@@ -66,7 +66,8 @@
         sortbyValues: gnSearchSettings.sortbyValues,
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         selectionBucket: 'e101',
-        filters: gnSearchSettings.filters,
+        // Sextant only applies filter to main search. Not here
+        // filters: gnSearchSettings.filters,
         params: {
           sortBy: 'changeDate',
           _isTemplate: 'y or n',
