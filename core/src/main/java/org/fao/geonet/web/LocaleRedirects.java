@@ -174,7 +174,7 @@ public class LocaleRedirects {
             return true;
         }
         final Optional<Source> one = sourceRepository.findById(portal);
-        if (one.isPresent()) {
+        if (!one.isPresent()) {
             List<String> portalList = new ArrayList<>();
             portalList.add(NodeInfo.DEFAULT_NODE);
             sourceRepository.findByType(SourceType.subportal, null).forEach(e -> {
