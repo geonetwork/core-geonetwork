@@ -1,19 +1,20 @@
-RELEASE
+Release
 =======
 
-The release module for Geonetwork
+The release module for GeoNetwork.
 
-* Build release and download Jetty
+Open a terminal window and execute the following steps from within the ``release`` folder.
 
-`
-cd ..
-mvn clean install -Djetty-download
-`
 
-* Create ZIP distributions
+* Once GeoNetwork has been built (run Maven in the repository root), download Jetty:
 
-`
-cd release
-ant
-`
+    `
+    mvn clean install -Djetty-download
+    `
+
+* Next, create the ZIP distributions and copy the WAR:
+
+    `
+    ant
+    `
 
