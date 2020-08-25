@@ -26,6 +26,7 @@
   <xml_iso19110>Save this metadata as an ISO19110 XML file</xml_iso19110>
   <xml_iso19110Tooai_dc>Save this metadata as an OAI Dublin Core XML file</xml_iso19110Tooai_dc>
 
+  <shareOnSocialSite>Share on social sites</shareOnSocialSite>
 
   <advanced>Full</advanced>
   <default>Simple</default>
