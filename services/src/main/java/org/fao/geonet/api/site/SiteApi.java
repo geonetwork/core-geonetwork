@@ -42,6 +42,7 @@ import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -554,10 +555,17 @@ public class SiteApi {
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
+        boolean isIndexing = ApplicationContextHolder.get().getBean(DataManager.class).isIndexing();
+
+        if (isIndexing) {
+            throw new NotAllowedException(
+                "Indexing is already in progress. Wait for the current task to complete.");
+        }
 
         if (reset) {
             searchMan.init(true, Optional.of(Arrays.asList(indices)));
         }
+
         searchMan.rebuildIndex(context, havingXlinkOnly, false, bucket);
 
         return new HttpEntity<>(HttpStatus.CREATED);
