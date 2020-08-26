@@ -1,17 +1,22 @@
 <div class="container new-metadata-vertical" id="gn-new-metadata-container">
-  <h2 data-translate="">{{title}}</h2>
 
-  <div class="alert alert-warning" data-ng-hide="hasTemplates"
-       data-translate="">noTemplatesAvailable
-  </div>
-  <div class="alert alert-warning" data-ng-show="groups.length === 0"
-       data-translate="">youAreNotMemberOfAnyGroup
-  </div>
+  <div class="row">
+    <div class="col-md-12 gn-margin-bottom">
+      <h1 data-translate="">createNewMetadata</h1>
+
+      <div class="alert alert-warning" data-ng-hide="hasTemplates"
+          data-translate="">noTemplatesAvailable
+      </div>
+      <div class="alert alert-warning" data-ng-show="groups.length === 0"
+          data-translate="">youAreNotMemberOfAnyGroup
+      </div>
 
 
-  <div class="progress progress-striped active"
-       data-ng-show="hasTemplates && mdList === null">
-    <div class="progress-bar" style="width: 100%"/>
+      <div class="progress progress-striped active"
+          data-ng-show="hasTemplates && mdList === null">
+        <div class="progress-bar" style="width: 100%"/>
+      </div>
+    </div>
   </div>
 
   <div class="row" data-ng-show="hasTemplates">
@@ -103,7 +108,7 @@
   </div>
   <div class="row">
     <div class="col-sm-8 col-sm-offset-4">
-      <div class="dropup">
+      <div class="dropup gn-margin-top">
         <div class="btn-group">
           <button type="button" class="btn btn-primary"
                   data-gn-click-and-spin="createNewMetadata()"
@@ -132,6 +137,9 @@
       </div>
     </div>
   </div>
-
-  <div data-gn-need-help="user-guide/describing-information/creating-metadata.html"></div>
+  <div class="row">
+    <div class="col-md-12">
+      <div data-gn-need-help="user-guide/describing-information/creating-metadata.html"></div>
+    </div>
+  </div>
 </div>
