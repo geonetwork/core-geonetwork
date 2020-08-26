@@ -1,14 +1,14 @@
 <div>
   <section class="gn-userfeedback-sidebar">
-    <h1 data-ng-show="rating.ratingCount > 0 && loaded">
+    <h2 data-ng-show="rating.ratingCount > 0 && loaded">
       <span data-translate="">GUFrate</span>
       <span>{{rating.ratingAverages['-1']}} / 5 <i class="fa fa-fw fa-star"></i></span>
       <span data-ng-show="rating.ratingAverages && loaded"
          data-translate=""
          data-translate-values="{ratingCount:'{{rating.ratingCount}}'}">GUFfromRatingCountRatings</span>
-    </h1>
-    <h1 data-ng-show="rating.ratingCount === 0 && loaded"
-        data-translate="">GUFnoRatings</h1>
+    </h2>
+    <h2 data-ng-show="rating.ratingCount === 0 && loaded"
+        data-translate="">GUFnoRatings</h2>
 
     <ul class="gn-userfeedback-list"
         data-ng-show="loaded">

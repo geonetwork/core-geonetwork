@@ -994,7 +994,7 @@
                     in order to be loaded by the application when running mvn jetty:run.
                     -->
                   <target description="copy from schemas to schema_plugins folder">
-                    <copy todir="${schema-plugins.dir}">
+                    <copy todir="${schema-plugins.dir}" preservelastmodified="true">
                       <fileset dir="${basedir}/../schemas/">
                         <include name="**/src/main/plugin/**"/>
                       </fileset>

@@ -1,9 +1,9 @@
 <div class="context">
   <a href="" class="hidden download-element"></a>
 
-  <div class="btn-group" role="group">
+  <div class="btn-group" role="group"  aria-label="{{'load' | translate}}, {{'download' | translate}}, {{'save' | translate}}">
     <!-- upload -->
-    <div class="btn-group" role="group" data-ng-class="isSaveMapInCatalogAllowed && user.isEditorOrMore() ? 'width-33' : 'width-50'">
+    <div class="btn-group" role="group" aria-label="{{'load' | translate}}" data-ng-class="isSaveMapInCatalogAllowed && user.isEditorOrMore() ? 'width-33' : 'width-50'">
       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span data-translate="">load</span>
         <span class="caret"></span>
@@ -24,7 +24,7 @@
       </ul>
     </div>
     <!-- download -->
-    <div class="btn-group" role="group" data-ng-class="isSaveMapInCatalogAllowed && user.isEditorOrMore() ? 'width-33' : 'width-50'">
+    <div class="btn-group" role="group" aria-label="{{'download' | translate}}" data-ng-class="isSaveMapInCatalogAllowed && user.isEditorOrMore() ? 'width-33' : 'width-50'">
       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span data-translate="">download</span>
         <span class="caret"></span>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
   ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
@@ -23,22 +22,10 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="2.0"
-                xmlns="http://www.isotc211.org/2005/gmd"
-                exclude-result-prefixes="#all">
-
-  <xsl:template name="RefSystemTypes">
-    <xsl:param name="srs"/>
-    <referenceSystemIdentifier>
-      <RS_Identifier>
-        <code>
-          <gco:CharacterString>
-            <xsl:value-of select="$srs"/>
-          </gco:CharacterString>
-        </code>
-      </RS_Identifier>
-    </referenceSystemIdentifier>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+  <xsl:include href="OGCWxSGetCapabilities-to-19119.xsl"/>
+  <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+  <xsl:template match="/">
+    <xsl:apply-templates/>
   </xsl:template>
-
 </xsl:stylesheet>
