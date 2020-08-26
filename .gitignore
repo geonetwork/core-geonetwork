@@ -26,6 +26,7 @@ docs/schema-loc-*.rst
 eclipse/
 es/elasticsearch-*
 es/es-dashboards/kibana-*
+geonetwork-os-wininstaller/
 harvesters/harvester_*.log
 idea/
 jcs_caching/
@@ -85,3 +86,4 @@ web/src/main/webapp/doc/fr
 web/src/main/webapp/images/logos/*
 web/src/main/webapp/images/statTmp
 web/src/main/webapp/scripts/lib/*
+wininstaller/
