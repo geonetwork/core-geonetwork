@@ -20,26 +20,25 @@
  * David Blasby  -  GeoCat
  */
 
-(function() {
+(function () {
   goog.provide('gn_schema_translations_loader');
 
-  var module = angular.module('gn_schema_translations_loader',
-      ['pascalprecht.translate']);
+  var module = angular.module(
+    'gn_schema_translations_loader',
+    ['pascalprecht.translate']);
 
   //module.run -- init code
-  module.run(['$http','$translate','$LOCALES',
-    function($http,$translate,$LOCALES) {
+  module.run(['$http', '$translate', '$LOCALES',
+    function ($http, $translate, $LOCALES) {
 
       // add potential items like "en-schema-iso19139.ca.HNAP.json"
       $http.get('../api/standards')
-        .success(function(data) {
-             var locals =$LOCALES;
-             var files = _.map(data,function(s){
-                  $LOCALES.push("schema-"+s.name);
-             });
-             $translate.refresh(); // force reload
+        .success(function (data) {
+          var files = _.map(data, function (s) {
+            $LOCALES.push("schema-" + s.name);
+          });
+          $translate.refresh(); // force reload
         });
-
     }
-    ]);
-    })();
+  ]);
+})();
