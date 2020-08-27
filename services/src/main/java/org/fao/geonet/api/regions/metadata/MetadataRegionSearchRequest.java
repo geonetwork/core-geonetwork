@@ -65,6 +65,8 @@ import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.GeometryFactory;
 
 import jeeves.server.context.ServiceContext;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
 
 /**
  * TODO: A polygon may be exclusion and in such case should be substracted from the overall extent?
@@ -226,6 +228,17 @@ public class MetadataRegionSearchRequest extends Request {
             Element polygon = extentObj.getChild("polygon", objNamespace);
             String gml = Xml.getString(polygon);
             geometry = SpatialIndexWriter.parseGml(getParser(polygon), gml);
+
+            Element xmlGeom = (Element) polygon.getChildren().get(0);
+            String srs = xmlGeom.getAttributeValue("srsName");
+            CoordinateReferenceSystem sourceCRS = DefaultGeographicCRS.WGS84;
+
+            if (srs != null && !(srs.equals(""))) sourceCRS = CRS.decode(srs);
+            // if we have an srs and its not WGS84 then transform to WGS84
+            if (!CRS.equalsIgnoreMetadata(sourceCRS, DefaultGeographicCRS.WGS84)) {
+                MathTransform tform = CRS.findMathTransform(sourceCRS, DefaultGeographicCRS.WGS84);
+                geometry = (MultiPolygon) JTS.transform(geometry, tform);
+            }
         } else if ("EX_GeographicBoundingBox".equals(extentObj.getName())) {
             double minx = getCoordinateValue("westBoundLongitude", extentObj);
             double maxx = getCoordinateValue("eastBoundLongitude", extentObj);

@@ -206,7 +206,7 @@ public class SpatialIndexWriter implements FeatureListener {
         if (value instanceof HashMap) {
             @SuppressWarnings("rawtypes")
             HashMap map = (HashMap) value;
-            List<Polygon> geoms = new ArrayList<Polygon>();
+            List<MultiPolygon> geoms = new ArrayList<MultiPolygon>();
             for (Object entry : map.values()) {
                 addToList(geoms, entry);
             }
@@ -226,14 +226,16 @@ public class SpatialIndexWriter implements FeatureListener {
         }
     }
 
-    public static void addToList(List<Polygon> geoms, Object entry) {
+    public static void addToList(List<MultiPolygon> geoms, Object entry) {
         if (entry instanceof Polygon) {
-            geoms.add((Polygon) entry);
+            geoms.add(toMultiPolygon((Polygon) entry));
+        } else if (entry instanceof MultiPolygon) {
+            geoms.add((MultiPolygon) entry);
         } else if (entry instanceof Collection) {
             @SuppressWarnings("rawtypes")
             Collection collection = (Collection) entry;
             for (Object object : collection) {
-                geoms.add((Polygon) object);
+                geoms.add(toMultiPolygon((Polygon) object));
             }
         }
     }
