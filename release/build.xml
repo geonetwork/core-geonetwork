@@ -55,8 +55,6 @@
   <property name="propsdir" value="../.props"/>
   <property name="ant.build.javac.target" value="1.8"/>
   <property name="debugOn" value="on"/>
-  <property name="thesaurusUrl"
-            value="https://raw.githubusercontent.com/geonetwork/util-gemet/master/thesauri"/>
 
   <!-- Used for copyright year -->
   <tstamp>
@@ -64,28 +62,6 @@
   </tstamp>
 
   <!-- =================================================================================== -->
-
-  <target name="thesaurusDownload">
-    <mkdir dir="../web/target/thesauri"/>
-
-    <get src="${thesaurusUrl}/gemet.rdf"
-         dest="../web/target/thesauri/gemet.rdf" usetimestamp="true"/>
-  </target>
-
-  <target name="inspireDbSettings">
-    <mkdir dir="../web/target/inspire"/>
-
-    <copy file="../web/target/geonetwork/WEB-INF/classes/setup/sql/data/data-db-default.sql"
-          tofile="../web/target/inspire/data-db-default.sql" overwrite="true"/>
-    <replace file="../web/target/inspire/data-db-default.sql">
-      <replacefilter>
-        <replacetoken>
-          <![CDATA[INSERT INTO Settings VALUES (721,720,'enable','false');]]></replacetoken>
-        <replacevalue>
-          <![CDATA[INSERT INTO Settings VALUES (721,720,'enable','true');]]></replacevalue>
-      </replacefilter>
-    </replace>
-  </target>
 
   <target name="setProperties">
 
@@ -131,7 +107,7 @@
 
     </propertyfile>
 
-    <!-- make sure all files that need have version numbers etc updated -->
+    <!-- Make sure all files that we need have their version numbers etc. updated -->
 
     <!-- help file -->
     <copy file="readme.html"
@@ -160,9 +136,8 @@
     <echo message="Done"/>
   </target>
 
-  <target name="distributions" depends="setProperties,thesaurusDownload,inspireDbSettings">
-    <echo message="Preconditions OK: ready to create ZIP distributions"/>
-    <ant dir="." target="zipInspire"/>
+  <target name="distributions" depends="setProperties">
+    <echo message="Preconditions OK"/>
     <ant dir="." target="war"/>
   </target>
 
@@ -175,7 +150,7 @@
 
     <echo message="Creating ZIP file for ${appName} ${release}..."/>
 
-    <zip destfile="../${appName}-${release}/${appName}-${release}-${subVersion}-Jetty.zip">
+    <zip destfile="../${appName}-${release}/${appName}-${release}-${subVersion}.zip">
       <zipfileset dir="./bin" prefix="bin" />
       <zipfileset dir="../.props" includes="readme.html, license.html" />
       <zipfileset dir="./jetty" prefix="jetty" excludes="logs/*.log, logs/archive/*.log" />
@@ -185,49 +160,18 @@
     </zip>
 
     <checksum
-      file="../${appName}-${release}/${appName}-${release}-${subVersion}-Jetty.zip"
+      file="../${appName}-${release}/${appName}-${release}-${subVersion}.zip"
       forceOverwrite="yes"/>
 
   </target>
 
-  <!-- Create ZIP distribution for GeoNetwork + Jetty + shell scripts + INSPIRE configuration -->
-  <target name="zipInspire" depends="zip">
-
-    <echo message="Creating ZIP file for ${appName} ${release} with INSPIRE configuration..."/>
-
-    <copy file="../${appName}-${release}/${appName}-${release}-${subVersion}-Jetty.zip" 
-          tofile="../${appName}-${release}/${appName}-${release}-${subVersion}-Jetty-INSPIRE.zip" />
-
-    <zip destfile="../${appName}-${release}/${appName}-${release}-${subVersion}-Jetty-INSPIRE.zip" update="true">
-      <!-- Add schematron rules (should already be there) -->
-      <zipfileset dir="../web/target/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron"
-                  prefix="web/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron" 
-                  includes="schematron-rules-inspire*.sch" />
-      
-      <!-- GEMET thesaurus files. For INSPIRE, user will use the admin and load them from INSPIRE Registry -->
-      <zipfileset dir="../web/target/thesauri"
-                  prefix="web/geonetwork/WEB-INF/data/config/codelist/external/thesauri/theme" 
-                  includes="gemet.rdf" />
-      
-      <!-- SQL script with INSPIRE Settings enabled -->
-      <zipfileset dir="../web/target/inspire"
-                  prefix="web/geonetwork/WEB-INF/classes/setup/sql/data" 
-                  includes="data-db-default.sql" />
-    </zip>
-
-    <checksum
-      file="../${appName}-${release}/${appName}-${release}-${subVersion}-Jetty-INSPIRE.zip"
-      forceOverwrite="yes"/>  
-
-  </target>
-
   <!-- Copy and rename WAR file and calculate checksum -->
-  <target name="war">
+  <target name="war" depends="zip">
 
     <copy file="../web/target/geonetwork.war" 
-          tofile="../${appName}-${version}/${appName}-${version}-${subVersion}.war" />    
+          tofile="../${appName}-${release}/${appName}-${release}-${subVersion}.war" />    
 
-    <checksum file="../${appName}-${version}/${appName}-${version}-${subVersion}.war"
+    <checksum file="../${appName}-${release}/${appName}-${release}-${subVersion}.war"
               forceOverwrite="yes"/> 
 
   </target>
