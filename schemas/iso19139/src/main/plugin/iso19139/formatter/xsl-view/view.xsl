@@ -471,6 +471,15 @@
     <br/>
   </xsl:template>
 
+  <xsl:template mode="render-field"
+                match="gmd:EX_BoundingPolygon/gmd:polygon">
+    <xsl:copy-of select="gn-fn-render:extent($metadataUuid,
+        count(ancestor::gmd:extent/preceding-sibling::gmd:extent/*/*[local-name() = 'geographicElement']/*) +
+        count(../../preceding-sibling::gmd:geographicElement) + 1)"/>
+    <br/>
+    <br/>
+  </xsl:template>
+
 
   <!-- Display spatial extents containing bounding polygons on a map -->
 
@@ -485,16 +494,20 @@
       </h2>
       <div class="target"><xsl:comment select="name()"/>
 
-        <xsl:apply-templates mode="render-field" select="gmd:description"/>
+        <xsl:apply-templates mode="render-field"
+                             select="gmd:description"/>
 
-        <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
+        <xsl:apply-templates mode="render-field"
+                             select="gmd:geographicElement[not(gmd:EX_GeographicDescription)]"/>
 
         <!-- Display any included geographic descriptions separately after displayed map -->
+        <xsl:apply-templates mode="render-field"
+                             select="gmd:geographicElement[gmd:EX_GeographicDescription]"/>
 
-        <xsl:apply-templates mode="render-field" select="gmd:geographicElement[gmd:EX_GeographicDescription]"/>
-
-        <xsl:apply-templates mode="render-field" select="gmd:temporalElement"/>
-        <xsl:apply-templates mode="render-field" select="gmd:verticalElement"/>
+        <xsl:apply-templates mode="render-field"
+                             select="gmd:temporalElement"/>
+        <xsl:apply-templates mode="render-field"
+                             select="gmd:verticalElement"/>
 
       </div>
     </div>

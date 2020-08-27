@@ -134,7 +134,7 @@
         </xsl:for-each>
       </xsl:variable>
 
-      
+
       <xsl:choose>
         <xsl:when test="$byThesaurus">
           <xsl:for-each-group select="$tags/tag" group-by="@thesaurus">
@@ -438,7 +438,7 @@
 
 
 
-  <!-- Some major sections are boxed but 
+  <!-- Some major sections are boxed but
   * if part of fieldsWithFieldset exception
   * has content
   * only if more than one child to be displayed (non flat mode only) bypass container elements
@@ -488,10 +488,20 @@
   </xsl:template>
 
 
+  <xsl:template mode="render-field"
+                match="gex:EX_BoundingPolygon/gex:polygon"
+                priority="100">
+    <xsl:copy-of select="gn-fn-render:extent($metadataUuid,
+        count(ancestor::mri:extent/preceding-sibling::mri:extent/*/*[local-name() = 'geographicElement']/*) +
+        count(../../preceding-sibling::gex:geographicElement) + 1)"/>
+    <br/>
+    <br/>
+  </xsl:template>
+
   <!-- Display spatial extents containing bounding polygons on a map -->
 
   <xsl:template mode="render-field"
-                match="gex:EX_Extent[gex:geographicElement/*/gex:polygon]"
+                match="gex:EX_Extent"
                 priority="100">
     <div class="entry name">
     <h4>
@@ -500,21 +510,10 @@
                            select="@*"/>
     </h4>
     <div class="target">
+      <xsl:apply-templates mode="render-field"
+                           select="gex:*"/>
 
-    <xsl:apply-templates mode="render-field" select="gex:description"/>
-
-    <!-- Display all included bounding polygons/boxes on the one map -->
-
-    <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
-
-    <!-- Display any included geographic descriptions separately after map -->
-
-    <xsl:apply-templates mode="render-field" select="gex:geographicElement[gex:EX_GeographicDescription]"/>
-
-    <xsl:apply-templates mode="render-field" select="gex:temporalElement"/>
-    <xsl:apply-templates mode="render-field" select="gex:verticalElement"/>
-
-    </div>
+      </div>
     </div>
   </xsl:template>
 
