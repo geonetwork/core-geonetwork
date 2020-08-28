@@ -1,0 +1,97 @@
+@sxt-base-color-dark: #315da8;
+@sxt-base-color: #093564;
+@sxt-base-color-light: #CECECE;
+@sxt-button-color: #36B5C1;
+@sxt-button-color-light: #2F9DA8; 
+
+
+// see: https://gitlab.ifremer.fr/sextant/geonetwork/issues/34
+
+// cancel automatic bullet points
+.c_showlocation ul:not(.pagination) > li::before, .c_nodelist ul:not(.pagination) > li::before {
+  content: none;
+  margin-left: 0px;
+}
+
+.c_showlocation section h5 {
+  font-size: 14px;
+}
+.c_showlocation section h4 {
+  font-weight: 500;
+}
+// https://gitlab.ifremer.fr/sextant/geonetwork/issues/105
+
+.c_showlocation ul:not(.pagination), .c_nodelist ul:not(.pagination) {
+  overflow: initial;
+}
+.c_showlocation section h3::before {
+  content: None;
+  font-weight: normal;
+}
+
+.c_showlocation .embed-responsive-110pct {
+    padding-bottom: 0%;
+}
+
+.gn .gn-metadata-display h3, .g .gn-metadata-display h3 {
+  content: None;
+  font-weight: normal !important;
+}
+
+.gn .sxt-scroll, .g .sxt-scroll, .gn .sxt-scroll .hfull, .g .sxt-scroll .hfull {
+  height: auto;
+}
+
+#main-tabset > div > div.tab-pane.ng-scope.active > div.hfull.sxt-search-main-container.ng-scope.sxt-scroll
+> form > div > div.maincol.hfull.sxt-left-panel.col-md-4.ng-scope > div {
+  top: 25px;
+}
+
+#main-tabset > div > div.tab-pane.ng-scope.active >
+div.hfull.sxt-search-main-container.ng-scope.sxt-scroll
+> form > div  div > div.ng-scope > div > ul > li {
+  content: none !important;
+}
+
+// cancel automatic caret
+.dropdown-toggle::after {
+  content: none;
+}
+
+// fix dropdown opening using show class instead of open
+.btn-group.show {
+  display: inline-block !important;
+}
+.gn[ng-app="gn_search_sextant"] ul:not(.pagination) > li::before,
+.gn[ng-app="gn_search_sextant"] ul:not(.pagination) > li::before,
+.gn[ng-app="gn_search_sextant"] ul:not(.pagination) ul ul > li::before,
+.gn[ng-app="gn_search_sextant"] ul:not(.pagination) ol ul > li::before,
+.gn[ng-app="gn_search_sextant"] ol ul ul > li::before,
+.gn[ng-app="gn_search_sextant"] ol ol ul > li::before,
+.gn[ng-app="gn_search_sextant"] ul:not(.pagination) ul ul > li::before,
+.gn[ng-app="gn_search_sextant"] ul:not(.pagination) ol ul > li::before,
+.gn[ng-app="gn_search_sextant"] ol ul ul > li::before,
+.gn[ng-app="gn_search_sextant"] ol ol ul > li::before {
+  content: none;
+}
+
+.gn .popover.right > .arrow, .g .popover.right > .arrow {
+ left: -16px !important;
+}
+
+// make md panel fit all available space
+.sxt-search-main-container .col-md-8 {
+  max-width: 100%;
+}
+// https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/166#note_23659
+div > div.col-xs-1.col-sm-1 {
+  max-width: none;
+}
+
+body {
+  overflow-x: hidden;
+}
+// https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/166
+div .gn .sxt-left-panel .sxt-reset-btn, .g .sxt-left-panel .sxt-reset-btn button {
+  bottom: -0.8em;
+}
