@@ -726,6 +726,24 @@
           <hasBoundingPolygon>true</hasBoundingPolygon>
         </xsl:if>
 
+        <xsl:for-each select="*/gex:EX_Extent/*/gex:EX_BoundingPolygon/gmd:polygon">
+          <xsl:variable name="geojson"
+                        select="util:gmlToGeoJson(
+                                  saxon:serialize(gml:*, 'default-serialize-mode'),
+                                  true(), 5)"/>
+          <xsl:choose>
+            <xsl:when test="$geojson = ''"></xsl:when>
+            <xsl:when test="starts-with($geojson, 'Error:')">
+              <shapeParsingError><xsl:value-of select="$geojson"/></shapeParsingError>
+            </xsl:when>
+            <xsl:otherwise>
+              <shape type="object">
+                <xsl:value-of select="$geojson"/>
+              </shape>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:for-each>
+
         <xsl:for-each select="*/gex:EX_Extent">
 
           <xsl:for-each select="gex:geographicElement/gex:EX_GeographicDescription/

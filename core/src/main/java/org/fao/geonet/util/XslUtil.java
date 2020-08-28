@@ -65,6 +65,7 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
@@ -75,6 +76,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.output.DOMOutputter;
 import org.locationtech.jts.geom.*;
+import org.locationtech.jts.precision.GeometryPrecisionReducer;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
@@ -143,6 +145,56 @@ public final class XslUtil {
             return toMultiPolygon((Geometry) value);
         }
     }
+
+    public static String gmlToGeoJson(String gml,
+                                      Boolean applyPrecisionModel,
+                                      Integer numberOfDecimals) {
+        if (applyPrecisionModel == null) {
+            applyPrecisionModel = true;
+        }
+        if (numberOfDecimals == null) {
+            numberOfDecimals = 5;
+        }
+
+        try {
+            if (StringUtils.isNotEmpty(gml)) {
+                Parser[] parsers = GMLParsers.create();
+                Parser parser = null;
+                if (gml.contains("xmlns:" + Geonet.Namespaces.GML32)) {
+                    parser = parsers[1];
+                } else {
+                    parser = parsers[0];
+                }
+                Geometry geom = parseGml(parser, gml);
+
+                if (applyPrecisionModel) {
+                    PrecisionModel precisionModel =
+                        new PrecisionModel(Math.pow(10, numberOfDecimals - 1));
+                    geom = GeometryPrecisionReducer.reduce(geom, precisionModel);
+                    // numberOfDecimals is equal to
+                    // precisionModel.getMaximumSignificantDigits()
+                }
+
+                // An issue here is that GeometryJSON conversion may over simplify
+                // the geometry by truncating coordinates based on numberOfDecimals
+                // which on default constructor is set to 4. This may lead to
+                // invalid geometry and Elasticsearch will fail parsing the GeoJSON
+                // with the following type of error:
+                // Caused by: org.locationtech.spatial4j.exception.InvalidShapeException:
+                // Provided shape has duplicate
+                // consecutive coordinates at: (-3.9997, 48.7463, NaN)
+                //
+                // To avoid this, it may be relevant to apply the reduction model
+                // preserving topology.
+                return new GeometryJSON(numberOfDecimals).toString(geom);
+            }
+        } catch (Exception e) {
+            return String.format("Error: %s, %s parsing %s to GeoJSON",
+                e.getClass().getSimpleName(), e.getMessage(), gml);
+        }
+        return "";
+    }
+
 
 
     public static void addToList(List<Polygon> geoms, Object entry) {
