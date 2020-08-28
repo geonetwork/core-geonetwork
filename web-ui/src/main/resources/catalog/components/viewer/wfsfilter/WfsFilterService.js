@@ -458,7 +458,7 @@
             if (config.isTokenized) {
               var sep = config.tokenSeparator;
               clause.push(
-                '(' + paramName + " = '" + escaped + "')",
+                '(' + paramName + " LIKE '" + escaped + "')",
                 '(' + paramName + " LIKE '%" + sep + escaped + sep + "%')",
                 '(' + paramName + " LIKE '%" + sep + escaped + "')",
                 '(' + paramName + " LIKE '" + escaped + sep + "%')"
