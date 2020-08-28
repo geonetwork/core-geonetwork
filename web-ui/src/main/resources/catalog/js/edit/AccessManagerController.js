@@ -74,7 +74,7 @@
 
         var filter = [];
         if ($scope.params.any != '') {
-          filter.push('{"match": {"resourceTitle": {' +
+          filter.push('{"match": {"resourceTitleObject.default": {' +
             '"query": "' + $scope.params.any + '", ' +
             '"zero_terms_query": "all", "fuzziness": "auto"}}}');
         }
@@ -109,7 +109,7 @@
               scriptFields.push(
                 '"' + fieldName +'": {' +
                 '      "script": {' +
-                '        "inline": "doc[\'op' + o.id + '\'].size() > 0 && doc[\'op' + o.id + '\'].value == \'' + g.id + '\'"' +
+                '        "inline": "doc[\'op' + o.id + '\'].size() > 0 && doc[\'op' + o.id + '\'].contains(\'' + g.id + '\')"' +
                 '      }' +
                 '    }');
               $scope.columns.push({
