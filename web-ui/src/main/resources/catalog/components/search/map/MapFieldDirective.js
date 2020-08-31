@@ -174,7 +174,7 @@
               scope.$watch('interaction.active', function(v, o) {
                 if (!v && o) {
                   resetSpatialFilter();
-                  if (!!scope.searchObj.params.geometry) {
+                  if (scope.searchObj && !!scope.searchObj.params.geometry) {
                     scope.triggerSearch();
                   }
                 }

@@ -250,7 +250,14 @@
                   // Set coords in the scope to pass it to the mapField directive
                   // (only if raster format to avoid excluding data by mistake: https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/199)
                   if (dataType === 'raster') {
-                    scope.extentCoords = gnMap.getPolygonFromExtent(extents[0]);
+                    var extent = extents[0];
+                    var proj = scope.map.getView().getProjection();
+                    extent = ol.extent.containsExtent(proj.getWorldExtent(),
+                      extent) ?
+                      ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
+                      proj.getExtent();
+
+                    scope.extentCoords = gnMap.getPolygonFromExtent(extent);
                   }
                 }
 
