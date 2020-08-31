@@ -105,5 +105,7 @@
   "annotationsSaveSuccess": "Les annotations ont été sauvegardées.",
   "searchOnlyTitle": "Rechercher uniquement dans le titre",
   "ui-settings-sextant": "Configuration spécifique Sextant",
-  "addAnnotations": "Associer des annotations"
+  "addAnnotations": "Associer des annotations",
+  "panierDrawBbox": "Dessiner une emprise pour l'extraction",
+  "panierDataExtent": "Emprise de la donnée"
 }

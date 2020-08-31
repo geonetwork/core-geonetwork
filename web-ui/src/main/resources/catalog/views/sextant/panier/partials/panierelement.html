@@ -4,9 +4,16 @@
   </button>
 
   <!--Map Draw Extent-->
-  <div data-ng-if="!isCopyfile" class="col-md-5" gn-map-field="map" class=""
+  <div data-ng-if="!isCopyfile" class="col-md-5">
+    <div gn-map-field="map" class="pos-relative"
        gn-map-field-geom="prop.extent" gn-map-field-extent="extentCoords"
-       template="../../catalog/views/sextant/templates/map/mapfield.html"></div>
+       template="../../catalog/views/sextant/templates/map/mapfield-panier.html"
+    ></div>
+    <div>
+      <div style="width: 12px; height: 12px; border: 2px solid orange; display: inline-block"></div>
+      <span translate>panierDataExtent</span>
+    </div>
+  </div>
 
   <div class="col-md-6">
     <h4>{{::(element.md.title || element.md.defaultTitle)}}</h4>

@@ -104,5 +104,7 @@
   "annotationsSaveSuccess": "Annotations successfully saved.",
   "searchOnlyTitle": "Search only in title",
   "ui-settings-sextant": "Sextant-specific configuration",
-  "addAnnotations": "Associate annotations"
+  "addAnnotations": "Associate annotations",
+  "panierDrawBbox": "Draw an extent for extracting the data",
+  "panierDataExtent": "Actual extent for this data"
 }
