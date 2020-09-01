@@ -14,39 +14,38 @@
             <div class="row gn-top-search">
               <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5">
                 <div class="input-group gn-form-any">
-
-                <span class="input-group-addon">
-                  <label>
-                    <input type="checkbox" title="{{'onlyMyRecord' | translate}}" data-ng-model="onlyMyRecord.is">
-                    <span data-translate="" class="hidden-xs hidden-sm">onlyMyRecord</span>
-                  </label>
-                </span>
-                <input type="text"
-                       class="form-control"
-                       id="gn-any-field"
-                       autocomplete="off"
-                       data-ng-model="searchObj.params.any"
-                       data-ng-model-options="modelOptions"
-                       placeholder="{{'anyPlaceHolder' | translate}}"
-                       aria-label="{{'anyPlaceHolder' | translate}}"
-                       data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
-                       data-typeahead-loading="anyLoading" class="form-control"
-                       data-typeahead-min-length="1">
-                <div class="input-group-btn">
-                  <button type="button"
-                          data-ng-click="triggerSearch()"
-                          title="{{'search' | translate}}"
-                          class="btn btn-default">
-                    <i class="fa fa-search"></i>
-                  </button>
-                  <button type="button"
-                          data-ng-click="setOnlyMyRecord();resetSearch(defaultSearchObj.defaultParams);"
-                          title="{{'ClearTitle' | translate}}"
-                          class="btn btn-default">
-                    <i class="fa fa-times"></i>
-                  </button>
-                </div>
-
+                  <span class="input-group-addon">
+                    <label>
+                      <input type="checkbox" title="{{'onlyMyRecord' | translate}}" data-ng-model="onlyMyRecord.is">
+                      <span data-translate="" class="hidden-xs hidden-sm">onlyMyRecord</span>
+                    </label>
+                  </span>
+                  <input type="text"
+                         class="form-control"
+                         id="gn-any-field"
+                         autocomplete="off"
+                         data-ng-model="searchObj.params.any"
+                         data-ng-model-options="modelOptions"
+                         placeholder="{{'anyPlaceHolder' | translate}}"
+                         aria-label="{{'anyPlaceHolder' | translate}}"
+                         data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
+                         data-typeahead-loading="anyLoading"
+                         data-typeahead-focus-first="false"
+                         data-typeahead-min-length="1"/>
+                  <div class="input-group-btn">
+                    <button type="button"
+                            data-ng-click="triggerSearch()"
+                            title="{{'search' | translate}}"
+                            class="btn btn-default">
+                      <i class="fa fa-search"></i>
+                    </button>
+                    <button type="button"
+                            data-ng-click="setOnlyMyRecord();resetSearch(defaultSearchObj.defaultParams);"
+                            title="{{'ClearTitle' | translate}}"
+                            class="btn btn-default">
+                      <i class="fa fa-times"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
               <div class="col-xs-12 col-sm-6 col-md-6 col-lg-7 text-right">
