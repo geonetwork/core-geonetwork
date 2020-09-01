@@ -27,8 +27,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.*;
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.transaction.TransactionManager;
@@ -47,6 +45,7 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
+import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
@@ -82,6 +81,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -174,14 +174,15 @@ public class BaseMetadataManager implements IMetadataManager {
      * order to rebuild the lucene index
      *t
      * @param force Force reindexing all from scratch
+     * @param asynchronous
      **/
-    public synchronized void synchronizeDbWithIndex(ServiceContext context, Boolean force) throws Exception {
+    public synchronized void synchronizeDbWithIndex(ServiceContext context, Boolean force, Boolean asynchronous) throws Exception {
 
         // get lastchangedate of all metadata in index
         Map<String, String> docs = searchManager.getDocsChangeDate();
 
         // set up results HashMap for post processing of records to be indexed
-        ArrayList<String> toIndex = new ArrayList<String>();
+        List<String> toIndex = new ArrayList<String>();
 
         LOGGER_DATA_MANAGER.debug("INDEX CONTENT:");
 
@@ -231,7 +232,14 @@ public class BaseMetadataManager implements IMetadataManager {
         // if anything to index then schedule it to be done after servlet is
         // up so that any links to local fragments are resolvable
         if (toIndex.size() > 0) {
-            metadataIndexer.batchIndexInThreadPool(context, toIndex);
+            if(asynchronous) {
+                Set<Integer> integerList = toIndex.stream().map(Integer::parseInt).collect(Collectors.toSet());
+                new BatchOpsMetadataReindexer(
+                    context.getBean(DataManager.class),
+                    integerList).process(false);
+            } else {
+                metadataIndexer.batchIndexInThreadPool(context, toIndex);
+            }
         }
 
         if (docs.size() > 0) { // anything left?

@@ -3,6 +3,7 @@ package org.fao.geonet.services.metadata;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.ISearchManager;
+import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.util.ThreadUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
