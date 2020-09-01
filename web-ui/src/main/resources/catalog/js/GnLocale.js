@@ -104,7 +104,7 @@
             method: 'GET',
             url: langUrl,
             headers: {
-              'Accept-Language': options.key,
+              'Accept-Language': options.key
             },
             cache: true
           }).success(function(data) {
