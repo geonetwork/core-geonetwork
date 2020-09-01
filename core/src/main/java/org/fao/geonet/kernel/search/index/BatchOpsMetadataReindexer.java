@@ -39,7 +39,7 @@
 //===	Contact: Jeroen Ticheler email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.services.metadata;
+package org.fao.geonet.kernel.search.index;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
