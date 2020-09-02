@@ -455,7 +455,7 @@
 
           if ((i === 0 && diff < 0) ||
               (i === times.length - 1 && diff > 0) ||
-              Math.abs(diff) < 1) {
+              (diff <= 0 && diff >= -1)) {
             return moment.utc(times[i]).toISOString();
           }
         }
