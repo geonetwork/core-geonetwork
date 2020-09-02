@@ -160,7 +160,7 @@ public final class XslUtil {
             if (StringUtils.isNotEmpty(gml)) {
                 Parser[] parsers = GMLParsers.create();
                 Parser parser = null;
-                if (gml.contains("xmlns:" + Geonet.Namespaces.GML32)) {
+                if (gml.contains(Geonet.Namespaces.GML32.getURI())) {
                     parser = parsers[1];
                 } else {
                     parser = parsers[0];
