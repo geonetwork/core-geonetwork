@@ -1,4 +1,8 @@
-<ows-context:OWSContext xmlns:ows-context="http://www.opengis.net/ows-context" version="0.3.1" id="ows-context-ex-1-v3">
+<ows-context:OWSContext xmlns:ows-context="http://www.opengis.net/ows-context"
+                        xmlns:ows="http://www.opengis.net/ows"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        version="0.3.1"
+                        id="ows-context-ex-1-v3">
     <ows-context:General>
         <ows:BoundingBox xmlns:ows="http://www.opengis.net/ows" crs="EPSG:3857">
             <ows:LowerCorner>-20037508.342789244 -20037508.342789244</ows:LowerCorner>
@@ -8,9 +12,9 @@
     <ows-context:ResourceList>
         <!--
         <ows-context:Layer queryable="false" name="TEMP" hidden="true" opacity="1">
-            <ows:Title xmlns:ows="http://www.opengis.net/ows">Coriolis ncWMS</ows:Title>
+            <ows:Title >Coriolis ncWMS</ows:Title>
             <ows-context:Server service="urn:ogc:serviceType:WMS">
-                <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://tds0.ifremer.fr/thredds/wms/CORIOLIS-GLOBAL-CORA04.0-OBS_FULL_TIME_SERIE?"/>
+                <ows-context:OnlineResource xlink:href="http://tds0.ifremer.fr/thredds/wms/CORIOLIS-GLOBAL-CORA04.0-OBS_FULL_TIME_SERIE?"/>
             </ows-context:Server>
             <ows-context:StyleList/>
         </ows-context:Layer>
@@ -41,13 +45,14 @@
             </ows-context:Server>
         </ows-context:Layer>
 
-
         <ows-context:Layer name="{type=arcgis,name=imagery}" group="Background layers" hidden="true" opacity="1">
             <ows:Title>Arcgis imagery</ows:Title>
         </ows-context:Layer>
+
         <ows-context:Layer name="{type=arcgis,name=hillshade}" group="Background layers" hidden="true" opacity="1">
             <ows:Title>Arcgis hillshade</ows:Title>
         </ows-context:Layer>
+
         <ows-context:Layer name="{type=arcgis,name=ocean}" group="Background layers" hidden="true" opacity="1">
             <ows:Title>Arcgis ocean</ows:Title>
         </ows-context:Layer>
@@ -56,6 +61,7 @@
         <ows-context:Layer name="{type=osm}" group="Background layers" hidden="true" opacity="1">
             <ows:Title>OpenStreetMap</ows:Title>
         </ows-context:Layer>
+
         <ows-context:Layer name="{type=osm-fr}" group="Background layers" hidden="true" opacity="1">
             <ows:Title>OpenStreetMap FR</ows:Title>
         </ows-context:Layer>
@@ -72,22 +78,24 @@
         <ows-context:Layer name="{type=bing,name=Aerial}" group="Background layers" hidden="true" opacity="1">
             <ows:Title>Bing Aerial</ows:Title>
         </ows-context:Layer>
+
         <ows-context:Layer name="{type=bing,name=AerialWithLabelsOnDemand}" group="Background layers" hidden="true"
                            opacity="1">
             <ows:Title>Bing Aerial with labels</ows:Title>
         </ows-context:Layer>
+
         <ows-context:Layer name="{type=bing,name=RoadOnDemand}" group="Background layers" hidden="true" opacity="1">
             <ows:Title>Bing Road</ows:Title>
         </ows-context:Layer>
+
         <!--
         <ows-context:Layer name="{type=wmts,name=emodnet:mean_multicolour}"
                            group="Background layers"
                            hidden="true" opacity="1">
-          <ows:Title xmlns:ows="http://www.opengis.net/ows">Emodnet MNT</ows:Title>
+          <ows:Title >Emodnet MNT</ows:Title>
           <ows-context:Server service="urn:ogc:serviceType:WMS">
             <ows-context:OnlineResource
-                    xlink:href="http://ows.emodnet-bathymetry.eu/wmts?"
-                    xmlns:xlink="http://www.w3.org/1999/xlink"/>
+                    xlink:href="http://ows.emodnet-bathymetry.eu/wmts?"/>
           </ows-context:Server>
         -->
     </ows-context:ResourceList>
