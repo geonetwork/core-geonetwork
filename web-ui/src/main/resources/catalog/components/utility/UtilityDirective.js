@@ -1454,7 +1454,9 @@
             var imgs = imgOrMd.overview;
             var url = $(element).attr('src');
             for (var i = 0; i < imgs.list.length; i++) {
-              if (imgs.list[i].url === url) {
+              // the thumbnails url might end with `?approved=false/true`, which is not
+              // present on img
+              if (imgs.list[i].url.indexOf(url) === 0) {
                 img = imgs.list[i];
                 break;
               }
