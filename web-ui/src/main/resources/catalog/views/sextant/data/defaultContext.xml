@@ -6,7 +6,7 @@
         </ows:BoundingBox>
     </ows-context:General>
     <ows-context:ResourceList>
-<!--
+        <!--
         <ows-context:Layer queryable="false" name="TEMP" hidden="true" opacity="1">
             <ows:Title xmlns:ows="http://www.opengis.net/ows">Coriolis ncWMS</ows:Title>
             <ows-context:Server service="urn:ogc:serviceType:WMS">
@@ -14,35 +14,72 @@
             </ows-context:Server>
             <ows-context:StyleList/>
         </ows-context:Layer>
--->
+        -->
 
-        <ows-context:Layer queryable="false" name="{type=wmts,name=sextant}" hidden="false" opacity="1" group="Background layers">
-            <ows:Title xmlns:ows="http://www.opengis.net/ows">Sextant</ows:Title>
+        <ows-context:Layer name="{type=wmts,name=sextant}" group="Background layers" hidden="false" opacity="1">
+            <ows:Title>Sextant</ows:Title>
             <ows-context:Server service="urn:ogc:serviceType:WMS">
-                <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://sextant.ifremer.fr/geowebcache/service/wmts?"/>
+                <ows-context:OnlineResource
+                        xlink:href="https://sextant.ifremer.fr/geowebcache/service/wmts?service=WMTS&amp;request=GetCapabilities&amp;version=1.0.0"/>
             </ows-context:Server>
-            <ows-context:StyleList/>
         </ows-context:Layer>
-        <ows-context:Layer queryable="false" name="{type=wmts,name=Ocean_Basemap}" hidden="true" opacity="1" group="Background layers">
-            <ows:Title xmlns:ows="http://www.opengis.net/ows">Base Map</ows:Title>
+
+        <ows-context:Layer name="{type=wmts,name=Ocean_Basemap}" group="Background layers" hidden="true" opacity="1">
+            <ows:Title>Base Map</ows:Title>
             <ows-context:Server service="urn:ogc:serviceType:WMS">
-                <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://server.arcgisonline.com/arcgis/rest/services/Ocean_Basemap/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"/>
+                <ows-context:OnlineResource
+                        xlink:href="http://server.arcgisonline.com/arcgis/rest/services/Ocean_Basemap/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"/>
             </ows-context:Server>
-            <ows-context:StyleList/>
         </ows-context:Layer>
-        <ows-context:Layer name="{type=bing_aerial}" group="Background layers" hidden="true" opacity="1">
-            <ows:Title xmlns:ows="http://www.opengis.net/ows">Bing Aerial</ows:Title>
+
+        <ows-context:Layer name="{type=wmts,name=Ocean_World_Ocean_Base}" group="Background layers" hidden="true"
+                           opacity="1">
+            <ows:Title>World_Ocean_Base</ows:Title>
+            <ows-context:Server service="urn:ogc:serviceType:WMS">
+                <ows-context:OnlineResource
+                        xlink:href="https://server.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"/>
+            </ows-context:Server>
         </ows-context:Layer>
+
+
+        <ows-context:Layer name="{type=arcgis,name=imagery}" group="Background layers" hidden="true" opacity="1">
+            <ows:Title>Arcgis imagery</ows:Title>
+        </ows-context:Layer>
+        <ows-context:Layer name="{type=arcgis,name=hillshade}" group="Background layers" hidden="true" opacity="1">
+            <ows:Title>Arcgis hillshade</ows:Title>
+        </ows-context:Layer>
+        <ows-context:Layer name="{type=arcgis,name=ocean}" group="Background layers" hidden="true" opacity="1">
+            <ows:Title>Arcgis ocean</ows:Title>
+        </ows-context:Layer>
+
+
         <ows-context:Layer name="{type=osm}" group="Background layers" hidden="true" opacity="1">
-            <ows:Title xmlns:ows="http://www.opengis.net/ows">OpenStreetMap</ows:Title>
+            <ows:Title>OpenStreetMap</ows:Title>
         </ows-context:Layer>
-        <ows-context:Layer queryable="false" name="{type=wmts,name=web_mercator_etopo1_hillshade}" hidden="true" opacity="1" group="Background layers">
-            <ows:Title xmlns:ows="http://www.opengis.net/ows">Etopo1</ows:Title>
+        <ows-context:Layer name="{type=osm-fr}" group="Background layers" hidden="true" opacity="1">
+            <ows:Title>OpenStreetMap FR</ows:Title>
+        </ows-context:Layer>
+
+        <ows-context:Layer name="{type=wmts,name=web_mercator_etopo1_hillshade}" group="Background layers" hidden="true"
+                           opacity="1">
+            <ows:Title>Etopo1</ows:Title>
             <ows-context:Server service="urn:ogc:serviceType:WMS">
-                <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"/>                </ows-context:Server>
-            <ows-context:StyleList/>
+                <ows-context:OnlineResource
+                        xlink:href="https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"/>
+            </ows-context:Server>
         </ows-context:Layer>
-<!--
+
+        <ows-context:Layer name="{type=bing,name=Aerial}" group="Background layers" hidden="true" opacity="1">
+            <ows:Title>Bing Aerial</ows:Title>
+        </ows-context:Layer>
+        <ows-context:Layer name="{type=bing,name=AerialWithLabelsOnDemand}" group="Background layers" hidden="true"
+                           opacity="1">
+            <ows:Title>Bing Aerial with labels</ows:Title>
+        </ows-context:Layer>
+        <ows-context:Layer name="{type=bing,name=RoadOnDemand}" group="Background layers" hidden="true" opacity="1">
+            <ows:Title>Bing Road</ows:Title>
+        </ows-context:Layer>
+        <!--
         <ows-context:Layer name="{type=wmts,name=emodnet:mean_multicolour}"
                            group="Background layers"
                            hidden="true" opacity="1">
@@ -52,6 +89,6 @@
                     xlink:href="http://ows.emodnet-bathymetry.eu/wmts?"
                     xmlns:xlink="http://www.w3.org/1999/xlink"/>
           </ows-context:Server>
--->
+        -->
     </ows-context:ResourceList>
 </ows-context:OWSContext>
