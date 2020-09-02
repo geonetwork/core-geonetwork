@@ -360,15 +360,16 @@ layouts:
               classSpace: 5
               backgroundColor: white
               layerFontSize: 9
-  overviewPrintTemplate:
-    mainPage:
-      rotation: false
-      pageSize: 612 612
-      backgroundPdf: '${configDir}/template-thumbnail.pdf'
-      items:
-        - !map
-          spacingAfter: 0
-          width: 612
-          height: 612
-          absoluteX: 0
-          absoluteY: 612
+## SEXTANT SPECIFIC: disable overview format
+#  overviewPrintTemplate:
+#    mainPage:
+#      rotation: false
+#      pageSize: 612 612
+#      backgroundPdf: '${configDir}/template-thumbnail.pdf'
+#      items:
+#        - !map
+#          spacingAfter: 0
+#          width: 612
+#          height: 612
+#          absoluteX: 0
+#          absoluteY: 612
