@@ -275,11 +275,16 @@
           var enc = self.encoders.
               layers['Layer'].call(this, layer);
           var url = layer.getSource().getUrls()[0];
-          //Remove the XYZ and extension parts of the URL
-          if(url.indexOf("{z}") > 0) {
-            url = url.substring(0, url.indexOf("{z}"));
-            //Remove last "/"
-            url = url.substring(0, url.lastIndexOf("/"));
+
+          // parse url template to determine the `url` and `path_format` parameters for mapfish-print
+          var pathFormat = '${z}/${x}/${y}.${extension}';
+          var templateStart = url.indexOf("/{z}");
+          if (templateStart !== -1) {
+            var urlTemplate = url.substring(templateStart, url.length);
+            if (urlTemplate.indexOf('/{z}/{y}/{x}') === 0) {
+              pathFormat = '${z}/${y}/${x}.${extension}';
+            }
+            url = url.substring(0, templateStart);
           }
 
           url = gnGlobalSettings.getNonProxifiedUrl(url);
@@ -295,7 +300,8 @@
             resolutions: layer.getSource().getTileGrid().getResolutions(),
             tileSize: [
               layer.getSource().getTileGrid().getTileSize(),
-              layer.getSource().getTileGrid().getTileSize()]
+              layer.getSource().getTileGrid().getTileSize()],
+            path_format: pathFormat
           });
           return enc;
         },
