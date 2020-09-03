@@ -179,6 +179,10 @@
                 ctrl.dataProjection = srsName && srsName.length === 2 ?
                     srsName[1] : 'EPSG:4326';
 
+                ctrl.dataOlProjection = ol.proj.get(ctrl.dataProjection)
+
+                if(!ctrl.dataOlProjection) return;
+
                 if (!isProjAvailable(ctrl.dataProjection)) {
                   ctrl.projections.push({
                     code: ctrl.dataProjection,
@@ -222,6 +226,9 @@
 
             // update output with gml
             ctrl.updateOutput = function(feature, forceFitView) {
+
+              if (!feature) return;
+
               // fit view if geom is valid & not empty
               if ((forceFitView || ctrl.fromTextInput) &&
                   feature.getGeometry() &&
@@ -232,6 +239,8 @@
 
               var outputCrs = $attrs['outputCrs'] ? $attrs['outputCrs'] :
                   ctrl.currentProjection;
+
+              ctrl.dataOlProjection = ol.proj.get(outputCrs);
 
               // print output (skip if readonly)
               if (!ctrl.readOnly) {
