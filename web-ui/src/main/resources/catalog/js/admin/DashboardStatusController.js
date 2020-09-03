@@ -172,10 +172,12 @@
       };
 
       $scope.indexRecordsWithErrors = function() {
-        // Search records
-        $http.get('qi?_content_type=json&' +
-            '_indexingError=1&bucket=ie&' +
-            'summaryOnly=true&_isTemplate=y or n').then(
+
+        $http.post('../api/search/records/_search?bucket=ie', {"query": {
+          "bool" : {
+            "must": {"terms": {"indexingError": ["true"]}}
+          }
+        }, "from": 0, "size": 0}).then(
             function() {
               // Select
               $http.put('../api/selections/ie').then(
