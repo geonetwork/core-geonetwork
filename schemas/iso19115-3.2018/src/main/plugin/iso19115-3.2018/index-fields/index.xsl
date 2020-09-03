@@ -727,7 +727,7 @@
           <hasBoundingPolygon>true</hasBoundingPolygon>
         </xsl:if>
 
-        <xsl:for-each select="*/gex:EX_Extent/*/gex:EX_BoundingPolygon/gmd:polygon">
+        <xsl:for-each select="*/gex:EX_Extent/*/gex:EX_BoundingPolygon/gex:polygon">
           <xsl:variable name="geojson"
                         select="util:gmlToGeoJson(
                                   saxon:serialize(gml:*, 'default-serialize-mode'),
