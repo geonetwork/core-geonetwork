@@ -76,6 +76,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.output.DOMOutputter;
 import org.locationtech.jts.geom.*;
+import org.locationtech.jts.operation.valid.IsValidOp;
 import org.locationtech.jts.precision.GeometryPrecisionReducer;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
@@ -167,14 +168,18 @@ public final class XslUtil {
                 }
                 Geometry geom = parseGml(parser, gml);
 
-                if (applyPrecisionModel) {
-                    PrecisionModel precisionModel =
-                        new PrecisionModel(Math.pow(10, numberOfDecimals - 1));
-                    geom = GeometryPrecisionReducer.reduce(geom, precisionModel);
-                    // numberOfDecimals is equal to
-                    // precisionModel.getMaximumSignificantDigits()
+                if (geom == null) {
+                    return "Warning: GML geometry is null.";
                 }
 
+                if (!geom.isValid()) {
+                    IsValidOp isValidOp = new IsValidOp(geom);
+                    return String.format(
+                        "Warning: GML geometry is not valid. %s",
+                        isValidOp.getValidationError().toString());
+                }
+
+                Geometry reducedGeom = null;
                 // An issue here is that GeometryJSON conversion may over simplify
                 // the geometry by truncating coordinates based on numberOfDecimals
                 // which on default constructor is set to 4. This may lead to
@@ -186,7 +191,24 @@ public final class XslUtil {
                 //
                 // To avoid this, it may be relevant to apply the reduction model
                 // preserving topology.
-                return new GeometryJSON(numberOfDecimals).toString(geom);
+                if (applyPrecisionModel) {
+                    PrecisionModel precisionModel =
+                        new PrecisionModel(Math.pow(10, numberOfDecimals - 1));
+                    reducedGeom = GeometryPrecisionReducer.reduce(geom, precisionModel);
+
+                    if (reducedGeom.isEmpty()) {
+                        int numberOfDecimalsForSmallGeom = 10;
+
+                        precisionModel =
+                            new PrecisionModel(Math.pow(10, numberOfDecimalsForSmallGeom - 1));
+                        reducedGeom = GeometryPrecisionReducer.reduce(geom, precisionModel);
+                        return new GeometryJSON(numberOfDecimalsForSmallGeom).toString(reducedGeom);
+//                    return String.format(
+//                        "Warning: Empty geometry after applying precision reducer with %d decimals.",
+//                        numberOfDecimals);
+                    }
+                }
+                return new GeometryJSON(numberOfDecimals).toString(reducedGeom);
             }
         } catch (Exception e) {
             return String.format("Error: %s, %s parsing %s to GeoJSON",

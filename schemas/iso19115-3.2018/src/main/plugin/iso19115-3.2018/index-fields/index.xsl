@@ -213,6 +213,7 @@
 
       <xsl:for-each select="$otherLanguages">
         <xsl:copy-of select="gn-fn-index:add-field('otherLanguage', .)"/>
+        <xsl:copy-of select="gn-fn-index:add-field('otherLanguageId', ../../../@id)"/>
       </xsl:for-each>
 
 
@@ -733,7 +734,7 @@
                                   true(), 5)"/>
           <xsl:choose>
             <xsl:when test="$geojson = ''"></xsl:when>
-            <xsl:when test="starts-with($geojson, 'Error:')">
+            <xsl:when test="matches($geojson, '(Error|Warning):.*')">
               <shapeParsingError><xsl:value-of select="$geojson"/></shapeParsingError>
             </xsl:when>
             <xsl:otherwise>
