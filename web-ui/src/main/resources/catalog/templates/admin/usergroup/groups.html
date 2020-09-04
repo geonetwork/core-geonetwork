@@ -233,7 +233,7 @@
           <a href="#/organization/users/{{u.id}}" class="list-group-item"
              data-ng-repeat="u in groupUsersPageItems()">
             <img class="img-circle"
-                 ng-src="http://gravatar.com/avatar/{{u.emailAddresses[0] | md5}}?s=18"/>
+                 ng-src="../api/users/{{(u.id)}}.png?size=18"/>
             <span class='badge' data-ng-show="u.enabled === false"
                   data-translate="">disabled</span> {{u.name}} {{u.surname}}
             ({{u.profile | translate}})
