@@ -1466,7 +1466,7 @@
 
     <withHeldCheck.frequency>0/30 * * * * ?</withHeldCheck.frequency>
 
-    <landingPage.formatter>xsl-view?view=sextant&amp;template=sextant-summary-view&amp;portalLink=group&amp;language=all</landingPage.formatter>
+    <landingPage.formatter>xsl-view?view=sextant&amp;template=sextant-summary-view&amp;portalLink=group</landingPage.formatter>
     <landingPage.language>all</landingPage.language>
 
 
