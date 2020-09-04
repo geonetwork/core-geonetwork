@@ -689,7 +689,8 @@
 
   <xsl:template mode="render-field"
                 match="*[*/name() = $configuration/editor/tableFields/table/@for and
-                         $isFlatMode = true()]"
+                         $isFlatMode = true() and
+                         $view != 'sextant']"
                 priority="2001">
     <xsl:variable name="isFirstOfItsKind"
                   select="count(preceding-sibling::*[name() = current()/name()]) = 0"/>
