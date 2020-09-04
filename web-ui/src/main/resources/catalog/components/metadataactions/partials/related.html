@@ -163,7 +163,7 @@
             <p class="text-muted"
                data-ng-if="mainType.indexOf('MD') == 0 && r.id">
               <span class="gn-related-description">
-                {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a href="#/metadata/{{r.id}}">{{'more' |
+                {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a data-ng-click="config.showMore(r, md)" href="">{{'more' |
                 translate}}...</a>
               </span>
             </p>
