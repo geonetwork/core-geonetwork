@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19157/-2/mdq/1.0" version="1.0">
+  <include schemaLocation="mdq.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="DQ_Confidence" substitutionGroup="mdq:AbstractDQ_Metaquality" type="mdq:DQ_Confidence_Type">
+    <annotation>
+      <documentation>trustworthiness of a data quality result</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_Confidence_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Metaquality_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_Confidence_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_Confidence"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_Homogeneity" substitutionGroup="mdq:AbstractDQ_Metaquality" type="mdq:DQ_Homogeneity_Type">
+    <annotation>
+      <documentation>expected or tested uniformity of the results obtained for a data quality evaluation</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_Homogeneity_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Metaquality_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_Homogeneity_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_Homogeneity"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractDQ_Metaquality" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:AbstractDQ_Metaquality_Type">
+    <annotation>
+      <documentation>information about the reliability of data quality results</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractDQ_Metaquality_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Element_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="relatedElement" type="mdq:AbstractDQ_Element_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractDQ_Metaquality_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:AbstractDQ_Metaquality"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_Representativity" substitutionGroup="mdq:AbstractDQ_Metaquality" type="mdq:DQ_Representativity_Type">
+    <annotation>
+      <documentation>degree to which the sample used has produced a result which is representative of the data within the data quality scope</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_Representativity_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Metaquality_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_Representativity_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_Representativity"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

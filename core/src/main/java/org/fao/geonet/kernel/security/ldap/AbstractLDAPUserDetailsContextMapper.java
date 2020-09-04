@@ -41,10 +41,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Map LDAP user information to GeoNetworkUser information.
@@ -71,6 +68,13 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
     private boolean ldapUsernameCaseInsensitive = true;
 
 
+    private LDAPUtils ldapUtils;
+
+    public void setLdapUtils(LDAPUtils utils){
+        this.ldapUtils = utils;
+    }
+
+
     public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
         ctx.setAttributeValues("objectclass", new String[]{"top", "person",
             "organizationalPerson", "inetOrgPerson"});
@@ -91,12 +95,13 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
                                           String username, Collection<? extends GrantedAuthority> authorities) {
 
         Profile defaultProfile;
-        if (mapping.get("profile")[1] != null) {
+        if ((mapping.get("profile") != null) && (mapping.get("profile")[1] != null)) {
             defaultProfile = Profile.valueOf(mapping.get("profile")[1]);
         } else {
             defaultProfile = Profile.RegisteredUser;
         }
         String defaultGroup = mapping.get("privilege")[1];
+        //allow proper injection
         LDAPUtils ldapUtils = ApplicationContextHolder.get().getBean(LDAPUtils.class);
 
         Map<String, ArrayList<String>> userInfo = ldapUtils
@@ -106,11 +111,22 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
             username = username.toLowerCase();
         }
 
+        //pass DN along.
+        // NOTE: LDAPUser doesn't allow you to set DN!!!
+        if (!userInfo.containsKey("dn")) {
+            ArrayList dns = new ArrayList(Arrays.asList(
+                    userCtx.getDn().toString(),   //will not include base
+                    userCtx.getNameInNamespace() // includes base
+                ));
+            userInfo.put("dn", dns);
+        }
+
         LDAPUser userDetails = new LDAPUser(username);
         User user = userDetails.getUser();
-        user.setName(getUserInfo(userInfo, "name"))
-            .setSurname(getUserInfo(userInfo, "surname"))
-            .setOrganisation(getUserInfo(userInfo, "organisation"));
+        user.setName(getUserInfo(userInfo, "name"));
+
+        user.setSurname(getUserInfo(userInfo, "surname"));
+        user.setOrganisation(getUserInfo(userInfo, "organisation"));
         user.getEmailAddresses().clear();
         user.getEmailAddresses().add(getUserInfo(userInfo, "mail"));
         user.getPrimaryAddress().setAddress(getUserInfo(userInfo, "address"))
@@ -185,7 +201,9 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
     @Override
     public synchronized void saveUser(LDAPUser userDetails) {
         try {
-            LDAPUtils ldapUtils = ApplicationContextHolder.get().getBean(LDAPUtils.class);
+            //allow proper injection
+            LDAPUtils ldapUtils = this.ldapUtils != null? this.ldapUtils :
+                ApplicationContextHolder.get().getBean(LDAPUtils.class);
 
             if (createNonExistingLdapUser
                 && !ldapManager.userExists(userDetails.getUsername())) {
@@ -226,6 +244,23 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
         return getUserInfo(userInfo, attributeName, "");
     }
 
+    //returns null if not available
+    private String getValue(Map<String, ArrayList<String>> userInfo,String ldapAttributeName) {
+        if ((ldapAttributeName == null) || (userInfo == null)) //bad args
+            return null;
+        ArrayList<String> info = userInfo.get(ldapAttributeName);
+        if ((info == null) || (info.size() ==0)) //no value supplied
+            return null;
+        if (info.size() == 1) // only one value -- that's it
+            return info.get(0);
+        // we sometime get > 1 value here, especially for CN containing the full DN
+        if (info.get(1) == null) //no value there
+            return info.get(0);
+        if (info.get(0).length() < info.get(1).length()) //return shortest
+            return info.get(0);
+        return info.get(1);
+    }
+
     /**
      * Return the first element of userInfo corresponding to the attribute name. If attributeName
      * mapping is not defined, return empty string. If no value found in LDAP user info, return
@@ -240,10 +275,10 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
             String ldapAttributeName = attributeMapping[0];
             String configDefaultValue = attributeMapping[1];
 
-            if (ldapAttributeName != null
-                && userInfo.get(ldapAttributeName) != null
-                && userInfo.get(ldapAttributeName).get(0) != null) {
-                value = userInfo.get(ldapAttributeName).get(0);
+            String v = getValue(userInfo, ldapAttributeName);
+
+            if (v != null) {
+                value = v;
             } else if (configDefaultValue != null) {
                 value = configDefaultValue;
             } else {

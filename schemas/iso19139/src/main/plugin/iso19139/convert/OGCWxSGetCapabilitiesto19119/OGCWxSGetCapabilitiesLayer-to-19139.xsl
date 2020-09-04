@@ -28,15 +28,14 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:wfs="http://www.opengis.net/wfs"
                 xmlns:wms="http://www.opengis.net/wms"
+                xmlns:wmts="http://www.opengis.net/wmts/1.0"
                 xmlns:ows="http://www.opengis.net/ows"
+                xmlns:ows11="http://www.opengis.net/ows/1.1"
                 xmlns:wcs="http://www.opengis.net/wcs"
-                xmlns:xlink="http://www.w3.org/1999/xlink" version="2.0"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                version="2.0"
                 xmlns="http://www.isotc211.org/2005/gmd"
-                extension-element-prefixes="wcs ows wfs srv">
-
-  <!--
-        =============================================================================
-    -->
+                exclude-result-prefixes="#all">
 
   <xsl:param name="uuid"/>
   <xsl:param name="Name"/>
@@ -49,88 +48,58 @@
     OGC server list all epsg database. -->
   <xsl:variable name="maxCRS">21</xsl:variable>
 
-  <!--
-        =============================================================================
-    -->
 
   <xsl:include href="resp-party.xsl"/>
   <xsl:include href="ref-system.xsl"/>
   <xsl:include href="identification.xsl"/>
 
-  <!--
-        =============================================================================
-    -->
 
   <xsl:output method="xml" version="1.0" encoding="UTF-8"
               indent="yes"/>
 
-  <!--
-        =============================================================================
-    -->
 
   <xsl:template match="/">
     <xsl:apply-templates/>
   </xsl:template>
 
-  <!--
-        =============================================================================
-    -->
-  <xsl:template
-    match="WMT_MS_Capabilities[//Layer/Name=$Name]|wms:WMS_Capabilities[//wms:Layer/wms:Name=$Name]|wfs:WFS_Capabilities[//wfs:FeatureType/wfs:Name=$Name]|wcs:WCS_Capabilities[//wcs:CoverageOfferingBrief/wcs:name=$Name]">
+
+  <xsl:template match="WMT_MS_Capabilities[//Layer/Name=$Name]|
+                       wms:WMS_Capabilities[//wms:Layer/wms:Name=$Name]|
+                       wmts:Capabilities[//wmts:Layer/ows11:Identifier=$Name]|
+                       wfs:WFS_Capabilities[//wfs:FeatureType/wfs:Name=$Name]|
+                       wcs:WCS_Capabilities[//wcs:CoverageOfferingBrief/wcs:name=$Name]">
 
     <xsl:variable name="ows">
       <xsl:choose>
         <xsl:when
-          test="local-name(.)='WFS_Capabilities' and namespace-uri(.)='http://www.opengis.net/wfs' and @version='1.1.0'">
-          true
-        </xsl:when>
+          test="(local-name(.)='WFS_Capabilities' and namespace-uri(.)='http://www.opengis.net/wfs' and @version='1.1.0') or
+                (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wmts/1.0')">true</xsl:when>
         <xsl:otherwise>false</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
 
 
     <MD_Metadata>
-
-      <!--
-                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-            -->
-
       <fileIdentifier>
         <gco:CharacterString>
           <xsl:value-of select="$uuid"/>
         </gco:CharacterString>
       </fileIdentifier>
 
-      <!--
-                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-            -->
-
       <language>
         <LanguageCode codeList="http://www.loc.gov/standards/iso639-2/"
                       codeListValue="{$lang}"/>
       </language>
-
-      <!--
-                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-            -->
 
       <characterSet>
         <MD_CharacterSetCode codeList="./resources/codeList.xml#MD_CharacterSetCode"
                              codeListValue="utf8"/>
       </characterSet>
 
-      <!-- parentIdentifier -->
-      <!-- mdHrLv -->
       <hierarchyLevel>
         <MD_ScopeCode codeList="./resources/codeList.xml#MD_ScopeCode"
                       codeListValue="dataset"/>
       </hierarchyLevel>
-
-      <!-- mdHrLvName -->
-
-      <!--
-                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-            -->
 
       <xsl:for-each select="//ContactInformation|//wms:ContactInformation|//wcs:responsibleParty">
         <contact>
@@ -139,7 +108,7 @@
           </CI_ResponsibleParty>
         </contact>
       </xsl:for-each>
-      <xsl:for-each select="//ows:ServiceProvider">
+      <xsl:for-each select="//ows:ServiceProvider|//ows11:ServiceProvider">
         <contact>
           <CI_ResponsibleParty>
             <xsl:apply-templates select="." mode="RespParty"/>
@@ -147,10 +116,6 @@
         </contact>
       </xsl:for-each>
 
-
-      <!--
-                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-            -->
       <xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
       <dateStamp>
         <gco:DateTime>
@@ -158,9 +123,6 @@
         </gco:DateTime>
       </dateStamp>
 
-      <!--
-                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-            -->
       <metadataStandardName>
         <gco:CharacterString>ISO 19115:2003/19139</gco:CharacterString>
       </metadataStandardName>
@@ -169,7 +131,6 @@
         <gco:CharacterString>1.0</gco:CharacterString>
       </metadataStandardVersion>
 
-      <!-- spatRepInfo-->
       <xsl:choose>
         <!-- WMS 1.1.0 is space separated -->
         <xsl:when test="@version='1.1.0' or @version='1.0.0'">
@@ -197,10 +158,6 @@
         </xsl:otherwise>
       </xsl:choose>
 
-      <!--mdExtInfo-->
-      <!--
-                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-            -->
       <identificationInfo>
         <MD_DataIdentification>
           <xsl:apply-templates select="."
@@ -218,8 +175,6 @@
         </MD_DataIdentification>
       </identificationInfo>
 
-      <!--contInfo-->
-      <!--distInfo -->
       <distributionInfo>
         <MD_Distribution>
           <distributionFormat>
@@ -239,6 +194,11 @@
                   <linkage>
                     <URL>
                       <xsl:choose>
+                        <xsl:when test="local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wmts/1.0'">
+                          <xsl:value-of select="if (//ows11:Operation[@name='GetTile']/ows11:DCP/ows11:HTTP/ows11:Get/@xlink:href)
+                          then //ows11:Operation[@name='GetTile']/ows11:DCP/ows11:HTTP/ows11:Get/@xlink:href
+                          else wmts:ServiceMetadataURL/@xlink:href"/>
+                        </xsl:when>
                         <xsl:when test="$ows='true'">
                           <xsl:value-of
                             select="//ows:Operation[@name='GetFeature']/ows:DCP/ows:HTTP/ows:Get/@xlink:href"/>
@@ -263,28 +223,31 @@
                     </URL>
                   </linkage>
                   <protocol>
-                    <xsl:choose>
-                      <xsl:when test="name(.)='WMT_MS_Capabilities'">
-                        <gco:CharacterString>OGC:WMS-1.1.1-http-get-map
-                        </gco:CharacterString>
-                      </xsl:when>
-                      <xsl:when test="name(.)='WMS_Capabilities'">
-                        <gco:CharacterString>OGC:WMS-1.3.0-http-get-map
-                        </gco:CharacterString>
-                      </xsl:when>
-                      <xsl:when test="$ows='true'">
-                        <gco:CharacterString>OGC:WFS-1.1.0-http-get-feature
-                        </gco:CharacterString>
-                      </xsl:when>
-                      <xsl:when test="name(.)='WFS_Capabilities'">
-                        <gco:CharacterString>OGC:WFS-1.0.0-http-get-feature
-                        </gco:CharacterString>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <gco:CharacterString>OGC:WCS-1.0.0-http-get-coverage
-                        </gco:CharacterString>
-                      </xsl:otherwise>
-                    </xsl:choose>
+                    <gco:CharacterString>
+                      <xsl:choose>
+                        <xsl:when test="name(.)='WMT_MS_Capabilities'">
+                          <gco:CharacterString>OGC:WMS-1.1.1-http-get-map
+                          </gco:CharacterString>
+                        </xsl:when>
+                        <xsl:when test="name(.)='WMS_Capabilities'">
+                          <gco:CharacterString>OGC:WMS-1.3.0-http-get-map
+                          </gco:CharacterString>
+                        </xsl:when>
+                        <xsl:when test="local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wmts/1.0'">OGC:WMTS</xsl:when>
+                        <xsl:when test="$ows='true'">
+                          <gco:CharacterString>OGC:WFS-1.1.0-http-get-feature
+                          </gco:CharacterString>
+                        </xsl:when>
+                        <xsl:when test="name(.)='WFS_Capabilities'">
+                          <gco:CharacterString>OGC:WFS-1.0.0-http-get-feature
+                          </gco:CharacterString>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <gco:CharacterString>OGC:WCS-1.0.0-http-get-coverage
+                          </gco:CharacterString>
+                        </xsl:otherwise>
+                      </xsl:choose>
+                    </gco:CharacterString>
                   </protocol>
                   <name>
                     <gco:CharacterString>
@@ -318,7 +281,6 @@
         </MD_Distribution>
       </distributionInfo>
 
-      <!--dqInfo-->
       <dataQualityInfo>
         <DQ_DataQuality>
           <scope>
@@ -338,9 +300,6 @@
           </lineage>
         </DQ_DataQuality>
       </dataQualityInfo>
-      <!--mdConst -->
-      <!--mdMaint-->
-
     </MD_Metadata>
   </xsl:template>
 
@@ -410,11 +369,11 @@
   </xsl:template>
 
 
-  <!-- Metadata URL
-    -->
-  <xsl:template mode="onlineResource" match="
-    //wms:Layer[wms:Name=$Name]/wms:MetadataURL|
-    //Layer[Name=$Name]/MetadataURL" priority="2">
+  <!-- Metadata URL -->
+  <xsl:template mode="onlineResource"
+                match="//wms:Layer[wms:Name=$Name]/wms:MetadataURL|
+                       //Layer[Name=$Name]/MetadataURL"
+                priority="2">
 
     <xsl:call-template name="onlineResource">
       <xsl:with-param name="name" select="concat($Name, ' (', name(.) ,')')"/>
@@ -422,12 +381,13 @@
                       select="wms:OnlineResource/@xlink:href|OnlineResource/@xlink:href"/>
       <xsl:with-param name="protocol" select="wms:Format|Format"/>
     </xsl:call-template>
-
   </xsl:template>
 
-  <xsl:template mode="onlineResource" match="
-    //wms:Layer[wms:Name=$Name]/wms:Style/wms:LegendURL|
-    //Layer[Name=$Name]/Style/LegendURL" priority="2">
+
+  <xsl:template mode="onlineResource"
+                match="//wms:Layer[wms:Name=$Name]/wms:Style/wms:LegendURL|
+                       //Layer[Name=$Name]/Style/LegendURL"
+                priority="2">
 
     <xsl:call-template name="onlineResource">
       <xsl:with-param name="name" select="concat(../Title|../wms:Title, ' (', name(.) ,')')"/>
@@ -435,12 +395,13 @@
                       select="wms:OnlineResource/@xlink:href|OnlineResource/@xlink:href"/>
       <xsl:with-param name="protocol" select="wms:Format|Format"/>
     </xsl:call-template>
-
   </xsl:template>
+
 
   <xsl:template mode="onlineResource" match="*">
     <xsl:apply-templates mode="onlineResource" select="*"/>
   </xsl:template>
+
 
   <xsl:template name="onlineResource">
     <xsl:param name="name"/>
@@ -473,9 +434,4 @@
       </CI_OnlineResource>
     </onLine>
   </xsl:template>
-
-  <!--
-        =============================================================================
-    -->
-
 </xsl:stylesheet>

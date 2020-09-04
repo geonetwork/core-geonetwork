@@ -114,7 +114,7 @@
              title="{{'layerMoveUp'|translate}}"></a>
           <a href="" class="btn btn-default btn-sm fa fa-arrow-down"
              ng-disabled="$last"
-             ng-click="moveLayer(layer, -1)"
+             ng-click="moveLayer(layer, -1, $last)"
              title="{{'layerMoveDown'|translate}}"></a>
            <a href=""
               class="btn btn-default btn-sm fa fa-times"
@@ -124,9 +124,9 @@
         <label class="gn-map-layer" for="layer-{{$index}}">
           <span data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''">
             {{layer.get('label')}}
-            <small><em>
+            <span><em>
               {{layer.get('currentStyle') ? '(' + (layer.get('currentStyle').Title || layer.get('currentStyle').Name) + ')' : ''}}
-            </em></small>
+            </em></span>
           </span>
         </label>
       </div>
@@ -143,7 +143,7 @@
 
   <div class="details width-100" ng-show="layer.showInfo">
     <p ng-if="layer.get('legend')">
-      <img ng-src="{{layer.get('legend')}}"/>
+      <img alt="{{layer.get('label')}} {{'mapLegend' | translate}}" ng-src="{{layer.get('legend')}}"/>
     </p>
     <h6 ng-if="layer.get('attribution')" data-translate="">Attribution</h6>
     <p ng-if="layer.get('attribution')"><em>{{layer.get('attribution')}}</em></p>

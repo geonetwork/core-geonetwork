@@ -14,7 +14,9 @@
                 data-ng-keyup="$event.keyCode == 13 && goToSearch(homeAnyField)"
                 data-typeahead="address for address in getAnySuggestions($viewValue)"
                 data-typeahead-loading="anyLoading"
-                data-typeahead-min-length="1"/>
+                data-typeahead-min-length="1"
+                data-typeahead-focus-first="false"
+                data-typeahead-wait-ms="300"/>
           <span class="input-group-btn">
             <a class="btn btn-primary btn-lg"
               type="button"

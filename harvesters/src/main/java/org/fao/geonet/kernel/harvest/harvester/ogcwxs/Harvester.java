@@ -351,6 +351,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             // and add the metadata
             XPath xp = XPath.newInstance("//Layer[count(./*[name(.)='Layer'])=0] | " +
                 "//wms:Layer[count(./*[name(.)='Layer'])=0] | " +
+                "//wmts:Layer[count(./*[local-name(.)='Layer'])=0] | " +
                 "//wfs:FeatureType | " +
                 "//wcs:CoverageOfferingBrief | " +
                 "//sos:ObservationOffering | " +
@@ -358,6 +359,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             xp.addNamespace("wfs", "http://www.opengis.net/wfs");
             xp.addNamespace("wcs", "http://www.opengis.net/wcs");
             xp.addNamespace("wms", "http://www.opengis.net/wms");
+            xp.addNamespace("wmts", "http://www.opengis.net/wmts/1.0");
             xp.addNamespace("wps", "http://www.opengis.net/wps/2.0");
             xp.addNamespace("sos", "http://www.opengis.net/sos/1.0");
 
@@ -618,6 +620,9 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         } else if (params.ogctype.substring(0, 3).equals("SOS")) {
             Namespace gml = Namespace.getNamespace("http://www.opengis.net/gml");
             reg.name = layer.getChild("name", gml).getValue();
+        } else if (params.ogctype.substring(0, 4).equals("WMTS")) {
+            Namespace ows = Namespace.getNamespace("http://www.opengis.net/ows/1.1");
+            reg.name = layer.getChild("Identifier", ows).getValue();
         }
 
         //--- md5 the full capabilities URL + the layer, coverage or feature name
@@ -627,9 +632,9 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
         if (params.useLayerMd && (
             params.ogctype.substring(0, 3).equals("WMS") ||
-                params.ogctype.substring(0, 3).equals("WFS") ||
-                params.ogctype.substring(0, 3).equals("WPS") ||
-                params.ogctype.substring(0, 3).equals("WCS"))) {
+            params.ogctype.substring(0, 3).equals("WFS") ||
+            params.ogctype.substring(0, 3).equals("WPS") ||
+            params.ogctype.substring(0, 3).equals("WCS"))) {
 
             log.info("  - Searching for metadataUrl for layer " + reg.name);
 

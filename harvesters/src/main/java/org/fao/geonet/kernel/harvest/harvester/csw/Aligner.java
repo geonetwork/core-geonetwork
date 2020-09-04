@@ -63,11 +63,13 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
 
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -317,47 +319,8 @@ public class Aligner extends BaseAligner<CswParams> {
             }
         }
 
-        if (StringUtils.isNotEmpty(params.getBatchEdits())) {
-            SchemaManager _schemaManager = context.getBean(SchemaManager.class);
-            EditLib editLib = new EditLib(_schemaManager);
-            ObjectMapper mapper = new ObjectMapper();
+        applyBatchEdits(ri, md, schema);
 
-            BatchEditParameter[] listOfUpdates = mapper.readValue(params.getBatchEdits(), BatchEditParameter[].class);
-            if (listOfUpdates.length > 0) {
-                boolean metadataChanged = false;
-                boolean createXpathNodeIfNotExists =
-                    context.getBean(SettingManager.class).getValueAsBool(SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS);
-                MetadataSchema metadataSchema = _schemaManager.getSchema(schema);
-
-                Iterator<BatchEditParameter> listOfUpdatesIterator =
-                    Arrays.asList(listOfUpdates).iterator();
-                while (listOfUpdatesIterator.hasNext()) {
-                    BatchEditParameter batchEditParameter =
-                        listOfUpdatesIterator.next();
-
-                    AddElemValue propertyValue =
-                        new AddElemValue(batchEditParameter.getValue());
-
-                    boolean applyEdit = true;
-                    if (StringUtils.isNotEmpty(batchEditParameter.getCondition())) {
-                        final Object node = Xml.selectSingle(md, batchEditParameter.getCondition(), metadataSchema.getNamespaces());
-                        applyEdit = (node != null) || (node instanceof Boolean && (Boolean)node != false);
-                    }
-                    if (applyEdit) {
-                        metadataChanged = editLib.addElementOrFragmentFromXpath(
-                            md,
-                            metadataSchema,
-                            batchEditParameter.getXpath(),
-                            propertyValue,
-                            createXpathNodeIfNotExists
-                        ) || metadataChanged;
-                    }
-                }
-                if (metadataChanged) {
-                    log.debug("  - Record updated by batch edit configuration:" + ri.uuid);
-                }
-            }
-        }
         //
         // insert metadata
         //
@@ -395,6 +358,52 @@ public class Aligner extends BaseAligner<CswParams> {
         result.addedMetadata++;
     }
 
+    private void applyBatchEdits(RecordInfo ri, Element md, String schema) throws JDOMException, IOException {
+        if (StringUtils.isNotEmpty(params.getBatchEdits())) {
+            SchemaManager _schemaManager = context.getBean(SchemaManager.class);
+            EditLib editLib = new EditLib(_schemaManager);
+            ObjectMapper mapper = new ObjectMapper();
+
+            BatchEditParameter[] listOfUpdates = mapper.readValue(params.getBatchEdits(), BatchEditParameter[].class);
+            if (listOfUpdates.length > 0) {
+                boolean metadataChanged = false;
+                boolean createXpathNodeIfNotExists =
+                    context.getBean(SettingManager.class).getValueAsBool(SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS);
+                MetadataSchema metadataSchema = _schemaManager.getSchema(schema);
+
+                Iterator<BatchEditParameter> listOfUpdatesIterator =
+                    Arrays.asList(listOfUpdates).iterator();
+                while (listOfUpdatesIterator.hasNext()) {
+                    BatchEditParameter batchEditParameter =
+                        listOfUpdatesIterator.next();
+
+                    AddElemValue propertyValue =
+                        new AddElemValue(batchEditParameter.getValue());
+
+                    boolean applyEdit = true;
+                    if (StringUtils.isNotEmpty(batchEditParameter.getCondition())) {
+                        applyEdit = false;
+                        final Object node = Xml.selectSingle(md, batchEditParameter.getCondition(), metadataSchema.getNamespaces());
+                        if (node != null && node instanceof Boolean && (Boolean)node == true) {
+                            applyEdit = true;
+                        }
+                    }
+                    if (applyEdit) {
+                        metadataChanged = editLib.addElementOrFragmentFromXpath(
+                            md,
+                            metadataSchema,
+                            batchEditParameter.getXpath(),
+                            propertyValue,
+                            createXpathNodeIfNotExists
+                        ) || metadataChanged;
+                    }
+                }
+                if (metadataChanged) {
+                    log.debug("  - Record updated by batch edit configuration:" + ri.uuid);
+                }
+            }
+        }
+    }
     private void updateMetadata(RecordInfo ri, String id, Boolean force) throws Exception {
         String date = localUuids.getChangeDate(ri.uuid);
 
@@ -422,9 +431,23 @@ public class Aligner extends BaseAligner<CswParams> {
             return false;
         }
 
+
+        String schema = dataMan.autodetectSchema(md, null);
+
+        if (StringUtils.isNotEmpty(params.xpathFilter)) {
+            Object xpathResult = Xml.selectSingle(md, params.xpathFilter, new ArrayList<Namespace>(dataMan.getSchema(schema).getNamespaces()));
+            boolean match = xpathResult instanceof Boolean && ((Boolean) xpathResult).booleanValue();
+            if(!match) {
+                result.xpathFilterExcluded ++;
+                return false;
+            }
+        }
+
         if (!params.xslfilter.equals("")) {
             md = processMetadata(context, md, processName, processParams);
         }
+
+        applyBatchEdits(ri, md, schema);
 
         //
         // update metadata

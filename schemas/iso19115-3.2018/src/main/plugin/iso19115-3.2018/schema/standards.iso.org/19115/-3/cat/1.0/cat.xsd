@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0" 
+  xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/cat/1.0" version="1.0">
+  <annotation>
+    <documentation>catalogue is a collection of  information items (CT_Items) that are managed using a registry (CT_Catalogue). The abstract concept of catalogue was defined in ISO19139 to harmonise the different ISO 19100 series catalogue concepts, such as PF_PortrayalCatalogue (ISO 19117) and FC_FeatureCatalogue (ISO 19110).</documentation>
+  </annotation>
+  <include schemaLocation="catalogues.xsd"/>
+  <include schemaLocation="codelistItem.xsd"/>
+  <include schemaLocation="crsItem.xsd"/>
+  <include schemaLocation="uomItem.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/lan/1.0" schemaLocation="../../../../19115/-3/lan/1.0/lan.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

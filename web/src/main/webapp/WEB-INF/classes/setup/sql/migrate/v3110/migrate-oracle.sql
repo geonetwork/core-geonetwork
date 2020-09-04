@@ -16,3 +16,5 @@ ALTER TABLE usersearch ADD (tempurl clob);
 ALTER TABLE usersearch SET tempurl = url, url = null;
 ALTER TABLE usersearch DROP COLUMN url;
 ALTER TABLE usersearch RENAME COLUMN tempurl to url;
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/users/identicon', 'gravatar:mp', 0, 9110, 'n');

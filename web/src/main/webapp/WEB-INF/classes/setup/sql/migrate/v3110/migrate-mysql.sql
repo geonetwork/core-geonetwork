@@ -14,6 +14,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 
 ALTER TABLE usersearch MODIFY url TEXT
 
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/users/identicon', 'gravatar:mp', 0, 9110, 'n');
 
 DROP INDEX idx_metadatafiledownloads_metadataid ON MetadataFileDownloads;
 DROP INDEX idx_metadatafileuploads_metadataid ON MetadataFileUploads;
