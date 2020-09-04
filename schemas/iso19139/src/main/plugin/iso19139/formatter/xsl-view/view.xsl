@@ -548,11 +548,9 @@
                           count(*/@codeListValue) = 0
                         ]"
                 priority="50">
-
     <xsl:apply-templates mode="render-value" select="@*"/>
     <xsl:apply-templates mode="render-field" select="*"/>
   </xsl:template>
-
 
   <!-- Some major sections are boxed -->
   <xsl:template mode="render-field"
@@ -563,7 +561,6 @@
       gmd:extent[name(..)!='gmd:EX_TemporalExtent']|
       *[$isFlatMode = false() and gmd:* and
         not(gco:CharacterString) and not(gmd:URL)]">
-
     <div class="entry name">
       <h2>
         <xsl:call-template name="render-field-label">
@@ -1103,9 +1100,9 @@
   </xsl:template>
 
   <xsl:template mode="render-value"
-                match="*[gmx:Anchor]">
+                match="*[gmx:Anchor|gmd:URL]">
     <xsl:apply-templates mode="render-value"
-                         select="gmx:Anchor"/>
+                         select="gmx:Anchor|gmd:URL"/>
   </xsl:template>
 
   <xsl:template mode="render-value"

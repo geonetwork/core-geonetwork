@@ -4,6 +4,7 @@
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
                 xmlns:utils="java:org.fao.geonet.util.XslUtil"
+                xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
@@ -681,6 +682,69 @@
       <xsl:apply-templates mode="render-field">
         <xsl:with-param name="fieldName" select="$fieldName"/>
       </xsl:apply-templates>
+    </xsl:for-each>
+  </xsl:template>
+
+
+
+  <xsl:template mode="render-field"
+                match="*[*/name() = $configuration/editor/tableFields/table/@for and
+                         $isFlatMode = true()]"
+                priority="2001">
+    <xsl:variable name="isFirstOfItsKind"
+                  select="count(preceding-sibling::*[name() = current()/name()]) = 0"/>
+    <xsl:if test="$isFirstOfItsKind">
+      <xsl:variable name="tableConfig"
+                    select="$configuration/editor/tableFields/table[@for = current()/*/name()]"/>
+      <dl class="gn-table">
+        <dt>
+          <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
+        </dt>
+        <dd>
+          <table class="table">
+            <thead>
+              <tr>
+                <xsl:for-each select="$tableConfig/header/col[@label]">
+                  <th>
+                    <xsl:value-of select="tr:nodeLabel(tr:create($schema), @label, null)"/>
+                  </th>
+                </xsl:for-each>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <xsl:call-template name="render-table-row">
+                  <xsl:with-param name="tableConfig" select="$tableConfig"/>
+                </xsl:call-template>
+              </tr>
+              <xsl:for-each select="following-sibling::*[name() = current()/name()]">
+                <tr>
+                  <xsl:call-template name="render-table-row">
+                    <xsl:with-param name="tableConfig" select="$tableConfig"/>
+                  </xsl:call-template>
+                </tr>
+              </xsl:for-each>
+            </tbody>
+          </table>
+        </dd>
+      </dl>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="render-table-row">
+    <xsl:param name="tableConfig"/>
+
+    <xsl:variable name="root"
+                  select="."/>
+    <xsl:for-each select="$tableConfig/row/col[@xpath]">
+      <xsl:variable name="node">
+        <saxon:call-template name="{concat('evaluate-', $schema)}">
+          <xsl:with-param name="base" select="$root/*"/>
+          <xsl:with-param name="in" select="concat('/', @xpath)"/>
+        </saxon:call-template>
+      </xsl:variable>
+      <td><xsl:apply-templates mode="render-value"
+                               select="if ($node//@codeListValue) then $node//@codeListValue else $node"/></td>
     </xsl:for-each>
   </xsl:template>
 
