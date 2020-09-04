@@ -65,9 +65,9 @@ new_version="$2"
 sed $sedopt "s/${version}/${new_version}-SNAPSHOT/g" docs/eng/users/source/conf.py 
 sed $sedopt "s/${version}/${new_version}-SNAPSHOT/g" docs/eng/developer/source/conf.py
 
-# Update installer
-sed $sedopt "s/\<property name=\"version\" value=\"${version}\" \/\>/\<property name=\"version\" value=\"${new_version}\" \/\>/g" installer/build.xml
-sed $sedopt "s/\<property name=\"subVersion\" value=\"0\" \/\>/\<property name=\"subVersion\" value=\"SNAPSHOT\" \/\>/g" installer/build.xml
+# Update ZIP distribution
+sed $sedopt "s/\<property name=\"version\" value=\"${version}\" \/\>/\<property name=\"version\" value=\"${new_version}\" \/\>/g" release/build.xml
+sed $sedopt "s/\<property name=\"subVersion\" value=\"0\" \/\>/\<property name=\"subVersion\" value=\"SNAPSHOT\" \/\>/g" release/build.xml
 
 # Update version pom files
 find . -name pom.xml -exec sed $sedopt "s/${version}/${new_version}-SNAPSHOT/g" {} \;
