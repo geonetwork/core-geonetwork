@@ -9014,45 +9014,45 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
      <label>Statut</label>
    </element>
   <element name="mrc:MI_RangeElementDescription">
-    <label>Range element description</label>
+    <label>Description de la gamme</label>
     <description>eg. storage_meth</description>
   </element>
   <element name="mrc:definition">
-    <label>Definition</label>
+    <label>Définition</label>
     <description>Designation associated with a set of range elements. eg. "Indicates the sample storage method used."</description>
   </element>
   <element name="mrc:rangeElement">
-    <label>Range element</label>
+    <label>Gamme</label>
     <description>Specific range elements, i.e. range elements associated with a name and their definition. eg. "frozen: Samples are kept frozen.", "room temperature, dry: Samples are kept at room temperature, unsealed."</description>
   </element>
   <element name="mac:MI_EnvironmentalRecord">
-    <label>Environmental record</label>
+    <label>Dossier environnemental</label>
     <description>Information about the environmental conditions during the acquisition</description>
   </element>
   <element name="mac:solarAzimuth">
-    <label>Solar azimuth</label>
+    <label>Azimut solaire</label>
     <description>Clockwise angle in degrees from north to the centre of the sun’s disc.
       Note: This angle is calculated from the nadir point of the sensor, not at the centre point of the image</description>
   </element>
   <element name="mac:solarElevation">
-    <label>Solar elevation</label>
+    <label>Élévation solaire</label>
     <description>Angle between the horizon and the centre of the Sun’s disk</description>
   </element>
   <element name="mac:MI_Objective">
-    <label>Objective</label>
+    <label>Objectif</label>
     <description>Describes the characteristics, spatial and temporal extent of the intended object to be observed
     </description>
   </element>
   <element name="mac:function">
-    <label>Function</label>
+    <label>Fonction</label>
     <description></description>
   </element>
   <element name="mac:extent">
-    <label>Extent</label>
+    <label>Étendue</label>
     <description></description>
   </element>
   <element name="mac:sensingInstrument">
-    <label>Sensing instrument</label>
+    <label>Capteur</label>
     <description></description>
   </element>
   <element name="mac:pass">
@@ -9060,11 +9060,11 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <description></description>
   </element>
   <element name="mac:content">
-    <label>Content</label>
+    <label>Contenu</label>
     <description></description>
   </element>
   <element name="mac:context">
-    <label>Context</label>
+    <label>Contexte</label>
     <description>Meaning of the event</description>
   </element>
   <element name="mac:MI_PlatformPass">
@@ -9072,7 +9072,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <description>Identification of collection coverage.</description>
   </element>
   <element name="mac:MI_Platform">
-    <label>Platform</label>
+    <label>Platforme</label>
     <description>Designations for the platform used to acquire the dataset
     </description>
   </element>
