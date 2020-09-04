@@ -31,7 +31,6 @@ import jeeves.server.UserSession;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.users.model.UserDto;
@@ -40,6 +39,7 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -54,10 +54,19 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.bind.DatatypeConverter;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USERS_IDENTICON;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 import static org.springframework.data.jpa.domain.Specification.where;
@@ -69,6 +78,9 @@ import static org.springframework.data.jpa.domain.Specification.where;
     description = "User operations")
 @Controller("users")
 public class UsersApi {
+
+    @Autowired
+    SettingManager settingManager;
 
     @Autowired
     UserRepository userRepository;
@@ -84,6 +96,13 @@ public class UsersApi {
 
     @Autowired
     DataManager dataManager;
+
+    private BufferedImage pixel;
+
+    public UsersApi() {
+        pixel = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        pixel.setRGB(0, 0, (0xFF));
+    }
 
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -175,6 +194,61 @@ public class UsersApi {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
 
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get user identicon",
+        description = "")
+    @RequestMapping(
+        value = "/{userIdentifier}.png",
+        produces = MediaType.IMAGE_PNG_VALUE,
+        method = RequestMethod.GET)
+    @ResponseBody
+    public void getUser(
+        @Parameter(
+            description = "User identifier."
+        )
+        @PathVariable
+            Integer userIdentifier,
+        @Parameter(
+            description = "Size."
+        )
+        @RequestParam(defaultValue = "18")
+            Integer size,
+        @Parameter(hidden = true)
+            HttpServletResponse response
+    ) throws IOException {
+        String identiconType = settingManager.getValue(SYSTEM_USERS_IDENTICON);
+        if (identiconType != null && identiconType.startsWith("gravatar")) {
+            try {
+                Optional<User> user = userRepository.findById(userIdentifier);
+
+                if (!user.isPresent()) {
+                    throw new UserNotFoundEx(Integer.toString(userIdentifier));
+                }
+
+                String[] config = identiconType.split(":");
+                String dParameter = config.length > 1 ? config[1] : null;
+                String fParameter = config.length == 3 ? config[2] : null;
+
+                String email = user.get().getEmail() != null ? user.get().getEmail() : "";
+                MessageDigest md = MessageDigest.getInstance("MD5");
+                byte[] hash = md.digest(email.getBytes());
+                URL url = new URL("https://gravatar.com/avatar/" +
+                    DatatypeConverter.printHexBinary(hash).toLowerCase() +
+                    "?s=" + size +
+                    (dParameter ==  null ? "" : "&d=" + dParameter) +
+                    (fParameter ==  null ? "" : "&f=" + fParameter)
+                );
+                BufferedImage image = ImageIO.read(url);
+                response.setStatus(HttpStatus.OK.value());
+                ImageIO.write(image, "PNG", response.getOutputStream());
+            } catch (NoSuchAlgorithmException e) {
+                ImageIO.write(pixel, "PNG", response.getOutputStream());
+            }
+        } else {
+            ImageIO.write(pixel, "PNG", response.getOutputStream());
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(

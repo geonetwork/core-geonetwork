@@ -147,6 +147,8 @@
 
           scope.setRegion = function(regionType) {
             scope.regionType = regionType;
+            // clear the input field
+            scope.resetRegion();
           };
         }
       };
