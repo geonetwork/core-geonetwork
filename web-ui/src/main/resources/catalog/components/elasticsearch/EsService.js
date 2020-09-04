@@ -69,7 +69,7 @@
             var queryExpression = p.any.match(/^q\((.*)\)$/);
             if (queryExpression == null) {
               // var queryBase = '${any} resourceTitleObject.default:(${any})^2',
-              var queryBase = gnGlobalSettings.gnCfg.mods.search.queryBase,
+              var queryBase = '(' + gnGlobalSettings.gnCfg.mods.search.queryBase + ')',
                   defaultQuery = '${any}';
               if (queryBase.indexOf(defaultQuery) === -1) {
                 console.warn('Check your configuration. Query base \'' +
