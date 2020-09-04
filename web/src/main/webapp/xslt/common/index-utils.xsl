@@ -135,14 +135,14 @@
                                 'resourceTitleObject',
                                 '')"/>
     <recordLink type="object">{
-      "type": "<xsl:value-of select="$type"/>",
+      "type": "<xsl:value-of select="normalize-space($type)"/>",
       <xsl:for-each select="$otherProperties//p[@name != '']">
         "<xsl:value-of select="@name"/>": "<xsl:value-of select="@value"/>",
       </xsl:for-each>
-      "to": "<xsl:value-of select="$uuid"/>",
-      "url": "<xsl:value-of select="$url"/>",
+      "to": "<xsl:value-of select="normalize-space($uuid)"/>",
+      "url": "<xsl:value-of select="normalize-space($url)"/>",
       "title": "<xsl:value-of select="gn-fn-index:json-escape($recordTitle)"/>",
-      "origin": "<xsl:value-of select="$origin"/>"
+      "origin": "<xsl:value-of select="normalize-space($origin)"/>"
       }</recordLink>
   </xsl:function>
 

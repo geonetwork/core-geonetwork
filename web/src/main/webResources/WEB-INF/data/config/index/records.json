@@ -1050,6 +1050,14 @@
         }
       },
       {
+        "numbers": {
+          "match": "*Number",
+          "mapping": {
+            "type": "short"
+          }
+        }
+      },
+      {
         "integerRange": {
           "match": "*IntegerRange",
           "mapping": {
@@ -1179,6 +1187,9 @@
       "geom": {
         "type": "geo_shape"
       },
+      "shape": {
+        "type": "geo_shape"
+      },
       "location": {
         "type": "geo_point"
       },
@@ -1286,9 +1297,6 @@
       "metadataIdentifier": {
         "type": "keyword"
       },
-      "inspireThemeNumber": {
-        "type": "short"
-      },
       "otherConstraints": {
         "type": "text",
         "fields": {
@@ -1386,9 +1394,6 @@
       },
       "schema": {
         "type": "keyword"
-      },
-      "tagNumber": {
-        "type": "short"
       },
       "tag": {
         "type": "keyword",

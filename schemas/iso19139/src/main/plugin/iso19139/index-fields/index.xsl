@@ -29,6 +29,7 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml31="http://www.opengis.net/gml"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
@@ -65,7 +66,7 @@
   -->
   <xsl:variable name="operatesOnSetByProtocol" select="false()"/>
 
-  <xsl:variable name="processRemoteDocs" select="true()" />
+  <xsl:variable name="processRemoteDocs" select="false()" />
 
   <!-- List of keywords to search for to flag a record as opendata.
    Do not put accents or upper case letters here as comparison will not
@@ -179,6 +180,7 @@
 
       <xsl:for-each select="$otherLanguages">
         <xsl:copy-of select="gn-fn-index:add-field('otherLanguage', .)"/>
+        <xsl:copy-of select="gn-fn-index:add-field('otherLanguageId', ../../../@id)"/>
       </xsl:for-each>
 
 
@@ -723,9 +725,27 @@
         </xsl:for-each>
 
 
-        <xsl:if test="*/gmd:EX_Extent/*/gmd:EX_BoundingPolygon">
+        <xsl:if test="*/gmd:EX_Extent/*/gmd:EX_BoundingPolygon/gmd:polygon">
           <hasBoundingPolygon>true</hasBoundingPolygon>
         </xsl:if>
+
+        <xsl:for-each select="*/gmd:EX_Extent/*/gmd:EX_BoundingPolygon/gmd:polygon">
+          <xsl:variable name="geojson"
+                        select="util:gmlToGeoJson(
+                                  saxon:serialize((gml:*|gml31:*), 'default-serialize-mode'),
+                                  true(), 5)"/>
+          <xsl:choose>
+            <xsl:when test="$geojson = ''"></xsl:when>
+            <xsl:when test="matches($geojson, '(Error|Warning):.*')">
+              <shapeParsingError><xsl:value-of select="$geojson"/></shapeParsingError>
+            </xsl:when>
+            <xsl:otherwise>
+              <shape type="object">
+                <xsl:value-of select="$geojson"/>
+              </shape>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:for-each>
 
         <xsl:for-each select="*/gmd:EX_Extent">
 
@@ -881,7 +901,7 @@
 
       <xsl:for-each select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem">
         <xsl:for-each select="gmd:referenceSystemIdentifier/gmd:RS_Identifier">
-          <xsl:variable name="crs" select="gmd:code/*"/>
+          <xsl:variable name="crs" select="gmd:code/*/text()"/>
 
           <xsl:if test="$crs != ''">
             <coordinateSystem>

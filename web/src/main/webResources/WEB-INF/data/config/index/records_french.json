@@ -1085,6 +1085,14 @@
         }
       },
       {
+        "numbers": {
+          "match": "*Number",
+          "mapping": {
+            "type": "short"
+          }
+        }
+      },
+      {
         "integerRange": {
           "match": "*IntegerRange",
           "mapping": {
@@ -1327,9 +1335,6 @@
       "metadataIdentifier": {
         "type": "keyword"
       },
-      "inspireThemeNumber": {
-        "type": "short"
-      },
       "otherConstraints": {
         "type": "text",
         "fields": {
@@ -1360,7 +1365,7 @@
       "recordGroup": {
         "type": "keyword"
       },
-      "recordLink": {
+      "recordJoin": {
         "type": "join",
         "relations": {
           "record": [
@@ -1369,6 +1374,32 @@
             "sibling",
             "feature"
           ]
+        }
+      },
+      "recordLink": {
+        "type": "nested",
+        "properties": {
+          "type": {
+            "type": "keyword"
+          },
+          "subtype": {
+            "type": "keyword"
+          },
+          "created": {
+            "type": "keyword"
+          },
+          "to": {
+            "type": "keyword"
+          },
+          "url": {
+            "type": "keyword"
+          },
+          "title": {
+            "type": "keyword"
+          },
+          "origin": {
+            "type": "keyword"
+          }
         }
       },
       "resolutionDistance": {
@@ -1381,7 +1412,8 @@
         "type": "keyword"
       },
       "resourceIdentifier": {
-        "type": "keyword"
+        "type": "keyword",
+        "copy_to": "any"
       },
       "geoTag": {
         "type": "keyword"
@@ -1400,9 +1432,6 @@
       },
       "schema": {
         "type": "keyword"
-      },
-      "tagNumber": {
-        "type": "short"
       },
       "tag": {
         "type": "keyword",

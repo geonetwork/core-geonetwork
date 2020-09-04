@@ -213,6 +213,7 @@
 
       <xsl:for-each select="$otherLanguages">
         <xsl:copy-of select="gn-fn-index:add-field('otherLanguage', .)"/>
+        <xsl:copy-of select="gn-fn-index:add-field('otherLanguageId', ../../../@id)"/>
       </xsl:for-each>
 
 
@@ -725,6 +726,24 @@
         <xsl:if test="*/gex:EX_Extent/*/gex:EX_BoundingPolygon">
           <hasBoundingPolygon>true</hasBoundingPolygon>
         </xsl:if>
+
+        <xsl:for-each select="*/gex:EX_Extent/*/gex:EX_BoundingPolygon/gex:polygon">
+          <xsl:variable name="geojson"
+                        select="util:gmlToGeoJson(
+                                  saxon:serialize(gml:*, 'default-serialize-mode'),
+                                  true(), 5)"/>
+          <xsl:choose>
+            <xsl:when test="$geojson = ''"></xsl:when>
+            <xsl:when test="matches($geojson, '(Error|Warning):.*')">
+              <shapeParsingError><xsl:value-of select="$geojson"/></shapeParsingError>
+            </xsl:when>
+            <xsl:otherwise>
+              <shape type="object">
+                <xsl:value-of select="$geojson"/>
+              </shape>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:for-each>
 
         <xsl:for-each select="*/gex:EX_Extent">
 
