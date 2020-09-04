@@ -285,10 +285,7 @@ public class UserFeedbackUtils {
             userfeedbackDto.setAuthorOrganization("");
         } else {
             userfeedbackDto.setAuthorName(input.getAuthorName());
-            // Add md5 email hash for gravatar
-            if (isNotBlank(input.getAuthorEmail())) {
-                userfeedbackDto.setAuthorEmail(md5Hex(input.getAuthorEmail()));
-            }
+            userfeedbackDto.setAuthorEmail(input.getAuthorEmail());
             userfeedbackDto.setAuthorOrganization(input.getAuthorOrganization());
         }
 
