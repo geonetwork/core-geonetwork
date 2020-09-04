@@ -63,11 +63,13 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
 
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -317,6 +319,46 @@ public class Aligner extends BaseAligner<CswParams> {
             }
         }
 
+        applyBatchEdits(ri, md, schema);
+
+        //
+        // insert metadata
+        //
+        AbstractMetadata metadata = new Metadata();
+        metadata.setUuid(uuid);
+        if (!uuid.equals(ri.uuid)) {
+            md = metadataUtils.setUUID(schema, uuid, md);
+        }
+        Integer ownerId = getOwner();
+        metadata.getDataInfo().
+            setSchemaId(schema).
+            setRoot(md.getQualifiedName()).
+            setType(MetadataType.METADATA).
+            setChangeDate(new ISODate(ri.changeDate)).
+            setCreateDate(new ISODate(ri.changeDate));
+        metadata.getSourceInfo().
+            setSourceId(params.getUuid()).
+            setOwner(ownerId).
+            setGroupOwner(getGroupOwner());
+        metadata.getHarvestInfo().
+            setHarvested(true).
+            setUuid(params.getUuid());
+
+        metadata.getSourceInfo().setGroupOwner(getGroupOwner());
+
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
+
+        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+
+        String id = String.valueOf(metadata.getId());
+
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
+
+        metadataIndexer.indexMetadata(id, true, null);
+        result.addedMetadata++;
+    }
+
+    private void applyBatchEdits(RecordInfo ri, Element md, String schema) throws JDOMException, IOException {
         if (StringUtils.isNotEmpty(params.getBatchEdits())) {
             SchemaManager _schemaManager = context.getBean(SchemaManager.class);
             EditLib editLib = new EditLib(_schemaManager);
@@ -361,43 +403,7 @@ public class Aligner extends BaseAligner<CswParams> {
                 }
             }
         }
-        //
-        // insert metadata
-        //
-        AbstractMetadata metadata = new Metadata();
-        metadata.setUuid(uuid);
-        if (!uuid.equals(ri.uuid)) {
-            md = metadataUtils.setUUID(schema, uuid, md);
-        }
-        Integer ownerId = getOwner();
-        metadata.getDataInfo().
-            setSchemaId(schema).
-            setRoot(md.getQualifiedName()).
-            setType(MetadataType.METADATA).
-            setChangeDate(new ISODate(ri.changeDate)).
-            setCreateDate(new ISODate(ri.changeDate));
-        metadata.getSourceInfo().
-            setSourceId(params.getUuid()).
-            setOwner(ownerId).
-            setGroupOwner(getGroupOwner());
-        metadata.getHarvestInfo().
-            setHarvested(true).
-            setUuid(params.getUuid());
-
-        metadata.getSourceInfo().setGroupOwner(getGroupOwner());
-
-        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
-
-        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
-
-        String id = String.valueOf(metadata.getId());
-
-        addPrivileges(id, params.getPrivileges(), localGroups, context);
-
-        metadataIndexer.indexMetadata(id, true, null);
-        result.addedMetadata++;
     }
-
     private void updateMetadata(RecordInfo ri, String id, Boolean force) throws Exception {
         String date = localUuids.getChangeDate(ri.uuid);
 
@@ -425,9 +431,23 @@ public class Aligner extends BaseAligner<CswParams> {
             return false;
         }
 
+
+        String schema = dataMan.autodetectSchema(md, null);
+
+        if (StringUtils.isNotEmpty(params.xpathFilter)) {
+            Object xpathResult = Xml.selectSingle(md, params.xpathFilter, new ArrayList<Namespace>(dataMan.getSchema(schema).getNamespaces()));
+            boolean match = xpathResult instanceof Boolean && ((Boolean) xpathResult).booleanValue();
+            if(!match) {
+                result.xpathFilterExcluded ++;
+                return false;
+            }
+        }
+
         if (!params.xslfilter.equals("")) {
             md = processMetadata(context, md, processName, processParams);
         }
+
+        applyBatchEdits(ri, md, schema);
 
         //
         // update metadata
