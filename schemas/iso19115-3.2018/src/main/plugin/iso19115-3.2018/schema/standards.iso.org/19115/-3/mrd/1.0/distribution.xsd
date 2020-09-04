@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+  xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" 
+  xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0" 
+  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" 
+  xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mrd/1.0" version="1.0">
+<!--  <include schemaLocation="mrd.xsd"/>-->
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+ <!-- <import namespace="http://standards.iso.org/iso/19115/-3/gmw/1.0" schemaLocation="../../../../19115/-3/gmw/1.0/gmw.xsd"/>-->
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="MD_DigitalTransferOptions" substitutionGroup="gco:AbstractObject" type="mrd:MD_DigitalTransferOptions_Type">
+    <annotation>
+      <documentation>technical means and media by which a resource is obtained from the distributor</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_DigitalTransferOptions_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" name="unitsOfDistribution" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>tiles, layers, geographic areas, etc., in which data is available NOTE: unitsOfDistribution applies to both onLine and offLine distributions</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="transferSize" type="gco:Real_PropertyType">
+            <annotation>
+              <documentation>estimated size of a unit in the specified transfer format, expressed in megabytes. The transfer size is &gt; 0.0</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="onLine" type="mcc:Abstract_OnlineResource_PropertyType">
+            <annotation>
+              <documentation>information about online sources from which the resource can be obtained</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="offLine" type="mrd:MD_Medium_PropertyType">
+            <annotation>
+              <documentation>information about offline media on which the resource can be obtained</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="transferFrequency" type="gco:TM_PeriodDuration_PropertyType">
+            <annotation>
+              <documentation>rate of occurrence of distribution</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="distributionFormat" type="mrd:MD_Format_PropertyType">
+            <annotation>
+              <documentation>format of distribution</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_DigitalTransferOptions_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrd:MD_DigitalTransferOptions"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_Distribution" substitutionGroup="mcc:Abstract_Distribution" type="mrd:MD_Distribution_Type">
+    <annotation>
+      <documentation>information about the distributor of and options for obtaining the resource</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_Distribution_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_Distribution_Type">
+        <sequence>
+          <element minOccurs="0" name="description" type="gco:CharacterString_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="distributionFormat" type="mcc:Abstract_Format_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="distributor" type="mrd:MD_Distributor_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="transferOptions" type="mrd:MD_DigitalTransferOptions_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_Distribution_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrd:MD_Distribution"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_Distributor" substitutionGroup="gco:AbstractObject" type="mrd:MD_Distributor_Type">
+    <annotation>
+      <documentation>information about the distributor</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_Distributor_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="distributorContact" type="mcc:Abstract_Responsibility_PropertyType">
+            <annotation>
+              <documentation>party from whom the resource may be obtained. This list need not be exhaustive</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="distributionOrderProcess" type="mcc:Abstract_StandardOrderProcess_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="distributorFormat" type="mcc:Abstract_Format_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="distributorTransferOptions" type="mrd:MD_DigitalTransferOptions_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_Distributor_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrd:MD_Distributor"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_Format" substitutionGroup="mcc:Abstract_Format" type="mrd:MD_Format_Type">
+    <annotation>
+      <documentation>description of the computer language construct that specifies the representation of data objects in a record, file, message, storage device or transmission channel</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_Format_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_Format_Type">
+        <sequence>
+          <element name="formatSpecificationCitation" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>citation/URL of the specification for the format</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="amendmentNumber" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>amendment number of the format version</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="fileDecompressionTechnique" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>recommendations of algorithms or processes that can be applied to read or expand resources to which compression techniques have been applied</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="medium" type="mrd:MD_Medium_PropertyType">
+            <annotation>
+              <documentation>medium used by the format</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="formatDistributor" type="mrd:MD_Distributor_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_Format_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrd:MD_Format"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_Medium" substitutionGroup="gco:AbstractObject" type="mrd:MD_Medium_Type">
+    <annotation>
+      <documentation>information about the media on which the resource can be distributed</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_Medium_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" name="name" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>name of the medium on which the resource can be received</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="density" type="gco:Real_PropertyType">
+            <annotation>
+              <documentation>density at which the data is recorded</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="densityUnits" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>units of measure for the recording density</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="volumes" type="gco:Integer_PropertyType">
+            <annotation>
+              <documentation>number of items in the media identified</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="mediumFormat" type="mrd:MD_MediumFormatCode_PropertyType">
+            <annotation>
+              <documentation>method used to write to the medium</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="mediumNote" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>description of other limitations or requirements for using the medium</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="identifier" type="mcc:MD_Identifier_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_Medium_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrd:MD_Medium"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_MediumFormatCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>method used to write to the medium</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_MediumFormatCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrd:MD_MediumFormatCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_StandardOrderProcess" substitutionGroup="mcc:Abstract_StandardOrderProcess" type="mrd:MD_StandardOrderProcess_Type">
+    <annotation>
+      <documentation>common ways in which the resource may be obtained or received, and related instructions and fee information</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_StandardOrderProcess_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_StandardOrderProcess_Type">
+        <sequence>
+          <element minOccurs="0" name="fees" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>fees and terms for retrieving the resource. Include monetary units (as specified in ISO 4217)</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="plannedAvailableDateTime" type="gco:DateTime_PropertyType">
+            <annotation>
+              <documentation>date and time when the resource will be available</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="orderingInstructions" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>general instructions, terms and services provided by the distributor</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="turnaround" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>typical turnaround time for the filling of an order</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="orderOptionsType" type="gco:RecordType_PropertyType">
+            <annotation>
+              <documentation>description of the order options record</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="orderOptions" type="gco:Record_PropertyType">
+            <annotation>
+              <documentation>request/purchase choices</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_StandardOrderProcess_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrd:MD_StandardOrderProcess"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0" xmlns:fcc="http://standards.iso.org/iso/19110/fcc/1.0" xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1" xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19110/gfc/1.1" version="1.1">
+  <include schemaLocation="featureCatalogue.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/cit/1.0" schemaLocation="../../../19115/-3/cit/1.0/cit.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19110/fcc/1.0" schemaLocation="../../../19110/fcc/1.0/fcc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/lan/1.0" schemaLocation="../../../19115/-3/lan/1.0/lan.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

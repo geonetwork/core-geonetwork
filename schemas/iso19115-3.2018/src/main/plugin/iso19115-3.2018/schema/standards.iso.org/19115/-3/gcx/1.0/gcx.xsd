@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"  elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/gcx/1.0" version="1.0">
+  <annotation>
+    <documentation>Elements for xml implementation, from ISO 19139 updated for compatibility with new schema. Anchor, FileName, MimeFileType; all in substitution group for CharacterString to support Web environments.</documentation>
+  </annotation>
+  <include schemaLocation="extendedTypes.xsd"/>
+
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

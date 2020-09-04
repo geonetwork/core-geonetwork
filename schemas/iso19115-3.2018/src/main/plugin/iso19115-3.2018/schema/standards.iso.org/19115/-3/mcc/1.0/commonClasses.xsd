@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" version="1.0">
+  <include schemaLocation="mcc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="MD_BrowseGraphic" substitutionGroup="gco:AbstractObject" type="mcc:MD_BrowseGraphic_Type">
+    <annotation>
+      <documentation>graphic that provides an illustration of the dataset (should include a legend for the graphic, if applicable)</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_BrowseGraphic_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="fileName" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>name of the file that contains a graphic that provides an illustration of the dataset</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="fileDescription" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>text description of the illustration</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="fileType" type="gco:CharacterString_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="imageConstraints" type="mcc:Abstract_Constraints_PropertyType">
+            <annotation>
+              <documentation>restriction on access and/or use of browse graphic</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="linkage" type="mcc:Abstract_OnlineResource_PropertyType">
+            <annotation>
+              <documentation>link to browse graphic</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_BrowseGraphic_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:MD_BrowseGraphic"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_Identifier" substitutionGroup="gco:AbstractObject" type="mcc:MD_Identifier_Type">
+    <annotation>
+      <documentation>value uniquely identifying an object within a namespace</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_Identifier_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" name="authority" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>Citation for the code namespace and optionally the person or party responsible for maintenance of that namespace</documentation>
+            </annotation>
+          </element>
+          <element name="code" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>alphanumeric value identifying an instance in the namespace e.g. EPSG::4326</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="codeSpace" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Identifier or namespace in which the code is valid</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="version" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>version identifier for the namespace</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="description" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>natural language description of the meaning of the code value E.G for codeSpace = EPSG, code = 4326: description = WGS-84" to "for codeSpace = EPSG, code = EPSG::4326: description = WGS-84</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_Identifier_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:MD_Identifier"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_ProgressCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>status of the resource</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_ProgressCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:MD_ProgressCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_Scope" substitutionGroup="gco:AbstractObject" type="mcc:MD_Scope_Type">
+    <annotation>
+      <documentation>new: information about the scope of the resource</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_Scope_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="level" type="mcc:MD_ScopeCode_PropertyType">
+            <annotation>
+              <documentation>description of the scope</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="extent" type="mcc:Abstract_Extent_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="levelDescription" type="mcc:MD_ScopeDescription_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_Scope_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:MD_Scope"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_ScopeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>class of information to which the referencing entity applies</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_ScopeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:MD_ScopeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_ScopeDescription" substitutionGroup="gco:AbstractObject" type="mcc:MD_ScopeDescription_Type">
+    <annotation>
+      <documentation>description of the class of information covered by the information</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_ScopeDescription_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <choice>
+          <element name="attributes" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>instances of attribute types to which the information applies</documentation>
+            </annotation>
+          </element>
+          <element name="features" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>instances of feature types to which the information applies</documentation>
+            </annotation>
+          </element>
+          <element name="featureInstances" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>feature instances to which the information applies</documentation>
+            </annotation>
+          </element>
+          <element name="attributeInstances" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>attribute instances to which the information applies</documentation>
+            </annotation>
+          </element>
+          <element name="dataset" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>dataset to which the information applies</documentation>
+            </annotation>
+          </element>
+          <element name="other" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>class of information that does not fall into the other categories to which the information applies</documentation>
+            </annotation>
+          </element>
+        </choice>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_ScopeDescription_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:MD_ScopeDescription"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_SpatialRepresentationTypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>method used to represent geographic information in the resource</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_SpatialRepresentationTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:MD_SpatialRepresentationTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="URI" substitutionGroup="gco:AbstractObject" type="mcc:URI_Type">
+    <annotation>
+      <documentation>Uniform Resource Identifier (URI), is a compact string of characters used to identify or name a resource</documentation>
+    </annotation>
+  </element>
+  <complexType name="URI_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="URI_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mcc:URI"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/cat/1.0" version="1.0">
+  <include schemaLocation="cat.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="CT_UnitOfMeasure" substitutionGroup="cat:AbstractCT_Item" type="cat:CT_UnitOfMeasure_Type"/>
+  <complexType name="CT_UnitOfMeasure_Type">
+    <complexContent>
+      <extension base="cat:AbstractCT_Item_Type">
+        <sequence>
+          <element minOccurs="0" name="quantityType" type="gco:CharacterString_PropertyType"/>
+          <element minOccurs="0" name="uomSymbol" type="gco:CharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_UnitOfMeasure_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_UnitOfMeasure"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CT_UomCatalogue" substitutionGroup="cat:AbstractCT_Catalogue" type="cat:CT_UomCatalogue_Type"/>
+  <complexType name="CT_UomCatalogue_Type">
+    <complexContent>
+      <extension base="cat:AbstractCT_Catalogue_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_UomCatalogue_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_UomCatalogue"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

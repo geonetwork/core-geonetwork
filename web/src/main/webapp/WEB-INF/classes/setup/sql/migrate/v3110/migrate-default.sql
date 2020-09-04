@@ -11,6 +11,7 @@ ALTER TABLE Validation ALTER COLUMN valType TYPE varchar(128);
 
 -- New setting for server timezone
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/timeZone', '', 0, 260, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/users/identicon', 'gravatar:mp', 0, 9110, 'n');
 
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (63,'recordrestored','y', 63, 'event', null);
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'ara','Record restored.');
