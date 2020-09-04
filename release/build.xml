@@ -24,14 +24,14 @@
 
 <!--
 ==============================================================================
-=== This Ant build file is used to build the GeoNetwork opensource installers
+=== This Ant build file is used to create the GeoNetwork opensource distro's
 ===
 === Authors : Jeroen Ticheler <ticheler@users.sourceforge.net>
 ===           Andrea Carboni <acarboni@users.sourceforge.net>
 ==============================================================================
 -->
 
-<project name="geonetwork" default="installer" basedir=".">
+<project name="geonetwork" default="distributions" basedir=".">
 
   <condition property="osys" value="macosx">
     <os family="mac"/>
@@ -43,41 +43,25 @@
     <os family="unix"/>
   </condition>
 
-  <property name="appName" value="geonetwork"/>
-  <property name="version" value="3.11.0"/>
+  <!-- Project build properties -->
+  <property name="appName" value="GeoNetwork"/>
+  <property name="displayName" value="GeoNetwork opensource"/>
+  <property name="homepage" value="https://geonetwork-opensource.org"/>
+  <property name="version" value="3.10.4"/>
   <property name="subVersion" value="SNAPSHOT"/>
   <property name="javaVersion" value="1.8.0"/>
-  <!-- Minimum version required -->
-  <property name="jre_url" value="http://openjdk.java.net/"/>
+  <property name="jreUrl" value="http://openjdk.java.net/"/>
   <property name="OS" value="Compiled on ${os.name} (${osys})"/>
   <property name="propsdir" value="../.props"/>
   <property name="ant.build.javac.target" value="1.8"/>
   <property name="debugOn" value="on"/>
-  <!-- on off true false yes no -->
-  <property name="thesaurusUrl"
-            value="https://raw.githubusercontent.com/geonetwork/util-gemet/master/thesauri"/>
 
-  <target name="thesaurusDownload">
-    <mkdir dir="../web/target/thesauri"/>
+  <!-- Used for copyright year -->
+  <tstamp>
+    <format property="year" pattern="yyyy"/>
+  </tstamp>
 
-    <get src="${thesaurusUrl}/gemet.rdf"
-         dest="../web/target/thesauri/gemet.rdf" usetimestamp="true"/>
-  </target>
-
-  <target name="inspireDbSettings">
-    <mkdir dir="../web/target/inspire"/>
-
-    <copy file="../web/target/geonetwork/WEB-INF/classes/setup/sql/data/data-db-default.sql"
-          tofile="../web/target/inspire/data-db-default.sql" overwrite="true"/>
-    <replace file="../web/target/inspire/data-db-default.sql">
-      <replacefilter>
-        <replacetoken>
-          <![CDATA[INSERT INTO Settings VALUES (721,720,'enable','false');]]></replacetoken>
-        <replacevalue>
-          <![CDATA[INSERT INTO Settings VALUES (721,720,'enable','true');]]></replacevalue>
-      </replacefilter>
-    </replace>
-  </target>
+  <!-- =================================================================================== -->
 
   <target name="setProperties">
 
@@ -102,13 +86,13 @@
       file="../web/src/main/webapp/WEB-INF/server.prop"
       comment="GeoNetwork opensource properties. These are also used by geonetwork at runtime">
       <!-- These are used by geonetwork at runtime -->
-      <!-- Do not remove !! -->
+      <!-- DO NOT REMOVE!! -->
       <entry key="version" value="${version}"/>
       <entry key="subVersion" value="${subVersion}"/>
       <entry key="release" value="${version}"/>
 
       <entry key="javaVersion" value="${javaVersion}"/>
-      <entry key="jre_url" value="${jre_url}"/>
+      <entry key="jre_url" value="${jreUrl}"/>
       <entry key="ant.build.javac.target" value="1.8"/>
       <entry key="buildDate" type="date" value="now"
              pattern="yyyy-MM-dd'T'HH:mm:ssZ"/>
@@ -123,18 +107,17 @@
 
     </propertyfile>
 
-    <!-- make sure all files that need have version numbers etc updated -->
+    <!-- Make sure all files that we need have their version numbers etc. updated -->
 
     <!-- help file -->
     <copy file="readme.html"
           tofile="${propsdir}/readme.html"
           filtering="on" overwrite="yes"/>
-    <copy file="readme_fra.html"
-          tofile="${propsdir}/readme_fra.html"
-          filtering="on" overwrite="yes"/>
-    <copy file="readme_spa.html"
-          tofile="${propsdir}/readme_spa.html"
-          filtering="on" overwrite="yes"/>
+    
+    <!-- license file -->
+    <copy file="license.html"
+          tofile="${propsdir}/license.html"
+          filtering="on" overwrite="yes"/>    
 
     <echo message="Replacing template variables in readme files..."/>
     <replace file="${propsdir}/readme.html"
@@ -142,36 +125,24 @@
       <replacefilter token="@version@" property="version"/>
       <replacefilter token="@subVersion@" property="subVersion"/>
       <replacefilter token="@day@" property="day"/>
+      <replacefilter token="@jreUrl@" property="jre_url"/>
       <replacefilter token="@javaVersion@" property="javaVersion"/>
-      <replacefilter token="@jre_url@" property="jre_url"/>
     </replace>
-    <replace file="${propsdir}/readme_fra.html"
-             propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
-      <replacefilter token="@version@" property="version"/>
-      <replacefilter token="@subVersion@" property="subVersion"/>
-      <replacefilter token="@day@" property="day"/>
-      <replacefilter token="@javaVersion@" property="javaVersion"/>
-      <replacefilter token="@jre_url@" property="jre_url"/>
-    </replace>
-    <replace file="${propsdir}/readme_spa.html"
-             propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
-      <replacefilter token="@version@" property="version"/>
-      <replacefilter token="@subVersion@" property="subVersion"/>
-      <replacefilter token="@day@" property="day"/>
-      <replacefilter token="@javaVersion@" property="javaVersion"/>
-      <replacefilter token="@jre_url@" property="jre_url"/>
-    </replace>
+    <!-- Replace variables in ReadMe file that are not in server.prop -->
+    <replace file="${propsdir}/readme.html" token="@appName@" value="${appName}"/>
+    <replace file="${propsdir}/readme.html" token="@displayName@" value="${displayName}"/>
+    <replace file="${propsdir}/readme.html" token="@homepage@" value="${homepage}"/>
+    <replace file="${propsdir}/readme.html" token="@year@" value="${year}"/> 
     <echo message="Done"/>
   </target>
 
-
-  <target name="installer" depends="setProperties,thesaurusDownload,inspireDbSettings">
-    <echo message="All conditions met: ready to create ZIP files"/>
-    <ant dir="." target="zipinstallInspire"/>
+  <target name="distributions" depends="setProperties">
+    <echo message="Preconditions OK"/>
+    <ant dir="." target="war"/>
   </target>
 
-
-  <target name="zipinstall">
+  <!-- Create ZIP distribution for GeoNetwork + Jetty + shell scripts -->
+  <target name="zip">
     <property file="../web/src/main/webapp/WEB-INF/server.prop"/>
 
     <delete dir="../${appName}-${release}"/>
@@ -179,8 +150,9 @@
 
     <echo message="Creating ZIP file for ${appName} ${release}..."/>
 
-    <zip destfile="../${appName}-${release}/${appName}-install-${release}-${subVersion}.zip">
+    <zip destfile="../${appName}-${release}/${appName}-${release}-${subVersion}.zip">
       <zipfileset dir="./bin" prefix="bin" />
+      <zipfileset dir="../.props" includes="readme.html, license.html" />
       <zipfileset dir="./jetty" prefix="jetty" excludes="logs/*.log, logs/archive/*.log" />
       <zipfileset dir="../web/target/geonetwork" prefix="web/geonetwork" />
       <zipfileset dir="./data" prefix="web/geonetwork/data" />
@@ -188,38 +160,19 @@
     </zip>
 
     <checksum
-      file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.zip"
+      file="../${appName}-${release}/${appName}-${release}-${subVersion}.zip"
       forceOverwrite="yes"/>
 
   </target>
 
-  <target name="zipinstallInspire" depends="zipinstall">
+  <!-- Copy and rename WAR file and calculate checksum -->
+  <target name="war" depends="zip">
 
-    <echo message="Creating ZIP file for ${appName} ${release} with INSPIRE configuration..."/>
+    <copy file="../web/target/geonetwork.war" 
+          tofile="../${appName}-${release}/${appName}-${release}-${subVersion}.war" />    
 
-    <copy file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.zip" 
-          tofile="../${appName}-${release}/${appName}-install-${release}-${subVersion}-INSPIRE.zip" />
-
-    <zip destfile="../${appName}-${release}/${appName}-install-${release}-${subVersion}-INSPIRE.zip" update="true">
-      <!-- Add schematron rules (should already be there) -->
-      <zipfileset dir="../web/target/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron"
-                  prefix="web/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron" 
-                  includes="schematron-rules-inspire*.sch" />
-      
-      <!-- GEMET thesaurus files. For INSPIRE, user will use the admin and load them from INSPIRE Registry -->
-      <zipfileset dir="../web/target/thesauri"
-                  prefix="web/geonetwork/WEB-INF/data/config/codelist/external/thesauri/theme" 
-                  includes="gemet.rdf" />
-      
-      <!-- SQL script with INSPIRE Settings enabled -->
-      <zipfileset dir="../web/target/inspire"
-                  prefix="web/geonetwork/WEB-INF/classes/setup/sql/data" 
-                  includes="data-db-default.sql" />
-    </zip>
-
-    <checksum
-      file="../${appName}-${release}/${appName}-install-${release}-${subVersion}-INSPIRE.zip"
-      forceOverwrite="yes"/>  
+    <checksum file="../${appName}-${release}/${appName}-${release}-${subVersion}.war"
+              forceOverwrite="yes"/> 
 
   </target>
 
