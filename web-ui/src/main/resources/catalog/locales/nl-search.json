@@ -414,6 +414,7 @@
     "fbCatHarvesting": "Harvesting",
     "fbCatValidator": "Validator",
     "fbCatOthers": "Anders",
+    "fbSendTo": "Verzend naar",
     "syncAllLayers": "Synchroniseer alle lagen (of alleen de achtergrond lagen) tussen kaart en overview",
     "mdvalid": "Metadata is valide",
     "mdinvalid": "Metadata is niet valide",
@@ -462,11 +463,11 @@
     "GUFaddKeywords": "Voeg trefwoorden toe",
     "GUFcurrentScore": "Huidige score",
     "GUFuserInformation": "Gebruikers informatie",
-    "GUFgiveYourOpinionOnDifferentCategories": "<span class=\"btn btn-primary btn-round\">1</span> Deel uw ervaringen met verschillende aspecten van deze dataset",
-    "GUFgiveYourOpinionAboutTheDataset": "<span class=\"btn btn-primary btn-round\">2</span> Deel uw ervaringen met, stel een vraag over of plaats een commentaar over deze dataset",
-    "GUFhelpUsImproveDataset": "<span class=\"btn btn-primary btn-round\">3</span> Help ons deze dataset te verbeteren...",
+    "GUFgiveYourOpinionOnDifferentCategories": "Deel je ervaring met deze dataset",
+    "GUFgiveYourOpinionAboutTheDataset": "Deel je ervaring, stel een vraag of plaats een opmerking over deze dataset",
+    "GUFhelpUsImproveDataset": "Help ons deze dataset te verbeteren",
     "GUFcategories": "Categorieën",
-    "GUFyouAreLoggedInAs": "U bent momenteel ingelogd als <a>{{authorNameValue}}</a>",
+    "GUFyouAreLoggedInAs": "Momenteel ingelogd als <b>{{authorNameValue}}</b>",
     "GUFyouAreNotLoggedInPleaseFillIn": "U bent niet ingelogd, vul uw naam, email en organisatie in.",
     "GUFshowUserNameInComments": "Toon mijn gebruikersnaam in beoordelingen",
     "GUFhideUserNameInPublic": "Verberg mijn gebruikersnaam in publieke beoordelingen (email zal nooit getoond worden)",
@@ -520,5 +521,8 @@
     "dateFrom": "Records gewijzigd na",
     "dateTo": "Records gewijzigd voor",
     "activeFilters": "Actieve filters",
-    "geometryFilter": "Bounding Box"
+    "geometryFilter": "Bounding Box",
+    "GUFname": "Uw naam",
+    "GUFemail": "Uw email adres",
+    "GUForganization": "Uw organisatie"
 }

@@ -414,6 +414,7 @@
     "fbCatHarvesting": "Moissonnage",
     "fbCatValidator": "Validation",
     "fbCatOthers": "Autre",
+    "fbSendTo": "Send to",
     "syncAllLayers": "Synchroniser toutes les couches (ou seulement le fond de carte) entre le visualiseur et la minicarte d'aperçu.",
     "mdvalid": "La métadonnée est valide",
     "mdinvalid": "La métadonnée n'est pas valide",
@@ -462,11 +463,11 @@
     "GUFaddKeywords": "Ajouter des mots-clés",
     "GUFcurrentScore": "Score",
     "GUFuserInformation": "Information sur l'utilisateur",
-    "GUFgiveYourOpinionOnDifferentCategories": "<span class=\"btn btn-primary btn-round\">1</span> Partager votre expérience sur cette ressource",
-    "GUFgiveYourOpinionAboutTheDataset": "<span class=\"btn btn-primary btn-round\">2</span> Poser une question sur cette ressource",
-    "GUFhelpUsImproveDataset": "<span class=\"btn btn-primary btn-round\">3</span> Aider nous à améliorer cette ressource ...",
+    "GUFgiveYourOpinionOnDifferentCategories": "Share your experience related to different aspects of this dataset",
+    "GUFgiveYourOpinionAboutTheDataset": "Share your experience with, ask a question about or state a comment about this dataset",
+    "GUFhelpUsImproveDataset": "Help us improve the dataset even more...",
     "GUFcategories": "Catégories",
-    "GUFyouAreLoggedInAs": "Vous êtes acutellement connecté en tant que <a>{{authorNameValue}}</a>",
+    "GUFyouAreLoggedInAs": "You are currently logged in as <b>{{authorNameValue}}</b>",
     "GUFyouAreNotLoggedInPleaseFillIn": "Vous n'êtes pas connecté. Veuillez saisir votre nom, email et organisation.",
     "GUFshowUserNameInComments": "Afficher mon nom dans les commentaires.",
     "GUFhideUserNameInPublic": "Cacher mon nom sur les commentaires publics (l'email n'est jamais affiché)",
@@ -520,5 +521,8 @@
     "dateFrom": "Fiches mises à jour après",
     "dateTo": "Fiches mises à jour avant",
     "activeFilters": "Filtres actifs",
-    "geometryFilter": "Emprise"
+    "geometryFilter": "Emprise",
+    "GUFname": "Your Name",
+    "GUFemail": "Your Email address",
+    "GUForganization": "Your Organization"
 }

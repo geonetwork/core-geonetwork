@@ -368,6 +368,7 @@
     "linkToXmlTab": "Einige Fehler können behoben werden, indem Sie den <a href=\"#/metadata/{{metadataId}}?tab=xml\">XML editor</a> verwenden.",
     "directoryManagerSubtitle": "Hier können Sie folgende Verzeichnisse verwalten: Kontakte, Formate und Ausdehnungen.",
     "directoryManagerSubtitleImport": "Geben Sie hier die vollständige XML Beschreibung eines Eintrags für den Import in die Datenbank ein.",
+    "directoryManagerError": "Error when importing the full XML",
     "directoryEntryTypes": "Eingabetypen",
     "directoryTemplates": "Vorlagen",
     "addNewDirectoryEntry": "Eintrag hinzufügen",

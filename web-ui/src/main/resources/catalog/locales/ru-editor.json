@@ -368,6 +368,7 @@
     "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}?tab=xml\">XML editor</a>.",
     "directoryManagerSubtitle": "This screen allows you to edit directory entries such as contacts, formats, etc. including template management.",
     "directoryManagerSubtitleImport": "Enter here the full XML content of an entry to import it to the database.",
+    "directoryManagerError": "Error when importing the full XML",
     "directoryEntryTypes": "Entry Types",
     "directoryTemplates": "Templates",
     "addNewDirectoryEntry": "Add New Entry",

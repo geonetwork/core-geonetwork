@@ -368,6 +368,7 @@
     "linkToXmlTab": "Certaines erreurs peuvent être corrigées en utilisant <a href=\"#/metadata/{{metadataId}}?tab=xml\">la vue XML </a>.",
     "directoryManagerSubtitle": "Ce menu vous permet de gérer des éléments réutilisables tel que des contacts, formats, etc. Ces éléments peuvent être construits à partir de gabarits.",
     "directoryManagerSubtitleImport": "Entrez ici le contenu complet en XML d'un élément réutilisable afin de l'importer dans la base de donnée.",
+    "directoryManagerError": "Error when importing the full XML",
     "directoryEntryTypes": "Types d'éléments",
     "directoryTemplates": "Gabarits",
     "addNewDirectoryEntry": "Ajouter un élément",

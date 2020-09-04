@@ -81,7 +81,7 @@
   "facet-isTemplate": "Type de fiches",
   "facet-schema": "Standards",
   "facet-isPublishedToAll": "Fiches publiées",
-  "facet-thesaurus_geonetworkthesaurusexternalthemehttpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree": "Substances prioritaires",
+  "facet-thesaurus_geonetworkthesaurusexternalthemehttpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree": "Données prioritaires",
   "isPublishedToAll-true": "Oui",
   "isPublishedToAll-false": "Non",
   "indexRecordsWithErrors": "Fiches avec des erreurs d'indexation",

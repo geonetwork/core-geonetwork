@@ -368,6 +368,7 @@
     "linkToXmlTab": "Hægt er að laga einhverjar villur með því að nota <a href=\"#/metadata/{{metadataId}}?tab=xml\">XML editor.</a>",
     "directoryManagerSubtitle": "Þessi skjár leyfir þér að breyta skráarfærslum eins og tengiliðum, gagnasniðum, o.s.frv. ásamt því að stjórna sniðmátum. ",
     "directoryManagerSubtitleImport": "Sláðu hér inn fullt XML innihald færslu til að flytja inn í gagnagrunninn. ",
+    "directoryManagerError": "Error when importing the full XML",
     "directoryEntryTypes": "Færslutegundir",
     "directoryTemplates": "Sniðmát",
     "addNewDirectoryEntry": "Bæta við Nýrri Færslu",
