@@ -53,6 +53,7 @@ public class Settings {
     public static final String SYSTEM_INSPIRE_ATOM = "system/inspire/atom";
     public static final String SYSTEM_INSPIRE_ATOM_SCHEDULE = "system/inspire/atomSchedule";
     public static final String SYSTEM_PREFER_GROUP_LOGO = "system/metadata/prefergrouplogo";
+    public static final String SYSTEM_USERS_IDENTICON = "system/users/identicon";
     public static final String SYSTEM_SEARCHSTATS = "system/searchStats/enable";
     public static final String SYSTEM_FEEDBACK_EMAIL = "system/feedback/email";
     public static final String SYSTEM_FEEDBACK_MAILSERVER_HOST = "system/feedback/mailServer/host";

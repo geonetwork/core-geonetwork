@@ -368,6 +368,7 @@
     "linkToXmlTab": "Sommige fouten kunnen worden gerepareerd in de <a href=\"#/metadata/{{metadataId}}?tab=xml\">XML editor</a>.",
     "directoryManagerSubtitle": "Dit scherm stelt u in staat om snippet entries zoals, contactgegevens, formaten, etc. te beheren, inclusief template beheer",
     "directoryManagerSubtitleImport": "Vul hier de XML inhoud van een snippet in om het te in de database te importeren",
+    "directoryManagerError": "Er is een fout opgetreden bij het importeren van de XML",
     "directoryEntryTypes": "Snippet typen",
     "directoryTemplates": "Templates",
     "addNewDirectoryEntry": "Voeg een nieuwe snippet toe",

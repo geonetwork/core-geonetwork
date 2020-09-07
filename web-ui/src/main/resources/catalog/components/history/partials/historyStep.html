@@ -49,7 +49,7 @@
       </p>
 
       <img class="img-circle"
-           data-ng-src="//gravatar.com/avatar/{{h.authorEmail | md5}}?s=18"/>
+           data-ng-src="../api/users/{{(h.id.userId)}}.png?size=18"/>
       {{h.authorName}}
     </div>
     <div class="timeline-body" data-ng-show="h.closeDate == null">
