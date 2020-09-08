@@ -92,7 +92,7 @@
         incrementEvents = ['imageloadstart'];
         decrementEvents = ['imageloadend', 'imageloaderror'];
       } else {
-        goog.asserts.fail('unsupported source type');
+        throw 'Unsupported source type ' + source.toString() + '.';
       }
 
       source.on(incrementEvents, function() {
