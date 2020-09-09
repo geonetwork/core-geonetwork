@@ -21,7 +21,13 @@
   }
 
   var libs = document.createElement('script');
-  libs.src = staticUrl + 'lib.js';
+  var libName = 'lib.js';
+  if (scriptEl.hasAttribute('no-jquery')) {
+    libName = 'lib_nojquery.js';
+  } else if (scriptEl.hasAttribute('no-bootstrap')) {
+    libName = 'lib_nobs.js';
+  }
+  libs.src = staticUrl + libName;
   root.appendChild(libs);
 
   var sextant = document.createElement('script');
