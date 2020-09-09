@@ -306,9 +306,8 @@ goog.require('gn_alert');
 
       // SEXTANT SPECIFIC
       // this key holds the equivalent of the legacy sxtSettings object
-      'sextant': {
-
-      }
+      // by default no sextant settings is specified
+      'sextant': null
       // END SEXTANT SPECIFIC
     };
 
