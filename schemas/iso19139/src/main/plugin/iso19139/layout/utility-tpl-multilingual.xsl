@@ -111,14 +111,21 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-
+        <xsl:variable name="mainLanguage">
+          <xsl:call-template name="get-iso19139-language"/>
+        </xsl:variable>
         <xsl:for-each select="$metadata/gmd:locale/gmd:PT_Locale">
-          <lang id="{@id}" code="{gmd:languageCode/gmd:LanguageCode/@codeListValue}"/>
+          <xsl:variable name="langCode"
+                        select="gmd:languageCode/gmd:LanguageCode/@codeListValue"/>
+          <lang id="{@id}" code="{$langCode}">
+            <xsl:if test="$langCode = $mainLanguage">
+              <xsl:attribute name="default" select="''"/>
+            </xsl:if>
+          </lang>
         </xsl:for-each>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-
 
   <!-- Template used to return a translation if one found,
        or the text in default metadata language

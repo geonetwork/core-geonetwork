@@ -97,6 +97,11 @@
       <div class="gn-multilingual-field">
         <ul class="nav nav-pills">
           <script src="{$nodeUrl}../catalog/js/GnLandingPageLib.js?v={$buildNumber}">&amp;nbsp;</script>
+          <script type="text/javascript">
+            window.onload = function() {
+              document.getElementById('gn-default-lang-link').click();
+            };
+          </script>
 
           <xsl:variable name="metadataOtherLanguages">
             <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
@@ -105,9 +110,10 @@
           <xsl:variable name="defaultLanguage"
                         select="$metadataOtherLanguages/*[position() = last()]/@code"/>
 
-          <xsl:for-each select="$metadataOtherLanguages/*">
+          <xsl:for-each select="($metadataOtherLanguages/*[@default], $metadataOtherLanguages/*[not(@default)])">
             <li class="">
-              <a onclick="gnLandingPage.displayLanguage('{@code}', this);">
+              <a id="{if (@default) then 'gn-default-lang-link' else ''}"
+                 onclick="gnLandingPage.displayLanguage('{@code}', this);">
                 <xsl:variable name="label"
                               select="utils:getIsoLanguageLabel(@code, @code)"/>
                 <xsl:value-of select="if ($label != '') then $label else @code"/><xsl:text> </xsl:text>
