@@ -282,6 +282,7 @@ goog.require('gn_alert');
           'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/catalog.edit',
           'isUserRecordsOnly': false,
+          'minUserProfileToCreateTemplate': '',
           'isFilterTagsDisplayed': false,
           'fluidEditorLayout': true,
           'createPageTpl':
@@ -687,6 +688,14 @@ goog.require('gn_alert');
           },
           isConnected: function() {
             return !this.isAnonymous();
+          },
+          canCreateTemplate: function() {
+            var profile = gnGlobalSettings.gnCfg.mods.editor.minUserProfileToCreateTemplate
+              || '',
+              fnName = (profile !== '' ?
+                ('is' + profile[0].toUpperCase() + profile.substring(1) + 'OrMore') :
+                '');
+            return angular.isFunction(this[fnName]) ? this[fnName]() : this.isConnected();
           },
           canEditRecord: function(md) {
             if (!md || this.isAnonymous()) {
