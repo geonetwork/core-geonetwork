@@ -258,6 +258,7 @@
     </entry>
     <entry key="3.99.0">
       <list>
+        <value>java:v3990.UpdateAllSequenceValueToMax</value>
         <value>WEB-INF/classes/setup/sql/migrate/v3990/migrate-</value>
       </list>
     </entry>
