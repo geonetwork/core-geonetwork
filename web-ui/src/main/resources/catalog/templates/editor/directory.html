@@ -41,8 +41,10 @@
           </li>
         </ul>
       </h5>
-      <div class="flex-spacer" />
-      <h5 class="btn-group">
+      <div class="flex-spacer"
+           data-ng-show="user.canCreateTemplate()"/>
+      <h5 class="btn-group"
+          data-ng-show="user.canCreateTemplate()">
         <button type="button" class="btn btn-success"
             ng-click="startImporting(true)">
           <i class="fa fa-plus"/>&nbsp;
@@ -90,7 +92,8 @@
                 <a href ng-click="showTemplates(false)" translate>
                   directoryEntries</a>
               </li>
-              <li ng-class="{active : templatesShown()}">
+              <li data-ng-show="user.canCreateTemplate()"
+                  ng-class="{active : templatesShown()}">
                 <a href ng-click="showTemplates(true)" translate>
                   directoryTemplates</a>
               </li>
@@ -476,11 +479,15 @@
                 <span translate class="hidden-xs">
                   save</span>
               </button>
-              <button type="button" class="btn btn-primary dropdown-toggle"
+              <button type="button"
+                      data-ng-show="user.canCreateTemplate()"
+                      class="btn btn-primary dropdown-toggle"
                       data-toggle="dropdown" aria-expanded="false">
                 <span class="caret"></span>
               </button>
-              <ul class="dropdown-menu dropdown-menu-right" role="menu">
+              <ul class="dropdown-menu dropdown-menu-right"
+                  data-ng-show="user.canCreateTemplate()"
+                  role="menu">
                 <li><a href title="{{(activeEntry.isTemplate === 't' ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}"
                        data-gn-click-and-spin="switchTypeAndSave(true)">
                   {{(activeEntry.isTemplate === 't' ? 'saveAsDirectoryEntry' : 'saveAsTemplate') | translate}}

@@ -21,7 +21,72 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
-
-<codelists/>
+<codelists>
+  <codelist name="gmd:CI_RoleCode" alias="roleCode">
+    <entry>
+      <code>resourceProvider</code>
+      <label>Resource provider</label>
+      <description>Party that supplies the resource</description>
+    </entry>
+    <entry>
+      <code>custodian</code>
+      <label>Custodian</label>
+      <description>Party that accepts accountability and responsability for the data and ensures
+        appropriate care and maintenance of the resource
+      </description>
+    </entry>
+    <entry>
+      <code>owner</code>
+      <label>Owner</label>
+      <description>Party that owns the resource</description>
+    </entry>
+    <entry>
+      <code>user</code>
+      <label>User</label>
+      <description>Party who uses the resource</description>
+    </entry>
+    <entry>
+      <code>distributor</code>
+      <label>Distributor</label>
+      <description>Party who distributes the resource</description>
+    </entry>
+    <entry>
+      <code>originator</code>
+      <label>Originator</label>
+      <description>Party who created the resource</description>
+    </entry>
+    <entry>
+      <code>pointOfContact</code>
+      <label>Point of contact</label>
+      <description>Party who can be contacted for acquiring knowledge about or acquisition of the
+        resource
+      </description>
+    </entry>
+    <entry>
+      <code>principalInvestigator</code>
+      <label>Principal investigator</label>
+      <description>Key party responsible for gathering information and conducting
+        research
+      </description>
+    </entry>
+    <entry>
+      <code>processor</code>
+      <label>Processor</label>
+      <description>Party wha has processed the data in a manner such that the resource has been
+        modified
+      </description>
+    </entry>
+    <entry>
+      <code>publisher</code>
+      <label>Publisher</label>
+      <description>Party who published the resource</description>
+    </entry>
+    <entry>
+      <code>author</code>
+      <label>Author</label>
+      <description>Party who authored the resource</description>
+    </entry>
+  </codelist>
+</codelists>
 
 
