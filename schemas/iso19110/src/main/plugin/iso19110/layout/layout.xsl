@@ -53,8 +53,7 @@
     <xsl:variable name="flatModeException"
                   select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name,  name(..))"/>
 
-    <xsl:if test="$isEditing and (not($isFlatMode) or $flatModeException)">
-
+    <xsl:if test="(not($isFlatMode) or $flatModeException)">
       <xsl:variable name="label"
                     select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>
       <xsl:call-template name="render-element-to-add">

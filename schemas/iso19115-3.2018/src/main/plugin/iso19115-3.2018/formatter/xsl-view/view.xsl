@@ -620,6 +620,10 @@
                   </div>
                 </xsl:for-each>
                 <xsl:for-each select="cit:onlineResource/*/cit:linkage[normalize-space(.) != '']">
+                  <xsl:variable name="linkDescription">
+                    <xsl:apply-templates mode="render-value"
+                                         select="../cit:description"/>
+                  </xsl:variable>
                   <xsl:variable name="linkage">
                     <xsl:apply-templates mode="render-value" select="."/>
                   </xsl:variable>
@@ -627,8 +631,11 @@
                   <a href="{normalize-space($linkage)}" target="_blank">
                     <xsl:value-of select="if (../cit:name)
                                           then ../cit:name/* else
-                                          normalize-space(linkage)"/>&#160;
+                                          normalize-space($linkage)"/>&#160;
                   </a>
+                  <p>
+                    <xsl:value-of select="normalize-space($linkDescription)"/>
+                  </p>
                 </xsl:for-each>
                 <xsl:for-each select="cit:hoursOfService">
                   <span>
