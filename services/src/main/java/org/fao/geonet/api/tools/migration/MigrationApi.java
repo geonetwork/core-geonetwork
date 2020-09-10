@@ -49,7 +49,7 @@ public class MigrationApi {
 
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Call a migration step")
-    @RequestMapping(value = "/steps/{stepName}",
+    @RequestMapping(value = "/steps/{stepName:.+}",
         produces = MediaType.TEXT_PLAIN_VALUE,
         method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.CREATED)
