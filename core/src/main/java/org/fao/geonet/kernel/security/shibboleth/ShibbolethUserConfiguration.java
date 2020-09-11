@@ -32,6 +32,7 @@ import org.springframework.util.StringUtils;
  * @author María Arias de Reyna (delawen)
  */
 public class ShibbolethUserConfiguration implements SecurityProviderConfiguration {
+    private final String SECURITY_PROVIDER = "SHIBBOLETH";
     private String usernameKey;
     private String surnameKey;
     private String firstnameKey;
@@ -193,19 +194,23 @@ public class ShibbolethUserConfiguration implements SecurityProviderConfiguratio
 		this.roleGroupSeparator = roleGroupSeparator;
 	}
 
-	@Override
-	public String getLoginType() {
-		if (this.hideLogin) {
-			return LoginType.NOFORM.toString();
-		} else {
-		return LoginType.FORM.toString();
-		}
+
+	public String getSecurityProvider() {
+		return SECURITY_PROVIDER;
 	}
 
 	@Override
 	public boolean getSSO() {
 		return true;
 	}
-}
 
+	@Override
+	public String getLoginType() {
+		if (this.hideLogin) {
+			return LoginType.AUTOLOGIN.toString();
+		} else {
+		return LoginType.FORM.toString();
+		}
+	}
+}
 

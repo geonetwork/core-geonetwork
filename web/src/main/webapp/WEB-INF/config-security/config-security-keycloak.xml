@@ -53,6 +53,7 @@
         class="org.fao.geonet.kernel.security.keycloak.KeycloakConfiguration">
     <property name="loginType" value="${keycloakConfiguration.loginType}" />
     <property name="organisationKey" value="${keycloakConfiguration.organisationKey}"/>
+    <property name="publicClientId" value="${keycloakConfiguration.publicClientId}"/>
     <property name="updateProfile" value="${keycloakConfiguration.updateProfile}"/>
     <property name="updateGroup" value="${keycloakConfiguration.updateGroup}"/>
     <property name="roleGroupSeparator" value="${keycloakConfiguration.roleGroupSeparator}"/>

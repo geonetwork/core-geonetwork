@@ -24,6 +24,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:keycloakUtil="java:org.fao.geonet.kernel.security.keycloak.KeycloakXslUtil"
                 version="2.0"
                 exclude-result-prefixes="#all">
   <!-- Template to load CSS and Javascript -->
@@ -226,20 +227,11 @@
       <script src="{$uiResourcesPath}lib/timeline/timeline-zoomable.js?v={$buildNumber}"></script>
       <link rel="stylesheet" href="{$uiResourcesPath}lib/timeline/timeline.css"/>
       <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
-      <script type="text/javascript">
-        var module = angular.module('gn_search');
-        module.config(['gnGlobalSettings',
-        function(gnGlobalSettings) {
-        gnGlobalSettings.isSSO = <xsl:value-of select="$isSSO"/>;
-        gnGlobalSettings.isDisableLoginForm = <xsl:value-of select="$isDisableLoginForm and $isSSO"/>;
-        gnGlobalSettings.isShowLoginAsLink = <xsl:value-of select="$isShowLoginAsLink and $isSSO"/>;
-        }]);
-      </script>
     </xsl:if>
 
-    <xsl:if test="$angularApp = 'gn_login'">
+    <xsl:if test="$angularApp = 'gn_search' or $angularApp = 'gn_login'">
       <script type="text/javascript">
-        var module = angular.module('gn_login');
+        var module = angular.module('<xsl:value-of select="$angularApp"/>');
         module.config(['gnGlobalSettings',
         function(gnGlobalSettings) {
         gnGlobalSettings.isSSO = <xsl:value-of select="$isSSO"/>;
@@ -247,6 +239,32 @@
         gnGlobalSettings.isShowLoginAsLink = <xsl:value-of select="$isShowLoginAsLink and $isSSO"/>;
         }]);
       </script>
+
+      <!-- For keycloak we have to add some extra scripts -->
+      <xsl:if test="util:getSecurityProvider() =  'KEYCLOAK'">
+        <xsl:variable name="authServerBaseUrl"  select="keycloakUtil:getAuthServerBaseUrl()"/>
+        <script src="{$authServerBaseUrl}/js/keycloak.js"></script>
+        <script type="text/javascript">
+          var sessionModule = angular.module('gn_session_service');
+          var keycloak = new Keycloak({
+          "realm" : "<xsl:value-of select="keycloakUtil:getRealm()"/>",
+          "url" : "<xsl:value-of select="keycloakUtil:getAuthServerBaseUrl()"/>",
+          "clientId" : "<xsl:value-of select="keycloakUtil:getClientId()"/>"
+          })
+
+          keycloak.init({ onLoad: '<xsl:value-of select="keycloakUtil:getInitOnLoad()"/>',
+          checkLoginIframe: false }).success(function(authenticated) {
+             $(window).load(function() {
+              if (authenticated) {
+                if ($("#signinLink").length) {
+                   window.location.href = $("#signinLink").href;
+                }
+              }
+            })
+          });
+
+        </script>
+      </xsl:if>
     </xsl:if>
 
     <!-- XML highlighter JS dependency. -->

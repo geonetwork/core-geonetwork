@@ -33,9 +33,11 @@ import static org.fao.geonet.kernel.security.SecurityProviderConfiguration.Login
  *
  */
 public class KeycloakConfiguration implements SecurityProviderConfiguration {
+    private final String SECURITY_PROVIDER = "KEYCLOAK";
     private String DEFAULT_ROLE_GROUP_SEPARATOR = ":";
 
     private String loginType;
+    private String publicClientId;
 
     private String organisationKey;
 
@@ -68,6 +70,14 @@ public class KeycloakConfiguration implements SecurityProviderConfiguration {
         this.updateGroup = updateGroup;
     }
 
+    public String getPublicClientId() {
+        return publicClientId;
+    }
+
+    public void setPublicClientId(String publicClientId) {
+        this.publicClientId = publicClientId;
+    }
+
     public String getRoleGroupSeparator() {
         return roleGroupSeparator;
     }
@@ -77,6 +87,11 @@ public class KeycloakConfiguration implements SecurityProviderConfiguration {
             roleGroupSeparator = DEFAULT_ROLE_GROUP_SEPARATOR;
         }
         this.roleGroupSeparator = roleGroupSeparator;
+    }
+
+    @Override
+    public String getSecurityProvider() {
+       return SECURITY_PROVIDER;
     }
 
     @Override
@@ -92,12 +107,13 @@ public class KeycloakConfiguration implements SecurityProviderConfiguration {
     public void setLoginType(String loginType) {
         LoginType parsedLoginType = parse(loginType);
         switch(parsedLoginType) {
-            // support LINK
+            // support LINK and AUTOLOGIN
             case LINK:
+            case AUTOLOGIN:
                 break;
             case DEFAULT:
-                // Default to form
-                parsedLoginType= LINK;
+                // Default to autologin
+                parsedLoginType= AUTOLOGIN;
                 break;
             default:
                 // Currently don't support anything else

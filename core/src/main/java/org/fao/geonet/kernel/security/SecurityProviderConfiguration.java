@@ -23,8 +23,6 @@ package org.fao.geonet.kernel.security;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.kernel.mef.MEFLib;
-import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
@@ -52,9 +50,8 @@ public interface SecurityProviderConfiguration {
 
 		/**
 		 * No login form provided which will automatically login the user when possible
-		 * This will also disable the logout button.
 		 */
-		NOFORM;
+		AUTOLOGIN;
 
 		// ------------------------------------------------------------------------
 
@@ -65,8 +62,8 @@ public interface SecurityProviderConfiguration {
 				return FORM;
 			if (type.equalsIgnoreCase("link"))
 				return LINK;
-			if (type.equalsIgnoreCase("noform"))
-				return NOFORM;
+			if (type.equalsIgnoreCase("autologin"))
+				return AUTOLOGIN;
 
 			throw new BadParameterEx("LoginType", type);
 		}
@@ -81,6 +78,8 @@ public interface SecurityProviderConfiguration {
 	String getLoginType();
 
 	boolean getSSO();
+
+	String getSecurityProvider();
 
 	/**
 	 * Check if sso is enabled
