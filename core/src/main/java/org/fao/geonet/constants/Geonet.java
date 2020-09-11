@@ -220,6 +220,9 @@ public final class Geonet {
         public static final String SEARCH_REQUEST = "search.request";
         public static final String METADATA_SHOW = "metadata.show";
         public static final String METADATA_EDITING = "metadata.editing";
+        // Used to track the creation of a draft copy when the metadata is edited,
+        // to be able to remove it if the user cancels the editing without saving any change
+        public static final String METADATA_EDITING_CREATED_DRAFT = "metadata.editing.created.draft";
         public static final String METADATA_BEFORE_ANY_CHANGES = "metadata.before.any.changes";
         public static final String METADATA_EDITING_TAB = "metadata.editing.tab";
         public static final String METADATA_POSITION = "metadata.position";
