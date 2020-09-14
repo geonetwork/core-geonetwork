@@ -91,6 +91,8 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
 
             // Now update the id to sequence values so that all id's are not null.
             updatePKValue(connection, dialect);
+            // commit the changes
+            connection.commit();
 
             // Now update uuid and titles for the existing records
             updateOtherNewFields();
@@ -115,7 +117,7 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
         } catch (Exception e) {
             // If there was an error then we will log the error and continue.
             // Most likely cause is that the column already exists which should be fine.
-            Log.error(Geonet.DB, "  Exception while adding new ID column to metadataStatus. " +
+            Log.error(Geonet.DB, "  Exception while adding new " + MetadataStatus_.id.getName() + " column to " + MetadataStatus.TABLE_NAME + ". " + 
                     "Error is: " + e.getMessage());
             Log.debug(Geonet.DB, e);
         }
@@ -124,7 +126,7 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
         } catch (Exception e) {
             // If there was an erro then we will log the error and continue.
             // Most likely cause is that the column already exists which should be fine.
-            Log.error(Geonet.DB, "  Exception while adding new ID column to metadataStatus. " +
+            Log.error(Geonet.DB, "  Exception while adding new " + MetadataStatus_.uuid.getName() + " column to " + MetadataStatus.TABLE_NAME + ". " +
                     "Error is: " + e.getMessage());
             Log.debug(Geonet.DB, e);
         }
@@ -302,26 +304,66 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
 
     private void finalizeChanges(final Connection connection, Dialect dialect ) throws SQLException {
 
-        // lets drop the old primary key on the table
+        // Now that data has been updated, add the not null constraints to fields that were previously created as null.
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " modify " + MetadataStatus_.id.getName() + " INTEGER NOT NULL");
+        } catch (Exception e) {
+            // If there was an error then we will log the error and continue.
+            // JPA will probably apply the constraint correctly on next restart.
+            Log.error(Geonet.DB, "  Exception while modifying " + MetadataStatus_.id.getName() + " column of " + MetadataStatus.TABLE_NAME + " to NOT NULL. " +
+                    "Error is: " + e.getMessage());
+            Log.debug(Geonet.DB, e);
+        }
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " modify " + MetadataStatus_.uuid.getName() + " VARCHAR(255) NOT NULL");
+        } catch (Exception e) {
+            // If there was an erro then we will log the error and continue.
+            // Most likely cause is that the column already exists which should be fine.
+            Log.error(Geonet.DB, "  Exception while modifying " + MetadataStatus_.uuid.getName() + " column of " + MetadataStatus.TABLE_NAME + " to NOT NULL. " +
+                    "Error is: " + e.getMessage());
+            Log.debug(Geonet.DB, e);
+        }
+
+        String metadataStatusTableName;
+        // postgres uses lowercase names while other databases use uppercase.
+        if (connection.getMetaData().getDriverName().matches("(?i).*postgres.*")) {
+            metadataStatusTableName = MetadataStatus.TABLE_NAME.toLowerCase();
+        } else {
+            metadataStatusTableName = MetadataStatus.TABLE_NAME.toUpperCase();
+        }
+
+        // lets drop the old primary key constraint on the table
+        String pkName =  null;
         try (Statement statement = connection.createStatement()) {
             DatabaseMetaData databaseMetaData  = connection.getMetaData();
-            ResultSet PK  = databaseMetaData.getPrimaryKeys(connection.getCatalog(), connection.getSchema(), MetadataStatus.TABLE_NAME);
-            //-- https://stackoverflow.com/questions/35871077/org-h2-jdbc-jdbcsqlexception-general-error-java-lang-stackoverflowerror-500?rq=1
-
-            String pkName = PK.getString("PK_NAME");
-            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " DROP CONSTRAINT " + pkName + ";");
-            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " DROP PRIMARY KEY;");
+            ResultSet pkResultSet  = databaseMetaData.getPrimaryKeys(connection.getCatalog(), connection.getSchema(), metadataStatusTableName);
+            if (pkResultSet.next()) {
+                pkName = pkResultSet.getString("PK_NAME");
+            }
+            if (pkName == null) {
+                throw new RuntimeException("Error getting primary key constraint name for table " + MetadataStatus.TABLE_NAME);
+            }
+            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " drop constraint " + pkName);
         } catch (Exception e) {
-            Log.error(Geonet.DB, "  Exception while dropping old primary key on table " + MetadataStatus.TABLE_NAME + ". " +
+            Log.error(Geonet.DB, "  Exception while dropping old primary key constraint on table " + MetadataStatus.TABLE_NAME + ". Restart application and check logs for database errors.  If errors exists then may need to manually drop the primary key for this table." +
+                    "Error is: " + e.getMessage());
+            Log.debug(Geonet.DB, e, e);
+        }
+
+        // lets drop the old primary key on the table
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " drop primary key");
+        } catch (Exception e) {
+            Log.error(Geonet.DB, "  Exception while dropping old primary key on table " + MetadataStatus.TABLE_NAME + ". Restart application and check logs for database errors.  If errors exists then may need to manually drop the primary key for this table. " +
                     "Error is: " + e.getMessage());
             Log.debug(Geonet.DB, e, e);
         }
 
         // lets add the new primary key
         try (Statement statement = connection.createStatement()) {
-            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " + dialect.getAddPrimaryKeyConstraintString("MetadataStatusPk") + ";");
+            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " + dialect.getAddPrimaryKeyConstraintString(MetadataStatus.TABLE_NAME + "Pk") + " (" + MetadataStatus_.id.getName() + ")");
         } catch (Exception e) {
-            Log.error(Geonet.DB, "  Exception while adding priimary key on ID column for " + MetadataStatus.TABLE_NAME + "." +
+            Log.error(Geonet.DB, "  Exception while adding primary key on " + MetadataStatus_.id.getName() + " column for " + MetadataStatus.TABLE_NAME + ". " +
                     "Error is: " + e.getMessage());
             Log.debug(Geonet.DB, e, e);
         }

@@ -47,7 +47,6 @@ import java.util.LinkedHashMap;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = MetadataStatus.TABLE_NAME,
-    uniqueConstraints = @UniqueConstraint(columnNames = {"metadataid", "statusid", "userid", "changedate"}),
     indexes = {
         @Index(name="idx_metadatastatus_metadataid", columnList = "metadataid"),
         @Index(name="idx_metadatastatus_statusid", columnList = "statusid"),
