@@ -10,16 +10,16 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx1">
+<rdf:Description rdf:nodeID="node1e59mld0fx1">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 	<ns5:upperCorner></ns5:upperCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396354865093">
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx1">
+<rdf:Description rdf:nodeID="node1e59mld0fx1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 </rdf:Description>
@@ -31,146 +31,143 @@
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355082701">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">D1: Birds, Marine Mammals and Turtles</ns2:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396354865093">
-	<ns2:prefLabel xml:lang="fr">D1: Biodiversité</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1cc3qfo1nx2">
+<rdf:Description rdf:nodeID="node1e59mld0fx2">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 	<ns5:upperCorner></ns5:upperCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355082701">
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx2"/>
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx2"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1e5fd6unpx1">
+	<ns5:upperCorner> </ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1e59mld0fx2">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner></ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/dcsmm-descripteur#cd22bfbb-d2aa-4508-a427-c56eeda29c51">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr">Biodiversité - Poissons</ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355150171">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1e59mld0fx3">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+	<ns5:upperCorner></ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355150171">
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx3"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1e59mld0fx3">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner></ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1e59mld0fx4">
+	<ns5:lowerCorner></ns5:lowerCorner>
+	<ns5:upperCorner></ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355200865">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en">D1: Pelagic Habitats</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355166339">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1e59mld0fx4">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355166339">
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx4"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355186841">
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx5"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1e59mld0fx5">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner></ns5:lowerCorner>
+	<ns5:upperCorner></ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355322555">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en">D7: Hydrographical Conditions</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355186841">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1e59mld0fx5">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1e59mld0fx6">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355200865">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx6"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1e59mld0fx6">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner></ns5:lowerCorner>
+	<ns5:upperCorner></ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355166339">
+	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396354865093">
-	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1cc3qfo1nx2">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner></ns5:lowerCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355082701">
-	<ns2:prefLabel xml:lang="fr">D1: Oiseaux, tortues, mammifères marins (OTMM)</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355150171">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1cc3qfo1nx3">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-	<ns5:upperCorner></ns5:upperCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355150171">
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx3"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1cc3qfo1nx3">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner></ns5:lowerCorner>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1cc3qfo1nx4">
-	<ns5:lowerCorner></ns5:lowerCorner>
-	<ns5:upperCorner></ns5:upperCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355150171">
-	<ns2:prefLabel xml:lang="fr">D1: Poissons/Céphalopodes (PC)</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355166339">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1cc3qfo1nx4">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355166339">
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx4"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355186841">
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx5"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1cc3qfo1nx5">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner></ns5:lowerCorner>
-	<ns5:upperCorner></ns5:upperCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355166339">
-	<ns2:prefLabel xml:lang="fr">D1: Habitats benthiques côtiers (HBC)</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355186841">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1cc3qfo1nx5">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1cc3qfo1nx6">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355200865">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx6"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1cc3qfo1nx6">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner></ns5:lowerCorner>
-	<ns5:upperCorner></ns5:upperCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355200865">
-	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
-	<ns2:prefLabel xml:lang="fr">D1: Habitats pélagiques (HP)</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355186841">
-	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en">D1: Biodiversity</ns2:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355231319">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx7">
+<rdf:Description rdf:nodeID="node1e59mld0fx7">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355186841">
-	<ns2:prefLabel xml:lang="fr">D1: Habitats benthiques profonds (HBP)</ns2:prefLabel>
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396354865093">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355231319">
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx7"/>
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx7"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx7">
+<rdf:Description rdf:nodeID="node1e59mld0fx7">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx8">
+<rdf:Description rdf:nodeID="node1e59mld0fx8">
 	<ns5:upperCorner></ns5:upperCorner>
 </rdf:Description>
 
@@ -183,20 +180,20 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx8">
+<rdf:Description rdf:nodeID="node1e59mld0fx8">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355257279">
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx8"/>
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx8"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx8">
+<rdf:Description rdf:nodeID="node1e59mld0fx8">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx9">
+<rdf:Description rdf:nodeID="node1e59mld0fx9">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
@@ -208,30 +205,24 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355326393">
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx10"/>
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx10"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355323091">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355322555">
 	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
-	<ns2:prefLabel xml:lang="fr">D7: Conditions hydrographiques</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx11"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355323091">
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx11"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1cc3qfo1nx11">
+<rdf:Description rdf:nodeID="node1e59mld0fx11">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx10">
+<rdf:Description rdf:nodeID="node1e59mld0fx10">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 </rdf:Description>
@@ -240,16 +231,16 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355323091">
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355573284">
 	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
-	<ns2:prefLabel xml:lang="fr">D8: Contaminants chimiques</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355325824">
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx12"/>
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx12"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx12">
+<rdf:Description rdf:nodeID="node1e59mld0fx12">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -262,26 +253,26 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx12">
+<rdf:Description rdf:nodeID="node1e59mld0fx12">
 	<ns5:lowerCorner></ns5:lowerCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355322555">
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx9"/>
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx9"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355267246">
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx13"/>
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx13"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx13">
+<rdf:Description rdf:nodeID="node1e59mld0fx13">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx12">
+<rdf:Description rdf:nodeID="node1e59mld0fx12">
 	<ns5:upperCorner></ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -296,17 +287,17 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355319620">
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx14"/>
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx14"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx14">
+<rdf:Description rdf:nodeID="node1e59mld0fx14">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx10">
+<rdf:Description rdf:nodeID="node1e59mld0fx10">
 	<ns5:upperCorner></ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -321,10 +312,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355321897">
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx15"/>
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx15"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx15">
+<rdf:Description rdf:nodeID="node1e59mld0fx15">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
@@ -356,7 +347,7 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx16">
+<rdf:Description rdf:nodeID="node1e59mld0fx16">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -365,28 +356,31 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355573284">
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx16"/>
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx16"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx16">
+<rdf:Description rdf:nodeID="node1e59mld0fx16">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355573284">
-	<ns2:prefLabel xml:lang="fr">D11: Perturbations sonores</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
+<rdf:Description rdf:about="http://geonetwork-opensource.org/dcsmm-descripteur#48171ae0-190c-46db-af6b-b0a092e76cf6">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1e5fd6unpx1">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geonetwork-opensource.org/dcsmm-descripteur#6e1b03be-6ab4-4e73-9079-dd88b7718c5c">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">AES : Analyse Economique et Sociale</ns2:prefLabel>
 	<ns2:scopeNote xml:lang="fr">definition</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx17"/>
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx17"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx17">
+<rdf:Description rdf:nodeID="node1e59mld0fx17">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -395,36 +389,36 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">Carpe Diem</ns2:prefLabel>
 	<ns2:scopeNote xml:lang="fr">définition</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1cc3qfo1nx18"/>
+	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx18"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cc3qfo1nx18">
+<rdf:Description rdf:nodeID="node1e59mld0fx18">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355082701">
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355150171">
-	<ns2:prefLabel xml:lang="en">D1: Fish and Cephalopods</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355166339">
-	<ns2:prefLabel xml:lang="en">D1: Coastal benthic habitats</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355186841">
-	<ns2:prefLabel xml:lang="en">D1: Deep-sea benthic habitats</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+<rdf:Description rdf:about="http://geonetwork-opensource.org/dcsmm-descripteur#cd22bfbb-d2aa-4508-a427-c56eeda29c51">
+	<ns2:prefLabel xml:lang="fr">D1: Biodiversité - Poissons</ns2:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355200865">
-	<ns2:prefLabel xml:lang="en">D1: Pelagic Habitats</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fr">D1: Biodiversité - Habitats pélagiques</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355322555">
+	<ns2:prefLabel xml:lang="fr">D7: Changements hydrographiques</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396354865093">
+	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fr">D1: Biodiversité - Oiseaux</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355166339">
+	<ns2:prefLabel xml:lang="fr">D1: Biodiversité - Habitats benthiques</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">D1: Coastal benthic habitats</ns2:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355231319">
@@ -437,9 +431,9 @@
 	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355323091">
-	<ns2:prefLabel xml:lang="en">D8: Chemical contaminants</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355573284">
+	<ns2:prefLabel xml:lang="fr">D11: Bruit sous-marin</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">D11: Noise</ns2:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355325824">
@@ -467,14 +461,17 @@
 	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355322555">
-	<ns2:prefLabel xml:lang="en">D7: Hydrographical Conditions</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355323091">
+	<ns2:prefLabel xml:lang="fr">D8: Contaminants</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">D8: Chemical contaminants</ns2:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355573284">
-	<ns2:prefLabel xml:lang="en">D11: Noise</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+<rdf:Description rdf:about="http://geonetwork-opensource.org/dcsmm-descripteur#cd22bfbb-d2aa-4508-a427-c56eeda29c51">
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355082701">
+	<ns2:prefLabel xml:lang="fr">D1: Biodiversité - Tortues</ns2:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geonetwork-opensource.org/dcsmm-descripteur#6e1b03be-6ab4-4e73-9079-dd88b7718c5c">
@@ -486,16 +483,55 @@
 	<ns2:prefLabel xml:lang="en">Carpe Diem</ns2:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396354865093">
+<rdf:Description rdf:nodeID="node1e5fd575ex1">
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355150171">
+	<ns2:prefLabel xml:lang="fr">D1: Biodiversité - Céphalopodes</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">D1: Fish and Cephalopods</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
 	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="en">D1: Biodiversity</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/dcsmm-descripteur#cd22bfbb-d2aa-4508-a427-c56eeda29c51">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1e5fd575ex1">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/dcsmm-descripteur#cd22bfbb-d2aa-4508-a427-c56eeda29c51">
+	<ns5:BoundedBy rdf:nodeID="node1e5fd575ex1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1e5fd575ex1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355082701">
-	<ns2:prefLabel xml:lang="en">D1: Birds, Marine Mammals and Turtles</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geonetwork-opensource.org/dcsmm-descripteur#48171ae0-190c-46db-af6b-b0a092e76cf6">
+<rdf:Description rdf:about="http://geonetwork-opensource.org/dcsmm-descripteur#1febd30b-6240-4a96-a17d-27226a7194e9">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">D1: Biodiversité - Mammifères</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Biodiversité - Mammifères</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1e5fd6unpx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1e5fd6unpx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355186841">
+	<ns2:prefLabel xml:lang="fr">D1: Biodiversité</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">D1: Deep-sea benthic habitats</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
 	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
 </rdf:Description>
 

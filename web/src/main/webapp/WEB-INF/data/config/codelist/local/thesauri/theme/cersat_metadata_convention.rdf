@@ -13,67 +13,117 @@
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#9897e935-a744-437b-94d5-53eb8a987a2b">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en">/NetCDF CF/CF-1.4</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1cmkeuo77x1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cmkeuo77x1">
+<rdf:Description rdf:nodeID="node1drngagjex5">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#9897e935-a744-437b-94d5-53eb8a987a2b">
+	<ns5:BoundedBy rdf:nodeID="node1drngagjex1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1drngagjex1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#0169f18f-8a72-461f-862a-fc38f3abf65e">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en">/NetCDF CF/CF-1.5</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1cmkeutu9x1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cmkeutu9x1">
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#2cb5c897-25a9-4566-aff5-0d09c5d54c69">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#0169f18f-8a72-461f-862a-fc38f3abf65e">
+	<ns5:BoundedBy rdf:nodeID="node1drngagjex2"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1drngagjex2">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#2cb5c897-25a9-4566-aff5-0d09c5d54c69">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en">/NetCDF CF/CF-1.6</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1cmkev2sbx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cmkev2sbx1">
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#3a93a2b6-1c54-46d1-a779-eda9bfde59ba">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#2cb5c897-25a9-4566-aff5-0d09c5d54c69">
+	<ns5:BoundedBy rdf:nodeID="node1drngagjex3"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1drngagjex3">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#3a93a2b6-1c54-46d1-a779-eda9bfde59ba">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en">/NetCDF GDS/GDS v1.0</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1cmkf2d8cx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cmkf2d8cx1">
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#f79cf81e-3acd-4ac1-bb6f-3085e5b331cd">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#3a93a2b6-1c54-46d1-a779-eda9bfde59ba">
+	<ns5:BoundedBy rdf:nodeID="node1drngagjex4"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1drngagjex4">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#f79cf81e-3acd-4ac1-bb6f-3085e5b331cd">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en">/NetCDF GDS/GDS v2.0</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1cmkf2jf9x1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cmkf2jf9x1">
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#9897e935-a744-437b-94d5-53eb8a987a2b">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#f79cf81e-3acd-4ac1-bb6f-3085e5b331cd">
+	<ns5:BoundedBy rdf:nodeID="node1drngagjex5"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1drngagjex5">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#9897e935-a744-437b-94d5-53eb8a987a2b">
+	<ns2:prefLabel xml:lang="fr">/NetCDF CF/CF-1.4</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/NetCDF CF/CF-1.4</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#f79cf81e-3acd-4ac1-bb6f-3085e5b331cd">
+	<ns2:prefLabel xml:lang="fr">/NetCDF GDS/GDS v2.0</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/NetCDF GDS/GDS v2.0</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#3a93a2b6-1c54-46d1-a779-eda9bfde59ba">
+	<ns2:prefLabel xml:lang="fr">/NetCDF GDS/GDS v1.0</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/NetCDF GDS/GDS v1.0</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#2cb5c897-25a9-4566-aff5-0d09c5d54c69">
+	<ns2:prefLabel xml:lang="fr">/NetCDF CF/CF-1.6</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/NetCDF CF/CF-1.6</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#0169f18f-8a72-461f-862a-fc38f3abf65e">
+	<ns2:prefLabel xml:lang="fr">/NetCDF CF/CF-1.5</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/NetCDF CF/CF-1.5</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
 </rdf:Description>
 
 </rdf:RDF>

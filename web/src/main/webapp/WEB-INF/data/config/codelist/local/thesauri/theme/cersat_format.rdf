@@ -13,28 +13,48 @@
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#5c182d1d-6f69-4511-acea-7610e201ed62">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en">/NetCDF/NetCDF 3</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1cmkeraugx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cmkeraugx1">
+<rdf:Description rdf:nodeID="node1drngagisx2">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#5c182d1d-6f69-4511-acea-7610e201ed62">
+	<ns5:BoundedBy rdf:nodeID="node1drngagisx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1drngagisx1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#63658a0f-74fd-4b18-aad7-a62fae49a1df">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en">/NetCDF/NetCDF 4</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1cmkerfhpx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cmkerfhpx1">
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#5c182d1d-6f69-4511-acea-7610e201ed62">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#63658a0f-74fd-4b18-aad7-a62fae49a1df">
+	<ns5:BoundedBy rdf:nodeID="node1drngagisx2"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1drngagisx2">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#5c182d1d-6f69-4511-acea-7610e201ed62">
+	<ns2:prefLabel xml:lang="fr">/NetCDF/NetCDF 3</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/NetCDF/NetCDF 3</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#63658a0f-74fd-4b18-aad7-a62fae49a1df">
+	<ns2:prefLabel xml:lang="fr">/NetCDF/NetCDF 4</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/NetCDF/NetCDF 4</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
 </rdf:Description>
 
 </rdf:RDF>

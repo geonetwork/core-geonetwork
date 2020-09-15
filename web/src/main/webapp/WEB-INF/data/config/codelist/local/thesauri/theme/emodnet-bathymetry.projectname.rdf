@@ -1,68 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
-         xmlns:dcterms="http://purl.org/dc/terms/"
-         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-         xmlns:foaf="http://xmlns.com/foaf/0.1/"
-         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-  <skos:ConceptScheme rdf:about="http://www.emodnet.eu/projectname">
-    <dc:title>Project name</dc:title>
-    <dc:description></dc:description>
-    <dcterms:issued>2015-01-29</dcterms:issued>
-    <dcterms:modified>2015-01-29</dcterms:modified>
-  </skos:ConceptScheme>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:ns3="http://www.opengis.net/gml#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
 
-  <skos:Concept rdf:about="http://www.emodnet.eu/projectname#EMODNetBathymetry">
-    <skos:prefLabel xml:lang="en">EMODNet Bathymetry</skos:prefLabel>
-    <skos:definition xml:lang="en">European Marine Observation and Data Network - Bathymetry</skos:definition>
-    <skos:prefLabel xml:lang="fr">EMODNet Bathymetry</skos:prefLabel>
-    <skos:definition xml:lang="fr">European Marine Observation and Data Network - Bathymetry</skos:definition>
-  </skos:Concept>
-  <skos:Concept rdf:about="http://www.emodnet.eu/projectname#EMODNetChemistry">
-    <skos:prefLabel xml:lang="en">EMODNet Chemistry</skos:prefLabel>
-    <skos:definition xml:lang="en">Preparatory action for European Marine Observation and Data Network - Lot 3
+<rdf:Description rdf:about="http://www.emodnet.eu/projectname">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<dc:title>Project name</dc:title>
+	<dc:description></dc:description>
+	<dcterms:issued>2015-01-29</dcterms:issued>
+	<dcterms:modified>2015-01-29</dcterms:modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet.eu/projectname#EMODNetBathymetry">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">EMODNet Bathymetry</skos:prefLabel>
+	<skos:definition xml:lang="en">European Marine Observation and Data Network - Bathymetry</skos:definition>
+	<skos:prefLabel xml:lang="fr">EMODNet Bathymetry</skos:prefLabel>
+	<skos:definition xml:lang="fr">European Marine Observation and Data Network - Bathymetry</skos:definition>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet.eu/projectname#EMODNetChemistry">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">EMODNet Chemistry</skos:prefLabel>
+	<skos:definition xml:lang="en">Preparatory action for European Marine Observation and Data Network - Lot 3
       - Chemistry</skos:definition>
-    <skos:prefLabel xml:lang="fr">EMODNet Chemistry</skos:prefLabel>
-    <skos:definition xml:lang="fr">Preparatory action for European Marine Observation and Data Network - Lot 3
+	<skos:prefLabel xml:lang="fr">EMODNet Chemistry</skos:prefLabel>
+	<skos:definition xml:lang="fr">Preparatory action for European Marine Observation and Data Network - Lot 3
       - Chemistry</skos:definition>
-  </skos:Concept>
-  <skos:Concept rdf:about="http://www.emodnet.eu/projectname#EMODNetSeabedMapping">
-    <skos:prefLabel xml:lang="en">EMODNet Seabed Mapping</skos:prefLabel>
-    <skos:definition xml:lang="en">Preparatory action for European Marine Observation and Data Network -
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet.eu/projectname#EMODNetSeabedMapping">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">EMODNet Seabed Mapping</skos:prefLabel>
+	<skos:definition xml:lang="en">Preparatory action for European Marine Observation and Data Network -
       Seabed Mapping Lot</skos:definition>
-    <skos:prefLabel xml:lang="fr">EMODNet Seabed Mapping</skos:prefLabel>
-    <skos:definition xml:lang="fr">Preparatory action for European Marine Observation and Data Network -
+	<skos:prefLabel xml:lang="fr">EMODNet Seabed Mapping</skos:prefLabel>
+	<skos:definition xml:lang="fr">Preparatory action for European Marine Observation and Data Network -
       Seabed Mapping Lot</skos:definition>
-  </skos:Concept>
-  <skos:Concept rdf:about="http://www.emodnet.eu/projectname#EMODNetBiology">
-    <skos:prefLabel xml:lang="en">EMODNet Biology</skos:prefLabel>
-    <skos:definition xml:lang="en">Preparatory action for European Marine Observation and Data Network - Lot 1
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet.eu/projectname#EMODNetBiology">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">EMODNet Biology</skos:prefLabel>
+	<skos:definition xml:lang="en">Preparatory action for European Marine Observation and Data Network - Lot 1
       - Biology</skos:definition>
-    <skos:prefLabel xml:lang="fr">EMODNet Biology</skos:prefLabel>
-    <skos:definition xml:lang="fr">Preparatory action for European Marine Observation and Data Network - Lot 1
+	<skos:prefLabel xml:lang="fr">EMODNet Biology</skos:prefLabel>
+	<skos:definition xml:lang="fr">Preparatory action for European Marine Observation and Data Network - Lot 1
       - Biology</skos:definition>
-  </skos:Concept>
-  <skos:Concept rdf:about="http://www.emodnet.eu/projectname#EMODNetHydrography">
-    <skos:prefLabel xml:lang="en">EMODNet Hydrography</skos:prefLabel>
-    <skos:definition xml:lang="en">Preparatory action for European Marine Observation and Data Network - Lot 1
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet.eu/projectname#EMODNetHydrography">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">EMODNet Hydrography</skos:prefLabel>
+	<skos:definition xml:lang="en">Preparatory action for European Marine Observation and Data Network - Lot 1
       – Hydrography</skos:definition>
-    <skos:prefLabel xml:lang="fr">EMODNet Hydrography</skos:prefLabel>
-    <skos:definition xml:lang="fr">Preparatory action for European Marine Observation and Data Network - Lot 1
+	<skos:prefLabel xml:lang="fr">EMODNet Hydrography</skos:prefLabel>
+	<skos:definition xml:lang="fr">Preparatory action for European Marine Observation and Data Network - Lot 1
       – Hydrography</skos:definition>
-  </skos:Concept>
-  <skos:Concept rdf:about="http://www.emodnet.eu/projectname#GeoSeas">
-    <skos:prefLabel xml:lang="en">Geo-Seas</skos:prefLabel>
-    <skos:definition xml:lang="en">Pan-European infrastructure for management of marine and ocean geological
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet.eu/projectname#GeoSeas">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Geo-Seas</skos:prefLabel>
+	<skos:definition xml:lang="en">Pan-European infrastructure for management of marine and ocean geological
       and geophysical data</skos:definition>
-    <skos:prefLabel xml:lang="fr">Geo-Seas</skos:prefLabel>
-    <skos:definition xml:lang="fr">Pan-European infrastructure for management of marine and ocean geological
+	<skos:prefLabel xml:lang="fr">Geo-Seas</skos:prefLabel>
+	<skos:definition xml:lang="fr">Pan-European infrastructure for management of marine and ocean geological
       and geophysical data</skos:definition>
-  </skos:Concept>
-  <skos:Concept rdf:about="http://www.emodnet.eu/projectname#EMODnetHRSM">
-    <skos:prefLabel xml:lang="en">EMODnet HRSM</skos:prefLabel>
-    <skos:definition xml:lang="en"></skos:definition>
-    <skos:prefLabel xml:lang="fr">EMODnet HRSM </skos:prefLabel>
-    <skos:definition xml:lang="fr"></skos:definition>
-  </skos:Concept>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet.eu/projectname#EMODnetHRSM">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">EMODnet HRSM</skos:prefLabel>
+	<skos:definition xml:lang="en"></skos:definition>
+	<skos:prefLabel xml:lang="fr">EMODnet HRSM</skos:prefLabel>
+	<skos:definition xml:lang="fr"></skos:definition>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet.eu/projectname#EMODnetHRSM2">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="fr">EMODnetHRSM2</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">EMODnetHRSM2</skos:prefLabel>
+	<ns3:BoundedBy rdf:nodeID="node1dfggop98x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1dfggop98x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns3:lowerCorner> </ns3:lowerCorner>
+	<ns3:upperCorner> </ns3:upperCorner>
+	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
 
 </rdf:RDF>

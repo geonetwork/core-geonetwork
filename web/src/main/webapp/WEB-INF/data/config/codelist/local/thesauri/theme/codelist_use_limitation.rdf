@@ -1,89 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-         xmlns:skos="http://www.w3.org/2004/02/skos/core#">
-  <skos:ConceptScheme rdf:about="https://registry.ifremer.fr/use_limitation">
-    <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/">Use limitation</dc:title>
-    <dcterms:issued xmlns:dcterms="http://purl.org/dc/terms/">2019-06-27T14:39:48</dcterms:issued>
-    <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/">2018-07-27T14:39:48</dcterms:modified>
-  </skos:ConceptScheme>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
 
-  <skos:Concept rdf:about="https://registry.ifremer.fr/use_limitation#noconditionsapply">
-    <skos:prefLabel xml:lang="en">No conditions apply</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">Aucune condition ne s’applique</skos:prefLabel>
-  </skos:Concept>
-  <skos:Concept rdf:about="https://registry.ifremer.fr/use_limitation#unknown">
-    <skos:prefLabel xml:lang="en">Unknown conditions</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">Conditions inconnues</skos:prefLabel>
-  </skos:Concept>
-  <skos:Concept rdf:about="https://creativecommons.org/publicdomain/zero/1.0/deed">
-    <skos:prefLabel xml:lang="en">Creative Commons 0</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">Données sous Licence Creative Commons 0</skos:prefLabel>
-  </skos:Concept>
-  <skos:Concept rdf:about="https://www.etalab.gouv.fr/licence-ouverte-open-licence">
-    <skos:prefLabel xml:lang="en">Open licence</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">Données sous Licence ouverte</skos:prefLabel>
-  </skos:Concept>
-  <skos:Concept rdf:about="https://creativecommons.org/licenses/by/4.0/">
-    <skos:prefLabel xml:lang="en">Creative Commons - Attribution (BY)</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">Données sous Licence Creative Commons - Attribution (BY)</skos:prefLabel>
-    <skos:scopeNote xml:lang="en">You are free to:
-      Share — copy and redistribute the material in any medium or format
-      Adapt — remix, transform, and build upon the material
-      for any purpose, even commercially.</skos:scopeNote>
-    <skos:scopeNote xml:lang="fr">Vous êtes autorisé à :
-      Partager — copier, distribuer et communiquer le matériel par tous moyens et sous tous formats
-      Adapter — remixer, transformer et créer à partir du matériel
-      pour toute utilisation, y compris commerciale.</skos:scopeNote>
-  </skos:Concept>
-  <skos:Concept rdf:about="https://creativecommons.org/licenses/by-nd/4.0/">
-    <skos:prefLabel xml:lang="en">Licence Creative Commons - Attribution-NoDerivatives (BY-ND)</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">Données sous Licence Creative Commons - Attribution + Pas de Modification (BY-ND)</skos:prefLabel>
-    <skos:scopeNote xml:lang="en">You are free to:
-      Share — copy and redistribute the material in any medium or format
-      for any purpose, even commercially.</skos:scopeNote>
-    <skos:scopeNote xml:lang="fr">Vous êtes autorisé à :
-      Partager — copier, distribuer et communiquer le matériel par tous moyens et sous tous formats
-      pour toute utilisation, y compris commerciale.</skos:scopeNote>
-  </skos:Concept>
-  <skos:Concept rdf:about="https://creativecommons.org/licenses/by-nc-nd/4.0/">
-    <skos:prefLabel xml:lang="en">Licence Creative Commons - Attribution-NonCommercial-NoDerivatives (BY-NC-ND)</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">Données sous Licence Creative Commons - Attribution + Pas d’Utilisation Commerciale + Pas de Modification (BY-NC-ND)</skos:prefLabel>
-    <skos:scopeNote xml:lang="en">You are free to:
-      Share — copy and redistribute the material in any medium or format</skos:scopeNote>
-    <skos:scopeNote xml:lang="fr">Vous êtes autorisé à :
-      Partager — copier, distribuer et communiquer le matériel par tous moyens et sous tous formats</skos:scopeNote>
-  </skos:Concept>
-  <skos:Concept rdf:about="https://creativecommons.org/licenses/by-nc/4.0/">
-    <skos:prefLabel xml:lang="en">Licence Creative Commons - Attribution-NonCommercial (BY-NC)</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">Données sous Licence Creative Commons - Attribution + Pas d’Utilisation Commerciale (BY-NC)</skos:prefLabel>
-    <skos:scopeNote xml:lang="en">You are free to:
-      Share — copy and redistribute the material in any medium or format
-      Adapt — remix, transform, and build upon the material</skos:scopeNote>
-    <skos:scopeNote xml:lang="fr">Vous êtes autorisé à :
-      Partager — copier, distribuer et communiquer le matériel par tous moyens et sous tous formats
-      Adapter — remixer, transformer et créer à partir du matériel</skos:scopeNote>
-  </skos:Concept>
-  <skos:Concept rdf:about="https://creativecommons.org/licenses/by-nc-sa/4.0/">
-    <skos:prefLabel xml:lang="en">Licence Creative Commons - Attribution-NonCommercial-ShareAlike (BY-NC-SA)</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">Données sous Licence Creative Commons - Attribution + Pas d’Utilisation Commerciale + Partage dans les mêmes conditions (BY-NC-SA)</skos:prefLabel>
-    <skos:scopeNote xml:lang="en">You are free to:
-      Share — copy and redistribute the material in any medium or format
-      Adapt — remix, transform, and build upon the material</skos:scopeNote>
-    <skos:scopeNote xml:lang="fr">Vous êtes autorisé à :
-      Partager — copier, distribuer et communiquer le matériel par tous moyens et sous tous formats
-      Adapter — remixer, transformer et créer à partir du matériel</skos:scopeNote>
-  </skos:Concept>
-  <skos:Concept rdf:about="https://creativecommons.org/licenses/by-sa/4.0/">
-    <skos:prefLabel xml:lang="en">Creative Commons - Attribution-ShareAlike (BY-SA)</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">Données sous Licence Creative Commons - Attribution + Partage dans les mêmes conditions (BY-SA)</skos:prefLabel>
-    <skos:scopeNote xml:lang="en">You are free to:
-      Share — copy and redistribute the material in any medium or format
-      Adapt — remix, transform, and build upon the material
-      for any purpose, even commercially.</skos:scopeNote>
-    <skos:scopeNote xml:lang="fr">Vous êtes autorisé à :
-      Partager — copier, distribuer et communiquer le matériel par tous moyens et sous tous formats
-      Adapter — remixer, transformer et créer à partir du matériel
-      pour toute utilisation, y compris commerciale.</skos:scopeNote>
-  </skos:Concept>
- </rdf:RDF>
+<rdf:Description rdf:about="https://registry.ifremer.fr/use_limitation">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<dc:title>Use limitation</dc:title>
+	<dcterms:issued>2019-06-27T14:39:48</dcterms:issued>
+	<dcterms:modified>2018-07-27T14:39:48</dcterms:modified>
+</rdf:Description>
 
+<rdf:Description rdf:about="https://registry.ifremer.fr/use_limitation#noconditionsapply">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">No conditions apply</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Aucune condition ne s’applique</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://registry.ifremer.fr/use_limitation#unknown">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Unknown conditions</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Conditions inconnues</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/publicdomain/zero/1.0/deed">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:prefLabel xml:lang="en">CC-BY-NC-ND (Creative Commons - Attribution, No commercial usage, No modification)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://www.etalab.gouv.fr/licence-ouverte-open-licence">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/publicdomain/zero/1.0/deed">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:prefLabel xml:lang="en">CC0 (Creative Commons - Transfer into public domain)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/licenses/by/4.0/">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+	<skos:prefLabel xml:lang="fr">CC-BY-NC-SA (Creative Commons - Attribution, Pas de modification)</skos:prefLabel>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:prefLabel xml:lang="en">CC-BY-NC-SA (Creative Commons - Attribution, Pas de modification)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/licenses/by-nd/4.0/">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/licenses/by/4.0/">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:prefLabel xml:lang="en">CC-BY (Creative Commons - Attribution)</skos:prefLabel>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="fr">CC-BY (Creative Commons - Attribution)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/licenses/by-sa/4.0/">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:prefLabel xml:lang="en">CC-BY-NC-SA (Creative Commons - Attribution, No commercial usage, Sharing under the same conditions)</skos:prefLabel>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="fr">CC-BY-NC-SA (Creative Commons - Attribution, Pas d’utilisation commerciale, Partage dans les mêmes conditions)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/licenses/by-nc/4.0/">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/licenses/by-nd/4.0/">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:prefLabel xml:lang="en">CC-BY-ND (Creative Commons - Attribution, No modification)</skos:prefLabel>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="fr">CC-BY-ND (Creative Commons - Attribution, Pas de modification)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/licenses/by-nc/4.0/">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:prefLabel xml:lang="en">CC-BY-NC (Creative Commons - Attribution, No commercial usage)</skos:prefLabel>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="fr">CC-BY-NC (Creative Commons - Attribution, Pas d'utilisation commerciale)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/licenses/by-sa/4.0/">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="fr">CC-BY-NC-ND (Creative Commons - Attribution, Pas d’utilisation commerciale, Pas de modification)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://creativecommons.org/publicdomain/zero/1.0/deed">
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="fr">CC0 (Creative Commons - Transfert dans le Domaine Public)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://www.etalab.gouv.fr/licence-ouverte-open-licence">
+	<skos:prefLabel xml:lang="fr">Licence Ouverte</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Open Licence</skos:prefLabel>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+</rdf:Description>
+
+</rdf:RDF>

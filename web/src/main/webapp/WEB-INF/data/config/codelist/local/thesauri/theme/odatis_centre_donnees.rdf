@@ -21,10 +21,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#fd231811-6876-4077-b422-6b60e49e0e25">
-	<ns5:BoundedBy rdf:nodeID="node1cu1innrjx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1e83v03qhx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cu1innrjx1">
+<rdf:Description rdf:nodeID="node1e83v03qhx1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -39,10 +39,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#0c8616fd-ad4c-45f5-83cc-e92c0ea7adb7">
-	<ns5:BoundedBy rdf:nodeID="node1cu1innrjx2"/>
+	<ns5:BoundedBy rdf:nodeID="node1e83v03qhx2"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cu1innrjx2">
+<rdf:Description rdf:nodeID="node1e83v03qhx2">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -51,10 +51,10 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="en">CDS-SAT-Couleur</ns2:prefLabel>
 	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1cu1innrjx3"/>
+	<ns5:BoundedBy rdf:nodeID="node1e83v03qhx3"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cu1innrjx3">
+<rdf:Description rdf:nodeID="node1e83v03qhx3">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -69,10 +69,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#fead38a4-53ca-4058-ba9e-a85987053f7c">
-	<ns5:BoundedBy rdf:nodeID="node1cu1innrjx4"/>
+	<ns5:BoundedBy rdf:nodeID="node1e83v03qhx4"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cu1innrjx4">
+<rdf:Description rdf:nodeID="node1e83v03qhx4">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -87,10 +87,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1bb88866-9d56-436f-b8e1-3ed8616782b6">
-	<ns5:BoundedBy rdf:nodeID="node1cu1innrjx5"/>
+	<ns5:BoundedBy rdf:nodeID="node1e83v03qhx5"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cu1innrjx5">
+<rdf:Description rdf:nodeID="node1e83v03qhx5">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -105,10 +105,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#90e9b26a-5b64-48ff-8a0f-8d5f8e102bf6">
-	<ns5:BoundedBy rdf:nodeID="node1cu1innrjx6"/>
+	<ns5:BoundedBy rdf:nodeID="node1e83v03qhx6"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cu1innrjx6">
+<rdf:Description rdf:nodeID="node1e83v03qhx6">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -117,16 +117,16 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#0c8616fd-ad4c-45f5-83cc-e92c0ea7adb7">
-	<ns2:prefLabel xml:lang="fr">CDS-SAT-Toulouse</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#fd231811-6876-4077-b422-6b60e49e0e25">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fr">CDS-SAT-CERSAT</ns2:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#b1a95540-48fa-4a74-8ab4-1b30d77aafed">
-	<ns5:BoundedBy rdf:nodeID="node1cu1innrjx7"/>
+	<ns5:BoundedBy rdf:nodeID="node1e83v03qhx7"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cu1innrjx7">
+<rdf:Description rdf:nodeID="node1e83v03qhx7">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -141,10 +141,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#23701edb-d218-4dbc-8e27-59c028d4750d">
-	<ns5:BoundedBy rdf:nodeID="node1cu1innrjx8"/>
+	<ns5:BoundedBy rdf:nodeID="node1e83v03qhx8"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cu1innrjx8">
+<rdf:Description rdf:nodeID="node1e83v03qhx8">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -159,15 +159,15 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#4fd11de6-171c-4199-ae0c-23c07df6fb9f">
-	<ns5:BoundedBy rdf:nodeID="node1cu1innrjx9"/>
+	<ns5:BoundedBy rdf:nodeID="node1e83v03qhx9"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cu1innrjx9">
+<rdf:Description rdf:nodeID="node1e83v03qhx9">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cu1innrjx10">
+<rdf:Description rdf:nodeID="node1e83v03qhx10">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -175,7 +175,7 @@
 	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cu1innrjx10">
+<rdf:Description rdf:nodeID="node1e83v03qhx10">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -183,16 +183,25 @@
 	<ns2:prefLabel xml:lang="en">CDS-IS-SISMER</ns2:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#fd231811-6876-4077-b422-6b60e49e0e25">
-	<ns2:prefLabel xml:lang="fr">CDS-SAT-Brest</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="en">CDS-SAT-Brest</ns2:prefLabel>
+<rdf:Description rdf:nodeID="node1e83v03qhx11">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#0c8616fd-ad4c-45f5-83cc-e92c0ea7adb7">
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#23701edb-d218-4dbc-8e27-59c028d4750d">
 	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="en">CDS-SAT-Toulouse</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#789b46a0-650f-4f82-a275-7489035728ed">
+	<ns5:BoundedBy rdf:nodeID="node1e83v03qhx11"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1e83v03qhx11">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#fd231811-6876-4077-b422-6b60e49e0e25">
+	<ns2:prefLabel xml:lang="en">CDS-SAT-CERSAT</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#4fd11de6-171c-4199-ae0c-23c07df6fb9f">
@@ -219,28 +228,31 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">Autres</ns2:prefLabel>
 	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1cu1innrjx10"/>
+	<ns5:BoundedBy rdf:nodeID="node1e83v03qhx10"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#23701edb-d218-4dbc-8e27-59c028d4750d">
-	<ns2:prefLabel xml:lang="fr">/CDS-IS-Sorbonne Université/CDS-IS-IMEV</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">/CDS-IS-Sorbonne Université/CDS-IS-IMEV</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#0c8616fd-ad4c-45f5-83cc-e92c0ea7adb7">
 	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fr">CDS-SAT-AVISO</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">CDS-SAT-AVISO</ns2:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#789b46a0-650f-4f82-a275-7489035728ed">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/CDS-IS-Sorbonne Université/CDS-IS-SBR</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">/CDS-IS-Sorbonne Université/CDS-IS-SBR</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1cum1d1igx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cum1d1igx1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#23701edb-d218-4dbc-8e27-59c028d4750d">
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fr">CDS-IS-IMEV</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">CDS-IS-IMEV</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#789b46a0-650f-4f82-a275-7489035728ed">
+	<ns2:prefLabel xml:lang="fr">CDS-IS-SBR</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">CDS-IS-SBR</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
 </rdf:Description>
 
 </rdf:RDF>

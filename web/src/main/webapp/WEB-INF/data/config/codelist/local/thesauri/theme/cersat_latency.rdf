@@ -13,106 +13,186 @@
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#5872edbb-9827-44f7-9de9-7d1c8b133841">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en">Less than 6 hours</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1ckhgtnjmx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1ckhgtnjmx1">
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d756b5fd-b50c-4e3b-9327-404811ebffc9">
+	<ns2:prefLabel xml:lang="en">Less than 24 hours</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#5872edbb-9827-44f7-9de9-7d1c8b133841">
+	<ns5:BoundedBy rdf:nodeID="node1drngagiex1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1drngagiex1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#d9588632-9d2d-46df-ace5-6994707e90c8">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en">Less than 12 hours</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1ckhgu5lbx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1ckhgu5lbx1">
+<rdf:Description rdf:nodeID="node1drngagiex8">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d9588632-9d2d-46df-ace5-6994707e90c8">
+	<ns5:BoundedBy rdf:nodeID="node1drngagiex2"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1drngagiex2">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#d756b5fd-b50c-4e3b-9327-404811ebffc9">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en">Less than 24 hours</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1ckhgune1x1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1ckhgune1x1">
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#5b439e5a-70fc-4578-87d0-2076dcb999f3">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d756b5fd-b50c-4e3b-9327-404811ebffc9">
+	<ns5:BoundedBy rdf:nodeID="node1drngagiex3"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1drngagiex3">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#e0e83198-e745-4a15-b384-018f0f9e5f8d">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en">Less than 48 hours</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1ckhgvt00x1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1ckhgvt00x1">
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d9588632-9d2d-46df-ace5-6994707e90c8">
+	<ns2:prefLabel xml:lang="en">Less than 12 hours</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#e0e83198-e745-4a15-b384-018f0f9e5f8d">
+	<ns5:BoundedBy rdf:nodeID="node1drngagiex4"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1drngagiex4">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#e9faf9e5-977d-4f98-95b9-3083dfca7cf6">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en">Less than 3 days</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1ckhh0n7ux1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1ckhh0n7ux1">
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#dbf82de9-e939-483b-824f-e5c215746268">
+	<ns2:prefLabel xml:lang="en">Less than 4 hours</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#e9faf9e5-977d-4f98-95b9-3083dfca7cf6">
+	<ns5:BoundedBy rdf:nodeID="node1drngagiex5"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1drngagiex5">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#5b439e5a-70fc-4578-87d0-2076dcb999f3">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en">Less than 1 month</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1ckhh18bnx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1ckhh18bnx1">
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#c44e00a6-706b-4798-8828-71a375dded34">
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#5b439e5a-70fc-4578-87d0-2076dcb999f3">
+	<ns5:BoundedBy rdf:nodeID="node1drngagiex6"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1drngagiex6">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#c44e00a6-706b-4798-8828-71a375dded34">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en">Less than 4 months</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1ckhh1q9mx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1ckhh1q9mx1">
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#e0e83198-e745-4a15-b384-018f0f9e5f8d">
+	<ns2:prefLabel xml:lang="en">Less than 48 hours</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#c44e00a6-706b-4798-8828-71a375dded34">
+	<ns5:BoundedBy rdf:nodeID="node1drngagiex7"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1drngagiex7">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#dbf82de9-e939-483b-824f-e5c215746268">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en">Less than 4 hours</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1cm0j06s7x1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1cm0j06s7x1">
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#e9faf9e5-977d-4f98-95b9-3083dfca7cf6">
+	<ns2:prefLabel xml:lang="en">Less than 3 days</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#dbf82de9-e939-483b-824f-e5c215746268">
+	<ns5:BoundedBy rdf:nodeID="node1drngagiex8"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1drngagiex8">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#c44e00a6-706b-4798-8828-71a375dded34">
+	<ns2:prefLabel xml:lang="en">Less than 4 months</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Moins de 4 mois</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en">Moins de 4 mois</ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#5b439e5a-70fc-4578-87d0-2076dcb999f3">
+	<ns2:prefLabel xml:lang="fr">Moins d'un mois</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Less than 1 month</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#dbf82de9-e939-483b-824f-e5c215746268">
+	<ns2:scopeNote xml:lang="en">Moins de 4 heures</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fr">Moins de 4 heures</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d9588632-9d2d-46df-ace5-6994707e90c8">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fr">Moins de 12 heures</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#e9faf9e5-977d-4f98-95b9-3083dfca7cf6">
+	<ns2:scopeNote xml:lang="en">Moins de 3 jours</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fr">Moins de 3 jours</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#e0e83198-e745-4a15-b384-018f0f9e5f8d">
+	<ns2:scopeNote xml:lang="en">Moins de 48 heures</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fr">Moins de 48 heures</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d756b5fd-b50c-4e3b-9327-404811ebffc9">
+	<ns2:scopeNote xml:lang="en">Moins de 24 heures</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fr">Moins de 24 heures</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#5872edbb-9827-44f7-9de9-7d1c8b133841">
+	<ns2:prefLabel xml:lang="fr">Moins de 6 heures</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Less than 6 hours</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Moins de 6 heures</ns2:scopeNote>
 </rdf:Description>
 
 </rdf:RDF>
