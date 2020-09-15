@@ -219,7 +219,7 @@
         $scope.thesaurusSelected = {
           title: '',
           filename: '',
-          defaultNamespace: 'http://www.mysite.org/thesaurus',
+          defaultNamespace: '',
           dname: 'theme',
           type: 'local'
         };
@@ -251,10 +251,11 @@
        * and filename. eg. http://localhost:8080/thesaurus/theme/commune
        */
       $scope.computeThesaurusNs = function() {
-        $scope.thesaurusSuggestedNs =
-            location.origin +
-            '/thesaurus/' + $scope.thesaurusSelected.dname.trim().replace(/[^\d\w-\.]/gi, '') + '/' +
-            $scope.thesaurusSelected.filename.trim().replace(/[^\d\w-\.]/gi, '');
+        $scope.thesaurusSuggestedNs =+
+          location.href.split($scope.nodeId)[0] + $scope.nodeId
+            + "/api/registries/vocabularies/local."
+            + $scope.thesaurusSelected.dname.trim().replace(/[^\d\w-\.]/gi, '') + '.'
+            + $scope.thesaurusSelected.filename.replace(/[^\d\w-\.]/gi, '');
       };
 
       /**

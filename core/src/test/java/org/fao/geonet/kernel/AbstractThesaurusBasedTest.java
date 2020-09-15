@@ -36,7 +36,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @NotThreadSafe  // randomly failing without that
-public abstract class AbstractThesaurusBasedTest {
+public abstract class AbstractThesaurusBasedTest extends org.fao.geonet.AbstractCoreIntegrationTest {
     protected static final String THESAURUS_KEYWORD_NS = "http://abstract.thesaurus.test#";
     protected static final IsoLanguagesMapper isoLangMapper = new IsoLanguagesMapper() {
         {
