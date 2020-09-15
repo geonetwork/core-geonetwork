@@ -23,6 +23,7 @@
 
 package org.fao.geonet.domain;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.entitylistener.SourceEntityListenerManager;
 import org.fao.geonet.repository.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,6 @@ import java.util.UUID;
 @Table(name = "Sources")
 @EntityListeners(SourceEntityListenerManager.class)
 public class Source extends Localized {
-    @Autowired
-    LanguageRepository langRepository;
 
     private String _uuid = UUID.randomUUID().toString();
     private String _name;
@@ -77,6 +76,8 @@ public class Source extends Localized {
         if (translations != null && translations.size() != 0) {
             setLabelTranslations(translations);
         } else {
+            LanguageRepository langRepository =
+                ApplicationContextHolder.get().getBean(LanguageRepository.class);
             java.util.List<Language> allLanguages = langRepository.findAll();
             Map<String, String> labelTranslations = getLabelTranslations();
             for (Language l : allLanguages) {
