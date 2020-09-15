@@ -235,10 +235,11 @@
             facetModel.excludeFilter = reqAgg.terms.exclude !== undefined;
             var esFacet = this;
             respAgg.buckets.forEach(function (bucket) {
-              if (bucket.key) {
-                var itemPath = facetModel.path.concat([bucket.key + '']);
+              if (angular.isDefined(bucket.key)) {
+                var key = (bucket.key_as_string || bucket.key),
+                    itemPath = facetModel.path.concat([key + '']);
                 var facet = {
-                  value: bucket.key,
+                  value: key,
                   meta: bucket.meta,
                   count: bucket.doc_count,
                   path: itemPath

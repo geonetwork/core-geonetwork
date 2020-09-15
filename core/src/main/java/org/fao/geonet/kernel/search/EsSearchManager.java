@@ -82,6 +82,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
+import static org.elasticsearch.rest.RestStatus.*;
 
 
 public class EsSearchManager implements ISearchManager {
@@ -358,6 +359,7 @@ public class EsSearchManager implements ISearchManager {
         updates.put("indexingDate", new Date());
         return updateFields(id, updates);
     }
+
     public void updateFieldAsynch(String id, String field, Object value) throws Exception {
         Map<String, Object> updates = new HashMap<>(2);
         updates.put(field, value);
@@ -409,7 +411,8 @@ public class EsSearchManager implements ISearchManager {
                         List<String> errorDocumentIds = new ArrayList<>();
                         // Add information in index that some items were not properly indexed
                         Arrays.stream(bulkItemResponses.getItems()).forEach(e -> {
-                            if (e.status().getStatus() != 201) { // Not created
+                            if (e.status() != OK
+                                && e.status() != CREATED) {
                                 errorDocumentIds.add(e.getId());
                                 ObjectMapper mapper = new ObjectMapper();
                                 ObjectNode docWithErrorInfo = mapper.createObjectNode();
@@ -464,46 +467,46 @@ public class EsSearchManager implements ISearchManager {
 
     static {
         arrayFields = ImmutableSet.<String>builder()
-                .add(Geonet.IndexFieldNames.RECORDLINK)
-                .add("topic")
-                .add("cat")
-                .add("keyword")
-                .add("resourceCredit")
-                .add("resolutionScaleDenominator")
-                .add("resolutionDistance")
-                .add("extentDescription")
-                .add("inspireTheme")
-                .add("inspireThemeUri")
-                .add("inspireTheme_syn")
-                .add("inspireAnnex")
-                .add("status")
-                .add("status_text")
-                .add("coordinateSystem")
-                .add("identifier")
-                .add("responsibleParty")
-                .add("mdLanguage")
-                .add("otherLanguage")
-                .add("resourceLanguage")
-                .add("resourceIdentifier")
-                .add("MD_LegalConstraintsOtherConstraints")
-                .add("MD_LegalConstraintsUseLimitation")
-                .add("MD_SecurityConstraintsUseLimitation")
-                .add("overview")
-                .add("MD_ConstraintsUseLimitation")
-                .add("resourceType")
-                .add("type")
-                .add("link")
-                .add("crsDetails")
-                .add("format")
-                .add("creationDateForResource")
-                .add("publicationDateForResource")
-                .add("revisionDateForResource")
-                .add("contact")
-                .add("contactForResource")
-                .add("OrgForResource")
-                .add("resourceProviderOrgForResource")
-                .add("resourceTemporalDateRange")
-                .add("resourceTemporalExtentDateRange")
+            .add(Geonet.IndexFieldNames.RECORDLINK)
+            .add("topic")
+            .add("cat")
+            .add("keyword")
+            .add("resourceCredit")
+            .add("resolutionScaleDenominator")
+            .add("resolutionDistance")
+            .add("extentDescription")
+            .add("inspireTheme")
+            .add("inspireThemeUri")
+            .add("inspireTheme_syn")
+            .add("inspireAnnex")
+            .add("status")
+            .add("status_text")
+            .add("coordinateSystem")
+            .add("identifier")
+            .add("responsibleParty")
+            .add("mdLanguage")
+            .add("otherLanguage")
+            .add("resourceLanguage")
+            .add("resourceIdentifier")
+            .add("MD_LegalConstraintsOtherConstraints")
+            .add("MD_LegalConstraintsUseLimitation")
+            .add("MD_SecurityConstraintsUseLimitation")
+            .add("overview")
+            .add("MD_ConstraintsUseLimitation")
+            .add("resourceType")
+            .add("type")
+            .add("link")
+            .add("crsDetails")
+            .add("format")
+            .add("creationDateForResource")
+            .add("publicationDateForResource")
+            .add("revisionDateForResource")
+            .add("contact")
+            .add("contactForResource")
+            .add("OrgForResource")
+            .add("resourceProviderOrgForResource")
+            .add("resourceTemporalDateRange")
+            .add("resourceTemporalExtentDateRange")
             .build();
         booleanFields = ImmutableSet.<String>builder()
             .add("hasxlinks")
@@ -692,6 +695,7 @@ public class EsSearchManager implements ISearchManager {
                                 int from, int size) throws Exception {
         return client.query(defaultIndex, luceneQuery, filterQuery, includedFields, from, size);
     }
+
     public SearchResponse query(JsonNode jsonRequest, Set<String> includedFields,
                                 int from, int size, List<SortBuilder<FieldSortBuilder>> sort) throws Exception {
         // TODO: Review postFilterBuilder
@@ -703,6 +707,7 @@ public class EsSearchManager implements ISearchManager {
         // TODO: Review postFilterBuilder
         return client.query(defaultIndex, jsonRequest, null, includedFields, from, size);
     }
+
     public Map<String, String> getFieldsValues(String id, Set<String> fields) throws Exception {
         return client.getFieldsValues(defaultIndex, id, fields);
     }

@@ -417,6 +417,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             fields.put(Geonet.IndexFieldNames.ID, metadataId);
             fields.put(Geonet.IndexFieldNames.FEATUREOFRECORD, "record");
             fields.put(Geonet.IndexFieldNames.IS_HARVESTED, isHarvested);
+            if (isHarvested) {
+                fields.put(Geonet.IndexFieldNames.HARVESTUUID, fullMd.getHarvestInfo().getUuid());
+            }
             fields.put(Geonet.IndexFieldNames.OWNER, owner);
             fields.put(Geonet.IndexFieldNames.POPULARITY, popularity);
             fields.put(Geonet.IndexFieldNames.RATING, rating);
