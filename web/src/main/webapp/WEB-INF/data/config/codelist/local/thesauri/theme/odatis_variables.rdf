@@ -10,9 +10,9 @@
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geonetwork-opensource.org/Variables Odatis">
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Variables ODATIS">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
-	<ns3:title>Variables Odatis</ns3:title>
+	<ns3:title>Variables ODATIS</ns3:title>
 </rdf:Description>
 
 <rdf:Description rdf:nodeID="node1de7fsjm6x1">

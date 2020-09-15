@@ -6,9 +6,9 @@
 	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
 	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
 
-<rdf:Description rdf:about="http://geonetwork-opensource.org/Type de jeux de donnée - ODATIS">
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Type de jeux de donnée ODATIS">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
-	<ns3:title>Type de jeux de donnée - ODATIS</ns3:title>
+	<ns3:title>Type de jeux de donnée ODATIS</ns3:title>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ce73db96-24b9-4ba1-86f8-4b7e45fa20a3">

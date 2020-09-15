@@ -6,9 +6,9 @@
 	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
 	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
 
-<rdf:Description rdf:about="http://geonetwork-opensource.org/Thèmatiques - ODATIS">
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Thèmatiques ODATIS">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
-	<ns3:title>Thèmatiques - ODATIS</ns3:title>
+	<ns3:title>Thèmatiques ODATIS</ns3:title>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#9f4cbaab-5278-45f4-ae6f-a9dfffbaa367">
