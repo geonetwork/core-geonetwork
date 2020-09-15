@@ -214,7 +214,7 @@
         }
       };
 
-      this.generateEsRequest = function(p, searchState, searchConfigId) {
+      this.generateEsRequest = function(p, searchState, searchConfigId, filters) {
         var params = {};
         var luceneQueryString = gnEsLuceneQueryParser.facetsToLuceneQuery(searchState.filters);
 
@@ -241,6 +241,10 @@
             must: []
           }
         };
+
+        if (angular.isArray(filters)) {
+          query.function_score['query'].bool.filter = filters;
+        }
 
         var queryHook = query.function_score.query.bool;
         this.buildQueryClauses(queryHook, p, luceneQueryString);

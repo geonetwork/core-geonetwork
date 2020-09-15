@@ -143,25 +143,6 @@
           $scope.searchObj.params,
           defaultParams);
 
-      // Add hidden filters which may
-      // restrict search (do not add an existing filter)
-      if ($scope.searchObj.filters) {
-        angular.forEach($scope.searchObj.filters,
-            function(value, key) {
-              var p = $scope.searchObj.params[key];
-              if (p) {
-                if (p !== value && (!p.indexOf || p.indexOf(value) === -1)) {
-                  if (!angular.isArray(p)) {
-                    $scope.searchObj.params[key] = [p];
-                  }
-                  $scope.searchObj.params[key].push(value);
-                }
-              } else {
-                $scope.searchObj.params[key] = value;
-              }
-            });
-      }
-
       // Set default pagination if not set
       if ((!keepPagination &&
           !$scope.searchObj.permalink) ||
@@ -178,8 +159,8 @@
       var params = angular.copy($scope.searchObj.params);
       var finalParams = angular.extend(params, hiddenParams);
       $scope.finalParams = finalParams;
-
-      var esParams = gnESService.generateEsRequest(finalParams, $scope.searchObj.state, $scope.searchObj.configId);
+      var esParams = gnESService.generateEsRequest(finalParams, $scope.searchObj.state,
+        $scope.searchObj.configId, $scope.searchObj.filters);
       gnESClient.search(esParams, $scope.searchResults.selectionBucket || 'metadata', $scope.searchObj.configId)
         .then(function(data) {
         // data is not an object: this is an error
@@ -497,7 +478,8 @@
         var key = facet.path[i];
         facetConfigs[key] = $scope.facetConfig[key];
       }
-      var request = gnESService.generateEsRequest($scope.finalParams, $scope.searchObj.state, $scope.searchObj.configId);
+      var request = gnESService.generateEsRequest($scope.finalParams, $scope.searchObj.state,
+        $scope.searchObj.configId, $scope.searchObj.filters);
       return gnESClient.getTermsParamsWithNewSizeOrFilter(
         request.query,
         facet.path,
@@ -514,7 +496,8 @@
         var key = facet.path[i];
         facetConfigs[key] = $scope.facetConfig[key];
       }
-      var request = gnESService.generateEsRequest($scope.finalParams, $scope.searchObj.state, $scope.searchObj.configId)
+      var request = gnESService.generateEsRequest($scope.finalParams, $scope.searchObj.state,
+        $scope.searchObj.configId, $scope.searchObj.filters)
       return gnESClient.getTermsParamsWithNewSizeOrFilter(
         request.query,
         facet.path,

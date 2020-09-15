@@ -28,28 +28,6 @@
   var module = angular.module('gn_sources_controller',
       []);
 
-  module.controller('GnCSWSearchServiceRecordController', [
-    '$scope', 'gnGlobalSettings',
-    function($scope, gnGlobalSettings) {
-      $scope.searchObj = {
-        internal: true,
-        any: '',
-        defaultParams: {
-          any: '',
-          from: 1,
-          to: 50,
-          type: 'service',
-          sortBy: 'title',
-          sortOrder: 'asc'
-        }
-      };
-      $scope.searchObj.params = angular.extend({},
-        $scope.searchObj.defaultParams);
-      $scope.updateParams = function() {
-        $scope.searchObj.params.any =
-          '*' + $scope.searchObj.any + '*';
-      };
-    }]);
 
   module.controller('GnSourcesController', [
     '$scope', '$http', '$rootScope', '$translate',

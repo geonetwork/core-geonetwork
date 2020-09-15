@@ -305,11 +305,11 @@ public class EsHTTPProxy {
         if (queryNode.get("function_score") != null) {
             // Add filter node to the bool element of the query if provided
             ObjectNode objectNode = (ObjectNode) queryNode.get("function_score").get("query").get("bool");
-            objectNode.set("filter", nodeFilter);
+            insertFilter(objectNode, nodeFilter);
         } else if (queryNode.get("bool") != null) {
             // Add filter node to the bool element of the query if provided
             ObjectNode objectNode = (ObjectNode) queryNode.get("bool");
-            objectNode.set("filter", nodeFilter);
+            insertFilter(objectNode, nodeFilter);
         } else {
             // If no bool node in the query, create the bool node and add the query and filter nodes to it
             ObjectNode copy = esQuery.get("query").deepCopy();
@@ -320,6 +320,15 @@ public class EsHTTPProxy {
 
             ((ObjectNode) queryNode).removeAll();
             ((ObjectNode) queryNode).set("bool", objectNodeBool);
+        }
+    }
+
+    private void insertFilter(ObjectNode objectNode, JsonNode nodeFilter) {
+        JsonNode filter = objectNode.get("filter");
+        if (filter != null && filter.isArray()) {
+            ((ArrayNode) filter).add(nodeFilter);
+        } else {
+            objectNode.set("filter", nodeFilter);
         }
     }
 
