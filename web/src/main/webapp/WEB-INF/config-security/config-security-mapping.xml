@@ -36,11 +36,9 @@
     <property name="securityMetadataSource">
       <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex">
         <sec:intercept-url pattern="/metadata/.*" access="permitAll"/>
-
         <!-- Secure proxy URL if needed eg. restrict to some host only. -->
         <sec:intercept-url pattern="/proxy\?url=.*" access="permitAll"/>
         <!--<sec:intercept-url pattern="/proxy\?url=.*(www.brgm.fr|www.ifremer.fr).*" access="permitAll"/>-->
-
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/metadata/.*" access="permitAll"/>
@@ -78,8 +76,6 @@
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/oaipmh!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/info!?.*" access="permitAll"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.csw!?.*"
-                           access="hasRole('Administrator')"/>
         <sec:intercept-url
           pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.csw.customelementset!?.*"
           access="hasAuthority('Administrator')"/>

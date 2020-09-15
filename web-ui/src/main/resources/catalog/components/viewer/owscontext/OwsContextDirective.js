@@ -38,11 +38,14 @@
 
       $scope.searchObj = {
         permalink: false,
-        filters: {
-          type: 'map/interactive'
-        },
+        filters: [{
+          "query_string": {
+            "query": "+resourceType:\"map/interactive\""
+          }
+        }],
         hitsperpageValues: 2,
         params: {
+          isTemplate: 'n',
           sortBy: 'resourceTitleObject.default.keyword',
           from: 1,
           to: 2

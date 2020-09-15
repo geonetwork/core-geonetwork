@@ -32,6 +32,13 @@ public enum SettingSet {
     INSPIRE(new String[]{
         Settings.SYSTEM_INSPIRE_ENABLE
     }),
+    CSW(new String[]{
+        Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID,
+        Settings.SYSTEM_CSW_ENABLE,
+        Settings.SYSTEM_CSW_ENABLEWHENINDEXING,
+        Settings.SYSTEM_CSW_METADATA_PUBLIC,
+        Settings.SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS
+    }),
     HARVESTER(new String[]{
         Settings.SYSTEM_HARVESTER_ENABLE_EDITING
     }),

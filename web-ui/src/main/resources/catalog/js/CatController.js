@@ -364,7 +364,12 @@ goog.require('gn_alert');
               }
             }
           },
-          'filters': {},
+          'filters': null,
+          // 'filters': [{
+          //     "query_string": {
+          //       "query": "-resourceType:service"
+          //     }
+          //   }],
           'sortbyValues': [{
             'sortBy': 'relevance',
             'sortOrder': ''
