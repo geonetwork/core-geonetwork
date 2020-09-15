@@ -113,7 +113,7 @@
         <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:descriptiveKeywords/
                                           *[
                                           mri:type/*/@codeListValue = 'theme'
-                                            and string-join(mri:keyword//text(), '') != ''
+                                            and normalize-space(string-join(mri:keyword//text(), '')) != ''
                                             and (not(mri:thesaurusName/*/cit:identifier/*/mcc:code)
                                             or mri:thesaurusName/*/cit:identifier/*/mcc:code/*/
                                                 text() != '')]">
