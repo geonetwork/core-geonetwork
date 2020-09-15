@@ -748,7 +748,9 @@
 
   <!-- Display thesaurus name and the list of keywords -->
   <xsl:template mode="render-field"
-                match="mri:descriptiveKeywords[count(*/mri:keyword) = 0]" priority="200"/>
+                match="mri:descriptiveKeywords[  
+                  normalize-space(string-join(*/mri:keyword//text(), '')) = ''
+                  or count(*/mri:keyword) = 0]" priority="200"/>
   <xsl:template mode="render-field"
                 match="mri:descriptiveKeywords[
                         */mri:thesaurusName/cit:CI_Citation/cit:title]"
