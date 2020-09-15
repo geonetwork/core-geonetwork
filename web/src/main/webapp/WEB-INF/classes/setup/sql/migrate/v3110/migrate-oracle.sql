@@ -13,6 +13,11 @@ ALTER TABLE Validation ALTER COLUMN valType TYPE varchar(128);
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/timeZone', '', 0, 260, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/users/identicon', 'gravatar:mp', 0, 9110, 'n');
 
+ALTER TABLE usersearch ADD (tempurl clob);
+ALTER TABLE usersearch SET tempurl = url, url = null;
+ALTER TABLE usersearch DROP COLUMN url;
+ALTER TABLE usersearch RENAME COLUMN tempurl to url;
+
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (63,'recordrestored','y', 63, 'event', null);
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'ara','Record restored.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'cat','Record restored.');

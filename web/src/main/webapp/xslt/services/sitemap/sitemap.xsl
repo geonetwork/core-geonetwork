@@ -121,7 +121,7 @@
               </xsl:when>
 
               <xsl:otherwise>
-                <xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid)"/>
+                <xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid, '?language=all')"/>
               </xsl:otherwise>
             </xsl:choose>
           </loc>
