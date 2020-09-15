@@ -53,47 +53,70 @@
     <xsl:variable name="mainLanguage">
       <xsl:call-template name="get-iso19115-3.2018-language"/>
     </xsl:variable>
-    
+
     <xsl:choose>
       <xsl:when test="$metadata/gn:info[position() = last()]/isTemplate = 's'">
         <xsl:for-each select="distinct-values($metadata//lan:LocalisedCharacterString/@locale)">
           <xsl:variable name="locale" select="string(.)" />
-          <xsl:variable name="langId" select="xslutil:threeCharLangCode(substring($locale,2,2))" />
+          <xsl:variable name="langId" select="xslutil:threeCharLangCode(substring($locale, 2, 2))" />
           <lang id="{.}" code="{$langId}"/>
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:for-each select="$metadata/mdb:otherLocale/lan:PT_Locale[
-                                  lan:language/lan:LanguageCode/@codeListValue != $mainLanguage]">
+        <xsl:for-each select="$metadata/mdb:otherLocale/lan:PT_Locale">
           <lang id="{@id}" code="{lan:language/lan:LanguageCode/@codeListValue}"/>
+        </xsl:for-each>
+        <xsl:for-each select="$metadata/mdb:defaultLocale/*">
+          <lang id="{@id}" code="{lan:language/lan:LanguageCode/@codeListValue}" default=""/>
         </xsl:for-each>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
-  <!-- Template used to return a translation if one found, 
-       or the text in default metadata language 
+  <!-- Template used to return a translation if one found,
+       or the text in default metadata language
        or the first non empty text element.
+       If language id used is "#ALL", then all translations
+       are reported with an xml:lang attribute indicating
+       the language of the text.
     -->
   <xsl:template name="get-iso19115-3.2018-localised"
                 mode="localised"
                 match="*[lan:PT_FreeText or gco:CharacterString or gcx:Anchor]">
     <xsl:param name="langId"/>
 
-    <xsl:variable name="translation"
-                  select="lan:PT_FreeText/lan:textGroup/lan:LocalisedCharacterString[@locale=$langId]"/>
-
     <xsl:variable name="mainValue"
                   select="(gco:CharacterString|gcx:Anchor)[1]"/>
 
-    <xsl:variable name="firstNonEmptyValue"
-                  select="((gco:CharacterString|gcx:Anchor|lan:PT_FreeText/lan:textGroup/lan:LocalisedCharacterString)[. != ''])[1]"/>
+    <xsl:choose>
+      <xsl:when test="$langId = '#ALL' and lan:PT_FreeText">
+        <xsl:choose>
+          <xsl:when test="lan:PT_FreeText">
+            <xsl:for-each select="lan:PT_FreeText/lan:textGroup/lan:LocalisedCharacterString[. != '']">
+              <xsl:variable name="id"
+                            select="replace(@locale, '#', '')"/>
+              <div xml:lang="{$metadata//lan:PT_Locale[@id = $id]/lan:language/*/@codeListValue}"><xsl:value-of select="."/></div>
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:otherwise>
+            <div xml:lang="{$metadata//mdb:defaultLocale/*/lan:language/*/@codeListValue}"><xsl:value-of select="$mainValue"/></div>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="translation"
+                      select="lan:PT_FreeText/lan:textGroup/lan:LocalisedCharacterString[@locale= $langId]"/>
 
-    <xsl:value-of select="if($translation != '')
+        <xsl:variable name="firstNonEmptyValue"
+                      select="((gco:CharacterString|gcx:Anchor|lan:PT_FreeText/lan:textGroup/lan:LocalisedCharacterString)[. != ''])[1]"/>
+
+        <xsl:value-of select="if($translation != '')
                           then $translation
                           else (if($mainValue != '')
                                 then $mainValue
                                 else $firstNonEmptyValue)"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template mode="localised" match="*">

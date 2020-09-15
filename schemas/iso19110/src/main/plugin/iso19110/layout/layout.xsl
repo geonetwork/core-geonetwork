@@ -34,6 +34,7 @@
                 exclude-result-prefixes="#all">
 
   <xsl:include href="utility-fn.xsl"/>
+  <xsl:include href="utility-tpl.xsl"/>
   <xsl:include href="layout-custom-fields.xsl"/>
 
   <!-- Ignore all gn element -->
@@ -298,23 +299,10 @@
 
   </xsl:template>
 
-
-  <!-- Get the main metadata languages - none for ISO19110 -->
-  <xsl:template name="get-iso19110-language"/>
-
-  <!-- Get the list of other languages -->
-  <xsl:template name="get-iso19110-other-languages"/>
-
-  <xsl:template name="get-iso19110-other-languages-as-json"/>
-
-  <xsl:template name="get-iso19110-online-source-config"/>
-
   <xsl:template name="get-iso19110-title">
     <xsl:value-of select="$metadata/gfc:FC_FeatureCatalogue/gmx:name/gco:CharacterString|
                           $metadata/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|
                           $metadata/gfc:FC_FeatureType/gfc:typeName/gco:LocalName"/>
   </xsl:template>
-
-  <xsl:template name="get-iso19110-extents-as-json">[]</xsl:template>
 
 </xsl:stylesheet>
