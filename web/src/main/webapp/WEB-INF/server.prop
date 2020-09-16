@@ -1,16 +1,16 @@
 #GeoNetwork opensource properties. These are also used by geonetwork at runtime
-#Wed, 29 Apr 2020 08:08:46 +0000
+#Wed, 16 Sep 2020 07:58:29 +0000
 
 version=4.0.0
-subVersion=alpha.1
+subVersion=alpha.2
 release=4.0.0
 javaVersion=1.8.0
 jre_url=http\://openjdk.java.net/
 ant.build.javac.target=1.8
-buildDate=2020-04-29T08\:08\:46+0000
-date=2008290808
-day=29-4-2020
+buildDate=2020-09-16T07\:58\:29+0000
+date=2058160758
+day=16-9-2020
 OS=Compiled on Linux (unix)
 debugOn=on
-git_revision=a998abae4f1e993edbdb89bb7fed2abef4d9e825
+git_revision=87ea090ab61fabb6696092079775d95c3343032f
 git_url=https\://github.com/geonetwork/core-geonetwork.git (push)
