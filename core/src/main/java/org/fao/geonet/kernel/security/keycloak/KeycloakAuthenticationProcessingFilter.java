@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.security.keycloak;
 
 import org.apache.commons.lang.LocaleUtils;
-import org.apache.http.client.utils.URIBuilder;
 
 import org.fao.geonet.utils.Log;
 import org.keycloak.KeycloakPrincipal;
@@ -36,6 +35,8 @@ import org.springframework.security.authentication.event.InteractiveAuthenticati
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.FilterChain;
@@ -43,9 +44,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapters.springsecurity.filter.KeycloakAuthenticationProcessingFilter {
+
+    private RequestCache requestCache;
 
     @Autowired
     private KeycloakUserUtils keycloakUserUtils;
@@ -96,19 +104,42 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                             + "' properly authenticated via Keycloak");
 
 
-                    //Todo the redirect is currently hard coded to to to the context root
-                    // It needs to be corrected to later go to the gn redirection url
-                    try {
-                        URIBuilder uribuilder = new URIBuilder();
-                        uribuilder.setScheme(request.getScheme());
-                        uribuilder.setPort(request.getServerPort()); //set for all?
-                        uribuilder.setHost(request.getServerName());
-                        uribuilder.setPath(request.getContextPath());
-                        response.sendRedirect(uribuilder.build().toString());
-                    } catch (URISyntaxException e) {
-                        Log.error(Log.JEEVES, "Error creating redirect url", e);
+                    if (requestCache != null) {
+                        String redirect = null;
+
+                        SavedRequest savedReq = requestCache.getRequest(request,
+                                response);
+                        if (savedReq != null) {
+                            redirect = savedReq.getRedirectUrl();
+                            Log.debug(Log.JEEVES,
+                                    "Found saved request location: " + redirect);
+                        } else {
+                            Log.debug(Log.JEEVES, "No saved request found");
+                        }
+
+                        if (redirect != null) {
+                            Log.info(Log.JEEVES, "Redirecting to " + redirect);
+
+                            // Removing original request, since we want to
+                            // retain current headers.
+                            // If request remains in cache, requestCacheFilter
+                            // will reinstate the original headers and we don't
+                            // want it.
+                            requestCache.removeRequest(request, response);
+
+                            response.sendRedirect(redirect);
+                        }
+                    } else {
+                        Map<String, List<String>> qsMap = splitQueryString(request.getQueryString());
+                        if (qsMap.containsKey("redirectUrl")) {
+                            response.sendRedirect(qsMap.get("redirectUrl").get(0));
+                        } else {
+                            // If the redirect url did not exist then lets redirect back to the context home.
+                            response.sendRedirect(request.getContextPath());
+                        }
                     }
 
+                    // Set users preferred locale if it exists.
                     if (keycloakPrincipal.getKeycloakSecurityContext().getToken().getLocale() != null) {
                         try {
                             response.setLocale(LocaleUtils.toLocale(keycloakPrincipal.getKeycloakSecurityContext().getToken().getLocale()));
@@ -125,6 +156,7 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                 if (this.eventPublisher != null) {
                     eventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(authResult, this.getClass()));
                 }
+                // No further action required as we are redirecting to new page
                 return;
             } catch (Exception ex) {
                 Log.warning(Log.JEEVES, "Error during Keycloak login for user "
@@ -132,5 +164,36 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
             }
         }
         chain.doFilter(request, response);
+    }
+
+    public RequestCache getRequestCache() {
+        return requestCache;
+    }
+
+    public void setRequestCache(RequestCache requestCache) {
+        this.requestCache = requestCache;
+    }
+
+    /**
+     * parse query string into a map.
+     * Source: https://stackoverflow.com/questions/13592236/parse-a-uri-string-into-name-value-collection
+     *
+     * @param queryString to be parse into a map.
+     * @return a map containing the values from the querystring.
+     * @throws UnsupportedEncodingException
+     */
+    private static Map<String, List<String>> splitQueryString(String queryString) throws UnsupportedEncodingException {
+        final Map<String, List<String>> query_pairs = new LinkedHashMap<String, List<String>>();
+        final String[] pairs = queryString.split("&");
+        for (String pair : pairs) {
+            final int idx = pair.indexOf("=");
+            final String key = idx > 0 ? URLDecoder.decode(pair.substring(0, idx), "UTF-8") : pair;
+            if (!query_pairs.containsKey(key)) {
+                query_pairs.put(key, new LinkedList<String>());
+            }
+            final String value = idx > 0 && pair.length() > idx + 1 ? URLDecoder.decode(pair.substring(idx + 1), "UTF-8") : null;
+            query_pairs.get(key).add(value);
+        }
+        return query_pairs;
     }
 }
