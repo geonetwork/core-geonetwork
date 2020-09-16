@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexFields;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
@@ -392,6 +393,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             final MetadataType metadataType = fullMd.getDataInfo().getType();
             final String root = fullMd.getDataInfo().getRoot();
             final String uuid = fullMd.getUuid();
+            String indexKey = uuid;
+            if (fullMd instanceof MetadataDraft) {
+                indexKey += "-draft";
+            }
+
             final String extra = fullMd.getDataInfo().getExtra();
             final boolean isHarvested = fullMd.getHarvestInfo().isHarvested();
             final String owner = String.valueOf(fullMd.getSourceInfo().getOwner());
@@ -421,135 +427,146 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 fields.put(Geonet.IndexFieldNames.HARVESTUUID, fullMd.getHarvestInfo().getUuid());
             }
             fields.put(Geonet.IndexFieldNames.OWNER, owner);
-            fields.put(Geonet.IndexFieldNames.POPULARITY, popularity);
-            fields.put(Geonet.IndexFieldNames.RATING, rating);
 
-            if (RatingsSetting.ADVANCED.equals(settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE))) {
-                int nbOfFeedback = userFeedbackRepository.findByMetadata_Uuid(uuid).size();
-                fields.put(Geonet.IndexFieldNames.FEEDBACKCOUNT, nbOfFeedback);
-            }
 
-            fields.put(Geonet.IndexFieldNames.DISPLAY_ORDER, displayOrder);
-            fields.put(Geonet.IndexFieldNames.EXTRA, extra);
-
-            // If the metadata has an atom document, index related information
-            InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id$);
-
-            if ((feed != null) && StringUtils.isNotEmpty(feed.getAtom())) {
-                fields.put("has_atom", "y");
-                fields.put("any", feed.getAtom());
-            }
-
-            if (owner != null) {
-                Optional<User> userOpt = userRepository.findById(fullMd.getSourceInfo().getOwner());
-                if (userOpt.isPresent()) {
-                    User user = userOpt.get();
-                    fields.put(Geonet.IndexFieldNames.USERINFO, user.getUsername() + "|" + user.getSurname() + "|" + user
-                        .getName() + "|" + user.getProfile());
-                    fields.put(Geonet.IndexFieldNames.OWNERNAME, user.getName() + " " + user.getSurname());
-                }
-            }
-
-            String logoUUID = null;
-            if (groupOwner != null) {
-                final Optional<Group> groupOpt = groupRepository.findById(groupOwner);
-                if (groupOpt.isPresent()) {
-                    Group group = groupOpt.get();
-                    fields.put(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner));
-                    final boolean preferGroup = settingManager.getValueAsBool(Settings.SYSTEM_PREFER_GROUP_LOGO, true);
-                    if (group.getWebsite() != null && !group.getWebsite().isEmpty() && preferGroup) {
-                        fields.put(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite());
-                    }
-                    if (group.getLogo() != null && preferGroup) {
-                        logoUUID = group.getLogo();
-                    }
-                }
-            }
-
-            // Group logo are in the harvester folder and contains extension in file name
-            boolean added = false;
-            if (StringUtils.isNotEmpty(logoUUID)) {
-                final Path harvesterLogosDir = resources.locateHarvesterLogosDir(getServiceContext());
-                try (Resources.ResourceHolder logo = resources.getImage(getServiceContext(), logoUUID, harvesterLogosDir)) {
-                    if (logo != null) {
-                        added = true;
-                        fields.put(Geonet.IndexFieldNames.LOGO,
-                                   "/images/harvesting/" + logo.getPath().getFileName());
-                    }
-                }
-            }
-
-            // If not available, use the local catalog logo
-            if (!added) {
-                logoUUID = source + ".png";
-                final Path logosDir = resources.locateLogosDir(getServiceContext());
-                try (Resources.ResourceHolder image = resources.getImage(getServiceContext(), logoUUID, logosDir)) {
-                    if (image != null) {
-                        fields.put(Geonet.IndexFieldNames.LOGO,
-                                "/images/logos/" + logoUUID);
-                    }
-                }
-            }
-
-            fields.putAll(buildFieldsForPrivileges(id$));
-
-            for (MetadataCategory category : fullMd.getCategories()) {
-                fields.put(Geonet.IndexFieldNames.CAT, category.getName());
-            }
-
-            // get status
-            Sort statusSort = Sort.by(Sort.Direction.DESC,
-                MetadataStatus_.id.getName() + "." + MetadataStatusId_.changeDate.getName());
-            List<MetadataStatus> statuses = statusRepository.findAllByIdAndByType(id$, StatusValueType.workflow, statusSort);
-            if (!statuses.isEmpty()) {
-                MetadataStatus stat = statuses.get(0);
-                String status = String.valueOf(stat.getId().getStatusId());
-                fields.put(Geonet.IndexFieldNames.STATUS, status);
-                String statusChangeDate = stat.getId().getChangeDate().getDateAndTime();
-                fields.put(Geonet.IndexFieldNames.STATUS_CHANGE_DATE, statusChangeDate);
-            }
-
-            // getValidationInfo
-            // -1 : not evaluated
-            // 0 : invalid
-            // 1 : valid
-            List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id$);
-            if (validationInfo.isEmpty()) {
-                fields.put(Geonet.IndexFieldNames.VALID, "-1");
+            if (!schemaManager.existsSchema(schema)) {
+                fields.put(IndexFields.DRAFT, "n");
+                fields.put(IndexFields.INDEXING_ERROR_FIELD, true);
+                fields.put(IndexFields.INDEXING_ERROR_MSG, String.format(
+                    "Schema '%s' is not registerd in this catalog. Install it or remove those records",
+                    schema
+                ));
+                searchManager.index(null, md, indexKey, fields, metadataType, root, forceRefreshReaders);
+                Log.error(Geonet.DATA_MANAGER, String.format(
+                    "Record %s / Schema '%s' is not registerd in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
+                    metadataId, schema));
             } else {
-                String isValid = "1";
-                boolean hasInspireValidation = false;
-                for (MetadataValidation vi : validationInfo) {
-                    String type = vi.getId().getValidationType();
-                    MetadataValidationStatus status = vi.getStatus();
 
-                    // TODO: Check if ignore INSPIRE validation?
-                    if (!type.equalsIgnoreCase("inspire")) {
-                        if (status == MetadataValidationStatus.INVALID && vi.isRequired()) {
-                            isValid = "0";
-                        }
-                    } else {
-                        hasInspireValidation = true;
-                        fields.put(Geonet.IndexFieldNames.INSPIRE_REPORT_URL, vi.getReportUrl());
-                        fields.put(Geonet.IndexFieldNames.INSPIRE_VALIDATION_DATE, vi.getValidationDate().getDateAndTime());
+                fields.put(Geonet.IndexFieldNames.POPULARITY, popularity);
+                fields.put(Geonet.IndexFieldNames.RATING, rating);
+
+                if (RatingsSetting.ADVANCED.equals(settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE))) {
+                    int nbOfFeedback = userFeedbackRepository.findByMetadata_Uuid(uuid).size();
+                    fields.put(Geonet.IndexFieldNames.FEEDBACKCOUNT, nbOfFeedback);
+                }
+
+                fields.put(Geonet.IndexFieldNames.DISPLAY_ORDER, displayOrder);
+                fields.put(Geonet.IndexFieldNames.EXTRA, extra);
+
+                // If the metadata has an atom document, index related information
+                InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id$);
+
+                if ((feed != null) && StringUtils.isNotEmpty(feed.getAtom())) {
+                    fields.put("has_atom", "y");
+                    fields.put("any", feed.getAtom());
+                }
+
+                if (owner != null) {
+                    Optional<User> userOpt = userRepository.findById(fullMd.getSourceInfo().getOwner());
+                    if (userOpt.isPresent()) {
+                        User user = userOpt.get();
+                        fields.put(Geonet.IndexFieldNames.USERINFO, user.getUsername() + "|" + user.getSurname() + "|" + user
+                            .getName() + "|" + user.getProfile());
+                        fields.put(Geonet.IndexFieldNames.OWNERNAME, user.getName() + " " + user.getSurname());
                     }
-                    fields.put(Geonet.IndexFieldNames.VALID + "_" + type, status.getCode());
                 }
-                fields.put(Geonet.IndexFieldNames.VALID, isValid);
 
-                if (!hasInspireValidation) {
-                    fields.put(Geonet.IndexFieldNames.VALID_INSPIRE, "-1");
+                String logoUUID = null;
+                if (groupOwner != null) {
+                    final Optional<Group> groupOpt = groupRepository.findById(groupOwner);
+                    if (groupOpt.isPresent()) {
+                        Group group = groupOpt.get();
+                        fields.put(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner));
+                        final boolean preferGroup = settingManager.getValueAsBool(Settings.SYSTEM_PREFER_GROUP_LOGO, true);
+                        if (group.getWebsite() != null && !group.getWebsite().isEmpty() && preferGroup) {
+                            fields.put(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite());
+                        }
+                        if (group.getLogo() != null && preferGroup) {
+                            logoUUID = group.getLogo();
+                        }
+                    }
                 }
+
+                // Group logo are in the harvester folder and contains extension in file name
+                boolean added = false;
+                if (StringUtils.isNotEmpty(logoUUID)) {
+                    final Path harvesterLogosDir = resources.locateHarvesterLogosDir(getServiceContext());
+                    try (Resources.ResourceHolder logo = resources.getImage(getServiceContext(), logoUUID, harvesterLogosDir)) {
+                        if (logo != null) {
+                            added = true;
+                            fields.put(Geonet.IndexFieldNames.LOGO,
+                                "/images/harvesting/" + logo.getPath().getFileName());
+                        }
+                    }
+                }
+
+                // If not available, use the local catalog logo
+                if (!added) {
+                    logoUUID = source + ".png";
+                    final Path logosDir = resources.locateLogosDir(getServiceContext());
+                    try (Resources.ResourceHolder image = resources.getImage(getServiceContext(), logoUUID, logosDir)) {
+                        if (image != null) {
+                            fields.put(Geonet.IndexFieldNames.LOGO,
+                                "/images/logos/" + logoUUID);
+                        }
+                    }
+                }
+
+                fields.putAll(buildFieldsForPrivileges(id$));
+
+                for (MetadataCategory category : fullMd.getCategories()) {
+                    fields.put(Geonet.IndexFieldNames.CAT, category.getName());
+                }
+
+                // get status
+                Sort statusSort = Sort.by(Sort.Direction.DESC,
+                    MetadataStatus_.id.getName() + "." + MetadataStatusId_.changeDate.getName());
+                List<MetadataStatus> statuses = statusRepository.findAllByIdAndByType(id$, StatusValueType.workflow, statusSort);
+                if (!statuses.isEmpty()) {
+                    MetadataStatus stat = statuses.get(0);
+                    String status = String.valueOf(stat.getId().getStatusId());
+                    fields.put(Geonet.IndexFieldNames.STATUS, status);
+                    String statusChangeDate = stat.getId().getChangeDate().getDateAndTime();
+                    fields.put(Geonet.IndexFieldNames.STATUS_CHANGE_DATE, statusChangeDate);
+                }
+
+                // getValidationInfo
+                // -1 : not evaluated
+                // 0 : invalid
+                // 1 : valid
+                List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id$);
+                if (validationInfo.isEmpty()) {
+                    fields.put(Geonet.IndexFieldNames.VALID, "-1");
+                } else {
+                    String isValid = "1";
+                    boolean hasInspireValidation = false;
+                    for (MetadataValidation vi : validationInfo) {
+                        String type = vi.getId().getValidationType();
+                        MetadataValidationStatus status = vi.getStatus();
+
+                        // TODO: Check if ignore INSPIRE validation?
+                        if (!type.equalsIgnoreCase("inspire")) {
+                            if (status == MetadataValidationStatus.INVALID && vi.isRequired()) {
+                                isValid = "0";
+                            }
+                        } else {
+                            hasInspireValidation = true;
+                            fields.put(Geonet.IndexFieldNames.INSPIRE_REPORT_URL, vi.getReportUrl());
+                            fields.put(Geonet.IndexFieldNames.INSPIRE_VALIDATION_DATE, vi.getValidationDate().getDateAndTime());
+                        }
+                        fields.put(Geonet.IndexFieldNames.VALID + "_" + type, status.getCode());
+                    }
+                    fields.put(Geonet.IndexFieldNames.VALID, isValid);
+
+                    if (!hasInspireValidation) {
+                        fields.put(Geonet.IndexFieldNames.VALID_INSPIRE, "-1");
+                    }
+                }
+
+                fields.putAll(addExtraFields(fullMd));
+
+                searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType, root, forceRefreshReaders);
             }
-
-            fields.putAll(addExtraFields(fullMd));
-
-            String indexKey = uuid;
-            if (fullMd instanceof MetadataDraft) {
-                indexKey += "-draft";
-            }
-            searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType, root, forceRefreshReaders);
-
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId
                 + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);

@@ -377,7 +377,9 @@ public class EsSearchManager implements ISearchManager {
                       boolean forceRefreshReaders) throws Exception {
 
         Element docs = new Element("doc");
-        addMDFields(docs, schemaDir, metadata, metadataType);
+        if (schemaDir != null) {
+            addMDFields(docs, schemaDir, metadata, metadataType);
+        }
         addMoreFields(docs, dbFields);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -393,7 +395,6 @@ public class EsSearchManager implements ISearchManager {
 
         String jsonDocument = mapper.writeValueAsString(doc);
         listOfDocumentsToIndex.put(id, jsonDocument);
-
         if (listOfDocumentsToIndex.size() == commitInterval || forceRefreshReaders) {
             sendDocumentsToIndex();
         }
