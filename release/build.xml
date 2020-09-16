@@ -160,9 +160,9 @@
       <zipfileset dir="./schemaPlugins" prefix="web/geonetwork/WEB-INF/data/config/schema_plugins" />
     </zip>
 
-    <checksum
-      file="../${appName}-${release}/${appName}-${release}-${subVersion}.zip"
-      forceOverwrite="yes"/>
+    <checksum file="../${appName}-${release}/${appName}-${release}-${subVersion}.zip"
+              pattern="{0}  {1}"
+              forceOverwrite="yes"/>
 
   </target>
 
@@ -173,8 +173,8 @@
           tofile="../${appName}-${release}/${appName}-${release}-${subVersion}.war" />
 
     <checksum file="../${appName}-${release}/${appName}-${release}-${subVersion}.war"
+              pattern="{0}  {1}"
               forceOverwrite="yes"/>
 
   </target>
-
 </project>
