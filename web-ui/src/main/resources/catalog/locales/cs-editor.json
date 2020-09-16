@@ -1,4 +1,5 @@
 {
+    "featureCatReplace": "Nahradit stávající katalog funkcí?",
     "add-extent-from-geokeywords": "Z klíčových slov vypočítat rozměr",
     "add-extent-from-geokeywords-help": "Hledejte všechna klíčová slova z tezauru typu 'place' a přidejte odpovídající rozsahy.",
     "addCRS-help": "Přidat nové CRS",

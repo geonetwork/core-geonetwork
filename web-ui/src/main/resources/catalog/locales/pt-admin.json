@@ -1173,6 +1173,8 @@
     "ui-createPageTpl-other": "personalizadas",
     "ui-languages": "Lista de idiomas",
     "ui-filters": "Filtros",
+    "ui-minUserProfileToCreateTemplate": "Which minimum profile is required to manage/create template?",
+    "ui-minUserProfileToCreateTemplate-help": "Can be one of: '', 'Editor', 'Reviewer', 'UserAdmin', 'Administrator'. Depending on the user highest profile, user may not be able to import a record as a template or subtemplate, save a record as a template in the editor or manage directory templates. This applies only to the user interface, not to the API. '' means that all users can create template.",
     "ui-facetTabField": "Campo da faceta para exibir usando guias",
     "ui-facetTabField-help": "O campo da guia é exibido acima dos resultados da pesquisa.",
     "ui-filters-help": "Add extra filters to add to any search queries. It is recommended to avoid setting a filter on an existing form field.",

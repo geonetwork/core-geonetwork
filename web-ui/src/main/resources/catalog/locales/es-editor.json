@@ -1,4 +1,5 @@
 {
+    "featureCatReplace": "Replace existing feature catalog?",
     "add-extent-from-geokeywords": "Calcular la extensión con las palabras clave",
     "add-extent-from-geokeywords-help": "Buscar todas las palabras clave del tesauro con tipo 'lugar' y añadir las extensiones coincidentes.",
     "addCRS-help": "Añadir nuevo CRS",

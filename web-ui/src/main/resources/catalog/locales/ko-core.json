@@ -395,6 +395,7 @@
     "link-hassources": "원본 데이터 셋의",
     "link-sources": "원본 데이터셋",
     "link-siblings": "형제",
+    "link-fcats": "피처 카탈로그",
     "indexAccessError": "인덱스 접근 중 오류가 발생했습니다.",
     "applyFilter": "필터 적용",
     "confirm": "확인",

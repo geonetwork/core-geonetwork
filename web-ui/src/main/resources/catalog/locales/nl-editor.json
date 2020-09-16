@@ -1,4 +1,5 @@
 {
+    "featureCatReplace": "Replace existing feature catalog?",
     "add-extent-from-geokeywords": "Bereken de dekking uit de trefwoorden",
     "add-extent-from-geokeywords-help": "Doorzoek alle trefwoorden uit de thesaurus van het type plaats en voeg de bijbehorende extent toe.",
     "addCRS-help": "Voeg nieuw projectie systeem toe",
@@ -269,8 +270,8 @@
     "saveMetadataError": "Fout tijdens het opslaan van metadata. U moet de editor herladen .",
     "saveMetadataSuccess": "Alle wijzigingen opgeslagen .",
     "saveMetadata": "Bewaar metadata",
-    "saveDraft": "Opslaan draft",
-    "draftCanNoBeATemplateOrMinorEdit": "Een draft kan geen template zijn, en kan geen gebruik maken van de 'minor edit' modus.",
+    "saveDraft": "Concept opslaan",
+    "draftCanNoBeATemplateOrMinorEdit": "Template kan niet in concept opgeslagen worden, ook kunt u geen gebruik maken van de 'minor edit' modus.",
     "saveTemplate": "Bewaar template",
     "saveAsMetadata": "Bewaar als metadata",
     "saveAsTemplate": "Bewaar als template",
