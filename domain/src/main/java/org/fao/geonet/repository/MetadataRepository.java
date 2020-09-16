@@ -42,7 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Jesse
  */
 public interface MetadataRepository extends GeonetRepository<Metadata, Integer>, MetadataRepositoryCustom,
-    JpaSpecificationExecutor<Metadata> {
+    JpaSpecificationExecutor<Metadata>, StreamableJpaSpecificationRepository<Metadata> {
 
     @Nullable
     Metadata findOneById(int id);
