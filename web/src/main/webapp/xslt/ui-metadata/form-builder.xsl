@@ -274,7 +274,7 @@
               <xsl:with-param name="domeElementToMoveRef" select="$editInfo/@ref"/>
             </xsl:call-template>
 
-            <xsl:if test="$attributesSnippet">
+            <xsl:if test="$attributesSnippet and count($attributesSnippet/*) > 0">
               <xsl:variable name="cssDefaultClass" select="'well well-sm'"/>
               <div class="{$cssDefaultClass}
                 {if ($forceDisplayAttributes) then 'gn-attr-mandatory' else 'gn-attr'}
@@ -392,7 +392,7 @@
         </xsl:if>
       </legend>
 
-      <xsl:if test="count($attributesSnippet/*) > 0">
+      <xsl:if test="count($attributesSnippet/*) > 0 and name($attributesSnippet/*[1]) != 'null'">
         <div class="well well-sm gn-attr {if ($isDisplayingAttributes = true()) then '' else 'hidden'}">
           <xsl:copy-of select="$attributesSnippet"/>
         </div>

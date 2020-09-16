@@ -359,8 +359,6 @@
           <xsl:variable name="isInPTFreeText"
                         select="count(lan:PT_FreeText/*/lan:LocalisedCharacterString[
                                             @locale = concat('#', $mainLanguageId)]) = 1"/>
-
-
           <xsl:choose>
             <xsl:when test="$isInPTFreeText">
               <!-- Update gco:CharacterString to contains
@@ -381,7 +379,7 @@
             <xsl:otherwise>
               <!-- Populate PT_FreeText for default language if not existing and it is not null. -->
               <xsl:apply-templates select="gco:CharacterString|gcx:Anchor"/>
-              <xsl:if test="normalize-space(gco:CharacterString|gcx:Anchor) != ''">
+              <xsl:if test="normalize-space(gco:CharacterString|gcx:Anchor) != '' or lan:PT_FreeText">
                 <lan:PT_FreeText>
                   <lan:textGroup>
                     <lan:LocalisedCharacterString locale="#{$mainLanguageId}">

@@ -30,10 +30,8 @@
                 exclude-result-prefixes="#all">
 
 
-  <!-- Get lang #id in metadata PT_Locale section,  deprecated: if not return the 2 first letters
-        of the lang iso3code in uper case.
-
-         if not return the lang iso3code in uper case.
+  <!-- Get lang #id in metadata PT_Locale section.
+       if not found, return the lang iso3code in upper case.
         -->
   <xsl:function name="gn-fn-iso19139:getLangId" as="xs:string">
     <xsl:param name="md"/>
