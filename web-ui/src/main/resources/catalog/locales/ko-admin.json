@@ -1173,6 +1173,8 @@
     "ui-createPageTpl-other": "사용자 정의",
     "ui-languages": "언어 목록",
     "ui-filters": "필터",
+    "ui-minUserProfileToCreateTemplate": "Which minimum profile is required to manage/create template?",
+    "ui-minUserProfileToCreateTemplate-help": "Can be one of: '', 'Editor', 'Reviewer', 'UserAdmin', 'Administrator'. Depending on the user highest profile, user may not be able to import a record as a template or subtemplate, save a record as a template in the editor or manage directory templates. This applies only to the user interface, not to the API. '' means that all users can create template.",
     "ui-facetTabField": "탭을 사용하여 표시할 패싯 필드",
     "ui-facetTabField-help": "검색 결과 위에 탬 필드가 표시됩니다.",
     "ui-filters-help": "Add extra filters to add to any search queries. It is recommended to avoid setting a filter on an existing form field.",

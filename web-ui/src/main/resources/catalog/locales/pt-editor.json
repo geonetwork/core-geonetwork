@@ -1,4 +1,5 @@
 {
+    "featureCatReplace": "Replace existing feature catalog?",
     "add-extent-from-geokeywords": "Calcular extensão a partir de palavras-chave",
     "add-extent-from-geokeywords-help": "Search all keywords from thesaurus of type 'place' and add matching extents.",
     "addCRS-help": "Adicionar novo CRS",
