@@ -73,3 +73,20 @@ Configure ES to start on server startup. It is recommended to protect `gn-record
 
  * Note that for debian-based servers the current deb download (7.3.2) can be installed rather than installing manually and can be configured to run as a service using the instructions here: https://www.elastic.co/guide/en/elasticsearch/reference/current/starting-elasticsearch.html
 
+
+## Errors
+
+* Max number of fields: As we are using dynamic fields, when having a large number of records, the system may reach the maximum number of fields in Elasticsearch. In this situation, Elasticsearch is reporting: 
+```
+java.lang.IllegalArgumentException: Limit of total fields [1000] in index [gn-records] has been exceeded
+```
+
+Increase the limit using:
+```
+curl -X PUT http://localhost:9200/gn-records/_settings -H "Content-Type:application/json"  -d '
+{
+  "index.mapping.total_fields.limit": 6000
+}'
+```
+
+See https://www.elastic.co/guide/en/elasticsearch/reference/master/mapping.html#mapping
