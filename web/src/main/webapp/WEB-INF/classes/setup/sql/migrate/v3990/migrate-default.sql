@@ -12,5 +12,7 @@ UPDATE metadata
     SET data = REGEXP_REPLACE(data, '[a-z]{3}\/thesaurus\.download\?ref=', 'api/registries/vocabularies/', 'g')
     WHERE data LIKE '%thesaurus.download?ref=%';
 
+UPDATE settings SET value = '1' WHERE name = 'system/threadedindexing/maxthreads';
+
 UPDATE Settings SET value='3.99.0' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
