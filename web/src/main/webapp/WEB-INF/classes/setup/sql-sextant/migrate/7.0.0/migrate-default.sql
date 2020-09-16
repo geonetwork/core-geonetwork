@@ -44,7 +44,7 @@ UPDATE Settings SET value='alpha.2' WHERE name='system/platform/subVersion';
 
 UPDATE settings SET value = 'default' WHERE name = 'system/ui/defaultView';
 UPDATE settings SET value = '1' WHERE name = 'system/threadedindexing/maxthreads';
-
+DELETE FROM settings_ui;
 
 -- #############################################
 -- After application starts
