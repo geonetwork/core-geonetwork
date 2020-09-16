@@ -1,5 +1,6 @@
 {
   "settings": {
+    "index.mapping.total_fields.limit": ${es.index.mapping.total_fields.limit},
     "index": {
       "analysis": {
         "analyzer": {
