@@ -37,7 +37,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
-import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -59,11 +59,7 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
     private KeycloakUserUtils keycloakUserUtils;
 
     public KeycloakAuthenticationProcessingFilter(AuthenticationManager authenticationManager) {
-        super(authenticationManager);
-    }
-
-    public KeycloakAuthenticationProcessingFilter(AuthenticationManager authenticationManager, RequestMatcher requiresAuthenticationRequestMatcher) {
-        super(authenticationManager, requiresAuthenticationRequestMatcher);
+        super(authenticationManager, new AntPathRequestMatcher(KeycloakUtil.getSigninPath()));
     }
 
     @Override

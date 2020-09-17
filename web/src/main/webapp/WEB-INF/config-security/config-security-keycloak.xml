@@ -69,16 +69,12 @@
   <bean id="keycloakAuthenticationEntryPoint" class="org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationEntryPoint">
     <constructor-arg name="adapterDeploymentContext" ref="adapterDeploymentContext"/>
   </bean>
+  <bean id="keycloakUtil" class="org.fao.geonet.kernel.security.keycloak.KeycloakUtil" />
   <bean id="keycloakAuthenticationProvider" class="org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider" />
   <bean id="keycloakPreAuthActionsFilter" class="org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter" />
   <bean id="keycloakPreAuthActionsLoginFilter" class="org.fao.geonet.kernel.security.keycloak.keycloakPreAuthActionsLoginFilter" />
-  <bean id="keycloakAuthenticationProcessingFilter" class="org.fao.geonet.kernel.security.keycloak.KeycloakAuthenticationProcessingFilter">
+  <bean id="keycloakAuthenticationProcessingFilter" class="org.fao.geonet.kernel.security.keycloak.KeycloakAuthenticationProcessingFilter" depends-on="keycloakUtil">
     <constructor-arg name="authenticationManager" ref="authenticationManager" />
-    <property name="requiresAuthenticationRequestMatcher">
-      <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
-        <constructor-arg name="pattern" value="/signin"/>
-      </bean>
-    </property>
   </bean>
 
   <bean id="keycloakLogoutHandler" class="org.fao.geonet.kernel.security.keycloak.KeycloakLogoutHandler">
@@ -86,7 +82,9 @@
   </bean>
 
   <bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
-    <constructor-arg name="logoutSuccessUrl" value="/geonetwork" />
+    <constructor-arg name="logoutSuccessHandler">
+        <bean class="org.fao.geonet.kernel.security.keycloak.KeycloakLogoutSuccessHandler" />
+    </constructor-arg>
     <constructor-arg name="handlers">
       <list>
         <ref bean="keycloakLogoutHandler" />

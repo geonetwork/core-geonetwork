@@ -101,7 +101,13 @@ public class KeycloakConfiguration implements SecurityProviderConfiguration {
 
     @Override
     public boolean getSSO() {
-        return true;
+        LoginType parsedLoginType = parse(loginType);
+
+        if (parsedLoginType == AUTOLOGIN || parsedLoginType == LINK ) {
+            return true;
+        }
+
+        return false;
     }
 
     public void setLoginType(String loginType) {

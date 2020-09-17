@@ -1,19 +1,12 @@
 package org.fao.geonet.kernel.security.keycloak;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpStatus;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
-import org.fao.geonet.utils.Log;
-import org.keycloak.adapters.spi.UserSessionManagement;
 import org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
-import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -26,25 +19,6 @@ import java.io.IOException;
 
 public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFilter {
     public static String signinPath = null;
-
-    private static String getSigninPath() {
-        if (signinPath == null) {
-            try {
-                LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint = ApplicationContextHolder.get().getBean(LoginUrlAuthenticationEntryPoint.class);
-                String signinPath = loginUrlAuthenticationEntryPoint.getLoginFormUrl().split("\\?")[0];
-            } catch(BeansException e) {
-                // If we cannot find the bean then we will just use a default.
-            }
-            // If signinPath is null then something may have gone wrong.
-            // This should generally not happen - if it does then lets set to what it currently expected and then log a warning.
-            if (StringUtils.isEmpty(signinPath)) {
-                signinPath = "/signin";
-                Log.warning(Log.JEEVES,
-                        "Could not detect signin path from configuration. Using /signin");
-            }
-        }
-        return signinPath;
-    }
 
     @Autowired
     LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint;
@@ -60,11 +34,11 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
         HttpServletResponse servletResponse = (HttpServletResponse) response;
 
         if (servletRequest.getPathInfo() != null &&
-                !(servletRequest.getContextPath() + getSigninPath()).equals(servletRequest.getRequestURI())  &&
+                !(servletRequest.getContextPath() + KeycloakUtil.getSigninPath()).equals(servletRequest.getRequestURI())  &&
                 !isAuthenticated() ) {
 
             String encodedRedirectURL = ((HttpServletResponse) response).encodeRedirectURL(
-                    servletRequest.getContextPath() + getSigninPath() + "?redirectUrl=" + URLEncoder.encode(servletRequest.getRequestURL().toString(), Constants.ENCODING));
+                    servletRequest.getContextPath() + KeycloakUtil.getSigninPath() + "?redirectUrl=" + URLEncoder.encode(servletRequest.getRequestURL().toString(), Constants.ENCODING));
 
             servletResponse.sendRedirect(encodedRedirectURL);
 
