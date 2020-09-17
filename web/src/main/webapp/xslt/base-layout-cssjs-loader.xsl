@@ -241,7 +241,7 @@
       </script>
 
       <!-- For keycloak we have to add some extra scripts -->
-      <xsl:if test="util:getSecurityProvider() =  'KEYCLOAK'">
+      <xsl:if test="util:getSecurityProvider() =  'KEYCLOAK' and keycloakUtil:getClientId()">
         <xsl:variable name="authServerBaseUrl"  select="keycloakUtil:getAuthServerBaseUrl()"/>
         <script src="{$authServerBaseUrl}/js/keycloak.js"></script>
         <script type="text/javascript">

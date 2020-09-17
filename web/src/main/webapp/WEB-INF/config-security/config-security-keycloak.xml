@@ -23,25 +23,24 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans
-  xmlns:sec="http://www.springframework.org/schema/security"
-  xmlns:ctx="http://www.springframework.org/schema/context"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:util="http://www.springframework.org/schema/util"
-  xmlns:security="http://www.springframework.org/schema/security"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+          http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
           http://www.springframework.org/schema/context
           http://www.springframework.org/schema/context/spring-context-3.0.xsd
-          http://www.springframework.org/schema/security
-          http://www.springframework.org/schema/security/spring-security.xsd"
-  xmlns="http://www.springframework.org/schema/beans">
+          http://www.springframework.org/schema/util
+          http://www.springframework.org/schema/util/spring-util.xsd">
 
-  <ctx:property-override
+  <context:property-override
           location="WEB-INF/config-security/config-security-keycloak-overrides.properties"
           ignore-resource-not-found="true"/>
 
-  <ctx:component-scan base-package="org.keycloak.adapters.springsecurity" />
+  <context:component-scan base-package="org.keycloak.adapters.springsecurity" />
 
   <security:authentication-manager alias="authenticationManager">
     <security:authentication-provider ref="keycloakAuthenticationProvider" />
@@ -72,6 +71,7 @@
   </bean>
   <bean id="keycloakAuthenticationProvider" class="org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider" />
   <bean id="keycloakPreAuthActionsFilter" class="org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter" />
+  <bean id="keycloakPreAuthActionsLoginFilter" class="org.fao.geonet.kernel.security.keycloak.keycloakPreAuthActionsLoginFilter" />
   <bean id="keycloakAuthenticationProcessingFilter" class="org.fao.geonet.kernel.security.keycloak.KeycloakAuthenticationProcessingFilter">
     <constructor-arg name="authenticationManager" ref="authenticationManager" />
     <property name="requiresAuthenticationRequestMatcher">
@@ -101,29 +101,25 @@
     </property>
   </bean>
 
-  <!--bean id="filterChainFilters" class="java.util.ArrayList">
-    <constructor-arg>
-      <list>
-        <ref bean="securityContextPersistenceFilter"/>
-        <ref bean="logoutFilter"/>
-        <ref bean="keycloakPreAuthActionsFilter"/>
-        <ref bean="keycloakAuthenticationProcessingFilter"/>
-        <ref bean="requestCacheFilter"/>
-        <ref bean="anonymousFilter"/>
-        <ref bean="sessionMgmtFilter"/>
-        <ref bean="exceptionTranslationFilter"/>
-        <ref bean="filterSecurityInterceptor"/>
-      </list>
-    </constructor-arg>
-  </bean-->
-
   <bean id="filterChainFilters" class="java.util.ArrayList">
   <constructor-arg
-          ref="#{ '${keycloakConfiguration.loginType}' != 'form' ? 'keycloakFilterChanFiltersExclusive' : 'keycloakFilterChanFiltersInclusive' }">
+            ref="#{ keycloakConfiguration.loginType == 'autologin' ? 'keycloakFilterChanFiltersExclusive' : keycloakConfiguration.loginType == 'link' ? 'keycloakFilterChanFiltersLink' : 'keycloakFilterChanFiltersInclusive' }">
   </constructor-arg>
    </bean>
 
   <util:list id="keycloakFilterChanFiltersExclusive">
+    <ref bean="securityContextPersistenceFilter" />
+    <ref bean="logoutFilter" />
+    <ref bean="keycloakPreAuthActionsLoginFilter" />
+    <ref bean="keycloakAuthenticationProcessingFilter" />
+    <ref bean="requestCacheFilter" />
+    <ref bean="anonymousFilter" />
+    <ref bean="sessionMgmtFilter" />
+    <ref bean="exceptionTranslationFilter" />
+    <ref bean="filterSecurityInterceptor" />
+  </util:list>
+
+  <util:list id="keycloakFilterChanFiltersLink">
     <ref bean="securityContextPersistenceFilter" />
     <ref bean="logoutFilter" />
     <ref bean="keycloakPreAuthActionsFilter" />
@@ -135,21 +131,21 @@
     <ref bean="filterSecurityInterceptor" />
   </util:list>
 
-  <!-- This list should be kept updated based on the one on config-security-core.xml -->
+	<!-- This list should be kept updated based on the one on config-security-core.xml -->
   <util:list id="keycloakFilterChanFiltersInclusive">
-      <ref bean="securityContextPersistenceFilter"/>
-    <!-- To disable csrf security (not recommended) comment the following line -->
-    <ref bean="csrfFilter" />
-    <!-- To disable csrf security (not recommended) comment the upper line -->
-    <ref bean="logoutFilter" />
-      <ref bean="keycloakPreAuthActionsFilter"/>
-      <ref bean="keycloakAuthenticationProcessingFilter"/>
-    <ref bean="basicAuthenticationFilter" />
-    <ref bean="formLoginFilter" />
-      <ref bean="requestCacheFilter"/>
-      <ref bean="anonymousFilter"/>
-      <ref bean="sessionMgmtFilter"/>
-      <ref bean="exceptionTranslationFilter"/>
-      <ref bean="filterSecurityInterceptor"/>
-  </util:list>
+		<ref bean="securityContextPersistenceFilter" />
+		<!-- To disable csrf security (not recommended) comment the following line -->
+		<ref bean="csrfFilter" />
+		<!-- To disable csrf security (not recommended) comment the upper line -->
+		<ref bean="logoutFilter" />
+		<ref bean="keycloakPreAuthActionsFilter"/>
+		<ref bean="keycloakAuthenticationProcessingFilter"/>
+		<ref bean="basicAuthenticationFilter" />
+		<ref bean="formLoginFilter" />
+		<ref bean="requestCacheFilter" />
+		<ref bean="anonymousFilter" />
+		<ref bean="sessionMgmtFilter" />
+		<ref bean="exceptionTranslationFilter" />
+		<ref bean="filterSecurityInterceptor" />
+	</util:list>
 </beans>
