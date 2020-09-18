@@ -1123,7 +1123,7 @@
               }
 
               if (!isLayerAvailableInMapProjection) {
-				gnAlertService.addAlert({
+                gnAlertService.addAlert({
                   msg: $translate.instant('layerNotAvailableInMapProj',{proj:mapProjection}),
                   delay: 5000,
                   type: 'warning'});

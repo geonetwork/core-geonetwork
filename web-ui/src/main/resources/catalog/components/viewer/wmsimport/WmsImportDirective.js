@@ -71,6 +71,9 @@
          * @return {*}
          */
           this.addLayer = function(getCapLayer, style) {
+            if (gnMap.isLayerInMap($scope.map, getCapLayer.Title, getCapLayer.url, style || '')) {
+              return;
+            }
             getCapLayer.version = $scope.capability.version;
             getCapLayer.capRequest = $scope.capability.Request;
 
