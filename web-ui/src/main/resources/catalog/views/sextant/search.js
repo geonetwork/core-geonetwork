@@ -266,8 +266,9 @@
         }
         var content = $translate.instant('addLayerPopover' + to);
         var opts = {
-          content:content,
-          placement:'bottom'
+          content: content,
+          placement: 'bottom',
+          trigger: 'manual'
         };
 
         pop.popover(opts);
