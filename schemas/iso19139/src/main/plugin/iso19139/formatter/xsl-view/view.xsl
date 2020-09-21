@@ -26,6 +26,7 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:gts="http://www.isotc211.org/2005/gts"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -360,7 +361,7 @@
        gco:Angle|gmx:FileName|
        gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
        gco:LocalName|gmd:PT_FreeText|
-       gco:Date|gco:DateTime|*/@codeListValue]"
+       gco:Date|gco:DateTime|*/@codeListValue]|*[gts:TM_PeriodDuration != '']"
                 priority="50">
     <xsl:param name="fieldName" select="''" as="xs:string"/>
 
@@ -1068,6 +1069,11 @@
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template mode="render-value"
+                match="gts:TM_PeriodDuration">
+    <div data-gn-field-duration-div="{.}"><xsl:value-of select="."/></div>
   </xsl:template>
 
   <!-- Translate boolean values -->
