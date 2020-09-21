@@ -343,6 +343,7 @@
       <name>mri:denominator</name>
       <name>mri:distance</name>
       <name>mri:levelOfDetail</name>
+      <name>mri:temporalResolution</name>
       <name>mri:vertical</name>
       <name>msr:checkPointAvailability</name>
       <name>msr:controlPointAvailability</name>
