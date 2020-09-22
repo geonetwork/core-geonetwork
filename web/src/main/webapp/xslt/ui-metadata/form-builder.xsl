@@ -159,6 +159,7 @@
             <xsl:attribute name="data-parent-ref" select="concat('_', $editInfo/@parent)"/>
             <xsl:attribute name="data-label" select="$label/label"/>
             <xsl:attribute name="data-element-name" select="name()"/>
+            <xsl:attribute name="data-required" select="$isRequired"/>
 
             <xsl:if test="$directiveAttributes instance of node()+">
               <xsl:variable name="node" select="." />
