@@ -144,7 +144,7 @@
        *  requests are cancelled
        */
       this.getCapabilities = function(url, options) {
-        url = gnOwsCapabilities.mergeDefaultParams(url, {
+        var url = gnOwsCapabilities.mergeDefaultParams(url, {
           service: 'WPS',
           version: '1.0.0',
           request: 'GetCapabilities'
@@ -353,9 +353,7 @@
       this.getStatus = function(url) {
         var defer = $q.defer();
 
-        $http.get(url, {
-          cache: true
-        }).then(
+        $http.get(url).then(
             function(data) {
               var response = unmarshaller.unmarshalString(data.data).value;
               defer.resolve(response);
@@ -372,15 +370,20 @@
        * Returns true if the mime type matches a WMS service
        *
        * @param {object} response excecuteProcess response object.
-       * @return {bool} true if WMS service
+       * @return {number} index of the output with the WMS service info; null if none found
        */
       this.responseHasWmsService = function(response) {
-        try {
-          var mimeType = response.processOutputs.output[0].reference.mimeType;
-          return this.WMS_MIMETYPE_REGEX.test(mimeType);
-        } catch (e) {
-          return false;
+        var outputs = response.processOutputs.output;
+        for (var i = 0; i < outputs.length; i++) {
+          try {
+            var mimeType = outputs[i].reference.mimeType;
+            if (this.WMS_MIMETYPE_REGEX.test(mimeType)) {
+              return i;
+            }
+          } catch (e) {
+          }
         }
+        return null;
       };
 
       /**
@@ -423,14 +426,15 @@
        * in the layer manager.
        *
        * @param {object} response excecuteProcess response object.
+       * @param {number} index index of the output with the WMS service info
        * @param {ol.Map} map
        * @param {ol.layer.Base} parentLayer optional
        */
-      this.extractWmsLayerFromResponse =
-          function(response, map, parentLayer) {
-
+      this.extractWmsLayerFromResponse = function(response, index, map, parentLayer) {
         try {
-          var ref = response.processOutputs.output[0].reference;
+          var output = response.processOutputs.output[index];
+          var ref = output.reference;
+          var identifier = output.identifier.value;
           gnMap.addWmsAllLayersFromCap(map, ref.href, true).
               then(function(layers) {
                 layers.forEach(function(l) {

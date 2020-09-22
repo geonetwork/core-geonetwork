@@ -4350,9 +4350,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
     <help>Protocole de connexion utilisé, par exemple FTP.</help>
     <condition/>
     <helper sort="true">
-      <option value="ESRI:AIMS--http--configuration">Fichier configuration ArcIMS Map Service (*.AXL)</option>
-      <option value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</option>
-      <option value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</option>
+      <option value="ESRI:REST">ArcGIS REST Services</option>
       <option value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</option>
       <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
       <option value="OGC:KML">OGC-KML Keyhole Markup Language</option>
@@ -4369,6 +4367,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
       <option value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</option>
       <option value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</option>
       <option value="OGC:WFS">OGC-WFS Web Feature Service</option>
+      <option value="INSPIRE Atom">INSPIRE Atom</option>
       <option value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</option>
       <option value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
       <option value="OGC:WMC">OGC-WMC Web Map Context</option>
@@ -6550,5 +6549,9 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
   </element>
   <element name="gco:Boolean">
     <label>Booléen</label>
+  </element>
+  <element name="xlink:type">
+    <label>Link</label>
+    <description>Link type</description>
   </element>
 </labels>

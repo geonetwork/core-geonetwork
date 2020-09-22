@@ -63,41 +63,44 @@
         restrict: 'A',
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
-          $http.get('../api/regions?categoryId=' +
+          element.on('focus', function() {
+            $http.get('../api/regions?categoryId=' +
               'http%3A%2F%2Fwww.naturalearthdata.com%2Fne_admin%23Country',
               {}, {
                 cache: true
               }).success(function(response) {
-            var data = response.region;
+              var data = response.region;
 
-            // Compute default name and add a
-            // tokens element which is used for filter
-            angular.forEach(data, function(country) {
-              country.tokens = [];
-              angular.forEach(country.label, function(label) {
-                country.tokens.push(label);
+              // Compute default name and add a
+              // tokens element which is used for filter
+              angular.forEach(data, function(country) {
+                country.tokens = [];
+                angular.forEach(country.label, function(label) {
+                  country.tokens.push(label);
+                });
+                country.name = country.label[scope.lang];
               });
-              country.name = country.label[scope.lang];
+              var source = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: data,
+                limit: 30
+              });
+              source.initialize();
+              $(element).typeahead({
+                minLength: 0,
+                highlight: true
+              }, {
+                name: 'countries',
+                displayKey: 'name',
+                source: source.ttAdapter()
+              }).on('typeahead:selected', function(event, datum) {
+                if (angular.isFunction(scope.onRegionSelect)) {
+                  scope.onRegionSelect(datum);
+                }
+              });
             });
-            var source = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-              queryTokenizer: Bloodhound.tokenizers.whitespace,
-              local: data,
-              limit: 30
-            });
-            source.initialize();
-            $(element).typeahead({
-              minLength: 0,
-              highlight: true
-            }, {
-              name: 'countries',
-              displayKey: 'name',
-              source: source.ttAdapter()
-            }).on('typeahead:selected', function(event, datum) {
-              if (angular.isFunction(scope.onRegionSelect)) {
-                scope.onRegionSelect(datum);
-              }
-            });
+            element.unbind("focus")
           });
         }
       };
@@ -144,6 +147,8 @@
 
           scope.setRegion = function(regionType) {
             scope.regionType = regionType;
+            // clear the input field
+            scope.resetRegion();
           };
         }
       };
@@ -220,6 +225,77 @@
                   n.metadataErrorReport.metadataErrorReport.length != 0;
             }
           });
+        }
+      };
+    }]);
+
+  module.directive('gnDuplicateCheck', ['$translate', '$http', '$q',
+    function($translate, $http, $q) {
+      return {
+        restrict: 'A',
+        require: 'ngModel',
+        scope: {
+          value: '=gnDuplicateCheck',
+          list: '=gnDuplicateCheckList',
+          apply: '=gnDuplicateCheckApply',
+          remote: '@gnDuplicateCheckRemote',
+          property: '@gnDuplicateCheckProperty'
+        },
+        link: function(scope, element, attrs, ngModel) {
+          var cssClass = 'gn-duplicate';
+          if (!angular.isArray(scope.list) && scope.remote === undefined) {
+            console.warn('gnDuplicateCheck need an array of values for the list or a remote URL.')
+            return;
+          }
+
+          if (angular.isArray(scope.list)) {
+            var existingValues = scope.property ? [] : scope.list;
+            if (scope.property) {
+              var path = scope.property.split('.');
+              for (var i = 0; i < scope.list.length; i++) {
+                var v = scope.list[i];
+                if (angular.isObject(v)) {
+                  for (var j = 0; j < path.length; j++) {
+                    v = v[path[j]];
+                    existingValues.push(v);
+                  }
+                }
+              }
+            }
+          }
+
+          ngModel.$asyncValidators.gnDuplicateCheck = function(value, viewValue) {
+            value = value || viewValue;
+            if (scope.apply === false) {
+              return $q.when(true);
+            }
+            if (angular.isArray(existingValues)) {
+              if (existingValues.indexOf(value) !== -1) {
+                ngModel.$setValidity(cssClass, false);
+                return $q.reject(false);
+              } else {
+                return $q.when(true);
+              }
+            } else if (scope.remote) {
+              var deferred = $q.defer();
+
+              // Promise server side check
+              $http.get(scope.remote.replace('{value}', value)).then(function (r){
+                if (r.status !== 404) {
+                  ngModel.$setValidity(cssClass, false);
+                  deferred.reject(false);
+                } else {
+                  ngModel.$setValidity(cssClass, true);
+                  deferred.resolve(true);
+                }
+              }, function (e){
+                ngModel.$setValidity(cssClass, true);
+                deferred.resolve(true);
+              });
+
+              return deferred.promise;
+            }
+          };
         }
       };
     }]);
@@ -382,43 +458,46 @@
         restrict: 'A',
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
-          $http.get('../api/isolanguages', {}, {
-            cache: true
-          }).success(function(data) {
-            // Compute default name and add a
-            // tokens element which is used for filter
-            angular.forEach(data, function(lang) {
-              var defaultName = lang.label['eng'];
-              lang.name = lang.label[scope.lang] || defaultName;
-              lang.tokens = [lang.name, lang.code, defaultName];
-            });
-            var source = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-              queryTokenizer: Bloodhound.tokenizers.whitespace,
-              local: data,
-              limit: 30
-            });
-            source.initialize();
-            $(element).typeahead({
-              minLength: 0,
-              highlight: true
-            }, {
-              name: 'isoLanguages',
-              displayKey: 'code',
-              source: source.ttAdapter(),
-              templates: {
-                suggestion: function(datum) {
-                  return '<p>' + datum.name + ' (' + datum.code + ')</p>';
+          element.on('focus', function() {
+            $http.get('../api/isolanguages', {}, {
+              cache: true
+            }).success(function(data) {
+              // Compute default name and add a
+              // tokens element which is used for filter
+              angular.forEach(data, function(lang) {
+                var defaultName = lang.label['eng'];
+                lang.name = lang.label[scope.lang] || defaultName;
+                lang.tokens = [lang.name, lang.code, defaultName];
+              });
+              var source = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: data,
+                limit: 30
+              });
+              source.initialize();
+              $(element).typeahead({
+                minLength: 0,
+                highlight: true
+              }, {
+                name: 'isoLanguages',
+                displayKey: 'code',
+                source: source.ttAdapter(),
+                templates: {
+                  suggestion: function(datum) {
+                    return '<p>' + datum.name + ' (' + datum.code + ')</p>';
+                  }
                 }
-              }
+              });
             });
-          });
+            element.unbind("focus")
+          })
         }
       };
     }]);
 
-  module.directive('gnHumanizeTime', ['gnGlobalSettings',
-    function(gnGlobalSettings) {
+  module.directive('gnHumanizeTime', ['gnGlobalSettings', 'gnHumanizeTimeService',
+    function(gnGlobalSettings, gnHumanizeTimeService) {
       return {
         restrict: 'A',
         template: '<span title="{{title}}">{{value}}</span>',
@@ -431,25 +510,10 @@
           var useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
           scope.$watch('date', function(originalDate) {
             if (originalDate) {
-              // Moment will properly parse YYYY, YYYY-MM,
-              // YYYY-MM-DDTHH:mm:ss which are the formats
-              // used in the common metadata standards.
-              // By the way check Z which may be used in GML times
-              var date = null;
-              if (originalDate.match('[Zz]$') !== null) {
-                date = moment(originalDate, 'YYYY-MM-DDtHH-mm-SSSZ');
-              } else {
-                date = moment(originalDate);
-              }
-              if (date.isValid()) {
-                var fromNow = date.fromNow();
-                var formattedDate = scope.format ?
-                    date.format(scope.format) :
-                    date.toString();
-                scope.value = scope.fromNow !== undefined && useFromNowSetting ?
-                    fromNow : formattedDate;
-                scope.title = scope.fromNow !== undefined && useFromNowSetting ?
-                    formattedDate : fromNow;
+              var attempt = gnHumanizeTimeService(originalDate, scope.format, scope.fromNow !== undefined)
+              if (attempt !== undefined) {
+                scope.value = attempt.value;
+                scope.title = attempt.title;
               }
             }
           });
@@ -689,8 +753,8 @@
    * the element to indicate the status
    * collapsed or expanded.
    */
-  module.directive('gnSlideToggle', [
-    function() {
+  module.directive('gnSlideToggle', ["$timeout",
+    function($timeout) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -717,7 +781,9 @@
             });
           });
           if (attrs['gnSlideToggle'] == 'true') {
-            element.click();
+            $timeout(function() {
+                 element.click();
+            },0); //this needs to be done after the DOM is updated
           }
         }
       };
@@ -1535,6 +1601,36 @@
       };
     }
   ]);
+
+
+  /**
+   * @ngdoc gnApiLink
+   * @name gn_utility.directive:gnApiLink
+   *
+   * @description
+   * Convert the element href attribute
+   * from /srv/api/records/... to a link
+   * for the JS apps. This is usefull if
+   * a formatter is loaded into the JS app
+   * in order to have links to record to
+   * open in current app.
+   */
+  module.directive('gnApiLink', ['$compile',
+    function($compile) {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          var href = $(element).attr('href'),
+              apiPath = '/srv/api/records/';
+          if (href.indexOf(apiPath) != -1) {
+            $(element).attr('href',
+              href.replace(/.*\/srv\/api\/records\//, '#/metadata/'));
+          }
+        }
+      };
+    }
+  ]);
+
 
   /**
    * @ngdoc directive

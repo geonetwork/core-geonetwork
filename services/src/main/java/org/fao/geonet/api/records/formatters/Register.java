@@ -25,7 +25,7 @@ package org.fao.geonet.api.records.formatters;
 
 import com.google.common.io.ByteStreams;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 import net.sf.json.JSONObject;
 
@@ -75,7 +75,7 @@ import static org.fao.geonet.api.records.formatters.FormatterConstants.VIEW_XSL_
 public class Register extends AbstractFormatService {
 
 
-    @RequestMapping(value = {"/{lang}/md.formatter.register"}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = {"/{portal}/{lang}/md.formatter.register"}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public JSONObject serviceSpecificExec(HttpServletRequest request,
                                           @PathVariable String lang,

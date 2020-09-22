@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.mapservers.GeoFile;
 import org.fao.geonet.api.mapservers.GeoServerNode;
 import org.fao.geonet.api.mapservers.GeoServerRest;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.domain.MapServer;
 import org.fao.geonet.repository.MapServerRepository;
 import org.fao.geonet.utils.FilePathChecker;
@@ -41,7 +42,6 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 import java.io.IOException;
@@ -227,8 +227,10 @@ public class Do implements Service {
                     FilePathChecker.verify(file);
 
                     // Get ZIP file from data directory
-                    Path f = Lib.resource.getDir(context, access, metadataId).resolve(file);
-                    return addZipFile(action, gs, f, file, metadataUuid, metadataTitle, metadataAbstract);
+                    final Store store = context.getBean("resourceStore", Store.class);
+                    try (Store.ResourceHolder resource = store.getResource(context, metadataUuid, file)) {
+                        return addZipFile(action, gs, resource.getPath(), file, metadataUuid, metadataTitle, metadataAbstract);
+                    }
                 }
             }
         }

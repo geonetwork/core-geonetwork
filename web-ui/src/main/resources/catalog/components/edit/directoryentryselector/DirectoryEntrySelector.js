@@ -29,10 +29,11 @@
   goog.require('gn_editor_xml_service');
   goog.require('gn_metadata_manager_service');
   goog.require('gn_schema_manager_service');
+  goog.require('gn_popover');
 
   var module = angular.module('gn_directory_entry_selector',
       ['gn_metadata_manager_service', 'gn_schema_manager_service',
-        'gn_editor_xml_service', 'pascalprecht.translate']);
+        'gn_editor_xml_service', 'pascalprecht.translate', 'gn_popover']);
 
   /**
    *

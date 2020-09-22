@@ -507,8 +507,8 @@
     </description>
   </element>
   <element name="gmd:abstract" id="25.0">
-    <label>Palvelun tiivistelmä</label>
-    <description>Palvelun sisältöä kuvaileva tiivistelmä.</description>
+    <label>Resurssin tiivistelmä</label>
+    <description>Aineiston tai palvelun sisältöä kuvaileva tiivistelmä.</description>
     <condition>Pakollinen</condition>
   </element>
   <element name="gmd:accessConstraints" id="70.0">
@@ -3391,5 +3391,9 @@
   </element>
   <element name="gco:Scale">
     <label>Scale</label>
+  </element>
+  <element name="xlink:type">
+    <label>Link</label>
+    <description>Link type</description>
   </element>
 </labels>

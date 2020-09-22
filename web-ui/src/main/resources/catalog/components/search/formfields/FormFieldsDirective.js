@@ -128,6 +128,7 @@
               }, config)).on('typeahead:selected', function(event, datum) {
                 field.typeahead('val', '');
                 $(element).tagsinput('add', datum);
+                field.data('ttTypeahead').input.trigger('queryChanged');
               });
 
               function allOrSearchFn(q, sync) {
@@ -164,6 +165,16 @@
                   scope.$apply();
                 }
                 refreshDatum();
+              });
+
+              scope.$on('beforeSearchReset', function(){
+                field.typeahead('val', '');
+                stringValues= [];
+                for (i = 0; i < prev.length; i++) {
+                  $(element).tagsinput('remove', prev[i]);
+                }
+                prev = [];
+                field.data('ttTypeahead').input.trigger('queryChanged');
               });
 
               // model -> ui
@@ -274,6 +285,8 @@
             ownerGroup: '=',
             lang: '=',
             groups: '=',
+            disabled: '=?',
+            optional: '@?',
             excludeSpecialGroups: '='
           },
 
@@ -282,7 +295,9 @@
             if (attrs.profile) {
               url = '../api/groups?profile=' + attrs.profile;
             }
-            var optional = attrs.hasOwnProperty('optional');
+            var optional = scope.optional != 'false' ? true : false;
+            var setDefaultValue = attrs['setDefaultValue'] == 'false' ? false : true;
+            scope.disabled = scope.disabled ? true : false;
 
             $http.get(url, {cache: true}).
                 success(function(data) {
@@ -300,7 +315,7 @@
                   }
 
                   // Select by default the first group.
-                  if ((angular.isUndefined(scope.ownerGroup) ||
+                  if (setDefaultValue && (angular.isUndefined(scope.ownerGroup) ||
                     scope.ownerGroup === '' ||
                     scope.ownerGroup === null) && data) {
                     // Requires to be converted to string, otherwise
@@ -315,7 +330,6 @@
                   }
                 });
           }
-
         };
       }])
 
@@ -709,14 +723,14 @@
    * @name gn_formfields.directive:gnBboxInput
    * @restrict A
    * @requires gnMap
-   * @requires ngeoDecorateInteraction
+   * @requires olDecorateInteraction
    *
    * @description
    * The `gnBboxInput` directive provides an input widget for bounding boxes.
    */
       .directive('gnBboxInput', [
         'gnMap',
-        'ngeoDecorateInteraction',
+        'olDecorateInteraction',
         function(gnMap, goDecoI) {
 
           var extentFromValue = function(str) {

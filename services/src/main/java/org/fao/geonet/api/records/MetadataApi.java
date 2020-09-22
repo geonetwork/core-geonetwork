@@ -33,6 +33,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.entity.StringEntity;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -208,7 +209,7 @@ public class MetadataApi {
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_XML_VALUE,
-            MediaType.APPLICATION_JSON_VALUE
+            MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8"
         })
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Return the record."),
@@ -321,7 +322,6 @@ public class MetadataApi {
             isJson ? "json" : "xml"
         ));
         return isJson ? Xml.getJSON(xml) : xml;
-        //return xml;
     }
 
     @ApiOperation(

@@ -67,31 +67,13 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-//=============================================================================
-
 class Harvester implements IHarvester<HarvestResult> {
     private final AtomicBoolean cancelMonitor;
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
     private Logger log;
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //--------------------------------------------------------------------------
     private GeonetParams params;
     private ServiceContext context;
 
-    //---------------------------------------------------------------------------
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
@@ -105,12 +87,6 @@ class Harvester implements IHarvester<HarvestResult> {
         this.context = context;
         this.params = params;
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Sources update
-    //---
-    //---------------------------------------------------------------------------
 
     public HarvestResult harvest(Logger log) throws Exception {
         this.log = log;
@@ -168,7 +144,7 @@ class Harvester implements IHarvester<HarvestResult> {
         SortedSet<RecordInfo> records = new TreeSet<>(Comparator.comparing(RecordInfo::getUuid));
 
         // Do a search and set from=1 and to=2, try to find out maxPageSize
-        // xml.search service returns maxPageSize in 3.8.x onwards, if not set then 
+        // xml.search service returns maxPageSize in 3.8.x onwards, if not set then
         // use 100. If set but is greater than the one defined by client use the client one.
         int pageSize = 100;
 
@@ -394,7 +370,7 @@ class Harvester implements IHarvester<HarvestResult> {
     }
 
     private void updateSources(SortedSet<RecordInfo> records,
-                               Map<String, Source> remoteSources) throws SQLException, MalformedURLException {
+                               Map<String, Source> remoteSources) throws MalformedURLException {
         log.info("Aligning source logos from for : " + params.getName());
 
         //--- collect all different sources that have been harvested
@@ -408,17 +384,18 @@ class Harvester implements IHarvester<HarvestResult> {
         //--- update local sources and retrieve logos (if the case)
 
         String siteId = context.getBean(SettingManager.class).getSiteId();
+        final Resources resources = context.getBean(Resources.class);
 
         for (String sourceUuid : sources) {
             if (!siteId.equals(sourceUuid)) {
                 Source source = remoteSources.get(sourceUuid);
 
                 if (source != null) {
-                    retrieveLogo(context, params.host, sourceUuid);
+                    retrieveLogo(context, resources, params.host, sourceUuid);
                 } else {
                     String sourceName = "(unknown)";
                     source = new Source(sourceUuid, sourceName, new HashMap<String, String>(), SourceType.harvester);
-                    Resources.copyUnknownLogo(context, sourceUuid);
+                    resources.copyUnknownLogo(context, sourceUuid);
                 }
 
                 context.getBean(SourceRepository.class).save(source);
@@ -426,7 +403,7 @@ class Harvester implements IHarvester<HarvestResult> {
         }
     }
 
-    private void retrieveLogo(ServiceContext context, String url, String uuid) throws MalformedURLException {
+    private void retrieveLogo(ServiceContext context, final Resources resources, String url, String uuid) throws MalformedURLException {
         String logo = uuid + ".gif";
         String baseUrl = url;
         if (!new URL(baseUrl).getPath().endsWith("/")) {
@@ -437,18 +414,16 @@ class Harvester implements IHarvester<HarvestResult> {
         Lib.net.setupProxy(context, req);
         req.setAddress(req.getAddress() + "images/logos/" + logo);
 
-        Path logoFile = Resources.locateLogosDir(context).resolve(logo);
+        final Path logoDir = resources.locateLogosDir(context);
 
         try {
-            req.executeLarge(logoFile);
+            resources.createImageFromReq(context, logoDir, logo, req);
         } catch (IOException e) {
             context.warning("Cannot retrieve logo file from : " + url);
             context.warning("  (C) Logo  : " + logo);
             context.warning("  (C) Excep : " + e.getMessage());
 
-            IO.deleteFile(logoFile, false, Geonet.GEONETWORK);
-
-            Resources.copyUnknownLogo(context, uuid);
+            resources.copyUnknownLogo(context, uuid);
         }
     }
 
@@ -456,7 +431,3 @@ class Harvester implements IHarvester<HarvestResult> {
         return errors;
     }
 }
-
-//=============================================================================
-
-

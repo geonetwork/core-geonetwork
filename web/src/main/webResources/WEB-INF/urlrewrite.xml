@@ -37,45 +37,51 @@
 
   <!-- Rule to redirect URL to resources from RDF output -->
   <rule>
+    <note>Redirect to default formatter when accessing
+    /{portal}/metadata/{uuid}.</note>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/metadata/(.*)$</from>
+    <to type="forward">$1/api/records/$3</to>
+  </rule>
+  <rule>
     <note>In the catalog, a resource is equivalent to one record.
       So redirect to metadata formatter.</note>
-    <from>^(.*)/resources/resources/(.*)$</from>
-    <to type="forward">$1/api/records/$2</to>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/resources/(.*)$</from>
+    <to type="forward">$1/api/records/$3</to>
   </rule>
   <rule>
     <note>In the catalog, a dataset is equivalent to one record.
     So redirect to metadata formatter.</note>
-    <from>^(.*)/resources/datasets/(.*)$</from>
-    <to type="forward">$1/search?_uuid_OR_identifier=$2</to>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/datasets/(.*)$</from>
+    <to type="forward">$1/search?_uuid_OR_identifier=$3</to>
   </rule>
   <rule>
     <note>Catalog information page. List all records for the catalog.
       Redirect to search page.
     </note>
-    <from>^(.*)/resources/catalogs/(.*)$</from>
-    <to type="forward">$1/search?_source=$2</to>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/catalogs/(.*)$</from>
+    <to type="forward">$1/search?_source=$3</to>
   </rule>
   <rule>
     <note>Organization information page.</note>
-    <from>^(.*)/resources/organizations/(.*)$</from>
-    <to type="forward">$1/search?orgName=$2</to>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/organizations/(.*)$</from>
+    <to type="forward">$1/search?orgName=$3</to>
   </rule>
   <rule>
     <note>Tag information page.</note>
-    <from>^(.*)/resources/registries/vocabularies/.*/concepts/(.*)$</from>
-    <to type="forward">$1/search?keyword=$2</to>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/registries/vocabularies/.*/concepts/(.*)$</from>
+    <to type="forward">$1/search?keyword=$3</to>
   </rule>
   <rule>
     <note>Vocabulary information page.</note>
-    <from>^(.*)/resources/registries/vocabularies/(.*)$</from>
-    <to type="forward">$1/search?thesaurusName=$2</to>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/registries/vocabularies/(.*)$</from>
+    <to type="forward">$1/search?thesaurusName=$3</to>
   </rule>
   <rule>
     <note>Organization information page. List all records for an organization.
       Redirect to search page with organization filter.
     </note>
-    <from>^(.*)/resources/persons/(.*)$</from>
-    <to type="forward">$1/search?responsiblePartyEmail=$2</to>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/persons/(.*)$</from>
+    <to type="forward">$1/search?responsiblePartyEmail=$3</to>
   </rule>
   <rule>
     <note>
@@ -104,10 +110,9 @@
       * /resources/registries/vocabularies/{{thesaurusIdentifier}}/concepts/{{keywordName}}
 
     </note>
-    <from>^(.*)/resources/(.*)$</from>
-    <to type="forward">$1/api/$2</to>
+    <from>^(/([A-Za-z0-9\-_]+/)?[A-Za-z0-9\-_]+)/resources/(.*)$</from>
+    <to type="forward">$1/api/$3</to>
   </rule>
-
 
 
   <rule>
@@ -115,7 +120,7 @@
       Retrieves robots.txt filemap pointing to sitemaps for better indexing.
     </note>
     <from>^/robots.txt$</from>
-    <to type="forward" last="true">/srv/eng/robots.txt</to>
+    <to type="forward" last="true">/srv/api/robots.txt</to>
   </rule>
 
   <rule>
@@ -219,44 +224,6 @@
     <from>^/opensearch/(.*)/download?(.*)$</from>
     <to type="forward">/srv/$1/atom.download</to>
   </rule>
-
-  <!-- Sitemap URLs -->
-  <rule>
-    <note>
-      sitemap with format and page number
-    </note>
-    <from>^/sitemap/(.*)/([0-9]+)/(.*)$</from>
-    <to type="forward">/srv/$3/portal.sitemap?doc=$2&amp;format=$1</to>
-  </rule>
-  <rule>
-    <note>
-      sitemap with page number
-    </note>
-    <from>^/sitemap/([0-9]+)/(.*)$</from>
-    <to type="forward">/srv/$2/portal.sitemap?doc=$1</to>
-  </rule>
-  <rule>
-    <note>
-      sitemap with format
-    </note>
-    <from>^/sitemap/(.*)/(.*)$</from>
-    <to type="forward">/srv/$2/portal.sitemap?format=$1</to>
-  </rule>
-  <rule>
-    <note>
-      sitemap
-    </note>
-    <from>^/sitemap/(.*)$</from>
-    <to type="forward">/srv/$1/portal.sitemap</to>
-  </rule>
-  <rule>
-    <note>
-      sitemap
-    </note>
-    <from>^/sitemap$</from>
-    <to type="forward">/srv/eng/portal.sitemap</to>
-  </rule>
-  <!-- Sitemap URLs -->
 
 
   <!-- hide jsession id from google bot -->

@@ -66,15 +66,9 @@
               .success(function(data) {
                 scope.icons = data[0];
               });
-          // $http.get('admin.usergroups.list@json?id=' + 1)
-          //          .success(function(data) {
           $http.get('info?_content_type=json&type=languages', {cache: true})
               .success(function(data) {
                 scope.languages = data.language;
-              });
-          $http.get('admin.group.list@json', {cache: true})
-              .success(function(data) {
-                scope.groups = data !== 'null' ? data : null;
               });
         }
       };
@@ -103,8 +97,8 @@
   /**
      * Display harvester schedule configuration.
      */
-  module.directive('gnHarvesterSchedule', ['$translate',
-    function($translate) {
+  module.directive('gnHarvesterSchedule', ['gnConfig','$translate',
+    function(gnConfig, $translate) {
 
       return {
         restrict: 'A',
@@ -121,6 +115,10 @@
                            '0 0/5 14 * * ?',
                            '0 15 10 ? * MON-FRI',
                            '0 15 10 15 * ?'];
+          scope.timeZone = gnConfig['system.server.timeZone'];
+          if (scope.timeZone) {
+            scope.timeZoneOffset = '(GMT' + moment.tz(scope.timeZone).format('Z / z') + ')'
+          }
           scope.setSchedule = function(exp) {
             scope.harvester.options.every = exp;
           };
@@ -265,7 +263,7 @@
             }
           };
         }]);
-  
+
   /**
    * Extra fields common for all harvesters
    */

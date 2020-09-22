@@ -194,8 +194,9 @@
    * </ul>
    *
    */
-      .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit', '$filter',
-        function(gnOnlinesrc, gnCurrentEdit, $filter) {
+      .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit',
+        'gnConfigService', '$filter',
+        function(gnOnlinesrc, gnCurrentEdit, gnConfigService, $filter) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -233,6 +234,25 @@
               scope.isCategoryEnable = function(category) {
                 return angular.isUndefined(scope.types) ? true :
                         category.match(scope.types) !== null;
+              };
+
+              /**
+               * Builds metadata url checking if the resource points to internal or external url.
+               *
+               * @param resource
+               * @returns {string|*}
+               */
+              scope.buildMetadataLink = function(resource) {
+                var baseUrl = gnConfigService.getServiceURL();
+
+                var resourceUrl = resource.url[scope.lang] ||
+                  resource.url['eng'];
+
+                if (resourceUrl.indexOf(baseUrl) == 0) {
+                  return '../metadata/' + resource.id;
+                } else {
+                  return resource.url[scope.lang];
+                }
               };
 
               // Reload relations when a directive requires it
@@ -322,6 +342,7 @@
                 scope.ctrl = {};
               },
               post: function(scope, element, attrs) {
+                scope.clearFormOnProtocolChange = !(attrs.clearFormOnProtocolChange == "false"); //default to true (old behavior)
                 scope.popupid = attrs['gnPopupid'];
 
                 scope.config = null;
@@ -343,12 +364,19 @@
                 // directive and the SearchFormController scope that
                 // is contained by the directive
                 scope.stateObj = {};
+                var projectedExtent = null;
+
 
                 function loadLayers() {
                   if (!angular.isArray(scope.map.getSize()) ||
                       scope.map.getSize().indexOf(0) >= 0) {
                     $timeout(function() {
                       scope.map.updateSize();
+                      if (projectedExtent != null) {
+                        scope.map.getView().fit(
+                          projectedExtent,
+                          scope.map.getSize());
+                      }
                     }, 300);
                   }
 
@@ -357,8 +385,30 @@
                     scope.map.removeLayer(layer);
                   });
 
-                  scope.map.addLayer(gnMap.getLayersFromConfig());
+                  var conf = gnMap.getMapConfig();
 
+                  scope.map.addLayer(new ol.layer.Tile({
+                    source:  new ol.source.OSM()
+                  }));
+                  // TODO: Add base layer from config
+                  // This does not work because createLayerFromProperties
+                  // return a promise and base layer is added twice.
+                  // if (conf.useOSM) {
+                  //   scope.map.addLayer(new ol.layer.Tile({
+                  //     source:  new ol.source.OSM(),
+                  //     type: 'base'
+                  //   }));
+                  // }
+                  // else {
+                  //   conf['map-editor'].layers.forEach(function(layerInfo) {
+                  //     gnMap.createLayerFromProperties(layerInfo, scope.map)
+                  //       .then(function(layer) {
+                  //         if (layer) {
+                  //           scope.map.addLayer(layer);
+                  //         }
+                  //       });
+                  //   });
+                  // }
                   // Add each WMS layer to the map
                   scope.layers = scope.gnCurrentEdit.layerConfig;
                   angular.forEach(scope.gnCurrentEdit.layerConfig,
@@ -374,12 +424,11 @@
                         }));
                       });
 
-                  var listenerExtent = scope.$watch(
-                		  'angular.isArray(scope.gnCurrentEdit.extent)', function() {
 
-                	  if (angular.isArray(scope.gnCurrentEdit.extent)) {
+                  var listenerExtent = scope.$watch(
+                    'angular.isArray(scope.gnCurrentEdit.extent)', function() {
+                        if (angular.isArray(scope.gnCurrentEdit.extent)) {
                           // FIXME : only first extent is took into account
-                          var projectedExtent;
                           var extent = scope.gnCurrentEdit.extent &&
                               scope.gnCurrentEdit.extent[0];
                           var proj = ol.proj.get(gnMap.getMapConfig().projection);
@@ -410,10 +459,10 @@
                   //Added mandatory custom params here to avoid
                   //changing other printing services
                   jsonSpec = angular.extend(
-                		  scope.jsonSpec,
-                		  {
-                			  hasNoTitle: true
-                		  });
+                    scope.jsonSpec,
+                    {
+                      hasNoTitle: true
+                    });
 
                   return $http.put('../api/0.1/records/' +
                       scope.gnCurrentEdit.uuid +
@@ -456,27 +505,21 @@
                 function getTypeConfig(link) {
                   for (var i = 0; i < scope.config.types.length; i++) {
                     var c = scope.config.types[i];
-                    if (scope.schema === 'iso19115-3') {
-                      var p = c.fields &&
-                              c.fields.protocol &&
-                              c.fields.protocol.value || '',
-                          f = c.fields &&
-                          c.fields.function &&
-                          c.fields.function.value || '',
-                          ap = c.fields &&
-                          c.fields.applicationProfile &&
-                          c.fields.applicationProfile.value || '';
-                      if (c.process.indexOf(link.type) === 0 &&
-                          p === (link.protocol || '') &&
-                          f === (link.function || '') &&
-                          ap === (link.applicationProfile || '')
-                      ) {
-                        return c;
-                      }
-                    } else {
-                      if (c.process.indexOf(link.type) === 0) {
-                        return c;
-                      }
+                    var p = c.fields &&
+                            c.fields.protocol &&
+                            c.fields.protocol.value || '',
+                        f = c.fields &&
+                        c.fields.function &&
+                        c.fields.function.value || '',
+                        ap = c.fields &&
+                        c.fields.applicationProfile &&
+                        c.fields.applicationProfile.value || '';
+                    if (c.process.indexOf(link.type) === 0 &&
+                        p === (link.protocol || '') &&
+                        f === (link.function || '') &&
+                        ap === (link.applicationProfile || '')
+                    ) {
+                      return c;
                     }
                   }
                   return scope.config.types[0];
@@ -512,6 +555,31 @@
                     var typeConfig = linkToEdit ?
                       getTypeConfig(linkToEdit) :
                       getType(linkType);
+
+                    if (gnCurrentEdit.mdOtherLanguages) {
+                       scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
+                       scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
+
+                       // not multilingual {"fre":"#"}
+                       if (Object.keys(scope.mdLangs).length > 1) {
+                         scope.isMdMultilingual = true;
+                         scope.mdLang = gnCurrentEdit.mdLanguage;
+
+                         for (var p in scope.mdLangs) {
+                           var v = scope.mdLangs[p];
+                           if (v.indexOf('#') === 0) {
+                             var l = v.substr(1);
+                             if (!l) {
+                               l = scope.mdLang;
+                             }
+                             scope.mdLangs[p] = l;
+                           }
+                         }
+                       } else {
+                         scope.isMdMultilingual = false;
+                       }
+                    }
+
                     scope.config.multilingualFields = [];
                     angular.forEach(typeConfig.fields, function(f, k) {
                     if (scope.isMdMultilingual &&
@@ -520,29 +588,7 @@
                       }
                     });
 
-                    if (gnCurrentEdit.mdOtherLanguages) {
-                      scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
-                      scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
 
-                      // not multilingual {"fre":"#"}
-                      if (Object.keys(scope.mdLangs).length > 1) {
-                        scope.isMdMultilingual = true;
-                        scope.mdLang = gnCurrentEdit.mdLanguage;
-
-                        for (var p in scope.mdLangs) {
-                          var v = scope.mdLangs[p];
-                          if (v.indexOf('#') === 0) {
-                            var l = v.substr(1);
-                            if (!l) {
-                              l = scope.mdLang;
-                            }
-                            scope.mdLangs[p] = l;
-                          }
-                        }
-                      } else {
-                        scope.isMdMultilingual = false;
-                      }
-                    }
 
                     initThumbnailMaker();
                     resetForm();
@@ -592,9 +638,13 @@
                         if (scope.isFieldMultilingual(field)) {
                           var e = {};
                           $.each(scope.mdLangs, function(key, v) {
-                            e[v] =
-                              (linkToEdit[fields[field]] &&
-                                linkToEdit[fields[field]][key]) || '';
+                          e[v] = ''; // default
+                          // if key is in the values dictionary
+                          if (linkToEdit[fields[field]] && linkToEdit[fields[field]][key])
+                              e[v] = linkToEdit[fields[field]][key];
+                          // otherwise if v is in values dictionary
+                          else if (linkToEdit[fields[field]] && linkToEdit[fields[field]][v])
+                               e[v] = linkToEdit[fields[field]][v];
                           });
                           fields[field] = e;
                         }
@@ -675,18 +725,27 @@
                   scope.layers = [];
                   scope.OGCProtocol = false;
                   if (scope.params && !scope.isEditing) {
-                    scope.params.name = '';
-                    scope.params.desc = '';
-                    initMultilingualFields();
+                    if (scope.clearFormOnProtocolChange) {
+                      scope.params.name = '';
+                      scope.params.desc = '';
+                      initMultilingualFields();
+                    }
+                    else {
+                      initMultilingualFields(['name','desc']);
+                    }
                     scope.params.selectedLayers = [];
                     scope.params.layers = [];
                   }
                 };
 
-                var initMultilingualFields = function() {
+                //doNotmodifyFields - list of field names
+                //   this will NOT update fields in this list.
+                var initMultilingualFields = function(doNotModifyFields) {
                   scope.config.multilingualFields.forEach(function(f) {
-                    scope.params[f] = {};
-                    setParameterValue(f, '');
+                    if ( (!doNotModifyFields) || (!_.contains(doNotModifyFields,f)) ) {
+                      scope.params[f] = {};
+                      setParameterValue(f, '');
+                    }
                   });
                 };
 
@@ -898,7 +957,7 @@
                   if (!angular.isUndefined(scope.params.protocol) && o !== n) {
                     resetProtocol();
                     scope.OGCProtocol = checkIsOgc(scope.params.protocol);
-                    if (scope.OGCProtocol != null && !scope.isEditing) {
+                    if (scope.OGCProtocol != null && !scope.isEditing && scope.clearFormOnProtocolChange) {
                       // Reset parameter in case of multilingual metadata
                       // Those parameters are object.
                       scope.params.name = '';

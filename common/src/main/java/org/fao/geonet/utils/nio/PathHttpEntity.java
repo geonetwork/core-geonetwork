@@ -27,7 +27,6 @@
 
 package org.fao.geonet.utils.nio;
 
-import org.apache.http.annotation.NotThreadSafe;
 import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.Args;
@@ -38,6 +37,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * A self contained, repeatable entity that obtains its content from a file.

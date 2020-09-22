@@ -25,29 +25,28 @@ package org.fao.geonet.util;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Function;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.MultiPolygon;
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.client.config.RequestConfig;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.IsoLanguage;
+import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.UiSetting;
 import org.fao.geonet.domain.User;
@@ -57,8 +56,11 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
+import org.fao.geonet.kernel.security.shibboleth.ShibbolethUserConfiguration;
+import org.fao.geonet.kernel.security.shibboleth.ShibbolethUserUtils;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.url.UrlChecker;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.IsoLanguageRepository;
@@ -66,34 +68,34 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UiSettingsRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
-import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.gml3.GMLConfiguration;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.geotools.xml.Parser;
+import org.geotools.xsd.Parser;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.output.DOMOutputter;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.HttpStatus;
 import org.w3c.dom.Node;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -108,6 +110,7 @@ import java.util.regex.Pattern;
 
 import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.parseGml;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_ORGANIZATION;
+import static org.fao.geonet.utils.Xml.getXmlFromJSON;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All params are objects because
@@ -194,12 +197,16 @@ public final class XslUtil {
      * @return Return the JSON config as string or an empty object.
      */
     public static String getUiConfiguration(String key) {
-        final String defaultUiConfiguration = NodeInfo.DEFAULT_NODE;
-        NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
+        String nodeId = org.fao.geonet.NodeInfo.DEFAULT_NODE;
+        try {
+            org.fao.geonet.NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(org.fao.geonet.NodeInfo.class);
+            nodeId = nodeInfo.getId();
+        } catch (BeanCreationException e) {
+        }
         SourceRepository sourceRepository= ApplicationContextHolder.get().getBean(SourceRepository.class);
         UiSettingsRepository uiSettingsRepository = ApplicationContextHolder.get().getBean(UiSettingsRepository.class);
 
-        Source portal = sourceRepository.findOne(nodeInfo.getId());
+        org.fao.geonet.domain.Source portal = sourceRepository.findOne(nodeId);
 
         if (uiSettingsRepository != null) {
             UiSetting one = null;
@@ -210,7 +217,7 @@ public final class XslUtil {
                 one = uiSettingsRepository.findOne(key);
             }
             else if (one == null) {
-                one = uiSettingsRepository.findOne(defaultUiConfiguration);
+                one = uiSettingsRepository.findOne(org.fao.geonet.NodeInfo.DEFAULT_NODE);
             }
 
             if (one != null) {
@@ -328,6 +335,23 @@ public final class XslUtil {
     }
 
 
+    public static Node downloadJsonAsXML(String url) {
+        HttpGet httpGet = new HttpGet(url);
+        HttpClient client = new DefaultHttpClient();
+        try {
+            final HttpResponse httpResponse = client.execute(httpGet);
+            final String jsonResponse = IOUtils.toString(
+                httpResponse.getEntity().getContent(),
+                String.valueOf(StandardCharsets.UTF_8)).trim();
+            Element element = getXmlFromJSON(jsonResponse);
+            DOMOutputter outputter = new DOMOutputter();
+            return outputter.output(new Document(element));
+        } catch (IOException | JDOMException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * Check if bean is defined in the context
      *
@@ -336,6 +360,21 @@ public final class XslUtil {
     public static boolean existsBean(String beanId) {
         return ProfileManager.existsBean(beanId);
     }
+
+	/**
+	 * Check if Shibboleth should show login
+	 *
+	 * @param beanId
+	 *            id of the bean to look up
+	 */
+	public static boolean shibbolethHideLogin() {
+		if (existsBean("shibbolethConfiguration")) {
+			ServiceContext serviceContext = ServiceContext.get();
+			ShibbolethUserConfiguration shib = serviceContext.getBean(ShibbolethUserConfiguration.class);
+			return shib.getHideLogin();
+		}
+		return false;
+	}
 
     /**
      * Optimistically check if user can access a given url.  If not possible to determine then the
@@ -580,7 +619,6 @@ public final class XslUtil {
         }
     }
 
-
     /**
      * Returns the HTTP code  or error message if error occurs during URL connection.
      *
@@ -588,63 +626,12 @@ public final class XslUtil {
      * @return the numeric code of the HTTP request or a String with an error.
      */
     public static String getUrlStatus(String url) {
-        return getUrlStatus(url, 5);
-
-    }
-
-    /**
-     * Returns the HTTP code  or error message if error occurs during URL connection.
-     *
-     * @param url       The URL to ckeck.
-     * @param tryNumber the number of remaining tries.
-     */
-    public static String getUrlStatus(String url, int tryNumber) {
-        if (tryNumber < 1) {
-            // protect against redirect loops
-            return "ERR_TOO_MANY_REDIRECTS";
+        UrlChecker urlChecker = ApplicationContextHolder.get().getBean(UrlChecker.class);
+        LinkStatus urlStatus = urlChecker.getUrlStatus(url);
+        if (urlStatus.getStatusValue().equalsIgnoreCase("4XX") || urlStatus.getStatusValue().equalsIgnoreCase("310")) {
+           return urlStatus.getStatusInfo();
         }
-        HttpHead head = new HttpHead(url);
-        GeonetHttpRequestFactory requestFactory = ApplicationContextHolder.get().getBean(GeonetHttpRequestFactory.class);
-        ClientHttpResponse response = null;
-        try {
-            response = requestFactory.execute(head, new Function<HttpClientBuilder, Void>() {
-                @Nullable
-                @Override
-                public Void apply(@Nullable HttpClientBuilder originalConfig) {
-                    RequestConfig.Builder config = RequestConfig.custom()
-                        .setConnectTimeout(1000)
-                        .setConnectionRequestTimeout(3000)
-                        .setSocketTimeout(5000);
-                    RequestConfig requestConfig = config.build();
-                    originalConfig.setDefaultRequestConfig(requestConfig);
-
-                    return null;
-                }
-            });
-            //response = requestFactory.execute(head);
-            if (response.getRawStatusCode() == HttpStatus.SC_BAD_REQUEST
-                || response.getRawStatusCode() == HttpStatus.SC_METHOD_NOT_ALLOWED
-                || response.getRawStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                // the website doesn't support HEAD requests. Need to do a GET...
-                response.close();
-                HttpGet get = new HttpGet(url);
-                response = requestFactory.execute(get);
-            }
-
-            if (response.getStatusCode().is3xxRedirection() && response.getHeaders().containsKey("Location")) {
-                // follow the redirects
-                return getUrlStatus(response.getHeaders().getFirst("Location"), tryNumber - 1);
-            }
-
-            return String.valueOf(response.getRawStatusCode());
-        } catch (IOException e) {
-            Log.error(Geonet.GEONETWORK, "IOException validating  " + url + " URL. " + e.getMessage(), e);
-            return e.getMessage();
-        } finally {
-            if (response != null) {
-                response.close();
-            }
-        }
+        return urlStatus.getStatusValue();
     }
 
     public static String threeCharLangCode(String langCode) {
@@ -929,28 +916,40 @@ public final class XslUtil {
         return max;
     }
 
-    private static final Cache<String, Boolean> URL_VALIDATION_CACHE;
+    private static final Cache<String, Integer> URL_VALIDATION_CACHE;
 
     static {
-        URL_VALIDATION_CACHE = CacheBuilder.<String, Boolean>newBuilder().
+        URL_VALIDATION_CACHE = CacheBuilder.<String, Integer>newBuilder().
             maximumSize(100000).
             expireAfterAccess(25, TimeUnit.HOURS).
             build();
     }
 
-    public static boolean validateURL(final String urlString) throws ExecutionException {
-        return URL_VALIDATION_CACHE.get(urlString, new Callable<Boolean>() {
+    public static Integer getURLStatus(final String urlString) throws ExecutionException {
+        return URL_VALIDATION_CACHE.get(urlString, new Callable<Integer>() {
             @Override
-            public Boolean call() throws Exception {
+            public Integer call() throws Exception {
                 try {
-                    return (Integer.parseInt(getUrlStatus(urlString)) / 100 == 2);
+                    return Integer.parseInt(getUrlStatus(urlString));
                 } catch (Exception e) {
-                    return false;
+                    Log.info(Geonet.GEONETWORK,"validateURL: exception - ",e);
+                    return -1;
                 }
             }
         });
     }
 
+    public static String getURLStatusAsString(final String urlString) throws ExecutionException {
+        Integer status = getURLStatus(urlString);
+        return status == -1 ? "UNKNOWN" :
+            String.format("%s (%d)",
+                HttpStatus.valueOf(status).name(), status);
+    }
+
+    public static boolean validateURL(final String urlString) throws ExecutionException {
+        Integer status = getURLStatus(urlString);
+        return status == -1 ? false : status / 100 == 2;
+    }
 
     /**
      * Utility method to retrieve the thesaurus dir from xsl processes.

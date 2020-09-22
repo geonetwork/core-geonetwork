@@ -1,13 +1,20 @@
-<div col-md-offset-3 col-md-6 relative ngr-margin-bottom>
-  <span class="btn btn-sm btn-primary searchterm" data-ng-repeat="filter in currentFilters">
-    <span data-ng-if="filter.type == 'facet'"
-          data-ng-attr-title="{{filter.labelKey | decodeURIComponent | translate}}">{{filter.labelKey | decodeURIComponent | translate}}</span>
-    <span data-ng-if="filter.type == 'standard'"
-          data-ng-attr-title="{{filter.value | decodeURIComponent | translatearray:' or '}}">{{filter.value | decodeURIComponent | translatearray:' or '}}</span>
-    <span data-ng-if="filter.type == 'boolean'"
-          data-ng-attr-title="{{filter.labelKey | translate}}">{{filter.labelKey | translate}}</span>
-    <span data-ng-if="filter.type == 'geometry'"
-          data-ng-attr-title="{{filter.value}}">{{filter.value}}</span>
-    <i class="fa fa-times" data-ng-click="removeFilter(filter)"></i>
-</span>
+<div class="search-filter-tags panel panel-success" ng-if="currentFilters.length">
+  <div class="panel-heading flex-row">
+    <span translate>activeFilters</span>
+    <div class="flex-spacer flex-grow"></div>
+    <a href ng-click="removeAll()"
+       class="btn btn-default btn-xs remove-all"
+       translate>removeAllFilters</a>
+  </div>
+  <div class="panel-body">
+    <a href class="filter-group flex-row flex-wrap"
+       title="{{'removeThisFilter' | translate}}"
+       ng-repeat="filter in currentFilters"
+       ng-click="removeFilter(filter)">
+      <span class="fa fa-times text-danger delete-icon"></span>
+      <strong class="text-no-wrap text-uppercase" translate>{{filter.key}}</strong>
+      <div class="flex-spacer"></div>
+      <span translate>{{filter.value | translatearray}}</span>
+    </a>
+  </div>
 </div>

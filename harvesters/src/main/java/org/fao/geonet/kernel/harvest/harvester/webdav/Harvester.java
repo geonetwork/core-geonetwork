@@ -35,7 +35,6 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
@@ -245,6 +244,12 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
                 updateMetadata(rf, existingRecordInfo, true);
                 log.info("Overriding record with uuid " + uuid);
                 result.updatedMetadata++;
+
+                if (params.isIfRecordExistAppendPrivileges()) {
+                    addPrivileges(dataMan.getMetadataId(uuid),
+                        params.getPrivileges(), localGroups, context);
+                    result.privilegesAppendedOnExistingRecord++;
+                }
                 return;
             case RANDOM:
                 log.info("Generating random uuid for remote record with uuid " + uuid);
@@ -327,7 +332,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
         metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         metadataManager.flush();
 
@@ -346,7 +351,12 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
             dataMan.autodetectSchema(md);
 
             try {
-                params.getValidate().validate(dataMan, context, md);
+                Integer groupIdVal = null;
+                if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                    groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                }
+
+                params.getValidate().validate(dataMan, context, md, groupIdVal);
                 return (Element) md.detach();
             } catch (Exception e) {
                 log.info("Skipping metadata that does not validate. Path is : " + rf.getPath());
@@ -482,12 +492,12 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
 
                 context.getBean(IMetadataManager.class).save(metadata);
             }
-            
+
             //--- the administrator could change privileges and categories using the
             //--- web interface so we have to re-set both
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
             repository.deleteAllByMetadataId(Integer.parseInt(record.id));
-            addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context);
+            addPrivileges(record.id, params.getPrivileges(), localGroups, context);
 
             metadata.getCategories().clear();
             addCategories(metadata, params.getCategories(), localCateg, context, null, true);

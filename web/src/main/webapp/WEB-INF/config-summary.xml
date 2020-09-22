@@ -45,8 +45,11 @@
           determine facet values for the indexing field.
           The bean must implement the org.fao.kernel.search.classifier.Classifier interface
           Defaults to a classifier which uses the value of the field to be indexed
+      * localized: (optional, default FALSE) indicates if the field can contain multilingual values.
+          SHOULD NOT be applied to "code" values, like topic categories/codelist/etc, for
+          these fields should be defined a translator in the summary section for the field.
 
-      When a facet definitionis modified or added, the index MUST be rebuilt.
+      When a facet definition is modified or added, the index MUST be rebuilt.
 
       How facet summaries should be built and formatted for each summary type is defined
       in the summaryTypes element. The summaryTypes element contains a number of summary type elements each
@@ -65,6 +68,7 @@
       * (optional) translator: Define a DB translator to retrieve label from description
           tables (eg. categoriesdes) or codelist translator to retrieve label from schema
           codelists files.
+      * (optional) pageSize: "show more"/"show less" page size of the facet items in the UI
 
     eg. for category
 
@@ -80,8 +84,8 @@
 
   <facets>
     <facet name="keyword" indexKey="keyword" label="keywords" localized="true"/>
-    <facet name="topicCat" indexKey="topicCat" label="topicCats" localized="true"/>
-    <facet name="category" indexKey="_cat" label="categories" localized="true"/>
+    <facet name="topicCat" indexKey="topicCat" label="topicCats" />
+    <facet name="category" indexKey="_cat" label="categories" />
     <facet name="inspireTheme" indexKey="inspiretheme" label="inspireThemes"/>
     <facet name="inspireThemeWithAc" indexKey="inspirethemewithac" label="inspireThemesWithAc"/>
     <facet name="inspireThemeURI" indexKey="inspirethemeuri" label="inspireThemesURI"/>
@@ -100,12 +104,14 @@
     <facet name="title" indexKey="title" label="titles"/>
     <facet name="metadataType" indexKey="_isTemplate" label="metadataTypes"/>
     <facet name="isValid" indexKey="_valid" label="isValid"/>
+    <facet name="isValidInspire" indexKey="_valid_inspire" label="isValidInspire"/>
     <facet name="isHarvested" indexKey="_isHarvested" label="isHarvested"/>
     <facet name="mdStatus" indexKey="_status" label="mdStatus"/>
     <facet name="status" indexKey="cl_status" label="status"/>
     <facet name="sourceCatalog" indexKey="_source" label="sourceCatalog"/>
     <facet name="standard" indexKey="_schema" label="standards"/>
     <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
+    <facet name="recordOwner" indexKey="recordOwner" label="recordOwner"/>
     <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
 	  <facet name="isPublishedToAll" indexKey="_isPublishedToAll" label="isPublishedToAll" />
@@ -126,7 +132,7 @@
 
     <facet name="maintenanceAndUpdateFrequency" indexKey="cl_maintenanceAndUpdateFrequency"
            label="maintenanceAndUpdateFrequencies"/>
-    <facet name="mdActions" indexKey="_mdActions" label="mdActions"/> 
+    <facet name="mdActions" indexKey="_mdActions" label="mdActions"/>
   </facets>
 
   <summaryTypes>
@@ -169,8 +175,10 @@
       <item facet="sourceCatalog"
             translator="db:org.fao.geonet.repository.SourceRepository:findOneByUuid"/>
       <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
+      <item facet="isValidInspire" max="3" sortBy="value" translator="apploc:validStatus-"/>
       <item facet="groupOwner" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+      <item facet="recordOwner" max="45" sortBy="value"/>
       <item facet="publishedForGroup" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
       <item facet="standard" max="15" sortBy="value"/>
@@ -208,6 +216,7 @@
       <item facet="groupOwner" max="99" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
       <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
+      <item facet="recordOwner" max="45" sortBy="value"/>
     </summaryType>
     <summaryType name="contact" format="DIMENSION">
       <item facet="orgNameTree" max="99"/>

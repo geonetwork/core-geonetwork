@@ -6,9 +6,6 @@
 @import "gn.less";
 @import "gn_viewer.less";
 
-@fa-version: '4.1.0';
-@fa-font-path: '../catalog/lib/style/font-awesome/fonts';
-
 @panel-heading-height: 2.8em;
 
 
@@ -106,7 +103,9 @@
     left: 1em;
     top: 0;
   }
-
+  .facet-pagination .separator:first-child {
+    display: none;
+  }
 }
 .gn-facet-breadcrumb {
   margin-top: 8px;
@@ -353,7 +352,7 @@ span.gn-facet-label:first-letter {
   }
 }
 
-[ngeo-map] {
+[ol-map] {
   width: 100%;
   height: 250px;
 }
@@ -719,4 +718,41 @@ button.active [role=tooltip] {
 .gn-nojs [role=main] {
   background-color: white;
   padding-top: 15px;
+}
+
+.search-filter-tags {
+  .panel-body {
+    background-color: fade(@panel-success-heading-bg, 50%);
+    font-size: 0.9em;
+  }
+  a.filter-group, .remove-all-link > a {
+    color: @panel-success-text;
+    font-weight: initial;
+    &:hover, &:focus {
+      text-decoration: underline;
+    }
+  }
+  .filter-group {
+    position: relative;
+    line-height: 1.1em;
+    margin-left: 1em;
+    &:not(:last-child) {
+      margin-bottom: 0.8em;
+    }
+    .delete-icon {
+      position: absolute;
+      right: calc(~"100% + 3px");
+      top: 0;
+      line-height: 1em;
+      opacity: 0;
+    }
+    &:hover, &:focus {
+      .delete-icon {
+        opacity: 1;
+      }
+    }
+  }
+  .remove-all {
+    color: @panel-danger-text;
+  }
 }

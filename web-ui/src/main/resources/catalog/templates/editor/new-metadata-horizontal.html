@@ -1,16 +1,20 @@
 <div class="container" id="gn-new-metadata-container">
-  <h2 data-translate="">{{title}}</h2>
+  <div class="row">
+    <div class="col-md-12 gn-margin-bottom">
+      <h1 data-translate="">createNewMetadata</h1>
 
-  <div class="alert alert-warning" data-ng-hide="hasTemplates"
-       data-translate="">noTemplatesAvailable
-  </div>
-  <div class="alert alert-warning" data-ng-show="groups.length === 0"
-       data-translate="">youAreNotMemberOfAnyGroup
-  </div>
+      <div class="alert alert-warning" data-ng-hide="hasTemplates"
+          data-translate="">noTemplatesAvailable
+      </div>
+      <div class="alert alert-warning" data-ng-show="groups.length === 0"
+          data-translate="">youAreNotMemberOfAnyGroup
+      </div>
 
-  <div class="progress progress-striped active"
-       data-ng-show="hasTemplates && mdList === null">
-    <div class="progress-bar" style="width: 100%"/>
+      <div class="progress progress-striped active"
+          data-ng-show="hasTemplates && mdList === null">
+        <div class="progress-bar" style="width: 100%"/>
+      </div>
+    </div>
   </div>
 
   <div class="row" data-ng-show="hasTemplates">
@@ -64,8 +68,13 @@
           <strong>{{(ownerGroup.label[lang] || '...') | translate}}</strong>
         </div>
         <div class="panel-body">
-          <div data-groups-combo="" data-owner-group="ownerGroup" lang="lang"
-               data-groups="groups" data-profile="Editor" data-exclude-special-groups="true"/>
+          <div data-groups-combo=""
+               data-optional="{{user.isAdministrator()}}"
+               data-owner-group="ownerGroup"
+               lang="lang"
+               data-groups="groups"
+               data-profile="Editor"
+               data-exclude-special-groups="true"/>
         </div>
       </div>
     </div>
@@ -127,4 +136,11 @@
       </a>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div data-gn-need-help="user-guide/describing-information/creating-metadata.html"></div>
+    </div>
+  </div>
+
 </div>

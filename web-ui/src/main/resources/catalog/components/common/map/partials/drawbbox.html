@@ -1,19 +1,10 @@
 <div class="gn-drawmap-panel">
   <div class="row">
-
     <!--Region picker-->
-    <div class="col-md-9">
+    <label class="col-sm-3 control-label"
+           data-translate="">chooseRegion</label>
+    <div class="col-md-8">
       <div data-gn-region-picker=""></div>
-    </div>
-
-    <!--Draw Button-->
-    <div class="col-md-3" ng-if="!readOnly">
-      <button class="btn btn-warning"
-              title="{{'clickToDrawABox' | translate}}"
-              data-ng-click="drawMap()"
-              data-ng-class="{active : drawing}">
-        <i class="fa fa-pencil"></i>&nbsp;<span data-translate="">drawRectangle</span>
-      </button>
     </div>
   </div>
 
@@ -22,30 +13,34 @@
       <label class="col-sm-3 control-label"
             data-translate="">bboxIdentifier</label>
       <div class="col-sm-8 gn-value">
-        <input class="form-control"
-              data-ng-model="identifier"
-              name="{{identifierRef}}"
-              ng-disabled="readOnly"/>
-      </div>
-      <div class="col-sm-1 gn-control">
-        <a class="btn pull-right" data-ng-click="identifier = ''">
-          <i class="fa fa-times text-danger"></i>
-        </a>
+        <div class="input-group">
+          <input class="form-control"
+                 data-ng-model="identifier"
+                 name="{{identifierRef}}"
+                 ng-disabled="readOnly"/>
+          <span class="input-group-btn">
+            <a class="btn btn-default" data-ng-click="identifier = ''">
+              <i class="fa fa-times"></i>
+            </a>
+          </span>
+        </div>
       </div>
     </div>
     <div class="form-group gn-field" data-ng-show="descriptionRef !== undefined">
       <label class="col-sm-3 control-label"
             data-translate="">bboxDescription</label>
       <div class="col-sm-8 gn-value">
-        <input class="form-control"
-              data-ng-model="description"
-              name="{{descriptionRef}}"
-              ng-disabled="readOnly"/>
-      </div>
-      <div class="col-sm-1 gn-control">
-        <a class="btn pull-right" data-ng-click="description = ''">
-          <i class="fa fa-times text-danger"></i>
-        </a>
+        <div class="input-group">
+          <input class="form-control"
+                 data-ng-model="description"
+                 name="{{descriptionRef}}"
+                 ng-disabled="readOnly"/>
+          <span class="input-group-btn">
+            <a class="btn btn-default" data-ng-click="description = ''">
+              <i class="fa fa-times"></i>
+            </a>
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -58,26 +53,36 @@
     <input data-ng-model="dcExtent" name="{{dcRef}}"/>
   </div>
 
-  <!--Projection selector-->
-  <div class="row" data-ng-show="projs.list.length > 1">
-    <div class="btn-group">
-      <button type="button" class="btn btn-link dropdown-toggle"
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-              title="{{'chooseAProj' | translate}}">
-        {{projs.formLabel}} <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li data-ng-repeat="proj in projs.list">
-          <a href="" data-ng-click="projs.form = proj.code; projs.formLabel = proj.label">
-            {{proj.label}}
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-
   <!--Map and coordinates inputs-->
-  <div class="text-center">
+  <div>
+    <div class="gn-editor-map-toolbar clearfix">
+      <!--Projection selector-->
+      <div class="pull-left" data-ng-show="projs.list.length > 1">
+        <div class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                  title="{{'chooseAProj' | translate}}">
+            {{projs.formLabel}} <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li data-ng-repeat="proj in projs.list">
+              <a href="" data-ng-click="projs.form = proj.code; projs.formLabel = proj.label">
+                {{proj.label}}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!--Draw Button-->
+      <div class=" pull-right" ng-if="!readOnly">
+        <button class="btn btn-default"
+                title="{{'clickToDrawABox' | translate}}"
+                data-ng-click="drawMap()"
+                data-ng-class="{active : drawing}">
+          <i class="fa fa-pencil"></i>&nbsp;<span data-translate="">drawRectangle</span>
+        </button>
+      </div>
+    </div>
     <div class="gn-editor-map">
       <span>
         <div class="input-group coord coord-north">
@@ -120,7 +125,7 @@
       <table>
         <tr>
           <td>
-            <div ng-if="map" ngeo-map="map"></div>
+            <div ng-if="map" ol-map="map"></div>
           </td>
         </tr>
       </table>

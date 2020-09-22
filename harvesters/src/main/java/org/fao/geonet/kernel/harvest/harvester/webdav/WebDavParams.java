@@ -125,6 +125,11 @@ public class WebDavParams extends AbstractParams {
 
         return copy;
     }
+
+    @Override
+    public String getIcon() {
+        return icon;
+    }
 }
 
 //=============================================================================

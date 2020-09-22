@@ -120,6 +120,7 @@
   <add-extent-from-geokeywords>Compute extent from keyword</add-extent-from-geokeywords>
   <add-extent-from-geokeywordsHelp>Analyze each keyword of type place and add matching extent.
   </add-extent-from-geokeywordsHelp>
+  <spatialExtent>Spatial extent</spatialExtent>
 
   <!-- String for INSPIRE SDS tab -->
 

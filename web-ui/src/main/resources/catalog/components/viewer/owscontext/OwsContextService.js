@@ -145,7 +145,6 @@
 
         if (map.getView().getProjection().getCode() != projection) {
           var view = new ol.View({
-            extent: extent,
             projection: projection
           });
           map.setView(view);
@@ -154,9 +153,7 @@
         var loadPromise = map.get('sizePromise');
         if (loadPromise) {
           loadPromise.then(function() {
-            $timeout(function () {
-              map.getView().fit(extent, map.getSize(), { nearest: true });
-            }, 300);
+            map.getView().fit(extent, map.getSize(), { nearest: true });
           })
         }
         else {
@@ -249,7 +246,7 @@
                     loadingLayer.set('bgLayer', true);
                   }
 
-                  var layerIndex = bgLayers.push(loadingLayer);
+                  var layerIndex = bgLayers.push(loadingLayer) - 1;
                   var p = self.createLayer(layer, map, 'do not add');
 
                   (function(idx, loadingLayer) {
@@ -257,7 +254,7 @@
                       if (!layer) {
                         return;
                       }
-                      bgLayers[idx - 1] = layer;
+                      bgLayers[idx] = layer;
 
                       layer.displayInLayerManager = false;
                       layer.background = true;
@@ -277,9 +274,10 @@
                 // load extension content (JSON)
                 if (layer.extension && layer.extension.any) {
                   var extension = JSON.parse(layer.extension.any);
-
+                  var loadingId = layer.name;
                   if (extension.style) {
                     currentStyle = {Name: extension.style};
+                    loadingId += ' ' + extension.style;
                   }
 
                   // import saved filters if available
@@ -303,7 +301,7 @@
 
                   var loadingLayer = new ol.layer.Image({
                     loading: true,
-                    label: layer.name || 'loading',
+                    label: loadingId || 'loading',
                     url: '',
                     visible: false,
                     group: layer.group
@@ -311,7 +309,7 @@
 
                   loadingLayer.displayInLayerManager = true;
 
-                  var layerIndex = map.getLayers().push(loadingLayer);
+                  var layerIndex = map.getLayers().push(loadingLayer) - 1;
                   var p = self.createLayer(layer, map, undefined, i, currentStyle);
                   loadingLayer.set('index', layerIndex);
 
@@ -439,7 +437,7 @@
             }];
           } else if (source instanceof ol.source.ImageWMS ||
               source instanceof ol.source.TileWMS) {
-            name = '{type=wms,name=' + layer.get('name') + '}';
+            name = layer.get('name');
             params.server = [{
               onlineResource: [{
                 href: layer.get('url')
@@ -667,10 +665,9 @@
                   olL.set('tree_index', index);
                   olL.setOpacity(layer.opacity);
                   olL.setVisible(!layer.hidden);
-                  if (layer.title) {
-                    olL.set('title', layer.title);
-                    olL.set('label', layer.title);
-                  }
+                  var title =  layer.title ? layer.title : olL.get('label');
+                  olL.set('title', title || '');
+                  olL.set('label', title || '');
                   $rootScope.$broadcast('layerAddedFromContext', olL);
                   return olL;
                 }

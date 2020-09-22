@@ -67,6 +67,12 @@ public class ThreddsParams extends AbstractParams {
     public String datasetAbstract;
     public String datasetCategory;
     public String serviceCategory;
+
+    @Override
+    public String getIcon() {
+        return icon;
+    }
+
     public ThreddsParams(DataManager dm) {
         super(dm);
     }

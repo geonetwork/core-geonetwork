@@ -24,6 +24,7 @@
 package org.fao.geonet.api.records.formatters;
 
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.api.records.extent.MapRenderer;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.BinaryFile;
 import org.jdom.Element;
@@ -62,7 +63,9 @@ public class PDF implements Service {
         try (OutputStream os = Files.newOutputStream(tempFile)) {
             ITextRenderer renderer = new ITextRenderer();
             String siteUrl = context.getBean(SettingManager.class).getSiteURL(context);
-            renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl, renderer.getSharedContext().getReplacedElementFactory()));
+            MapRenderer mapRenderer = new MapRenderer(context);
+            renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl,
+                renderer.getSharedContext().getReplacedElementFactory(), mapRenderer));
             renderer.setDocumentFromString(htmlContent, siteUrl);
             renderer.layout();
             renderer.createPDF(os);

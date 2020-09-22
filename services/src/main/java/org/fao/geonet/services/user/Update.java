@@ -23,7 +23,7 @@
 
 package org.fao.geonet.services.user;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 import jeeves.server.UserSession;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.services.ReadWriteController;
@@ -65,7 +65,7 @@ import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 public class Update {
 
 
-    @RequestMapping(value = "/{lang}/admin.user.resetpassword", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.user.resetpassword", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
@@ -87,7 +87,7 @@ public class Update {
         return new OkResponse();
     }
 
-    @RequestMapping(value = "/{lang}/admin.user.update", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/admin.user.update", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody

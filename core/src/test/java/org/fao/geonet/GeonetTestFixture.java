@@ -25,7 +25,7 @@ package org.fao.geonet;
 
 import com.google.common.collect.Lists;
 
-import com.vividsolutions.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.MultiPolygon;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -83,8 +83,6 @@ public class GeonetTestFixture {
 
     private volatile static FileSystemPool.CreatedFs templateFs;
     private volatile static SchemaManager templateSchemaManager;
-    private static LuceneConfig templateLuceneConfig;
-    private static SearchManager templateSearchManager;
     @Autowired
     protected DirectoryFactory _directoryFactory;
     @Autowired
@@ -93,7 +91,7 @@ public class GeonetTestFixture {
     private ConfigurableApplicationContext _applicationContext;
     private FileSystemPool.CreatedFs currentFs;
 
-    public void tearDown() throws IOException {
+    public void tearDown() {
         IO.setFileSystemThreadLocal(null);
         if (currentFs != null) {
             FILE_SYSTEM_POOL.release(currentFs);

@@ -82,11 +82,10 @@
                 title="{{'refreshHarvester' | translate}}">
           <span class="fa fa-refresh"></span>
         </button>
-
-        <br/>
-        <div id="gn-harvest-select-help-button" data-gn-need-help="user-guide/harvesting/index.html"></div>
       </div>
     </div>
+    
+    <div id="gn-harvest-select-help-button" data-gn-need-help="user-guide/harvesting/index.html"></div>
   </div>
 
 
@@ -239,9 +238,9 @@
                     {{k}}: {{v}}
                   </li>
                 </ul>
-
+                <!-- in some scenario logfile returns an array of files, take first -->
                 <a data-ng-show="h.info[0].logfile"
-                   href="admin.harvester.log?file={{h.info[0].logfile}}" target="_blank"
+                   ng-href="admin.harvester.log?file={{ (h.info[0].logfile | asArray)[0] | encodeURIComponent }}" target="_blank"
                    data-translate="">logFile</a>
                 </p>
               </div>

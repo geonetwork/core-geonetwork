@@ -5,9 +5,9 @@
   <div class=""
        data-ng-repeat="(type, items) in relations track by $index"
        data-ng-if="type && type !== 'thumbnails'">
-    <div class="row list-group-item gn-related-item gn-related-{{type}}"
-         data-ng-repeat="r in items track by $index"
-         data-ng-init="mainType = config.getType(r, type);">
+    <div data-ng-init="mainType = config.getType(r, type);"
+         class="row list-group-item gn-related-item gn-related-{{type}} gn-relation-type-{{mainType}}"
+         data-ng-repeat="r in items track by $index">
       <div class="col-xs-1 col-sm-1">
         <!-- OWS have their name overlaid over the globe icon -->
         <strong data-ng-if="(mainType === 'WMS') || (mainType === 'WMSSERVICE') || (mainType === 'WMTS') ||
@@ -24,41 +24,33 @@
           <i class="fa"
              data-ng-class="config.getClassIcon(mainType)"/>&nbsp;
         </strong>
-        </strong>
       </div>
       <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-8 col-sm-8'">
-        <!-- WMS & WFS contains layer name in title -->
-        <h3 data-ng-if="((mainType === 'WMS' || mainType === 'WMSSERVICE' ||
-                          mainType === 'WMTS' || mainType === 'WMTSSERVICE' ||
-                          mainType === 'WFS') &&
-                        !isLayerProtocol(r)) &&
-                      mainType !== 'WCS' &&
-                      mainType !== 'LINKDOWNLOAD' &&
-                      mainType !== 'LINK'">
-          {{::(r.title | gnLocalized: lang) || (r.url | gnLocalized: lang)}}
-        </h3>
+        <!-- Always display title if available -->
+        <h3 data-ng-if="::(r.title | gnLocalized: lang).length">{{::(r.title | gnLocalized: lang)}}</h3>
         <!-- Display description if available -->
-        <h4 data-ng-if="(mainType === 'WMS' || mainType === 'WMSSERVICE' ||
+        <p data-ng-if="(mainType === 'WMS' || mainType === 'WMSSERVICE' ||
                        mainType === 'WMTS' || mainType === 'WMTSSERVICE' ||
                        mainType === 'WCS' ||
                        mainType.indexOf('LINK') === 0 ||
                        mainType.indexOf('DEFAULT') === 0 ||
                        r.protocol === 'OGC:WFS') &&
-                       r.locDescription.length > 0">
+                       r.locDescription.length > 0  &&
+                      mainType !== 'LINK'">
           {{::r.locDescription | striptags | characters:150}}
-        </h4>
+        </p>
         <div data-ng-switch on="mainType">
           <div data-ng-switch-when="WMS">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{(r.title | gnLocalized: lang).replace('\'', '\\\'')}}'}">
                 wmsLinkDetails</span>
             </p>
           </div>
           <div data-ng-switch-when="WMTS">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{(r.title | gnLocalized: lang).replace('\'', '\\\'')}}'}">
                 wmtsLinkDetails</span>
             </p>
           </div>
@@ -79,9 +71,9 @@
           <div data-ng-switch-when="WFS">
             <p class="text-muted"
                data-ng-if="isLayerProtocol(r)">
-            <span data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
-                  wfsLinkDetails</span>
+              <span data-translate=""
+                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                wfsLinkDetails</span>
             </p>
             <div data-ng-if="isLayerProtocol(r)"
                  data-gn-no-map-wfs-download=""
@@ -91,9 +83,9 @@
 
             <p class="text-muted"
                data-ng-if="!isLayerProtocol(r)">
-            <span data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}'}">
-              wfsServiceLinkDetails</span>
+              <span data-translate=""
+                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}'}">
+                wfsServiceLinkDetails</span>
             </p>
             <div data-ng-if="!isLayerProtocol(r)"
                  data-gn-no-map-wfs-download=""
@@ -105,20 +97,26 @@
           <div data-ng-switch-when="TMS">
             <span data-translate=""
                   data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
-                  tmsLinkDetails</span>
+              tmsLinkDetails</span>
           </div>
 
           <div data-ng-switch-when="SOS">
             <span data-translate=""
                   data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
-                  sosLinkDetails</span>
+              sosLinkDetails</span>
+          </div>
+
+          <div data-ng-switch-when="ESRI:REST">
+            <span data-translate=""
+                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+              esriRestLinkDetails</span>
           </div>
 
           <div data-ng-switch-when="WCS">
             <p class="text-muted">
             <span data-translate=""
                   data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
-                  wcsLinkDetails</span>
+              wcsLinkDetails</span>
             </p>
           </div>
 
@@ -139,15 +137,15 @@
             <p class="text-muted">
             <span data-translate=""
                   data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
-          databaseLayerDetails</span>
+              databaseLayerDetails</span>
             </p>
           </div>
 
           <div data-ng-switch-when="FILE">
             <p class="text-muted">
-            <span data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', name:'{{r.title | gnLocalized: lang}}'}">
-          fileLayerDetails</span>
+              <span data-translate=""
+                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', name:'{{r.title | gnLocalized: lang}}'}">
+                fileLayerDetails</span>
               <input class="form-control"
                      type="text"
                      onClick="this.setSelectionRange(0, this.value.length)"
@@ -156,8 +154,7 @@
           </div>
 
           <div data-ng-switch-when="MDFCATS">
-            <h3>{{(r.title | gnLocalized: lang) }}</h3>
-            <h4 data-translate="">technicalInformation</h4>
+            <p data-translate="">technicalInformation</p>
             <div data-gn-attribute-table-renderer="r.featureType.attributeTable.element">
             </div>
           </div>
@@ -165,20 +162,17 @@
           <div data-ng-switch-default>
             <p class="text-muted"
                data-ng-if="mainType.indexOf('MD') == 0 && r.id">
-              <span class="gn-related-title">
-                <a href="#/metadata/{{r.id}}">
-                  {{(r.title | gnLocalized: lang) }}
-                </a> ({{(config.getLabel(mainType, type)) | translate}})
-              </span>
               <span class="gn-related-description">
-                {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a href="#/metadata/{{r.id}}">{{'more' |
+                {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a data-ng-click="config.showMore(r, md)" href="">{{'more' |
                 translate}}...</a>
               </span>
             </p>
 
             <p class="text-muted"
                data-ng-if="mainType.indexOf('MD') == -1">
-              <b>{{r.locTitle}}</b>
+              <span class="gn-related-description" data-ng-if="r.description">
+                {{ (r.description | gnLocalized: lang | striptags)}}</a>
+              </span>
               <span ng-bind-html="r.url | gnLocalized: lang | linky:'_blank'"></span>
             </p>
           </div>
@@ -187,7 +181,7 @@
 
       <div class="col-xs-12 col-sm-3">
         <button type="button"
-                class="btn btn-default btn-sm btn-block text-wrap"
+                class="btn btn-default btn-sm btn-block gn-btn-addtomap text-wrap"
                 data-ng-show="hasAction(mainType)"
                 data-ng-click="config.doAction(mainType, r, md)">
 
@@ -196,11 +190,17 @@
           </span>
           <br/>
           <span class="visible-lg-*"
-                data-ng-if="mainType == 'MDSIBLING'">
+                data-ng-if="mainType == 'MDSIBLING' && r.associationType != ''">
             ({{::r.associationType | translate}}{{::(r.initiativeType != '' ? ' / ' + (r.initiativeType | translate) : '')}})
           </span>
-
         </button>
+
+        <button type="button"
+                class="btn btn-default btn-sm btn-block gn-btn-addtoexternal text-wrap"
+                data-ng-if="externalViewerActionEnabled
+                          && (mainType === 'WMS' || mainType === 'WMSSERVICE')"
+                data-ng-click="externalViewerAction(mainType, r, md)"
+                data-translate="">viewInExternalViewer</button>
       </div>
 
     </div>

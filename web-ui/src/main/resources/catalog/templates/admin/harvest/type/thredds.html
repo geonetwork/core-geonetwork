@@ -1,6 +1,6 @@
-<form data-ng-keypress="updatingHarvester()">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
-
+<form name="harvesterForm"
+      data-ng-keypress="updatingHarvester()">
+  <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <div class="row">
     <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected" lang=""/>

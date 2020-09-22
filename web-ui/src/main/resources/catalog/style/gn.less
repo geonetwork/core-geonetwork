@@ -4,9 +4,10 @@
 @import (less) "../lib/ol.css";
 @import (less) "../lib/angular.ext/hotkeys/hotkeys.min.css";
 @import "gn_doc.less";
+@import "gn_icons.less";
 @import "ellipsis.less";
 
-@fa-version: '4.3.0';
+@fa-version: '4.4.0';
 @fa-font-path: '../catalog/lib/style/font-awesome/fonts';
 
 
@@ -84,11 +85,12 @@ div[gn-transfer-ownership] * .list-group {
   Display button label in top tool bar using inline mode.
  */
 .gn-top-bar {
-    border-radius: 0px;
-    padding: 0 20px;
-    .navbar-collapse {
- //       padding-right: 5px;
-    }
+  border-radius: 0px;
+  padding: 0 20px;
+  .navbar-collapse {
+    padding-left: 0;
+    padding-right: 0;
+  }
   .visible-lg {
     display: none !important;
   }
@@ -319,6 +321,11 @@ div.gn-scroll-spy {
       pointer-events: none;
     }
   }
+  li {
+    a {
+      min-width: max-content;
+    }
+  }
 }
 
 .gn-popup {
@@ -339,13 +346,16 @@ div.gn-scroll-spy {
     width: 90vw;
     max-height: 90vh;
     .modal-body {
-      max-height: 76vh;
+      max-height: 80vh;
       overflow: auto;
       min-height: 500px;
       .gn-modal-content {
         // height of modal body - 2 * padding - height of button(s)
-        max-height: calc(~"76vh - 30px - 30px");
+        max-height: calc(~"76vh - 30px - 28px");
         overflow: auto;
+        .img-thumbnail {
+          max-height: 250px;
+        }
       }
     }
   }
@@ -736,13 +746,13 @@ button, .btn, .btn:active, a {
   }
 }
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   background-color: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: gray;
-  border-radius: 4px;
+  background-color: #9e9e9e;
+  border-radius: 0;
 }
 
 .gn-bbox-input {
@@ -753,7 +763,7 @@ button, .btn, .btn:active, a {
   [class^='col-'] {
     text-align: center;
   }
-  [ngeo-btn-group] {
+  [gn-btn-group] {
     padding:0;
   }
   .form-group {
@@ -875,7 +885,7 @@ input.ng-invalid {
 
 
 // md type widget (used only in editor for now)
-gn-md-type-widget {
+gn-md-type-widget, gn-md-type-inspire-validation-widget {
   display: inline-block;
   & > div {
     border-radius: 1000px;
@@ -891,13 +901,13 @@ gn-md-type-widget {
     background-color: @gray-light;
     overflow: hidden;
 
-    &.valid-status-1 {
+    &.valid-status-1, &.valid-inspire-status-1 {
       background-color: @gray-light;
     }
-    &.valid-status0 {
+    &.valid-status0, &.valid-inspire-status0 {
       background-color: @btn-danger-bg;
     }
-    &.valid-status1 {
+    &.valid-status1, &.valid-inspire-status1 {
       background-color: @btn-success-bg;
     }
     &.md-type-t {
@@ -958,6 +968,13 @@ gn-md-type-widget {
     padding-left: 3px;
     margin: -6px 0px;
     line-height: 1em;
+    .gn-user-name {
+      max-width: 200px;
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .gn-user-role {
       text-transform: uppercase;
       opacity: 0.9;
@@ -992,6 +1009,111 @@ gn-md-type-widget {
         }
       }
     }
+  }
+}
+
+
+// map
+.gn-drawmap-panel {
+  input[type="number"] {
+    margin: 0;
+    text-align: left;
+  }
+  .gn-editor-map {
+    padding: 15px;
+    position: relative;
+    margin-top: 30px;
+    [ol-map] {
+      border: 1px solid @input-border;
+      border-radius: @border-radius-base;
+    }
+  }
+  .coord {
+    position: absolute;
+    width: 200px;
+    z-index: 20;
+  }
+  .coord-north {
+    top: -1em;
+    left: 50%;
+    margin-left: -75px;
+  }
+  .coord-south {
+    bottom: -0.25em;
+    left: 50%;
+    margin-left: -75px;
+  }
+  .coord-east {
+    right: -15px;
+    top: 50%;
+    margin-top: -1.25em;
+  }
+  .coord-west {
+    left: -15px;
+    top: 50%;
+    margin-top: -1.25em;
+  }
+  @media (max-width: @screen-xs-max) {
+    .coord {
+      width: 150px;
+    }
+    .coord-east {
+      right: -30px;
+    }
+    .coord-west {
+      left: -30px;
+    }
+  }
+  table  {
+    .form-group {
+      width: 150px;
+    }
+    .btn-group {
+      margin-left: 15px;
+    }
+  }
+  .form-group {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+  .col-left, .col-right {
+    width: 25%;
+  }
+  .col-middle {
+    width: 50%;
+  }
+  table {
+    width:100%
+  }
+  .map {
+    height: 300px;
+    width: 100%;
+  }
+
+  .gn-proj-select {
+    width: 250px;
+    vertical-align: top;
+  }
+  [data-gn-region-picker], [gn-region-picker] {
+    .fa {
+      position: absolute;
+      top: 13px;
+      z-index: 20;
+      right: 10px;
+      &.fa-spinner {
+        right: 25px;
+      }
+      &.fa-times-circle {
+        cursor: pointer;
+      }
+    }
+  }
+  input[type=number] {
+    text-align: center;
+  }
+  .dropdown-menu {
+    font-size: 13px;
+    text-align: left;
   }
 }
 
@@ -1054,6 +1176,9 @@ gn-indexing-task-status {
 .flex-align-end { align-items: flex-end; }
 .flex-align-start { align-items: flex-start; }
 .flex-align-stretch { align-items: stretch; }
+.flex-nowrap, .flex-no-wrap { flex-wrap: nowrap; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-wrap-r { flex-wrap: wrap-reverse; }
 .text-wrap { white-space: normal; }
 .text-nowrap, .text-no-wrap { white-space: nowrap; }
 .text-ellipsis { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }

@@ -1,10 +1,14 @@
 <ul class="list-group">
   <li ng-repeat="layer in (layers | gnReverse | filter:layerFilterFn)"
       data-ng-if="layer.get('legend')"
-      class="list-group-item">
-    <h5>{{layer.get('label')}}</h5>
+      class="list-group-item gn-map-layer">
+    <label>{{layer.get('label')}}</label>
+    <span><em>
+      {{layer.get('currentStyle') ? '(' + (layer.get('currentStyle').Title || layer.get('currentStyle').Name) + ')' : ''}}
+    </em></span>
     <p>
       <img ng-src="{{layer.get('legend')}}"
+           alt="{{layer.get('label')}} {{'mapLegend' | translate}}"
            aria-label="{{layer.get('label')}} {{'mapLegend' | translate}}"/>
     </p>
     <h6 ng-if="layer.get('attribution')">

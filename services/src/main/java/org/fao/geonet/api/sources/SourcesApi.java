@@ -29,7 +29,6 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.GeonetEntity;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.Source;
@@ -39,7 +38,6 @@ import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,15 +47,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -97,8 +94,20 @@ public class SourcesApi {
         @ApiResponse(code = 200, message = "List of source catalogues.")
     })
     @ResponseBody
-    public List<Source> getSources() throws Exception {
-        return sourceRepository.findAll(SortUtils.createSort(Source_.name));
+    public List<Source> getSources(
+        @ApiParam(
+            value = "Group owner of the source (only applies to subportal)."
+        )
+        @RequestParam(
+            value = "group",
+            required = false)
+        Integer group
+    ) throws Exception {
+        if (group != null) {
+            return sourceRepository.findByGroupOwner(group);
+        } else {
+            return sourceRepository.findAll(SortUtils.createSort(Source_.name));
+        }
     }
 
     @ApiOperation(
@@ -115,21 +124,14 @@ public class SourcesApi {
     @ResponseBody
     public void getSubPortal(
         @ApiIgnore
-            HttpServletRequest request,
-        @ApiIgnore
-            HttpServletResponse response,
-        @ApiIgnore
-        @RequestHeader(
-            value = "Accept",
-            defaultValue = MediaType.APPLICATION_JSON_VALUE
-        )
-            String accept
+            HttpServletResponse response
     ) throws Exception {
         final List<Source> sources = sourceRepository.findAll(SortUtils.createSort(Source_.name));
         Element sourcesList = new Element("sources");
         sources.stream().map(GeonetEntity::asXml).forEach(sourcesList::addContent);
+        response.setContentType(MediaType.TEXT_HTML_VALUE);
         response.getWriter().write(
-            new XsltResponseWriter()
+            new XsltResponseWriter("portal")
                 .withJson("catalog/locales/en-core.json")
                 .withJson("catalog/locales/en-search.json")
                 .withXml(sourcesList)
@@ -193,7 +195,8 @@ public class SourcesApi {
     private void copySourceLogo(Source source, HttpServletRequest request) {
         if (source.getLogo() != null) {
             ServiceContext context = ApiUtils.createServiceContext(request);
-            Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + source.getLogo(), source.getUuid());
+            context.getBean(Resources.class).copyLogo(context, "images" + File.separator + "harvesting" + File.separator + source.getLogo(),
+                                                      source.getUuid());
         }
     }
 
@@ -267,12 +270,13 @@ public class SourcesApi {
         if (existingSource != null) {
             if (existingSource.getLogo() != null) {
                 ServiceContext context = ApiUtils.createServiceContext(request);
-                Path icon = Resources.locateLogosDir(context)
-                    .resolve(existingSource.getUuid() + "." +
-                        FilenameUtils.getExtension(existingSource.getLogo()));
+                final Resources resources = context.getBean(Resources.class);
+                final Path logoDir = resources.locateLogosDir(context);
                 try {
-                    Files.deleteIfExists(icon);
-                } catch (IOException e) {
+                    resources.deleteImageIfExists(existingSource.getUuid() + "." +
+                                                          FilenameUtils.getExtension(existingSource.getLogo()),
+                                                  logoDir);
+                } catch (IOException ignored) {
                 }
             }
             sourceRepository.delete(existingSource);
@@ -294,6 +298,8 @@ public class SourcesApi {
             entity.setUuid(source.getUuid());
             entity.setType(source.getType());
             entity.setFilter(source.getFilter());
+            entity.setGroupOwner(source.getGroupOwner());
+            entity.setServiceRecord(source.getServiceRecord());
             entity.setUiConfig(source.getUiConfig());
             entity.setLogo(source.getLogo());
             Map<String, String> labelTranslations = source.getLabelTranslations();

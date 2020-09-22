@@ -66,6 +66,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -124,7 +125,7 @@ public class MetadataWorkflowApi {
 
     @Autowired
     AccessManager accessManager;
-    
+
     @Autowired
     SettingManager settingManager;
 
@@ -136,6 +137,9 @@ public class MetadataWorkflowApi {
 
     @Autowired
     StatusActionsFactory statusActionFactory;
+
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     @ApiOperation(value = "Get record status history", notes = "", nickname = "getRecordStatusHistory")
     @RequestMapping(value = "/{metadataUuid}/status", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
@@ -336,6 +340,20 @@ public class MetadataWorkflowApi {
         }
     }
 
+    @ApiOperation(value = "Delete all record status", notes = "", nickname = "deleteAllRecordStatus")
+    @RequestMapping(value = "/{metadataUuid}/status", method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('Administrator')")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "Status removed."),
+        @ApiResponse(code = 404, message = "Status not found."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN) })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAllRecordStatus(
+        @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+        HttpServletRequest request) throws Exception {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        metadataStatusRepository.deleteAllById_MetadataId(metadata.getId());
+    }
+
     @ApiOperation(value = "Search status", notes = "", nickname = "searchStatusByType")
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, path = "/status/search")
     @ResponseStatus(value = HttpStatus.OK)
@@ -425,6 +443,7 @@ public class MetadataWorkflowApi {
         }
 
         Map<Integer, String> titles = new HashMap<>();
+        Map<Integer, String> uuids = new HashMap<>();
 
         // Add all user info and record title to response
         for (MetadataStatus s : listOfStatus) {
@@ -458,6 +477,17 @@ public class MetadataWorkflowApi {
                 }
             }
             status.setTitle(title);
+
+            String uuid = uuids.get(s.getId().getMetadataId());
+            if (uuid == null) {
+                try {
+                    // Collect metadata uuid.
+                    uuid=metadataUtils.getMetadataUuid(Integer.toString(s.getId().getMetadataId()));
+                    uuids.put(s.getId().getMetadataId(), uuid);
+                } catch (Exception e1) {
+                }
+            }
+            status.setUuid(uuid);
 
             response.add(status);
         }

@@ -376,6 +376,10 @@
         updateGroupsByProfile(groups);
       });
 
+      $scope.sortByLabel = function(group) {
+        return group.label[$scope.lang];
+      };
+
       /**
        * Compute user profile based on group/profile select
        * list. This is closely related to the template manipulating
@@ -708,12 +712,15 @@
         $scope.groupUpdated = true;
       };
 
-      $scope.$watch('user', function(n, o) {
-        if (n && n.profile) {
+      var userAndGroupInitialized = false;
+      var unregister = $scope.$watch('user', function(n, o) {
+        if (!userAndGroupInitialized && n && n.profile) {
+          userAndGroupInitialized = true;
+          unregister();
           loadGroups();
           loadUsers();
         }
-      });
+      }, true);
     }]);
 
   module.filter('loggedUserIsUseradminOrMore', function() {

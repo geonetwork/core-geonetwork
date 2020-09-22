@@ -28,14 +28,16 @@
 
   module.factory('gnAdminMenu', function() {
     var userAdminMenu = [
+      {name: 'usersAndGroups', route: '#organization',
+        classes: 'btn-default', icon: 'fa-group'},
       {name: 'harvesters', route: '#harvest',
         classes: 'btn-primary', icon: 'fa-cloud-download'},
       {name: 'statisticsAndStatus', route: '#dashboard',
         classes: 'btn-success', icon: 'fa-dashboard'},
       {name: 'reports', route: '#reports',
         classes: 'btn-success', icon: 'fa-file-text-o'},
-      {name: 'usersAndGroups', route: '#organization',
-        classes: 'btn-default', icon: 'fa-group'}
+      {name: 'settings', route: '#settings',
+        classes: 'btn-warning', icon: 'fa-gear'}
     ];
     var menu = {
       UserAdmin: userAdminMenu,
@@ -43,6 +45,8 @@
         // TODO : create gn classes
         {name: 'metadatasAndTemplates', route: '#metadata',
           classes: 'btn-primary', icon: 'fa-archive'},
+        {name: 'usersAndGroups', route: '#organization',
+          classes: 'btn-default', icon: 'fa-group'},
         {name: 'harvesters', route: '#harvest', //url: 'harvesting',
           classes: 'btn-primary', icon: 'fa-cloud-download'},
         {name: 'statisticsAndStatus', route: '#dashboard',
@@ -51,8 +55,6 @@
           classes: 'btn-success', icon: 'fa-file-text-o'},
         {name: 'classificationSystems', route: '#classification',
           classes: 'btn-info', icon: 'fa-tags'},
-        {name: 'usersAndGroups', route: '#organization',
-          classes: 'btn-default', icon: 'fa-group'},
         {name: 'settings', route: '#settings',
           classes: 'btn-warning', icon: 'fa-gear'},
         {name: 'tools', route: '#tools',

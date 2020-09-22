@@ -142,7 +142,7 @@ public class GetRelated implements Service, RelatedMetadata {
     /**
      * @param type List of comma or "|" separated types
      */
-    @RequestMapping(value = "/{lang}/xml.relation")
+    @RequestMapping(value = "/{portal}/{lang}/xml.relation")
     public HttpEntity<byte[]> exec(@PathVariable String lang,
                                    @RequestParam(required = false) Integer id,
                                    @RequestParam(required = false) String uuid,

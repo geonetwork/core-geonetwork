@@ -42,4 +42,17 @@ public interface MetadataValidationRepositoryCustom {
     @Transactional
     @Query(value="DELETE FROM MetadataValidation v where v.id.metadataId = ?1")
     int deleteAllById_MetadataId(Integer metadataId);
+
+    /**
+     * Delete all the entities that are related to the indicated metadata
+     * and are internal validation (eg. XSD or schematron).
+     * It will preserve INSPIRE validation results.
+     *
+     * @param metadataId the id of the metadata.
+     * @return the number of rows deleted
+     */
+    @Modifying(clearAutomatically=true)
+    @Transactional
+    @Query(value="DELETE FROM MetadataValidation v where v.id.metadataId = ?1 AND valtype != 'inspire'")
+    int deleteAllInternalValidationById_MetadataId(Integer metadataId);
 }

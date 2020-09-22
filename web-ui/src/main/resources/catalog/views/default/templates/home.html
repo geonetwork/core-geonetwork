@@ -1,7 +1,7 @@
-<div>
+<!-- <div> -->
   <div class="row gn-row-main">
     <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
-      <div class="col-sm-8 col-sm-offset-2">
+      <div class="col-md-offset-1 col-md-10 col-lg-8 col-lg-offset-2">
 
         <div class="input-group gn-form-any">
           <input type="text"
@@ -14,7 +14,9 @@
                 data-ng-keyup="$event.keyCode == 13 && goToSearch(homeAnyField)"
                 data-typeahead="address for address in getAnySuggestions($viewValue)"
                 data-typeahead-loading="anyLoading"
-                data-typeahead-min-length="1"/>
+                data-typeahead-min-length="1"
+                data-typeahead-focus-first="false"
+                data-typeahead-wait-ms="300"/>
           <span class="input-group-btn">
             <a class="btn btn-primary btn-lg"
               type="button"
@@ -78,7 +80,7 @@
             </label>
             <label data-ng-show="searchInfo.facet['topicCats'].length > 0">
               <input type="radio" name="browse" value="topics" data-ng-model="browse"/>
-              <span data-translate="">topics</span>
+              <span data-translate="">topicCats</span>
             </label>
           </span>
           <label
@@ -86,7 +88,7 @@
             data-translate="">inspireThemes</span></label>
           <label
             data-ng-show="searchInfo.facet['topicCats'].length > 0 && searchInfo.facet['inspireThemes'].length == 0"><span
-            data-translate="">topics</span></label>
+            data-translate="">topicCats</span></label>
         </h4>
 
   <!--       <div class="row">
@@ -239,4 +241,4 @@
     </div>
   </div>
   <!-- /.gn-row-info -->
-</div>
+<!-- </div> -->

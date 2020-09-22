@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.search.facet;
 
 import com.google.common.collect.Sets;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.search.classifier.Split;
 import org.fao.geonet.kernel.search.classifier.Value;
 import org.jdom.JDOMException;
@@ -46,15 +47,16 @@ public class DimensionTest {
     }
 
     @Test
-    public void testDimensionSetClassifier() throws JDOMException {
+    public void testDimensionSetClassifier() {
         Dimension dimension = new Dimension("test", "index", "Test");
         dimension.setClassifier(new Split(" *(-|\\|) *"));
         assertEquals(Split.class, dimension.getClassifier().getClass());
     }
 
     @Test
-    public void testDimensionSetLocalized() throws JDOMException {
+    public void testDimensionSetLocalized() {
         Dimension dimension = new Dimension("test", "index", "Test");
+        ApplicationContextHolder.clear();
         final GenericApplicationContext applicationContext = new GenericApplicationContext();
         applicationContext.refresh();
         applicationContext.getBeanFactory().registerSingleton("languages", Sets.newHashSet("eng", "fre", "ger"));

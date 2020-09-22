@@ -42,6 +42,7 @@
         <!--<sec:intercept-url pattern="/proxy\?url=.*(www.brgm.fr|www.ifremer.fr).*" access="permitAll"/>-->
 
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+" access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/metadata/.*" access="permitAll"/>
         <sec:intercept-url pattern="/static/wroAPI/.*" access="hasRole('Administrator')"/>
         <sec:intercept-url pattern="/static/.*" access="permitAll"/>

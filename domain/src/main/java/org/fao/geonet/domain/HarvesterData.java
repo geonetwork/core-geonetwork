@@ -23,7 +23,7 @@
 
 package org.fao.geonet.domain;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 import javax.persistence.*;
 

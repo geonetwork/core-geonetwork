@@ -170,7 +170,7 @@
               };
 
               function addLayerFromLocation(config) {
-                if (angular.isUndefined(config.name)) {
+                if (angular.isUndefined(config.name) && config.type !== 'esrirest') {
                   // This is a service without a layer name
                   // Display the add layer from service panel
 
@@ -178,12 +178,12 @@
                   scope.activeTools.addLayers = true;
                   scope.addLayerTabs.services = true;
                   scope.addLayerUrl[config.type || 'wms'] = config.url;
-                } else if (config.name) {
+                } else if (config.name || config.type === 'esrirest') {
                   gnViewerService.openTool('layers');
 
                   var loadLayerPromise = gnMap[
-                      config.type === 'wmts' ?
-                      'addWmtsFromScratch' : 'addWmsFromScratch'
+                      config.type === 'wmts' ? 'addWmtsFromScratch' :
+                        (config.type === 'esrirest' ? 'addEsriRestFromScratch' : 'addWmsFromScratch')
                       ](
                       scope.map, config.url,
                       config.name, undefined, config.md);
@@ -193,8 +193,15 @@
                       gnMap.feedLayerWithRelated(layer, config.group);
 
                       var extent = layer.get('cextent') || layer.get('extent');
+                      var autofit = gnViewerSettings.mapConfig.autoFitOnLayer;
+                      var message = extent && !autofit ? 'layerAdded' : 'layerAddedNoExtent';
+
+                      if (autofit) {
+                        scope.map.getView().fit(extent);
+                      }
+
                       gnAlertService.addAlert({
-                        msg: $translate.instant('layerAdded', {
+                        msg: $translate.instant(message, {
                           layer: layer.get('label'),
                           extent: extent ? extent.join(',') : ''
                         }),

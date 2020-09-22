@@ -17,7 +17,7 @@
              data-ng-class="u.id === userSelected.id ? 'active' : ''"
              data-ng-click="selectUser(u)">
             <img class="img-circle"
-                 ng-src="//gravatar.com/avatar/{{(u.emailAddresses[0] | md5) || ''}}?s=18&d=blank"/>
+                 ng-src="../api/users/{{(u.id)}}.png?size=18"/>
             <span class='badge' data-ng-show="u.enabled === false"
                   data-translate="">disabled</span> {{u.name}} {{u.surname}}
             ({{u.profile | translate}})
@@ -34,11 +34,9 @@
           <i class="fa fa-plus"/>
           <span data-translate="">newUser</span>
         </button>
-
-        <div
-          data-gn-need-help="administrator-guide/managing-users-and-groups/creating-user.html"></div>
       </div>
     </div>
+    <div data-gn-need-help="administrator-guide/managing-users-and-groups/creating-user.html"></div>
   </div>
 
   <div class="col-lg-8" data-ng-hide="userSelected.id == null">
@@ -90,7 +88,8 @@
               </div>
             </div>
 
-            <div data-ng-class="gnUserEdit.username.$error.required ? 'has-error' : ''"
+            <div data-ng-class="gnUserEdit.username.$error.required ||
+                                gnUserEdit.username.$error.gnDuplicateCheck ? 'has-error' : ''"
                  class="form-group">
               <label class="control-label col-sm-3" data-translate="">username</label>
               <div class="col-sm-9">
@@ -98,9 +97,17 @@
                        class="form-control"
                        data-ng-model="userSelected.username"
                        data-ng-required="true"
+                       required=""
+                       data-ng-model-options="{debounce: 200}"
+                       data-gn-duplicate-check="userSelected.username"
+                       data-gn-duplicate-check-apply="userOperation == 'newuser'"
+                       data-gn-duplicate-check-remote="../api/users/properties/userid?exist={value}"
                        data-ng-disabled="!user.isUserAdminOrMore()"
                        autocomplete="off"/>
                 <p class="help-block" data-translate="">usernameHelp</p>
+                <p class="help-block"
+                   ng-if="gnUserEdit.username.$error.gnDuplicateCheck"
+                   data-translate="">duplicatedValueFoundUserName</p>
               </div>
             </div>
             <!-- Password are disabled when updating user -->
@@ -224,7 +231,32 @@
             </fieldset>
 
 
-            <fieldset>
+            <fieldset data-ng-if="!user.isUserAdminOrMore()">
+              <legend data-translate="profile"></legend>
+
+              <div data-ng-if="groupsByProfile['RegisteredUser'].length > 0">
+                <h4 data-translate="">RegisteredUser</h4>
+                <ul>
+                  <li data-ng-repeat="g in groupsByProfile['RegisteredUser']">{{g.langlabel}}</li>
+                </ul>
+              </div>
+
+              <div data-ng-if="groupsByProfile['Editor'].length > 0">
+                <h4 data-translate="">Editor</h4>
+                <ul>
+                  <li data-ng-repeat="g in groupsByProfile['Editor']">{{g.langlabel}}</li>
+                </ul>
+              </div>
+
+              <div data-ng-if="groupsByProfile['Reviewer'].length > 0">
+                <h4 data-translate="">Reviewer</h4>
+                <ul>
+                  <li data-ng-repeat="g in groupsByProfile['Reviewer']">{{g.langlabel}}</li>
+                </ul>
+              </div>
+            </fieldset>
+
+            <fieldset data-ng-if="user.isUserAdminOrMore()">
               <legend data-translate="">defineUserGroupsPerProfile</legend>
               <input type="hidden" name="profile" data-ng-model="userSelected.profile"
                      value="{{userSelected.profile}}"/>
@@ -240,20 +272,18 @@
               <div
                 data-ng-show="userSelected.profile != 'Administrator'">
                 <h3 data-translate="">RegisteredUser</h3>
+
                 <div data-gn-multiselect="groupsByProfile['RegisteredUser']"
-                     data-ng-disabled="!user.isUserAdminOrMore()"
                      data-choices="groups"></div>
 
 
                 <h3 data-translate="">Editor</h3>
                 <div data-gn-multiselect="groupsByProfile['Editor']"
-                     data-ng-disabled="!user.isUserAdminOrMore()"
                      data-choices="groups"></div>
 
 
                 <h3 data-translate="">Reviewer</h3>
                 <div data-gn-multiselect="groupsByProfile['Reviewer']"
-                     data-ng-disabled="!user.isUserAdminOrMore()"
                      data-choices="groups"></div>
 
                 <p class="help-block"
@@ -262,7 +292,6 @@
 
                 <h3 data-translate="">UserAdmin</h3>
                 <div data-gn-multiselect="groupsByProfile['UserAdmin']"
-                     data-ng-disabled="!user.isUserAdminOrMore()"
                      data-choices="groups"></div>
 
                 <p class="help-block"

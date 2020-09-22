@@ -45,8 +45,10 @@ public interface IMetadataValidator {
     /**
      * Validates metadata against XSD and schematron files related to metadata schema throwing XSDValidationErrorEx if xsd errors or
      * SchematronValidationErrorEx if schematron rules fails.
+     *
+     * Method used when importing/harvesting metadata.
      */
-    void validateMetadata(String schema, Element xml, ServiceContext context, String fileName) throws Exception;
+    void validateExternalMetadata(String schema, Element xml, ServiceContext context, String fileName, Integer groupOwner) throws Exception;
 
     /**
      * 
@@ -64,7 +66,7 @@ public interface IMetadataValidator {
     /**
      * Creates XML schematron report.
      */
-    Element doSchemaTronForEditor(String schema, Element md, String lang) throws Exception;
+    Element doSchemaTronForEditor(String schema, Element md, String lang, Integer groupOwner) throws Exception;
 
     /**
      * Used by harvesters that need to validate metadata.

@@ -32,7 +32,9 @@
   goog.require('gn_directoryassociatedmd');
   goog.require('gn_facets');
   goog.require('gn_mdtypewidget');
+  goog.require('gn_mdtypeinspirevalidationwidget');
   goog.require('gn_draftvalidationwidget');
+  goog.require('gn_batchtask');
 
   var module = angular.module('gn_directory_controller', [
     'gn_catalog_service',
@@ -40,7 +42,9 @@
     'gn_directoryassociatedmd',
     'pascalprecht.translate',
     'gn_mdtypewidget',
-    'gn_draftvalidationwidget'
+    'gn_mdtypeinspirevalidationwidget',
+    'gn_draftvalidationwidget',
+    'gn_batchtask'
   ]);
 
   /**
@@ -373,20 +377,27 @@
 
       $scope.importEntry = function(xml) {
         gnMetadataManager.importFromXml(
-            gnUrlUtils.toKeyValue($scope.importData), xml).then(
-            function(r) {
-              if (r.status === 400) {
-                $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant('saveMetadataError'),
-                  error: r.data,
-                  timeout: 0,
-                  type: 'danger'});
-              } else {
-                refreshEntriesInfo();
-                $scope.closeEditor();
-              }
+          gnUrlUtils.toKeyValue($scope.importData), xml).then(function(r) {
+            if (r.status === 400) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('directoryManagerError'),
+                error: r.data,
+                timeout: 0,
+                type: 'danger'});
+            } else {
+              refreshEntriesInfo();
+              $scope.closeEditor();
             }
-        );
+          })
+          .catch(function(f) {
+            if (f.status === 400) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('directoryManagerError'),
+                error: f.data,
+                timeout: 0,
+                type: 'danger'});
+            }
+          });
       };
 
       // ACTIONS

@@ -2859,7 +2859,7 @@
     <description>Nome do sistema de referência espacial. Por padrão
       definido (epsg:4326)
     </description>
-    <example>urn:x-ogc:def:crs:EPSG:6.6:4326</example>
+    <example>urn:ogc:def:crs:EPSG:6.6:4326</example>
   </element>
 
   <!-- ==================================================== -->
@@ -3152,5 +3152,9 @@
   <element name="gmx:fieldOfApplication">
     <label>Field of application</label>
     <description>Field of application</description>
+  </element>
+  <element name="xlink:type">
+    <label>Link</label>
+    <description>Link type</description>
   </element>
 </labels>

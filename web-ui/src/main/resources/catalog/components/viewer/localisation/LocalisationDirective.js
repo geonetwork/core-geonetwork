@@ -94,6 +94,7 @@
             }
           }],
         link: function(scope, element, attrs, ctrl) {
+          scope.locToolDisabled = gnGlobalSettings.gnCfg.mods.geocoder.enabled === false;
 
           /** localisation text query */
           scope.query = '';

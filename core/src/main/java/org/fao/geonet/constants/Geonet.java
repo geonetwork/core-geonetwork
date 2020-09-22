@@ -206,11 +206,8 @@ public final class Geonet {
         public static final String WFS_STYLESHEETS = "convert/WFSToFragments";
         public static final String TDS_STYLESHEETS = "convert/ThreddsToFragments";
         public static final String TDS_19119_19139_STYLESHEETS = "convert/ThreddsCatalogto19119";
-        public static final String ISO19119TOJZKIT_STYLESHEET = "convert/19119ToJZKitRepository.xsl";
         public static final String OGC_STYLESHEETS = "convert/OGCWxSGetCapabilitiesto19119";
         public static final String CONVERT_STYLESHEETS = "convert/";
-        public static final String LOGOS = "images/logos/";
-        public static final String DIF_STYLESHEET = "convert/DIFToISO.xsl";
         public static final String XML = Jeeves.Path.XML;
     }
 
@@ -221,8 +218,6 @@ public final class Geonet {
         public static final String MAIN_SEARCH = "main.search";
         public static final String SEARCH_RESULT = "search.result";
         public static final String SEARCH_REQUEST = "search.request";
-        public static final String LAST_SEARCH_RESULT = "last.search.result";
-        public static final String SEARCH_REQUEST_ID = "search_request_id";
         public static final String METADATA_SHOW = "metadata.show";
         public static final String METADATA_EDITING = "metadata.editing";
         public static final String METADATA_BEFORE_ANY_CHANGES = "metadata.before.any.changes";
@@ -231,8 +226,6 @@ public final class Geonet {
         public static final String SEARCH_KEYWORDS_RESULT = "search.keywords.result";
         public static final String SELECTED_RESULT = "selected.result";
         public static final String VALIDATION_REPORT = "validation.report";
-        public static final String METADATA_ISO19110 = "metadata.iso19110";
-        public static final String FC_ISO19110 = "fc.iso19110";
         public static final String FILE_DISCLAIMER = "file.disclaimer";
         public static final String BATCH_PROCESSING_REPORT = "BATCH_PROCESSING_REPORT";
 
@@ -425,7 +418,7 @@ public final class Geonet {
         public static final String MAX_RECORDS = "maxRecords";
 
         /**
-         * Parameter name: {@value #ALLOW_UNBOUNDED_QUERIES} - Allow XmlSearch to return as many 
+         * Parameter name: {@value #ALLOW_UNBOUNDED_QUERIES} - Allow XmlSearch to return as many
          * records as the search returns (this was the default behaviour before 3.8.x).
          */
         public static final String ALLOW_UNBOUNDED_QUERIES = "allowUnboundedQueries";
@@ -666,6 +659,7 @@ public final class Geonet {
         public static final String UUID = "_uuid";
         public static final String IS_HARVESTED = "_isHarvested";
         public static final String OWNER = "_owner";
+        public static final String OWNERNAME = "recordOwner";
         public static final String DUMMY = "_dummy";
         public static final String POPULARITY = "_popularity";
         public static final String RATING = "_rating";
@@ -681,11 +675,18 @@ public final class Geonet {
         public static final String STATUS = "_status";
         public static final String STATUS_CHANGE_DATE = "_statusChangeDate";
         public static final String VALID = "_valid";
+        public static final String VALID_INSPIRE = "_valid_inspire";
         public static final String ID = "_id";
         public static final String ANY = "any";
         public static final String LOCALE = "locale";
 		public static final String IS_PUBLISHED_TO_ALL = "_isPublishedToAll";
         public static final String FEEDBACKCOUNT = "feedbackCount";
         public static final String DRAFT = "_draft";
+        public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
+        public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
+    }
+
+    public static class SearchConfig {
+        public static final String SEARCH_IGNORE_PORTAL_FILTER_OPTION = "ignorePortalFilter";
     }
 }

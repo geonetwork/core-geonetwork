@@ -288,6 +288,13 @@
                     // and all directives to be rendered which
                     // may affect element positions.
                   }
+                }).catch(function(data) {
+                  //an api-error is returned as xml
+                  $rootScope.$broadcast('StatusUpdated', {
+                    title: $translate.instant('runServiceError'),
+                    error: $(data).find('description').text(),
+                    timeout: 0,
+                    type: 'danger'});
                 });
 
                 window.onbeforeunload = function() {
@@ -352,7 +359,7 @@
             });
           }
         });
-        
+
       };
 
       /**
@@ -579,16 +586,6 @@
         }
       };
 
-      function parseXmlError(error) {
-        if (error.toString().indexOf('<?xml') === 0) {
-          var x = jQuery.parseXML(error),
-              d = x.getElementsByTagName('description'),
-              m = d[0].textContent;
-          return m;
-        }
-        return null;
-      };
-
       $scope.close = function(submit, approve) {
         // if auto unpublish is not set in the settings, or if MD is not
         // published: close w/o confirmation
@@ -617,15 +614,13 @@
             }, function(error) {
               // When closing editor and if error occurs,
               // the response is in XML. Try to get the message
-              message = parseXmlError(error);
 
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $scope.saveError = true;
 
               $rootScope.$broadcast('StatusUpdated', {
-                title: message ?
-                message : $translate.instant('saveMetadataError'),
-                error: message ? undefined : error,
+                title: error ? error.message : $translate.instant('saveMetadataError'),
+                error: error,
                 timeout: 0,
                 type: 'danger'});
             });

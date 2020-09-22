@@ -89,12 +89,14 @@ public class FacetsService {
         private final String key;
         private final String name;
         private final String label;
+        private final Integer pageSize;
 
         public Facet(ItemConfig itemConfig) {
             final Dimension dimension = itemConfig.getDimension();
             this.key = dimension.getIndexKey();
             this.label = dimension.getLabel();
             this.name = dimension.getName();
+            this.pageSize = itemConfig.getPageSize();
         }
 
         public String getKey() {
@@ -107,6 +109,10 @@ public class FacetsService {
 
         public String getLabel() {
             return label;
+        }
+
+        public Integer getPageSize() {
+            return pageSize;
         }
     }
 }

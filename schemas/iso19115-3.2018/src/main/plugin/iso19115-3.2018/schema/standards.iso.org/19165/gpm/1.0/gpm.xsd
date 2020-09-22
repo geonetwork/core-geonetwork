@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gpm="http://standards.iso.org/iso/19165/gpm/1.0" 
+  elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19165/gpm/1.0" version="1.0">
+  <annotation>
+    <documentation>Namespace for XML elements &lt;font color="#1f497d"&gt;for geospatial preservation metadata (ISO 19165)&lt;/font&gt;.</documentation>
+  </annotation>
+  <include schemaLocation="geospatialPreservationMetadata.xsd"/>
+</schema>

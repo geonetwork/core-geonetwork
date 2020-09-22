@@ -1,4 +1,5 @@
-<form data-ng-keypress="updatingHarvester()">
+<form name="harvesterForm"
+      data-ng-keypress="updatingHarvester()">
   <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <div class="row">
@@ -21,7 +22,7 @@
 
     <fieldset id="gn-harvest-settings-oai-basic-filter-row" class="form-horizontal">
       <legend id="gn-harvest-settings-oai-basic-filter-title" data-translate="">harvesterFilter</legend>
-      
+
       <div id="gn-harvest-settings-oai-basic-filter-from-row">
         <label id="gn-harvest-settings-oai-basic-filter-from-label" class="control-label col-lg-4" data-translate="">from</label>
         <div class="col-lg-8">
@@ -74,6 +75,13 @@
     </legend>
 
     <div id="gn-harvest-settings-oai-advanced-remote-row" data-gn-harvester-account="harvesterSelected"/>
+    <div id="gn-harvest-settings-oai-advanced-validate-row">
+      <label id="gn-harvest-settings-oai-advanced-validate-label" class="control-label">
+        <span data-translate="">harvesterValidate</span>
+      </label>
+      <div id="gn-harvest-settings-oai-advanced-validate-list" data-gn-harvester-validation="harvesterSelected.content.validate"/>
+      <p class="help-block" data-translate="">harvesterValidateHelp</p>
+    </div>
 
     <div id="gn-harvest-settings-oai-advanced-categories-row"
          data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"

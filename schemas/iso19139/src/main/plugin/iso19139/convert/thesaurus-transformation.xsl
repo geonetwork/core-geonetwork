@@ -94,6 +94,31 @@
     </xsl:apply-templates>
   </xsl:template>
 
+  <!-- given a thesarus and language, find the most appropriate responsible party name.
+       This will be in the dublin core section as "publisher"-->
+  <xsl:function name="geonet:getThesaurusResponsiblePartyIso19139">
+    <xsl:param name="thesarus" />
+    <xsl:param name="lang1" />
+    <xsl:variable name="lang" select="lower-case($lang1)" />
+    <xsl:variable name="lang_2letter" select="lower-case(util:twoCharLangCode($lang))" />
+
+    <xsl:variable name="thesaurusPublisherMultilingualNode" select="$thesarus/dublinCoreMultilinguals/dublinCoreMultilingual[lower-case(./lang) = $lang and ./tag='publisher']/value" />
+    <xsl:variable name="thesaurusPublisherMultilingualNode_2letter" select="$thesarus/dublinCoreMultilinguals/dublinCoreMultilingual[lower-case(./lang) = $lang_2letter and ./tag='publisher']/value" />
+
+    <xsl:choose>
+      <xsl:when test="$thesaurusPublisherMultilingualNode">
+        <xsl:value-of select="$thesaurusPublisherMultilingualNode"/>
+      </xsl:when>
+      <xsl:when test="$thesaurusPublisherMultilingualNode_2letter">
+        <xsl:value-of select="$thesaurusPublisherMultilingualNode_2letter"/>
+      </xsl:when>
+      <xsl:otherwise>
+        Unknown
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
+
+
   <xsl:template mode="to-iso19139-keyword" match="*[not(/root/request/skipdescriptivekeywords)]">
     <xsl:param name="textgroupOnly"/>
     <xsl:param name="listOfLanguage"/>
@@ -176,10 +201,29 @@
               <xsl:variable name="keyword" select="."/>
 
               <xsl:if test="not($textgroupOnly)">
-                <gco:CharacterString>
-                  <xsl:value-of
-                    select="$keyword/values/value[@language = $listOfLanguage[1]]/text()"></xsl:value-of>
-                </gco:CharacterString>
+                <xsl:choose>
+                  <xsl:when test="$withAnchor">
+                    <gmx:Anchor>
+                      <xsl:attribute name="xlink:href">
+                        <xsl:choose>
+                          <xsl:when test="matches(uri, '^http.*')">
+                            <xsl:value-of select="uri"/>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <xsl:value-of select="concat($serviceUrl, 'api/registries/vocabularies/keyword?thesaurus=', thesaurus/key, '&amp;id=', uri)"/>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </xsl:attribute>
+                      <xsl:value-of select="value"/>
+                    </gmx:Anchor>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <gco:CharacterString>
+                      <xsl:value-of
+                        select="$keyword/values/value[@language = $listOfLanguage[1]]/text()"></xsl:value-of>
+                    </gco:CharacterString>
+                  </xsl:otherwise>
+                </xsl:choose>
               </xsl:if>
 
               <gmd:PT_FreeText>
@@ -199,8 +243,6 @@
               <!-- ... default mode -->
               <xsl:choose>
                 <xsl:when test="$withAnchor">
-                  <!-- TODO multilingual Anchor ?
-                  -->
                   <gmx:Anchor>
                     <xsl:attribute name="xlink:href">
                       <xsl:choose>
@@ -304,6 +346,30 @@
               </gmd:CI_Date>
             </gmd:date>
           </xsl:if>
+
+          <!--
+              You can pull in the publisher from the Thesaurus XML.  See Metadata101/iso19139.ca.HNAP
+              NOTE: HNAP only has 2 languages, so this should be modified so it loops through the non-default lanaguages
+                    instead of just using ${altLang}
+              NOTE: This also hard-codes the <gmd:role>, but you can also add this to the RDF and put it in here.
+              NOTE:      <xsl:variable name="currentThesaurusFull" select="$thesauri/thesaurus[key = $currentThesaurus]" />
+
+           <gmd:citedResponsibleParty>
+            <gmd:CI_ResponsibleParty>
+              <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString><xsl:value-of select="geonet:getThesaurusResponsibleParty($currentThesaurusFull,$mdlang)"/></gco:CharacterString>
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#{$altLang}"><xsl:value-of select="geonet:getThesaurusResponsiblePartyIso19139($currentThesaurusFull,$altLang)"/></gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:organisationName>
+              <gmd:role>
+                <gmd:CI_RoleCode codeListValue="RI_409" codeList="http://nap.geogratis.gc.ca/metadata/register/napMetadataRegister.xml#IC_90">custodian; conservateur</gmd:CI_RoleCode>
+              </gmd:role>
+            </gmd:CI_ResponsibleParty>
+          </gmd:citedResponsibleParty>
+          -->
 
           <xsl:if test="$withThesaurusAnchor">
             <gmd:identifier>

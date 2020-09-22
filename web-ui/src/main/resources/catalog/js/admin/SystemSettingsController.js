@@ -25,10 +25,11 @@
   goog.provide('gn_system_settings_controller');
 
   goog.require('gn_ui_config');
+  goog.require('gn_timezone_selector')
 
 
   var module = angular.module('gn_system_settings_controller',
-      ['gn_ui_config']);
+      ['gn_ui_config', 'gn_timezone_selector']);
 
   module.filter('hideLanguages', function() {
     return function(input) {
@@ -196,7 +197,7 @@
                 if (target) {
                   $timeout(function () {
                     gnUtilityService.scrollTo(target);
-                  }, 300);
+                  }, 900);
                 }
               }
             }).error(function(data) {
@@ -265,6 +266,12 @@
             "configuration": (isUpdate ? $scope.uiConfiguration.configuration : JSON.stringify(gnGlobalSettings.gnCfg))
           }, {responseType: 'text'}).then(function(r) {
             loadUiConfigurations();
+          }, function(r) {
+            $rootScope.$broadcast('StatusUpdated', {
+              title: $translate.instant('uiConfigUpdateError'),
+              error: r.data,
+              timeout: 0,
+              type: 'danger'});
           });
         }
       };
@@ -406,7 +413,7 @@
           $scope.filterMain(fieldsetParent);
         }
       };
-      
+
       // filter the main parent (for Settings)
       $scope.filterMain = function(element) {
 

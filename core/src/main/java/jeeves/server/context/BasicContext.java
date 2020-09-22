@@ -18,7 +18,7 @@
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //===
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: GeoNetwork@fao.org
+//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
 package jeeves.server.context;
@@ -118,6 +118,13 @@ public class BasicContext implements Logger {
         return jeevesApplicationContext.getBean(beanType);
     }
 
+    public
+    @Nonnull
+    <T> T getBean(String name, Class<T> beanType) {
+        return jeevesApplicationContext.getBean(name, beanType);
+    }
+
+
     //--------------------------------------------------------------------------
 
     public EntityManager getEntityManager() {
@@ -187,7 +194,10 @@ public class BasicContext implements Logger {
      * @return the id of the current node.
      */
     public String getNodeId() {
-        return this.jeevesApplicationContext.getBean(NodeInfo.class).getId();
+        try {
+            return this.jeevesApplicationContext.getBean(NodeInfo.class).getId();
+        } catch (Exception e) {}
+        return NodeInfo.DEFAULT_NODE;
     }
 }
 

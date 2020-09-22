@@ -16,6 +16,9 @@
   <!-- Enable tab view mode or not -->
   <xsl:param name="tabs" select="'true'"/>
 
+  <!-- Display citation or not -->
+  <xsl:param name="citation" select="'false'"/>
+
   <!-- List of related items to display on top. By default only online links. -->
   <xsl:param name="related" select="'onlines'"/>
 
@@ -70,19 +73,6 @@
                 select="/root/url"/>
   <xsl:variable name="nodeUrl"
                 select="/root/gui/nodeUrl"/>
-
-  <!-- Date formating -->
-  <xsl:variable name="dateFormats">
-    <dateTime>
-      <for lang="eng" default="true">[H1]:[m01]:[s01] on [D1] [MNn] [Y]</for>
-      <for lang="fre">[H1]:[m01]:[s01] le [D1] [MNn] [Y]</for>
-    </dateTime>
-    <date>
-      <for lang="eng" default="true">[D1] [MNn] [Y]</for>
-      <for lang="fre">[D1] [MNn] [Y]</for>
-    </date>
-  </xsl:variable>
-
 
   <xsl:variable name="schemaStrings"
                 select="/root/schemas/*[name() = $schema]/strings"/>

@@ -30,61 +30,6 @@ input[type=text], input[type=number], select {
 }
 
 
-.gn-drawmap-panel {
-  table  {
-    .form-group {
-      width: 150px;
-    }
-    .btn-group {
-      margin-left: 15px;
-    }
-  }
-  .form-group {
-    margin-left: 0px;
-    margin-right: 0px;
-  }
-  .col-left, .col-right {
-   width: 25%;
-  }
-  .col-middle {
-   width: 50%;
-  }
-  table {
-   width:100%
-  }
-  .map {
-   height: 300px;
-   width: 100%;
-  }
-
-  .gn-proj-select {
-    width: 250px;
-    vertical-align: top;
-  }
-  [data-gn-region-picker], [gn-region-picker] {
-    .fa {
-      position: absolute;
-      top: 11px;
-      z-index: 20;
-      right: 10px;
-      &.fa-spinner {
-        right: 25px;
-      }
-      &.fa-times-circle {
-        cursor: pointer;
-      }
-    }
-  }
-  input[type=number] {
-    margin-top: 15px;
-    margin-bottom: 15px;
-    text-align: center;
-  }
-  .dropdown-menu {
-    font-size: 13px;
-    text-align: left;
-  }
-}
 .gn-geopublisher-panel {
   .map {
    height: 300px;
@@ -485,8 +430,12 @@ form.gn-editor {
   .gn-value .col-xs-4 {
       padding-right: 0px;
   }
+  
+  div.th-inner {
+    font-size: 12px;
+  }
 
-  .gn-required > div.th-inner:after,
+  .gn-required > div.th-inner:after, legend.gn-required:after,
   label.gn-required:after, .gn-required > label:after,
   label.gn-mandatory:after, .gn-mandatory > label:after {
       content: "*";
@@ -501,7 +450,10 @@ form.gn-editor {
     font-size: 2em;
     margin: -7px 0 0 7px;
   }
-
+  legend.gn-required:after {
+    font-size: 24px;
+    margin: 0px;
+  }
 
   .form-horizontal .form-group {
       margin-left: 0px;
@@ -617,6 +569,7 @@ form.gn-tab-inspire {
         margin-top: 10px;
         overflow: auto;
         padding-bottom: 2px;
+        word-break: break-word;
       }
       &.text-danger {
         border-left: 4px solid @brand-danger;
@@ -698,7 +651,7 @@ table.gn-data-store {
 }
 
 .open > .dropdown-menu {
-  max-height: 25em;
+  max-height: 30em;
   overflow-y: auto;
 }
 
@@ -889,7 +842,7 @@ gn-directory-associated-md {
 }
 
 // md type widget (used only in editor for now)
-gn-md-type-widget {
+gn-md-type-widget, gn-md-type-inspire-validation-widget {
   display: inline-block;
   & > div {
     border-radius: 1000px;
@@ -905,19 +858,24 @@ gn-md-type-widget {
     background-color: @gray-light;
     overflow: hidden;
 
-    &.valid-status-1 {
+    &.valid-status-1, &.valid-inspire-status-1 {
       background-color: @gray-light;
     }
-    &.valid-status0 {
+    &.valid-status0, &.valid-inspire-status0 {
       background-color: @btn-danger-bg;
     }
-    &.valid-status1 {
+    &.valid-status1, &.valid-inspire-status1 {
       background-color: @btn-success-bg;
     }
     &.md-type-t {
       background-color: @btn-primary-bg;
     }
-
+    a {
+      color: #fff;
+      &:hover {
+        color: #fff;
+      }
+    }
     &::after {
       content: '';
       background-color: rgba(255, 255, 255, 0.25);
@@ -975,7 +933,7 @@ gn-draft-validation-widget {
 
 .gn-editor-board {
   .table.gn-results-editor td {
-    gn-md-type-widget {
+    gn-md-type-widget, gn-md-type-inspire-validation-widget {
       margin-top: 5px;
     }
   }
@@ -986,14 +944,6 @@ gn-draft-validation-widget {
   padding-bottom: 150px;
 }
 @media (min-width: @screen-md-min) {
-  .scrollbar-white() {
-    &::-webkit-scrollbar-track, &::-webkit-scrollbar-thumb {
-      -webkit-box-shadow: inset 0 0 6px #fff; 
-    }
-    &::-webkit-scrollbar-thumb:window-inactive {
-      background: #fff; 
-    }
-  }
   .gn-editor-sidebar {
     margin-top: 0;
     position: fixed;
@@ -1001,7 +951,6 @@ gn-draft-validation-widget {
     overflow: auto;
     max-height: 100%;
     padding-bottom: 110px;
-    .scrollbar-white();
   }
 }
 

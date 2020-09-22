@@ -3,7 +3,7 @@
 @btn-link-disabled-color: #707070;
 @dropdown-link-disabled-color: #707070;
 
-[data-gn-map-field] > [ngeo-map] {
+[data-gn-map-field] > [ol-map] {
   border: 1px solid #ccc;
   border-radius: 3px;
   right: 0;
@@ -13,16 +13,6 @@
   width: 250px !important;
   height: 250px !important;
   margin: 5px;
-  .ol-attribution {
-    right: auto;
-    left: .5em;
-    button {
-      background-color: @brand-primary;
-    }
-  }
-  .ol-attribution button {
-    float: left;
-  }
 }
 
 // map viewer
@@ -33,17 +23,20 @@
   left: 0px;
   right: 0px;
   .ol-attribution {
-    right: auto;
-    left: .5em;
+    .gn-attribution();
+    bottom: 1em;
+    left: 1em;
     button {
       background-color: @brand-primary;
     }
-  }
-  .ol-attribution button {
-    float: left;
+    @media screen and (max-height: 768px) {
+      left: auto;
+      right: 1em;
+    }
   }
 
   .panel-tools {
+    max-height: ~"calc(100% - 2em - @{gn-bottombar-height} + 3px)";
     .panel-heading {
       background-color: transparent;
     }
@@ -52,6 +45,11 @@
       &.active {
         background-color: @btn-primary-bg;
         * { color: @btn-primary-color; }
+      }
+    }
+    .alert {
+      a {
+        text-decoration: underline;
       }
     }
   }
@@ -107,16 +105,19 @@
       }
     }
   }
+  gn-features-tables, .gn-viewer-info-pane {
+    .gn-features-table {
+      box-shadow: none;
+    }
+  }
 }
 
 // minimap on search results
 .gn-search-map {
-  [ngeo-map] {
+  [ol-map] {
     background: @body-bg;
     .ol-attribution {
-      li, a {
-        font-size: 10px;
-      }
+      .gn-attribution();
     }
   }
 }

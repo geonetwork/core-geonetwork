@@ -47,6 +47,7 @@ var gnHarvestergeonetwork = {
           "name": []
         }
       }],
+      "ifRecordExistAppendPrivileges": false,
       "privileges": [{
         "@id": "1",
         "operation":     [
@@ -66,7 +67,7 @@ var gnHarvestergeonetwork = {
     var body = '<node id="' + h['@id'] + '" '
       + '    type="' + h['@type'] + '">'
       + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
-      + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>' 
+      + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>'
       + '  <site>'
       + '    <name>' + h.site.name + '</name>'
       + '    <host>' + h.site.host.replace(/&/g, '&amp;') + '</host>'

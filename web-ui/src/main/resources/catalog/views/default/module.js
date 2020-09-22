@@ -140,6 +140,8 @@
       $scope.location = gnSearchLocation;
       $scope.fluidLayout = gnGlobalSettings.gnCfg.mods.home.fluidLayout;
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
+      $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
+      $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();
         $('button.gn-minimap-toggle > i').toggleClass('fa-angle-double-left fa-angle-double-right');
@@ -219,7 +221,7 @@
       $scope.toggleListType = function(type) {
         $scope.type = type;
       };
-      
+
       $scope.infoTabs = {
         lastRecords: {
           title: 'lastRecords',
@@ -257,23 +259,27 @@
         addMdLayerToMap: function (link, md) {
           var config = {
             uuid: md ? md.getUuid() : null,
-            type: link.protocol.indexOf('WMTS') > -1 ? 'wmts' : 'wms',
+            type:
+              link.protocol.indexOf('WMTS') > -1 ? 'wmts' :
+                ((link.protocol == 'ESRI:REST') || (link.protocol.startsWith('ESRI REST')) ? 'esrirest' : 'wms'),
             url: $filter('gnLocalized')(link.url) || link.url
           };
 
+          var title = link.title;
+          var name = link.name;
           if (angular.isObject(link.title)) {
-            link.title = $filter('gnLocalized')(link.title);
+            title = $filter('gnLocalized')(link.title);
           }
           if (angular.isObject(link.name)) {
-            link.name = $filter('gnLocalized')(link.name);
+            name = $filter('gnLocalized')(link.name);
           }
 
-          if (link.name && link.name !== '') {
-            config.name = link.name;
+          if (name && name !== '') {
+            config.name = name;
             config.group = link.group;
             // Related service return a property title for the name
-          } else if (link.title) {
-            config.name = link.title;
+          } else if (title) {
+            config.name = title;
           }
 
           // if an external viewer is defined, use it here
@@ -285,7 +291,7 @@
               type: config.type,
               url: config.url,
               name: config.name,
-              title: link.title
+              title: title
             });
             return;
           }

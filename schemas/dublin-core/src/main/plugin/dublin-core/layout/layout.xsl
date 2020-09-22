@@ -29,6 +29,7 @@
                 exclude-result-prefixes="#all">
 
   <xsl:include href="utility-fn.xsl"/>
+  <xsl:include href="utility-tpl.xsl"/>
 
   <!-- Get the main metadata languages -->
   <xsl:template name="get-dublin-core-language">
@@ -38,16 +39,6 @@
   <xsl:template name="get-dublin-core-title">
     <xsl:value-of select="$metadata//dc:title"/>
   </xsl:template>
-
-  <!-- No multilingual support in Dublin core -->
-  <xsl:template name="get-dublin-core-other-languages-as-json"/>
-
-  <!-- Get the list of other languages -->
-  <xsl:template name="get-dublin-core-other-languages"/>
-
-  <xsl:template name="get-dublin-core-online-source-config"/>
-
-  <xsl:template name="get-dublin-core-extents-as-json">[]</xsl:template>
 
   <!-- Visit all tree -->
   <xsl:template mode="mode-dublin-core" match="dc:*|dct:*">
@@ -173,7 +164,7 @@
       test="$isEditing and
             (
               not($isFlatMode) or
-              gn-fn-metadata:isFieldFlatModeException($viewConfig, $name)
+              gn-fn-metadata:isFieldFlatModeException($viewConfig, $name,  name(..))
             ) and
             $service != 'embedded' and
             count(following-sibling::node()[name() = $name]) = 0">

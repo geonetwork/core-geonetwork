@@ -67,7 +67,9 @@ public class Source extends Localized {
     private String logo;
     private String filter;
     private String uiConfig;
+    private String serviceRecord;
     private ISODate creationDate = new ISODate();
+    private Integer groupOwner;
 
     /**
      * Default constructor.  Required by framework.
@@ -145,7 +147,7 @@ public class Source extends Localized {
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
     @CollectionTable(joinColumns = @JoinColumn(name = "idDes"), name = "SourcesDes")
     @MapKeyColumn(name = "langId", length = 5)
-    @Column(name = "label", nullable = false, length = 96)
+    @Column(name = "label", nullable = false, length = 255)
     public Map<String, String> getLabelTranslations() {
         return super.getLabelTranslations();
     }
@@ -253,4 +255,28 @@ public class Source extends Localized {
         return this;
     }
 
+    /**
+     * Get the group id that this subportal is managed by.
+     * When assigning a subportal to a group, user admin of that group
+     * can manage it.
+     * @return the group that owns this source.
+     */
+    @Column(name = "groupOwner")
+    public Integer getGroupOwner() {
+        return groupOwner;
+    }
+
+    public Source setGroupOwner(Integer groupOwner) {
+        this.groupOwner = groupOwner;
+        return this;
+    }
+
+    @Column(name = "serviceRecord")
+    public String getServiceRecord() {
+        return serviceRecord;
+    }
+
+    public void setServiceRecord(String serviceRecord) {
+        this.serviceRecord = serviceRecord;
+    }
 }

@@ -23,7 +23,7 @@
 
 package org.fao.geonet.services.system;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.domain.responses.OkResponse;
@@ -45,7 +45,7 @@ public class UpdateSystemInfo {
     @Autowired
     private SystemInfo info;
 
-    @RequestMapping(value = "/{lang}/systeminfo/staging", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/systeminfo/staging", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public OkResponse update(@RequestParam(required = true) String newProfile) {

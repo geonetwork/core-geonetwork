@@ -103,7 +103,7 @@ public class ListFormatters extends AbstractFormatService {
         }
     }
 
-    @RequestMapping(value = "/{lang}/md.formatter.list", produces = {
+    @RequestMapping(value = "/{portal}/{lang}/md.formatter.list", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public FormatterDataResponse exec(

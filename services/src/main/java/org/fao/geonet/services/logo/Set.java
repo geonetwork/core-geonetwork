@@ -29,6 +29,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.formatters.Resource;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -45,6 +46,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 import javax.imageio.ImageIO;
 
@@ -59,9 +61,9 @@ public class Set implements Service {
     }
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-
-        Path harvestingLogoDirectory = Resources.locateHarvesterLogosDir(context);
-        Path nodeLogoDirectory = Resources.locateLogosDir(context);
+        Resources resources = context.getBean(Resources.class);
+        Path harvestingLogoDirectory = resources.locateHarvesterLogosDir(context);
+        Path nodeLogoDirectory = resources.locateLogosDir(context);
 
         String file = Util.getParam(params, Params.FNAME);
         String asFavicon = Util.getParam(params, Params.FAVICON, "0");
@@ -75,33 +77,34 @@ public class Set implements Service {
         SettingManager settingMan = context.getBean(SettingManager.class);
         String nodeUuid = settingMan.getSiteId();
 
-        try {
-            Path logoFilePath = harvestingLogoDirectory.resolve(file);
-            if (!Files.exists(logoFilePath)) {
+        try (Resources.ResourceHolder logoResource = resources.getImage(context, file, harvestingLogoDirectory)) {
+            final Path logoFilePath;
+            if (logoResource == null) {
                 logoFilePath = context.getAppPath().resolve("images/harvesting/" + file);
+            } else {
+                logoFilePath = logoResource.getPath();
             }
             try (InputStream inputStream = Files.newInputStream(logoFilePath)) {
                 BufferedImage source = ImageIO.read(inputStream);
 
                 if ("1".equals(asFavicon)) {
-                    createFavicon(source, nodeLogoDirectory.resolve("favicon.png"));
+                    try (Resources.ResourceHolder logo = resources.getWritableImage(context, "favicon.png", nodeLogoDirectory)) {
+                        createFavicon(source, logo.getPath());
+                    }
                 } else {
-                    Path logo = nodeLogoDirectory.resolve(nodeUuid + ".png");
-                    Path defaultLogo = nodeLogoDirectory.resolve("logo.png");
+                    try (Resources.ResourceHolder logo = resources.getWritableImage(context, nodeUuid + ".png", nodeLogoDirectory);
+                         Resources.ResourceHolder defaultLogo = resources.getWritableImage(context, "logo.png", nodeLogoDirectory)) {
 
-                    if (!file.endsWith(".png")) {
-                        try (
-                            OutputStream logoOut = Files.newOutputStream(logo);
-                            OutputStream defLogoOut = Files.newOutputStream(defaultLogo);
-                        ) {
-                            ImageIO.write(source, "png", logoOut);
-                            ImageIO.write(source, "png", defLogoOut);
+                        if (!file.endsWith(".png")) {
+                            try (OutputStream logoOut = Files.newOutputStream(logo.getPath());
+                                 OutputStream defLogoOut = Files.newOutputStream(defaultLogo.getPath())) {
+                                ImageIO.write(source, "png", logoOut);
+                                ImageIO.write(source, "png", defLogoOut);
+                            }
+                        } else {
+                            Files.copy(logoFilePath, logo.getPath(), StandardCopyOption.REPLACE_EXISTING);
+                            Files.copy(logoFilePath, defaultLogo.getPath(), StandardCopyOption.REPLACE_EXISTING);
                         }
-                    } else {
-                        Files.deleteIfExists(logo);
-                        IO.copyDirectoryOrFile(logoFilePath, logo, false);
-                        Files.deleteIfExists(defaultLogo);
-                        IO.copyDirectoryOrFile(logoFilePath, defaultLogo, false);
                     }
                 }
             }

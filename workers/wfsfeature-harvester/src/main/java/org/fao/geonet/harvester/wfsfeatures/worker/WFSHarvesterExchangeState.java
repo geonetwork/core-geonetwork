@@ -112,7 +112,7 @@ public class WFSHarvesterExchangeState {
             m.put(WFSDataStoreFactory.TIMEOUT.key, parameters.getTimeOut());
             m.put(WFSDataStoreFactory.TRY_GZIP.key, true);
             m.put(WFSDataStoreFactory.ENCODING.key, parameters.getEncoding());
-            m.put(WFSDataStoreFactory.USEDEFAULTSRS.key, false);
+            m.put(WFSDataStoreFactory.USEDEFAULTSRS.key, true);
             m.put(WFSDataStoreFactory.OUTPUTFORMAT.key, "GML3"); // seems to be mandatory with wfs 1.1.0 sources
             m.put(WFSDataStoreFactory.LENIENT.key, true);
 

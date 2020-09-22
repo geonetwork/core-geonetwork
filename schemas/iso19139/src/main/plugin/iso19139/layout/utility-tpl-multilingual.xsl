@@ -24,6 +24,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
                 version="2.0"
@@ -38,8 +39,17 @@
         <xsl:value-of select="xslutil:getLanguage()" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$metadata/gmd:language/gco:CharacterString|
-       $metadata/gmd:language/gmd:LanguageCode/@codeListValue"/>
+          <xsl:choose>
+            <xsl:when test="$metadata/gmd:language/gmd:LanguageCode/@codeListValue">
+              <xsl:value-of select="$metadata/gmd:language/gmd:LanguageCode/@codeListValue"/>
+            </xsl:when>
+            <xsl:when test="contains($metadata/gmd:language/gco:CharacterString,';')">
+                 <xsl:value-of  select="normalize-space(substring-before($metadata/gmd:language/gco:CharacterString,';'))"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:value-of select="$metadata/gmd:language/gco:CharacterString"/>
+            </xsl:otherwise>
+          </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
    </xsl:template>
@@ -101,41 +111,65 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-
+        <xsl:variable name="mainLanguage">
+          <xsl:call-template name="get-iso19139-language"/>
+        </xsl:variable>
         <xsl:for-each select="$metadata/gmd:locale/gmd:PT_Locale">
-          <lang id="{@id}" code="{gmd:languageCode/gmd:LanguageCode/@codeListValue}"/>
+          <xsl:variable name="langCode"
+                        select="gmd:languageCode/gmd:LanguageCode/@codeListValue"/>
+          <lang id="{@id}" code="{$langCode}">
+            <xsl:if test="$langCode = $mainLanguage">
+              <xsl:attribute name="default" select="''"/>
+            </xsl:if>
+          </lang>
         </xsl:for-each>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
+  <!-- Template used to return a translation if one found,
+       or the text in default metadata language
+       or the first non empty text element.
 
-  <!-- Template used to return a gco:CharacterString element
-        in default metadata language or in a specific locale
-        if exist.
-        FIXME : gmd:PT_FreeText should not be in the match clause as gco:CharacterString
-        is mandatory and PT_FreeText optional. Added for testing GM03 import.
+       If language id used is "#ALL", then all translations
+       are reported with an xml:lang attribute indicating
+       the language of the text.
     -->
-  <xsl:template name="localised" mode="localised" match="*[gco:CharacterString or gmd:PT_FreeText]">
+  <xsl:template name="localised" mode="localised" match="*[gco:CharacterString or gmx:Anchor or gmd:PT_FreeText]">
     <xsl:param name="langId"/>
 
+
+    <xsl:variable name="mainValue"
+                  select="(gco:CharacterString|gmx:Anchor)[1]"/>
     <xsl:choose>
-      <xsl:when
-        test="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] and
-        gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] != ''">
-        <xsl:value-of
-          select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId]"/>
-      </xsl:when>
-      <xsl:when test="not(gco:CharacterString)">
-        <!-- If no CharacterString, try to use the first textGroup available -->
-        <xsl:value-of
-          select="gmd:PT_FreeText/gmd:textGroup[position()=1]/gmd:LocalisedCharacterString"/>
+      <xsl:when test="$langId = '#ALL' and gmd:PT_FreeText">
+        <xsl:choose>
+          <xsl:when test="gmd:PT_FreeText">
+            <xsl:for-each select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[. != '']">
+              <xsl:variable name="id"
+                            select="replace(@locale, '#', '')"/>
+              <div xml:lang="{$metadata//gmd:locale/*[@id = $id]/gmd:languageCode/*/@codeListValue}"><xsl:value-of select="."/></div>
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:otherwise>
+            <div xml:lang="{$metadata//gmd:MD_Metadata/gmd:language/*/@codeListValue}"><xsl:value-of select="$mainValue"/></div>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="gco:CharacterString"/>
+        <xsl:variable name="translation"
+                      select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId]"/>
+
+        <xsl:variable name="firstNonEmptyValue"
+                      select="((gco:CharacterString|gmx:Anchor|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString)[. != ''])[1]"/>
+
+        <xsl:value-of select="if($translation != '')
+                          then $translation
+                          else (if($mainValue != '')
+                                then $mainValue
+                                else $firstNonEmptyValue)"/>
       </xsl:otherwise>
     </xsl:choose>
-
   </xsl:template>
 
 

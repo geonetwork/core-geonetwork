@@ -133,7 +133,7 @@ public class BackupArchiveApi {
     public String trigger(HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         final Trigger trigger = newTrigger().forJob("archiveAllMetadata", "gnBackgroundTasks").startNow().build();
-        context.getApplicationContext().getBean("gnBackgroundJobScheduler", Scheduler.class).scheduleJob(trigger);
+        context.getBean("gnBackgroundJobScheduler", Scheduler.class).scheduleJob(trigger);
 
         return "{\"success\":true}";
     }

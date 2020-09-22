@@ -23,34 +23,50 @@
 
 package org.fao.geonet.api.records.editing;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.base.Function;
+import com.google.common.io.CharStreams;
+import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
+import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.ClientHttpResponse;
 
-import com.google.common.io.CharStreams;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import javassist.NotFoundException;
-
-// A static style interface for methods in Inspire Service.
+// Utility class to access methods in Inspire Service.
 // Based on ETF Web API v.2 BETA
 public class InspireValidatorUtils {
 
@@ -87,9 +103,52 @@ public class InspireValidatorUtils {
      */
     private final static String TestRuns_URL = "/v2/TestRuns";
 
+    /**
+     * Test status PASSED.
+     */
+    public final static String TEST_STATUS_PASSED = "PASSED";
+
+    /**
+     * Test status FAILED.
+     */
+    public final static String TEST_STATUS_FAILED = "FAILED";
+
+    /**
+     * Test status PASSED_MANUAL.
+     */
+    public final static String TEST_STATUS_PASSED_MANUAL = "PASSED_MANUAL";
+
+    /**
+     * Test status UNDEFINED.
+     */
+    public final static String TEST_STATUS_UNDEFINED = "UNDEFINED";
+
+    /**
+     * Test status NOT_APPLICABLE.
+     */
+    public final static String TEST_STATUS_NOT_APPLICABLE = "NOT_APPLICABLE";
+
+    /**
+     * Test status INTERNAL_ERROR.
+     */
+    public final static String TEST_STATUS_INTERNAL_ERROR = "INTERNAL_ERROR";
+
+    @Value("#{validatorAdditionalConfig['defaultTestSuite']}")
     public String defaultTestSuite;
 
+    // Using @Resource instead of @Autowired+@Qualifier for injecting java.util.Map instances
+    // Check https://stackoverflow.com/a/13914052/1140558
+    @Resource(name = "inspireEtfValidatorTestsuites")
     private Map<String, String[]> testsuites;
+
+    @Resource(name = "inspireEtfValidatorTestsuitesConditions")
+    private Map<String, String> testsuitesConditions;
+
+    @Value("#{validatorAdditionalConfig['maxNumberOfEtfChecks']}")
+    private Integer maxNumberOfEtfChecks;
+
+    @Value("#{validatorAdditionalConfig['intervalBetweenEtfChecks']}")
+    private Long intervalBetweenEtfChecks;
 
     public String getDefaultTestSuite() {
         return defaultTestSuite;
@@ -107,6 +166,30 @@ public class InspireValidatorUtils {
         return testsuites;
     }
 
+    public void setTestsuitesConditions(Map<String, String> testsuitesConditions) {
+        this.testsuitesConditions = testsuitesConditions;
+    }
+
+    public Map getTestsuitesConditions() {
+        return testsuitesConditions;
+    }
+
+    public Integer getMaxNumberOfEtfChecks() {
+        return maxNumberOfEtfChecks;
+    }
+
+    public void setMaxNumberOfEtfChecks(Integer maxNumberOfEtfChecks) {
+        this.maxNumberOfEtfChecks = maxNumberOfEtfChecks;
+    }
+
+    public Long getIntervalBetweenEtfChecks() {
+        return intervalBetweenEtfChecks;
+    }
+
+    public void setIntervalBetweenEtfChecks(Long intervalBetweenEtfChecks) {
+        this.intervalBetweenEtfChecks = intervalBetweenEtfChecks;
+    }
+
     public InspireValidatorUtils() {
     }
 
@@ -114,34 +197,26 @@ public class InspireValidatorUtils {
      * Check service status.
      *
      * @param endPoint the end point
-     * @param client the client (optional) (optional)
      * @return true, if successful
      * @throws IOException
      */
-    public boolean checkServiceStatus(String endPoint) throws IOException {
+    public boolean checkServiceStatus(ServiceContext context, String endPoint) throws IOException {
 
         HttpGet request = new HttpGet(endPoint + CheckStatus_URL);
 
         // add request header
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
-        ClientHttpResponse response = null;
 
-        try {
-            response = requestFactory.execute(request);
+        try (ClientHttpResponse response = this.execute(context, request)) {
+            if (response.getStatusCode().value() == 200) {
+                return true;
+            } else {
+                Log.warning(Log.SERVICE, "INSPIRE service not available: " + endPoint + CheckStatus_URL);
+                return false;
+            }
         } catch (Exception e) {
             Log.warning(Log.SERVICE, "Error calling INSPIRE service: " + endPoint, e);
-            return false;
-        } finally {
-            request.completed();
-            request.releaseConnection();
-            response.close();
-        }
-
-        if (response.getStatusCode().value() == 200) {
-            return true;
-        } else {
-            Log.warning(Log.SERVICE, "INSPIRE service not available: " + endPoint + CheckStatus_URL);
             return false;
         }
     }
@@ -150,11 +225,10 @@ public class InspireValidatorUtils {
      * Upload metadata file.
      *
      * @param endPoint the end point
-     * @param xml the xml
-     * @param client the client (optional)
+     * @param xml      the xml
      * @return the string
      */
-    private String uploadMetadataFile(String endPoint, InputStream xml) {
+    private String uploadMetadataFile(ServiceContext context, String endPoint, InputStream xml) {
 
         HttpPost request = new HttpPost(endPoint + TestObjects_URL + "?action=upload");
 
@@ -171,7 +245,7 @@ public class InspireValidatorUtils {
 
             request.setEntity(entity);
 
-            response = requestFactory.execute(request);
+            response = this.execute(context, request);
 
             if (response.getStatusCode().value() == 200) {
 
@@ -181,28 +255,25 @@ public class InspireValidatorUtils {
                 return jsonRoot.getJSONObject("testObject").getString("id");
             } else {
                 Log.warning(Log.SERVICE,
-                        "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + TestObjects_URL);
+                    "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + TestObjects_URL);
                 return null;
             }
         } catch (Exception e) {
             Log.error(Log.SERVICE, "Error calling INSPIRE service: " + endPoint, e);
             return null;
         } finally {
-            request.completed();
-            request.releaseConnection();
-            response.close();
+            IOUtils.closeQuietly(response);
         }
     }
 
     /**
      * Gets the tests.
      *
-     * @param endPoint the end point
+     * @param endPoint  the end point
      * @param testsuite
-     * @param client the client (optional)
      * @return the tests
      */
-    private List<String> getTests(String endPoint, String testsuite) {
+    private List<String> getTests(ServiceContext context, String endPoint, String testsuite) {
         if (testsuite == null) {
             testsuite = getDefaultTestSuite();
         }
@@ -216,7 +287,7 @@ public class InspireValidatorUtils {
         try {
             String[] tests = testsuites.get(testsuite);
 
-            response = requestFactory.execute(request);
+            response = this.execute(context, request);
 
             if (response.getStatusCode().value() == 200) {
 
@@ -248,16 +319,14 @@ public class InspireValidatorUtils {
                 return testList;
             } else {
                 Log.warning(Log.SERVICE,
-                        "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + ExecutableTestSuites_URL);
+                    "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + ExecutableTestSuites_URL);
                 return null;
             }
         } catch (Exception e) {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
             return null;
         } finally {
-            request.completed();
-            request.releaseConnection();
-            response.close();
+            IOUtils.closeQuietly(response);
         }
     }
 
@@ -265,14 +334,13 @@ public class InspireValidatorUtils {
      * Test run.
      *
      * @param endPoint the end point
-     * @param fileId the file id
+     * @param fileId   the file id
      * @param testList the test list
-     * @param client the client (optional)
      * @return the string
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws IOException   Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
-    private String testRun(String endPoint, String fileId, List<String> testList, String testTitle) {
+    private String testRun(ServiceContext context, String endPoint, String fileId, List<String> testList, String testTitle) {
 
         HttpPost request = new HttpPost(endPoint + TestRuns_URL);
         request.setHeader("Content-type", ACCEPT);
@@ -303,7 +371,7 @@ public class InspireValidatorUtils {
             StringEntity entity = new StringEntity(json.toString());
             request.setEntity(entity);
 
-            response = requestFactory.execute(request);
+            response = this.execute(context, request);
 
             if (response.getStatusCode().value() == 201) {
 
@@ -311,12 +379,12 @@ public class InspireValidatorUtils {
 
                 JSONObject jsonRoot = new JSONObject(body);
                 String testId = jsonRoot.getJSONObject("EtfItemCollection").getJSONObject("testRuns").getJSONObject("TestRun")
-                        .getString("id");
+                    .getString("id");
 
                 return testId;
             } else {
                 Log.warning(Log.SERVICE,
-                        "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + TestRuns_URL);
+                    "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + TestRuns_URL);
                 return null;
             }
 
@@ -324,9 +392,7 @@ public class InspireValidatorUtils {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
             return null;
         } finally {
-            request.completed();
-            request.releaseConnection();
-            response.close();
+            IOUtils.closeQuietly(response);
         }
     }
 
@@ -334,12 +400,11 @@ public class InspireValidatorUtils {
      * Checks if is ready.
      *
      * @param endPoint the end point
-     * @param testId the test id
-     * @param client the client (optional)
+     * @param testId   the test id
      * @return true, if is ready
      * @throws Exception
      */
-    public boolean isReady(String endPoint, String testId) throws Exception {
+    public boolean isReady(ServiceContext context, String endPoint, String testId) throws Exception {
         if (testId == null) {
             return false;
         }
@@ -348,11 +413,8 @@ public class InspireValidatorUtils {
 
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
-        ClientHttpResponse response = null;
 
-        try {
-            response = requestFactory.execute(request);
-
+        try (ClientHttpResponse response = this.execute(context, request)) {
             if (response.getStatusCode().value() == 200) {
                 String body = CharStreams.toString(new InputStreamReader(response.getBody()));
 
@@ -361,25 +423,22 @@ public class InspireValidatorUtils {
                 // Completed when estimated number of Test Steps is equal to completed Test Steps
                 // Somehow this condition is necessary but not sufficient
                 // so another check on real value of test is evaluated
-                return jsonRoot.getInt("val") == jsonRoot.getInt("max") & isPassed(endPoint, testId) != null;
+                return jsonRoot.getInt("val") == jsonRoot.getInt("max") & isPassed(context, endPoint, testId) != null;
 
             } else if (response.getStatusCode().value() == 404) {
 
-                throw new NotFoundException("Test not found");
+                throw new ResourceNotFoundException("Test not found");
 
             } else {
-                Log.warning(Log.SERVICE, "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for "
-                        + TestRuns_URL + "?view=progress");
+                Log.warning(Log.SERVICE,
+                    "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + TestRuns_URL
+                        + "?view=progress");
             }
-        } catch (NotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             throw e;
         } catch (Exception e) {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
             throw e;
-        } finally {
-            request.completed();
-            request.releaseConnection();
-            response.close();
         }
 
         return false;
@@ -389,12 +448,11 @@ public class InspireValidatorUtils {
      * Checks if is passed.
      *
      * @param endPoint the end point
-     * @param testId the test id
-     * @param client the client (optional)
+     * @param testId   the test id
      * @return the string
      * @throws Exception
      */
-    public String isPassed(String endPoint, String testId) throws Exception {
+    public String isPassed(ServiceContext context, String endPoint, String testId) throws Exception {
 
         if (testId == null) {
             throw new Exception("");
@@ -404,11 +462,8 @@ public class InspireValidatorUtils {
 
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
-        ClientHttpResponse response = null;
 
-        try {
-
-            response = requestFactory.execute(request);
+        try (ClientHttpResponse response = this.execute(context, request)) {
 
             if (response.getStatusCode().value() == 200) {
 
@@ -418,26 +473,23 @@ public class InspireValidatorUtils {
 
                 try {
                     return jsonRoot.getJSONObject("EtfItemCollection").getJSONObject("testRuns").getJSONObject("TestRun")
-                            .getString("status");
+                        .getString("status");
                 } catch (JSONException e) {
                     return null;
                 }
 
             } else if (response.getStatusCode().value() == 404) {
 
-                throw new NotFoundException("Test not found");
+                throw new ResourceNotFoundException("Test not found");
 
             } else {
-                Log.warning(Log.SERVICE, "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for "
-                        + TestRuns_URL + "?view=progress");
+                Log.warning(Log.SERVICE,
+                    "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + TestRuns_URL
+                        + "?view=progress");
             }
         } catch (Exception e) {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
             throw e;
-        } finally {
-            request.completed();
-            request.releaseConnection();
-            response.close();
         }
 
         return null;
@@ -447,7 +499,7 @@ public class InspireValidatorUtils {
      * Gets the report url.
      *
      * @param endPoint the end point
-     * @param testId the test id
+     * @param testId   the test id
      * @return the report url
      */
     public String getReportUrl(String endPoint, String testId) {
@@ -459,7 +511,7 @@ public class InspireValidatorUtils {
      * Gets the report url in JSON format.
      *
      * @param endPoint the end point
-     * @param testId the test id
+     * @param testId   the test id
      * @return the report url
      */
     public static String getReportUrlJSON(String endPoint, String testId) {
@@ -468,23 +520,35 @@ public class InspireValidatorUtils {
     }
 
     /**
-     * Submit file.
+     * Gets the report url in XML format.
      *
-     * @param record the record
+     * @param endPoint the end point
+     * @param testId   the test id
+     * @return the report url
+     */
+    public static String getReportUrlXML(String endPoint, String testId) {
+
+        return endPoint + TestRuns_URL + "/" + testId + ".xml";
+    }
+
+    /**
+     * Submit file to the external ETF validator.
+     *
+     * @param record    the record
      * @param testsuite
      * @return the string
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws IOException   Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
-    public String submitFile(String serviceEndpoint, InputStream record, String testsuite, String testTitle)
-            throws IOException, JSONException {
+    public String submitFile(ServiceContext context, String serviceEndpoint, InputStream record, String testsuite, String testTitle)
+        throws IOException {
 
         try {
-            if (checkServiceStatus(serviceEndpoint)) {
+            if (checkServiceStatus(context, serviceEndpoint)) {
                 // Get the tests to execute
-                List<String> tests = getTests(serviceEndpoint, testsuite);
+                List<String> tests = getTests(context, serviceEndpoint, testsuite);
                 // Upload file to test
-                String testFileId = uploadMetadataFile(serviceEndpoint, record);
+                String testFileId = uploadMetadataFile(context, serviceEndpoint, record);
 
                 if (testFileId == null) {
                     Log.error(Log.SERVICE, "File not valid.", new IllegalArgumentException());
@@ -493,12 +557,12 @@ public class InspireValidatorUtils {
 
                 if (tests == null || tests.size() == 0) {
                     Log.error(Log.SERVICE,
-                            "Default test sequence not supported. Check org.fao.geonet.api.records.editing.InspireValidatorUtils.TESTS_TO_RUN_TG13.",
-                            new Exception());
+                        "Default test sequence not supported. Check org.fao.geonet.api.records.editing.InspireValidatorUtils.TESTS_TO_RUN_TG13.",
+                        new Exception());
                     return null;
                 }
                 // Return test id from Inspire service
-                return testRun(serviceEndpoint, testFileId, tests, testTitle);
+                return testRun(context, serviceEndpoint, testFileId, tests, testTitle);
 
             } else {
                 ServiceNotFoundEx ex = new ServiceNotFoundEx(serviceEndpoint);
@@ -509,4 +573,134 @@ public class InspireValidatorUtils {
             // client.close();
         }
     }
+
+    public String retrieveReport(ServiceContext context, String endPoint) throws Exception {
+
+        HttpGet request = new HttpGet(endPoint);
+
+        // add request header
+        request.addHeader("User-Agent", USER_AGENT);
+        request.addHeader("Accept", ACCEPT);
+
+        try (ClientHttpResponse response = this.execute(context, request)) {
+            return IOUtils.toString(response.getBody(), StandardCharsets.UTF_8.name());
+        } catch (Exception e) {
+            Log.warning(Log.SERVICE, "Error calling INSPIRE service to retrieve the result report: " + endPoint, e);
+            throw e;
+        }
+    }
+
+    public void waitUntilReady(ServiceContext context, String endPoint, String testId) throws Exception {
+        int checkCounter = 1;
+
+        while (checkCounter++ <= maxNumberOfEtfChecks) {
+            if (isReady(context, endPoint, testId)) {
+                return;
+            }
+
+            Thread.sleep(intervalBetweenEtfChecks);
+        }
+
+        throw new Exception("ETF validation task hasn't finish after " + maxNumberOfEtfChecks + " checks.");
+    }
+
+    /**
+     * Calculates the metadata validation status in GeoNetwork
+     * based on the INSPIRE validator result.
+     * - UNDEFINED, INTERNAL_ERROR --> MetadataValidationStatus.NEVER_CALCULATED
+     * - PASSED, PASSED_MANUAL --> MetadataValidationStatus.VALID
+     * - NOT_APPLICABLE --> MetadataValidationStatus.DOES_NOT_APPLY
+     * - Other cases --> MetadataValidationStatus.INVALID
+     *
+     * @param validationStatus
+     * @return
+     */
+    public MetadataValidationStatus calculateValidationStatus(String validationStatus) {
+        boolean isUndefined = validationStatus.equalsIgnoreCase(TEST_STATUS_UNDEFINED);
+        boolean isNotApplicable = validationStatus.equalsIgnoreCase(TEST_STATUS_NOT_APPLICABLE);
+        boolean executed = !validationStatus.equalsIgnoreCase(TEST_STATUS_INTERNAL_ERROR);
+
+        MetadataValidationStatus metadataValidationStatus;
+
+        if (isNotApplicable) {
+            metadataValidationStatus = MetadataValidationStatus.DOES_NOT_APPLY;
+        } else if (!isUndefined && executed) {
+            boolean isValid =
+                validationStatus.equalsIgnoreCase(TEST_STATUS_PASSED) || validationStatus.equalsIgnoreCase(TEST_STATUS_PASSED_MANUAL);
+
+            metadataValidationStatus = (isValid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID);
+        } else {
+            metadataValidationStatus = MetadataValidationStatus.NEVER_CALCULATED;
+        }
+
+        return metadataValidationStatus;
+    }
+
+    /**
+     * Calculate the test suites to apply:
+     * - Checks if any rule for the schema, otherwise
+     * - checks if any rule in the schema dependency hierarchy.
+     *
+     * @param schemaid
+     * @param metadataSchemaUtils
+     * @return
+     */
+    public Map<String, String> calculateTestsuitesToApply(String schemaid, IMetadataSchemaUtils metadataSchemaUtils) {
+        Map<String, String> testsuitesConditions = getTestsuitesConditions();
+
+        // Check for rules for the schema
+        Map<String, String> testsuitesConditionsForSchema = testsuitesConditions.entrySet().stream()
+            .filter(x -> x.getKey().split("::")[0].equalsIgnoreCase(schemaid))
+            .collect(Collectors.toMap(map -> map.getKey().split("::")[1], map -> map.getValue()));
+
+        // If no rules found, check the rules in the dependencies of the schema
+        if (testsuitesConditionsForSchema.isEmpty()) {
+            MetadataSchema metadataSchema = metadataSchemaUtils.getSchema(schemaid);
+
+            Set<String> schemasProcessed = new HashSet<>();
+
+            String schemaDependsOn = metadataSchema.getDependsOn();
+
+            boolean conditionsFound = false;
+
+            while (StringUtils.isNotEmpty(schemaDependsOn) && !schemasProcessed.contains(schemaDependsOn) && !conditionsFound) {
+
+                schemasProcessed.add(schemaDependsOn);
+
+                String schemaDependsOnFilter = schemaDependsOn;
+                testsuitesConditionsForSchema = testsuitesConditions.entrySet().stream()
+                    .filter(x -> x.getKey().split("::")[0].equalsIgnoreCase(schemaDependsOnFilter))
+                    .collect(Collectors.toMap(map -> map.getKey().split("::")[1], map -> map.getValue()));
+
+                conditionsFound = !testsuitesConditionsForSchema.isEmpty();
+
+                // If no conditions found, check the schema dependency (if defined)
+                if (!conditionsFound) {
+                    metadataSchema = metadataSchemaUtils.getSchema(schemaDependsOn);
+                    schemaDependsOn = metadataSchema.getDependsOn();
+                }
+            }
+        }
+
+        return testsuitesConditionsForSchema;
+    }
+
+    /**
+     * Executes the HttpUriRequest
+     *
+     * @param request
+     * @return response of execute method
+     * @throws IOException
+     */
+    private ClientHttpResponse execute(ServiceContext context, HttpUriRequest request) throws IOException {
+
+        final Function<HttpClientBuilder, Void> proxyConfiguration = new Function<HttpClientBuilder, Void>() {
+            @Nullable @Override public Void apply(@Nonnull HttpClientBuilder input) {
+                Lib.net.setupProxy(context, input, request.getURI().getHost());
+                return null;
+            }
+        };
+        return requestFactory.execute(request, proxyConfiguration);
+    }
+
 }

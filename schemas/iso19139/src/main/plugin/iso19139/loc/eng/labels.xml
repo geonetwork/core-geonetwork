@@ -2267,9 +2267,7 @@
     <label>Protocol</label>
     <description>Connection protocol to be used</description>
     <helper sort="true">
-      <option value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File (*.AXL)</option>
-      <option value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</option>
-      <option value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</option>
+      <option value="ESRI:REST">ArcGIS REST Services</option>
       <option value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</option>
       <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
       <option value="OGC:KML">OGC-KML Keyhole Markup Language</option>
@@ -2286,6 +2284,7 @@
       <option value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</option>
       <option value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</option>
       <option value="OGC:WFS">OGC-WFS Web Feature Service</option>
+      <option value="INSPIRE Atom">INSPIRE Atom</option>
       <option value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</option>
       <option value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
       <option value="OGC:WMC">OGC-WMC Web Map Context</option>
@@ -2980,7 +2979,7 @@
     <description>Name of the Spatial Reference System. By default set to
       geographic (epsg:4326)
     </description>
-    <example>urn:x-ogc:def:crs:EPSG:6.6:4326</example>
+    <example>urn:ogc:def:crs:EPSG:6.6:4326</example>
   </element>
 
   <element name="srv:SV_ServiceIdentification">
@@ -3551,5 +3550,9 @@
   <element name="gco:upper">
     <label>Upper cardinality</label>
     <description>Upper cardinality</description>
+  </element>
+  <element name="xlink:type">
+    <label>Link</label>
+    <description>Link type</description>
   </element>
 </labels>

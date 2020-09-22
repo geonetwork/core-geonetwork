@@ -92,25 +92,25 @@ public class LinkPresenterTest extends AbstractCoreIntegrationTest {
                 .setFailing(false)
                 .setStatusValue("200")
                 .setStatusInfo("OK")
-                .setcheckDate(yesterday);
+                .setCheckDate(yesterday);
 
         koInTheMiddle = new LinkStatus()
                 .setFailing(true)
                 .setStatusValue("400")
                 .setStatusInfo("KO")
-                .setcheckDate(today);
+                .setCheckDate(today);
 
         okAtTheEnd = new LinkStatus()
                 .setFailing(false)
                 .setStatusValue("200")
                 .setStatusInfo("OK")
-                .setcheckDate(tomorrow);
+                .setCheckDate(tomorrow);
 
         statusKo = new LinkStatus()
                 .setFailing(true)
                 .setStatusValue("400")
                 .setStatusInfo("KO")
-                .setcheckDate(today);
+                .setCheckDate(today);
 
 
     }

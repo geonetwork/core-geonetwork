@@ -122,10 +122,8 @@
       };
 
       $scope.loadFormatter = function(url) {
-        if ($scope.mdView.current.record == null) {
-          return;
-        }
-        var showApproved = $scope.mdView.current.record.draft != 'y';
+        var showApproved = $scope.mdView.current.record == null ? 
+          true : $scope.mdView.current.record.draft != 'y';
         var gn_metadata_display = $('#gn-metadata-display');
 
         $http.get(url, {
@@ -171,12 +169,10 @@
       // Reset current formatter to open the next record
       // in default mode.
       function loadFormatter() {
-        $scope.currentFormatter = null;
         var f = gnSearchLocation.getFormatterPath();
+        $scope.currentFormatter = '';
         if (f != undefined) {
-          $scope.currentFormatter = {
-            url: f
-          };
+          $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, '$1');
           $scope.loadFormatter(f);
         }
       }

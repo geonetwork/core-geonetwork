@@ -144,7 +144,7 @@ public class LocaleRedirects {
      * @param langHeader
      * @return
      */
-    @RequestMapping(value = "/{portal}")
+    @RequestMapping(value = {"/{portal}", "/{portal}/"})
     public ModelAndView redirectPortalPath(final HttpServletRequest request,
                              @PathVariable String portal,
                              @CookieValue(value = Jeeves.LANG_COOKIE, required = false)

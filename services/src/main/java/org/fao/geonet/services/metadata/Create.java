@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
@@ -149,10 +150,9 @@ public class Create extends NotInReadOnlyModeService {
 
 
         try {
-            copyDataDir(context, id, newId, Params.Access.PUBLIC);
-            copyDataDir(context, id, newId, Params.Access.PRIVATE);
-        } catch (IOException e) {
-            Log.warning(Geonet.DATA_MANAGER, "Error while copying metadata resources. " + e.getMessage() +
+            StoreUtils.copyDataDir(context, Integer.parseInt(id), Integer.parseInt(newId), true);
+        } catch (Exception e) {
+            Log.warning(Geonet.DATA_MANAGER, "Error while copying metadata resources. " + e.toString() +
                 ". Metadata is created but without resources from record with id:" + id);
         }
 
@@ -168,14 +168,5 @@ public class Create extends NotInReadOnlyModeService {
         }
         response.addContent(new Element(Geonet.Elem.ID).setText(newId));
         return response;
-    }
-
-    private void copyDataDir(ServiceContext context, String oldId, String newId, String access) throws IOException {
-        final Path sourceDir = Lib.resource.getDir(context, access, oldId);
-        final Path destDir = Lib.resource.getDir(context, access, newId);
-
-        if (Files.exists(sourceDir)) {
-            IO.copyDirectoryOrFile(sourceDir, destDir, false);
-        }
     }
 }

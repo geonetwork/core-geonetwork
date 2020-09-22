@@ -49,12 +49,12 @@ public class RecordGroupOwnerChangeEvent extends AbstractHistoryEvent {
 
     @Override
     public String getCurrentState() {
-        return newOwnerObjectJSON.toString();
+        return newOwnerObjectJSON != null ? newOwnerObjectJSON.toString(): null;
     }
 
     @Override
     public String getPreviousState() {
-        return oldOwnerObjectJSON.toString();
+        return oldOwnerObjectJSON != null ? oldOwnerObjectJSON.toString() : null;
     }
 
     @Override

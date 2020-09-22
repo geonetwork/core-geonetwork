@@ -44,6 +44,52 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xml-maven-plugin</artifactId>
+        <version>1.0.1</version>
+        <dependencies>
+          <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>saxon</artifactId>
+            <version>8.7</version>
+          </dependency>
+          <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.8</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>transform</goal>
+            </goals>
+            <configuration>
+              <forceCreation>true</forceCreation>
+              <transformationSets>
+                <transformationSet>
+                  <dir>../../schemas/</dir>
+                  <stylesheet>src/main/resources/config-editor-doc.xsl</stylesheet>
+                  <outputDir>../manuals/source/customizing-application/editor-ui</outputDir>
+                  <includes>
+                    <include>config-editor.xsd</include>
+                  </includes>
+                  <fileMappers>
+                    <fileMapper
+                      implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
+                      <pattern>config-editor\.xsd$</pattern>
+                      <replacement>creating-custom-editor.rst</replacement>
+                    </fileMapper>
+                  </fileMappers>
+                </transformationSet>
+              </transformationSets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>com.soebes.maven.plugins</groupId>
         <artifactId>iterator-maven-plugin</artifactId>
         <version>0.3</version>
@@ -56,6 +102,7 @@
             <configuration>
               <items>
                 <!-- Define the schema to generate the documentation for. -->
+                <item>iso19115-3.2018</item>
                 <item>iso19139</item>
                 <item>iso19110</item>
                 <item>dublin-core</item>
@@ -175,13 +222,13 @@
                       <resource>
                         <directory>../../schemas/@item@/doc/en</directory>
                         <filtering>false</filtering>
-                        <targetPath>en/standards</targetPath>
+                        <targetPath>source/annexes/standards</targetPath>
                       </resource>
                     </resources>
                     <overwrite>true</overwrite>
                   </configuration>
                 </pluginExecutor>
-                <pluginExecutor>
+                <!--<pluginExecutor>
                   <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
@@ -199,7 +246,7 @@
                     </resources>
                     <overwrite>true</overwrite>
                   </configuration>
-                </pluginExecutor>
+                </pluginExecutor>-->
               </pluginExecutors>
             </configuration>
           </execution>

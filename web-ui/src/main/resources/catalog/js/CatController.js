@@ -94,7 +94,15 @@ goog.require('gn_alert');
             'slo': 'sk'
           },
           'isLogoInHeader': false,
-          'logoInHeaderPosition': 'left'
+          'logoInHeaderPosition': 'left',
+          'fluidHeaderLayout': true,
+          'showGNName': true,
+          'isHeaderFixed': false
+        },
+        'cookieWarning': {
+          'enabled': true,
+          'cookieWarningMoreInfoLink': '',
+          'cookieWarningRejectLink': ''
         },
         'home': {
           'enabled': true,
@@ -166,13 +174,27 @@ goog.require('gn_alert');
             }],
             defaultUrl: ''
           },
+          'downloadFormatter': [{
+            'label': 'exportMEF',
+            'url': '/formatters/zip?withRelated=false',
+            'class': 'fa-file-zip-o'
+          }, {
+            'label': 'exportPDF',
+            'url' : '/formatters/xsl-view?output=pdf&language=${lang}',
+            'class': 'fa-file-pdf-o'
+          }, {
+            'label': 'exportXML',
+            // 'url' : '/formatters/xml?attachment=false',
+            'url' : '/formatters/xml',
+            'class': 'fa-file-code-o'
+          }],
           'grid': {
             'related': ['parent', 'children', 'services', 'datasets']
           },
           'linkTypes': {
             'links': ['LINK', 'kml'],
             'downloads': ['DOWNLOAD'],
-            'layers': ['OGC'],
+            'layers': ['OGC', 'ESRI:REST'],
             'maps': ['ows']
           },
           'isFilterTagsDisplayedInSearch': false,
@@ -189,12 +211,13 @@ goog.require('gn_alert');
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/map',
           'externalViewer': {
             'enabled': false,
+            'enabledViewAction': false,
             'baseUrl': 'http://www.example.com/viewer',
-            'urlTemplate': 'http://www.example.com/viewer?url=${service.url}&type=${service.type}&layer=${service.name}',
+            'urlTemplate': 'http://www.example.com/viewer?url=${service.url}&type=${service.type}&layer=${service.title}&lang=${iso2lang}&title=${md.defaultTitle}',
             'openNewWindow': false,
             'valuesSeparator': ','
           },
-          'is3DModeAllowed': true,
+          'is3DModeAllowed': false,
           'isSaveMapInCatalogAllowed': true,
           'isExportMapAsImageEnabled': false,
           'storage': 'sessionStorage',
@@ -205,7 +228,7 @@ goog.require('gn_alert');
           },
           'projection': 'EPSG:3857',
           'projectionList': [{
-            'code': 'EPSG:4326',
+            'code': 'urn:ogc:def:crs:EPSG:6.6:4326',
             'label': 'WGS84 (EPSG:4326)'
           }, {
             'code': 'EPSG:3857',
@@ -244,7 +267,8 @@ goog.require('gn_alert');
             'context': '',
             'extent': [0, 0, 0, 0],
             'layers': [{'type': 'osm'}]
-          }
+          },
+          'autoFitOnLayer': false
         },
         'geocoder': {
             'enabled': true,
@@ -258,6 +282,7 @@ goog.require('gn_alert');
           'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/catalog.edit',
           'isUserRecordsOnly': false,
+          'minUserProfileToCreateTemplate': '',
           'isFilterTagsDisplayed': false,
           'fluidEditorLayout': true,
           'createPageTpl':
@@ -289,7 +314,7 @@ goog.require('gn_alert');
       requireProxy: [],
       gnCfg: angular.copy(defaultConfig),
       gnUrl: '',
-      docUrl: 'http://geonetwork-opensource.org/manuals/3.6.x/',
+      docUrl: 'https://geonetwork-opensource.org/manuals/3.8.x/',
       //docUrl: '../../doc/',
       modelOptions: {
         updateOn: 'default blur',
@@ -300,6 +325,7 @@ goog.require('gn_alert');
       },
       current: null,
       shibbolethEnabled: false,
+      shibbolethHideLogin: true,
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
         // start from the default config to make sure every field is present
         // and override with config arg if required
@@ -336,6 +362,7 @@ goog.require('gn_alert');
         var copy = angular.copy(defaultConfig);
         copy.mods.header.languages = {};
         copy.mods.search.grid.related = [];
+        copy.mods.map["map-editor"].layers = [];
         return copy;
       },
       getProxyUrl: function() {
@@ -453,12 +480,16 @@ goog.require('gn_alert');
              gnViewerSettings, gnSearchSettings, $cookies,
              gnExternalViewer, gnAlertService) {
       $scope.version = '0.0.1';
-
+      var defaultNode = 'srv';
 
       // Links for social media
       $scope.socialMediaLink = $location.absUrl();
       $scope.getPermalink = gnUtilityService.getPermalink;
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
+      $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
+      $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
+      $scope.isHeaderFixed = gnGlobalSettings.gnCfg.mods.header.isHeaderFixed;
+      $scope.isLogoInHeader = gnGlobalSettings.gnCfg.mods.header.isLogoInHeader;
 
       // If gnLangs current already set by config, do not use URL
       $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;
@@ -477,7 +508,7 @@ goog.require('gn_alert');
             return res[1];
           }
         }
-        return detector.default || 'srv';
+        return detector.default || defaultNode;
       }
 
 
@@ -501,13 +532,21 @@ goog.require('gn_alert');
         return detector.default || 'geonetwork';
       }
       $scope.nodeId = detectNode(gnGlobalSettings.gnCfg.nodeDetector);
+      $scope.isDefaultNode = $scope.nodeId === defaultNode;
       $scope.service = detectService(gnGlobalSettings.gnCfg.serviceDetector);
       $scope.redirectUrlAfterSign = window.location.href;
 
       gnGlobalSettings.nodeId = $scope.nodeId;
       gnConfig.env = gnConfig.env ||  {};
       gnConfig.env.node = $scope.nodeId;
+      gnConfig.env.defaultNode = defaultNode;
       gnConfig.env.baseURL = detectBaseURL(gnGlobalSettings.gnCfg.baseURLDetector);
+
+      $scope.signoutUrl = gnGlobalSettings.gnCfg.mods.signout.appUrl
+        + '?redirectUrl='
+        + window.location.href.slice(
+            0,
+            window.location.href.indexOf(gnConfig.env.node) + gnConfig.env.node.length);
 
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
@@ -523,6 +562,7 @@ goog.require('gn_alert');
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
       $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
+      $scope.shibbolethHideLogin = gnGlobalSettings.shibbolethHideLogin;
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
 
@@ -580,6 +620,7 @@ goog.require('gn_alert');
           angular.forEach(gnConfig['map.proj4js'], function(item) {
             proj4.defs(item.code, item.value);
           });
+          ol.proj.proj4.register(proj4);
         }
       });
 
@@ -647,6 +688,14 @@ goog.require('gn_alert');
           },
           isConnected: function() {
             return !this.isAnonymous();
+          },
+          canCreateTemplate: function() {
+            var profile = gnGlobalSettings.gnCfg.mods.editor.minUserProfileToCreateTemplate
+              || '',
+              fnName = (profile !== '' ?
+                ('is' + profile[0].toUpperCase() + profile.substring(1) + 'OrMore') :
+                '');
+            return angular.isFunction(this[fnName]) ? this[fnName]() : this.isConnected();
           },
           canEditRecord: function(md) {
             if (!md || this.isAnonymous()) {

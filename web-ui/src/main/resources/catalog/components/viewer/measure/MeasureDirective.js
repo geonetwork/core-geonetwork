@@ -25,47 +25,34 @@
   goog.provide('gn_measure');
 
   var module = angular.module('gn_measure', [
-    'ngeo',
     'ui.bootstrap.buttons'
   ]);
 
-  module.filter('measure', function() {
-    return function(floatInMeter, type, units) {
-      // Type could be: volume, area or distance
-      var factor = 1000;
-      switch (type) {
-        case 'volume': factor = Math.pow(factor, 3);
-        break;
-        case 'area': factor = Math.pow(factor, 2);
-        break;
-        default: break;
-      }
-      units = units || [' km', ' m'];
-      floatInMeter = floatInMeter || 0;
-      var measure = floatInMeter.toFixed(2);
-      var km = Math.floor(measure / factor);
+  var formatLength = function(line, sourceProj) {
+    var length = ol.sphere.getLength(line, { projection: sourceProj});
+    var output;
+    if (length > 1000) {
+      output = (Math.round(length / 1000 * 100) / 100) +
+        ' ' + 'km';
+    } else {
+      output = (Math.round(length * 100) / 100) +
+        ' ' + 'm';
+    }
+    return output;
+  };
 
-      if (km <= 0) {
-        if (parseInt(measure) == 0) {
-          measure = 0;
-        }
-        return measure + units[1];
-      }
-
-      var str = '' + km;
-      var m = Math.floor(Math.floor(measure) % factor * 100 / factor);
-
-      if (m > 0) {
-        str += '.';
-        if (m < 10) {
-          str += '0';
-        }
-        str += m;
-      }
-      str += ' ' + units[0];
-      return str;
-    };
-  });
+  var formatArea = function(polygon, sourceProj) {
+    var area = ol.sphere.getArea(polygon, { projection: sourceProj});
+    var output;
+    if (area > 10000) {
+      output = (Math.round(area / 1000000 * 100) / 100) +
+        ' ' + 'km<sup>2</sup>';
+    } else {
+      output = (Math.round(area * 100) / 100) +
+        ' ' + 'm<sup>2</sup>';
+    }
+    return output;
+  };
 
   /**
    * @ngdoc directive
@@ -196,7 +183,7 @@
               deregisterFeature = areaFeature.on('change',
                   function(evt) {
                     var feature = evt.target;
-                    var lineCoords = feature.getGeometry().getCoordinates()[0];
+                    var lineCoords = feature.getGeometry().getCoordinates()[0].slice(0, -1);
 
                     distFeature.getGeometry().setCoordinates(lineCoords);
                     updateMeasuresFn();
@@ -212,35 +199,20 @@
 
               updateMeasuresFn();
               featureOverlay.getSource().addFeature(distFeature);
-              areaFeature.unByKey(deregisterFeature);
+              ol.Observable.unByKey(deregisterFeature);
             }, this);
       };
 
       this.create = function(map, measureObj, scope) {
 
-        var wgs84Sphere = new ol.Sphere(6378137);
-
         // taken from https://openlayers.org/en/v3.15.0/examples/measure.html
         getGeodesicLength = function(geometry) {
           var sourceProj = map.getView().getProjection();
-          var coordinates = geometry.getCoordinates();
-          length = 0;
-          for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
-            var c1 = ol.proj.transform(coordinates[i],
-                sourceProj, 'EPSG:4326');
-            var c2 = ol.proj.transform(coordinates[i + 1],
-                sourceProj, 'EPSG:4326');
-            length += wgs84Sphere.haversineDistance(c1, c2);
-          }
-          return length;
+          return formatLength(geometry, sourceProj);
         };
         getGeodesicArea = function(geometry) {
           var sourceProj = map.getView().getProjection();
-          var geom = geometry.clone().transform(
-              sourceProj, 'EPSG:4326');
-          var coordinates = geom.getLinearRing(0).getCoordinates();
-          area = Math.abs(wgs84Sphere.geodesicArea(coordinates));
-          return area;
+          return formatArea(geometry, sourceProj);
         };
 
         // Update values of measures from features

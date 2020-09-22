@@ -32,7 +32,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +50,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.api.records.attachments.FilesystemStore;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
@@ -76,7 +76,6 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.BinaryFile;
@@ -91,27 +90,6 @@ import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-
-import jeeves.server.context.ServiceContext;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 //=============================================================================
@@ -280,6 +258,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         dataMan.batchIndexInThreadPool(context, ids);
 
         result.totalMetadata = result.addedMetadata + result.updatedMetadata;
+        Store store = context.getBean("resourceStore", Store.class);
 
         //-----------------------------------------------------------------------
         //--- remove old metadata
@@ -296,7 +275,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                     log.debug("  - Removing old metadata before update with id: " + id);
 
                 //--- remove the metadata directory including the public and private directories.
-                IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), id));
+                store.delResources(context, uuid);
 
                 // Remove metadata
                 metadataManager.deleteMetadata(context, id);
@@ -372,6 +351,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             // and add the metadata
             XPath xp = XPath.newInstance("//Layer[count(./*[name(.)='Layer'])=0] | " +
                 "//wms:Layer[count(./*[name(.)='Layer'])=0] | " +
+                "//wmts:Layer[count(./*[local-name(.)='Layer'])=0] | " +
                 "//wfs:FeatureType | " +
                 "//wcs:CoverageOfferingBrief | " +
                 "//sos:ObservationOffering | " +
@@ -379,6 +359,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             xp.addNamespace("wfs", "http://www.opengis.net/wfs");
             xp.addNamespace("wcs", "http://www.opengis.net/wcs");
             xp.addNamespace("wms", "http://www.opengis.net/wms");
+            xp.addNamespace("wmts", "http://www.opengis.net/wmts/1.0");
             xp.addNamespace("wps", "http://www.opengis.net/wps/2.0");
             xp.addNamespace("sos", "http://www.opengis.net/sos/1.0");
 
@@ -461,7 +442,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         String id = String.valueOf(metadata.getId());
         uuids.add(uuid);
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         return uuids;
     }
@@ -639,6 +620,9 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         } else if (params.ogctype.substring(0, 3).equals("SOS")) {
             Namespace gml = Namespace.getNamespace("http://www.opengis.net/gml");
             reg.name = layer.getChild("name", gml).getValue();
+        } else if (params.ogctype.substring(0, 4).equals("WMTS")) {
+            Namespace ows = Namespace.getNamespace("http://www.opengis.net/ows/1.1");
+            reg.name = layer.getChild("Identifier", ows).getValue();
         }
 
         //--- md5 the full capabilities URL + the layer, coverage or feature name
@@ -648,9 +632,9 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
         if (params.useLayerMd && (
             params.ogctype.substring(0, 3).equals("WMS") ||
-                params.ogctype.substring(0, 3).equals("WFS") ||
-                params.ogctype.substring(0, 3).equals("WPS") ||
-                params.ogctype.substring(0, 3).equals("WCS"))) {
+            params.ogctype.substring(0, 3).equals("WFS") ||
+            params.ogctype.substring(0, 3).equals("WPS") ||
+            params.ogctype.substring(0, 3).equals("WCS"))) {
 
             log.info("  - Searching for metadataUrl for layer " + reg.name);
 
@@ -866,7 +850,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             if (log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");
 
             if (log.isDebugEnabled()) log.debug("    - Set Privileges and category.");
-            addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context);
+            addPrivileges(reg.id, params.getPrivileges(), localGroups, context);
 
             if (log.isDebugEnabled()) log.debug("    - Set Harvested.");
 
@@ -929,7 +913,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             Path filename = getMapThumbnail(layer);
 
             // Add downloaded file to metadata store
-            FilesystemStore store = new FilesystemStore();
+            Store store = context.getBean(FilesystemStore.class);
             try {
                 store.delResource(context, layer.uuid, filename.getFileName().toString());
             } catch (Exception e) {}

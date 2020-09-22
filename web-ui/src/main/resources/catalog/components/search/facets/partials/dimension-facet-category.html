@@ -25,12 +25,41 @@
          data-params="params"
          data-ng-class="isSelected ? '' : 'hidden'"></div>
   </li>
-  <li class="list-group-item"
-      data-ng-if="category.length - initialMaxItems > 0">
-    <button data-ng-click="toggleAll()"
-            class="btn btn-link">
-      {{category.length - initialMaxItems}}&nbsp;
-      {{(category.length >= maxItems) ? ('more' | translate) : ('less' | translate)}}
+  <li class="list-group-item facet-pagination">
+
+    <button data-ng-click="addItems()"
+            data-ng-if="getMorePageSize() > 0 && category.length - initialMaxItems > pageSize"
+            class="btn btn-link"
+            translate translate-values="{count: getMorePageSize()}">
+      moreFacet
     </button>
+
+    <span class="separator"
+          data-ng-if="getLessPageSize() > 0 && category.length - initialMaxItems > pageSize">&nbsp;|&nbsp;</span>
+    <button data-ng-click="removeItems()"
+            data-ng-if="getLessPageSize() > 0 && category.length - initialMaxItems > pageSize"
+            class="btn btn-link"
+            translate translate-values="{count: getLessPageSize()}">
+      lessFacet
+    </button>
+
+    <span class="separator"
+          data-ng-if="maxItems < category.length">&nbsp;|&nbsp;</span>
+    <button data-ng-click="showAllItems()"
+            class="btn btn-link"
+            data-ng-if="maxItems < category.length"
+            translate translate-values="{count: category.length}">
+      allFacet
+    </button>
+
+    <span class="separator"
+          data-ng-if="maxItems > initialMaxItems">&nbsp;|&nbsp;</span>
+    <button data-ng-click="showInitialItems()"
+            class="btn btn-link"
+            data-ng-if="maxItems > initialMaxItems"
+            translate translate-values="{count: initialMaxItems}">
+      initialFacet
+    </button>
+
   </li>
 </ul>

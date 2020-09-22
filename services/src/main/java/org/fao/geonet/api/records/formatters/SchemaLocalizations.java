@@ -31,10 +31,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 import groovy.util.slurpersupport.GPathResult;
 
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.records.formatters.groovy.CurrentLanguageHolder;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -122,7 +123,15 @@ public class SchemaLocalizations {
         HttpServletRequest request = attributes.getRequest();
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
-        final String lang3 =  appContext.getBean(LanguageUtils.class).getIso3langCode(request.getLocales());
+        final ServiceContext serviceContext = ServiceContext.get();
+        final String lang3 = serviceContext != null ?
+            serviceContext.getLanguage() :
+            appContext.getBean(LanguageUtils.class).getIso3langCode(request.getLocales());
+        return create(schema, lang3);
+    }
+
+    public static SchemaLocalizations create(String schema, String lang3) throws IOException, JDOMException {
+        final ApplicationContext appContext = ApplicationContextHolder.get();
         final String lang2 = appContext.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(lang3);
         CurrentLanguageHolder languageHolder = new CurrentLanguageHolder() {
             @Override

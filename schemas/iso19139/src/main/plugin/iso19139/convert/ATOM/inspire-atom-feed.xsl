@@ -146,7 +146,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
             </xsl:call-template>
         </id>
-        
+
         <!-- REQ 10: rights -->
         <rights>
             <xsl:apply-templates mode="translated-rights" select="gmd:identificationInfo/srv:SV_ServiceIdentification"/>
@@ -154,7 +154,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 
         <!-- REQ 11: updated -->
         <updated><xsl:value-of select="$updated"/>Z</updated>
-        
+
         <!-- REQ 12: author -->
         <xsl:call-template name="add-author">
             <xsl:with-param name="pocs" select="gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact"/>
@@ -167,7 +167,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
             </entry>
         </xsl:for-each>
     </xsl:template>
-    
+
     <!-- === Dataset entry within Service Feed ===================================================================== -->
 
     <xsl:template mode="dataset_entry" match="gmd:MD_Metadata">
@@ -178,10 +178,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 <xsl:with-param name="lang" select="$requestedLanguage"/>
             </xsl:apply-templates>
         </xsl:variable>
-        <xsl:variable name="identifierCode" select="./gmd:identificationInfo[1]//gmd:citation/gmd:CI_Citation/gmd:identifier[1]/gmd:MD_Identifier/gmd:code/gco:CharacterString|
-                                                    ./gmd:identificationInfo[1]//gmd:citation/gmd:CI_Citation/gmd:identifier[1]/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
-        <xsl:variable name="identifierCodeSpace" select="./gmd:identificationInfo[1]//gmd:citation/gmd:CI_Citation/gmd:identifier[1]/gmd:MD_Identifier/gmd:codeSpace/gco:CharacterString|
-                                                    ./gmd:identificationInfo[1]//gmd:citation/gmd:CI_Citation/gmd:identifier[1]/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString"/>
+        <xsl:variable name="identifierCode" select="./gmd:identificationInfo[1]//gmd:citation/gmd:CI_Citation/gmd:identifier[1]/*/gmd:code/gco:CharacterString"/>
+        <xsl:variable name="identifierCodeSpace" select="./gmd:identificationInfo[1]//gmd:citation/gmd:CI_Citation/gmd:identifier[1]/*/gmd:codeSpace/gco:CharacterString"/>
 
         <!-- REQ 13: code and namespace -->
         <inspire_dls:spatial_dataset_identifier_code><xsl:value-of select="$identifierCode"/></inspire_dls:spatial_dataset_identifier_code>
@@ -333,7 +331,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 <xsl:with-param name="lang" select="$requestedLanguage"/>
             </xsl:apply-templates>
         </subtitle>
-        
+
         <!-- REQ 28: TODO implement thesaurus to be used in editor to select one or more INSPIRE Spatial Object Types and based on selection show here the links -->
         <xsl:for-each select=".//gmd:keyword/gco:CharacterString[../../gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString=$featureconceptThesaurusTitle]">
             <xsl:variable name="concept" select="."/>
@@ -379,7 +377,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 </xsl:call-template>
             </xsl:if>
         </xsl:for-each>
- 
+
         <xsl:if test="$requestedLanguage!=$docLang">
             <xsl:call-template name="atom-link">
                 <xsl:with-param name="title">
@@ -393,7 +391,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 <xsl:with-param name="rel">alternate</xsl:with-param>
             </xsl:call-template>
         </xsl:if>
- 
+
         <!-- REC 9: upward link to download service feed -->
         <xsl:variable name="serviceIdentifier" select="normalize-space(/root/serviceIdentifier)"/>
         <xsl:if test="$serviceIdentifier">
@@ -406,7 +404,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 </xsl:attribute>
             </link>
         </xsl:if>
- 
+
         <!-- REQ 22: id -->
         <id>
             <xsl:call-template name="atom-link-href">
@@ -507,7 +505,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
             <xsl:variable name="entryTitle" select="concat($datasetTitle,' in ', $crsLabel, if ($mimeTypeLabel!='') then concat(' - ', $mimeTypeLabel) else '')"/>
 
             <xsl:if test="($requestedCRS='' or $requestedCRS=$crs) and ($searchTerms='' or contains(lower-case($entryTitle),$searchTerms))">
-                <entry>                
+                <entry>
                     <inspire_dls:spatial_dataset_identifier_code><xsl:value-of select="$identifierCode"/></inspire_dls:spatial_dataset_identifier_code>
                     <inspire_dls:spatial_dataset_identifier_namespace><xsl:value-of select="$identifierCodeSpace"/></inspire_dls:spatial_dataset_identifier_namespace>
 
@@ -571,7 +569,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
             </xsl:when>
         </xsl:choose>
     </xsl:template>
-    
+
     <xsl:template mode="translated-rights" match="srv:SV_ServiceIdentification|gmd:MD_DataIdentification">
 <!--        <xsl:variable name="useLimitation" select="normalize-space(gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation/gco:CharacterString)"/>
         <xsl:variable name="translated-useLimitation" select="normalize-space(gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=concat('#',upper-case(java:threeCharLangCode($requestedLanguage)))])"/>
@@ -634,9 +632,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <xsl:param name="codeSpace"/>
         <xsl:param name="title"/>
         <xsl:param name="rel"/>
-        
+
         <xsl:variable name="type" select="if ($fileIdentifier!='') then 2 else 3"/>
-        
+
         <link type="application/atom+xml">
             <xsl:if test="$rel!=''">
                    <xsl:attribute name="rel" select="$rel"/>
@@ -699,7 +697,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-        
+
     <!-- Take the poc having role=author if exists, else take the first poc -->
 
     <xsl:template name="add-author">
@@ -785,7 +783,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 
     <xsl:template name="add-category">
         <xsl:param name="crs"/>
-        
+
         <xsl:choose>
             <xsl:when test="$crs">
                 <xsl:variable name="epsgCode">
@@ -822,7 +820,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 <category term="http://www.opengis.net/def/crs/EPSG/0/unknown" label="Unknown" />
             </xsl:otherwise>
         </xsl:choose>
-        
+
     </xsl:template>
 
     <xsl:template name="get-epsg-code">
