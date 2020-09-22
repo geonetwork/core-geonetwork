@@ -372,7 +372,9 @@
             params[mode + 'Uuid'] = md.uuid;
           }
           params[mode + 'Url'] = md.remoteUrl || '';
-          params[mode + 'Title'] = md.title || md.resourceTitleObject.default;
+          params[mode + 'Title'] = md.title // Remote
+            || md.resourceTitle // not multilingual eg. 19110
+            || md.resourceTitleObject.default;
           return runProcess(this, params).then(function() {
             closePopup(popupid);
           });
