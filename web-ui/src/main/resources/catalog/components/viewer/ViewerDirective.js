@@ -291,21 +291,23 @@
                   }
                 }
 
-                if (activateCmd || addCmd) {
+                // Define which tool is active
+                var toolCmd = $location.search()['tool'];
+                if (toolCmd) {
+                  scope.activeTools[$location.search()['tool']] = true;
+                }
+
+                if (activateCmd || addCmd || toolCmd) {
                   // Replace location with action by a stateless path
                   // to not being able to replay the action with browser
                   // history.
                   $location.path('/map')
                       .search('add', null)
                       .search('activate', null)
+                      .search('tool', null)
                       .replace();
                 }
 
-
-                // Define which tool is active
-                if ($location.search()['tool']) {
-                  scope.activeTools[$location.search()['tool']] = true;
-                }
 
                 if ($location.search()['extent']) {
                   scope.map.getView().fit(

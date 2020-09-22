@@ -78,8 +78,8 @@
 
 
   module.controller('gnsSearchTopEntriesController', [
-    '$scope', 'gnGlobalSettings',
-    function($scope, gnGlobalSettings) {
+    '$scope', 'gnRelatedResources',
+    function($scope, gnRelatedResources) {
       $scope.resultTemplate = '../../catalog/components/' +
         'search/resultsview/partials/viewtemplates/grid4maps.html';
       $scope.searchObj = {
@@ -97,6 +97,10 @@
           from: 1,
           to: 30
         }
+      };
+
+      $scope.loadMap = function(map, md) {
+        gnRelatedResources.getAction('MAP')(map, md);
       };
     }]);
 
