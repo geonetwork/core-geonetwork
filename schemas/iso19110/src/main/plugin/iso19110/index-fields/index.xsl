@@ -41,7 +41,7 @@
     <doc>
       <docType>metadata</docType>
       <documentStandard>iso19110</documentStandard>
-
+      <resourceType>featureCatalog</resourceType>
       <resourceTitle>
         <xsl:value-of select="/gfc:FC_FeatureCatalogue/gmx:name/gco:CharacterString|
         /gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|
