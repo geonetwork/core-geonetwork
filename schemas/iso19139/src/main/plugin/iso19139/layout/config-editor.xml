@@ -84,7 +84,29 @@
     <for name="gmd:organisationName" use="data-gn-anchor-switcher"/>
     -->
 
+    <!-- Example of data-gn-field-upload-div directive:
 
+    Create a widget to handle editing of Anchor fields, that require to upload files to the metadata and link them.
+
+    Files are stored in the metadata store, the same way as when adding online resources.
+
+    Format of the xml snippet created:
+
+    <gmd:supplementalInformation>
+      <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/api/records/cde2f47f-4a3f-4da1-8918-9923e7d372f1/attachments/report2019.docx">
+        Report 2019
+      </gmx:Anchor>
+    </gmd:supplementalInformation>
+
+    The directive doesn't support multilingual fields.
+
+    Parameters:
+        data-allow-modify-xlink="true": allows to modify the xlink href (defaults to false)
+
+    <for name="gmd:supplementalInformation" use="data-gn-field-upload-div">
+      <directiveAttributes data-allow-modify-xlink="true" data-link-href="eval#gmx:Anchor/@xlink:href" />
+    </for>
+    -->
 
     <for name="gts:TM_PeriodDuration" use="data-gn-field-duration-div"/>
     <for name="gml:duration" use="data-gn-field-duration-div"/>
