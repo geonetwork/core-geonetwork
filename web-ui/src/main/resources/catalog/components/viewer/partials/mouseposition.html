@@ -1,0 +1,34 @@
+<div class="gn-map-mouse-position"
+     ng-hide="disabledTools.mousePosition">
+    <span id="gn-map-mouse-position"
+          ng-show="displayMousePosition"
+          aria-label="{{'mousePosition' | translate}}">
+    </span>
+  <div class="btn-group" role="group" aria-label="...">
+    <button type="button"
+            title="{{'displayMousePosition' | translate}}"
+            ng-click="switchMousePosition()"
+            ng-class="displayMousePosition ? 'active' : ''"
+            class="btn btn-default btn-xs">
+      <span class="fa fa-map-marker fa-fw"/>
+    </button>
+    <div class="btn-group">
+      <button class="btn btn-default btn-xs dropdown-toggle"
+              ng-class="displayMousePosition ? '' : 'disabled'"
+              type="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li class="dropdown-header" data-translate="">coordinateFormat</li>
+        <li data-ng-repeat="p in projectionList"
+            data-ng-class="{'disabled': p.code === coordinateProjectionCode && p.format === coordinateFormat}">
+          <a data-ng-click="setMousePositionProjection(p)">
+            {{p.label}}
+            <span data-ng-hide="p.format == 'DD'">({{p.format}})</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

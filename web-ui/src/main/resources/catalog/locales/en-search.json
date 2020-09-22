@@ -525,5 +525,10 @@
   "geometryFilter": "Bounding Box",
   "GUFname": "Your Name",
   "GUFemail": "Your Email address",
-  "GUForganization": "Your Organization"
+  "GUForganization": "Your Organization",
+  "mousePositionCopiedToClipboard": "Coordinates {{position}} copied to clipboard.",
+  "mousePosition": "Position",
+  "coordinateFormat": "Projection & format",
+  "displayMousePosition": "Display mouse position (Use 'c' shortcut to copy position to clipboard).",
+  "copyMousePosition": "Copy mouse position to clipboard"
 }
