@@ -1092,20 +1092,20 @@
 
     <xsl:variable name="uuid" select="@uuid"/>
     <xsl:variable name="role" select="../../cit:role/*/@codeListValue"/>
-    <xsl:variable name="email" select="cit:contactInfo/cit:CI_Contact/
+    <xsl:variable name="email" select="cit:contactInfo[1]/cit:CI_Contact/
                              cit:address/cit:CI_Address/
-                             cit:electronicMailAddress/gco:CharacterString|
-                 cit:individual//cit:contactInfo/cit:CI_Contact/
+                             cit:electronicMailAddress/gco:CharacterString[normalize-space()!='']|
+                 cit:individual//cit:contactInfo[1]/cit:CI_Contact/
                                 cit:address/cit:CI_Address/
-                                cit:electronicMailAddress/gco:CharacterString"/>
+                                cit:electronicMailAddress/gco:CharacterString[normalize-space()!='']"/>
     <xsl:variable name="roleTranslation" select="util:getCodelistTranslation('cit:CI_RoleCode', string($role), string($lang))"/>
     <xsl:variable name="logo" select="cit:logo/mcc:MD_BrowseGraphic/mcc:fileName/gco:CharacterString"/>
-    <xsl:variable name="website" select=".//cit:onlineResource/*/cit:linkage/gco:CharacterString"/>
+    <xsl:variable name="website" select="cit:contactInfo[1]//cit:onlineResource[1]/*/cit:linkage/gco:CharacterString"/>
     <xsl:variable name="phones"
-                  select=".//cit:contactInfo/cit:CI_Contact/cit:phone/*/cit:number/gco:CharacterString"/>
+                  select="cit:contactInfo[1]/cit:CI_Contact/cit:phone/*/cit:number/gco:CharacterString"/>
     <!--<xsl:variable name="phones"
                   select="cit:contactInfo/cit:CI_Contact/cit:phone/concat(*/cit:numberType/*/@codeListValue, ':', */cit:number/gco:CharacterString)"/>-->
-    <xsl:variable name="address" select="string-join(cit:contactInfo/*/cit:address/*/(
+    <xsl:variable name="address" select="string-join(cit:contactInfo[1]/*/cit:address/*/(
                                           cit:deliveryPoint|cit:postalCode|cit:city|
                                           cit:administrativeArea|cit:country)/gco:CharacterString/text(), ', ')"/>
     <xsl:variable name="individualNames" select="cit:individual//cit:name/gco:CharacterString"/>

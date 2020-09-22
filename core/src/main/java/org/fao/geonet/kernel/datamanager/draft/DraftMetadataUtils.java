@@ -537,9 +537,10 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             // Copy privileges from original metadata
             for (OperationAllowed op : metadataOperations.getAllOperations(templateMetadata.getId())) {
 
-                // Only interested in editing and reviewing privileges
+                // Only interested in editing and reviewing privileges and group owner privileges
                 // No one else should be able to see it
-                if (op.getId().getOperationId() == ReservedOperation.editing.getId()) {
+                if (op.getId().getOperationId() == ReservedOperation.editing.getId() ||
+                    ((groupOwner != null) && (op.getId().getGroupId() == Integer.parseInt(groupOwner)))) {
                     Log.trace(Geonet.DATA_MANAGER, "Assign operation: " + op);
                     metadataOperations.forceSetOperation(context, finalId, op.getId().getGroupId(),
                         op.getId().getOperationId());

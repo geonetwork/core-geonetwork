@@ -1,8 +1,8 @@
-<div class="md-feedback"
-     data-ng-show="isUserFeedbackEnabled">
+<div class="md-feedback gn-margin-bottom"
+     data-ng-show="!isUserFeedbackEnabled">
   <a href data-ng-click="toggle()"
      title="{{'fbFeedback' | translate}}"
-     class="gn-md-feedback-btn">
+     class="btn btn-default">
     <i class="fa fa-fw fa-envelope"></i>
     <span class="hidden-xs" data-ng-show="showLabel" data-translate="">{{showLabel}}</span>
   </a>
@@ -31,6 +31,7 @@
                          data-translate="">fbName</label>
                   <div class="col-sm-9">
                     <input type="text" class="form-control" name="name"
+                           aria-label="{{'fbName' | translate}}"
                            value="{{user.name}}" required="required"/>
                   </div>
                 </div>
@@ -39,6 +40,7 @@
                          data-translate="">fbFunction</label>
                   <div class="col-sm-9">
                     <input type="text" class="form-control" name="function"
+                           aria-label="{{'fbFunction' | translate}}"
                            value="{{user.function}}"/>
                   </div>
                 </div>
@@ -47,6 +49,7 @@
                          data-translate="">fbOrganization</label>
                   <div class="col-sm-9">
                     <input type="text" class="form-control" name="org"
+                           aria-label="{{'fbOrganization' | translate}}"
                            required="required"/>
                   </div>
                 </div>
@@ -55,6 +58,7 @@
                          data-translate="">fbPhone</label>
                   <div class="col-sm-9">
                     <input type="tel" class="form-control" name="phone"
+                           aria-label="{{'fbPhone ' | translate}}"
                            data-gn-autogrow=""></input>
                   </div>
                 </div>
@@ -63,6 +67,7 @@
                          data-translate="">fbEmail</label>
                   <div class="col-sm-9">
                     <input type="email" class="form-control" name="email"
+                           aria-label="{{'fbEmail' | translate}}"
                            value="{{user.email|empty}}" required="required"/>
                   </div>
                 </div>
@@ -73,7 +78,7 @@
                   <label class="col-sm-3 control-label"
                          data-translate="">fbFunction</label>
                   <div class="col-sm-9">
-                    <select class="form-control" name="type" required="required">
+                    <select class="form-control" name="type" required="required" aria-label="{{'fbFunction' | translate}}">
                       <option value="question" data-translate="">fbQuestion</option>
                       <option value="error" data-translate="">fbError</option>
                       <option value="comment" data-translate="">fbComments</option>
@@ -86,6 +91,7 @@
                          data-translate="">fbCategory</label>
                   <div class="col-sm-9">
                     <select class="form-control" name="category"
+                            aria-label="{{'fbCategory' | translate}}"
                             required="required">
                       <option value="Metadata Contents" data-translate="">fbCatMetadataContents</option>
                       <option value="Data Contents" data-translate="">fbCatDataContents</option>
@@ -108,28 +114,36 @@
                          data-translate="">fbComments</label>
                   <div class="col-sm-9">
                   <textarea class="form-control" name="comments"
+                            aria-label="{{'fbComments' | translate}"
                             data-gn-autogrow="" required="required"></textarea>
                   </div>
                 </div>
               </div>
 
-              <input type="hidden"
-                     name="uuid"
-                     value="{{md.getUuid()}}"/>
-              <input type="hidden"
-                     id="recaptcha"
-                     name="recaptcha"/>
-              <input type="hidden"
-                     name="metadataEmail"
-                     value="{{sendTo}}"/>
-              <ul>
-                <li data-ng-repeat="c in contactList" data-ng-show="c.email !== ''">
-                  <label class="control-label">
-                    <input type="checkbox" data-ng-model="c.selected" data-ng-change="updateList()"/>
-                    {{c.email}} ({{c.role}})
-                  </label>
-                </li>
-              </ul>
+              <div class="form-group">
+                <input type="hidden"
+                      name="uuid"
+                      value="{{md.getUuid()}}"/>
+                <input type="hidden"
+                      id="recaptcha"
+                      name="recaptcha"/>
+                <input type="hidden"
+                      name="metadataEmail"
+                      value="{{sendTo}}"/>
+                
+                <label class="col-sm-3 control-label"
+                       data-translate="">fbSendTo</label>
+                <div class="col-sm-9">
+                  <ul class="list-group">
+                    <li class="list-group-item" data-ng-repeat="c in contactList" data-ng-show="c.email !== ''">
+                      <label>
+                        <input type="checkbox" aria-label="{{'fbSendTo' | translate}} {{c.email}} ({{c.role}})" data-ng-model="c.selected" data-ng-change="updateList()"/>
+                        {{c.email}} ({{c.role}})
+                      </label>
+                    </li>
+                  </ul>
+                </div>
+              </div>
 
               <div class="form-group" data-ng-if="recaptchaEnabled">
                 <div vc-recaptcha class="col-lg-8"
@@ -143,8 +157,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-primary pull-right" type="submit">
-              <i class="fa fa-envelope"></i>&nbsp;<span data-translate="">send</span>
+            <button class="btn btn-default pull-right" type="submit">
+              <span data-translate="">send</span>
             </button>
           </div>
         </form>

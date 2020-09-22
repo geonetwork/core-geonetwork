@@ -41,10 +41,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Map LDAP user information to GeoNetworkUser information.
@@ -112,6 +109,16 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 
         if (this.isLdapUsernameCaseInsensitive()) {
             username = username.toLowerCase();
+        }
+
+        //pass DN along.
+        // NOTE: LDAPUser doesn't allow you to set DN!!!
+        if (!userInfo.containsKey("dn")) {
+            ArrayList dns = new ArrayList(Arrays.asList(
+                    userCtx.getDn().toString(),   //will not include base
+                    userCtx.getNameInNamespace() // includes base
+                ));
+            userInfo.put("dn", dns);
         }
 
         LDAPUser userDetails = new LDAPUser(username);

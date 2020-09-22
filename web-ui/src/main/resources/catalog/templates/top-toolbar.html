@@ -27,19 +27,18 @@
   <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav gn-menu-xs" role="menu">
       <li class="clearfix hidden-xs" data-ng-if="gnCfg.mods.home.enabled">
-        <a class="pull-left gn-logo-link" data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}" data-ng-hide="{{gnCfg.mods.header.isLogoInHeader}}">
-          <img class="gn-logo"
-                alt="{{'siteLogo' | translate}}"
-                data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
-        </a>
-        <a class="pull-left hidden-sm"
-           data-ng-if="gnCfg.mods.header.showGNName"
-           data-ng-class="gnCfg.mods.header.isLogoInHeader ? '' : 'gn-nopadding-left'"
+        <a class="pull-left gn-logo-link" 
            data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
+          <img class="gn-logo gn-margin-right"
+               data-ng-hide="{{gnCfg.mods.header.isLogoInHeader}}"
+               alt="{{'siteLogo' | translate}}"
+               data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
           <span class="gn-name"
+                data-ng-if="gnCfg.mods.header.showGNName"
                 data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
                 title="{{info['node/name'] || info['system/site/name']}}">
-            {{info['node/name'].split('|')[0] || info['system/site/name']}}</span>
+            {{info['node/name'].split('|')[0] || info['system/site/name']}}
+          </span>
         </a>
       </li>
       <li class="gn-menuitem-xs" data-ng-if="gnCfg.mods.search.enabled">
@@ -160,7 +159,7 @@
           role="button" aria-expanded="false">
           <img class="img-circle"
             alt="{{'avatar' | translate}}"
-            data-ng-src="//gravatar.com/avatar/{{user.email | md5}}?s=18"/>
+            data-ng-src="../api/users/{{(user.id)}}.png?size=18"/>
           <div class="gn-user-info hidden-sm hidden-md">
             <span class="gn-user-name">{{user.name}} {{user.surname}}</span><br>
             <span class="gn-user-role">{{user.profile | lowercase | translate}}</span>
@@ -177,7 +176,7 @@
           <li class="text-center hidden-xs" role="menuitem">
             <img class="img-circle"
                  alt="{{'avatar' | translate}}"
-                 data-ng-src="//gravatar.com/avatar/{{user.email | md5}}?s=56"/>
+                 data-ng-src="../api/users/{{(user.id)}}.png?size=56"/>
           </li>
           <li role="separator" class="divider hidden-xs"></li>
           <li class="dropdown-header hidden-xs" role="menuitem" translate>username</li>

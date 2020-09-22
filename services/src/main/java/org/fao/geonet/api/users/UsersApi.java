@@ -23,14 +23,8 @@
 
 package org.fao.geonet.api.users;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Authorization;
+import io.swagger.annotations.*;
 import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -42,34 +36,39 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.UserSavedSelectionRepository;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.util.PasswordUtil;
-import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.bind.DatatypeConverter;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USERS_IDENTICON;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -86,6 +85,9 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class UsersApi {
 
     @Autowired
+    SettingManager settingManager;
+
+    @Autowired
     UserRepository userRepository;
 
     @Autowired
@@ -99,6 +101,13 @@ public class UsersApi {
 
     @Autowired
     DataManager dataManager;
+
+    private BufferedImage pixel;
+
+    public UsersApi() {
+        pixel = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        pixel.setRGB(0, 0, (0xFF));
+    }
 
 
     @ApiOperation(
@@ -192,6 +201,62 @@ public class UsersApi {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
 
+    }
+
+
+    @ApiOperation(
+        value = "Get user identicon",
+        notes = "",
+        nickname = "getUserIdentIcon")
+    @RequestMapping(
+        value = "/{userIdentifier}.png",
+        produces = MediaType.IMAGE_PNG_VALUE,
+        method = RequestMethod.GET)
+    @ResponseBody
+    public void getUser(
+        @ApiParam(
+            value = "User identifier."
+        )
+        @PathVariable
+            Integer userIdentifier,
+        @ApiParam(
+            value = "Size."
+        )
+        @RequestParam(defaultValue = "18")
+            Integer size,
+        @ApiIgnore
+            HttpServletResponse response
+    ) throws IOException {
+        String identiconType = settingManager.getValue(SYSTEM_USERS_IDENTICON);
+        if (identiconType != null && identiconType.startsWith("gravatar")) {
+            try {
+                User user = userRepository.findOne(userIdentifier);
+                if (user == null) {
+                    throw new UserNotFoundEx(Integer.toString(userIdentifier));
+                }
+
+                String[] config = identiconType.split(":");
+                String dParameter = config.length > 1 ? config[1] : null;
+                String fParameter = config.length == 3 ? config[2] : null;
+
+                String email = user.getEmail() != null ? user.getEmail() : "";
+                MessageDigest md = MessageDigest.getInstance("MD5");
+                byte[] hash = md.digest(email.getBytes());
+                URL url = new URL("https://gravatar.com/avatar/" +
+                    DatatypeConverter.printHexBinary(hash).toLowerCase() +
+                    "?s=" + size +
+                    (dParameter ==  null ? "" : "&d=" + dParameter) +
+                    (fParameter ==  null ? "" : "&f=" + fParameter)
+                );
+                BufferedImage image = ImageIO.read(url);
+                response.setStatus(HttpStatus.OK.value());
+                ImageIO.write(image, "PNG", response.getOutputStream());
+            } catch (NoSuchAlgorithmException e) {
+                ImageIO.write(pixel, "PNG", response.getOutputStream());
+            }
+        } else {
+            ImageIO.write(pixel, "PNG", response.getOutputStream());
+        }
     }
 
     @ApiOperation(
