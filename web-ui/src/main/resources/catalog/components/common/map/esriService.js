@@ -43,7 +43,8 @@
         renderLegend(json, layerId) {
           var $this = this;
 
-          var legend = !!layerId ? {
+          var singleLayer = !!layerId;
+          var legend = singleLayer ? {
             layers: json.layers.filter(function (layer) {
               return layer.layerId == layerId;
             })
@@ -53,7 +54,7 @@
           var context = canvas.getContext('2d');
           context.textBaseline = 'middle';
           context.font = FONT_SIZE + 'px sans-serif';
-          var size = this.measureLegend(context, legend);
+          var size = this.measureLegend(context, legend, singleLayer);
 
           // size canvas & draw background
           canvas.width = size[0];
@@ -69,12 +70,16 @@
             var layer = json.layers[i];
             promise = promise.then(function (y) {
               var layer = this;
-              y += TITLE_PADDING;
-              context.fillStyle = 'black';
-              context.textBaseline = 'middle';
-              context.font = 'bold ' + FONT_SIZE + 'px sans-serif';
-              context.fillText(layer.layerName, PADDING, y + FONT_SIZE / 2);
-              y += FONT_SIZE;
+
+              if (!singleLayer) {
+                y += TITLE_PADDING;
+                context.fillStyle = 'black';
+                context.textBaseline = 'middle';
+                context.font = 'bold ' + FONT_SIZE + 'px sans-serif';
+                context.fillText(layer.layerName, PADDING, y + FONT_SIZE / 2);
+                y += FONT_SIZE;
+              }
+
               return $this.renderRules(y, context, layer.legend);
             }.bind(layer));
           }
@@ -135,16 +140,19 @@
          * Returns the expected size of the legend
          * @param {CanvasRenderingContext2D} context
          * @param {Object} json
+         * @param {boolean} skipLayerName
          * @return {[number, number]} width and height
          */
-        measureLegend(context, json) {
+        measureLegend(context, json, skipLayerName) {
           var width = 100;
           var height = 0;
           for (var i = 0; i < json.layers.length; i++) {
             var layer = json.layers[i];
-            var nameMetrics = context.measureText(layer.layerName);
-            width = Math.max(width, nameMetrics.width + PADDING * 2);
-            height += TITLE_PADDING + FONT_SIZE;
+            if (!skipLayerName) {
+              var nameMetrics = context.measureText(layer.layerName);
+              width = Math.max(width, nameMetrics.width + PADDING * 2);
+              height += TITLE_PADDING + FONT_SIZE;
+            }
 
             for (var j = 0; j < layer.legend.length; j++) {
               var rule = layer.legend[j];
