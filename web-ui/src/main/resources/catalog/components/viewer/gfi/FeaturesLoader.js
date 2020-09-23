@@ -524,13 +524,19 @@
     this.loading = true;
     var mapExtent = map.getView().calculateExtent();
     var mapSize = map.getSize();
+    var layerId = layer.getSource().getParams().LAYERS;
+
+    var layerParam = 'top'; // only the top most features will be returned
+    if (!!layerId) {
+      layerParam = 'all:' + layerId; // look into the specified layer instead
+    }
 
     // we use the identify operation on the image service, see:
     // https://developers.arcgis.com/rest/services-reference/identify-map-service-.htm
     var identifyUrl = layer.getSource().getUrl() +
       '/identify?geometryType=esriGeometryPoint&geometry=' + coordinates[0] + ',' + coordinates[1] +
       '&tolerance=4&mapExtent=' + mapExtent.join(',') + '&imageDisplay=' + mapSize.join(',') + ',96' +
-      '&f=json';
+      '&f=json&layers=' + layerParam;
 
     var format = new ol.format.EsriJSON();
 
