@@ -37,15 +37,23 @@
         /**
          * Renders a JSON legend asynchronously to an image
          * @param {Object} json
+         * @param {string} [layerId] optional, legend will be filtered on this layer
          * @return {Promise<string>} data url
          */
-        renderLegend(json) {
+        renderLegend(json, layerId) {
           var $this = this;
+
+          var legend = !!layerId ? {
+            layers: json.layers.filter(function (layer) {
+              return layer.layerId == layerId;
+            })
+          } : json;
+
           var canvas = document.createElement('canvas');
           var context = canvas.getContext('2d');
           context.textBaseline = 'middle';
           context.font = FONT_SIZE + 'px sans-serif';
-          var size = this.measureLegend(context, json);
+          var size = this.measureLegend(context, legend);
 
           // size canvas & draw background
           canvas.width = size[0];
@@ -57,15 +65,16 @@
           var promise = $q.resolve(0);
 
           // chain one promise per legend
-          for (var i = 0; i < json.layers.length; i++) {
+          for (var i = 0; i < legend.layers.length; i++) {
             var layer = json.layers[i];
             promise = promise.then(function (y) {
               var layer = this;
               y += TITLE_PADDING;
               context.fillStyle = 'black';
+              context.textBaseline = 'middle';
               context.font = 'bold ' + FONT_SIZE + 'px sans-serif';
               context.fillText(layer.layerName, PADDING, y + FONT_SIZE / 2);
-              y += PADDING + FONT_SIZE;
+              y += FONT_SIZE;
               return $this.renderRules(y, context, layer.legend);
             }.bind(layer));
           }
@@ -95,10 +104,10 @@
                 y += PADDING;
                 context.drawImage(image, PADDING, y, rule.width, rule.height);
                 context.fillStyle = 'black';
+                context.textBaseline = 'middle';
                 context.font = FONT_SIZE + 'px sans-serif';
                 context.fillText(rule.label, PADDING * 2 + rule.width, y + rule.height / 2);
-                y += rule.height;
-                return y;
+                return y + rule.height;
               })
             }.bind(rule));
           }
@@ -135,7 +144,7 @@
             var layer = json.layers[i];
             var nameMetrics = context.measureText(layer.layerName);
             width = Math.max(width, nameMetrics.width + PADDING * 2);
-            height += TITLE_PADDING + PADDING + FONT_SIZE;
+            height += TITLE_PADDING + FONT_SIZE;
 
             for (var j = 0; j < layer.legend.length; j++) {
               var rule = layer.legend[j];

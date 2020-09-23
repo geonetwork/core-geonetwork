@@ -1496,7 +1496,7 @@
 
             var legendUrl = serviceUrl + '/legend?f=json';
             var legendPromise = $http.get(legendUrl).then(function (response) {
-              return gnEsriUtils.renderLegend(response.data);
+              return gnEsriUtils.renderLegend(response.data, layer);
             })
 
             // layer title and extent are set after the layer info promise resolves
