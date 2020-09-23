@@ -120,10 +120,13 @@
         }
       };
 
-      this.setMap = function() {
+      this.setMap = function(tool) {
         if (gnGlobalSettings.isMapViewerEnabled &&
             !gnExternalViewer.isEnabled()) {
           $location.path(this.MAP);
+          if (tool != undefined) {
+            $location.search('tool', tool);
+          }
         }
       };
 
