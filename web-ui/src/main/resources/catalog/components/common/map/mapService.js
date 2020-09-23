@@ -26,11 +26,13 @@
 
   goog.require('gn_ows');
   goog.require('gn_wfs_service');
+  goog.require('gn_esri_service');
 
 
   var module = angular.module('gn_map_service', [
     'gn_ows',
-    'gn_wfs_service'
+    'gn_wfs_service',
+    'gn_esri_service'
   ]);
 
   /**
@@ -63,11 +65,12 @@
       'gnViewerService',
       'gnAlertService',
       '$http',
+      'gnEsriUtils',
       function(olDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
           gnGlobalSettings, gnViewerSettings, gnViewerService, gnAlertService,
-          $http) {
+          $http, gnEsriUtils) {
 
         /**
          * @description
@@ -1491,13 +1494,20 @@
               }
             });
 
+            var legendUrl = serviceUrl + '/legend?f=json';
+            var legendPromise = $http.get(legendUrl).then(function (response) {
+              return gnEsriUtils.renderLegend(response.data);
+            })
+
             // layer title and extent are set after the layer info promise resolves
-            return $q.all([layerInfoPromise, feedMdPromise])
+            return $q.all([layerInfoPromise, legendPromise, feedMdPromise])
               .then(function (results) {
                 var layerInfo = results[0];
+                var legendUrl = results[1];
                 var extent =
                   [layerInfo.extent.xmin, layerInfo.extent.ymin, layerInfo.extent.xmax, layerInfo.extent.ymax];
                 olLayer.set('label', layerInfo.title);
+                olLayer.set('legend', legendUrl);
                 olLayer.set('extent', extent);
               })
               .then(gnViewerSettings.getPreAddLayerPromise)
