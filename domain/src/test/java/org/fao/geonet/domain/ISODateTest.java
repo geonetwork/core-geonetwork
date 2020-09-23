@@ -470,17 +470,17 @@ public class ISODateTest {
 
         ZonedDateTime pstDateTime =
             ZonedDateTime.of(
-                2019, 6, 1, 0, 0, 0, 0, ZoneId.of("America/Vancouver").normalized());
+                2019, 6, 1, 0, 0, 0, 0, ZoneId.of("UTC-07:00").normalized());
         expected = pstDateTime.toInstant().truncatedTo(ChronoUnit.SECONDS);
-        assertEquals( "PST", expected, instant );
+        assertEquals( "UTC-07:00", expected, instant );
 
         ISODate estDate = new ISODate("2019-06-01T00:00-04:00");
         instant = estDate.toDate().toInstant().truncatedTo(ChronoUnit.SECONDS);
 
         ZonedDateTime estDateTime =
             ZonedDateTime.of(
-                2019, 6, 1, 0, 0, 0, 0, ZoneId.of("America/Toronto").normalized());
+                2019, 6, 1, 0, 0, 0, 0, ZoneId.of("UTC-04:00").normalized());
         expected = estDateTime.toInstant().truncatedTo(ChronoUnit.SECONDS);
-        assertEquals( "EST", expected, instant );
+        assertEquals( "UTC-04:00", expected, instant );
     }
 }

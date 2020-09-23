@@ -448,7 +448,7 @@ public class ISODate
             // issues.
             String afterT = timeAndDate.substring(indexOfT + 1);
             boolean timeZoneInfo = afterT.contains("+") || afterT.contains("-")
-                || afterT.endsWith("Z") || afterT.endsWith("Z");
+                || afterT.toUpperCase().endsWith("Z");
 
             if (timeZoneInfo) {
                 timeAndDate = parseISODateTime(timeAndDate);
