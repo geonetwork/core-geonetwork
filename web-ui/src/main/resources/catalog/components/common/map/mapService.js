@@ -62,10 +62,12 @@
       'gnViewerSettings',
       'gnViewerService',
       'gnAlertService',
+      '$http',
       function(olDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
-          gnGlobalSettings, gnViewerSettings, gnViewerService, gnAlertService) {
+          gnGlobalSettings, gnViewerSettings, gnViewerService, gnAlertService,
+          $http) {
 
         /**
          * @description
@@ -1429,63 +1431,83 @@
           },
 
           addEsriRestFromScratch: function(map, url, name, createOnly, md) {
-            var defer = $q.defer();
-            var $this = this;
-
             var serviceUrl = url.replace(/(.*\/MapServer).*/, '$1')
             var layer = url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$2');
             name = url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$1 $2');
 
-            if (!isLayerInMap(map, name, url)) {
-              gnWmsQueue.add(url, name);
-              var params = {};
-              if (layer != '') {
-                params.LAYERS = layer;
+            var olLayer = getTheLayerFromMap(map, name, url);
+            if (olLayer !== null) {
+              if(md) {
+                olLayer.set('md', md);
               }
-              var layerOptions = {
-                url: url,
-                opacity: 1,
-                visible: true,
-                source: new ol.source.ImageArcGISRest({
-                  // ratio: 1.01,
-                  params: params,
-                  url: serviceUrl
-                })
-              };
-
-              olL = new ol.layer.Image(layerOptions);
-
-              olL.set('name', name);
-              olL.set('label', name);
-              olL.displayInLayerManager = true;
-              olDecorateLayer(olL);
-
-              var finishCreation = function() {
-                $q.resolve(olL).
-                    then(gnViewerSettings.getPreAddLayerPromise).
-                    finally(
-                    function() {
-                      if (!createOnly) {
-                        map.addLayer(olL);
-                      }
-                      gnWmsQueue.removeFromQueue(url, name);
-                      defer.resolve(olL);
-                    });
-              };
-
-              var feedMdPromise = md ?
-                $q.resolve(md).then(function(md) {
-                  olL.set('md', md);
-                }) : $this.feedLayerMd(olL);
-
-              feedMdPromise.then(finishCreation);
-            } else {
-              var olL = getTheLayerFromMap(map, name, url);
-                if(olL && md) {
-                  olL.set('md', md);
-                }
+              return $q.resolve(olLayer);
             }
-            return defer.promise;
+
+            gnWmsQueue.add(url, name);
+
+            var params = {};
+            if (layer != '') {
+              params.LAYERS = layer;
+            }
+            var layerOptions = {
+              url: url,
+              opacity: 1,
+              visible: true,
+              source: new ol.source.ImageArcGISRest({
+                // ratio: 1.01,
+                params: params,
+                url: serviceUrl
+              })
+            };
+
+            olLayer = new ol.layer.Image(layerOptions);
+            olLayer.displayInLayerManager = true;
+            olLayer.set('name', name);
+            olDecorateLayer(olLayer);
+
+            var feedMdPromise
+            if (md) {
+              feedMdPromise = $q.resolve();
+              olLayer.set('md', md);
+            } else {
+              feedMdPromise = this.feedLayerMd(olLayer);
+            }
+
+            // query layer info
+            var layerInfoUrl = url + (url.indexOf('?') > -1 ? '&' : '?') + 'f=json';
+            var layerInfoPromise = $http.get(layerInfoUrl).then(function (response) {
+              var info = response.data;
+
+              // we're pointing at a layer group
+              if (!!info.mapName) {
+                return {
+                  extent: info.fullExtent,
+                  title: info.mapName
+                };
+              }
+              return {
+                extent: info.extent,
+                title: info.name
+              }
+            });
+
+            // layer title and extent are set after the layer info promise resolves
+            return $q.all([layerInfoPromise, feedMdPromise])
+              .then(function (results) {
+                var layerInfo = results[0];
+                var extent =
+                  [layerInfo.extent.xmin, layerInfo.extent.ymin, layerInfo.extent.xmax, layerInfo.extent.ymax];
+                olLayer.set('label', layerInfo.title);
+                olLayer.set('extent', extent);
+              })
+              .then(gnViewerSettings.getPreAddLayerPromise)
+              .then(function() {
+                if (!createOnly) {
+                  map.addLayer(olLayer);
+                }
+                gnWmsQueue.removeFromQueue(url, name);
+                return olLayer;
+              });
           },
 
           /**
