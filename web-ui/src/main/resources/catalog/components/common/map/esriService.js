@@ -27,6 +27,7 @@
   var module = angular.module('gn_esri_service', []);
 
   var PADDING = 5;
+  var TITLE_PADDING = 15;
   var FONT_SIZE = 12;
   var TMP_IMAGE = new Image();
 
@@ -40,12 +41,19 @@
          */
         renderLegend(json) {
           var $this = this;
-
           var canvas = document.createElement('canvas');
-          canvas.width = 200;
-          canvas.height = 500;
           var context = canvas.getContext('2d');
           context.textBaseline = 'middle';
+          context.font = FONT_SIZE + 'px sans-serif';
+          var size = this.measureLegend(context, json);
+
+          // size canvas & draw background
+          canvas.width = size[0];
+          canvas.height = size[1];
+          context.fillStyle = 'white';
+          context.fillRect(0, 0, size[0], size[1]);
+
+          // starting Y is 0
           var promise = $q.resolve(0);
 
           // chain one promise per legend
@@ -53,9 +61,10 @@
             var layer = json.layers[i];
             promise = promise.then(function (y) {
               var layer = this;
-              y += PADDING;
+              y += TITLE_PADDING;
+              context.fillStyle = 'black';
               context.font = 'bold ' + FONT_SIZE + 'px sans-serif';
-              context.fillText(layer.layerName, PADDING, y + PADDING + FONT_SIZE / 2);
+              context.fillText(layer.layerName, PADDING, y + FONT_SIZE / 2);
               y += PADDING + FONT_SIZE;
               return $this.renderRules(y, context, layer.legend);
             }.bind(layer));
@@ -83,11 +92,12 @@
             promise = promise.then(function (y) {
               var rule = this;
               return $this.renderImageData(rule.imageData, rule.contentType).then(function (image) {
-                context.drawImage(image, PADDING, y + PADDING);
+                y += PADDING;
+                context.drawImage(image, PADDING, y, rule.width, rule.height);
                 context.fillStyle = 'black';
                 context.font = FONT_SIZE + 'px sans-serif';
-                context.fillText(rule.label, PADDING * 2 + image.width, y + PADDING + image.height / 2);
-                y += image.height + PADDING;
+                context.fillText(rule.label, PADDING * 2 + rule.width, y + rule.height / 2);
+                y += rule.height;
                 return y;
               })
             }.bind(rule));
@@ -110,6 +120,31 @@
           };
           TMP_IMAGE.src = 'data:' + (format || 'image/png') + ';base64,' + imageData;
           return defer.promise;
+        },
+
+        /**
+         * Returns the expected size of the legend
+         * @param {CanvasRenderingContext2D} context
+         * @param {Object} json
+         * @return {[number, number]} width and height
+         */
+        measureLegend(context, json) {
+          var width = 100;
+          var height = 0;
+          for (var i = 0; i < json.layers.length; i++) {
+            var layer = json.layers[i];
+            var nameMetrics = context.measureText(layer.layerName);
+            width = Math.max(width, nameMetrics.width + PADDING * 2);
+            height += TITLE_PADDING + PADDING + FONT_SIZE;
+
+            for (var j = 0; j < layer.legend.length; j++) {
+              var rule = layer.legend[j];
+              var ruleMetrics = context.measureText(rule.label);
+              width = Math.max(width, rule.width + ruleMetrics.width + PADDING * 3);
+              height += PADDING + rule.height;
+            }
+          }
+          return [width, height];
         }
       }
     }
