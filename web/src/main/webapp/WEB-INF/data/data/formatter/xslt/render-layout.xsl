@@ -192,7 +192,6 @@
                 </h1>
               </xsl:if>
 
-              <xsl:call-template name="render-language-switcher"/>
 
               <div>
                 <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
@@ -232,6 +231,8 @@
             </div>
           </div>
           <div class="gn-md-side gn-md-side-advanced col-md-3">
+            <xsl:call-template name="render-language-switcher"/>
+
             <xsl:if test="$portalLink != ''">
               <xsl:variable name="defaultUrl"
                             select="concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)"/>
