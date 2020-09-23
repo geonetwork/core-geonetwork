@@ -93,6 +93,12 @@
     display: none;
   }
 
+  // Landing page multilingual mode require this to display
+  // div as content and avoid line feed
+  div[xml\:lang] {
+    display: contents;
+  }
+
   dd {
     //padding-left: 1em;
     text-align: justify;
