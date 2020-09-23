@@ -44,11 +44,7 @@ public class IndexHealthCheck implements HealthCheckFactory {
                 try {
                     ApplicationContext applicationContext = ApplicationContextHolder.get();
                     EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
-                    int from = 0;
-                    SettingInfo si = applicationContext.getBean(SettingInfo.class);
-                    int size = Integer.parseInt(si.getSelectionMaxRecords());
-
-                    final SearchResponse result = searchMan.query("*", null, from, size);
+                    final SearchResponse result = searchMan.query("*", null, 0, 0);
                     if (result.status().getStatus() == 200) {
                         return Result.healthy(String.format(
                             "%s records indexed in remote index currently.",
