@@ -1100,6 +1100,12 @@
 
 
 
+
+  <xsl:template mode="render-value"
+                match="*[gco:Distance|gco:Measure]">
+    <xsl:apply-templates mode="render-value"
+                         select="gco:Distance|gco:Measure"/>
+  </xsl:template>
   <xsl:template mode="render-value"
                 match="gco:Distance|gco:Measure">
     <span><xsl:value-of select="."/>&#10;<xsl:value-of select="@uom"/></span>
