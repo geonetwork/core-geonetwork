@@ -1458,8 +1458,7 @@
               olL.set('name', name);
               olL.set('label', name);
               olL.displayInLayerManager = true;
-              // FIXME: Layer tree visibility toggle does not work
-              olL.visible = layerOptions.visible;
+              olDecorateLayer(olL);
 
               var finishCreation = function() {
                 $q.resolve(olL).
