@@ -168,15 +168,15 @@
     "@context": "http://schema.org/",
     <xsl:choose>
       <xsl:when test="mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue != ''">
-        "@type": "<xsl:value-of select="schema-org-fn:getType(mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue, 'schema:')"/>",
+        "@type": "<xsl:value-of select="schema-org-fn:getType(mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue,'')"/>",
       </xsl:when>
       <xsl:otherwise>
-        "@type": "schema:Dataset",
+        "@type": "Dataset",
       </xsl:otherwise>
     </xsl:choose>
     <!-- TODO: Use the identifier property to attach any relevant Digital Object identifiers (DOIs). -->
     "@id": "<xsl:value-of select="concat($baseUrl, 'api/records/', mdb:metadataIdentifier[1]/*/mcc:code/*/text())"/>",
-    "includedInDataCatalog":[{"url":"<xsl:value-of select="concat($baseUrl, 'search#', $catalogueName)"/>","name":"<xsl:value-of select="$catalogueName"/>"}],
+    "includedInDataCatalog":[{"@type":"DataCatalog","url":"<xsl:value-of select="concat($baseUrl, 'search#', $catalogueName)"/>","name":"<xsl:value-of select="$catalogueName"/>"}],
     <!-- TODO: is the dataset language or the metadata language ? -->
     "inLanguage":"<xsl:value-of select="if ($requestedLanguage  != '') then $requestedLanguage else $defaultLanguage"/>",
     <!-- TODO: availableLanguage -->
@@ -258,8 +258,7 @@
                                        select="."/>
         </xsl:for-each>
         <xsl:if test=".//cit:electronicMailAddress">
-       
-          ,"email":  [<xsl:for-each select=".//cit:electronicMailAddress">
+            ,"email":  [<xsl:for-each select=".//cit:electronicMailAddress">
             <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
             <xsl:if test="position() != last()">,</xsl:if>
         </xsl:for-each>]
