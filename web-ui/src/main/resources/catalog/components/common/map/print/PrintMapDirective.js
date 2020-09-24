@@ -195,6 +195,11 @@
 
     $scope.printing = false;
 
+    $scope.unsupportedLayers = gnPrint.getUnsupportedLayerTypes($scope.map);
+    $scope.map.getLayers().on('change:length', function() {
+      $scope.unsupportedLayers = gnPrint.getUnsupportedLayerTypes($scope.map);
+    });
+
     $scope.submit = function() {
       if (!$scope.printActive) {
         return;
