@@ -1435,7 +1435,7 @@
 
           addEsriRestFromScratch: function(map, url, name, createOnly, md) {
             var serviceUrl = url.replace(/(.*\/MapServer).*/, '$1')
-            var layer = url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$2');
+            var layer = !!name ? name : url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$2');
             name = url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$1 $2');
 
             var olLayer = getTheLayerFromMap(map, name, url);
@@ -1963,6 +1963,23 @@
                   break;
                 }
                 this.addWmsFromScratch(map, opt.url, opt.name)
+                    .then(function(layer) {
+                      if (title) {
+                        layer.set('title', title);
+                        layer.set('label', title);
+                      }
+                      return layer;
+                    });
+                break;
+
+              case 'arcgis':
+                if (!opt.url) {
+                  $log.warn('A required parameter (url) ' +
+                      'is missing in the specified ArcGIS layer:',
+                      opt);
+                  break;
+                }
+                this.addEsriRestFromScratch(map, opt.url, opt.name)
                     .then(function(layer) {
                       if (title) {
                         layer.set('title', title);
