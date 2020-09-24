@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mda="http://standards.iso.org/iso/19115/-3/mda/1.0" xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mda/1.0" version="1.0">
+  <include schemaLocation="mda.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mdb/1.0" schemaLocation="../../../../19115/-3/mdb/1.0/mdb.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element abstract="true" name="AbstractDS_Aggregate" substitutionGroup="mda:AbstractDS_Resource" type="mda:AbstractDS_Aggregate_Type">
+    <annotation>
+      <documentation>collection of resources</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractDS_Aggregate_Type">
+    <complexContent>
+      <extension base="mda:AbstractDS_Resource_Type">
+        <sequence>
+          <element maxOccurs="unbounded" name="composedOf" type="mda:AbstractDS_Resource_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractDS_Aggregate_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mda:AbstractDS_Aggregate"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DS_DataSet" substitutionGroup="mda:AbstractDS_Resource" type="mda:DS_DataSet_Type">
+    <annotation>
+      <documentation>identifiable collection of data</documentation>
+    </annotation>
+  </element>
+  <complexType name="DS_DataSet_Type">
+    <complexContent>
+      <extension base="mda:AbstractDS_Resource_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DS_DataSet_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mda:DS_DataSet"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DS_Initiative" substitutionGroup="mda:AbstractDS_Aggregate" type="mda:DS_Initiative_Type">
+    <annotation>
+      <documentation>collection of associated resources related by their participation in a common initiative</documentation>
+    </annotation>
+  </element>
+  <complexType name="DS_Initiative_Type">
+    <complexContent>
+      <extension base="mda:AbstractDS_Aggregate_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DS_Initiative_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mda:DS_Initiative"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DS_OtherAggregate" substitutionGroup="mda:AbstractDS_Aggregate" type="mda:DS_OtherAggregate_Type">
+    <annotation>
+      <documentation>collection of resource associated through inspecified means</documentation>
+    </annotation>
+  </element>
+  <complexType name="DS_OtherAggregate_Type">
+    <complexContent>
+      <extension base="mda:AbstractDS_Aggregate_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DS_OtherAggregate_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mda:DS_OtherAggregate"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DS_Platform" substitutionGroup="mda:DS_Series" type="mda:DS_Platform_Type">
+    <annotation>
+      <documentation>collection of associated resources produced from the same sensor platform</documentation>
+    </annotation>
+  </element>
+  <complexType name="DS_Platform_Type">
+    <complexContent>
+      <extension base="mda:DS_Series_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DS_Platform_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mda:DS_Platform"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DS_ProductionSeries" substitutionGroup="mda:DS_Series" type="mda:DS_ProductionSeries_Type">
+    <annotation>
+      <documentation>collection of associated resources produced to the same production specification</documentation>
+    </annotation>
+  </element>
+  <complexType name="DS_ProductionSeries_Type">
+    <complexContent>
+      <extension base="mda:DS_Series_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DS_ProductionSeries_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mda:DS_ProductionSeries"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractDS_Resource" substitutionGroup="gco:AbstractObject" type="mda:AbstractDS_Resource_Type">
+    <annotation>
+      <documentation>an identifiable asset or means that fulfils a requirement</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractDS_Resource_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element maxOccurs="unbounded" name="has" type="mdb:MD_Metadata_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractDS_Resource_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mda:AbstractDS_Resource"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DS_Sensor" substitutionGroup="mda:DS_Series" type="mda:DS_Sensor_Type">
+    <annotation>
+      <documentation>collection of associated resources produced by the same sensor</documentation>
+    </annotation>
+  </element>
+  <complexType name="DS_Sensor_Type">
+    <complexContent>
+      <extension base="mda:DS_Series_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DS_Sensor_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mda:DS_Sensor"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DS_Series" substitutionGroup="mda:AbstractDS_Aggregate" type="mda:DS_Series_Type">
+    <annotation>
+      <documentation>collection of resource related by a common heritage adhering to a common specification</documentation>
+    </annotation>
+  </element>
+  <complexType name="DS_Series_Type">
+    <complexContent>
+      <extension base="mda:AbstractDS_Aggregate_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DS_Series_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mda:DS_Series"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="SV_Service" substitutionGroup="mda:AbstractDS_Resource" type="mda:SV_Service_Type">
+    <annotation>
+      <documentation>resource is a service</documentation>
+    </annotation>
+  </element>
+  <complexType name="SV_Service_Type">
+    <complexContent>
+      <extension base="mda:AbstractDS_Resource_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="SV_Service_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mda:SV_Service"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

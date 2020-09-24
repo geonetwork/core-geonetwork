@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<fields>
+<!-- override all the schema substitutes for gco:CharacterString 
+	- we don't want any
+	<field name="gco:CharacterString">
+	</field> --> 
+
+<!-- offer just the service and data identification -->
+	<field name="mri:AbstractMD_Identification">
+		<substitute name="srv:SV_ServiceIdentification"/>
+		<substitute name="mri:MD_DataIdentification"/>
+	</field>
+
+<!-- just VerticalCS (exclude ML_VerticalCS) -->
+	<field name="gml:VerticalCS">
+	</field>
+
+<!-- just VerticalDatum (exclude ML_VerticalDatum) -->
+	<field name="gml:VerticalDatum">
+	</field>
+
+<!-- just CoordinateSystemAxis (exclude ML_CoordinateSystemAxis) -->
+	<field name="gml:CoordinateSystemAxis">
+	</field>
+</fields>

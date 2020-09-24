@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+
+  <uri name="http://www.w3.org/1999/xlink.xsd"
+       uri="schema/others/xlink/xlink.xsd"/>
+  
+  <uri name="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd"
+       uri="schema/standards.iso.org/19115/-3/gco/1.0/gco.xsd"/>
+
+  <uri name="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19136_Schemas/gml.xsd"
+       uri="schema/others/ISO19136/gml.xsd"/>
+
+  <uri name="http://standards.iso.org/iso/19115/-3/gex/1.0/gex.xsd"
+       uri="schema/standards.iso.org/19115/-3/gex/1.0/gex.xsd"/>
+
+  <uri name="http://standards.iso.org/iso/19115/-3/mdb/2.0/mdb.xsd"
+       uri="schema/standards.iso.org/19115/-3/mdb/2.0/mdb.xsd"/>
+
+  <uri name="http://standards.iso.org/iso/19115/-3/cit/2.0/cit.xsd"
+       uri="schema/standards.iso.org/19115/-3/cit/2.0/cit.xsd"/>
+
+  <uri name="http://standards.iso.org/iso/19115/-3/mrs/1.0/mrs.xsd"
+       uri="schema/standards.iso.org/19115/-3/mrs/1.0/mrs.xsd"/>
+
+  <uri name="http://standards.iso.org/iso/19115/-3/srv/2.1/srv.xsd"
+       uri="schema/standards.iso.org/19115/-3/srv/2.1/srv.xsd"/>
+
+  <uri name="http://standards.iso.org/iso/19115/-3/mri/1.0/mri.xsd"
+       uri="schema/standards.iso.org/19115/-3/mri/1.0/mri.xsd"/>
+
+  <uri name="http://standards.iso.org/iso/19115/-3/mcc/1.0/mcc.xsd"
+       uri="schema/standards.iso.org/19115/-3/mcc/1.0/mcc.xsd"/>
+
+  <uri name="http://standards.iso.org/iso/19157/-2/dqm/1.0/dqm.xsd"
+       uri="schema/standards.iso.org/19157/-2/dqm/1.0/dqm.xsd"/>
+
+
+
+
+  <!-- These are to map schemaLocation hints to local schemas to make sure that
+    GeoNetwork edits and validates against a schema it knows about. -->
+
+  <system systemId="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco-gml3.2.x/gco.xsd"
+          uri="schema/standards.iso.org/19115/-3/gco/1.0/gco.xsd"/>
+
+  <system systemId="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19136_Schemas/gml.xsd"
+          uri="schema/others/ISO19136/gml.xsd"/>
+
+  <system systemId="http://standards.iso.org/iso/19157/-2/dqm/1.0/dqm.xsd"
+          uri="schema/standards.iso.org/ISO19157/-2/dqm/1.0/dqm.xsd"/>
+
+  <system systemId="http://standards.iso.org/iso/19115/-3/cit/2.0/cit.xsd"
+          uri="schema/standards.iso.org/19115/-3/cit/1.0/cit.xsd"/>
+
+  <system systemId="http://standards.iso.org/iso/19115/-3/gex/1.0/gex.xsd"
+          uri="schema/standards.iso.org/19115/-3/gex/1.0/gex.xsd"/>
+
+  <system systemId="http://standards.iso.org/iso/19115/-3/mrs/1.0/mrs.xsd"
+          uri="schema/standards.iso.org/19115/-3/mrs/1.0/mrs.xsd"/>
+
+  <system systemId="http://standards.iso.org/iso/19115/-3/mri/1.0/mri.xsd"
+          uri="schema/standards.iso.org/19115/-3/mri/1.0/mri.xsd"/>
+
+  <system systemId="http://standards.iso.org/iso/19115/-3/mcc/1.0/mcc.xsd"
+          uri="schema/standards.iso.org/19115/-3/mcc/1.0/mcc.xsd"/>
+
+  <system systemId="http://www.w3.org/1999/xlink.xsd"
+            uri="schema/others/xlink/xlink.xsd"/>
+
+  <system systemId="http://www.w3.org/2001/xml.xsd"
+            uri="schema/others/xlink/xml.xsd"/>
+</catalog>
