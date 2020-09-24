@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:pre="http://standards.iso.org/iso/19135/-2/pre/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19135/-2/pre/1.0" version="1.0">
+  <include schemaLocation="pre.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element abstract="true" name="Abstract_Register" substitutionGroup="gco:AbstractObject" type="pre:Abstract_Register_Type"/>
+  <complexType abstract="true" name="Abstract_Register_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_Register_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="pre:Abstract_Register"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="Abstract_RegisterItem" substitutionGroup="gco:AbstractObject" type="pre:Abstract_RegisterItem_Type"/>
+  <complexType abstract="true" name="Abstract_RegisterItem_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Abstract_RegisterItem_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="pre:Abstract_RegisterItem"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

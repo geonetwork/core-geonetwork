@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/srv/2.1" version="2.0">
+  <include schemaLocation="serviceInformation.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mri/1.0" schemaLocation="../../../../19115/-3/mri/1.0/mri.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

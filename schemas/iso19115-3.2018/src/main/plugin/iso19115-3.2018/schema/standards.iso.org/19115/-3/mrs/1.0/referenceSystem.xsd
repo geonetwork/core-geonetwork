@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mrs/1.0" version="1.0">
+  <include schemaLocation="mrs.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="MD_ReferenceSystem" substitutionGroup="mcc:Abstract_ReferenceSystem" type="mrs:MD_ReferenceSystem_Type">
+    <annotation>
+      <documentation>information about the reference system</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_ReferenceSystem_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_ReferenceSystem_Type">
+        <sequence>
+          <element minOccurs="0" name="referenceSystemIdentifier" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>identifier and codespace for reference systeme.g. EPSG::4326</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="referenceSystemType" type="mrs:MD_ReferenceSystemTypeCode_PropertyType">
+            <annotation>
+              <documentation>type of reference system identifiede.g. geographic2D</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_ReferenceSystem_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrs:MD_ReferenceSystem"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_ReferenceSystemTypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>defines type of reference system used</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_ReferenceSystemTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrs:MD_ReferenceSystemTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>
