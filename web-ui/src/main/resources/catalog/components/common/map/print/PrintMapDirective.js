@@ -316,11 +316,7 @@
           } else if (src instanceof ol.source.XYZ) {
             encLayer = gnPrint.encoders.layers['XYZ'].call(this,
                 layer, layerConfig, proj);
-          } else if (src instanceof ol.source.Vector ||
-              src instanceof ol.source.ImageVector) {
-            if (src instanceof ol.source.ImageVector) {
-              src = src.getSource();
-            }
+          } else if (src instanceof ol.source.Vector) {
             var features = [];
             src.forEachFeatureInExtent(ext, function(feat) {
               features.push(feat);
