@@ -42,7 +42,7 @@
          * @param {string} [layerId] optional, legend will be filtered on this layer
          * @return {Promise<string>} data url
          */
-        renderLegend(json, layerId) {
+        renderLegend: function(json, layerId) {
           var $this = this;
 
           var singleLayer = !!layerId;
@@ -94,7 +94,7 @@
          * @param {Object[]} rules
          * @return {Promise<number>} current y
          */
-        renderRules(startY, context, rules) {
+        renderRules: function(startY, context, rules) {
           var promises = [];
 
           // chain one promise for each rule
@@ -124,7 +124,7 @@
          * @param {string} format, defaults to 'image/png'
          * @return {Promise<Image>} image
          */
-        renderImageData(imageData, format) {
+        renderImageData: function(imageData, format) {
           var defer = $q.defer();
           var image = new Image();
           image.onload = function() {
@@ -141,7 +141,7 @@
          * @param {boolean} skipLayerName
          * @return {[number, number]} width and height
          */
-        measureLegend(context, json, skipLayerName) {
+        measureLegend: function(context, json, skipLayerName) {
           var width = 100;
           var height = 0;
           for (var i = 0; i < json.layers.length; i++) {
