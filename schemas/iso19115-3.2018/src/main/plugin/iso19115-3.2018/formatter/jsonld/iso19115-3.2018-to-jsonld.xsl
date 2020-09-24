@@ -87,10 +87,25 @@
       <entry key="nonGeographicDataset" value="Dataset"/>
       <entry key="dimensionGroup" value="TechArticle"/>
       <entry key="featureType" value="Dataset"/>
+      <entry key="attribute" value="CreativeWork"/>
+      <entry key="attributeType" value="Thing"/>
+      <entry key="feature" value="Thing"/>
+      <entry key="propertyType" value="Thing"/>
+      <entry key="fieldSession" value="Project"/>
+      <entry key="software" value="SoftwareApplication"/>
       <entry key="model" value="TechArticle"/>
       <entry key="tile" value="Dataset"/>
-      <entry key="fieldSession" value="Project"/>
+      <entry key="metadata" value="ArchiveComponent"/>
+      <entry key="initiative" value="Thing"/>
+      <entry key="sample" value="ArchiveComponent"/>
+      <entry key="document" value="DigitalDocument"/>
+      <entry key="repository" value="ArchiveComponent"/>
+      <entry key="aggregate" value="ArchiveComponent"/>
+      <entry key="product" value="Product"/>
+      <entry key="collection" value="ArchiveComponent"/>
+      <entry key="coverage" value="CreativeWork"/>
       <entry key="collectionSession" value="Project"/>
+
     </xsl:variable>
 
     <xsl:variable name="match"
@@ -242,10 +257,13 @@
           ,"name": <xsl:apply-templates mode="toJsonLDLocalized"
                                        select="."/>
         </xsl:for-each>
-        <xsl:for-each select=".//cit:electronicMailAddress">
-          ,"email": <xsl:apply-templates mode="toJsonLDLocalized"
-                                       select="."/>
-        </xsl:for-each>
+        <xsl:if test=".//cit:electronicMailAddress">
+       
+          ,"email":  [<xsl:for-each select=".//cit:electronicMailAddress">
+            <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
+            <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>]
+        </xsl:if>
 
         <!-- TODO: only if children available -->
         ,"contactPoint": {
@@ -352,11 +370,13 @@
       -->
     </xsl:for-each>
 
-    <xsl:for-each select="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints">
-      ,"license": <xsl:apply-templates mode="toJsonLDLocalized"
-                                      select="."/>
-    </xsl:for-each>
 
+    <xsl:if test="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints">    
+      ,"license": [<xsl:for-each select="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints"> 
+          <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
+          <xsl:if test="position() != last()">,</xsl:if>
+      </xsl:for-each>]
+    </xsl:if>
     <!-- TODO: When a dataset derives from or aggregates several originals, use the isBasedOn property. -->
     <!-- TODO: hasPart -->
   }
