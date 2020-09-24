@@ -386,6 +386,7 @@
                        *[gml:beginPosition != '']|*[gml:endPosition != '']|
                        *[gco:Date != '']|*[gco:DateTime != '']|*[gco:TM_PeriodDuration != '']|
                        *[*/@codeListValue]|*[@codeListValue]|
+                       gml:identifier[. != '']|gml:name[. != '']|
                        gml:description[. != '']|gml:timePosition[. != '']|
                        gml:beginPosition[. != '']|gml:endPosition[. != '']"
                 priority="500">
