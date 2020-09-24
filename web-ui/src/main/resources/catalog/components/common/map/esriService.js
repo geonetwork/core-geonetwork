@@ -29,7 +29,9 @@
   var PADDING = 5;
   var TITLE_PADDING = 15;
   var FONT_SIZE = 12;
-  var TMP_IMAGE = new Image();
+
+  var TITLE_FONT = 'bold ' + FONT_SIZE + 'px sans-serif';
+  var LABEL_FONT = FONT_SIZE + 'px sans-serif';
 
   module.service('gnEsriUtils', ['$q',
     function($q) {
@@ -53,7 +55,6 @@
           var canvas = document.createElement('canvas');
           var context = canvas.getContext('2d');
           context.textBaseline = 'middle';
-          context.font = FONT_SIZE + 'px sans-serif';
           var size = this.measureLegend(context, legend, singleLayer);
 
           // size canvas & draw background
@@ -62,62 +63,58 @@
           context.fillStyle = 'white';
           context.fillRect(0, 0, size[0], size[1]);
 
-          // starting Y is 0
-          var promise = $q.resolve(0);
+          var promises = [];
+          var y = 0;
 
           // chain one promise per legend
           for (var i = 0; i < legend.layers.length; i++) {
             var layer = json.layers[i];
-            promise = promise.then(function (y) {
-              var layer = this;
+            if (!singleLayer) {
+              y += TITLE_PADDING;
+              context.fillStyle = 'black';
+              context.textBaseline = 'middle';
+              context.font = TITLE_FONT;
+              context.fillText(layer.layerName, PADDING, y + FONT_SIZE / 2);
+              y += FONT_SIZE;
+            }
 
-              if (!singleLayer) {
-                y += TITLE_PADDING;
-                context.fillStyle = 'black';
-                context.textBaseline = 'middle';
-                context.font = 'bold ' + FONT_SIZE + 'px sans-serif';
-                context.fillText(layer.layerName, PADDING, y + FONT_SIZE / 2);
-                y += FONT_SIZE;
-              }
-
-              return $this.renderRules(y, context, layer.legend);
-            }.bind(layer));
+            promises.push(this.renderRules(y, context, layer.legend));
+            y += (layer.legend[0].height + PADDING) * layer.legend.length;
           }
 
-          return promise.then(function() {
+          return $q.all(promises).then(function() {
             return canvas.toDataURL('image/png');
           });
         },
 
         /**
          * Renders a array of rules asynchronously
-         * @param {number} currentY
+         * @param {number} startY
          * @param {CanvasRenderingContext2D} context
          * @param {Object[]} rules
          * @return {Promise<number>} current y
          */
-        renderRules(currentY, context, rules) {
-          var $this = this;
-          var promise = $q.resolve(currentY);
+        renderRules(startY, context, rules) {
+          var promises = [];
 
           // chain one promise for each rule
           for (var i = 0; i < rules.length; i++) {
             var rule = rules[i];
-            promise = promise.then(function (y) {
-              var rule = this;
-              return $this.renderImageData(rule.imageData, rule.contentType).then(function (image) {
-                y += PADDING;
-                context.drawImage(image, PADDING, y, rule.width, rule.height);
-                context.fillStyle = 'black';
-                context.textBaseline = 'middle';
-                context.font = FONT_SIZE + 'px sans-serif';
-                context.fillText(rule.label, PADDING * 2 + rule.width, y + rule.height / 2);
-                return y + rule.height;
-              })
-            }.bind(rule));
+            var y = startY + i * (rules[0].height + PADDING) + PADDING;
+            promises.push(
+              this.renderImageData(rule.imageData, rule.contentType)
+                .then(function (y, image) {
+                  var rule = this;
+                  context.drawImage(image, PADDING, y, rule.width, rule.height);
+                  context.fillStyle = 'black';
+                  context.textBaseline = 'middle';
+                  context.font = LABEL_FONT;
+                  context.fillText(rule.label, PADDING * 2 + rule.width, y + rule.height / 2);
+                }.bind(rule, y))
+            );
           }
 
-          return promise;
+          return $q.all(promises);
         },
 
         /**
@@ -129,10 +126,11 @@
          */
         renderImageData(imageData, format) {
           var defer = $q.defer();
-          TMP_IMAGE.onload = function() {
+          var image = new Image();
+          image.onload = function() {
             defer.resolve(this);
           };
-          TMP_IMAGE.src = 'data:' + (format || 'image/png') + ';base64,' + imageData;
+          image.src = 'data:' + (format || 'image/png') + ';base64,' + imageData;
           return defer.promise;
         },
 
@@ -149,6 +147,7 @@
           for (var i = 0; i < json.layers.length; i++) {
             var layer = json.layers[i];
             if (!skipLayerName) {
+              context.font = TITLE_FONT;
               var nameMetrics = context.measureText(layer.layerName);
               width = Math.max(width, nameMetrics.width + PADDING * 2);
               height += TITLE_PADDING + FONT_SIZE;
@@ -156,6 +155,7 @@
 
             for (var j = 0; j < layer.legend.length; j++) {
               var rule = layer.legend[j];
+              context.font = LABEL_FONT;
               var ruleMetrics = context.measureText(rule.label);
               width = Math.max(width, rule.width + ruleMetrics.width + PADDING * 3);
               height += PADDING + rule.height;
