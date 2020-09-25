@@ -294,7 +294,7 @@ goog.require('gn_alert');
                 'field': 'thesaurus_geonetworkthesaurusexternalthemegemet_tree',
                 'size': 100,
                 "order" : { "_key" : "asc" },
-                "include": "[^/]+/?[^/]+"
+                "include": "[^\^]+^?[^\^]+"
                 // Limit to 2 levels
               }
             },
