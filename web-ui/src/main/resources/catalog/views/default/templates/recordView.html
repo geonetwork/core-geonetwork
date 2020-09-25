@@ -187,7 +187,7 @@
                 <td>
                   <button
                     data-ng-repeat="cat in mdView.current.record.inspireTheme_syn"
-                    data-ng-click="search({'inspireTheme_syn': cat})"
+                    data-ng-click="filterBy('inspireTheme_syn', cat)"
                     class="btn btn-sm btn-default {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
                     title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}}">
                     <span class="iti-{{cat.split('|')[0]}}"></span>
@@ -201,18 +201,18 @@
                 <th data-translate="">listOfCategories</th>
                 <td>
                   <button data-ng-repeat="cat in mdView.current.record.cat"
-                      data-ng-click="search({'cat': cat})"
-                      class="btn btn-sm btn-default"
-                      title="{{'clickToFilterOn' | translate}} {{('cat-' + cat) | translate}}">
+                          data-ng-click="filterBy('cat', cat)"
+                          class="btn btn-sm btn-default"
+                          title="{{'clickToFilterOn' | translate}} {{('cat-' + cat) | translate}}">
                     <span class="fa gn-icon-{{cat}} resource-color"></span>&nbsp;
                     {{('cat-' + cat) | translate}}
                   </button>
 
                   <button data-ng-repeat="cat in mdView.current.record.topic track by $index"
-                      data-ng-click="search({'topic': cat})"
-                      data-ng-if="cat != ''"
-                      class="btn btn-sm btn-default"
-                      title="{{'clickToFilterOn' | translate}} {{cat | translate}}">
+                          data-ng-click="filterBy('topic', cat)"
+                          data-ng-if="cat != ''"
+                          class="btn btn-sm btn-default"
+                          title="{{'clickToFilterOn' | translate}} {{cat | translate}}">
                     <span class="fa gn-icon-{{cat}} topic-color"></span>&nbsp;
                     {{cat | translate}}
                   </button>
@@ -231,9 +231,9 @@
                           data-ng-show="!!k.link">
                           {{k.value}}</a>&nbsp;
                         <a href=""
-                          title="{{'clickToFilterOn' | translate}} {{k.value}}"
-                          aria-label="{{'clickToFilterOn' | translate}} {{k.value}}"
-                          data-ng-click="search({'keyword': k.value})">
+                           title="{{'clickToFilterOn' | translate}} {{k.value}}"
+                           aria-label="{{'clickToFilterOn' | translate}} {{k.value}}"
+                           data-ng-click="filterBy('tag', k.value)">
                           <i class="fa fa-search"/>
                         </a>
                     </li>
