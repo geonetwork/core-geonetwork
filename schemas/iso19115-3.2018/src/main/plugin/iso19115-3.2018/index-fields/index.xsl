@@ -460,11 +460,11 @@
 
         <!-- Index all keywords -->
         <xsl:variable name="keywords"
-                      select="*/mri:MD_Keywords/
-                          mri:keyword/gco:CharacterString|
-                        */mri:MD_Keywords/
-                          mri:keyword/lan:PT_FreeText/lan:textGroup/
-                            lan:LocalisedCharacterString"/>
+                      select="*/mri:MD_Keywords/mri:keyword/(
+                                gco:CharacterString|
+                                gcx:Anchor|
+                                lan:PT_FreeText/lan:textGroup/
+                            lan:LocalisedCharacterString)"/>
 
         <tagNumber>
           <xsl:value-of select="count($keywords)"/>
