@@ -80,6 +80,15 @@
         $location.path('/search');
         $location.search(params);
       };
+
+      $scope.filterBy = function(field, value) {
+        $location.path('/search');
+        var params = {};
+        params[field] = {};
+        params[field][value] = true;
+        $location.search('query_string', angular.toJson(params));
+      };
+
       $scope.deleteRecord = function(md) {
         return gnMetadataActions.deleteMd(md).then(function(data) {
           gnAlertService.addAlert({
