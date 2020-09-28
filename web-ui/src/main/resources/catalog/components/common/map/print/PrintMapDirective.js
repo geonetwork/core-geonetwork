@@ -255,10 +255,9 @@
         return parseInt(scale.value);
       });
       // encode url to remove accents
-      encLegends.forEach(function(part, index) {
-        var legend = new URL(part);
-        this[index] = legend.toString();
-      }, encLegends);
+      encLegends.map(function(url) {
+        return new URL(url).toString();
+      });
 
       var spec = {
         layout: $scope.config.layout.name,
