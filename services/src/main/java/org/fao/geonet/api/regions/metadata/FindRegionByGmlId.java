@@ -48,7 +48,7 @@ public class FindRegionByGmlId extends MetadataRegionFinder {
     @Override
     public void findRegion(MetadataRegionSearchRequest searchRequest, List<Region> regions, MetadataRegionSearchRequest.Id mdId, String id, Element metadata) throws Exception {
         String gmlId = id.substring(GML_ID_PREFIX.length());
-        final Element geomEl = Xml.selectElement(metadata, "*//*[@gml:id = '" + gmlId + "']", Lists.newArrayList(Geonet.Namespaces.GML));
+        final Element geomEl = Xml.selectElement(metadata, "*//*[@gml:id = '" + gmlId + "']", Lists.newArrayList(metadata.getNamespace("gml")));
         if (geomEl != null) {
             searchRequest.findContainingGmdEl(regions, mdId, geomEl);
         }

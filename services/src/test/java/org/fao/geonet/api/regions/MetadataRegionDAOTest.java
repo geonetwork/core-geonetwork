@@ -55,7 +55,7 @@ import static org.junit.Assert.assertNull;
 
 public class MetadataRegionDAOTest extends AbstractServiceIntegrationTest {
 
-    public static final ArrayList<Namespace> NAMESPACES = Lists.newArrayList(ISO19139Namespaces.GMD, Geonet.Namespaces.GML,
+    public static final ArrayList<Namespace> NAMESPACES = Lists.newArrayList(ISO19139Namespaces.GMD, Geonet.Namespaces.GML32,
         Geonet.Namespaces.GEONET);
     private int metadataId;
     @Autowired
@@ -101,7 +101,6 @@ public class MetadataRegionDAOTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    @Ignore(value = "Not running anymore")
     public void testGetGeomEditId() throws Exception {
         final Element metadata = dataManager.getMetadata(this.context, "" + this.metadataId, true, false, false);
 
@@ -115,7 +114,6 @@ public class MetadataRegionDAOTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    @Ignore(value = "Not running anymore")
     public void testGetGeomUUID() throws Exception {
         final Element metadata = dataManager.getMetadata(this.context, "" + this.metadataId, true, false, false);
 
@@ -135,7 +133,7 @@ public class MetadataRegionDAOTest extends AbstractServiceIntegrationTest {
         final Element metadata = dataManager.getMetadata(this.context, "" + this.metadataId, true, false, false);
 
         final Element extentEl = Xml.selectElement(metadata, "*//gml:MultiSurface", NAMESPACES);
-        final String geomRefId = extentEl.getAttributeValue("id", Geonet.Namespaces.GML);
+        final String geomRefId = extentEl.getAttributeValue("id", metadata.getNamespace("gml"));
         Geometry geom = regionDAO.getGeom(this.context, "metadata:@id" + this.metadataId + ":@gml" + geomRefId, false, "EPSG:4326");
         assertNotNull(geom);
 
@@ -144,7 +142,6 @@ public class MetadataRegionDAOTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    @Ignore(value = "Not running anymore")
     public void testGetGeomXPath() throws Exception {
         final Element metadata = dataManager.getMetadata(this.context, "" + this.metadataId, true, false, false);
 

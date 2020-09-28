@@ -548,34 +548,32 @@
   </xsl:template>
 
 
+  <xsl:template mode="render-field"
+                match="gex:EX_BoundingPolygon/gex:polygon"
+                priority="100">
+    <xsl:copy-of select="gn-fn-render:extent($metadataUuid,
+        count(ancestor::mri:extent/preceding-sibling::mri:extent/*/*[local-name() = 'geographicElement']/*) +
+        count(../../preceding-sibling::gex:geographicElement) + 1)"/>
+    <br/>
+    <br/>
+  </xsl:template>
+
   <!-- Display spatial extents containing bounding polygons on a map -->
 
   <xsl:template mode="render-field"
-                match="gex:EX_Extent[gex:geographicElement/*/gex:polygon]"
+                match="gex:EX_Extent"
                 priority="100">
     <div class="entry name">
-      <h4>
-        <xsl:call-template name="render-field-label">
+    <h4>
+      <xsl:call-template name="render-field-label">
           <xsl:with-param name="languages" select="$allLanguages"/>
         </xsl:call-template>
-        <xsl:apply-templates mode="render-value"
-                             select="@*"/>
-      </h4>
-      <div class="target">
-
-        <xsl:apply-templates mode="render-field" select="gex:description"/>
-
-        <!-- Display all included bounding polygons/boxes on the one map -->
-
-        <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
-
-        <!-- Display any included geographic descriptions separately after map -->
-
-        <xsl:apply-templates mode="render-field" select="gex:geographicElement[gex:EX_GeographicDescription]"/>
-
-        <xsl:apply-templates mode="render-field" select="gex:temporalElement"/>
-        <xsl:apply-templates mode="render-field" select="gex:verticalElement"/>
-
+      <xsl:apply-templates mode="render-value"
+                           select="@*"/>
+    </h4>
+    <div class="target">
+      <xsl:apply-templates mode="render-field"
+                           select="gex:*"/>
       </div>
     </div>
   </xsl:template>

@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jdom.Namespace;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
@@ -48,6 +49,7 @@ import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.api.regions.MetadataRegion;
+import org.fao.geonet.util.GMLParsers;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.geometry.jts.JTS;
@@ -63,6 +65,8 @@ import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.GeometryFactory;
 
 import jeeves.server.context.ServiceContext;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
 
 /**
  * TODO: A polygon may be exclusion and in such case should be substracted from the overall extent?
@@ -71,7 +75,6 @@ public class MetadataRegionSearchRequest extends Request {
 
     public static final String PREFIX = "metadata:";
     private static final FindByNodeName EXTENT_FINDER = new FindByNodeName("EX_BoundingPolygon", "EX_GeographicBoundingBox", "polygon");
-    private final Parser[] parsers;
     ServiceContext context;
     private List<? extends MetadataRegionFinder> regionFinders = Lists.newArrayList(
         new FindRegionByXPath(), new FindRegionByGmlId(), new FindRegionByEditRef());
@@ -79,9 +82,8 @@ public class MetadataRegionSearchRequest extends Request {
     private String label;
     private GeometryFactory factory;
 
-    public MetadataRegionSearchRequest(ServiceContext context, Parser[] parsers, GeometryFactory factory) {
+    public MetadataRegionSearchRequest(ServiceContext context, GeometryFactory factory) {
         this.context = context;
-        this.parsers = parsers;
         this.factory = factory;
     }
 
@@ -173,8 +175,7 @@ public class MetadataRegionSearchRequest extends Request {
         Element metadata = findMetadata(id, false);
         if (metadata != null) {
             Path schemaDir = getSchemaDir(id);
-            MultiPolygon geom = SpatialIndexWriter.getSpatialExtent(schemaDir, metadata, parsers,
-                new SpatialExtentErrorHandler());
+            MultiPolygon geom = SpatialIndexWriter.getSpatialExtent(schemaDir, metadata, new SpatialExtentErrorHandler());
             MetadataRegion region = new MetadataRegion(id, null, geom);
             regions.add(region);
         }
@@ -202,23 +203,47 @@ public class MetadataRegionSearchRequest extends Request {
         return extents;
     }
 
+    private double getCoordinateValue(String coord, Element bbox) {
+        Element coordElement = bbox.getChild(coord, bbox.getNamespace());
+        if (coordElement != null) {
+            List children = coordElement.getChildren();
+            if (children.size() == 1 && children.get(0) instanceof Element) {
+                return Double.parseDouble(((Element) children.get(0)).getText());
+            }
+        }
+        return 0;
+    };
+
     Region parseRegion(Id mdId, Element extentObj) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         gc.getBean(DataManager.class).getEditLib().removeEditingInfo(extentObj);
 
         String id = null;
         Geometry geometry = null;
+        Namespace objNamespace = extentObj.getNamespace();
         if ("polygon".equals(extentObj.getName())) {
             String gml = Xml.getString(extentObj);
-            geometry = SpatialIndexWriter.parseGml(parsers[0], gml);
+            geometry = SpatialIndexWriter.parseGml(getParser(extentObj), gml);
         } else if ("EX_BoundingPolygon".equals(extentObj.getName())) {
-            String gml = Xml.getString(extentObj.getChild("polygon", Geonet.Namespaces.GMD));
-            geometry = SpatialIndexWriter.parseGml(parsers[0], gml);
+            Element polygon = extentObj.getChild("polygon", objNamespace);
+            String gml = Xml.getString(polygon);
+            geometry = SpatialIndexWriter.parseGml(getParser(polygon), gml);
+
+            Element xmlGeom = (Element) polygon.getChildren().get(0);
+            String srs = xmlGeom.getAttributeValue("srsName");
+            CoordinateReferenceSystem sourceCRS = DefaultGeographicCRS.WGS84;
+
+            if (srs != null && !(srs.equals(""))) sourceCRS = CRS.decode(srs);
+            // if we have an srs and its not WGS84 then transform to WGS84
+            if (!CRS.equalsIgnoreMetadata(sourceCRS, DefaultGeographicCRS.WGS84)) {
+                MathTransform tform = CRS.findMathTransform(sourceCRS, DefaultGeographicCRS.WGS84);
+                geometry = (MultiPolygon) JTS.transform(geometry, tform);
+            }
         } else if ("EX_GeographicBoundingBox".equals(extentObj.getName())) {
-            double minx = Double.parseDouble(extentObj.getChild("westBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
-            double maxx = Double.parseDouble(extentObj.getChild("eastBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
-            double miny = Double.parseDouble(extentObj.getChild("southBoundLatitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
-            double maxy = Double.parseDouble(extentObj.getChild("northBoundLatitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
+            double minx = getCoordinateValue("westBoundLongitude", extentObj);
+            double maxx = getCoordinateValue("eastBoundLongitude", extentObj);
+            double miny = getCoordinateValue("southBoundLatitude", extentObj);
+            double maxy = getCoordinateValue("northBoundLatitude", extentObj);
             geometry = factory.toGeometry(new Envelope(minx, maxx, miny, maxy));
         }
 
@@ -230,6 +255,14 @@ public class MetadataRegionSearchRequest extends Request {
             return new MetadataRegion(mdId, id, geometry);
         } else {
             return null;
+        }
+    }
+
+    private Parser getParser(Element polygon) {
+        try {
+            return GMLParsers.create(((Element) polygon.getChildren().get(0)));
+        } catch (Exception e) {
+            return GMLParsers.createGML();
         }
     }
 
