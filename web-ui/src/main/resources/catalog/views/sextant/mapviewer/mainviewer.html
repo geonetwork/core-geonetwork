@@ -295,8 +295,18 @@
   </div>
 
 
-  <!--Top right buttons - Navigation-->
-  <div ng-if="hasGeoSearch" class="btn-group sx-toolbar tools" gn-localisation-input map="map"></div>
+  <div class="sx-toolbar tools flex-row flex-align-start">
+    <!--Top right buttons - Navigation-->
+    <div ng-if="hasGeoSearch" class="btn-group" gn-localisation-input map="map"></div>
+
+    <div class="btn-group sxt-adminbtn" ng-if="allowLogin && !authenticated">
+      <a type="button" class="btn btn-default"
+         href="{{getSignInUrl()}}"
+         title="{{'signIn'|translate}}">
+        <i class="fa fa-sign-in"></i>
+      </a>
+    </div>
+  </div>
 
   <!--Top right buttons - Navigation-->
   <div class="tools control-tools">
