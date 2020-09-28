@@ -163,6 +163,8 @@ public class MetadataEditingApi {
                 sb.append("redirectUrl=catalog.edit");
             }
 
+            context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT, true);
+
             Element el = new Element("script");
             el.setText("window.location.hash = decodeURIComponent(\"#/metadata/" + id2 + sb.toString() + "\")");
             String elStr = Xml.getString(el);
@@ -395,6 +397,10 @@ public class MetadataEditingApi {
         buildEditorForm(tab, httpSession, forwardedParams, request, elMd, metadata.getDataInfo().getSchemaId(), context,
                 applicationContext, false, false, response);
 
+        if (isEnabledWorkflow) {
+            // After saving the form remove the information to remove the draft copy if the user cancels the editor
+            context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);
+        }
     }
 
     @ApiOperation(value = "Cancel edits", notes = "Cancel current editing session.", nickname = "cancelEdits")
