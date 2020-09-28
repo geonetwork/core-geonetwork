@@ -28,6 +28,7 @@ import com.google.common.io.Files;
 import com.itextpdf.text.Image;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.extent.MapRenderer;
 import org.fao.geonet.api.records.extent.MetadataExtentApi;
 import org.fao.geonet.constants.Geonet;
@@ -54,6 +55,8 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ImageReplacedElementFactory implements ReplacedElementFactory {
     private static Set<String> imgFormatExts = null;
@@ -88,6 +91,10 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
         return imgFormatExts;
     }
 
+    static private Pattern ONE_EXTENT_API_REGEX = Pattern.compile(".*/(.*)/extents/([0-9]+)\\.png.*");
+    static private Pattern ALL_EXTENT_API_REGEX = Pattern.compile(".*/(.*)/extents\\.png.*");
+    static private final String EXTENT_XPATH = ".//*[local-name() ='extent']/*/*[local-name() = 'geographicElement']/*";
+
     @Override
     public ReplacedElement createReplacedElement(LayoutContext layoutContext, BlockBox box,
                                                  UserAgentCallback userAgentCallback, int cssWidth, int cssHeight) {
@@ -97,10 +104,46 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
         }
 
         String nodeName = element.getNodeName();
+        if (!"img".equals(nodeName)) {
+            try {
+                return superFactory.createReplacedElement(layoutContext, box, userAgentCallback, cssWidth, cssHeight);
+            } catch (Throwable e) {
+                return new EmptyReplacedElement(cssWidth, cssHeight);
+            }
+        }
+
+
         String src = element.getAttribute("src");
-        if ("img".equals(nodeName)
-            && (src.startsWith(baseURL + "region.getmap.png") || src.contains("/extents.png") || src.endsWith("/geom.png"))
-            && mapRenderer != null) {
+
+        boolean useExtentApi = src.startsWith(baseURL.substring(0, baseURL.length() - 4))
+                && mapRenderer != null
+                && (ALL_EXTENT_API_REGEX.matcher(src).matches()
+                || ONE_EXTENT_API_REGEX.matcher(src).matches());
+
+        if (useExtentApi) {
+            BufferedImage image = null;
+            try {
+                String regionId;
+                Matcher allMatcher = ALL_EXTENT_API_REGEX.matcher(src);
+                Matcher oneMatcher = ONE_EXTENT_API_REGEX.matcher(src);
+                if (allMatcher.matches()) {
+                    regionId = String.format("metadata:@id%s", ApiUtils.getInternalId(allMatcher.group(1), true));
+                } else {
+                    oneMatcher.matches();
+                    regionId = String.format("metadata:@id%s:@xpath(%s)[%s]", ApiUtils.getInternalId(oneMatcher.group(1), true), EXTENT_XPATH, oneMatcher.group(2));
+                }
+                Map<String, String> parameters = getParams(src);
+                String srs = parameters.get(MetadataExtentApi.MAP_SRS_PARAM) != null ? parameters.get(MetadataExtentApi.MAP_SRS_PARAM) : "EPSG:4326";
+                Integer width = parameters.get(MetadataExtentApi.WIDTH_PARAM) != null ? Integer.parseInt(parameters.get(MetadataExtentApi.WIDTH_PARAM)) : null;
+                Integer height = parameters.get(MetadataExtentApi.HEIGHT_PARAM) != null ? Integer.parseInt(parameters.get(MetadataExtentApi.HEIGHT_PARAM)) : null;
+                String background = parameters.get(MetadataExtentApi.BACKGROUND_PARAM);
+                image = mapRenderer.render(regionId, srs, width, height, background, null, null, null, null, null);
+            } catch (Exception e) {
+                Log.warning(Geonet.GEONETWORK, "Error writing extent to PDF", e);
+            }
+            float factor = layoutContext.getDotsPerPixel();
+            return loadImage(layoutContext, box, userAgentCallback, cssWidth, cssHeight, new BufferedImageLoader(image), factor);
+        } else if (src.startsWith(baseURL + "region.getmap.png") | src.endsWith("/geom.png") && mapRenderer != null) {
             BufferedImage image = null;
             try {
                 Map<String, String> parameters = getParams(src);
@@ -121,8 +164,7 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
             }
             float factor = layoutContext.getDotsPerPixel();
             return loadImage(layoutContext, box, userAgentCallback, cssWidth, cssHeight, new BufferedImageLoader(image), factor);
-        } else if ("img".equals(nodeName)
-            && (src.startsWith(baseURL + "region.getmap.png") || src.contains("/extents.png") || src.endsWith("/geom.png"))) {
+        } else if (src.startsWith(baseURL + "region.getmap.png") || src.endsWith("/extents.png") || src.endsWith("/geom.png")) {
             StringBuilder builder = new StringBuilder(baseURL);
             try {
                 if (StringUtils.startsWith(src, "http")) {
@@ -145,7 +187,7 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
             }
             float factor = layoutContext.getDotsPerPixel();
             return loadImage(layoutContext, box, userAgentCallback, cssWidth, cssHeight, new UrlImageLoader(builder.toString()), factor);
-        } else if ("img".equals(nodeName) && isSupportedImageFormat(src)) {
+        } else if (isSupportedImageFormat(src)) {
             float factor = layoutContext.getDotsPerPixel();
             return loadImage(layoutContext, box, userAgentCallback, cssWidth, cssHeight, new UrlImageLoader(src), factor);
         }

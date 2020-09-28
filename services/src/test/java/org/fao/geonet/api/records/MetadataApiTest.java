@@ -64,7 +64,6 @@ import javax.persistence.PersistenceContext;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
@@ -116,7 +115,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
     private String uuid;
     private int id;
-    private AbstractMetadata md;
     private ServiceContext context;
 
 
@@ -136,11 +134,19 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         String source = sourceRepository.findAll().get(0).getUuid();
         String schema = schemaManager.autodetectSchema(sampleMetadataXml);
         final Metadata metadata = new Metadata();
-        metadata.setDataAndFixCR(sampleMetadataXml).setUuid(uuid);
-        metadata.getDataInfo().setRoot(sampleMetadataXml.getQualifiedName()).setSchemaId(schema).setType(MetadataType.METADATA);
-        metadata.getDataInfo().setPopularity(1000);
-        metadata.getSourceInfo().setOwner(1).setSourceId(source);
-        metadata.getHarvestInfo().setHarvested(false);
+        metadata
+            .setDataAndFixCR(sampleMetadataXml)
+            .setUuid(uuid);
+        metadata.getDataInfo()
+            .setRoot(sampleMetadataXml.getQualifiedName())
+            .setSchemaId(schema)
+            .setType(MetadataType.METADATA)
+            .setPopularity(1000);
+        metadata.getSourceInfo()
+            .setOwner(1)
+            .setSourceId(source);
+        metadata.getHarvestInfo()
+            .setHarvested(false);
 
 
         this.id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, false, false, UpdateDatestamp.NO,
@@ -148,7 +154,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
 
         dataManager.indexMetadata(Lists.newArrayList("" + this.id));
-        this.md = metadataRepository.findById(this.id).get();
+        this.id = metadataRepository.findById(this.id).get().getId();
     }
 
 
@@ -339,7 +345,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     public void getRecordAsXMLIncreasePopularity() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
-        int popularity = md.getDataInfo().getPopularity();
+        int popularity = metadataRepository.findOneById(this.id).getDataInfo().getPopularity();
 
         // Add Schema locations
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml").param("increasePopularity", "true")

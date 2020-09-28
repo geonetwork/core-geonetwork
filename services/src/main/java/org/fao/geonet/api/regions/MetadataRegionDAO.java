@@ -47,7 +47,7 @@ import java.util.Collections;
 public class MetadataRegionDAO extends RegionsDAO {
 
     public static final String CATEGORY_NAME = "metadata";
-    private final Parser[] parsers = GMLParsers.create();
+
     private final GeometryFactory factory = new GeometryFactory();
 
     @Override
@@ -57,7 +57,7 @@ public class MetadataRegionDAO extends RegionsDAO {
 
     @Override
     public Request createSearchRequest(ServiceContext context) throws Exception {
-        return new MetadataRegionSearchRequest(context, parsers, factory);
+        return new MetadataRegionSearchRequest(context, factory);
     }
 
     @Override

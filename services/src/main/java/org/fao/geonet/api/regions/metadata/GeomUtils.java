@@ -2,6 +2,7 @@ package org.fao.geonet.api.regions.metadata;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.spatial.ErrorHandler;
+import org.fao.geonet.util.GMLParsers;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.geometry.jts.JTS;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class GeomUtils {
-    public static MultiPolygon getSpatialExtent(Path schemaDir, Element metadata, Parser[] parsers, ErrorHandler errorHandler) throws Exception {
+    public static MultiPolygon getSpatialExtent(Path schemaDir, Element metadata, ErrorHandler errorHandler) throws Exception {
         org.geotools.util.logging.Logging.getLogger("org.geotools.xml")
             .setLevel(Level.SEVERE);
         Path sSheet = schemaDir.resolve("extract-gml.xsl").toAbsolutePath();
@@ -38,12 +39,7 @@ public class GeomUtils {
         }
         List<Polygon> allPolygons = new ArrayList<Polygon>();
         for (Element geom : (List<Element>) transform.getChildren()) {
-            Parser parser = null;
-            if (geom.getNamespace().equals(Geonet.Namespaces.GML32)) {
-                parser = parsers[1]; // geotools gml3.2 parser
-            } else {
-                parser = parsers[0];
-            }
+            Parser parser = GMLParsers.create(geom);
             String srs = geom.getAttributeValue("srsName");
             CoordinateReferenceSystem sourceCRS = DefaultGeographicCRS.WGS84;
             String gml = Xml.getString(geom);
@@ -90,7 +86,7 @@ public class GeomUtils {
         if (value instanceof HashMap) {
             @SuppressWarnings("rawtypes")
             HashMap map = (HashMap) value;
-            List<Polygon> geoms = new ArrayList<Polygon>();
+            List<MultiPolygon> geoms = new ArrayList<MultiPolygon>();
             for (Object entry : map.values()) {
                 addToList(geoms, entry);
             }
@@ -124,14 +120,16 @@ public class GeomUtils {
         throw new IllegalArgumentException(message);
     }
 
-    public static void addToList(List<Polygon> geoms, Object entry) {
+    public static void addToList(List<MultiPolygon> geoms, Object entry) {
         if (entry instanceof Polygon) {
-            geoms.add((Polygon) entry);
+            geoms.add(toMultiPolygon((Polygon) entry));
+        } else if (entry instanceof MultiPolygon) {
+            geoms.add((MultiPolygon) entry);
         } else if (entry instanceof Collection) {
             @SuppressWarnings("rawtypes")
             Collection collection = (Collection) entry;
             for (Object object : collection) {
-                geoms.add((Polygon) object);
+                geoms.add(toMultiPolygon((Polygon) object));
             }
         }
     }

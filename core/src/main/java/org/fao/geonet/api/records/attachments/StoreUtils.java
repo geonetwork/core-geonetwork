@@ -29,6 +29,7 @@ import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -88,9 +89,12 @@ public abstract class StoreUtils {
         final Store store = context.getBean("resourceStore", Store.class);
         Files.createDirectories(destinationDir);
         for (MetadataResource resource: resources) {
-            try (Store.ResourceHolder holder = store.getResource(context, metadataUuid, resource.getVisibility(), resource.getFilename(),
-                    approved)) {
-                Files.copy(Files.newInputStream(holder.getPath()), destinationDir.resolve(resource.getFilename()));
+            try (
+              Store.ResourceHolder holder = store.getResource(context, metadataUuid, resource.getVisibility(),
+                    resource.getFilename(), approved);
+              InputStream inputStream = Files.newInputStream(holder.getPath())
+            ) {
+                Files.copy(inputStream, destinationDir.resolve(resource.getFilename()));
             }
         }
     }
