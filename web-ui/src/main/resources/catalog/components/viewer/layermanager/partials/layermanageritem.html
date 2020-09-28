@@ -75,10 +75,10 @@
               </li>
 
               <!--Download-->
-              <li class="" data-gn-wfs-download="layer"
+              <li class="" ng-if="hasDownload"
+                           data-gn-wfs-download="layer"
                            data-init-on-demand="true"
                            data-mode="select"
-                           ng-show="hasDownload"
                            has-download="hasDownload" data-map="map" role="menuitem">
               </li>
 
@@ -124,9 +124,9 @@
         <label class="gn-map-layer" for="layer-{{$index}}">
           <span data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''">
             {{layer.get('label')}}
-            <small><em>
+            <span><em>
               {{layer.get('currentStyle') ? '(' + (layer.get('currentStyle').Title || layer.get('currentStyle').Name) + ')' : ''}}
-            </em></small>
+            </em></span>
           </span>
         </label>
       </div>
@@ -143,7 +143,7 @@
 
   <div class="details width-100" ng-show="layer.showInfo">
     <p ng-if="layer.get('legend')">
-      <img ng-src="{{layer.get('legend')}}"/>
+      <img alt="{{layer.get('label')}} {{'mapLegend' | translate}}" ng-src="{{layer.get('legend')}}"/>
     </p>
     <h6 ng-if="layer.get('attribution')" data-translate="">Attribution</h6>
     <p ng-if="layer.get('attribution')"><em>{{layer.get('attribution')}}</em></p>

@@ -270,19 +270,7 @@
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
-
-      <!-- artifact assembly -->
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptors>
-            <descriptor>release/zip-war.xml</descriptor>
-            <descriptor>release/bin.xml</descriptor>
-          </descriptors>
-          <finalName>geonetwork-${project.version}</finalName>
-          <outputDirectory>${project.build.directory}/release</outputDirectory>
-        </configuration>
-      </plugin>
+   
       <!-- run integration tests after unit tests -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>

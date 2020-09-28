@@ -377,20 +377,27 @@
 
       $scope.importEntry = function(xml) {
         gnMetadataManager.importFromXml(
-            gnUrlUtils.toKeyValue($scope.importData), xml).then(
-            function(r) {
-              if (r.status === 400) {
-                $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant('saveMetadataError'),
-                  error: r.data,
-                  timeout: 0,
-                  type: 'danger'});
-              } else {
-                refreshEntriesInfo();
-                $scope.closeEditor();
-              }
+          gnUrlUtils.toKeyValue($scope.importData), xml).then(function(r) {
+            if (r.status === 400) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('directoryManagerError'),
+                error: r.data,
+                timeout: 0,
+                type: 'danger'});
+            } else {
+              refreshEntriesInfo();
+              $scope.closeEditor();
             }
-        );
+          })
+          .catch(function(f) {
+            if (f.status === 400) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('directoryManagerError'),
+                error: f.data,
+                timeout: 0,
+                type: 'danger'});
+            }
+          });
       };
 
       // ACTIONS
