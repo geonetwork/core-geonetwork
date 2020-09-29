@@ -516,7 +516,7 @@
 
     var uuid;
     if(layer.get('md')) {
-      uuid = layer.get('md').getUuid();
+      uuid = layer.get('md').uuid;
     } else if(layer.get('metadataUuid')) {
       uuid = layer.get('metadataUuid');
     }
