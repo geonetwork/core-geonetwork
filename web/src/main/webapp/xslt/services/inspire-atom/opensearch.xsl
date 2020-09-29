@@ -78,7 +78,7 @@
           <Url type="text/html" rel="results">
             <xsl:attribute name="template">
               <xsl:value-of
-                select="concat($baseUrl,/root/gui/url,'/search?any={searchTerms?}')"/>
+                select="concat($baseUrl,/root/gui/url,'/srv/', /root/gui/language,'/opensearch/htmlsearch?q={searchTerms?}')"/>
             </xsl:attribute>
           </Url>
         </xsl:when>
