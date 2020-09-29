@@ -162,7 +162,7 @@
             data-ng-src="../api/users/{{(user.id)}}.png?size=18"/>
           <div class="gn-user-info hidden-sm hidden-md">
             <span class="gn-user-name">{{user.name}} {{user.surname}}</span><br>
-            <span class="gn-user-role">{{user.profile | lowercase | translate}}</span>
+            <span class="gn-user-role">{{user.profile | translate}}</span>
           </div>
           <span class="alert alert-danger ng-hide"
                 data-ng-show="session.remainingTime > 0 &&
@@ -185,7 +185,7 @@
           </li>
           <li class="dropdown-header hidden-xs" role="menuitem" translate>profile</li>
           <li class="hidden-xs" role="menuitem">
-            <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}#/organization/users?userOrGroup={{user.username}}">{{user.profile | lowercase | translate}}</a>
+            <a style="text-transform: lowercase" data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}#/organization/users?userOrGroup={{user.username}}">{{user.profile | translate}}</a>
           </li>
           <li role="separator" class="divider hidden-xs"></li>
           <li role="menuitem">
