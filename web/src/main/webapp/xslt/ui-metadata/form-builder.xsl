@@ -156,8 +156,30 @@
             </xsl:choose>
 
             <xsl:attribute name="data-ref" select="concat('_', $editInfo/@ref)"/>
+            <xsl:attribute name="data-parent-ref" select="concat('_', $editInfo/@parent)"/>
             <xsl:attribute name="data-label" select="$label/label"/>
+            <xsl:attribute name="data-element-name" select="name()"/>
             <xsl:attribute name="data-required" select="$isRequired"/>
+
+            <xsl:if test="$directiveAttributes instance of node()+">
+              <xsl:variable name="node" select="." />
+
+              <xsl:for-each select="$directiveAttributes//attribute::*">
+                <xsl:choose>
+                  <xsl:when test="starts-with(., 'eval#')">
+                    <xsl:attribute name="{name()}">
+                      <saxon:call-template name="{concat('evaluate-', $schema)}">
+                        <xsl:with-param name="base" select="$node"/>
+                        <xsl:with-param name="in" select="concat('/', substring-after(., 'eval#'))"/>
+                      </saxon:call-template>
+                    </xsl:attribute>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:copy-of select="."/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:for-each>
+            </xsl:if>
           </span>
           <div class="col-sm-1 gn-control">
             <xsl:if test="not($isDisabled)">

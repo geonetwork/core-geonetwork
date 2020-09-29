@@ -149,7 +149,7 @@
             });
 
             // output for editor (equals input by default)
-            ctrl.outputPolygonXml = ctrl.polygonXml;
+            ctrl.outputPolygonXml = surroundGmlWithGmdPolygon(ctrl.polygonXml);
 
             // projection list
             ctrl.projections = gnMap.getMapConfig().projectionList;
@@ -179,49 +179,55 @@
                 ctrl.dataProjection = srsName && srsName.length === 2 ?
                     srsName[1] : 'EPSG:4326';
 
-                if (!isProjAvailable(ctrl.dataProjection)) {
-                  ctrl.projections.push({
-                    code: ctrl.dataProjection,
-                    label: ctrl.dataProjection
-                  });
-                }
+                ctrl.dataOlProjection = ol.proj.get(ctrl.dataProjection)
 
-                ctrl.currentProjection = ctrl.dataProjection;
+                if(ctrl.dataOlProjection) {
+                  if (!isProjAvailable(ctrl.dataProjection)) {
+                    ctrl.projections.push({
+                      code: ctrl.dataProjection,
+                      label: ctrl.dataProjection
+                    });
+                  }
 
-                // parse first feature from source XML & set geometry name
-                try {
-                  var geometry = gnGeometryService.parseGeometryInput(
+                  ctrl.currentProjection = ctrl.dataProjection;
+
+                  // parse first feature from source XML & set geometry name
+                  try {
+                    var geometry = gnGeometryService.parseGeometryInput(
                       ctrl.map,
                       ctrl.polygonXml,
                       {
                         crs: ctrl.currentProjection,
                         format: 'gml'
                       }
-                      );
-                } catch (e) {
-                  console.warn('Could not parse geometry');
-                  console.warn(e);
+                    );
+                  } catch (e) {
+                    console.warn('Could not parse geometry');
+                    console.warn(e);
+                  }
+
+                  if (!geometry) {
+                    console.warn('Could not parse geometry from extent polygon');
+                    return;
+                  }
+
+                  var feature = new ol.Feature({
+                    geometry: geometry
+                  });
+
+                  // add to map
+                  source.clear();
+                  source.addFeature(feature);
                 }
-
-                if (!geometry) {
-                  console.warn('Could not parse geometry from extent polygon');
-                  return;
-                }
-
-                var feature = new ol.Feature({
-                  geometry: geometry
-                });
-
-                // add to map
-                source.clear();
-                source.addFeature(feature);
-
                 ctrl.updateOutput(feature, true);
               }
             };
 
             // update output with gml
             ctrl.updateOutput = function(feature, forceFitView) {
+
+              if (!feature) return;
+
               // fit view if geom is valid & not empty
               if ((forceFitView || ctrl.fromTextInput) &&
                   feature.getGeometry() &&
@@ -233,23 +239,22 @@
               var outputCrs = $attrs['outputCrs'] ? $attrs['outputCrs'] :
                   ctrl.currentProjection;
 
+              ctrl.dataOlProjection = ol.proj.get(outputCrs);
+
               // print output (skip if readonly)
               if (!ctrl.readOnly) {
                 // GML 3.2.1 is used for ISO19139:2007
                 // TODO: ISO19115-3:2018
-                ctrl.outputPolygonXml =
-                    '<gmd:polygon xmlns:gmd="http://www.isotc211.org/2005/gmd">' +
-                    gnGeometryService.printGeometryOutput(
-                    ctrl.map,
-                    feature,
-                    {
-                      crs: outputCrs,
-                      format: 'gml'
-                    }
-                    ).replace(
-                      /http:\/\/www.opengis.net\/gml"/g,
-                      'http://www.opengis.net/gml/3.2"') +
-                    '</gmd:polygon>';
+                ctrl.outputPolygonXml = surroundGmlWithGmdPolygon(gnGeometryService.printGeometryOutput(
+                  ctrl.map,
+                  feature,
+                  {
+                    crs: outputCrs,
+                    format: 'gml'
+                  }
+                ).replace(
+                  /http:\/\/www.opengis.net\/gml"/g,
+                  'http://www.opengis.net/gml/3.2"'))
               }
 
               // update text field (unless geometry was entered manually)
@@ -322,6 +327,13 @@
                   }
                   );
             };
+
+            function surroundGmlWithGmdPolygon(gmlString) {
+              return '<gmd:polygon xmlns:gmd="http://www.isotc211.org/2005/gmd">' +
+                 gmlString +
+                '</gmd:polygon>';
+
+            }
           }
         ]
       };

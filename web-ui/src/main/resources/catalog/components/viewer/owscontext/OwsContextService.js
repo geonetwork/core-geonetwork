@@ -195,135 +195,133 @@
 
           for (i = 0; i < layers.length; i++) {
             var type, layer = layers[i];
-            if (layer.name) {
-              if (layer.group == 'Background layers') {
+            if (layer.group == 'Background layers') {
 
-                // {type=bing_aerial} (mapquest, osm ...)
-                var re = this.getREForPar('type');
-                type = layer.name.match(re) ? re.exec(layer.name)[1] : null;
-                if (type && type != 'wmts' && type != 'wms') {
-                  var opt;
-                  re = this.getREForPar('name');
-                  if (layer.name.match(re)) {
-                    var lyr = re.exec(layer.name)[1];
+              // {type=bing_aerial} (mapquest, osm ...)
+              var re = this.getREForPar('type');
+              type = layer.name.match(re) ? re.exec(layer.name)[1] : null;
+              if (type && type != 'wmts' && type != 'wms') {
+                var opt;
+                re = this.getREForPar('name');
+                if (layer.name.match(re)) {
+                  var lyr = re.exec(layer.name)[1];
 
-                    if (layer.server) {
-                      var server = layer.server[0];
-                      var res = server.onlineResource[0].href;
-                    }
-                    opt = {name: lyr,
-                            url: res};
+                  if (layer.server) {
+                    var server = layer.server[0];
+                    var res = server.onlineResource[0].href;
                   }
-                  var olLayer =
-                      gnMap.createLayerForType(type, opt, layer.title);
-                  if (olLayer) {
-                    olLayer.displayInLayerManager = false;
-                    olLayer.background = true;
-                    olLayer.set('group', 'Background layers');
-                    olLayer.setVisible(!layer.hidden);
-                    bgLayers.push(olLayer);
-
-                    if (!layer.hidden && !isFirstBgLayer) {
-                      isFirstBgLayer = true;
-                      map.getLayers().setAt(0, olLayer);
-                    }
-                  }
+                  opt = {name: lyr,
+                          url: res};
                 }
-
-                // {type=wmts,name=Ocean_Basemap} or WMS
-                else {
-
-                  // to push in bgLayers not in the map
-                  var loadingLayer = new ol.layer.Image({
-                    loading: true,
-                    label: 'loading',
-                    url: '',
-                    visible: false
-                  });
+                var olLayer =
+                    gnMap.createLayerForType(type, opt, layer.title);
+                if (olLayer) {
+                  olLayer.displayInLayerManager = false;
+                  olLayer.background = true;
+                  olLayer.set('group', 'Background layers');
+                  olLayer.setVisible(!layer.hidden);
+                  bgLayers.push(olLayer);
 
                   if (!layer.hidden && !isFirstBgLayer) {
                     isFirstBgLayer = true;
-                    loadingLayer.set('bgLayer', true);
+                    map.getLayers().setAt(0, olLayer);
                   }
-
-                  var layerIndex = bgLayers.push(loadingLayer) - 1;
-                  var p = self.createLayer(layer, map, 'do not add');
-
-                  (function(idx, loadingLayer) {
-                    p.then(function(layer) {
-                      if (!layer) {
-                        return;
-                      }
-                      bgLayers[idx] = layer;
-
-                      layer.displayInLayerManager = false;
-                      layer.background = true;
-
-                      if (loadingLayer.get('bgLayer')) {
-                        map.getLayers().setAt(0, layer);
-                      }
-                    });
-                  })(layerIndex, loadingLayer);
                 }
               }
-              // WMS layer not in background
-              else if (layer.server) {
-                var server = layer.server[0];
-                var currentStyle;
 
-                // load extension content (JSON)
-                if (layer.extension && layer.extension.any) {
-                  var extension = JSON.parse(layer.extension.any);
-                  var loadingId = layer.name;
-                  if (extension.style) {
-                    currentStyle = {Name: extension.style};
-                    loadingId += ' ' + extension.style;
-                  }
+              // {type=wmts,name=Ocean_Basemap} or WMS
+              else {
 
-                  // import saved filters if available
-                  if (extension.filters && extension.wfsUrl) {
-                    var url = extension.wfsUrl;
+                // to push in bgLayers not in the map
+                var loadingLayer = new ol.layer.Image({
+                  loading: true,
+                  label: 'loading',
+                  url: '',
+                  visible: false
+                });
 
-                    // get ES object and save filters on it
-                    // (will be used by the WfsFilterDirective
-                    // when initializing)
-                    var esObj =
-                        wfsFilterService.registerEsObject(url, layer.name);
-                    esObj.initialFilters = extension.filters;
-                  }
-
-                  // this object holds the WPS input values
-                  var defaultInputs = extension.processInputs || {};
+                if (!layer.hidden && !isFirstBgLayer) {
+                  isFirstBgLayer = true;
+                  loadingLayer.set('bgLayer', true);
                 }
 
-                // create WMS layer
-                if (server.service == 'urn:ogc:serviceType:WMS') {
+                var layerIndex = bgLayers.push(loadingLayer) - 1;
+                var p = self.createLayer(layer, map, 'do not add');
 
-                  var loadingLayer = new ol.layer.Image({
-                    loading: true,
-                    label: loadingId || 'loading',
-                    url: '',
-                    visible: false,
-                    group: layer.group
+                (function(idx, loadingLayer) {
+                  p.then(function(layer) {
+                    if (!layer) {
+                      return;
+                    }
+                    bgLayers[idx] = layer;
+
+                    layer.displayInLayerManager = false;
+                    layer.background = true;
+
+                    if (loadingLayer.get('bgLayer')) {
+                      map.getLayers().setAt(0, layer);
+                    }
                   });
+                })(layerIndex, loadingLayer);
+              }
+            }
+            // WMS layer not in background
+            else if (layer.server) {
+              var server = layer.server[0];
+              var currentStyle;
 
-                  loadingLayer.displayInLayerManager = true;
-
-                  var layerIndex = map.getLayers().push(loadingLayer) - 1;
-                  var p = self.createLayer(layer, map, undefined, i, currentStyle);
-                  loadingLayer.set('index', layerIndex);
-
-                  (function(idx, loadingLayer) {
-                    p.then(function(layer) {
-                      if (layer) {
-                        map.getLayers().setAt(idx, layer);
-                      }
-                      else {
-                        loadingLayer.set('errors', ['load failed']);
-                      }
-                    });
-                  })(layerIndex, loadingLayer);
+              // load extension content (JSON)
+              if (layer.extension && layer.extension.any) {
+                var extension = JSON.parse(layer.extension.any);
+                var loadingId = layer.name;
+                if (extension.style) {
+                  currentStyle = {Name: extension.style};
+                  loadingId += ' ' + extension.style;
                 }
+
+                // import saved filters if available
+                if (extension.filters && extension.wfsUrl) {
+                  var url = extension.wfsUrl;
+
+                  // get ES object and save filters on it
+                  // (will be used by the WfsFilterDirective
+                  // when initializing)
+                  var esObj =
+                      wfsFilterService.registerEsObject(url, layer.name);
+                  esObj.initialFilters = extension.filters;
+                }
+
+                // this object holds the WPS input values
+                var defaultInputs = extension.processInputs || {};
+              }
+
+              // create WMS layer
+              if (server.service == 'urn:ogc:serviceType:WMS') {
+
+                var loadingLayer = new ol.layer.Image({
+                  loading: true,
+                  label: loadingId || 'loading',
+                  url: '',
+                  visible: false,
+                  group: layer.group
+                });
+
+                loadingLayer.displayInLayerManager = true;
+
+                var layerIndex = map.getLayers().push(loadingLayer) - 1;
+                var p = self.createLayer(layer, map, undefined, i, currentStyle);
+                loadingLayer.set('index', layerIndex);
+
+                (function(idx, loadingLayer) {
+                  p.then(function(layer) {
+                    if (layer) {
+                      map.getLayers().setAt(idx, layer);
+                    }
+                    else {
+                      loadingLayer.set('errors', ['load failed']);
+                    }
+                  });
+                })(layerIndex, loadingLayer);
               }
             }
             firstLoad = false;
@@ -472,6 +470,10 @@
           } else if (source instanceof ol.source.WMTS) {
             name = '{type=wmts,name=' + layer.get('name') + '}';
             url = gnGlobalSettings.getNonProxifiedUrl(layer.get('urlCap'));
+          } else if (source instanceof ol.source.ImageArcGISRest) {
+            var layerId = layer.getSource().getParams().LAYERS;
+            name = '{type=arcgis,name=' + (layerId || '') + '}';
+            url = layer.get('url');
           } else {
             return;
           }
@@ -619,8 +621,10 @@
           var name = reL.exec(layer.name)[1];
           var promise;
 
-          if (type == 'wmts') {
+          if (type === 'wmts') {
             promise = gnMap.addWmtsFromScratch(map, res.href, name, createOnly);
+          } else if (type === 'arcgis') {
+            promise = gnMap.addEsriRestFromScratch(map, res.href, name, createOnly);
           }
 
           // if it's not WMTS, let's assume it is wms

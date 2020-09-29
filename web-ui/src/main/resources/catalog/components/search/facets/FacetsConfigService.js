@@ -60,7 +60,9 @@
               scope.facetConfig.map[scope.categoryKey]) {
             categoryList.push({
               dimension: dimensionFilter[0],
-              value: dimensionFilter.slice(1, dimensionFilter.length)
+              value: dimensionFilter.
+                  slice(1, dimensionFilter.length).
+                  join('/')
             });
           } else if (dimensionFilter[1] &&
               dimensionFilter.length > 2 &&

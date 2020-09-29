@@ -40,14 +40,16 @@ public class MetadataRegion extends Region {
     private Geometry geometry;
 
     public MetadataRegion(Id mdId, String id, Geometry geometry) {
-        super("metadata" + mdId.getIdentifiedId() + ":" + id, Collections.emptyMap(), MetadataRegionDAO.CATEGORY_NAME,
-            Collections.emptyMap(), true,
-            new ReferencedEnvelope(geometry.getEnvelopeInternal(), WGS84));
+        super("metadata" + mdId.getIdentifiedId() + ":" + id, Collections.<String, String>emptyMap(), MetadataRegionDAO.CATEGORY_NAME,
+            Collections.<String, String>emptyMap(), true,
+            geometry != null ? new ReferencedEnvelope(geometry.getEnvelopeInternal(), WGS84) : null);
         this.geometry = geometry;
     }
 
     public Geometry getGeometry(CoordinateReferenceSystem projection) throws Exception {
-
+        if (geometry == null) {
+            return null;
+        }
         CoordinateReferenceSystem coordinateReferenceSystem = getBBox().getCoordinateReferenceSystem();
         Integer sourceCode = CRS.lookupEpsgCode(coordinateReferenceSystem, false);
         Integer desiredCode = CRS.lookupEpsgCode(projection, false);
