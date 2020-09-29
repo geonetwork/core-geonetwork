@@ -3,9 +3,10 @@
 This is the ISO19115-3:2018 schema plugin included in core-geonetwork.
 
 The main changes with the previous ISO19115-3 plugin are:
+
 * Update to latest XSD (https://github.com/ISO-TC211/XML/wiki/Schema-Updates)
 * Add support for 19115-2 Imagery standards
-
+* directly included in core-geonetwork
 
 ## Reference documents:
 
@@ -24,7 +25,6 @@ Discovery Service](http://cnig.gouv.fr/wp-content/uploads/2015/06/titellus_fx_pr
 
 * SPW / Metawal http://metawal.wallonie.be/
 * Ifremer / Sextant https://sextant.ifremer.fr/ (only some projects - EMODnet Checkpoint, CERSAT)
-
 
 ## Description:
 
@@ -115,7 +115,6 @@ To retrieve the record in ISO19115-3.2018, use http://standards.iso.org/iso/1911
 </csw:GetRecordById>
 ```
 Note: outputSchema = own will also return the record in ISO19115-3.
-
 
 
 ## More work required
