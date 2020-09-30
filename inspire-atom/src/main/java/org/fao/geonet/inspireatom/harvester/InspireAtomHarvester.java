@@ -92,19 +92,19 @@ public class InspireAtomHarvester {
 
         final InspireAtomFeedRepository repository = gc.getBean(InspireAtomFeedRepository.class);
 
+        // Value used in metadata editor for online resources to identify an INSPIRE atom resource
+        String atomProtocol = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM_PROTOCOL);
+
         // Using index information, as type is only available in index and not in database.
         // If retrieved from database retrieves all iso19139 metadata and should apply for each result an xslt process
         // to identify if a service or dataset (slow process)
-        List<AbstractMetadata> iso19139Metadata = InspireAtomUtil.searchMetadataByType(ServiceContext.get(), searchManager, "service");
-        //List<Metadata> iso19139Metadata = metadataRepository.findAll(Specifications.where(MetadataSpecs.isType(MetadataType.METADATA)).and(MetadataSpecs.isIso19139Schema()));
+        List<AbstractMetadata> iso19139Metadata = InspireAtomUtil.searchMetadataByTypeAndProtocol(ServiceContext.get(),
+            searchManager, "service", atomProtocol);
 
         Element result = new Element("response");
 
         try {
             logger.info("ATOM feed harvest started");
-
-            // Value used in metadata editor for online resources to identify an INSPIRE atom resource
-            String atomProtocol = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM_PROTOCOL);
 
             // Removes all atom information from existing metadata. Harvester will reload with updated information
             logger.info("ATOM feed harvest: remove existing metadata feeds");
@@ -294,8 +294,8 @@ public class InspireAtomHarvester {
 
         final InspireAtomFeedRepository repository = gc.getBean(InspireAtomFeedRepository.class);
 
-        List<AbstractMetadata> iso19139Metadata = InspireAtomUtil.searchMetadataByType(ServiceContext.get(), gc.getBean(SearchManager.class), "dataset");
-        //List<Metadata> iso19139Metadata = metadataRepository.findAll(Specifications.where(MetadataSpecs.isType(MetadataType.METADATA)).and(MetadataSpecs.isIso19139Schema()));
+        List<AbstractMetadata> iso19139Metadata = InspireAtomUtil.searchMetadataByTypeAndProtocol(ServiceContext.get(),
+            gc.getBean(SearchManager.class), "dataset", atomProtocol);
 
         Map<String, String> metadataWithAtomFeeds =
             InspireAtomUtil.retrieveDatasetMetadataWithAtomFeeds(dataMan, iso19139Metadata, atomProtocol);
