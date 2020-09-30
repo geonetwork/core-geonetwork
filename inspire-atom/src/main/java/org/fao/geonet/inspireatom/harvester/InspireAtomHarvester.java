@@ -213,13 +213,16 @@ public class InspireAtomHarvester {
 
         final InspireAtomFeedRepository repository = gc.getBean(InspireAtomFeedRepository.class);
 
+        long total = serviceMetadataWithAtomFeeds.entrySet().size();
+        long i = 1;
+
         // Process the metadata retrieving the atom feed content and store it in the catalog.
         for (Map.Entry<String, String> entry : serviceMetadataWithAtomFeeds.entrySet()) {
             String metadataId = entry.getKey();
             String metadataUuid = dataMan.getMetadataUuid(metadataId);
 
             try {
-                logger.info("Processing feed for service metadata with uuid:" + metadataUuid);
+                logger.info("Processing feed (" + i++ + "/"+ total + ") for service metadata with uuid:" + metadataUuid);
 
                 String atomUrl = entry.getValue();
                 logger.debug("Atom feed Url for service metadata (" + metadataUuid + "): " + atomUrl);
@@ -300,13 +303,16 @@ public class InspireAtomHarvester {
         Map<String, String> metadataWithAtomFeeds =
             InspireAtomUtil.retrieveDatasetMetadataWithAtomFeeds(dataMan, iso19139Metadata, atomProtocol);
 
+        long total = metadataWithAtomFeeds.entrySet().size();
+        long i = 1;
+
         // Process the metadata retrieving the atom feed content and store it in the catalog.
         for (Map.Entry<String, String> entry : metadataWithAtomFeeds.entrySet()) {
             String metadataId = entry.getKey();
             String metadataUuid = dataMan.getMetadataUuid(metadataId);
 
             try {
-                logger.info("Processing feed for dataset metadata with uuid:" + metadataUuid);
+                logger.info("Processing feed (" + i++ + "/"+ total + ") for dataset metadata with uuid:" + metadataUuid);
 
                 Element md = dataMan.getMetadata(metadataId);
 
@@ -370,6 +376,9 @@ public class InspireAtomHarvester {
 
         final InspireAtomFeedRepository repository = gc.getBean(InspireAtomFeedRepository.class);
 
+        long total = datasetsInformation.entrySet().size();
+        long i = 1;
+
         // Process the metadata retrieving the atom feed content and store it in the catalog.
         for (Map.Entry<String, String> entry : datasetsInformation.entrySet()) {
             String atomDatasetId = entry.getKey();
@@ -379,6 +388,8 @@ public class InspireAtomHarvester {
                 metadataUuid = InspireAtomUtil.retrieveDatasetUuidFromIdentifier(context,
                     gc.getBean(SearchManager.class), atomDatasetId);
 
+                logger.info("Processing feed (" + i++ + "/"+ total + ") for dataset metadata with uuid:" + metadataUuid);
+
                 String atomDatasetNs = entry.getValue();
                 logger.debug("Dataset, id=" + atomDatasetId + ", namespace=" + atomDatasetNs);
 
@@ -387,7 +398,6 @@ public class InspireAtomHarvester {
                     continue;
                 }
 
-                logger.info("Processing feed for dataset metadata with uuid:" + metadataUuid);
 
                 String metadataId = dataMan.getMetadataId(metadataUuid);
                 String schema = dataMan.getMetadataSchema(metadataId);
