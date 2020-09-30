@@ -77,11 +77,7 @@ public class IndexingTask extends QuartzJobBean {
                         + metadataIdentifier + ". Error: " + e.getMessage(), e);
                 }
             }
-            try {
-                this.applicationContext.getBean(EsSearchManager.class).forceIndexChanges();
-            } catch (IOException e) {
-                Log.error(Geonet.INDEX_ENGINE, "Error forcing index changes", e);
-            }
+            this.applicationContext.getBean(EsSearchManager.class).forceIndexChanges();
         }
     }
 

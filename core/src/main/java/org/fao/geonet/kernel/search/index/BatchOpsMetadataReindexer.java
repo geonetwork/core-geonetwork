@@ -49,7 +49,9 @@ import com.google.common.util.concurrent.MoreExecutors;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.util.ThreadUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.MBeanExporter;
 import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -196,14 +198,14 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
         @Override
         public void run() {
             for (int i = beginIndex; i < beginIndex + count; i++) {
-                boolean doIndex = beginIndex + count - 1 == i;
                 try {
-                    dm.indexMetadata(ids[i] + "", doIndex);
+                    dm.indexMetadata(ids[i] + "", false);
                     processed.incrementAndGet();
                 } catch (Exception e) {
                     inError.incrementAndGet();
                 }
             }
+            ApplicationContextHolder.get().getBean(EsSearchManager.class).forceIndexChanges();
         }
     }
 }

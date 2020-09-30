@@ -84,9 +84,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
 
-    Lock waitLoopLock = new ReentrantLock();
-    Lock indexingLock = new ReentrantLock();
-
     @Autowired
 	private EsSearchManager searchManager;
     @Autowired
@@ -314,12 +311,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     @Override
     public boolean isIndexing() {
-        indexingLock.lock();
-        try {
-            return !indexing.isEmpty() || !batchIndex.isEmpty();
-        } finally {
-            indexingLock.unlock();
-        }
+        return searchManager.isIndexing();
     }
 
     @Override
@@ -332,33 +324,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Override
     public void indexMetadata(final String metadataId, final boolean forceRefreshReaders)
         throws Exception {
-        waitLoopLock.lock();
-        try {
-            if (waitForIndexing.contains(metadataId)) {
-                return;
-            }
-            while (indexing.contains(metadataId)) {
-                try {
-                    waitForIndexing.add(metadataId);
-                    // don't index the same metadata 2x
-                    synchronized (this) {
-                        wait(200);
-                    }
-                } catch (InterruptedException e) {
-                    return;
-                } finally {
-                    waitForIndexing.remove(metadataId);
-                }
-            }
-            indexingLock.lock();
-            try {
-                indexing.add(metadataId);
-            } finally {
-                indexingLock.unlock();
-            }
-        } finally {
-            waitLoopLock.unlock();
-        }
         AbstractMetadata fullMd;
 
         try {
@@ -571,13 +536,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId
                 + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
             fullMd = null;
-        } finally {
-            indexingLock.lock();
-            try {
-                indexing.remove(metadataId);
-            } finally {
-                indexingLock.unlock();
-            }
         }
         if (fullMd != null) {
             this.publisher.publishEvent(new MetadataIndexCompleted(fullMd));

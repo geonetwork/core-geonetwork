@@ -176,7 +176,7 @@ public class BaseMetadataManager implements IMetadataManager {
      * @param force Force reindexing all from scratch
      * @param asynchronous
      **/
-    public synchronized void synchronizeDbWithIndex(ServiceContext context, Boolean force, Boolean asynchronous) throws Exception {
+    public void synchronizeDbWithIndex(ServiceContext context, Boolean force, Boolean asynchronous) throws Exception {
 
         // get lastchangedate of all metadata in index
         Map<String, String> docs = searchManager.getDocsChangeDate();
