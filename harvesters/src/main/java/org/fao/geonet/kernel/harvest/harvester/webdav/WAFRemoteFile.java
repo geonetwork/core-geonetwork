@@ -150,7 +150,7 @@ class WAFRemoteFile implements RemoteFile {
     }
     public void setChangeDate(String date) {
         try {
-            changeDate = new ISODate(ISODate.parseBasicOrFullDateTime(date).getMillis());
+            changeDate = new ISODate(ISODate.parseBasicOrFullDateTime(date).toInstant().toEpochMilli());
         } catch (Exception e) {
             changeDate = null;
         }

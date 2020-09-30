@@ -850,8 +850,8 @@ public class Thesaurus {
             FileTime lastModifiedTime = null;
             if (this.date != null) {
                 try {
-                    lastModifiedTime = FileTime.fromMillis(ISODate.parseBasicOrFullDateTime(this.date).toDate().getTime());
-                } catch (IOException e) {
+                    lastModifiedTime = FileTime.fromMillis(ISODate.parseBasicOrFullDateTime(this.date).toInstant().toEpochMilli());
+                } catch (Exception e) {
                     Log.warning(Geonet.THESAURUS, "Unable to parse " + this.date + " into an actual java.util.Date object", e);
                 }
             }

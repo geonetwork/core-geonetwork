@@ -27,19 +27,9 @@
 
 package org.fao.geonet.domain;
 
-import static java.util.Calendar.DAY_OF_MONTH;
-import static java.util.Calendar.HOUR_OF_DAY;
-import static java.util.Calendar.MINUTE;
-import static java.util.Calendar.MONTH;
-import static java.util.Calendar.SECOND;
-import static java.util.Calendar.YEAR;
-
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.utils.Log;
+import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Embeddable;
@@ -47,16 +37,27 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
+import java.io.Serializable;
+import java.time.Duration;
+import java.time.Period;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.fao.geonet.utils.Log;
-import org.jdom.Element;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Period;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
-import org.joda.time.format.ISOPeriodFormat;
-import org.joda.time.format.PeriodFormatter;
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.SECOND;
+import static java.util.Calendar.YEAR;
+
 
 /**
  * Represents a date at a given time. Provides methods for representing the date as a string and
@@ -160,27 +161,30 @@ public class ISODate
      * something ridiculous like JUNK value above
      */
     public static String parseISODateTimes(String input1, String input2) {
-        DateTimeFormatter dto = ISODateTimeFormat.dateTime();
-        PeriodFormatter p = ISOPeriodFormat.standard();
-        DateTime odt1;
-        String odt = "";
+        //DateTimeFormatter dto =ISODateTimeFormat.dateTime();
+        DateTimeFormatter dto = DateTimeFormatter.ISO_DATE_TIME;
+        //PeriodFormatter p = ISOPeriodFormat.standard();
+        ZonedDateTime odt1;
+        String odt;
 
         // input1 should be some sort of ISO time
         // eg. basic: 20080909, full: 2008-09-09T12:21:00 etc
         // convert everything to UTC so that we remove any timezone
         // problems
         try {
-            DateTime idt = parseBasicOrFullDateTime(input1);
-            odt1 = dto.parseDateTime(idt.toString())
-                .withZone(DateTimeZone.forID("UTC"));
-            odt = odt1.toString();
+            ZonedDateTime idt = parseBasicOrFullDateTime(input1);
+            //odt1 = dto.parseDateTime(idt.toString())
+            //    .withZone(DateTimeZone.forID("UTC"));
+            odt1 = idt.withZoneSameInstant(ZoneOffset.UTC);
+            //odt = odt1.toString();
+            odt = idt.withZoneSameInstant(ZoneOffset.UTC).toString();
 
         } catch (Exception e) {
             Log.error("geonetwork.domain", "Error parsing ISO DateTimes, error: " + e.getMessage(), e);
             return DEFAULT_DATE_TIME;
         }
 
-        if (input2 == null || input2.equals(""))
+        if (StringUtils.isBlank(input2))
             return odt;
 
         // input2 can be an ISO time as for input1 but also an ISO time period
@@ -196,17 +200,24 @@ public class ISODate
             }
 
             if (input2.startsWith("P")) {
-                Period ip = p.parsePeriod(input2);
-                DateTime odt2;
+                String[] periodAndDurationArray = input2.split("T");
+                String periodString = periodAndDurationArray[0];
+                String durationString = "PT" + periodAndDurationArray[1];
+
+                // Period ip =p.parsePeriod(input2);
+                Period ip = Period.parse(periodString);
+                Duration duration = Duration.parse(durationString);
+                ZonedDateTime odt2;
                 if (!minus)
-                    odt2 = odt1.plus(ip.toStandardDuration().getMillis());
+                    odt2 = odt1.plus(ip).plus(duration);
                 else
-                    odt2 = odt1.minus(ip.toStandardDuration().getMillis());
+                    odt2 = odt1.minus(ip).minus(duration);
                 odt = odt + "|" + odt2.toString();
             } else {
-                DateTime idt = parseBasicOrFullDateTime(input2);
-                DateTime odt2 = dto.parseDateTime(idt.toString())
-                    .withZone(DateTimeZone.forID("UTC"));
+                ZonedDateTime idt = parseBasicOrFullDateTime(input2);
+                ZonedDateTime odt2 = idt.withZoneSameInstant(ZoneOffset.UTC);
+                //DateTime odt2 = dto.parseDateTime(idt.toString())
+                //    .withZone(DateTimeZone.forID("UTC"));
                 odt = odt + "|" + odt2.toString();
             }
         } catch (Exception e) {
@@ -217,21 +228,33 @@ public class ISODate
         return odt;
     }
 
-    public static DateTime parseBasicOrFullDateTime(String input1)
-        throws Exception {
-        DateTimeFormatter bd = ISODateTimeFormat.basicDate();
-        DateTimeFormatter bt = ISODateTimeFormat.basicTime();
-        DateTimeFormatter bdt = ISODateTimeFormat.basicDateTime();
-        DateTimeFormatter dtp = ISODateTimeFormat.dateTimeParser();
-        DateTime idt;
+    public static ZonedDateTime parseBasicOrFullDateTime(String input1) {
+        DateTimeFormatter bd = DateTimeFormatter.BASIC_ISO_DATE;
+        DateTimeFormatter bt = DateTimeFormatter.ISO_TIME;
+        DateTimeFormatter bdt = DateTimeFormatter.ISO_DATE_TIME;
+        DateTimeFormatter dtp = new DateTimeFormatterBuilder().appendPattern("yyyy[-MM][-dd['T'HH[:mm[:ss]]]][.SSSXXX]")
+                .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
+                .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
+                .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+                .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+                .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
+                .parseDefaulting(ChronoField.NANO_OF_SECOND, 0)
+                .parseDefaulting(ChronoField.OFFSET_SECONDS, ZoneOffset.of("Z").getTotalSeconds())
+                .toFormatter();
+        //DateTimeFormatter dtp = ISODateTimeFormat.dateTimeParser();
+        //DateTime idt;
+        ZonedDateTime idt;
         Matcher matcher;
         if (input1.length() == 8 && !input1.startsWith("T")) {
-            idt = bd.parseDateTime(input1);
+            //idt = bd.parseDateTime(input1);
+            idt = ZonedDateTime.parse(input1, bd);
         } else if (input1.startsWith("T") && !input1.contains(":")) {
-            idt = bt.parseDateTime(input1);
+            //idt = bt.parseDateTime(input1);
+            idt = ZonedDateTime.parse(input1, bt);
         } else if (input1.contains("T") && !input1.contains(":")
             && !input1.contains("-")) {
-            idt = bdt.parseDateTime(input1);
+            //idt = bdt.parseDateTime(input1);
+            idt = ZonedDateTime.parse(input1, bdt);
         } else if ((matcher = gsYearMonth.matcher(input1)).matches()) {
             String year = matcher.group(1);
             String month = matcher.group(2);
@@ -309,7 +332,8 @@ public class ISODate
             idt = generateDate(year, month, day, second, minute, hour,
                 timezone);
         } else {
-            idt = dtp.parseDateTime(input1);
+            //idt = dtp.parseDateTime(input1);
+            idt = ZonedDateTime.parse(input1, dtp);
         }
         return idt;
     }
@@ -324,23 +348,22 @@ public class ISODate
      * @param timezone
      * @return
      */
-    private static DateTime generateDate(String year, String month, String day,
+    private static ZonedDateTime generateDate(String year, String month, String day,
                                          String second, String minute, String hour, String timezone) {
-
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, Integer.valueOf(year));
-        c.set(Calendar.MONTH, Integer.valueOf(month) - 1);
-        c.set(Calendar.DAY_OF_MONTH, Integer.valueOf(day));
-
-        c.set(Calendar.SECOND, Integer.valueOf(second));
-        c.set(Calendar.MILLISECOND, 0);
-        c.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
-        c.set(Calendar.MINUTE, Integer.valueOf(minute));
-
         TimeZone zone = TimeZone.getTimeZone(timezone);
-        c.setTimeZone(zone);
+        ZonedDateTime result = ZonedDateTime.of(
+                Integer.parseInt(year),
+                Integer.parseInt(month),
+                Integer.parseInt(day),
+                Integer.parseInt(hour),
+                Integer.parseInt(minute),
+                Integer.parseInt(second),
+                0,
+                zone.toZoneId());
 
-        return new DateTime(c.getTimeInMillis());
+        //return new DateTime(c.getTimeInMillis());
+        return result.withZoneSameInstant(TimeZone.getDefault().toZoneId());
+
     }
 
     /**
@@ -351,7 +374,7 @@ public class ISODate
      * @param timezone
      * @return
      */
-    private static DateTime generateDate(String year, String month,
+    private static ZonedDateTime generateDate(String year, String month,
                                          String minute, String hour, String timezone) {
 
         return generateDate(year, month, "1", "00", minute, hour, timezone);
