@@ -244,12 +244,16 @@ public class MetadataUtils {
                     if (StringUtils.isNotEmpty(dataset.getValue())) {
                         String[] datasetInfo = dataset.getValue().split("\\|");
                         String datasetUuid = datasetInfo[0];
-                        String refType = (datasetInfo.length > 1)?datasetInfo[1]:"L";
 
-                        if (!refType.equals("R")) {
-                            listOfUUIDs.add(datasetUuid);
-                        } else {
-                            listOfRemoteDatasets.add(dataset.getValue());
+                        // Ignore if datasetUuid is empty
+                        if (StringUtils.isNotEmpty(datasetUuid)) {
+                            String refType = (datasetInfo.length > 1)?datasetInfo[1]:"L";
+
+                            if (!refType.equals("R")) {
+                                listOfUUIDs.add(datasetUuid);
+                            } else {
+                                listOfRemoteDatasets.add(dataset.getValue());
+                            }
                         }
                     }
                 }
