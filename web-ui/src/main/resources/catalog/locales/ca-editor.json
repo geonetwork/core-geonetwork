@@ -1,4 +1,5 @@
 {
+    "featureCatReplace": "Replace existing feature catalog?",
     "add-extent-from-geokeywords": "Calcular l'extensió a partir de les paraules clau",
     "add-extent-from-geokeywords-help": "Search all keywords from thesaurus of type 'place' and add matching extents.",
     "addCRS-help": "Afegir nou CRS",
@@ -368,6 +369,7 @@
     "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}?tab=xml\">XML editor</a>.",
     "directoryManagerSubtitle": "This screen allows you to edit directory entries such as contacts, formats, etc. including template management.",
     "directoryManagerSubtitleImport": "Enter here the full XML content of an entry to import it to the database.",
+    "directoryManagerError": "Error when importing the full XML",
     "directoryEntryTypes": "Entry Types",
     "directoryTemplates": "Templates",
     "addNewDirectoryEntry": "Add New Entry",
@@ -415,5 +417,8 @@
     "accessManagerChooseGroups": "Choose one or more groups",
     "accessManagerChooseOperations": "Choose one or more operation types",
     "status-no-status": "Workflow not active",
-    "draft": "Working copy"
+    "badGmlProjectionCode": "The geometry projection <b>{{srsName}}</b> defined in the XML is not valid. Please edit the xml to fix the srs name or enter a new geometry.",
+    "draft": "Working copy",
+    "link": "Enllaç",
+    "link-text": "Link text"
 }

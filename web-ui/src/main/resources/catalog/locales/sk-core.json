@@ -1,4 +1,5 @@
 {
+    "Administrator": "Administrátor",
     "all": "všetko",
     "allInPage": "všetko na stránke",
     "addToSelection": "Pridať do ...",
@@ -43,6 +44,7 @@
     "_groupOwner": "Skupina",
     "_groupPublished": "Publikované v tejto skupine",
     "_indexingError": "Chyba indexovania",
+    "indexRecords": "Index records",
     "_source": "Katalóg",
     "previousKeywords": "Predchádzajúce",
     "previousPage": "Predchádzajúca strana",
@@ -88,7 +90,10 @@
     "moreInfoOnRecord": "more ...",
     "comments": "Poznámka",
     "country": "Krajina",
+    "validateLinks": "Validate record links",
+    "metadataLinksValidated": "Link validation started.",
     "validateSelectedRecordConfirm": "Chcete naozaj validovať {{selectedCount}} vybraté záznamy?",
+    "validateLinksSelectedRecordConfirm": "Do you really want to validate links of the {{selectedCount}} selected record(s)?",
     "validateSelectedRecordINSPIREConfirm": "Do you really want to validate in INSPIRE validator the {{selectedCount}} selected record(s)?",
     "regions": "Regióny",
     "gemetKeywords": "Kľúčové slová GEMET",
@@ -391,6 +396,7 @@
     "link-hassources": "Je zdrojom údajovej sady",
     "link-sources": "Zdrojové údajové sady",
     "link-siblings": "Siblings",
+    "link-fcats": "Katalóg prvkov",
     "indexAccessError": "Error during index access.",
     "applyFilter": "Apply Filter",
     "confirm": "OK",
@@ -508,5 +514,7 @@
     "warnPublishDraft": "When publishing records with workflow enabled, the status will change to 'Approve'. Are you sure you want to continue?",
     "cancelWorkingCopy": "Cancel working copy",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{title}}'?",
-    "workingCopy": "Working copy"
+    "workingCopy": "Working copy",
+    "metadataValidated": "Metadata validated.",
+    "wmtsLayerNoUsableMatrixSet": "The WMTS layer could not be added. This may be because none of the projections advertised in the service matches any of the known projections of the application."
 }

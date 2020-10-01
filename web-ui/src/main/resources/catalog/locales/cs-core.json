@@ -1,4 +1,5 @@
 {
+    "Administrator": "Administrátor",
     "all": "všechny",
     "allInPage": "Všechny na stránce",
     "addToSelection": "Přidat do ...",
@@ -43,6 +44,7 @@
     "_groupOwner": "Skupina",
     "_groupPublished": "Publikováno v této skupině",
     "_indexingError": "Chyba indexování",
+    "indexRecords": "Index záznamů",
     "_source": "Katalog",
     "previousKeywords": "Předchozí",
     "previousPage": "Předchozí strana",
@@ -88,7 +90,10 @@
     "moreInfoOnRecord": "více ...",
     "comments": "Poznámka",
     "country": "Země",
+    "validateLinks": "Ověřit odkazy na záznamy",
+    "metadataLinksValidated": "Ověření odkazu bylo zahájeno.",
     "validateSelectedRecordConfirm": "Opravdu chcete ověřit vybraný záznam(y) {{selectedCount}}?",
+    "validateLinksSelectedRecordConfirm": "Opravdu chcete ověřit odkazy na {{selectedCount}} vybraných záznamů(y)?",
     "validateSelectedRecordINSPIREConfirm": "Opravdu chcete ověřit v INSPIRE validátoru {{selectedCount}} vybrané(ých) záznamů?",
     "regions": "Regiony",
     "gemetKeywords": "Klíčová slova GEMET",
@@ -391,6 +396,7 @@
     "link-hassources": "Je zdrojem datasetu",
     "link-sources": "Zdrojové datové sady",
     "link-siblings": "Sourozenci",
+    "link-fcats": "Katalog prvků",
     "indexAccessError": "Chyba při přístupu k indexům.",
     "applyFilter": "Použít filtr",
     "confirm": "OK",
@@ -508,5 +514,7 @@
     "warnPublishDraft": "Při publikování záznamů s povoleným pracovním postupem se stav změní na 'Schválit'. Jste si jistý, že chcete pokračovat?",
     "cancelWorkingCopy": "Zrušit pracovní kopii",
     "deleteWorkingCopyRecordConfirm": "Opravdu chcete odstranit pracovní kopii '{{title}}'?",
-    "workingCopy": "Pracovní kopie"
+    "workingCopy": "Pracovní kopie",
+    "metadataValidated": "Metadata byla ověřena.",
+    "wmtsLayerNoUsableMatrixSet": "Vrstvu WMTS nelze přidat. Může to být způsobeno tím, že žádná z projekcí inzerovaných ve službě neodpovídá žádné známé projekci aplikace."
 }

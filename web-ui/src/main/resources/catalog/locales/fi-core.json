@@ -1,4 +1,5 @@
 {
+    "Administrator": "Ylläpitäjä",
     "all": "kaikki",
     "allInPage": "kaikki sivulla",
     "addToSelection": "Lisää...",
@@ -43,6 +44,7 @@
     "_groupOwner": "Ryhmä",
     "_groupPublished": "Julkaistu ryhmässä",
     "_indexingError": "Indeksointivirhe",
+    "indexRecords": "Index records",
     "_source": "Luettelo",
     "previousKeywords": "Edellinen",
     "previousPage": "Edellinen sivu",
@@ -88,7 +90,10 @@
     "moreInfoOnRecord": "lisää...",
     "comments": "Kommentti",
     "country": "Maa",
+    "validateLinks": "Validate record links",
+    "metadataLinksValidated": "Link validation started.",
     "validateSelectedRecordConfirm": "Haluatko validoida valitut {{selectedCount}} dokumenttia?",
+    "validateLinksSelectedRecordConfirm": "Do you really want to validate links of the {{selectedCount}} selected record(s)?",
     "validateSelectedRecordINSPIREConfirm": "Do you really want to validate in INSPIRE validator the {{selectedCount}} selected record(s)?",
     "regions": "Alueet",
     "gemetKeywords": "GEMET-avainsanat",
@@ -391,6 +396,7 @@
     "link-hassources": "On lähde aineistolle",
     "link-sources": "Lähdeaineistot",
     "link-siblings": "Rinnakkaiset",
+    "link-fcats": "Kohdeluettelo",
     "indexAccessError": "Virhe otettaessa yhteyttä indeksiin",
     "applyFilter": "Käytä suodinta",
     "confirm": "OK",
@@ -508,5 +514,7 @@
     "warnPublishDraft": "When publishing records with workflow enabled, the status will change to 'Approve'. Are you sure you want to continue?",
     "cancelWorkingCopy": "Cancel working copy",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{title}}'?",
-    "workingCopy": "Working copy"
+    "workingCopy": "Working copy",
+    "metadataValidated": "Metadata validated.",
+    "wmtsLayerNoUsableMatrixSet": "The WMTS layer could not be added. This may be because none of the projections advertised in the service matches any of the known projections of the application."
 }

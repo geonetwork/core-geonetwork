@@ -1,4 +1,5 @@
 {
+    "Administrator": "Administrador",
     "all": "todos",
     "allInPage": "todos na página",
     "addToSelection": "Adicionar à ...",
@@ -43,6 +44,7 @@
     "_groupOwner": "Grupo",
     "_groupPublished": "Publicado neste grupo",
     "_indexingError": "Erro na indexação",
+    "indexRecords": "Index records",
     "_source": "Catálogo",
     "previousKeywords": "Anterior",
     "previousPage": "Página anterior",
@@ -88,7 +90,10 @@
     "moreInfoOnRecord": "Mais ...",
     "comments": "Comentário",
     "country": "País",
+    "validateLinks": "Validate record links",
+    "metadataLinksValidated": "Link validation started.",
     "validateSelectedRecordConfirm": "Você realmente deseja validar os {{selectedCount}} registro(s) selecionados?",
+    "validateLinksSelectedRecordConfirm": "Do you really want to validate links of the {{selectedCount}} selected record(s)?",
     "validateSelectedRecordINSPIREConfirm": "Do you really want to validate in INSPIRE validator the {{selectedCount}} selected record(s)?",
     "regions": "Regiões",
     "gemetKeywords": "Palavras-chave GEMET",
@@ -391,6 +396,7 @@
     "link-hassources": "É conjunto de dados fonte de ",
     "link-sources": "Conjuntos de dados fonte",
     "link-siblings": "Irmãos",
+    "link-fcats": "Catálogo de feições",
     "indexAccessError": "Erro durante o acesso ao índice.",
     "applyFilter": "Aplicar Filtro",
     "confirm": "OK",
@@ -508,5 +514,7 @@
     "warnPublishDraft": "Ao publicar um registro com o fluxo de trabalho habilitado, o status vai automaticamente ser alterado para Aprovado. Tem certeza que deseja continuar?",
     "cancelWorkingCopy": "Cancelar Cópia de Trabalho",
     "deleteWorkingCopyRecordConfirm": "Você realmente deseja remover a Cópia de Trabalho '{{title}}'?",
-    "workingCopy": "Cópia de Trabalho"
+    "workingCopy": "Cópia de Trabalho",
+    "metadataValidated": "Metadata validated.",
+    "wmtsLayerNoUsableMatrixSet": "The WMTS layer could not be added. This may be because none of the projections advertised in the service matches any of the known projections of the application."
 }

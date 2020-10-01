@@ -1,4 +1,5 @@
 {
+    "Administrator": "관리자",
     "all": "모두",
     "allInPage": "페이지의 모두",
     "addToSelection": "추가하기 ...",
@@ -43,6 +44,7 @@
     "_groupOwner": "그룹",
     "_groupPublished": "이 그룹에 게시",
     "_indexingError": "색인 오류",
+    "indexRecords": "Index records",
     "_source": "카탈로그",
     "previousKeywords": "이전",
     "previousPage": "이전 페이지",
@@ -88,7 +90,10 @@
     "moreInfoOnRecord": "더 보기...",
     "comments": "의견",
     "country": "국가",
+    "validateLinks": "Validate record links",
+    "metadataLinksValidated": "Link validation started.",
     "validateSelectedRecordConfirm": "정말로 {{selectedCount}}개의 선택된 레코드(들)를 검증하시겠습니까?",
+    "validateLinksSelectedRecordConfirm": "Do you really want to validate links of the {{selectedCount}} selected record(s)?",
     "validateSelectedRecordINSPIREConfirm": "Do you really want to validate in INSPIRE validator the {{selectedCount}} selected record(s)?",
     "regions": "지역",
     "gemetKeywords": "GEOMET 키워드",
@@ -391,6 +396,7 @@
     "link-hassources": "원본 데이터 셋의",
     "link-sources": "원본 데이터셋",
     "link-siblings": "형제",
+    "link-fcats": "피처 카탈로그",
     "indexAccessError": "인덱스 접근 중 오류가 발생했습니다.",
     "applyFilter": "필터 적용",
     "confirm": "확인",
@@ -508,5 +514,7 @@
     "warnPublishDraft": "When publishing records with workflow enabled, the status will change to 'Approve'. Are you sure you want to continue?",
     "cancelWorkingCopy": "Cancel working copy",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{title}}'?",
-    "workingCopy": "Working copy"
+    "workingCopy": "Working copy",
+    "metadataValidated": "Metadata validated.",
+    "wmtsLayerNoUsableMatrixSet": "The WMTS layer could not be added. This may be because none of the projections advertised in the service matches any of the known projections of the application."
 }
