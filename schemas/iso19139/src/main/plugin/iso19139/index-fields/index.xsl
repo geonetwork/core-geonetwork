@@ -308,8 +308,19 @@
             <xsl:element name="{$dateType}MonthForResource">
               <xsl:value-of select="substring($date, 0, 8)"/>
             </xsl:element>
+          </xsl:for-each>
 
 
+          <xsl:for-each select="gmd:date/gmd:CI_Date[gn-fn-index:is-isoDate(gmd:date/*/text())]">
+            <xsl:variable name="dateType"
+                          select="gmd:dateType[1]/gmd:CI_DateTypeCode/@codeListValue"
+                          as="xs:string?"/>
+            <xsl:variable name="date"
+                          select="string(gmd:date[1]/gco:Date|gmd:date[1]/gco:DateTime)"/>
+
+            <resourceDate type="object">
+              {"type": "<xsl:value-of select="$dateType"/>", "date": "<xsl:value-of select="$date"/>"}
+            </resourceDate>
           </xsl:for-each>
 
           <xsl:if test="$useDateAsTemporalExtent">
@@ -866,6 +877,20 @@
                   Date range not indexed.</indexingErrorMsg>
               </xsl:if>
             </xsl:if>
+          </xsl:for-each>
+
+          <xsl:for-each select=".//gmd:verticalElement/*">
+            <xsl:variable name="min"
+                          select="gmd:minimumValue/*/text()"/>
+            <xsl:variable name="max"
+                          select="gmd:maximumValue/*/text()"/>
+
+            <resourceVerticalRange type="object">{
+              "gte": "<xsl:value-of select="normalize-space($min)"/>"
+              <xsl:if test="$min &lt; $max">
+                ,"lte": "<xsl:value-of select="normalize-space($max)"/>"
+              </xsl:if>
+              }</resourceVerticalRange>
           </xsl:for-each>
         </xsl:for-each>
 

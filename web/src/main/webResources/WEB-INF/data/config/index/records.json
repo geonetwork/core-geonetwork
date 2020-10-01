@@ -1249,6 +1249,17 @@
       "resolutionScaleDenominator": {
         "type": "integer"
       },
+      "resourceDate": {
+        "type": "nested",
+        "properties": {
+          "type": {
+            "type": "keyword"
+          },
+          "date": {
+            "type": "date"
+          }
+        }
+      },
       "link": {
         "type": "nested",
         "properties": {

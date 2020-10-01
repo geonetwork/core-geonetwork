@@ -330,7 +330,6 @@
           }
           scope.$watch('regionType', function(val) {
             if (scope.regionType) {
-
               if (scope.regionType.id == 'geonames') {
                 $(element).typeahead('destroy');
                 var url = gnViewerSettings.geocoder;
@@ -509,10 +508,13 @@
           fromNow: '@'
         },
         link: function linkFn(scope, element, attr) {
-          var useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
+          var useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.humanizeDates,
+              format = gnGlobalSettings.gnCfg.mods.global.dateFormat;
           scope.$watch('date', function(originalDate) {
             if (originalDate) {
-              var attempt = gnHumanizeTimeService(originalDate, scope.format, scope.fromNow !== undefined)
+              var attempt = gnHumanizeTimeService(originalDate,
+                scope.format || format,
+                scope.fromNow !== undefined)
               if (attempt !== undefined) {
                 scope.value = attempt.value;
                 scope.title = attempt.title;
