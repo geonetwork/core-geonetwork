@@ -1,6 +1,7 @@
 {
+    "featureCatReplace": "Replace existing feature catalog?",
     "add-extent-from-geokeywords": "Ausdehnung anhand der Schlagwörter berechnen",
-    "add-extent-from-geokeywords-help": "Search all keywords from thesaurus of type 'place' and add matching extents.",
+    "add-extent-from-geokeywords-help": "Alle Schlagwörter vom Typ \"Ort\" im Thesaurus suchen und entsprechenden Extent anfügen.",
     "addCRS-help": "neues Projektionssystem hinzufügen",
     "contactId": "Kontaktidentifikator",
     "contactSetForMetadata": "Metadatenkontakt",
@@ -368,6 +369,7 @@
     "linkToXmlTab": "Einige Fehler können behoben werden, indem Sie den <a href=\"#/metadata/{{metadataId}}?tab=xml\">XML editor</a> verwenden.",
     "directoryManagerSubtitle": "Hier können Sie folgende Verzeichnisse verwalten: Kontakte, Formate und Ausdehnungen.",
     "directoryManagerSubtitleImport": "Geben Sie hier die vollständige XML Beschreibung eines Eintrags für den Import in die Datenbank ein.",
+    "directoryManagerError": "Error when importing the full XML",
     "directoryEntryTypes": "Eingabetypen",
     "directoryTemplates": "Vorlagen",
     "addNewDirectoryEntry": "Eintrag hinzufügen",
@@ -415,5 +417,8 @@
     "accessManagerChooseGroups": "Wählen Sie einen oder mehrere Gruppen aus",
     "accessManagerChooseOperations": "Wählren Sie ein oder mehrere Operationstypen",
     "status-no-status": "Workflow nicht aktiv",
-    "draft": "Arbeitskopie"
+    "badGmlProjectionCode": "The geometry projection <b>{{srsName}}</b> defined in the XML is not valid. Please edit the xml to fix the srs name or enter a new geometry.",
+    "draft": "Arbeitskopie",
+    "link": "Verknüpfung",
+    "link-text": "Link text"
 }

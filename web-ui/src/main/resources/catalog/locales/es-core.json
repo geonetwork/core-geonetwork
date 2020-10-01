@@ -1,4 +1,5 @@
 {
+    "Administrator": "Administrador",
     "all": "todos",
     "allInPage": "todo en una página",
     "addToSelection": "Añadir a...",
@@ -43,6 +44,7 @@
     "_groupOwner": "Grupo",
     "_groupPublished": "Publicado en ese grupo",
     "_indexingError": "Error en la indexación",
+    "indexRecords": "Index records",
     "_source": "Catálogo",
     "previousKeywords": "Anterior",
     "previousPage": "Página anterior",
@@ -54,8 +56,8 @@
     "address": "Dirección",
     "personal": "Personal",
     "gnToggle": "Mostrar/ocultar secciones",
-    "cookieWarning": "This web page uses cookies. If you continue using this page, we will assume you accept this.",
-    "moreOnCookie": "Want to know more about this message?",
+    "cookieWarning": "Esta página web utiliza cookies. Si continúa utilizando esta página, asumiremos que acepta el uso de cookies.",
+    "moreOnCookie": "¿Quiere saber más sobre este mensaje?",
     "acceptCookie": "Aceptar",
     "rejectCookie": "Sácame de aquí",
     "adminConsole": "Consola de Administrador",
@@ -88,7 +90,10 @@
     "moreInfoOnRecord": "Más ...",
     "comments": "Comentario",
     "country": "País",
+    "validateLinks": "Validate record links",
+    "metadataLinksValidated": "Link validation started.",
     "validateSelectedRecordConfirm": "¿Seguro que quieres validar las {{selectedCount}} entradas seleccionadas?",
+    "validateLinksSelectedRecordConfirm": "Do you really want to validate links of the {{selectedCount}} selected record(s)?",
     "validateSelectedRecordINSPIREConfirm": "Do you really want to validate in INSPIRE validator the {{selectedCount}} selected record(s)?",
     "regions": "Regiones",
     "gemetKeywords": "Palabras clave GEMET",
@@ -391,6 +396,7 @@
     "link-hassources": "Es un conjunto de datos fuente de",
     "link-sources": "Conjutos de datos fuente",
     "link-siblings": "Hermanos",
+    "link-fcats": "Catálogo de features",
     "indexAccessError": "Error durante el acceso al índice",
     "applyFilter": "Aplicar Filtro",
     "confirm": "OK",
@@ -508,5 +514,7 @@
     "warnPublishDraft": "When publishing records with workflow enabled, the status will change to 'Approve'. Are you sure you want to continue?",
     "cancelWorkingCopy": "Cancel working copy",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{title}}'?",
-    "workingCopy": "Working copy"
+    "workingCopy": "Working copy",
+    "metadataValidated": "Metadata validated.",
+    "wmtsLayerNoUsableMatrixSet": "The WMTS layer could not be added. This may be because none of the projections advertised in the service matches any of the known projections of the application."
 }
