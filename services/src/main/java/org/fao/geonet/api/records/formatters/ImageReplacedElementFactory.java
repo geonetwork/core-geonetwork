@@ -48,7 +48,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -179,6 +181,7 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
     private ReplacedElement loadImage(LayoutContext layoutContext, BlockBox box, UserAgentCallback userAgentCallback,
                                       int cssWidth, int cssHeight, ImageLoader imageLoader, float scaleFactor) {
         try {
+
             Image image = imageLoader.loadImage();
 
             image.scaleAbsolute(image.getPlainWidth() * scaleFactor, image.getPlainHeight() * scaleFactor);
@@ -237,9 +240,11 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
 
         @Override
         public Image loadImage() throws Exception {
-            Log.error(Geonet.GEONETWORK, "URL -> " + url);
+            URI normalizedUrl = new URI(url).normalize();
+            Log.debug(Geonet.GEONETWORK, String.format("URL -> %s, normalized URL -> %s",
+                url, normalizedUrl.toString()));
 
-            try (InputStream input = new URL(url).openStream()) {
+            try (InputStream input = normalizedUrl.toURL().openStream()) {
                 byte[] bytes = IOUtils.toByteArray(input);
                 return Image.getInstance(bytes);
             }
