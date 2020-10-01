@@ -1,0 +1,115 @@
+================================================================================
+===
+=== GeoNetwork 3.10.4: List of changes
+===
+================================================================================
+- [BP] ISO19115-3 / Fix multilingual editing. (#5029)
+- Update manuals module
+- [BP] Update translations from Transifex
+- [BP] pdf - normalize URL before openStream() (#4778)
+- [BP] INSPIRE Atom feeds improvements, related to #5043 (#5062)
+- [BP] Get related datasets - ignore if the dataset uuid is empty. Related to #4844 (#5063)
+- [BP] Fixed bug with the profile text not being translation correctly (#4774)
+- [BP] impr open search desc (#4832)
+- [BP] update readme, to remove installation instrucitons and fix links (#5036)
+- Remove the working copy when cancelling on initial edit on approved record, fixes #4993 (#5006)
+- [BP] Avoid incorrect delimiter in query string for hierarchical facet search
+- impr iso19139 jsonld formatter (#5046)
+- [BP] Fix bug where #lang was being selected based on 2 char lang code when it should be using the gmd:locale (#4847)
+- [BP] Fixes #5047 - close input stream after copying attachments (#5052)
+- INSPIRE Atom - Create independent log file for each Atom harvester execution and log improvements. UI: use gn-click-and-spin directive (#5043)
+- [BP] Editor / ignore elements with geonet namespace for render-element value parameter (#5032)
+- [BP] Formatter / Avoid empty thesaurus block (#5009)
+- [BP] Landing page / Improve multilingual support (#4924)
+- [BP] Display contact web address description and linkage if name is not provided in full view
+- [BP] Schema / 19115-3 / Thesaurus / Override label
+- [BP] Schema / 19115-3 / Translation / French
+- Addresses #87 - Only include details from the first contactInfo
+- Keywords / Group keywords not part of a thesaurus together.
+- Fixes #78 - display gml:identifer/gml:name elements in full view (mrc:units)
+- Typo.
+- add DataCatalog type to catalog remove schema: prefix
+- fixes problems with duplicated license and email, suggests some new scopecode types
+- Change required by https://github.com/geonetwork/core-geonetwork/pull/3569
+- The README.md has been updated to reflect that this plugin no longer needs to be installed, and to fix the github links to reference core-geonetwork.
+- removed submodule iso19115-3.2018
+- [BP] Angular view / Fix missing maintenanceAndUpdateFrequency (#5031)
+- Field upload directive for metadata editor (#4061)
+- [BP] Adopt contributor-covenant.org code of conduct as per email discussion (#5026)
+- [BP] Turn `<span>` elements into `<button>`s, and add a `z-index` to display the cookie message on top of other elements (#5028)
+- [BP] Remove closure from production scripts (fix ie11 incompatibility) (#4849)
+- [BP] Fixed bug where it was supplying the resourceId which was the simple filename and it would use this to query the database and never found the result. Changed it to get the getId() function where returns the same format as the filename stored in the database. (#4846)
+- [BP] Add a check at the metadata import API to report a user-friendly message instead of blank to the client console upon the event when importing did not succeeded due to somehow the invalid metadata archive. (#4998)
+- [BP] Create draft: copy group owner privileges, fixes #4995 (#4996)
+- [BP] Don't rotate harvester log files if a harvester is running during midnight (#5024)
+- [BP] INSPIRE Atom feeds parsing - handle optional elements / attributes and update xslt to extract feed url and dataset id to work with Anchor elements (#5018)
+- [BP] fixes a bug accidentally introduced in #4853 (#5019)
+- [BP] Avoid empty attribute sections in the metadata editor
+- [BP] Editor / Label above input mode / Fix offset for thesaurus picker (#5002)
+- [BP] Update README.md (#4997)
+- [BP] Formatter improvements (ISO19110 mainly) (#4905)
+- [BP] Which minimum profile is required to manage/create template? (#4932)
+- [BP] Example of configuring ldap security for recursion (#4990)
+- [BP] Build / Zip / Make shell script executable (#4988)
+- Add classes for TYPE to related rows and add to map buttons (#4978)
+- [BP] Replace broken JAR installer for ZIP distribution (#4984)
+- [BP] UI improvements for the bounding box block in the editor: - re-order the UI element - group elements (add elements to a toolbar for the map) - change delete icons and couple them to the input fields - delete the previous search item when switching the region type
+- [BP] some improvement suggestions for dcat export (#4898)
+- [BP] Adding support remote datasets for operatesOn caused problems for har…vested records with link to external ressource #4830 - use local dataset version if available in the local catalogue (#4844)
+- [BP] Harvester / CSW / Update / Apply xpath filter and batch edits (#4910)
+- [BP] Identicon config (#4939)
+- [BP] homepage: same typeahead option as in search page
+- [BP] Fix for aligning logo and GN name (#4969)
+- [BP] [a11y] Combine GN logo and name in one link in the top menu
+- [BP] Show an error message when the invalid XML is entered: (#4949)
+- [BP] Keywords / Group keywords by type when not part of a thesaurus (#4861)
+- [BP] don't show language nav-pills if only one language (#4964)
+- [BP] Improved visibilty of links on map panels
+- [BP] A11y improvements to the map panels and map toggle buttons
+- [BP] Improvements to the a11y of the user feedback options and screens: - added aria-labels - removed collapsing panels - order of headings
+- [BP] Uniform look for the contribute pages, same (readable) title (H1), same nesting of rows and columns
+- [BP] Fix for the Admin Settings menu to get stuck.
+- [BP] Editor / Table head label font size consistent with others
+- [BP] Editor / GeoPublisher / Fix map init
+- [BP] Fixed bug uninitialized baseURL This caused values to be http://localhost:8080null instead of http://localhost:8080/geonetwork
+- [BP] Prevent moving down of the last layer.
+- [BP] update email in source code contact details to operational email address (#4853)
+- [BP] Fix issued with using jdbc.port value when set.  #4833 Issue related to https://stackoverflow.com/questions/28369582/spring-boot-spring-always-assigns-default-value-to-property-despite-of-it-bein
+- [BP] Harvester / CSW / Fix batch edit condition (#4857)
+- [BP] Add a localized time format in harvester logs
+- Validation report / Link check / Display status / Update message.
+- Validation report / Link check / Display status.
+- [BP] Search / Allow searches on `_groupOwner`
+- [BP] Allow GeoNetwork datadir from tomcat context Parameter (#4943)
+- [BP] Harvester / OGC WxS / Add WMTS basic support (#4829)
+- [BP] LDAP changes for AD and other configurations (#4938)
+- [BP] add custom file for supported languages, so it doesn't throw 404 (#4860)
+- [BP] INSPIRE / Registry is now available on https (#4935)
+- [BP] minor doc changes (#4923)
+- [BP] Editor / Directory / Add contact breaks scrolling
+- [BP] Editor / Turn off hotkeys while editing
+- [BP] better error handling for language detection
+- [BP] Fixed null pointer error on the jeevesAppContext while destroying object. It would occur when GN failed to startup correctly.
+- [BP] New LDAP test cases and infrastructure (#4878)
+- [BP] Don't clear the multilingual fields when changing protocol (#4894)
+- Merge branch 'improve_import_error_message'
+- [BP] Add the metadata uuid to the excetion in MEF import
+- [BP] Fixed typo with attachment
+- Externalize InspireValidatorUtils configuration (#4876)
+- Add schema dependency to service module so that unit tests will not fail. (#4835)
+- [#4864] Fix for thumbnails on the homepage containing a space
+- Add `href=""` to make the links accessible for keyboards
+- add dublin core section to thesaurus (#4831)
+- validation report UX (#4828)
+- do not want a default namespace to be inferred from srsName attribute when default namespace is gml (#4824)
+- Editor / Polygon / Fix validation error on srsName and id attributes. (#4791)
+- Enhance ESRI REST API support (#4784)
+- Remove the 'geonet' namespace from the metadata (added to the metadata to handle the metadata editing logic) before applying update-fixed-info process, to avoid it's added to the stored metadata
+- group reviewer should be able do publish an md even if they can't edi… (#4816)
+- make message more specific
+- fix typo
+- MapService / show an error when parsing WMTS options failed
+- Map / avoid error when no world extent on proj
+- Map / do not put an extent restriction on map views
+- [BP] Add multilingual titles to thesauri (#4766)
+- Update version to 3.10.4-SNAPSHOT
