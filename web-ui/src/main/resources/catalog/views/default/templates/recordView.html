@@ -540,9 +540,9 @@
                 <li class="timeline-inverted"
                     data-ng-repeat="date in mdView.current.record.resourceDate">
                   <div class="timeline-badge timeline-badge-small"
-                       data-ng-class="{'danger': date.type === 'superseded'}">
+                       data-ng-class="{'danger': date.type === 'deprecated'}">
                     <i class="fa fa-fw"
-                       data-ng-class="{'fa-chevron-right': date.type === 'creation','fa-ban': date.type === 'superseded', 'fa-retweet': date.type === 'revision', 'fa-check': date.type === 'publication', 'fa-calendar': date.type === 'nextUpdate'}"/>
+                       data-ng-class="{'fa-chevron-right': date.type === 'creation', 'fa-code-fork': date.type === 'superseded','fa-ban': date.type === 'deprecated', 'fa-retweet': date.type === 'revision', 'fa-check': date.type === 'publication', 'fa-calendar': date.type === 'nextUpdate'}"/>
                   </div>
                   <div class="timeline-panel">
                     <dt data-translate>{{date.type | translate}}</dt>
