@@ -904,6 +904,15 @@ public class EditLib {
         }
     }
 
+    /**
+     * Removes the version of the edit session for a metadata. Used when the edit session is finished.
+     *
+     * @param id
+     */
+    public void clearVersion(String id) {
+        htVersions.remove(id);
+    }
+
     //--------------------------------------------------------------------------
     //---
     //--- Private methods
