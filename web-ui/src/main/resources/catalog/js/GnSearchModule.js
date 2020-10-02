@@ -61,6 +61,8 @@
         'codelists/gmd%3ADS_AssociationTypeCode');
     $LOCALES.push('/../api/standards/iso19139/' +
         'codelists/gmd%3ADS_InitiativeTypeCode');
+    $LOCALES.push('/../api/standards/iso19115-3.2018/' +
+        'codelists/cit%3ACI_DateTypeCode');
   }]);
 
 })();

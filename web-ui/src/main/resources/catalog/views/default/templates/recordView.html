@@ -376,11 +376,7 @@
 
           <table class="table table-striped">
             <tbody>
-<<<<<<< HEAD
             <tr data-ng-if="mdView.current.record.codelist_maintenanceAndUpdateFrequency_text.length > 0">
-=======
-            <tr data-ng-if="mdView.current.record.maintenanceAndUpdateFrequency_text">
->>>>>>> origin/master
               <th data-translate="">updateFrequency</th>
               <td>
                 <p data-ng-repeat="c in mdView.current.record.codelist_maintenanceAndUpdateFrequency_text">
@@ -531,46 +527,74 @@
           </section>
 
           <section class="gn-md-side-dates"
-                  data-ng-if="mdView.current.record.creationDateForResource ||
-                              mdView.current.record.publicationDateForResource ||
-                              mdView.current.record.revisionDateForResource ||
-                              mdView.current.record.resourceTemporalDateRange">
-            <h2>
-              <i class="fa fa-fw fa-clock-o"></i>
-              <span data-translate="">tempExtent</span>
-            </h2>
+                  data-ng-if="mdView.current.record.resourceDate.length > 0 ||
+                              mdView.current.record.resourceTemporalExtentDateRange ||
+                              mdView.current.record.resourceVerticalRange">
+            <div data-ng-show="mdView.current.record.resourceDate.length > 0">
+              <h2>
+                <i class="fa fa-fw fa-clock-o"></i>
+                <span data-translate="">resourceEvents</span>
+              </h2>
 
-            <p>
-            <dl data-ng-show="mdView.current.record.creationDateForResource.length > 0">
-              <dt data-translate>creationDate</dt>
-              <dd data-ng-repeat="creaDate in mdView.current.record.creationDateForResource track by $index"
-                  data-gn-humanize-time="{{creaDate}}"
-                  data-format="YYYY-MM-DD"/>
-            </dl>
-            <dl data-ng-show="mdView.current.record.publicationDateForResource.length > 0">
-              <dt data-translate>publicationDate</dt>
-              <dd data-ng-repeat="pubDate in mdView.current.record.publicationDateForResource track by $index"
-                  data-gn-humanize-time="{{pubDate}}"
-                  data-format="YYYY-MM-DD"/>
-            </dl>
-            <dl data-ng-show="mdView.current.record.revisionDateForResource.length > 0">
-              <dt data-translate>revisionDate</dt>
-              <dd data-ng-repeat="revDate in mdView.current.record.revisionDateForResource track by $index"
-                  data-gn-humanize-time="{{revDate}}"
-                  data-format="YYYY-MM-DD"/>
-            </dl>
-            <dl
-              data-ng-show="mdView.current.record.resourceTemporalExtentDateRange">
-              <dt data-translate>tempExtentBegin</dt>
-              <dd data-ng-repeat="range in mdView.current.record.resourceTemporalExtentDateRange">
-                <span data-gn-humanize-time="{{range.gte}}"
-                      data-format="YYYY-MM-DD"/>
-                &nbsp;<i class="fa fa-fw fa-forward"></i>
-                <span data-gn-humanize-time="{{range.lte}}"
-                      data-format="YYYY-MM-DD"/>
-              </dd>
-            </dl>
-            </p>
+              <ul class="timeline timeline-1-col">
+                <li class="timeline-inverted"
+                    data-ng-repeat="date in mdView.current.record.resourceDate">
+                  <div class="timeline-badge timeline-badge-small"
+                       data-ng-class="{'danger': date.type === 'deprecated'}">
+                    <i class="fa fa-fw"
+                       data-ng-class="{'fa-chevron-right': date.type === 'creation', 'fa-code-fork': date.type === 'superseded','fa-ban': date.type === 'deprecated', 'fa-retweet': date.type === 'revision', 'fa-check': date.type === 'publication', 'fa-calendar': date.type === 'nextUpdate'}"/>
+                  </div>
+                  <div class="timeline-panel">
+                    <dt data-translate>{{date.type | translate}}</dt>
+                    <dd data-gn-humanize-time="{{date.date}}"/>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div data-ng-show="mdView.current.record.resourceTemporalExtentDateRange">
+              <h2>
+                <i class="fa fa-fw fa-clock-o"></i>
+                <span data-translate="">tempExtent</span>
+              </h2>
+
+              <div class="flex-row flex-align-center gn-period"
+                  data-ng-repeat="range in mdView.current.record.resourceTemporalExtentDateRange">
+                <div class="flex-start"
+                    data-ng-show="range.gte">
+                  <dt data-gn-humanize-time="{{range.gte}}"/>
+                </div>
+                <div class="spacer">
+                  <i class="fa fa-chevron-right"></i>
+                </div>
+                <div class="flex-end"
+                    data-ng-show="range.lte">
+                  <dt data-gn-humanize-time="{{range.lte}}"/>
+                </div>
+              </div>
+            </div>
+
+            <div data-ng-show="mdView.current.record.resourceVerticalRange">
+              <h2>
+                <i class="fa fa-fw fa-clock-o"></i>
+                <span data-translate="">resourceVerticalRange</span>
+              </h2>
+
+              <div class="flex flex-row flex-align-center gn-vertical-range"
+                  data-ng-repeat="range in mdView.current.record.resourceVerticalRange">
+                <div class="width-25">
+                  <i class="fa fa-fw fa-chevron-up"/>
+                </div>
+                <div class="width-75">
+                  <div data-ng-show="range.lte">
+                    <dt>{{range.lte}}</dt>
+                  </div>
+                  <div data-ng-show="range.gte">
+                    <dt>{{range.gte}}</dt>
+                  </div>
+                </div>
+              </div>
+            </div>
           </section>
 
           <section class="gn-md-side-providedby">

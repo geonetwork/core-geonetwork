@@ -309,6 +309,18 @@
             </xsl:element>
           </xsl:for-each>
 
+          <xsl:for-each select="cit:date/cit:CI_Date[gn-fn-index:is-isoDate(cit:date/*/text())]">
+              <xsl:variable name="dateType"
+                            select="cit:dateType/cit:CI_DateTypeCode/@codeListValue"
+                            as="xs:string?"/>
+              <xsl:variable name="date"
+                            select="string(cit:date/gco:Date|cit:date/gco:DateTime)"/>
+            <resourceDate type="object">
+              {"type": "<xsl:value-of select="$dateType"/>", "date": "<xsl:value-of select="$date"/>"}
+            </resourceDate>
+          </xsl:for-each>
+
+
           <xsl:if test="$useDateAsTemporalExtent">
             <xsl:for-each-group select="cit:date/cit:CI_Date[gn-fn-index:is-isoDate(cit:date/*/text())]/cit:date/*/text()"
                                 group-by=".">
@@ -860,6 +872,20 @@
                   Date range not indexed.</indexingErrorMsg>
               </xsl:if>
             </xsl:if>
+          </xsl:for-each>
+
+          <xsl:for-each select=".//gex:verticalElement/*">
+            <xsl:variable name="min"
+                          select="gex:minimumValue/*/text()"/>
+            <xsl:variable name="max"
+                          select="gex:maximumValue/*/text()"/>
+
+            <resourceVerticalRange type="object">{
+              "gte": "<xsl:value-of select="normalize-space($min)"/>"
+              <xsl:if test="$min &lt; $max">
+                ,"lte": "<xsl:value-of select="normalize-space($max)"/>"
+              </xsl:if>
+              }</resourceVerticalRange>
           </xsl:for-each>
         </xsl:for-each>
 

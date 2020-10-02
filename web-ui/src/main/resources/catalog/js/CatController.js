@@ -68,7 +68,8 @@ goog.require('gn_alert');
       },
       'mods': {
         'global': {
-          'humanizeDates': true
+          'humanizeDates': true,
+          'dateFormat': 'YYYY-MM-DD'
         },
         'footer':{
           'enabled': true,

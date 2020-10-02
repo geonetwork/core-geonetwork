@@ -135,7 +135,7 @@
 
   <!-- ... Dates  -->
   <xsl:template mode="render-value" match="*[matches(., '^[0-9]{4}-[0-9]{2}-[0-9]{2}$')]">
-    <span data-gn-humanize-time="{.}" data-format="DD MMM YYYY">
+    <span data-gn-humanize-time="{.}">
       <xsl:value-of select="."/>
     </span>
   </xsl:template>

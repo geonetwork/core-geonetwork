@@ -618,7 +618,14 @@
         this.isPublishedToAll = this.isPublished() ?
             'false' : 'true';
       },
-
+      getFields: function(filter) {
+        var values = {}, props = this, keys = Object.keys(this)
+          .filter(function(name) {return new RegExp(filter).test(name)});
+        keys.forEach(function (k) {
+          values[k] = props[k];
+        });
+        return values;
+      },
       getLinks: function() {
         return this.link;
       },

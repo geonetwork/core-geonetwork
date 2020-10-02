@@ -814,7 +814,7 @@
 
   <!-- Display thesaurus name and the list of keywords -->
   <xsl:template mode="render-field"
-                match="mri:descriptiveKeywords[  
+                match="mri:descriptiveKeywords[
                   normalize-space(string-join(*/mri:keyword//text(), '')) = ''
                   or count(*/mri:keyword) = 0]" priority="200"/>
   <xsl:template mode="render-field"
@@ -1137,7 +1137,7 @@
                 match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
                       |gml:beginPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
                       |gml:endPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
-    <span data-gn-humanize-time="{.}" data-format="DD MMM YYYY">
+    <span data-gn-humanize-time="{.}">
       <xsl:value-of select="."/>
     </span>
   </xsl:template>

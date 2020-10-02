@@ -1149,7 +1149,7 @@
                 match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
                       |gml:beginPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
                       |gml:endPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
-    <span data-gn-humanize-time="{.}" data-format="DD MMM YYYY"><xsl:comment select="name()"/>
+    <span data-gn-humanize-time="{.}"><xsl:comment select="name()"/>
       <xsl:value-of select="."/>
     </span>
   </xsl:template>
