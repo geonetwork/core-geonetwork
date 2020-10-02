@@ -43,14 +43,14 @@
           <div data-ng-switch-when="WMS">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{(r.title | gnLocalized: lang).replace('\'', '\\\'')}}'}">
+                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{(r.title | gnLocalized: lang).replaceAll('\'', '\\\'')}}'}">
                 wmsLinkDetails</span>
             </p>
           </div>
           <div data-ng-switch-when="WMTS">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{(r.title | gnLocalized: lang).replace('\'', '\\\'')}}'}">
+                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{(r.title | gnLocalized: lang).replaceAll('\'', '\\\'')}}'}">
                 wmtsLinkDetails</span>
             </p>
           </div>
@@ -136,7 +136,7 @@
           <div data-ng-switch-when="DB">
             <p class="text-muted">
             <span data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  data-translate-values="{url:'{{(r.url | gnLocalized: lang).replaceAll('\\', '\\\\')}}', layer:'{{r.title | gnLocalized: lang}}'}">
               databaseLayerDetails</span>
             </p>
           </div>
@@ -144,7 +144,7 @@
           <div data-ng-switch-when="FILE">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', name:'{{r.title | gnLocalized: lang}}'}">
+                    data-translate-values="{url:'{{(r.url | gnLocalized: lang).replaceAll('\\', '\\\\')}}', name:'{{r.title | gnLocalized: lang}}'}">
                 fileLayerDetails</span>
               <input class="form-control"
                      type="text"
