@@ -103,11 +103,7 @@ public final class IndexMetadataTask implements Runnable {
             for (Object metadataId : _metadataIds) {
                 this.indexed.incrementAndGet();
                 if (this.indexed.compareAndSet(500, 0)) {
-                    try {
-                        searchManager.forceIndexChanges();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    searchManager.forceIndexChanges();
                 }
 
                 try {
@@ -121,8 +117,6 @@ public final class IndexMetadataTask implements Runnable {
                 _context.getUserSession().loginAs(_user);
             }
             searchManager.forceIndexChanges();
-        } catch (IOException e) {
-            Log.error(Geonet.INDEX_ENGINE, "Error occurred indexing metadata", e);
         } finally {
             _batchIndex.remove(this);
         }

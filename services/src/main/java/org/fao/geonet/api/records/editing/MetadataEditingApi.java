@@ -404,7 +404,7 @@ public class MetadataEditingApi {
 
             if (reindex) {
                 Log.trace(Geonet.DATA_MANAGER, " > Reindexing record");
-                dataMan.indexMetadata(id, true);
+           //     dataMan.indexMetadata(id, true);
             }
 
             ajaxEditUtils.removeMetadataEmbedded(session, id);

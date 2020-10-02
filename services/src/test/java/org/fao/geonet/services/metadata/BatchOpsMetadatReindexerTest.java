@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.util.ThreadUtils;
@@ -173,7 +174,8 @@ public class BatchOpsMetadatReindexerTest {
 
         PowerMockito.mockStatic(ApplicationContextHolder.class);
         PowerMockito.when(ApplicationContextHolder.get()).thenReturn(mockAppContext);
-
+        EsSearchManager searchManager = Mockito.mock(EsSearchManager.class);
+        Mockito.when(mockAppContext.getBean(Mockito.eq((EsSearchManager.class)))).thenReturn(searchManager);
 
         PowerMockito.mockStatic(ThreadUtils.class);
         PowerMockito.when(ThreadUtils.getNumberOfThreads()).thenReturn(numberOfAvailableThreads);
@@ -188,7 +190,7 @@ public class BatchOpsMetadatReindexerTest {
                 usedTread.add(Thread.currentThread());
                 return null;
             }
-        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.eq(true));
+        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.anyBoolean());
         return mockDataMan;
     }
 
@@ -202,7 +204,7 @@ public class BatchOpsMetadatReindexerTest {
                 latch.await();
                 return null;
             }
-        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.eq(true));
+        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.anyBoolean());
         return mockDataMan;
     }
 

@@ -153,7 +153,8 @@ public class EsSearchManager implements ISearchManager {
     private int commitInterval = 200;
 
     // public for test, to be private or protected
-    public Map<String, String> listOfDocumentsToIndex = new HashMap<>();
+    public Map<String, String> listOfDocumentsToIndex =
+        Collections.synchronizedMap(new HashMap<>());
     private Map<String, String> indexList;
 
     public String getDefaultIndex() {
@@ -391,73 +392,86 @@ public class EsSearchManager implements ISearchManager {
         if (StringUtils.isNotEmpty(catalog)) {
             doc.put("sourceCatalogue", catalog);
         }
-//        doc.put("indexingDate", new Date());
 
         String jsonDocument = mapper.writeValueAsString(doc);
-        listOfDocumentsToIndex.put(id, jsonDocument);
-        if (listOfDocumentsToIndex.size() == commitInterval || forceRefreshReaders) {
-            sendDocumentsToIndex();
+
+        if (forceRefreshReaders) {
+            HashMap<String, String> document = new HashMap<>();
+            document.put(id, jsonDocument);
+            final BulkResponse bulkItemResponses = client.bulkRequest(defaultIndex, document);
+            checkIndexResponse(bulkItemResponses, document);
+        } else {
+            listOfDocumentsToIndex.put(id, jsonDocument);
+            if (listOfDocumentsToIndex.size() == commitInterval) {
+                sendDocumentsToIndex();
+            }
         }
     }
 
     private void sendDocumentsToIndex() {
-        synchronized (this) {
-            if (listOfDocumentsToIndex.size() > 0) {
-                // TODOES: Report status of failures
-                try {
-                    final BulkResponse bulkItemResponses = client.bulkRequest(defaultIndex, listOfDocumentsToIndex);
-                    int responseStatus = bulkItemResponses.status().getStatus();
-                    if (bulkItemResponses.hasFailures()) {
-                        Map<String, String> listErrorOfDocumentsToIndex = new HashMap<>(bulkItemResponses.getItems().length);
-                        List<String> errorDocumentIds = new ArrayList<>();
-                        // Add information in index that some items were not properly indexed
-                        Arrays.stream(bulkItemResponses.getItems()).forEach(e -> {
-                            if (e.status() != OK
-                                && e.status() != CREATED) {
-                                errorDocumentIds.add(e.getId());
-                                ObjectMapper mapper = new ObjectMapper();
-                                ObjectNode docWithErrorInfo = mapper.createObjectNode();
-                                docWithErrorInfo.put(IndexFields.DBID, e.getId());
-                                String resourceTitle = String.format("Document #%s", e.getId());
+        Map<String, String> documents = new HashMap<>(listOfDocumentsToIndex);
+        listOfDocumentsToIndex.clear();
+        if (documents.size() > 0) {
+            try {
+                final BulkResponse bulkItemResponses = client
+                    .bulkRequest(defaultIndex, documents);
+                checkIndexResponse(bulkItemResponses, documents);
+            } catch (Exception e) {
+                LOGGER.error(
+                    "An error occurred while indexing {} documents in current indexing list. Error is {}.",
+                    new Object[]{listOfDocumentsToIndex.size(), e.getMessage()});
+            } finally {
+                //                listOfDocumentsToIndex.clear();
+            }
+        }
+    }
 
-                                String failureDoc = listOfDocumentsToIndex.get(e.getId());
-                                try {
-                                    JsonNode node = mapper.readTree(failureDoc);
-                                    resourceTitle = node.get("resourceTitleObject").get("default").asText();
-                                } catch (Exception ignoredException) {
-                                }
-                                docWithErrorInfo.put(IndexFields.RESOURCE_TITLE, resourceTitle);
-                                docWithErrorInfo.put(IndexFields.DRAFT, "n");
-                                docWithErrorInfo.put(IndexFields.INDEXING_ERROR_FIELD, true);
-                                docWithErrorInfo.put(IndexFields.INDEXING_ERROR_MSG, e.getFailureMessage());
-                                // TODO: Report the JSON which was causing the error ?
+    private void checkIndexResponse(BulkResponse bulkItemResponses,
+                                    Map<String, String> documents) throws IOException {
+        if (bulkItemResponses.hasFailures()) {
+            Map<String, String> listErrorOfDocumentsToIndex = new HashMap<>(bulkItemResponses.getItems().length);
+            List<String> errorDocumentIds = new ArrayList<>();
+            // Add information in index that some items were not properly indexed
+            Arrays.stream(bulkItemResponses.getItems()).forEach(e -> {
+                if (e.status() != OK
+                    && e.status() != CREATED) {
+                    errorDocumentIds.add(e.getId());
+                    ObjectMapper mapper = new ObjectMapper();
+                    ObjectNode docWithErrorInfo = mapper.createObjectNode();
+                    docWithErrorInfo.put(IndexFields.DBID, e.getId());
+                    String resourceTitle = String.format("Document #%s", e.getId());
 
-                                LOGGER.error("Document with error #{}: {}.",
-                                    new Object[]{e.getId(), e.getFailureMessage()});
-                                LOGGER.error(failureDoc);
-
-                                try {
-                                    listErrorOfDocumentsToIndex.put(e.getId(), mapper.writeValueAsString(docWithErrorInfo));
-                                } catch (JsonProcessingException e1) {
-                                    LOGGER.error("Generated document for the index is not properly formatted. Check document #{}: {}.",
-                                        new Object[]{e.getId(), e1.getMessage()});
-                                }
-                            }
-                        });
-
-                        if (listErrorOfDocumentsToIndex.size() > 0) {
-                            BulkResponse response = client.bulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
-                            if (!(response.status().getStatus() != 201)) {
-                                LOGGER.error("Failed to save error documents {}.",
-                                    new Object[]{errorDocumentIds.toArray().toString()});
-                            }
-                        }
+                    String failureDoc = documents.get(e.getId());
+                    try {
+                        JsonNode node = mapper.readTree(failureDoc);
+                        resourceTitle = node.get("resourceTitleObject").get("default").asText();
+                    } catch (Exception ignoredException) {
                     }
-                } catch (IOException e) {
-                    // TODOES: Probably ES not accessible ?
-                    // Report errors
+                    docWithErrorInfo.put(IndexFields.RESOURCE_TITLE, resourceTitle);
+                    docWithErrorInfo.put(IndexFields.DRAFT, "n");
+                    docWithErrorInfo.put(IndexFields.INDEXING_ERROR_FIELD, true);
+                    docWithErrorInfo.put(IndexFields.INDEXING_ERROR_MSG, e.getFailureMessage());
+                    // TODO: Report the JSON which was causing the error ?
+
+                    LOGGER.error("Document with error #{}: {}.",
+                        new Object[]{e.getId(), e.getFailureMessage()});
+                    LOGGER.error(failureDoc);
+
+                    try {
+                        listErrorOfDocumentsToIndex.put(e.getId(), mapper.writeValueAsString(docWithErrorInfo));
+                    } catch (JsonProcessingException e1) {
+                        LOGGER.error("Generated document for the index is not properly formatted. Check document #{}: {}.",
+                            new Object[]{e.getId(), e1.getMessage()});
+                    }
                 }
-                listOfDocumentsToIndex.clear();
+            });
+
+            if (listErrorOfDocumentsToIndex.size() > 0) {
+                BulkResponse response = client.bulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
+                if (!(response.status().getStatus() != 201)) {
+                    LOGGER.error("Failed to save error documents {}.",
+                        new Object[]{errorDocumentIds.toArray().toString()});
+                }
             }
         }
     }
@@ -496,16 +510,15 @@ public class EsSearchManager implements ISearchManager {
             .add("MD_ConstraintsUseLimitation")
             .add("resourceType")
             .add("type")
+            .add("resourceDates")
             .add("link")
             .add("crsDetails")
             .add("format")
-            .add("creationDateForResource")
-            .add("publicationDateForResource")
-            .add("revisionDateForResource")
             .add("contact")
             .add("contactForResource")
             .add("OrgForResource")
             .add("resourceProviderOrgForResource")
+            .add("resourceVerticalRange")
             .add("resourceTemporalDateRange")
             .add("resourceTemporalExtentDateRange")
             .build();
@@ -560,6 +573,7 @@ public class EsSearchManager implements ISearchManager {
 
             boolean isArray = nodeElements.size() > 1
                 || arrayFields.contains(propertyName)
+                || propertyName.endsWith("DateForResource")
                 || propertyName.startsWith("codelist_");
             if (isArray) {
                 ArrayNode arrayNode = doc.putArray(propertyName);
@@ -625,7 +639,7 @@ public class EsSearchManager implements ISearchManager {
     }
 
     @Override
-    public void forceIndexChanges() throws IOException {
+    public void forceIndexChanges() {
         sendDocumentsToIndex();
     }
 
@@ -953,5 +967,9 @@ public class EsSearchManager implements ISearchManager {
             ApplicationContextHolder.get().getBean(EsSearchManager.class).getDefaultIndex(),
             analyzer,
             fieldValue);
+    }
+
+    public boolean isIndexing() {
+        return listOfDocumentsToIndex.size() > 0;
     }
 }

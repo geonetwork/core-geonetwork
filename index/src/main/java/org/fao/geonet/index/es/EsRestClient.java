@@ -241,54 +241,6 @@ public class EsRestClient implements InitializingBean {
             e.printStackTrace();
             throw e;
         }
-//        BulkRequestBuilder bulkRequestBuilder = client.prepareBulk();
-//        BulkResponse response = null;
-//        int counter = 0;
-//
-//        Map<String, String> errors = new HashMap<>();
-//        Iterator iterator = docs.keySet().iterator();
-//        while (iterator.hasNext()) {
-//            String id = (String)iterator.next();
-//            try {
-//
-//                bulkRequestBuilder.add(
-//                    client.prepareIndex(index, index, id).setSource(docs.get(id))
-//                );
-//                counter ++;
-//
-//                if (bulkRequestBuilder.numberOfActions() % commitInterval == 0) {
-//                    response = bulkRequestBuilder.execute().actionGet();
-//                    logger.info(String.format(
-//                        "Importing %s: %d actions performed. Has errors: %s",
-//                        index,
-//                        counter,
-//                        response.hasFailures()
-//                    ));
-//                    if (response.hasFailures()) {
-//                        errors.put(counter + "", response.buildFailureMessage());
-//                        success = false;
-//                    }
-//                    bulkRequestBuilder = client.prepareBulk();
-//                }
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        }
-//        if (bulkRequestBuilder.numberOfActions() > 0) {
-//            bulkRequestBuilder
-//                .setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
-//            response = bulkRequestBuilder.execute().actionGet();
-//            logger.info(String.format(
-//                "Importing %s: %d actions performed. Has errors: %s",
-//                index,
-//                counter,
-//                response.hasFailures()
-//            ));
-//            if (response.hasFailures()) {
-//                errors.put(counter + "", response.buildFailureMessage());
-//                success = false;
-//            }
-//        }
     }
 
 //
