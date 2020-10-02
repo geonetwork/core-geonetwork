@@ -558,27 +558,20 @@
                 <span data-translate="">tempExtent</span>
               </h2>
 
-              <ul class="timeline timeline-1-col"
+              <div class="flex-row flex-align-center gn-period"
                   data-ng-repeat="range in mdView.current.record.resourceTemporalExtentDateRange">
-                <li class="timeline-inverted"
+                <div class="flex-start"
                     data-ng-show="range.gte">
-                  <div class="timeline-badge timeline-badge-small">
-                    <i class="fa fa-fw fa-play"/>
-                  </div>
-                  <div class="timeline-panel">
-                    <dd data-gn-humanize-time="{{range.gte}}"/>
-                  </div>
-                </li>
-                <li class="timeline-inverted"
+                  <dt data-gn-humanize-time="{{range.gte}}"/>
+                </div>
+                <div class="spacer">
+                  <i class="fa fa-chevron-right"></i>
+                </div>
+                <div class="flex-end"
                     data-ng-show="range.lte">
-                  <div class="timeline-badge timeline-badge-small">
-                    <i class="fa fa-fw fa-stop"/>
-                  </div>
-                  <div class="timeline-panel">
-                    <dd data-gn-humanize-time="{{range.lte}}"/>
-                  </div>
-                </li>
-              </ul>
+                  <dt data-gn-humanize-time="{{range.lte}}"/>
+                </div>
+              </div>
             </div>
 
             <div data-ng-show="mdView.current.record.resourceVerticalRange">
@@ -587,27 +580,20 @@
                 <span data-translate="">resourceVerticalRange</span>
               </h2>
 
-              <ul class="timeline timeline-1-col"
+              <div class="flex flex-row flex-align-center gn-vertical-range"
                   data-ng-repeat="range in mdView.current.record.resourceVerticalRange">
-                <li class="timeline-inverted"
-                    data-ng-show="range.lte">
-                  <div class="timeline-badge timeline-badge-small">
-                    <i class="fa fa-fw fa-chevron-down"/>
+                <div class="width-25">
+                  <i class="fa fa-fw fa-chevron-up"/>
+                </div>
+                <div class="width-75">
+                  <div data-ng-show="range.lte">
+                    <dt>{{range.lte}}</dt>
                   </div>
-                  <div class="timeline-panel">
-                    <dd>{{range.lte}}</dd>
+                  <div data-ng-show="range.gte">
+                    <dt>{{range.gte}}</dt>
                   </div>
-                </li>
-                <li class="timeline-inverted"
-                    data-ng-show="range.gte">
-                  <div class="timeline-badge timeline-badge-small">
-                    <i class="fa fa-fw fa-chevron-up"/>
-                  </div>
-                  <div class="timeline-panel">
-                    <dd>{{range.gte}}</dd>
-                  </div>
-                </li>
-              </ul>
+                </div>
+              </div>
             </div>
           </section>
 
