@@ -249,6 +249,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
             Log.debug(Geonet.EDITOR_SESSION, "Editing session end.");
         }
         session.removeProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
+
+        metadataManager.getEditLib().clearVersion(id);
     }
 
     /**
