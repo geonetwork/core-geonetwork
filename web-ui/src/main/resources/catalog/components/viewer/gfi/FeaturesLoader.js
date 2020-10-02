@@ -358,8 +358,6 @@
    * @private
    */
   geonetwork.GnFeaturesINDEXLoader.prototype.formatUrlValues_ = function(url) {
-    var $filter = this.$injector.get('$filter');
-
     var processedUrl = this.fillUrlWithFilter_(url);
     return '<a target="_blank" href="' + encodeURI(processedUrl) + '">' +
       linkTpl + '</a>';
@@ -398,7 +396,7 @@
         if (fValue !== null && fValue !== undefined) {
           fValue = parseValue ? fValue.values[filter.split('.')[1]] :
             Object.keys(fValue.values).join(';');
-          url = url.replace(placeholder, encodeURIComponent(fValue));
+          url = url.replace(placeholder, fValue);
         } else {
           url = this.urlUtils.remove(url, [paramName]);   // when no value present, remove the whole param altogether
         }
