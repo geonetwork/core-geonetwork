@@ -299,13 +299,13 @@ public class InspireAtomUtil {
         return atomFeed;
     }
 
-    public static List<AbstractMetadata> searchMetadataByType(ServiceContext context,
+    public static List<AbstractMetadata> searchMetadataByTypeAndProtocol(ServiceContext context,
                                                               ISearchManager searchMan,
-                                                              String type) {
-
-
+                                                              String type,
+                                                              String protocol) {
             Element request = new Element(Jeeves.Elem.REQUEST);
             request.addContent(new Element("type").setText(type));
+            request.addContent(new Element("protocol").setText(protocol));
             request.addContent(new Element("fast").setText("true"));
 
             // TODOES

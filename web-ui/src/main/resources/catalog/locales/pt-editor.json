@@ -417,5 +417,8 @@
     "accessManagerChooseGroups": "Escolha um ou mais grupos",
     "accessManagerChooseOperations": "Escolha um ou mais tipos de operação",
     "status-no-status": "Fluxo de trabalho não está ativo",
-    "draft": "Cópia de Trabalho"
+    "badGmlProjectionCode": "The geometry projection <b>{{srsName}}</b> defined in the XML is not valid. Please edit the xml to fix the srs name or enter a new geometry.",
+    "draft": "Cópia de Trabalho",
+    "link": "Link",
+    "link-text": "Link text"
 }

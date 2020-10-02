@@ -63,6 +63,9 @@
   <logger name="geonetwork.editorfillelement" additivity="false">
     <level value="DEBUG"/>
   </logger>
+  <logger name="geonetwork.LanguageDetector" additivity="false">
+    <level value="DEBUG"/>
+  </logger>
   <logger name="geonetwork.index" additivity="false">
     <level value="DEBUG"/>
   </logger>
@@ -77,7 +80,18 @@
     <appender-ref ref="consoleAppender"/>
     <appender-ref ref="fileAppender"/>
   </logger>
+  <logger name="geonetwork.atom" additivity="false">
+    <level value="DEBUG"/>
+    <appender-ref ref="consoleAppender"/>
+    <appender-ref ref="fileAppender"/>
+  </logger>
+  <logger name="geonetwork.lucene" additivity="false">
+    <level value="DEBUG"/>
+  </logger>
   <logger name="geonetwork.ldap" additivity="false">
+    <level value="DEBUG"/>
+  </logger>
+  <logger name="geonetwork.lucene.tracking" additivity="false">
     <level value="DEBUG"/>
   </logger>
   <logger name="geonetwork.mef" additivity="false">
