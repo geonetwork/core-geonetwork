@@ -94,7 +94,6 @@ public class EditLib {
 
     public EditLib(SchemaManager scm) {
         this.scm = scm;
-        htVersions.clear();
     }
 
     /**
