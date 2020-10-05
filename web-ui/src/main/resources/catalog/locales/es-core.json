@@ -1,4 +1,5 @@
 {
+    "Administrator": "Administrador",
     "all": "todos",
     "allInPage": "todo en una página",
     "addToSelection": "Añadir a...",
@@ -55,8 +56,8 @@
     "address": "Dirección",
     "personal": "Personal",
     "gnToggle": "Mostrar/ocultar secciones",
-    "cookieWarning": "This web page uses cookies. If you continue using this page, we will assume you accept this.",
-    "moreOnCookie": "Want to know more about this message?",
+    "cookieWarning": "Esta página web utiliza cookies. Si continúa utilizando esta página, asumiremos que acepta el uso de cookies.",
+    "moreOnCookie": "¿Quiere saber más sobre este mensaje?",
     "acceptCookie": "Aceptar",
     "rejectCookie": "Sácame de aquí",
     "adminConsole": "Consola de Administrador",

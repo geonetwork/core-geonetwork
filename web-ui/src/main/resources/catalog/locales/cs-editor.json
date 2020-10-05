@@ -417,5 +417,8 @@
     "accessManagerChooseGroups": "Vyberte jednu nebo více skupin",
     "accessManagerChooseOperations": "Vyberte jeden nebo více typů operací",
     "status-no-status": "Pracovní postup není aktivní",
-    "draft": "Pracovní kopie"
+    "badGmlProjectionCode": "Projekce geometrie <b>{{srsName}}</b> definovaná v XML není platná. Upravte xml, abyste opravili název srs nebo zadejte novou geometrii.",
+    "draft": "Pracovní kopie",
+    "link": "Odkaz",
+    "link-text": "Text odkazu"
 }

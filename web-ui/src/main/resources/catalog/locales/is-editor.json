@@ -417,5 +417,8 @@
     "accessManagerChooseGroups": "Veldu einn eða fleiri hópa",
     "accessManagerChooseOperations": "Veldu eina eða fleiri aðgerðartegundir",
     "status-no-status": "Vinnuferli ekki virkt",
-    "draft": "Vinnuafrit"
+    "badGmlProjectionCode": "The geometry projection <b>{{srsName}}</b> defined in the XML is not valid. Please edit the xml to fix the srs name or enter a new geometry.",
+    "draft": "Vinnuafrit",
+    "link": "Tengill",
+    "link-text": "Link text"
 }

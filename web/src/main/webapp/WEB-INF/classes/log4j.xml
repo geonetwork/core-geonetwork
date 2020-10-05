@@ -72,8 +72,11 @@
   <logger name="geonetwork.editorfillelement">
     <level value="ERROR"/>
   </logger>
+  <logger name="geonetwork.LanguageDetector">
+    <level value="ERROR"/>
+  </logger>
   <logger name="geonetwork.index">
-    <level value="WARNING"/>
+    <level value="ERROR"/>
   </logger>
   <logger name="geonetwork.csw">
     <level value="ERROR"/>
@@ -89,7 +92,18 @@
     <appender-ref ref="consoleAppender"/>
     <appender-ref ref="fileAppender"/>
   </logger>
+  <logger name="geonetwork.atom" additivity="false">
+    <level value="INFO"/>
+    <appender-ref ref="consoleAppender"/>
+    <appender-ref ref="fileAppender"/>
+  </logger>
+  <logger name="geonetwork.lucene">
+    <level value="ERROR"/>
+  </logger>
   <logger name="geonetwork.ldap">
+    <level value="ERROR"/>
+  </logger>
+  <logger name="geonetwork.lucene.tracking">
     <level value="ERROR"/>
   </logger>
   <logger name="geonetwork.mef">

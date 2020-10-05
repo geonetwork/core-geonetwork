@@ -1,11 +1,12 @@
 # ISO 19115-3:2018 schema plugin
 
-This is the ISO19115-3:2018 schema plugin available in GeoNetwork 3.8.x by default.
+This is the ISO19115-3:2018 schema plugin included in core-geonetwork.
 
 The main changes with the previous ISO19115-3 plugin are:
+
 * Update to latest XSD (https://github.com/ISO-TC211/XML/wiki/Schema-Updates)
 * Add support for 19115-2 Imagery standards
-
+* directly included in core-geonetwork
 
 ## Reference documents:
 
@@ -25,7 +26,6 @@ Discovery Service](http://cnig.gouv.fr/wp-content/uploads/2015/06/titellus_fx_pr
 * SPW / Metawal http://metawal.wallonie.be/
 * Ifremer / Sextant https://sextant.ifremer.fr/ (only some projects - EMODnet Checkpoint, CERSAT)
 
-
 ## Description:
 
 This plugin is composed of:
@@ -42,62 +42,6 @@ This plugin is composed of:
 * multilingual metadata support
 * validation (XSD and Schematron)
 
-
-
-## Installing the plugin
-
-Use GeoNetwork 3.8+ version.
-
-### Adding the plugin to the source code
-
-The best approach is to add the plugin as a submodule into GeoNetwork schema module.
-
-```
-cd schemas
-git submodule add https://github.com/metadata101/iso19115-3.2018.git iso19115-3.2018
-```
-
-Choose the branch corresponding to the GeoNetwork version you are using.
-
-Add the new module to the schema/pom.xml:
-
-```
-  <module>iso19139</module>
-  <module>iso19115-3.2018</module>
-</modules>
-```
-
-Add the dependency in the web module in web/pom.xml:
-
-```
-<dependency>
-  <groupId>${project.groupId}</groupId>
-  <artifactId>schema-iso19115-3.2018</artifactId>
-  <version>${gn.schemas.version}</version>
-</dependency>
-```
-
-Add the module to the webapp in web/pom.xml:
-
-```
-<execution>
-  <id>copy-schemas</id>
-  <phase>process-resources</phase>
-  ...
-  <resource>
-    <directory>${project.basedir}/../schemas/iso19115-3.2018/src/main/plugin</directory>
-    <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-  </resource>
-```
-
-
-Build the application.
-
-
-### Adding the conversion to the import record page
-
-Add `ISO19139-to-ISO19115-3-2018.xsl` and `ISO19115-3-2014-to-ISO19115-3-2018.xsl` to the `/web/src/main/webapp/xsl/conversion/import` folder.
-
 ## Metadata rules:
 
 ### Metadata identifier
@@ -106,7 +50,7 @@ The metadata identifier is stored in the element mdb:MD_Metadata/mdb:metadataIde
 Only the code is set by default but more complete description may be defined (see authority,
 codeSpace, version, description).
 
-```
+```xml
 <mdb:metadataIdentifier>
   <mcc:MD_Identifier>
     <mcc:code>
@@ -123,15 +67,16 @@ to the catalog the metadata was created. If the metadata is harvested by another
 catalog, then this link will provide a way to retrieve the original record in the
 source catalog.
 
-```
+```xml
 <mdb:metadataLinkage>
   <cit:CI_OnlineResource>
     <cit:linkage>
       <gco:CharacterString>http://localhost/geonetwork/srv/eng/home?uuid={{MetadataUUID}}</gco:CharacterString>
     </cit:linkage>
     <cit:function>
-      <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode"
-                                 codeListValue="completeMetadata"/>
+      <cit:CI_OnLineFunctionCode
+         codeList="http://standards.iso.org/iso/19139/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode"
+         codeListValue="completeMetadata"/>
     </cit:function>
   </cit:CI_OnlineResource>
 </mdb:metadataLinkage>
@@ -148,11 +93,9 @@ The parent metadata records is referenced using the following form from the edit
 
 Nevertheless, the citation code is also indexed.
 
-
-
 ### Validation
 
-Validation steps are first XSD validation made on the schema, then the schematron validation defined in folder  [iso19115-3.2018/schematron](https://github.com/metadata101/iso19115-3.2018/tree/develop/src/main/plugin/iso19115-3/schematron). 2 famillies of rules are available:
+Validation steps are first XSD validation made on the schema, then the schematron validation defined in folder  [iso19115-3.2018/schematron](https://github.com/geonetwork/core-geonetwork/tree/master/schemas/iso19115-3.2018/src/main/plugin/iso19115-3.2018/schematron). 2 famillies of rules are available:
 * ISO rules (defined by TC211)
 * INSPIRE rules
 
@@ -161,7 +104,7 @@ Validation steps are first XSD validation made on the schema, then the schematro
 
 If requesting using output schema http://www.isotc211.org/2005/gmd an ISO19139 record is returned. 
 To retrieve the record in ISO19115-3.2018, use http://standards.iso.org/iso/19115/-3/mdb/2.0 output schema.
-```
+```xml
 <?xml version="1.0"?>
 <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
   service="CSW"
@@ -172,7 +115,6 @@ To retrieve the record in ISO19115-3.2018, use http://standards.iso.org/iso/1911
 </csw:GetRecordById>
 ```
 Note: outputSchema = own will also return the record in ISO19115-3.
-
 
 
 ## More work required
@@ -200,4 +142,3 @@ Comments and questions to geonetwork-developers or geonetwork-users mailing list
 * François Prunayre (titellus)
 * Arnaud De Groof (Spacebel)
 * Ted Habermann (hdfgroup)
-* Craig Jones

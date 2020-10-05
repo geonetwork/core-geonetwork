@@ -417,5 +417,8 @@
     "accessManagerChooseGroups": "하나 이상의 그룹을 선택",
     "accessManagerChooseOperations": "하나 이상의 작업 유형 선택",
     "status-no-status": "Workflow not active",
-    "draft": "Working copy"
+    "badGmlProjectionCode": "The geometry projection <b>{{srsName}}</b> defined in the XML is not valid. Please edit the xml to fix the srs name or enter a new geometry.",
+    "draft": "Working copy",
+    "link": "링크",
+    "link-text": "Link text"
 }

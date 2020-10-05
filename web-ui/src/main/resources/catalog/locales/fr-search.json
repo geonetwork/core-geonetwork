@@ -524,5 +524,6 @@
     "geometryFilter": "Emprise",
     "GUFname": "Nom",
     "GUFemail": "Email",
-    "GUForganization": "Organisation"
+    "GUForganization": "Organisation",
+    "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed"
 }
