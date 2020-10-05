@@ -98,5 +98,9 @@
   "ui-facetConfig": "Facets configuration",
   "ui-facetConfig-help": "This configuration is used to display facets, using either terms aggregations or filters. See <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html\">the documentation</a> for more information.",
   "resourceEvents": "Resource events",
-  "resourceVerticalRange": "Vertical extent"
+  "resourceVerticalRange": "Vertical extent",
+  "searchBadRequest": "Query returned an error. Check the console for details.",
+  "searchInvalidResponse": "Query returned an invalid response. Check the console for details.",
+  "exactMatch": "Exact match",
+  "exactMatch-help": "Exact match means that '\"' are added to the search terms."
 }

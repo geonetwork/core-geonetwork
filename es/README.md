@@ -101,3 +101,15 @@ curl -s -XGET localhost:9200/gn-records/_mapping?pretty | grep type | wc -l
 ```
 
 See https://www.elastic.co/guide/en/elasticsearch/reference/master/mapping.html#mapping
+
+
+
+* Field expansion limit: The client application will report "Query returned an error. Check the console for details" and the error contains the following:
+
+```
+field expansion for [*] matches too many fields, limit: 1024
+```
+
+An option is to restrict `queryBase` to limit the number of field to query on. `any:(${any}) resourceTitleObject.default:(${any})^2` is a good default. Using `${any}` will probably trigger the error if the number of records is high.
+
+The other option is to increase `indices.query.bool.max_clause_count`.
