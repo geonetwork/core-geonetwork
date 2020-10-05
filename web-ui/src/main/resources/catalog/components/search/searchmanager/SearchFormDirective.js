@@ -49,7 +49,7 @@
    * Controller to create new metadata record.
    */
   var searchFormController =
-      function($scope, $location, $parse, gnSearchManagerService,
+      function($scope, $location, $parse, $translate, gnSearchManagerService,
                Metadata, gnSearchLocation, gnESClient,
                gnESService, gnAlertService) {
     var defaultParams = {};
@@ -165,9 +165,10 @@
         .then(function(data) {
         // data is not an object: this is an error
         if (typeof data !== 'object') {
+          console.warn('An error occurred while searching. Response is not an object.', esParams, data.data);
           gnAlertService.addAlert({
             id: 'searchError',
-            msg: data || ('Error running search: ' + angular.toJson(esParams)),
+            msg: $translate.instant('searchInvalidResponse'),
             type: 'danger'
           });
           return;
@@ -205,7 +206,12 @@
           paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
         }
       },function(data){
-        console.warn('An error occurred while searching with params', esParams);
+        console.warn('An error occurred while searching. Bad request.', esParams, data.data);
+        gnAlertService.addAlert({
+          id: 'searchError',
+          msg: $translate.instant('searchBadRequest'),
+          type: 'danger'
+        });
       }).then(function() {
         $scope.searching--;
       });
@@ -331,6 +337,7 @@
 
       $scope.$broadcast('beforeSearchReset', preserveGeometrySearch);
 
+      $scope.searchObj.state.exactMatch = false;
       if (searchParams) {
         $scope.searchObj.params = searchParams;
       } else {
@@ -513,6 +520,7 @@
     '$scope',
     '$location',
     '$parse',
+    '$translate',
     'gnSearchManagerService',
     'Metadata',
     'gnSearchLocation',

@@ -57,7 +57,7 @@
        * @param queryHook
        * @param p
        */
-      this.buildQueryClauses = function(queryHook, p, luceneQueryString) {
+      this.buildQueryClauses = function(queryHook, p, luceneQueryString, exactMatch) {
         var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
           'sortBy', 'sortOrder', 'resultType', 'facet.q', 'any', 'geometry', 'query_string',
           'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo', 'geom', 'relation',
@@ -79,8 +79,11 @@
                   'Using default value \'${any}\'.');
                 queryBase = defaultQuery;
               }
-              var q = queryBase.replace(/\$\{any\}/g,
-                                        escapeSpecialCharacters(p.any));
+              var searchString = escapeSpecialCharacters(p.any),
+                q = queryBase.replace(
+                      /\$\{any\}/g,
+                      exactMatch === true ? '\"' + searchString + '\"' : searchString);
+              console.log(q);
               queryStringParams.push(q);
             } else {
               queryStringParams.push(queryExpression[1]);
@@ -247,7 +250,7 @@
         }
 
         var queryHook = query.function_score.query.bool;
-        this.buildQueryClauses(queryHook, p, luceneQueryString);
+        this.buildQueryClauses(queryHook, p, luceneQueryString, searchState.exactMatch);
 
         if(p.from) {
           params.from = p.from - 1;

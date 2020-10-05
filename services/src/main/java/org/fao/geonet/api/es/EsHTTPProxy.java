@@ -468,13 +468,22 @@ public class EsHTTPProxy {
                 // interactions with the resource are enabled now
                 connectionWithFinalHost.connect();
 
+                // send remote host's response to client
+                String contentEncoding = getContentEncoding(connectionWithFinalHost.getHeaderFields());
+
                 int code = connectionWithFinalHost.getResponseCode();
                 if (code != 200) {
+                    InputStream errorDetails = "gzip".equalsIgnoreCase(contentEncoding) ?
+                        new GZIPInputStream(connectionWithFinalHost.getErrorStream()) :
+                        connectionWithFinalHost.getErrorStream();
+
                     response.sendError(code,
                         String.format(
-                            "Error is: %s. Request body: %s",
+                            "Error is: %s.\nRequest:\n%s.\nError:\n%s.",
                             connectionWithFinalHost.getResponseMessage(),
-                            requestBody));
+                            requestBody,
+                            IOUtils.toString(errorDetails)
+                        ));
                     return;
                 }
 
@@ -501,9 +510,6 @@ public class EsHTTPProxy {
                             + "\" is not allowed by the proxy rules");
                     return;
                 }
-
-                // send remote host's response to client
-                String contentEncoding = getContentEncoding(connectionWithFinalHost.getHeaderFields());
 
                 // copy headers from the remote server's response to the response to send to the client
                 copyHeadersFromConnectionToResponse(response, connectionWithFinalHost, "Content-Length");
