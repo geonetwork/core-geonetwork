@@ -1,20 +1,24 @@
-<ul class="row gn-info-list">
-  <li
-    data-ng-repeat="row in featuredSearches"
-    data-ng-click="search(row.url)"
-    id="gn-info-list-mw-{row.id}}">
-    <section class="resultcard clearfix"
-             data-ng-class="row.url ? 'hasThumbnail' : 'noThumbnail'">
+<ul class="row list-group gn-info-list">
+  <li class="list-group-item panel panel-default gn-card"
+      data-ng-repeat="row in featuredSearches"
+      data-ng-click="search(row.url)"
+      id="gn-info-list-mw-{row.id}}">
 
-      <div class="title">
-        <h4>{{row.names[lang] || row.names['eng'] || ('userSearchNameMissing' | translate)}}&nbsp;</h4>
+    <div class="panel-heading gn-card-heading">
+      <div class="gn-md-title">
+        <h1>{{row.names[lang] || row.names['eng'] || ('userSearchNameMissing' | translate)}}</h1>
       </div>
+    </div>
 
-      <div class="gn-md-thumbnail">
-        <div class="gn-img-thumbnail"
-             style="background-image: url({{row.logo}})">
+    <div class="panel-body gn-card-body">
+      <div class="gn-md-contents">
+        <div class="gn-md-thumbnail"
+             data-ng-class="{'gn-md-no-thumbnail': !row.logo}">
+          <div class="gn-img-thumbnail"
+              style="background-image: url({{row.logo}})">
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   </li>
 </ul>

@@ -43,14 +43,18 @@
         data-ng-show="searchResults.records.length > 0">
     <div class="row gn-top-records" role="row">
       <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
-        <h4 data-translate="">topMaps</h4>
+        <div class="col-sm-12">
+          <h4 data-translate="">topMaps</h4>
 
-        <input type="hidden" name="_csrf" value="{{csrf}}"/>
+          <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
-        <div data-ng-show="searchResults.records.length > 0"
-             data-gn-results-container=""
-             data-search-results="searchResults"
-             data-template-url="resultTemplate"></div>
+          <div data-ng-show="searchResults.records.length > 0"
+              class="gn-info-list-blocks"
+              data-gn-results-container=""
+              data-search-results="searchResults"
+              data-template-url="resultTemplate"></div>
+        </div>
+
       </div>
     </div>
     <!-- /.gn-top-records -->

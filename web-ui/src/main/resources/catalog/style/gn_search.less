@@ -403,9 +403,6 @@ span.gn-facet-label:first-letter {
   h4 {
     font-size: 14px;
   }
-  p {
-    // font-size: .9em;
-  }
   blockquote {
     padding: 6px 20px;
     margin:0;
@@ -420,53 +417,17 @@ span.gn-facet-label:first-letter {
   .invisible {
     display: none;
   }
-  .gn-md-thumbnail {
-    float:left;
-    width: 140px;
-    height: auto;
-    margin-right: 15px;
-    border-radius: 4px;
-    overflow: hidden;
-    .gn-img-thumbnail {
-      border: 1px solid #ddd;
-      margin: 0;
-      min-height: 100%;
-    }
-  }
-  .gn-md-no-thumbnail {
-    width: 140px;
-    height: 140px;
-    background-size: 140px 140px;
-    background-image: url(../catalog/views/default/images/no-thumbnail.png);
-    height: 140px;
-  }
 }
 
 
 .gn-top-records {
-  .well();
-
   /* Make a wide div with an horizontal scroll */
   [data-gn-results-container] {
-    overflow-x: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
 
     .gn-resultview {
       display: flex;
-    }
-
-    /* to loop over results */
-    li.gn-grid {
-      width: 200px;
-      min-width: 200px;
-      height: 200px;
-      text-align: center;
-
-      .gn-md-thumbnail {
-        display: inline-block;
-        float: none;
-        margin-right: 0px;
-      }
     }
   }
 }

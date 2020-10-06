@@ -1,46 +1,48 @@
-<ul class="row gn-info-list">
-  <li
-    data-ng-repeat="md in searchResults.records"
-    gn-metadata-open="md"
-    gn-records="searchResults.records"
-    gn-formatter="formatter.defaultUrl"
-    id="gn-info-list-mw-{{md.getUuid()}}">
-    <section class="resultcard clearfix"
-             data-ng-class="md.getThumbnails().list[0].url ? 'hasThumbnail' : 'noThumbnail'">
+<ul class="row list-group gn-info-list">
+  <li class="list-group-item panel panel-default gn-card"
+      data-ng-repeat="md in searchResults.records"
+      gn-metadata-open="md"
+      gn-records="searchResults.records"
+      gn-formatter="formatter.defaultUrl">
 
-      <div class="title">
+    <div class="panel-heading gn-card-heading">
+      <div class="gn-md-title">
         <a href=""
-           title="{{md.title || md.defaultTitle}}"
-           gn-metadata-open="md"
-           gn-records="searchResults.records"
-           gn-formatter="formatter.defaultUrl">
-          <h4>{{md.title || md.defaultTitle}}&nbsp;</h4>
+          title="{{md.title || md.defaultTitle}}"
+          gn-metadata-open="md"
+          gn-records="searchResults.records"
+          gn-formatter="formatter.defaultUrl">
+          <h1>{{md.title || md.defaultTitle}}</h1>
         </a>
       </div>
+    </div>
+    <!-- /.gn-card-heading -->
 
-      <div class="gn-md-thumbnail">
-        <a href=""
-           title="{{(md.abstract || md.defaultAbstract) | striptags}}"
-           gn-metadata-open="md"
-           gn-records="searchResults.records"
-           gn-formatter="formatter.defaultUrl">
-          <div class="gn-img-thumbnail"
-               style="background-image: url('{{md.getThumbnails().list[0].url}}')">
+    <div class="panel-body gn-card-body">
+      <div class="gn-md-contents">
+        <div class="gn-md-thumbnail"
+             data-ng-class="{'gn-md-no-thumbnail': !md.getThumbnails().list[0].url}">
+          <a href=""
+            title="{{(md.abstract || md.defaultAbstract) | striptags}}"
+            gn-metadata-open="md"
+            gn-records="searchResults.records"
+            gn-formatter="formatter.defaultUrl">
+            <div class="gn-img-thumbnail"
+                 style="background-image: url('{{md.getThumbnails().list[0].url}}')">
+            </div>
+          </a>
+        </div>
+        <div class="gn-md-details">
+          <div class="gn-md-abstract">
+            <p>{{md.abstract}}</p>
+            <div class="gn-md-types">
+              <span class="badge" data-ng-repeat="t in md.type">{{t | translate}}</span>
+            </div>
           </div>
-        </a>
-      </div>
-
-      <div class="content">
-        <div class="abstract">
-          {{md.abstract}}
-        </div>
-
-        <div class="introduction">
-          <span class="badge" data-ng-repeat="t in md.type">{{t | translate}}
-          </span>
         </div>
       </div>
-
-    </section>
+    </div>
+    <!-- /.gn-card-body -->
   </li>
+  <!-- /.gn-card -->
 </ul>
