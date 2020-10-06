@@ -27,7 +27,6 @@ import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ReservedGroup;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -37,16 +36,6 @@ import java.util.List;
  * @author Jesse
  */
 public interface GroupRepositoryCustom {
-    /**
-     * Find the group with the given groupId (where groupId is a string).  The string will be converted
-     * to an integer for making the query.
-     *
-     * @param groupId the groupid.
-     * @return the group with the given groupid
-     */
-    @Nullable
-    Group findOne(@Nonnull String groupId);
-
     /**
      * Find a group given one of the Reserved groups enumeration values.
      *

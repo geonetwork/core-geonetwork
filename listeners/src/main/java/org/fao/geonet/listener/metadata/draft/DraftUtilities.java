@@ -117,10 +117,10 @@ public class DraftUtilities {
             st.setMetadataId(md.getId());
             st.setUuid(md.getUuid());
             try {
-            st.setTitles(metadataUtils.extractTitles(Integer.toString(md.getId())));
+                st.setTitles(metadataUtils.extractTitles(Integer.toString(md.getId())));
             } catch (Exception e) {
                 Log.error(Geonet.DATA_MANAGER, String.format(
-                        "Error locating titles for metadata id: %d", + md.getId()), e);
+                        "Error locating titles for metadata id: %d", +md.getId()), e);
             }
 
             metadataStatusRepository.save(st);

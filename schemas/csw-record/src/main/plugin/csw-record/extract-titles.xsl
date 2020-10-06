@@ -31,7 +31,7 @@
   <xsl:template match="csw:Record|csw:SummaryRecord">
     <titles>
       <title>
-        <xsl:attribute name="lang"><xsl:value-of select="dc:language"/></xsl:attribute>
+        <xsl:attribute name="lang"><xsl:value-of select="dc:language[1]"/></xsl:attribute>
         <xsl:value-of select="dc:title"/>
       </title>
     </titles>

@@ -846,7 +846,7 @@ public class BaseMetadataManager implements IMetadataManager {
         String popularity = "" + dataInfo.getPopularity();
         String rating = "" + dataInfo.getRating();
         String owner = "" + metadata.getSourceInfo().getOwner();
-        String groupOwner = "" + metadata.getSourceInfo().getGroupOwner();
+        Integer groupOwner = metadata.getSourceInfo().getGroupOwner();
         String displayOrder = "" + dataInfo.getDisplayOrder();
 
         Element info = new Element(Edit.RootChild.INFO, Edit.NAMESPACE);
