@@ -443,6 +443,7 @@
   </servlet-mapping>
 
   <session-config>
+    <tracking-mode>COOKIE</tracking-mode>
     <session-timeout>${sessionTimeout}</session-timeout>
     <cookie-config>
       <http-only>true</http-only>
