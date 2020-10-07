@@ -61,7 +61,8 @@ import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
 
 /**
  * Represents a date at a given time. Provides methods for representing the date as a string and
- * parsing from string. <p> String format is: yyyy-mm-ddThh:mm:ss </p>
+ * parsing from string.
+ * <p>String format is: {@code yyyy-mm-ddThh:mm:ss}.</p>
  */
 @Embeddable
 @XmlRootElement
@@ -479,7 +480,6 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
     /**
      * Get the Time and Date encoded as a String.
      */
-
     @XmlValue
     public String getDateAndTime() {
         if (_shortDate || _shortDateYearMonth || _shortDateYear) {
@@ -643,7 +643,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
         try {
             String[] parts = isoDate.split("[-/]");
             if ((parts.length == 0) || (parts.length > 3)) {
-                throw new IllegalArgumentException("Invalid ISO date : " + isoDate);
+                throw new IllegalArgumentException("Invalid ISO date: " + isoDate);
             }
 
             _shortDate = (parts.length == 3);
@@ -694,7 +694,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
             internalDateTime = ZonedDateTime.of(year, month, day, hour, minute, second, 0, ZoneOffset.UTC);
 
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid ISO date : " + isoDate, e);
+            throw new IllegalArgumentException("Invalid ISO date: " + isoDate, e);
         }
     }
 
@@ -702,7 +702,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
         try {
             String[] parts = isoDate.split(":");
             if (parts.length == 1 || parts.length > 3) {
-                throw new IllegalArgumentException("Invalid ISO date : " + isoDate);
+                throw new IllegalArgumentException("Invalid ISO date: " + isoDate);
             }
 
             int hour = Integer.parseInt(parts[0]);
@@ -724,7 +724,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
 
             _shortDate = false;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid ISO date : " + isoDate, e);
+            throw new IllegalArgumentException("Invalid ISO date: " + isoDate, e);
         }
     }
 

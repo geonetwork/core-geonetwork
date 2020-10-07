@@ -35,7 +35,6 @@ import java.time.temporal.TemporalUnit;
 import static java.util.Calendar.YEAR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class ISODateTest {
 
@@ -225,8 +224,6 @@ public class ISODateTest {
     public void testTimeDifferenceInSeconds() {
         ISODate date1 = new ISODate("1976-6-3T1:2:3");
         ISODate date2 = new ISODate("1976-6-3T1:2:30");
-        System.out.println(date1.getTimeInSeconds());
-        System.out.println(date2.getTimeInSeconds());
         assertEquals(27, date2.timeDifferenceInSeconds(date1));
         assertEquals(-27, date1.timeDifferenceInSeconds(date2));
     }
@@ -262,22 +259,20 @@ public class ISODateTest {
     @Test
     public void testParseISODateTime() {
         // Format: yyyy-mm-ddThh.mm:ss[+hh:mm|=+hh:mm] Time zone
-        String jodaISODate = ISODate
-            .convertToISOZuluDateTime("2010-10-10T00:00:00+02:00");
-        assertTrue(jodaISODate.equals("2010-10-09T22:00:00.000Z"));
+        String datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2010-10-10T00:00:00+02:00");
+        assertTrue(datetimeInIsoFormat.equals("2010-10-09T22:00:00.000Z"));
 
         // Format: yyyy-mm-ddThh.mm:ss.ms[+hh:mm|=+hh:mm] Time zone
-        jodaISODate = ISODate
-            .convertToISOZuluDateTime("2010-10-10T00:00:00.000+02:00");
-        assertTrue(jodaISODate.equals("2010-10-09T22:00:00.000Z"));
+        datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2010-10-10T00:00:00.000+02:00");
+        assertTrue(datetimeInIsoFormat.equals("2010-10-09T22:00:00.000Z"));
 
         // Format: yyyy-mm-ddThh.mm:ssZ (UTC)
-        jodaISODate = ISODate.convertToISOZuluDateTime("2010-10-10T00:00:00Z");
-        assertTrue(jodaISODate.equals("2010-10-10T00:00:00.000Z"));
+        datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2010-10-10T00:00:00Z");
+        assertTrue(datetimeInIsoFormat.equals("2010-10-10T00:00:00.000Z"));
 
         // Format: yyyy-mm-ddThh.mm:ss.msZ (UTC)
-        jodaISODate = ISODate.convertToISOZuluDateTime("2010-10-10T00:00:00.000Z");
-        assertTrue(jodaISODate.equals("2010-10-10T00:00:00.000Z"));
+        datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2010-10-10T00:00:00.000Z");
+        assertTrue(datetimeInIsoFormat.equals("2010-10-10T00:00:00.000Z"));
     }
 
     @Test
@@ -291,16 +286,15 @@ public class ISODateTest {
 
             // Format: yyyy-MM-hh:mm Time zone
             String tmp = year + "-" + month + "-" + hour + ":" + minutes + "Z";
-            String jodaISODate = ISODate.convertToISOZuluDateTime(tmp);
-            assertEquals(jodaISODate, year + "-" + month + "-01T" + hour + ":"
-                + minutes + ":00.000Z");
+            String dateTimeInIsoFormat = ISODate.convertToISOZuluDateTime(tmp);
+            assertEquals(dateTimeInIsoFormat, year + "-" + month + "-01T" + hour + ":" + minutes + ":00.000Z");
 
             year = "20" + getRandom(1, 0) + getRandom(9, 0);
             month = "0" + getRandom(9, 1);
             // Format: yyyy-MM
             tmp = year + "-" + month;
-            jodaISODate = ISODate.convertToISOZuluDateTime(tmp);
-            assertEquals(jodaISODate, tmp + "-01T00:00:00.000Z");
+            dateTimeInIsoFormat = ISODate.convertToISOZuluDateTime(tmp);
+            assertEquals(dateTimeInIsoFormat, tmp + "-01T00:00:00.000Z");
 
         }
     }
@@ -314,20 +308,19 @@ public class ISODateTest {
             String minutes = getRandom(5, 1) + "" + getRandom(9, 0);
 
             // Format: yyyy-hh:mm Time zone
-            String jodaISODate = ISODate.convertToISOZuluDateTime(year + "-" + hour + ":" + minutes + "Z");
-            assertEquals(jodaISODate, year + "-01-01T" + hour + ":" + minutes + ":00.000Z");
+            String datetimeInIsoFormat = ISODate.convertToISOZuluDateTime(year + "-" + hour + ":" + minutes + "Z");
+            assertEquals(datetimeInIsoFormat, year + "-01-01T" + hour + ":" + minutes + ":00.000Z");
 
             year = "20" + getRandom(1, 0) + getRandom(9, 0);
 
             // Format: yyyy
-            jodaISODate = ISODate.convertToISOZuluDateTime(year);
-            assertEquals(jodaISODate, year + "-01-01T00:00:00.000Z");
+            datetimeInIsoFormat = ISODate.convertToISOZuluDateTime(year);
+            assertEquals(datetimeInIsoFormat, year + "-01-01T00:00:00.000Z");
         }
     }
 
     private String getRandom(int max, int min) {
-        return Integer
-            .toString(min + (int) (Math.random() * ((max - min) + 1)));
+        return Integer.toString(min + (int) (Math.random() * ((max - min) + 1)));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -411,7 +404,6 @@ public class ISODateTest {
     public void testGetDate() throws Exception {
         ISODate isoDate = new ISODate("2013-10-10T13:20:00Z");
         assertEquals("2013-10-10", isoDate.getDateAsString());
-
 
         isoDate = new ISODate("2019-01");
         assertEquals("2019-01", isoDate.getDateAsString());
