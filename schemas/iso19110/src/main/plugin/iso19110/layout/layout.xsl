@@ -167,7 +167,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelConfig"/>
-      <xsl:with-param name="value" select="*"/>
+      <xsl:with-param name="value" select="*[namespace-uri(.) != $gnUri]"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
       <xsl:with-param name="widgetParams"/>-->
@@ -235,7 +235,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelConfig"/>
-      <xsl:with-param name="value" select="*"/>
+      <xsl:with-param name="value" select="*[namespace-uri(.) != $gnUri]"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
       <xsl:with-param name="widgetParams"/>-->

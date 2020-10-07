@@ -374,7 +374,7 @@
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
                       select="$labelConfig/*"/>
-      <xsl:with-param name="value" select="if ($isMultilingualElement) then $values else *"/>
+      <xsl:with-param name="value" select="if ($isMultilingualElement) then $values else *[namespace-uri(.) != $gnUri]"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
         <xsl:with-param name="widgetParams"/>-->

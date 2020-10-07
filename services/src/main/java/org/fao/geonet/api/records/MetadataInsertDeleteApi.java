@@ -62,6 +62,7 @@ import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordCreateEvent;
 import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.events.history.RecordImportedEvent;
+import org.fao.geonet.exceptions.BadFormatEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.AccessManager;
@@ -556,6 +557,11 @@ public class MetadataInsertDeleteApi {
                         List<String> ids = MEFLib.doImport(version == MEFLib.Version.V1 ? "mef" : "mef2",
                                 uuidProcessing, transformWith, settingManager.getSiteId(), metadataType, category,
                                 group, rejectIfInvalid, assignToCatalog, context, tempFile);
+                        if (ids.isEmpty()) {
+                            //we could have used a finer-grained error handling inside the MEFLib import call (MEF MD file processing)
+                            //This is a catch-for-call for the case when there is no record is imported, to notify the user the import is not successful.
+                            throw new BadFormatEx("Import 0 record, check whether the importing file is a valid MEF archive.");
+                        }
                         ids.forEach(e -> {
                             report.addMetadataInfos(Integer.parseInt(e),
                                     String.format("Metadata imported with ID '%s'", e));

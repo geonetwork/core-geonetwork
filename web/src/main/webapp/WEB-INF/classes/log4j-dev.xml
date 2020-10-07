@@ -80,6 +80,11 @@
     <appender-ref ref="consoleAppender"/>
     <appender-ref ref="fileAppender"/>
   </logger>
+  <logger name="geonetwork.atom" additivity="false">
+    <level value="DEBUG"/>
+    <appender-ref ref="consoleAppender"/>
+    <appender-ref ref="fileAppender"/>
+  </logger>
   <logger name="geonetwork.lucene" additivity="false">
     <level value="DEBUG"/>
   </logger>

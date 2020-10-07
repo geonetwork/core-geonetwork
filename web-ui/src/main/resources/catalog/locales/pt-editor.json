@@ -1,4 +1,5 @@
 {
+    "featureCatReplace": "Replace existing feature catalog?",
     "add-extent-from-geokeywords": "Calcular extensão a partir de palavras-chave",
     "add-extent-from-geokeywords-help": "Search all keywords from thesaurus of type 'place' and add matching extents.",
     "addCRS-help": "Adicionar novo CRS",
@@ -368,6 +369,7 @@
     "linkToXmlTab": "Alguns erros podem ser corrigido usando o <a href=\"#/metadata/{{metadataId}}?tab=xml\">editor XML</a> .",
     "directoryManagerSubtitle": "Esta tela permite que você edite entradas de diretório, como contatos, formatos, etc., incluindo gerenciamento de modelos.",
     "directoryManagerSubtitleImport": "Digite aqui o conteúdo completo do XML de entrada para importa-lo para o banco de dados.",
+    "directoryManagerError": "Error when importing the full XML",
     "directoryEntryTypes": "Tipos de entrada",
     "directoryTemplates": "Modelos",
     "addNewDirectoryEntry": "Adicionar uma nova entrada",
@@ -415,5 +417,8 @@
     "accessManagerChooseGroups": "Escolha um ou mais grupos",
     "accessManagerChooseOperations": "Escolha um ou mais tipos de operação",
     "status-no-status": "Fluxo de trabalho não está ativo",
-    "draft": "Cópia de Trabalho"
+    "badGmlProjectionCode": "The geometry projection <b>{{srsName}}</b> defined in the XML is not valid. Please edit the xml to fix the srs name or enter a new geometry.",
+    "draft": "Cópia de Trabalho",
+    "link": "Link",
+    "link-text": "Link text"
 }

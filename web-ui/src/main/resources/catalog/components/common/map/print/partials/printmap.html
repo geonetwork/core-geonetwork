@@ -65,6 +65,16 @@
       <textarea class="form-control" aria-label="{{'mapComment'|translate}}" data-ng-model="mapComment"></textarea>
     </div>
   </div>
+
+  <div class="alert alert-warning flex-row flex-align-center small" role="alert" ng-if="unsupportedLayers.length > 0">
+    <span class="fa fa-warning"></span>
+    <div class="flex-spacer"></div>
+    <div>
+      <span translate>printUnsupportedLayerTypes</span>:
+      <strong>{{unsupportedLayers.join(', ')}}</strong>
+    </div>
+  </div>
+
   <button class="btn btn-default btn-block" ng-class="{'disabled': printing}"
           data-ng-click="submit()">
     <i class="fa fa-print" ng-if="!printing"></i>
