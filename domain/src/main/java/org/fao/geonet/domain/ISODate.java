@@ -89,21 +89,18 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
     @XmlTransient private static final Pattern htmlFormat = Pattern
             .compile("([a-zA-Z]{3}) ([a-zA-Z]{3}) ([0-9]{2}) ([0-9]{4}) ([0-2][0-9]):([0-5][0-9]):([0-5][0-9]) (.+)");
 
-    @XmlTransient private boolean _shortDate; // --- 'true' if the format is yyyy-mm-dd
+    /** {@code true} if the format is {@code yyyy-mm-dd}. */
+    @XmlTransient private boolean _shortDate;
 
-    @XmlTransient private boolean _shortDateYear; // --- 'true' if the format is yyyy
+    /** {@code true} if the format is {@code yyyy}. */
+    @XmlTransient private boolean _shortDateYear;
 
-    @XmlTransient private boolean _shortDateYearMonth; // --- 'true' if the format is yyyy-mm
+    /** {@code true} if the format is {@code yyyy-mm}. */
+    @XmlTransient private boolean _shortDateYearMonth;
 
     @XmlTransient
-    //private Calendar _calendar = Calendar.getInstance();
     private ZonedDateTime internalDateTime;
 
-    // ---------------------------------------------------------------------------
-    // ---
-    // --- Constructor
-    // ---
-    // ---------------------------------------------------------------------------
 
     /**
      * Constructs an instance of <code>ISODate</code> with current date, time
@@ -184,9 +181,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
      * character and the parsed value of {@code durationOrDateTimeString}.
      */
     public static String parseISODateTimes(String dateTimeString, String durationOrDateTimeString) {
-        //DateTimeFormatter dto =ISODateTimeFormat.dateTime();
-        DateTimeFormatter dto = DateTimeFormatter.ISO_DATE_TIME;
-        //PeriodFormatter p = ISOPeriodFormat.standard();
+
         ZonedDateTime odt1;
         String odt;
 
@@ -196,10 +191,8 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
         // problems
         try {
             ZonedDateTime idt = parseBasicOrFullDateTime(dateTimeString);
-            //odt1 = dto.parseDateTime(idt.toString())
-            //    .withZone(DateTimeZone.forID("UTC"));
+
             odt1 = idt.withZoneSameInstant(ZoneOffset.UTC);
-            //odt = odt1.toString();
             odt = idt.withZoneSameInstant(ZoneOffset.UTC).format(ISO_OFFSET_DATE_TIME_NANOSECONDS);
 
         } catch (Exception e) {
@@ -240,8 +233,6 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
             } else {
                 ZonedDateTime idt = parseBasicOrFullDateTime(durationOrDateTimeString);
                 ZonedDateTime odt2 = idt.withZoneSameInstant(ZoneOffset.UTC);
-                //DateTime odt2 = dto.parseDateTime(idt.toString())
-                //    .withZone(DateTimeZone.forID("UTC"));
                 odt = odt + "|" + odt2.toString();
             }
         } catch (Exception e) {
@@ -268,18 +259,13 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
                 .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0).parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
                 .parseDefaulting(ChronoField.NANO_OF_SECOND, 0)
                 .parseDefaulting(ChronoField.OFFSET_SECONDS, ZoneOffset.of("Z").getTotalSeconds()).toFormatter();
-        //DateTimeFormatter catchAllDateTimeFormatter = ISODateTimeFormat.dateTimeParser();
-        //DateTime result;
         ZonedDateTime result;
         Matcher matcher;
         if (stringToParse.length() == 8 && !stringToParse.startsWith("T")) {
-            //result = basicIsoDateFormatter.parseDateTime(stringToParse);
             result = ZonedDateTime.parse(stringToParse, DateTimeFormatter.BASIC_ISO_DATE);
         } else if (stringToParse.startsWith("T") && !stringToParse.contains(":")) {
-            //result = isoTimeFormatter.parseDateTime(stringToParse);
             result = ZonedDateTime.parse(stringToParse, DateTimeFormatter.ISO_TIME);
         } else if (stringToParse.contains("T") && !stringToParse.contains(":") && !stringToParse.contains("-")) {
-            //result = isoDateTimeFormatter.parseDateTime(stringToParse);
             result = ZonedDateTime.parse(stringToParse, DateTimeFormatter.ISO_DATE_TIME);
         } else if ((matcher = gsYearMonth.matcher(stringToParse)).matches()) {
             String year = matcher.group(1);
@@ -357,7 +343,6 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
 
             result = generateDate(year, month, day, second, minute, hour, timezone);
         } else {
-            //result = catchAllDateTimeFormatter.parseDateTime(stringToParse);
             result = ZonedDateTime.parse(stringToParse, catchAllDateTimeFormatter);
         }
         return result;
@@ -380,7 +365,6 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
                 .of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day), Integer.parseInt(hour),
                         Integer.parseInt(minute), Integer.parseInt(second), 0, zone.toZoneId());
 
-        //return new DateTime(c.getTimeInMillis());
         return result.withZoneSameInstant(TimeZone.getDefault().toZoneId());
 
     }
@@ -486,12 +470,10 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
             return getDateAsString();
         } else {
             return internalDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            // return getDateAsString() + "T" + getTimeAsString();
         }
     }
 
     public void setDateAndTime(String isoDate) {
-
         String timeAndDate = isoDate;
         if (timeAndDate == null) {
             throw new IllegalArgumentException("Date string is null");
