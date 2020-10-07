@@ -113,9 +113,6 @@ public class LocaleRedirects {
                              ) throws ResourceNotFoundException {
         String lang = lang(langParam, langCookie, langHeader);
 
-        HttpSession session = request.getSession();
-        if (session != null) session.invalidate();
-
         if (checkPortalExist(portal, !accept.startsWith(ACCEPT_VALUE))) {
             return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, portal));
         } else {
