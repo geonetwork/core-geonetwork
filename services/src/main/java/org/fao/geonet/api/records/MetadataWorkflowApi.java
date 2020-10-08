@@ -158,6 +158,10 @@ public class MetadataWorkflowApi {
             Integer.parseInt(StatusValue.Events.RECORDDELETED),
             Integer.parseInt(StatusValue.Events.RECORDRESTORED)};
 
+    private enum State {
+        BEFORE, AFTER
+    }
+
     @ApiOperation(value = "Get record status history", notes = "", nickname = "getRecordStatusHistory")
     @RequestMapping(value = "/{metadataUuid}/status", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
@@ -469,45 +473,10 @@ public class MetadataWorkflowApi {
     )
             throws Exception {
 
-        MetadataStatus metadataStatus = null;
-        if (metadataUuid.matches("\\d+")) {
-            metadataStatus = metadataStatus = metadataStatusRepository.findOneByMetadataIdAndStatusValue_IdAndUserIdAndChangeDate(Integer.valueOf(metadataUuid), statusId, userId, new ISODate(changeDate));
-        } else{
-            metadataStatus = metadataStatusRepository.findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
-        }
+        MetadataStatus metadataStatus = getMetadataStatus(metadataUuid, statusId, userId, changeDate);
 
-        if (metadataStatus == null) {
-            throw new ResourceNotFoundException(
-                    String.format("Can't find metadata status for record '%d', user '%s' at date '%s'. Previous state cannot be viewed", metadataUuid,
-                            userId, changeDate));
-        }
+        return getValidatedStateText(metadataStatus, State.BEFORE, request, httpSession);
 
-        if (!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedRestoreStatuses, statusId)) {
-            throw new NotAllowedException("Unsupported action on status type '" + metadataStatus.getStatusValue().getType() + "' for metadata '" + metadataStatus.getUuid() + "'. Supports status type '" +
-                    StatusValueType.event + "' with the status id '" + Arrays.toString(supportedRestoreStatuses) + "'.");
-        }
-
-        if (metadataStatus.getPreviousState() == null) {
-            throw new ResourceNotFoundException(
-                    String.format("No data exists for previous state on metadata record '%d', user '%s' at date '%s'. Previous state cannot be viewed", metadataUuid,
-                            userId, changeDate));
-        }
-
-        String fullMetadataText = metadataStatus.getPreviousState();
-
-        // If record exists then check if user has access.
-        try {
-            ApiUtils.canEditRecord(metadataUuid, request);
-        } catch (SecurityException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
-        } catch (ResourceNotFoundException e) {
-            // If metadata record does not exists then it was deleted so
-            // we will only allow the administrator, owner to view the contents
-            checkCanViewStatus(fullMetadataText, metadataStatus, httpSession, request);
-        }
-
-        return fullMetadataText;
     }
 
     @ApiOperation(
@@ -536,45 +505,9 @@ public class MetadataWorkflowApi {
     )
             throws Exception {
 
-        MetadataStatus metadataStatus = null;
-        if (metadataUuid.matches("\\d+")) {
-            metadataStatus = metadataStatus = metadataStatusRepository.findOneByMetadataIdAndStatusValue_IdAndUserIdAndChangeDate(Integer.valueOf(metadataUuid), statusId, userId, new ISODate(changeDate));
-        } else{
-            metadataStatus = metadataStatusRepository.findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
-        }
+        MetadataStatus metadataStatus = getMetadataStatus(metadataUuid, statusId, userId, changeDate);
 
-        if (metadataStatus == null) {
-            throw new ResourceNotFoundException(
-                    String.format("Can't find metadata status for record '%d', user '%s' at date '%s'. Changes cannot be viewed", metadataUuid,
-                            userId, changeDate));
-        }
-
-        if (!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedRestoreStatuses, statusId)) {
-            throw new NotAllowedException("Unsupported action on status type '" + metadataStatus.getStatusValue().getType() + "' for metadata '" + metadataStatus.getUuid() + "'. Supports status type '" +
-                    StatusValueType.event + "' with the status id '" + Arrays.toString(supportedRestoreStatuses) + "'.");
-        }
-
-        if (metadataStatus.getCurrentState() == null) {
-            throw new ResourceNotFoundException(
-                    String.format("No data exists for metadata record '%d', user '%s' at date '%s'. Changes state cannot be viewed", metadataUuid,
-                            userId, changeDate));
-        }
-
-        String fullMetadataText = metadataStatus.getCurrentState();
-
-        // If record exists then check if user has access.
-        try {
-            ApiUtils.canEditRecord(metadataUuid, request);
-        } catch (SecurityException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
-        } catch (ResourceNotFoundException e) {
-            // If metadata record does not exists then it was deleted so
-            // we will only allow the administrator, owner to view the contents
-            checkCanViewStatus(fullMetadataText, metadataStatus, httpSession, request);
-        }
-
-        return fullMetadataText;
+        return getValidatedStateText(metadataStatus, State.AFTER, request, httpSession);
     }
 
     @ApiOperation(
@@ -598,52 +531,28 @@ public class MetadataWorkflowApi {
             @ApiParam(value = "User identifier", required = true) @PathVariable int userId,
             @ApiParam(value = "Change date", required = true) @PathVariable String changeDate,
             @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession, HttpServletRequest request
-            )
-                    throws Exception {
+    )
+            throws Exception {
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         DataManager dataMan = applicationContext.getBean(DataManager.class);
 
-        MetadataStatus metadataStatus = null;
-        if (metadataUuid.matches("\\d+")) {
-            metadataStatus = metadataStatus = metadataStatusRepository.findOneByMetadataIdAndStatusValue_IdAndUserIdAndChangeDate(Integer.valueOf(metadataUuid), statusId, userId, new ISODate(changeDate));
-        } else{
-            metadataStatus = metadataStatusRepository.findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
-        }
+        MetadataStatus metadataStatus = getMetadataStatus(metadataUuid, statusId, userId, changeDate);
 
-        if (metadataStatus == null) {
-            throw new ResourceNotFoundException(
-                    String.format("Can't find metadata status for record '%d', user '%s' at date '%s'. Record cannot be restored", metadataUuid,
-                            userId, changeDate));
-        }
+        // Try to get previous state text this will also check to ensure that user is allowed to access the data.
+        String previousStateText = getValidatedStateText(metadataStatus, State.BEFORE, request, httpSession);
 
-        if (!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedRestoreStatuses, statusId)) {
-            throw new NotAllowedException("The recover for this element is not supported. Supports status type '" +
-                    StatusValueType.event + "' with the status id '" + Arrays.toString(supportedRestoreStatuses) +
-                    "'. Received status type '" + metadataStatus.getStatusValue().getType() + "' with status id '" + statusId + "'");
-        }
-
-        if (metadataStatus.getPreviousState() == null) {
-            throw new ResourceNotFoundException(
-                    String.format("No data exists for previous state on metadata record '%d', user '%s' at date '%s'. Record cannot be restrored", metadataUuid,
-                            userId, changeDate));
-        }
-
-        AbstractMetadata metadata = null;
-        // If record exists then check if user has access.
+        // For cases where the records was not deleted, we will attempt to get the metadata record.
+        // If it remains as null then the record did not exists and this is a recovery.
+        AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canEditRecord(metadataStatus.getUuid(), request);
-        } catch (SecurityException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
         } catch (ResourceNotFoundException e) {
-            // If metadata record does not exists then it was deleted so 
-            // lets check if the user can vew the record. There will be other checks later
-            // to ensure they have access to insert the data.
-            checkCanViewStatus(metadataStatus.getPreviousState(), metadataStatus, httpSession, request);
+            // resource not found so lets set it to null;
+            metadata = null;
         }
 
-
+        // Begin the recovery
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
 
@@ -654,11 +563,11 @@ public class MetadataWorkflowApi {
             beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
 
             XMLOutputter outp = new XMLOutputter();
-            if (beforeMetadata!=null) {
+            if (beforeMetadata != null) {
                 xmlBefore = outp.outputString(beforeMetadata);
             }
 
-            if (xmlBefore.equals(metadataStatus.getPreviousState())) {
+            if (xmlBefore.equals(previousStateText)) {
                 throw new NotAllowedException("Error recovering metadata id " + metadataUuid + ". Cannot recover record which are identical. Possibly already recovered.");
             }
         }
@@ -667,7 +576,7 @@ public class MetadataWorkflowApi {
         IMetadataManager iMetadataManager = context.getBean(IMetadataManager.class);
         Integer recoveredMetadataId = null;
         if (metadata != null) {
-            Element md = Xml.loadString(metadataStatus.getPreviousState(), false);
+            Element md = Xml.loadString(previousStateText, false);
             Element mdNoGeonetInfo = metadataUtils.removeMetadataInfo(md);
 
             iMetadataManager.updateMetadata(context, String.valueOf(metadata.getId()), mdNoGeonetInfo, false, true, true, context.getLanguage(),
@@ -677,7 +586,7 @@ public class MetadataWorkflowApi {
             // Recover from delete
             Element element = null;
             try {
-                element = Xml.loadString(metadataStatus.getPreviousState(), false);
+                element = Xml.loadString(previousStateText, false);
             } catch (JDOMParseException ex) {
                 throw new IllegalArgumentException(
                         String.format("XML fragment is invalid. Error is %s", ex.getMessage()));
@@ -746,12 +655,12 @@ public class MetadataWorkflowApi {
 
 
             if (s.getTitles() != null && s.getTitles().size() > 0) {
-                    // Locate language title based on language which is a 3 char code
-                    // First look for exact match. otherwise look for 2 char code and if still not found then default to first occurrence
-                    status.setTitle(
-                            s.getTitles().getOrDefault(language,
-                                    s.getTitles().getOrDefault(language.substring(0,2),
-                                            s.getTitles().entrySet().iterator().next().getValue())));
+                // Locate language title based on language which is a 3 char code
+                // First look for exact match. otherwise look for 2 char code and if still not found then default to first occurrence
+                status.setTitle(
+                        s.getTitles().getOrDefault(language,
+                                s.getTitles().getOrDefault(language.substring(0, 2),
+                                        s.getTitles().entrySet().iterator().next().getValue())));
             }
             // If title was not stored in database then try to get it from the index.
             // Titles may be missing in database if it is older data or if the extract-titles.xsl does not exists/fails for schema plugin
@@ -940,5 +849,57 @@ public class MetadataWorkflowApi {
         }
 
         return id;
+    }
+
+    private MetadataStatus getMetadataStatus(String uuidOrInternalId, int statusId, int userId, String changeDate) throws ResourceNotFoundException {
+        MetadataStatus metadataStatus;
+        if (uuidOrInternalId.matches("\\d+")) {
+            metadataStatus = metadataStatusRepository.findOneByMetadataIdAndStatusValue_IdAndUserIdAndChangeDate(Integer.valueOf(uuidOrInternalId), statusId, userId, new ISODate(changeDate));
+        } else {
+            metadataStatus = metadataStatusRepository.findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(uuidOrInternalId, statusId, userId, new ISODate(changeDate));
+        }
+
+        if (metadataStatus == null) {
+            throw new ResourceNotFoundException(
+                    String.format("Can't find metadata status for record '%s', user '%d', status, '%d' at date '%s'", uuidOrInternalId,
+                            userId, statusId, changeDate));
+        }
+
+        return metadataStatus;
+    }
+
+    private String getValidatedStateText(MetadataStatus metadataStatus, State state, HttpServletRequest request, HttpSession httpSession) throws Exception {
+
+        if (!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedRestoreStatuses, metadataStatus.getStatusValue().getId())) {
+            throw new NotAllowedException("Unsupported action on status type '" + metadataStatus.getStatusValue().getType() + "' for metadata '" + metadataStatus.getUuid() + "'. Supports status type '" +
+                    StatusValueType.event + "' with the status id '" + Arrays.toString(supportedRestoreStatuses) + "'.");
+        }
+
+        String StateText;
+        if (state.equals(State.AFTER)) {
+            StateText = metadataStatus.getCurrentState();
+        } else {
+            StateText = metadataStatus.getPreviousState();
+        }
+
+        if (StateText == null) {
+            throw new ResourceNotFoundException(
+                    String.format("No data exists for previous state on metadata record '%d', user '%s' at date '%s'", metadataStatus.getUuid(),
+                            metadataStatus.getUserId(), metadataStatus.getChangeDate()));
+        }
+
+        // If record exists then check if user has access.
+        try {
+            ApiUtils.canEditRecord(metadataStatus.getUuid(), request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        } catch (ResourceNotFoundException e) {
+            // If metadata record does not exists then it was deleted so
+            // we will only allow the administrator, owner to view the contents
+            checkCanViewStatus(StateText, metadataStatus, httpSession, request);
+        }
+
+        return StateText;
     }
 }
