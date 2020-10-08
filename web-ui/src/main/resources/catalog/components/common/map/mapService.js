@@ -1418,8 +1418,10 @@
           },
 
           addEsriRestFromScratch: function(map, url, name, createOnly, md) {
-            var serviceUrl = url.replace(/(.*\/MapServer).*/, '$1')
-            var layer = !!name ? name : url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$2');
+            var serviceUrl = url.replace(/(.*\/MapServer).*/, '$1');
+            var layer = !!name && parseInt(name).toString() === name
+              ? name
+              : url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$2');
             name = url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$1 $2');
 
             var olLayer = getTheLayerFromMap(map, name, url);
@@ -1433,8 +1435,8 @@
             gnWmsQueue.add(url, name);
 
             var params = {};
-            if (layer != '') {
-              params.LAYERS = layer;
+            if (!!layer) {
+              params.LAYERS = 'show:' + layer;
             }
             var layerOptions = {
               url: url,

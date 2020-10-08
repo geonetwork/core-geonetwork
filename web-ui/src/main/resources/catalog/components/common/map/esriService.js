@@ -43,7 +43,7 @@
          * @return {Promise<string>} data url
          */
         renderLegend: function(json, layerId) {
-          var singleLayer = !!layerId && Number.isInteger(Number.parseInt(layerId));
+          var singleLayer = !!layerId;
           var legend = singleLayer ? {
             layers: json.layers.filter(function (layer) {
               return layer.layerId == layerId;
