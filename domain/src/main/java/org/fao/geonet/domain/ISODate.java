@@ -70,6 +70,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
     private static final String DEFAULT_DATE_TIME = "3000-01-01T00:00:00.000Z"; // JUNK
 
     public static final DateTimeFormatter ISO_OFFSET_DATE_TIME_NANOSECONDS;
+    public static final DateTimeFormatter CATCH_ALL_DATE_TIME_FORMATTER;
     public static final DateTimeFormatter YEAR_MONTH_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
     public static final DateTimeFormatter YEAR_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy");
     public static final DateTimeFormatter YEAR_MONTH_DAYS_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -79,6 +80,12 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
                 .appendLiteral('T').appendValue(ChronoField.HOUR_OF_DAY, 2).appendLiteral(':').appendValue(MINUTE_OF_HOUR, 2)
                 .appendLiteral(':').appendValue(SECOND_OF_MINUTE, 2).appendFraction(NANO_OF_SECOND, 3, 9, true).appendOffsetId()
                 .toFormatter();
+
+        CATCH_ALL_DATE_TIME_FORMATTER = new DateTimeFormatterBuilder().parseCaseInsensitive()
+                .appendPattern("yyyy[-M][-d['T'H[:m[:s[.SSS]][XXX]]]]").parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
+                .parseDefaulting(ChronoField.DAY_OF_MONTH, 1).parseDefaulting(HOUR_OF_DAY, 0).parseDefaulting(MINUTE_OF_HOUR, 0)
+                .parseDefaulting(SECOND_OF_MINUTE, 0).parseDefaulting(NANO_OF_SECOND, 0)
+                .parseDefaulting(ChronoField.OFFSET_SECONDS, ZoneOffset.of("Z").getTotalSeconds()).toFormatter();
     }
 
     // Pattern to check dates
@@ -89,18 +96,22 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
     @XmlTransient private static final Pattern htmlFormat = Pattern
             .compile("([a-zA-Z]{3}) ([a-zA-Z]{3}) ([0-9]{2}) ([0-9]{4}) ([0-2][0-9]):([0-5][0-9]):([0-5][0-9]) (.+)");
 
-    /** {@code true} if the format is {@code yyyy-mm-dd}. */
+    /**
+     * {@code true} if the format is {@code yyyy-mm-dd}.
+     */
     @XmlTransient private boolean _shortDate;
 
-    /** {@code true} if the format is {@code yyyy}. */
+    /**
+     * {@code true} if the format is {@code yyyy}.
+     */
     @XmlTransient private boolean _shortDateYear;
 
-    /** {@code true} if the format is {@code yyyy-mm}. */
+    /**
+     * {@code true} if the format is {@code yyyy-mm}.
+     */
     @XmlTransient private boolean _shortDateYearMonth;
 
-    @XmlTransient
-    private ZonedDateTime internalDateTime;
-
+    @XmlTransient private ZonedDateTime internalDateTime;
 
     /**
      * Constructs an instance of <code>ISODate</code> with current date, time
@@ -111,6 +122,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
     }
 
     // ---------------------------------------------------------------------------
+
     /**
      * Constructs an instance of {@code ISODate} with the time and format passed as parameters, local timezone.
      *
@@ -253,12 +265,6 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
      * @return a {@link ZonedDateTime}
      */
     public static ZonedDateTime parseBasicOrFullDateTime(String stringToParse) {
-        final DateTimeFormatter catchAllDateTimeFormatter = new DateTimeFormatterBuilder().parseCaseInsensitive()
-                .appendPattern("yyyy[-M][-d['T'H[:m[:s[.SSS]][XXX]]]]").parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
-                .parseDefaulting(ChronoField.DAY_OF_MONTH, 1).parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
-                .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0).parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
-                .parseDefaulting(ChronoField.NANO_OF_SECOND, 0)
-                .parseDefaulting(ChronoField.OFFSET_SECONDS, ZoneOffset.of("Z").getTotalSeconds()).toFormatter();
         ZonedDateTime result;
         Matcher matcher;
         if (stringToParse.length() == 8 && !stringToParse.startsWith("T")) {
@@ -343,7 +349,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
 
             result = generateDate(year, month, day, second, minute, hour, timezone);
         } else {
-            result = ZonedDateTime.parse(stringToParse, catchAllDateTimeFormatter);
+            result = ZonedDateTime.parse(stringToParse, CATCH_ALL_DATE_TIME_FORMATTER);
         }
         return result;
     }
@@ -485,8 +491,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
             // zone. This class converts to UTC format to avoid timezones
             // issues.
             String afterT = timeAndDate.substring(indexOfT + 1);
-            boolean timeZoneInfo = afterT.contains("+") || afterT.contains("-")
-                || afterT.toUpperCase().endsWith("Z");
+            boolean timeZoneInfo = afterT.contains("+") || afterT.contains("-") || afterT.toUpperCase().endsWith("Z");
 
             if (timeZoneInfo) {
                 timeAndDate = convertToISOZuluDateTime(timeAndDate);
