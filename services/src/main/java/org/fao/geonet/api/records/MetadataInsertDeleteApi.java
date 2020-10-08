@@ -217,9 +217,6 @@ public class MetadataInsertDeleteApi {
                 report.addMetadataId(metadata.getId());
             }
         }
-
-        dataManager.forceIndexChanges();
-
         report.close();
         return report;
     }
@@ -396,6 +393,7 @@ public class MetadataInsertDeleteApi {
 
         // User assigned uuid: check if already exists
         String metadataUuid = null;
+
 
         if (generateUuid && !StringUtils.isEmpty(targetUuid)) {
             // Check if the UUID exists
