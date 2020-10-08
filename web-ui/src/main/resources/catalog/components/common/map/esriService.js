@@ -43,9 +43,7 @@
          * @return {Promise<string>} data url
          */
         renderLegend: function(json, layerId) {
-          var $this = this;
-
-          var singleLayer = !!layerId;
+          var singleLayer = !!layerId && Number.isInteger(Number.parseInt(layerId));
           var legend = singleLayer ? {
             layers: json.layers.filter(function (layer) {
               return layer.layerId == layerId;
@@ -143,7 +141,7 @@
          */
         measureLegend: function(context, json, skipLayerName) {
           var width = 100;
-          var height = 0;
+          var height = 1;
           for (var i = 0; i < json.layers.length; i++) {
             var layer = json.layers[i];
             if (!skipLayerName) {
