@@ -208,25 +208,32 @@
       };
 
       this.deleteMd = function(md, bucket) {
-        $rootScope.$broadcast('operationOnSelectionStart');
+        var deferred = $q.defer();
         if (md) {
-          return gnMetadataManager.remove(md.id).then(function() {
+          gnMetadataManager.remove(md.id).then(function(data) {
+            $timeout(function() {
+              $rootScope.$broadcast('search');
+            }, 5000);
+            deferred.resolve(data);
+          }, function(data) {
+            deferred.reject(data);
+          });
+        } else {
+          $rootScope.$broadcast('operationOnSelectionStart');
+          $http.delete('../api/records?' +
+              'bucket=' + bucket).then(function(data) {
             $rootScope.$broadcast('mdSelectNone');
             $rootScope.$broadcast('operationOnSelectionStop');
-            // TODO: Here we may introduce a delay to not display the deleted
-            // record in results.
-            // https://github.com/geonetwork/core-geonetwork/issues/759
             $rootScope.$broadcast('search');
+            $timeout(function() {
+              $rootScope.$broadcast('search');
+            }, 5000);
+            deferred.resolve(data);
+          }, function(data) {
+            deferred.reject(data);
           });
         }
-        else {
-          return $http.delete('../api/records?' +
-              'bucket=' + bucket).then(function() {
-            $rootScope.$broadcast('mdSelectNone');
-            $rootScope.$broadcast('operationOnSelectionStop');
-            $rootScope.$broadcast('search');
-          });
-        }
+        return deferred.promise;
       };
 
 

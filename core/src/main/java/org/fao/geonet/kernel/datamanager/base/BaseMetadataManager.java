@@ -589,7 +589,10 @@ public class BaseMetadataManager implements IMetadataManager {
             groupId = String.valueOf(groupIdI);
         }
         metadataOperations.copyDefaultPrivForGroup(context, stringId, groupId, fullRightsForGroup);
-        metadataIndexer.indexMetadata(stringId, forceRefreshReaders);
+
+        if (index) {
+            metadataIndexer.indexMetadata(stringId, forceRefreshReaders);
+        }
 
         return savedMetadata;
     }
