@@ -89,7 +89,7 @@ public class MetadataStatusRepositoryTest extends AbstractSpringDataTest {
         MetadataStatus status3 = _repo.save(newMetadataStatus());
 
         assertEquals(3, _repo.count());
-        _repo.deleteAllByMetadataId(status1.getMetadataId());
+        _repo.deleteAllById_MetadataId(status1.getMetadataId());
         assertEquals(1, _repo.count());
         assertNull(_repo.findOne(status1.getId()));
         assertNull(_repo.findOne(status2.getId()));

@@ -885,10 +885,12 @@ public class BaseMetadataManager implements IMetadataManager {
         }
 
         // add groupowner name
-        Group group = groupRepository.findOne(groupOwner);
-        if (group != null) {
-            String groupOwnerName = group.getName();
-            addElement(info, Edit.Info.Elem.GROUPOWNERNAME, groupOwnerName);
+        if (groupOwner != null) {
+            Group group = groupRepository.findOne(groupOwner);
+            if (group != null) {
+                String groupOwnerName = group.getName();
+                addElement(info, Edit.Info.Elem.GROUPOWNERNAME, groupOwnerName);
+            }
         }
 
         for (MetadataCategory category : metadata.getCategories()) {

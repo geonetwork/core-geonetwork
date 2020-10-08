@@ -13,7 +13,6 @@ import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
@@ -174,7 +173,7 @@ public class DraftUtilities {
             metadataOperations.deleteMetadataOper(String.valueOf(id), false);
             metadataRatingByIpRepository.deleteAllById_MetadataId(id);
             metadataValidationRepository.deleteAllById_MetadataId(id);
-            metadataStatusRepository.deleteAllByMetadataId(id);
+            metadataStatusRepository.deleteAllById_MetadataId(id);
 
             // --- remove metadata
             xmlSerializer.delete(String.valueOf(id), ServiceContext.get());

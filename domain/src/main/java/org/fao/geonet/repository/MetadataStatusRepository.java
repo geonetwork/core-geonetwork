@@ -98,7 +98,7 @@ public interface MetadataStatusRepository extends GeonetRepository<MetadataStatu
     @Modifying(clearAutomatically=true)
     @Transactional
     @Query(value="DELETE FROM MetadataStatus s WHERE s.id.metadataId = ?1")
-    int deleteAllByMetadataId(Integer metadataId);
+    int deleteAllById_MetadataId(Integer metadataId);
     
     /**
      * Delete all the entities that are related to the indicated user.

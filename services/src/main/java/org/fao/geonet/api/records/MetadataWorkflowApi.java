@@ -367,7 +367,7 @@ public class MetadataWorkflowApi {
             @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
             HttpServletRequest request) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        metadataStatusRepository.deleteAllByMetadataId(metadata.getId());
+        metadataStatusRepository.deleteAllById_MetadataId(metadata.getId());
     }
 
     @ApiOperation(value = "Search status", notes = "", nickname = "searchStatusByType")
@@ -469,10 +469,12 @@ public class MetadataWorkflowApi {
     )
             throws Exception {
 
-        MetadataStatus metadataStatus;
-
-        metadataStatus = metadataStatusRepository
-                .findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
+        MetadataStatus metadataStatus = null;
+        if (metadataUuid.matches("\\d+")) {
+            metadataStatus = metadataStatus = metadataStatusRepository.findOneByMetadataIdAndStatusValue_IdAndUserIdAndChangeDate(Integer.valueOf(metadataUuid), statusId, userId, new ISODate(changeDate));
+        } else{
+            metadataStatus = metadataStatusRepository.findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
+        }
 
         if (metadataStatus == null) {
             throw new ResourceNotFoundException(
@@ -533,10 +535,13 @@ public class MetadataWorkflowApi {
             @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession, HttpServletRequest request
     )
             throws Exception {
-        MetadataStatus metadataStatus;
 
-        metadataStatus = metadataStatusRepository
-                .findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
+        MetadataStatus metadataStatus = null;
+        if (metadataUuid.matches("\\d+")) {
+            metadataStatus = metadataStatus = metadataStatusRepository.findOneByMetadataIdAndStatusValue_IdAndUserIdAndChangeDate(Integer.valueOf(metadataUuid), statusId, userId, new ISODate(changeDate));
+        } else{
+            metadataStatus = metadataStatusRepository.findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
+        }
 
         if (metadataStatus == null) {
             throw new ResourceNotFoundException(
@@ -599,8 +604,12 @@ public class MetadataWorkflowApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         DataManager dataMan = applicationContext.getBean(DataManager.class);
 
-        MetadataStatus metadataStatus = metadataStatusRepository
-                .findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
+        MetadataStatus metadataStatus = null;
+        if (metadataUuid.matches("\\d+")) {
+            metadataStatus = metadataStatus = metadataStatusRepository.findOneByMetadataIdAndStatusValue_IdAndUserIdAndChangeDate(Integer.valueOf(metadataUuid), statusId, userId, new ISODate(changeDate));
+        } else{
+            metadataStatus = metadataStatusRepository.findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(metadataUuid, statusId, userId, new ISODate(changeDate));
+        }
 
         if (metadataStatus == null) {
             throw new ResourceNotFoundException(
