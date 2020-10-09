@@ -31,8 +31,21 @@
     'gnPopup',
     function($rootScope, $q, $http, gnPopup) {
       var modal = null;
+      var countriesPromise = null;
 
       return {
+        // returns a promise
+        getCountries: function() {
+          if (!countriesPromise) {
+            countriesPromise = $http.get('https://pkgstore.datahub.io/core/country-list/data_json/data/8c458f2d15d9f2119654b29ede6e45b8/data_json.json', {
+              withCredentials: false
+            }).then(function (response) {
+              return response.data;
+            });
+          }
+          return countriesPromise;
+        },
+
         /**
          * Will show the download form and, when submitted, will open all urls
          * to download files
@@ -43,36 +56,41 @@
          * analytics service is done
          */
         openDownloadForm: function(urls, mdUuid) {
-          var scope = $rootScope.$new(true);
-          scope.values = {};
+          this.getCountries().then(function (countries) {
+            var scope = $rootScope.$new(true);
+            scope.values = {};
 
-          var sendAnalyticsReport = function (values) {
-            // hardcoded values
-            // see: https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/223
-            values['service'] = '2'; // '2' is Sextant
-            values['api'] = '2dbSmaEG4Ac27SYT';
-            values['uuid'] = mdUuid;
+            var sendAnalyticsReport = function (values) {
+              // hardcoded values
+              // see: https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/223
+              values['service'] = '2';
+              values['api'] = '2dbSmaEG4Ac27SYT';
+              values['uuid'] = mdUuid;
 
-            $http.get('https://nodc.inogs.it/emodnet-dev/extranet/analytics', {
-              params: values
-            });
-          }
+              $http.get('https://nodc.inogs.it/emodnet-dev/extranet/analytics', {
+                params: values,
+                withCredentials: false
+              });
+            }
 
-          scope.submit = function() {
-            // for each url, send tracking values & open for download
-            urls.forEach(function(url) {
-              sendAnalyticsReport(scope.values);
-              window.open(url);
-            });
+            scope.countries = countries;
 
-            modal.modal('hide');
-          };
+            scope.submit = function () {
+              // for each url, send tracking values & open for download
+              urls.forEach(function (url) {
+                sendAnalyticsReport(scope.values);
+                window.open(url);
+              });
 
-          var templateUrl = '../../catalog/views/sextant/services/emodnetdownloadform.html'
-          modal = gnPopup.createModal({
-            title: 'emodnetDownloadForm',
-            content: '<div ng-include="\'' + templateUrl + '\'"></div>'
-          }, scope);
+              modal.modal('hide');
+            };
+
+            var templateUrl = '../../catalog/views/sextant/services/emodnetdownloadform.html'
+            modal = gnPopup.createModal({
+              title: 'emodnetDownloadForm',
+              content: '<div ng-include="\'' + templateUrl + '\'"></div>'
+            }, scope);
+          });
         },
 
         /**

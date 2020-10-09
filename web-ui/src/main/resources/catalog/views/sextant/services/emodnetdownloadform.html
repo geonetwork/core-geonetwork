@@ -53,7 +53,7 @@
 
   <div class="form-group">
     <label class="col-sm-3 control-label" translate>organizationName</label>
-    <div class="col-sm-9">
+    <div class="col-sm-8">
       <input maxlength="80" type="text" class="form-control" name="organizationName" ng-model="values['org_name']">
     </div>
   </div>
@@ -99,16 +99,21 @@
       </div>
     </div>
 
-  <div class="form-group">
+  <div class="form-group gn-required">
     <label class="col-sm-3 control-label" translate>country</label>
-    <div class="col-sm-9">
-      <input maxlength="80" type="text" class="form-control" name="country" ng-model="values['country']">
+    <div class="col-sm-6">
+      <select class="form-control" required ng-model="values['country']">
+        <option></option>
+        <option ng-repeat="country in countries" value="{{country.Code}}">
+          {{country.Name}}
+        </option>
+      </select>
     </div>
   </div>
 
   <div class="form-group">
     <label class="col-sm-3 control-label" translate>email</label>
-    <div class="col-sm-9">
+    <div class="col-sm-6">
       <input maxlength="80" type="email" class="form-control" name="email" ng-model="values['email']">
     </div>
   </div>
