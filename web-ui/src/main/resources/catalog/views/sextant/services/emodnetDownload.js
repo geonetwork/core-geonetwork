@@ -15,9 +15,8 @@
    * @description
    * This services handles the case where a form must be submitted before
    * downloading a file attached to a record.
-   * The data filled in this form is then sent to a Matomo server (see
-   * https://developer.matomo.org/guides/tracking-javascript-guide) using
-   * hardcoded parameters.
+   * The data filled in this form is then sent to a custom analytics service
+   * using GET query parameters.
    * Multiple URLs are handled and the download of each one should be triggered
    * once the form is submitted.
    * The form is described in a separate HTML template that is included
@@ -28,39 +27,12 @@
   module.factory('sxtEmodnetDownload', [
     '$rootScope',
     '$q',
+    '$http',
     'gnPopup',
-    function($rootScope, $q, gnPopup) {
+    function($rootScope, $q, $http, gnPopup) {
       var modal = null;
 
       return {
-        initialized: false,
-
-        /**
-         * This will add the Matomo/Piwik library to the page
-         * Must be called when opening the form for the first time
-         */
-        importLibrary: function() {
-          if (this.initialized) return;
-
-          // global tracking array
-          window._paq = window._paq || []
-
-          var url = "//piwik.vliz.be/";
-          _paq.push(['setTrackerUrl', url + 'piwik.php']);
-          _paq.push(['setSiteId', '23']);
-
-          var scriptTag = document.createElement('script');
-          scriptTag.type = 'text/javascript';
-          scriptTag.async = true;
-          scriptTag.defer = true;
-          scriptTag.src = url + 'piwik.js';
-          var firstScriptTag = document.getElementsByTagName('script')[0];
-          var header = firstScriptTag.parentNode;
-          header.insertBefore(scriptTag, firstScriptTag);
-
-          this.initialized = true;
-        },
-
         /**
          * Will show the download form and, when submitted, will open all urls
          * to download files
@@ -71,31 +43,25 @@
          * analytics service is done
          */
         openDownloadForm: function(urls, mdUuid) {
-          this.importLibrary();
-
           var scope = $rootScope.$new(true);
           scope.values = {};
 
-          var category = 'Download_form';
+          var sendAnalyticsReport = function (values) {
+            // hardcoded values
+            // see: https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/223
+            values['service'] = '2'; // '2' is Sextant
+            values['api'] = '2dbSmaEG4Ac27SYT';
+            values['uuid'] = mdUuid;
 
-          var addTrackingValues = function (url, values) {
-            // hardcoded tracking values
-            values['DownloadForm-sender_id'] = 'sextant';
-            values['DownloadForm-data_url'] = url;
-            values['DownloadForm-UUID'] = mdUuid;
-
-            Object.keys(values).forEach(function(key) {
-              if (values[key]) {
-                _paq.push(['trackEvent', category, key, values[key]]);
-              }
+            $http.get('https://nodc.inogs.it/emodnet-dev/extranet/analytics', {
+              params: values
             });
-            _paq.push(['trackEvent', category, 'DownloadForm-jsondata', JSON.stringify(values)]);
           }
 
           scope.submit = function() {
             // for each url, send tracking values & open for download
             urls.forEach(function(url) {
-              addTrackingValues(url, scope.values);
+              sendAnalyticsReport(scope.values);
               window.open(url);
             });
 
