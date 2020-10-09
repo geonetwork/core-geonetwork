@@ -369,7 +369,7 @@ public class MetadataStatus extends GeonetEntity {
      *
      * @param titles the new titles related to the metadata record at the time the status was created.
      */
-    public void setTitles(@Nonnull LinkedHashMap<String, String> titles) {
+    public void setTitles(LinkedHashMap<String, String> titles) {
         this.titles = titles;
     }
 
@@ -378,9 +378,11 @@ public class MetadataStatus extends GeonetEntity {
      *
      * @param titles the new titles related to the metadata record at the time the status was created.
      */
-    public void setTitles(@Nonnull String titles) {
-        JpaConverterJson jpaConverterJson = new JpaConverterJson();
-        this.titles = (LinkedHashMap<String, String>) jpaConverterJson.convertToEntityAttribute(titles);
+    public void setTitles(String titles) {
+        if (titles != null) {
+            JpaConverterJson jpaConverterJson = new JpaConverterJson();
+            this.titles = (LinkedHashMap<String, String>) jpaConverterJson.convertToEntityAttribute(titles);
+        }
     }
 
     @Lob
