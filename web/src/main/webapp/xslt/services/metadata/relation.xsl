@@ -27,13 +27,13 @@
   following relatedResponse.xsd.
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:geonet="http://www.fao.org/geonetwork" 
+                xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
-                xmlns:gfc="http://www.isotc211.org/2005/gfc" 
+                xmlns:gfc="http://www.isotc211.org/2005/gfc"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                xmlns:gmx="http://www.isotc211.org/2005/gmx" 
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
-                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 version="2.0" exclude-result-prefixes="#all">
 
   <xsl:include href="../../common/profiles-loader-tpl-brief.xsl"/>
@@ -52,7 +52,7 @@
   <xsl:template mode="relation" match="summary" priority="99"/>
 
 
-  <!-- In Lucene only mode, metadata are retrieved from the index and pass 
+  <!-- In Lucene only mode, metadata are retrieved from the index and pass
     as a simple XML with one level element. Make a simple copy here. -->
   <xsl:template mode="superBrief" match="metadata">
     <xsl:copy>
@@ -75,7 +75,7 @@
       <xsl:variable name="abstract" select="gfc:scope" />
       <xsl:variable name="featureTypes" select="gfc:featureType" />
 
-      
+
         <item>
           <id>
             <xsl:value-of select="$uuid" />
@@ -125,8 +125,8 @@
                           select="*/gfc:valueType/gco:TypeName/gco:aName/*/text()" />
                       </type>
                       <xsl:if test="*/gfc:listedValue">
-                        <values>
-                          <xsl:for-each select="*/gfc:listedValue">
+                        <xsl:for-each select="*/gfc:listedValue">
+                          <values>
                             <label>
                               <xsl:value-of select="*/gfc:label/*/text()" />
                             </label>
@@ -136,8 +136,8 @@
                             <definition>
                               <xsl:value-of select="*/gfc:definition/*/text()" />
                             </definition>
-                          </xsl:for-each>
-                        </values>
+                          </values>
+                        </xsl:for-each>
                       </xsl:if>
                     </element>
                   </xsl:for-each>
@@ -145,7 +145,7 @@
               </xsl:if>
             </xsl:for-each>
           </featureType>
-        </item>      
+        </item>
     </xsl:for-each>
     </fcats>
   </xsl:template>
@@ -218,8 +218,8 @@
     </xsl:if>
   </xsl:template>
 
-  <!-- Add the default title as title. This may happen when title is retrieve 
-    from index and the record is not available in current language. eg. iso19110 
+  <!-- Add the default title as title. This may happen when title is retrieve
+    from index and the record is not available in current language. eg. iso19110
     records are only indexed with no language info. -->
   <xsl:template mode="superBrief" match="metadata">
     <xsl:copy-of select="*"/>
