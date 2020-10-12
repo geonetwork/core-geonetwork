@@ -235,7 +235,9 @@
 
             <xsl:if test="$portalLink != ''">
               <xsl:variable name="defaultUrl"
-                            select="concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)"/>
+                            select="concat($nodeUrl,
+                                      if($language = 'all') then 'eng' else $language,
+                                      '/catalog.search#/metadata/', $metadataUuid)"/>
               <xsl:variable name="portalUrl">
                 <xsl:choose>
                   <xsl:when test="$portalLink = 'default'">
