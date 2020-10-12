@@ -953,6 +953,7 @@
                                   then daobs:search-in-contains($eu9762009/*, $title)
                                   else daobs:search-in($eu9762009/*, $title)"/>
             <xsl:if test="count($matchingEUText) = 1">
+
               <xsl:variable name="pass"
                             select="*/mdq:result/*/mdq:pass/gco:Boolean"/>
               <inspireConformResource>
@@ -1177,6 +1178,7 @@
             </properties>
           </xsl:variable>
           <xsl:copy-of select="gn-fn-index:build-record-link($code, $xlink, @xlink:title, 'siblings', $properties)"/>
+          <agg_associated><xsl:value-of select="$code"/></agg_associated>
         </xsl:if>
       </xsl:for-each>
 
