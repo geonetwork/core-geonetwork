@@ -125,8 +125,8 @@
                           select="*/gfc:valueType/gco:TypeName/gco:aName/*/text()" />
                       </type>
                       <xsl:if test="*/gfc:listedValue">
-                        <values>
-                          <xsl:for-each select="*/gfc:listedValue">
+                        <xsl:for-each select="*/gfc:listedValue">
+                          <values>
                             <label>
                               <xsl:value-of select="*/gfc:label/*/text()" />
                             </label>
@@ -136,8 +136,8 @@
                             <definition>
                               <xsl:value-of select="*/gfc:definition/*/text()" />
                             </definition>
-                          </xsl:for-each>
-                        </values>
+                          </values>
+                        </xsl:for-each>
                       </xsl:if>
                     </element>
                   </xsl:for-each>
