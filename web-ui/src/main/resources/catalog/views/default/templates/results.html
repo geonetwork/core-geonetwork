@@ -32,24 +32,21 @@
                data-enable-events=""></div>
         </div>
 
-        <div class="col-xs-6 col-sm-3 col-sm-pull-6 col-lg-pull-6 gn-nopadding-left">
-          <div data-gn-selection-widget=""
-               data-results="searchResults"></div>
-        </div>
-
-        <div class="col-xs-6 col-sm-3 gn-nopadding-right">
-          <div class="pull-right"
-               data-gn-results-tpl-switcher=""></div>
-          <div class="pull-right"
-               data-sortby-combo=""
-               data-params="searchObj.params"
-               data-gn-sortby-values="searchObj.sortbyValues"></div>
+        <div class="col-xs-6 col-sm-3 col-md-4"
+             data-ng-show="searchResults.records.length > 0">
+          <div class="pull-right">
+            <div class="pull-left" 
+                 data-sortby-combo=""
+                 data-params="searchObj.params"
+                 data-gn-sortby-values="searchObj.sortbyValues"></div>
+            <div class="pull-left"
+                 data-gn-results-tpl-switcher=""></div>
+          </div>
         </div>
       </div>
-      <!-- /.gn-row-tools -->
 
       <div class="row">
-        <div class="col-xs-12 gn-nopadding-left gn-nopadding-right">
+        <div class="col-xs-12">
           <span class="loading fa fa-spinner fa-spin"
                 data-ng-show="searching"></span>
 
