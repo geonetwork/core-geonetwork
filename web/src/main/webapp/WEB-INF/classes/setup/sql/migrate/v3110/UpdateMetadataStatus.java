@@ -91,8 +91,6 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
 
             // Now update the id to sequence values so that all id's are not null.
             updatePKValue(connection, dialect);
-            // commit the changes
-            connection.commit();
 
             // Now update uuid and titles for the existing records
             updateOtherNewFields();
@@ -130,6 +128,8 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
                     "Error is: " + e.getMessage());
             Log.debug(Geonet.DB, e);
         }
+
+        connection.commit();
     }
 
     /**
@@ -141,6 +141,8 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
 
     private void updatePKValue(final Connection connection, Dialect dialect) throws SQLException {
 
+        String HIBERNATE_SEQUENCE = getDatabaseObjectName(connection, "HIBERNATE_SEQUENCE");
+
         Statement statement = null;
         Integer rowcount = null;
         try {
@@ -151,12 +153,17 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
                         " where " + MetadataStatus_.id.getName() + " IS NULL");
             } catch (SQLException e1) {
                 try {
+                    connection.rollback();
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    statement = connection.createStatement();
                     rowcount = statement.executeUpdate("update " + MetadataStatus.TABLE_NAME +
-                            " set " + MetadataStatus_.id.getName() + " = " + dialect.getSelectSequenceNextValString("HIBERNATE_SEQUENCE") +
+                            " set " + MetadataStatus_.id.getName() + " = " + dialect.getSelectSequenceNextValString(HIBERNATE_SEQUENCE) +
                             " where " + MetadataStatus_.id.getName() + " IS NULL");
                 } catch (SQLException e2) {
                     throw new SQLException("Error updating table \"" + MetadataStatus.TABLE_NAME + "." + MetadataStatus_.id.getName() +
-                            "\" values to sequence value using sequence \"" + MetadataStatus.ID_SEQ_NAME + "\" and \"HIBERNATE_SEQUENCE\"", e1);
+                            "\" values to sequence value using sequence \"" + MetadataStatus.ID_SEQ_NAME + "\" and \"" + HIBERNATE_SEQUENCE + "\"\n" + e1.getMessage() + "\n", e2);
                 }
             }
         } finally {
@@ -317,17 +324,22 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
 
         // Now that data has been updated, add the not null constraints to fields that were previously created as null.
         try (Statement statement = connection.createStatement()) {
-            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " modify " + MetadataStatus_.id.getName() + " INTEGER NOT NULL");
+            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " + getAlterTableNotNullString(connection, MetadataStatus_.id.getName(), "INTEGER"));
         } catch (Exception e) {
+            connection.rollback();
             // If there was an error then we will log the error and continue.
             // JPA will probably apply the constraint correctly on next restart.
             Log.error(Geonet.DB, "  Exception while modifying " + MetadataStatus_.id.getName() + " column of " + MetadataStatus.TABLE_NAME + " to NOT NULL. " +
                     "Error is: " + e.getMessage());
             Log.debug(Geonet.DB, e);
         }
+
+        connection.commit();
+
         try (Statement statement = connection.createStatement()) {
-            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " modify " + MetadataStatus_.uuid.getName() + " VARCHAR(255) NOT NULL");
+            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " + getAlterTableNotNullString(connection, MetadataStatus_.uuid.getName(), "VARCHAR(255)"));
         } catch (Exception e) {
+            connection.rollback();
             // If there was an erro then we will log the error and continue.
             // Most likely cause is that the column already exists which should be fine.
             Log.error(Geonet.DB, "  Exception while modifying " + MetadataStatus_.uuid.getName() + " column of " + MetadataStatus.TABLE_NAME + " to NOT NULL. " +
@@ -335,13 +347,12 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
             Log.debug(Geonet.DB, e);
         }
 
-        String metadataStatusTableName;
-        // postgres uses lowercase names while other databases use uppercase.
-        if (connection.getMetaData().getDriverName().matches("(?i).*postgres.*")) {
-            metadataStatusTableName = MetadataStatus.TABLE_NAME.toLowerCase();
-        } else {
-            metadataStatusTableName = MetadataStatus.TABLE_NAME.toUpperCase();
-        }
+        connection.commit();
+
+        String metadataStatusTableName = getDatabaseObjectName(connection, MetadataStatus.TABLE_NAME);
+
+        // The next 3 statements are to drop the pk.  Not all databases will accept them all but hopefully at then
+        // end of all these statements the pk has been dropped.
 
         // lets drop the old primary key constraint on the table
         String pkName =  null;
@@ -356,27 +367,55 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
             }
             statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " drop constraint " + pkName);
         } catch (Exception e) {
+            connection.rollback();
             Log.error(Geonet.DB, "  Exception while dropping old primary key constraint on table " + MetadataStatus.TABLE_NAME + ". Restart application and check logs for database errors.  If errors exists then may need to manually drop the primary key for this table." +
                     "Error is: " + e.getMessage());
             Log.debug(Geonet.DB, e, e);
         }
 
+        connection.commit();
+
         // lets drop the old primary key on the table
         try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " drop primary key");
         } catch (Exception e) {
+            connection.rollback();
             Log.error(Geonet.DB, "  Exception while dropping old primary key on table " + MetadataStatus.TABLE_NAME + ". Restart application and check logs for database errors.  If errors exists then may need to manually drop the primary key for this table. " +
                     "Error is: " + e.getMessage());
             Log.debug(Geonet.DB, e, e);
         }
 
+        connection.commit();
+
         // lets add the new primary key
         try (Statement statement = connection.createStatement()) {
             statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " + dialect.getAddPrimaryKeyConstraintString(MetadataStatus.TABLE_NAME + "Pk") + " (" + MetadataStatus_.id.getName() + ")");
         } catch (Exception e) {
+            connection.rollback();
             Log.error(Geonet.DB, "  Exception while adding primary key on " + MetadataStatus_.id.getName() + " column for " + MetadataStatus.TABLE_NAME + ". " +
                     "Error is: " + e.getMessage());
             Log.debug(Geonet.DB, e, e);
         }
+
+        connection.commit();
     }
+
+    private String getDatabaseObjectName(final Connection connection, String objectName) throws SQLException {
+        // postgres uses lowercase names while other databases use uppercase.
+        if (connection.getMetaData().getDriverName().matches("(?i).*postgres.*")) {
+            return objectName.toLowerCase();
+        } else {
+            return objectName.toUpperCase();
+        }
+    }
+
+    private String getAlterTableNotNullString(final Connection connection, String columnName, String datatype) throws SQLException {
+        // postgres set to not null.
+        if (connection.getMetaData().getDriverName().matches("(?i).*postgres.*")) {
+            return "alter column " + columnName.toLowerCase() + " SET NOT NULL";
+        } else {
+            return "modify " + columnName.toUpperCase() + " " + datatype + " NOT NULL";
+        }
+    }
+
 }
