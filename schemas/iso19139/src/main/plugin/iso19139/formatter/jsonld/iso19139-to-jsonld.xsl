@@ -202,7 +202,7 @@
     <xsl:if test="position() != last()">,</xsl:if>
     </xsl:for-each>],
     "provider" : [<xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/*[gmd:role/gmd:CI_RoleCode/@codeListValue='resourceProvider' or gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']">
-    <xsl:apply-templates mode="doContact" select="."/>
+    <xsl:apply-templates mode="doContact" select="."/>,
     </xsl:for-each>
     <!-- this adds all metadata-contacts as 'provider', goal is to persist the property-->
     <xsl:for-each select="gmd:contact/*">
