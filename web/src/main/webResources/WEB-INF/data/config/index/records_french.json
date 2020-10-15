@@ -1,5 +1,6 @@
 {
   "settings": {
+    "index.mapping.total_fields.limit": ${es.index.mapping.total_fields.limit},
     "index": {
       "analysis": {
         "analyzer": {
@@ -20,16 +21,20 @@
           "french_heavy": {
             "tokenizer": "icu_tokenizer",
             "filter": [
-              "french_elision",
-              "icu_folding",
+              "lowercase",
               "french_synonym",
+              "french_elision",
+              "french_stop",
+              "icu_folding",
               "french_stemmer"
             ]
           },
           "french_light": {
             "tokenizer": "icu_tokenizer",
             "filter": [
+              "lowercase",
               "french_elision",
+              "french_stop",
               "icu_folding"
             ]
           },
@@ -84,6 +89,10 @@
             "min_shingle_size": 2,
             "max_shingle_size": 3
           },
+          "french_stop": {
+            "type":       "stop",
+            "stopwords":  "_french_"
+          },
           "french_elision": {
             "type": "elision",
             "articles_case": true,
@@ -91,7 +100,6 @@
           },
           "french_synonym": {
             "type": "synonym",
-            "ignore_case": true,
             "expand": true,
             "synonyms": [
               "sig, systeme d'information geographique, ids, gis, sdi",
@@ -1228,6 +1236,9 @@
       "geom": {
         "type": "geo_shape"
       },
+      "shape": {
+        "type": "geo_shape"
+      },
       "location": {
         "type": "geo_point"
       },
@@ -1285,6 +1296,17 @@
       },
       "resolutionScaleDenominator": {
         "type": "integer"
+      },
+      "resourceDate": {
+        "type": "nested",
+        "properties": {
+          "type": {
+            "type": "keyword"
+          },
+          "date": {
+            "type": "date"
+          }
+        }
       },
       "link": {
         "type": "nested",
@@ -1509,7 +1531,7 @@
         "type": "boolean"
       },
       "popularity": {
-        "type": "short"
+        "type": "long"
       },
       "rating": {
         "type": "short"
