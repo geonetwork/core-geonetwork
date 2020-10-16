@@ -112,7 +112,7 @@ function TimeLine(element, callback, options) {
     });
 
     timelineY = d3.scale.linear()
-      .range([timelineHeight, 0])
+      .range([timelineHeight - 3, 0])
       .domain([0, valueExtent[1]]);
 
     var changeRequest;
@@ -296,7 +296,7 @@ function TimeLine(element, callback, options) {
       return d.value;
     });
     timelineY = d3.scale.linear()
-      .range([timelineHeight, 0])
+      .range([timelineHeight - 3, 0])
       .domain([0, valueExtent[1]]);
   }
 
