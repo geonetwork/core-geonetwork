@@ -4,6 +4,9 @@
 
   var module = angular.module('sxt_emodnetdownload', []);
 
+  var ANALYTICS_API_URL = 'https://nodc.inogs.it/emodnet-dev/extranet/analytics';
+  var COUNTRIES_JSON_URL = 'https://pkgstore.datahub.io/core/country-list/data_json/data/8c458f2d15d9f2119654b29ede6e45b8/data_json.json';
+
   /**
    * @ngdoc service
    * @kind function
@@ -37,7 +40,7 @@
         // returns a promise
         getCountries: function() {
           if (!countriesPromise) {
-            countriesPromise = $http.get('https://pkgstore.datahub.io/core/country-list/data_json/data/8c458f2d15d9f2119654b29ede6e45b8/data_json.json', {
+            countriesPromise = $http.get(COUNTRIES_JSON_URL, {
               withCredentials: false
             }).then(function (response) {
               return response.data;
@@ -67,7 +70,7 @@
               values['api'] = '2dbSmaEG4Ac27SYT';
               values['uuid'] = mdUuid;
 
-              $http.get('https://nodc.inogs.it/emodnet-dev/extranet/analytics', {
+              $http.get(ANALYTICS_API_URL, {
                 params: values,
                 withCredentials: false
               });
