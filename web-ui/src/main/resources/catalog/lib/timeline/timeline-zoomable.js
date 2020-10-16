@@ -5,7 +5,7 @@
  * changed, ie the graph is zoomed or panned using mouse or buttons
  * Arguments are the updated `from` and `to` values in DD-MM-YYYY format
  * @param {Object} options
- * @param {bool} options.showAsHistogram
+ * @param {bool} options.showAsHistogram Deprecated
  */
 function TimeLine(element, callback, options) {
   var me = this;
@@ -16,12 +16,10 @@ function TimeLine(element, callback, options) {
   var timelineHeight;
   var timelineX;
   var timelineY;
-  var timelineLine;
-  var timelineArea;
   var timelineXAxis;
   var timelineXTranslate = 0;
   var timelineXScale = 1;
-  var svg;
+  var timelineSvg;
   var lastQuery = null;
   var maxDomain;
 
@@ -153,15 +151,6 @@ function TimeLine(element, callback, options) {
     root.append('g').attr('class', 'all-data-root');
     root.append('g').attr('class', 'data-root');
 
-    timelineArea = d3.svg.area()
-      .x(function(d) {
-        return timelineX(d.event);
-      })
-      .y0(timelineHeight)
-      .y1(function(d) {
-        return timelineY(d.value);
-      });
-
     timelineSelection = timelineX.domain();
 
     refreshGraphMaxData();
@@ -181,7 +170,6 @@ function TimeLine(element, callback, options) {
       .attr('transform', 'translate(0,' + (timelineHeight) + ')')
       .call(timelineXAxis);
 
-    // svg = d3.select("body").append("svg").append("g");
     initAppControls();
 
     this.initialized = true;
@@ -196,7 +184,6 @@ function TimeLine(element, callback, options) {
 
   function initAppControls() {
     d3.select(element).selectAll('.zoomBtn').on('click', function(event) {
-      var currentZoom = zoom.scale();
       var scale = zoom.scale(),
         extent = zoom.scaleExtent(),
         translate = zoom.translate(),
@@ -258,15 +245,12 @@ function TimeLine(element, callback, options) {
       // calculate the zone
       refreshGraphMaxData();
       refreshGraphData();
-      var context = container.select('svg').select('g');
       container.select('svg').select(".x.axis").call(timelineXAxis);
     }
 
   }
 
   function applyZoom() {
-    var container = d3.select(element);
-
     // calculate zone
     refreshGraphMaxData();
     refreshGraphData();
@@ -275,11 +259,7 @@ function TimeLine(element, callback, options) {
 
   function setZoom(translate, scale) {
     var container = d3.select(element);
-    var context = container.select('svg').select('g');
     container.select('svg').select(".x.axis").call(timelineXAxis);
-    if (!me.options.showAsHistogram) {
-      context.select(".all-data-root").attr("transform", "translate(" + translate + ",0)scale(" + scale + ", 1)");
-    }
   }
 
   // will be used to filter out invisible blocks
@@ -287,42 +267,30 @@ function TimeLine(element, callback, options) {
     var x0 = timelineX(d.time.begin);
     var x1 = timelineX(d.time.end);
     return x1 >= 0 && x0 <= timelineWidth;
-  };
+  }
 
   function refreshGraphMaxData() {
-    if (me.initialized && !me.options.showAsHistogram) {
-      return;
-    }
-
     var container = d3.select(element);
     var context = container.select('svg').select('g.all-data-root');
 
-    if (me.options.showAsHistogram) {
-      var all = context.selectAll('rect.areaAll')
-        .data(me.graphMaxData, function(d) { return d.event; });
-      all.enter()
-        .append('rect').attr('class', 'areaAll');
-      all.style('display', 'none')
-        .filter(isVisible).style('display', 'block')
-        .attr("x", function(d) { return timelineX(d.event); })
-        .attr("width", function(d) {
-          // min width is 3px
-          return Math.max(
-            timelineX(d.time.end) - timelineX(d.time.begin),
-            3 / timelineScale
-          );
-        })
-        .attr("y", function(d) { return timelineY(d.value); })
-        .attr("height", function(d) { return timelineHeight - timelineY(d.value); });
-      all.exit()
-        .remove();
-    } else {
-      context
-        .append("path")
-        .datum(me.graphMaxData)
-        .attr("class", "areaAll")
-        .attr("d", timelineArea);
-    }
+    var all = context.selectAll('rect.areaAll')
+      .data(me.graphMaxData, function(d) { return d.event; });
+    all.enter()
+      .append('rect').attr('class', 'areaAll');
+    all.style('display', 'none')
+      .filter(isVisible).style('display', 'block')
+      .attr("x", function(d) { return timelineX(d.event); })
+      .attr("width", function(d) {
+        // min width is 3px
+        return Math.max(
+          timelineX(d.time.end) - timelineX(d.time.begin),
+          3 / timelineScale
+        );
+      })
+      .attr("y", function(d) { return timelineY(d.value); })
+      .attr("height", function(d) { return timelineHeight - timelineY(d.value); });
+    all.exit()
+      .remove();
 
     var valueExtent = d3.extent(me.graphMaxData, function(d) {
       return d.value;
@@ -336,34 +304,24 @@ function TimeLine(element, callback, options) {
     var container = d3.select(element);
     var context = container.select('svg').select('g.data-root');
 
-
-    if (me.options.showAsHistogram) {
-      var all = context.selectAll('rect.area')
-        .data(me.graphData, function(d) { return d.event; });
-      all.enter()
-        .append('rect').attr('class', 'area');
-      all.style('display', 'none')
-        .filter(isVisible).style('display', 'block')
-        .attr("x", function(d) { return timelineX(d.event); })
-        .attr("width", function(d) {
-          // min width is 3px
-          return Math.max(
-            timelineX(d.time.end) - timelineX(d.time.begin),
-            3 / timelineScale
-          );
-        })
-        .attr("y", function(d) { return timelineY(d.value); })
-        .attr("height", function(d) { return timelineHeight - timelineY(d.value); });
-      all.exit()
-        .remove();
-    } else {
-      context.selectAll('path.area').remove();
-      context
-        .append("path")
-        .datum(me.graphData)
-        .attr("class", "area")
-        .attr("d", timelineArea);
-    }
+    var all = context.selectAll('rect.area')
+      .data(me.graphData, function(d) { return d.event; });
+    all.enter()
+      .append('rect').attr('class', 'area');
+    all.style('display', 'none')
+      .filter(isVisible).style('display', 'block')
+      .attr("x", function(d) { return timelineX(d.event); })
+      .attr("width", function(d) {
+        // min width is 3px
+        return Math.max(
+          timelineX(d.time.end) - timelineX(d.time.begin),
+          3 / timelineScale
+        );
+      })
+      .attr("y", function(d) { return timelineY(d.value); })
+      .attr("height", function(d) { return timelineHeight - timelineY(d.value); });
+    all.exit()
+      .remove();
   }
 
   this.setTimeline = function (data) {
@@ -395,7 +353,6 @@ function TimeLine(element, callback, options) {
     }
 
     var graphCenter = [timelineWidth / 2, timelineHeight / 2];
-    var targetCenter = (begin + end) / 2;
     var targetScale = (domain[1] - domain[0]) / (end - begin);
     var targetTranslate = [
       - (begin - domain[0]) / (domain[1] - domain[0]) * timelineWidth * targetScale,

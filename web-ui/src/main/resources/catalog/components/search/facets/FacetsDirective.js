@@ -418,9 +418,7 @@
         scope.showGraph = scope.$eval(attrs.showGraph);
         if (scope.$eval(attrs.showGraph)) {
           scope.graph = new TimeLine(element.find('.ui-timeline')[0],
-              scope.graphCallback, {
-                showAsHistogram: true
-              });
+              scope.graphCallback);
 
           // this updates the graph view to be
           // in sync with the current values
