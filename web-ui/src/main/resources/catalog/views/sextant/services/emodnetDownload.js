@@ -4,6 +4,9 @@
 
   var module = angular.module('sxt_emodnetdownload', []);
 
+  var ANALYTICS_API_URL = 'https://nodc.inogs.it/emodnet-dev/extranet/analytics';
+  var COUNTRIES_JSON_URL = 'https://pkgstore.datahub.io/core/country-list/data_json/data/8c458f2d15d9f2119654b29ede6e45b8/data_json.json';
+
   /**
    * @ngdoc service
    * @kind function
@@ -15,9 +18,8 @@
    * @description
    * This services handles the case where a form must be submitted before
    * downloading a file attached to a record.
-   * The data filled in this form is then sent to a Matomo server (see
-   * https://developer.matomo.org/guides/tracking-javascript-guide) using
-   * hardcoded parameters.
+   * The data filled in this form is then sent to a custom analytics service
+   * using GET query parameters.
    * Multiple URLs are handled and the download of each one should be triggered
    * once the form is submitted.
    * The form is described in a separate HTML template that is included
@@ -28,37 +30,23 @@
   module.factory('sxtEmodnetDownload', [
     '$rootScope',
     '$q',
+    '$http',
     'gnPopup',
-    function($rootScope, $q, gnPopup) {
+    function($rootScope, $q, $http, gnPopup) {
       var modal = null;
+      var countriesPromise = null;
 
       return {
-        initialized: false,
-
-        /**
-         * This will add the Matomo/Piwik library to the page
-         * Must be called when opening the form for the first time
-         */
-        importLibrary: function() {
-          if (this.initialized) return;
-
-          // global tracking array
-          window._paq = window._paq || []
-
-          var url = "//piwik.vliz.be/";
-          _paq.push(['setTrackerUrl', url + 'piwik.php']);
-          _paq.push(['setSiteId', '23']);
-
-          var scriptTag = document.createElement('script');
-          scriptTag.type = 'text/javascript';
-          scriptTag.async = true;
-          scriptTag.defer = true;
-          scriptTag.src = url + 'piwik.js';
-          var firstScriptTag = document.getElementsByTagName('script')[0];
-          var header = firstScriptTag.parentNode;
-          header.insertBefore(scriptTag, firstScriptTag);
-
-          this.initialized = true;
+        // returns a promise
+        getCountries: function() {
+          if (!countriesPromise) {
+            countriesPromise = $http.get(COUNTRIES_JSON_URL, {
+              withCredentials: false
+            }).then(function (response) {
+              return response.data;
+            });
+          }
+          return countriesPromise;
         },
 
         /**
@@ -71,42 +59,41 @@
          * analytics service is done
          */
         openDownloadForm: function(urls, mdUuid) {
-          this.importLibrary();
+          this.getCountries().then(function (countries) {
+            var scope = $rootScope.$new(true);
+            scope.values = {};
 
-          var scope = $rootScope.$new(true);
-          scope.values = {};
+            var sendAnalyticsReport = function (values) {
+              // hardcoded values
+              // see: https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/223
+              values['service'] = '2';
+              values['api'] = '2dbSmaEG4Ac27SYT';
+              values['uuid'] = mdUuid;
 
-          var category = 'Download_form';
+              $http.get(ANALYTICS_API_URL, {
+                params: values,
+                withCredentials: false
+              });
+            }
 
-          var addTrackingValues = function (url, values) {
-            // hardcoded tracking values
-            values['DownloadForm-sender_id'] = 'sextant';
-            values['DownloadForm-data_url'] = url;
-            values['DownloadForm-UUID'] = mdUuid;
+            scope.countries = countries;
 
-            Object.keys(values).forEach(function(key) {
-              if (values[key]) {
-                _paq.push(['trackEvent', category, key, values[key]]);
-              }
-            });
-            _paq.push(['trackEvent', category, 'DownloadForm-jsondata', JSON.stringify(values)]);
-          }
+            scope.submit = function () {
+              // for each url, send tracking values & open for download
+              urls.forEach(function (url) {
+                sendAnalyticsReport(scope.values);
+                window.open(url);
+              });
 
-          scope.submit = function() {
-            // for each url, send tracking values & open for download
-            urls.forEach(function(url) {
-              addTrackingValues(url, scope.values);
-              window.open(url);
-            });
+              modal.modal('hide');
+            };
 
-            modal.modal('hide');
-          };
-
-          var templateUrl = '../../catalog/views/sextant/services/emodnetdownloadform.html'
-          modal = gnPopup.createModal({
-            title: 'emodnetDownloadForm',
-            content: '<div ng-include="\'' + templateUrl + '\'"></div>'
-          }, scope);
+            var templateUrl = '../../catalog/views/sextant/services/emodnetdownloadform.html'
+            modal = gnPopup.createModal({
+              title: 'emodnetDownloadForm',
+              content: '<div ng-include="\'' + templateUrl + '\'"></div>'
+            }, scope);
+          });
         },
 
         /**

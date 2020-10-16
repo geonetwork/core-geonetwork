@@ -20,11 +20,56 @@
   <!-- data-cfasync="false" -->
   <script defer="" src="https://www.emodnet-chemistry.eu/js/cookieconsent.js">
   </script>
-  <script defer="" src="https://www.emodnet-chemistry.eu/js/sextant-embed.js">
-  </script>
-  <script defer="" src="http://localhost:8080/geonetwork/static/lib.js">
-  </script>
-  <script defer="" src="http://localhost:8080/geonetwork/static/gn_search_sextant.js">
+<!--  <script defer="" src="https://www.emodnet-chemistry.eu/js/sextant-embed.js">-->
+<!--  </script>-->
+  <script>
+   var sxtSettings = {
+    langDetector: {
+     fromHtmlTag: true,
+     regexp: '^\/([a-z]+)\/',
+     lang: 'fre'
+    },
+    // configWhat: 'EMODNET_Chemistry',
+    tabOverflow: {
+     search: true
+    },
+    sortBy: ['relevance', 'changeDate', '-title'],
+    viewerUrl:
+            'https://ec.oceanbrowser.net/emodnet/?server=${wmsurl}&layers=${layername}',
+    layerFilter: true,
+    facetConfig: [
+     {
+      key: 'C19',
+      labels: {
+       eng: 'Geographical area - C19',
+       fre: 'Geographical area - C19'
+      }
+     },
+     {
+      key: 'L04',
+      labels: {
+       eng: 'Matrix Categories - L04',
+       fre: 'Matrix Categories - L04'
+      }
+     },
+     {
+      key: 'P36',
+      labels: {
+       eng: 'Themes - P36',
+       fre: 'Themes - P36'
+      }
+     },
+     {
+      key: 'resource_responsibleParty_originator',
+      labels: {
+       eng: 'Data originator - EDMO',
+       fre: 'Data originator - EDMO'
+      }
+     }
+    ],
+    theme: 'emodnet-bathymetry',
+    useEmodnetDownloadForm: true
+   }
   </script>
   <meta name="wicket.header.items"/>
  </head>
@@ -163,6 +208,10 @@
      </h1>
      <div class="gn sxt-max-md nodc-fullContent" data-ng-app="gn_search_sextant" data-ng-controller="GnCatController" data-ng-include="'../../catalog/views/sextant/templates/index.html'" data-sxt-size="auto">
      </div>
+     <script src="http://localhost:8080/geonetwork/static/lib.js">
+     </script>
+     <script src="http://localhost:8080/geonetwork/static/gn_search_sextant.js">
+     </script>
     </div>
    </div>
   </main>
