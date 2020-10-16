@@ -198,7 +198,7 @@ public class MetadataSampleApi {
     @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody
-    SimpleMetadataProcessingReport addSamples(
+    SimpleMetadataProcessingReport addTemplates(
         @Parameter(description = API_PARAM_SCHEMA_IDENTIFIERS,
             required = true,
             example = "iso19139")

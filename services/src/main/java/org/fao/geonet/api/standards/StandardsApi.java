@@ -93,7 +93,7 @@ public class StandardsApi implements ApplicationContextAware {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "List of standards.")
     })
-    List<MetadataSchema> getConfigurations() throws Exception {
+    List<MetadataSchema> getStandardConfigurations() throws Exception {
         Set<String> schemaIds = schemaManager.getSchemas();
         List<MetadataSchema> schemaList = new ArrayList<>(schemaIds.size());
         schemaIds.stream().forEach(id -> schemaList.add(schemaManager.getSchema(id)));

@@ -198,7 +198,7 @@ public class MetadataApi {
     })
     public
     @ResponseBody
-    Object getRecord(
+    Object getRecordAs(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
             required = true)
@@ -496,7 +496,7 @@ public class MetadataApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
-    public RelatedResponse getRelated(
+    public RelatedResponse getAssociatedResources(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
             required = true)
@@ -576,7 +576,8 @@ public class MetadataApi {
         Map<String, String[]> decodeMap = new HashMap<>();
 
         try {
-            RelatedResponse related = getRelated(metadataUuid, type, 0, 100, request);
+            RelatedResponse related = getAssociatedResources(
+                metadataUuid, type, 0, 100, request);
 
             if (isIncludedAttributeTable(related.getFcats())) {
                 for (AttributeTable.Element element : related.getFcats().getItem().get(0).getFeatureType().getAttributeTable().getElement()) {

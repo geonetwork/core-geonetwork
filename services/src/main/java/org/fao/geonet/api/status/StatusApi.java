@@ -60,8 +60,7 @@ public class StatusApi {
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public List<StatusValue> getStatus(HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+    public List<StatusValue> getStatusList() throws Exception {
         return statusValueRepository.findAll();
     }
 
@@ -71,9 +70,8 @@ public class StatusApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<StatusValue> getStatusByType(
-        @Parameter(description = "Type", required = true) @PathVariable StatusValueType type, HttpServletRequest request)
+        @Parameter(description = "Type", required = true) @PathVariable StatusValueType type)
         throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
         return statusValueRepository.findAllByType(type);
     }
 

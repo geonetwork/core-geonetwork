@@ -84,10 +84,7 @@ public class UserSelectionsApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    List<Selection> get(
-        @Parameter(hidden = true)
-            HttpSession httpSession
-    )
+    List<Selection> getSelectionList()
         throws Exception {
         return selectionRepository.findAll();
     }
@@ -234,7 +231,7 @@ public class UserSelectionsApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    List<String> get(
+    List<String> getSelectionRecords(
         @Parameter(description = "Selection identifier",
             required = true)
         @PathVariable

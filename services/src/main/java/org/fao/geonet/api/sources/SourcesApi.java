@@ -109,7 +109,7 @@ public class SourcesApi {
         @ApiResponse(responseCode = "200", description = "List of portals.")
     })
     @ResponseBody
-    public void getSubPortal(
+    public void getSubPortals(
         @Parameter(hidden = true)
             HttpServletResponse response
     ) throws Exception {

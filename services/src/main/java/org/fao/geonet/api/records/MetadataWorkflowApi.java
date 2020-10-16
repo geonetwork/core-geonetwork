@@ -333,7 +333,7 @@ public class MetadataWorkflowApi {
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, path = "/status/search")
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public List<MetadataStatusResponse> getStatusByType(
+    public List<MetadataStatusResponse> getWorkflowStatusByType(
         @Parameter(description = "One or more types to retrieve (ie. worflow, event, task). Default is all.",
             required = false)
         @RequestParam(required = false)

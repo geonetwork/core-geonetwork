@@ -204,7 +204,7 @@ public class UsersApi {
         produces = MediaType.IMAGE_PNG_VALUE,
         method = RequestMethod.GET)
     @ResponseBody
-    public void getUser(
+    public void getUserIdenticon(
         @Parameter(
             description = "User identifier."
         )
