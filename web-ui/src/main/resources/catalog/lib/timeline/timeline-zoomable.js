@@ -113,7 +113,7 @@ function TimeLine(element, callback, options) {
 
     timelineY = d3.scale.linear()
       .range([timelineHeight, 0])
-      .domain(valueExtent);
+      .domain([0, valueExtent[1]]);
 
     var changeRequest;
     zoom = d3.behavior.zoom().x(timelineX)
@@ -297,7 +297,7 @@ function TimeLine(element, callback, options) {
     });
     timelineY = d3.scale.linear()
       .range([timelineHeight, 0])
-      .domain(valueExtent);
+      .domain([0, valueExtent[1]]);
   }
 
   function refreshGraphData() {
