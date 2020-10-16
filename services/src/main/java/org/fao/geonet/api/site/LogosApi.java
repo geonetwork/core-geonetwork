@@ -102,7 +102,7 @@ public class LogosApi {
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public Set<String> get(
+    public Set<String> getLogos(
         HttpServletRequest request
     ) {
         ApplicationContext context = ApplicationContextHolder.get();

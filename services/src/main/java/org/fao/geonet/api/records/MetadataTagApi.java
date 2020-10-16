@@ -97,7 +97,7 @@ public class MetadataTagApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
-    public Set<MetadataCategory> getTags(
+    public Set<MetadataCategory> getRecordTags(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
             required = true)
@@ -123,7 +123,7 @@ public class MetadataTagApi {
     })
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
-    public void updateTags(
+    public void tagRecord(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
             required = true)
@@ -247,7 +247,7 @@ public class MetadataTagApi {
     })
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
-    public MetadataProcessingReport updateTags(
+    public MetadataProcessingReport tagRecords(
         @Parameter(
             description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false)
@@ -355,7 +355,7 @@ public class MetadataTagApi {
     })
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
-    public MetadataProcessingReport updateTags(
+    public MetadataProcessingReport deleteTagForRecords(
         @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false)
         @RequestParam(required = false) String[] uuids,

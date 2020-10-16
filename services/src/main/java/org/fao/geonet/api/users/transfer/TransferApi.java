@@ -88,7 +88,7 @@ public class TransferApi {
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('UserAdmin')")
     @ResponseBody
-    public List<OwnerResponse> getUsers(
+    public List<OwnerResponse> getRecordOwners(
         @Parameter(hidden = true)
             HttpSession httpSession,
         HttpServletRequest request

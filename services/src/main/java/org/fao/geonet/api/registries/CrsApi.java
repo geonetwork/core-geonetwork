@@ -92,7 +92,7 @@ public class CrsApi {
         @ApiResponse(responseCode = "200", description = "List of CRS.")
     })
     @ResponseBody
-    public List<Crs> getCrs(
+    public List<Crs> searchCrs(
         @Parameter(
             description = "Search value",
             required = false)

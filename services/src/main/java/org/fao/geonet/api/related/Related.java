@@ -93,7 +93,7 @@ public class Related implements ApplicationContextAware {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
-    public Map<String, RelatedResponse> getRelated(
+    public Map<String, RelatedResponse> getAssociatedResourcesForRecords(
         @Parameter(description = "Type of related resource. If none, all resources are returned.",
             required = false
         )

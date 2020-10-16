@@ -178,7 +178,7 @@ public class SiteApi {
         @ApiResponse(responseCode = "200", description = "Site description.")
     })
     @ResponseBody
-    public SettingsListResponse get(
+    public SettingsListResponse getSiteOrPortalDescription(
         @Parameter(hidden = true)
             HttpServletRequest request
     ) throws Exception {

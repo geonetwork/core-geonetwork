@@ -633,7 +633,7 @@ public class UserFeedbackAPI {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)})
     @ResponseBody
-    public ResponseEntity publish(
+    public ResponseEntity publishFeedback(
         @Parameter(
             description = "User feedback UUID.",
             required = true
