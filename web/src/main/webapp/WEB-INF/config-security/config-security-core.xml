@@ -367,11 +367,11 @@
         class="org.fao.geonet.security.web.csrf.GeonetworkCsrfSecurityRequestMatcher">
     <constructor-arg>
       <set>
-        <!-- CSW requests -->
         <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw-publication!?.*</value>
         <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw-.*</value>
         <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw!?.*</value>
-        <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.search!?</value>
+        <value>/[a-zA-Z0-9_\-]+/api/search/.*</value>
+        <value>/[a-zA-Z0-9_\-]+/api/site</value>
       </set>
     </constructor-arg>
   </bean>
