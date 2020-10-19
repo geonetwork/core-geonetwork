@@ -23,8 +23,9 @@
 
 (function() {
   goog.provide('gn_ui_config_directive');
+  goog.require('gn_timezone_selector')
 
-  var module = angular.module('gn_ui_config_directive', ['ui.ace']);
+  var module = angular.module('gn_ui_config_directive', ['ui.ace', 'gn_timezone_selector']);
 
   module.directive('gnUiConfig', ['gnGlobalSettings',
     function(gnGlobalSettings) {
