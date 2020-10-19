@@ -88,6 +88,8 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         template.getDataInfo().setPopularity(32);
         Metadata metadata = _repo.save(template);
 
+        _entityManager.flush();
+        _entityManager.clear();
         _repo.incrementPopularity(metadata.getId());
         _entityManager.flush();
         _entityManager.clear();
