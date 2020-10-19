@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.10.7-SNAPSHOT</version>
+    <version>3.10-SNAPSHOT</version>
   </parent>
 
 
@@ -558,29 +558,29 @@
     <!-- Add dependencies to schema plugin
     having a custom Bean to be loaded. -->
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>schema-iso19139</artifactId>
-      <version>${gn.schemas.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>schema-csw-record</artifactId>
-      <version>${gn.schemas.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>schema-iso19110</artifactId>
-      <version>${gn.schemas.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>schema-dublin-core</artifactId>
-      <version>${gn.schemas.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>schema-iso19115-3.2018</artifactId>
-      <version>${gn.schemas.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>

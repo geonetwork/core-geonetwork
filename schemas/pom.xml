@@ -28,12 +28,11 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.10.7-SNAPSHOT</version>
+    <version>3.10-SNAPSHOT</version>
   </parent>
 
-  <version>3.7</version>
-
   <modelVersion>4.0.0</modelVersion>
+  <groupId>org.geonetwork-opensource.schemas</groupId>
   <artifactId>schemas</artifactId>
   <name>GeoNetwork schema plugins</name>
   <packaging>pom</packaging>
@@ -55,7 +54,7 @@
   </modules>
   <properties>
     <rootProjectDir>../..</rootProjectDir>
-    <gn.project.version>3.10.7-SNAPSHOT</gn.project.version>
+    <gn.project.version>3.10-SNAPSHOT</gn.project.version>
   </properties>
 
 </project>
