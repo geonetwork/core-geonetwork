@@ -25,14 +25,19 @@
       <input type="month" class="form-control"
              data-ng-model="month"
              data-ng-show="mode === 'month'"/>
-      <input type="date" class="form-control"
+      <input type="date" class="form-control gn-date"
              data-ng-model="date"
              data-ng-class="hideTime == 'true' ? 'gn-notime' : ''"
              data-ng-show="mode === ''"/>
-      <input type="time" class="form-control"
+      <input type="time" class="form-control gn-time"
              data-ng-class="hideTime == 'true' ? 'hidden' : ''"
              data-ng-model="time"
              data-ng-show="mode === ''"/>
+      <select  class="form-control gn-timezone"
+             data-ng-class="hideTime == 'true' ? 'hidden' : ''"
+             data-ng-model="timezone"
+             data-ng-show="mode === ''"
+             data-ng-options="t.offset as (t.name + ' ' + t.offset) for t in timezoneNames"/>
       <div class="input-group-btn">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
           <i class="fa fa-clock-o"></i>&nbsp;<span class="caret"></span>

@@ -24,7 +24,8 @@
 (function() {
   goog.provide('gn_date_picker_directive');
 
-  var module = angular.module('gn_date_picker_directive', []);
+  var module = angular.module('gn_date_picker_directive',
+    []);
 
   /**
    *  Create a widget to handle date composed of
@@ -75,8 +76,26 @@
                scope.dateInput = dateTime.format(format);
              };
 
-             scope.mode = scope.year = scope.month = scope.time =
-             scope.date = scope.dateDropDownInput = '';
+             var userTimezone =  moment.tz.guess();
+             scope.timezoneNames = [
+               {name: 'No timezone', offset: ''},
+               {
+                 name: 'Your timezone: ' + userTimezone,
+                 offset: moment.tz(userTimezone).format('ZZ')
+                   .replace(/([+-]?[0-9]{2})([0-9]{2})/, '$1:$2')
+               },
+               {name: '----', offset: ''}];
+             _.each(moment.tz.names(), function(tz, index, list) {
+               scope.timezoneNames.push({
+                 name: tz,
+                 offset: moment.tz(tz).format('ZZ')
+                   .replace(/([+-]?[0-9]{2})([0-9]{2})/, '$1:$2')
+               })
+             });
+
+             scope.mode = scope.year = scope.month =
+               scope.time = scope.timezone =
+               scope.date = scope.dateDropDownInput = '';
              scope.withIndeterminatePosition =
              attrs.indeterminatePosition !== undefined;
 
@@ -94,10 +113,19 @@
              } else {
                var isDateTime = scope.value.indexOf('T') !== -1;
                var tokens = scope.value.split('T');
-               scope.date = new Date(moment(isDateTime ? tokens[0] : scope.value).utc().format());
+
+               scope.date = new Date(
+                 moment(isDateTime ? tokens[0] : scope.value)
+                   .utc().format());
+
+               var time = tokens[1],
+                   hasTimezone = time.length > 8;
+
                scope.time = isDateTime ?
-               moment(tokens[1], 'HH:mm:ss').toDate() :
-               undefined;
+                 moment(time, 'HH:mm:ss').toDate() :
+                 undefined;
+
+               scope.timezone = time.substr(8);
              }
              if (scope.dateTypeSupported !== true) {
                scope.dateInput = scope.value;
@@ -119,6 +147,7 @@
                  scope.year = '';
                  scope.month = '';
                  scope.time = '';
+                 scope.timezone = '';
                }
              };
 
@@ -153,7 +182,7 @@
                  var time = $filter('date')(scope.time, 'HH:mm:ss');
                  // TODO: Set seconds, Timezone ?
                  scope.dateTime = $filter('date')(scope.date, 'yyyy-MM-dd');
-                 scope.dateTime += 'T' + time;
+                 scope.dateTime += 'T' + time + scope.timezone;
                } else {
                  scope.dateTime = $filter('date')(scope.date, 'yyyy-MM-dd');
                }
@@ -183,6 +212,7 @@
 
              scope.$watch('date', buildDate);
              scope.$watch('time', buildDate);
+             scope.$watch('timezone', buildDate);
              scope.$watch('year', buildDate);
              scope.$watch('month', buildDate);
              scope.$watch('dateInput', buildDate);

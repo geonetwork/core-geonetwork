@@ -317,16 +317,20 @@ form.gn-editor {
    * line instead of 100% width in input group.
    */
   .gn-date-picker {
-    > input[type=date] {
-      width: 60%;
+    > input.gn-date {
+      width: 50%;
     }
-    > input[type=time] {
-      width: 40%;
+    > input.gn-time {
+      width: 35%;
     }
-    > input[type=date].gn-notime {
+    > select.gn-timezone {
+      width: 15%;
+    }
+    > input.gn-date.gn-notime {
       width: 100%;
     }
-    > input[type=time].hidden {
+    > input.gn-time.hidden,
+    > select.gn-timezone.hidden {
       width: 0%;
     }
     .gn-indeterminate-position {
@@ -430,7 +434,7 @@ form.gn-editor {
   .gn-value .col-xs-4 {
       padding-right: 0px;
   }
-  
+
   div.th-inner {
     font-size: 12px;
   }
