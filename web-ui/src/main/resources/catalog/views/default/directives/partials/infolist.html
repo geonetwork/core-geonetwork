@@ -8,11 +8,14 @@
     <div class="panel-heading gn-card-heading">
       <div class="gn-md-title">
         <a href=""
-          title="{{md.title || md.defaultTitle}}"
-          gn-metadata-open="md"
-          gn-records="searchResults.records"
-          gn-formatter="formatter.defaultUrl">
-          <h1>{{md.resourceTitle}}</h1>
+           class="clamp-2"
+           title="{{md.title || md.defaultTitle}}"
+           gn-metadata-open="md"
+           gn-records="searchResults.records"
+           gn-formatter="formatter.defaultUrl">
+          <h1>
+            {{md.resourceTitle}}
+          </h1>
         </a>
       </div>
     </div>
@@ -22,10 +25,10 @@
         <div class="gn-md-thumbnail"
              data-ng-class="{'gn-md-no-thumbnail': !md.overview[0].url}">
           <a href=""
-            title="{{(md.abstract || md.defaultAbstract) | striptags}}"
-            gn-metadata-open="md"
-            gn-records="searchResults.records"
-            gn-formatter="formatter.defaultUrl">
+             title="{{(md.abstract || md.defaultAbstract) | striptags}}"
+             gn-metadata-open="md"
+             gn-records="searchResults.records"
+             gn-formatter="formatter.defaultUrl">
             <div class="gn-img-thumbnail"
                  style="background-image: url('{{md.overview[0].url}}')">
             </div>

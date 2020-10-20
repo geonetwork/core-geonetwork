@@ -10,12 +10,8 @@
              data-use-location-parameters="true"
              ng-if="isFilterTagsDisplayedInSearch && searchResults.facets">
         </div>
-
-
-            <div data-ng-show="searchResults.records.length > 0"
-                 data-es-facets="searchResults.facets"></div>
-
-
+        <div data-ng-show="searchResults.records.length > 0"
+              data-es-facets="searchResults.facets"></div>
         <div data-ng-show="searchResults.records.length > 0"
              data-gn-saved-selections-panel="user"></div>
       </div>
@@ -24,7 +20,13 @@
     <div class="col-md-9 container-fluid">
       <div class="row gn-row-tools"
            data-ng-show="searchResults.records.length > 0">
-        <div class="col-xs-12 col-sm-6 col-sm-push-3 text-center">
+           
+        <div class="col-xs-6 col-sm-3 col-md-4">
+          <div data-gn-selection-widget=""
+               data-results="searchResults"></div>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-4 text-center">
           <div class=""
                data-gn-pagination="paginationInfo"
                data-hits-values="searchObj.hitsperpageValues"
@@ -34,6 +36,7 @@
 
         <div class="col-xs-6 col-sm-3 col-md-4"
              data-ng-show="searchResults.records.length > 0">
+
           <div class="pull-right">
             <div class="pull-left" 
                  data-sortby-combo=""
@@ -52,7 +55,7 @@
 
           <div class="alert alert-warning" role="alert"
                ng-if="!searching && searchResults.count == 0">
-            <i class="fa fa-frown-o"></i>
+            <span class="fa fa-frown-o"></span>
             <span data-translate="">zarooResult</span>
           </div>
 
@@ -66,7 +69,7 @@
                   class="btn btn-link"
                   onClick="window.scrollTo(0,0);"
                   title="{{'scrollTop' | translate}}">
-            <i class="fa fa-fw fa-chevron-up"/>
+            <span class="fa fa-fw fa-chevron-up"></span>
           </button>
         </div>
       </div>
@@ -82,7 +85,7 @@
   <button data-ng-click="toggleMap()"
           title="{{'toggleMiniMap' | translate}}"
           class="gn-toggle gn-minimap-toggle btn btn-primary gn-minimap-button hidden-xs">
-    <i class="fa fa-angle-double-right" ></i>
+    <span class="fa fa-angle-double-right" ></span>
     <strong class="gn-minimap-toggle gn-minimap-text" data-translate="">map</strong>
   </button>
 </div>

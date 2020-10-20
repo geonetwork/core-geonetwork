@@ -6,9 +6,6 @@
   padding-top: 15px;
   background-color: @gn-results-background-color;
 
-  .gn-record-selected {
-    background-color: darken(@panel-default-heading-bg, 15%);
-  }
   .gn-md-select {
     display: table-cell;
     vertical-align: middle;
@@ -37,7 +34,6 @@
   .btn-default {
     border: 0;
     border-radius: 0;
-    border-right: 1px solid #ddd;
     &:hover, &:focus, &:active {
       background: 0;
       box-shadow: none;
@@ -78,7 +74,7 @@ ul.gn-resultview {
   @thumbnail-width: 140px;
 
   margin-right: -15px;
-
+  padding-top: 15px;
   .metadata {
     position: absolute;
     top: 0;
@@ -141,9 +137,7 @@ ul.gn-resultview {
       margin-top: -1px;
     }
   }
-
 }
-
 
 // nojs styles
 .gn-nojs {

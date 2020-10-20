@@ -1,34 +1,24 @@
-<ul class="list-group gn-resultview gn-resultview-sumup">
+<ul class="list-group gn-resultview gn-resultview-sumup clearfix">
   <li class="list-group-item gn-grid panel panel-default gn-card"
+      data-ng-class="{'gn-record-selected': md.selected}"
       data-ng-repeat="md in searchResults.records"
       data-gn-fix-mdlinks=""
       data-gn-displayextent-onhover=""
       data-gn-zoomto-onclick="">
 
-<<<<<<< HEAD
-    <div class="panel-heading gn-card-heading"
-         data-ng-class="{'gn-record-selected': md.selected}">
-      <div class="gn-md-title">
-        <div class="gn-md-select">
-          <input data-gn-selection-md
-=======
     <div class="panel-heading gn-card-heading">
       <div class="gn-md-title">
         <div class="gn-md-select">
           <input data-gn-selection-md 
->>>>>>> master-uniform-md-card
                  type="checkbox"
                  data-ng-model="md.selected"
                  aria-label="{{'clickToSelect' | translate}}"
                  data-ng-change="change()"/>
         </div>
-<<<<<<< HEAD
-        <span class="fa gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"></span>
-=======
-        <span class="fa gn-md-icon gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"></span>
->>>>>>> master-uniform-md-card
+        <span class="fa gn-md-icon gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"></span>
         <h1>
           <a href=""
+             class="clamp-2"
              gn-metadata-open="md"
              gn-records="searchResults.records"
              gn-formatter="formatter.defaultUrl"
@@ -56,12 +46,16 @@
         </div>
 
         <div class="gn-md-details">
-          <div class="gn-md-abstract text-muted">
-            <div class="ellipsis">
+          <div class="gn-md-abstract">
+            <div class="clamp-6">
               <p>{{md.resourceAbstract.split('.')[0] | striptags}}.</p>
-              <p class="text-muted">
-                {{md.OrgForResource[0]}}
-              </p>
+            </div>
+            <p class="gn-md-resource">
+              {{md.OrgForResource[0]}}
+            </p>
+            <div data-ng-if="md.codelist_status_text.length > 0"
+                 title="{{md.codelist_status_text[0]}}"
+                 class="gn-status gn-status-{{md.codelist_status[0]}}">{{md.codelist_status_text[0]}}
             </div>
           </div>
         </div>
@@ -70,21 +64,21 @@
     <!-- /.gn-card-body -->
 
     <div class="panel-footer gn-card-footer clearfix">
-      <div data-ng-if="md.codelist_status_text.length > 0"
-           title="{{md.codelist_status_text[0]}}"
-           class="gn-status gn-status-{{md.codelist_status[0]}}">{{md.codelist_status_text[0]}}
-      </div>
+
       <div class="gn-toolbar">
-        <gn-links-btn class="pull-right"></gn-links-btn>
-        <div gn-grid-related gn-grid-related-uuid="::md.uuid"
-             class="pull-right"
-             template="../../catalog/views/default/templates/gridRelated.html"></div>-->
         <div data-ng-if="md.draft == 'e'"
              title="{{'workingCopy' | translate}}"
-             class="gn-workingcopy-status pull-right">
-          <i class="fa fa-pencil"></i>
+             class="gn-workingcopy-status">
+          <span class="fa fa-pencil"></span>
           <span>{{'workingCopy' | translate}}</span>
         </div>
+        <div class="pull-right">
+          <div gn-grid-related gn-grid-related-uuid="::md.uuid"
+               class="gn-md-related pull-left"
+               template="../../catalog/views/default/templates/gridRelated.html"></div>
+          <gn-links-btn class="pull-left"></gn-links-btn>
+        </div>
+
       </div>
     </div>
     <!-- /.gn-card-footer -->

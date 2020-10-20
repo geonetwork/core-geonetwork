@@ -3,28 +3,32 @@
     <li data-ng-repeat="link in recordLink">
       <a data-ng-href="{{link.url ||
                          (location.origin + location.pathname + '#/metadata/' + link.to) }}"
-         title="{{('link-' + link.type) | translate}}">
-        <i class="fa fa-fw gn-icon-{{link.type}}"></i>
+         title="{{('link-' + link.type) | translate}}"
+         class="clearfix">
+        <span class="fa fa-fw gn-icon-{{link.type}} pull-left"></span>
         {{link.title}}
-        <i class="fa fa-fw"
-           data-ng-class="{'fa-external-link': link.origin === 'remote'}"></i>
+        <span class="gn-related-link pull-left" ng-if="!link.title">{{link.url}}</span>
+        <span class="fa fa-fw pull-left"
+              data-ng-class="{'fa-external-link': link.origin === 'remote'}"></span>
       </a>
     </li>
   </ul>
-  <ul class="list-group" ng-if="::relations">
+  <ul class="list-group gn-related-list" ng-if="::relations">
     <ul ng-repeat="type in ::types"
         ng-if="::relations[type]"
         ng-init="displayState[type] = false;"
         class="gn-related-list">
-      <!--<li class="gn-related-type">
+      <li class="gn-related-type">
         {{::relations[type].length}}&nbsp;{{type | translate}}
-      </li>-->
+      </li>
       <li ng-repeat="r in ::relations[type]" >
         <a ng-show="$index < max || displayState[type]"
            href="{{location.origin}}{{location.pathname}}#/metadata/{{r.id}}"
-           title="{{('link-' + type) | translate}} > -{{r.title | gnLocalized: lang}}">
-          <i class="fa fa-fw gn-icon-{{type}}"></i>
-          {{r.title | gnLocalized: lang | characters:80}}
+           title="{{('link-' + type) | translate}} > -{{r.title | gnLocalized: lang}}"
+           class="clearfix">
+          <span class="fa fa-fw gn-icon-{{type}} pull-left"></span>
+          <span class="gn-related-link pull-left">{{r.title | gnLocalized: lang | characters:80}}</span>
+          <span class="gn-related-link pull-left" ng-if="!r.title[lang]">{{r.url | gnLocalized: lang}}</span>
         </a>
       </li>
       <li ng-if="relations[type].length > max && !display">
