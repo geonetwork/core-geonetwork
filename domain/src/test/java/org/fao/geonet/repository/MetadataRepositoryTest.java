@@ -83,21 +83,6 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
     }
 
     @Test
-    public void testIncrementPopularity() throws Exception {
-        final Metadata template = newMetadata();
-        template.getDataInfo().setPopularity(32);
-        Metadata metadata = _repo.save(template);
-
-        _entityManager.flush();
-        _entityManager.clear();
-        _repo.incrementPopularity(metadata.getId());
-        _entityManager.flush();
-        _entityManager.clear();
-
-        assertEquals(33, _repo.findById(metadata.getId()).get().getDataInfo().getPopularity());
-    }
-
-    @Test
     public void testFindByUUID() throws Exception {
         Metadata metadata = _repo.save(newMetadata());
 
