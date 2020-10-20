@@ -33,7 +33,6 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
-                xmlns:related="java:org.fao.geonet.api.records.MetadataUtils"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:daobs="http://daobs.org"
                 xmlns:saxon="http://saxon.sf.net/"
@@ -1108,7 +1107,7 @@
                     select="util:getSettingValue('system/index/indexingTimeRecordLink')" />
       <xsl:if test="$indexingTimeRecordLink = 'true'">
         <xsl:variable name="recordsLinks"
-                      select="related:getTargetAssociatedResourcesAsNode(
+                      select="util:getTargetAssociatedResourcesAsNode(
                                         $identifier,
                                         gmd:parentIdentifier/*[text() != '']/text())"/>
         <xsl:copy-of select="$recordsLinks//recordLink"/>

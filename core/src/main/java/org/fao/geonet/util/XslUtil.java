@@ -23,7 +23,6 @@
 
 package org.fao.geonet.util;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -44,8 +43,16 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.kernel.*;
+import org.fao.geonet.domain.IsoLanguage;
+import org.fao.geonet.domain.LinkStatus;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.UiSetting;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.KeywordBean;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.Thesaurus;
+import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.Translator;
@@ -72,7 +79,12 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.output.DOMOutputter;
-import org.locationtech.jts.geom.*;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.locationtech.jts.operation.valid.IsValidOp;
 import org.locationtech.jts.precision.GeometryPrecisionReducer;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -96,7 +108,17 @@ import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -484,9 +506,6 @@ public final class XslUtil {
 
 	/**
 	 * Check if Shibboleth should show login
-	 *
-	 * @param beanId
-	 *            id of the bean to look up
 	 */
 	public static boolean shibbolethHideLogin() {
 		if (existsBean("shibbolethConfiguration")) {

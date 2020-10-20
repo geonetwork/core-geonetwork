@@ -42,7 +42,6 @@
                 xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
-                xmlns:related="java:org.fao.geonet.api.records.MetadataUtils"
                 xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -1126,7 +1125,7 @@
         <xsl:variable name="parentUuid"
                       select=".//mri:associatedResource/*[mri:associationType/*/@codeListValue = parentAssociatedResourceType]/mri:metadataReference/@uuidref[. != '']"/>
         <xsl:variable name="recordsLinks"
-                      select="related:getTargetAssociatedResourcesAsNode(
+                      select="util:getTargetAssociatedResourcesAsNode(
                                         $identifier,
                                         if ($parentUuid) then $parentUuid else mdb:parentMetadata[@uuidref != '']/@uuidref)"/>
         <xsl:copy-of select="$recordsLinks//recordLink"/>
