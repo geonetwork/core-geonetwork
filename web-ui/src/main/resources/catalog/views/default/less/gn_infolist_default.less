@@ -73,6 +73,8 @@
   list-style: none;
   margin-right: 15px;
   float: left;
+  transition: all 200ms ease-in;
+  transform: scale(1);
   .gn-card-heading {
     height: @gn-card-header-height;
     background-color: @gn-resultcard-title-background-color;
@@ -109,7 +111,7 @@
         display: table-cell;
         line-height: 1.3em;
         vertical-align: middle;
-        font-weight: normal;
+        font-weight: bold;
       }
     }
   }
@@ -314,6 +316,9 @@ li.gn-list {
       filter: grayscale(100%);
     }
     &:hover {
+      transition: all 200ms ease-in;
+      transform: scale(1.03);
+      z-index: 10;
       .gn-img-thumbnail {
         filter: none;
       }
@@ -373,6 +378,9 @@ li.gn-list {
             display: none;
           }
         }
+      }
+      &:hover {
+        transform: scale(1.01);
       }
     }
   }
