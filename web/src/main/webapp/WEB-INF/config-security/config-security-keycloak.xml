@@ -71,14 +71,24 @@
   </bean>
   <bean id="keycloakUtil" class="org.fao.geonet.kernel.security.keycloak.KeycloakUtil" />
   <bean id="keycloakAuthenticationProvider" class="org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider" />
-  <bean id="keycloakPreAuthActionsFilter" class="org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter" />
-  <bean id="keycloakPreAuthActionsLoginFilter" class="org.fao.geonet.kernel.security.keycloak.keycloakPreAuthActionsLoginFilter" />
+  <bean id="userSessionManagement" class="org.fao.geonet.kernel.security.keycloak.KeycloakHttpSessionManager" />
+  <bean id="keycloakPreAuthActionsFilter" class="org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter">
+    <constructor-arg ref="userSessionManagement" />
+  </bean>
+  <bean id="keycloakPreAuthActionsLoginFilter" class="org.fao.geonet.kernel.security.keycloak.keycloakPreAuthActionsLoginFilter" >
+      <constructor-arg ref="userSessionManagement" />
+  </bean>
   <bean id="keycloakAuthenticationProcessingFilter" class="org.fao.geonet.kernel.security.keycloak.KeycloakAuthenticationProcessingFilter" depends-on="keycloakUtil">
     <constructor-arg name="authenticationManager" ref="authenticationManager" />
   </bean>
 
   <bean id="keycloakLogoutHandler" class="org.fao.geonet.kernel.security.keycloak.KeycloakLogoutHandler">
     <constructor-arg ref="adapterDeploymentContext" />
+  </bean>
+
+  <bean id="sessionRegistry"  class="org.springframework.security.core.session.SessionRegistryImpl" />
+  <bean id="sessionAuthenticationStrategy" class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
+    <constructor-arg ref="sessionRegistry"/>
   </bean>
 
   <bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">

@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel.security.keycloak;
 
 import org.fao.geonet.Constants;
+import org.keycloak.adapters.spi.UserSessionManagement;
 import org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -23,8 +24,8 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
     @Autowired
     LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint;
 
-    public keycloakPreAuthActionsLoginFilter() {
-        super();
+    public keycloakPreAuthActionsLoginFilter(UserSessionManagement userSessionManagement) {
+        super(userSessionManagement);
     }
 
     @Override
@@ -35,6 +36,7 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
 
         if (servletRequest.getPathInfo() != null &&
                 !(servletRequest.getContextPath() + KeycloakUtil.getSigninPath()).equals(servletRequest.getRequestURI())  &&
+                !(servletRequest.getPathInfo()).equals("/k_logout")  &&
                 !isAuthenticated() ) {
 
             String encodedRedirectURL = ((HttpServletResponse) response).encodeRedirectURL(
