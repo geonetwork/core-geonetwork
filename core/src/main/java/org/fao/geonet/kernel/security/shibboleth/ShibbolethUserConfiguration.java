@@ -200,17 +200,12 @@ public class ShibbolethUserConfiguration implements SecurityProviderConfiguratio
 	}
 
 	@Override
-	public boolean getSSO() {
-		return true;
-	}
-
-	@Override
 	public String getLoginType() {
-		if (this.hideLogin) {
-			return LoginType.AUTOLOGIN.toString();
-		} else {
-		return LoginType.FORM.toString();
-		}
-	}
+        if (this.hideLogin) {
+            return LoginType.AUTOLOGIN.toString();
+        } else {
+            return LoginType.FORM.toString();
+        }
+    }
 }
 

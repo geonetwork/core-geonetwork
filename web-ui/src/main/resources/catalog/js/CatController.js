@@ -324,7 +324,6 @@ goog.require('gn_alert');
         }
       },
       current: null,
-      isSSO: false,
       isDisableLoginForm: false,
       isShowLoginAsLink: false,
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
@@ -562,7 +561,6 @@ goog.require('gn_alert');
       $scope.logoPath = gnGlobalSettings.gnUrl + '../images/harvesting/';
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
-      $scope.isSSO = gnGlobalSettings.isSSO;
       $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
       $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();

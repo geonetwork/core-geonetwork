@@ -141,7 +141,7 @@
 
     <form class="navbar-form navbar-right language-switcher">
       <span class="gn-menuheader-xs visible-xs"
-            data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && (!isSSO || (isSSO && !isDisableLoginForm))"
+            data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !isShowLoginAsLink && !isDisableLoginForm"
             data-translate="">language</span>
       <div class="form-group"
            data-gn-language-switcher="lang"

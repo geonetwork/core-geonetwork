@@ -9,7 +9,7 @@
           <p data-translate="">loginText</p>
           <form class="form-horizontal" name="gnSigninForm" action="{{formAction}}"
                 method="post" role="form" data-ng-if="::user"
-                data-ng-show="!isSSO || (isSSO && !isDisableLoginForm)">
+                data-ng-show="!isDisableLoginForm && !isShowLoginAsLink">
             <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
             <!-- username -->

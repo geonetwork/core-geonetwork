@@ -77,8 +77,6 @@ public interface SecurityProviderConfiguration {
 
 	String getLoginType();
 
-	boolean getSSO();
-
 	String getSecurityProvider();
 
 	/**

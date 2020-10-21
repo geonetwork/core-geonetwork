@@ -65,7 +65,6 @@
           $scope.redirectUrl = gnUtilityService.getUrlParameter('redirect');
           $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
           $scope.gnConfig = gnConfig;
-          $scope.isSSO = gnGlobalSettings.isSSO;
           $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
           $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;
 

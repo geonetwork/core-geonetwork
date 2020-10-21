@@ -234,9 +234,8 @@
         var module = angular.module('<xsl:value-of select="$angularApp"/>');
         module.config(['gnGlobalSettings',
         function(gnGlobalSettings) {
-        gnGlobalSettings.isSSO = <xsl:value-of select="$isSSO"/>;
-        gnGlobalSettings.isDisableLoginForm = <xsl:value-of select="$isDisableLoginForm and $isSSO"/>;
-        gnGlobalSettings.isShowLoginAsLink = <xsl:value-of select="$isShowLoginAsLink and $isSSO"/>;
+        gnGlobalSettings.isDisableLoginForm = <xsl:value-of select="$isDisableLoginForm"/>;
+        gnGlobalSettings.isShowLoginAsLink = <xsl:value-of select="$isShowLoginAsLink"/>;
         }]);
       </script>
 

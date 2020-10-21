@@ -65,9 +65,6 @@
   <xsl:variable name="angularModule"
                 select="if ($angularApp = 'gn_search') then concat('gn_search_', $searchView) else $angularApp"></xsl:variable>
 
-  <xsl:variable name="isSSO"
-                select="util:isSSO()"/>
-                
   <xsl:variable name="isDisableLoginForm"
                 select="util:isDisableLoginForm()"/>
 

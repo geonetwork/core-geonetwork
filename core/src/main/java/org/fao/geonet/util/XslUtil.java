@@ -351,31 +351,6 @@ public final class XslUtil {
         return null;
     }
 
-    /**
-     * Check if bean is defined in the context
-     *
-     * @param beanId id of the bean to look up
-     */
-    // Was using util:existsBean('shibbolethConfiguration') but should use use util:isSSO()
-    // Not sure if this is being used anywhere else so depreciating it for now.
-    @Deprecated
-    public static boolean existsBean(String beanId) {
-        return ProfileManager.existsBean(beanId);
-    }
-
-    /**
-     * Check if security provider is sso enabled
-     */
-    public static boolean isSSO() {
-        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
-
-        if (securityProviderConfiguration != null) {
-            return securityProviderConfiguration.getSSO();
-        }
-        // If we cannot find SecurityProviderConfiguration then default to false.
-        return false;
-    }
-
 	/**
 	 * Check if security provider require login form
 	 */
