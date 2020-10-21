@@ -80,9 +80,7 @@ public class EsFilterBuilder {
         // Add it to the request.
         if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
             final Optional<Source> portal = sourceRepository.findById(node.getId());
-            if (portal.isPresent()) {
-                //LOGGER.warn("Null portal " + node);
-            } else if (StringUtils.isNotEmpty(portal.get().getFilter())) {
+            if (portal.isPresent() && StringUtils.isNotEmpty(portal.get().getFilter())) {
                 //LOGGER.debug("Applying portal filter: {}", portal.getFilter());
                 return portal.get().getFilter();
             }
