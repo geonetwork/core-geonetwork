@@ -314,9 +314,7 @@
             var feature = format.readFeatures(
               fullXml.replace(
                 /http:\/\/www.opengis.net\/gml\/3.2/g,
-                'http://www.opengis.net/gml')
-                .replace(/urn:x-ogc:def:crs:EPSG:6.6:4326/g,
-                  'urn:ogc:def:crs:EPSG:6.6:4326'), {
+                'http://www.opengis.net/gml'), {
               dataProjection: options.crs,
               featureProjection: outputProjection
             })[0];

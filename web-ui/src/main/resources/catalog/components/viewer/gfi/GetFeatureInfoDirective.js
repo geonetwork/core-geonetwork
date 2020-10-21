@@ -143,7 +143,8 @@
         }
         var layers = map.getLayers().getArray().filter(function(layer) {
           return (layer.getSource() instanceof ol.source.ImageWMS ||
-              layer.getSource() instanceof ol.source.TileWMS) &&
+              layer.getSource() instanceof ol.source.TileWMS ||
+              layer.getSource() instanceof ol.source.ImageArcGISRest) &&
               layer.getVisible();
         }).reverse();
 
@@ -182,7 +183,13 @@
     layers.forEach(function(layer) {
 
       var indexObject = layer.get('indexObject');
-      var type = indexObject ? 'index' : 'gfi';
+      var isArcGis = layer.getSource() instanceof ol.source.ImageArcGISRest;
+      var type = 'gfi';
+      if (!!indexObject) {
+        type = 'index';
+      } else if (isArcGis) {
+        type = 'esri';
+      }
 
       this.gnFeaturesTableManager.addTable({
         name: layer.get('label') || layer.get('name'),

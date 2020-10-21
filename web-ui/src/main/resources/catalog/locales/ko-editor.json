@@ -1,4 +1,5 @@
 {
+    "featureCatReplace": "Replace existing feature catalog?",
     "add-extent-from-geokeywords": "키워드에서 범위 계산",
     "add-extent-from-geokeywords-help": "Search all keywords from thesaurus of type 'place' and add matching extents.",
     "addCRS-help": "새로운 좌표체계 추가",
@@ -368,6 +369,7 @@
     "linkToXmlTab": "몇몇 오류는 <a href=\"#/metadata/{{metadataId}}?tab=xml\">XML 편집기</a>를 사용하여 수정할 수 있습니다.",
     "directoryManagerSubtitle": "이 페이지는 템플릿 관리를 포함하여 연락처, 포맷 등 디렉토리 항목을 편집할 수 있습니다.",
     "directoryManagerSubtitleImport": "데이터베이스로 가져오려면 항목의 전체 XML 내용을 입력하십시오.",
+    "directoryManagerError": "Error when importing the full XML",
     "directoryEntryTypes": "항목 유형",
     "directoryTemplates": "템플릿",
     "addNewDirectoryEntry": "새로운 항목 추가",
@@ -415,5 +417,8 @@
     "accessManagerChooseGroups": "하나 이상의 그룹을 선택",
     "accessManagerChooseOperations": "하나 이상의 작업 유형 선택",
     "status-no-status": "Workflow not active",
-    "draft": "Working copy"
+    "badGmlProjectionCode": "The geometry projection <b>{{srsName}}</b> defined in the XML is not valid. Please edit the xml to fix the srs name or enter a new geometry.",
+    "draft": "Working copy",
+    "link": "링크",
+    "link-text": "Link text"
 }

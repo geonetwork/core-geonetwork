@@ -55,11 +55,14 @@ import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
+import org.fao.geonet.repository.MetadataRatingByIpRepository;
+import org.fao.geonet.repository.MetadataStatusRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SimpleMetadata;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.Updater;
@@ -77,8 +80,6 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.annotation.Nonnull;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -86,7 +87,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 
@@ -102,6 +102,16 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     private GroupRepository groupRepository;
     @Autowired
     private StatusValueRepository statusValueRepository;
+    @Autowired
+    private MetadataStatusRepository metadataStatusRepository;
+    @Autowired
+    private MetadataRatingByIpRepository metadataRatingByIpRepository;
+    @Autowired
+    private MetadataValidationRepository metadataValidationRepository;
+
+    @Autowired
+    private SearchManager searchManager;
+
     @Autowired
     private AccessManager am;
 
@@ -593,6 +603,31 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         } catch (Exception ex) {
             Log.error(Geonet.RESOURCES, "Failed copy of resources: " + ex.getMessage(), ex);
             throw new RuntimeIOException(ex);
+        }
+    }
+
+    @Override
+    public void cancelEditingSession(ServiceContext context, String id) throws Exception {
+        super.cancelEditingSession(context, id);
+
+        int intId = Integer.parseInt(id);
+
+        // Remove the draft copy if the metadata was edited and the user cancels the editor, without saving any change
+        if (metadataDraftRepository.exists(intId) &&
+            (context.getUserSession().getProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT) == Boolean.TRUE)) {
+            try {
+                // Remove related data
+                metadataOperations.deleteMetadataOper(id, false);
+                metadataRatingByIpRepository.deleteAllById_MetadataId(intId);
+                metadataValidationRepository.deleteAllById_MetadataId(intId);
+                metadataStatusRepository.deleteAllById_MetadataId(intId);
+
+                // --- remove metadata
+                xmlSerializer.delete(id, ServiceContext.get());
+                searchManager.delete(id);
+            } catch (Exception e) {
+                Log.error(Geonet.DATA_MANAGER, "Couldn't cleanup draft " + id, e);
+            }
         }
     }
 

@@ -104,13 +104,30 @@ public class ISODate
     }
 
     // ---------------------------------------------------------------------------
-
+    /**
+     * Create from milliseconds, local timezone.
+     * @param time Time in milliseconds, local timezone.
+     * @param shortDate True to use short yyyy-mm-dd format
+     */
     public ISODate(final long time, final boolean shortDate) {
         _calendar.setTimeInMillis(time);
         _shortDate = shortDate;
     }
 
+    /**
+     * Create from milliseconds (UTC).
+     * <p>
+     * Examples:
+     * <ul>
+     *     <li><code>new ISODate(System.currentTimeMillis())</code></li>
+     *     <li><code>new ISODate(new Date().getTime())</code></li>
+     * </ul>
+     * </p>
+     *
+     * @param time Time in milliseconds, UTC timezone
+     */
     public ISODate(final long time) {
+        _calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         _calendar.setTimeInMillis(time);
         _shortDate = false;
     }
@@ -430,7 +447,8 @@ public class ISODate
             // JODAISODate. This class converts to UTC format to avoid timezones
             // issues.
             String afterT = timeAndDate.substring(indexOfT + 1);
-            boolean timeZoneInfo = afterT.contains("+") || afterT.contains("-");
+            boolean timeZoneInfo = afterT.contains("+") || afterT.contains("-")
+                || afterT.toUpperCase().endsWith("Z");
 
             if (timeZoneInfo) {
                 timeAndDate = parseISODateTime(timeAndDate);
@@ -633,6 +651,7 @@ public class ISODate
                 int indexOfZ = secondsToParse.toUpperCase().indexOf('Z');
                 if (indexOfZ > -1) {
                     secondsToParse = secondsToParse.substring(0, indexOfZ);
+                    _calendar.setTimeZone( TimeZone.getTimeZone("UTC"));
                 }
 
                 second = (int) Float.parseFloat(secondsToParse);

@@ -360,12 +360,12 @@ public class Aligner extends BaseAligner<CswParams> {
 
     private void applyBatchEdits(RecordInfo ri, Element md, String schema) throws JDOMException, IOException {
         if (StringUtils.isNotEmpty(params.getBatchEdits())) {
-            SchemaManager _schemaManager = context.getBean(SchemaManager.class);
-            EditLib editLib = new EditLib(_schemaManager);
             ObjectMapper mapper = new ObjectMapper();
 
             BatchEditParameter[] listOfUpdates = mapper.readValue(params.getBatchEdits(), BatchEditParameter[].class);
             if (listOfUpdates.length > 0) {
+                SchemaManager _schemaManager = context.getBean(SchemaManager.class);
+                EditLib editLib = new EditLib(_schemaManager);
                 boolean metadataChanged = false;
                 boolean createXpathNodeIfNotExists =
                     context.getBean(SettingManager.class).getValueAsBool(SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS);

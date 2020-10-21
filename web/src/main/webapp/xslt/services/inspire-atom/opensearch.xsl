@@ -71,14 +71,14 @@
           <Url type="application/xml" rel="results">
             <xsl:attribute name="template">
               <xsl:value-of
-                select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/', /root/response/fileId,'/search?any={filter}')"/>
+                select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/', /root/response/fileId,'/search?any={searchTerms?}')"/>
             </xsl:attribute>
           </Url>
 
           <Url type="text/html" rel="results">
             <xsl:attribute name="template">
               <xsl:value-of
-                select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/', /root/response/fileId,'/searchhtml?any={filter}')"/>
+                select="concat($baseUrl,/root/gui/url,'/srv/', /root/gui/language,'/opensearch/htmlsearch?q={searchTerms?}')"/>
             </xsl:attribute>
           </Url>
         </xsl:when>
@@ -97,7 +97,7 @@
           <Url type="application/xml" rel="results">
             <xsl:attribute name="template">
               <xsl:value-of
-                select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/search?any={filter}')"/>
+                select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/search?any={searchTerms?}')"/>
             </xsl:attribute>
           </Url>
         </xsl:otherwise>
@@ -107,7 +107,7 @@
       <Url type="application/atom+xml" rel="describedby">
         <xsl:attribute name="template">
           <xsl:value-of
-            select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/describe?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code}', '&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace}', '&amp;language={language}')"/>
+            select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/describe?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code?}', '&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace?}', '&amp;language={language?}')"/>
         </xsl:attribute>
       </Url>
 
@@ -119,7 +119,7 @@
 
         <xsl:attribute name="template">
           <xsl:value-of
-            select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/download?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code}', '&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace}&amp;crs={inspire_dls:crs}', '&amp;language={language}')"/>
+            select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/download?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code?}', '&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace?}&amp;crs={inspire_dls:crs?}', '&amp;language={language?}')"/>
         </xsl:attribute>
       </Url>
 

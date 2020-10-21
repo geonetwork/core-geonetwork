@@ -56,6 +56,12 @@
 
 <div class="spacer" />
 
+<div ng-if="ctrl.dataOlProjection == null" class="alert alert-danger"
+     data-translate=""
+     data-translate-values="{srsName:'{{ctrl.dataProjection}}'}">
+  badGmlProjectionCode
+</div>
+
 <!-- input geometry field -->
 <div class="row">
   <div class="col-md-12">

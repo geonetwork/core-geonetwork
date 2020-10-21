@@ -66,7 +66,7 @@
         <xsl:for-each select="$metadata/mdb:otherLocale/lan:PT_Locale">
           <lang id="{@id}" code="{lan:language/lan:LanguageCode/@codeListValue}"/>
         </xsl:for-each>
-        <xsl:for-each select="$metadata/mdb:defaultLocale/*">
+        <xsl:for-each select="$metadata/mdb:defaultLocale/lan:PT_Locale">
           <lang id="{@id}" code="{lan:language/lan:LanguageCode/@codeListValue}" default=""/>
         </xsl:for-each>
       </xsl:otherwise>

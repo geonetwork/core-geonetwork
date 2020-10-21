@@ -77,6 +77,11 @@
     <appender-ref ref="consoleAppender"/>
     <appender-ref ref="fileAppender"/>
   </logger>
+  <logger name="geonetwork.atom" additivity="false">
+    <level value="INFO"/>
+    <appender-ref ref="consoleAppender"/>
+    <appender-ref ref="fileAppender"/>
+  </logger>
   <logger name="geonetwork.lucene" additivity="true">
     <level value="DEBUG"/>
   </logger>

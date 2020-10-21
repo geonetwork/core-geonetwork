@@ -86,6 +86,16 @@
            alt="{$schemaStrings/thumbnail}"
            src="{$nodeUrl}api/records/{$uuid}/extents.png"/>
     </xsl:if>
+  </xsl:function>
+
+  <xsl:function name="gn-fn-render:extent">
+    <xsl:param name="uuid" as="xs:string"/>
+    <xsl:param name="index" as="xs:integer"/>
+    <xsl:if test="$uuid">
+      <img class="gn-img-extent"
+           alt="{$schemaStrings/thumbnail}"
+           src="{$nodeUrl}api/records/{$uuid}/extents/{$index}.png"/>
+    </xsl:if>
 
   </xsl:function>
 
