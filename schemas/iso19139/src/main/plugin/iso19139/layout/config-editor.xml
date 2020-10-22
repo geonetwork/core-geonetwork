@@ -3288,17 +3288,16 @@
 
 
           <section name="cm-format">
-            <field xpath="/gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributionFormat/*/gmd:name"
+            <field xpath="/gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributionFormat"
                    name="cm-format"
-                    del="../.."/>
+                    del="."/>
 
             <action type="add"
-                    btnLabel="cm-add-format-n3"
-                    if="count(gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributionFormat[*/gmd:name != '']) = 0"
+                    btnLabel="cm-add-format"
                     or="distributionFormat"
                     in="/gmd:MD_Metadata/gmd:distributionInfo/*">
               <template>
-                <snippet>
+                <snippet label="cm-add-format-n3">
                   <gmd:distributionFormat>
                     <gmd:MD_Format>
                       <gmd:name>
@@ -3310,15 +3309,7 @@
                     </gmd:MD_Format>
                   </gmd:distributionFormat>
                 </snippet>
-              </template>
-            </action>
-            <action type="add"
-                    btnLabel="cm-add-format-n4"
-                    if="count(gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributionFormat[*/gmd:name != '']) = 0"
-                    or="distributionFormat"
-                    in="/gmd:MD_Metadata/gmd:distributionInfo/*">
-              <template>
-                <snippet>
+                <snippet label="cm-add-format-n4">
                   <gmd:distributionFormat>
                     <gmd:MD_Format>
                       <gmd:name>
@@ -3330,15 +3321,7 @@
                     </gmd:MD_Format>
                   </gmd:distributionFormat>
                 </snippet>
-              </template>
-            </action>
-            <action type="add"
-                    btnLabel="cm-add-format-n4cm"
-                    if="count(gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributionFormat[*/gmd:name != '']) = 0"
-                    or="distributionFormat"
-                    in="/gmd:MD_Metadata/gmd:distributionInfo/*">
-              <template>
-                <snippet>
+                <snippet label="cm-add-format-n4cm">
                   <gmd:distributionFormat>
                     <gmd:MD_Format>
                       <gmd:name>
@@ -3350,15 +3333,7 @@
                     </gmd:MD_Format>
                   </gmd:distributionFormat>
                 </snippet>
-              </template>
-            </action>
-            <action type="add"
-                    btnLabel="cm-add-format-n64bo"
-                    if="count(gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributionFormat[*/gmd:name != '']) = 0"
-                    or="distributionFormat"
-                    in="/gmd:MD_Metadata/gmd:distributionInfo/*">
-              <template>
-                <snippet>
+                <snippet label="cm-add-format-n64bo">
                   <gmd:distributionFormat>
                     <gmd:MD_Format>
                       <gmd:name>
@@ -3366,6 +3341,30 @@
                       </gmd:name>
                       <gmd:version>
                         <gco:CharacterString>64-bit offset</gco:CharacterString>
+                      </gmd:version>
+                    </gmd:MD_Format>
+                  </gmd:distributionFormat>
+                </snippet>
+                <snippet label="cm-add-format-shp">
+                  <gmd:distributionFormat>
+                    <gmd:MD_Format>
+                      <gmd:name>
+                        <gco:CharacterString>ESRI Shapefile</gco:CharacterString>
+                      </gmd:name>
+                      <gmd:version>
+                        <gco:CharacterString>1.0</gco:CharacterString>
+                      </gmd:version>
+                    </gmd:MD_Format>
+                  </gmd:distributionFormat>
+                </snippet>
+                <snippet label="cm-add-format-tiff">
+                  <gmd:distributionFormat>
+                    <gmd:MD_Format>
+                      <gmd:name>
+                        <gco:CharacterString>GeoTIFF</gco:CharacterString>
+                      </gmd:name>
+                      <gmd:version>
+                        <gco:CharacterString>1.0</gco:CharacterString>
                       </gmd:version>
                     </gmd:MD_Format>
                   </gmd:distributionFormat>

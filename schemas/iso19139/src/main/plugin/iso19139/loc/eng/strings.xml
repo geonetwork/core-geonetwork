@@ -551,11 +551,13 @@
   <cm-reference>Reference</cm-reference>
   <cm-add-reference>Add reference</cm-add-reference>
   <cm-format>Format</cm-format>
-  <cm-add-format>Add format</cm-add-format>
+  <cm-add-format>Add a format</cm-add-format>
   <cm-add-format-n64bo>NetCDF 64-bit offset</cm-add-format-n64bo>
   <cm-add-format-n4cm>NetCDF 4 Classic model</cm-add-format-n4cm>
   <cm-add-format-n4>NetCDF 4</cm-add-format-n4>
   <cm-add-format-n3>NetCDF 3</cm-add-format-n3>
+  <cm-add-format-tiff>GeoTIFF</cm-add-format-tiff>
+  <cm-add-format-shp>ESRI Shapefile</cm-add-format-shp>
 
   <sxt-view-date>Date(s)</sxt-view-date>
   <sxt-view-contact>Contact(s)</sxt-view-contact>

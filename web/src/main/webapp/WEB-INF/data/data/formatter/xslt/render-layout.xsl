@@ -303,7 +303,7 @@
                           $view != 'earthObservation' and
                           $view != 'sdn'">
 
-              <section class="gn-md-side-providedby">
+              <!--<section class="gn-md-side-providedby">
                 <h2>
                   <i class="fa fa-fw fa-cog"><xsl:comment select="'icon'"/></i>
                   <span><xsl:value-of select="$schemaStrings/providedBy"/></span>
@@ -311,7 +311,7 @@
                 <img class="gn-source-logo"
                      alt="{$schemaStrings/logo}"
                      src="{$nodeUrl}../images/logos/{$source}.png" />
-              </section>
+              </section>-->
 
               <xsl:if test="$isSocialbarEnabled">
                 <section class="gn-md-side-social">
