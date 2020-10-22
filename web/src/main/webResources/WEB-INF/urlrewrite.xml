@@ -188,6 +188,15 @@
     <to type="permanent-redirect">%{context-path}/$1/$2/catalog.search#/search?any=$3</to>
   </rule>
 
+
+  <rule>
+    <note>
+      Redirect virtual CSW to equivalent subportal
+    </note>
+    <from>^/srv/([a-z]{3})/csw-([^?]*)\??(.*)?</from>
+    <to type="permanent-redirect">%{context-path}/$2/$1/csw?$3</to>
+  </rule>
+
   <rule>
     <note>
       INSPIRE Atom Describe (service)
@@ -227,6 +236,8 @@
     <from>^/opensearch/(.*)/download?(.*)$</from>
     <to type="forward">/srv/$1/atom.download</to>
   </rule>
+
+
 
 
   <!-- hide jsession id from google bot -->
