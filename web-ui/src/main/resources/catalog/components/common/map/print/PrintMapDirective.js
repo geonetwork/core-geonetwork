@@ -254,9 +254,17 @@
       var scales = $scope.config.scales.map(function(scale) {
         return parseInt(scale.value);
       });
+
       // encode url to remove accents
       encLegends.map(function(url) {
-        return new URL(url).toString();
+        var urlObject;
+        try {
+          urlObject = new URL(url).toString();
+        } catch (e) {
+          console.warn(e);
+          return url;
+        }
+         return urlObject;
       });
 
       var spec = {
