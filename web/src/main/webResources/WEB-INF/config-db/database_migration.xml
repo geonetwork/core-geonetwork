@@ -251,15 +251,25 @@
         <value>WEB-INF/classes/setup/sql/migrate/v3101/migrate-</value>
       </list>
     </entry>
-    <entry key="3.11.0">
+    <entry key="3.10.2">
       <list>
-        <value>WEB-INF/classes/setup/sql/migrate/v3110/migrate-</value>
+        <value>WEB-INF/classes/setup/sql/migrate/v3102/migrate-</value>
       </list>
     </entry>
-    <entry key="3.99.0">
+    <entry key="3.10.3">
       <list>
-        <value>java:v3990.UpdateAllSequenceValueToMax</value>
-        <value>WEB-INF/classes/setup/sql/migrate/v3990/migrate-</value>
+        <value>WEB-INF/classes/setup/sql/migrate/v3103/migrate-</value>
+      </list>
+    </entry>
+    <entry key="3.10.4">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v3104/migrate-</value>
+      </list>
+    </entry>
+    <entry key="4.0.0">
+      <list>
+        <value>java:v4000.UpdateAllSequenceValueToMax</value>
+        <value>WEB-INF/classes/setup/sql/migrate/v4000/migrate-</value>
       </list>
     </entry>
   </util:map>
