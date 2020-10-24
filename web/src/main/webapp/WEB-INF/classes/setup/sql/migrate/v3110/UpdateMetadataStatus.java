@@ -227,60 +227,6 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
                         }
                         if (metadataStatus.getTitles() == null || metadataStatus.getTitles().size() == 0) {
                             LinkedHashMap<String, String> titles = titlesMap.get(metadataStatus.getMetadataId());
-                            // Try to get the titles from the schema.
-                            // Note: Schemas are not registered at this point so this is not possible.
-                            //      Generated errors similar to the following
-                            //             Schema not registered : dublin-core
-                            // This would be the preferred option but not work so commenting this option for now.
-                        /*if (titles == null) {
-                            try {
-                                titles = metadataUtils.extractTitles(Integer.toString(metadataStatus.getMetadataId()));
-                                titlesMap.put(metadataStatus.getMetadataId(), titles);
-                            } catch (Exception e) {
-                                Log.error(Geonet.DATA_MANAGER, String.format(
-                                        "Error locating titles for metadata id: %d", +metadataStatus.getMetadataId()), e);
-                            }
-                        }*/
-
-                            // Try to get the titles from the index.
-                            // Getting the following errors
-                            //        There needs to be a ServiceContext in the thread local for this thread
-                            // So skipping this one as well as it does not seem like the index are ready to be used at this point.
-                        /*if (titles == null) {
-                            Map<String, String> indexTitles = new LinkedHashMap<>();
-                            try {
-                                try {
-                                    String title = LuceneSearcher.getMetadataFromIndexById(Geonet.DEFAULT_LANGUAGE, metadataStatus.getMetadataId() + "", "title");
-                                    if (title != null) {
-                                        indexTitles.put(Geonet.DEFAULT_LANGUAGE, title);
-                                    }
-                                } catch (Exception e) {
-                                    Log.debug(Geonet.DATA_MANAGER, "Error getting title from index for metadata id '" + metadataStatus.getMetadataId() + "' for default language '" + Geonet.DEFAULT_LANGUAGE + "'", e);
-                                }
-                                for (Language lang : languages) {
-                                    if (!Geonet.DEFAULT_LANGUAGE.equals(lang.getId())) {
-                                        try {
-                                            String title = LuceneSearcher.getMetadataFromIndexById(lang.getId(), metadataStatus.getMetadataId() + "", "title");
-                                            if (title != null) {
-                                                indexTitles.put(lang.getId(), title);
-                                            }
-                                        } catch (Exception e) {
-                                            Log.debug(Geonet.DATA_MANAGER, "Error getting title from index for metadata id '" + metadataStatus.getMetadataId() + "' for language '" + lang.getId() + "'", e);
-                                        }
-                                    }
-                                }
-                                if (indexTitles.size() > 0) {
-                                    titles = indexTitles;
-                                    titlesMap.put(metadataStatus.getMetadataId(), titles);
-                                }
-                            } catch (Exception e) {
-                                Log.error(Geonet.DATA_MANAGER, String.format(
-                                        "Error locating titles for metadata id: %d", +metadataStatus.getMetadataId()), e);
-                            }
-                        }*/
-
-                            // Last option - just use the metadata title field
-                            // but I believe this is being depreciated as they all seem to be null
                             if (titles == null) {
                                 LinkedHashMap<String, String> indexTitles = new LinkedHashMap<>();
                                 try {

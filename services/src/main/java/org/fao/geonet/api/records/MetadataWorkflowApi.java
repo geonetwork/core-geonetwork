@@ -748,22 +748,17 @@ public class MetadataWorkflowApi {
             }
         }
 
-        UserSession user = ApiUtils.getUserSession(httpSession);
-        if (user.getProfile() != Profile.Administrator) {
+        UserSession userSession = ApiUtils.getUserSession(httpSession);
+        if (userSession.getProfile() != Profile.Administrator) {
             if (groupId != null) {
-                final Specifications<UserGroup> spec = where(UserGroupSpecs.hasProfile(Profile.Editor))
-                        .and(UserGroupSpecs.hasUserId(user.getUserIdAsInt()))
-                        .and(UserGroupSpecs.hasGroupId(Integer.valueOf(groupId)));
-
-                final List<UserGroup> userGroups = userGroupRepository.findAll(spec);
-
-                if (userGroups.size() == 0) {
+                final List<Integer> editingGroupList = AccessManager.getGroups(userSession, Profile.Editor);
+                if (!editingGroupList.contains(Integer.valueOf(groupId))) {
                     throw new SecurityException(
                             String.format("You can't view history from this group (" + groupOwnerName + "). User MUST be an Editor in that group"));
                 }
             } else {
                 throw new SecurityException(
-                        String.format("Error identify group where this metadata belong to. Only administrator can restore this record"));
+                        String.format("Error identify group where this metadata belong to. Only administrator can view this record"));
             }
         }
     }
@@ -787,16 +782,11 @@ public class MetadataWorkflowApi {
             }
         }
 
-        UserSession user = ApiUtils.getUserSession(httpSession);
-        if (user.getProfile() != Profile.Administrator) {
+        UserSession userSession = ApiUtils.getUserSession(httpSession);
+        if (userSession.getProfile() != Profile.Administrator) {
             if (groupId != null) {
-                final Specifications<UserGroup> spec = where(UserGroupSpecs.hasProfile(Profile.Editor))
-                        .and(UserGroupSpecs.hasUserId(user.getUserIdAsInt()))
-                        .and(UserGroupSpecs.hasGroupId(Integer.valueOf(groupId)));
-
-                final List<UserGroup> userGroups = userGroupRepository.findAll(spec);
-
-                if (userGroups.size() == 0) {
+                final List<Integer> editingGroupList = AccessManager.getGroups(userSession, Profile.Editor);
+                if (!editingGroupList.contains(Integer.valueOf(groupId))) {
                     throw new SecurityException(
                             String.format("You can't create a record in this group (" + groupOwnerName + "). User MUST be an Editor in that group"));
                 }
