@@ -44,6 +44,26 @@ public class FilesystemStoreResource implements MetadataResource {
     private final Date lastModification;
     private final String metadataUuid;
     private final String filename;
+    private final String version;
+    private final ExternalResourceManagementProperties externalResourceManagementProperties;
+
+    public FilesystemStoreResource(String metadataUuid,
+                                   String filename,
+                                   String baseUrl,
+                                   MetadataResourceVisibility metadataResourceVisibility,
+                                   long size,
+                                   Date lastModification,
+                                   String version,
+                                   ExternalResourceManagementProperties externalResourceManagementProperties) {
+        this.metadataUuid = metadataUuid;
+        this.filename = filename;
+        this.url = baseUrl + getId();
+        this.metadataResourceVisibility = metadataResourceVisibility;
+        this.size = size;
+        this.lastModification = lastModification;
+        this.version=version;
+        this.externalResourceManagementProperties = externalResourceManagementProperties;
+    }
 
     public FilesystemStoreResource(String metadataUuid,
                                    String filename,
@@ -51,12 +71,7 @@ public class FilesystemStoreResource implements MetadataResource {
                                    MetadataResourceVisibility metadataResourceVisibility,
                                    long size,
                                    Date lastModification) {
-        this.metadataUuid = metadataUuid;
-        this.filename = filename;
-        this.url = baseUrl + getId();
-        this.metadataResourceVisibility = metadataResourceVisibility;
-        this.size = size;
-        this.lastModification = lastModification;
+        this(metadataUuid, filename, baseUrl, metadataResourceVisibility, size, lastModification, null, null);
     }
 
     @Override
@@ -91,6 +106,16 @@ public class FilesystemStoreResource implements MetadataResource {
     }
 
     @Override
+    public String getVersion() {
+        return version;
+    }
+
+    public ExternalResourceManagementProperties getExternalResourceManagementProperties() {
+        return externalResourceManagementProperties;
+    }
+
+
+    @Override
     public String toString() {
         StringBuffer sb = new StringBuffer(this.getClass().getSimpleName());
         sb.append("\n");
@@ -100,6 +125,8 @@ public class FilesystemStoreResource implements MetadataResource {
         sb.append("Type: ").append(metadataResourceVisibility).append("\n");
         sb.append("Size: ").append(size).append("\n");
         sb.append("Last modification: ").append(lastModification).append("\n");
+        sb.append("Version: ").append(version).append("\n");
+        sb.append("ExternalResourceManagementProperties.url: ").append(externalResourceManagementProperties.getUrl()).append("\n");
         return sb.toString();
     }
 }
