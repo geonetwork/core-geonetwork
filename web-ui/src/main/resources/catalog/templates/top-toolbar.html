@@ -198,7 +198,7 @@
         </ul>
       </li>
       <li class="open signin-dropdown"
-          data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && isSSO && isShowLoginAsLink">
+          data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && isShowLoginAsLink">
         <a href="{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}"
            title="{{'signIn'|translate}}"
            class="gn-menuheader-xs"
@@ -209,7 +209,7 @@
         </a>
       </li>
       <li class="dropdown dropdown-hover open signin-dropdown"
-        data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && (!isSSO || (isSSO && !isShowLoginAsLink && !isDisableLoginForm))">
+        data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !isShowLoginAsLink && !isDisableLoginForm">
         <a href="{{gnCfg.mods.signin.appUrl | signInLink}}"
            title="{{'signIn'|translate}}"
            class="dropdown-toggle gn-menuheader-xs"
