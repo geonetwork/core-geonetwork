@@ -7,7 +7,9 @@
              data-ng-class="row.url ? 'hasThumbnail' : 'noThumbnail'">
 
       <div class="title">
-        <h4>{{row.names[lang] || row.names['eng'] || ('userSearchNameMissing' | translate)}}&nbsp;</h4>
+        <a>
+          <h4>{{row.names[lang] || row.names['eng'] || ('userSearchNameMissing' | translate)}}&nbsp;</h4>
+        </a>
       </div>
 
       <div class="gn-md-thumbnail">
