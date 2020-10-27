@@ -83,6 +83,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 import static org.elasticsearch.rest.RestStatus.*;
+import static org.fao.geonet.constants.Geonet.IndexFieldNames.IS_TEMPLATE;
 
 
 public class EsSearchManager implements ISearchManager {
@@ -438,18 +439,23 @@ public class EsSearchManager implements ISearchManager {
                     errorDocumentIds.add(e.getId());
                     ObjectMapper mapper = new ObjectMapper();
                     ObjectNode docWithErrorInfo = mapper.createObjectNode();
-                    docWithErrorInfo.put(IndexFields.DBID, e.getId());
                     String resourceTitle = String.format("Document #%s", e.getId());
+                    String id = "";
+                    String isTemplate = "";
 
                     String failureDoc = documents.get(e.getId());
                     try {
                         JsonNode node = mapper.readTree(failureDoc);
                         resourceTitle = node.get("resourceTitleObject").get("default").asText();
+                        id = node.get(IndexFields.DBID).asText();
+                        isTemplate = node.get(IS_TEMPLATE).asText();
                     } catch (Exception ignoredException) {
                     }
+                    docWithErrorInfo.put(IndexFields.DBID, id);
                     docWithErrorInfo.put(IndexFields.RESOURCE_TITLE, resourceTitle);
+                    docWithErrorInfo.put(IS_TEMPLATE, isTemplate);
                     docWithErrorInfo.put(IndexFields.DRAFT, "n");
-                    docWithErrorInfo.put(IndexFields.INDEXING_ERROR_FIELD, true);
+                    docWithErrorInfo.put(IndexFields.INDEXING_ERROR_FIELD, "true");
                     docWithErrorInfo.put(IndexFields.INDEXING_ERROR_MSG, e.getFailureMessage());
                     // TODO: Report the JSON which was causing the error ?
 
