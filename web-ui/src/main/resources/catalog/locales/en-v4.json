@@ -28,6 +28,7 @@
   "groupPublished": "Published in that group",
   "indexingError": "Indexing error",
   "source": "Catalog",
+  "ui-sortBy-help": "Define default sort by option. eg. 'relevance' to use the computed search score (see score configuration) or 'dateStamp#desc' to return last updated record first.",
   "sortBy-dateStamp": "last updates",
   "sortBy-createDate": "new records",
   "sortBy-resourceTitleObject.default.keyword": "title",
