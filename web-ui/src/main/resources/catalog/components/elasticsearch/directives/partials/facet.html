@@ -10,7 +10,7 @@
   <a href
      class="flex-row flex-align-center flex-shrink width-100"
      ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'gn-facet-checked' + (ctrl.item.inverted ? '-inverted' : '') : ''"
-     title="{{::ctrl.item.value | capitalize}}"
+     title="{{::ctrl.item.value}}"
      ng-click="ctrl.filter(ctrl.facet, ctrl.item)">
     <span class="fa fa-fw"
           ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'fa-check-square' : 'fa-square-o'">
