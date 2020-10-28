@@ -64,10 +64,10 @@
       this.loadItemClass = function (url, lang) {
         var itemClass = [];
 
-        var deferred = $q.defer();
+        var deferred = $q.defer(), urlToken = url.split('/');
 
         $http({
-          url: url + '/registry/registry.' + lang + responseFormat,
+          url: url + '/' + urlToken[urlToken.length - 1] + '.' + lang + responseFormat,
           method: 'GET',
           cache: true
         }).then(function (r) {

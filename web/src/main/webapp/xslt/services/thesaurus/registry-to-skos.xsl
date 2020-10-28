@@ -69,7 +69,7 @@
                 select="/documents/*[*:language = 'en']/*:label[@xml:lang = 'en']"/>
 
   <xsl:variable name="statusSuffix"
-                select="'registry/status/valid'"/>
+                select="'/status/valid'"/>
 
   <xsl:variable name="hasBroaderNarrowerLinks"
                 select="count(//*[1]/*:containeditems/*/*:parents) > 0"/>

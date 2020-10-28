@@ -52,7 +52,7 @@
           scope.loadingCollection = false;
 
           scope.registryUrl = '';
-          scope.defaultRegistry = 'https://inspire.ec.europa.eu';
+          scope.defaultRegistry = 'https://inspire.ec.europa.eu/registry';
 
           scope.setDefault = function() {
             scope.registryUrl = scope.defaultRegistry;
