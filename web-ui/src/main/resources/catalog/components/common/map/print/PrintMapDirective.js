@@ -257,14 +257,11 @@
 
       // encode url to remove accents
       encLegends.map(function(url) {
-        var urlObject;
         try {
-          urlObject = new URL(url).toString();
+          return new URL(url).toString();
         } catch (e) {
-          console.warn(e);
           return url;
         }
-         return urlObject;
       });
 
       var spec = {
