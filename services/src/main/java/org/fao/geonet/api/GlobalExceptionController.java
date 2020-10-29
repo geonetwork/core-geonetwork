@@ -52,10 +52,8 @@ import org.springframework.web.multipart.MultipartException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.FileNotFoundException;
-import java.util.Collections;
-import java.util.List;
-import java.util.MissingResourceException;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -182,7 +180,31 @@ public class GlobalExceptionController {
             MediaType.APPLICATION_XHTML_XML,
             MediaType.APPLICATION_JSON
         );
-        needsBody = !Collections.disjoint(allowedContentTypes, requestMediaTypes);
+
+        // If requested "text/html" with as preferred option on top of
+        // the allowed content types, should contain empty body.
+        int posHtmlMediaType = requestMediaTypes.indexOf(MediaType.TEXT_HTML);
+        boolean requestedHtmlMediaType = false;
+
+        if (posHtmlMediaType == 0) {
+            requestedHtmlMediaType = true;
+        } else if (posHtmlMediaType > -1) {
+            // Intersect allowed mediatypes + text/html with requested
+            // media types to check if text/html has precedence.
+            List<MediaType> allowedContentTypesAndHtml =
+                Arrays.asList( MediaType.APPLICATION_XML,
+                    MediaType.APPLICATION_XHTML_XML,
+                    MediaType.APPLICATION_JSON,
+                    MediaType.TEXT_HTML);
+
+            List<MediaType> requestMediaTypes2 = new ArrayList<>(requestMediaTypes);
+
+            requestMediaTypes2.retainAll(allowedContentTypesAndHtml);
+            requestedHtmlMediaType = (requestMediaTypes2.indexOf(MediaType.TEXT_HTML) == 0);
+        }
+
+        needsBody = !Collections.disjoint(allowedContentTypes, requestMediaTypes) &&
+            !requestedHtmlMediaType;
         return needsBody;
     }
 
