@@ -35,7 +35,7 @@
       idDoc: function(config) {
         this.params = config;
         return encodeURIComponent(config.wfsUrl + '#' + config.featureTypeName);
-            // config.featureTypeName.replace(':', '\\:');
+        // config.featureTypeName.replace(':', '\\:');
       },
       facets: true,
       stats: true,

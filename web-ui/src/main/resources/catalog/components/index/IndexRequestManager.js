@@ -57,7 +57,7 @@
 
       if (!(type && name)) {
         console.error(
-            'You can\'t register an index object without identifiers');
+          'You can\'t register an index object without identifiers');
         return;
       }
 
@@ -73,7 +73,7 @@
       // Instanciate the index request object
       if (!pool_[objId]) {
         var indexObj = new geonetwork.gnIndexRequest(
-            $injector.get(configName), $injector);
+          $injector.get(configName), $injector);
         pool_[objId] = indexObj;
       }
       return pool_[objId];

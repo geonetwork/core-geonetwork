@@ -28,22 +28,22 @@
 
 
   module.provider('gnIndexService',
-      function() {
-        this.$get = ['$http',
-          function($http) {
-            // FIXME: this is not used
-            function deleteDocs(filter) {
-              return $http.delete(
-                  '../api/search/update',
-                  // TODO: Migrate to ES
-                  {
-                    params: {'query': filter}
-                  }
-              );
-            };
-            return {
-              deleteDocs: deleteDocs
-            };
-          }];
-      });
+    function() {
+      this.$get = ['$http',
+        function($http) {
+          // FIXME: this is not used
+          function deleteDocs(filter) {
+            return $http.delete(
+              '../api/search/update',
+              // TODO: Migrate to ES
+              {
+                params: {'query': filter}
+              }
+            );
+          };
+          return {
+            deleteDocs: deleteDocs
+          };
+        }];
+    });
 })();

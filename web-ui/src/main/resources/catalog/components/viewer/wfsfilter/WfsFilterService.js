@@ -45,7 +45,7 @@
 
       var buildIndexUrl = function(params) {
         return gnUrlUtils.append(indexProxyUrl + '/query',
-            gnUrlUtils.toKeyValue(params));
+          gnUrlUtils.toKeyValue(params));
       };
 
       // transform date from dd-MM-YYYY to ISO (YYYY-MM-dd)
@@ -74,7 +74,7 @@
       var getIdxNameObj = function(name, idxFields) {
         for (var i = 0; i < idxFields.length; i++) {
           if (idxFields[i].label == name ||
-              idxFields[i].idxName == name) {
+            idxFields[i].idxName == name) {
             return idxFields[i];
           }
         }
@@ -85,22 +85,41 @@
        * be gathered to create the full SLD filter config to send to the
        * generateSLD service.
        *
-       * @param {string} key index key of the field
+       * @param {string} name of the facet field
+       * @param {*} value of the active filter
        * @param {string} type of the facet field (range, field etc..)
+       * @param {Object} fieldInfo field info taken from the application profile
+       * @param {string} tokenSeparator separator for tokenized fields; if defined, the field
+       * is considered tokenized & the output filter will be `like '*value*'` instead of `= 'value'`
        * @return {Array} an array containing the filters
        */
-      var buildSldFilter = function(name, value, type, multiValued) {
+      var buildSldFilter = function(name, value, type, fieldInfo, tokenSeparator) {
         var filterFields = [];
 
+        // Transforms date format: dd-MM-YYYY > YYYY-MM-dd (ISO)
+        function transformDate(d) {
+          return d.substr(6) + '-' + d.substr(3, 2) + '-' + d.substr(0, 2);
+        }
+
+        // date range
+        if (type == 'rangeDate' && fieldInfo.minField && fieldInfo.maxField) {
+          filterFields.push({
+            field_name: fieldInfo.maxField,
+            filter: [{
+              filter_type: 'PropertyIsGreaterThanOrEqualTo',
+              params: [transformDate(value.from)]
+            }]
+          }, {
+            field_name: fieldInfo.minField,
+            filter: [{
+              filter_type: 'PropertyIsLessThanOrEqualTo',
+              params: [transformDate(value.to)]
+            }]
+          });
+        }
+
         // date
-        if (type == 'date' || type == 'rangeDate') {
-
-          // Transforms date format: dd-MM-YYYY > YYYY-MM-dd (ISO)
-          // TODO: externalize this?
-          function transformDate(d) {
-            return d.substr(6) + '-' + d.substr(3, 2) + '-' + d.substr(0, 2);
-          }
-
+        else if (type == 'date') {
           filterFields.push({
             field_name: name,
             filter: [{
@@ -138,15 +157,74 @@
           var filters = [];
 
           angular.forEach(value, function(v, k) {
-            filters.push({
-              filter_type: multiValued ? 'PropertyIsLike' : 'PropertyIsEqualTo',
-              params: [multiValued ? '*' + k + '*' : k]
-            });
+            if (tokenSeparator !== undefined) {
+              // handle 3 cases for a tokenized field: value is first, last or between both
+              filters.push({
+                  filter_type: 'PropertyIsLike',
+                  params: [k + tokenSeparator + '*']
+                }, {
+                  filter_type: 'PropertyIsLike',
+                  params: ['*' + tokenSeparator + k]
+                }, {
+                  filter_type: 'PropertyIsLike',
+                  params: ['*' + tokenSeparator + k + tokenSeparator + '*']
+                }, {
+                  // PropertyIsEqualTo ne fonctionne pas sur les CLOB, remplace par un PropertyIsLike
+                  filter_type: 'PropertyIsLike',
+                  params: [k]
+                }
+
+
+              );
+            }
+            else {
+              filters.push({
+                filter_type: 'PropertyIsEqualTo',
+                params: [k]
+              });
+            }
+
+
           });
 
           filterFields.push({
             field_name: name,
             filter: filters
+          });
+        }
+
+        // histogram
+        else if (type == 'histogram') {
+          var filter = [];
+
+          angular.forEach(value, function(v, k) {
+            if (k.substring(0, 3) === '>= ') {
+              var greaterThan = k.substring(3);
+              filter.push({
+                filter_type: 'PropertyIsGreaterThanOrEqualTo',
+                params: [greaterThan]
+              });
+            } else if (k.substring(0, 2) === '< ') {
+              var lowerThan = k.substring(2);
+              filter.push({
+                filter_type: 'PropertyIsLessThan',
+                params: [lowerThan]
+              });
+            } else {
+              var parts = k.split(' - ');
+              filter.push({
+                filter_type: 'PropertyIsBetweenExclusive',
+                params: parts
+              }, {
+                filter_type: 'PropertyIsEqualTo',
+                params: [parts[0]]
+              });
+            }
+          });
+
+          filterFields.push({
+            field_name: name,
+            filter: filter
           });
         }
 
@@ -157,9 +235,11 @@
       /**
        * Create the generateSLD service config from the facet ui state.
        * @param {object} facetState represents the choices from the facet ui
+       * @param {object} appProfile optional, application profile holding field
+       * data
        * @return {object} the sld config object
        */
-      this.createSLDConfig = function(facetState) {
+      this.createSLDConfig = function(facetState, appProfile) {
         var sldConfig = {
           filters: []
         };
@@ -169,18 +249,19 @@
           var fieldInfo = attrName.match(/ft_(.*?)_([a-z]+)(?:_(tree))?$/);
           var fieldName = fieldInfo ? fieldInfo[1] : attrName;
           var type = attrValue.type || 'terms';
+          var appProfileField = appProfile && appProfile.fields &&
+            appProfile.fields.filter(function(field) {
+              return field.name === fieldName;
+            })[0];
+          var tokenSeparator = appProfile && appProfile.tokenizedFields &&
+            appProfile.tokenizedFields[fieldName];
 
-          // multiple values
-          if (attrValue.values && Object.keys(attrValue.values).length) {
-            Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
-                fieldName, attrValue.values, type, true));
-          }
+          var values = attrValue.values && Object.keys(attrValue.values).length ?
+            attrValue.values : attrValue.value;
 
-          // single value
-          else if (attrValue.value) {
-            Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
-                fieldName, attrValue.value, type, false));
-          }
+          Array.prototype.push.apply(sldConfig.filters,
+            buildSldFilter(fieldName, values, type, appProfileField, tokenSeparator)
+          );
         });
 
         return sldConfig;
@@ -195,12 +276,12 @@
        * @param {string} wfsUrl url of the wfs service
        */
       this.getApplicationProfile = function(uuid, ftName, wfsUrl, protocol) {
-        return $http.post('../api/records/' + uuid +
-            '/query/wfs-indexing-config', {
-              url: wfsUrl,
-              name: ftName,
-              protocol: protocol
-            });
+        return $http.post('../api/0.1/records/' + uuid +
+          '/query/wfs-indexing-config', {
+          url: wfsUrl,
+          name: ftName,
+          protocol: protocol
+        });
       };
 
       /**
@@ -240,9 +321,11 @@
             }
             field.aggs = newField.aggs;
             field.display = newField.display;
-
             // add a flag for tokenized fields
             field.isTokenized = tokenizedFields[field.name] != null;
+            field.tokenSeparator = tokenizedFields[field.name];
+            field.suffix = newField.suffix
+            field.hidden = newField.hidden
           }
           if (!keep) {
             toRemoveIdx.unshift(idx);
@@ -294,7 +377,7 @@
 
         return $http({
           method: 'POST',
-          url: '../api/tools/ogc/sld',
+          url: '../api/0.1/tools/ogc/sld',
           data: $.param(params),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
@@ -308,15 +391,15 @@
        * @return {httpPromise} when indexing is done
        */
       this.indexWFSFeatures = function(
-          url, type, idxConfig, treeFields, uuid, version) {
-        return $http.put('../api/workers/data/wfs/actions/start', {
-          url: url,
-          typeName: type,
-          version: version || '1.1.0',
-          tokenizedFields: idxConfig,
-          treeFields: treeFields,
-          metadataUuid: uuid
-        }
+        url, type, idxConfig, treeFields, uuid, version) {
+        return $http.put('../api/0.1/workers/data/wfs/actions/start', {
+            url: url,
+            typeName: type,
+            version: version || '1.1.0',
+            tokenizedFields: idxConfig,
+            treeFields: treeFields,
+            metadataUuid: uuid
+          }
         ).then(function(data) {
         }, function(response) {
         });
@@ -342,26 +425,47 @@
           var paramName = fName;
 
           if (useActualParamName) {
-            var fieldInfo = paramName.match(/ft_(.*)_([a-z]{1})?([a-z]{1})?$/);
+            var fieldInfo = paramName.match(/ft_(.*?)_([a-z]+)(?:_(tree))?$/);
             paramName = fieldInfo ? fieldInfo[1] : paramName;
           }
 
           if (config.isDateTime) {
             if (values.from && values.to) {
               where = where.concat([
-                '(' + paramName + ' > ' + transformDate(values.from) + ')',
-                '(' + paramName + ' < ' + transformDate(values.to) + ')'
+                '(' + config.maxField + ' >= \'' + transformDate(values.from) + '\')',
+                '(' + config.minField + ' <= \'' + transformDate(values.to) + '\')'
               ]);
             }
             return;
           }
+
           angular.forEach(values, function(v, k) {
+            if (config.isRange) {
+              if (k.substring(0, 3) === '>= ') {
+                var greaterThan = k.substring(3);
+                clause.push('(' + paramName + ' >= ' + greaterThan + ')');
+              } else if (k.substring(0, 2) === '< ') {
+                var lowerThan = k.substring(2);
+                clause.push('(' + paramName + ' < ' + lowerThan + ')');
+              } else {
+                var parts = k.split(' - ');
+                clause.push('(' + paramName + ' >= ' + parts[0] + ' AND ' + paramName + ' < ' + parts[1] + ')');
+              }
+              return;
+            }
+
             var escaped = k.replace(/'/g, '\\\'');
-            clause.push(
-                (config.isTokenized) ?
-                '(' + paramName + " LIKE '%" + escaped + "%')" :
-                '(' + paramName + " = '" + escaped + "')"
-            );
+            if (config.isTokenized) {
+              var sep = config.tokenSeparator;
+              clause.push(
+                '(' + paramName + " LIKE '" + escaped + "')",
+                '(' + paramName + " LIKE '%" + sep + escaped + sep + "%')",
+                '(' + paramName + " LIKE '%" + sep + escaped + "')",
+                '(' + paramName + " LIKE '" + escaped + sep + "%')"
+              );
+            } else {
+              clause.push('(' + paramName + " = '" + escaped + "')");
+            }
           });
           if (clause.length == 0) return;
           where.push('(' + clause.join(' OR ') + ')');
@@ -411,9 +515,9 @@
           if (state.geometry) {
             result.geometry = [
               state.geometry[0][0] + ',' +
-                  state.geometry[1][1] + ',' +
-                  state.geometry[1][0] + ',' +
-                  state.geometry[0][1]
+              state.geometry[1][1] + ',' +
+              state.geometry[1][0] + ',' +
+              state.geometry[0][1]
             ];
           }
         }
