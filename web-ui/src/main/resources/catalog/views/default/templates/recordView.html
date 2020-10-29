@@ -270,11 +270,11 @@
                               || mdView.current.record.MD_LegalConstraintsOtherConstraints">
                 <th data-translate="">legalConstraints</th>
                 <td>
-                  <p>
-                    {{mdView.current.record.MD_LegalConstraintsOtherConstraints}}
+                  <p data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsOtherConstraints">
+                    {{i}}
                   </p>
-                  <p>
-                    {{mdView.current.record.MD_LegalConstraintsUseLimitation}}
+                  <p data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsUseLimitation">
+                    {{i}}
                   </p>
                 </td>
               </tr>
@@ -282,8 +282,8 @@
               <tr data-ng-if="mdView.current.record.MD_SecurityConstraintsUseLimitation">
                 <th data-translate="">securityConstraints</th>
                 <td>
-                  <p>
-                    {{mdView.current.record.MD_SecurityConstraintsUseLimitation}}
+                  <p data-ng-repeat="i in mdView.current.record.MD_SecurityConstraintsUseLimitation">
+                    {{i}}
                   </p>
                 </td>
               </tr>
@@ -291,8 +291,8 @@
               <tr data-ng-if="mdView.current.record.MD_ConstraintsUseLimitation">
                 <th data-translate="">resourceConstraints</th>
                 <td>
-                  <p>
-                    {{mdView.current.record.MD_ConstraintsUseLimitation}}
+                  <p data-ng-repeat="i in mdView.current.record.MD_ConstraintsUseLimitation">
+                    {{i}}
                   </p>
                 </td>
               </tr>
