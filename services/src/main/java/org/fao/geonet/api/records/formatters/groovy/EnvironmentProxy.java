@@ -25,7 +25,6 @@ package org.fao.geonet.api.records.formatters.groovy;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Multimap;
-
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterParams;
@@ -44,7 +43,7 @@ import java.util.Map;
  * @author Jesse on 10/20/2014.
  */
 public class EnvironmentProxy implements Environment {
-    private static ThreadLocal<Environment> currentEnvironment = new InheritableThreadLocal<Environment>();
+    private static final ThreadLocal<Environment> currentEnvironment = new InheritableThreadLocal<Environment>();
 
     public static void setCurrentEnvironment(FormatterParams fparams) {
         currentEnvironment.set(new EnvironmentImpl(fparams, fparams.context.getBean(IsoLanguagesMapper.class)));
@@ -147,7 +146,8 @@ public class EnvironmentProxy implements Environment {
         return get().getIndexInfo();
     }
 
-    @Override public ServiceContext getContext() {
+    @Override
+    public ServiceContext getContext() {
         return get().getContext();
     }
 
@@ -156,7 +156,8 @@ public class EnvironmentProxy implements Environment {
         return get().getBean(clazz);
     }
 
-    @Override public <T> T getBean(final String name, final Class<T> clazz) {
+    @Override
+    public <T> T getBean(final String name, final Class<T> clazz) {
         return get().getBean(name, clazz);
     }
 

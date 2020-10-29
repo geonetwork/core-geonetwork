@@ -1,0 +1,656 @@
+================================================================================
+===
+=== GeoNetwork 4.0.0: List of changes
+===
+================================================================================
+- Update doc submodule.
+- Update version number to 4.0.0-alpha.1.
+- Dashboard / Update defaults.
+- Update doc.
+- Remove unused strings from strings.xml files, remove unused xsl files / templates
+- Merge remote-tracking branch 'origin/master' into es
+- Cleaning / Removing some Lucene refs.
+- Admin / Turn off batch process.
+- Remove xsl for thumbnails. Attachement API is now used.
+- Disable RSS and RDF links. Fix PDF missing fields.
+- Cleaning / Remove non existing security mappings.
+- Cleaning / Jeeves / Unused GUI services.
+- Cleaning / Jeeves / Unused GUI services.
+- Removed unused translation files from old UI
+- Cleaning / Remove overrides.
+- Merge branch 'es' of https://github.com/geonetwork/core-geonetwork into es
+- Remove INSPIRE Search panel setting from Java code
+- Cleaning / Remove unused settings.
+- Removed image used in old UI
+- SQL / Migration / Drop unused settings.
+- Merge branch 'es' of https://github.com/geonetwork/core-geonetwork into es
+- Remove iso19115-to-iso19139 unused folder and move oai_dc-to-dublin-core folder to xsl/conversion
+- Cleaning / Notification system was not used.
+- Merge branch 'es' of https://github.com/geonetwork/core-geonetwork into es
+- Removed unused files and old styling files that will require rework when migrated the features using them like file disclaimer
+- Cleaning / Notification system was not used.
+- Cleaning / Language detector removal.
+- Cleaning / Remove old schematronscripts.
+- Cleaning / Language detector removal.
+- Cleaning / Remove images used by XSL UI and ExtJS UI.
+- Remove useless es profile. It is mandatory now.
+- Update version to 3.99.0-SNAPSHOT
+- Update documentation to configure an external ElasticSearch instance
+- INSPIRE / Indexing / Turn if off if INSPIRE settings is off
+- Adding a docker-compose
+- Hide INSPIRE Themes panel in home page if INSPIRE setting is disabled
+- CSW filter to ES query - remove unrequired escape of characters (required only for raw Lucene query conversion)
+- JNDI support improvements (#4599)
+- Add track_total_hits for catalog with more than 10k records to report exact number of results.
+- Search / Fix restore on reload. Fix facet containing '.'. Fix missing title in related button.
+- ES proxy - remove fields with privileges info from the response
+- Only show the index error panel if the health check returns an error in the index
+- Update CSW queryable mappings for: OrganisationName, TemporalExtent, Classification, MetadataPointOfContact and ResponsiblePartyRole
+- Admin / Status / Add indexing error summary and fix record list.
+- Fix - Allow ellipsis in dropdown-menu button (mtd links)
+- Home / Do not display aggs if no results.
+- Search / Add possibility to support negative terms query (required for searching all but not service in link to a dataset panel).
+- Related records / Fix uuid query when having multiple values.
+- CSW / Remove display info parameter.
+- Home / Fix resource type filter.
+- Batch edit / Show selected only. Properly disable action.
+- Batch edit / Fix display of selected records.
+- Batch edit / Fix search config.
+- Config / Add geonetwork.indexConfig.dir option. On init, initialize the index config dir if an external datadir is used. Missing file.
+- Config / Add geonetwork.indexConfig.dir option. On init, initialize the index config dir if an external datadir is used.
+- Update CSW queryable mappings for title and abstract
+- webapp - allow frames from same origin
+- Aggs / Fix resourceType facet filter.
+- Suggestion / Contextualize suggestions to current search.
+- Index / Fix empty date. Turn off recordlink which requires more work with routing.
+- Fix - Ellipsis text for facet
+- Index / Remove message.
+- Update schemas maven version to 4.0
+- Temporal coverage as range field. Restore it in advanced form.
+- Use a prefix for maven artifacts build in the project.
+- Multi portal mode / getNodeId may be triggered outside a request scope (eg. formatter in background process) (#4613)
+- Index / Fix GeoJSON parsing error on 7.6.2.
+- Index / Fix GeoJSON parsing error on 7.6.2.
+- ES / Turn off sha check on download.
+- Merge remote-tracking branch 'origin/master' into es
+- Fix broken Software Development links from 3.8.x to trunk (#4609)
+- add multientrycombiner directive (#4597)
+- allow keyword picker to be used inside another component (#4596)
+- Don't run the change status until we get a harvesterID back (#4606)
+- Metadata creation / Update UUID references (#4584)
+- Harvester timezone setting (#4576)
+- Angular view / Related resource / Add description if any on links.
+- Angular view / Related resources / Fix word wrap on long label button
+- Formatter / Template field / Add bottom margin to make distinction of each matching elements. (#4594)
+- ES / Search / Value may not be a string or array.
+- CSW / Results with summary is removed.
+- Cleaning and fix CSW output.
+- Directory config.
+- Subtemplate / Improve config and fix privileges issues.
+- Index / Operations are array field. Fixed privileges depending on user session.
+- ES / Improve facet.
+- Escape Lucene char from full text search.
+- Merge remote-tracking branch 'origin/master' into es
+- ES / Improve facet, sorting and translations.
+- Update repositories used by build (#4595)
+- Overview / Optimize size depending on needs.
+- API / Attachments / Images / Add a size parameter.
+- API / Related / Extract title field from new schema.
+- API / Related / Extract title field from new schema.
+- Build / Do not inherit to not install es in dashboard module.
+- Merge remote-tracking branch 'origin/master' into es
+- Fixes for the menu on smaller screens
+- Styling and settings for the fixed header
+- Update version to 3.10.2-0
+- Remove unused JS code from EditorController - parseXmlError (#4588)
+- Remove unused JS code from EditorController - parseXmlError (#4588)
+- error message are now json, no need to convert them from xml (#4445)
+- error message are now json, no need to convert them from xml (#4445)
+- Validation / Index in current thread to avoid lock (#4587)
+- Validation / Index in current thread to avoid lock (#4587)
+- Formatter / ISO19139 / Fix layout when email is here (#4586)
+- Formatter / ISO19139 / Fix layout when email is here (#4586)
+- Prevent user searches requests for unlogged users in search results page #4396
+- Prevent user searches requests for unlogged users in search results page #4396
+- Metadata batch validation show validation summary instead of a message with '[Object object]' text
+- User feedback / Fix JS error on init. (#4579)
+- Multi portal mode / getNodeId may be triggered outside a request scope (eg. harvesting) (#4578)
+- Facet / Client side translator.
+- AWS S3 storage bug fix (#4573)
+- User feedback / Fix JS error on init. (#4579)
+- Admin / Harvester config / Fix sort by title.
+- Update submodule.
+- More like this / Update to new index structure for text field.
+- User feedback / Fix JS error on init.
+- ISO19139 / Index / Overview with no label.
+- Multi portal mode / getNodeId may be triggered outside a request scope (eg. harvesting) (#4578)
+- Merge remote-tracking branch 'origin/es' into es
+- AWS S3 storage bug fix (#4573)
+- ES / Update to 7.6.2.
+- Merge remote-tracking branch 'origin/master' into es
+- Protect error-json.xsl for XSS and set contentType=application/json for the error page
+- Protect error-json.xsl for XSS and set contentType=application/json for the error page
+- Updates from transifex.
+- Update 115-3 submodule.
+- Updates from transifex.
+- Update 115-3 submodule.
+- (gn) editor / improve highlight directives for perf
+- (gn) editor / improve highlight directives for perf
+-  Index / Add translations for topic category.
+- Add better support for gmd:language containing gmd:LanguageCode and gco:CharacterString (#4572)
+- Fix build.
+- Update ISO19115-3 submodule.
+- Update ISO19115-3 submodule.
+- Update ISO19115-3 submodule.
+- ES / Fix facet key translation.
+- Add better support for gmd:language containing gmd:LanguageCode and gco:CharacterString (#4572)
+- Merge remote-tracking branch 'origin/master' into es
+- Update ISO19115-3 submodule.
+- Updates from transifex.
+- Update ISO19115-3 submodule.
+- Updates from transifex.
+- Map / Background layer / Add support for WMS group layer
+- Admin / UI config / Download formatter support (#4564)
+- Portal / Add info with a link to the portal and its CSW endpoint.
+- Multinode / Cleanup datadir node setup (not used anymore).
+- Thesaurus / Regions / Brexit
+- Fixes for metadata rating: - Use metadata rating setting to enable  the metadata rating panel in the metadata detail page instead of the user feedback setting (contact us feature). - Add var declaration to javascript variable
+- Formatter / Display a section only if there is something in
+- Fix for the `none` background image causing a 404 to a non existing page (#4558)
+- Map / Background layer / Add support for WMS group layer
+- Admin / UI config / Download formatter support (#4564)
+- Portal / Add info with a link to the portal and its CSW endpoint.
+- Multinode / Cleanup datadir node setup (not used anymore).
+- fix multilingual save issue (#4563)
+- fix multilingual save issue (#4562)
+- change order of nav-pills in multilingual fields (#4549) (#4560)
+- Thesaurus / Regions / Brexit
+- Fixes for metadata rating: - Use metadata rating setting to enable  the metadata rating panel in the metadata detail page instead of the user feedback setting (contact us feature). - Add var declaration to javascript variable
+- Formatter / Display a section only if there is something in
+- [BP] Fix for the `none` background image causing a 404 to a non existing page (#4558)
+- Fix for the `none` background image causing a 404 to a non existing page (#4558)
+- change order of nav-pills in multilingual fields (#4549)
+- Multi portal mode / User entity listener may be triggered outside a request scope
+- API / Threads status / Add missing portal mapping
+- INSPIRE / Add example for a migration from TG1.3 to 2.0 (#4538)
+- Multi portal mode / User entity listener may be triggered outside a request scope
+- API / Threads status / Add missing portal mapping
+- INSPIRE / Add example for a migration from TG1.3 to 2.0 (#4538)
+- Fixed checking in XslFormatter to retrieve schema locations to make a case-insensitive comparison (the value of the schema was converted to lowercase, but not the values in the schema list) (#4548)
+- Bump jetty.version from 9.4.22.v20191022 to 9.4.27.v20200227
+- Map / External viewer improvements (#4521)
+- Harvester / CSW / Misc fix.
+- Harvester / Delete associated records does not work when FK exists
+- Editor / Init country autocomplete only on focus
+- Multi portal mode / Fix shared NodeInfo (#4542)
+- Lib update.
+- Replace mixin with plain CSS code
+- Truncate the username, so long username don't break the UI
+- API / Region / Return null.
+- Metadata display modes - Switch to Full View doesn't work when metadata record is called in Simple View from external web application #4511
+- INSPIRE / Add example for a migration from TG1.3 to 2.0 (#4538)
+- [BP] Fixed checking in XslFormatter to retrieve schema locations to make a case-insensitive comparison (the value of the schema was converted to lowercase, but not the values in the schema list) (#4548)
+- Fixed checking in XslFormatter to retrieve schema locations to make a case-insensitive comparison (the value of the schema was converted to lowercase, but not the values in the schema list) (#4548)
+- Bump jetty.version from 9.4.22.v20191022 to 9.4.27.v20200227
+- Map / External viewer improvements (#4521)
+- Harvester / CSW / Misc fix.
+- Harvester / Delete associated records does not work when FK exists
+- Editor / Init country autocomplete only on focus
+- Multi portal mode / Fix shared NodeInfo (#4542)
+- Lib update.
+- Replace mixin with plain CSS code
+- Truncate the username, so long username don't break the UI
+- API / Region / Return null.
+- Metadata display modes - Switch to Full View doesn't work when metadata record is called in Simple View from external web application #4511
+- [BP] Change Oh to Zero (#4532)
+- change Oh to Zero (#4532)
+- [BP] Remove extra comma in json object in CatController, introduced in #4509
+- Remove extra comma in json object in CatController, introduced in #4509 (#4524)
+- JS / Fix build error due to extra comma
+- DB / Migration / MergeUsersByUsernameDatabaseMigration / Flush deletion before inserting new merged user
+- Improve cookie warning message (#4509)
+- Privileges / When user can't download disable download action (#4471)
+- Formatter / XSL / Improvement when not using tabs (#4470)
+- PDF / Language parameter does not override Accept-Language header in all cases. (#4520)
+- Test / Do not force reindex in test (#4018)
+- Log / Avoid exception on 'Can't find bundle for base name messages, locale en' #4515
+- Update LocalisationService.js
+- CSW / Add post processing for portal.
+- Add post processing xslt for CSW results
+- Fix typo in opening XML tag
+- Updates from transifex.
+- Update iso19139 oasis-catalog.xml references to 2007 schema files. Fixes apiso.xsd issue described in #3836
+- Period duration / Add readonly mode.
+- DB / Migration / MergeUsersByUsernameDatabaseMigration / Flush deletion before inserting new merged user
+- Improve cookie warning message (#4509)
+- Privileges / When user can't download disable download action (#4471)
+- Formatter / XSL / Improvement when not using tabs (#4470)
+- PDF / Language parameter does not override Accept-Language header in all cases. (#4520)
+- Test / Do not force reindex in test (#4018)
+- Log / Avoid exception on 'Can't find bundle for base name messages, locale en' #4515
+- Update LocalisationService.js
+- CSW / Add post processing for portal.
+- Add post processing xslt for CSW results
+- [BP] Update Portuguese iso19139 strings.xml file
+- Merge branch 'dispiste-issue-4510-portuguese-strings'
+- Fix typo in opening XML tag
+- Merge branch 'issue-4510-portuguese-strings' of https://github.com/dispiste/core-geonetwork into dispiste-issue-4510-portuguese-strings
+- Updates from transifex.
+- Update portuguese strings.xml file. Fixes #4510
+- Update iso19139 oasis-catalog.xml references to 2007 schema files. Fixes apiso.xsd issue described in #3836
+- Period duration / Add readonly mode.
+- Merge remote-tracking branch 'origin/master' into es
+- ES schema / Text field are now object with optional link and translations.
+- Update ISO19115-3 submodule.
+- Region API / Move to /api (#4491)
+- Editing / History / Only save changes at the end of the editing session
+- Import from server folder, xml text or url doesn't use the Publish option #4489
+- Support INSPIRE Themes thesaurus title with anchor in iso19139 INSPIRE metadata view (#4474)
+-  Use system property log_dir to customise the parent directory of the log folder: (#4473)
+- Sitemap / Move to spring. (#4465)
+- Set datainfo root when creating metadata from a template
+- Default display of citation proposal to off
+- chore: use map projection for input geometry
+- Update ISO19115-3 submodule.
+- Add Anchor support and switch multilingual mode to an object type.
+- Region API / Deprecated tests.
+- Add geom utilities from old SpatialIndexWriter.
+- Merge remote-tracking branch 'origin/master' into es
+- Region API / Move to /api (#4491)
+- ES / Connect all search in map viewer to ES search service. Add support for wildcard query.
+- Editing / History / Only save changes at the end of the editing session
+- Import from server folder, xml text or url doesn't use the Publish option #4489
+- ES / Update to 7.6.0.
+- Fix build.
+- Merge pull request #4467 from julsbreakdown/get_map_crs_for_wps_inputs
+- ISO19139 / Other constraints indexing.
+- Support INSPIRE Themes thesaurus title with anchor in iso19139 INSPIRE metadata view (#4474)
+-  Use system property log_dir to customise the parent directory of the log folder: (#4473)
+- Sitemap / Move to spring. (#4465)
+- Set datainfo root when creating metadata from a template
+- Default display of citation proposal to off
+- chore: use map projection for input geometry
+- SQL / Backport migration for 3.10.2.
+- Update version to 3.10.2-SNAPSHOT
+- Update version to 3.10.1-0
+- Update ISO19115-3 submodule.
+- Update 19115-3 submodule.
+- PDF / Print polygon extent when record is not public (#4460)
+- PDF / Print polygon extent when record is not public (#4460)
+- DB migration / resources.get converted to attachments API
+- Add override and random UUID options to OAI-PMH harvester (#4453)
+- Remove invalid content length header in log file download. The value was set to the log file size, but the service returns a zip file with different size, causing download issues in some cases
+- Help / Link to trunk
+- DB migration / resources.get converted to attachments API
+- Add override and random UUID options to OAI-PMH harvester (#4453)
+- Remove invalid content length header in log file download. The value was set to the log file size, but the service returns a zip file with different size, causing download issues in some cases
+- [BP] Remove unused namespaces from OAI records
+- Remove unused namespaces from OAI records (#4455)
+- Update Kibana version in README.md
+- Update version of ElasticSearch in README.md
+- Index gmd:otherConstraints with gmx:Anchor (#4449)
+- Index gmd:otherConstraints with gmx:Anchor (#4449)
+- [BP] Stop infinite harvester loop if start > nextRecord (#4446)
+- Stop infinite harvester loop if start > nextRecord (#4443)
+- Help / Link to trunk
+- Update ISO19115-3 submodule.
+- Sharing / Add definition of publish. (#4405)
+- ISO19139 / Multilingual / Add Anchor and fallback to non empty value (#4435)
+- INSPIRE / CSW / Validator trigger error if ResponseLanguage is empty (#4434)
+- Attachements / type is now visibility and values are uppercase on GET. (#4429)
+- MEF / Avoid exception when user do not have download privileges. (#4428)
+- chore(closure) add missing listen_ function
+- Fix fill of multi-polygon in region.getmap
+- add closure in wro sources
+- chore typo and replace deprecated closure clone
+- chore add closure missing methods
+- Update ISO19115-3 submodule.
+- Sharing / Add definition of publish. (#4405)
+- ISO19139 / Multilingual / Add Anchor and fallback to non empty value (#4435)
+- INSPIRE / CSW / Validator trigger error if ResponseLanguage is empty (#4434)
+- Attachements / type is now visibility and values are uppercase on GET. (#4429)
+- MEF / Avoid exception when user do not have download privileges. (#4428)
+- Merge pull request #4436 from julsbreakdown/add_closure_listen__function_
+- [BP] Address glitch with duplicate or missing logfiles (#4439)
+- Address glitch with duplicate or missing logfiles (#4432)
+- chore(closure) add missing listen_ function
+- Merge pull request #4431 from julsbreakdown/ol_add_missing_goog
+- Fix fill of multi-polygon in region.getmap
+- add closure in wro sources
+- chore typo and replace deprecated closure clone
+- chore add closure missing methods
+- Update submodule.
+- Update submodule.
+- Portal / Upload logo when one is added
+- ISO19139 / Citation / Date is last publication or revision date
+- Add support for drawing 19115-3 bounding polygons
+- Display bounding polygons in 19139 full view
+- Icrease length of Validation.valType column
+- Update from transifex.
+- Record view / Add download menu configuration. (#4400)
+- Styling improvements to the full metadata view (#4414)
+- CSW / Configuration of the capabilities is now done using a service metadata record (#4390)
+- Editor / Record becomes draft even with workflow disabled  (#4407)
+- Editor / Init language autocomplete only on focus (#4409)
+- Record view / Spatial representation type can contain multiple values
+- Use an existing variable in stead of creating a new one
+- Use `File Identifier` in metadata tab of the full metadata view
+- pom - switch to https for repo.maven
+- Do not use an empty string as `background-image`
+- Handle AccessDeniedException to return http status code 403 instead of 400
+- Portal / Allow /srv/ to redirect to home. (#4387)
+- avoid rss search to send link with two slashes
+- Update all font-awesome version numbers and fix the location
+- Process / Fix missing thesaurusDir variable required by some processes.
+- Utility / Add download JSON from URL and return XML (to be used in XSLT). Eg. To build feature catalogue from ESRI Rest service.
+- Editor / Associated panel / Add placeholder for URL and local network choices in ISO19115-3.
+- Portal / Upload logo when one is added
+- ISO19139 / Citation / Date is last publication or revision date
+- Add support for drawing 19115-3 bounding polygons
+- Display bounding polygons in 19139 full view
+- Icrease length of Validation.valType column
+- Update from transifex.
+- Record view / Display other constraints.
+- ES / Multilingual / Add draft language analyzer config. Experiment for French.
+- Sorting / Change date / Desc order.
+- Home / Restore INSPIRE themes entry points.
+- Dublin core / Fix error on indexing west bounds.
+- Subtemplate / Editor selector.
+- Record view / Add download menu configuration. (#4400)
+- Styling improvements to the full metadata view (#4414)
+- More robust indexing. Facet config for editor board.
+- Editor board / Fix record view link.
+- Subtemplate / Indexing contact and make admin UI work.
+- Merge remote-tracking branch 'origin/master' into es
+- CSW / Configuration of the capabilities is now done using a service metadata record (#4390)
+- Editor / Record becomes draft even with workflow disabled  (#4407)
+- Editor / Init language autocomplete only on focus (#4409)
+- Record view / Spatial representation type can contain multiple values
+- Use an existing variable in stead of creating a new one
+- Use `File Identifier` in metadata tab of the full metadata view
+- pom - switch to https for repo.maven
+- Do not use an empty string as `background-image`
+- Handle AccessDeniedException to return http status code 403 instead of 400
+- Portal / Allow /srv/ to redirect to home. (#4387)
+- avoid rss search to send link with two slashes
+- Update all font-awesome version numbers and fix the location
+- Process / Fix missing thesaurusDir variable required by some processes.
+- Utility / Add download JSON from URL and return XML (to be used in XSLT). Eg. To build feature catalogue from ESRI Rest service.
+- Editor / Associated panel / Add placeholder for URL and local network choices in ISO19115-3.
+- Add support for custom sql file for data initialization
+- Fix typo in en-search.json
+- MEF / Move back attachment folders in the record folder
+- (gn) fix translation key in homepage
+- Search filter tags / put panel below basket & user searches
+- Search filter tags / minor rewrite & clarify code
+- INSPIRE validation / Add last validation state. (#4388)
+- Formatter / PDF / Restore the header with logo
+- Fix for too wide logo in result list
+- Search filter tags / store facet filters in cache for when dimensions are not available
+- Search filter tags / add generic translation for geometry filter
+- Search filter tags / correctly translate categories & wrap text instead of ellipsis
+- Search filter tags / better behaviour in batch edit
+- Search filter tags / put container on the side with facets
+- Search filter tags / rework & simplify
+- Add support for custom sql file for data initialization
+- Merge pull request #4403 from geonetwork/fix-filter-translation-typo
+- Fix typo in en-search.json
+- Merge pull request #4401 from cmangeat/fix_translation_in_home_page
+- Merge pull request #4381 from jahow/rework-search-filter-tags
+- MEF / Move back attachment folders in the record folder
+- (gn) fix translation key in homepage
+- Search filter tags / put panel below basket & user searches
+- Search filter tags / minor rewrite & clarify code
+- ES / Restore previous/next record.
+- Update submodule.
+- ES / Cleaning. Avoid errors during indexing.
+- Record view / Fix direct link to formatter.
+- Update to 3.11.
+- Merge remote-tracking branch 'origin/master' into es
+- INSPIRE validation / Add last validation state. (#4388)
+- Formatter / PDF / Restore the header with logo
+- Fix for too wide logo in result list
+- Search filter tags / store facet filters in cache for when dimensions are not available
+- Search filter tags / add generic translation for geometry filter
+- Search filter tags / correctly translate categories & wrap text instead of ellipsis
+- Search filter tags / better behaviour in batch edit
+- Search filter tags / put container on the side with facets
+- Search filter tags / rework & simplify
+- Update version to 3.11.0-SNAPSHOT
+- Update version to 3.10.1-SNAPSHOT
+- Update version to 3.10.0-0
+- Update submodule.
+- ES / Related API / Start from 0 in the list and fix UUID search.
+- ES / Suggestions / Handle config with multiple fields to be proposed as suggestion.
+- ES / Preserve spaces in index field values.
+- ES / Sort / Sort with asc/desc instead of reverse.
+- ES / Indexing / Make build tree values common.
+- ES / Geom is json now. Region getmap expecting WKT.
+- ES / Overview / Kiss .
+- ES / Indexing fix multilingual field 19115-3. Thesaurus are keywords for facetting.
+- ES / Misc improvements.
+- ES / Facet / Do not display category if no content. More result now preserve ordering.
+- ES / Move to 7.5.1.
+- Merge remote-tracking branch 'origin/master' into es
+- Merge remote-tracking branch 'origin/master' into es
+- ES / Restore integration tests (#4272)
+- Search app / Only search on records.
+- Delete by id - missing +.
+- ES / Fix delete by id.
+- ES / More robust geom indexing.
+- ISO19139 / Fix geom indexing.
+- use failsafe plugin to run tagged abstractSpringDataTest as it tests once test es started
+- Bad merge.
+- Dependency / Remove Avalon and update to xmlgraphics 2.4.
+- Fix build.
+- Merge remote-tracking branch 'origin/es' into es
+- Fix build.
+- Merge remote-tracking branch 'origin/master' into es
+- ISO19110 / Fix standard name
+- Merge remote-tracking branch 'origin/master' into es
+- ES / Analyze request api change.
+- Merge remote-tracking branch 'origin/master' into es
+- Merge remote-tracking branch 'origin/master' into es
+- Aggs / Distrinction between AOI and GEMET. Editor board facet config.
+- Search / Fix query string builder.
+- Indexing / Ignore TermNotFoundException.
+- Remove CSW virtual endpoints to use portals instead
+- Facets / improve date histogram when initial filter is set
+- es: highlight facet title if contains active search input
+- Facet / Hide empty facet.
+- es: add negative search
+- es: fix any is an AND with facets
+- es: fix correct size of hits
+- es: configure facet with searchObj.configId, and add editor facets
+- Facet / Hide empty facet.
+- Facets / handle auto-interval date histogram
+- Facet / fix date range facet model bug
+- Facets / better style for date graph button & collapse toggle
+- Facets / add date histogram & adapt timeline graph a bit
+- Facet / Sort by config. Response is not ordered.
+- CSW - Convert filter to ES json query instead of query string to support geometries with And / Or conditions. Updates on GetRecords query constraint: empty filter is not allowed in specification, should be used an empty query element
+- Cleaning.
+- Search / Add scoring function support (with experimental config).
+- Remove traling comma & invalid syntax
+- Facets / remove panel title
+- Search facets / add 'load more terms' option
+- Search / Remove advanced form.
+- JS / Trailing comma
+- Merge remote-tracking branch 'origin/es' into es
+- Merge remote-tracking branch 'origin/master' into es
+- es: keep collapse in hierarchy key
+- Templates must have uuid.
+- Search / Add missing fields to _source.
+- ES Proxy / Add multi search support. Fix indexing when loading templates.
+- es: fix isInSearch for facet tree
+- es: bind hierarchy tree click on search
+- es: modify facet directive to target an item
+- add countWatchers()
+- es: index tree with _tree
+- es: index keywords with hierarchy
+- es: put geo_shape in bool cause filter is erased by proxy
+- Avoid error on non existing service.
+- Harvester / Fix.
+- Autocomplete / Add configuration and use search_as_you_type mode by default.
+- Fix admin & thesaurus using old Jeeves services.
+- Admin / Index / Only drop records index by default. Add possibility to choose which indices to reset.
+- Admin / Index / Drop index fix.
+- ES / If filter is null, then do not create it.
+- Indexing / Reduce usage of Element. Experimenting update of field instead of complete reindex. Applied to update record privilege.
+- _source config / Use includes and add missing id.
+- Facets / fix collapse/expandall buttons
+- Facets / general refactoring of the directives & style
+- Facets / store collapsed state on item
+- Utility / add capitalize pipe
+- es: add geom search
+- ES Search Manager sendDocumentsToIndex - handle response status for document updates (http 200)
+- es: fix md bbox display in search map
+- Merge branch 'es' of https://github.com/geonetwork/core-geonetwork into es
+- CSW sorting
+- ES / Add API to update one or more field without reindexing the complete document.
+- es: fix 'no facets'
+- es: fix angular injection
+- es: remove injection of gnFacetConfigService
+- ES search / define default configs for _source
+- Re-add CSW service
+- es: remove AST lucene query parsing
+- es: remove old facets from searcFormDirective
+- es: move search state in search directive
+- Search / The client is responsible of choosing which type of document to query.
+- Ui config / update facet config label & subtext
+- UI config / rework JSON edit field to use ACE
+- Default config / put facet configs in respective sections
+- ES / CSV / search results.
+- Search / Show only selection.
+- Search results / Improve list view.
+- ES / PDF / search results.
+- es: rename facet directive to be not dependant of ES
+- es: parse es params only if not null
+- es: store search state as JSON in url
+- CSW - GetRecordById
+- Initial code for CSW
+- ES Search Manager - don't execute bulk request for failed documents when there're not failed documents to avoid exception
+- MEF export / Export related too.
+- MEF export / Move to API.
+- Use max selection records in EsSearchManager methods
+- Selection / Restore select all. The proxy is now saving the last search based on the bucket id in session and you can reuse it somewhere else if needed. Query can be done using JSON Elastic object or Lucene query syntax also.
+- Add pagination to Es rest client
+- Merge remote-tracking branch 'origin/master' into es
+- Merge remote-tracking branch 'origin/master' into es
+- ES / Better alert if index is down. Experiment on collapsed mode mixing features & records (disabled).
+- ES / Experiment join
+- es: add nested facets
+- Add tree facet in the ui
+- es: handle filters in facets
+- ES / Home page facets config.
+- ES / Home page / Info list / Restore thumbnail.
+- ES / Restore home page records top hits.
+- ES / Update to 7.2.0.
+- ES / Search results / Restore add to map button.
+- ES / Remove Jest.
+- ES / Move WFS feature harvester to JHLRestClient
+- reset facets state on search reset
+- Bind facets to lucene query_string parameter in the url
+- ES / Add  Java High Level REST Client.
+- ES / Health check update related to 7.x version breaking changes.
+- ES / Add portal filter. To be done in EsClient too.
+- Merge remote-tracking branch 'origin/master' into es
+- ES / Exclude drafts from more like this.
+- ES / Draft is working.
+- ES / Do not autocomplete any field. Fix id search when duplicating.
+- ES / Sort by option.
+- ES / Test.
+- ES / Turn off alert
+- ES / Restore get index field value.
+- ES / Restore MEF export with related records.
+- ES / Admin / Fix search records related to user, harvester.
+- ES / Privileges / Admin see all, if owner see also.
+- ES / Index / Map types.
+- ES / Fix sorting on field.
+- ES / Remove old lucene XSLT. Add possibility to limit field returned in _source.
+- ES / Related / Fix add to map.
+- es: use real ES format for facet aggregations format in config
+- ES / Avoid uuid to be an array. Fix empty owner id in harvester config.
+- ES / Some doc on manual index setup.
+- ES / Restore selection mechanism.
+- ES / Misc fix
+- ES / Restore template list in new metadata panel.
+- ES / Restore basic link search.
+- ES / Record view is now displaying all record properties.
+- Draft fix and contact field is an object.
+- ES / Misc fix related to index init.
+- Merge remote-tracking branch 'origin/master' into es
+- Merge remote-tracking branch 'origin/master' into es
+- Index mapping / Set link as nested object to allow better queries
+- Merge remote-tracking branch 'origin/master' into es
+- Update to ES 6.3.0.
+- Merge remote-tracking branch 'origin/master' into es
+- Merge remote-tracking branch 'origin/master' into es
+- Display overview URL in record view and search results.
+- Fix more like this api call.
+- Properly open metadata view and editor.
+- Improve indexing. Start making objects for link, overview, contact.
+- Index document with errors. Errors are usually related to invalid JSON. In this case create a document with indexingError field set and with a title at least.
+- infolist resourcetype can have multiple same instances
+- Remove unrequired ElasticSearch http proxy Csrf exclusion
+- ES multilingual indexing.
+- Link is an object.
+- Populate translation. Start adding link as an object. Now, add type=object attribute in XSL indexing to store an object in elastic.
+- Do not split request on client side. This is done by ES tokenizer. If you want an exact match add double quote to your search phrase.
+- Add drop and reset index.
+- ES multilingual indexing.
+- implemented dynamic facets (from ui config or explicit object)
+- fixed js error when ES did not send any hit back
+- ElasticSearch http proxy quote privilege values
+- fix corsinterceptor to recieve proper error catching add failed-es-request catching to searchformdirective
+- es: fix searchs in homepage
+- Update document type filter
+- Remove PreAuthorize in ElasticSearch http proxy
+- es: fix browse topic home page
+- Add ElasticSearch http proxy Csrf exclusion
+- Fix missing settings which was duplicated in old Jeeves service.
+- implemented support for dateranges in search form
+- ElasticSearch http proxy
+- fixed pagination in search form
+- es index tag.completion as completion
+- es ui: add completion example for keyword
+- Use API for me service.
+- removed getId and getUuid on md object
+- fixed key used for resource type
+- fix keys used for MD title and abstract
+- removed remaining geonet:info usage in js code
+- Properly index geom.
+- Add trigram analyzer to allows suggestions on similar terms. example provided in EsService - needs more configuration and testing.
+- Cleaning / web-client is unused.
+- Clean up dependencies.
+- Start ES for tests.
+- Cleaning / Removing old XSL files.
+- Start ES during test.
+- Fix build.
+- Update to JEST 5.3.3 and make rebuild index works with ES.
+- Refactor JsonDatabaseMigration to make it easier to use
+- CSW GetRecords/GetRecordById doesn't add schemaLocation defined in schema-ident.xml #2435
+- Terms query can be an array. Adapt query for editor board home.
+- Yellow status in ES is fine, it will turn green only if you set a cluster of three node.
+- Add more like this.
+- update the md-view to use the elastic properties
+- es facets: add suggestion
+- es facets: fix query_string
+- es facets: allow multiple fields
+- es facet highlight serach params
+- Fix indexing.
+- work on es facets
+- Add es client
+- Admin / Remove lucene related actions in tools.
+- Create draft index module and add index status checker
+- Remove stopword configuration.
+- rewrite toJon method
+- Fix compilation due to static removal.
+- Restore the majority of the test coverage. Check TODOES for tests related to search which need more work.
+- pretty
+- add a nominal test for indexation
+- Remove Lucene dependency and start removing old Jeeves services.
+- Enable Es module by default
+- Change ES type from 'string' to 'text'
+- Update to JEST 5.3.3 and make rebuild index works with ES.
+- Update to ES 6.2.4.

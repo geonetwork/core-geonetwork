@@ -24,18 +24,13 @@
 package org.fao.geonet.monitor.health;
 
 import com.yammer.metrics.core.HealthCheck;
-import io.searchbox.core.Search;
-import io.searchbox.core.SearchResult;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.HttpGet;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.ClientHttpResponse;
 
 /**

@@ -27,6 +27,7 @@ import net.sf.ehcache.CacheManager;
 import org.fao.geonet.ApplicationContextHolder;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -66,6 +67,7 @@ import static org.junit.Assert.fail;
     AbstractSpringDataTest.CLASSPATH_REPOSITORY_TEST_CONTEXT_XML})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Transactional(propagation = Propagation.REQUIRED)
+@Category(AbstractSpringDataTest.class)
 public abstract class AbstractSpringDataTest {
 
     public static final String CLASSPATH_CONFIG_SPRING_GEONETWORK_XML = "classpath*:config-spring-geonetwork.xml";

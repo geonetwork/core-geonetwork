@@ -59,13 +59,14 @@ public interface SourceRepository extends GeonetRepository<Source, String>, JpaS
     @Nullable
     Source findOneByUuid(@Nonnull String uuid);
 
+
     public
     @Nullable
     List<Source> findByLogo(@Nonnull String logo);
 
     public
     @Nullable
-    List<Source> findByType(@Nonnull SourceType sourceType);
+    List<Source> findByType(@Nonnull SourceType sourceType, Sort sort);
 
     public
     @Nullable

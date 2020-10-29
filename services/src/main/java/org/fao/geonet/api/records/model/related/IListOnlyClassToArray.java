@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * When a class contains only one property of type list, use this interface to simplify it in JSON
  * as an array only.
- *
+ * <p>
  * eg. in XML /parent/item/title in JSON {parent: []} instead of {parent: {item: []}}
  */
 @JsonSerialize(using = ListOnlyClassSerializer.class)

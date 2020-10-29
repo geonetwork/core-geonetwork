@@ -23,16 +23,18 @@
 
 package org.fao.geonet.api.usersearches;
 
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.usersearches.model.PaginatedUserSearchResponse;
 import org.fao.geonet.api.usersearches.model.UserSearchDto;
-import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.converter.UserSearchFeaturedTypeConverter;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
@@ -54,7 +56,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -62,12 +63,9 @@ import java.util.*;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-    "/{portal}/api/usersearches",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/usersearches"
+    "/{portal}/api/usersearches"
 })
-@Api(value = "usersearches",
-    tags = "usersearches",
+@Tag(name = "usersearches",
     description = "User custom searches operations")
 public class UserSearchesApi {
 
@@ -91,10 +89,9 @@ public class UserSearchesApi {
         binder.registerCustomEditor(UserSearchFeaturedType.class, new UserSearchFeaturedTypeConverter());
     }
 
-    @ApiOperation(
-        value = "Get user custom searches",
-        notes = "",
-        nickname = "getUserCustomSearches")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get user custom searches",
+        description = "")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
@@ -102,7 +99,7 @@ public class UserSearchesApi {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public List<UserSearchDto> getUserCustomSearches(
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
     ) {
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -118,7 +115,7 @@ public class UserSearchesApi {
 
             Set<Group> groups = new HashSet<>();
             userGroups.forEach(us -> groups.add(us.getGroup()));
-            userSearchesList= userSearchRepository.findAllByGroupsInOrCreator(groups, session.getPrincipal());
+            userSearchesList = userSearchRepository.findAllByGroupsInOrCreator(groups, session.getPrincipal());
         }
 
         List<UserSearchDto> customSearchDtoList = new ArrayList<>();
@@ -128,20 +125,19 @@ public class UserSearchesApi {
     }
 
 
-    @ApiOperation(
-        value = "Get user custom searches for all users (no paginated)",
-        notes = "",
-        nickname = "getAllUserCustomSearches")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get user custom searches for all users (no paginated)",
+        description = "")
     @RequestMapping(
         value = "/all",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     public List<UserSearchDto> getAllUserCustomSearches(
-        @ApiParam(
-            value = "Featured type search."
+        @Parameter(
+            description = "Featured type search."
         )
         @RequestParam(required = false) UserSearchFeaturedType featuredType) {
 
@@ -150,7 +146,7 @@ public class UserSearchesApi {
         if (featuredType == null) {
             userSearchesList = userSearchRepository.findAll();
         } else {
-            userSearchesList =  userSearchRepository.findAllByFeaturedType(featuredType);
+            userSearchesList = userSearchRepository.findAllByFeaturedType(featuredType);
         }
 
         List<UserSearchDto> customSearchDtoList = new ArrayList<>();
@@ -159,29 +155,28 @@ public class UserSearchesApi {
         return customSearchDtoList;
     }
 
-    @ApiOperation(
-        value = "Get user custom searches for all users (paginated)",
-        notes = "",
-        nickname = "getAllUserCustomSearchesPaginated")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get user custom searches for all users (paginated)",
+        description = "")
     @RequestMapping(
         value = "/allpaginated",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     public PaginatedUserSearchResponse getAllUserCustomSearchesPage(
-        @ApiParam(
-            value = "Featured  type search."
+        @Parameter(
+            description = "Featured  type search."
         )
         @RequestParam(required = false) UserSearchFeaturedType featuredType,
         @RequestParam(required = false, defaultValue = "")
             String search,
-        @ApiParam(value = "From page",
+        @Parameter(description = "From page",
             required = false)
         @RequestParam(required = false, defaultValue = "0")
             Integer offset,
-        @ApiParam(value = "Number of records to return",
+        @Parameter(description = "Number of records to return",
             required = false)
         @RequestParam(required = false, defaultValue = "10")
             Integer limit
@@ -194,7 +189,7 @@ public class UserSearchesApi {
             UserSearch_.creationDate);
 
         int page = (offset / limit);
-        final PageRequest pageRequest = new PageRequest(page, limit, sortBy);
+        final PageRequest pageRequest = PageRequest.of(page, limit, sortBy);
 
         Specification<UserSearch> searchSpec = null;
         if (StringUtils.isNotEmpty(search)) {
@@ -223,10 +218,9 @@ public class UserSearchesApi {
     }
 
 
-    @ApiOperation(
-        value = "Get featured user custom searches",
-        notes = "",
-        nickname = "getFeaturedUserCustomSearches")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get featured user custom searches",
+        description = "")
     @RequestMapping(
         value = "/featured",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -234,7 +228,7 @@ public class UserSearchesApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<UserSearchDto> getFeaturedUserCustomSearches(
-        @ApiParam(value = "Number of records to return",
+        @Parameter(description = "Number of records to return",
             required = false)
         @RequestParam(required = false)
             UserSearchFeaturedType type
@@ -244,7 +238,7 @@ public class UserSearchesApi {
             type = UserSearchFeaturedType.HOME;
         }
 
-        List<UserSearch>  userSearchesList = userSearchRepository.findAllByFeaturedType(type);
+        List<UserSearch> userSearchesList = userSearchRepository.findAllByFeaturedType(type);
 
         List<UserSearchDto> customSearchDtoList = new ArrayList<>();
         userSearchesList.forEach(u -> customSearchDtoList.add(UserSearchDto.from(u)));
@@ -253,10 +247,9 @@ public class UserSearchesApi {
     }
 
 
-    @ApiOperation(
-        value = "Get custom search",
-        notes = "",
-        nickname = "getUserCustomSearch")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get custom search",
+        description = "")
     @RequestMapping(
         value = "/{searchIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -265,12 +258,12 @@ public class UserSearchesApi {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public UserSearchDto getUserCustomSearch(
-        @ApiParam(
-            value = API_PARAM_USERSEARCH_IDENTIFIER
+        @Parameter(
+            description = API_PARAM_USERSEARCH_IDENTIFIER
         )
         @PathVariable
             Integer searchIdentifier,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
     ) {
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -291,26 +284,25 @@ public class UserSearchesApi {
     }
 
 
-    @ApiOperation(
-        value = "Creates a user search",
-        notes = "Creates a user search.",
-        nickname = "createUserCustomSearch")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Creates a user search",
+        description = "Creates a user search.")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("isAuthenticated()")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "User search created.")
+        @ApiResponse(responseCode = "201", description = "User search created.")
     })
     @ResponseBody
     public ResponseEntity<Integer> createUserCustomSearch(
-        @ApiParam(
-            value = API_PARAM_USERSEARCH_DETAILS
+        @Parameter(
+            description = API_PARAM_USERSEARCH_DETAILS
         )
         @RequestBody
             UserSearchDto userSearchDto,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
     ) {
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -343,44 +335,44 @@ public class UserSearchesApi {
     }
 
 
-    @ApiOperation(
-        value = "Update a user search",
-        notes = "",
-        authorizations = {
-            @Authorization(value = "basicAuth")
-        },
-        nickname = "updateCustomUserSearch")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Update a user search",
+        description = ""
+        //       authorizations = {
+        //           @Authorization(value = "basicAuth")
+        //      })
+    )
     @RequestMapping(
         value = "/{searchIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT
     )
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "User search  updated."),
-        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
+        @ApiResponse(responseCode = "204", description = "User search  updated."),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
     @ResponseBody
     public void updateCustomUserSearch(
-        @ApiParam(
-            value = API_PARAM_USERSEARCH_IDENTIFIER
+        @Parameter(
+            description = API_PARAM_USERSEARCH_IDENTIFIER
         )
         @PathVariable
             Integer searchIdentifier,
-        @ApiParam(
-            value = API_PARAM_USERSEARCH_DETAILS
+        @Parameter(
+            description = API_PARAM_USERSEARCH_DETAILS
         )
         @RequestBody
             UserSearchDto userSearchDto,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
 
-        final UserSearch existing = userSearchRepository.findOne(searchIdentifier);
-        if (existing == null) {
+        final Optional<UserSearch> existing = userSearchRepository.findById(searchIdentifier);
+        if (!existing.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 MSG_USERSEARCH_WITH_IDENTIFIER_NOT_FOUND, searchIdentifier
             ));
@@ -404,10 +396,9 @@ public class UserSearchesApi {
     }
 
 
-    @ApiOperation(
-        value = "Delete a user search",
-        notes = "Deletes a user search by identifier.",
-        nickname = "deleteUserCustomSearch")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Delete a user search",
+        description = "Deletes a user search by identifier.")
     @RequestMapping(value = "/{searchIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.DELETE)
@@ -415,12 +406,12 @@ public class UserSearchesApi {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public ResponseEntity<String> deleteUserCustomSerach(
-        @ApiParam(
-            value = "Search identifier."
+        @Parameter(
+            description = "Search identifier."
         )
         @PathVariable
             Integer searchIdentifier,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
     ) {
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -429,10 +420,10 @@ public class UserSearchesApi {
         UserSearch userSearch = retrieveUserSearch(userSearchRepository, searchIdentifier);
 
         if (myProfile.equals(Profile.Administrator)) {
-            userSearchRepository.delete(searchIdentifier);
+            userSearchRepository.deleteById(searchIdentifier);
         } else {
             if (userSearch.getCreator().getId() == session.getUserIdAsInt()) {
-                userSearchRepository.delete(searchIdentifier);
+                userSearchRepository.deleteById(searchIdentifier);
             } else {
                 throw new IllegalArgumentException("You don't have rights to delete the user search");
             }
@@ -452,12 +443,12 @@ public class UserSearchesApi {
      */
     private UserSearch retrieveUserSearch(UserSearchRepository userSearchRepository, Integer searchIdentifier)
         throws ResourceNotFoundEx {
-        UserSearch userSearch = userSearchRepository.findOne(searchIdentifier);
+        Optional<UserSearch> userSearch = userSearchRepository.findById(searchIdentifier);
 
-        if (userSearch == null) {
+        if (!userSearch.isPresent()) {
             throw new ResourceNotFoundEx("User search not found");
         }
 
-        return userSearch;
+        return userSearch.get();
     }
 }

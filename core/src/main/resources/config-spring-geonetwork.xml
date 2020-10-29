@@ -25,9 +25,11 @@
 <beans
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://www.springframework.org/schema/beans"
+  xmlns:util="http://www.springframework.org/schema/util"
   xmlns:context="http://www.springframework.org/schema/context"
   xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     ">
 
@@ -44,36 +46,44 @@
         lazy-init="true"/>
   <bean id="ServiceInfo" class="jeeves.server.dispatchers.ServiceInfo" scope="prototype"/>
 
+  <bean id="archiveAllMetadataJob" class="org.fao.geonet.kernel.backup.ArchiveAllMetadataJob" lazy-init="true"/>
 
   <bean id="AccessManager" class="org.fao.geonet.kernel.AccessManager" lazy-init="true"/>
   <bean id="DataManager" class="org.fao.geonet.kernel.DataManager" lazy-init="true"/>
   <bean id="GeonetworkDataDirectory" class="org.fao.geonet.kernel.GeonetworkDataDirectory"
         lazy-init="true"/>
 
-  <bean id="luceneConfig" class="org.fao.geonet.kernel.search.LuceneConfig" lazy-init="true">
-    <constructor-arg ref="facets"/>
-    <constructor-arg ref="summaryTypes"/>
-  </bean>
-
   <bean id="translatorFactory" class="org.fao.geonet.kernel.search.TranslatorFactory"/>
 
   <bean id="urlAnalyzer" class="org.fao.geonet.kernel.url.UrlAnalyzer" lazy-init="true"/>
-  <bean id="urlChecker" class="org.fao.geonet.kernel.url.UrlChecker" lazy-init="true"/>
-  <bean id="SearchManager" class="org.fao.geonet.kernel.search.SearchManager" lazy-init="true"/>
-  <bean id="SearchLogger" class="org.fao.geonet.kernel.search.log.SearcherLogger" lazy-init="true"/>
-  <bean id="EsSearchManager" class="org.fao.geonet.kernel.search.EsSearchManager" lazy-init="true">
-    <property name="index" value="\${es.index.records}"/>
-    <property name="publicIndex" value="\${es.index.records_public}"/>
-    <property name="indexType" value="\${es.index.records.type}"/>
+
+  <bean id="urlChecker" class="org.fao.geonet.kernel.url.UrlChecker" lazy-init="true">
+    <property name="UserAgent" value="${urlChecker.UserAgent}"/>
   </bean>
-  <bean id="LuceneIndexLanguageTracker"
-        class="org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker" lazy-init="true"/>
+
+  <bean id="SearchLogger" class="org.fao.geonet.kernel.search.log.SearcherLogger" lazy-init="true"/>
+
+
+  <util:map id="indexList">
+    <entry key="records" value="\${es.index.records}"/>
+    <entry key="features" value="\${es.index.features}"/>
+    <entry key="searchlogs" value="\${es.index.searchlogs}"/>
+  </util:map>
+
+  <bean id="EsSearchManager"
+        class="org.fao.geonet.kernel.search.EsSearchManager"
+        lazy-init="false">
+    <property name="indexList" ref="indexList"/>
+  </bean>
+
+
+  <bean id="esClient"
+        class="org.fao.geonet.index.es.EsRestClient"/>
+
   <bean id="HarvesterSettingsManager" class="org.fao.geonet.kernel.setting.HarvesterSettingsManager"
         lazy-init="true"/>
   <bean id="SettingInfo" class="org.fao.geonet.kernel.setting.SettingInfo" lazy-init="true"/>
   <bean id="SettingManager" class="org.fao.geonet.kernel.setting.SettingManager" lazy-init="true"/>
-  <bean id="MetadataNotifierManager" class="org.fao.geonet.notifier.MetadataNotifierManager"
-        lazy-init="true"/>
   <bean id="IsoLanguagesMapper" class="org.fao.geonet.languages.IsoLanguagesMapper"
         lazy-init="true"/>
   <bean id="selectionManager" class="org.fao.geonet.kernel.SelectionManager" lazy-init="true"/>
@@ -83,6 +93,31 @@
         scope="singleton"/>
   <bean id="schematronValidatorExternalMd" class="org.fao.geonet.kernel.SchematronValidatorExternalMd" lazy-init="false"
         scope="singleton"/>
+
+  <bean name="indexStatus"
+        class="org.fao.geonet.index.Status"
+        scope="singleton">
+    <constructor-arg value="index"/>
+  </bean>
+
+  <bean name="indexStatusChecker"
+        class="org.fao.geonet.index.es.EsServerStatusChecker"/>
+
+  <!-- Task for index status checker -->
+  <bean name="indexStatusJob"
+        class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+    <property name="jobClass"
+              value="org.fao.geonet.index.es.EsServerStatusChecker"/>
+  </bean>
+
+  <!-- Scheduling of the index status checker -->
+  <bean id="indexStatusTrigger"
+        class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="jobDetail" ref="indexStatusJob"/>
+    <property name="cronExpression" value="${es.index.checker.interval}"/>
+    <property name="startDelay" value="0"/>
+  </bean>
+
 
   <!-- List of records to index in a moment ...-->
   <bean id="indexingList"
@@ -147,6 +182,7 @@
     </property>
     <property name="triggers">
       <list>
+        <ref bean="indexStatusTrigger"/>
         <ref bean="indexingTaskTrigger"/>
         <ref bean="withHeldTaskTrigger"/>
         <ref bean="watchListNotificationTaskTrigger"/>
@@ -168,13 +204,6 @@
         lazy-init="true"
         scope="prototype"/>
 
-  <bean id="MetadataNotifierTask"
-        class="org.fao.geonet.notifier.MetadataNotifierTask"
-        lazy-init="true" scope="prototype"/>
-
-  <bean id="MetadataNotifierClient"
-        class="org.fao.geonet.notifier.MetadataNotifierClient"
-        lazy-init="true" scope="prototype"/>
 
   <bean id="backupMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
     <property name="jobDetail">

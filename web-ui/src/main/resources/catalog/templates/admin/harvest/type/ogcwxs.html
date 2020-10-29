@@ -48,7 +48,7 @@
       <select id="gn-harvest-settings-ogc-advanced-template-list"
               class="form-control"
               data-ng-model="harvesterSelected.options.serviceTemplateUuid"
-              data-ng-options="t['geonet:info'].uuid as t.getTitle() for t in ogcwxsTemplates">
+              data-ng-options="t._id as t._source.resourceTitleObject.default for t in ogcwxsTemplates">
       </select>
       <p class="help-block" data-translate="">ogcwxs-serviceTemplateUuidHelp</p>
     </div>
@@ -91,7 +91,7 @@
         <select id="gn-harvest-settings-ogc-advanced-records-template-list"
                 class="form-control"
                 data-ng-model="harvesterSelected.options.datasetTemplateUuid"
-                data-ng-options="t['geonet:info'].uuid as t.getTitle() for t in ogcwxsDatasetTemplates">
+                data-ng-options="t._id as t._source.resourceTitleObject.default for t in ogcwxsDatasetTemplates">
         </select>
         <!--
         TODO: This need more work as it requires changes in the XSL transformation

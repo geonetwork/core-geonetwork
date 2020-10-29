@@ -1,14 +1,14 @@
 <div>
   <form class="form-horizontal" role="form"
         data-ng-search-form="">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+    <input type="hidden" name="_csrf" value="{{csrf}}"/>
     <div class="onlinesrc-container">
 
       <div class="form-group gn-required" ng-show="::ctrl.associationTypes.length">
-        <label class="col-sm-3 control-label">
+        <label class="col-sm-2 control-label">
           <span data-translate="">associationType</span>
         </label>
-        <div class="col-sm-5">
+        <div class="col-sm-10">
           <div data-schema-info-combo="codelist"
                data-schema-info-combo-values="ctrl.associationTypes"
                data-allow-blank="false"
@@ -17,10 +17,10 @@
         </div>
       </div>
       <div class="form-group" ng-show="::ctrl.initiativeTypes.length">
-        <label class="col-sm-3 control-label">
+        <label class="col-sm-2 control-label">
           <span data-translate="">initiativeType</span>
         </label>
-        <div class="col-sm-5">
+        <div class="col-sm-10">
           <div data-schema-info-combo="codelist"
                data-schema-info-combo-values="ctrl.initiativeTypes"
                data-selected-info="config.initiativeType"
@@ -30,6 +30,9 @@
         </div>
       </div>
       <div class="form-group">
+        <label class="col-sm-2 control-label">
+          <span data-translate="">chooseACatalogRecord</span>
+        </label>
         <div class="col-sm-10">
           <div class="input-group dropdown" id="siblingdd">
             <span class="input-group-addon">
@@ -40,31 +43,50 @@
                    data-toggle="dropdown"
                    data-ng-model="searchObj.any"
                    data-ng-model-options="modelOptions"
-                   placeholder="{{'search' | translate}}"/>
+                   autocomplete="off"
+                   placeholder="{{'anyPlaceHolder' | translate}}"
+                   aria-label="{{'anyPlaceHolder' | translate}}"/>
             <ul class="dropdown-menu" role="menu">
               <li data-ng-repeat="md in searchResults.records">
                 <a href=""
                    data-ng-click="addToSelection(md, config.associationType, config.initiativeType)">
-                  {{md.title || md.defaultTitle}}
+                  {{md.resourceTitle}}
                 </a>
               </li>
             </ul>
           </div>
         </div>
       </div>
-      <div>
-        <ul class="list-group">
-          <li class="list-group-item gn-record"
-              data-ng-repeat="obj in selection">
-            {{obj.md.title || obj.md.defaultTitle}}
-              <span><i>({{obj.associationType}}
-                <span data-ng-show="obj.initiativeType">/ {{obj.initiativeType}}</span>)
-              </i></span>
-            <a data-ng-click="removeFromSelection(obj)" href="">
-              <i class="btn fa fa-times text-danger pull-right"></i>
-            </a>
-          </li>
-        </ul>
+      <div class="form-group">
+        <div class="col-sm-12"
+             data-gn-remote-record-selector=""></div>
+      </div>
+      <div data-ng-if="selection.length > 0">
+        <h2 data-translate="">siblingListToAdd</h2>
+        <table class="table table-striped"
+               >
+          <thead>
+            <tr>
+              <th data-translate="">associationType</th>
+              <th data-translate="">initiativeType</th>
+              <th data-translate="">metadata</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-ng-repeat="obj in selection">
+              <td>{{obj.md.resourceTitle}}</td>
+              <td>{{obj.associationType | translate}}</td>
+              <td>{{obj.initiativeType | translate}}</td>
+              <td>
+                <a title="{{'removeFromSelection' | translate}}"
+                   data-ng-click="removeFromSelection(obj)" href="">
+                  <i class="btn fa fa-times text-danger"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div class="">
         <button type="button" class="btn navbar-btn btn-success"

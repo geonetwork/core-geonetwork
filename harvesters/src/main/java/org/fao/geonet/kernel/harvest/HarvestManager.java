@@ -163,5 +163,12 @@ public interface HarvestManager {
 
     void setReadOnly(boolean readOnly);
 
-    public ConfigurableApplicationContext getApplicationContext();
+    ConfigurableApplicationContext getApplicationContext();
+
+    /**
+     * Reschedule the active harvesters if their timezone is different than the one in
+     * {@link org.fao.geonet.kernel.setting.Settings#SYSTEM_SERVER_TIMEZONE}.
+     *
+     */
+    void rescheduleActiveHarvesters();
 }

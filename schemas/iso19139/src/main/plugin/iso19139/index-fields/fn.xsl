@@ -21,9 +21,51 @@
   -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:daobs="http://daobs.org"
                 exclude-result-prefixes="#all"
                 version="2.0">
+
+  <xsl:template name="build-tree-values">
+    <xsl:param name="values"/>
+    <xsl:param name="fieldName" as="xs:string"/>
+    <xsl:param name="thesaurus" as="xs:string"/>
+    <xsl:param name="language" as="xs:string?" select="'eng'"/>
+    <xsl:param name="allTreeField" as="xs:boolean"/>
+
+    <xsl:variable name="paths">
+      <xsl:for-each select="$values">
+        <xsl:variable name="keywordsWithHierarchy"
+                      select="util:getKeywordHierarchy(normalize-space(.), $thesaurus, $language)"/>
+
+        <xsl:if test="count($keywordsWithHierarchy) > 0">
+          <xsl:for-each select="$keywordsWithHierarchy">
+            <xsl:variable name="path" select="tokenize(., '\^')"/>
+            <xsl:for-each select="$path">
+              <xsl:variable name="position"
+                            select="position()"/>
+              <value><xsl:value-of select="string-join($path[position() &lt;= $position], '^')"/></value>
+            </xsl:for-each>
+          </xsl:for-each>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
+
+    <xsl:for-each-group select="$paths/*" group-by=".">
+      <xsl:sort select="."/>
+      <xsl:if test="$fieldName != ''">
+        <xsl:element name="{$fieldName}">
+          <xsl:value-of select="."/>
+        </xsl:element>
+      </xsl:if>
+
+      <xsl:if test="$allTreeField">
+        <xsl:element name="keywords_tree">
+          <xsl:value-of select="."/>
+        </xsl:element>
+      </xsl:if>
+    </xsl:for-each-group>
+  </xsl:template>
 
   <xsl:function name="daobs:search-in" as="node()*">
     <xsl:param name="list" as="node()*"/>

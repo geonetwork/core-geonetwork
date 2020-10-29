@@ -6,7 +6,7 @@
                 version="1.0"
 >
 
-  <xsl:include href="modal.xsl"/>
+  <!--<xsl:include href="modal.xsl"/>-->
   <xsl:include href="metadata.xsl"/>
 
   <!--
@@ -15,7 +15,7 @@
   <xsl:template name="content">
 
     <xsl:call-template name="formLayout">
-      <xsl:with-param name="title" select="/root/gui/strings/download"/>
+      <xsl:with-param name="title" select="/root/gui/strings/filedisclaimer/download"/>
       <xsl:with-param name="content">
         <form id="feedbackf" name="feedbackf" accept-charset="UTF-8" method="post">
           <input type="hidden" name="id" value="{/root/response/id}"/>
@@ -40,24 +40,24 @@
                   <xsl:otherwise>
                     <!-- generic stuff from strings.xml -->
                     <h2>
-                      <xsl:value-of select="/root/gui/strings/copyright1"/>
+                      <xsl:value-of select="/root/gui/strings/filedisclaimer/copyright1"/>
                     </h2>
-                    <xsl:copy-of select="/root/gui/strings/copyright2"/>
+                    <xsl:copy-of select="/root/gui/strings/filedisclaimer/copyright2"/>
                     <p/>
-                    <xsl:value-of select="/root/gui/strings/copyright3"/>
+                    <xsl:value-of select="/root/gui/strings/filedisclaimer/copyright3"/>
                     <p/>
-                    <xsl:copy-of select="/root/gui/strings/feedbackTopics"/>
+                    <xsl:copy-of select="/root/gui/strings/filedisclaimer/feedbackTopics"/>
                     <h2>
-                      <xsl:value-of select="/root/gui/strings/disclaimer1"/>
+                      <xsl:value-of select="/root/gui/strings/filedisclaimer/disclaimer1"/>
                     </h2>
-                    <xsl:value-of select="/root/gui/strings/disclaimer2"/>
+                    <xsl:value-of select="/root/gui/strings/filedisclaimer/disclaimer2"/>
                   </xsl:otherwise>
                 </xsl:choose>
               </td>
             </tr>
             <tr>
               <th class="padded">
-                <xsl:value-of select="/root/gui/strings/name"/>
+                <xsl:value-of select="/root/gui/strings/filedisclaimer/name"/>
               </th>
               <xsl:variable name="username"
                             select="normalize-space(concat(/root/response/name,' ',/root/response/surname))"/>
@@ -67,7 +67,7 @@
             </tr>
             <tr>
               <th class="padded">
-                <xsl:value-of select="/root/gui/strings/organisation"/>
+                <xsl:value-of select="/root/gui/strings/filedisclaimer/organisation"/>
               </th>
               <td class="padded">
                 <input class="content" type="text" name="org" size="60"
@@ -76,7 +76,7 @@
             </tr>
             <tr>
               <th class="padded">
-                <xsl:value-of select="/root/gui/strings/downloadEmail"/>
+                <xsl:value-of select="/root/gui/strings/filedisclaimer/downloadEmail"/>
               </th>
               <td class="padded">
                 <input class="content" type="text" name="email" size="60"
@@ -85,7 +85,7 @@
             </tr>
             <tr>
               <th class="padded" valign="top">
-                <xsl:value-of select="/root/gui/strings/feedbackReasonForDownload"/>
+                <xsl:value-of select="/root/gui/strings/filedisclaimer/feedbackReasonForDownload"/>
               </th>
               <td class="padded">
                 <textarea class="content" name="comments" cols="60" rows="4" wrap="soft"></textarea>
@@ -94,7 +94,7 @@
           </table>
           <div align="center">
             <b>
-              <xsl:value-of select="/root/gui/strings/acceptanceMessage"/>
+              <xsl:value-of select="/root/gui/strings/filedisclaimer/acceptanceMessage"/>
             </b>
           </div>
           <br/>

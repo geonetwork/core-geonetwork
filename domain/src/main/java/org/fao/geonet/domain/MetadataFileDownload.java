@@ -36,7 +36,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "MetadataFileDownloads",
-    indexes = { @Index(name = "idx_metadatafiledownloads_metadataid", columnList = "metadataid") })
+    indexes = { @Index(name = "ix_metadatafiledownloads_mdid", columnList = "metadataid") })
 @SequenceGenerator(name = MetadataFileDownload.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class MetadataFileDownload {
     static final String ID_SEQ_NAME = "metadata_filedownload_id_seq";

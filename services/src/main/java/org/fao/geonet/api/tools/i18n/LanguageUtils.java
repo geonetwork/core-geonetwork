@@ -52,6 +52,16 @@ public class LanguageUtils {
 //        }
 //    }
 
+    static public String locale2gnCode(String code) {
+        if (code.equals("fra")) {
+            return "fre";
+        } else if (code.equals("slk")) { // transforms ISO 639-2/T into ISO 639-2/B
+            return "slo";
+        } else {
+            return code;
+        }
+    }
+
     public Locale parseAcceptLanguage(final Enumeration<Locale> listOfLocales) {
         while (listOfLocales.hasMoreElements()) {
             Locale l = listOfLocales.nextElement();
@@ -65,16 +75,6 @@ public class LanguageUtils {
     public String getIso3langCode(Enumeration<Locale> locales) {
         Locale l = parseAcceptLanguage(locales);
         return locale2gnCode(l.getISO3Language());
-    }
-
-    static public String locale2gnCode (String code) {
-        if (code.equals("fra")) {
-            return "fre";
-        } else if (code.equals("slk")) { // transforms ISO 639-2/T into ISO 639-2/B
-            return "slo";
-        } else {
-            return code;
-        }
     }
 
     public Locale parseAcceptLanguage(final Locale locale) {

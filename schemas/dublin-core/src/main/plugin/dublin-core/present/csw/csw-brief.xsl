@@ -27,8 +27,6 @@
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 version="1.0">
 
-  <xsl:param name="displayInfo"/>
-
   <xsl:template match="simpledc">
     <xsl:variable name="info" select="geonet:info"/>
     <csw:BriefRecord>
@@ -50,12 +48,6 @@
           <xsl:value-of select="."/>
         </dc:type>
       </xsl:for-each>
-
-      <!-- GeoNetwork elements added when resultType is equal to results_with_summary -->
-      <xsl:if test="$displayInfo = 'true'">
-        <xsl:copy-of select="$info"/>
-      </xsl:if>
-
     </csw:BriefRecord>
   </xsl:template>
 </xsl:stylesheet>

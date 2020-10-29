@@ -17,7 +17,7 @@
           <form id="gn-settings">
             <div>
               <label>
-                <input type="checkbox" name="system.csw.enable"
+                <input type="checkbox" name="system/csw/enable"
                       value="{{cswSettings['system/csw/enable']}}"
                       data-ng-model="cswSettings['system/csw/enable']"/>
                 <span>{{'system/csw/enable' | translate}}</span>
@@ -34,9 +34,9 @@
                    id="serviceList">
                 <input class="form-control"
                         data-ng-model="cswSettings['system/csw/capabilityRecordUuid']"
-                        name="system.csw.capabilityRecordUuid"/>
+                        name="system/csw/capabilityRecordUuid"/>
                 <span class="input-group-addon">
-                  {{cswServiceRecord.title || cswServiceRecord.defaultTitle}}
+                  {{cswServiceRecord.resourceTitleObject.default}}
                 </span>
                 <div class="input-group-btn">
                   <button type="button" class="btn btn-default dropdown-toggle"
@@ -57,8 +57,8 @@
                     </li>
                     <li data-ng-repeat="md in searchResults.records">
                       <a href=""
-                         data-ng-click="cswSettings['system/csw/capabilityRecordUuid'] = md.getUuid()">
-                        {{md.title || md.defaultTitle}}
+                         data-ng-click="cswSettings['system/csw/capabilityRecordUuid'] = md.uuid">
+                        {{md.resourceTitleObject.default}}
                       </a>
                     </li>
                   </ul>
@@ -69,7 +69,7 @@
             </div>
             <div data-ng-show="cswSettings['system/csw/enable']">
               <label>
-                <input type="checkbox" name="system.csw.metadataPublic"
+                <input type="checkbox" name="system/csw/metadataPublic"
                       value="{{cswSettings['system/csw/metadataPublic']}}"
                       data-ng-model="cswSettings['system/csw/metadataPublic']"/>
                 <span>{{'system/csw/metadataPublic' | translate}}</span>
@@ -79,7 +79,7 @@
             </div>
             <div data-ng-show="cswSettings['system/csw/enable']">
               <label>
-                <input type="checkbox" name="system.csw.transactionUpdateCreateXPath"
+                <input type="checkbox" name="system/csw/transactionUpdateCreateXPath"
                       value="{{cswSettings['system/csw/transactionUpdateCreateXPath']}}"
                       data-ng-model="cswSettings['system/csw/transactionUpdateCreateXPath']"/>
                 <span>{{'system/csw/transactionUpdateCreateXPath' | translate}}</span>

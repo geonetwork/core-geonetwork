@@ -26,11 +26,9 @@
   xmlns:sec="http://www.springframework.org/schema/security"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans
-          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-
-
+          http://www.springframework.org/schema/beans/spring-beans.xsd
           http://www.springframework.org/schema/security
-          http://www.springframework.org/schema/security/spring-security-3.2.xsd"
+          http://www.springframework.org/schema/security/spring-security.xsd"
   xmlns="http://www.springframework.org/schema/beans">
 
   <alias name="filterChainProxy" alias="springSecurityFilterChain"/>
@@ -38,16 +36,10 @@
   <bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
     <constructor-arg>
       <list>
-        <sec:filter-chain pattern="/srv/swagger-resources/**" filters=""/>
-        <sec:filter-chain pattern="/srv/v2/**" filters=""/>
-
         <!-- TODO: This needs to be secured to not access private info -->
         <sec:filter-chain pattern="/index/**" filters=""/>
-
-        <sec:filter-chain pattern="/dashboards/**" filters=""/>
         <sec:filter-chain pattern="/jolokia/**" filters="securityContextPersistenceFilter, adminUserFilter"/>
-
-
+        <sec:filter-chain pattern="/dashboards/**" filters="securityContextPersistenceFilter, adminUserFilter"/>
         <sec:filter-chain pattern="/doc/**" filters=""/>
         <sec:filter-chain pattern="/apps/**" filters="" />
         <!-- wroAPI is protected for admin only
@@ -74,7 +66,8 @@
   </bean>
 
 
-  <bean id="coreFilterChain" class="org.springframework.security.web.DefaultSecurityFilterChain">
+  <bean id="coreFilterChain"
+        class="org.springframework.security.web.DefaultSecurityFilterChain">
     <constructor-arg>
       <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
         <constructor-arg value="/**"/>
@@ -84,6 +77,7 @@
       <ref bean="filterChainFilters"/>
     </constructor-arg>
   </bean>
+
   <bean id="filterChainFilters" class="java.util.ArrayList">
     <constructor-arg>
       <list>
@@ -132,7 +126,8 @@
     <property name="disableUrlRewriting" value="true" />
   </bean>
 
-  <bean class="org.fao.geonet.web.GeoNetworkHttpSessionRequestCache" id="requestCache">
+  <bean class="org.fao.geonet.web.GeoNetworkHttpSessionRequestCache"
+        id="requestCache">
     <property name="allowedUrlsPatterns">
       <set>
         <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/catalog.*</value>
@@ -167,7 +162,7 @@
         class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
         <property name="defaultTargetUrl" value="/"/>
         <property name="targetUrlParameter" value="redirectUrl"/>
-        <property name="requestCache" ref="requestCache" />
+        <property name="requestCache" ref="requestCache"/>
       </bean>
     </property>
     <property name="sessionAuthenticationStrategy">
@@ -212,14 +207,17 @@
     <property name="defaultTargetUrl" value="${logout.success.url}"></property>
     <property name="targetUrlParameter" value="redirectUrl"/>
   </bean>
+
   <bean id="requestCacheFilter"
-        class="org.springframework.security.web.savedrequest.RequestCacheAwareFilter"/>
+        class="org.springframework.security.web.savedrequest.RequestCacheAwareFilter">
+    <constructor-arg index="0" ref="requestCache"/>
+  </bean>
 
   <bean id="exceptionTranslationFilter"
         class="org.springframework.security.web.access.ExceptionTranslationFilter">
     <constructor-arg index="0" ref="authenticationEntryPoint"/>
+    <constructor-arg index="1" ref="requestCache"/>
     <property name="accessDeniedHandler" ref="accessDeniedHandler"/>
-    <property name="requestCache" ref="requestCache" />
   </bean>
 
   <bean id="defaultAuthenticationEntryPoint"
@@ -238,7 +236,9 @@
     </constructor-arg>
     <property name="defaultEntryPoint" ref="defaultAuthenticationEntryPoint" />
   </bean>
-  <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher" id="apiRequestMatcher">
+
+  <bean id="apiRequestMatcher"
+        class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
     <constructor-arg name="pattern" value="/*/api/**" />
   </bean>
 
@@ -368,11 +368,11 @@
         class="org.fao.geonet.security.web.csrf.GeonetworkCsrfSecurityRequestMatcher">
     <constructor-arg>
       <set>
-        <!-- CSW requests -->
         <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw-publication!?.*</value>
         <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw-.*</value>
         <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw!?.*</value>
-        <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.search!?</value>
+        <value>/[a-zA-Z0-9_\-]+/api/search/.*</value>
+        <value>/[a-zA-Z0-9_\-]+/api/site</value>
       </set>
     </constructor-arg>
   </bean>

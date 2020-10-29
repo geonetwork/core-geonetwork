@@ -31,10 +31,6 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 version="2.0" exclude-result-prefixes="#all">
 
-  <xsl:param name="displayInfo"/>
-
-  <!-- =================================================================== -->
-
   <!-- Convert ISO profile elements to their base type -->
   <xsl:template match="*[@gco:isoType]">
     <xsl:element name="{@gco:isoType}">
@@ -45,19 +41,14 @@
   <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
     <xsl:variable name="info" select="geonet:info"/>
     <xsl:element name="{if (@gco:isoType) then @gco:isoType else name()}">
+      <xsl:apply-templates select="@*"/>
+
       <xsl:apply-templates select="gmd:fileIdentifier"/>
       <xsl:apply-templates select="gmd:hierarchyLevel"/>
       <xsl:apply-templates select="gmd:identificationInfo"/>
 
-      <!-- GeoNetwork elements added when resultType is equal to results_with_summary -->
-      <xsl:if test="$displayInfo = 'true'">
-        <xsl:copy-of select="$info"/>
-      </xsl:if>
-
     </xsl:element>
   </xsl:template>
-
-  <!-- =================================================================== -->
 
   <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification|
                        gmd:identificationInfo/*[contains(@gco:isoType, 'MD_DataIdentification')]|
@@ -72,15 +63,11 @@
     </xsl:element>
   </xsl:template>
 
-  <!-- =================================================================== -->
-
   <xsl:template match="gmd:MD_BrowseGraphic">
     <xsl:copy>
       <xsl:apply-templates select="gmd:fileName"/>
     </xsl:copy>
   </xsl:template>
-
-  <!-- =================================================================== -->
 
   <xsl:template match="gmd:EX_Extent">
     <xsl:copy>
@@ -97,15 +84,11 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- =================================================================== -->
-
   <xsl:template match="gmd:CI_Citation">
     <xsl:copy>
       <xsl:apply-templates select="gmd:title"/>
     </xsl:copy>
   </xsl:template>
-
-  <!-- === copy template ================================================= -->
 
   <xsl:template match="@*|node()">
     <xsl:copy>

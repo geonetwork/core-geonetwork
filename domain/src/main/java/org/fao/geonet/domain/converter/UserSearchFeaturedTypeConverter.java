@@ -40,7 +40,7 @@ public class UserSearchFeaturedTypeConverter
 
     @Override
     public Character convertToDatabaseColumn(UserSearchFeaturedType attribute) {
-        return attribute.asChar();
+        return attribute == null ? null : attribute.asChar();
     }
 
     @Override

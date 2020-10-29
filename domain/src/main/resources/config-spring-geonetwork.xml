@@ -31,11 +31,13 @@
 
   <!-- Look up the JPA repositories -->
   <jpa:repositories base-package="org.fao.geonet.repository"
-                    factory-class="org.fao.geonet.repository.GeonetRepositoryFactoryBean"
+                    base-class="org.fao.geonet.repository.GeonetRepositoryImpl"
                     entity-manager-factory-ref="entityManagerFactory"
                     transaction-manager-ref="transactionManager"/>
 
-  <bean id="userNodeIdSetter" class="org.fao.geonet.entitylistener.UserNodeIdSetter"/>
+  <bean id="userNodeIdSetter"
+        class="org.fao.geonet.entitylistener.UserNodeIdSetter"/>
+
   <bean id="entityManagerFactory"
         class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
     <property name="dataSource" ref="jdbcDataSource"/>
@@ -44,17 +46,21 @@
     <property name="jpaPropertyMap" ref="jpaPropertyMap"/>
   </bean>
 
-  <bean id="generateDdl" class="java.lang.String" scope="singleton">
+  <bean id="generateDdl"
+        class="java.lang.String" scope="singleton">
     <constructor-arg value="true"/>
   </bean>
 
-  <bean lazy-init="true" id="jpaVendorAdapter"
-        class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+  <bean id="jpaVendorAdapter"
+        class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+        lazy-init="true">
     <property name="generateDdl" ref="generateDdl"/>
     <property name="showSql" value="false"/>
     <property name="database" ref="jpaVendorAdapterDatabaseParam"/>
   </bean>
-  <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+
+  <bean id="transactionManager"
+        class="org.springframework.orm.jpa.JpaTransactionManager">
     <property name="entityManagerFactory" ref="entityManagerFactory"/>
   </bean>
 </beans>

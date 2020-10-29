@@ -7,7 +7,7 @@ function showUsage
   echo -e "Usage: ./`basename $0 $1` schema_name git_schema_repository git_schema_branch"
   echo
   echo -e "Example:"
-  echo -e "\t./`basename $0 $1` iso19115-3 https://github.com/metadata101/iso19115-3 3.4.x"
+  echo -e "\t./`basename $0 $1` iso19139.ca.HNAP https://github.com/metadata101/iso19139.ca.HNAP 3.11.x"
   echo
 }
 
@@ -45,58 +45,118 @@ fi
 # Add schema module in schemas/pom.xml
 line=$(grep -n ${schema} schemas/pom.xml | cut -d: -f1)
 
-if [ ! $line ]
+if [ ! -n "$line" ]
 then
-  line=$(grep -n 'iso19139</module>' schemas/pom.xml | cut -d: -f1)
+  line=$(grep -n '</profiles>' schemas/pom.xml | cut -d: -f1)
+  insertLine=$(($line - 1))
 
   echo "Adding schema ${schema} to schemas/pom.xml"
 
-  sed $sedopt "${line} a\\
-    <module>${schema}</module>
-  " schemas/pom.xml
+  sed $sedopt -f /dev/stdin schemas/pom.xml << SED_SCRIPT
+  ${insertLine} a\\
+\    <profile>\\
+\      <id>schema-${schema}</id>\\
+\      <activation>\\
+\        <file><exists>${schema}</exists></file>\\
+\      </activation>\\
+\      <modules>\\
+\        <module>${schema}</module>\\
+\      </modules>\\
+\    </profile>
+SED_SCRIPT
 fi
 
 
 # Add schema dependency in web/pom.xml
 line=$(grep -n "schema-${schema}" web/pom.xml | cut -d: -f1)
 
-if [ ! $line ]
+if [ ! -n "$line" ]
 then
-  line=$(grep -n 'schema-iso19139</artifactId>' web/pom.xml | cut -d: -f1)
-  insertLine=$(($line + 2))
+  gnSchemasVersion='${project.version}'
+  basedir='${basedir}'
 
-  projectGroupId='${project.groupId}'
-  gnSchemasVersion='${gn.schemas.version}'
+  echo "Adding schema ${schema} dependency to web/pom.xml for schemaCopy"
 
-  echo "Adding schema ${schema} dependency to web/pom.xml"
+  line=$(grep -n '<!-- add schema_plugins -->' web/pom.xml | cut -d: -f1 | tail -1)
+  insertLine=$(($line))
+  sed $sedopt -f /dev/stdin web/pom.xml << SED_SCRIPT
+  ${insertLine} a\\
+\        <dependency>\\
+\          <groupId>org.geonetwork-opensource.schemas</groupId>\\
+\          <artifactId>schema-${schema}</artifactId>\\
+\          <version>${gnSchemasVersion}</version>\\
+\        </dependency>
+SED_SCRIPT
 
-  sed $sedopt "${insertLine} a\\
-<dependency>\\
-<groupId>${projectGroupId}</groupId>\\
-<artifactId>schema-${schema}</artifactId>\\
-<version>${gnSchemasVersion}</version>\\
-</dependency>
-  " web/pom.xml
+  echo "Adding schema ${schema} dependency to web/pom.xml for schemaUnpack"
+
+  line=$(grep -n '</profiles>' web/pom.xml | cut -d: -f1)
+  insertLine=$(($line - 1))
+  sed $sedopt -f /dev/stdin web/pom.xml << SED_SCRIPT
+  ${insertLine} a\\
+\    <profile>\\
+\      <id>schema-${schema}</id>\\
+\      <activation>\\
+\        <property><name>schemasCopy</name><value>!true</value></property>\\
+\        <file><exists>../schemas/${schema}</exists></file>\\
+\      </activation>\\
+\      <dependencies>\\
+\        <dependency>\\
+\          <groupId>org.geonetwork-opensource.schemas</groupId>\\
+\          <artifactId>schema-${schema}</artifactId>\\
+\          <version>${gnSchemasVersion}</version>\\
+\        </dependency>\\
+\      </dependencies>\\
+\      <build>\\
+\        <plugins>\\
+\          <plugin>\\
+\            <groupId>org.apache.maven.plugins</groupId>\\
+\            <artifactId>maven-dependency-plugin</artifactId>\\
+\            <executions>\\
+\              <execution>\\
+\                <id>${schema}-resources</id>\\
+\                <phase>process-resources</phase>\\
+\                <goals><goal>unpack</goal></goals>\\
+\                <configuration>\\
+\                  <artifactItems>\\
+\                    <artifactItem>\\
+\                      <groupId>org.geonetwork-opensource.schemas</groupId>\\
+\                      <artifactId>schema-${schema}</artifactId>\\
+\                      <type>zip</type>\\
+\                      <overWrite>false</overWrite>\\
+\                      <outputDirectory>\$\{schema-plugins.dir\}</outputDirectory>\\
+\                    </artifactItem>\\
+\                  </artifactItems>\\
+\                </configuration>\\
+\              </execution>\\
+\            </executions>\\
+\          </plugin>\\
+\        </plugins>\\
+\      </build>\\
+\    </profile>
+SED_SCRIPT
 fi
 
-
-# Add schema resources in web/pom.xml
-line=$(grep -n "schemas/${schema}/src/main/plugin</directory>" web/pom.xml | cut -d: -f1)
+# Add schema resources in service/pom.xml with test scope for unit tests
+line=$(grep -n "<artifactId>schema-${schema}</artifactId>" services/pom.xml | cut -d: -f1)
 
 if [ ! $line ]
 then
-  line=$(grep -n 'schemas/iso19139/src/main/plugin</directory>' web/pom.xml | cut -d: -f1)
-  finalLine=$(($line + 3))
+  line=$(grep -n '</dependencies>' services/pom.xml | cut -d: -f1)
+  finalLine=$(($line - 1))
 
-  projectBaseDir='${project.basedir}'
-  baseDir='${basedir}'
+  projectGroupId='${project.groupId}'
+  gnSchemasVersion='${project.version}'
 
-  echo "Adding schema ${schema} resources to web/pom.xml"
+  echo "Adding schema ${schema} resources to service/pom.xml"
 
-  sed $sedopt "${finalLine} a\\
- <resource>\\
-    <directory>${projectBaseDir}/../schemas/${schema}/src/main/plugin</directory>\\
-    <targetPath>${baseDir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>\\
-  </resource>
-  " web/pom.xml
+  sed $sedopt -f /dev/stdin services/pom.xml << SED_SCRIPT
+  ${finalLine} a\\
+\    <dependency>\\
+\      <groupId>${projectGroupId}</groupId>\\
+\      <artifactId>schema-${schema}</artifactId>\\
+\      <version>${gnSchemasVersion}</version>\\
+\      <scope>test</scope>\\
+\    </dependency>
+SED_SCRIPT
 fi

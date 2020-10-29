@@ -23,7 +23,7 @@
 
 package org.fao.geonet.component.csw;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
@@ -84,13 +84,14 @@ public class Transaction extends AbstractOperation implements CatalogService {
     static final String NAME = "Transaction";
     @Autowired
     SchemaManager _schemaManager;
+    @Autowired
     private SearchController _searchController;
     @Autowired
     private FieldMapper _fieldMapper;
 
     @Autowired
     public Transaction(ApplicationContext context) {
-        _searchController = new SearchController(context);
+
     }
 
 
@@ -287,7 +288,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
             dataMan.setOperation(context, id, "" + ReservedGroup.all.getId(), ReservedOperation.view);
         }
 
-        dataMan.indexMetadata(id, true, null);
+        dataMan.indexMetadata(id, true);
 
         documents.add(new InsertedMetadata(schema, id, xml));
 
@@ -535,11 +536,11 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
         ElementSetName setName = ElementSetName.BRIEF;
 
-        Pair<Element, Element> results = _searchController.search(context, 1, 100, ResultType.RESULTS,
-            OutputSchema.DEFAULT.toString(), setName, filterExpr, filterVersion, null, null, null, 0, null, null);
+        Element results = _searchController.search(context, 1, 100, ResultType.RESULTS,
+            OutputSchema.DEFAULT.toString(), setName, filterExpr, filterVersion, null, null, null, 0, null);
 
         @SuppressWarnings("unchecked")
-        List<Element> children = results.two().getChildren();
+        List<Element> children = results.getChildren();
         return children;
     }
 

@@ -74,8 +74,8 @@ public class SourceRepositoryTest extends AbstractSpringDataTest {
         Source source1 = _repo.save(newSource());
         Source source2 = _repo.save(newSource());
 
-        assertEquals(source1.getUuid(), _repo.findOne(source1.getUuid()).getUuid());
-        assertEquals(source2.getUuid(), _repo.findOne(source2.getUuid()).getUuid());
+        assertEquals(source1.getUuid(), _repo.findById(source1.getUuid()).get().getUuid());
+        assertEquals(source2.getUuid(), _repo.findById(source2.getUuid()).get().getUuid());
     }
 
     public Source newSource() {

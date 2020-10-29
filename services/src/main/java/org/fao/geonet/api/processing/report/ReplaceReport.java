@@ -33,7 +33,7 @@ import java.util.List;
  * @author Jose García
  */
 public class ReplaceReport extends Report {
-    private List<ReplaceEntryChange> elementChanges;
+    private final List<ReplaceEntryChange> elementChanges;
 
     public ReplaceReport(List<Element> changes) {
         super("List of changes");

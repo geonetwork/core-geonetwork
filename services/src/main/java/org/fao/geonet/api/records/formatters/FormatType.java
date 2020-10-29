@@ -41,7 +41,7 @@ public enum FormatType {
     testpdf("application/test-pdf");
     public final String contentType;
 
-    private FormatType(String contentType) {
+    FormatType(String contentType) {
         this.contentType = contentType;
     }
 
@@ -51,7 +51,7 @@ public enum FormatType {
      */
     public static FormatType find(String acceptHeader) {
         if (acceptHeader != null) {
-            List<String> accept = Arrays.asList(acceptHeader.toLowerCase().split(","));
+            String[] accept = acceptHeader.toLowerCase().split(",");
             for (String h : accept) {
                 for (FormatType c : values()) {
                     if (h.startsWith(c.contentType)) {

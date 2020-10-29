@@ -59,8 +59,8 @@
                      any: '',
                      from: 1,
                      to: 50,
-                     sortBy: 'title',
-                     sortOrder: 'reverse'
+                     sortBy: 'resourceTitleObject.default.keyword',
+                     sortOrder: ''
                    }
                  };
 
@@ -105,8 +105,8 @@
 
                  scope.setSource = function(r) {
                    if (angular.isObject(r)) {
-                     scope.sourceRecordTitle = r.title || r.defaultTitle || '';
-                     scope.sourceRecord = r['geonet:info'].uuid;
+                     scope.sourceRecordTitle = r.resourceTitle || '';
+                     scope.sourceRecord = r.uuid;
                    } else {
                      scope.sourceRecordTitle = null;
                      scope.sourceRecord = null;
@@ -117,7 +117,7 @@
                  scope.getFragments = function() {
                    scope.fragments = [];
                    $http.post(
-                    '../api/0.1/records/' + scope.sourceRecord +
+                    '../api/records/' + scope.sourceRecord +
                     '/query/' + scope.query, {}).then(function(r) {
                      if (r.status === 200) {
                        scope.fragments = {};

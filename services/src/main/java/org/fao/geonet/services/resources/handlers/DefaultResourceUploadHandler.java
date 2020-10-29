@@ -23,10 +23,7 @@
 
 package org.fao.geonet.services.resources.handlers;
 
-import com.google.common.io.Closer;
-
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Util;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
@@ -35,9 +32,7 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
@@ -49,7 +44,7 @@ import java.nio.file.Path;
 
 /**
  * Class that implements OMNR upload custom behavior.
- *
+ * <p>
  * - Stores upload information for reporting.
  *
  * @author josegar74
@@ -57,21 +52,21 @@ import java.nio.file.Path;
 public class DefaultResourceUploadHandler implements IResourceUploadHandler {
 
     private static void moveFile(final ServiceContext context, final int metadataId, final String fileName, final InputStream is,
-            final String access, final String overwrite) throws Exception {
+                                 final String access, final String overwrite) throws Exception {
         final Store store = context.getBean("resourceStore", Store.class);
         final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
         final String uuid = metadataUtils.getMetadataUuid(Integer.toString(metadataId));
         MetadataResourceVisibility visibility = MetadataResourceVisibility.parse(access);
         if (overwrite.equals("no") && store.getResourceDescription(context, uuid, visibility, fileName, true) != null) {
             throw new Exception("File upload unsuccessful because "
-                    + fileName + " already exists and overwrite was not permitted");
+                + fileName + " already exists and overwrite was not permitted");
         }
         store.putResource(context, uuid, fileName, is, null, visibility, true);
     }
 
 
     private static void moveFile(final ServiceContext context, final int metadataId, final String fileName, final Path uploadDir,
-            final String access, final String overwrite) throws Exception {
+                                 final String access, final String overwrite) throws Exception {
         final Store store = context.getBean("resourceStore", Store.class);
         final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
         final String uuid = metadataUtils.getMetadataUuid(Integer.toString(metadataId));
@@ -80,7 +75,7 @@ public class DefaultResourceUploadHandler implements IResourceUploadHandler {
             MetadataResourceVisibility visibility = MetadataResourceVisibility.parse(access);
             if (overwrite.equals("no") && store.getResourceDescription(context, uuid, visibility, fileName, true) != null) {
                 throw new Exception("File upload unsuccessful because "
-                        + fileName + " already exists and overwrite was not permitted");
+                    + fileName + " already exists and overwrite was not permitted");
             }
             store.putResource(context, uuid, source, visibility);
         } finally {

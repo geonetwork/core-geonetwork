@@ -29,6 +29,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.support.JpaEntityInformation;
+import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,12 +62,20 @@ public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializabl
     ID> implements GeonetRepository<T, ID> {
 
     private final Class<T> _entityClass;
+    private final JpaEntityInformation<T, ?> _entityInformation;
     protected EntityManager _entityManager;
 
+    public GeonetRepositoryImpl(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
+        super(entityInformation, entityManager);
+        this._entityManager = entityManager;
+        this._entityInformation = entityInformation;
+        this._entityClass = getDomainClass();
+    }
 
-    protected GeonetRepositoryImpl(Class<T> domainClass, EntityManager entityManager) {
+    public GeonetRepositoryImpl(Class<T> domainClass, EntityManager entityManager) {
         super(domainClass, entityManager);
         this._entityManager = entityManager;
+        this._entityInformation = JpaEntityInformationSupport.getEntityInformation(domainClass, entityManager);
         this._entityClass = domainClass;
     }
 
@@ -91,7 +101,7 @@ public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializabl
 
         final TypedQuery<T> typedQuery = entityManager.createQuery(query);
         if (pageable != null) {
-            typedQuery.setFirstResult(pageable.getOffset());
+            typedQuery.setFirstResult(Math.toIntExact(pageable.getOffset()));
             typedQuery.setMaxResults(pageable.getPageSize());
         }
         for (T t : typedQuery.getResultList()) {
@@ -176,7 +186,7 @@ public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializabl
     @Nonnull
     @Override
     public Element findAllAsXml(final Specification<T> specification, final Sort sort) {
-        PageRequest request = new PageRequest(0, Integer.MAX_VALUE, sort);
+        PageRequest request = PageRequest.of(0, Integer.MAX_VALUE, sort);
         return findAllAsXml(_entityManager, _entityClass, specification, request);
     }
 }

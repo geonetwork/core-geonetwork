@@ -125,7 +125,7 @@ public class SchematronServiceIntegrationTest extends AbstractSchematronServiceI
 
         assertEquals("ok", result.getName());
 
-        assertEquals(newPriority, _schematronRepository.findOne(id).getDisplayPriority());
+        assertEquals(newPriority, _schematronRepository.findById(id).get().getDisplayPriority());
     }
 
     @Test(expected = UnsupportedOperationException.class)

@@ -267,7 +267,7 @@
                 <gmd:MD_Identifier>
                   <gmd:code>
                     <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                                xlink:href="http://sdi.eea.europa.eu/internal-catalogue/srv/eng/thesaurus.download?ref=external.theme.httpinspireeceuropaeutheme-theme">
+                                xlink:href="http://sdi.eea.europa.eu/internal-catalogue/srv/api/registries/vocabularies/external.theme.httpinspireeceuropaeutheme-theme">
                       geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme
                     </gmx:Anchor>
                   </gmd:code>
@@ -320,7 +320,7 @@
                 <gmd:MD_Identifier>
                   <gmd:code>
                     <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                                xlink:href="http://sdi.eea.europa.eu/internal-catalogue/srv/eng/thesaurus.download?ref=external.theme.gemet">
+                                xlink:href="http://sdi.eea.europa.eu/internal-catalogue/srv/api/registries/vocabularies/external.theme.gemet">
                       geonetwork.thesaurus.external.theme.gemet
                     </gmx:Anchor>
                   </gmd:code>

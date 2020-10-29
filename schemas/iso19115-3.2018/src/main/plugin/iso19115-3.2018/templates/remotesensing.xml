@@ -1,0 +1,659 @@
+<mdb:MD_Metadata xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/2.0"
+                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+                 xmlns:mex="http://standards.iso.org/iso/19115/-3/mex/1.0"
+                 xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
+                 xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
+                 xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
+                 xmlns:mda="http://standards.iso.org/iso/19115/-3/mda/1.0"
+                 xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
+                 xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
+                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
+                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+                 xmlns:mpc="http://standards.iso.org/iso/19115/-3/mpc/1.0"
+                 xmlns:mdt="http://standards.iso.org/iso/19115/-3/mdt/2.0"
+                 xmlns:gml="http://www.opengis.net/gml/3.2"
+                 xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
+                 xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
+                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
+                 xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0"
+                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
+                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
+                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+                 xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
+                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+                 xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1">
+   <mdb:metadataIdentifier>
+      <mcc:MD_Identifier>
+         <mcc:code>
+            <gco:CharacterString>c37b183e-0257-401d-b09d-3e8b0697887f</gco:CharacterString>
+         </mcc:code>
+         <mcc:codeSpace>
+            <gco:CharacterString>urn:uuid</gco:CharacterString>
+         </mcc:codeSpace>
+      </mcc:MD_Identifier>
+  </mdb:metadataIdentifier>
+   <mdb:defaultLocale>
+      <lan:PT_Locale id="EN">
+         <lan:language>
+            <lan:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
+         </lan:language>
+         <lan:characterEncoding>
+            <lan:MD_CharacterSetCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_CharacterSetCode"
+                                     codeListValue="utf8"/>
+         </lan:characterEncoding>
+      </lan:PT_Locale>
+   </mdb:defaultLocale>
+   <mdb:contact>
+      <cit:CI_Responsibility>
+         <cit:role>
+            <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
+                             codeListValue="editor"/>
+         </cit:role>
+         <cit:party>
+            <cit:CI_Organisation>
+               <cit:name>
+                  <gco:CharacterString>CERSAT Exploitation</gco:CharacterString>
+               </cit:name>
+               <cit:contactInfo>
+                  <cit:CI_Contact>
+                     <cit:address>
+                        <cit:CI_Address>
+                           <cit:electronicMailAddress>
+                              <gco:CharacterString>fpaf@ifremer.fr</gco:CharacterString>
+                           </cit:electronicMailAddress>
+                        </cit:CI_Address>
+                     </cit:address>
+                  </cit:CI_Contact>
+               </cit:contactInfo>
+            </cit:CI_Organisation>
+         </cit:party>
+      </cit:CI_Responsibility>
+  </mdb:contact>
+   <mdb:dateInfo>
+      <cit:CI_Date>
+         <cit:date>
+            <gco:DateTime>2020-06-12T11:45:56</gco:DateTime>
+         </cit:date>
+         <cit:dateType>
+            <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                 codeListValue="revision"/>
+         </cit:dateType>
+      </cit:CI_Date>
+  </mdb:dateInfo>
+   <mdb:dateInfo>
+      <cit:CI_Date>
+         <cit:date>
+            <gco:DateTime>2018-03-31T19:13:30</gco:DateTime>
+         </cit:date>
+         <cit:dateType>
+            <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="creation"/>
+         </cit:dateType>
+      </cit:CI_Date>
+  </mdb:dateInfo>
+   <mdb:metadataStandard>
+      <cit:CI_Citation>
+         <cit:title>
+            <gco:CharacterString>ISO 19115-3:2018 - Remote Sensing</gco:CharacterString>
+         </cit:title>
+      </cit:CI_Citation>
+  </mdb:metadataStandard>
+   <mdb:metadataLinkage>
+      <cit:CI_OnlineResource>
+         <cit:linkage>
+            <gco:CharacterString>https://sextant-test.ifremer.fr/geonetwork/srv/api/records/c37b183e-0257-401d-b09d-3e8b0697887f</gco:CharacterString>
+         </cit:linkage>
+         <cit:function>
+            <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                                       codeListValue="completeMetadata"/>
+         </cit:function>
+      </cit:CI_OnlineResource>
+  </mdb:metadataLinkage>
+   <mdb:referenceSystemInfo>
+      <mrs:MD_ReferenceSystem>
+         <mrs:referenceSystemIdentifier>
+            <mcc:MD_Identifier>
+               <mcc:code>
+                  <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/4326</gco:CharacterString>
+               </mcc:code>
+               <mcc:description>
+                  <gco:CharacterString>WGS 84 (EPSG:4326)</gco:CharacterString>
+               </mcc:description>
+            </mcc:MD_Identifier>
+         </mrs:referenceSystemIdentifier>
+      </mrs:MD_ReferenceSystem>
+  </mdb:referenceSystemInfo>
+   <mdb:identificationInfo>
+      <mri:MD_DataIdentification>
+         <mri:citation>
+            <cit:CI_Citation>
+               <cit:title>
+                  <gco:CharacterString>Template Remote Sensing</gco:CharacterString>
+               </cit:title>
+               <cit:alternateTitle gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </cit:alternateTitle>
+               <cit:date>
+                  <cit:CI_Date>
+                     <cit:date>
+                        <gco:Date>2004-01-19</gco:Date>
+                     </cit:date>
+                     <cit:dateType>
+                        <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                             codeListValue="creation"/>
+                     </cit:dateType>
+                  </cit:CI_Date>
+               </cit:date>
+            </cit:CI_Citation>
+         </mri:citation>
+         <mri:abstract gco:nilReason="missing">
+            <gco:CharacterString/>
+         </mri:abstract>
+         <mri:spatialRepresentationType>
+            <mcc:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_SpatialRepresentationTypeCode"
+                                                  codeListValue="grid"/>
+         </mri:spatialRepresentationType>
+         <mri:spatialResolution>
+            <mri:MD_Resolution>
+               <mri:distance>
+                  <gco:Distance uom=""/>
+               </mri:distance>
+            </mri:MD_Resolution>
+         </mri:spatialResolution>
+         <mri:temporalResolution>
+            <gco:TM_PeriodDuration>P0Y0M0DT0H0M0S</gco:TM_PeriodDuration>
+         </mri:temporalResolution>
+         <mri:topicCategory>
+            <mri:MD_TopicCategoryCode>oceans</mri:MD_TopicCategoryCode>
+         </mri:topicCategory>
+         <mri:extent>
+            <gex:EX_Extent>
+               <gex:geographicElement>
+                  <gex:EX_GeographicBoundingBox>
+                     <gex:westBoundLongitude>
+                        <gco:Decimal/>
+                     </gex:westBoundLongitude>
+                     <gex:eastBoundLongitude>
+                        <gco:Decimal/>
+                     </gex:eastBoundLongitude>
+                     <gex:southBoundLatitude>
+                        <gco:Decimal/>
+                     </gex:southBoundLatitude>
+                     <gex:northBoundLatitude>
+                        <gco:Decimal/>
+                     </gex:northBoundLatitude>
+                  </gex:EX_GeographicBoundingBox>
+                  <gex:EX_GeographicDescription>
+                     <gex:geographicIdentifier>
+                        <mcc:MD_Identifier>
+                           <mcc:code gco:nilReason="missing">
+                              <gco:CharacterString/>
+                           </mcc:code>
+                        </mcc:MD_Identifier>
+                     </gex:geographicIdentifier>
+                  </gex:EX_GeographicDescription>
+               </gex:geographicElement>
+               <gex:temporalElement xlink:type="simple">
+                  <gex:EX_TemporalExtent>
+                     <gex:extent>
+                        <gml:TimePeriod gml:id="d19355e238a1052958">
+                           <gml:beginPosition/>
+                           <gml:endPosition/>
+                        </gml:TimePeriod>
+                     </gex:extent>
+                  </gex:EX_TemporalExtent>
+               </gex:temporalElement>
+            </gex:EX_Extent>
+         </mri:extent>
+         <mri:descriptiveKeywords>
+            <mri:MD_Keywords>
+               <mri:keyword>
+                  <gco:CharacterString>Oceanographic geographical features</gco:CharacterString>
+               </mri:keyword>
+               <mri:type>
+                  <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+                                          codeListValue="theme"/>
+               </mri:type>
+               <mri:thesaurusName>
+                  <cit:CI_Citation>
+                     <cit:title>
+                        <gco:CharacterString>GEMET - INSPIRE themes, version 1.0</gco:CharacterString>
+                     </cit:title>
+                     <cit:date>
+                        <cit:CI_Date>
+                           <cit:date>
+                              <gco:Date>2018-07-27</gco:Date>
+                           </cit:date>
+                           <cit:dateType>
+                              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                                   codeListValue="publication"/>
+                           </cit:dateType>
+                        </cit:CI_Date>
+                     </cit:date>
+                     <cit:identifier>
+                        <mcc:MD_Identifier>
+                           <mcc:code>
+                              <gcx:Anchor xlink:href="https://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.httpinspireeceuropaeutheme-theme">geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme</gcx:Anchor>
+                           </mcc:code>
+                        </mcc:MD_Identifier>
+                     </cit:identifier>
+                  </cit:CI_Citation>
+               </mri:thesaurusName>
+            </mri:MD_Keywords>
+         </mri:descriptiveKeywords>
+         <mri:descriptiveKeywords>
+            <mri:MD_Keywords>
+               <mri:keyword gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </mri:keyword>
+               <mri:type>
+                  <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+                                          codeListValue="theme"/>
+               </mri:type>
+               <mri:thesaurusName>
+                  <cit:CI_Citation>
+                     <cit:title>
+                        <gcx:Anchor xlink:href="http://custom.shared.obj.ch/concept#">Thèmatiques - ODATIS</gcx:Anchor>
+                     </cit:title>
+                     <cit:date>
+                        <cit:CI_Date>
+                           <cit:date>
+                              <gco:Date>2020-06-09</gco:Date>
+                           </cit:date>
+                           <cit:dateType>
+                              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                                   codeListValue="publication"/>
+                           </cit:dateType>
+                        </cit:CI_Date>
+                     </cit:date>
+                     <cit:identifier>
+                        <mcc:MD_Identifier>
+                           <mcc:code>
+                              <gcx:Anchor xlink:href="https://sextant-test.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.odatis_thematiques">geonetwork.thesaurus.local.theme.odatis_thematiques</gcx:Anchor>
+                           </mcc:code>
+                        </mcc:MD_Identifier>
+                     </cit:identifier>
+                  </cit:CI_Citation>
+               </mri:thesaurusName>
+            </mri:MD_Keywords>
+         </mri:descriptiveKeywords>
+         <mri:descriptiveKeywords>
+            <mri:MD_Keywords>
+               <mri:keyword gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </mri:keyword>
+               <mri:type>
+                  <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+                                          codeListValue="theme"/>
+               </mri:type>
+               <mri:thesaurusName>
+                  <cit:CI_Citation>
+                     <cit:title>
+                        <gcx:Anchor xlink:href="http://custom.shared.obj.ch/concept#">Cersat - Parameter</gcx:Anchor>
+                     </cit:title>
+                     <cit:date>
+                        <cit:CI_Date>
+                           <cit:date>
+                              <gco:Date>2020-06-09</gco:Date>
+                           </cit:date>
+                           <cit:dateType>
+                              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                                   codeListValue="publication"/>
+                           </cit:dateType>
+                        </cit:CI_Date>
+                     </cit:date>
+                     <cit:identifier>
+                        <mcc:MD_Identifier>
+                           <mcc:code>
+                              <gcx:Anchor xlink:href="https://sextant-test.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.cersat_parameter">geonetwork.thesaurus.local.theme.cersat_parameter</gcx:Anchor>
+                           </mcc:code>
+                        </mcc:MD_Identifier>
+                     </cit:identifier>
+                  </cit:CI_Citation>
+               </mri:thesaurusName>
+            </mri:MD_Keywords>
+         </mri:descriptiveKeywords>
+         <mri:descriptiveKeywords>
+            <mri:MD_Keywords>
+               <mri:keyword gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </mri:keyword>
+               <mri:type>
+                  <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+                                          codeListValue="theme"/>
+               </mri:type>
+               <mri:thesaurusName>
+                  <cit:CI_Citation>
+                     <cit:title>
+                        <gcx:Anchor xlink:href="http://custom.shared.obj.ch/concept#">Cersat - Project</gcx:Anchor>
+                     </cit:title>
+                     <cit:date>
+                        <cit:CI_Date>
+                           <cit:date>
+                              <gco:Date>2020-06-09</gco:Date>
+                           </cit:date>
+                           <cit:dateType>
+                              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                                   codeListValue="publication"/>
+                           </cit:dateType>
+                        </cit:CI_Date>
+                     </cit:date>
+                     <cit:identifier>
+                        <mcc:MD_Identifier>
+                           <mcc:code>
+                              <gcx:Anchor xlink:href="https://sextant-test.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.cersat_project">geonetwork.thesaurus.local.theme.cersat_project</gcx:Anchor>
+                           </mcc:code>
+                        </mcc:MD_Identifier>
+                     </cit:identifier>
+                  </cit:CI_Citation>
+               </mri:thesaurusName>
+            </mri:MD_Keywords>
+         </mri:descriptiveKeywords>
+         <mri:descriptiveKeywords>
+            <mri:MD_Keywords>
+               <mri:keyword gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </mri:keyword>
+               <mri:type>
+                  <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+                                          codeListValue="theme"/>
+               </mri:type>
+               <mri:thesaurusName>
+                  <cit:CI_Citation>
+                     <cit:title>
+                        <gcx:Anchor xlink:href="http://custom.shared.obj.ch/concept#">Cersat - Latency</gcx:Anchor>
+                     </cit:title>
+                     <cit:date>
+                        <cit:CI_Date>
+                           <cit:date>
+                              <gco:Date>2020-06-09</gco:Date>
+                           </cit:date>
+                           <cit:dateType>
+                              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                                   codeListValue="publication"/>
+                           </cit:dateType>
+                        </cit:CI_Date>
+                     </cit:date>
+                     <cit:identifier>
+                        <mcc:MD_Identifier>
+                           <mcc:code>
+                              <gcx:Anchor xlink:href="https://sextant-test.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.cersat_latency">geonetwork.thesaurus.local.theme.cersat_latency</gcx:Anchor>
+                           </mcc:code>
+                        </mcc:MD_Identifier>
+                     </cit:identifier>
+                  </cit:CI_Citation>
+               </mri:thesaurusName>
+            </mri:MD_Keywords>
+         </mri:descriptiveKeywords>
+         <mri:descriptiveKeywords>
+            <mri:MD_Keywords>
+               <mri:keyword gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </mri:keyword>
+               <mri:type>
+                  <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+                                          codeListValue="theme"/>
+               </mri:type>
+               <mri:thesaurusName>
+                  <cit:CI_Citation>
+                     <cit:title>
+                        <gcx:Anchor xlink:href="http://custom.shared.obj.ch/concept#">Cersat - GCMD parameter</gcx:Anchor>
+                     </cit:title>
+                     <cit:date>
+                        <cit:CI_Date>
+                           <cit:date>
+                              <gco:Date>2020-06-09</gco:Date>
+                           </cit:date>
+                           <cit:dateType>
+                              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                                   codeListValue="publication"/>
+                           </cit:dateType>
+                        </cit:CI_Date>
+                     </cit:date>
+                     <cit:identifier>
+                        <mcc:MD_Identifier>
+                           <mcc:code>
+                              <gcx:Anchor xlink:href="https://sextant-test.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.GCMDparameter">geonetwork.thesaurus.external.theme.GCMDparameter</gcx:Anchor>
+                           </mcc:code>
+                        </mcc:MD_Identifier>
+                     </cit:identifier>
+                  </cit:CI_Citation>
+               </mri:thesaurusName>
+            </mri:MD_Keywords>
+         </mri:descriptiveKeywords>
+         <mri:descriptiveKeywords>
+            <mri:MD_Keywords>
+               <mri:keyword gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </mri:keyword>
+               <mri:type>
+                  <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+                                          codeListValue="theme"/>
+               </mri:type>
+               <mri:thesaurusName>
+                  <cit:CI_Citation>
+                     <cit:title>
+                        <gcx:Anchor xlink:href="http://custom.shared.obj.ch/concept#">Centre de données ODATIS</gcx:Anchor>
+                     </cit:title>
+                     <cit:date>
+                        <cit:CI_Date>
+                           <cit:date>
+                              <gco:Date>2020-06-09</gco:Date>
+                           </cit:date>
+                           <cit:dateType>
+                              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                                   codeListValue="publication"/>
+                           </cit:dateType>
+                        </cit:CI_Date>
+                     </cit:date>
+                     <cit:identifier>
+                        <mcc:MD_Identifier>
+                           <mcc:code>
+                              <gcx:Anchor xlink:href="https://sextant-test.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.odatis_centre_donnees">geonetwork.thesaurus.local.theme.odatis_centre_donnees</gcx:Anchor>
+                           </mcc:code>
+                        </mcc:MD_Identifier>
+                     </cit:identifier>
+                  </cit:CI_Citation>
+               </mri:thesaurusName>
+            </mri:MD_Keywords>
+         </mri:descriptiveKeywords>
+         <mri:descriptiveKeywords>
+            <mri:MD_Keywords>
+               <mri:keyword gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </mri:keyword>
+               <mri:type>
+                  <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+                                          codeListValue="theme"/>
+               </mri:type>
+               <mri:thesaurusName>
+                  <cit:CI_Citation>
+                     <cit:title>
+                        <gcx:Anchor xlink:href="http://custom.shared.obj.ch/concept#">Variables ODATIS</gcx:Anchor>
+                     </cit:title>
+                     <cit:date>
+                        <cit:CI_Date>
+                           <cit:date>
+                              <gco:Date>2020-06-09</gco:Date>
+                           </cit:date>
+                           <cit:dateType>
+                              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                                   codeListValue="publication"/>
+                           </cit:dateType>
+                        </cit:CI_Date>
+                     </cit:date>
+                     <cit:identifier>
+                        <mcc:MD_Identifier>
+                           <mcc:code>
+                              <gcx:Anchor xlink:href="https://sextant-test.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.odatis_variables">geonetwork.thesaurus.local.theme.odatis_variables</gcx:Anchor>
+                           </mcc:code>
+                        </mcc:MD_Identifier>
+                     </cit:identifier>
+                  </cit:CI_Citation>
+               </mri:thesaurusName>
+            </mri:MD_Keywords>
+         </mri:descriptiveKeywords>
+         <mri:descriptiveKeywords>
+            <mri:MD_Keywords>
+               <mri:keyword gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </mri:keyword>
+               <mri:type>
+                  <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+                                          codeListValue="theme"/>
+               </mri:type>
+               <mri:thesaurusName>
+                  <cit:CI_Citation>
+                     <cit:title>
+                        <gcx:Anchor xlink:href="http://custom.shared.obj.ch/concept#">Type de jeux de donnée - ODATIS</gcx:Anchor>
+                     </cit:title>
+                     <cit:date>
+                        <cit:CI_Date>
+                           <cit:date>
+                              <gco:Date>2020-06-09</gco:Date>
+                           </cit:date>
+                           <cit:dateType>
+                              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                                   codeListValue="publication"/>
+                           </cit:dateType>
+                        </cit:CI_Date>
+                     </cit:date>
+                     <cit:identifier>
+                        <mcc:MD_Identifier>
+                           <mcc:code>
+                              <gcx:Anchor xlink:href="https://sextant-test.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.type_jeux_donnee">geonetwork.thesaurus.local.theme.type_jeux_donnee</gcx:Anchor>
+                           </mcc:code>
+                        </mcc:MD_Identifier>
+                     </cit:identifier>
+                  </cit:CI_Citation>
+               </mri:thesaurusName>
+            </mri:MD_Keywords>
+         </mri:descriptiveKeywords>
+         <mri:descriptiveKeywords>
+            <mri:MD_Keywords>
+               <mri:keyword gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </mri:keyword>
+               <mri:type>
+                  <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+                                          codeListValue="theme"/>
+               </mri:type>
+               <mri:thesaurusName>
+                  <cit:CI_Citation>
+                     <cit:title>
+                        <gcx:Anchor xlink:href="http://custom.shared.obj.ch/concept#">Thèmatiques - ODATIS</gcx:Anchor>
+                     </cit:title>
+                     <cit:date>
+                        <cit:CI_Date>
+                           <cit:date>
+                              <gco:Date>2020-06-09</gco:Date>
+                           </cit:date>
+                           <cit:dateType>
+                              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                                   codeListValue="publication"/>
+                           </cit:dateType>
+                        </cit:CI_Date>
+                     </cit:date>
+                     <cit:identifier>
+                        <mcc:MD_Identifier>
+                           <mcc:code>
+                              <gcx:Anchor xlink:href="https://sextant-test.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.odatis_thematiques">geonetwork.thesaurus.local.theme.odatis_thematiques</gcx:Anchor>
+                           </mcc:code>
+                        </mcc:MD_Identifier>
+                     </cit:identifier>
+                  </cit:CI_Citation>
+               </mri:thesaurusName>
+            </mri:MD_Keywords>
+         </mri:descriptiveKeywords>
+         <mri:resourceConstraints>
+            <mco:MD_LegalConstraints>
+               <mco:useLimitation>
+                  <gco:CharacterString>None</gco:CharacterString>
+               </mco:useLimitation>
+               <mco:accessConstraints>
+                  <mco:MD_RestrictionCode codeListValue="unrestricted"
+                                          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode"/>
+               </mco:accessConstraints>
+               <mco:useConstraints>
+                  <mco:MD_RestrictionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode"
+                                          codeListValue="otherRestrictions"/>
+               </mco:useConstraints>
+               <mco:otherConstraints gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </mco:otherConstraints>
+               <mco:otherConstraints gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </mco:otherConstraints>
+            </mco:MD_LegalConstraints>
+         </mri:resourceConstraints>
+         <mri:supplementalInformation gco:nilReason="missing">
+            <gco:CharacterString/>
+         </mri:supplementalInformation>
+      </mri:MD_DataIdentification>
+   </mdb:identificationInfo>
+   <mdb:contentInfo>
+      <mrc:MI_CoverageDescription>
+         <mrc:attributeDescription>
+            <gco:RecordType/>
+         </mrc:attributeDescription>
+         <mrc:processingLevelCode>
+            <mcc:MD_Identifier>
+               <mcc:code gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </mcc:code>
+               <mcc:version gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </mcc:version>
+               <mcc:description gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </mcc:description>
+            </mcc:MD_Identifier>
+         </mrc:processingLevelCode>
+         <mrc:rangeElementDescription/>
+      </mrc:MI_CoverageDescription>
+   </mdb:contentInfo>
+   <mdb:distributionInfo>
+      <mrd:MD_Distribution>
+         <mrd:distributionFormat>
+            <mrd:MD_Format>
+               <mrd:formatSpecificationCitation>
+                  <cit:CI_Citation>
+                     <cit:title gco:nilReason="missing">
+                        <gco:CharacterString/>
+                     </cit:title>
+                     <cit:edition gco:nilReason="missing">
+                        <gco:CharacterString/>
+                     </cit:edition>
+                  </cit:CI_Citation>
+               </mrd:formatSpecificationCitation>
+               <mrd:amendmentNumber gco:nilReason="missing">
+                  <gco:CharacterString/>
+               </mrd:amendmentNumber>
+            </mrd:MD_Format>
+         </mrd:distributionFormat>
+      </mrd:MD_Distribution>
+  </mdb:distributionInfo>
+   <mdb:dataQualityInfo>
+      <mdq:DQ_DataQuality>
+         <mdq:scope>
+            <mcc:MD_Scope>
+               <mcc:level>
+                  <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode"
+                                    codeListValue="series"/>
+               </mcc:level>
+            </mcc:MD_Scope>
+         </mdq:scope>
+      </mdq:DQ_DataQuality>
+  </mdb:dataQualityInfo>
+   <mdb:resourceLineage>
+      <mrl:LI_Lineage>
+         <mrl:statement gco:nilReason="missing">
+            <gco:CharacterString/>
+         </mrl:statement>
+      </mrl:LI_Lineage>
+  </mdb:resourceLineage>
+</mdb:MD_Metadata>

@@ -23,19 +23,17 @@
 
 package org.fao.geonet.kernel.search;
 
-import com.google.common.base.Optional;
-
 import org.fao.geonet.domain.Localized;
 import org.fao.geonet.entitylistener.GeonetworkEntityListener;
 import org.fao.geonet.entitylistener.PersistentEventType;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * A in-memory cache for facet translations.  This should be used by any translator that has slow
@@ -77,7 +75,7 @@ public class TranslatorCache {
             }
 
         }
-        this.cache.put(key, Optional.fromNullable(value));
+        this.cache.put(key, Optional.ofNullable(value));
     }
 
 

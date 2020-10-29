@@ -31,7 +31,7 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.persistence.criteria.*;
 
 /**
- * Specifications for querying MetadataIdentifierTemplate.
+ * Specification for querying MetadataIdentifierTemplate.
  *
  * @author Jose García
  */

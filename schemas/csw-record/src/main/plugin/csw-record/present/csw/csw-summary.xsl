@@ -27,11 +27,6 @@
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 version="1.0">
-
-  <xsl:param name="displayInfo"/>
-
-  <!-- ================================================================= -->
-
   <xsl:template match="csw:Record">
     <xsl:variable name="info" select="geonet:info"/>
     <csw:SummaryRecord>
@@ -126,23 +121,12 @@
           <xsl:value-of select="."/>
         </dc:rights>
       </xsl:for-each>
-
-      <!-- GeoNetwork elements added when resultType is equal to results_with_summary -->
-      <xsl:if test="$displayInfo = 'true'">
-        <xsl:copy-of select="$info"/>
-      </xsl:if>
-
     </csw:SummaryRecord>
   </xsl:template>
-
-  <!-- ================================================================= -->
 
   <xsl:template match="@*|node()">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
-
-  <!-- ================================================================= -->
-
 </xsl:stylesheet>

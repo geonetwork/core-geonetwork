@@ -33,7 +33,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
- * Specifications for querying HarvestHistoryRepository.
+ * Specification for querying HarvestHistoryRepository.
  * <p/>
  * User: Jesse Date: 9/20/13 Time: 3:34 PM
  */

@@ -39,6 +39,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.Optional;
 
 /**
  * Geonetwork has had several password storing mechanisms in the past and upgrading is a tricky
@@ -181,13 +182,13 @@ public class PasswordUtil {
     public static User updatePasswordWithNew(boolean matchOldPassword, String oldPassword,
                                              String newPassword, Integer iUserId, ApplicationContext appContext) throws SQLException, UserNotFoundEx {
         UserRepository repo = appContext.getBean(UserRepository.class);
-        User user = repo.findOne(iUserId);
-        if (user == null) {
+        Optional<User> user = repo.findById(iUserId);
+        if (user.isPresent()) {
             throw new UserNotFoundEx("" + iUserId);
         }
 
         PasswordEncoder encoder = encoder(appContext);
-        return updatePasswordWithNew(matchOldPassword, oldPassword, newPassword, user, encoder, repo);
+        return updatePasswordWithNew(matchOldPassword, oldPassword, newPassword, user.get(), encoder, repo);
     }
 
     /**

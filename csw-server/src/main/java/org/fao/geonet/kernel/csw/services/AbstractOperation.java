@@ -37,8 +37,8 @@ import org.geotools.filter.text.cql2.CQL;
 import org.geotools.filter.text.cql2.CQLException;
 import org.geotools.filter.v1_1.OGC;
 import org.geotools.filter.v1_1.OGCConfiguration;
-import org.geotools.xml.Configuration;
-import org.geotools.xml.Encoder;
+import org.geotools.xsd.Configuration;
+import org.geotools.xsd.Encoder;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.opengis.filter.Filter;
@@ -248,20 +248,21 @@ public abstract class AbstractOperation {
     protected Element getFilterExpression(Element constr)
         throws CatalogException {
 
-        // Return an empty filter if no constraint
-        // which is equivalent to a Lucene MatchAllDocsQuery.
         if (constr == null)
-            return new Element("Filter", Csw.NAMESPACE_OGC);
-
+            return null;
 
         Element filter = constr.getChild("Filter", Csw.NAMESPACE_OGC);
         Element cql = constr.getChild("CqlText", Csw.NAMESPACE_CSW);
 
-        if (filter == null && cql == null)
-            throw new NoApplicableCodeEx(
-                "Missing filter expression or cql query");
-
-        return (filter != null) ? filter : convertCQL(cql.getText());
+        if (filter != null) {
+            return filter;
+        } else {
+            if (cql != null) {
+                return convertCQL(cql.getText());
+            } else {
+                return null;
+            }
+        }
     }
 
 

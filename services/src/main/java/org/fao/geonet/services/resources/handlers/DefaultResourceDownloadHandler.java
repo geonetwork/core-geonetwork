@@ -25,7 +25,6 @@ package org.fao.geonet.services.resources.handlers;
 
 
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;

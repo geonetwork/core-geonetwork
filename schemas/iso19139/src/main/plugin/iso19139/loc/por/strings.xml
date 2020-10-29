@@ -205,7 +205,7 @@
   <sds-accesspoint>URL do Ponto de Acesso</sds-accesspoint>
   <sds-add-accesspoint>Adicionar Ponto de Acesso</sds-add-accesspoint>
 
-  <sds-endpoint>Endpoint URL</sds-ponto final>
+  <sds-endpoint>Endpoint URL</sds-endpoint>
   <sds-add-endpoint>Adicionar ponto final</sds-add-endpoint>
 
   <sds-addNoConstraints>Sem Limitação</sds-addNoConstraints>

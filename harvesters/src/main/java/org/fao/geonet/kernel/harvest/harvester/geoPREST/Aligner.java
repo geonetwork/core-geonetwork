@@ -189,13 +189,13 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        dataMan.indexMetadata(id, Math.random() < 0.01, null);
+        dataMan.indexMetadata(id, Math.random() < 0.01);
         result.addedMetadata++;
     }
 
@@ -240,7 +240,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
                 addCategories(metadata, params.getCategories(), localCateg, context, null, true);
                 metadataManager.flush();
 
-                dataMan.indexMetadata(id, Math.random() < 0.01, null);
+                dataMan.indexMetadata(id, Math.random() < 0.01);
                 result.updatedMetadata++;
             }
         }

@@ -54,7 +54,7 @@
                             local-name() != 'MultiCurve' and
                             count(*) > 0 and
                             .//(gml:posList|gml320:posList) != '']">
-      <xsl:copy-of select="."/>
+      <xsl:copy-of copy-namespaces="no" select="."/>
     </xsl:for-each>
   </xsl:template>
 

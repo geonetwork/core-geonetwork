@@ -76,7 +76,7 @@ public class UiSetting extends GeonetEntity implements Serializable {
 
     @Lob
     @Column(nullable = true)
-    @Type(type = "org.hibernate.type.StringClobType")
+    @Type(type = "org.hibernate.type.TextType")
     public String getConfiguration() {
         return configuration;
     }

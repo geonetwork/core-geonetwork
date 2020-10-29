@@ -23,9 +23,8 @@
 <label class="control-label" translate>mapConfigLayers</label>
 <table class="table table-striped">
   <tr data-ng-repeat="layer in mCfg[key]['layers'] track by $index">
-  <td>
-    <input type="text" class="form-control"
-      gn-json-edit="layer" />
+  <td style="width: 90%">
+    <gn-json-edit height="50" model="layer"></gn-json-edit>
   </td>
   <td>
     <a class="btn btn-link text-danger"

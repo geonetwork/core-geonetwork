@@ -276,7 +276,7 @@
        * @param {string} wfsUrl url of the wfs service
        */
       this.getApplicationProfile = function(uuid, ftName, wfsUrl, protocol) {
-        return $http.post('../api/0.1/records/' + uuid +
+        return $http.post('../api/records/' + uuid +
             '/query/wfs-indexing-config', {
               url: wfsUrl,
               name: ftName,
@@ -377,7 +377,7 @@
 
         return $http({
           method: 'POST',
-          url: '../api/0.1/tools/ogc/sld',
+          url: '../api/tools/ogc/sld',
           data: $.param(params),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
@@ -392,7 +392,7 @@
        */
       this.indexWFSFeatures = function(
           url, type, idxConfig, treeFields, uuid, version) {
-        return $http.put('../api/0.1/workers/data/wfs/actions/start', {
+        return $http.put('../api/workers/data/wfs/actions/start', {
           url: url,
           typeName: type,
           version: version || '1.1.0',

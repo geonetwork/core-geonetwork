@@ -28,18 +28,18 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.11.0-SNAPSHOT</version>
+    <version>4.0.1-SNAPSHOT</version>
   </parent>
 
   <name>GeoNetwork Slave</name>
   <packaging>jar</packaging>
-  <artifactId>slave</artifactId>
+  <artifactId>gn-slave</artifactId>
   <description>Converts the instance on a slave instance</description>
   <url>http://geonetwork-opensource.org</url>
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>harvesters</artifactId>
+      <artifactId>gn-harvesters</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

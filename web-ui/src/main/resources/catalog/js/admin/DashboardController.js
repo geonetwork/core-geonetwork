@@ -96,10 +96,25 @@
 
 
       function loadConditionalTabs() {
+        if ($scope.user.profile === 'UserAdmin') {
+          $scope.pageMenu.tabs = [{
+            type: 'record-links',
+            label: 'record-links',
+            icon: 'fa-link',
+            href: '#/dashboard/record-links'
+          }];
+          $scope.pageMenu.defaultTab = 'record-links';
+        }
         if ($scope.healthCheck.DashboardAppHealthCheck === true) {
           $scope.pageMenu.tabs = $scope.pageMenu.tabs.concat(dashboards);
         }
       }
+
+      $scope.pageMenu = {
+        folder: 'dashboard/',
+        defaultTab: 'status',
+        tabs: $scope.pageMenu.tabs
+      };
 
       loadConditionalTabs();
 
@@ -108,12 +123,6 @@
           loadConditionalTabs();
         }
       });
-
-      $scope.pageMenu = {
-        folder: 'dashboard/',
-        defaultTab: 'status',
-        tabs: $scope.pageMenu.tabs
-      };
 
       $http.get('../api/site/info').
           success(function(data) {

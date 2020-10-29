@@ -34,14 +34,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Basic Metadata and Draft Tests
- * 
+ *
  * @author delawen María Arias de Reyna
  */
 public class BasicAbstractMetadataTest extends AbstractSpringDataTest {
-	
+
     @Autowired
     MetadataRepository _metadatarepo;
-    
+
     @Autowired
     MetadataDraftRepository _metadatadraftrepo;
 
@@ -53,41 +53,16 @@ public class BasicAbstractMetadataTest extends AbstractSpringDataTest {
         Metadata md = new Metadata();
         populate(md);
         _metadatarepo.save(md);
-        
-        md = _metadatarepo.findOneByUuid(md.getUuid());
-        
-        assertNotNull(md);
-        
-        _metadatarepo.delete(md);
-        
-        md = _metadatarepo.findOneByUuid(md.getUuid());
-        
-        assertNull(md);
-    }
-    
-    @Test
-    public void testDraftWithRepositoryDAO() throws Exception {
-    	Metadata record = new Metadata();
-    	populate(record);
-    	_metadatarepo.save(record);
-    	
-    	MetadataDraft md = new MetadataDraft();
-        populate(md);
-        md.setApprovedVersion(record);
-        _metadatadraftrepo.save(md);
-        
-        md = _metadatadraftrepo.findOneByUuid(md.getUuid());
-        
-        assertNotNull(md);
-        
-        _metadatadraftrepo.delete(md);
-        
-        md = _metadatadraftrepo.findOneByUuid(md.getUuid());
-        
-        assertNull(md);
-        
 
-    	_metadatarepo.delete(record);
+        md = _metadatarepo.findOneByUuid(md.getUuid());
+
+        assertNotNull(md);
+
+        _metadatarepo.delete(md);
+
+        md = _metadatarepo.findOneByUuid(md.getUuid());
+
+        assertNull(md);
     }
 
 	private void populate(AbstractMetadata md) {
@@ -99,6 +74,6 @@ public class BasicAbstractMetadataTest extends AbstractSpringDataTest {
         md.getDataInfo().setSchemaId("isoFake");
 	}
 
-    
-    
+
+
 }

@@ -74,16 +74,13 @@
 
     <!-- Create a first document representing the main record. -->
     <doc>
-      <documentType>metadata</documentType>
+      <docType>metadata</docType>
       <documentStandard>dublin-core</documentStandard>
 
       <!-- Index the metadata document as XML -->
       <document>
         <!--<xsl:value-of select="saxon:serialize(., 'default-serialize-mode')"/>-->
       </document>
-      <uuid>
-        <xsl:value-of select="$identifier"/>
-      </uuid>
       <metadataIdentifier>
         <xsl:value-of select="$identifier"/>
       </metadataIdentifier>
@@ -167,34 +164,63 @@
       <!-- This index for "coverage" requires significant expansion to
          work well for spatial searches. It now only works for very
          strictly formatted content
-         North 46.3, South 42.51, East 3.88, West -1.84
+         North 46.3, South 42.51, East 3.88, West -1.84 -->
       <xsl:for-each select="/simpledc/dc:coverage">
         <xsl:variable name="coverage" select="."/>
 
         <xsl:choose>
           <xsl:when test="starts-with(., 'North')">
-            <xsl:variable name="n" select="substring-after($coverage,'North ')"/>
-            <xsl:variable name="north" select="substring-before($n, ',')"/>
-            <xsl:variable name="s" select="substring-after($coverage,'South ')"/>
-            <xsl:variable name="south" select="substring-before($s, ',')"/>
-            <xsl:variable name="e" select="substring-after($coverage,'East ')"/>
-            <xsl:variable name="east" select="substring-before($e, ',')"/>
-            <xsl:variable name="w" select="substring-after($coverage,'West ')"/>
-            <xsl:variable name="west"
-                          select="if (contains($w, '. ')) then substring-before($w, '. ') else $w"/>
+            <xsl:variable name="nt" select="substring-after($coverage,'North ')"/>
+            <xsl:variable name="n" select="substring-before($nt, ',')"/>
+            <xsl:variable name="st" select="substring-after($coverage,'South ')"/>
+            <xsl:variable name="s" select="substring-before($st, ',')"/>
+            <xsl:variable name="et" select="substring-after($coverage,'East ')"/>
+            <xsl:variable name="e" select="substring-before($et, ',')"/>
+            <xsl:variable name="wt" select="substring-after($coverage,'West ')"/>
+            <xsl:variable name="w"
+                          select="if (contains($wt, '. ')) then substring-before($wt, '. ') else $wt"/>
             <xsl:variable name="p" select="substring-after($coverage,'(')"/>
             <xsl:variable name="place" select="substring-before($p,')')"/>
 
-            <Field name="westBL" string="{$west}" store="false" index="true"/>
-            <Field name="eastBL" string="{$east}" store="false" index="true"/>
-            <Field name="southBL" string="{$south}" store="false" index="true"/>
-            <Field name="northBL" string="{$north}" store="false" index="true"/>
-            <Field name="geoBox" string="{concat($west, '|',
-                                                  $south, '|',
-                                                  $east, '|',
-                                                  $north
-                                                  )}" store="true" index="false"/>
+            <xsl:choose>
+              <xsl:when test="-180 &lt;= number($e) and number($e) &lt;= 180 and
+                              -180 &lt;= number($w) and number($w) &lt;= 180 and
+                              -90 &lt;= number($s) and number($s) &lt;= 90 and
+                              -90 &lt;= number($n) and number($n) &lt;= 90">
+                <xsl:choose>
+                  <xsl:when test="$e = $w and $s = $n">
+                    <location><xsl:value-of select="concat($s, ',', $w)"/></location>
+                  </xsl:when>
+                  <xsl:when
+                    test="($e = $w and $s != $n) or ($e != $w and $s = $n)">
+                    <!-- Probably an invalid bbox indexing a point only -->
+                    <location><xsl:value-of select="concat($s, ',', $w)"/></location>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <geom>
+                      <xsl:text>{"type": "Polygon",</xsl:text>
+                      <xsl:text>"coordinates": [[</xsl:text>
+                      <xsl:value-of select="concat('[', $w, ',', $s, ']')"/>
+                      <xsl:text>,</xsl:text>
+                      <xsl:value-of select="concat('[', $e, ',', $s, ']')"/>
+                      <xsl:text>,</xsl:text>
+                      <xsl:value-of select="concat('[', $e, ',', $n, ']')"/>
+                      <xsl:text>,</xsl:text>
+                      <xsl:value-of select="concat('[', $w, ',', $n, ']')"/>
+                      <xsl:text>,</xsl:text>
+                      <xsl:value-of select="concat('[', $w, ',', $s, ']')"/>
+                      <xsl:text>]]}</xsl:text>
+                    </geom>
 
+                    <location><xsl:value-of select="concat(
+                                              (number($s) + number($n)) div 2,
+                                              ',',
+                                              (number($w) + number($e)) div 2)"/></location>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:when>
+              <xsl:otherwise></xsl:otherwise>
+            </xsl:choose>
             <Field name="keyword" string="{$place}" store="true" index="true"/>
           </xsl:when>
           <xsl:otherwise>

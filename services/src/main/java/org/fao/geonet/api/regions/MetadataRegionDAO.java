@@ -23,35 +23,31 @@
 
 package org.fao.geonet.api.regions;
 
-import java.util.Collection;
-import java.util.Collections;
-
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.regions.metadata.MetadataRegionSearchRequest;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.util.GMLParsers;
-import org.geotools.xml.Parser;
+import org.geotools.xsd.Parser;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-
-import jeeves.server.context.ServiceContext;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * A Regions DAO that fetches geometries from a metadata.  The geometry ids are structured as
  * follows:
  *
- * <ul> <li>metadata:@id1234 - get all the geometries in the metadata with the id 1234</li>
- * <li>metadata:@uuid1234 - get all the geometries in the metadata with the uuid 1234</li>
- * <li>metadata:@uuid1234:1111 - get all the geometry with the geonet:element/@ref = 1111 in the
- * metadata with the uuid 1234</li> <li>metadata:@uuid1234:@gml1111 - get all the geometry with the
- * @gml:id = 1111 in the metadata with the uuid 1234</li> </ul>
+ * <ul>
+ *     <li>metadata:@id1234 - get all the geometries in the metadata with the id 1234</li>
+ * </ul>
  */
 public class MetadataRegionDAO extends RegionsDAO {
 
     public static final String CATEGORY_NAME = "metadata";
-    private final Parser[] parsers = GMLParsers.create();
+
     private final GeometryFactory factory = new GeometryFactory();
 
     @Override
@@ -61,7 +57,7 @@ public class MetadataRegionDAO extends RegionsDAO {
 
     @Override
     public Request createSearchRequest(ServiceContext context) throws Exception {
-        return new MetadataRegionSearchRequest(context, parsers, factory);
+        return new MetadataRegionSearchRequest(context, factory);
     }
 
     @Override

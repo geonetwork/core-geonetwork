@@ -26,7 +26,6 @@ package org.fao.geonet.api.records.formatters.groovy.template;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.records.formatters.ConfigFile;

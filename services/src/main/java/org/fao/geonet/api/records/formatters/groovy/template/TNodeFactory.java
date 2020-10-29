@@ -24,7 +24,6 @@
 package org.fao.geonet.api.records.formatters.groovy.template;
 
 import com.google.common.collect.Lists;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 

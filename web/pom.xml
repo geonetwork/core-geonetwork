@@ -28,13 +28,13 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.11.0-SNAPSHOT</version>
+    <version>4.0.1-SNAPSHOT</version>
   </parent>
 
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <artifactId>web-app</artifactId>
+  <artifactId>gn-web-app</artifactId>
   <packaging>war</packaging>
   <name>GeoNetwork Web module</name>
   <description> GeoNetwork web module description (TODO). </description>
@@ -129,7 +129,10 @@
       <artifactId>spring-test</artifactId>
       <scope>compile</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-webmvc-core</artifactId>
+    </dependency>
     <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>
@@ -144,10 +147,6 @@
       <artifactId>marc4j</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.geotools</groupId>
-      <artifactId>gt-api</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-xml</artifactId>
@@ -186,32 +185,8 @@
     </dependency>
 
     <dependency>
-      <groupId>com.vividsolutions</groupId>
-      <artifactId>jts</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-analyzers-common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-misc</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-queries</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-queryparser</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-facet</artifactId>
+      <groupId>org.locationtech.jts</groupId>
+      <artifactId>jts-core</artifactId>
     </dependency>
     <dependency>
       <groupId>pcj</groupId>
@@ -232,14 +207,6 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-email</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>avalon-framework</groupId>
-      <artifactId>avalon-framework-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.avalon.framework</groupId>
-      <artifactId>avalon-framework-impl</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-digester</groupId>
@@ -318,30 +285,77 @@
     <dependency>
       <groupId>org.mapfish.print</groupId>
       <artifactId>print-lib</artifactId>
-      <version>${print-lib.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-httpclient</groupId>
+          <artifactId>commons-httpclient</artifactId>
+        </exclusion>
+        <!--
+        <exclusion>
+          <groupId>com.codahale.metrics</groupId>
+          <artifactId>metrics-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.codahale.metrics</groupId>
+          <artifactId>metrics-log4j</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.codahale.metrics</groupId>
+          <artifactId>metrics-servlet</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.codahale.metrics</groupId>
+          <artifactId>metrics-servlets</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.codahale.metrics</groupId>
+          <artifactId>metrics-httpclient</artifactId>
+        </exclusion>
+        -->
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-context</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-web</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xalan</groupId>
+          <artifactId>xalan</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.xmlgraphics</groupId>
+          <artifactId>batik-transcoder</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- ====================== -->
     <!-- Generated dependencies -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>cachingxslt</artifactId>
+      <artifactId>gn-cachingxslt</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>oaipmh</artifactId>
+      <artifactId>gn-oaipmh</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency> <!-- dummy API for ARC SDE stuff -->
       <groupId>${project.groupId}</groupId>
-      <artifactId>dummy-api</artifactId>
+      <artifactId>gn-dummy-api</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>gn-core</artifactId>
       <version>${project.version}</version>
       <exclusions>
         <exclusion>
@@ -353,42 +367,37 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>services</artifactId>
+      <artifactId>gn-services</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>gn-harvesters</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>camelPeriodicProducer</artifactId>
+      <artifactId>gn-health-monitor</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>harvesters</artifactId>
+      <artifactId>gn-inspire-atom</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>gn-doi</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>health-monitor</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>inspire-atom</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>doi</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>listeners</artifactId>
+      <artifactId>gn-listeners</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -449,17 +458,6 @@
       <groupId>com.yammer.metrics</groupId>
       <artifactId>metrics-log4j</artifactId>
     </dependency>
-
-    <!-- language detection -->
-    <dependency>
-      <groupId>com.cybozu.labs</groupId>
-      <artifactId>langdetect</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>net.arnx.jsonic</groupId>
-      <artifactId>jsonic</artifactId>
-    </dependency>
-    <!-- end language detection -->
     <dependency>
       <groupId>opendap</groupId>
       <artifactId>opendap</artifactId>
@@ -473,7 +471,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>web-ui</artifactId>
+      <artifactId>gn-web-ui</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
@@ -506,31 +504,30 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>domain</artifactId>
+      <artifactId>gn-domain</artifactId>
       <version>${project.version}</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>gn-core</artifactId>
       <version>${project.version}</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>services</artifactId>
+      <artifactId>gn-services</artifactId>
       <version>${project.version}</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>wro4j</artifactId>
+      <artifactId>gn-wro4j</artifactId>
       <version>${project.version}</version>
     </dependency>
-
     <dependency>
       <groupId>ro.isdc.wro4j</groupId>
       <artifactId>wro4j-maven-plugin</artifactId>
@@ -538,37 +535,14 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Add dependencies to schema plugin
-    having a custom Bean to be loaded. -->
-    <dependency>
+    <!--<dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19139</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-    <dependency>
+      <artifactId>gn-camelPeriodicProducer</artifactId>
+      <version>${project.version}</version>
+    </dependency>-->
+    <!--<dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19110</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>schema-dublin-core</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19115-3</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19115-3.2018</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>wfsfeature-harvester</artifactId>
+      <artifactId>gn-wfsfeature-harvester</artifactId>
       <version>${project.version}</version>
       <exclusions>
         <exclusion>
@@ -588,7 +562,7 @@
           <artifactId>jsp-api-2.1</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
+    </dependency>-->
 
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -596,7 +570,10 @@
       <version>3.0.1</version>
       <scope>provided</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.mitre.dsmiley.httpproxy</groupId>
       <artifactId>smiley-http-proxy-servlet</artifactId>
@@ -609,12 +586,66 @@
       <artifactId>autolink</artifactId>
       <version>0.6.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!--
+    Required for DB migration test
+    like AdvancedSearchFormMigrationTest
+    <dependency>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy</artifactId>
+      <version>0.6.14</version>
+      <scope>test</scope>
+    </dependency>-->
+    <!--
+    Required by domain
+    Invocation of init method failed; nested exception is
+    java.lang.NoClassDefFoundError: net/bytebuddy/TypeCache
+    org.springframework.beans.factory.BeanCreationException:
+    Error creating bean with name 'entityManagerFactory' defined in URL
+    -->
+    <dependency>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy</artifactId>
+      <version>1.10.10</version>
+    </dependency>
+
+
+    <!-- Add dependencies to built-in schema plugin having a custom bean to be loaded. -->
+    <dependency>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
+      <artifactId>gn-schema-iso19139</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
+      <artifactId>gn-schema-iso19110</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
+      <artifactId>gn-schema-dublin-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
+      <artifactId>gn-schema-iso19115-3.2018</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!--    <dependency>-->
+    <!--      <groupId>${project.groupId}</groupId>-->
+    <!--      <artifactId>schema-iso19115-3.2018</artifactId>-->
+    <!--      <version>${gn.schemas.version}</version>-->
+    <!--    </dependency>-->
   </dependencies>
 
   <build>
 
     <plugins>
-
       <!-- Generate a properties file with the commit hash to be displayed on the admin.console -->
 	    <plugin>
 	        <groupId>pl.project13.maven</groupId>
@@ -701,7 +732,7 @@
         <configuration>
           <filesets>
             <fileset>
-              <directory>src/main/webapp/WEB-INF/data/config/schema_plugins</directory>
+              <directory>${schema-plugins.dir}</directory>
               <includes>
                 <include>**/*</include>
               </includes>
@@ -760,7 +791,7 @@
             </configuration>
           </execution>
           <execution>
-            <id>copy-schemas</id>
+            <id>copy-documentation</id>
             <phase>process-resources</phase>
             <goals>
               <goal>copy-resources</goal>
@@ -770,44 +801,31 @@
               <overwrite>true</overwrite>
               <outputDirectory>${build.webapp.resources}</outputDirectory>
               <resources>
-                <!-- Copy the schema folder to the webapp folder source directory
-                in order to be loaded by the application when running mvn jetty:run.
-                -->
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19139/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19115-3/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19115-3.2018/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19110/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/dublin-core/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/csw-record/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19115-3.2018/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
-                  </targetPath>
-                </resource>
-                <!-- Copy the documentation in the webapp. -->
                 <resource>
                   <directory>${project.basedir}/../docs/manuals/target/doc</directory>
                   <targetPath>${basedir}/src/main/webapp/doc</targetPath>
                 </resource>
               </resources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-index-schema-to-source</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <escapeString>\</escapeString>
+              <includeEmptyDirs>false</includeEmptyDirs>
+              <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/index</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/src/main/webResources/WEB-INF/data/config/index</directory>
+                  <filtering>true</filtering>
+                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/index</targetPath>
+                </resource>
+              </resources>
+              <overwrite>true</overwrite>
             </configuration>
           </execution>
         </executions>
@@ -901,6 +919,10 @@
               <name>org.eclipse.jetty.server.Request.maxFormContentSize</name>
               <value>5000000</value>
             </systemProperty>
+            <systemProperty>
+              <name>org.eclipse.jetty.classInheritanceMap</name>
+              <value>true</value>
+            </systemProperty>
           </systemProperties>
           <httpConnector>
             <port>${jetty.port}</port>
@@ -912,10 +934,139 @@
     </plugins>
   </build>
 
-  <!-- Define profiles for running configuration using -Denv=profile.id parameter
-    Profiles configuration is defined in src/main/filters.
-    -->
   <profiles>
+
+    <!-- Unpack schema resources from maven artifacts -->
+    <profile>
+      <id>schemas-unpack</id>
+      <activation>
+        <property><name>schemasCopy</name><value>!true</value></property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>unpack-schemas</id>
+                <phase>process-resources</phase>
+                <goals><goal>unpack</goal></goals>
+                <configuration>
+                  <encoding>UTF-8</encoding>
+                  <artifactItems>
+                    <!-- unpack built-in schema plugins into schema-plugins directory -->
+                    <artifactItem>
+                      <groupId>org.geonetwork-opensource.schemas</groupId>
+                      <artifactId>gn-schema-iso19139</artifactId>
+                      <type>zip</type>
+                      <overWrite>false</overWrite>
+                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>org.geonetwork-opensource.schemas</groupId>
+                      <artifactId>gn-schema-iso19110</artifactId>
+                      <type>zip</type>
+                      <overWrite>false</overWrite>
+                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>org.geonetwork-opensource.schemas</groupId>
+                      <artifactId>gn-schema-dublin-core</artifactId>
+                      <type>zip</type>
+                      <overWrite>false</overWrite>
+                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>org.geonetwork-opensource.schemas</groupId>
+                      <artifactId>gn-schema-iso19115-3.2018</artifactId>
+                      <type>zip</type>
+                      <overWrite>false</overWrite>
+                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Copy schema resources using relative paths -->
+    <profile>
+      <id>schemas-copy</id>
+      <activation> <!-- use -DcopySchemas=true to activate       -->
+        <property><name>schemasCopy</name><value>true</value></property>
+      </activation>
+      <!-- Add dependencies to schema plugin having a custom Bean to be loaded. -->
+      <dependencies>
+        <!-- add schema_plugins -->
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-schemas-ant</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                    <!-- Copy all the src/main/plugin folders in schemas to the webapp folder
+                    in order to be loaded by the application when running mvn jetty:run.
+                    -->
+                  <target description="copy from schemas to schema_plugins folder">
+                    <copy todir="${schema-plugins.dir}" preservelastmodified="true">
+                      <fileset dir="${basedir}/../schemas/">
+                        <include name="**/src/main/plugin/**"/>
+                      </fileset>
+                      <regexpmapper handledirsep="yes"
+                        from="^[-_\.a-zA-Z0-9]+/src/main/plugin/(.*)"
+                          to="\1" />
+                    </copy>
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <!-- copy schema resources using relative paths -->
+            <executions>
+              <execution>
+                <id>copy-schemas</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <includeEmptyDirs>true</includeEmptyDirs>
+                  <overwrite>true</overwrite>
+                  <outputDirectory>${build.webapp.resources}</outputDirectory>
+                  <resources>
+                    <!-- Copy src/main/plugin folder to webapp folder source directory
+                    in order to be loaded by the application when running mvn jetty:run.
+                    -->
+                    <!--
+                    <resource>
+                      <directory>metadata101/iso19139.xyz/src/main/plugin</directory>
+                      <targetPath>${schema-plugins.dir}</targetPath>
+                    </resource>
+                    -->
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <profile>
       <id>run-static-analysis</id>
       <activation>
@@ -930,10 +1081,15 @@
         </plugins>
       </build>
     </profile>
+
+    <!--
+    Define profiles for running configuration using -Denv=profile.id parameter
+    Profiles configuration is defined in src/main/filters.
+    -->
     <profile>
       <id>no-env-specified</id>
       <activation>
-        <property>
+        <property> <!-- default -->
           <name>!env</name>
         </property>
       </activation>
@@ -943,7 +1099,7 @@
     </profile>
     <profile>
       <id>env-prod</id>
-      <activation>
+      <activation> <!-- -Denv=prod -->
         <property>
           <name>env</name>
           <value>prod</value>
@@ -957,7 +1113,7 @@
     <profile>
       <id>env-dev</id>
       <activation>
-        <property>
+        <property> <!-- -Denv=dev -->
           <name>env</name>
           <value>dev</value>
         </property>
@@ -970,7 +1126,7 @@
     </profile>
     <profile>
       <id>env-inspire</id>
-      <activation>
+      <activation> <!-- -Denv=inspire -->
         <property>
           <name>env</name>
           <value>inspire</value>
@@ -981,33 +1137,11 @@
         <server>default</server>
       </properties>
     </profile>
-
-    <profile>
-      <id>es</id>
-      <properties>
-        <es.spring.profile>es</es.spring.profile>
-
-        <es.port>9200</es.port>
-        <es.host>localhost</es.host>
-        <es.url>http://${es.host}:${es.port}</es.url>
-        <es.index.features>gn-features</es.index.features>
-        <es.index.features.type>features</es.index.features.type>
-        <es.index.records>gn-records</es.index.records>
-        <es.index.records_public></es.index.records_public>
-        <es.index.records.type>records</es.index.records.type>
-        <es.index.searchlogs>gn-searchlogs</es.index.searchlogs>
-        <es.index.searchlogs.type>searchlogs</es.index.searchlogs.type>
-
-        <kb.port>5601</kb.port>
-        <kb.url>http://localhost:${kb.port}</kb.url>
-      </properties>
-    </profile>
-
     <profile>
       <id>slave</id>
       <dependencies>
         <dependency>
-          <groupId>org.geonetwork-opensource</groupId>
+          <groupId>${project.groupId}</groupId>
           <artifactId>slave</artifactId>
           <version>${project.version}</version>
         </dependency>
@@ -1022,10 +1156,10 @@
     <geonetwork.webapp.js.dir>${geonetwork.webapp.dir}/scripts</geonetwork.webapp.js.dir>
     <geonetwork.build.dir>${project.build.directory}/${project.build.finalName}</geonetwork.build.dir>
     <geonetwork.webapp.css.dir>${geonetwork.webapp.dir}</geonetwork.webapp.css.dir>
+    <schema-plugins.dir>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</schema-plugins.dir>
+    <geonetwork.webapp.css.dir>${geonetwork.webapp.dir}</geonetwork.webapp.css.dir>
     <minify.verbose>false</minify.verbose>
     <build.webapp.resources>${project.build.directory}/webapp</build.webapp.resources>
-    <web.xml.main.config.overrides>/WEB-INF/config-overrides-${env}.xml</web.xml.main.config.overrides>
-    <system.specific.overrides></system.specific.overrides>
     <rootProjectDir>${basedir}/..</rootProjectDir>
     <wro4jOutput>${project.build.directory}/wro4j-output/</wro4jOutput>
   </properties>

@@ -18,34 +18,27 @@
 //===	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //===
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: GeoNetwork@fao.org
+//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
 package org.fao.geonet.services.thesaurus;
 
 import com.google.common.collect.Sets;
-
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
-
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
-import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
-import org.fao.geonet.kernel.search.keyword.KeywordSearchType;
-import org.fao.geonet.kernel.search.keyword.KeywordSort;
-import org.fao.geonet.kernel.search.keyword.SortDirection;
-import org.fao.geonet.kernel.search.keyword.XmlParams;
+import org.fao.geonet.kernel.search.keyword.*;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -57,12 +50,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Returns a list of keywords given a list of thesaurus

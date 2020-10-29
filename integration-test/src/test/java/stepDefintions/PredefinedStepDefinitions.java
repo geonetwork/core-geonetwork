@@ -306,7 +306,7 @@ public class PredefinedStepDefinitions implements BaseTest {
 
     @Then("^I check API operation (GET|POST|DELETE|PUT) ([^ ]*) as (.*)/(.*) and expect status ([0-9]{3})$")
     public void apicheck_auth_status(String method, String url, String username, String password, int status) throws Exception {
-        Integer statusReturned = navigationObj.apiCallStatus(method, endPointToTest + "/srv/api/0.1" + url, username, password);
+        Integer statusReturned = navigationObj.apiCallStatus(method, endPointToTest + "/srv/api" + url, username, password);
         Assert.assertEquals((int) statusReturned, status);
         //             .andExpect(jsonPath("$[*].name", hasItem("all")))
     }

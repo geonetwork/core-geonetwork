@@ -105,7 +105,7 @@ public class UpdateOperations implements ApplicationListener<MetadataShare> {
                         Log.trace(Geonet.DATA_MANAGER, "Updating privileges on draft " + draft.getId());
 
                         // except for reserved groups
-                        Group g = groupRepository.findOne(op.getId().getGroupId());
+                        Group g = groupRepository.findById(op.getId().getGroupId()).get();
                         if (!g.isReserved()) {
                             try {
                                 if (event.getType() == Type.REMOVE) {

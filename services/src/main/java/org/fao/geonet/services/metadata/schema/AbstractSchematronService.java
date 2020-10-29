@@ -27,14 +27,13 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.jdom.Element;
 
 import java.nio.file.Path;
 
 /**
  * Provides the Distpatch API for the different actions available to all the services.
- *
+ * <p>
  * Created by Jesse on 2/13/14.
  */
 public abstract class AbstractSchematronService implements Service {

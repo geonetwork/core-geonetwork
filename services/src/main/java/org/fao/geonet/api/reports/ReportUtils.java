@@ -25,13 +25,12 @@ package org.fao.geonet.api.reports;
 
 import com.google.common.collect.ImmutableSet;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.utils.Log;
 
 import java.util.HashSet;
 import java.util.List;
@@ -58,13 +57,13 @@ public final class ReportUtils {
      * taken from requested groups.
      *
      * @param context Service context.
-     * @param groups Requested list of groups to filter.
+     * @param groups  Requested list of groups to filter.
      * @return List of valid groups to apply in filter query.
      * @throws Exception Exception retrieving the list of groups for the filter.
      */
     public static Set<Integer> groupsForFilter(
-            final ServiceContext context,
-            final List<Integer> groups) throws Exception {
+        final ServiceContext context,
+        final List<Integer> groups) throws Exception {
 
         Set<Integer> requestedGroups;
 
@@ -77,14 +76,14 @@ public final class ReportUtils {
         Profile userProfile = context.getUserSession().getProfile();
 
         if (userProfile != null
-                && userProfile.equals(Profile.Administrator)) {
+            && userProfile.equals(Profile.Administrator)) {
             return requestedGroups;
         } else {
             GeonetContext gc = (GeonetContext) context
                 .getHandlerContext(Geonet.CONTEXT_NAME);
             AccessManager am = gc.getBean(AccessManager.class);
             Set<Integer> userGroups = am.getUserGroups(context.getUserSession(),
-                    context.getIpAddress(), false);
+                context.getIpAddress(), false);
 
             // Remove special groups
             userGroups.remove(ReservedGroup.guest.getId());
@@ -119,7 +118,7 @@ public final class ReportUtils {
     /**
      * Retrieves a metadata title from the Lucene index.
      *
-     * @param context Service context.
+     * @param context    Service context.
      * @param metadataId Metadata identifier.
      * @return Metadata title.
      */
@@ -132,7 +131,7 @@ public final class ReportUtils {
     /**
      * Retrieves a metadata uuid from the Lucene index.
      *
-     * @param context Service context.
+     * @param context    Service context.
      * @param metadataId Metadata identifier.
      * @return Metadata uuid.
      */
@@ -144,31 +143,37 @@ public final class ReportUtils {
 
     /**
      * Retrieves a metadata value from the Lucene index.
+     * <p>
+     * Duplicated with XslUtil - to refactor.
+     * <p>
+     * TODO / TODOES
      *
-     * @param context Service context.
+     * @param context    Service context.
      * @param metadataId Metadata identifier.
-     * @param fieldName Lucene field name.
+     * @param fieldName  Lucene field name.
      * @return Field value.
      */
     private static String retrieveMetadataIndexField(
-            final ServiceContext context,
-            final int metadataId,
-            final String fieldName) {
+        final ServiceContext context,
+        final int metadataId,
+        final String fieldName) {
         String value = "";
 
-        try {
-            value = LuceneSearcher.getMetadataFromIndexById(
-                    context.getLanguage(),
-                    metadataId + "",
-                    fieldName);
+        throw new NotImplementedException("Not implemented in ES");
+//        try {
+//
+//            value = LuceneSearcher.getMetadataFromIndexById(
+//                    context.getLanguage(),
+//                    metadataId + "",
+//                    fieldName);
+//
+//            if (value == null) {
+//                value = "";
+//            }
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
 
-            if (value == null) {
-                value = "";
-            }
-        } catch (Exception ex) {
-            Log.error(Geonet.GEONETWORK, ex.getMessage(), ex);
-        }
-
-        return value;
+//        return value;
     }
 }

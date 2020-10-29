@@ -87,8 +87,8 @@
             }
 
             // Parse selected to boolean
-            metadata['geonet:info'].selected =
-                metadata['geonet:info'].selected == 'true';
+            metadata.selected =
+                metadata.selected == 'true';
           }
         }
 
@@ -155,8 +155,7 @@
               function(key, value) {
                 filter += '&' + key + '=' + value;
               });
-          search('q?_content_type=json&fast=index' +
-              '&bucket=' + scope.searchResults.selectionBucket +
+          search('q?bucket=' + scope.searchResults.selectionBucket +
               filter +
               '&from=' + (pageOptions.currentPage *
               pageOptions.hitsPerPage + 1) +
@@ -193,6 +192,7 @@
       // of url and use gnSearch only (then rename it to search)
       var gnSearch = function(params, error, internal) {
         var defer = $q.defer();
+
         gnHttp.callService(internal ? 'internalSearch' : 'search',
             params).
             success(function(data, status) {

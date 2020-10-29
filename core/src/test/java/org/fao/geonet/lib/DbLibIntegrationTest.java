@@ -56,6 +56,6 @@ public class DbLibIntegrationTest extends AbstractCoreIntegrationTest {
             }
         });
 
-        assertTrue(_metadataCategoryRepository.exists(832983245));
+        assertTrue(_metadataCategoryRepository.existsById(832983245));
     }
 }

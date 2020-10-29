@@ -44,4 +44,11 @@
   <bean id="FieldMapper" class="org.fao.geonet.kernel.csw.services.getrecords.FieldMapper"
         lazy-init="true"/>
 
+  <bean id="EsFilterBuilder" class="org.fao.geonet.kernel.search.EsFilterBuilder"
+        lazy-init="true"/>
+
+
+  <bean id="SearchController" class="org.fao.geonet.kernel.csw.services.getrecords.SearchController" lazy-init="true"/>
+
+
 </beans>

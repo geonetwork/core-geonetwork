@@ -120,26 +120,56 @@
         }
       };
 
-      this.setMap = function() {
+      this.setMap = function(tool) {
         if (gnGlobalSettings.isMapViewerEnabled &&
             !gnExternalViewer.isEnabled()) {
           $location.path(this.MAP);
+          if (tool != undefined) {
+            $location.search('tool', tool);
+          }
         }
       };
 
-      this.setSearch = function(params) {
+      this.setSearch = function(searchObjParam) {
         if (!this.isSearch()) {
           $location.path(this.SEARCH);
         }
-        if (params) {
-          $location.search(params);
+        var params = angular.copy(searchObjParam, {}), urlParams = {};
+        if (angular.isObject(params)) {
+          var keys = Object.keys(params);
+          keys.map(function(k) {
+            if (k != 'query_string' && angular.isObject(params[k])) {
+              // Search params may be object eg. range
+              // and are not encoded in URL. An option may be
+              // to encode them as string and restore them on load.
+              urlParams[k] = angular.toJson(params[k]);
+            } else {
+              urlParams[k] = params[k];
+            }
+          });
+          $location.search(urlParams);
         }
       };
       this.removeParams = function() {
         $location.search('');
       };
       this.getParams = function() {
-        return $location.search();
+        var urlParams = $location.search(),
+            keys = Object.keys(urlParams),
+            params = {};
+        keys.map(function(k) {
+          if (k != 'query_string' && k != 'any') {
+            try {
+              // Search params may be object eg. range
+              params[k] = angular.fromJson(urlParams[k]);
+            } catch(ex) {
+              params[k] = urlParams[k];
+            }
+          } else {
+              params[k] = urlParams[k];
+          }
+        });
+        return params;
       };
 
       this.setHome = function() {
@@ -173,7 +203,7 @@
 
 
       /**
-       * Keep history and state of routing for to keep the search state.
+       * Keep history and state of routing to keep the search state.
        * Actually, if you had run a search, then moved to another location,
        * when you get back to the search, the params are kept and the search
        * is not fired again.

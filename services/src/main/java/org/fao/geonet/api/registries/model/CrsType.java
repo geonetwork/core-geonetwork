@@ -30,14 +30,13 @@ public enum CrsType {
     CoordinateReferenceSystem(org.opengis.referencing.crs.CoordinateReferenceSystem.class),
     VerticalCRS(org.opengis.referencing.crs.VerticalCRS.class),
     GeographicCRS(org.opengis.referencing.crs.GeographicCRS.class),
-    ProjectedCRS(org.opengis.referencing.crs.ProjectedCRS.class),;
+    ProjectedCRS(org.opengis.referencing.crs.ProjectedCRS.class),
+    ;
 
     private Class clazz;
 
     CrsType() {
     }
-
-    ;
 
     CrsType(Class clazz) {
         this.clazz = clazz;

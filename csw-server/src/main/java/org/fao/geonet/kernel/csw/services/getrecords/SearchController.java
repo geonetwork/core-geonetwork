@@ -23,10 +23,14 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.search.Sort;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
@@ -39,50 +43,71 @@ import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
-import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.csw.services.getrecords.es.CswFilter2Es;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.search.EsFilterBuilder;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.geotools.gml2.GMLConfiguration;
-import org.jdom.*;
-import org.springframework.context.ApplicationContext;
+import org.geotools.xsd.Configuration;
+import org.geotools.xsd.Parser;
+import org.jdom.Attribute;
+import org.jdom.Content;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.opengis.filter.Filter;
+import org.opengis.filter.capability.FilterCapabilities;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-/**
- * TODO javadoc.
- */
+
 public class SearchController {
 
     public final static String DEFAULT_ELEMENTNAMES_STRATEGY = "relaxed";
-    private final Set<String> _selector;
-    private final Set<String> _uuidselector;
-    private GMLConfiguration _gmlConfig;
-    private ApplicationContext _applicationContext;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Single public method to perform the general search tasks
-    //---
-    //---------------------------------------------------------------------------
+    private static final Configuration FILTER_1_0_0 = new org.geotools.filter.v1_0.OGCConfiguration();
+    private static final Configuration FILTER_1_1_0 = new org.geotools.filter.v1_1.OGCConfiguration();
+    private static final Configuration FILTER_2_0_0 = new org.geotools.filter.v2_0.FESConfiguration();
 
-    public SearchController(ApplicationContext applicationContext) {
-        _selector = Collections.singleton("_id");
-        _uuidselector = Collections.singleton("_uuid");
-        _gmlConfig = new GMLConfiguration();
-        this._applicationContext = applicationContext;
+    @Autowired
+    IMetadataUtils metadataUtils;
+
+    @Autowired
+    private EsSearchManager searchManager;
+
+    @Autowired
+    private FieldMapper fieldMapper;
+
+    @Autowired
+    private EsFilterBuilder esFilterBuilder;
+
+
+    @Autowired
+    private SchemaManager schemaManager;
+
+    public static Parser createFilterParser(String filterVersion) {
+        Configuration config;
+        if (filterVersion.equals(FilterCapabilities.VERSION_100)) {
+            config = FILTER_1_0_0;
+        } else if (filterVersion.equals(FilterCapabilities.VERSION_200)) {
+            config = FILTER_2_0_0;
+        } else if (filterVersion.equals(FilterCapabilities.VERSION_110)) {
+            config = FILTER_1_1_0;
+        } else {
+            throw new IllegalArgumentException("UnsupportFilterVersion: " + filterVersion);
+        }
+        return new Parser(config);
     }
 
     /**
@@ -390,10 +415,6 @@ public class SearchController {
                     }
                     matchingMetadata = result;
                 }
-
-                if (resultType == ResultType.RESULTS_WITH_SUMMARY) {
-                    matchingMetadata.addContent((Content) info.clone());
-                }
                 result = matchingMetadata;
             } else {
                 if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
@@ -422,116 +443,155 @@ public class SearchController {
      * @param elemNames                   requested ElementNames
      * @param typeName                    requested typeName
      * @param maxHitsFromSummary          ?
-     * @param cswServiceSpecificContraint specific contraint for specialized CSW services
      * @param strategy                    ElementNames strategy
      * @return result
      * @throws CatalogException hmm
      */
-    public Pair<Element, Element> search(ServiceContext context, int startPos, int maxRecords,
+        public Element search(ServiceContext context, int startPos, int maxRecords,
                                          ResultType resultType, String outSchema, ElementSetName setName,
-                                         Element filterExpr, String filterVersion, Sort sort,
+                                         Element filterExpr, String filterVersion, List<SortBuilder<FieldSortBuilder>> sort,
                                          Set<String> elemNames, String typeName, int maxHitsFromSummary,
-                                         String cswServiceSpecificContraint, String strategy) throws CatalogException {
+                                         String strategy) throws CatalogException {
+
+        String elasticSearchQuery = convertCswFilterToEsQuery(filterExpr, filterVersion);
+
+        JsonNode esJsonQuery;
+
+        try {
+            String filterQueryString = esFilterBuilder.build(context, "metadata");
+            String jsonQuery = String.format(elasticSearchQuery, filterQueryString);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            esJsonQuery = objectMapper.readTree(jsonQuery);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
-        CatalogSearcher searcher = new CatalogSearcher(_gmlConfig, _selector, _uuidselector, _applicationContext);
+        // TODO: Check to get summary or remove custom summary output
 
-        context.getUserSession().setProperty(Geonet.Session.SEARCH_RESULT, searcher);
+        try {
+            SearchResponse result = searchManager.query(esJsonQuery, new HashSet<String>(), startPos-1, maxRecords, sort);
 
-        // search for results, filtered and sorted
-        Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher.search(context, filterExpr, filterVersion,
-            typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
+            SearchHit[] hits = result.getHits().getHits();
 
-        Element summary = summaryAndSearchResults.one();
-        int numMatches = Integer.parseInt(summary.getAttributeValue("count"));
-        if (numMatches != 0 && startPos > numMatches) {
-            throw new InvalidParameterValueEx("startPosition", String.format(
-                "Start position (%d) can't be greater than number of matching records (%d for current search).",
-                startPos, numMatches
+            long numMatches = result.getHits().getTotalHits().value;
+
+            if (numMatches != 0 && startPos > numMatches) {
+                throw new InvalidParameterValueEx("startPosition", String.format(
+                    "Start position (%d) can't be greater than number of matching records (%d for current search).",
+                    startPos, numMatches
             ));
+            }
+
+            int counter = 0;
+
+            for(SearchHit hit : hits) {
+                int mdId =  Integer.parseInt((String) hit.getSourceAsMap().get("id"));
+
+                AbstractMetadata metadata = metadataUtils.findOne(mdId);
+
+                final String schema = metadata.getDataInfo().getSchemaId();
+                String displayLanguage = context.getLanguage();
+                Element resultMD = applyElementSetName(context, schemaManager, schema,
+                    metadata.getXmlData(false), outSchema, setName, resultType, Integer.toString(mdId), displayLanguage);
+                resultMD = applyElementNames(context, elemNames, typeName, schemaManager, schema, resultMD, resultType, null, strategy);
+
+                if (resultMD != null) {
+                    if (resultType == ResultType.RESULTS) {
+                        results.addContent(resultMD);
+                    }
+
+                    counter++;
+                }
+
+            }
+
+            results.setAttribute("numberOfRecordsMatched", Long.toString(numMatches));
+            results.setAttribute("numberOfRecordsReturned", Long.toString(counter));
+            results.setAttribute("elementSet", setName.toString());
+
+
+            if (numMatches > counter) {
+                results.setAttribute("nextRecord", Long.toString(counter + startPos));
+            } else {
+                results.setAttribute("nextRecord", "0");
+            }
+
+            return results;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
 
-
-        final SettingInfo settingInfo = context.getBean(SearchManager.class).getSettingInfo();
-        String displayLanguage = LuceneSearcher.determineLanguage(context, filterExpr, settingInfo).presentationLanguage;
-        // retrieve actual metadata for results
-        int counter = retrieveMetadataMatchingResults(context, results, summaryAndSearchResults, maxRecords, setName,
-            outSchema, elemNames, typeName, resultType, strategy, displayLanguage);
-
-        //
-        // properties of search result
-        //
-        results.setAttribute("numberOfRecordsMatched", numMatches + "");
-        results.setAttribute("numberOfRecordsReturned", counter + "");
-        results.setAttribute("elementSet", setName.toString());
-
-        int nextRecord = counter + startPos;
-        if (nextRecord > numMatches) {
-            //  "number of records returned to client nextRecord -
-            // position of next record in the result set
-            // (0 if no records remain)"
-            // Cf. http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd
-            results.setAttribute("nextRecord", "0");
-        } else {
-            results.setAttribute("nextRecord", nextRecord + "");
-        }
-
-        return Pair.read(summary, results);
+        //context.getUserSession().setProperty(Geonet.Session.SEARCH_RESULT, searcher);
     }
 
-    /**
-     * Retrieve actual metadata matching the results. Adds elements to results parameter as a side
-     * effect.
-     *
-     * @param context                 Service context
-     * @param results                 retrieved results
-     * @param summaryAndSearchResults results from search
-     * @param maxRecords              equested max records to return
-     * @param elementSetName          requested ElementSetName
-     * @param outputSchema            requested OutputSchema
-     * @param elementNames            requested ElementNames
-     * @param typeName                requested typeName
-     * @param resultType              requested ResultType
-     * @param strategy                ElementNames strategy
-     * @return number of results from search that could be retrieved
-     * @throws CatalogException hmm
-     */
-    private int retrieveMetadataMatchingResults(ServiceContext context,
-                                                Element results,
-                                                Pair<Element, List<ResultItem>> summaryAndSearchResults,
-                                                int maxRecords, ElementSetName elementSetName,
-                                                String outputSchema, Set<String> elementNames,
-                                                String typeName, ResultType resultType, String strategy, String displayLanguage)
-        throws CatalogException {
 
-        List<ResultItem> resultsList = summaryAndSearchResults.two();
-        int counter = 0;
-        for (int i = 0; (i < maxRecords) && (i < resultsList.size()); i++) {
-            ResultItem resultItem = resultsList.get(i);
-            String id = resultItem.getID();
-            Element md = null;
+    /**
+     * Applies stylesheet according to ElementSetName and schema.
+     *
+     * @param context        Service context
+     * @param schemaManager  schemamanager
+     * @param schema         schema
+     * @param result         result
+     * @param outputSchema   requested OutputSchema
+     * @param elementSetName requested ElementSetName
+     * @param resultType     requested ResultTYpe
+     * @param id             metadata id
+     * @return metadata
+     * @throws InvalidParameterValueEx hmm
+     */
+    public Element applyElementSetName(ServiceContext context, SchemaManager schemaManager, String schema,
+                                              Element result, String outputSchema, ElementSetName elementSetName,
+                                              ResultType resultType, String id, String displayLanguage) throws InvalidParameterValueEx {
+        Path schemaDir = schemaManager.getSchemaCSWPresentDir(schema);
+        Path styleSheet = schemaDir.resolve(outputSchema + "-" + elementSetName + ".xsl");
+
+        if (!Files.exists(styleSheet)) {
+            context.warning(
+                String.format(
+                    "OutputSchema '%s' not supported for metadata with '%s' (%s). Corresponding XSL transformation '%s' does not exist. The record will not be returned in response.",
+                    outputSchema, id, schema, styleSheet.toString()));
+            return null;
+        } else {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("lang", displayLanguage);
 
             try {
-                md = retrieveMetadata(context, id, elementSetName, outputSchema, elementNames, typeName, resultType, strategy, displayLanguage);
-                // metadata cannot be retrieved
-                if (md == null) {
-                    results.addContent(new Comment(String.format("Metadata with id '%s' returned null.", id)));
-                    context.warning("SearchController : Metadata not found or invalid schema : " + id);
-                }
-                // metadata can be retrieved
-                else {
-                    // metadata must be included in response
-                    if ((resultType == ResultType.RESULTS || resultType == ResultType.RESULTS_WITH_SUMMARY)) {
-                        results.addContent(md);
-                    }
-                }
-            } catch (InvalidParameterValueEx e) {
-                results.addContent(new Comment(e.getMessage()));
+                result = Xml.transform(result, styleSheet, params);
+            } catch (Exception e) {
+                context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
+                context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
+                return null;
             }
-            counter++;
+            return result;
         }
-        return counter;
+    }
+
+
+    private Filter parseFilter(Element xml, String filterVersion) {
+        if (xml == null) return null;
+
+        final Parser parser = createFilterParser(filterVersion);
+        parser.setValidating(true);
+        parser.setFailOnValidationError(true);
+        String string = Xml.getString(xml);
+        try {
+            final Object parseResult = parser.parse(new StringReader(string));
+            if (parseResult instanceof Filter) {
+                return (Filter) parseResult;
+            } else {
+                return null;
+            }
+        } catch (IOException | SAXException | ParserConfigurationException e) {
+            Log.error(Geonet.CSW_SEARCH, "Errors occurred when trying to parse a filter", e);
+            throw new IllegalArgumentException(e.getMessage());
+        }
+    }
+
+    private String  convertCswFilterToEsQuery(Element xml, String filterVersion) {
+        return CswFilter2Es.translate(parseFilter(xml, filterVersion), fieldMapper);
     }
 
     /**
@@ -575,7 +635,6 @@ public class SearchController {
         if (Files.exists(styleSheet)) {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("lang", displayLanguage);
-            params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
 
             try {
                 result = Xml.transform(result, styleSheet, params);

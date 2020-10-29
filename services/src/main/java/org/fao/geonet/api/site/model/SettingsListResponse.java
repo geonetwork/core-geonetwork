@@ -35,9 +35,10 @@ import java.util.List;
 
 @JsonSerialize(using = SettingsListToObjectSerializer.class)
 public class SettingsListResponse {
-    public SettingsListResponse() {}
-
     private List<Setting> settings = new ArrayList<>();
+
+    public SettingsListResponse() {
+    }
 
     public List<Setting> getSettings() {
         return settings;

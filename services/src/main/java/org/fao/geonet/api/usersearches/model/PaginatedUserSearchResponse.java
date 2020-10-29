@@ -28,7 +28,6 @@ import java.util.List;
 /**
  * Response object for paginated results of user searches
  * in the format required by 'bootstrap-table' component.
- *
  */
 public class PaginatedUserSearchResponse {
     private long total;

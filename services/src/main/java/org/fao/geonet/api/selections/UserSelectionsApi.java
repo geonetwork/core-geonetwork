@@ -22,23 +22,14 @@
  */
 package org.fao.geonet.api.selections;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
-import org.fao.geonet.ApplicationContextHolder;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Language;
-import org.fao.geonet.domain.Selection;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserSavedSelection;
-import org.fao.geonet.domain.UserSavedSelectionId;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SelectionRepository;
@@ -46,37 +37,25 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.UserSavedSelectionRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import springfox.documentation.annotations.ApiIgnore;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Select a list of elements stored in session.
  */
 @RequestMapping(value = {
-    "/{portal}/api/userselections",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/userselections"
+    "/{portal}/api/userselections"
 })
-@Api(value = "userselections",
-    tags = "userselections",
+@Tag(name = "userselections",
     description = "User selections related operations")
 @Controller("userselections")
 public class UserSelectionsApi {
@@ -96,8 +75,7 @@ public class UserSelectionsApi {
     @Autowired
     IMetadataUtils metadataRepository;
 
-    @ApiOperation(value = "Get list of user selection sets",
-        nickname = "getUserSelectionType")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get list of user selection sets")
     @RequestMapping(
         method = RequestMethod.GET,
         produces = {
@@ -106,44 +84,40 @@ public class UserSelectionsApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    List<Selection> get(
-        @ApiIgnore
-            HttpSession httpSession
-    )
+    List<Selection> getSelectionList()
         throws Exception {
         return selectionRepository.findAll();
     }
 
 
-    @ApiOperation(value = "Add a user selection set",
-        nickname = "createUserSelectionType")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Add a user selection set")
     @RequestMapping(
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Selection created."),
-        @ApiResponse(code = 400, message = "A selection with that id or name already exist."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "201", description = "Selection created."),
+        @ApiResponse(responseCode = "400", description = "A selection with that id or name already exist."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ResponseBody
     public ResponseEntity createPersistentSelectionType(
-        @ApiParam(
+        @Parameter(
             name = "selection"
         )
         @RequestBody
             Selection selection
     )
         throws Exception {
-        Selection existingSelection = selectionRepository.findOne(selection.getId());
-        if (existingSelection != null) {
+        Optional<Selection> existingSelectionById = selectionRepository.findById(selection.getId());
+        if (existingSelectionById.isPresent()) {
             throw new IllegalArgumentException(String.format(
                 "A selection with id '%d' already exist. Choose another id or unset it.",
                 selection.getId()
             ));
         }
 
-        existingSelection = selectionRepository.findOneByName(selection.getName());
+        Selection existingSelection = selectionRepository.findOneByName(selection.getName());
         if (existingSelection != null) {
             throw new IllegalArgumentException(String.format(
                 "A selection with name '%s' already exist. Choose another name.", selection.getName()
@@ -162,36 +136,34 @@ public class UserSelectionsApi {
     }
 
 
-
-    @ApiOperation(
-        value = "Update a user selection set",
-        notes = "",
-        nickname = "updateUserSelection")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Update a user selection set",
+        description = "")
     @RequestMapping(
         value = "/{selectionIdentifier}",
         method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Selection updated."),
-        @ApiResponse(code = 404, message = "Selection not found."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "204", description = "Selection updated."),
+        @ApiResponse(responseCode = "404", description = "Selection not found."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     public ResponseEntity updateUserSelection(
-        @ApiParam(
-            value = "Selection identifier",
+        @Parameter(
+            description = "Selection identifier",
             required = true
         )
         @PathVariable
             Integer selectionIdentifier,
-        @ApiParam(
+        @Parameter(
             name = "selection"
         )
         @RequestBody
             Selection selection
     ) throws Exception {
-        Selection existingSelection = selectionRepository.findOne(selectionIdentifier);
-        if (existingSelection != null) {
+        Optional<Selection> existingSelection = selectionRepository.findById(selectionIdentifier);
+        if (existingSelection.isPresent()) {
             selection.setId(selectionIdentifier);
             selectionRepository.save(selection);
 //            selectionRepository.update(selectionIdentifier, entity -> {
@@ -213,32 +185,31 @@ public class UserSelectionsApi {
     }
 
 
-    @ApiOperation(
-        value = "Remove a user selection set",
-        notes = "",
-        nickname = "deleteUserSelection")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Remove a user selection set",
+        description = "")
     @RequestMapping(
         value = "/{selectionIdentifier}",
         method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Selection removed."),
-        @ApiResponse(code = 404, message = "Selection not found."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "204", description = "Selection removed."),
+        @ApiResponse(responseCode = "404", description = "Selection not found."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasAuthority('UserAdmin')")
     public ResponseEntity deleteUserSelection(
-        @ApiParam(
-            value = "Selection identifier",
+        @Parameter(
+            description = "Selection identifier",
             required = true
         )
         @PathVariable
             Integer selectionIdentifier
     ) throws Exception {
-        Selection selection = selectionRepository.findOne(selectionIdentifier);
-        if (selection != null) {
+        Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
+        if (selection.isPresent()) {
             umsRepository.deleteAllBySelection(selectionIdentifier);
-            selectionRepository.delete(selectionIdentifier);
+            selectionRepository.deleteById(selectionIdentifier);
         } else {
             throw new ResourceNotFoundException(String.format(
                 "Selection with id '%d' does not exist.",
@@ -249,98 +220,95 @@ public class UserSelectionsApi {
     }
 
 
-    @ApiOperation(value = "Get record in a user selection set",
-        nickname = "getSelection")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get record in a user selection set")
     @RequestMapping(
         method = RequestMethod.GET,
         value = "/{selectionIdentifier}/{userIdentifier}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @PreAuthorize("hasRole('Guest')")
+    @PreAuthorize("hasAuthority('Guest')")
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    List<String> get(
-        @ApiParam(value = "Selection identifier",
+    List<String> getSelectionRecords(
+        @Parameter(description = "Selection identifier",
             required = true)
         @PathVariable
             Integer selectionIdentifier,
-        @ApiParam(value = "User identifier",
+        @Parameter(description = "User identifier",
             required = true)
         @PathVariable
             Integer userIdentifier,
-        @ApiIgnore
-        HttpSession httpSession
+        @Parameter(hidden = true)
+            HttpSession httpSession
     )
         throws Exception {
-        Selection selection = selectionRepository.findOne(selectionIdentifier);
-        if (selection == null) {
+        Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
+        if (!selection.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "Selection with id '%d' does not exist.",
                 selectionIdentifier
             ));
         }
 
-        User user = userRepository.findOne(userIdentifier);
-        if (user == null) {
+        Optional<User> user = userRepository.findById(userIdentifier);
+        if (!user.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "User with id '%d' does not exist.",
                 selectionIdentifier
             ));
         }
 
-        if (selection != null) {
+        if (selection.isPresent()) {
             return umsRepository.findMetadata(selectionIdentifier, userIdentifier);
         }
         return null;
     }
 
 
-
-    @ApiOperation(value = "Add items to a user selection set",
-        nickname = "addToUserSelection")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Add items to a user selection set")
     @RequestMapping(
         method = RequestMethod.PUT,
         value = "/{selectionIdentifier}/{userIdentifier}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @PreAuthorize("hasRole('Guest')")
+    @PreAuthorize("hasAuthority('Guest')")
     public
     @ResponseBody
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Records added to selection set."),
-        @ApiResponse(code = 404, message = "Selection or user or at least one UUID not found."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "201", description = "Records added to selection set."),
+        @ApiResponse(responseCode = "404", description = "Selection or user or at least one UUID not found."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     ResponseEntity<String> addToUserSelection(
-        @ApiParam(value = "Selection identifier",
+        @Parameter(description = "Selection identifier",
             required = true)
         @PathVariable
             Integer selectionIdentifier,
-        @ApiParam(value = "User identifier",
+        @Parameter(description = "User identifier",
             required = true)
         @PathVariable
             Integer userIdentifier,
-        @ApiParam(value = "One or more record UUIDs.",
+        @Parameter(description = "One or more record UUIDs.",
             required = false)
         @RequestParam(required = false)
             String[] uuid,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
     )
         throws Exception {
-        Selection selection = selectionRepository.findOne(selectionIdentifier);
-        if (selection == null) {
+        Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
+        if (!selection.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "Selection with id '%d' does not exist.",
                 selectionIdentifier
             ));
         }
 
-        User user = userRepository.findOne(userIdentifier);
-        if (user == null) {
+        Optional<User> user = userRepository.findById(userIdentifier);
+        if (!user.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "User with id '%d' does not exist.",
                 selectionIdentifier
@@ -350,7 +318,7 @@ public class UserSelectionsApi {
         for (String u : uuid) {
             // Check record exist
             if (metadataRepository.existsMetadataUuid(u)) {
-                UserSavedSelection e = new UserSavedSelection(selection, user, u);
+                UserSavedSelection e = new UserSavedSelection(selection.get(), user.get(), u);
                 try {
                     umsRepository.save(e);
                 } catch (Exception e1) {
@@ -364,49 +332,48 @@ public class UserSelectionsApi {
     }
 
 
-    @ApiOperation(value = "Remove items to a user selection set",
-        nickname = "deleteFromUserSelection")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Remove items to a user selection set")
     @RequestMapping(
         method = RequestMethod.DELETE,
         value = "/{selectionIdentifier}/{userIdentifier}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @PreAuthorize("hasRole('Guest')")
+    @PreAuthorize("hasAuthority('Guest')")
     public
     @ResponseBody
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Items removed from a set."),
-        @ApiResponse(code = 404, message = "Selection or user not found."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "204", description = "Items removed from a set."),
+        @ApiResponse(responseCode = "404", description = "Selection or user not found."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     ResponseEntity deleteFromUserSelection(
-        @ApiParam(value = "Selection identifier",
+        @Parameter(description = "Selection identifier",
             required = true)
         @PathVariable
             Integer selectionIdentifier,
-        @ApiParam(value = "User identifier",
+        @Parameter(description = "User identifier",
             required = true)
         @PathVariable
             Integer userIdentifier,
-        @ApiParam(value = "One or more record UUIDs. If null, remove all.",
+        @Parameter(description = "One or more record UUIDs. If null, remove all.",
             required = false)
         @RequestParam(required = false)
             String[] uuid,
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpSession httpSession
     )
         throws Exception {
-        Selection selection = selectionRepository.findOne(selectionIdentifier);
-        if (selection == null) {
+        Optional<Selection> selection = selectionRepository.findById(selectionIdentifier);
+        if (!selection.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "Selection with id '%d' does not exist.",
                 selectionIdentifier
             ));
         }
 
-        User user = userRepository.findOne(userIdentifier);
-        if (user == null) {
+        Optional<User> user = userRepository.findById(userIdentifier);
+        if (!user.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "User with id '%d' does not exist.",
                 selectionIdentifier
@@ -421,7 +388,7 @@ public class UserSelectionsApi {
                     .setSelectionId(selectionIdentifier)
                     .setUserId(userIdentifier)
                     .setMetadataUuid(u);
-                umsRepository.delete(e);
+                umsRepository.deleteById(e);
             }
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -24,25 +24,20 @@
 package jeeves.config.springutil;
 
 import com.google.common.io.Files;
-
 import jeeves.server.JeevesEngine;
-import jeeves.server.overrides.ConfigurationOverrides;
-
-import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.utils.Log;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import java.io.File;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 /**
  * Initializes the ApplicationContexts for each node.
@@ -59,11 +54,9 @@ public class JeevesContextLoaderListener implements ServletContextListener {
 
             File node = new File(servletContext.getRealPath("/WEB-INF/config-node/srv.xml"));
 
-            ConfigurationOverrides overrides = ConfigurationOverrides.DEFAULT;
-
             String parentConfigFile = "/WEB-INF/config-spring-geonetwork-parent.xml";
 
-            parentAppContext = new JeevesApplicationContext(null, null, parentConfigFile);
+            parentAppContext = new JeevesApplicationContext(null, parentConfigFile);
             parentAppContext.setServletContext(servletContext);
             parentAppContext.refresh();
 
@@ -74,7 +67,7 @@ public class JeevesContextLoaderListener implements ServletContextListener {
 
             }
 
-            JeevesApplicationContext jeevesAppContext = new JeevesApplicationContext(overrides, parentAppContext,
+            JeevesApplicationContext jeevesAppContext = new JeevesApplicationContext(parentAppContext,
                 "classpath:mapfish-spring-application-context.xml", commonConfigFile, node.toURI().toString());
 
             jeevesAppContext.setServletContext(servletContext);
@@ -105,7 +98,9 @@ public class JeevesContextLoaderListener implements ServletContextListener {
          */
         JeevesApplicationContext jeevesAppContext =
             (JeevesApplicationContext) servletContext.getAttribute(User.NODE_APPLICATION_CONTEXT_KEY);
-        jeevesAppContext.destroy();
+        if (jeevesAppContext != null) {
+            jeevesAppContext.destroy();
+        }
 
         Log.info(Log.ENGINE, "Destroying the parent appContext");
         parentAppContext.destroy();

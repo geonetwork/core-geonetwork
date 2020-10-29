@@ -23,24 +23,11 @@
 
 package org.fao.geonet.api.records.formatters.cache;
 
+import static org.fao.geonet.constants.Params.Access.PRIVATE;
+import static org.fao.geonet.constants.Params.Access.PUBLIC;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
-
-import jeeves.constants.Jeeves;
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.api.records.formatters.FormatType;
-import org.fao.geonet.api.records.formatters.FormatterWidth;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockHttpSession;
-import org.springframework.web.context.request.ServletWebRequest;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -55,17 +42,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PreDestroy;
-
-import static org.fao.geonet.constants.Params.Access.PRIVATE;
-import static org.fao.geonet.constants.Params.Access.PUBLIC;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * A {@link PersistentStore} that saves the files to
@@ -269,7 +256,7 @@ public class FilesystemStore implements PersistentStore {
         long startTime = System.currentTimeMillis();
         try (
             Statement statement = metadataDb.createStatement();
-            ResultSet resultSet = statement.executeQuery(QUERY_GET_INFO_FOR_RESIZE);
+            ResultSet resultSet = statement.executeQuery(QUERY_GET_INFO_FOR_RESIZE)
         ) {
             while (currentSize > targetSize && resultSet.next()) {
                 Path path = IO.toPath(new URI(resultSet.getString(PATH)));

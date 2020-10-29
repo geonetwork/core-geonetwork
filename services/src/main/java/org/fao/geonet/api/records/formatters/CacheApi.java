@@ -23,9 +23,13 @@
 
 package org.fao.geonet.api.records.formatters;
 
-import io.swagger.annotations.*;
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import jeeves.services.ReadWriteController;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.formatters.cache.FormatterCache;
@@ -37,25 +41,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import jeeves.services.ReadWriteController;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import springfox.documentation.annotations.ApiIgnore;
-
-import javax.servlet.http.HttpServletRequest;
-
-import java.util.Map;
-
-import static org.fao.geonet.api.records.formatters.cache.FormatterCache.initializeFormatters;
 
 @RequestMapping(value = {
-    "/{portal}/api/formatters",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/formatters"
+    "/{portal}/api/formatters"
 })
-@Api(value = "formatters",
-    tags = "formatters",
+@Tag(name = "formatters",
     description = "Formatter operations")
 @Controller("formatters")
 @ReadWriteController
@@ -63,13 +55,9 @@ public class CacheApi {
     @Autowired
     FormatterCache formatterCache;
 
-    @ApiOperation(
-        value = "Get formatter cache info",
-        notes = "",
-        authorizations = {
-            @Authorization(value = "basicAuth")
-        },
-        nickname = "getFormatterCacheInfo")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get formatter cache info",
+        description = "")
     @RequestMapping(
         value = "/cache",
         method = RequestMethod.GET,
@@ -78,58 +66,54 @@ public class CacheApi {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('Administrator')")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Cache info returned."),
-        @ApiResponse(code = 403, message = "Operation not allowed. Only Administrator can access it.")
+        @ApiResponse(responseCode = "200", description = "Cache info returned."),
+        @ApiResponse(responseCode = "403", description = "Operation not allowed. Only Administrator can access it.")
     })
     @ResponseBody
     public Map<String, String> getFormatterCacheInfo() {
         return formatterCache.getInfo();
     }
 
-    @ApiOperation(
-        value = "Clear formatter cache",
-        notes = "Formatters are used to render records in various format (HTML, PDF, ...). " +
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Clear formatter cache",
+        description = "Formatters are used to render records in various format (HTML, PDF, ...). " +
             "When a record is rendered a cache is populated for better performance. " +
             "By default the cache is an H2 database with files on the filesystems " +
-            "(See <dataDirectory>/resources/htmlcache/formatter-cache folder).",
-        authorizations = {
-            @Authorization(value = "basicAuth")
-        },
-        nickname = "clearFormatterCache")
+            "(See <dataDirectory>/resources/htmlcache/formatter-cache folder)."
+        //       authorizations = {
+        //           @Authorization(value = "basicAuth")
+        //      })
+    )
     @RequestMapping(
         value = "/cache",
         method = RequestMethod.DELETE
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Cache cleared."),
-        @ApiResponse(code = 403, message = "Operation not allowed. Only Administrator can access it.")
+        @ApiResponse(responseCode = "204", description = "Cache cleared."),
+        @ApiResponse(responseCode = "403", description = "Operation not allowed. Only Administrator can access it.")
     })
     public void clearFormatterCache() throws Exception {
         formatterCache.clear();
     }
 
 
-    @ApiOperation(
-        value = "Rebuild landing page cache",
-        notes = "Build cache for public metadata records",
-        authorizations = {
-            @Authorization(value = "basicAuth")
-        },
-        nickname = "rebuildLandingPageCache")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Rebuild landing page cache",
+        description = "Build cache for public metadata records")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.POST)
     @PreAuthorize("hasRole('Administrator')")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Formatter cache builder process started."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+        @ApiResponse(responseCode = "201", description = "Formatter cache builder process started."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity rebuildLandingPageCache(
-        @ApiIgnore
+        @Parameter(hidden = true)
             HttpServletRequest request
     ) throws Exception {
         formatterCache.fillLandingPageCache(ApiUtils.createServiceContext(request));

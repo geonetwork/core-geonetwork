@@ -197,7 +197,7 @@ public class MetadataValidation extends GeonetEntity {
     @Column
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Type(type = "org.hibernate.type.StringClobType")
+    @Type(type = "org.hibernate.type.TextType")
     public String getReportContent() {
         return reportContent;
     }

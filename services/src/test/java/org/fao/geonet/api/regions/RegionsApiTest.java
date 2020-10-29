@@ -97,8 +97,7 @@ public class RegionsApiTest  extends AbstractServiceIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$[*].id", hasItem("http://www.naturalearthdata.com/ne_admin#Continent")))
-            .andExpect(jsonPath("$[*].id", hasItem("http://www.naturalearthdata.com/ne_admin#Country")))
-            .andExpect(jsonPath("$[*].id", hasItem("metadata")));
+            .andExpect(jsonPath("$[*].id", hasItem("http://www.naturalearthdata.com/ne_admin#Country")));
 
     }
 }

@@ -84,6 +84,7 @@
   [ol-map] {
     width: 100%;
     height:  calc(~"100vh - 102px");
+    background-color: white;
     &.gn-gfi-loading:hover {
       cursor: wait;
     }
@@ -104,11 +105,24 @@
     .dropdown-menu {
       max-height: 45vh;
       overflow: auto;
-
     }
     .dropdown-toggle {
       padding: 0;
       border: none;
+    }
+  }
+  .gn-map-mouse-position {
+    position: absolute;
+    top: 4em;
+    left: 1em;
+    margin: 2px;
+    width: 25em;
+    max-width: 75%;
+    font-size: 12px;
+    .ol-mouse-position {
+      position: absolute;
+      top: 3px;
+      right: 20px;
     }
   }
   .search-container {

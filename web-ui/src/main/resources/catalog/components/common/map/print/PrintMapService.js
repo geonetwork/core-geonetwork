@@ -535,5 +535,25 @@
 
       return literal;
     };
+
+    /**
+     * Returns an array of unsupported layer types
+     * @param map
+     * @return {string[]}
+     */
+    this.getUnsupportedLayerTypes = function(map) {
+      return map.getLayers().getArray().reduce(function(prev, layer) {
+        var unsupported;
+        if (layer.getSource() instanceof ol.source.BingMaps) {
+          unsupported = 'Bing Maps';
+        } else if (layer.getSource() instanceof ol.source.ImageArcGISRest) {
+          unsupported = 'ArcGIS REST';
+        }
+        if (!!unsupported && prev.indexOf(unsupported) === -1) {
+          return prev.concat([unsupported]);
+        }
+        return prev;
+      }, []);
+    };
   }]);
 })();

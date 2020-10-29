@@ -23,6 +23,8 @@
 
 package org.fao.geonet.api.records.formatters;
 
+import jeeves.interfaces.Service;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Params;
@@ -38,9 +40,6 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import jeeves.interfaces.Service;
-import jeeves.server.context.ServiceContext;
 
 /**
  * Allows a user to download as a zip file a format and all of the associated data

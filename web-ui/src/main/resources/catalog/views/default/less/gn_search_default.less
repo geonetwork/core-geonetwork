@@ -30,6 +30,9 @@
   display: none;
 }
 
+.btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
+  outline-offset: 0px;
+}
 .popover {
   max-width: 350px;
 }
@@ -130,22 +133,28 @@
 }
 // user search panel
 .gn-search-user {
+  .panel-body {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
   .list-group {
-    margin-bottom: 10px;
+    margin-bottom: 2px;
+    max-height: 80px;
+    overflow: auto;
     .list-group-item {
       margin-top: 1px;
-      padding-left: 0;
-      padding-right: 0;
+      padding: 0;
       border-radius: 0;
       border: 0;
-      border-bottom: 1px solid @list-group-border;
     }
   }
 }
 
 // advanced search
 .gn-search-filter {
-  padding: 5px;
+  .col-md-2 {
+    padding-left: 0;
+  }
   .nav-pills li {
     display: block;
   }
@@ -172,9 +181,6 @@
     .tagsinput-trigger {
       top: 34px;
       right: 25px;
-      @media (max-width: @screen-sm-max) {
-        top: 38px;
-      }
     }
     .tagsinput-clear {
       right: 20px;

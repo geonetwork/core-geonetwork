@@ -8,9 +8,10 @@
         <div class="panel-body">
           <p data-translate="">loginText</p>
           <form class="form-horizontal" name="gnSigninForm" action="{{formAction}}"
-                method="post" role="form" data-ng-if="::user" data-ng-show="!shibbolethEnabled">
+                method="post" role="form" data-ng-if="::user"
+                data-ng-show="!shibbolethEnabled || (shibbolethEnabled && !shibbolethHideLogin)">
             <input type="hidden" name="_csrf" value="{{csrf}}"/>
-  
+
             <!-- username -->
             <div class="form-group">
               <label for="inputUsername" data-translate="">username</label>
@@ -18,7 +19,7 @@
                 <span class="input-group-addon">
                   <i class="fa fa-user"></i>
                 </span>
-                <input type="text" 
+                <input type="text"
                        class="form-control"
                        id="inputUsername"
                        name="username"
@@ -45,14 +46,14 @@
                        required=""/>
               </div>
             </div>
-  
+
             <input type="hidden" name="redirectUrl" data-ng-model="redirectUrl" value="{{redirectUrl}}"/>
             <!--<div class="checkbox">
                       <label class="checkbox">
                           <input type="checkbox"/><span translate>rememberMe</span>
                       </label>
                   </div>-->
-  
+
             <button type="submit"
                     class="btn btn-primary btn-block"
                     data-ng-disabled="!gnSigninForm.$valid">
@@ -60,7 +61,7 @@
               <span data-translate="">signIn</span>
             </button>
           </form>
-  
+
           <p class="text-danger"
             data-ng-show="signinFailure">
             <strong data-translate="">signinFailure</strong>
@@ -115,7 +116,7 @@
                           data-ng-model="usernameToRemind"
                           data-ng-required="" class="form-control"/>
                   </div>
-                  <a type="submit" 
+                  <a type="submit"
                      class="btn btn-default btn-block"
                      data-ng-disabled="usernameToRemind == ''"
                      data-ng-click="remindMyPassword('#userinfo')">

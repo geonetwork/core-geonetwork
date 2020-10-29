@@ -1,8 +1,9 @@
 dist: trusty
 sudo: false
 language: java
+script: mvn clean verify -Pit
 jdk:
-  - oraclejdk8
+  - openjdk8
 before_install:
   - unset _JAVA_OPTIONS
   - export MAVEN_OPTS="-Xmx512M -XX:MaxPermSize=256M"

@@ -24,22 +24,15 @@
 package org.fao.geonet.api.regions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import org.fao.geonet.kernel.region.Region;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 
+import javax.xml.bind.annotation.*;
 import java.util.Collection;
 import java.util.Map;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author Jesse on 4/9/2015.
@@ -53,11 +46,11 @@ public class ListRegionsResponse {
 
     @XmlElement
     @JsonProperty
-    private Collection<RegionResponse> region = Lists.newArrayList();
+    private final Collection<RegionResponse> region = Lists.newArrayList();
 
     @XmlElement
     @JsonProperty
-    private Map<String, CategoryResponse> categories = Maps.newHashMap();
+    private final Map<String, CategoryResponse> categories = Maps.newHashMap();
 
     public ListRegionsResponse() {
     }

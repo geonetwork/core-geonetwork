@@ -103,7 +103,7 @@ class SimpleTypeEntry extends BaseHandler {
                     } else if (elemName.equals("minInclusive") || elemName.equals("maxInclusive") ||
                         elemName.equals("minExclusive") || elemName.equals("maxExclusive") ||
                         elemName.equals("pattern"))
-                    //--- we are not interested in type's domain so we skip these specifications
+                    //--- we are not interested in type's domain so we skip these Specification
                     {
 
                     } else {

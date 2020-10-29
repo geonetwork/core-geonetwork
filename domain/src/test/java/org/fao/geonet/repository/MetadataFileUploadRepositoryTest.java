@@ -74,8 +74,8 @@ public class MetadataFileUploadRepositoryTest extends AbstractSpringDataTest {
         fileUpload2.setMetadataId(metadata.getId());
         fileUpload2 = _metadataFileUploadRepo.save(fileUpload2);
 
-        assertEquals(fileUpload1, _metadataFileUploadRepo.findOne(fileUpload1.getId()));
-        assertEquals(fileUpload2, _metadataFileUploadRepo.findOne(fileUpload2.getId()));
+        assertEquals(fileUpload1, _metadataFileUploadRepo.findById(fileUpload1.getId()).get());
+        assertEquals(fileUpload2, _metadataFileUploadRepo.findById(fileUpload2.getId()).get());
     }
 
     @Test

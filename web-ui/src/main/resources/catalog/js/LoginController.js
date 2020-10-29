@@ -66,6 +66,7 @@
           $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
           $scope.gnConfig = gnConfig;
           $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
+          $scope.shibbolethHideLogin = gnGlobalSettings.shibbolethHideLogin;
 
           function initForm() {
            if ($window.location.pathname.indexOf('new.password') !== -1) {
@@ -126,7 +127,7 @@
 
            $scope.userInfo.email = $scope.userInfo.username;
 
-           return $http.put('../api/0.1/user/actions/register', $scope.userInfo)
+           return $http.put('../api/user/actions/register', $scope.userInfo)
            .success(function(data) {
              $rootScope.$broadcast('StatusUpdated', {
                title: data
@@ -143,7 +144,7 @@
           * Remind user password.
           */
          $scope.remindMyPassword = function() {
-           $http.get('../api/0.1/user/' +
+           $http.get('../api/user/' +
            $scope.usernameToRemind +
                         '/actions/forgot-password')
             .success(function(data) {
@@ -165,7 +166,7 @@
           * Change user password.
           */
          $scope.updatePassword = function() {
-           $http.patch('../api/0.1/user/' + $scope.userToRemind, {
+           $http.patch('../api/user/' + $scope.userToRemind, {
              password: $scope.password,
              changeKey: $scope.changeKey
            })

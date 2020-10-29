@@ -356,7 +356,7 @@
     <xsl:param name="xpath" as="xs:string?"/>
 
     <xsl:variable name="childType"
-                  select="normalize-space($configuration/editor/fields/for[@name = $childName]/@use)"/>
+                  select="normalize-space($configuration/editor/fields/for[@name = $childName and not(@xpath)]/@use)"/>
     <xsl:variable name="childTypeXpath"
                   select="normalize-space($configuration/editor/fields/for[@name = $childName and @xpath = $xpath]/@use)"/>
     <xsl:variable name="type"
@@ -397,18 +397,38 @@
   <!-- Return the directive to use for editing. -->
   <xsl:function name="gn-fn-metadata:getFieldDirective" as="node()">
     <xsl:param name="configuration" as="node()"/>
+    <!-- The container element -->
     <xsl:param name="name" as="xs:string"/>
+    <!-- The element containing the value eg. gco:Date -->
+    <xsl:param name="childName" as="xs:string?"/>
     <xsl:param name="xpath" as="xs:string?"/>
 
+    <xsl:variable name="childType"
+                  select="$configuration/editor/fields/for[@name = $childName and not(@xpath) and starts-with(@use, 'data-')]"/>
+    <xsl:variable name="childTypeXpath"
+                  select="$configuration/editor/fields/for[@name = $childName and @xpath = $xpath and starts-with(@use, 'data-')]"/>
     <xsl:variable name="type"
-                  select="$configuration/editor/fields/for[@name = $name and starts-with(@use, 'data-') and not(@xpath)]"/>
-    <xsl:variable name="typeWithXpath"
-                  select="$configuration/editor/fields/for[@name = $name and starts-with(@use, 'data-') and @xpath = $xpath]"/>
+                  select="$configuration/editor/fields/for[@name = $name and not(@xpath) and starts-with(@use, 'data-')]"/>
+    <xsl:variable name="typeXpath"
+                  select="$configuration/editor/fields/for[@name = $name and @xpath = $xpath and starts-with(@use, 'data-')]"/>
+
     <xsl:choose>
-      <xsl:when test="$typeWithXpath">
+      <xsl:when test="$childTypeXpath">
         <xsl:element name="directive">
-          <xsl:attribute name="data-directive-name" select="$typeWithXpath/@use"/>
-          <xsl:copy-of select="$typeWithXpath/directiveAttributes/@*"/>
+          <xsl:attribute name="data-directive-name" select="$childTypeXpath/@use"/>
+          <xsl:copy-of select="$childTypeXpath/directiveAttributes/@*"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:when test="$childType">
+        <xsl:element name="directive">
+          <xsl:attribute name="data-directive-name" select="$childType/@use"/>
+          <xsl:copy-of select="$childType/directiveAttributes/@*"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:when test="$typeXpath">
+        <xsl:element name="directive">
+          <xsl:attribute name="data-directive-name" select="$typeXpath/@use"/>
+          <xsl:copy-of select="$typeXpath/directiveAttributes/@*"/>
         </xsl:element>
       </xsl:when>
       <xsl:when test="$type">

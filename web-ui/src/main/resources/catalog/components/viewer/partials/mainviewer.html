@@ -129,6 +129,9 @@
             graticule-ogc-service="graticuleOgcService"></button>
   </div>
 
+  <div gn-map-mouse-position=""/>
+
+
   <!-- Add layers -->
   <div class="panel panel-default panel-tools"
        ng-show="activeTools.addLayers">
@@ -160,7 +163,7 @@
         <tab heading="{{'addLayerFromServices' | translate}}"
              active="addLayerTabs.services"
              role="tab">
-          <br/>   
+          <br/>
           <div gn-wms-import="wms"
                gn-wms-import-map="map"
                gn-wms-import-url="addLayerUrl.wms"

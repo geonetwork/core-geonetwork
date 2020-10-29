@@ -23,25 +23,13 @@
 
 package org.fao.geonet.component.csw;
 
+import com.google.common.base.Optional;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
-
-import com.google.common.base.Optional;
-
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.exceptions.ResourceNotFoundEx;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
-
-import org.fao.geonet.utils.Xml;
-import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
@@ -53,11 +41,11 @@ import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +76,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService {
 
     @Autowired
     public GetRecordById(ApplicationContext applicationContext) {
-        _searchController = new SearchController(applicationContext);
+
     }
 
 
@@ -159,39 +147,11 @@ public class GetRecordById extends AbstractOperation implements CatalogService {
                     continue;
                 //throw new InvalidParameterValueEx("uuid", "Can't find metadata with uuid "+uuid);
 
-
-                // Apply CSW service specific constraint
-                String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
-
-                if (StringUtils.isNotEmpty(cswServiceSpecificContraint)) {
-                    if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                        Log.debug(Geonet.CSW_SEARCH, "GetRecordById (cswServiceSpecificContraint): " + cswServiceSpecificContraint);
-
-                    cswServiceSpecificContraint = cswServiceSpecificContraint + " +_id: " + id;
-                    if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                        Log.debug(Geonet.CSW_SEARCH, "GetRecordById (cswServiceSpecificContraint with uuid): " + cswServiceSpecificContraint);
-
-                    Element filterExpr = new Element("Filter", Csw.NAMESPACE_OGC);
-
-                    Pair<Element, Element> results = _searchController.search(context, 0, 1, ResultType.HITS, "csw",
-                        ElementSetName.BRIEF, filterExpr, Csw.FILTER_VERSION_1_1, null, null, null, 0, cswServiceSpecificContraint, null);
-
-
-                    if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                        Log.debug(Geonet.CSW_SEARCH, "GetRecordById cswServiceSpecificContraint result: " + Xml.getString(results.two()));
-
-                    int numOfResults = Integer.parseInt(results.two().getAttributeValue("numberOfRecordsMatched"));
-
-                    if (numOfResults == 0)
-                        continue;
-                }
-
                 // Check if the current user has access
                 // to the requested MD
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
 
-                final SettingInfo settingInfo = gc.getBean(SearchManager.class).getSettingInfo();
-                final String displayLanguage = LuceneSearcher.determineLanguage(context, request, settingInfo).presentationLanguage;
+                final String displayLanguage = context.getLanguage();
                 Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null,
                     displayLanguage);
 

@@ -28,7 +28,7 @@
             <a href ng-click="createFromTemplate(t)" class="flex-row flex-start">
               <div class="flex-spacer" />
               <i class="fa fa-fw fa-bookmark-o"/>
-              <div class="text-wrap">{{::t.title || t.defaultTitle}}</div>
+              <div class="text-wrap">{{::t.resourceTitle}}</div>
             </a>
           </li>
           <li class="divider"/>
@@ -41,8 +41,10 @@
           </li>
         </ul>
       </h5>
-      <div class="flex-spacer" />
-      <h5 class="btn-group">
+      <div class="flex-spacer"
+           data-ng-show="user.canCreateTemplate()"/>
+      <h5 class="btn-group"
+          data-ng-show="user.canCreateTemplate()">
         <button type="button" class="btn btn-success"
             ng-click="startImporting(true)">
           <i class="fa fa-plus"/>&nbsp;
@@ -90,7 +92,8 @@
                 <a href ng-click="showTemplates(false)" translate>
                   directoryEntries</a>
               </li>
-              <li ng-class="{active : templatesShown()}">
+              <li data-ng-show="user.canCreateTemplate()"
+                  ng-class="{active : templatesShown()}">
                 <a href ng-click="showTemplates(true)" translate>
                   directoryTemplates</a>
               </li>
@@ -186,7 +189,7 @@
                 <div class="flex-row" ng-if="!templatesShown()">
                   <input class="flex-no-shrink" type="checkbox"
                          data-gn-selection-md
-                         data-ng-model="md['geonet:info'].selected"
+                         data-ng-model="md.selected"
                          aria-label="{{clickToSelect | translate}}"
                          data-ng-change="change()"/>
 
@@ -194,19 +197,19 @@
 
                   <a href class="text-ellipsis"
                      data-ng-if="user.canEditRecord(md)"
-                     ng-click="startEditing(md)" title="{{md.title || md.defaultTitle}}">
-                    {{md.title || md.defaultTitle}}</a>
-                  <span data-ng-if="!user.canEditRecord(md)">{{md.title || md.defaultTitle}}</span>
+                     ng-click="startEditing(md)" title="{{md.resourceTitle}}">
+                    {{md.resourceTitle}}</a>
+                  <span data-ng-if="!user.canEditRecord(md)">{{md.resourceTitle}}</span>
                 </div>
 
                 <div class="entry-info flex-row flex-align-center" ng-if="!templatesShown()">
                   <div class="text-muted">
                     <small><span data-translate="">owner</span>:</small>
-                    <small>{{::md.getOwnername()}}</small>
+                    <small>{{::md.recordOwner}}</small>
                     &nbsp;
                     <small data-translate="">updatedOn</small>
                     <small class="text-muted"
-                           data-gn-humanize-time="{{md['geonet:info'].changeDate}}"
+                           data-gn-humanize-time="{{md.changeDate}}"
                            data-from-now=""></small>
                   </div>
 
@@ -264,7 +267,7 @@
                     </button>
                     <ul class="dropdown-menu pull-right" role="menu">
                       <li ng-if="md.openAssociatedMD">
-                        <gn-directory-associated-md entry-uuid="md['geonet:info'].uuid" />
+                        <gn-directory-associated-md entry-uuid="md.uuid" />
                       </li>
                     </ul>
                   </div>
@@ -281,14 +284,14 @@
                      ng-if="templatesShown()">
 
                   <input data-gn-selection-md type="checkbox"
-                         data-ng-model="md['geonet:info'].selected"
+                         data-ng-model="md.selected"
                          aria-label="{{'clickToSelect' | translate}}"
                          data-ng-change="change()"/>
 
                   <gn-md-type-widget metadata="md"></gn-md-type-widget>
 
                   <a href ng-click="startEditing(md)" title="{{md.title}}">
-                    {{md.title || md.defaultTitle}}</a>
+                    {{md.resourceTitle}}</a>
 
                   <div class="flex-spacer flex-grow"></div>
 
@@ -348,7 +351,7 @@
         <span class="text-muted" translate>directoryEntryEditing</span>
         &nbsp;
         <gn-md-type-widget metadata="activeEntry"></gn-md-type-widget>
-        {{activeEntry.title || activeEntry.defaultTitle}}
+        {{activeEntry.resourceTitle}}
         &nbsp;
         <a href class="btn btn-default" ng-click="closeEditor()">
           <i class="fa fa-close"/>&nbsp;
@@ -428,12 +431,12 @@
 
           <div class="entry-editor-controls">
             <div gn-metadata-group-updater="activeEntry.groupOwner"
-                 metadata-id="activeEntry['geonet:info'].id">
+                 metadata-id="activeEntry.id">
             </div>
 
             <button type="button" class="btn btn-default"
                 ng-click="startPermissionsEdit(activeEntry)"
-                ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
+                ng-disabled="activeEntry.edit !== true"
                 title="{{'directoryEntryPermissions' | translate}}">
               <i class="fa fa-key"/>&nbsp;
               <span translate class="hidden-xs hidden-sm hidden-md">
@@ -476,11 +479,15 @@
                 <span translate class="hidden-xs">
                   save</span>
               </button>
-              <button type="button" class="btn btn-primary dropdown-toggle"
+              <button type="button"
+                      data-ng-show="user.canCreateTemplate()"
+                      class="btn btn-primary dropdown-toggle"
                       data-toggle="dropdown" aria-expanded="false">
                 <span class="caret"></span>
               </button>
-              <ul class="dropdown-menu dropdown-menu-right" role="menu">
+              <ul class="dropdown-menu dropdown-menu-right"
+                  data-ng-show="user.canCreateTemplate()"
+                  role="menu">
                 <li><a href title="{{(activeEntry.isTemplate === 't' ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}"
                        data-gn-click-and-spin="switchTypeAndSave(true)">
                   {{(activeEntry.isTemplate === 't' ? 'saveAsDirectoryEntry' : 'saveAsTemplate') | translate}}
@@ -491,7 +498,7 @@
 
             <button type="button" class="btn btn-default hidden-xs"
                 gn-click-and-spin="saveAndClose()"
-                ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
+                ng-disabled="activeEntry.edit !== true"
                 title="{{'closeEditor' | translate}}">
               <i class="fa fa-save"/>&nbsp;
               <span translate>
@@ -501,8 +508,8 @@
         </div>
         <div class="panel-body">
           <fieldset ng-if="activeEntry"
-                    ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
-            <div id="gn-editor-container-{{activeEntry['geonet:info'].id}}"></div>
+                    ng-disabled="activeEntry.edit !== true">
+            <div id="gn-editor-container-{{activeEntry.id}}"></div>
           </fieldset>
         </div>
       </div>
@@ -515,7 +522,7 @@
           <span translate>directoryEntryAssociatedMetadata</span>
         </div>
         <div class="panel-body">
-          <gn-directory-associated-md entry-uuid="activeEntry['geonet:info'].uuid" />
+          <gn-directory-associated-md entry-uuid="activeEntry.uuid" />
         </div>
       </div>
     </div>
@@ -524,7 +531,7 @@
   <div gn-modal class="gn-share gn-privileges-popup"
        gn-popup-options="{title:'sharingSettings', closeCallback: closePermissionsEdit}"
        id="gn-share">
-    <div ng-if="activeEntry" gn-share="activeEntry['geonet:info'].id"></div>
+    <div ng-if="activeEntry" gn-share="activeEntry.id"></div>
   </div>
 
   <div gn-modal class="gn-confirm-delete"

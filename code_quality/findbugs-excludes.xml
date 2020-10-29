@@ -141,11 +141,9 @@
       <Class name="org.fao.geonet.services.main.Info"/>
       <Class name="org.fao.geonet.guiservices.metadata.GetRelated"/>
       <Class name="org.fao.geonet.guiservices.templates.Get"/>
-      <Class name="org.fao.geonet.services.mef.Export"/>
       <Class name="org.fao.geonet.services.metadata.SearchUnused"/>
       <Class name="org.fao.geonet.services.metadata.SearchUnused"/>
       <Class name="org.fao.geonet.utils.Xml"/>
-      <Class name="org.fao.geonet.services.thumbnail.Set"/>
     </Or>
     <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE"/>
   </Match>
@@ -213,25 +211,7 @@
   </Match>
 
 
-  <!-- The following bugs are hard to fix should be fixed because they can cause problems in servers with multiple geonetworks running -->
-  <Match>
-    <Or>
-      <Class name="org.fao.geonet.kernel.search.LuceneSearcher"/>
-      <Class name="org.fao.geonet.kernel.search.spatial.SpatialIndexWriter"/>
-      <Class name="org.fao.geonet.kernel.search.SearchManager"/>
-    </Or>
-    <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"/>
-  </Match>
-
   <!-- TODO: Excluded these findbug checks in the services module for now, Travis needs to be running first.  -->
-  <Match>
-    <Class name="org.fao.geonet.guiservices.csw.virtual.Update"/>
-    <Bug pattern="BX_UNBOXING_IMMEDIATELY_REBOXED"/>
-    <Or>
-      <Method name="exec"/>
-      <Method name="valueOf"/>
-    </Or>
-  </Match>
   <Match>
     <Class name="org.fao.geonet.services.log.List"/>
     <Bug pattern="SS_SHOULD_BE_STATIC"/>
@@ -258,14 +238,6 @@
   <Match>
     <Class name="org.fao.geonet.api.records.formatters.groovy.util.LinkType"/>
     <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
-  </Match>
-  <Match>
-    <Class name="org.fao.geonet.services.region.GetMap"/>
-    <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
-    <Or>
-      <Method name="computeGeomInDomainOfValidity"/>
-      <Method name="next"/>
-    </Or>
   </Match>
   <Match>
     <Class name="org.fao.geonet.api.regions.ListRegionsResponse"/>

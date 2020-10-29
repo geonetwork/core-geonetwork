@@ -168,7 +168,7 @@ public class UserDto {
         return this;
     }
 
-    public List<String>  getGroupsEditor() {
+    public List<String> getGroupsEditor() {
         return groupsEditor;
     }
 
@@ -177,7 +177,7 @@ public class UserDto {
         return this;
     }
 
-    public List<String>  getGroupsReviewer() {
+    public List<String> getGroupsReviewer() {
         return groupsReviewer;
     }
 
@@ -186,7 +186,7 @@ public class UserDto {
         return this;
     }
 
-    public List<String>  getGroupsUserAdmin() {
+    public List<String> getGroupsUserAdmin() {
         return groupsUserAdmin;
     }
 
@@ -221,10 +221,7 @@ public class UserDto {
             return false;
         if (groupsReviewer != null ? !groupsReviewer.equals(userDto.groupsReviewer) : userDto.groupsReviewer != null)
             return false;
-        if (groupsUserAdmin != null ? !groupsUserAdmin.equals(userDto.groupsUserAdmin) : userDto.groupsUserAdmin != null)
-            return false;
-
-        return true;
+        return groupsUserAdmin != null ? groupsUserAdmin.equals(userDto.groupsUserAdmin) : userDto.groupsUserAdmin == null;
     }
 
     @Override

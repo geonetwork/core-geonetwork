@@ -18,7 +18,7 @@
 //===	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //===
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: GeoNetwork@fao.org
+//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
 package org.fao.geonet.services.thesaurus;
@@ -28,9 +28,8 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.KeywordBean;
@@ -148,7 +147,7 @@ public class EditElement implements Service {
         }
 
         String thesaType = ref;
-        thesaType = thesaType.substring(thesaType.indexOf('.') + 1, thesaType.length());
+        thesaType = thesaType.substring(thesaType.indexOf('.') + 1);
         thesaType = thesaType.substring(0, thesaType.indexOf('.'));
 
         elResp.addContent(new Element("thesaType").setText(thesaType));

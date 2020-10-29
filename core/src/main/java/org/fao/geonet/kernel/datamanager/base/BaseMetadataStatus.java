@@ -23,6 +23,9 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.domain.Group;
@@ -46,9 +49,6 @@ import org.fao.geonet.util.WorkflowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Sort;
-
-import java.util.HashSet;
-import java.util.List;
 
 
 public class BaseMetadataStatus implements IMetadataStatus {
@@ -79,7 +79,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
     public MetadataStatus getStatus(int metadataId) throws Exception {
         String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
         List<MetadataStatus> status = metadataStatusRepository.findAllByIdAndByType(metadataId,
-                StatusValueType.workflow, new Sort(Sort.Direction.DESC, sortField));
+                StatusValueType.workflow, Sort.by(Sort.Direction.DESC, sortField));
         if (status.isEmpty()) {
             return null;
         } else {
@@ -94,7 +94,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
     public List<MetadataStatus> getAllStatus(int metadataId) throws Exception {
         String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
         List<MetadataStatus> status = metadataStatusRepository.findAllById_MetadataId(metadataId,
-                new Sort(Sort.Direction.DESC, sortField));
+                Sort.by(Sort.Direction.DESC, sortField));
         if (status.isEmpty()) {
             return null;
         } else {
@@ -131,14 +131,14 @@ public class BaseMetadataStatus implements IMetadataStatus {
     public MetadataStatus setStatus(ServiceContext context, int id, int status, ISODate changeDate,
             String changeMessage) throws Exception {
         MetadataStatus statusObject = setStatusExt(context, id, status, changeDate, changeMessage);
-        metadataIndexer.indexMetadata(Integer.toString(id), true, null);
+        metadataIndexer.indexMetadata(Integer.toString(id), true);
         return statusObject;
     }
 
     @Override
     public MetadataStatus setStatusExt(MetadataStatus metatatStatus) throws Exception {
         metadataStatusRepository.save(metatatStatus);
-        metadataIndexer.indexMetadata(metatatStatus.getId().getMetadataId() + "", true, null);
+        metadataIndexer.indexMetadata(metatatStatus.getId().getMetadataId() + "", true);
         return metatatStatus;
     }
 
@@ -150,10 +150,16 @@ public class BaseMetadataStatus implements IMetadataStatus {
     @Override
     public MetadataStatus setStatusExt(ServiceContext context, int id, int status, ISODate changeDate,
             String changeMessage) throws Exception {
+        Optional<StatusValue> statusValue = statusValueRepository.findById(status);
+
+        if (!statusValue.isPresent()) {
+            throw new IllegalArgumentException("The workflow status change requested is not valid: " + status);
+        }
 
         MetadataStatus metatatStatus = new MetadataStatus();
         metatatStatus.setChangeMessage(changeMessage);
-        metatatStatus.setStatusValue(statusValueRepository.findOne(status));
+
+        metatatStatus.setStatusValue(statusValue.get());
         int userId = context.getUserSession().getUserIdAsInt();
         MetadataStatusId mdStatusId = new MetadataStatusId().setStatusId(status).setMetadataId(id)
                 .setChangeDate(changeDate).setUserId(userId);
@@ -175,10 +181,10 @@ public class BaseMetadataStatus implements IMetadataStatus {
             return;
         }
 
-        final Group group = groupRepository.findOne(Integer.valueOf(groupOwner));
+        final Optional<Group> group = groupRepository.findById(Integer.valueOf(groupOwner));
         String groupName = "";
-        if (group != null) {
-            groupName = group.getName();
+        if (group.isPresent()) {
+            groupName = group.get().getName();
         }
 
         if (WorkflowUtil.isGroupWithEnabledWorkflow(groupName)) {
@@ -194,6 +200,12 @@ public class BaseMetadataStatus implements IMetadataStatus {
     @Override
     public void changeCurrentStatus(Integer userId, Integer metadataId, Integer newStatus) throws Exception {
 
+        Optional<StatusValue> statusValue = statusValueRepository.findById(newStatus);
+
+        if (!statusValue.isPresent()) {
+            throw new IllegalArgumentException("The workflow status change requested is not valid: " + newStatus);
+        }
+
         // Check compatible workflow status
         String currentState = this.getCurrentStatus(metadataId);
         String nextStatus = String.valueOf(newStatus);
@@ -204,7 +216,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
 
         MetadataStatus metatatStatus = new MetadataStatus();
         metatatStatus.setChangeMessage("");
-        metatatStatus.setStatusValue(statusValueRepository.findOne(newStatus));
+        metatatStatus.setStatusValue(statusValue.get());
 
         MetadataStatusId mdStatusId = new MetadataStatusId().setStatusId(newStatus).setMetadataId(metadataId)
                 .setChangeDate(new ISODate(System.currentTimeMillis())).setUserId(userId);
@@ -212,7 +224,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
         metatatStatus.setId(mdStatusId);
 
         metadataStatusRepository.save(metatatStatus);
-        metadataIndexer.indexMetadata(metadataId + "", true, null);
+        metadataIndexer.indexMetadata(metadataId + "", true);
     }
 
     // Utility to verify workflow status transitions

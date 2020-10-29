@@ -65,18 +65,11 @@
             }
           }, true);
 
-
-          // Make a copy as string for the ui-ace widget to work on
           scope.$watch('jsonConfig', function (n) {
-            scope.jsonConfigSource = scope.config = JSON.stringify(n, null, 2);
+            scope.config = JSON.stringify(n);
           }, true);
-          scope.$watch('jsonConfigSource', function (n, o) {
-            if (n !== o) {
-              scope.jsonConfig = JSON.parse(n);
-            }
-          });
 
-          scope.sortOrderChoices = ['', 'reverse'];
+          scope.sortOrderChoices = ['asc', 'desc'];
 
 
           // ng-model can't bind to object key, so
@@ -134,26 +127,45 @@
   // used to edit an object as a JSON string
   module.directive('gnJsonEdit', function() {
     return {
-      restrict: 'A',
+      restrict: 'E',
       scope: {
-        value: '=gnJsonEdit'
+        value: '=model'
       },
+      template: '<div style="height: {{height}}"' +
+        '          ui-ace="{useWrapMode:true, showGutter:true, mode:\'json\'}"' +
+        '          data-ng-model="asText"></div>',
       link: function(scope, element, attrs) {
-        element.val(JSON.stringify(scope.value));
+        scope.height = (attrs.height || '300') + 'px';
 
-        scope.$watch('value', function(newValue, oldValue) {
-          element.val(JSON.stringify(newValue));
+        var internalUpdate = false;
+
+        scope.$watch('value', function(value) {
+          if (internalUpdate) {
+            internalUpdate = false;
+            return;
+          }
+          scope.asText = JSON.stringify(value, null, 2);
         }, true);
 
-        element.on('change', function(eventObject) {
-          scope.$apply(function() {
-            var newValue = element.val();
-            try {
-              angular.merge(scope.value, JSON.parse(newValue));
-            } catch (e) {
-              console.warn('Error parsing JSON: ', newValue);
-            }
-          });
+        scope.$watch('asText', function(text) {
+          if (!text) {
+            return;
+          }
+          var newObj;
+          try {
+            newObj = JSON.parse(text);
+          } catch (e) {
+            console.warn('Error parsing JSON: ', e, text);
+            return;
+          }
+          if (JSON.stringify(newObj) === JSON.stringify(scope.value)) {
+            return;
+          }
+          for (var key in scope.value) {
+            delete scope.value[key];
+          }
+          angular.merge(scope.value, newObj);
+          internalUpdate = true;
         });
       }
     };

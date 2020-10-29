@@ -23,15 +23,7 @@
 
 package org.fao.geonet.api.processing;
 
-import java.io.StringWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.xml.transform.stream.StreamResult;
-
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
@@ -52,7 +44,13 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import jeeves.server.context.ServiceContext;
+import javax.annotation.Nonnull;
+import javax.xml.transform.stream.StreamResult;
+import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by francois on 23/05/16.
@@ -63,8 +61,9 @@ public class XslProcessUtils {
     /**
      * Process a metadata record and add information about the processing to one or more sets for
      * reporting.
-     *  @param id      The metadata identifier corresponding to the metadata record to process
-     * @param process The process name
+     *
+     * @param id              The metadata identifier corresponding to the metadata record to process
+     * @param process         The process name
      * @param updateDateStamp
      */
     public static Element process(ServiceContext context, String id,
@@ -124,13 +123,7 @@ public class XslProcessUtils {
                 boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
                 Element md = metadataManager.getMetadata(context, id, forEditing, false, withValidationErrors, keepXlinkAttributes);
 
-                Map<String, Object> xslParameter = new HashMap<>();
-
-                xslParameter.put("guiLang", context.getLanguage());
-                xslParameter.put("baseUrl", context.getBaseUrl());
-                xslParameter.put("nodeUrl", settingsMan.getNodeURL());
-                xslParameter.put("catalogUrl", settingsMan.getSiteURL(context));
-                xslParameter.put("nodeId", context.getNodeId());
+                Map<String, Object> xslParameter = getDefaultXslParameters(context, settingsMan);
 
                 for (Map.Entry<String, String[]> parameter : params.entrySet()) {
                     String value = parameter.getValue()[0].trim();
@@ -184,7 +177,7 @@ public class XslProcessUtils {
 
                     dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
                     if (index) {
-                        dataMan.indexMetadata(id, true, null);
+                        dataMan.indexMetadata(id, true);
                     }
                 }
 
@@ -202,10 +195,22 @@ public class XslProcessUtils {
         return null;
     }
 
+    private static Map<String, Object> getDefaultXslParameters(ServiceContext context, SettingManager settingsMan) {
+        Map<String, Object> xslParameter = new HashMap<>();
+
+        xslParameter.put("guiLang", context.getLanguage());
+        xslParameter.put("baseUrl", context.getBaseUrl());
+        xslParameter.put("nodeUrl", settingsMan.getNodeURL());
+        xslParameter.put("catalogUrl", settingsMan.getSiteURL(context));
+        xslParameter.put("nodeId", context.getNodeId());
+        xslParameter.put("thesauriDir", context.getApplicationContext().getBean(GeonetworkDataDirectory.class).getThesauriDir().toAbsolutePath().toString());
+        return xslParameter;
+    }
+
     public static String processAsText(ServiceContext context, String id, String process, boolean save,
-                                  XsltMetadataProcessingReport report,
-                                  String siteUrl,
-                                  Map<String, String[]> params) throws Exception {
+                                       XsltMetadataProcessingReport report,
+                                       String siteUrl,
+                                       Map<String, String[]> params) throws Exception {
         SchemaManager schemaMan = context.getBean(SchemaManager.class);
         AccessManager accessMan = context.getBean(AccessManager.class);
         DataManager dataMan = context.getBean(DataManager.class);
@@ -250,14 +255,7 @@ public class XslProcessUtils {
                 boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
                 Element md = dataMan.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
-                Map<String, Object> xslParameter = new HashMap<>();
-
-                xslParameter.put("guiLang", context.getLanguage());
-                xslParameter.put("baseUrl", context.getBaseUrl());
-                xslParameter.put("nodeUrl", settingsMan.getNodeURL());
-                xslParameter.put("catalogUrl", settingsMan.getSiteURL(context));
-                xslParameter.put("nodeId", context.getNodeId());
-                xslParameter.put("thesauriDir", context.getApplicationContext().getBean(GeonetworkDataDirectory.class).getThesauriDir().toAbsolutePath().toString());
+                Map<String, Object> xslParameter = getDefaultXslParameters(context, settingsMan);
 
                 for (Map.Entry<String, String[]> parameter : params.entrySet()) {
                     String value = parameter.getValue()[0].trim();
@@ -284,7 +282,7 @@ public class XslProcessUtils {
                 xslParameter.put("siteUrl", siteUrl);
 
                 Xml.transform(
-                    md, xslProcessing,  new StreamResult(sw), xslParameter);
+                    md, xslProcessing, new StreamResult(sw), xslParameter);
 
                 report.addMetadataId(iId);
                 // TODO : it could be relevant to list at least

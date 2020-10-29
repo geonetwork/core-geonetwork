@@ -30,14 +30,14 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.11.0-SNAPSHOT</version>
+    <version>4.0.1-SNAPSHOT</version>
   </parent>
 
 
   <!-- =========================================================== -->
   <!-- Module Description -->
   <!-- =========================================================== -->
-  <artifactId>oaipmh</artifactId>
+  <artifactId>gn-oaipmh</artifactId>
   <packaging>jar</packaging>
   <name>Oaipmh modules</name>
   <description>
@@ -60,7 +60,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>domain</artifactId>
+      <artifactId>gn-domain</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

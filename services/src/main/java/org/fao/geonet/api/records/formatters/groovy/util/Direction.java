@@ -48,6 +48,6 @@ public enum Direction {
      * metadata are part of the same group of related metadata, both are children metadata and part
      * of the same group/relationship.
      */
-    SIBLING;
+    SIBLING
 
 }

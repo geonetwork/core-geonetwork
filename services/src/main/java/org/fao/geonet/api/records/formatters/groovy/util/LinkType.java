@@ -25,10 +25,9 @@ package org.fao.geonet.api.records.formatters.groovy.util;
 
 import org.fao.geonet.api.records.formatters.groovy.Functions;
 
-import java.util.Objects;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * Represents the group name and icon of a type of links.  IE Dataset, parent, children, etc...
@@ -43,7 +42,7 @@ public class LinkType {
     /**
      * The direction of the relationship.  Indicates if the current metadata is the parent,
      * child,sibling of the related item.
-     *
+     * <p>
      * In some cases this is not important (link linking to webpages), in those cases it can be
      * null.
      */

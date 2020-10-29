@@ -54,8 +54,8 @@ public class AddressRepositoryTest extends AbstractSpringDataTest {
         Address address2 = newAddress();
         address2 = _repo.save(address2);
 
-        assertEquals(address2, _repo.findOne(address2.getId()));
-        assertEquals(address1, _repo.findOne(address1.getId()));
+        assertEquals(address2, _repo.findById(address2.getId()).get());
+        assertEquals(address1, _repo.findById(address1.getId()).get());
     }
 
     @Test

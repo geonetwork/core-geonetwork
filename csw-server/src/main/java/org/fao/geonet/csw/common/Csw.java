@@ -150,6 +150,7 @@ public final class Csw {
                 public static final String TYPE = "type";
                 public static final String RANGE = "range";
                 public static final String XPATH = "xpath";
+                public static final String SORT_FIELD = "sortField";
 
             }
 

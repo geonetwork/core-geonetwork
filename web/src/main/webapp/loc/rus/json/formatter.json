@@ -1,0 +1,15 @@
+{
+    "abstract": "Abstract",
+    "complete": "Complete",
+    "hierarchy": "Hierarchy",
+    "links": "Links",
+    "noUuidInLink": "No uuid in link",
+    "overview": "Overview",
+    "parent": "Parent",
+    "testString": "This String is here for testing don't delete",
+    "xml": "XML",
+    "uncategorizedKeywords" : "Uncategorized",
+    "uncategorized" : "Uncategorized",
+    "related-link": "Relations"
+
+}

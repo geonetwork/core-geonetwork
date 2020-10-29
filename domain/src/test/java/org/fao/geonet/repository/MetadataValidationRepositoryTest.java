@@ -30,8 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * Test the MetadataValidationRepository class User: Jesse Date: 9/4/13 Time: 4:01 PM
@@ -93,7 +92,7 @@ public class MetadataValidationRepositoryTest extends AbstractSpringDataTest {
         final List<MetadataValidation> all = _metadataValidationRepository.findAll();
         assertEquals(1, all.size());
         assertEquals(val3.getId(), all.get(0).getId());
-        assertNull(_metadataValidationRepository.findOne(val1.getId()));
+        assertFalse(_metadataValidationRepository.findById(val1.getId()).isPresent());
     }
 
     private MetadataValidation newValidation() {

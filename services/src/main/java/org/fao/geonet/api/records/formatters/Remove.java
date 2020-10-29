@@ -23,6 +23,8 @@
 
 package org.fao.geonet.api.records.formatters;
 
+import jeeves.interfaces.Service;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -32,9 +34,6 @@ import org.jdom.Element;
 
 import java.io.IOException;
 import java.nio.file.Path;
-
-import jeeves.interfaces.Service;
-import jeeves.server.context.ServiceContext;
 
 /**
  * Allows a user to delete a previously inserted user's xsl stylesheet

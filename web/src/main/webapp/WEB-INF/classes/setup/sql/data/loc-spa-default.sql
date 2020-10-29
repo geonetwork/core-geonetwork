@@ -1,11 +1,6 @@
 INSERT INTO Languages (id, name, isinspire, isdefault) VALUES ('spa','español', 'y', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (5, 'spa', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (6, 'spa', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (7, 'spa', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (8, 'spa', 'accessConstraints', '');
-
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'spa','Conjuntos de datos');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'spa','Recursos interactivos');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'spa','Casos de Uso, buenas prácticas');

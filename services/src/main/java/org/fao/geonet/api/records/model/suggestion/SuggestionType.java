@@ -1,11 +1,6 @@
-
 package org.fao.geonet.api.records.model.suggestion;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
 
 /**
@@ -37,8 +32,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "suggestionType", propOrder = {
@@ -65,10 +58,8 @@ public class SuggestionType {
     /**
      * Gets the value of the name property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
+     * @return possible object is
+     * {@link String }
      */
     public String getName() {
         return name;
@@ -77,10 +68,8 @@ public class SuggestionType {
     /**
      * Sets the value of the name property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setName(String value) {
         this.name = value;
@@ -89,10 +78,8 @@ public class SuggestionType {
     /**
      * Gets the value of the operational property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
+     * @return possible object is
+     * {@link String }
      */
     public String getOperational() {
         return operational;
@@ -101,10 +88,8 @@ public class SuggestionType {
     /**
      * Sets the value of the operational property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setOperational(String value) {
         this.operational = value;
@@ -113,10 +98,8 @@ public class SuggestionType {
     /**
      * Gets the value of the params property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
+     * @return possible object is
+     * {@link String }
      */
     public String getParams() {
         return params;
@@ -125,10 +108,8 @@ public class SuggestionType {
     /**
      * Sets the value of the params property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setParams(String value) {
         this.params = value;
@@ -137,10 +118,8 @@ public class SuggestionType {
     /**
      * Gets the value of the process property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
+     * @return possible object is
+     * {@link String }
      */
     public String getProcess() {
         return process;
@@ -149,10 +128,8 @@ public class SuggestionType {
     /**
      * Sets the value of the process property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setProcess(String value) {
         this.process = value;
@@ -161,10 +138,8 @@ public class SuggestionType {
     /**
      * Gets the value of the id property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
+     * @return possible object is
+     * {@link String }
      */
     public String getId() {
         return id;
@@ -173,10 +148,8 @@ public class SuggestionType {
     /**
      * Sets the value of the id property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setId(String value) {
         this.id = value;
@@ -185,10 +158,8 @@ public class SuggestionType {
     /**
      * Gets the value of the category property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
+     * @return possible object is
+     * {@link String }
      */
     public String getCategory() {
         return category;
@@ -197,10 +168,8 @@ public class SuggestionType {
     /**
      * Sets the value of the category property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setCategory(String value) {
         this.category = value;
@@ -209,10 +178,8 @@ public class SuggestionType {
     /**
      * Gets the value of the target property.
      *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
+     * @return possible object is
+     * {@link String }
      */
     public String getTarget() {
         return target;
@@ -221,10 +188,8 @@ public class SuggestionType {
     /**
      * Sets the value of the target property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setTarget(String value) {
         this.target = value;

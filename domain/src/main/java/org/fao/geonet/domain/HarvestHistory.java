@@ -250,7 +250,7 @@ public class HarvestHistory extends GeonetEntity {
      * @return the harvester info.
      */
     @Lob
-    @Type(type = "org.hibernate.type.StringClobType")
+    @Type(type = "org.hibernate.type.TextType")
     // this is a work around for postgres so postgres can correctly load clobs
     public String getInfo() {
         return _info;
@@ -352,7 +352,7 @@ public class HarvestHistory extends GeonetEntity {
      * @return the parameters used for performing the harvesting.
      */
     @Lob
-    @Type(type = "org.hibernate.type.StringClobType")
+    @Type(type = "org.hibernate.type.TextType")
     // this is a work around for postgres so postgres can correctly load clobs
     public String getParams() {
         return _params;

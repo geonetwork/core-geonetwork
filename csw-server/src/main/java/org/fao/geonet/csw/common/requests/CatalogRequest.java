@@ -41,14 +41,7 @@ import java.util.List;
 
 import static org.fao.geonet.utils.AbstractHttpRequest.Method;
 
-//=============================================================================
-
 public abstract class CatalogRequest {
-    //---------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //---------------------------------------------------------------------------
 
     // Parameters to not take into account in GetRequest
     private static final List<String> excludedParameters = Arrays.asList("", "request", "version", "service");
@@ -61,12 +54,6 @@ public abstract class CatalogRequest {
 
     //---------------------------------------------------------------------------
     protected String serverVersion = Csw.CSW_VERSION;  // Sets default value
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
 
     public CatalogRequest(ServiceContext context) {
         this(context, null);

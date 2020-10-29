@@ -83,6 +83,7 @@ import java.util.SortedSet;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+
 public class Aligner extends BaseAligner<GeonetParams> {
 
     private Logger log;
@@ -522,7 +523,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, ufo, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, false, ufo, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
@@ -551,7 +552,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
         context.getBean(IMetadataManager.class).save(metadata);
 
-        dataMan.indexMetadata(id, Math.random() < 0.01, null);
+        dataMan.indexMetadata(id, Math.random() < 0.01);
         result.addedMetadata++;
 
         return id;
@@ -768,12 +769,12 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
 
         final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
-        AbstractMetadata metadata;
+        Metadata metadata;
         if (!force && !ri.isMoreRecentThan(date)) {
             if (log.isDebugEnabled())
                 log.debug("  - XML not changed for local metadata with uuid:" + ri.uuid);
             result.unchangedMetadata++;
-            metadata = metadataRepository.findOne(id);
+            metadata = metadataRepository.findOneById(Integer.valueOf(id));
             if (metadata == null) {
                 throw new NoSuchElementException("Unable to find a metadata with ID: " + id);
             }
@@ -793,9 +794,8 @@ public class Aligner extends BaseAligner<GeonetParams> {
             String language = context.getLanguage();
             metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate,
                 updateDateStamp);
-            metadata = metadataRepository.findOne(id);
+            metadata = metadataRepository.findOneById(Integer.valueOf(id));
             result.updatedMetadata++;
-
             if (force) {
                 //change ownership of metadata to new harvester
                 metadata.getHarvestInfo().setUuid(params.getUuid());
@@ -807,7 +807,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
         metadata.getCategories().clear();
         addCategories(metadata, params.getCategories(), localCateg, context, null, true);
-        metadata = metadataRepository.findOne(id);
+        metadata = metadataRepository.findOneById(Integer.valueOf(id));
 
         Element general = info.getChild("general");
 
@@ -840,7 +840,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         metadataManager.save(metadata);
 //        dataMan.flush();
 
-        dataMan.indexMetadata(id, Math.random() < 0.01, null);
+        dataMan.indexMetadata(id, Math.random() < 0.01);
     }
 
     private void handleFile(String id, String file, MetadataResourceVisibility visibility, String changeDate,

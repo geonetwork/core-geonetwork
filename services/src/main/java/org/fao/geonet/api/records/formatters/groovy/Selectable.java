@@ -24,7 +24,6 @@
 package org.fao.geonet.api.records.formatters.groovy;
 
 import groovy.util.slurpersupport.GPathResult;
-
 import org.springframework.beans.BeanUtils;
 
 import java.beans.PropertyDescriptor;
@@ -64,7 +63,7 @@ public abstract class Selectable {
     @Override
     public final String toString() {
         return getClass().getSimpleName() + "{" +
-            (name != null ? "name='" + name + "\'," : "") +
+            (name != null ? "name='" + name + "'," : "") +
             " priority=" + priority +
             extraToString() +
             '}';

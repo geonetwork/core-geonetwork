@@ -1,7 +1,7 @@
 package org.fao.geonet.listener.metadata.draft;
 
 import java.util.List;
-
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataDraft;
@@ -15,8 +15,7 @@ import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.repository.MetadataRatingByIpRepository;
@@ -28,8 +27,6 @@ import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import jeeves.server.context.ServiceContext;
 
 @Service
 public class DraftUtilities {
@@ -44,7 +41,7 @@ public class DraftUtilities {
     private MetadataFileUploadRepository metadataFileUploadRepository;
 
     @Autowired
-    private SearchManager searchManager;
+    private EsSearchManager searchManager;
 
     @Autowired
     private XmlSerializer xmlSerializer;
@@ -69,7 +66,6 @@ public class DraftUtilities {
      * remove the draft
      *
      * @param md
-     * @param draft
      * @return
      */
     public AbstractMetadata replaceMetadataWithDraft(AbstractMetadata md) {
@@ -155,7 +151,7 @@ public class DraftUtilities {
     public void removeDraft(MetadataDraft draft) {
 
         Integer id = draft.getId();
-        if (!metadataDraftRepository.exists(id)) {
+        if (!metadataDraftRepository.existsById(id)) {
             // We are being called after removing everything related to this record.
             // Nothing to do here
             return;
@@ -172,7 +168,7 @@ public class DraftUtilities {
 
             // --- remove metadata
             xmlSerializer.delete(String.valueOf(id), ServiceContext.get());
-            searchManager.delete(id + "");
+            searchManager.delete(String.format("+id:%d", id ));
         } catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, "Couldn't cleanup draft " + draft, e);
         }

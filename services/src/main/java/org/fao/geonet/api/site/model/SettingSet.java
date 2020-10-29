@@ -30,21 +30,23 @@ import org.fao.geonet.kernel.setting.Settings;
  */
 public enum SettingSet {
     INSPIRE(new String[]{
-        Settings.SYSTEM_INSPIRE_ENABLE_SEARCH_PANEL,
         Settings.SYSTEM_INSPIRE_ENABLE
+    }),
+    CSW(new String[]{
+        Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID,
+        Settings.SYSTEM_CSW_ENABLE,
+        Settings.SYSTEM_CSW_ENABLEWHENINDEXING,
+        Settings.SYSTEM_CSW_METADATA_PUBLIC,
+        Settings.SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS
     }),
     HARVESTER(new String[]{
         Settings.SYSTEM_HARVESTER_ENABLE_EDITING
     }),
     USER_GROUP_ONLY(
         new String[]{Settings.SYSTEM_METADATAPRIVS_USERGROUPONLY}),
-    AUTH,READ_ONLY,INDEX,SYSTEMINFO,STAGING_PROFILE,TYPE;
+    AUTH, READ_ONLY, INDEX, SYSTEMINFO, STAGING_PROFILE, TYPE;
 
     private String[] listOfSettings;
-
-    public String[] getListOfSettings() {
-        return listOfSettings;
-    }
 
     SettingSet() {
     }
@@ -60,5 +62,9 @@ public enum SettingSet {
             }
         }
         return false;
+    }
+
+    public String[] getListOfSettings() {
+        return listOfSettings;
     }
 }

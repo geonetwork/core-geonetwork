@@ -10,7 +10,10 @@ import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterApi;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.api.records.formatters.cache.Key;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.MetadataValidationId;
+import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
@@ -30,7 +33,10 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
 
 import static jeeves.transaction.TransactionManager.CommitBehavior.ALWAYS_COMMIT;
 import static jeeves.transaction.TransactionManager.TransactionRequirement.CREATE_NEW;
@@ -39,8 +45,8 @@ import static jeeves.transaction.TransactionManager.TransactionRequirement.CREAT
 public class MInspireEtfValidateProcess implements SelfNaming {
 
     private final ApplicationContext appContext;
-    private ServiceContext serviceContext;
-    private String URL;
+    private final ServiceContext serviceContext;
+    private final String URL;
 
     private ObjectName probeName;
     private int metadataToAnalyseCount = -1;
@@ -52,11 +58,23 @@ public class MInspireEtfValidateProcess implements SelfNaming {
     private long analyseMdDate = Long.MAX_VALUE;
 
 
+    public MInspireEtfValidateProcess(String URL,
+                                      ServiceContext serviceContext, ApplicationContext appContext) {
+        this.URL = URL;
+        this.serviceContext = serviceContext;
+        this.appContext = appContext;
+
+        try {
+            this.probeName = new ObjectName(String.format("geonetwork:name=batch-etf-inspire,idx=%s", this.hashCode()));
+        } catch (MalformedObjectNameException e) {
+            e.printStackTrace();
+        }
+    }
+
     @ManagedAttribute
     public int getMetadataToAnalyseCount() {
         return metadataToAnalyseCount;
     }
-
 
     @ManagedAttribute
     public int getMetadataAnalysed() {
@@ -88,23 +106,9 @@ public class MInspireEtfValidateProcess implements SelfNaming {
         return analyseMdDate;
     }
 
-
     @ManagedAttribute
     public ObjectName getObjectName() {
         return this.probeName;
-    }
-
-    public MInspireEtfValidateProcess(String URL,
-                                      ServiceContext serviceContext, ApplicationContext appContext) {
-        this.URL = URL;
-        this.serviceContext = serviceContext;
-        this.appContext = appContext;
-
-        try {
-            this.probeName = new ObjectName(String.format("geonetwork:name=batch-etf-inspire,idx=%s", this.hashCode()));
-        } catch (MalformedObjectNameException e) {
-            e.printStackTrace();
-        }
     }
 
     public void deleteAll() {
@@ -179,7 +183,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
                                                 inspireValidatorUtils.waitUntilReady(serviceContext, URL, testId);
 
                                                 String reportUrl = inspireValidatorUtils.getReportUrl(URL, testId);
-                                                String reportXmlUrl = inspireValidatorUtils.getReportUrlXML(URL, testId);
+                                                String reportXmlUrl = InspireValidatorUtils.getReportUrlXML(URL, testId);
                                                 String reportXml = inspireValidatorUtils.retrieveReport(serviceContext, reportXmlUrl);
 
                                                 String validationStatus = inspireValidatorUtils.isPassed(serviceContext, URL, testId);
@@ -251,15 +255,15 @@ public class MInspireEtfValidateProcess implements SelfNaming {
     }
 
     private final void runInNewTransaction(String name, TransactionTask<Object> transactionTask) {
-        TransactionManager.runInTransaction(name, appContext, CREATE_NEW,  ALWAYS_COMMIT, false, transactionTask);
+        TransactionManager.runInTransaction(name, appContext, CREATE_NEW, ALWAYS_COMMIT, false, transactionTask);
     }
 
 
     /**
      * Returns the metadata to validate in INSPIRE validator:
-     *  - For iso19139 schema returns the iso19139 xml.
-     *  - For other schemas uses the iso19139 formatter to convert it,
-     *    otherwise if not available an iso19139 formatter returns null.
+     * - For iso19139 schema returns the iso19139 xml.
+     * - For other schemas uses the iso19139 formatter to convert it,
+     * otherwise if not available an iso19139 formatter returns null.
      *
      * @param context
      * @param record

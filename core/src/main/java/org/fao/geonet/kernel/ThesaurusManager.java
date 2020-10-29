@@ -17,7 +17,7 @@
 //===	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //===
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: GeoNetwork@fao.org
+//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
 package org.fao.geonet.kernel;
@@ -30,10 +30,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -428,6 +425,50 @@ public class ThesaurusManager implements ThesaurusFinder {
             }
             elTitle.addContent(title);
 
+            //add multilingual titles in to response
+            //      "multilingualTitles":     [
+            //            { "lang": "fr","title": "Data Usage Scope FR"},
+            //            {"lang": "en","title": "Data Usage Scope EN"}
+            //      ],
+            Element elMultilingualTitles = new Element("multilingualTitles");
+            for (Map.Entry<String, String> entry : currentTh.getMultilingualTitles().entrySet()) {
+                Element elMultilingualTitle = new Element("multilingualTitle");
+                Element elMultilingualTitl_lang = new Element("lang");
+                elMultilingualTitl_lang.setText(entry.getKey());
+                Element elMultilingualTitle_title = new Element("title");
+                elMultilingualTitle_title.setText(entry.getValue());
+                elMultilingualTitle.addContent(elMultilingualTitl_lang);
+                elMultilingualTitle.addContent(elMultilingualTitle_title);
+
+                elMultilingualTitles.addContent(elMultilingualTitle);
+            }
+
+            //add dublin core items to the response
+            // "dublinCoreMultilingual": [
+            //    { "lang": "fr","tag":"title","value": "Data Usage Scope FR"},
+            //    {"lang": "en","tag":"title","value": "Data Usage Scope EN"}
+            //]
+            Element elDublinCoreMultilingual = new Element("dublinCoreMultilinguals");
+            for (Map.Entry<String, Map<String,String>> entryLang : currentTh.getDublinCoreMultilingual().entrySet()) {
+                String lang = entryLang.getKey();
+                for (Map.Entry<String, String> entryItem : entryLang.getValue().entrySet()) {
+                    Element elItem = new Element("dublinCoreMultilingual");
+                    Element elLang = new Element("lang");
+                    elLang.setText(lang);
+                    Element elTag = new Element("tag");
+                    elTag.setText(entryItem.getKey());
+                    Element elValue = new Element("value");
+                    elValue.setText(entryItem.getValue());
+
+                    elItem.addContent(elLang);
+                    elItem.addContent(elTag);
+                    elItem.addContent(elValue);
+
+
+                    elDublinCoreMultilingual.addContent(elItem);
+                }
+            }
+
             Element elType = new Element("type");
             String type = currentTh.getType();
             elType.addContent(type);
@@ -450,8 +491,8 @@ public class ThesaurusManager implements ThesaurusFinder {
             // By default thesaurus are enabled (if nothing defined in db)
             char activated = Constants.YN_TRUE;
             final ThesaurusActivationRepository activationRepository = context.getBean(ThesaurusActivationRepository.class);
-            final ThesaurusActivation activation = activationRepository.findOne(currentTh.getKey());
-            if (activation != null && !activation.isActivated()) {
+            final Optional<ThesaurusActivation> activation = activationRepository.findById(currentTh.getKey());
+            if (activation.isPresent() && !activation.get().isActivated()) {
                 activated = Constants.YN_FALSE;
             }
             elActivated.setText("" + activated);
@@ -460,6 +501,8 @@ public class ThesaurusManager implements ThesaurusFinder {
             elLoop.addContent(elDname);
             elLoop.addContent(elFname);
             elLoop.addContent(elTitle);
+            elLoop.addContent(elMultilingualTitles);
+            elLoop.addContent(elDublinCoreMultilingual);
             elLoop.addContent(elDate);
             elLoop.addContent(elUrl);
             elLoop.addContent(elDefaultURI);

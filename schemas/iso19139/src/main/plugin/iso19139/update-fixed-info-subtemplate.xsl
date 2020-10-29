@@ -175,7 +175,7 @@
     </xsl:choose>
   </xsl:template>
 
-
+  <xsl:template match="gml:LinearRing/@srsName"/>
 
   <xsl:template name="correct_ns_prefix">
     <xsl:param name="element"/>

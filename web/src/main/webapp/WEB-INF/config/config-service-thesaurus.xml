@@ -34,24 +34,6 @@
       <error sheet="../xslt/error/error-json.xsl" contentType="application/json"/>
     </service>
 
-    <service name="thesaurus.upload" deprecated="true" >
-      <documentation><![CDATA[
-        Upload a new thesaurus.
-        ]]></documentation>
-      <class name=".services.thesaurus.Upload"/>
-      <error sheet="../xslt/error/error-json.xsl" contentType="application/json"/>
-    </service>
-
-    <service name="thesaurus.download" deprecated="true" >
-      <documentation><![CDATA[
-        Download a thesaurus.
-
-        ]]></documentation>
-      <class name=".services.thesaurus.Download"/>
-      <output file="true"/>
-      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
-    </service>
-
     <service name="thesaurus.add.from.register">
       <documentation><![CDATA[
         TODO
@@ -87,20 +69,6 @@
       <class name=".services.thesaurus.Add"/>
       <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
-
-    <service name="thesaurus.remove" deprecated="true">
-      <documentation><![CDATA[
-        Remove a thesaurus.
-
-        Parameters are:
-        * ref=local.theme.da
-        ]]>
-
-      </documentation>
-      <class name=".services.thesaurus.Delete"/>
-      <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
-    </service>
-
 
     <service name="thesaurus.enable">
       <documentation><![CDATA[

@@ -52,7 +52,6 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -426,7 +425,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
@@ -434,7 +433,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
         metadataManager.flush();
 
-        dataMan.indexMetadata(id, Math.random() < 0.01, null);
+        dataMan.indexMetadata(id, Math.random() < 0.01);
         result.addedMetadata++;
     }
 
@@ -510,7 +509,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
     }
 
     private Element toDublinCore(Element md) {
-        Path styleSheet = context.getAppPath().resolve("conversion/oai_dc-to-dublin-core/main.xsl");
+        Path styleSheet = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("conversion/oai_dc-to-dublin-core/main.xsl");
 
         try
         {
@@ -604,9 +603,9 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
             metadataManager.flush();
-            dataMan.indexMetadata(id, Math.random() < 0.01, null);
+            dataMan.indexMetadata(id, Math.random() < 0.01);
             result.updatedMetadata++;
-            metadataIndexer.indexMetadata(id, true, null);
+            metadataIndexer.indexMetadata(id, true);
             result.updatedMetadata++;
         }
     }

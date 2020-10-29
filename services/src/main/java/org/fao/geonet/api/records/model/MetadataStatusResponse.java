@@ -41,6 +41,7 @@ public class MetadataStatusResponse extends MetadataStatus {
     String ownerProfile;
 
     String title;
+    String uuid;
     String currentStatus;
     String previousStatus;
 
@@ -52,7 +53,7 @@ public class MetadataStatusResponse extends MetadataStatus {
 
     public MetadataStatusResponse(MetadataStatus s, boolean loadFull) {
         this.metadataStatusObject = s;
-        if(loadFull) {
+        if (loadFull) {
             this.loadFull = true;
             this.metadataStatusObject.getCurrentState();
             this.metadataStatusObject.getPreviousState();
@@ -117,8 +118,13 @@ public class MetadataStatusResponse extends MetadataStatus {
         return currentStatus;
     }
 
+    public MetadataStatusResponse setCurrentStatus(String currentStatus) {
+        this.currentStatus = currentStatus;
+        return this;
+    }
+
     public String getCurrentStatusDetails() {
-        if(loadFull) {
+        if (loadFull) {
             return metadataStatusObject.getCurrentState();
         } else {
             return "";
@@ -129,29 +135,34 @@ public class MetadataStatusResponse extends MetadataStatus {
         return previousStatus;
     }
 
+    public MetadataStatusResponse setPreviousStatus(String previousStatus) {
+        this.previousStatus = previousStatus;
+        return this;
+    }
+
     public String getPreviousStatusDetails() {
-        if(loadFull) {
+        if (loadFull) {
             return metadataStatusObject.getPreviousState();
         } else {
             return "";
         }
     }
 
-    public MetadataStatusResponse setCurrentStatus(String currentStatus) {
-        this.currentStatus = currentStatus;
-        return this;
-    }
-
-    public MetadataStatusResponse setPreviousStatus(String previousStatus) {
-        this.previousStatus = previousStatus;
-        return this;
-    }
     public String getTitle() {
         return title;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
     public MetadataStatusResponse setTitle(String title) {
         this.title = title;
+        return this;
+    }
+
+    public MetadataStatusResponse setUuid(String uuid) {
+        this.uuid = uuid;
         return this;
     }
 

@@ -23,14 +23,9 @@
 
 package org.fao.geonet.services.relations;
 
-import static org.fao.geonet.repository.specification.MetadataRelationSpecs.hasMetadataId;
-import static org.fao.geonet.repository.specification.MetadataRelationSpecs.hasRelatedId;
-import static org.springframework.data.jpa.domain.Specifications.where;
-
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataRelation;
 import org.fao.geonet.domain.MetadataRelationId;
@@ -38,15 +33,19 @@ import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.nio.file.Path;
+
+import static org.fao.geonet.repository.specification.MetadataRelationSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.MetadataRelationSpecs.hasRelatedId;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 //=============================================================================
 
 /**
  * Insert the relation between two metadata records. Input parameters could be UUID or internal id.
- *
+ * <p>
  * TODO : Should we add a relation type to store different kind of relation. For the time being,
  * relation table is used to store link between iso19139 and iso19110 metadata records.
  */
@@ -71,7 +70,7 @@ public class Insert extends NotInReadOnlyModeService {
         int childId = Integer.parseInt(Utils.getIdentifierFromParameters(
             params, context, Params.CHILD_UUID, Params.CHILD_ID));
 
-        final Specifications<MetadataRelation> spec = where(hasMetadataId(parentId)).and(hasRelatedId(childId));
+        final Specification<MetadataRelation> spec = where(hasMetadataId(parentId)).and(hasRelatedId(childId));
         final MetadataRelationRepository metadataRelationRepository = context.getBean(MetadataRelationRepository.class);
         final long count = metadataRelationRepository.count(spec);
 

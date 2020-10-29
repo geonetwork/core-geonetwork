@@ -48,8 +48,6 @@ import java.util.Map;
 public class CswPublicationDispatcher extends NotInReadOnlyModeService {
     private Logger logger;
 
-    private String cswServiceSpecificContraint;
-
     /**
      *
      * @param appPath
@@ -59,7 +57,6 @@ public class CswPublicationDispatcher extends NotInReadOnlyModeService {
     @Override
     public void init(Path appPath, ServiceConfig config) throws Exception {
         super.init(appPath, config);
-        cswServiceSpecificContraint = config.getValue(Geonet.Elem.FILTER);
     }
 
     /**
@@ -119,7 +116,7 @@ public class CswPublicationDispatcher extends NotInReadOnlyModeService {
             Element info = new Element("info").setText("CSW is disabled");
             response.addContent(info);
         } else {
-            response = gc.getBean(CatalogDispatcher.class).dispatch(params, context, cswServiceSpecificContraint);
+            response = gc.getBean(CatalogDispatcher.class).dispatch(params, context);
         }
         return response;
     }

@@ -25,7 +25,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                version="2.0"
+                version="2.0" xmlns:xslk="http://www.w3.org/1999/XSL/Transform"
                 exclude-result-prefixes="#all">
 
 
@@ -104,7 +104,7 @@
                           padding-left="4pt"
                           text-align="left">
                   <xsl:call-template name="replacePlaceholders">
-                    <xsl:with-param name="value" select="$env/metadata/pdfReport/headerLeft"/>
+                    <xsl:with-param name="value" select="$env/system/metadata/pdfReport/headerLeft"/>
                   </xsl:call-template>
                 </fo:block>
               </fo:table-cell>
@@ -114,7 +114,7 @@
                           padding-left="4pt"
                           text-align="right">
                   <xsl:call-template name="replacePlaceholders">
-                    <xsl:with-param name="value" select="$env/metadata/pdfReport/headerRight"/>
+                    <xsl:with-param name="value" select="$env/system/metadata/pdfReport/headerRight"/>
                   </xsl:call-template>
                 </fo:block>
               </fo:table-cell>
@@ -138,7 +138,7 @@
                           padding-left="4pt"
                           text-align="left">
                   <xsl:call-template name="replacePlaceholders">
-                    <xsl:with-param name="value" select="$env/metadata/pdfReport/footerLeft"/>
+                    <xsl:with-param name="value" select="$env/system/metadata/pdfReport/footerLeft"/>
                   </xsl:call-template>
                 </fo:block>
               </fo:table-cell>
@@ -149,9 +149,9 @@
                           padding-left="4pt"
                           text-align="right">
                   <xsl:call-template name="replacePlaceholders">
-                    <xsl:with-param name="value" select="$env/metadata/pdfReport/footerRight"/>
+                    <xsl:with-param name="value" select="$env/system/metadata/pdfReport/footerRight"/>
                   </xsl:call-template>
-                  <xsl:if test="string($env/metadata/pdfReport/footerRight)"> | </xsl:if>
+                  <xsl:if test="string($env/system/metadata/pdfReport/footerRight)"> | </xsl:if>
                   <fo:page-number/>/<fo:page-number-citation ref-id="terminator"/>
                 </fo:block>
               </fo:table-cell>
@@ -170,8 +170,8 @@
                                 $value, '\{date\}',
                                 format-dateTime(current-dateTime(),$df)),
                                   '\{siteInfo\}',
-                                  concat($env/system/site/name, '-',
-                                         $env/system/site/organization))"/>
+                                  concat($env/system/system/site/name, '-',
+                                         $env/system/system/site/organization))"/>
   </xsl:template>
 
 
@@ -183,19 +183,19 @@
                 font-weight="{$heading1-text-weight}"
                 text-align="center"
                 margin-bottom="10pt">
-        <xsl:value-of select="/root/gui/strings/pdfReportTocTitle"/>
+        <xsl:value-of select="$translations/pdfReportTocTitle"/>
       </fo:block>
 
 
-      <xsl:for-each select="$res/*[name() != 'summary' and name() != 'from' and name() != 'to']">
+      <xsl:for-each select="$res">
         <fo:block text-align-last="justify"
                   font-size="{$toc-text-size}"
                   font-weight="{$label-weight}"
                   color="{$font-color}">
-          <fo:basic-link internal-destination="section-{geonet:info/uuid}">
-            <xsl:value-of select="defaultTitle"/>
+          <fo:basic-link internal-destination="section-{uuid}">
+            <xsl:value-of select="resourceTitle"/>
             <fo:leader leader-pattern="space"/>
-            <fo:page-number-citation ref-id="section-{geonet:info/uuid}"/>
+            <fo:page-number-citation ref-id="section-{uuid}"/>
           </fo:basic-link>
         </fo:block>
       </xsl:for-each>
@@ -213,11 +213,10 @@
     <fo:table>
       <fo:table-column column-width="17cm"/>
       <fo:table-body>
-        <xsl:for-each select="$res/*[name() != 'summary' and name() != 'from' and name() != 'to']">
+        <xsl:for-each select="$res">
+          <xsl:variable name="source" select="string(sourceCatalogue)"/>
 
-          <xsl:variable name="source" select="string(geonet:info/source)"/>
-
-          <xsl:if test="geonet:info/id != ''">
+          <xsl:if test="id != ''">
             <fo:table-row border-top-style="solid"
                           border-right-style="solid"
                           border-left-style="solid"
@@ -232,8 +231,8 @@
                           font-size="{$title-size}" color="{$title-color}"
                           padding-top="4pt" padding-bottom="4pt"
                           padding-left="4pt" padding-right="4pt"
-                          id="section-{geonet:info/uuid}">
-                  <xsl:value-of select="defaultTitle"/>
+                          id="section-{uuid}">
+                  <xsl:value-of select="resourceTitleObject"/>
                 </fo:block>
               </fo:table-cell>
             </fo:table-row>
@@ -249,20 +248,19 @@
                     <fo:table-body>
 
                       <xsl:call-template name="info-rows">
-                        <xsl:with-param name="label" select="$oldGuiStrings/abstract"/>
-                        <xsl:with-param name="value" select="abstract"/>
+                        <xsl:with-param name="label" select="$translations/abstract"/>
+                        <xsl:with-param name="value" select="resourceAbstractObject"/>
                       </xsl:call-template>
 
                       <xsl:call-template name="info-rows">
-                        <xsl:with-param name="label" select="$oldGuiStrings/extent"/>
+                        <xsl:with-param name="label" select="$translations/extent"/>
                         <xsl:with-param name="content">
-                          <xsl:for-each select="geoBox[. != '']">
-                            <xsl:variable name="coords"
-                                          select="tokenize(normalize-space(.), '\|')"/>
+                          <xsl:if test="geom[. != '']">
                             <xsl:variable name="url"
-                                          select="concat($nodeUrl, 'eng/region.getmap.png?mapsrs=EPSG:3857&amp;width=300&amp;background=settings&amp;geomsrs=EPSG:4326&amp;geom=Polygon((', $coords[1], ' ', $coords[2], ',', $coords[1], ' ', $coords[4], ',', $coords[3], ' ', $coords[4], ',', $coords[3], ' ', $coords[2], ',', $coords[1], ' ', $coords[2], '))')"/>
+                                          select="concat($nodeUrl, 'api/records/', uuid, '/extents.png')"/>
+
                             <fo:basic-link text-decoration="underline"
-                                           color="$link-color"
+                                           color="{$link-color}"
                                            external-destination="{$url}">
                               <fo:external-graphic padding-left="4pt"
                                                    content-width="100%">
@@ -272,15 +270,15 @@
                                 </xsl:attribute>
                               </fo:external-graphic>
                             </fo:basic-link>
-                          </xsl:for-each>
+                          </xsl:if>
                         </xsl:with-param>
                       </xsl:call-template>
 
 
                       <xsl:call-template name="info-rows">
-                        <xsl:with-param name="label" select="$oldGuiStrings/keywords"/>
+                        <xsl:with-param name="label" select="$translations/Keywords"/>
                         <xsl:with-param name="value"
-                                        select="string-join(keyword, ', ')"/>
+                                        select="string-join(tag, ', ')"/>
                       </xsl:call-template>
 
                       <xsl:if test="legalConstraints">
@@ -294,33 +292,33 @@
                         </xsl:call-template>
                       </xsl:if>
 
-                      <xsl:if test="spatialRepresentationType_text">
+                      <xsl:if test="codelist_spatialRepresentationType_text">
                         <xsl:call-template name="info-rows">
-                          <xsl:with-param name="label" select="$oldGuiStrings/spatialRepresentationType"/>
+                          <xsl:with-param name="label" select="$translations/spatialRepresentationTypes"/>
                           <xsl:with-param name="value"
-                                          select="string-join(spatialRepresentationType_text, ', ')"/>
+                                          select="string-join(codelist_spatialRepresentationType_text, ', ')"/>
                         </xsl:call-template>
                       </xsl:if>
 
                       <xsl:if test="format">
                         <xsl:call-template name="info-rows">
-                          <xsl:with-param name="label" select="$oldGuiStrings/format"/>
+                          <xsl:with-param name="label" select="$translations/format"/>
                           <xsl:with-param name="value"
                                           select="string-join(format, ', ')"/>
                         </xsl:call-template>
                       </xsl:if>
 
-                      <xsl:if test="maintenanceAndUpdateFrequency_text">
+                      <xsl:if test="codelist_maintenanceAndUpdateFrequency_text">
                         <xsl:call-template name="info-rows">
-                          <xsl:with-param name="label" select="$oldGuiStrings/updateFrequency"/>
+                          <xsl:with-param name="label" select="$translations/updateFrequency"/>
                           <xsl:with-param name="value"
-                                          select="string-join(maintenanceAndUpdateFrequency_text, ', ')"/>
+                                          select="string-join(codelist_maintenanceAndUpdateFrequency_text, ', ')"/>
                         </xsl:call-template>
                       </xsl:if>
 
                       <xsl:call-template name="info-rows">
-                        <xsl:with-param name="label" select="$oldGuiStrings/uuid"/>
-                        <xsl:with-param name="value" select="geonet:info/uuid"/>
+                        <xsl:with-param name="label" select="$translations/uuid"/>
+                        <xsl:with-param name="value" select="uuid"/>
                         <xsl:with-param name="content">
                           <fo:external-graphic padding-left="4pt"
                                                content-width="9pt">
@@ -333,38 +331,35 @@
                       </xsl:call-template>
 
                       <xsl:call-template name="info-rows">
-                        <xsl:with-param name="label" select="$oldGuiStrings/lastUpdate"/>
+                        <xsl:with-param name="label" select="$translations/updatedOn"/>
                         <xsl:with-param name="value"
-                                        select="geonet:info/changeDate"/>
+                                        select="changeDate"/>
                       </xsl:call-template>
 
-                      <xsl:call-template name="metadata-resources">
-                        <xsl:with-param name="gui" select="$oldGuiStrings"/>
-                        <xsl:with-param name="metadata" select="."/>
-                      </xsl:call-template>
+                      <xsl:call-template name="metadata-resources"/>
 
                       <xsl:call-template name="info-rows">
-                        <xsl:with-param name="label" select="$oldGuiStrings/onTheWeb"/>
+                        <xsl:with-param name="label" select="$translations/onTheWeb"/>
                         <xsl:with-param name="content">
                           <fo:inline>
-                            <xsl:value-of select="$oldGuiStrings/show"/>
+                            <xsl:value-of select="$translations/show"/>
                             <xsl:text> </xsl:text>
-                            <fo:basic-link text-decoration="underline" color="$link-color">
+                            <fo:basic-link text-decoration="underline" color="{$link-color}">
                               <xsl:attribute name="external-destination">url('<xsl:value-of
-                                select="concat($nodeUrl, 'api/records/', geonet:info/uuid)"
+                                select="concat($nodeUrl, 'api/records/', uuid)"
                               />')
                               </xsl:attribute>HTML
                             </fo:basic-link>
-                            <fo:basic-link text-decoration="underline" color="$link-color">
+                            <fo:basic-link text-decoration="underline" color="{$link-color}">
                               <xsl:attribute name="external-destination">url('<xsl:value-of
-                                select="concat($nodeUrl, 'api/records/', geonet:info/uuid, '/formatters/xsl-view?view=advanced&amp;output=pdf')"/>')
+                                select="concat($nodeUrl, 'api/records/', uuid, '/formatters/xsl-view?view=advanced&amp;output=pdf')"/>')
                               </xsl:attribute>PDF
                             </fo:basic-link>
-                            <fo:basic-link text-decoration="underline" color="$link-color">
+                            <fo:basic-link text-decoration="underline" color="{$link-color}">
                               <xsl:attribute name="external-destination">url('<xsl:value-of
-                                select="concat($nodeUrl, 'api/records/', geonet:info/uuid, '/formatters/xml')"
+                                select="concat($nodeUrl, 'api/records/', uuid, '/formatters/xml')"
                               />')
-                              </xsl:attribute>XML (<xsl:value-of select="if (standardName != '') then standardName else geonet:info/schema"/>)
+                              </xsl:attribute>XML (<xsl:value-of select="if (standardName != '') then standardName else schema"/>)
                             </fo:basic-link>
                           </fo:inline>
 
@@ -377,9 +372,7 @@
             </fo:table-row>
             <fo:table-row>
               <fo:table-cell background-color="{$background-color-thumbnail}">
-                <xsl:call-template name="metadata-thumbnail-block">
-                  <xsl:with-param name="metadata" select="."/>
-                </xsl:call-template>
+                <xsl:call-template name="metadata-thumbnail-block"/>
               </fo:table-cell>
             </fo:table-row>
           </xsl:if>
@@ -388,21 +381,11 @@
     </fo:table>
   </xsl:template>
 
-
-
-
   <xsl:template name="metadata-thumbnail-block">
-    <xsl:param name="metadata"/>
-
     <fo:block display-align="center"
               padding-top="4pt" padding-bottom="4pt" padding-right="4pt" padding-left="4pt">
-      <!-- Format:
-         <image>thumbnail|resources.get?uuid=da165110-88fd-11da-a88f-000d939bc5d8&fname=thumbnail_s.gif&access=public</image>
-      -->
-
-      <!-- Thumbnails - Use the first one only -->
-      <xsl:for-each select="$metadata/image">
-        <xsl:variable name="image" select="tokenize(., '\|')[2]"/>
+      <xsl:for-each select="overview">
+        <xsl:variable name="image" select="tokenize(., '\|')[1]"/>
 
         <xsl:choose>
           <xsl:when test="contains($image ,'://')">
@@ -430,56 +413,24 @@
     </fo:block>
   </xsl:template>
 
-  <!-- ====================================
-    List of metadata resources based on online source section.
-    Metadata must be in brief format
-  -->
-  <xsl:template name="metadata-resources">
-    <xsl:param name="gui"/>
-    <xsl:param name="metadata"/>
-    <xsl:param name="title" select="true()"/>
-    <xsl:param name="remote" select="false()"/>
 
+
+  <xsl:template name="metadata-resources">
     <!-- display metadata url but only if its not a remote result -->
     <xsl:call-template name="info-rows">
-      <xsl:with-param name="label" select="if ($title) then $oldGuiStrings/resources else ''"/>
+      <xsl:with-param name="label" select="$translations/downloadsAndResources"/>
       <xsl:with-param name="content">
-        <xsl:if test="$metadata/geonet:info/download='true'">
-          <!-- Format:
-          <link>phy.zip|Physiography of North and Central Eurasia Landform (Gif Format)|http://localhost:8080/geonetwork/srv/en/resources.get?uuid=78f93047-74f8-4419-ac3d-fc62e4b0477b&fname=phy.zip&access=private|WWW:DOWNLOAD-1.0-http- -download|application/zip</link>
-          -->
+          <xsl:for-each select="link">
+            <xsl:variable name="link" select="tokenize(., '\|')"/>
 
-          <xsl:for-each select="$metadata/link[contains(., 'WWW:DOWNLOAD')]">
-            <xsl:variable name="link" select="tokenize(., '\|')[3]"/>
-
-            <fo:basic-link text-decoration="underline" color="$link-color">
-              <xsl:attribute name="external-destination">url('<xsl:value-of select="$link"/>')
+            <fo:basic-link text-decoration="underline" color="{$link-color}">
+              <xsl:attribute name="external-destination">url('<xsl:value-of select="$link[3]"/>')
               </xsl:attribute>
-              <xsl:value-of select="$oldGuiStrings/download"/>
+              <xsl:value-of select="$link[1]"/>
+              (<xsl:value-of select="$link[4]"/>)
             </fo:basic-link>
             <fo:block/>
           </xsl:for-each>
-        </xsl:if>
-
-        <xsl:if test="$metadata/geonet:info/dynamic='true'">
-          <!-- Format:
-          <link>landform|Physiography of North and Central Eurasia Landform|http://geonetwork3.fao.org/ows/7386_landf|OGC:WMS-1.1.1-http-get-map|application/vnd.ogc.wms_xml</link>
-          -->
-
-          <xsl:for-each select="$metadata/link[contains(., 'application/vnd.ogc.wms_xml')]">
-            <xsl:variable name="title" select="tokenize(., '\|')[2]"/>
-            <xsl:variable name="link" select="tokenize(., '\|')[3]"/>
-
-            <fo:basic-link text-decoration="underline" color="$link-color">
-              <xsl:attribute name="external-destination">url('<xsl:value-of select="$link"/>')
-              </xsl:attribute>
-              <xsl:value-of select="$oldGuiStrings/visualizationService"/> (<xsl:value-of
-              select="$title"/>)
-            </fo:basic-link>
-            <fo:block/>
-          </xsl:for-each>
-        </xsl:if>
-
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
@@ -490,7 +441,7 @@
     <xsl:param name="value"/>
     <xsl:param name="content"/>
     <fo:table-row>
-      <fo:table-cell background-color="{if ($label != '') then $background-color else ''}"
+      <fo:table-cell background-color="{if ($label != '') then $background-color else '#DDDDDD'}"
                      border-top-style="solid"
                      border-top-color="{$title-color}" border-top-width=".1pt"
                      color="{$font-color}"

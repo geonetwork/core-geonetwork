@@ -22,13 +22,13 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>es-dashboards</artifactId>
+  <artifactId>gn-es-dashboards</artifactId>
   <name>GeoNetwork dashboard app based on Kibana</name>
 
   <parent>
-    <artifactId>es</artifactId>
+    <artifactId>gn-es</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.11.0-SNAPSHOT</version>
+    <version>4.0.1-SNAPSHOT</version>
   </parent>
   <profiles>
     <profile>
@@ -43,10 +43,10 @@
           <plugin>
             <groupId>com.googlecode.maven-download-plugin</groupId>
             <artifactId>download-maven-plugin</artifactId>
+            <inherited>false</inherited>
             <executions>
               <execution>
-                <id>download-elastic-search</id>
-                <phase>pre-integration-test</phase>
+                <id>download-kibana</id>
                 <goals>
                   <goal>wget</goal>
                 </goals>
@@ -56,7 +56,6 @@
                   </url>
                   <unpack>true</unpack>
                   <outputDirectory>${project.basedir}</outputDirectory>
-                  <sha512>${kb.version.sha512}</sha512>
                 </configuration>
               </execution>
             </executions>
@@ -76,26 +75,13 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
+            <inherited>false</inherited>
             <configuration>
               <executable>kibana-${es.version}-${kb.platform}/bin/${kb.executable}</executable>
             </configuration>
           </plugin>
         </plugins>
       </build>
-    </profile>
-    <profile>
-      <id>windows</id>
-      <activation>
-        <os>
-          <family>Windows</family>
-        </os>
-      </activation>
-      <properties>
-        <kb.executable>kibana.bat</kb.executable>
-        <kb.platform>windows-x86</kb.platform>
-        <kb.installer.extension>zip</kb.installer.extension>
-        <kb.version.sha512>d9ed16170f9ef88a2dc4f0d300c52157674d1fe902cd1da3e9472d0830c0810b9417d9d3af6116dcdb328dea038998f9b4c695e0284d6094f43777b6598a7bf4</kb.version.sha512>
-      </properties>
     </profile>
   </profiles>
   <properties>

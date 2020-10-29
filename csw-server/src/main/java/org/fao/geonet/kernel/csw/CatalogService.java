@@ -30,8 +30,6 @@ import org.jdom.Element;
 
 import java.util.Map;
 
-//=============================================================================
-
 public interface CatalogService {
     String BEAN_PREFIX = "CswService.";
 
@@ -55,6 +53,3 @@ public interface CatalogService {
      */
     public Element retrieveValues(String parameterName) throws CatalogException;
 }
-
-//=============================================================================
-

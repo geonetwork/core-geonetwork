@@ -29,7 +29,7 @@ package org.fao.geonet.api.records.formatters.groovy;
  * @author Jesse on 10/16/2014.
  */
 public class TransformationContext {
-    private static ThreadLocal<TransformationContext> context = new InheritableThreadLocal<TransformationContext>();
+    private static final ThreadLocal<TransformationContext> context = new InheritableThreadLocal<TransformationContext>();
     public final Handlers handlers;
     public final Functions functions;
     public final Environment env;

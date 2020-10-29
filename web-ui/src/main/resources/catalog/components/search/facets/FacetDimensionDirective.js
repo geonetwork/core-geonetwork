@@ -195,17 +195,14 @@
 
           // Load facet configuration to know which index field
           // correspond to which dimension.
-          gnFacetConfigService.loadConfig(scope.facetType).
-              then(function(data) {
-                scope.facetConfig = {
-                  config: data,
-                  map:  {}
-                };
+          scope.facetConfig = {
+            config: {},
+            map:  {}
+          };
 
-                angular.forEach(scope.facetConfig.config, function(key) {
-                  scope.facetConfig.map[key.label] = key.name;
-                });
-              });
+          angular.forEach(scope.facetConfig.config, function(key) {
+            scope.facetConfig.map[key.label] = key.name;
+          });
         }
       };
     }]);

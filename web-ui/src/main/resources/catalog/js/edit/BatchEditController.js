@@ -37,23 +37,24 @@
       };
       $scope.isFilterTagsDisplayed =
           gnGlobalSettings.gnCfg.mods.editor.isFilterTagsDisplayed;
+
       $scope.defaultSearchObj = {
         permalink: false,
+        configId: 'editor',
         sortbyValues: gnSearchSettings.sortbyValues,
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         selectionBucket: 'be101',
         filters: gnSearchSettings.filters,
         params: {
-          sortBy: 'changeDate',
-          _isTemplate: 'y or n',
+          sortBy: 'dateStamp',
+          sortOrder: 'desc',
+          isTemplate: ['y', 'n'],
           editable: 'true',
-          resultType: $scope.facetsSummaryType,
           from: 1,
           to: 20
         }
       };
       angular.extend($scope.searchObj, $scope.defaultSearchObj);
-
 
       // Only my record toggle
       $scope.toggleOnlyMyRecord = function(callback) {
@@ -61,10 +62,10 @@
         callback();
       };
       var setOwner = function() {
-        $scope.searchObj.params['_owner'] = $scope.user.id;
+        $scope.searchObj.params['owner'] = $scope.user.id;
       };
       var unsetOwner = function() {
-        delete $scope.searchObj.params['_owner'];
+        delete $scope.searchObj.params['owner'];
       };
       $scope.$watch('user.id', function(newId) {
         if (angular.isDefined(newId) && $scope.onlyMyRecord.is) {
@@ -72,6 +73,7 @@
         }
       });
 
+      var maxRecordsDisplayed = 100;
 
       // When selection change get the current selection uuids
       // and populate a list of currently selected records to be
@@ -88,23 +90,40 @@
                   success(function(uuids) {
                     $scope.selectedRecordsCount = uuids.length;
                     if (uuids.length > 0) {
-                      $http.get('q?_content_type=json&_isTemplate=y or n or s&' +
-                            'fast=index&resultType=manager&' +
-                            '_uuid=' + uuids.join(' or ')).then(
-                          function(r) {
-                            var data = r.data;
-                            $scope.selectedRecords =
-                              gnSearchManagerService.format(data);
-                            $.each($scope.selectedRecords.dimension,
-                              function(idx, dim) {
-                                if (dim['@label'] == 'standards') {
-                                  $scope.selectedStandards = dim.category;
-                                  $scope.isSelectedAMixOfStandards =
-                                  $scope.selectedStandards &&
-                                  $scope.selectedStandards.length > 1;
-                                  return false;
+                      var query = {
+                        "size": maxRecordsDisplayed,
+                        "aggs": {
+                          "schema": {
+                            "terms": {
+                              "field": "schema.keyword",
+                              "size": 10
+                            }
+                          }
+                        },
+                        "query": {
+                          "bool": {
+                            "must": [{
+                                "terms": {
+                                  "isTemplate": ["y", "n", "s"]
                                 }
-                              });
+                              },
+                              {
+                                "terms": {
+                                  "uuid": uuids
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        "_source": ["resourceTitleObject.default"]
+                      };
+                      $http.post('../api/search/records/_search', query).then(
+                          function(r) {
+                            $scope.selectedRecords = r.data.hits;
+                            $scope.selectedStandards = r.data.aggregations.schema.buckets;
+                            $scope.isSelectedAMixOfStandards =
+                              $scope.selectedStandards &&
+                              $scope.selectedStandards.length > 1;
                             // TODO: If too many records - only list the first 20.
                           }, function (r) {
                             // Could produce too long URLs 414 (URI Too Long)
@@ -126,7 +145,7 @@
           return true;
         }
         $.each($scope.selectedStandards, function(idx, facet) {
-          if (facet['@value'] == standard) {
+          if (facet.key == standard) {
             isFound = true;
             return false;
           }
@@ -139,7 +158,7 @@
       $scope.searchSelection = function(params) {
         $http.get('../api/selections/be101').success(function(uuids) {
           $scope.searchObj.params = angular.extend({
-            _uuid: uuids.join(' or ')
+            uuid: uuids
           },
           $scope.defaultSearchObj.params);
           $scope.triggerSearch();
@@ -159,10 +178,12 @@
     '$compile',
     '$httpParamSerializer',
     'gnSearchSettings',
+    'gnGlobalSettings',
     'gnCurrentEdit',
     'gnSchemaManagerService',
     function($scope, $location, $http, $compile, $httpParamSerializer,
-        gnSearchSettings, gnCurrentEdit, gnSchemaManagerService) {
+        gnSearchSettings, gnGlobalSettings,
+        gnCurrentEdit, gnSchemaManagerService) {
 
       // Simple tab handling.
       $scope.selectedStep = 1;
@@ -199,26 +220,6 @@
       }];
       gnSearchSettings.resultTemplate =
           gnSearchSettings.resultViewTpls[0].tplUrl;
-
-      $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType = 'manager';
-
-      gnSearchSettings.sortbyValues = [{
-        sortBy: 'relevance',
-        sortOrder: ''
-      }, {
-        sortBy: 'changeDate',
-        sortOrder: ''
-      }, {
-        sortBy: 'title',
-        sortOrder: 'reverse'
-      }];
-
-      gnSearchSettings.hitsperpageValues = [20, 50, 100];
-
-      gnSearchSettings.paginationInfo = {
-        hitsPerPage: gnSearchSettings.hitsperpageValues[1]
-      };
-
 
       // TODO: Improve for other standards
       // Object used by directory directive
@@ -334,7 +335,7 @@
           };
         }
         $scope.xmlContacts[field.name].values.push({
-          title: record.title + (role ? ' - ' + role : ''),
+          title: record.resourceTitle + (role ? ' - ' + role : ''),
           xml: scope.snippet
         });
         $scope.addChange(field, {

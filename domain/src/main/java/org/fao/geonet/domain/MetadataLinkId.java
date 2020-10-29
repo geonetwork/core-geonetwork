@@ -32,23 +32,23 @@ import java.io.Serializable;
 public class MetadataLinkId implements Serializable {
     private static final long serialVersionUID = -5759713154514715316L;
 
-    private Link link;
+    private Integer link;
 
     private Integer metadataId;
 
     public MetadataLinkId() {
     }
 
-    public Link getLink() {
+    public Integer getLink() {
         return link;
+    }
+
+    public void setLink(Integer link) {
+        this.link = link;
     }
 
     public Integer getMetadataId() {
         return metadataId;
-    }
-
-    public void setLink(Link link) {
-        this.link = link;
     }
 
     public void setMetadataId(Integer metadataId) {
@@ -59,7 +59,7 @@ public class MetadataLinkId implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + link.getId();
+        result = prime * result + link;
         result = prime * result + metadataId;
         return result;
     }
@@ -73,7 +73,7 @@ public class MetadataLinkId implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         MetadataLinkId other = (MetadataLinkId) obj;
-        if (link.getId() != other.link.getId())
+        if (link.intValue() != other.link.intValue())
             return false;
         if (metadataId.intValue() != other.metadataId.intValue())
             return false;

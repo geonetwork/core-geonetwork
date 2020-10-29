@@ -23,6 +23,11 @@
 
 package org.fao.geonet.api.records.formatters.cache;
 
+import static org.springframework.data.jpa.domain.Specification.where;
+
+import java.io.IOException;
+import java.util.Optional;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
@@ -33,10 +38,9 @@ import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.EnableAsync;
-
-import java.io.IOException;
 
 /**
  * This class is responsible for listening for metadata index events and updating the cache's
@@ -61,10 +65,12 @@ public class FormatterCachePublishListener implements AsynchAfterCommitListener 
     public synchronized void onApplicationEvent(MetadataIndexCompleted event) {
         final int metadataId = event.getMd().getId();
         LOGGER.debug("Refreshing formatter cache for record '{}' [{}].", metadataId, Thread.currentThread());
-        final OperationAllowed one = operationAllowedRepository.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(ReservedGroup.all.getId(), metadataId, ReservedOperation.view.getId());
+        final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
+        final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(metadataId);
+        final ConfigurableApplicationContext context = ApplicationContextHolder.get();
+        final Optional<OperationAllowed> one = context.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished));
         try {
-            boolean isPublic = one != null;
-            formatterCache.setPublished(metadataId, event.getMd().getUuid(), isPublic);
+            formatterCache.setPublished(metadataId, event.getMd().getUuid(), one.isPresent());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

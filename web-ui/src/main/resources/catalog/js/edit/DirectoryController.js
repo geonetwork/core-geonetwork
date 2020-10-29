@@ -96,31 +96,31 @@
       $scope.ownerGroup = null;
       $scope.defaultSearchObj = {
         selectionBucket: 'd101',
+        configId: 'directory',
         any: '',
         params: {
-          _isTemplate: 's',
-          any: '',
-          _root: '',
-          sortBy: 'title',
-          sortOrder: 'reverse',
-          resultType: 'subtemplates'
+          sortBy: 'resourceTitleObject.default.keyword',
+          isTemplate: ['s'],
+          resultType: $scope.facetsSummaryType,
+          from: 1,
+          to: 20
         },
         sortbyValues: [
           {
-            sortBy: 'title',
-            sortOrder: 'reverse'
-          },
-          {
-            sortBy: 'owner',
-            sortOrder: 'reverse'
-          },
-          {
-            sortBy: 'changeDate',
+            sortBy: 'resourceTitleObject.default.keyword',
             sortOrder: ''
           },
           {
-            sortBy: '_valid',
-            sortOrder: 'reverse'
+            sortBy: 'recordOwner',
+            sortOrder: ''
+          },
+          {
+            sortBy: 'dateStamp',
+            sortOrder: 'desc'
+          },
+          {
+            sortBy: 'valid',
+            sortOrder: ''
           }
         ]
       };
@@ -183,60 +183,84 @@
       var refreshEntriesInfo = function() {
         // fetch templates list & return simplified objects to be used
         // in the template dropdown
-        gnSearchManagerService.search('qi?_content_type=json&' +
-            'template=t&fast=index&resultType=subtemplates&buildSummary=false')
-            .then(function(data) {
-              $scope.templates = data.metadata.map(function(md) {
-                return {
-                  root: $.isArray(md.root) ? md.root[0] : md.root,
-                  'geonet:info': md['geonet:info'],
-                  isTemplate: md.isTemplate,
-                  title: md.title
-                };
-              });
+        $http.post('../api/search/records/_search', {
+          "_source": {"includes": [
+              "uuid", "root", "resourceTitle", "isTemplate"]},
+          "query": {
+            "bool" : {
+              "must": [
+                {"terms": {"isTemplate": ["t"]}}
+              ]
+            }
+          }}, {cache: true}).then(function(r) {
+          if (r.data.hits.total.value > 0) {
+            $scope.templates = r.data.hits.hits.map(function(md) {
+              return {
+                root: md._source.root,
+                id: md.id,
+                uuid: md._source.uuid,
+                edit: md._source.edit,
+                selected: md._source.selected,
+                isTemplate: md._source.isTemplate,
+                resourceTitle: md._source.resourceTitle
+              };
             });
+          }
+        });
 
         // fetch all entries + templates
         var entryType = 's or t';
-        gnSearchManagerService.search('qi?_content_type=json&' +
-            'template=' + entryType +
-            '&fast=index&summaryOnly=true&resultType=subtemplates').
-            then(function(data) {
-              $scope.$broadcast('setPagination', $scope.paginationInfo);
-              $scope.mdList = data;
-              $scope.hasEntries = data.count != '0';
-
-              // get types info & sort them
-              $scope.mdTypes = data.facet.subTemplateTypes.map(
+        $http.post('../api/search/records/_search', {
+          "size": 0,
+          "aggs": {
+            "type": {
+              "terms": {
+                "field": "root",
+                "size": 100
+              }
+            }
+          },
+          "query": {
+            "bool" : {
+              "must": [
+                {"terms": {"isTemplate": ["t", "s"]}}
+              ]
+            }
+          }}, {cache: true}).then(function(r) {
+          $scope.hasEntries = r.data.hits.total.value > 0;
+          if ($scope.hasEntries) {
+            $scope.mdTypes = r.data.aggregations.type.buckets.map(
               function(type) {
                 return {
-                  name: type['@name'],
-                  count: type['@count']
+                  name: type.key,
+                  count: type.doc_count
                 };
               }
-              );
-              $scope.mdTypes.sort(function(a, b) {
-                var nameA = a.name;
-                var nameB = b.name;
-                return nameA < nameB ? -1 : (nameA > nameB ? 1 : 0);
-              });
-              var typeNames = $scope.mdTypes.map(function(t) {
-                return t.name;
-              });
+            );
 
-              // Select the default one or the first one
-              if ($scope.activeType &&
-              $.inArray(defaultType, typeNames) !== -1) {
-                $scope.selectType($scope.activeType);
-              } else if (defaultType &&
-              $.inArray(defaultType, typeNames) !== -1) {
-                $scope.selectType(defaultType);
-              } else if ($scope.mdTypes[0]) {
-                $scope.selectType($scope.mdTypes[0].name);
-              } else {
-                // No templates available ?
-              }
+            $scope.mdTypes.sort(function(a, b) {
+              var nameA = a.name;
+              var nameB = b.name;
+              return nameA < nameB ? -1 : (nameA > nameB ? 1 : 0);
             });
+            var typeNames = $scope.mdTypes.map(function(t) {
+              return t.name;
+            });
+
+            // Select the default one or the first one
+            if ($scope.activeType &&
+              $.inArray(defaultType, typeNames) !== -1) {
+              $scope.selectType($scope.activeType);
+            } else if (defaultType &&
+              $.inArray(defaultType, typeNames) !== -1) {
+              $scope.selectType(defaultType);
+            } else if ($scope.mdTypes[0]) {
+              $scope.selectType($scope.mdTypes[0].name);
+            } else {
+              // No templates available ?
+            }
+          }
+        });
       };
 
       /**
@@ -244,8 +268,11 @@
        */
       $scope.getEntries = function(type) {
         if (type) {
-          $scope.searchObj.params._root = type;
-          $scope.defaultSearchObj.params._root = type;
+          $scope.searchObj.params.root = type;
+          $scope.defaultSearchObj.params.root = type;
+        } else {
+          delete $scope.searchObj.params.root;
+          delete $scope.defaultSearchObj.params.root;
         }
         $scope.$broadcast('clearResults');
         $scope.$broadcast('search');
@@ -377,26 +404,33 @@
 
       $scope.importEntry = function(xml) {
         gnMetadataManager.importFromXml(
-            gnUrlUtils.toKeyValue($scope.importData), xml).then(
-            function(r) {
-              if (r.status === 400) {
-                $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant('saveMetadataError'),
-                  error: r.data,
-                  timeout: 0,
-                  type: 'danger'});
-              } else {
-                refreshEntriesInfo();
-                $scope.closeEditor();
-              }
+          gnUrlUtils.toKeyValue($scope.importData), xml).then(function(r) {
+            if (r.status === 400) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('directoryManagerError'),
+                error: r.data,
+                timeout: 0,
+                type: 'danger'});
+            } else {
+              refreshEntriesInfo();
+              $scope.closeEditor();
             }
-        );
+          })
+          .catch(function(f) {
+            if (f.status === 400) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('directoryManagerError'),
+                error: f.data,
+                timeout: 0,
+                type: 'danger'});
+            }
+          });
       };
 
       // ACTIONS
 
       $scope.delEntry = function(e) {
-        $scope.delEntryId = e['geonet:info'].id;
+        $scope.delEntryId = e.id;
         $('#gn-confirm-delete').modal('show');
       };
       $scope.confirmDelEntry = function(e) {
@@ -410,7 +444,7 @@
 
       $scope.copyEntry = function(e) {
         //md.create?id=181&group=2&isTemplate=s&currTab=simple
-        gnMetadataManager.copy(e['geonet:info'].id, $scope.ownerGroup,
+        gnMetadataManager.copy(e.id, $scope.ownerGroup,
             fullPrivileges,
             e.isTemplate === 't' ? 'TEMPLATE_OF_SUB_TEMPLATE' : 'SUB_TEMPLATE'
         ).then(refreshEntriesInfo);
@@ -429,7 +463,7 @@
 
         // conversion to template is done by duplicating into template type
         // the original entry is kept
-        gnMetadataManager.copy(e['geonet:info'].id, $scope.ownerGroup,
+        gnMetadataManager.copy(e.id, $scope.ownerGroup,
             fullPrivileges,
             'TEMPLATE_OF_SUB_TEMPLATE').then(refreshEntriesInfo);
       };
@@ -445,12 +479,12 @@
         }
 
         // a copy of the template is created & opened
-        gnMetadataManager.copy(e['geonet:info'].id, $scope.ownerGroup,
+        gnMetadataManager.copy(e.uuid, $scope.ownerGroup,
             fullPrivileges,
             'SUB_TEMPLATE')
             .then(function(response) {
               refreshEntriesInfo();
-              return gnMetadataManager.getMdObjById(response.data, 's or t');
+              return gnMetadataManager.getMdObjById(response.data, ['s', 't']);
             })
             .then(function(md) {
               $scope.startEditing(md);
@@ -458,14 +492,14 @@
       };
 
       $scope.validateEntry = function(e) {
-        gnMetadataManager.validateDirectoryEntry(e['geonet:info'].id, true)
+        gnMetadataManager.validateDirectoryEntry(e.id, true)
             .then(function() {
               if ($scope.publishToAllWhenValidated) {
                 gnMetadataActions.publish(e, undefined, undefined, $scope);
               }
               refreshEntriesInfo();
-              return gnMetadataManager.getMdObjById(e['geonet:info'].id,
-              's or t');
+              return gnMetadataManager.getMdObjById(e.id,
+                ['s', 't']);
             })
             .then(function(e) {
               if ($scope.activeEntry) {
@@ -475,11 +509,11 @@
       };
 
       $scope.rejectEntry = function(e) {
-        gnMetadataManager.validateDirectoryEntry(e['geonet:info'].id, false)
+        gnMetadataManager.validateDirectoryEntry(e.id, false)
             .then(function() {
               refreshEntriesInfo();
-              return gnMetadataManager.getMdObjById(e['geonet:info'].id,
-              's or t');
+              return gnMetadataManager.getMdObjById(e.id,
+                ['s', 't']);
             })
             .then(function(e) {
               if ($scope.activeEntry) {
@@ -508,7 +542,7 @@
         $scope.currentEditorAction =
             (e.isTemplate === 't' ? 'editTemplate' : 'editEntry');
 
-        var id = e['geonet:info'].id;
+        var id = e.id;
         angular.extend(gnCurrentEdit, {
           id: id,
           formId: '#gn-editor-' + id,
@@ -555,12 +589,12 @@
 
       // switch to templates (b === true) or entries (b === false)
       $scope.showTemplates = function(b) {
-        $scope.searchObj.params._isTemplate = b === true ? 't' : 's';   // temp
+        $scope.searchObj.params.isTemplate = b === true ? 't' : 's';   // temp
         $scope.$broadcast('clearResults');
         $scope.$broadcast('search');
       };
       $scope.templatesShown = function() {
-        return $scope.searchObj.params._isTemplate === 't';
+        return $scope.searchObj.params.isTemplate === 't';
       };
 
       // Append * for like search

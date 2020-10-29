@@ -23,43 +23,41 @@
 
 package org.fao.geonet.api.regions.metadata;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.api.regions.MetadataRegion;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.Request;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.spatial.ErrorHandler;
-import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.Utils;
-import org.fao.geonet.api.regions.MetadataRegion;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.util.GMLParsers;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.geotools.xml.Parser;
+import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.geotools.xsd.Parser;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.jdom.filter.Filter;
+import org.locationtech.jts.geom.*;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.GeometryFactory;
-
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
+import java.util.*;
 
 /**
  * TODO: A polygon may be exclusion and in such case should be substracted from the overall extent?
@@ -68,17 +66,13 @@ public class MetadataRegionSearchRequest extends Request {
 
     public static final String PREFIX = "metadata:";
     private static final FindByNodeName EXTENT_FINDER = new FindByNodeName("EX_BoundingPolygon", "EX_GeographicBoundingBox", "polygon");
-    private final Parser[] parsers;
     ServiceContext context;
-    private List<? extends MetadataRegionFinder> regionFinders = Lists.newArrayList(
-        new FindRegionByXPath(), new FindRegionByGmlId(), new FindRegionByEditRef());
     private String id;
     private String label;
-    private GeometryFactory factory;
+    private final GeometryFactory factory;
 
-    public MetadataRegionSearchRequest(ServiceContext context, Parser[] parsers, GeometryFactory factory) {
+    public MetadataRegionSearchRequest(ServiceContext context, GeometryFactory factory) {
         this.context = context;
-        this.parsers = parsers;
         this.factory = factory;
     }
 
@@ -124,18 +118,17 @@ public class MetadataRegionSearchRequest extends Request {
     }
 
     private void loadOnly(List<Region> regions, Id mdId, String id) throws Exception {
-        MetadataRegionFinder regionFinder = null;
-        for (MetadataRegionFinder next : regionFinders) {
-            if (next.accepts(id)) {
-                regionFinder = next;
-                break;
-            }
-        }
-
-        if (regionFinder != null) {
-            Element metadata = findMetadata(mdId, regionFinder.needsEditData());
+        if (id.startsWith("@xpath")) {
+            Element metadata = findMetadata(mdId, false);
             if (metadata != null) {
-                regionFinder.findRegion(this, regions, mdId, id, metadata);
+                String xpath = id.substring("@xpath".length());
+                DataManager dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
+                String schemaId = dataManager.getMetadataSchema(mdId.getId());
+                MetadataSchema schema = dataManager.getSchema(schemaId);
+                final Element geomEl = Xml.selectElement(metadata, xpath, schema.getNamespaces());
+                if (geomEl != null) {
+                    findContainingGmdEl(regions, mdId, geomEl);
+                }
             }
         }
     }
@@ -170,22 +163,10 @@ public class MetadataRegionSearchRequest extends Request {
         Element metadata = findMetadata(id, false);
         if (metadata != null) {
             Path schemaDir = getSchemaDir(id);
-            MultiPolygon geom = SpatialIndexWriter.getSpatialExtent(schemaDir, metadata, parsers,
+            MultiPolygon geom = GeomUtils.getSpatialExtent(schemaDir, metadata,
                 new SpatialExtentErrorHandler());
             MetadataRegion region = new MetadataRegion(id, null, geom);
             regions.add(region);
-        }
-    }
-
-    private class SpatialExtentErrorHandler implements ErrorHandler {
-        @Override
-        public void handleParseException(Exception e, String gml) {
-            Log.error(Geonet.SPATIAL, "Failed to convert gml to jts object: " + gml + "\n\t" + e.getMessage(), e);
-        }
-
-        @Override
-        public void handleBuildException(Exception e, List<Polygon> polygons) {
-            Log.error(Geonet.SPATIAL, "Failed to create a MultiPolygon from: " + polygons, e);
         }
     }
 
@@ -199,23 +180,47 @@ public class MetadataRegionSearchRequest extends Request {
         return extents;
     }
 
+    private double getCoordinateValue(String coord, Element bbox) {
+        Element coordElement = bbox.getChild(coord, bbox.getNamespace());
+        if (coordElement != null) {
+            List children = coordElement.getChildren();
+            if (children.size() == 1 && children.get(0) instanceof Element) {
+                return Double.parseDouble(((Element) children.get(0)).getText());
+            }
+        }
+        return 0;
+    };
+
     Region parseRegion(Id mdId, Element extentObj) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         gc.getBean(DataManager.class).getEditLib().removeEditingInfo(extentObj);
 
         String id = null;
         Geometry geometry = null;
+        Namespace objNamespace = extentObj.getNamespace();
         if ("polygon".equals(extentObj.getName())) {
             String gml = Xml.getString(extentObj);
-            geometry = SpatialIndexWriter.parseGml(parsers[0], gml);
+            geometry = GeomUtils.parseGml(getParser(extentObj), gml);
         } else if ("EX_BoundingPolygon".equals(extentObj.getName())) {
-            String gml = Xml.getString(extentObj.getChild("polygon", Geonet.Namespaces.GMD));
-            geometry = SpatialIndexWriter.parseGml(parsers[0], gml);
+            Element polygon = extentObj.getChild("polygon", objNamespace);
+            String gml = Xml.getString(polygon);
+            geometry = GeomUtils.parseGml(getParser(polygon), gml);
+
+            Element xmlGeom = (Element) polygon.getChildren().get(0);
+            String srs = xmlGeom.getAttributeValue("srsName");
+            CoordinateReferenceSystem sourceCRS = DefaultGeographicCRS.WGS84;
+
+            if (srs != null && !(srs.equals(""))) sourceCRS = CRS.decode(srs);
+            // if we have an srs and its not WGS84 then transform to WGS84
+            if (!CRS.equalsIgnoreMetadata(sourceCRS, DefaultGeographicCRS.WGS84)) {
+                MathTransform tform = CRS.findMathTransform(sourceCRS, DefaultGeographicCRS.WGS84);
+                geometry = (MultiPolygon) JTS.transform(geometry, tform);
+            }
         } else if ("EX_GeographicBoundingBox".equals(extentObj.getName())) {
-            double minx = Double.parseDouble(extentObj.getChild("westBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
-            double maxx = Double.parseDouble(extentObj.getChild("eastBoundLongitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
-            double miny = Double.parseDouble(extentObj.getChild("southBoundLatitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
-            double maxy = Double.parseDouble(extentObj.getChild("northBoundLatitude", Geonet.Namespaces.GMD).getChildText("Decimal", Geonet.Namespaces.GCO));
+            double minx = getCoordinateValue("westBoundLongitude", extentObj);
+            double maxx = getCoordinateValue("eastBoundLongitude", extentObj);
+            double miny = getCoordinateValue("southBoundLatitude", extentObj);
+            double maxy = getCoordinateValue("northBoundLatitude", extentObj);
             geometry = factory.toGeometry(new Envelope(minx, maxx, miny, maxy));
         }
 
@@ -230,9 +235,17 @@ public class MetadataRegionSearchRequest extends Request {
         }
     }
 
+    private Parser getParser(Element polygon) {
+        try {
+            return GMLParsers.create(((Element) polygon.getChildren().get(0)));
+        } catch (Exception e) {
+            return GMLParsers.createGML();
+        }
+    }
+
     private Element findMetadata(Id id, boolean includeEditData) throws Exception {
         final DataManager dataManager = context.getBean(DataManager.class);
-        String mdId = id.getMdId(context.getBean(SearchManager.class), dataManager);
+        String mdId = id.getMdId();
         try {
             if (context.getBean(IMetadataUtils.class).exists(Integer.parseInt(mdId))) {
                 Lib.resource.checkPrivilege(context, mdId, ReservedOperation.view);
@@ -249,7 +262,7 @@ public class MetadataRegionSearchRequest extends Request {
 
     private Path getSchemaDir(Id id) throws Exception {
         final DataManager dataManager = context.getBean(DataManager.class);
-        String mdId = id.getMdId(context.getBean(SearchManager.class), dataManager);
+        String mdId = id.getMdId();
         String schemaId = dataManager.getMetadataSchema(mdId);
         final IMetadataSchemaUtils schemaUtils = context.getBean(IMetadataSchemaUtils.class);
         return schemaUtils.getSchemaDir(schemaId);
@@ -265,13 +278,12 @@ public class MetadataRegionSearchRequest extends Request {
     public Optional<Long> getLastModified() throws Exception {
         if (id.startsWith(MetadataRegionSearchRequest.PREFIX)) {
             String[] idParts = id.substring(MetadataRegionSearchRequest.PREFIX.length()).split(":");
-
-            SearchManager searchManager = this.context.getBean(SearchManager.class);
-            DataManager dataManager = this.context.getBean(DataManager.class);
-            final String mdId = MetadataRegionSearchRequest.Id.create(idParts[0]).getMdId(searchManager, dataManager);
+            final String mdId = MetadataRegionSearchRequest.Id.create(idParts[0]).getMdId();
 
             if (mdId != null) {
-                final ISODate docChangeDate = searchManager.getDocChangeDate(mdId);
+                Metadata metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneById(Integer.valueOf(mdId));
+
+                final ISODate docChangeDate = metadata.getDataInfo().getChangeDate();
                 if (docChangeDate != null) {
                     return Optional.of(docChangeDate.toDate().getTime());
                 }
@@ -283,7 +295,7 @@ public class MetadataRegionSearchRequest extends Request {
     public static abstract class Id {
 
         protected String id;
-        private String prefix;
+        private final String prefix;
 
         public Id(String prefix, String id) {
             this.id = id;
@@ -291,19 +303,13 @@ public class MetadataRegionSearchRequest extends Request {
         }
 
         static Id create(String id) {
-            if (id.toLowerCase().startsWith(MdId.PREFIX)) {
-                return new MdId(id);
-            } else if (id.toLowerCase().startsWith(Uuid.PREFIX)) {
-                return new Uuid(id);
-            } else {
-                return new FileId(id);
-            }
+            return new MdId(id);
         }
 
         /**
          * Convert ID to the id for looking up the metadata in the database
          */
-        public abstract String getMdId(SearchManager searchManager, DataManager dataManager) throws Exception;
+        public abstract String getMdId() throws Exception;
 
         /**
          * Strip the identifier from the id and return the id
@@ -312,31 +318,6 @@ public class MetadataRegionSearchRequest extends Request {
 
         public String getIdentifiedId() {
             return prefix + id;
-        }
-    }
-
-    @Deprecated
-    public static class FileId extends Id {
-
-        private static final String PREFIX = "@fileId";
-
-        public FileId(String id) {
-            super(PREFIX, id);
-        }
-
-        @Override
-        public String getMdId(SearchManager searchManager, DataManager dataManager) throws Exception {
-            String mdId = Utils.lookupMetadataIdFromFileId(id, searchManager);
-
-            if (mdId == null) {
-                mdId = dataManager.getMetadataId(id);
-            }
-            return mdId;
-        }
-
-        @Override
-        public String getId() {
-            return id;
         }
     }
 
@@ -349,41 +330,20 @@ public class MetadataRegionSearchRequest extends Request {
         }
 
         @Override
-        public String getMdId(SearchManager searchManager, DataManager dataManager) {
+        public String getMdId() {
             return id;
         }
 
         @Override
         public String getId() {
             return id;
-        }
-
-    }
-
-    @Deprecated
-    public static class Uuid extends Id {
-
-        private static final String PREFIX = "@uuid";
-
-        public Uuid(String id) {
-            super(PREFIX, id.substring(PREFIX.length()));
-        }
-
-        @Override
-        public String getMdId(SearchManager searchManager, DataManager dataManager) throws Exception {
-            return dataManager.getMetadataId(id);
-        }
-
-        @Override
-        public String getId() {
-            return null;
         }
 
     }
 
     private static final class FindByNodeName implements Filter {
         private static final long serialVersionUID = 1L;
-        private String[] names;
+        private final String[] names;
 
         public FindByNodeName(String... names) {
             this.names = names;
@@ -401,7 +361,17 @@ public class MetadataRegionSearchRequest extends Request {
             }
             return false;
         }
-
     }
 
+    private class SpatialExtentErrorHandler implements ErrorHandler {
+        @Override
+        public void handleParseException(Exception e, String gml) {
+            Log.error(Geonet.SPATIAL, "Failed to convert gml to jts object: " + gml + "\n\t" + e.getMessage(), e);
+        }
+
+        @Override
+        public void handleBuildException(Exception e, List<Polygon> polygons) {
+            Log.error(Geonet.SPATIAL, "Failed to create a MultiPolygon from: " + polygons, e);
+        }
+    }
 }

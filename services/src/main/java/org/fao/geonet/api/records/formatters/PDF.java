@@ -23,8 +23,11 @@
 
 package org.fao.geonet.api.records.formatters;
 
-import org.fao.geonet.kernel.setting.SettingManager;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.records.extent.MapRenderer;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.BinaryFile;
 import org.jdom.Element;
@@ -35,10 +38,6 @@ import java.io.File;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 
 /**
  * Allows a user to display a metadata in PDF with a particular formatters

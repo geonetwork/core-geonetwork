@@ -61,8 +61,8 @@ public class IsoLanguageRepositoryTest extends AbstractSpringDataTest {
         isolang2 = _repo.save(isolang2);
 
 
-        assertEquals(isolang2, _repo.findOne(isolang2.getId()));
-        assertEquals(isolang1, _repo.findOne(isolang1.getId()));
+        assertEquals(isolang2, _repo.findById(isolang2.getId()).get());
+        assertEquals(isolang1, _repo.findById(isolang1.getId()).get());
     }
 
     @Test

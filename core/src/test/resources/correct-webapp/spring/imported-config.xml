@@ -26,17 +26,6 @@
        xmlns:ctx="http://www.springframework.org/schema/context"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
-  <import resource="classpath:correct-webapp/spring/imported-config2.xml"/>
-  <ctx:property-override
-    location="classpath:correct-webapp/spring/test-spring-overrides.properties"/>
-
-  <bean id="testBean2" class="jeeves.server.overrides.ExampleBean"/>
-  <bean id="astring" class="java.lang.String">
-    <constructor-arg value="astring"/>
-  </bean>
-
-
   <bean id="accessDecisionManager"
         class="org.springframework.security.access.vote.AffirmativeBased">
     <property name="decisionVoters">

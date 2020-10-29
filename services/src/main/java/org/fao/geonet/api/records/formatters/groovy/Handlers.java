@@ -23,29 +23,18 @@
 
 package org.fao.geonet.api.records.formatters.groovy;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimaps;
-import com.google.common.collect.Sets;
-
+import com.google.common.collect.*;
 import groovy.lang.Closure;
 import groovy.lang.GString;
 import groovy.util.ClosureComparator;
 import groovy.util.slurpersupport.GPathResult;
-
 import org.fao.geonet.api.records.formatters.FormatterParams;
 import org.fao.geonet.api.records.formatters.groovy.template.FileResult;
 import org.fao.geonet.api.records.formatters.groovy.template.TemplateCache;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
 
@@ -65,7 +54,7 @@ public class Handlers {
     StartEndHandler startHandler = new StartEndHandler(null);
     StartEndHandler endHandler = new StartEndHandler(null);
     private Set<String> roots = Sets.newHashSet();
-    private List<SkipElement> skipElements = Lists.newArrayList();
+    private final List<SkipElement> skipElements = Lists.newArrayList();
     private Callable<Iterable<Object>> functionRoots = null;
     /**
      * ModeId -> Mode mapping

@@ -82,78 +82,79 @@
 
   <!-- Main template -->
   <xsl:template name="content" match="/">
+    <response>
+      <!-- Sort results first as csv output could be different from one schema to another.
+      Create the sorted set based on the search response. Use the brief mode or the csv mode if
+      available.
+      -->
+      <xsl:variable name="sortedResults">
+        <xsl:for-each
+          select="/root/csw:GetRecordsResponse/csw:SearchResults/*|
+              /root/response/*">
+          <xsl:sort select="geonet:info/schema" order="descending"/>
 
-    <!-- Sort results first as csv output could be different from one schema to another.
-    Create the sorted set based on the search response. Use the brief mode or the csv mode if
-    available.
-    -->
-    <xsl:variable name="sortedResults">
-      <xsl:for-each
-        select="/root/csw:GetRecordsResponse/csw:SearchResults/*|
-            /root/response/*[name(.)!='summary']">
-        <xsl:sort select="geonet:info/schema" order="descending"/>
+          <!-- Try to apply csv mode template to current metadata record -->
+          <xsl:variable name="mdcsv">
+            <xsl:apply-templates mode="csv" select=".">
+              <xsl:with-param name="internalSep" select="$internalSep"/>
+            </xsl:apply-templates>
+          </xsl:variable>
 
-        <!-- Try to apply csv mode template to current metadata record -->
-        <xsl:variable name="mdcsv">
-          <xsl:apply-templates mode="csv" select=".">
-            <xsl:with-param name="internalSep" select="$internalSep"/>
-          </xsl:apply-templates>
-        </xsl:variable>
+          <!-- If not define just use the brief format -->
+          <xsl:variable name="md">
+            <xsl:choose>
+              <xsl:when test=". != $mdcsv">
+                <xsl:copy-of select="$mdcsv"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates mode="brief" select="."/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
 
-        <!-- If not define just use the brief format -->
-        <xsl:variable name="md">
-          <xsl:choose>
-            <xsl:when test=". != $mdcsv">
-              <xsl:copy-of select="$mdcsv"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:apply-templates mode="brief" select="."/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
+          <xsl:copy-of select="exslt:node-set($md)/*[1]"/>
+        </xsl:for-each>
+      </xsl:variable>
 
-        <xsl:copy-of select="exslt:node-set($md)/*[1]"/>
+      <xsl:variable name="columns">
+        <xsl:for-each-group select="$sortedResults/*" group-by="geonet:info/schema">
+          <schema name="{current-grouping-key()}">
+            <xsl:for-each-group select="current-group()/*[name(.)!='geonet:info']" group-by="name(.)">
+              <column name="{name(.)}">"<xsl:value-of select="name(.)"/>"
+              </column>
+            </xsl:for-each-group>
+          </schema>
+        </xsl:for-each-group>
+      </xsl:variable>
+
+      <!-- Display results
+          * header first (once)
+          * content then.
+      -->
+      <xsl:for-each select="$sortedResults/*">
+        <xsl:variable name="currentSchema" select="geonet:info/schema"/>
+
+        <xsl:choose>
+          <xsl:when
+            test="position()!=1 and $currentSchema = preceding-sibling::node()/geonet:info/schema"/>
+          <xsl:otherwise>
+            <!-- CSV header, schema and id first, then from schema column list -->
+            <xsl:text>"schema"</xsl:text>
+            <xsl:value-of select="$sep"/>
+            <xsl:text>"uuid"</xsl:text>
+            <xsl:value-of select="$sep"/>
+            <xsl:text>"id"</xsl:text><xsl:value-of select="$sep"/><xsl:value-of
+              select="string-join($columns/schema[@name=$currentSchema]/column/normalize-space(), $sep)"/>
+            <xsl:call-template name="newLine"/>
+          </xsl:otherwise>
+        </xsl:choose>
+
+        <xsl:call-template name="csvLine">
+          <xsl:with-param name="columns" select="$columns/schema[@name=$currentSchema]/column"/>
+          <xsl:with-param name="metadata" select="."/>
+        </xsl:call-template>
       </xsl:for-each>
-    </xsl:variable>
-
-    <xsl:variable name="columns">
-      <xsl:for-each-group select="$sortedResults/*" group-by="geonet:info/schema">
-        <schema name="{current-grouping-key()}">
-          <xsl:for-each-group select="current-group()/*[name(.)!='geonet:info']" group-by="name(.)">
-            <column name="{name(.)}">"<xsl:value-of select="name(.)"/>"
-            </column>
-          </xsl:for-each-group>
-        </schema>
-      </xsl:for-each-group>
-    </xsl:variable>
-
-    <!-- Display results
-        * header first (once)
-        * content then.
-    -->
-    <xsl:for-each select="$sortedResults/*">
-      <xsl:variable name="currentSchema" select="geonet:info/schema"/>
-      <xsl:choose>
-        <xsl:when
-          test="position()!=1 and $currentSchema=preceding-sibling::node()/geonet:info/schema"/>
-        <xsl:otherwise>
-          <!-- CSV header, schema and id first, then from schema column list -->
-          <xsl:text>"schema"</xsl:text>
-          <xsl:value-of select="$sep"/>
-          <xsl:text>"uuid"</xsl:text>
-          <xsl:value-of select="$sep"/>
-          <xsl:text>"id"</xsl:text><xsl:value-of select="$sep"/><xsl:value-of
-            select="string-join($columns/schema[@name=$currentSchema]/column/normalize-space(), $sep)"/>
-          <xsl:call-template name="newLine"/>
-        </xsl:otherwise>
-      </xsl:choose>
-
-      <xsl:call-template name="csvLine">
-        <xsl:with-param name="columns" select="$columns/schema[@name=$currentSchema]/column"/>
-        <xsl:with-param name="metadata" select="."/>
-      </xsl:call-template>
-    </xsl:for-each>
-
+    </response>
   </xsl:template>
 
   <!-- Dump line -->

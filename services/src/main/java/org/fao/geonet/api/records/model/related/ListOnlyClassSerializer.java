@@ -36,17 +36,17 @@ import java.io.IOException;
 public class ListOnlyClassSerializer extends JsonSerializer<IListOnlyClassToArray> {
 
     @Override
-    public void serialize(IListOnlyClassToArray iListOnlyClassToArray, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+    public void serialize(IListOnlyClassToArray iListOnlyClassToArray, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartArray();
         for (Object o : iListOnlyClassToArray.getItem()) {
             if (o instanceof RelatedMetadataItem) {
-                jsonGenerator.writeObject((RelatedMetadataItem) o);
+                jsonGenerator.writeObject(o);
             } else if (o instanceof RelatedSiblingMetadataItem) {
-                jsonGenerator.writeObject((RelatedSiblingMetadataItem) o);
+                jsonGenerator.writeObject(o);
             } else if (o instanceof RelatedLinkItem) {
-                jsonGenerator.writeObject((RelatedLinkItem) o);
+                jsonGenerator.writeObject(o);
             } else if (o instanceof RelatedThumbnailItem) {
-                jsonGenerator.writeObject((RelatedThumbnailItem) o);
+                jsonGenerator.writeObject(o);
             }
         }
         jsonGenerator.writeEndArray();

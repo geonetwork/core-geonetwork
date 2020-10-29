@@ -26,7 +26,7 @@ package org.fao.geonet.api.records.formatters;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
+import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.fao.geonet.domain.Pair;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -36,8 +36,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import jeeves.server.dispatchers.guiservices.XmlFile;
 
 /**
  * Contains all the translation/localization files for a particular schema.
@@ -97,8 +95,7 @@ public class SchemaLocalization {
             final Element labels = getLabels(lang);
 
             Set<Pair<String, String>> added = Sets.newHashSet();
-            @SuppressWarnings("unchecked")
-            final List<Element> children = labels.getChildren("element");
+            @SuppressWarnings("unchecked") final List<Element> children = labels.getChildren("element");
             for (Element element : children) {
                 final String name = element.getAttributeValue("name");
                 String parent = element.getAttributeValue("context");
@@ -131,12 +128,10 @@ public class SchemaLocalization {
             final Element codelistEls = getCodelists(lang);
 
             Set<Pair<String, String>> added = Sets.newHashSet();
-            @SuppressWarnings("unchecked")
-            final List<Element> children = codelistEls.getChildren("codelist");
+            @SuppressWarnings("unchecked") final List<Element> children = codelistEls.getChildren("codelist");
             for (Element codelist : children) {
                 String codelistName = extractCodeListNameFromXml(codelist);
-                @SuppressWarnings("unchecked")
-                final List<Element> codes = codelist.getChildren("entry");
+                @SuppressWarnings("unchecked") final List<Element> codes = codelist.getChildren("entry");
                 for (Element codeEl : codes) {
                     String code = codeEl.getChildText("code");
                     final Pair<String, String> key = Pair.read(codelistName, code);

@@ -42,7 +42,6 @@ import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
@@ -68,14 +67,13 @@ import java.util.Set;
 
 import static org.fao.geonet.kernel.setting.SettingManager.isPortRequired;
 
+
 /**
  * TODO javadoc.
  */
 @Component(CatalogService.BEAN_PREFIX + GetCapabilities.NAME)
 public class GetCapabilities extends AbstractOperation implements CatalogService {
     static final String NAME = "GetCapabilities";
-    @Autowired
-    private LuceneConfig _luceneConfig;
     @Autowired
     private CatalogConfiguration _catalogConfig;
     @Autowired
@@ -108,12 +106,11 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
         String recordUuidToUseForCapability = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID);
         if (!NodeInfo.DEFAULT_NODE.equals(context.getNodeId())) {
-            final Source source = sourceRepository.findOne(nodeinfo.getId());
+            final Source source = sourceRepository.findById(nodeinfo.getId()).get();
             if(source.getServiceRecord() != null) {
                 recordUuidToUseForCapability = source.getServiceRecord().toString();
             }
         }
-
         Element capabilities = null;
         String message = null;
         if (StringUtils.isNotEmpty(recordUuidToUseForCapability) && !"-1".equals(recordUuidToUseForCapability)) {
@@ -170,7 +167,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
 
             if (!isFromRecord) {
-                setKeywords(capabilities, context, cswServiceSpecificContraint);
+                setKeywords(capabilities, context);
             }
             setOperationsParameters(capabilities);
 
@@ -348,7 +345,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
         boolean isTitleDefined = false;
         String sourceUuid = NodeInfo.DEFAULT_NODE.equals(nodeinfo.getId()) ? sm.getSiteId() : nodeinfo.getId();
-        final Source source = sourceRepository.findOne(sourceUuid);
+        final Source source = sourceRepository.findById(sourceUuid).get();
         if (source != null) {
             vars.put("$TITLE", source.getLabelTranslations().get(langId));
             isTitleDefined = true;
@@ -437,7 +434,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
      * Defines keyword section of the GetCapabilities document according to catalogue content.
      * Reading  Lucene index, most popular keywords are added to the document.
      */
-    private void setKeywords(Element capabilities, ServiceContext context, String cswServiceSpecificContraint) {
+    private void setKeywords(Element capabilities, ServiceContext context) {
         Element serviceIdentificationEl = capabilities.getChild("ServiceIdentification", Csw.NAMESPACE_OWS);
         @SuppressWarnings("unchecked")
         List<Element> keywords = serviceIdentificationEl.getChildren("Keywords", Csw.NAMESPACE_OWS);
@@ -445,8 +442,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         List<Element> values;
         String[] properties = {"keyword"};
         try {
-            values = GetDomain.handlePropertyName(_catalogConfig, properties, context, true, _catalogConfig.getMaxNumberOfRecordsForKeywords(),
-                cswServiceSpecificContraint, _luceneConfig);
+            values = GetDomain.handlePropertyName(_catalogConfig, properties, context, true, _catalogConfig.getMaxNumberOfRecordsForKeywords());
         } catch (Exception e) {
             Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
             // If GetDomain operation failed, just add nothing to the capabilities document template.

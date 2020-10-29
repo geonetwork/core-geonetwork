@@ -35,10 +35,11 @@
                 <input type="text"
                        class="form-control"
                        id="gn-any-field"
+                       autocomplete="off"
                        data-ng-model="searchObj.params.any"
                        data-ng-model-options="modelOptions"
                        placeholder="{{'anyPlaceHolder' | translate}}"
-                       data-typeahead="address for address in getAnySuggestions($viewValue)"
+                       data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
                        data-typeahead-loading="anyLoading" class="form-control"
                        data-typeahead-min-length="1">
 
@@ -81,7 +82,7 @@
                   <label data-translate="" class="col-md-4 control-label">owner</label>
                   <div class="col-md-8">
                     <select class="form-control" id="gn-batchSearchOwner"
-                            data-ng-model="searchObj.params._owner">
+                            data-ng-model="searchObj.params.owner">
                       <option></option>
                       <option data-ng-repeat="u in batchSearchUsers | orderBy: 'username'"
                               value="{{u.id}}">{{u.name}} {{u.surname}} ({{u.username}})

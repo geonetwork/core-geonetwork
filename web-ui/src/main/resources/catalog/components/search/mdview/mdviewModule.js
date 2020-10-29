@@ -59,7 +59,7 @@
       $scope.gnMetadataActions = gnMetadataActions;
       $scope.url = location.href;
       $scope.compileScope = $scope.$new();
-      $scope.recordIdentifierRequested = gnSearchLocation.getUuid();
+      $scope.recordIdentifierRequested = gnSearchLocation.uuid;
       $scope.isUserFeedbackEnabled = false;
       $scope.isRatingEnabled = false;
       $scope.isSocialbarEnabled = gnGlobalSettings.gnCfg.mods.recordview.isSocialbarEnabled;
@@ -82,11 +82,20 @@
         $location.path('/search');
         $location.search(params);
       };
+
+      $scope.filterBy = function(field, value) {
+        $location.path('/search');
+        var params = {};
+        params[field] = {};
+        params[field][value] = true;
+        $location.search('query_string', angular.toJson(params));
+      };
+
       $scope.deleteRecord = function(md) {
         return gnMetadataActions.deleteMd(md).then(function(data) {
           gnAlertService.addAlert({
             msg: $translate.instant('metadataRemoved',
-                {title: md.title || md.defaultTitle}),
+                {title: md.resourceTitle}),
             type: 'success'
           });
           $scope.closeRecord(md);
@@ -124,7 +133,7 @@
       };
 
       $scope.loadFormatter = function(url) {
-        var showApproved = $scope.mdView.current.record == null ? 
+        var showApproved = $scope.mdView.current.record == null ?
           true : $scope.mdView.current.record.draft != 'y';
         var gn_metadata_display = $('#gn-metadata-display');
 
@@ -170,17 +179,17 @@
 
       // Reset current formatter to open the next record
       // in default mode.
-      function loadFormatter() {
-        var f = gnSearchLocation.getFormatterPath();
-        $scope.currentFormatter = '';
-        if (f != undefined) {
-          $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, '$1');
-          $scope.loadFormatter(f);
+      function loadFormatter(n, o) {
+        if (n === true) {
+          var f = gnSearchLocation.getFormatterPath();
+          $scope.currentFormatter = '';
+          if (f != undefined) {
+            $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, '$1');
+            $scope.loadFormatter(f);
+          }
         }
       }
-      // $scope.$watch('mdView.current.record', loadFormatter);
-      $rootScope.$on('$locationChangeSuccess', loadFormatter)
-      loadFormatter();
+      $scope.$watch('mdView.recordsLoaded', loadFormatter);
 
       // Know from what path we come from
       $scope.gnMdViewObj = gnMdViewObj;

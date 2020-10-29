@@ -74,27 +74,37 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
         Namespace nsXml = Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
 
         inspireAtomFeed.setTitle(atomDoc.getChildText("title", ns));
-        inspireAtomFeed.setSubtitle(atomDoc.getChildText("subtitle", ns));
-        inspireAtomFeed.setRights(atomDoc.getChildText("rights", ns));
-        inspireAtomFeed.setLang(atomDoc.getAttributeValue("lang", ns));
+
+        if (atomDoc.getChildText("subtitle", ns) != null) {
+            inspireAtomFeed.setSubtitle(atomDoc.getChildText("subtitle", ns));
+        }
+
+        if (atomDoc.getChildText("rights", ns) != null) {
+            inspireAtomFeed.setRights(atomDoc.getChildText("rights", ns));
+        }
+
+        inspireAtomFeed.setLang(atomDoc.getAttributeValue("lang", ns, ""));
         Element authorEl = atomDoc.getChild("author", ns);
         if (authorEl != null) {
             inspireAtomFeed.setAuthorName(atomDoc.getChild("author", ns).getChildText("name", ns));
             inspireAtomFeed.setAuthorEmail(atomDoc.getChild("author", ns).getChildText("email", ns));
         }
-        inspireAtomFeed.setLang(atomDoc.getAttributeValue("lang", nsXml));
+        inspireAtomFeed.setLang(atomDoc.getAttributeValue("lang", nsXml, ""));
 
         List<Element> entryList = atomDoc.getChildren("entry", ns);
         for (Element entry : entryList) {
             for (Element linkEl : (List<Element>) entry.getChildren("link", ns)) {
-                if (linkEl.getAttributeValue("rel").equals("alternate")) {
+                if (linkEl.getAttributeValue("rel", "").equals("alternate")) {
                     InspireAtomFeedEntry inspireAtomFeedEntry = new InspireAtomFeedEntry();
 
                     inspireAtomFeedEntry.setTitle(entry.getChildText("title", ns));
-                    inspireAtomFeedEntry.setCrs(entry.getChild("category", ns).getAttributeValue("term"));
 
-                    inspireAtomFeedEntry.setType(linkEl.getAttributeValue("type"));
-                    inspireAtomFeedEntry.setLang(linkEl.getAttributeValue("hreflang"));
+                    if (entry.getChildText("category", ns) != null) {
+                        inspireAtomFeedEntry.setCrs(entry.getChild("category", ns).getAttributeValue("term"));
+                    }
+
+                    inspireAtomFeedEntry.setType(linkEl.getAttributeValue("type", ""));
+                    inspireAtomFeedEntry.setLang(linkEl.getAttributeValue("hreflang", ""));
                     inspireAtomFeedEntry.setUrl(linkEl.getAttributeValue("href"));
 
                     inspireAtomFeed.addEntry(inspireAtomFeedEntry);
@@ -149,7 +159,7 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
 
     @Column
     @Lob
-    @Type(type = "org.hibernate.type.StringClobType")
+    @Type(type = "org.hibernate.type.TextType")
     public String getAtom() {
         return _atom;
     }

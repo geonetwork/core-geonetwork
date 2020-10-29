@@ -33,7 +33,7 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * Specifications for querying {@link UserRepository}.
+ * Specification for querying {@link UserRepository}.
  *
  * @author Jesse
  */

@@ -65,7 +65,7 @@ public class Setting extends GeonetEntity {
 
     @Lob
     @Column(name = "value", nullable = true)
-    @Type(type = "org.hibernate.type.StringClobType")
+    @Type(type = "org.hibernate.type.TextType")
     // this is a work around for postgres so postgres can correctly load clobs
     public String getValue() {
         return value;

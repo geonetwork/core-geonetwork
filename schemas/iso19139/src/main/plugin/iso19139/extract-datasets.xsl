@@ -24,12 +24,21 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 version="2.0">
   <xsl:template match="gmd:MD_Metadata">
     <datasets>
       <xsl:for-each select="gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn">
         <dataset>
-          <xsl:value-of select="@uuidref"/>
+          <xsl:choose>
+            <xsl:when test="@uuidref!=''">
+              <xsl:value-of select="@uuidref"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <!-- works only for csw requests for now -->
+              <xsl:value-of select="tokenize(tokenize(string(@xlink:href),'id=')[2],'&amp;')[1]"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </dataset>
       </xsl:for-each>
     </datasets>

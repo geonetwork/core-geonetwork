@@ -32,8 +32,8 @@ import javax.persistence.*;
  * relations without having to load the related metadata. </p> <p> Note: It is important that both
  * Metadata are managed (have been saved or loaded from the MetadataRepository.) For example:
  * <pre><code>
- *      Metadata metadata1 = _metadataRepo.findOne(id);
- *      Metadata metadata2 = _metadataRepo.findOne(id2);
+ *      Metadata metadata1 = _metadataRepo.findById(id).get();
+ *      Metadata metadata2 = _metadataRepo.findById(id2).get();
  *      new MetadataRelation(metadata1, metadata2);
  *     </code></pre>
  * </p>

@@ -59,8 +59,8 @@ public class MetadataRatingByIpRepositoryTest extends AbstractSpringDataTest {
         MetadataRatingByIp rating2 = newMetadataRatingByIp();
         rating2 = _repo.save(rating2);
 
-        assertEquals(rating2, _repo.findOne(rating2.getId()));
-        assertEquals(rating1, _repo.findOne(rating1.getId()));
+        assertEquals(rating2, _repo.findById(rating2.getId()).get());
+        assertEquals(rating1, _repo.findById(rating1.getId()).get());
     }
 
     @Test

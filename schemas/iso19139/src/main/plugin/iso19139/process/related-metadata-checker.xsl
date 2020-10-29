@@ -68,7 +68,7 @@
     <xsl:param name="uuid"/>
     <xsl:param name="type"/>
 
-    <xsl:variable name="status" select="java:getIndexField($baseUrl, '_uuid', $uuid, 'en')"/>
+    <xsl:variable name="status" select="java:getIndexField($baseUrl, 'uuid', $uuid, 'en')"/>
     <!--    <xsl:message>Check:<xsl:value-of select="."/>|<xsl:value-of select="$status"/></xsl:message>
     -->
     <xsl:if test="$status=''">

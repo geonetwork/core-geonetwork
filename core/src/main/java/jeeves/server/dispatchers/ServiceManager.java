@@ -18,7 +18,7 @@
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //===
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: GeoNetwork@fao.org
+//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
 package jeeves.server.dispatchers;
@@ -844,7 +844,13 @@ public class ServiceManager {
                                 } finally {
                                     timerContext.stop();
                                 }
-                                req.beginStream(outPage.getContentType(), cache);
+                                
+                                if (outPage.getContentType() != null
+                                    && outPage.getContentType().startsWith("text/plain")) {
+                                    req.beginStream(outPage.getContentType(), -1, "attachment;", cache);
+                                } else {
+                                    req.beginStream(outPage.getContentType(), cache);
+                                }
                                 req.getOutputStream().write(baos.toByteArray());
                                 req.endStream();
                             }

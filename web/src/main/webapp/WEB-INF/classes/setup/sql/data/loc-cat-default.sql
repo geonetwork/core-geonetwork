@@ -1,11 +1,6 @@
 INSERT INTO Languages (id, name, isinspire, isdefault) VALUES ('cat','català', 'n', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (53, 'cat', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (54, 'cat', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (55, 'cat', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (56, 'cat', 'accessConstraints', '');
-
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'cat','Mapes i gràfics');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'cat','Conjunts de dades');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'cat','Recursos interactius');

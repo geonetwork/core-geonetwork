@@ -48,12 +48,10 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 
 public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
@@ -94,7 +92,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         _entityManager.flush();
         _entityManager.clear();
 
-        assertEquals(33, _repo.findOne(metadata.getId()).getDataInfo().getPopularity());
+        assertEquals(33, _repo.findById(metadata.getId()).get().getDataInfo().getPopularity());
     }
 
     @Test
@@ -119,7 +117,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(3, _repo.count());
 
-        List<Integer> ids = _repo.findAllIdsBy((Specification<Metadata>)MetadataSpecs.hasMetadataUuid(metadata.getUuid()));
+        List<Integer> ids = _repo.findIdsBy((Specification<Metadata>)MetadataSpecs.hasMetadataUuid(metadata.getUuid()));
 
         assertArrayEquals(new Integer[]{metadata.getId()}, ids.toArray(new Integer[1]));
     }
@@ -135,9 +133,9 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(1, _repo.count());
 
-        assertSameContents(metadata, _repo.findOne(String.valueOf(metadata.getId())));
+        assertSameContents(metadata, _repo.findById(metadata.getId()).get());
 
-        assertNull(_repo.findOne("213213215"));
+        assertFalse(_repo.findById(213213215).isPresent());
     }
 
     @Test
@@ -175,7 +173,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(2, _repo.count());
 
-        AbstractMetadata found = _repo.findOneOldestByChangeDate();
+        AbstractMetadata found = _repo.findOldestByChangeDate();
         assertNotNull(found);
         assertSameContents(metadata1, found);
     }
@@ -187,26 +185,26 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         AbstractMetadata metadata2 = _repo.save(updateChangeDate(newMetadata(), "1980-12-13"));
         AbstractMetadata metadata3 = _repo.save(updateChangeDate(newMetadata(), "1995-12-13"));
 
-        final Sort sortByIdAsc = new Sort(Sort.Direction.DESC, Metadata_.id.getName());
-        PageRequest page1 = new PageRequest(0, 2, sortByIdAsc);
-        PageRequest page2 = new PageRequest(1, 2, sortByIdAsc);
-        Page<Pair<Integer, ISODate>> firstPage = _repo.findAllIdsAndChangeDates(page1);
-        Page<Pair<Integer, ISODate>> secondPage = _repo.findAllIdsAndChangeDates(page2);
+        final Sort sortByIdAsc = Sort.by(Sort.Direction.DESC, Metadata_.id.getName());
+        PageRequest page1 = PageRequest.of(0, 2, sortByIdAsc);
+        PageRequest page2 = PageRequest.of(1, 2, sortByIdAsc);
+        Page<Pair<Integer, ISODate>> firstPage = _repo.findIdsAndChangeDates(page1);
+        Page<Pair<Integer, ISODate>> secondPage = _repo.findIdsAndChangeDates(page2);
 
         assertEquals(2, firstPage.getNumberOfElements());
         assertEquals(0, firstPage.getNumber());
         assertEquals(2, firstPage.getTotalPages());
         assertEquals(3, firstPage.getTotalElements());
-        assertTrue(firstPage.isFirstPage());
-        assertFalse(firstPage.isLastPage());
+        assertTrue(firstPage.isFirst());
+        assertFalse(firstPage.isLast());
         assertTrue(firstPage.hasContent());
 
         assertEquals(1, secondPage.getNumberOfElements());
         assertEquals(1, secondPage.getNumber());
         assertEquals(2, secondPage.getTotalPages());
         assertEquals(3, secondPage.getTotalElements());
-        assertFalse(secondPage.isFirstPage());
-        assertTrue(secondPage.isLastPage());
+        assertFalse(secondPage.isFirst());
+        assertTrue(secondPage.isLast());
         assertTrue(secondPage.hasContent());
 
         assertEquals((Integer) metadata3.getId(), firstPage.getContent().get(0).one());
@@ -218,10 +216,10 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         assertEquals(metadata.getDataInfo().getChangeDate(), secondPage.getContent().get(0).two());
 
         final Sort sortByChangeDate = SortUtils.createSort(Metadata_.dataInfo, MetadataDataInfo_.changeDate);
-        page1 = new PageRequest(0, 1, sortByChangeDate);
-        page2 = new PageRequest(0, 3, sortByChangeDate);
-        firstPage = _repo.findAllIdsAndChangeDates(page1);
-        secondPage = _repo.findAllIdsAndChangeDates(page2);
+        page1 = PageRequest.of(0, 1, sortByChangeDate);
+        page2 = PageRequest.of(0, 3, sortByChangeDate);
+        firstPage = _repo.findIdsAndChangeDates(page1);
+        secondPage = _repo.findIdsAndChangeDates(page2);
 
         assertEquals(1, firstPage.getNumberOfElements());
         assertEquals(3, secondPage.getNumberOfElements());
@@ -244,7 +242,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         Metadata metadata3 = _repo.save(newMetadata());
 
         final Specification<Metadata> spec = (Specification<Metadata>)MetadataSpecs.hasMetadataIdIn(Arrays.asList(metadata.getId(), metadata3.getId()));
-        final Map<Integer, MetadataSourceInfo> allSourceInfo = _repo.findAllSourceInfo(Specifications.where(spec));
+        final Map<Integer, MetadataSourceInfo> allSourceInfo = _repo.findSourceInfo(Specification.where(spec));
 
         assertEquals(2, allSourceInfo.size());
         assertTrue(allSourceInfo.containsKey(metadata.getId()));
@@ -261,13 +259,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         return metadata;
     }
 
-    @Test(expected = InvalidDataAccessApiUsageException.class)
-    public void testFindByIdStringBadId() throws Exception {
-        assertNull(_repo.findOne("not a number"));
-    }
-
     private Metadata newMetadata() {
         return newMetadata(_inc);
     }
-
 }

@@ -14,49 +14,24 @@ public class ReportFilter {
     /**
      * Report begin date filter.
      */
-    private ISODate beginDate;
+    private final ISODate beginDate;
 
     /**
      * Report end date filter.
      */
-    private ISODate endDate;
+    private final ISODate endDate;
 
     /**
      * Report groups filter.
      */
-    private Set<Integer> groups;
-
-    /**
-     * Retrieves the begin date filter.
-     * @return begin date filter.
-     */
-    public ISODate getBeginDate() {
-        return beginDate;
-    }
-
-    /**
-     * Retrieves the end date filter.
-     * @return begin end filter.
-     */
-    public ISODate getEndDate() {
-        return endDate;
-    }
-
-    /**
-     * Retrieves the groups filter.
-     * @return groups filter.
-     */
-    public Set<Integer> getGroups() {
-        return groups;
-    }
-
+    private final Set<Integer> groups;
 
     /**
      * Creates a ReportFilter instance.
      *
      * @param beginDateFilter Report begin date filter.
-     * @param endDateFilter Report end date filter.
-     * @param groupsFilter Report groups to filter.
+     * @param endDateFilter   Report end date filter.
+     * @param groupsFilter    Report groups to filter.
      */
     public ReportFilter(final String beginDateFilter,
                         final String endDateFilter,
@@ -67,5 +42,32 @@ public class ReportFilter {
         this.beginDate = new ISODate(dateFrom);
         this.endDate = new ISODate(dateTo);
         this.groups = ImmutableSet.copyOf(groupsFilter);
+    }
+
+    /**
+     * Retrieves the begin date filter.
+     *
+     * @return begin date filter.
+     */
+    public ISODate getBeginDate() {
+        return beginDate;
+    }
+
+    /**
+     * Retrieves the end date filter.
+     *
+     * @return begin end filter.
+     */
+    public ISODate getEndDate() {
+        return endDate;
+    }
+
+    /**
+     * Retrieves the groups filter.
+     *
+     * @return groups filter.
+     */
+    public Set<Integer> getGroups() {
+        return groups;
     }
 }

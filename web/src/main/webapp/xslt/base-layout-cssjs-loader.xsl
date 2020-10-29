@@ -98,6 +98,7 @@
         <script src="{$uiResourcesPath}lib/jquery-2.2.4.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/moment+langs.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/moment-timezone-with-data-10-year-range.min.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/angular/angular.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-resource.js?v={$buildNumber}"></script>
@@ -223,14 +224,15 @@
       </xsl:otherwise>
     </xsl:choose>
 
+    <script src="{$uiResourcesPath}lib/d3_timeseries/d3.min.js?v={$buildNumber}"></script>
+    <script src="{$uiResourcesPath}lib/timeline/timeline-zoomable.js?v={$buildNumber}"></script>
+    <link rel="stylesheet" href="{$uiResourcesPath}lib/timeline/timeline.css"/>
+    <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
+
     <xsl:variable name="appConfig"
                   select="util:getUiConfiguration(/root/request/ui)"/>
 
     <xsl:if test="$angularApp = 'gn_search'">
-      <script src="{$uiResourcesPath}lib/d3_timeseries/d3.min.js?v={$buildNumber}"></script>
-      <script src="{$uiResourcesPath}lib/timeline/timeline-zoomable.js?v={$buildNumber}"></script>
-      <link rel="stylesheet" href="{$uiResourcesPath}lib/timeline/timeline.css"/>
-      <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
       <script type="text/javascript">
         var module = angular.module('gn_search');
         module.config(['gnGlobalSettings', 'gnViewerSettings',
@@ -246,6 +248,7 @@
           </xsl:if>
 
           gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
+        gnGlobalSettings.shibbolethHideLogin = <xsl:value-of select="$shibbolethHideLogin and $shibbolethOn"/>;
         }]);
       </script>
     </xsl:if>

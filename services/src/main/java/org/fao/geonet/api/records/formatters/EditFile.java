@@ -23,6 +23,8 @@
 
 package org.fao.geonet.api.records.formatters;
 
+import jeeves.interfaces.Service;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
@@ -35,9 +37,6 @@ import org.jdom.Element;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import jeeves.interfaces.Service;
-import jeeves.server.context.ServiceContext;
 
 /**
  * Allows a user to set the xsl used for displaying metadata.

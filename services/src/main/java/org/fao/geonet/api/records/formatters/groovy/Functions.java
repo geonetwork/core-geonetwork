@@ -24,12 +24,10 @@
 package org.fao.geonet.api.records.formatters.groovy;
 
 import com.google.common.io.Closer;
-
 import groovy.lang.Closure;
 import groovy.util.IndentPrinter;
 import groovy.util.slurpersupport.GPathResult;
 import groovy.xml.MarkupBuilder;
-
 import org.fao.geonet.api.records.formatters.ConfigFile;
 import org.fao.geonet.api.records.formatters.FormatterConstants;
 import org.fao.geonet.api.records.formatters.FormatterParams;
@@ -57,7 +55,7 @@ public class Functions extends SchemaLocalizations {
 
     private final Environment env;
     private final FormatterParams fparams;
-    private SchemaPlugin schemaPlugin;
+    private final SchemaPlugin schemaPlugin;
 
     public Functions(FormatterParams fparams, Environment env) throws Exception {
         super(fparams.context.getApplicationContext(), env, fparams.schema, fparams.config.dependOn());
@@ -70,7 +68,7 @@ public class Functions extends SchemaLocalizations {
     /**
      * Creates a groovy.xml.MarkupBuilder object and executes the closure with the MarkupBuilder as
      * its parameter.
-     *
+     * <p>
      * The xml created with the MarkupBuilder is returned as a string.
      *
      * @param htmlFunction function that uses the MarkupBuilder to create xml or html

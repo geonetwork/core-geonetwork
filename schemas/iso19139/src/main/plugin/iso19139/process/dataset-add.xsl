@@ -41,6 +41,9 @@ attached it to the metadata for data.
   <xsl:param name="protocol" select="'OGC:WMS-1.1.1-http-get-map'"/>
   <xsl:param name="url"/>
   <xsl:param name="desc"/>
+  <!-- Remote record title -->
+  <xsl:param name="title" select="''"/>
+
 
   <xsl:template match="/gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
 
@@ -114,7 +117,8 @@ attached it to the metadata for data.
                     </srv:coupledResource>
                   </xsl:for-each>
                 </xsl:if>
-                <xsl:if test="not($scopedName)">
+                <!-- For not remote dataset -->
+                <xsl:if test="not($scopedName) and $title = ''">
                   <srv:coupledResource>
                     <srv:SV_CoupledResource>
                       <srv:operationName>
@@ -142,7 +146,7 @@ attached it to the metadata for data.
                         <xsl:copy-of select="."/>
                       </xsl:when>
                     </xsl:choose>
-                    <xsl:if test="position()=last()">
+                    <xsl:if test="position() = last()">
                       <xsl:copy-of select="$coupledResource"/>
                     </xsl:if>
                   </xsl:for-each>
@@ -159,7 +163,7 @@ attached it to the metadata for data.
               <xsl:copy-of
                 select="gmd:identificationInfo/*/srv:couplingType|
                         gmd:identificationInfo/*/srv:containsOperations|
-                        gmd:identificationInfo/*/srv:operatesOn[@uuidref!=$uuidref]"/>
+                        gmd:identificationInfo/*/srv:operatesOn[@uuidref != $uuidref]"/>
 
               <!-- Handle operatesOn
 
@@ -167,8 +171,20 @@ attached it to the metadata for data.
               // metadata UUID should be set in the operatesOn element of
               // the service metadata record.
               -->
-              <srv:operatesOn uuidref="{$uuidref}"
-                              xlink:href="{$siteUrl}csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id={$uuidref}"/>
+              <srv:operatesOn uuidref="{$uuidref}">
+                <xsl:if test="$title != ''">
+                  <xsl:attribute name="xlink:title" select="$title"/>
+                </xsl:if>
+                <xsl:choose>
+                  <xsl:when test="$url != ''">
+                    <xsl:attribute name="xlink:href" select="$url"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:attribute name="xlink:href"
+                                   select="concat($siteUrl, 'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=', $uuidref)"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </srv:operatesOn>
 
               <xsl:apply-templates select="*[namespace-uri()!='http://www.isotc211.org/2005/gmd' and
                                              namespace-uri()!='http://www.isotc211.org/2005/srv']"/>
@@ -208,32 +224,58 @@ attached it to the metadata for data.
                   <xsl:copy-of
                     select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:onLine"/>
 
-                  <xsl:for-each select="tokenize($scopedName, ',')">
-                    <gmd:onLine>
-                      <gmd:CI_OnlineResource>
-                        <gmd:linkage>
-                          <gmd:URL>
-                            <xsl:value-of select="$url"/>
-                          </gmd:URL>
-                        </gmd:linkage>
-                        <gmd:protocol>
-                          <gco:CharacterString>
-                            <xsl:value-of select="$protocol"/>
-                          </gco:CharacterString>
-                        </gmd:protocol>
-                        <gmd:name>
-                          <gco:CharacterString>
-                            <xsl:value-of select="."/>
-                          </gco:CharacterString>
-                        </gmd:name>
-                        <gmd:description>
-                          <gco:CharacterString>
-                            <xsl:value-of select="."/>
-                          </gco:CharacterString>
-                        </gmd:description>
-                      </gmd:CI_OnlineResource>
-                    </gmd:onLine>
-                  </xsl:for-each>
+                  <xsl:choose>
+                    <xsl:when test="$title != ''">
+                      <gmd:onLine>
+                        <gmd:CI_OnlineResource>
+                          <gmd:linkage>
+                            <gmd:URL>
+                              <xsl:value-of select="$url"/>
+                            </gmd:URL>
+                          </gmd:linkage>
+                          <gmd:protocol>
+                            <gco:CharacterString>
+                              <xsl:value-of select="$protocol"/>
+                            </gco:CharacterString>
+                          </gmd:protocol>
+                          <gmd:name>
+                            <gco:CharacterString>
+                              <xsl:value-of select="$title"/>
+                            </gco:CharacterString>
+                          </gmd:name>
+                        </gmd:CI_OnlineResource>
+                      </gmd:onLine>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:for-each select="tokenize($scopedName, ',')">
+                        <gmd:onLine>
+                          <gmd:CI_OnlineResource>
+                            <gmd:linkage>
+                              <gmd:URL>
+                                <xsl:value-of select="$url"/>
+                              </gmd:URL>
+                            </gmd:linkage>
+                            <gmd:protocol>
+                              <gco:CharacterString>
+                                <xsl:value-of select="$protocol"/>
+                              </gco:CharacterString>
+                            </gmd:protocol>
+                            <gmd:name>
+                              <gco:CharacterString>
+                                <xsl:value-of select="."/>
+                              </gco:CharacterString>
+                            </gmd:name>
+                            <gmd:description>
+                              <gco:CharacterString>
+                                <xsl:value-of select="."/>
+                              </gco:CharacterString>
+                            </gmd:description>
+                          </gmd:CI_OnlineResource>
+                        </gmd:onLine>
+                      </xsl:for-each>
+                    </xsl:otherwise>
+                  </xsl:choose>
+
                   <xsl:copy-of
                     select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:offLine"
                   />

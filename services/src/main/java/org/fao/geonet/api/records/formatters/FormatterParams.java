@@ -23,14 +23,13 @@
 
 package org.fao.geonet.api.records.formatters;
 
-import java.nio.file.Path;
-
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.jdom.Element;
 import org.springframework.web.context.request.WebRequest;
 
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
 
 /**
  * @author Jesse on 10/15/2014.

@@ -3,8 +3,8 @@
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
-                xmlns:utils="java:org.fao.geonet.util.XslUtil"
                 xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
+                xmlns:utils="java:org.fao.geonet.util.XslUtil"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
@@ -105,12 +105,17 @@
               document.getElementById('gn-default-lang-link').click();
             };
           </script>
+
+
           <xsl:variable name="metadataOtherLanguages">
             <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
           </xsl:variable>
 
+          <xsl:variable name="defaultLanguage"
+                        select="$metadataOtherLanguages/*[position() = last()]/@code"/>
+
           <xsl:for-each select="($metadataOtherLanguages/*[@default], $metadataOtherLanguages/*[not(@default)])">
-            <li>
+            <li class="">
               <a id="{if (@default) then 'gn-default-lang-link' else ''}"
                  onclick="gnLandingPage.displayLanguage('{@code}', this);">
                 <xsl:variable name="label"
@@ -191,7 +196,6 @@
                   <xsl:copy-of select="$title"/>
                 </h1>
               </xsl:if>
-
 
               <div>
                 <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
@@ -385,6 +389,20 @@
             </xsl:if>
 
             <!--<xsl:if test="$sideRelated != ''">
+            <section class="gn-md-side-access">
+              <a class="btn btn-block btn-primary"
+                 href="{if ($portalLink != '')
+                        then replace($portalLink, '\$\{uuid\}', $metadataUuid)
+                        else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
+                <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
+                <xsl:value-of select="$schemaStrings/linkToPortal"/>
+              </a>
+              <div class="hidden-xs hidden-sm">
+                <xsl:value-of select="$schemaStrings/linkToPortal-help"/>
+              </div>
+            </section>
+
+            <xsl:if test="$sideRelated != ''">
               <section class="gn-md-side-associated">
                 <h2>
                   <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
@@ -541,7 +559,6 @@
         <xsl:if test="@name">
           <xsl:variable name="title"
                         select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
-
           <xsl:element name="h{1 + count(ancestor-or-self::*[name(.) = 'section'])}">
             <xsl:value-of select="$title"/>
           </xsl:element>

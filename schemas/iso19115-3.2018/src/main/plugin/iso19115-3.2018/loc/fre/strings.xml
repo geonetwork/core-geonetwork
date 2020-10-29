@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <!-- XSD error translation -->
+  <invalidElement>Contenu invalide à l'élément </invalidElement>
+  <onElementOf>Un des éléments suivants : </onElementOf>
+  <isExpected> est attendu.</isExpected>
+  <isNotComplete>.</isNotComplete>
+  <elementLocated> L'élément parent est </elementLocated>
+  <missingElement>Élément manquant dans </missingElement>
+  <invalidValue>Valeur manquante ou invalide. </invalidValue>
+  <notValidFor> n'est pas une valeur valide pour </notValidFor>
+  <xsdErrorIs>L'erreur est : </xsdErrorIs>
+  <inElement> contenu dans </inElement>
+  <enum1>La valeur </enum1>
+  <enum2> n'est pas valide pour le champ </enum2>
+  <enum3>Les valeurs possibles sont : </enum3>
+
+  <understandResource>Comprendre la ressource</understandResource>
+  <relatedResources>Service disponible et données associées</relatedResources>
+  <techInfo>Les informations techniques</techInfo>
+  <contactInfo>Les contacts</contactInfo>
+  <mdContactInfo>Contacts pour les métadonnées</mdContactInfo>
+  <temporalRef>Référence(s) temporelle(s)</temporalRef>
+  <refDate>Date(s) de référence</refDate>
+  <constraintInfo>Contraintes d'accès et d'utilisation</constraintInfo>
+  <resourceLineageTab>Lineage</resourceLineageTab>
+
+  <advanced>Complète</advanced>
+  <advanced-help>La vue complète permet d'ajouter tous les descripteurs définis dans le standard. Les champs sont groupés par onglet.</advanced-help>
+  <default>Simple</default>
+  <simple>Simple</simple>
+  <simple-help>La vue simple affiche toutes les informations présentes dans la fiche.</simple-help>
+  <inspire>INSPIRE</inspire>
+  <inspireTheme>Thèmes INSPIRE</inspireTheme>
+  <inspireThemeMandatory>INSPIRE themes*</inspireThemeMandatory>
+  <resource>Ressource</resource>
+  <xml>XML</xml>
+  <xml-help>La vue XML permet de modifier directement le XML de la fiche.</xml-help>
+  <metadata>Métadonnées</metadata>
+  <identificationInfo>Identification</identificationInfo>
+  <distributionInfo>Distribution</distributionInfo>
+  <dataQualityInfo>Qualité</dataQualityInfo>
+  <resourceLineage>Généalogie</resourceLineage>
+  <spatialRepresentationInfo>Rep. spatiale</spatialRepresentationInfo>
+  <referenceSystemInfo>Datum</referenceSystemInfo>
+  <contentInfo>Contenu</contentInfo>
+  <portrayalCatalogueInfo>Représentation</portrayalCatalogueInfo>
+  <metadataConstraints>Md. constraintes</metadataConstraints>
+  <metadataMaintenance>Md. maintenance</metadataMaintenance>
+  <applicationSchemaInfo>Standard ext.</applicationSchemaInfo>
+  <acquisitionInformation>Acquisition</acquisitionInformation>
+  <bboxesSection>Zone géographique</bboxesSection>
+  <citationProposal>Proposition de citation</citationProposal>
+  <citationProposal-help>Cette proposition de citation a été générée automatiquement selon le format suggéré par DataCite. Nous vous invitons à vérifier dans les métadonnées si les auteurs n'ont pas imposé un format de citation spécifique.</citationProposal-help>
+  <associatedResources>Ressources associées</associatedResources>
+
+
+
+  <add-resource-id>Générer un identifiant</add-resource-id>
+  <add-resource-idHelp>Construit un identifiant en utilisant l'URL du catalogue
+    et l'identifiant de la fiche (eg.
+    http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).
+  </add-resource-idHelp>
+  <add-extent-from-geokeywords>Calculer les emprises à partir des mots clés
+  </add-extent-from-geokeywords>
+  <add-extent-from-geokeywordsHelp>Analyse les mots clés de type géographique et
+    ajoute les emprises correspondantes.
+  </add-extent-from-geokeywordsHelp>
+
+
+
+  <earthObservation>Vue télédétection</earthObservation>
+  <eo-tab-contact>Contact</eo-tab-contact>
+  <eo-tab-description>Description</eo-tab-description>
+  <eo-version>Version</eo-version>
+  <eo-reference>Référence</eo-reference>
+  <eo-keywords>Propriétés</eo-keywords>
+  <eo-collection-id>Identifiant de collection</eo-collection-id>
+  <eo-collection-id-add>Ajouter un identifiant</eo-collection-id-add>
+  <eo-doi>DOI</eo-doi>
+  <eo-level>Niveau</eo-level>
+  <eo-feature-type>Type d'entité</eo-feature-type>
+  <eo-acquisition-pattern>Modèle d'acquisition</eo-acquisition-pattern>
+  <eo-compositing>Compositing</eo-compositing>
+  <eo-main-ig-parameters>Principaux paramètres instrumentaux ou géophysiques</eo-main-ig-parameters>
+  <eo-gcmd>Mots clés (GCMD)</eo-gcmd>
+  <eo-source>Source</eo-source>
+  <eo-spatial-coverage>Propriétés spatiales</eo-spatial-coverage>
+  <eo-area>Surface</eo-area>
+  <eo-resolution>Résolution</eo-resolution>
+  <eo-instrument-add>Ajouter un instrument et une plateforme</eo-instrument-add>
+  <eo-boundaries>Limites</eo-boundaries>
+  <eo-boundaries-code>Zone géographique</eo-boundaries-code>
+  <eo-projection>Projection</eo-projection>
+  <eo-add-projection>Ajouter une projection</eo-add-projection>
+  <eo-temporal-coverage>Propriétés temporelles</eo-temporal-coverage>
+  <eo-temporal-extent>Étendue</eo-temporal-extent>
+  <eo-start>Début</eo-start>
+  <eo-domain>Domaine</eo-domain>
+  <eo-end>Fin</eo-end>
+  <eo-latency>Latence</eo-latency>
+  <eo-ip-code>Code de l'instrument et de la plateforme</eo-ip-code>
+  <eo-project>Projet</eo-project>
+  <eo-authorship>Paternité</eo-authorship>
+  <eo-contact-add>Ajouter un contact</eo-contact-add>
+  <eo-known-issues>Problèmes connus</eo-known-issues>
+  <eo-main-info>Général</eo-main-info>
+  <eo-access-and-usage>Accès et usage</eo-access-and-usage>
+  <eo-helpdesk>Help desk</eo-helpdesk>
+  <eo-access>Accès</eo-access>
+  <eo-access-policy>Politique d'accès</eo-access-policy>
+  <eo-format>Format</eo-format>
+  <eo-format-add-netcdf3>Ajouter NetCDF 3</eo-format-add-netcdf3>
+  <eo-format-add-netcdf4>Ajouter NetCDF 4</eo-format-add-netcdf4>
+  <eo-convention>Convention</eo-convention>
+  <eo-usage>Usage</eo-usage>
+  <eo-link>Ajouter un lien (accès direct, services, outils)</eo-link>
+  <eo-link-doc>Ajouter un lien vers la documentation (user guide, processing and validation)</eo-link-doc>
+  <eo-doi-add>Ajouter un DOI</eo-doi-add>
+  <eo-required-citation>Citation requise</eo-required-citation>
+  <eo-usage-policy>Politique d'utilisation</eo-usage-policy>
+  <eo-doc>Documentation</eo-doc>
+  <eo-history>Historique</eo-history>
+  <eo-versions>Versions</eo-versions>
+  <eo-updates>Mises à jours</eo-updates>
+  <eo-updates-add>Ajouter une mise à jour</eo-updates-add>
+  <eo-issues>Problèmes</eo-issues>
+  <eo-issues-add>Ajouter un problème</eo-issues-add>
+  <eo-processstep-add>Ajouter une étape de processus</eo-processstep-add>
+
+  <addCrs4326>WGS 84</addCrs4326>
+  <addCrs4258>ETRS89</addCrs4258>
+  <addCrs3035>ETRS89 / LAEA Europe</addCrs3035>
+
+  <sxt-view-networkLink>Chemin d'accès</sxt-view-networkLink>
+  <noThesaurusName>Mots clés</noThesaurusName>
+  <extent>Étendue spatiale</extent>
+  <spatialExtent>Étendue spatiale</spatialExtent>
+  <freeTextKeywords>Other keywords</freeTextKeywords>
+</strings>

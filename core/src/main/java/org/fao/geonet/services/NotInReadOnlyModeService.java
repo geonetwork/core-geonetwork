@@ -23,9 +23,9 @@
 
 package org.fao.geonet.services;
 
+import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.logging.LogFactory;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -39,7 +39,7 @@ import java.nio.file.Path;
  *
  * @author heikki doeleman
  */
-public abstract class NotInReadOnlyModeService extends MailSendingService {
+public abstract class NotInReadOnlyModeService implements Service {
     private org.apache.commons.logging.Log log = LogFactory.getLog(NotInReadOnlyModeService.class);
 
     @Override

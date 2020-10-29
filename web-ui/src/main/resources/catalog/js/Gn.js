@@ -29,6 +29,7 @@ var geonetwork = {};
 
 
   goog.require('gn_locale');
+  goog.require('gn_count_watchers');
   goog.require('gn_polyfills');
 
   /**

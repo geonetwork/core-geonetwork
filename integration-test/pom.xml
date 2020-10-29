@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>geonetwork-integration-test</groupId>
-  <artifactId>geonetwork-integration-test</artifactId>
-  <version>3.7.0-SNAPSHOT</version>
+  <artifactId>gn-integration-test</artifactId>
+  <version>3..0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>geonetwork-integration-test</name>
 
@@ -50,7 +50,6 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>23.0</version>
     </dependency>
 
     <dependency>

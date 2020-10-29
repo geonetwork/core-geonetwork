@@ -5,10 +5,10 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.11.0-SNAPSHOT</version>
+    <version>4.0.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>es</artifactId>
+  <artifactId>gn-es</artifactId>
   <name>GeoNetwork index using Elasticsearch</name>
   <packaging>pom</packaging>
 
@@ -25,10 +25,10 @@
           <plugin>
             <groupId>com.googlecode.maven-download-plugin</groupId>
             <artifactId>download-maven-plugin</artifactId>
+            <inherited>false</inherited>
             <executions>
               <execution>
                 <id>download-elastic-search</id>
-                <phase>pre-integration-test</phase>
                 <goals>
                   <goal>wget</goal>
                 </goals>
@@ -38,7 +38,6 @@
                   </url>
                   <unpack>true</unpack>
                   <outputDirectory>${project.basedir}</outputDirectory>
-                  <sha512>${es.version.sha512}</sha512>
                 </configuration>
               </execution>
             </executions>
@@ -58,6 +57,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
+            <inherited>false</inherited>
             <configuration>
               <executable>elasticsearch-${es.version}/bin/${es.executable}</executable>
             </configuration>
@@ -78,7 +78,6 @@
     </profile>
   </profiles>
   <modules>
-    <module>es-core</module>
     <module>es-dashboards</module>
   </modules>
 

@@ -57,13 +57,23 @@
     background-color: @gn-menubar-background-active;
     color: @gn-menubar-color-active;
   }
-  .gn-name.gn-truncate {
-    @media (min-width: @screen-lg-min) {
-      max-width: 230px;
-      display: inline-block;
-      .text-overflow();
+  .gn-logo-link {
+    padding: 10px 15px;
+    .gn-logo {
+      margin: 0;
+    }
+    .gn-name {
+      margin-top: 4px;
+      &.gn-truncate {
+        @media (min-width: @screen-lg-min) {
+          max-width: 230px;
+          display: inline-block;
+          .text-overflow();
+        }
+      }
     }
   }
+
   // also add `display:none`, this doesn't take whitespace on the navbar
   .badge.invisible {
     display: none

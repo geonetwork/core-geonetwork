@@ -114,22 +114,22 @@
             "sortOrder": ""
           }, {
             "sortBy": "changeDate",
-            "sortOrder": ""
+            "sortOrder": "desc"
           }, {
             "sortBy": "title",
-            "sortOrder": "reverse"
+            "sortOrder": ""
           }, {
             "sortBy": "rating",
-            "sortOrder": ""
+            "sortOrder": "desc"
           }, {
             "sortBy": "popularity",
-            "sortOrder": ""
+            "sortOrder": "desc"
           }, {
             "sortBy": "denominatorDesc",
-            "sortOrder": ""
+            "sortOrder": "desc"
           }, {
             "sortBy": "denominatorAsc",
-            "sortOrder": "reverse"
+            "sortOrder": "asc"
           }],
           "sortBy": "relevance",
           "resultViewTpls": [{
@@ -141,7 +141,7 @@
           "formatter": {
             "list": [{
               "label": "full",
-              "url" : "../api/records/{{md.getUuid()}}/formatters/xsl-view?root=div&view=advanced"
+              "url" : "../api/records/{{md.uuid}}/formatters/xsl-view?root=div&view=advanced"
             }]
           },
           "linkTypes": {

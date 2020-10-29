@@ -1,18 +1,13 @@
-
 package org.fao.geonet.api.records.model.validation;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -25,8 +20,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -43,11 +36,9 @@ public class Pattern {
 
     /**
      * Gets the value of the title property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getTitle() {
         return title;
@@ -55,11 +46,9 @@ public class Pattern {
 
     /**
      * Sets the value of the title property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setTitle(String value) {
         this.title = value;
@@ -67,11 +56,9 @@ public class Pattern {
 
     /**
      * Gets the value of the rules property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Rules }
-     *     
+     *
+     * @return possible object is
+     * {@link Rules }
      */
     public Rules getRules() {
         return rules;
@@ -79,11 +66,9 @@ public class Pattern {
 
     /**
      * Sets the value of the rules property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Rules }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link Rules }
      */
     public void setRules(Rules value) {
         this.rules = value;

@@ -22,40 +22,24 @@
  */
 package org.fao.geonet.domain;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Transient;
-
-import org.apache.lucene.document.Document;
 import org.fao.geonet.utils.Xml;
 import org.hibernate.annotations.Type;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.springframework.util.Assert;
 
-import com.vividsolutions.jts.util.Assert;
+import javax.annotation.Nonnull;
+import javax.persistence.*;
+import java.io.IOException;
+import java.util.*;
+
 
 /**
  * An entity representing a metadata object in the database. The xml, groups and operations are lazily loaded so accessing then will need to
  * be done in a thread that has a bound EntityManager.
- * 
+ *
  * Also they can trigger database access if they have not been cached and therefore can cause slowdowns so they should only be accessed in
  * need.
  *
@@ -66,7 +50,7 @@ import com.vividsolutions.jts.util.Assert;
  */
 @MappedSuperclass
 public abstract class AbstractMetadata extends GeonetEntity {
-    static final String ID_SEQ_NAME = "metadata_id_seq";
+    public static final String ID_SEQ_NAME = "metadata_id_seq";
     public static final String METADATA_CATEG_JOIN_TABLE_CATEGORY_ID = "categoryId";
     private int _id;
     private String _uuid;
@@ -133,7 +117,7 @@ public abstract class AbstractMetadata extends GeonetEntity {
     @Column(nullable = false)
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Type(type = "org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
+    @Type(type = "org.hibernate.type.TextType") // this is a work around for postgres so postgres can correctly load clobs
     public String getData() {
         return _data;
     }
@@ -272,42 +256,6 @@ public abstract class AbstractMetadata extends GeonetEntity {
      */
     public void setHarvestInfo(MetadataHarvestInfo harvestInfo) {
         this._harvestInfo = harvestInfo;
-    }
-
-    protected static void transform(Document in, AbstractMetadata out) {
-        out.setId(Integer.valueOf(in.get("_id")));
-        out.setUuid(in.get("_uuid"));
-
-        final MetadataDataInfo dataInfo = out.getDataInfo();
-        dataInfo.setSchemaId(in.get("_schema"));
-        String metadataType = in.get("_isTemplate");
-        if (metadataType != null) {
-            dataInfo.setType(MetadataType.lookup(metadataType));
-        }
-        dataInfo.setCreateDate(new ISODate(in.get("_createDate")));
-        dataInfo.setChangeDate(new ISODate(in.get("_changeDate")));
-        dataInfo.setRoot(in.get("_root"));
-        final String displayOrder = in.get("_displayOrder");
-        if (displayOrder != null) {
-            dataInfo.setDisplayOrder(Integer.valueOf(displayOrder));
-        }
-
-        String tmpIsHarvest = in.get("_isHarvested");
-        if (tmpIsHarvest != null) {
-            out.getHarvestInfo().setHarvested(in.get("_isHarvested").equals("y"));
-
-        }
-        final MetadataSourceInfo sourceInfo = out.getSourceInfo();
-        sourceInfo.setSourceId(in.get("_source"));
-        final String owner = in.get("_owner");
-        if (owner != null) {
-            sourceInfo.setOwner(Integer.valueOf(owner));
-        }
-
-        final String groupOwner = in.get("_groupOwner");
-        if (groupOwner != null) {
-            sourceInfo.setGroupOwner(Integer.valueOf(groupOwner));
-        }
     }
 
     @Transient

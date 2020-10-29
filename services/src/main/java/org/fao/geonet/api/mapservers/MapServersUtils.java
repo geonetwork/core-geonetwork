@@ -90,8 +90,6 @@ public class MapServersUtils {
         }
     }
 
-    ;
-
     /**
      * Analyze ZIP file content and if valid, push the data to GeoServer.
      *

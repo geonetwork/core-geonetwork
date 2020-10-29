@@ -24,7 +24,6 @@
 package org.fao.geonet.api.records.formatters.groovy;
 
 import groovy.util.slurpersupport.GPathResult;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 

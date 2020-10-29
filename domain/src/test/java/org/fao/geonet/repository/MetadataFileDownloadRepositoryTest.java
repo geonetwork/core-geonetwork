@@ -86,8 +86,8 @@ public class MetadataFileDownloadRepositoryTest extends AbstractSpringDataTest {
         fileDownload2 = _metadataFileDownloadRepo.save(fileDownload2);
 
 
-        assertEquals(fileDownload1, _metadataFileDownloadRepo.findOne(fileDownload1.getId()));
-        assertEquals(fileDownload2, _metadataFileDownloadRepo.findOne(fileDownload2.getId()));
+        assertEquals(fileDownload1, _metadataFileDownloadRepo.findById(fileDownload1.getId()).get());
+        assertEquals(fileDownload2, _metadataFileDownloadRepo.findById(fileDownload2.getId()).get());
     }
 
     private MetadataFileDownload newMetadataFileDownload() {

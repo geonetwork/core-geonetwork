@@ -27,14 +27,12 @@ import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
-
 import org.jdom.JDOMException;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
-
-import javax.annotation.Nullable;
 
 /**
  * @author Jesse on 11/20/2014.

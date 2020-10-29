@@ -42,7 +42,7 @@ import java.util.List;
 import static org.fao.geonet.repository.SchematronCriteriaGroupRepositoryTest.*;
 
 /**
- * Test the specifications for selecting {@link org.fao.geonet.domain.SchematronCriteria}.
+ * Test the Specification for selecting {@link org.fao.geonet.domain.SchematronCriteria}.
  *
  * Created by Jesse on 2/12/14.
  */

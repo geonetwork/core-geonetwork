@@ -44,6 +44,7 @@
         filters: gnSearchSettings.filters,
         params: {
           sortBy: 'changeDate',
+          sortOrder: 'desc',
           _isTemplate: 'y or n',
           from: 1,
           to: 20
@@ -56,7 +57,7 @@
         if ($('#batchSearchTemplateY')[0].checked) values.push('y');
         if ($('#batchSearchTemplateN')[0].checked) values.push('n');
         if ($('#batchSearchTemplateS')[0].checked) values.push('s');
-        $scope.searchObj.params._isTemplate = values.join(' or ');
+        $scope.searchObj.params.isTemplate = values.join(' or ');
       };
 
 
@@ -87,11 +88,11 @@
               label: 'catalogueAdminTools',
               icon: 'fa-search',
               href: '#/tools/index'
-            },{
-              type: 'batch',
-              label: 'batchProcess',
-              icon: 'fa-medkit',
-              href: '#/tools/batch'
+            // },{
+            //   type: 'batch',
+            //   label: 'batchProcess',
+            //   icon: 'fa-medkit',
+            //   href: '#/tools/batch'
             },{
               type: 'transferownership',
               label: 'transfertPrivs',
@@ -173,10 +174,10 @@
         sortOrder: ''
       }, {
         sortBy: 'changeDate',
-        sortOrder: ''
+        sortOrder: 'desc'
       }, {
-        sortBy: 'title',
-        sortOrder: 'reverse'
+        sortBy: 'resourceTitleObject.default.keyword',
+        sortOrder: ''
       }];
 
       gnSearchSettings.hitsperpageValues = [20, 50, 100];
@@ -425,71 +426,19 @@
                 $timeout(checkIsIndexing, indexCheckInterval);
               }
               // Get the number of records (template, records, subtemplates)
-              $http.get('qi?_content_type=json&' +
-                 'template=y or n or s&summaryOnly=true').
+              $http.post('../api/search/records/_search', {size: 0}).
                  success(function(data, status) {
-                   $scope.numberOfIndexedRecords = data[0]['@count'];
+                   $scope.numberOfIndexedRecords = data.hits.total;
                  });
             });
       }
 
       checkIsIndexing();
 
-      $scope.rebuildIndex = function() {
-        return $http.get('admin.index.rebuild?reset=yes')
+      $scope.rebuildIndex = function(dropFirst) {
+        return $http.put('../api/site/index?reset=' + dropFirst + "&asynchronous=true")
             .success(function(data) {
               checkIsIndexing();
-            })
-            .error(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('rebuildIndexError'),
-                error: data,
-                timeout: 0,
-                type: 'danger'});
-            });
-      };
-      $scope.indexInEs = function() {
-        return $http.put('../api/site/index/es')
-            .success(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate.instant('indexInEsDone'),
-                timeout: 2,
-                type: 'success'});
-            })
-            .error(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('indexInEsDoneError'),
-                error: data,
-                timeout: 0,
-                type: 'danger'});
-            });
-      };
-
-      $scope.optimizeIndex = function() {
-        return $http.get('admin.index.optimize')
-            .success(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate.instant('indexOptimizationInProgress'),
-                timeout: 2,
-                type: 'success'});
-              // TODO: Does this is asynch and make the search unavailable?
-            })
-            .error(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('rebuildIndexError'),
-                error: data,
-                timeout: 0,
-                type: 'danger'});
-            });
-      };
-
-      $scope.reloadLuceneConfig = function() {
-        return $http.get('admin.index.config.reload')
-            .success(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate.instant('luceneConfigReloaded'),
-                timeout: 2,
-                type: 'success'});
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {

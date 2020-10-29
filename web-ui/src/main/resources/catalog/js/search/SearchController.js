@@ -53,9 +53,13 @@
     'gnSearchSettings',
     'gnGlobalSettings',
     'gnConfig',
+    'gnESClient',
+    'gnESService',
     'orderByFilter',
+    'gnConfigService',
     function($scope, $q, $http, suggestService, gnAlertService,
-             gnSearchSettings, gnGlobalSettings, gnConfig, orderByFilter) {
+             gnSearchSettings, gnGlobalSettings, gnConfig, gnESClient,
+             gnESService, orderByFilter, gnConfigService) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -67,11 +71,17 @@
       };
 
       $scope.isUserFeedbackEnabled = false;
+      $scope.isInspireEnabled = false;
 
-      var statusSystemRating = gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
-      if (statusSystemRating == 'advanced') {
-        $scope.isUserFeedbackEnabled = true;
-      }
+      gnConfigService.load().then(function(c) {
+        var statusSystemRating =
+          gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
+        if (statusSystemRating == 'advanced') {
+          $scope.isUserFeedbackEnabled = true;
+        }
+        $scope.isInspireEnabled =
+          (gnConfig[gnConfig.key.isInspireEnabled] == true);
+      });
 
       $scope.isUserSearchesEnabled = gnGlobalSettings.gnCfg.mods.search.usersearches.enabled;
       $scope.displayFeaturedSearchesPanel =
@@ -92,8 +102,8 @@
       $scope.advancedSearchTemplate = gnSearchSettings.advancedSearchTemplate ||
         '../../catalog/views/default/templates/advancedSearchForm/defaultAdvancedSearchForm.html';
 
-      $scope.getAnySuggestions = function(val) {
-        return suggestService.getAnySuggestions(val);
+      $scope.getAnySuggestions = function(val, searchObj) {
+        return suggestService.getAnySuggestions(val, searchObj);
       };
 
       $scope.container = '.gn-grid-item';
@@ -101,9 +111,23 @@
       $scope.keywordsOptions = {
         mode: 'remote',
         remote: {
-          url: suggestService.getUrl('QUERY', 'keyword', 'STARTSWITHFIRST'),
-          filter: suggestService.bhFilter,
-          wildcard: 'QUERY'
+          url: gnESClient.getUrl('_search') + '#QUERY', //gnESClient.getSuggestUrl('tag.trigram', 'QUERY'),
+          filter: gnESService.parseCompletionResponse,
+          wildcard: 'QUERY',
+          transport: function (opts, onSuccess, onError) {
+            var url = opts.url.split("#")[0];
+            var query = opts.url.split("#")[1];
+            $.ajax({
+              url: url,
+              data: JSON.stringify(gnESService.getCompletion('tag.completion', query)),
+              type: "POST",
+              dataType: 'json',
+              contentType: "application/json",
+              success: onSuccess,
+              error: onError
+            })
+          }
+
         }
       };
 

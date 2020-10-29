@@ -30,11 +30,11 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.11.0-SNAPSHOT</version>
+    <version>4.0.1-SNAPSHOT</version>
   </parent>
 
   <groupId>org.geonetwork-opensource</groupId>
-  <artifactId>web-ui</artifactId>
+  <artifactId>gn-web-ui</artifactId>
   <packaging>jar</packaging>
   <name>GeoNetwork user interface module</name>
   <description/>

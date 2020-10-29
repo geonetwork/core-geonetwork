@@ -70,7 +70,7 @@ public class Identify implements OaiPmhService {
     //---------------------------------------------------------------------------
 
     private ISODate getEarliestDS(ServiceContext context) throws Exception {
-        final AbstractMetadata oldestByChangeDate = context.getBean(MetadataRepository.class).findOneOldestByChangeDate();
+        final AbstractMetadata oldestByChangeDate = context.getBean(MetadataRepository.class).findOldestByChangeDate();
 
         //--- if we don't have metadata, just return 'now'
         if (oldestByChangeDate == null)

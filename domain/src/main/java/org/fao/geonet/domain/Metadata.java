@@ -23,15 +23,13 @@
 
 package org.fao.geonet.domain;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Set;
+import org.fao.geonet.domain.userfeedback.UserFeedback;
+import org.fao.geonet.entitylistener.MetadataEntityListenerManager;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
@@ -40,10 +38,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
-import org.apache.lucene.document.Document;
-import org.fao.geonet.domain.userfeedback.UserFeedback;
-import org.fao.geonet.entitylistener.MetadataEntityListenerManager;
 
 /**
  * @See {@link AbstractMetadata}
@@ -61,12 +59,6 @@ public class Metadata extends AbstractMetadata implements Serializable {
     private List<UserFeedback> userFeedbacks;
 
     public Metadata() {
-    }
-
-    public static Metadata createFromLuceneIndexDocument(Document doc) {
-        Metadata metadata = new Metadata();
-        transform(doc, metadata);
-        return metadata;
     }
 
     /**

@@ -22,15 +22,12 @@ package org.fao.geonet.services.util.z3950.provider.GN;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.kernel.search.SearcherType;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.GeonetContext;
+import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.services.util.z3950.GNXMLQuery;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.DOMOutputter;
@@ -65,18 +62,20 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
         super(observers);
         this.query = query;
         this.srvxtx = srvctx;
-
-        try {
-
-            GeonetContext gc = (GeonetContext) this.srvxtx
-                .getHandlerContext(Geonet.CONTEXT_NAME);
-            SearchManager searchMan = gc.getBean(SearchManager.class);
-
-            metasearcher = searchMan.newSearcher(SearcherType.LUCENE, SEARCH_Z3950_SERVER);
-
-        } catch (Exception e) {
-            Log.error(Geonet.SRU, "error constructing GNresult set: " + e.getMessage(), e);
-        }
+        throw new NotImplementedException("Z39.50 not implemented in ES");
+//        try {
+//
+//            GeonetContext gc = (GeonetContext) this.srvxtx
+//                .getHandlerContext(Geonet.CONTEXT_NAME);
+//            SearchManager searchMan = gc.getBean(SearchManager.class);
+//
+//            metasearcher = searchMan.newSearcher(SearcherType.LUCENE, SEARCH_Z3950_SERVER);
+//
+//        } catch (Exception e) {
+//            if (Log.isDebugEnabled(Geonet.SRU))
+//                Log.debug(Geonet.SRU, "error constructing GNresult set: " + e);
+//            e.printStackTrace();
+//        }
     }
 
     public int evaluate(int timeout) {

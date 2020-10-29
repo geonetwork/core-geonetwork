@@ -25,10 +25,11 @@
   goog.provide('gn_system_settings_controller');
 
   goog.require('gn_ui_config');
+  goog.require('gn_timezone_selector')
 
 
   var module = angular.module('gn_system_settings_controller',
-      ['gn_ui_config']);
+      ['gn_ui_config', 'gn_timezone_selector']);
 
   module.filter('hideLanguages', function() {
     return function(input) {
@@ -196,7 +197,7 @@
                 if (target) {
                   $timeout(function () {
                     gnUtilityService.scrollTo(target);
-                  }, 300);
+                  }, 900);
                 }
               }
             }).error(function(data) {
@@ -428,7 +429,7 @@
       };
 
       $scope.testMailConfiguration = function() {
-        $http.get('../api/0.1/tools/mail/test')
+        $http.get('../api/tools/mail/test')
             .then(function(response) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: response.data});
@@ -478,7 +479,7 @@
        * Execute Atom feed harvester
        */
       $scope.executeAtomHarvester = function() {
-        $http.get('atomharvester?_content_type=json').success(function(data) {
+        return $http.get('atomharvester?_content_type=json').success(function(data) {
           $scope.loadTplReport = data;
 
           $('#atomHarvesterModal').modal();

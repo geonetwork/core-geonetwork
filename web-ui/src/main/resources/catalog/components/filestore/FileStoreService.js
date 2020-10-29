@@ -33,7 +33,7 @@
        function($http) {
          return {
            get: function(metadataUuid, filter) {
-             return $http.get('../api/0.1/records/' +
+             return $http.get('../api/records/' +
                                   metadataUuid + '/attachments', {
                params: {
                  filter: filter,

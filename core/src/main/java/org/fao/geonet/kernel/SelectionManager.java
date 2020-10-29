@@ -23,35 +23,31 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.MetadataRecordSelector;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.util.MarkupParserCache;
-import org.fao.geonet.util.XslUtil;
-import org.fao.geonet.utils.Log;
-import org.jdom.Element;
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
 
-import javax.annotation.Nonnull;
+import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-
+import javax.annotation.Nonnull;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.SearchHit;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.utils.Log;
+import org.jdom.Element;
 
 /**
  * Manage objects selection for a user session.
@@ -225,59 +221,45 @@ public class SelectionManager {
     }
 
     /**
-     * <p> Selects all element in a LuceneSearcher or CatalogSearcher. </p>
+     * <p> Selects all element in the last search
+     * which is stored in session based on the bucket name.
+     * Sends the query with a max hits and build a collection of UUIDs.</p>
      */
     public void selectAll(String type, ServiceContext context, UserSession session) {
         Set<String> selection = selections.get(type);
-        SettingInfo si = context.getBean(SettingInfo.class);
         int maxhits = DEFAULT_MAXHITS;
-
+        SettingInfo settingInfo = ApplicationContextHolder.get().getBean(SettingInfo.class);
         try {
-            maxhits = Integer.parseInt(si.getSelectionMaxRecords());
+            maxhits = Integer.parseInt(settingInfo.getSelectionMaxRecords());
         } catch (Exception e) {
             Log.error(Geonet.GEONETWORK, "Select all - invalid max hits value, error: " + e.getMessage(), e);
         }
 
-        if (selection != null)
+        if (selection != null) {
             selection.clear();
+        }
 
-//        if (type.equals(SELECTION_METADATA)) {
         if (StringUtils.isNotEmpty(type)) {
-            Element request = (Element) session.getProperty(Geonet.Session.SEARCH_REQUEST + type);
-            Object searcher = null;
-
-            // Run last search if xml.search or q service is used (ie. last searcher is not stored in current session).
-            if (request != null) {
-                request = (Element) request.clone();
-                request.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-                SearchManager searchMan = gc.getBean(SearchManager.class);
-                try {
-                    searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-                    ServiceConfig sc = new ServiceConfig();
-                    ((LuceneSearcher) searcher).search(context, request, sc);
-                } catch (Exception e) {
-                    Log.error(Geonet.GEONETWORK, "Select all error: " + e.getMessage(), e);
-                }
-            } else {
-                searcher = session.getProperty(Geonet.Session.SEARCH_RESULT + type);
-            }
-            if (searcher == null)
+            JsonNode request = (JsonNode) session.getProperty(Geonet.Session.SEARCH_REQUEST + type);
+            if (request == null) {
                 return;
+            } else {
+                final SearchResponse searchResponse;
+                try {
+                    EsSearchManager searchManager = context.getBean(EsSearchManager.class);
+                    searchResponse = searchManager.query(request.get("query"), FIELDLIST_UUID, 0, maxhits);
+                    List<String> uuidList = new ArrayList();
+                    for (SearchHit h : Arrays.asList(searchResponse.getHits().getHits())) {
+                        uuidList.add((String) h.getSourceAsMap().get(Geonet.IndexFieldNames.UUID));
+                    }
 
-            List<String> uuidList;
-            try {
-                if (searcher instanceof MetadataRecordSelector)
-                    uuidList = ((MetadataRecordSelector) searcher).getAllUuids(maxhits, context);
-                else
-                    return;
-
-                if (selection != null) {
-                    selection.addAll(uuidList);
+                    if (selection != null) {
+                        selection.addAll(uuidList);
+                    }
+                } catch (Exception e) {
+                    Log.error(Geonet.GEONETWORK,
+                        "Select all - query error: " + e.getMessage(), e);
                 }
-
-            } catch (Exception e) {
-                Log.error(Geonet.GEONETWORK, "Select all error: " + e.getMessage(), e);
             }
         }
     }

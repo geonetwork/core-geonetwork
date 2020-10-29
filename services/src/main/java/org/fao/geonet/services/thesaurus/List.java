@@ -18,7 +18,7 @@
 //===	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //===
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: GeoNetwork@fao.org
+//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
 package org.fao.geonet.services.thesaurus;
@@ -27,9 +27,8 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -58,24 +57,19 @@ public class List implements Service {
     /**
      * Filter on directory
      */
-    private FilenameFilter directoryFilter = new FilenameFilter() {
+    private final FilenameFilter directoryFilter = new FilenameFilter() {
         public boolean accept(File dir, String name) {
-            if (dir.isDirectory() && !name.startsWith("."))
-                return true;
-            else
-                return false;
+            return dir.isDirectory() && !name.startsWith(".");
         }
     };
     /**
      * Filter on directory
      */
-    private FilenameFilter thesauriFilter = new FilenameFilter() {
+    private final FilenameFilter thesauriFilter = new FilenameFilter() {
         public boolean accept(File dir, String name) {
             if (dir.isDirectory() && !name.startsWith("."))
                 return true;
-            else if (!dir.isDirectory() && name.endsWith(".xml") || name.endsWith(".rdf"))
-                return true;
-            else return false;
+            else return !dir.isDirectory() && name.endsWith(".xml") || name.endsWith(".rdf");
         }
     };
 

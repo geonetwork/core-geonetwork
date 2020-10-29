@@ -82,7 +82,7 @@
               }
 
               if (scope.md ) {
-                scope.filter.recordFilter = scope.md['geonet:info'].id;
+                scope.filter.recordFilter = scope.md.id;
                 gnRecordHistoryService.search(scope.filter).then(function(r) {
                   scope.history = r.data;
                   scope.hasMoreRecords = r.data.length >= scope.filter.size;
@@ -188,10 +188,10 @@
               scope.hasMoreRecords = false;
 
               scope.getSuggestions = function(val) {
-                return gnSearchManagerService.search('q?fast=index&_content_type=json&_isTemplate=y or n&title=' + (val || '*')).then(function(res) {
+                return gnSearchManagerService.search('q?isTemplate=y or n&title=' + (val || '*')).then(function(res) {
                   var listOfTitles = [];
                   angular.forEach(res.metadata, function(value, key) {
-                    listOfTitles.push({id: value['geonet:info'].id, title: value.title});
+                    listOfTitles.push({id: value.id, title: value.title});
                   });
                   return listOfTitles;
                 });

@@ -30,14 +30,14 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.11.0-SNAPSHOT</version>
+    <version>4.0.1-SNAPSHOT</version>
   </parent>
 
 
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <artifactId>dummy-api</artifactId>
+  <artifactId>gn-dummy-api</artifactId>
   <packaging>jar</packaging>
   <name>ArcSDE module (dummy-api)</name>
   <description>

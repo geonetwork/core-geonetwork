@@ -18,7 +18,7 @@
 //===	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //===
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: GeoNetwork@fao.org
+//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
 package org.fao.geonet.services.thesaurus;
@@ -28,9 +28,8 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
@@ -46,7 +45,7 @@ import java.util.List;
  * For editing : removes a concept from a thesaurus. Use parameter "namespace" and "code" to remove
  * a specific concept, if not set, the current selection is removed ({@link
  * org.fao.geonet.services.thesaurus.SelectKeywords}).
- *
+ * <p>
  * Access is restricted
  */
 public class DeleteElement implements Service {

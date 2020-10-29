@@ -26,9 +26,7 @@ package org.fao.geonet.api.records.formatters.groovy.template;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
-
 import groovy.util.slurpersupport.GPathResult;
-
 import org.fao.geonet.SystemInfo;
 import org.xml.sax.Attributes;
 

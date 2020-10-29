@@ -43,16 +43,11 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
-import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -303,7 +298,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
         // not in this harvesting result
         //
         Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
-        List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy((Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(params.getUuid()));
+        List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findIdsBy((Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(params.getUuid()));
         for (Integer existingId : existingMetadata) {
 
             if (cancelMonitor.get()) {
@@ -350,7 +345,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
 
         metadataManager.flush();
 
-        dataMan.indexMetadata(id, true, null);
+        dataMan.indexMetadata(id, true);
     }
 
     /**
@@ -394,13 +389,13 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
 
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, xml, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        dataMan.indexMetadata(id, true, null);
+        dataMan.indexMetadata(id, true);
 
         return id;
     }
@@ -408,44 +403,14 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
     private void loadMetadataThumbnail(String thumbnail, String metadataId, String uuid) {
         log.info("  - Creating thumbnail for metadata uuid: " + uuid);
 
-        org.fao.geonet.services.thumbnail.Set s = new org.fao.geonet.services.thumbnail.Set();
-
         try {
             String filename = uuid + ".png";
             Path dir = context.getUploadDir();
 
             byte[] thumbnailImg =  Base64.decodeBase64(thumbnail);
-
-            try (OutputStream fo = Files.newOutputStream(dir.resolve(filename));
-                 InputStream in = new ByteArrayInputStream(thumbnailImg);) {
-                BinaryFile.copy(in, fo);
-            }
-
-
-            if (log.isDebugEnabled()) log.debug("  - File: " + filename);
-
-            Element par = new Element("request");
-            par.addContent(new Element("id").setText(metadataId));
-            par.addContent(new Element("version").setText("10"));
-            par.addContent(new Element("type").setText("large"));
-
-            Element fname = new Element("fname").setText(filename);
-            fname.setAttribute("content-type", "image/png");
-            fname.setAttribute("type", "file");
-            fname.setAttribute("size", "");
-
-            par.addContent(fname);
-            par.addContent(new Element("add").setText("Add"));
-            par.addContent(new Element("createSmall").setText("on"));
-            par.addContent(new Element("smallScalingFactor").setText("180"));
-            par.addContent(new Element("smallScalingDir").setText("width"));
-
-            // Call the services
-            s.execOnHarvest(par, context, dataMan);
-
-            metadataManager.flush();
-
-            result.thumbnails++;
+            // TODO use FileStore API
+//            metadataManager.flush();
+//            result.thumbnails++;
 
         } catch (Exception e) {
             log.warning("  - Failed to set thumbnail for metadata: " + e.getMessage());

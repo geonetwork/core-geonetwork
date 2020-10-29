@@ -22,12 +22,12 @@
  */
 package org.fao.geonet.api.cssstyle.service;
 
-import java.util.List;
-
 import org.fao.geonet.domain.CssStyleSetting;
 import org.fao.geonet.repository.CssStyleSettingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CssStyleSettingDatabaseService implements ICssStyleSettingService {

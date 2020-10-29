@@ -35,11 +35,9 @@
         },
         link: function(scope) {
           gnSearchManagerService.gnSearch({
-            uuid: scope.metadata["geonet:info"].uuid,
-            _isTemplate: 'y or n',
-            _draft: 'y',
-            fast: 'index',
-            _content_type: 'json'
+            uuid: scope.metadata.uuid,
+            isTemplate: 'y or n',
+            draft: 'y'
           }).then(function(data) {
             var i = 0;
             data.metadata.forEach(function (md, index) {

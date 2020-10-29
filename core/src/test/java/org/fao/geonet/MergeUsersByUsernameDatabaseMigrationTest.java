@@ -37,10 +37,7 @@ import org.junit.Test;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.io.ByteArrayInputStream;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -123,10 +120,10 @@ public class MergeUsersByUsernameDatabaseMigrationTest extends AbstractCoreInteg
         userTmp.setUsername(greatestProfileUser.getUsername().toLowerCase());
 
         migration.run(_applicationContext);
-        assertNull(_userRepo.findOne(user1.getId()));
-        assertNull(_userRepo.findOne(user2.getId()));
-        assertNull(_userRepo.findOne(user3.getId()));
-        User mergedUser = _userRepo.findOne(greatestProfileUser.getId());
+        assertFalse(_userRepo.findById(user1.getId()).isPresent());
+        assertFalse(_userRepo.findById(user2.getId()).isPresent());
+        assertFalse(_userRepo.findById(user3.getId()).isPresent());
+        User mergedUser = _userRepo.findById(greatestProfileUser.getId()).get();
         assertNotNull(mergedUser);
         assertEquals(userTmp.getUsername(), mergedUser.getUsername());
         assertEquals(userTmp.getProfile(), mergedUser.getProfile());
@@ -150,32 +147,55 @@ public class MergeUsersByUsernameDatabaseMigrationTest extends AbstractCoreInteg
 
         migration.mergeGroups(_applicationContext, duplicatedUserNames, greatestProfileUser);
 
-        assertNull(_userGroupRepo.findOne(new UserGroupId().setGroupId(group1.getId())
-            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Administrator)));
-        assertNotNull(_userGroupRepo.findOne(new UserGroupId().setGroupId(group1.getId())
-            .setUserId(greatestProfileUser.getId()).setProfile(Profile.UserAdmin)));
-        assertNotNull(_userGroupRepo.findOne(new UserGroupId().setGroupId(group1.getId())
-            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Reviewer)));
-        assertNotNull(_userGroupRepo.findOne(new UserGroupId().setGroupId(group1.getId())
-            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Editor)));
-        assertNotNull(_userGroupRepo.findOne(new UserGroupId().setGroupId(group1.getId())
-            .setUserId(greatestProfileUser.getId()).setProfile(Profile.RegisteredUser)));
-        assertNotNull(_userGroupRepo.findOne(new UserGroupId().setGroupId(group1.getId())
-            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Guest)));
+        Optional<UserGroup> userGroup = _userGroupRepo.findById(new UserGroupId().setGroupId(group1.getId())
+            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Administrator));
+        assertFalse(userGroup.isPresent());
+
+        userGroup = _userGroupRepo.findById(new UserGroupId().setGroupId(group1.getId())
+            .setUserId(greatestProfileUser.getId()).setProfile(Profile.UserAdmin));
+        assertTrue(userGroup.isPresent());
+
+        userGroup = _userGroupRepo.findById(new UserGroupId().setGroupId(group1.getId())
+            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Reviewer));
+        assertTrue(userGroup.isPresent());
+
+        userGroup = _userGroupRepo.findById(new UserGroupId().setGroupId(group1.getId())
+            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Editor));
+        assertTrue(userGroup.isPresent());
+
+        userGroup = _userGroupRepo.findById(new UserGroupId().setGroupId(group1.getId())
+            .setUserId(greatestProfileUser.getId()).setProfile(Profile.RegisteredUser));
+        assertTrue(userGroup.isPresent());
+
+        userGroup = _userGroupRepo.findById(new UserGroupId().setGroupId(group1.getId())
+            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Guest));
+        assertTrue(userGroup.isPresent());
+
 
         // Reviewer in group2
-        assertNull(_userGroupRepo.findOne(new UserGroupId().setGroupId(group2.getId())
-            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Administrator)));
-        assertNull(_userGroupRepo.findOne(new UserGroupId().setGroupId(group2.getId())
-            .setUserId(greatestProfileUser.getId()).setProfile(Profile.UserAdmin)));
-        assertNotNull(_userGroupRepo.findOne(new UserGroupId().setGroupId(group2.getId())
-            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Reviewer)));
-        assertNotNull(_userGroupRepo.findOne(new UserGroupId().setGroupId(group2.getId())
-            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Editor)));
-        assertNotNull(_userGroupRepo.findOne(new UserGroupId().setGroupId(group2.getId())
-            .setUserId(greatestProfileUser.getId()).setProfile(Profile.RegisteredUser)));
-        assertNotNull(_userGroupRepo.findOne(new UserGroupId().setGroupId(group2.getId())
-            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Guest)));
+        userGroup = _userGroupRepo.findById(new UserGroupId().setGroupId(group2.getId())
+            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Administrator));
+        assertFalse(userGroup.isPresent());
+
+        userGroup = _userGroupRepo.findById(new UserGroupId().setGroupId(group2.getId())
+            .setUserId(greatestProfileUser.getId()).setProfile(Profile.UserAdmin));
+        assertFalse(userGroup.isPresent());
+
+        userGroup = _userGroupRepo.findById(new UserGroupId().setGroupId(group2.getId())
+            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Reviewer));
+        assertTrue(userGroup.isPresent());
+
+        userGroup = _userGroupRepo.findById(new UserGroupId().setGroupId(group2.getId())
+            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Editor));
+        assertTrue(userGroup.isPresent());
+
+        userGroup = _userGroupRepo.findById(new UserGroupId().setGroupId(group2.getId())
+            .setUserId(greatestProfileUser.getId()).setProfile(Profile.RegisteredUser));
+        assertTrue(userGroup.isPresent());
+
+        userGroup = _userGroupRepo.findById(new UserGroupId().setGroupId(group2.getId())
+            .setUserId(greatestProfileUser.getId()).setProfile(Profile.Guest));
+        assertTrue(userGroup.isPresent());
 
         assertEquals(0, _userGroupRepo.findAll(UserGroupSpecs.hasUserId(user1.getId())).size());
         assertEquals(0, _userGroupRepo.findAll(UserGroupSpecs.hasUserId(user2.getId())).size());
@@ -201,7 +221,7 @@ public class MergeUsersByUsernameDatabaseMigrationTest extends AbstractCoreInteg
         for (Map.Entry<Integer, Integer> entry : metadataIdList.entrySet()) {
             Integer metadataId = entry.getKey();
             Integer groupId = entry.getValue();
-            Metadata metadata = metadataRepository.findOne(metadataId);
+            Metadata metadata = metadataRepository.findById(metadataId).get();
             assertEquals((Integer) greatestProfileUser.getId(), metadata.getSourceInfo().getOwner());
             assertEquals(groupId, metadata.getSourceInfo().getGroupOwner());
         }

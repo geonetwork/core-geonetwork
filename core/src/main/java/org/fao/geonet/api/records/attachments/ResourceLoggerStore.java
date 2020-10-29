@@ -80,7 +80,7 @@ public class ResourceLoggerStore extends AbstractStore {
             ResourceHolder holder = decoratedStore.getResource(context, metadataUuid, visibility, resourceId, approved);
             if (holder != null) {
                 // TODO: Add Requester details which may have been provided by a form ?
-                storeGetRequest(context, metadataUuid, resourceId, "", "", "", "", new ISODate().toString());
+                storeGetRequest(context, metadataUuid, holder.getMetadata().getId(), "", "", "", "", new ISODate().toString());
             }
             return holder;
         }

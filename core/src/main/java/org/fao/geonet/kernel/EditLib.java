@@ -94,7 +94,6 @@ public class EditLib {
 
     public EditLib(SchemaManager scm) {
         this.scm = scm;
-        htVersions.clear();
     }
 
     /**
@@ -903,6 +902,15 @@ public class EditLib {
             LOGGER_ADD_ELEMENT.warn("An illegal xpath was used to locate an element: {}", xpathProperty);
             return SelectResult.ERROR;
         }
+    }
+
+    /**
+     * Removes the version of the edit session for a metadata. Used when the edit session is finished.
+     *
+     * @param id
+     */
+    public void clearVersion(String id) {
+        htVersions.remove(id);
     }
 
     //--------------------------------------------------------------------------

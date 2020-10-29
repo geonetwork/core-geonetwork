@@ -567,7 +567,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
 
 				if (!isService) {
         	if (params.datasetCategory != null && !params.datasetCategory.equals("")) {
-           	MetadataCategory metadataCategory = context.getBean(MetadataCategoryRepository.class).findOne(Integer.parseInt(params.datasetCategory));
+           	MetadataCategory metadataCategory = context.getBean(MetadataCategoryRepository.class).findById(Integer.parseInt(params.datasetCategory)).get();
 
            	if (metadataCategory == null) {
              	throw new IllegalArgumentException("No category found with name: " + params.datasetCategory);
@@ -579,13 +579,13 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
         	addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 				}
 
-        metadata = (Metadata) mdManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = (Metadata) mdManager.insertMetadata(context, metadata, md, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        mdIndexer.indexMetadata(id, true, null);
+        mdIndexer.indexMetadata(id, true);
 
         mdManager.flush();
     }
@@ -1505,7 +1505,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
      *
      * @param    cata                    the XML of the catalog
      * @param    styleSheet              stylesheet to produce 19139
-     * @param    dataParamsStyleSheet    stylesheet to produce mcp:dataParameters from subset service xml
+     * @param    dataParamsNCSSStylesheet    stylesheet to produce mcp:dataParameters from subset service xml
      **/
 
     private void createDatasetMetadata(Element cata, Path styleSheet,

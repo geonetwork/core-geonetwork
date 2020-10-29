@@ -29,9 +29,9 @@ import org.fao.geonet.domain.Setting;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SettingRepository;
-import org.fao.geonet.services.config.DoActions;
 
 import java.net.URL;
+import java.util.Optional;
 
 /**
  * Logger utilities
@@ -48,11 +48,16 @@ public class LogUtils {
     public static void refreshLogConfiguration() {
         SettingRepository repository =
             ApplicationContextHolder.get().getBean(SettingRepository.class);
-        Setting setting = repository.findOne(Settings.SYSTEM_SERVER_LOG);
+        Optional<Setting> settingOpt = repository.findById(Settings.SYSTEM_SERVER_LOG);
+        Setting setting = null;
+
+        if (settingOpt.isPresent()) {
+            setting = settingOpt.get();
+        }
 
         // get log config from db settings
         String log4jProp = setting != null ? setting.getValue() : DEFAULT_LOG_FILE;
-        URL url = DoActions.class.getResource("/" + log4jProp);
+        URL url = LogUtils.class.getResource("/" + log4jProp);
         if (url != null) {
             // refresh configuration
             DOMConfigurator.configure(url);

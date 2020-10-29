@@ -40,11 +40,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -440,15 +436,24 @@ public class MEFLib {
 
         for (OperationAllowed operationAllowed : opsAllowed) {
             int grpId = operationAllowed.getId().getGroupId();
-            Group group = groupRepository.findOne(grpId);
-            String grpName = group.getName();
+            Optional<Group> group = groupRepository.findById(grpId);
+
+            if (!group.isPresent()) {
+                continue;
+            }
+
+            String grpName = group.get().getName();
 
             if (!userGroups.contains(grpId)) {
                 continue;
             }
 
-            Operation operation = operationRepository.findOne(operationAllowed.getId().getOperationId());
-            String operName = operation.getName();
+            Optional<Operation> operation = operationRepository.findById(operationAllowed.getId().getOperationId());
+            if (!operation.isPresent()) {
+                continue;
+            }
+
+            String operName = operation.get().getName();
 
             if (grpOwnerId != null && grpOwnerId == grpId) {
                 grpOwnerName = grpName;

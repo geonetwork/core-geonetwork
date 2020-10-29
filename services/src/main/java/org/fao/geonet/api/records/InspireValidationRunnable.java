@@ -21,13 +21,12 @@ import static jeeves.transaction.TransactionManager.TransactionRequirement.CREAT
 /**
  * Task executed when INSPIRE validation report is available for a metadata
  * that stores the validation report in the metadata validation table.
- *
  */
 public class InspireValidationRunnable implements Runnable {
-    private String testId;
-    private String endPoint;
-    private int mdId;
-    private ServiceContext context;
+    private final String testId;
+    private final String endPoint;
+    private final int mdId;
+    private final ServiceContext context;
 
     public InspireValidationRunnable(ServiceContext context,
                                      String endPoint, String testId, int mdId) {
@@ -39,20 +38,20 @@ public class InspireValidationRunnable implements Runnable {
 
     public void run() {
         TransactionManager.runInTransaction("inspire-validation", ApplicationContextHolder.get(),
-            CREATE_NEW,  ALWAYS_COMMIT, false, new TransactionTask<Object>() {
+            CREATE_NEW, ALWAYS_COMMIT, false, new TransactionTask<Object>() {
                 @Override
                 public Object doInTransaction(TransactionStatus transaction) throws Throwable {
                     InspireValidatorUtils inspireValidatorUtils =
                         ApplicationContextHolder.get().getBean(InspireValidatorUtils.class);
 
-                    MetadataValidationRepository metadataValidationRepository  =
+                    MetadataValidationRepository metadataValidationRepository =
                         ApplicationContextHolder.get().getBean(MetadataValidationRepository.class);
 
                     // Waits until the validation result is available
                     inspireValidatorUtils.waitUntilReady(context, endPoint, testId);
 
                     String reportUrl = inspireValidatorUtils.getReportUrl(endPoint, testId);
-                    String reportXmlUrl = inspireValidatorUtils.getReportUrlXML(endPoint, testId);
+                    String reportXmlUrl = InspireValidatorUtils.getReportUrlXML(endPoint, testId);
                     String reportXml = inspireValidatorUtils.retrieveReport(context, reportXmlUrl);
 
                     String validationStatus = inspireValidatorUtils.isPassed(context, endPoint, testId);

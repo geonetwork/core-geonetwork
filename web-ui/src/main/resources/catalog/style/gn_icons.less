@@ -3,7 +3,7 @@
 @import "../lib/style/font-awesome/less/mixins";
 
 /* used to display icons with resource types - iso19139 hierarchylevel */
-.gn-icon-dataset:before { content: @fa-var-database; }
+.gn-icon-dataset:before, .gn-icon-datasets:before { content: @fa-var-database; }
 .gn-icon-service:before { content: @fa-var-cog }
 .gn-icon-map:before { content: @fa-var-globe }
 .gn-icon-staticMap:before { content: @fa-var-globe }
@@ -16,7 +16,7 @@
 .gn-icon-series:before { content: @fa-var-files-o }
 .gn-icon-nonGeographicDataset:before { content: @fa-var-bar-chart-o }
 .gn-icon-dimensionGroup:before { content: @fa-var-star-half-o }
-.gn-icon-feature:before { content: @fa-var-tag }
+.gn-icon-feature:before { content: @fa-var-map-pin }
 .gn-icon-featureType:before { content: @fa-var-sitemap }
 .gn-icon-propertyType:before { content: @fa-var-sliders }
 .gn-icon-fieldSession:before { content: @fa-var-calendar }
@@ -63,14 +63,14 @@
 .gn-icon-thumbnail:before { content: @fa-var-picture-o }
 .gn-icon-onlinesrc:before { content: @fa-var-link }
 .gn-icon-parent:before { content: @fa-var-sitemap }
-.gn-icon-service:before { content: @fa-var-cloud }
-.gn-icon-source:before {
+.gn-icon-service:before, .gn-icon-services:before  { content: @fa-var-cloud }
+.gn-icon-source:before, .gn-icon-sources:before {
   content: @fa-var-sitemap;
 }
 .gn-icon-source {
   .fa-icon-rotate(180deg, 2);
 }
-.gn-icon-sibling:before { content: @fa-var-sign-out }
+.gn-icon-sibling:before, .gn-icon-siblings:before { content: @fa-var-sign-out }
 
 .gn-icon-MyFrequentlyUsedRecords:before { content: @fa-var-star }
 .gn-icon-WatchingRecords:before { content: @fa-var-bell }

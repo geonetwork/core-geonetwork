@@ -1,46 +1,28 @@
 package org.fao.geonet.api.registries;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataDataInfo;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.UpdateDatestamp;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.services.subtemplate.Get;
-import org.fao.geonet.util.Sha1Encoder;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Attribute;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-import org.jdom.Text;
-
 import com.google.common.collect.Table;
-
-import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.XLink;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.util.Sha1Encoder;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.jdom.*;
+
+import java.util.*;
 
 /**
  * Created by francois on 11/03/16.
  */
 public class DirectoryUtils {
+    public static final char SEPARATOR = '~';
     private static final String LOGGER = DirectoryApi.LOGGER;
 
     /**
@@ -86,7 +68,7 @@ public class DirectoryUtils {
                         context,
                         subtemplate,
                         (Element) entry.clone(),
-                        notify, index, ufo,
+                        index, ufo,
                         UpdateDatestamp.NO,
                         publicForGroup, refreshReaders);
 
@@ -292,7 +274,7 @@ public class DirectoryUtils {
                         parameters.put(searchIndexField, identifier);
                         String id = search(context, parameters);
                         if (id != null) {
-                            AbstractMetadata subTemplate = metadataRepository.findOne(id);
+                            AbstractMetadata subTemplate = metadataRepository.findOneById(Integer.valueOf(id));
                             if (subTemplate != null) {
                                 uuid = subTemplate.getUuid();
                                 subTemplateElement = subTemplate.getXmlData(false);
@@ -384,7 +366,7 @@ public class DirectoryUtils {
     /**
      * Build process URL parameters containing XPath of values to be replaced in the target
      * subtemplate.
-     *
+     * <p>
      * xlink:href="local://eng/subtemplate?uuid=0c18725d-7884-4a09-8492-8b0626d958f2&amp;process=gmd:role/gmd:CI_RoleCode/@codeListValue~resourceProvider&amp;
      */
     private static String getPropertiesAsParameters(Element source,
@@ -396,7 +378,7 @@ public class DirectoryUtils {
             if (StringUtils.isNotEmpty(value)) {
                 properties.append("&amp;").append("process=")
                     .append(xpath)
-                    .append(Get.SEPARATOR)
+                    .append(SEPARATOR)
                     .append(value);
             }
         }
@@ -411,30 +393,31 @@ public class DirectoryUtils {
     private static String search(ServiceContext context, Map<String, String> searchParameters) {
         ServiceConfig _config = new ServiceConfig();
 
-        SearchManager searchMan = context.getBean(SearchManager.class);
-
-        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-            // Creating parameters for search, fast only to retrieve uuid
-            Element parameters = new Element(Jeeves.Elem.REQUEST);
-            parameters.addContent(new Element("fast").addContent("index"));
-            parameters.addContent(new Element("_isTemplate").addContent("s"));
-            for (Map.Entry<String, String> e : searchParameters.entrySet()) {
-                parameters.addContent(
-                    new Element(e.getKey()).addContent(e.getValue()));
-            }
-            parameters.addContent(new Element("from").addContent(1 + ""));
-            parameters.addContent(new Element("to").addContent(1 + ""));
-
-            searcher.search(context, parameters, _config);
-
-            Element response = searcher.present(context, parameters, _config);
-            Element record = response.getChild("metadata");
-            if (record != null) {
-                return record.getChild("info", Geonet.Namespaces.GEONET).getChildText("id");
-            }
-        } catch (Exception e) {
-            Log.error(LOGGER, e.getMessage(), e);
-        }
+        EsSearchManager searchMan = context.getBean(EsSearchManager.class);
+        // TODOES
+//
+//        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+//            // Creating parameters for search, fast only to retrieve uuid
+//            Element parameters = new Element(Jeeves.Elem.REQUEST);
+//            parameters.addContent(new Element("fast").addContent("index"));
+//            parameters.addContent(new Element("_isTemplate").addContent("s"));
+//            for (Map.Entry<String, String> e : searchParameters.entrySet()) {
+//                parameters.addContent(
+//                    new Element(e.getKey()).addContent(e.getValue()));
+//            }
+//            parameters.addContent(new Element("from").addContent(1 + ""));
+//            parameters.addContent(new Element("to").addContent(1 + ""));
+//
+//            searcher.search(context, parameters, _config);
+//
+//            Element response = searcher.present(context, parameters, _config);
+//            Element record = response.getChild("metadata");
+//            if (record != null) {
+//                return record.getChild("info", Geonet.Namespaces.GEONET).getChildText("id");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return null;
     }
 }

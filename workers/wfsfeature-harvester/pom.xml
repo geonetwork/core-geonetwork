@@ -26,13 +26,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>workers</artifactId>
+    <artifactId>gn-workers</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.11.0-SNAPSHOT</version>
+    <version>4.0.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>wfsfeature-harvester</artifactId>
+  <artifactId>gn-wfsfeature-harvester</artifactId>
   <name>WFS features harvester</name>
 
   <build>
@@ -86,41 +86,31 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>core</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>gn-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-
-    <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>es-core</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>messaging</artifactId>
+      <artifactId>gn-messaging</artifactId>
       <version>${project.version}</version>
     </dependency>
-
     <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>services</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>gn-services</artifactId>
       <version>${project.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-geojson</artifactId>
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
-      <artifactId>gt-wfs</artifactId>
+      <artifactId>gt-wfs-ng</artifactId>
     </dependency>
 
     <dependency>

@@ -31,7 +31,7 @@ import javax.persistence.criteria.*;
 import java.util.Collection;
 
 /**
- * Specifications for querying {@link org.fao.geonet.repository.MetadataFileUploadRepository}.
+ * Specification for querying {@link org.fao.geonet.repository.MetadataFileUploadRepository}.
  *
  * @author Jose García
  */

@@ -25,18 +25,10 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
                 xmlns:geonet="http://www.fao.org/geonetwork"
-                version="1.0"
->
-
-  <xsl:param name="displayInfo"/>
-
+                version="1.0">
   <xsl:template match="csw:Record">
     <csw:Record>
       <xsl:apply-templates select="*[name(.)!='geonet:info']"/>
-
-      <xsl:if test="$displayInfo = 'true'">
-        <xsl:copy-of select="geonet:info"/>
-      </xsl:if>
     </csw:Record>
   </xsl:template>
 

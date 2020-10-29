@@ -29,35 +29,33 @@
   <xsl:include href="../../common/profiles-loader-tpl-brief.xsl"/>
   <xsl:include href="metadata-fop.xsl"/>
 
+  <xsl:variable name="translations"
+                select="/root/translations"/>
+
   <xsl:template match="/root">
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"
              xmlns:fox="http://xmlgraphics.apache.org/fop/extensions">
       <xsl:call-template name="fop-master"/>
 
-      <!-- Cover page -->
-      <xsl:if test="string($env/metadata/pdfReport/coverPdf)">
-        <fox:external-document content-type="pdf" src="{$env/metadata/pdfReport/coverPdf}" />
+      <xsl:if test="string($env/system/system/metadata/pdfReport/coverPdf)">
+        <fox:external-document content-type="pdf" src="{$env/system/metadata/pdfReport/coverPdf}" />
       </xsl:if>
 
-      <!-- TOC page -->
-      <xsl:if test="$env/metadata/pdfReport/tocPage = 'true'">
+      <xsl:if test="$env/system/metadata/pdfReport/tocPage = 'true'">
         <fo:page-sequence master-reference="Intro" force-page-count="no-force">
           <xsl:call-template name="fop-header"/>
 
           <fo:flow flow-name="xsl-region-body">
-            <!-- TOC page -->
-            <xsl:if test="$env/metadata/pdfReport/tocPage = 'true'">
-              <xsl:call-template name="toc-page">
-                <xsl:with-param name="res" select="/root/response"/>
-              </xsl:call-template>
-            </xsl:if>
+            <xsl:call-template name="toc-page">
+              <xsl:with-param name="res" select="/root/response/metadata"/>
+            </xsl:call-template>
           </fo:flow>
         </fo:page-sequence>
       </xsl:if>
 
       <!-- Intro page -->
-      <xsl:if test="string($env/metadata/pdfReport/introPdf)">
-        <fox:external-document content-type="pdf" src="{$env/metadata/pdfReport/introPdf}" />
+      <xsl:if test="string($env/system/metadata/pdfReport/introPdf)">
+        <fox:external-document content-type="pdf" src="{$env/system/metadata/pdfReport/introPdf}" />
       </xsl:if>
 
       <xsl:variable name="formatter"
@@ -69,9 +67,9 @@
           This does not work for private record as fox is using HTTP call
           without authentication. Also paging will not work and link from
           toc does not. -->
-          <xsl:for-each select="/root/response/*[name() != 'summary' and name() != 'from' and name() != 'to']" >
+          <xsl:for-each select="/root/response/metadata" >
             <fox:external-document content-type="pdf"
-                                   src="{concat($nodeUrl, 'api/records/', geonet:info/uuid, '/formatters/', $formatter)}" />
+                                   src="{concat($nodeUrl, 'api/records/', uuid, '/formatters/', $formatter)}" />
           </xsl:for-each>
         </xsl:when>
         <xsl:otherwise>
@@ -83,7 +81,7 @@
             <fo:flow flow-name="xsl-region-body">
               <fo:block font-size="{$font-size}">
                     <xsl:call-template name="fo">
-                      <xsl:with-param name="res" select="/root/response"/>
+                      <xsl:with-param name="res" select="/root/response/metadata"/>
                     </xsl:call-template>
               </fo:block>
               <fo:block id="terminator"/>

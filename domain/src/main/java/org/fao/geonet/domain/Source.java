@@ -26,25 +26,11 @@ package org.fao.geonet.domain;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.entitylistener.SourceEntityListenerManager;
 import org.fao.geonet.repository.LanguageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.*;
 import java.util.Map;
 import java.util.UUID;
-
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.AttributeOverride;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.Table;
 
 /**
  * Entity representing a source catalogue.
@@ -61,6 +47,7 @@ import javax.persistence.Table;
 @Table(name = "Sources")
 @EntityListeners(SourceEntityListenerManager.class)
 public class Source extends Localized {
+
     private String _uuid = UUID.randomUUID().toString();
     private String _name;
     private SourceType type = null;
@@ -147,7 +134,7 @@ public class Source extends Localized {
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
     @CollectionTable(joinColumns = @JoinColumn(name = "idDes"), name = "SourcesDes")
     @MapKeyColumn(name = "langId", length = 5)
-    @Column(name = "label", nullable = false, length = 96)
+    @Column(name = "label", nullable = false, length = 255)
     public Map<String, String> getLabelTranslations() {
         return super.getLabelTranslations();
     }

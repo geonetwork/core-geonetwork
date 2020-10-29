@@ -29,7 +29,6 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.UpdateDatestamp;
@@ -129,7 +128,6 @@ public interface IMetadataManager {
      * @param context
      * @param newMetadata
      * @param metadataXml
-     * @param notifyChange
      * @param index
      * @param updateFixedInfo
      * @param updateDatestamp
@@ -138,8 +136,8 @@ public interface IMetadataManager {
      * @return
      * @throws Exception
      */
-    AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, boolean notifyChange, boolean index,
-            boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, boolean forceRefreshReaders)
+    AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, boolean index,
+                                    boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, boolean forceRefreshReaders)
             throws Exception;
 
     /**

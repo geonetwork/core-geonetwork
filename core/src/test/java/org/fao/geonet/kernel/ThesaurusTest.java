@@ -488,4 +488,15 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         keyword.setUriCode(uri);
         writableThesaurus.addElement(keyword);
     }
+
+    @Test
+    public void getKeywordHierarchy() {
+        List<String> hierarchy = thesaurus.getKeywordHierarchy("135_testValue_eng", "eng");
+        assertEquals(1, hierarchy.size());
+        assertEquals("140_testValue_eng^135_testValue_eng", hierarchy.get(0));
+
+        hierarchy = thesaurus.getKeywordHierarchy("140_testValue_eng", "eng");
+        assertEquals(1, hierarchy.size());
+        assertEquals("140_testValue_eng", hierarchy.get(0));
+    }
 }

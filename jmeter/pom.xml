@@ -29,12 +29,12 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.11.0-SNAPSHOT</version>
+    <version>4.0.1-SNAPSHOT</version>
   </parent>
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <artifactId>performance</artifactId>
+  <artifactId>gn-performance</artifactId>
   <packaging>pom</packaging>
   <name>Performance testing module</name>
   <description>
@@ -150,7 +150,7 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>
-                  <artifactId>geonetwork-main</artifactId>
+                  <artifactId>gn-geonetwork-main</artifactId>
                   <version>${project.version}</version>
                   <type>war</type>
                 </artifactItem>

@@ -1,11 +1,6 @@
 INSERT INTO Languages (id, name, isinspire, isdefault) VALUES ('eng','English', 'y', 'y');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (1, 'eng', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (2, 'eng', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (3, 'eng', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (4, 'eng', 'accessConstraints', '');
-
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'eng','Maps & graphics');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'eng','Datasets');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'eng','Interactive resources');

@@ -28,11 +28,8 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.annotations.VisibleForTesting;
-
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
-import jeeves.server.overrides.ConfigurationOverrides;
-
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
@@ -51,15 +48,29 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
-import org.fao.geonet.utils.*;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.PrefixUrlRewrite;
+import org.fao.geonet.utils.ResolverWrapper;
+import org.fao.geonet.utils.Version;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.nio.NioPathAwareCatalogResolver;
-import org.jdom.*;
+import org.jdom.Attribute;
+import org.jdom.Content;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1489,6 +1500,7 @@ public class SchemaManager {
         mds.setTitles(getSchemaIdentMultilingualProperty(root, "title"));
         mds.setDescriptions(getSchemaIdentMultilingualProperty(root, "description"));
 
+        mds.setVersion(root.getChildText("version", GEONET_SCHEMA_NS));
         mds.setAppMinorVersionSupported(root.getChildText("appMinorVersionSupported", GEONET_SCHEMA_NS));
         mds.setAppMajorVersionSupported(root.getChildText("appMajorVersionSupported", GEONET_SCHEMA_NS));
         mds.setDependsOn(root.getChildText("depends", GEONET_SCHEMA_NS));
@@ -1587,8 +1599,6 @@ public class SchemaManager {
             return new ArrayList<Element>();
         } else {
             Element root = Xml.loadFile(xmlConvFile);
-            ConfigurationOverrides.DEFAULT.updateWithOverrides(xmlConvFile.toString(), null, basePath, root);
-
             if (root.getName() != "conversions")
                 throw new IllegalArgumentException("Schema conversions file " + xmlConvFile + " is invalid, no <conversions> root element");
             @SuppressWarnings("unchecked")

@@ -40,8 +40,6 @@
   <xsl:variable name="language" select="xslUtils:getLanguage()"/>
   <xsl:variable name="iso2letterLanguageCode" select="xslUtils:twoCharLangCode($language)"/>
 
-  <!-- ============================================================================================ -->
-
   <xsl:template match="gmd:MD_Metadata">
     <rdf:RDF xmlns:dct="http://purl.org/dc/terms/"
              xmlns:skos="http://www.w3.org/2004/02/skos/core#"
@@ -154,7 +152,7 @@
           <foaf:name>Thesaurus org</foaf:name>
           </foaf:Organization>
           </dc:creator>-->
-        <dct:uri><xsl:value-of select="$url"/>/srv/eng/thesaurus.download?ref=<xsl:value-of
+        <dct:uri><xsl:value-of select="$url"/>/srv/api/registries/vocabularies/<xsl:value-of
           select="key"/>
         </dct:uri>
         <!--

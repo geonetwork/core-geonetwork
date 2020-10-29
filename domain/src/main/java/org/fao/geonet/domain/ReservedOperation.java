@@ -102,6 +102,6 @@ public enum ReservedOperation {
     }
 
     public String getLuceneIndexCode() {
-        return "_op" + _id;
+        return "op" + _id;
     }
 }

@@ -23,10 +23,7 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
@@ -43,29 +40,18 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
-import jeeves.server.context.ServiceContext;
-import jeeves.server.overrides.ConfigurationOverrides;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 //=============================================================================
 
 public class ListMetadataFormats implements OaiPmhService {
     private static final String DEFAULT_PREFIXES_FILE = "WEB-INF/config-oai-prefixes.xml";
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //---------------------------------------------------------------------------
-
     public String getVerb() {
         return ListMetadataFormatsRequest.VERB;
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //---------------------------------------------------------------------------
 
     public AbstractResponse execute(AbstractRequest request, ServiceContext context) throws Exception {
         ListMetadataFormatsRequest req = (ListMetadataFormatsRequest) request;
@@ -90,8 +76,6 @@ public class ListMetadataFormats implements OaiPmhService {
         return res;
     }
 
-    //---------------------------------------------------------------------------
-
     private MetadataFormat getSchemaInfo(ServiceContext context, SchemaManager sm, String name) throws IOException, JDOMException {
         MetadataFormat mf = new MetadataFormat();
         mf.prefix = name;
@@ -114,19 +98,9 @@ public class ListMetadataFormats implements OaiPmhService {
         return mf;
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
-
     private List<MetadataFormat> getConvertFormats(ServiceContext context) throws IOException, JDOMException {
 
         Element elem = Xml.loadFile(context.getAppPath().resolve(DEFAULT_PREFIXES_FILE));
-        if (context.getServlet() != null && context.getServlet().getServletContext() != null) {
-            ConfigurationOverrides.DEFAULT.updateWithOverrides(DEFAULT_PREFIXES_FILE, context.getServlet().getServletContext(), context.getAppPath(), elem);
-        }
-
         @SuppressWarnings("unchecked")
         List<Element> defaultSchemas = elem.getChildren();
 
@@ -137,6 +111,3 @@ public class ListMetadataFormats implements OaiPmhService {
         return defMdfs;
     }
 }
-
-//=============================================================================
-

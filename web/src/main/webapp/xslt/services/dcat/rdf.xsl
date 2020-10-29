@@ -182,7 +182,7 @@
           <foaf:name>Thesaurus org</foaf:name>
           </foaf:Organization>
           </dc:creator>-->
-        <dct:uri><xsl:value-of select="$url"/>/srv/eng/thesaurus.download?ref=<xsl:value-of
+        <dct:uri><xsl:value-of select="$url"/>/srv/api/registries/vocabularies/<xsl:value-of
           select="key"/>
         </dct:uri>
         <!--

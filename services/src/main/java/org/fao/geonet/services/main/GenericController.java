@@ -23,16 +23,11 @@
 
 package org.fao.geonet.services.main;
 
-import java.nio.file.Path;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import jeeves.constants.Jeeves;
+import jeeves.server.JeevesEngine;
+import jeeves.server.UserSession;
+import jeeves.server.sources.ServiceRequest;
+import jeeves.server.sources.ServiceRequestFactory;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
@@ -45,15 +40,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import jeeves.constants.Jeeves;
-import jeeves.server.JeevesEngine;
-import jeeves.server.UserSession;
-import jeeves.server.dispatchers.ServiceManager;
-import jeeves.server.sources.ServiceRequest;
-import jeeves.server.sources.ServiceRequestFactory;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.nio.file.Path;
+import java.util.Iterator;
+import java.util.Map;
 
 @Controller
 public class GenericController {
@@ -163,7 +158,7 @@ public class GenericController {
             if (request instanceof MultipartRequest) {
                 Map<String, MultipartFile> files = ((MultipartRequest) request).getFileMap();
                 Iterator<Map.Entry<String, MultipartFile>> it =
-                        files.entrySet().iterator();
+                    files.entrySet().iterator();
                 while (it.hasNext()) {
                     Map.Entry<String, MultipartFile> file = it.next();
 

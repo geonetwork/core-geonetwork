@@ -11,6 +11,7 @@ tx set --auto-remote https://www.transifex.com/projects/p/core-geonetwork/
 tx pull -a -r 'core-geonetwork.editor'
 tx pull -a -r 'core-geonetwork.admin'
 tx pull -a -r 'core-geonetwork.core'
+tx pull -a -r 'core-geonetwork.v4'
 tx pull -a -r 'core-geonetwork.search'
 cd ..
 
@@ -38,7 +39,7 @@ for index in "${l[@]}" ; do
     KEY="${index%%::*}"
     VALUE="${index##*::}"
   echo "Language $VALUE"
-  for mod in admin core editor search
+  for mod in admin core editor search v4
   do
     cp $TRANSLATION_DIR$mod/$VALUE.json $SRC_DIR/$KEY-$mod.json
   done;

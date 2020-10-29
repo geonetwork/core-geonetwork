@@ -56,15 +56,16 @@ import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -80,6 +81,9 @@ public class ArchiveAllMetadataJob extends QuartzJobBean {
 
     @Autowired
     private SettingManager settingManager;
+
+    @Autowired
+    UserRepository userRepository;
 
     static final String CATALOG_ARCHIVE_BACKUP_FILE_PREFIX = "gn_backup";
     public static final String BACKUP_DIR = "backup_archive";
@@ -124,8 +128,8 @@ public class ArchiveAllMetadataJob extends QuartzJobBean {
             final MetadataRepository metadataRepository = serviceContext.getBean(MetadataRepository.class);
 
             loginAsAdmin(serviceContext);
-            final Specification<Metadata> harvested = Specifications.where((Specification<Metadata>)MetadataSpecs.isHarvested(false)).
-                    and((Specification<Metadata>)Specifications.not(MetadataSpecs.hasType(MetadataType.SUB_TEMPLATE)));
+            final Specification<Metadata> harvested = Specification.where((Specification<Metadata>)MetadataSpecs.isHarvested(false)).
+                    and((Specification<Metadata>)Specification.not(MetadataSpecs.hasType(MetadataType.SUB_TEMPLATE)));
             List<String> uuids = Lists.transform(metadataRepository.findAll(harvested), new Function<Metadata,
                     String>() {
                 @Nullable
@@ -163,8 +167,9 @@ public class ArchiveAllMetadataJob extends QuartzJobBean {
     }
 
     private void loginAsAdmin(ServiceContext serviceContext) {
-        final User adminUser = serviceContext.getBean(UserRepository.class).findAll(UserSpecs.hasProfile(Profile.Administrator), new
-                PageRequest(0, 1)).getContent().get(0);
+        final User adminUser = userRepository.findAll(
+            UserSpecs.hasProfile(Profile.Administrator),
+            PageRequest.of(0, 1)).getContent().get(0);
         Assert.isTrue(adminUser != null, "The system does not have an admin user");
         UserSession session = new UserSession();
         session.loginAs(adminUser);

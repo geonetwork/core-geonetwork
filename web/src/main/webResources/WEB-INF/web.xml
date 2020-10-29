@@ -168,14 +168,6 @@
   <filter>
     <filter-name>resources</filter-name>
     <filter-class>org.fao.geonet.resources.ResourceFilter</filter-class>
-    <!-- Specified what overrides to use if the
-      (servlet.getServletContext().getServletContextName()).jeeves.configuration.overrides.file
-      system parameter is not specified.
-    -->
-    <init-param>
-      <param-name>jeeves.configuration.overrides.file</param-name>
-      <param-value>${system.specific.overrides},${web.xml.main.config.overrides}</param-value>
-    </init-param>
   </filter>
 
   <!-- Add CORS Header -->
@@ -352,15 +344,6 @@
   <servlet>
     <servlet-name>gn-servlet</servlet-name>
     <servlet-class>jeeves.server.sources.http.JeevesServlet</servlet-class>
-    <!-- Specified what overrides to use if the
-        (servlet.getServletContext().getServletContextName()).jeeves.configuration.overrides.file
-        system parameter is not specified.
-    -->
-    <init-param>
-      <param-name>jeeves.configuration.overrides.file</param-name>
-      <param-value>${system.specific.overrides},${web.xml.main.config.overrides}</param-value>
-    </init-param>
-
     <!--
         Specified what geonetwork data directory to use.
         <init-param>
@@ -398,11 +381,15 @@
     </init-param>
     <init-param>
       <param-name>log</param-name>
-      <param-value>true</param-value>
+      <param-value>false</param-value>
     </init-param>
     <init-param>
       <param-name>http.protocol.handle-redirects</param-name>
       <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>securityMode</param-name>
+      <param-value>${proxy.securityMode}</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
@@ -412,7 +399,7 @@
 
 
   <!--Direct proxy to ES server.
-  One specific proxy for features and records
+  One specific proxy for features
   which are requested by client apps. Redirect
   to the proper index which may not have the default name.
   -->
@@ -433,7 +420,7 @@
     </init-param>
     <init-param>
       <param-name>log</param-name>
-      <param-value>true</param-value>
+      <param-value>false</param-value>
     </init-param>
     <init-param>
       <param-name>isSecured</param-name>
@@ -446,61 +433,6 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>ESRecordsProxy</servlet-name>
-    <servlet-class>org.fao.geonet.proxy.EsBasicAuthInjectorProxyServlet</servlet-class>
-    <init-param>
-      <param-name>targetUri</param-name>
-      <param-value>${es.url}/${es.index.records}/{_}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>username</param-name>
-      <param-value>${es.ro.username}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>password</param-name>
-      <param-value>${es.ro.password}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>log</param-name>
-      <param-value>true</param-value>
-    </init-param>
-    <init-param>
-      <param-name>isSecured</param-name>
-      <param-value>true</param-value>
-    </init-param>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>ESRecordsProxy</servlet-name>
-    <url-pattern>/index/records</url-pattern>
-  </servlet-mapping>
-
-
-  <servlet>
-    <servlet-name>ESPublicRecordsProxy</servlet-name>
-    <servlet-class>org.fao.geonet.proxy.EsBasicAuthInjectorProxyServlet</servlet-class>
-    <init-param>
-      <param-name>targetUri</param-name>
-      <param-value>${es.url}/${es.index.records_public}/{_}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>username</param-name>
-      <param-value>${es.ro.username}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>password</param-name>
-      <param-value>${es.ro.password}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>log</param-name>
-      <param-value>true</param-value>
-    </init-param>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>ESPublicRecordsProxy</servlet-name>
-    <url-pattern>/index/records_public</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>HttpDashboardProxy</servlet-name>
     <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
     <init-param>
@@ -509,7 +441,7 @@
     </init-param>
     <init-param>
       <param-name>log</param-name>
-      <param-value>true</param-value>
+      <param-value>false</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
@@ -567,6 +499,7 @@
   </welcome-file-list>
 
   <session-config>
+    <tracking-mode>COOKIE</tracking-mode>
     <session-timeout>${sessionTimeout}</session-timeout>
     <cookie-config>
       <http-only>true</http-only>
@@ -574,8 +507,7 @@
     </cookie-config>
   </session-config>
 
-  <context-param>
-    <param-name>spring.profiles.active</param-name>
-    <param-value>${es.spring.profile}</param-value>
-  </context-param>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
 </web-app>

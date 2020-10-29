@@ -2,19 +2,20 @@
   <li class="list-group-item gn-grid gn-map-item flex-col flex-align-stretch"
       data-ng-repeat="md in searchResults.records"
       data-gn-fix-mdlinks=""
-      title="{{(md.abstract || md.defaultAbstract) | striptags}}"
+      title="{{(md.resourceAbstract) | striptags}}"
       ng-click="loadMap(maps[0], md)">
 
+
     <div class="gn-md-thumbnail flex-grow"
-         ng-style="{ 'background-image': md.getThumbnails().list[0].url && 'url(' + md.getThumbnails().list[0].url + ')' }">
+         ng-style="{ 'background-image': md.overview[0].url && 'url(' + md.overview[0].url + ')' }">
     </div>
 
     <div class="gn-img-thumbnail-caption">
-      {{md.title || md.defaultTitle}}
+      {{md.resourceTitle}}
     </div>
 
     <a class=""
-        ng-href="#/metadata/{{md.getUuid()}}"
+        ng-href="#/metadata/{{md.uuid}}"
         title="{{'openRecord' | translate}}" translate>
       openRecord
     </a>

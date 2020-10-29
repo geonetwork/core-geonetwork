@@ -41,16 +41,16 @@
         georss:point, otherwise georss:where).
         ]]>
       </documentation>
-      <class name=".services.main.Search">
+      <!--        TODOES <class name=".services.main.Search">
         <param name="maxSummaryKeys" value="10"/>
         <param name="maxHitsInSummary" value="1000"/>
       </class>
       <output sheet="../xslt/services/rss/rss-search.xsl"
               contentType="application/rss+xml; charset=UTF-8">
-        <call name="rssItems" class=".services.main.Result"/>
+<call name="rssItems" class=".services.main.Result"/>
         <call name="siteURL" class=".guiservices.util.GetSiteURL"/>
         <xml name="i18n" file="xml/i18n.xml"/>
-      </output>
+      </output>-->
       <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
     </service>
 
@@ -67,7 +67,7 @@
         * icon
         ]]>
       </documentation>
-      <class name=".services.config.Get"/>
+      <!--<class name=".services.config.Get"/>-->
       <output sheet="../xslt/services/rss/opensearch.xsl"
               contentType="text/xml; charset=UTF-8"/>
     </service>

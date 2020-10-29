@@ -130,7 +130,7 @@ public class LinkStatus extends GeonetEntity implements Comparable<LinkStatus> {
     @Column(nullable = true)
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Type(type = "org.hibernate.type.StringClobType")
+    @Type(type = "org.hibernate.type.TextType")
     public String getStatusInfo() {
         return statusInfo;
     }
@@ -207,7 +207,7 @@ public class LinkStatus extends GeonetEntity implements Comparable<LinkStatus> {
     @Override
     public String toString() {
         return "LinkStatus{" + id +
-            ", link=" + link.getId() +
+            ", link=" + (link == null? "null" : link.getId()) +  // null protection
             ", isFailing=" + isFailing +
             ", checkDate=" + checkDate +
             ", statusValue=" + statusValue +

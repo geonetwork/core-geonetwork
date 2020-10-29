@@ -22,9 +22,12 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-lazy-init="true"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       default-lazy-init="true"
        xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
   <bean id="svnManager" class="org.fao.geonet.kernel.SvnManager"/>
   <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"/>
@@ -65,9 +68,21 @@
     </property>
   </bean>
 
-  <!--<bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>-->
-  <bean id="luceneDirectoryFactory"
-        class="org.fao.geonet.kernel.search.index.MemoryDirectoryFactory" lazy-init="true"/>
+  <util:map id="indexList">
+    <entry key="records" value="${es.index.records}"/>
+    <entry key="features" value="${es.index.features}"/>
+    <entry key="searchlogs" value="${es.index.searchlogs}"/>
+  </util:map>
+
+  <bean id="EsSearchManager"
+        class="org.fao.geonet.kernel.search.EsSearchManager"
+        lazy-init="false">
+    <property name="indexList" ref="indexList"/>
+  </bean>
+
+  <bean id="esClient"
+        class="org.fao.geonet.index.es.EsRestClient"/>
+
   <bean id="forceInitRepositoriesForTestingBean"
         class="org.fao.geonet.kernel.ForceInitRepositoriesForTestingBean" lazy-init="false"/>
   <bean id="httpRequestFactory" class="org.fao.geonet.utils.GeonetHttpRequestFactory"/>

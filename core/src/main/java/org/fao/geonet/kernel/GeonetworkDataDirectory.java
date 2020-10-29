@@ -66,7 +66,7 @@ public class GeonetworkDataDirectory {
 
     private Path webappDir;
     private Path systemDataDir;
-    private Path luceneDir;
+    private Path indexConfigDir;
     private Path configDir;
     private Path thesauriDir;
     private Path schemaPluginsDir;
@@ -161,6 +161,9 @@ public class GeonetworkDataDirectory {
                 case 1:
                     if (jeevesServlet != null) {
                         value = jeevesServlet.getInitParameter(keyToUse);
+                        if ( (value == null) && (jeevesServlet.getServletContext() != null) ){
+                            value = jeevesServlet.getServletContext().getInitParameter(keyToUse);
+                        }
                     }
                     break;
                 case 2:
@@ -264,8 +267,8 @@ public class GeonetworkDataDirectory {
             + systemDataDir);
 
         // Set subfolder data directory
-        luceneDir = setDir(jeevesServlet, webappName, handlerConfig, luceneDir, ".lucene" + KEY_SUFFIX,
-            Geonet.Config.LUCENE_DIR, "index");
+        indexConfigDir = setDir(jeevesServlet, webappName, handlerConfig, indexConfigDir, ".indexConfig" + KEY_SUFFIX,
+            Geonet.Config.INDEX_CONFIG_DIR, "config","index");
 
         configDir = setDir(jeevesServlet, webappName, handlerConfig, configDir, ".config" + KEY_SUFFIX,
             Geonet.Config.CONFIG_DIR, "config");
@@ -350,12 +353,38 @@ public class GeonetworkDataDirectory {
             }
         }
 
-        // Copy default logo to the harvesting folder
-        Path logoDir = this.resourcesDir.resolve("images").resolve("harvesting");
+        // Copy default logo to the images and harvesting folder
+        Path imagesDir = this.resourcesDir.resolve("images");
+        if (!Files.exists(imagesDir)) {
+            try {
+                final Path srcFile = getDefaultDataDir(webappDir).resolve("data").resolve("resources").resolve("images");
+                IO.copyDirectoryOrFile(srcFile, imagesDir, false);
+            } catch (IOException e) {
+                Log.info(
+                    Geonet.DATA_DIRECTORY,
+                    "      - Error copying images folder: "
+                        + e.getMessage());
+            }
+        }
+
+        Path logoDir = this.resourcesDir.resolve("images").resolve("logos");
+        if (!Files.exists(logoDir)) {
+            try {
+                Files.createDirectories(logoDir);
+            } catch (IOException e) {
+                Log.info(
+                    Geonet.DATA_DIRECTORY,
+                    "      - Error creating images/logos folder: "
+                        + e.getMessage());
+            }
+        }
+
+        logoDir = this.resourcesDir.resolve("images").resolve("harvesting");
         if (!Files.exists(logoDir) || IO.isEmptyDir(logoDir)) {
             Log.info(Geonet.DATA_DIRECTORY, "     - Copying logos ...");
             try {
-                final Path srcLogo = this.webappDir.resolve("images").resolve("harvesting");
+                Files.createDirectories(logoDir);
+                final Path srcLogo = getDefaultDataDir(webappDir).resolve("data").resolve("resources").resolve("images").resolve("harvesting");
 
                 if (Files.exists(srcLogo)) {
                     try (DirectoryStream<Path> paths = Files.newDirectoryStream(srcLogo)) {
@@ -368,11 +397,25 @@ public class GeonetworkDataDirectory {
                         }
                     }
                 }
-
             } catch (IOException e) {
                 Log.error(Geonet.DATA_DIRECTORY, "     - Logo copy failed: " + e.getMessage(), e);
             }
         }
+
+
+        if (!Files.exists(this.indexConfigDir) || IO.isEmptyDir(this.indexConfigDir)) {
+            Log.info(Geonet.DATA_DIRECTORY, "     - Copying index configuration in data directory ...");
+            try {
+                final Path srcFile = getDefaultDataDir(webappDir).resolve("config").resolve("index");
+                IO.copyDirectoryOrFile(srcFile, this.indexConfigDir, false);
+            } catch (IOException e) {
+                Log.info(
+                    Geonet.DATA_DIRECTORY,
+                    "      - Error copying index configuration: "
+                        + e.getMessage());
+            }
+        }
+
         Path schemaCatFile = configDir.resolve(Geonet.File.SCHEMA_PLUGINS_CATALOG);
         if (!Files.exists(schemaCatFile)) {
             Log.info(Geonet.DATA_DIRECTORY, "     - Copying schema plugin catalogue ...");
@@ -480,19 +523,19 @@ public class GeonetworkDataDirectory {
     }
 
     /**
-     * Get the directory to store the lucene indices in.
+     * Get the directory to store the index configuration in.
      *
-     * @return The directory to store the lucene indices in.
+     * @return The directory to store the index configuration in.
      */
-    public Path getLuceneDir() {
-        return luceneDir;
+    public Path getIndexConfigDir() {
+        return indexConfigDir;
     }
 
     /**
-     * Set the directory to store the lucene indices in.
+     * Set the directory to store the index configuration in.
      */
-    public void setLuceneDir(Path luceneDir) {
-        this.luceneDir = luceneDir;
+    public void setIndexConfigDir(Path indexConfigDir) {
+        this.indexConfigDir = indexConfigDir;
     }
 
     /**

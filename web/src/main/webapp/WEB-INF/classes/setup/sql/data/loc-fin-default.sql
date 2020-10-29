@@ -1,11 +1,6 @@
 INSERT INTO Languages (id, name, isinspire, isdefault) VALUES ('fin','suomi', 'y', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (37, 'fin', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (38, 'fin', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (39, 'fin', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (40, 'fin', 'accessConstraints', '');
-
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'fin','Kartat & kuvat');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'fin','Tietoaineistot');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'fin','Vuorovaikutteiset resurssit');

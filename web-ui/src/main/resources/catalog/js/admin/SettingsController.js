@@ -37,7 +37,6 @@
   goog.require('gn_cssstyle_settings_controller');
   goog.require('gn_csw_settings_controller');
   goog.require('gn_csw_test_controller');
-  goog.require('gn_csw_virtual_controller');
   goog.require('gn_logo_settings_controller');
   goog.require('gn_mapserver_controller');
   goog.require('gn_metadata_identifier_templates_controller');
@@ -48,7 +47,6 @@
   var module = angular.module('gn_settings_controller',
       ['gn_system_settings_controller',
        'gn_csw_settings_controller',
-       'gn_csw_virtual_controller',
        'gn_mapserver_controller',
        'gn_csw_test_controller',
        'gn_logo_settings_controller',
@@ -107,11 +105,6 @@
               label: 'manageCSW',
               icon: 'fa-server',
               href: '#/settings/csw'
-            },{
-              type: 'csw-virtual',
-              label: 'manageVirtualCSW',
-              icon: 'fa-server',
-              href: '#/settings/csw-virtual'
             },{
               type: 'csw-test',
               label: 'testCSW',

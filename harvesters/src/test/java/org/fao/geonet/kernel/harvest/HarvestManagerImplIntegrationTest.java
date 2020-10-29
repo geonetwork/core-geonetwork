@@ -83,7 +83,7 @@ public class HarvestManagerImplIntegrationTest extends AbstractHarvesterServiceI
 
         String harvesterUUID = Xml.selectString(harvesterParamsAfterAdd, "site/uuid");
         assertNotNull(harvesterUUID);
-        assertTrue(_sourceRepository.exists(harvesterUUID));
+        assertTrue(_sourceRepository.existsById(harvesterUUID));
         assertTrue(existsInSettingsRepository(harvesterId));
         assertTrue(existsInSettingsManager(harvesterId));
 
@@ -99,7 +99,7 @@ public class HarvestManagerImplIntegrationTest extends AbstractHarvesterServiceI
         assertEquals("There is still a metadata in the repository", 0, _metadataRepository.count());
         assertEquals(1, _harvestHistoryRepository.count());
         assertTrue(_harvestHistoryRepository.findAll().get(0).isDeleted());
-        assertFalse(_sourceRepository.exists(harvesterUUID));
+        assertFalse(_sourceRepository.existsById(harvesterUUID));
         assertFalse(existsInSettingsRepository(harvesterId));
         assertFalse(existsInSettingsManager(harvesterId));
 

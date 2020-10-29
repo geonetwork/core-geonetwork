@@ -1,4 +1,3 @@
-
 package org.fao.geonet.api.records.model.suggestion;
 
 import javax.xml.bind.JAXBElement;
@@ -19,7 +18,6 @@ import javax.xml.namespace.QName;
  * type definitions, element declarations and model
  * groups.  Factory methods for each of these are
  * provided in this class.
- *
  */
 @XmlRegistry
 public class ObjectFactory {
@@ -28,14 +26,12 @@ public class ObjectFactory {
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.fao.geonet.api.records
-     *
      */
     public ObjectFactory() {
     }
 
     /**
      * Create an instance of {@link SuggestionsType }
-     *
      */
     public SuggestionsType createSuggestionsType() {
         return new SuggestionsType();
@@ -43,7 +39,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link SuggestionType }
-     *
      */
     public SuggestionType createSuggestionType() {
         return new SuggestionType();
@@ -51,7 +46,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link SuggestionsType }{@code >}}
-     *
      */
     @XmlElementDecl(namespace = "", name = "suggestions")
     public JAXBElement<SuggestionsType> createSuggestions(SuggestionsType value) {

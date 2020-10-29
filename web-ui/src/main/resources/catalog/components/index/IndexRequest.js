@@ -30,18 +30,6 @@
     search: 'search'
   };
 
-  Array.prototype.unique = function() {
-    var a = this.concat();
-    for (var i = 0; i < a.length; ++i) {
-      for (var j = i + 1; j < a.length; ++j) {
-        if (a[i] === a[j])
-          a.splice(j--, 1);
-      }
-    }
-
-    return a;
-  };
-
   var ROWS = 20;
   var MAX_ROWS = 2000;
   var FACET_TREE_ROWS = 1000;
@@ -55,7 +43,7 @@
     this.$http = $injector.get('$http');
     this.$q = $injector.get('$q');
     this.$translate = $injector.get('$translate');
-    this.gnTreeFromSlash = $injector.get('gnTreeFromSlash');
+    this.gnFacetTree = $injector.get('gnFacetTree');
 
     this.config = config;
 
@@ -88,7 +76,7 @@
      * and document identifier fq param.
      *
      * ex:
-     * "../api/0.1/search/query?wt=json&
+     * "../api/search/query?wt=json&
      *    fq=featureTypeId:http://server/wfs/#LAYER"
      */
     this.baseUrl;
@@ -566,7 +554,7 @@
         });
       }
       else if (fieldId.endsWith('_tree')) {
-        facetField.tree = this.gnTreeFromSlash.getTree(respAgg.buckets);
+        facetField.tree = this.gnFacetTree.getTree(respAgg.buckets);
       }
       // date types
       else if (fieldId.endsWith('_dt') || facetField.type == 'rangeDate') {
@@ -1059,9 +1047,7 @@
     });
 
     if (any) {
-      any.split(' ').forEach(function(v) {
-        fieldsQ.push('+*' + v + '*');
-      });
+      fieldsQ.push(v);
     }
     if (this.initialParams.filter) {
       fieldsQ.push(this.initialParams.filter);

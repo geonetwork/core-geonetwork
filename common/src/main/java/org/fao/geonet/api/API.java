@@ -29,7 +29,6 @@ package org.fao.geonet.api;
  * Created by francois on 08/01/16.
  */
 public class API {
-    public static final String VERSION_0_1 = "0.1";
     public static final String CONTACT_EMAIL = "geonetwork@osgeo.org";
     public static final String LOG_MODULE_NAME = "geonetwork.api" ;
 }

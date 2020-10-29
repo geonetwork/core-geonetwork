@@ -41,6 +41,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -66,8 +67,8 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void putUiConfiguration() throws Exception {
-        UiSetting uiConfig = uiSettingsRepository.findOne("default");
-        Assert.assertNull(uiConfig);
+        Optional<UiSetting> uiConfig = uiSettingsRepository.findById("default");
+        Assert.assertFalse(uiConfig.isPresent());
 
         UiSetting newUiConfig = new UiSetting();
         newUiConfig.setId("default");
@@ -89,12 +90,12 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("text/plain")))
             .andExpect(status().is(201));
 
-        UiSetting one = uiSettingsRepository.findOne(newUiConfig.getId());
+        UiSetting one = uiSettingsRepository.findById(newUiConfig.getId()).get();
         Assert.assertNotNull(one);
 
 
         // Get
-        UiSetting uiConfiguration = uiSettingsRepository.findOne("default");
+        UiSetting uiConfiguration = uiSettingsRepository.findById("default").get();
         Assert.assertNotNull(uiConfiguration);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -106,7 +107,7 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
 
 
         // update
-        uiConfiguration = uiSettingsRepository.findOne("default");
+        uiConfiguration = uiSettingsRepository.findById("default").get();
         Assert.assertNotNull(uiConfiguration);
 
         uiConfiguration.setConfiguration("{}");
@@ -123,14 +124,15 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
             .andExpect(status().is(204));
 
         // Delete
-        uiConfiguration = uiSettingsRepository.findOne("default");
-        Assert.assertNotNull(uiConfiguration);
+        Assert.assertTrue( uiSettingsRepository.existsById("default"));
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
         this.mockMvc.perform(delete("/srv/api/ui/" + uiConfiguration.getId())
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
+
+        Assert.assertFalse( uiSettingsRepository.existsById("default"));
     }
 
     @Test
@@ -148,8 +150,8 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getNonExistingUiConfiguration() throws Exception {
-        UiSetting one = uiSettingsRepository.findOne("222");
-        Assert.assertNull(one);
+        Optional<UiSetting> one = uiSettingsRepository.findById("222");
+        Assert.assertFalse(one.isPresent());
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
@@ -162,8 +164,8 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void updateNonExistingUiConfiguration() throws Exception {
-        UiSetting uiConfiguration = uiSettingsRepository.findOne("222");
-        Assert.assertNull(uiConfiguration);
+        Optional<UiSetting> one = uiSettingsRepository.findById("222");
+        Assert.assertFalse(one.isPresent());
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
@@ -175,8 +177,8 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void deleteNonExistingUiConfiguration() throws Exception {
-        UiSetting uiConfiguration = uiSettingsRepository.findOne("222");
-        Assert.assertNull(uiConfiguration);
+        Optional<UiSetting> one = uiSettingsRepository.findById("222");
+        Assert.assertFalse(one.isPresent());
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 

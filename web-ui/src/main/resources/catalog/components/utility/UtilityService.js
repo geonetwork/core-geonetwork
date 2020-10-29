@@ -84,12 +84,9 @@
              e.offset().top :
              e.position().top;
           }
-          $('body,html').animate({scrollTop: top},
-           duration, easing, function() {
-              if (e.length == 1) {
-                e.fadeOut('slow', function() {e.fadeIn()});
-              }
-            });
+
+          $('body,html').scrollTop(top);
+
           $location.search('scrollTo', elementId);
         };
 
@@ -385,6 +382,12 @@
     };
   }]);
 
+  module.filter('unique', function() {
+    return function (arr, field) {
+      return _.uniq(arr, function(a) { return a[field]; });
+    };
+  });
+
   module.factory('gnRegionService', [
     '$q',
     '$http',
@@ -503,7 +506,8 @@
     };
   }]);
 
-  module.service('gnTreeFromSlash', [function() {
+  module.service('gnFacetTree', [function() {
+    var separator = '^';
     var findChild = function(node, name) {
       var n;
       if (node.nodes) {
@@ -535,12 +539,15 @@
           };
           if (!node.nodes) node.nodes = [];
           node.nodes.push(newNode);
+          node.items = node.nodes;
           //node.nodes.sort(sortNodeFn);
         }
         createNode(newNode, g, index + 1, e);
       } else {
         node.key = e.key;
         node.count = e.doc_count;
+        node.size = node.count;
+        node.path = [e.key];
       }
     };
 
@@ -550,7 +557,7 @@
       };
       list.forEach(function(e) {
         var name = e.key;
-        var g = name.split('/');
+        var g = name.split(separator);
         createNode(tree, g, 0, e);
       });
       return tree;

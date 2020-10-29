@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<i18n>
+  <viewInGE>Ver no Google Earth</viewInGE>
+  <warning>Aviso!</warning>
+  <addA>Adicionar</addA>
+  <nojs>Javascript não está habilitado. Habilite ou clique
+    <a
+      href="../search">aqui
+    </a>
+    para buscar em modo degradado.
+  </nojs>
+  <selectView>Escolher visualização</selectView>
+  <moreTabs>Mais informação</moreTabs>
+  <nodeChangeWarning>Aviso de Mudança de Nó</nodeChangeWarning>
+  <nodeChangeInfo>Aviso: Você não está mais no mesmo nó em que fez login.</nodeChangeInfo>
+  <nodeChangeBack>Se você quiser voltar para o nó em que fez login, clique:</nodeChangeBack>
+  <nodeChangeForward>Se você quiser fazer logout e retornar para a URL anterior, clique:
+  </nodeChangeForward>
+  <serviceNotAllowedTitle>Serviço indisponível</serviceNotAllowedTitle>
+  <serviceNotAllowed>O serviço {1} não existe ou você não tem os privilégios para acessá-lo.
+  </serviceNotAllowed>
+  <linkToHome>
+    <span>Retornar para a <a href="../..">página de busca</a>.
+    </span>
+  </linkToHome>
+</i18n>

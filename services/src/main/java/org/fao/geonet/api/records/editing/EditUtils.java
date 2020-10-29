@@ -23,11 +23,9 @@
 
 package org.fao.geonet.api.records.editing;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Lists;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
@@ -36,27 +34,19 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.EditLib;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.jdom.Attribute;
-import org.jdom.Content;
-import org.jdom.Element;
-import org.jdom.Namespace;
-import org.jdom.Text;
+import org.jdom.*;
 
-import com.google.common.collect.Lists;
-
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -344,7 +334,6 @@ class EditUtils {
     }
 
     /**
-     *
      * @param params
      * @throws Exception
      */

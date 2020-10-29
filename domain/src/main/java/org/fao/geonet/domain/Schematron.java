@@ -135,7 +135,7 @@ public class Schematron extends Localized {
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
     @CollectionTable(joinColumns = @JoinColumn(name = "idDes"), name = "SchematronDes")
     @MapKeyColumn(name = "langId", length = 5)
-    @Column(name = "label", nullable = false, length = 96)
+    @Column(name = "label", nullable = false, length = 255)
     public Map<String, String> getLabelTranslations() {
         return super.getLabelTranslations();
     }

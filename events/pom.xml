@@ -28,12 +28,12 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.11.0-SNAPSHOT</version>
+    <version>4.0.1-SNAPSHOT</version>
   </parent>
 
   <name>GeoNetwork Events</name>
   <packaging>jar</packaging>
-  <artifactId>events</artifactId>
+  <artifactId>gn-events</artifactId>
   <description>Contains all types of events geoNetwork specific you can listen to.</description>
   <url>http://geonetwork-opensource.org</url>
   <dependencies>
@@ -43,7 +43,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>domain</artifactId>
+      <artifactId>gn-domain</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

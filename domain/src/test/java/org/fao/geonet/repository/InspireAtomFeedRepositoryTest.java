@@ -58,11 +58,11 @@ public class InspireAtomFeedRepositoryTest extends AbstractSpringDataTest {
         InspireAtomFeed feed2 = newInspireAtomFeed();
         feed2 = _repo.save(feed2);
 
-        assertEquals(feed2, _repo.findOne(feed2.getId()));
-        assertEquals(feed1, _repo.findOne(feed1.getId()));
+        assertEquals(feed2, _repo.findById(feed2.getId()).get());
+        assertEquals(feed1, _repo.findById(feed1.getId()).get());
 
-        assertEquals(1, _repo.findOne(feed2.getId()).getEntryList().size());
-        assertEquals(feed2.getEntryList().get(0), _repo.findOne(feed2.getId()).getEntryList().get(0));
+        assertEquals(1, _repo.findById(feed2.getId()).get().getEntryList().size());
+        assertEquals(feed2.getEntryList().get(0), _repo.findById(feed2.getId()).get().getEntryList().get(0));
     }
 
 
@@ -92,12 +92,12 @@ public class InspireAtomFeedRepositoryTest extends AbstractSpringDataTest {
         feed1.setMetadataId(1);
         feed1 = _repo.save(feed1);
 
-        assertEquals(feed1.getMetadataId(), _repo.findOne(feed1.getId()).getMetadataId());
+        assertEquals(feed1.getMetadataId(), _repo.findById(feed1.getId()).get().getMetadataId());
 
         InspireAtomFeed feed2 = newInspireAtomFeed();
         feed2.setMetadataId(2);
         feed2 = _repo.save(feed2);
-        assertEquals(feed2.getMetadataId(), _repo.findOne(feed2.getId()).getMetadataId());
+        assertEquals(feed2.getMetadataId(), _repo.findById(feed2.getId()).get().getMetadataId());
 
         assertEquals(2, _repo.findAll().size());
 

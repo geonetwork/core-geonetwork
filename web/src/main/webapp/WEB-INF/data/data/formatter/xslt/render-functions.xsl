@@ -42,11 +42,11 @@
 
     <xsl:variable name="boxGeometry"
                   select="concat('POLYGON((',
-                  $east, ' ', $south, ',',
-                  $east, ' ', $north, ',',
-                  $west, ' ', $north, ',',
-                  $west, ' ', $south, ',',
-                  $east, ' ', $south, '))')"/>
+                  $east, '%20', $south, ',',
+                  $east, '%20', $north, ',',
+                  $west, '%20', $north, ',',
+                  $west, '%20', $south, ',',
+                  $east, '%20', $south, '))')"/>
     <xsl:variable name="numberFormat" select="'0.00'"/>
 
     <div class="thumbnail extent">
@@ -101,6 +101,16 @@
            alt="{$schemaStrings/thumbnail}"
            src="{$nodeUrl}api/records/{$uuid}/extents.png"/>
     </xsl:if>
+  </xsl:function>
+
+  <xsl:function name="gn-fn-render:extent">
+    <xsl:param name="uuid" as="xs:string"/>
+    <xsl:param name="index" as="xs:integer"/>
+    <xsl:if test="$uuid">
+      <img class="gn-img-extent"
+           alt="{$schemaStrings/thumbnail}"
+           src="{$nodeUrl}api/records/{$uuid}/extents/{$index}.png"/>
+    </xsl:if>
 
   </xsl:function>
 
@@ -111,12 +121,12 @@
   <xsl:function name="gn-fn-render:getMetadataTitle">
     <xsl:param name="uuid" as="xs:string"/>
     <xsl:param name="language" as="xs:string"/>
-
+    <!-- TODOES: Fallback to default language -->
     <xsl:variable name="metadataTitle"
                   select="util:getIndexField(
                   $language,
                   $uuid,
-                  'title',
+                  'resourceTitle',
                   $language)"/>
     <xsl:choose>
       <xsl:when test="$metadataTitle=''">
@@ -124,7 +134,7 @@
                       select="util:getIndexField(
                       $language,
                       $uuid,
-                      '_defaultTitle',
+                      'resourceTitle',
                       $language)"/>
         <xsl:choose>
           <xsl:when test="$metadataDefaultTitle=''">

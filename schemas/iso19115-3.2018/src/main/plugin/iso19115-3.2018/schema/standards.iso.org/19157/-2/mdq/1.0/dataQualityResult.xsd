@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0" 
+  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0" 
+  elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19157/-2/mdq/1.0" version="1.0">
+  <include schemaLocation="mdq.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gmw/1.0" schemaLocation="../../../../19115/-3/gmw/1.0/gmw.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="DQ_ConformanceResult" substitutionGroup="mdq:AbstractDQ_Result" type="mdq:DQ_ConformanceResult_Type">
+    <annotation>
+      <documentation>information about the outcome of evaluating the obtained value (or set of values) against a specified acceptable conformance quality level</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_ConformanceResult_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Result_Type">
+        <sequence>
+          <element name="specification" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>citation of data product specification or user requirement against which data is being evaluated</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="explanation" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>explanation of the meaning of conformance for this result</documentation>
+            </annotation>
+          </element>
+          <element name="pass" type="gco:Boolean_PropertyType">
+            <annotation>
+              <documentation>indication of the conformance result where 0 = fail and 1 = pass</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_ConformanceResult_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_ConformanceResult"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_DescriptiveResult" substitutionGroup="mdq:AbstractDQ_Result" type="mdq:DQ_DescriptiveResult_Type">
+    <annotation>
+      <documentation>data quality descriptive result</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_DescriptiveResult_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Result_Type">
+        <sequence>
+          <element name="statement" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>textual expression of the descriptive result</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_DescriptiveResult_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_DescriptiveResult"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_QuantitativeResult" substitutionGroup="mdq:AbstractDQ_Result" type="mdq:DQ_QuantitativeResult_Type">
+    <annotation>
+      <documentation>the values or information about the value(s) (or set of values) obtained from applying a data quality measure</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_QuantitativeResult_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Result_Type">
+        <sequence>
+          <element maxOccurs="unbounded" name="value" type="gco:Record_PropertyType">
+            <annotation>
+              <documentation>quantitative value or values, content determined by the evaluation procedure used, accordingly with the value type and valueStructure defined for the measure</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="valueUnit" type="gmw:UnitOfMeasure_PropertyType">
+            <annotation>
+              <documentation>value unit for reporting a data quality result</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="valueRecordType" type="gco:RecordType_PropertyType">
+            <annotation>
+              <documentation>value type for reporting a data quality result, depends of the implementation</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_QuantitativeResult_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_QuantitativeResult"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractDQ_Result" substitutionGroup="gco:AbstractObject" type="mdq:AbstractDQ_Result_Type">
+    <annotation>
+      <documentation>generalization of more specific result classes</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractDQ_Result_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" name="dateTime" type="gco:DateTime_PropertyType">
+            <annotation>
+              <documentation>date when the result was generated</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="resultScope" type="mcc:MD_Scope_PropertyType">
+            <annotation>
+              <documentation>scope of the result</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractDQ_Result_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:AbstractDQ_Result"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

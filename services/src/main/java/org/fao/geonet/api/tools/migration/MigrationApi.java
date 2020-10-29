@@ -23,51 +23,39 @@
 
 package org.fao.geonet.api.tools.migration;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.ContextAwareTask;
 import org.fao.geonet.DatabaseMigrationTask;
 import org.fao.geonet.api.API;
-import org.fao.geonet.domain.Profile;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-import java.sql.Connection;
+import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.context.ServiceContext;
+import java.sql.Connection;
 
 @RequestMapping(value = {
-    "/{portal}/api/tools/migration",
-    "/{portal}/api/" + API.VERSION_0_1 +
-        "/tools/migration"
+    "/{portal}/api/tools/migration"
 })
-@Api(value = "tools",
-    tags = "tools")
-@Controller("migration")
+@Tag(name = "tools")
+@RestController
 public class MigrationApi {
 
 
-    @ApiOperation(value = "Call a migration step",
-        nickname = "callStep")
-    @RequestMapping(value = "/steps/{stepName}",
+    @io.swagger.v3.oas.annotations.Operation(summary = "Call a migration step")
+    @RequestMapping(value = "/steps/{stepName:.+}",
         produces = MediaType.TEXT_PLAIN_VALUE,
         method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.CREATED)
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     public ResponseEntity<String> callStep(
-        @ApiParam(value = "Class name to execute corresponding to a migration step. See DatabaseMigrationTask.",
+        @Parameter(description = "Class name to execute corresponding to a migration step. See DatabaseMigrationTask.",
             example = "org.fao.geonet.api.records.attachments.MetadataResourceDatabaseMigration",
             required = true)
         @PathVariable

@@ -26,10 +26,8 @@ package org.fao.geonet.api.records.formatters.groovy.template;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
-
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
-
 import org.fao.geonet.SystemInfo;
 import org.xml.sax.Attributes;
 
@@ -77,13 +75,13 @@ public class TNodeIf extends TNode {
             do {
                 String key = matcher.group(1).trim();
                 this.scriptVariables.add(key);
-                builder.append(expr.substring(start, matcher.start()));
+                builder.append(expr, start, matcher.start());
                 builder.append(key);
 
                 start = matcher.end();
             } while (matcher.find());
 
-            builder.append(expr.substring(start, expr.length()));
+            builder.append(expr.substring(start));
 
             this.expr = builder.toString();
             this.not = false;
@@ -142,7 +140,7 @@ public class TNodeIf extends TNode {
             final Object val = context.getModelValue(this.expr);
             final String truthy = isTruthy(val);
             if (not) {
-                return truthy != null ? Optional.<String>absent() :
+                return truthy != null ? Optional.absent() :
                     Optional.of("fmt-if=!" + this.expr + " is false (" + this.expr + " is true)");
             } else {
                 if (truthy != null) {

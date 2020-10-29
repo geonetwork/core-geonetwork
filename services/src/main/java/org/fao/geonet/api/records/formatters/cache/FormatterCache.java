@@ -30,6 +30,23 @@ import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import javax.annotation.Nullable;
+import javax.annotation.PreDestroy;
+import javax.servlet.ServletContext;
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
@@ -51,7 +68,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Log;
-import org.fao.geonet.web.DefaultLanguage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -61,24 +77,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.web.context.request.ServletWebRequest;
-
-import javax.annotation.Nullable;
-import javax.annotation.PreDestroy;
-import javax.servlet.ServletContext;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Caches Formatter html files in memory (keeping the most recent or most accessed X formatters) and
@@ -108,7 +106,7 @@ public class FormatterCache {
     private final ExecutorService executor;
     private final BlockingQueue<Pair<Key, StoreInfoAndDataLoadResult>> storeRequests;
     @Autowired
-    private CacheConfig cacheConfig;
+    private final CacheConfig cacheConfig;
 
     private final HashMap<String, String> cacheProperties = new HashMap<String, String>();
     private String landingPageFormatter;
@@ -126,7 +124,7 @@ public class FormatterCache {
         cacheProperties.put("QUEUE_MAX_REQUEST_NUMBER", maxStoreRequests + "");
 
         this.persistentStore = persistentStore;
-        this.memoryCache = CacheBuilder.<Key, StoreInfoAndData>newBuilder().
+        this.memoryCache = CacheBuilder.newBuilder().
             removalListener(new RemoveFromIndexListener()).
             maximumSize(memoryCacheSize).build();
         this.cacheConfig = cacheConfig;
@@ -231,7 +229,7 @@ public class FormatterCache {
             writeLock.lock();
 
             this.memoryCache.put(key, cached);
-            this.mdIdIndex.put(key.mdId, Pair.read(key, (StoreInfoAndData) cached));
+            this.mdIdIndex.put(key.mdId, Pair.read(key, cached));
             if (writeToStoreInCurrentThread) {
                 createPersistentStoreRunnable(storeRequests, persistentStore).processStoreRequest(Pair.read(key, cached));
                 cacheProperties.put("FILESYSTEM_CACHE_SIZE", persistentStore.getSize() + "");
@@ -388,7 +386,7 @@ public class FormatterCache {
             public void run() {
                 final ServletContext servletContext = context.getServlet().getServletContext();
                 context.setAsThreadLocal();
-                final Page<Metadata> metadatas = ApplicationContextHolder.get().getBean(MetadataRepository.class).findAll(new PageRequest(0, 1));
+                final Page<Metadata> metadatas = ApplicationContextHolder.get().getBean(MetadataRepository.class).findAll(PageRequest.of(0, 1));
                 if (metadatas.getNumberOfElements() > 0) {
                     Integer mdId = metadatas.getContent().get(0).getId();
                     context.getUserSession().loginAs(new User().setName("admin").setProfile(Profile.Administrator).setUsername("admin"));
@@ -502,7 +500,7 @@ public class FormatterCache {
 
             final OperationAllowed publicRecord = operationAllowedRepo.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(ReservedGroup.all.getId(), metadataId, ReservedOperation.view.getId());
             if (publicRecord != null) {
-                final Metadata metadata = metadataRepository.findOne(metadataId);
+                final Metadata metadata = metadataRepository.findOneById(metadataId);
                 if(metadata.getDataInfo().getType() == MetadataType.METADATA) {
                     try {
                         formatService.getRecordFormattedBy(

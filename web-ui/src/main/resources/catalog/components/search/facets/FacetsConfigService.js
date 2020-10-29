@@ -31,23 +31,7 @@
    * TODO: Translate indexkey/facetkey
    */
   module.factory('gnFacetConfigService', [
-    'gnHttp',
-    function(gnHttp) {
-
-      var loadConfig = function(summaryType) {
-        return gnHttp.callService('facetConfig', {}, {
-          cache: true
-        }).then(function(data) {
-          if (data.status != 200) {
-            return;
-          }
-          if (!data.data.hasOwnProperty(summaryType)) {
-            alert('ERROR: The config-summary.xml file does ' +
-                "not declare a summary type of: '" + summaryType + "'");
-          }
-          return data.data[summaryType];
-        });
-      };
+    function() {
 
       function filter(scope, category, checked) {
         if (!scope.facetConfig) {
@@ -76,7 +60,9 @@
               scope.facetConfig.map[scope.categoryKey]) {
             categoryList.push({
               dimension: dimensionFilter[0],
-              value: dimensionFilter.slice(1, dimensionFilter.length)
+              value: dimensionFilter.
+                  slice(1, dimensionFilter.length).
+                  join('/')
             });
           } else if (dimensionFilter[1] &&
               dimensionFilter.length > 2 &&
@@ -199,7 +185,6 @@
       };
 
       return {
-        loadConfig: loadConfig,
         filter: filter,
         buildPath: buildPath,
         buildLabel: buildLabel,

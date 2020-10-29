@@ -64,7 +64,7 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
         _entityManager.clear();
 
         assertEquals(1, _repo.count());
-        assertSameContents(savedOp, _repo.findOne(savedOp.getId()));
+        assertSameContents(savedOp, _repo.findById(savedOp.getId()).get());
 
         _repo.deleteAll();
         assertEquals(0, _repo.count());
@@ -83,7 +83,7 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
             List<Operation> all = _repo.findAll();
             assertEquals(1, all.size());
 
-            Operation loadedOp = _repo.findOne(ReservedOperation.view.getId());
+            Operation loadedOp = _repo.findById(ReservedOperation.view.getId()).get();
             assertTrue(loadedOp.isReserved());
             assertTrue(loadedOp.is(ReservedOperation.view));
         } finally {
@@ -102,7 +102,7 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
         _entityManager.clear();
 
         assertEquals(1, _repo.count());
-        assertSameContents(operation, _repo.findOne(operation.getId()));
+        assertSameContents(operation, _repo.findById(operation.getId()).get());
 
         operation.setName("New Name");
         Operation updatedOperation = _repo.save(operation);
@@ -112,9 +112,9 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
         _entityManager.clear();
 
         assertEquals(1, _repo.count());
-        assertSameContents(operation, _repo.findOne(operation.getId()));
+        assertSameContents(operation, _repo.findById(operation.getId()).get());
         assertSameContents(operation, updatedOperation);
-        assertSameContents(updatedOperation, _repo.findOne(operation.getId()));
+        assertSameContents(updatedOperation, _repo.findById(operation.getId()).get());
     }
 
     @Test

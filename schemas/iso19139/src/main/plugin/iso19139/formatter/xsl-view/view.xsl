@@ -26,6 +26,7 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:gts="http://www.isotc211.org/2005/gts"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -157,7 +158,7 @@
                   <span class="badge"><xsl:copy-of select="."/></span>
                 </xsl:when>
                 <xsl:otherwise>
-                  <a href="#/search?keyword={.}">
+                  <a href='#/search?query_string=%7B"tag":%7B"{.}":true%7D%7D'>
                     <span class="badge"><xsl:copy-of select="."/></span>
                   </a>
                 </xsl:otherwise>
@@ -176,7 +177,7 @@
                 <span class="badge"><xsl:copy-of select="."/></span>
               </xsl:when>
               <xsl:otherwise>
-                <a href="#/search?keyword={.}">
+                <a href='#/search?query_string=%7B"tag":%7B"{.}":true%7D%7D'>
                   <span class="badge"><xsl:copy-of select="."/></span>
                 </a>
               </xsl:otherwise>
@@ -419,7 +420,7 @@
        gco:Angle|gmx:FileName|
        gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
        gco:LocalName|gmd:PT_FreeText|
-       gco:Date|gco:DateTime|*/@codeListValue]"
+       gco:Date|gco:DateTime|*/@codeListValue]|*[gts:TM_PeriodDuration != '']"
                 priority="50">
     <xsl:param name="fieldName" select="''" as="xs:string"/>
 
@@ -599,6 +600,16 @@
     <br/>
   </xsl:template>
 
+  <xsl:template mode="render-field"
+                match="gmd:EX_BoundingPolygon/gmd:polygon">
+    <xsl:copy-of select="gn-fn-render:extent($metadataUuid,
+        count(ancestor::gmd:extent/preceding-sibling::gmd:extent/*/*[local-name() = 'geographicElement']/*) +
+        count(../../preceding-sibling::gmd:geographicElement) + 1)"/>
+    <br/>
+    <br/>
+  </xsl:template>
+
+
 
   <!-- Display spatial extents containing bounding polygons on a map -->
   <xsl:template mode="render-field"
@@ -614,16 +625,20 @@
       </h2>
       <div class="target"><xsl:comment select="name()"/>
 
-        <xsl:apply-templates mode="render-field" select="gmd:description"/>
+        <xsl:apply-templates mode="render-field"
+                             select="gmd:description"/>
 
-        <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
+        <xsl:apply-templates mode="render-field"
+                             select="gmd:geographicElement[not(gmd:EX_GeographicDescription)]"/>
 
         <!-- Display any included geographic descriptions separately after displayed map -->
+        <xsl:apply-templates mode="render-field"
+                             select="gmd:geographicElement[gmd:EX_GeographicDescription]"/>
 
-        <xsl:apply-templates mode="render-field" select="gmd:geographicElement[gmd:EX_GeographicDescription]"/>
-
-        <xsl:apply-templates mode="render-field" select="gmd:temporalElement"/>
-        <xsl:apply-templates mode="render-field" select="gmd:verticalElement"/>
+        <xsl:apply-templates mode="render-field"
+                             select="gmd:temporalElement"/>
+        <xsl:apply-templates mode="render-field"
+                             select="gmd:verticalElement"/>
 
       </div>
     </div>
@@ -1163,6 +1178,11 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template mode="render-value"
+                match="gts:TM_PeriodDuration">
+    <div data-gn-field-duration-div="{.}"><xsl:value-of select="."/></div>
+  </xsl:template>
+
   <!-- Translate boolean values -->
   <xsl:template mode="render-value"
                 match="gco:Boolean">
@@ -1236,7 +1256,7 @@
                 match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
                       |gml:beginPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
                       |gml:endPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
-    <span data-gn-humanize-time="{.}" data-format="DD MMM YYYY"><xsl:comment select="name()"/>
+    <span data-gn-humanize-time="{.}"><xsl:comment select="name()"/>
       <xsl:value-of select="."/>
     </span>
   </xsl:template>

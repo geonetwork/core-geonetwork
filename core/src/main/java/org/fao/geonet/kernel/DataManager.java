@@ -54,7 +54,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.jdom.Element;
 import org.slf4j.Logger;
@@ -67,7 +66,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -75,12 +73,11 @@ import java.util.Set;
 
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
- *
+ * <p>
  * Deprecated in favor of
- *
+ * <p>
  * {@link IMetadataManager} {@link IMetadataUtils} {@link IMetadataIndexer} {@link IMetadataValidator} {@link IMetadataOperations}
  * {@link IMetadataStatus} {@link IMetadataSchemaUtils} {@link IMetadataCategory}
- *
  */
 @Deprecated
 public class DataManager {
@@ -106,27 +103,6 @@ public class DataManager {
     @Autowired
     private AccessManager accessManager;
 
-    /**
-     * Init Data manager and refresh index if needed. Can also be called after GeoNetwork startup in order to rebuild the lucene index
-     *
-     * @param force Force reindexing all from scratch
-     **/
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        this.metadataIndexer.init(context, force);
-        this.metadataManager.init(context, force);
-        this.metadataUtils.init(context, force);
-
-        // FIXME this shouldn't login automatically ever!
-        if (context.getUserSession() == null) {
-            LOGGER_DATA_MANAGER.debug( "Automatically login in as Administrator. Who is this? Who is calling this?");
-            UserSession session = new UserSession();
-            context.setUserSession(session);
-            session.loginAs(new User().setUsername("admin").setId(-1).setProfile(Profile.Administrator));
-            LOGGER_DATA_MANAGER.debug( "Hopefully this is cron job or routinely background task. Who called us?",
-                        new Exception("Dummy Exception to know the stacktrace"));
-        }
-    }
-
     @Deprecated
     public static void validateExternalMetadata(String schema, Element xml, ServiceContext context, Integer groupOwner) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -143,6 +119,27 @@ public class DataManager {
     public static void setNamespacePrefix(final Element md) {
         GeonetContext gc = (GeonetContext) ServiceContext.get().getHandlerContext(Geonet.CONTEXT_NAME);
         gc.getBean(IMetadataValidator.class).setNamespacePrefix(md);
+    }
+
+    /**
+     * Init Data manager and refresh index if needed. Can also be called after GeoNetwork startup in order to rebuild the lucene index
+     *
+     * @param force Force reindexing all from scratch
+     **/
+    public void init(ServiceContext context, Boolean force) throws Exception {
+        this.metadataIndexer.init(context, force);
+        this.metadataManager.init(context, force);
+        this.metadataUtils.init(context, force);
+
+        // FIXME this shouldn't login automatically ever!
+        if (context.getUserSession() == null) {
+            LOGGER_DATA_MANAGER.debug("Automatically login in as Administrator. Who is this? Who is calling this?");
+            UserSession session = new UserSession();
+            context.setUserSession(session);
+            session.loginAs(new User().setUsername("admin").setId(-1).setProfile(Profile.Administrator));
+            LOGGER_DATA_MANAGER.debug("Hopefully this is cron job or routinely background task. Who called us?",
+                new Exception("Dummy Exception to know the stacktrace"));
+        }
     }
 
     @Deprecated
@@ -171,18 +168,8 @@ public class DataManager {
     }
 
     @Deprecated
-    public void indexMetadata(final String metadataId, boolean forceRefreshReaders, ISearchManager searchManager) throws Exception {
-        metadataIndexer.indexMetadata(metadataId, forceRefreshReaders, searchManager);
-    }
-
-    @Deprecated
-    public void rescheduleOptimizer(Calendar beginAt, int interval) throws Exception {
-        metadataIndexer.rescheduleOptimizer(beginAt, interval);
-    }
-
-    @Deprecated
-    public void disableOptimizer() throws Exception {
-        metadataIndexer.disableOptimizer();
+    public void indexMetadata(final String metadataId, boolean forceRefreshReaders) throws Exception {
+        metadataIndexer.indexMetadata(metadataId, forceRefreshReaders);
     }
 
     @Deprecated
@@ -276,12 +263,14 @@ public class DataManager {
     }
 
     @Deprecated
-    public @Nullable String getMetadataId(@Nonnull String uuid) throws Exception {
+    public @Nullable
+    String getMetadataId(@Nonnull String uuid) throws Exception {
         return metadataUtils.getMetadataId(uuid);
     }
 
     @Deprecated
-    public @Nullable String getMetadataUuid(@Nonnull String id) throws Exception {
+    public @Nullable
+    String getMetadataUuid(@Nonnull String id) throws Exception {
         return metadataUtils.getMetadataUuid(id);
     }
 
@@ -326,13 +315,15 @@ public class DataManager {
     }
 
     @Deprecated
-    public @CheckForNull String autodetectSchema(Element md) throws SchemaMatchConflictException, NoSchemaMatchesException {
+    public @CheckForNull
+    String autodetectSchema(Element md) throws SchemaMatchConflictException, NoSchemaMatchesException {
         return metadataSchemaUtils.autodetectSchema(md);
     }
 
     @Deprecated
-    public @CheckForNull String autodetectSchema(Element md, String defaultSchema)
-            throws SchemaMatchConflictException, NoSchemaMatchesException {
+    public @CheckForNull
+    String autodetectSchema(Element md, String defaultSchema)
+        throws SchemaMatchConflictException, NoSchemaMatchesException {
         return metadataSchemaUtils.autodetectSchema(md, defaultSchema);
     }
 
@@ -353,31 +344,31 @@ public class DataManager {
 
     @Deprecated
     public String createMetadata(ServiceContext context, String templateId, String groupOwner, String source, int owner, String parentUuid,
-            String isTemplate, boolean fullRightsForGroup) throws Exception {
+                                 String isTemplate, boolean fullRightsForGroup) throws Exception {
         return metadataManager.createMetadata(context, templateId, groupOwner, source, owner, parentUuid, isTemplate, fullRightsForGroup);
     }
 
     @Deprecated
     public String createMetadata(ServiceContext context, String templateId, String groupOwner, String source, int owner, String parentUuid,
-            String isTemplate, boolean fullRightsForGroup, String uuid) throws Exception {
+                                 String isTemplate, boolean fullRightsForGroup, String uuid) throws Exception {
         return metadataManager.createMetadata(context, templateId, groupOwner, source, owner, parentUuid, isTemplate, fullRightsForGroup,
-                uuid);
+            uuid);
     }
 
     @Deprecated
     public String insertMetadata(ServiceContext context, String schema, Element metadataXml, String uuid, int owner, String groupOwner,
-            String source, String metadataType, String docType, String category, String createDate, String changeDate, boolean ufo,
-            boolean index) throws Exception {
+                                 String source, String metadataType, String docType, String category, String createDate, String changeDate, boolean ufo,
+                                 boolean index) throws Exception {
         return metadataManager.insertMetadata(context, schema, metadataXml, uuid, owner, groupOwner, source, metadataType, docType,
-                category, createDate, changeDate, ufo, index);
+            category, createDate, changeDate, ufo, index);
     }
 
     @Deprecated
-    public AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, boolean notifyChange, boolean index,
-            boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, boolean forceRefreshReaders)
-            throws Exception {
-        return metadataManager.insertMetadata(context, newMetadata, metadataXml, notifyChange, index, updateFixedInfo, updateDatestamp,
-                fullRightsForGroup, forceRefreshReaders);
+    public AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, boolean index,
+                                           boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, boolean forceRefreshReaders)
+        throws Exception {
+        return metadataManager.insertMetadata(context, newMetadata, metadataXml, index, updateFixedInfo, updateDatestamp,
+            fullRightsForGroup, forceRefreshReaders);
     }
 
     @Deprecated
@@ -435,7 +426,7 @@ public class DataManager {
 
     @Deprecated
     public Element applyCustomSchematronRules(String schema, int metadataId, Element md, String lang,
-            List<MetadataValidation> validations) {
+                                              List<MetadataValidation> validations) {
         return metadataValidator.applyCustomSchematronRules(schema, metadataId, md, lang, validations);
     }
 
@@ -445,29 +436,14 @@ public class DataManager {
     }
 
     @Deprecated
-    public Element getThumbnails(ServiceContext context, String metadataId) throws Exception {
-        return metadataUtils.getThumbnails(context, metadataId);
-    }
-
-    @Deprecated
-    public void setThumbnail(ServiceContext context, String id, boolean small, String file, boolean indexAfterChange) throws Exception {
-        metadataUtils.setThumbnail(context, id, small, file, indexAfterChange);
-    }
-
-    @Deprecated
-    public void unsetThumbnail(ServiceContext context, String id, boolean small, boolean indexAfterChange) throws Exception {
-        metadataUtils.unsetThumbnail(context, id, small, indexAfterChange);
-    }
-
-    @Deprecated
     public void setDataCommons(ServiceContext context, String id, String licenseurl, String imageurl, String jurisdiction,
-            String licensename, String type) throws Exception {
+                               String licensename, String type) throws Exception {
         metadataUtils.setDataCommons(context, id, licenseurl, imageurl, jurisdiction, licensename, type);
     }
 
     @Deprecated
     public void setCreativeCommons(ServiceContext context, String id, String licenseurl, String imageurl, String jurisdiction,
-            String licensename, String type) throws Exception {
+                                   String licensename, String type) throws Exception {
         metadataUtils.setCreativeCommons(context, id, licenseurl, imageurl, jurisdiction, licensename, type);
     }
 
@@ -488,7 +464,7 @@ public class DataManager {
 
     @Deprecated
     public Optional<OperationAllowed> getOperationAllowedToAdd(final ServiceContext context, final int mdId, final int grpId,
-            final int opId) {
+                                                               final int opId) {
         return metadataOperations.getOperationAllowedToAdd(context, mdId, grpId, opId);
     }
 
@@ -554,7 +530,7 @@ public class DataManager {
 
     @Deprecated
     public MetadataStatus setStatusExt(ServiceContext context, int id, int status, ISODate changeDate, String changeMessage)
-            throws Exception {
+        throws Exception {
         return metadataStatus.setStatusExt(context, id, status, changeDate, changeMessage);
     }
 
@@ -585,13 +561,13 @@ public class DataManager {
 
     @Deprecated
     public Element updateFixedInfo(String schema, Optional<Integer> metadataId, String uuid, Element md, String parentUuid,
-            UpdateDatestamp updateDatestamp, ServiceContext context) throws Exception {
+                                   UpdateDatestamp updateDatestamp, ServiceContext context) throws Exception {
         return metadataManager.updateFixedInfo(schema, metadataId, uuid, md, parentUuid, updateDatestamp, context);
     }
 
     @Deprecated
     public Set<String> updateChildren(ServiceContext srvContext, String parentUuid, String[] children, Map<String, Object> params)
-            throws Exception {
+        throws Exception {
         return metadataManager.updateChildren(srvContext, parentUuid, children, params);
     }
 
@@ -599,11 +575,6 @@ public class DataManager {
     @VisibleForTesting
     public void buildPrivilegesMetadataInfo(ServiceContext context, Map<String, Element> mdIdToInfoMap) throws Exception {
         metadataManager.buildPrivilegesMetadataInfo(context, mdIdToInfoMap);
-    }
-
-    @Deprecated
-    public void notifyMetadataChange(Element md, String metadataId) throws Exception {
-        metadataUtils.notifyMetadataChange(md, metadataId);
     }
 
     @Deprecated

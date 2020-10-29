@@ -90,7 +90,6 @@
             templateUrl: '../../catalog/components/edit/' +
                 'directoryentryselector/partials/' +
                 'directoryentryselector.html',
-
             compile: function compile(tElement, tAttrs, transclude) {
               return {
                 pre: function preLink(scope) {
@@ -98,17 +97,20 @@
                     any: '',
                     internal: true,
                     params: {
-                      _isTemplate: 's',
+                      isTemplate: 's',
                       any: '',
                       from: 1,
                       to: 20,
-                      _root: 'gmd:CI_ResponsibleParty',
-                      sortBy: 'title',
-                      sortOrder: 'reverse',
-                      resultType: 'subtemplates',
-                      _valid: scope.$eval(scope.showValidOnly) ? 1 : undefined
+                      root: 'gmd:CI_ResponsibleParty',
+                      sortBy: 'resourceTitleObject.default.keyword',
+                      sortOrder: '',
+                      resultType: 'subtemplates'
                     }
                   };
+
+                  if (scope.$eval(scope.showValidOnly)) {
+                    scope.searchObj.valid = 1;
+                  }
 
                   scope.modelOptions = angular.copy(
                  gnGlobalSettings.modelOptions);
@@ -153,10 +155,8 @@
                         angular.fromJson(scope.filter));
                   }
 
-                  // Append * for like search
                   scope.updateParams = function() {
-                    scope.searchObj.params.any =
-                   '*' + scope.searchObj.any + '*';
+                    scope.searchObj.params.any = scope.searchObj.any;
                   };
 
                   scope.snippet = null;
@@ -227,8 +227,8 @@
                     };
 
                     angular.forEach(entry, function(c) {
-                      var id = c['geonet:info'].id,
-                          uuid = c['geonet:info'].uuid;
+                      var id = c.id,
+                          uuid = c.uuid;
                       var params = {};
 
                       // For the time being only contact role
@@ -344,18 +344,18 @@
                  scope.searchObj = {
                    internal: true,
                    defaultParams: {
-                     _isTemplate: 's',
+                     isTemplate: 's',
                      any: '',
                      from: 1,
                      to: 10,
-                     _root: 'gmd:CI_ResponsibleParty',
-                     sortBy: 'title',
-                     sortOrder: 'reverse',
-                     resultType: 'contact',
-                     _valid:
-                     scope.$eval(tAttrs['showValidOnly']) ? 1 : undefined
+                     root: 'gmd:CI_ResponsibleParty',
+                     sortBy: 'resourceTitleObject.default.keyword',
+                     sortOrder: ''
                    }
                  };
+                 if(scope.$eval(tAttrs['showValidOnly'])) {
+                   scope.searchObj.valid = 1;
+                 }
                  scope.searchObj.params = angular.extend({},
                  scope.searchObj.params,
                  scope.searchObj.defaultParams);

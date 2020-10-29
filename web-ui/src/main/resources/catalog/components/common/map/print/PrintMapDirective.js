@@ -66,7 +66,7 @@
         overlayCanvas.width = width;
         overlayCanvas.height = height;
         var ctx = overlayCanvas.getContext('2d');
-        
+
 
         var minx, miny, maxx, maxy;
         minx = printRectangle[0], miny = printRectangle[1],
@@ -128,6 +128,8 @@
     };
 
     this.activate = function() {
+      $scope.unsupportedLayers = gnPrint.getUnsupportedLayerTypes($scope.map);
+
       var initMapEvents = function() {
         deregister = [
           $scope.map.getView().on('change:resolution', function(event) {
@@ -203,6 +205,8 @@
     };
 
     $scope.printing = false;
+
+    $scope.unsupportedLayers = gnPrint.getUnsupportedLayerTypes($scope.map);
 
     $scope.submit = function() {
       if (!$scope.printActive) {
@@ -333,11 +337,7 @@
           } else if (src instanceof ol.source.XYZ) {
             encLayer = gnPrint.encoders.layers['XYZ'].call(this,
                 layer, layerConfig, proj);
-          } else if (src instanceof ol.source.Vector ||
-              src instanceof ol.source.ImageVector) {
-            if (src instanceof ol.source.ImageVector) {
-              src = src.getSource();
-            }
+          } else if (src instanceof ol.source.Vector) {
             var features = [];
             src.forEachFeatureInExtent(ext, function(feat) {
               features.push(feat);
@@ -389,17 +389,17 @@
             scope.defaultLayout = attrs.layout;
             scope.auto = true;
             scope.activatedOnce = false;
-            
+
             scope.layersWithWhiteSpaces = false;
-            
+
             scope.$watchCollection(
                 function() {
                   return scope.map.getLayers().getArray();
-                }, 
+                },
                 function(layers) {
                   scope.layersWithWhiteSpaces = false;
                   layers.forEach(function(layer) {
-                    if(layer.getSource() 
+                    if(layer.getSource()
                         && layer.getSource() instanceof ol.source.TileWMS
                         && layer.getSource().getParams()
                         && layer.getSource().getParams().LAYERS

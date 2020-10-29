@@ -35,24 +35,24 @@
         {{('noRecordFoundWithResourceRegistered' + mode) | translate}}
     </div>
 
-    <ul class="gn-searchlayer-list">
-      <li class="gn-searchlayer"
+    <ul class="gn-searchlayer-list list-group">
+      <li class="gn-searchlayer list-group-item"
           data-ng-repeat="m in searchResults.records"
           data-ng-init="md = getMetadata(m)">
         <h3>
-          <a data-ng-href="#/metadata/{{md.getUuid()}}"
-            title="{{'openRecord' | translate}}">
-          {{md.title || md.defaultTitle}}
+          <a data-ng-click="loadMap(md.relevantMapLinks[0], md)"
+             title="{{'addMap' | translate}}">
+          {{md.resourceTitle}}
           </a>
         </h3>
         <div class="clearfix">
           <div class="gn-md-thumbnail pull-left">
             <img class="gn-img-thumbnail"
-                  alt="{{md.title || md.defaultTitle}}"
-                  data-ng-src="{{md.getThumbnails().list[0].url}}"
-                  data-ng-if="md.getThumbnails().list[0].url"/>
+                  alt="{{md.resourceTitle}}"
+                  data-ng-src="{{md.overview[0].url}}"
+                  data-ng-if="md.overview[0].url"/>
           </div>
-          <div class="pull-left">
+          <div class="">
             <ul>
                 <li data-ng-repeat="link in md.relevantLinks">
                   <a data-ng-click="addToMap(link)">
@@ -66,9 +66,17 @@
                 </li>
               </ul>
           </div>
+
+          <br/>
+          <a class=""
+             ng-href="#/metadata/{{md.uuid}}"
+             title="{{'openRecord' | translate}}" translate>
+            openRecord
+          </a>
         </div>
       </li>
     </ul>
+    <br/>
     <div data-ng-show="searchResults.records.length > 0">
       <div class="pull-right"
             data-gn-pagination="paginationInfo"

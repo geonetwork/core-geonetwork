@@ -29,7 +29,7 @@
   <xsl:template match="/">
     <html>
       <head>
-        <link href="../../catalog/lib/style/bootstrap-3.0.1/bootstrap.less" rel="stylesheet/less"
+        <link href="../../catalog/lib/style/bootstrap/less/bootstrap.less" rel="stylesheet/less"
               type="text/css"/>
         <script src="../../catalog/lib/less-1.4.1.min.js"></script>
       </head>

@@ -30,7 +30,7 @@ import java.util.logging.Level;
 
 import jeeves.server.context.ServiceContext;
 
-import org.geotools.factory.Hints;
+import org.geotools.util.factory.Hints;
 import org.geotools.referencing.factory.epsg.FactoryUsingWKT;
 import org.opengis.referencing.operation.CoordinateOperationAuthorityFactory;
 

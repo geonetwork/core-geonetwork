@@ -31,6 +31,7 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ import static org.junit.Assert.assertEquals;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(inheritLocations = true, locations = {"classpath*:http-request-factory-context.xml"})
+@ContextConfiguration(inheritLocations = true, locations = {"classpath*:http-request-factory-context.xml", "classpath*:domain-repository-test-context.xml"})
 public class TestIso19139SchematronDefinition extends AbstractSchematronTest {
     @Autowired
     protected ConfigurableApplicationContext _applicationContext;
@@ -65,6 +66,8 @@ public class TestIso19139SchematronDefinition extends AbstractSchematronTest {
         ApplicationContextHolder.set(_applicationContext);
     }
 
+    // TODOES
+    @Ignore
     @SuppressWarnings("unchecked")
     @Test
     public void testAllSchematrons() throws Exception {

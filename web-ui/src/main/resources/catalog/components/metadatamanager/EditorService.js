@@ -632,12 +632,12 @@
              return defer.promise;
            },
            view: function(md) {
-             window.open('../../?uuid=' + md['geonet:info'].uuid,
+             window.open('../../?uuid=' + md.uuid,
              'gn-view');
            },
            edit: function(md) {
              location.href = 'catalog.edit?#/metadata/' +
-             md['geonet:info'].id;
+             md.id;
            },
            getRecord: function(uuid) {
              var defer = $q.defer();

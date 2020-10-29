@@ -1,13 +1,11 @@
-
 package org.fao.geonet.api.records.model.validation;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -26,8 +24,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -41,10 +37,8 @@ public class Reports {
     /**
      * Gets the value of the report property.
      *
-     * @return
-     *     possible object is
-     *     {@link Report }
-     *
+     * @return possible object is
+     * {@link Report }
      */
     public List<Report> getReport() {
         if (report == null) {
@@ -56,10 +50,8 @@ public class Reports {
     /**
      * Sets the value of the report property.
      *
-     * @param value
-     *     allowed object is
-     *     {@link Report }
-     *
+     * @param value allowed object is
+     *              {@link Report }
      */
     public void setReport(List<Report> value) {
         this.report = value;

@@ -24,7 +24,6 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.MapServer;
-import org.fao.geonet.domain.StatusValue;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
@@ -34,7 +33,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface MapServerRepository
     extends GeonetRepository<MapServer, Integer>,
-    MapServerRepositoryCustom,
     JpaSpecificationExecutor<MapServer> {
     MapServer findOneById(int id);
 }

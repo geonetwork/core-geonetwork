@@ -32,7 +32,7 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.persistence.criteria.*;
 
 /**
- * Specifications for selecting {@link org.fao.geonet.domain.SchematronCriteria}
+ * Specification for selecting {@link org.fao.geonet.domain.SchematronCriteria}
  *
  * Created by Jesse on 2/12/14.
  */

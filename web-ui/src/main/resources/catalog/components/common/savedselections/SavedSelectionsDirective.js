@@ -34,7 +34,7 @@
 
       var searchRecordsInSelection = function(uuid, records) {
         // TODO: Redirect to search app if not in a search page
-        $location.path('/search').search('_uuid', uuid.join(' or '));
+        $location.path('/search').search('uuid', uuid);
       };
       return {
         // Actions defined for each type of list to
@@ -66,8 +66,8 @@
                 angular.forEach(md.getLinksByType('OGC:WMS'), function(link) {
                   if (gnExternalViewer.isEnabled()) {
                     gnExternalViewer.viewService({
-                      id: md.getId(),
-                      uuid: md.getUuid()
+                      id: md.id,
+                      uuid: md.uuid
                     }, {
                       url: link.url,
                       type: 'wms',
@@ -133,9 +133,9 @@
    */
   module.directive('gnSavedSelections', [
     'gnSearchManagerService', 'gnSavedSelectionConfig',
-    '$http', '$q', '$rootScope', '$translate',
+    '$http', '$q', '$rootScope', '$translate', 'Metadata',
     function(gnSearchManagerService, gnSavedSelectionConfig,
-             $http, $q, $rootScope, $translate) {
+             $http, $q, $rootScope, $translate, Metadata) {
 
       // List of persistent selections
       // and user records in each selections
@@ -170,18 +170,24 @@
 
         // TODO: Handle case when there is
         // too many items in the saved selections
-        gnSearchManagerService.search(
-            'q?_content_type=json&buildSummary=false&from=1&to=200&' +
-            'fast=index&_uuid=' +
-            allRecords.join(' or ')).then(
+        $http.post('../api/search/records/_search', {
+              "_source": {"includes": [
+                  "uuid", "root", "resourceTitle*", "isTemplate"]},
+              "from": 0,
+              "size": 2000,
+              "query": {
+                "bool" : {
+                  "must": [
+                    {"terms": {"uuid": allRecords}}
+                  ]
+                }
+              }}, {cache: true}).then(
             function(r) {
               var foundRecords = [];
-              angular.forEach(r.metadata, function(md) {
-                if (md) {
-                  var uuid = md['geonet:info'].uuid;
-                  selections.records[uuid] = md;
-                  foundRecords.push(uuid);
-                }
+              angular.forEach(r.data.hits.hits, function(md) {
+                var uuid = md._source.uuid;
+                selections.records[uuid] = new Metadata(md);
+                foundRecords.push(uuid);
               });
 
               // Identify records which have been deleted
@@ -405,6 +411,11 @@
         scope.isSavedSelectionEnabled =
           gnGlobalSettings.gnCfg.mods.search.savedSelection.enabled;
 
+
+        if (!scope.isSavedSelectionEnabled) {
+          return;
+        }
+
         scope.$watch('user', function(n, o) {
           if (n !== o || scope.selections === null) {
             scope.selections = null;
@@ -457,10 +468,14 @@
          function link(scope, element, attrs, controller) {
            scope.selectionsWithRecord = [];
            scope.selections = {};
-           scope.uuid = scope.record['geonet:info'].uuid;
+           scope.uuid = scope.record.uuid;
            scope.isSavedSelectionEnabled =
              gnGlobalSettings.gnCfg.mods.search.savedSelection.enabled;
 
+
+           if (!scope.isSavedSelectionEnabled) {
+             return;
+           }
            $rootScope.$on('savedSelectionsUpdate', function(e, n, o) {
              scope.selections = n;
              // Check in which selection this record is in

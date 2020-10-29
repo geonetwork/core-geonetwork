@@ -18,16 +18,15 @@
 //===	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //===
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: GeoNetwork@fao.org
+//===	Rome - Italy. email: geonetwork@osgeo.org
 //=============================================================================
 
 package org.fao.geonet.services.feedback;
 
-import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
@@ -45,10 +44,11 @@ import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
 
 //=============================================================================
 
@@ -198,9 +198,9 @@ public class AddLimitations implements Service {
         //--- now get the users name, organisation and email address to
         //--- prepopulate the feedback form (if they are logged in)
         if (session.getUserId() != null) {
-            User user = context.getBean(UserRepository.class).findOne(session.getUserIdAsInt());
-            if (user != null) {
-                Element elRec = user.asXml();
+            Optional<User> user = context.getBean(UserRepository.class).findById(session.getUserIdAsInt());
+            if (user.isPresent()) {
+                Element elRec = user.get().asXml();
                 elBrief.setName("record");
                 response.addContent(elRec.cloneContent());
             }
@@ -209,5 +209,3 @@ public class AddLimitations implements Service {
         return response;
     }
 }
-
-//=============================================================================

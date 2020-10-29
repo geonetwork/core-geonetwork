@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNotNull;
 public class OperationAllowedTest extends AbstractOperationsAllowedTest {
     @Test
     public void testGetGroup() {
-        OperationAllowed operationAllowed = _opAllowRepo.findOne(_opAllowed1.getId());
+        OperationAllowed operationAllowed = _opAllowRepo.findById(_opAllowed1.getId()).get();
         assertNotNull(operationAllowed);
         assertEquals(_opAllowed1.getId().getGroupId(), operationAllowed.getId().getGroupId());
     }

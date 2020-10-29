@@ -1,24 +1,18 @@
-
 package org.fao.geonet.api.records.model.validation;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.math.BigInteger;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSchemaType;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.math.BigInteger;
 
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -38,8 +32,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -82,11 +74,9 @@ public class Report {
 
     /**
      * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getId() {
         return id;
@@ -94,11 +84,9 @@ public class Report {
 
     /**
      * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setId(String value) {
         this.id = value;
@@ -106,11 +94,9 @@ public class Report {
 
     /**
      * Gets the value of the displayPriority property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
+     *
+     * @return possible object is
+     * {@link BigInteger }
      */
     public BigInteger getDisplayPriority() {
         return displayPriority;
@@ -118,11 +104,9 @@ public class Report {
 
     /**
      * Sets the value of the displayPriority property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link BigInteger }
      */
     public void setDisplayPriority(BigInteger value) {
         this.displayPriority = value;
@@ -130,11 +114,9 @@ public class Report {
 
     /**
      * Gets the value of the label property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getLabel() {
         return label;
@@ -142,11 +124,9 @@ public class Report {
 
     /**
      * Sets the value of the label property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setLabel(String value) {
         this.label = value;
@@ -154,11 +134,9 @@ public class Report {
 
     /**
      * Gets the value of the error property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
+     *
+     * @return possible object is
+     * {@link BigInteger }
      */
     public BigInteger getError() {
         return error;
@@ -166,11 +144,9 @@ public class Report {
 
     /**
      * Sets the value of the error property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link BigInteger }
      */
     public void setError(BigInteger value) {
         this.error = value;
@@ -178,11 +154,9 @@ public class Report {
 
     /**
      * Gets the value of the success property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getSuccess() {
         return success;
@@ -190,11 +164,9 @@ public class Report {
 
     /**
      * Sets the value of the success property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setSuccess(String value) {
         this.success = value;
@@ -202,11 +174,9 @@ public class Report {
 
     /**
      * Gets the value of the total property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getTotal() {
         return total;
@@ -214,11 +184,9 @@ public class Report {
 
     /**
      * Sets the value of the total property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setTotal(String value) {
         this.total = value;
@@ -226,11 +194,9 @@ public class Report {
 
     /**
      * Gets the value of the requirement property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getRequirement() {
         return requirement;
@@ -238,11 +204,9 @@ public class Report {
 
     /**
      * Sets the value of the requirement property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setRequirement(String value) {
         this.requirement = value;
@@ -250,11 +214,9 @@ public class Report {
 
     /**
      * Gets the value of the patterns property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Patterns }
-     *     
+     *
+     * @return possible object is
+     * {@link Patterns }
      */
     public Patterns getPatterns() {
         return patterns;
@@ -262,11 +224,9 @@ public class Report {
 
     /**
      * Sets the value of the patterns property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Patterns }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link Patterns }
      */
     public void setPatterns(Patterns value) {
         this.patterns = value;
@@ -283,6 +243,7 @@ public class Report {
 
     /**
      * Sets the value of schematronVerificationError property.
+     *
      * @param schematronVerificationError the error message.
      */
     public void setSchematronVerificationError(String schematronVerificationError) {

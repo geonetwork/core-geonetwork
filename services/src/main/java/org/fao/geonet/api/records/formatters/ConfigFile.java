@@ -23,11 +23,6 @@
 
 package org.fao.geonet.api.records.formatters;
 
-import org.fao.geonet.Constants;
-import org.fao.geonet.utils.IO;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
@@ -38,6 +33,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.fao.geonet.Constants;
+import org.fao.geonet.utils.IO;
 
 public class ConfigFile {
     private static final String CONFIG_PROPERTIES_FILENAME = "config.properties";
@@ -53,7 +52,7 @@ public class ConfigFile {
     private static final String DEPENDS_ON = "dependsOn";
     private static final String PUBLISHED = "published";
 
-    private Properties config;
+    private final Properties config;
 
     /**
      * Create a new Config file reading the config.properties file from the specific formatter dir, general formatter
@@ -64,7 +63,6 @@ public class ConfigFile {
      * @param searchParentDir {@code true} if config.properties in the parent folders must be included.
      * @param schemaDir       the schema root folder.
      * @throws IOException thrown if there are problems reading the config files.
-     *
      * @see ConfigFile#CONFIG_PROPERTIES_FILENAME
      */
     public ConfigFile(Path bundleDir, boolean searchParentDir, Path schemaDir) throws IOException {
@@ -99,6 +97,7 @@ public class ConfigFile {
             }
         }
     }
+
 
     public String getLang(String defaultLang) {
         if (config.containsKey(FIXED_LANG_CONFIG_PROP)) {

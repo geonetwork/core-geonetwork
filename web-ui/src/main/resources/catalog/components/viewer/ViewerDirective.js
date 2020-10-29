@@ -99,7 +99,7 @@
               if(gnViewerSettings.mapConfig.switcherProjectionList.length < 2) {
                 scope.disabledTools.projectionSwitcher = true;
               }
-              
+
               /** wps process tabs */
               scope.wpsTabs = {
                 byUrl: true,
@@ -291,21 +291,23 @@
                   }
                 }
 
-                if (activateCmd || addCmd) {
+                // Define which tool is active
+                var toolCmd = $location.search()['tool'];
+                if (toolCmd) {
+                  scope.activeTools[$location.search()['tool']] = true;
+                }
+
+                if (activateCmd || addCmd || toolCmd) {
                   // Replace location with action by a stateless path
                   // to not being able to replay the action with browser
                   // history.
                   $location.path('/map')
                       .search('add', null)
                       .search('activate', null)
+                      .search('tool', null)
                       .replace();
                 }
 
-
-                // Define which tool is active
-                if ($location.search()['tool']) {
-                  scope.activeTools[$location.search()['tool']] = true;
-                }
 
                 if ($location.search()['extent']) {
                   scope.map.getView().fit(
@@ -380,7 +382,6 @@
                   scope.selectedWps.url = openedTool.url;
                 }
 
-
                 openedTool.name = '';
               }, true);
 
@@ -400,6 +401,81 @@
         }
       };
     }]);
+
+  module.directive('gnMapMousePosition', function() {
+    return {
+      restrict: 'A',
+      replace: true,
+      templateUrl : '../../catalog/components/viewer/partials/mouseposition.html',
+      controller: ['gnViewerSettings', 'hotkeys', 'gnAlertService', '$translate', '$scope',
+        function(gnViewerSettings, hotkeys, gnAlertService, $translate, scope) {
+
+        scope.switchMousePosition = function() {
+          scope.displayMousePosition = !scope.displayMousePosition;
+        };
+
+        scope.displayMousePosition = false;
+        if (gnViewerSettings.mapConfig.disabledTools.mousePosition === false) {
+
+          scope.coordinateFormats = ['DD', 'DMS'];
+          scope.coordinateFormat = scope.coordinateFormats[0];
+          scope.coordinateFormatPrecision = 4;
+          scope.projectionList =
+            gnViewerSettings.mapConfig.projectionList.flatMap(function(p) {
+            return p.code.endsWith(':4326') ?
+              [].concat(angular.extend({format: 'DD'}, p),
+                        angular.extend({format: 'DMS'}, p)) :
+              angular.extend({format: 'DD'}, p);});
+          scope.coordinateProjectionCode = scope.projectionList[0].code;
+          scope.displayMousePosition = true;
+          scope.mousePosition = '';
+
+          scope.setMousePositionFormat = function(f) {
+            scope.coordinateFormat = f;
+          }
+
+          scope.setMousePositionProjection = function(c) {
+            scope.coordinateProjectionCode = c.code;
+            scope.coordinateFormat = c.format;
+            scope.mousePositionControl.setProjection(c.code);
+          }
+
+          scope.mousePositionControl = new ol.control.MousePosition({
+            coordinateFormat: function(c) {
+              scope.mousePosition =
+                scope.coordinateFormat === 'DD' ?
+                  ol.coordinate.format(c,'{x}, {y}', scope.coordinateFormatPrecision) :
+                  ol.coordinate.toStringHDMS(c,scope.coordinateFormatPrecision);
+              return scope.mousePosition;
+            },
+            projection: scope.coordinateProjectionCode,
+            target: document.getElementById('gn-map-mouse-position'),
+            undefinedHTML: '&nbsp;'
+          });
+          scope.map.addControl(scope.mousePositionControl);
+
+
+          hotkeys.bindTo(scope)
+            .add({
+              combo: 'c',
+              description: $translate.instant('copyMousePosition'),
+              callback: function(event) {
+                if (scope.mousePosition != '') {
+                  navigator.clipboard.writeText(scope.mousePosition).then(function() {
+                    gnAlertService.addAlert({
+                      msg: $translate.instant(
+                        "mousePositionCopiedToClipboard",
+                        {position: scope.mousePosition}),
+                      type: 'success'
+                    }, 2);
+                  });
+                }
+              }
+            });
+        }
+      }]
+    };
+  });
 
   // TODO : to remove those directives when ngeo allow null class
   module.directive('giBtnGroup', function() {

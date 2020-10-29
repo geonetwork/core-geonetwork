@@ -127,7 +127,6 @@
     </xsl:choose>
   </xsl:template>
 
-
   <!-- Template used to return a translation if one found,
        or the text in default metadata language
        or the first non empty text element.

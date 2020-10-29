@@ -25,7 +25,7 @@ package org.fao.geonet.api.records.formatters.cache;
 
 /**
  * Controls which requests should be cached by the {@link org.fao.geonet.api.records.formatters.cache.FormatterCache}.
- *
+ * <p>
  * For example which formatters to cache, what types (only html and xml).
  *
  * @author Jesse on 3/6/2015.

@@ -24,7 +24,6 @@
 package org.fao.geonet.services.resources.handlers;
 
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -40,7 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Class that implements resource upload custom behavior.
- *
+ * <p>
  * - Deletes the resource. - Stores delete resource information for reporting.
  *
  * @author josegar74

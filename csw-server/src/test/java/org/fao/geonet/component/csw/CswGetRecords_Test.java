@@ -29,9 +29,9 @@ import org.fao.geonet.Assert;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
-import org.fao.geonet.kernel.search.AbstractLanguageSearchOrderIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -44,13 +44,14 @@ import java.util.List;
  * <p/>
  * Created by Jesse on 1/27/14.
  */
-@ContextConfiguration(inheritLocations = true, locations = "classpath:csw-integration-test-context.xml")
 public class CswGetRecords_Test extends AbstractCoreIntegrationTest {
     private static final String field = "title";
     @Autowired
     private GetRecords _getRecords;
 
+    // TODOES
     @Test
+    @Ignore
     public void test_IsEqualIsNotEqualTo() throws Exception {
         final ServiceContext serviceContext = createServiceContext();
         serviceContext.setLanguage(null);

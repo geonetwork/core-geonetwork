@@ -28,7 +28,7 @@ package org.fao.geonet.api.records.formatters.groovy.template;
  * replacement of:
  *
  * <code>{{text | filter}}</code>
- *
+ * <p>
  * Will result in the model value "text" being retrieved from the model and then the filter with the
  * name "filter" will process the value to give the final value.
  *

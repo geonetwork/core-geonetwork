@@ -25,16 +25,12 @@ package org.fao.geonet.web;
 
 import jeeves.constants.Jeeves;
 
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.repository.SourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -46,17 +42,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicationContextFromServletContext;
 
 /**
  * Handles requests where there is no locale and a redirect to a correct (and localized) service is
@@ -126,7 +116,7 @@ public class LocaleRedirects {
         if (checkPortalExist(portal, !accept.startsWith(ACCEPT_VALUE))) {
             return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, portal));
         } else {
-            if (sourceRepository.findByType(SourceType.portal).size() == 0) {
+            if (sourceRepository.findByType(SourceType.portal, null).size() == 0) {
                 return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, NodeInfo.DEFAULT_NODE));
             }
             // Redirect to list of portal page if more than one or the default if only one
@@ -160,7 +150,7 @@ public class LocaleRedirects {
         if (checkPortalExist(portal, !accept.startsWith(ACCEPT_VALUE))) {
             return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, portal));
         } else {
-            if (sourceRepository.findByType(SourceType.subportal).size() == 0) {
+            if (sourceRepository.findByType(SourceType.subportal, null).size() == 0) {
                 return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, NodeInfo.DEFAULT_NODE));
             }
             // Redirect to list of portal page if more than one or the default if only one
@@ -180,11 +170,11 @@ public class LocaleRedirects {
             // This is the default node
             return true;
         }
-        final Source one = sourceRepository.findOne(portal);
-        if (one == null) {
+        final Optional<Source> one = sourceRepository.findById(portal);
+        if (!one.isPresent()) {
             List<String> portalList = new ArrayList<>();
             portalList.add(NodeInfo.DEFAULT_NODE);
-            sourceRepository.findByType(SourceType.subportal).forEach(e -> {
+            sourceRepository.findByType(SourceType.subportal, null).forEach(e -> {
                 portalList.add(e.getUuid());
             });
             if (throwException) {
@@ -231,7 +221,9 @@ public class LocaleRedirects {
 
     private String createServiceUrl(HttpServletRequest request, String service, String lang, String node) {
         node = node == null ? currentNode.getId() : node;
-
+        if (node.equals("accessDenied.jsp")) {
+            node = NodeInfo.DEFAULT_NODE;
+        }
         final Enumeration parameterNames = request.getParameterNames();
         StringBuilder headers = new StringBuilder();
         while (parameterNames.hasMoreElements()) {

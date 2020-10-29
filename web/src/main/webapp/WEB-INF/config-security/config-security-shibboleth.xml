@@ -26,11 +26,14 @@
 <beans
   xmlns:ctx="http://www.springframework.org/schema/context"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:util="http://www.springframework.org/schema/util"
   xsi:schemaLocation="http://www.springframework.org/schema/beans
-          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/beans/spring-beans.xsd
           http://www.springframework.org/schema/context
-          http://www.springframework.org/schema/context/spring-context-3.0.xsd"
-  xmlns="http://www.springframework.org/schema/beans">
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/util
+          http://www.springframework.org/schema/util/spring-util.xsd"
+	xmlns="http://www.springframework.org/schema/beans">
 
 
   <ctx:property-override
@@ -56,30 +59,56 @@
     <property name="usernameKey" value="${shibbolethConfiguration.usernameKey}"/>
     <property name="surnameKey" value="${shibbolethConfiguration.surnameKey}"/>
     <property name="firstnameKey" value="${shibbolethConfiguration.firstnameKey}"/>
+    <property name="organisationKey" value="${shibbolethConfiguration.organisationKey}"/>
     <property name="profileKey" value="${shibbolethConfiguration.profileKey}"/>
     <property name="groupKey" value="${shibbolethConfiguration.groupKey}"/>
     <property name="emailKey" value="${shibbolethConfiguration.emailKey}"/>
-    
+    <property name="roleGroupKey" value="${shibbolethConfiguration.roleGroupKey}"/>
+
     <property name="defaultGroup" value="${shibbolethConfiguration.defaultGroup}"/>
 
     <property name="updateProfile" value="${shibbolethConfiguration.updateProfile}"/>
     <property name="updateGroup" value="${shibbolethConfiguration.updateGroup}"/>
-   
+
     <property name="arraySeparator" value="${shibbolethConfiguration.arraySeparator}"/>
-  </bean>
-  
-  <bean id="filterChainFilters" class="java.util.ArrayList">
-    <constructor-arg>
-      <list>
-        <ref bean="securityContextPersistenceFilter"/>
-        <ref bean="logoutFilter"/>
-        <ref bean="shibbolethPreAuthFilter"/>
-        <ref bean="requestCacheFilter"/>
-        <ref bean="anonymousFilter"/>
-        <ref bean="sessionMgmtFilter"/>
-        <ref bean="exceptionTranslationFilter"/>
-        <ref bean="filterSecurityInterceptor"/>
-      </list>
-    </constructor-arg>
-  </bean>
+    <property name="roleGroupSeparator" value="${shibbolethConfiguration.roleGroupSeparator}"/>
+
+		<property name="hideLogin"
+			value="${shibbolethConfiguration.hideLogin}" />
+	</bean>
+
+	<bean id="filterChainFilters" class="java.util.ArrayList">
+		<constructor-arg
+			ref="#{ '${shibbolethConfiguration.hideLogin}' == 'true' ? 'shibbolethFilterChanFiltersExclusive' : 'shibbolethFilterChanFiltersInclusive' }">
+		</constructor-arg>
+	</bean>
+
+	<util:list id="shibbolethFilterChanFiltersExclusive">
+		<ref bean="securityContextPersistenceFilter" />
+		<ref bean="logoutFilter" />
+		<ref bean="shibbolethPreAuthFilter" />
+		<ref bean="requestCacheFilter" />
+		<ref bean="anonymousFilter" />
+		<ref bean="sessionMgmtFilter" />
+		<ref bean="exceptionTranslationFilter" />
+		<ref bean="filterSecurityInterceptor" />
+	</util:list>
+
+	<!-- This list should be kept updated based on the one on config-security-core.xml -->
+	<util:list id="shibbolethFilterChanFiltersInclusive">
+		<ref bean="securityContextPersistenceFilter" />
+		<!-- To disable csrf security (not recommended) comment the following line -->
+		<ref bean="csrfFilter" />
+		<!-- To disable csrf security (not recommended) comment the upper line -->
+		<ref bean="logoutFilter" />
+		<ref bean="preAuthenticationFilter" />
+		<ref bean="shibbolethPreAuthFilter" />
+		<ref bean="basicAuthenticationFilter" />
+		<ref bean="formLoginFilter" />
+		<ref bean="requestCacheFilter" />
+		<ref bean="anonymousFilter" />
+		<ref bean="sessionMgmtFilter" />
+		<ref bean="exceptionTranslationFilter" />
+		<ref bean="filterSecurityInterceptor" />
+	</util:list>
 </beans>

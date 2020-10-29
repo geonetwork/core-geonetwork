@@ -4,37 +4,39 @@
     gn-metadata-open="md"
     gn-records="searchResults.records"
     gn-formatter="formatter.defaultUrl"
-    id="gn-info-list-mw-{{md.getUuid()}}">
+    id="gn-info-list-mw-{{md.uuid}}">
     <section class="resultcard clearfix"
-             data-ng-class="md.getThumbnails().list[0].url ? 'hasThumbnail' : 'noThumbnail'">
+             data-ng-class="md.overview.length > 0 ? 'hasThumbnail' : 'noThumbnail'">
 
       <div class="title">
         <a href=""
+           title="{{md.title || md.defaultTitle}}"
            gn-metadata-open="md"
            gn-records="searchResults.records"
            gn-formatter="formatter.defaultUrl">
-          <h4>{{md.title || md.defaultTitle}}&nbsp;</h4>
+          <h4>{{md.resourceTitle}}&nbsp;</h4>
         </a>
       </div>
 
       <div class="gn-md-thumbnail">
         <a href=""
+           title="{{(md.abstract || md.defaultAbstract) | striptags}}"
            gn-metadata-open="md"
            gn-records="searchResults.records"
            gn-formatter="formatter.defaultUrl">
           <div class="gn-img-thumbnail"
-               style="background-image: url({{md.getThumbnails().list[0].url}})">
+               style="background-image: url({{md.overview[0].url}}?size=320)">
           </div>
         </a>
       </div>
 
       <div class="content">
         <div class="abstract">
-          {{md.abstract}}
+          {{md.resourceAbstract}}
         </div>
 
         <div class="introduction">
-          <span class="badge" data-ng-repeat="t in md.type">{{t | translate}}
+          <span class="badge" data-ng-repeat="t in md.resourceType track by $index">{{t | translate}}
           </span>
         </div>
       </div>

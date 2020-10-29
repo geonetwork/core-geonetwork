@@ -24,9 +24,7 @@
 package org.fao.geonet.api.regions;
 
 import com.google.common.base.Optional;
-
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SingleThesaurusFinder;
@@ -46,7 +44,6 @@ import org.jdom.JDOMException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import java.util.*;
-import java.util.List;
 import java.util.Map.Entry;
 
 public class ThesaurusRequest extends Request {
@@ -56,13 +53,13 @@ public class ThesaurusRequest extends Request {
 
     private static final CoordinateReferenceSystem WGS84 = Region.WGS84;
 
-    private WeakHashMap<String, Map<String, String>> categoryTranslations;
-    private ServiceContext serviceContext;
-    private KeywordSearchParamsBuilder searchBuilder;
-    private Thesaurus thesaurus;
-    private SingleThesaurusFinder finder;
+    private final WeakHashMap<String, Map<String, String>> categoryTranslations;
+    private final ServiceContext serviceContext;
+    private final KeywordSearchParamsBuilder searchBuilder;
+    private final Thesaurus thesaurus;
+    private final SingleThesaurusFinder finder;
 
-    private Set<String> localesToLoad;
+    private final Set<String> localesToLoad;
 
 
     public ThesaurusRequest(ServiceContext context, WeakHashMap<String, Map<String, String>> categoryTranslations, Set<String> localesToLoad, Thesaurus thesaurus) {

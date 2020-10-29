@@ -36,7 +36,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SchematronCriteriaGroup")
-@Cacheable
+//@Cacheable
 @Access(AccessType.PROPERTY)
 public class SchematronCriteriaGroup extends GeonetEntity {
     private SchematronCriteriaGroupId id;

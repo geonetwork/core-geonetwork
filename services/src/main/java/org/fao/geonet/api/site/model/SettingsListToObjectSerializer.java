@@ -26,12 +26,8 @@ package org.fao.geonet.api.site.model;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
-
-import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.domain.Setting;
-import org.fao.geonet.domain.SettingDataType;
 import org.fao.geonet.domain.SettingToObjectSerializer;
 
 import java.io.IOException;
@@ -42,7 +38,7 @@ import java.io.IOException;
 public class SettingsListToObjectSerializer extends JsonSerializer<SettingsListResponse> {
 
     @Override
-    public void serialize(SettingsListResponse settings, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+    public void serialize(SettingsListResponse settings, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
         for (Setting s : settings.getSettings()) {
             jsonGenerator.writeFieldName(s.getName());

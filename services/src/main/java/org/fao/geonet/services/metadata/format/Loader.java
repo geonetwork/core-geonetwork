@@ -1,28 +1,5 @@
 package org.fao.geonet.services.metadata.format;
 
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.services.Utils;
-import org.fao.geonet.services.metadata.Show;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.jdom.Namespace;
-
-import java.net.InetAddress;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
 /**
  * Enumeration for loader type of the service metadata.formatter You can specify the loader with the
  * param loader=show in the url. By default, the loader is SHOW which will use internal

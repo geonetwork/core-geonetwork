@@ -32,11 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -160,7 +156,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
                 //--- maybe the metadata was unretrievable
 
                 if (id != null) {
-                    dataMan.indexMetadata(id, true, null);
+                    dataMan.indexMetadata(id, true);
                 }
             }
         }
@@ -215,7 +211,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
         List<Element> categories = info.getChildren("category");
         addCategories(metadata, categories);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 

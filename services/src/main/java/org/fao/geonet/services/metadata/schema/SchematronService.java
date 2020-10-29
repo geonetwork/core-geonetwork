@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata.schema;
 
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Schematron;
@@ -39,7 +38,7 @@ import javax.annotation.Nonnull;
 
 /**
  * Load, edit, delete {@link org.fao.geonet.domain.Schematron} entities.
- *
+ * <p>
  * Created by Jesse on 2/7/14.
  */
 public class SchematronService extends AbstractSchematronService {
@@ -55,7 +54,7 @@ public class SchematronService extends AbstractSchematronService {
         if (id == null) {
             result = repository.findAllAsXml(SortUtils.createSort(Schematron_.displayPriority));
         } else {
-            final Schematron one = repository.findOne(Integer.parseInt(id));
+            final Schematron one = repository.findById(Integer.parseInt(id)).get();
             if (one == null) {
                 throw new BadParameterEx(Params.ID, id);
             }
@@ -69,7 +68,7 @@ public class SchematronService extends AbstractSchematronService {
     @Override
     protected boolean exists(Element params, ServiceContext context) throws Exception {
         String id = Util.getParam(params, Params.ID);
-        return context.getBean(SchematronRepository.class).exists(Integer.parseInt(id));
+        return context.getBean(SchematronRepository.class).existsById(Integer.parseInt(id));
     }
 
     @Override

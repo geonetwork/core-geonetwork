@@ -350,20 +350,22 @@
 
 
           <!-- User entry form -->
-          <form id="gn-create-thesaurus" name="gn-create-thesaurus"
+          <form id="gn-create-thesaurus" name="gnCreateThesaurus"
                 data-ng-show="importAs == 'new'">
             <input type="hidden" name="_csrf" value="{{csrf}}"/>
-            <div class="form-group">
+            <div class="form-group" data-ng-class="gnCreateThesaurus.title.$error.required ? 'has-error' : ''">
               <label class="control-label" data-translate="">thesaurusTitle</label>
               <input type="text" name="title" class="form-control" data-ng-disabled="!isNew()"
-                    id="gn-thesaurus-title" data-ng-model="thesaurusSelected.title"/>
+                     id="gn-thesaurus-title" data-ng-model="thesaurusSelected.title"
+                     data-ng-required="true" />
             </div>
 
-            <div class="form-group">
+            <div class="form-group" data-ng-class="gnCreateThesaurus.filename.$error.required ? 'has-error' : ''">
               <label class="control-label" data-translate="">thesaurusIdentifier</label>
               <input type="text" name="filename" class="form-control" data-ng-disabled="!isNew()"
-                    data-ng-keyup="computeThesaurusNs()"
-                    data-ng-model="thesaurusSelected.filename"/>
+                     data-ng-keyup="computeThesaurusNs()"
+                     data-ng-model="thesaurusSelected.filename"
+                     data-ng-required="true"/>
             </div>
             <div class="form-group">
               <label class="control-label" data-translate="">thesaurusClass</label>
@@ -374,11 +376,12 @@
                 lang="lang"></div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" data-ng-class="gnCreateThesaurus.defaultNamespace.$error.required ? 'has-error' : ''">
               <label class="control-label" data-translate="">thesaurusNamespace</label>
               <input type="text" name="defaultNamespace" class="form-control"
-                    data-ng-disabled="!isNew()"
-                    data-ng-model="thesaurusSelected.defaultNamespace"/>
+                     data-ng-disabled="!isNew()"
+                     data-ng-model="thesaurusSelected.defaultNamespace"
+                     data-ng-required="true"/>
               <p class="help-block" data-ng-show="isNew() && thesaurusSuggestedNs != ''"
                 data-ng-click="useSuggestedNs()">
                 {{"use"|translate}} {{thesaurusSuggestedNs}} {{"asThesaurusIdentifier"|translate}}
@@ -393,6 +396,7 @@
           </button>
           <button type="button" class="btn btn-primary"
                   data-ng-show="importAs == 'new'" data-ng-click="createThesaurus()"
+                  data-ng-disabled="!gnCreateThesaurus.$valid"
           ><span class="fa fa-plus"></span> {{"createThesaurus"|translate}}
           </button>
           <button type="button" class="btn btn-primary" data-ng-hide="importAs == 'new'"

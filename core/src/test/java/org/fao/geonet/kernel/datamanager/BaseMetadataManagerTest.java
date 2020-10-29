@@ -128,7 +128,7 @@ public class BaseMetadataManagerTest extends AbstractCoreIntegrationTest {
     }
 
     @Test
-    public void testSpecifications() throws Exception {
+    public void testSpecification() throws Exception {
 
         assertTrue(metadataUtils
             .findAll(MetadataSpecs.hasType(MetadataType.TEMPLATE)).isEmpty());

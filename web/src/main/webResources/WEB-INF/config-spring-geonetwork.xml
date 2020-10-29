@@ -35,15 +35,15 @@
   <context:property-placeholder location="${app.properties}"
                                 order="1"
                                 file-encoding="UTF-8"
-                                ignore-unresolvable="true" />
+                                ignore-unresolvable="true"/>
 
   <import resource="config-spring-env.xml"/>
   <import resource="config-security/config-security.xml"/>
-  <import resource="config-summary.xml"/>
   <import resource="classpath:JZkitApplicationContext.xml"/>
 
   <import resource="config-db/initial_data.xml"/>
   <import resource="config-print/config-spring-print.xml"/>
+  <import resource="config-etf-validator.xml"/>
 
   <!-- For database configuration look in the config-node configuration files (config-node/srv.xml) -->
 
@@ -67,9 +67,6 @@
   <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
   </bean>
-
-  <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory"
-        lazy-init="true"/>
 
   <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
     <property name="numberOfConcurrentRequests" value="30"/>
@@ -186,39 +183,11 @@
     <constructor-arg value="${ldap.base.search.filter}" />
   </bean>
 
-
-  <bean id="slashSplitClassifier"
-        class="org.fao.geonet.kernel.search.classifier.Split" lazy-init="true">
-    <constructor-arg name="regex" value="\s*?/\s*?"/>
-  </bean>
-
-  <!--
-  Example configuration for hierarchical facet based on
-  the GeoNetwork region thesaurus or GEMET.
-
-  Do not forget to add facet configuration on config-summary.xml
-
-  <bean id="regionKeywordClassifier"
-        class="org.fao.geonet.kernel.search.classifier.TermLabel" lazy-init="true">
-    <constructor-arg name="finder" ref="ThesaurusManager"/>
-    <constructor-arg name="conceptScheme" value="http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox"/>
-    <constructor-arg name="langCode" value="eng"/>
-  </bean>
-
-  <bean id="gemetKeywordClassifier"
-        class="org.fao.geonet.kernel.search.classifier.TermLabel" lazy-init="true">
-    <constructor-arg name="finder" ref="ThesaurusManager"/>
-    <constructor-arg name="conceptScheme" value="http://geonetwork-opensource.org/gemet"/>
-    <constructor-arg name="langCode" value="eng"/>
-  </bean>
-  -->
-
-
-    <!-- Comment the following beans to get non-draft metadata and uncomment the beans below -->
-    <!--<bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer"/>
-    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager"/>
-    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils"/>-->
-    <bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer"/>
-    <bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>
-    <bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>
+  <!-- Comment the following beans to get non-draft metadata and uncomment the beans below -->
+  <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer"/>
+  <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager"/>
+  <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils"/>
+  <!--<bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer"/>
+  <bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>
+  <bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>-->
 </beans>

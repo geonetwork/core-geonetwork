@@ -29,10 +29,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.MetadataSourceInfo;
-import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
 import org.jdom.Element;
 import org.springframework.data.domain.Page;
@@ -45,7 +42,6 @@ import org.springframework.data.repository.NoRepositoryBean;
  *
  * @author Jesse
  */
-@NoRepositoryBean
 public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
 
     /**
@@ -61,12 +57,11 @@ public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
      * <p/>
      * The id needs to be convertable to an integer
      * <p/>
-     * This is just short for repository.findOne(Integer.parseInt(id))
+     * This is just short for repository.findById(Integer.parseInt(id)).get()
      *
      * @param id the id in string form instead of integer.
      */
-    @Nullable
-    T findOne(@Nonnull String id);
+
 
     /**
      * Find the list of Metadata Ids and changes dates for the metadata. <p> When constructing sort
@@ -78,7 +73,7 @@ public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
      * @return List of &lt;MetadataId, changeDate&gt;
      */
     @Nonnull
-    Page<Pair<Integer, ISODate>> findAllIdsAndChangeDates(@Nonnull Pageable pageable);
+    Page<Pair<Integer, ISODate>> findIdsAndChangeDates(@Nonnull Pageable pageable);
 
     /**
      * Find all ids of metadata that match the specification.
@@ -87,7 +82,7 @@ public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
      * @return all ids
      */
     @Nonnull
-    List<Integer> findAllIdsBy(@Nonnull Specification<T> specs);
+    List<Integer> findIdsBy(@Nonnull Specification<T> specs);
 
     /**
      * Find the metadata that has the oldest change date.
@@ -95,7 +90,7 @@ public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
      * @return the metadata with the oldest change date
      */
     @Nullable
-    T findOneOldestByChangeDate();
+    Metadata findOldestByChangeDate();
 
     /**
      * Load the source info objects for all the metadata selected by the spec.
@@ -103,12 +98,12 @@ public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
      * @param spec the specification identifying the metadata of interest
      * @return a map of metadataId -> SourceInfo
      */
-    Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<T> spec);
+    Map<Integer, MetadataSourceInfo> findSourceInfo(Specification<T> spec);
 
     /**
      * Load only the basic info for a metadata. Used in harvesters, mostly.
      */
-    List<SimpleMetadata> findAllSimple(String harvestUuid);
+    List<SimpleMetadata> findSimple(String harvestUuid);
 
     /**
      * Find all metadata on specified page. Returns the uuid, changedate and schemaid
@@ -117,7 +112,7 @@ public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
      * @return all metadata harvested by the identified harvester.
      */
     @Nullable
-    Element findAllUuidsAndChangeDatesAndSchemaId(List<Integer> ids, @Nonnull Pageable pageable);
+    Element findUuidsAndChangeDatesAndSchemaId(List<Integer> ids, @Nonnull Pageable pageable);
 
     /**
      * Find all metadata. Returns the uuid, changedate and schemaid
@@ -126,6 +121,6 @@ public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
      * @return all metadata harvested by the identified harvester.
      */
     @Nullable
-    Element findAllUuidsAndChangeDatesAndSchemaId(List<Integer> ids);
-    
+    Element findUuidsAndChangeDatesAndSchemaId(List<Integer> ids);
+
 }

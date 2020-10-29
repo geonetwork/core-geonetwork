@@ -4,7 +4,7 @@
               <input type="hidden" name="_csrf" value="{{csrf}}"/>
     <div class="onlinesrc-container">
       <div class="form-group">
-        <div class="col-sm-10">
+        <div class="col-sm-12">
           <div class="input-group">
             <span class="input-group-addon"><i
               class="fa fa-search"/></span>
@@ -13,8 +13,12 @@
                    type="text"
                    data-ng-model="searchObj.any"
                    data-ng-model-options="modelOptions"
-                   placeholder="{{'search' | translate}}" autofocus=""/>
+                   autocomplete="off"
+                   placeholder="{{'anyPlaceHolder' | translate}}"
+                   aria-label="{{'anyPlaceHolder' | translate}}"
+                   autofocus=""/>
           </div>
+          <div data-gn-remote-record-selector=""></div>
         </div>
       </div>
       <div data-gn-search-form-results=""
@@ -30,7 +34,7 @@
               data-gn-click-and-spin="gnOnlinesrc.linkToMd(mode, selectRecords[0], popupid)"
               data-ng-class="{'disabled': (selectRecords.length < 1)}">
         <i class="fa gn-icon-{{mode}}"/>
-        <i class="icon-external-link"></i>
+        <i class="icon-external-link"></i>&nbsp;
         {{btn.label}}
       </button>
       <div data-gn-need-help="user-guide/associating-resources/linking-records.html"

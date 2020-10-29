@@ -118,7 +118,7 @@ public class HarvesterSetting extends GeonetEntity {
     @Nullable
     HarvesterSetting getParent() {
         return _parent;
-    }                         
+    }
 
     /**
      * Set the parent setting object for this setting. The may be null.
@@ -163,7 +163,7 @@ public class HarvesterSetting extends GeonetEntity {
      */
     @Lob
     @Column(name = "value", nullable = true)
-    @Type(type = "org.hibernate.type.StringClobType")
+    @Type(type = "org.hibernate.type.TextType")
     // this is a work around for postgres so postgres can correctly load clobs
     public
     @Nullable

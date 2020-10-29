@@ -195,6 +195,15 @@
           return input.split(splitChar)[splitIndex];
         }
       })
+
+      .filter('capitalize', function() {
+        return function(input) {
+          return (typeof input === 'string' && input.length > 0) ?
+            input.charAt(0).toUpperCase() + input.substr(1) :
+            input;
+        }
+      })
+
       /**
        * Filter to call window.encodeURIComponent.
        *

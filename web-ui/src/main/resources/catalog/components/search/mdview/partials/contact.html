@@ -9,19 +9,19 @@
       <div class="col-md-8">
         <address>
           <strong data-ng-if="::c.website">
-            <a data-ng-href="{{::c.website}}">{{c.org}}</a><br/>
+            <a data-ng-href="{{::c.website}}">{{c.organisation}}</a><br/>
           </strong>
           <strong data-ng-if="::!c.website">
-            {{c.org}}<br/>
+            {{c.organisation}}<br/>
           </strong>
           <div data-ng-if="c.email != ''">
             <a href="mailto:{{c.email}}">
-              <span data-ng-hide="c.name">{{c.email}}</span>
-              <span data-ng-show="c.name">{{c.name}}</span>
+              <span data-ng-hide="c.individual">{{c.email}}</span>
+              <span data-ng-show="c.individual">{{c.individual}}</span>
               <span data-ng-show="c.position">({{c.position}})</span>
             </a>
           </div>
-          <div data-ng-if="c.email === ''">{{c.name}}
+          <div data-ng-if="c.email === ''">{{c.individual}}
             <span data-ng-show="c.position">({{c.position}})</span>
           </div>
           <div data-ng-if="c.address != ''">{{c.address}}</div>
@@ -46,28 +46,28 @@
     <h3>
       <i class="fa fa-envelope"></i>
       <span>
-      {{roles}}
+      {{roles | translate}}
       </span>
     </h3>
-    <div class="row" data-ng-repeat="(org, contact) in contactByRole | groupBy:'org'">
+    <div class="row" data-ng-repeat="(organisation, contact) in contactByRole | groupBy:'organisation'">
       <div class="col-md-8">
         <address>
           <strong data-ng-if="::c.website">
-            <a data-ng-href="{{::c.website}}">{{c.org}}</a><br/>
+            <a data-ng-href="{{::c.website}}">{{c.organisation}}</a><br/>
           </strong>
           <strong data-ng-if="::!c.website">
-            {{c.org}}<br/>
+            {{c.organisation}}<br/>
           </strong>
 
           <span data-ng-repeat="c in contact track by $index">
             <span data-ng-if="c.email != ''">
               <a href="mailto:{{c.email}}">
-                <span data-ng-hide="c.name">{{c.email}}</span>
-                <span data-ng-show="c.name">{{c.name}}</span>
+                <span data-ng-hide="c.individual">{{c.email}}</span>
+                <span data-ng-show="c.individual">{{c.individual}}</span>
                 <span data-ng-show="c.position">({{c.position}})</span>
               </a>
             </span>
-            <span data-ng-if="c.email === ''">{{c.name}}
+            <span data-ng-if="c.email === ''">{{c.individual}}
               <span data-ng-show="c.position">({{c.position}})</span>
             </span>
             <span data-ng-if="!$last">,</span>
@@ -113,17 +113,17 @@
         </span>
         <ul>
           <li ng-repeat="(roles, contactGroupByRole) in contactGroupByAddress | groupBy:'roles'">
-            {{roles }}:<br/>
+            {{roles | translate}}:<br/>
             <span data-ng-repeat="c in contactGroupByRole track by $index">
               <span data-ng-if="c.email != ''">
                 <i class="fa fa-fw fa-envelope"></i>
                 <a href="mailto:{{c.email}}">
-                  <span data-ng-hide="c.name">{{c.email}}</span>
-                  <span data-ng-show="c.name">{{c.name}}</span>
+                  <span data-ng-hide="c.individual">{{c.email}}</span>
+                  <span data-ng-show="c.individual">{{c.individual}}</span>
                   <span data-ng-show="c.position">({{c.position}})</span>
                 </a>
               </span>
-              <span data-ng-if="c.email === ''">{{c.name}}
+              <span data-ng-if="c.email === ''">{{c.individual}}
                 <span data-ng-show="c.position">({{c.position}})</span>
               </span>
               <br>

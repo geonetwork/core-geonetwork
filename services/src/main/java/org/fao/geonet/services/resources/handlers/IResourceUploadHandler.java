@@ -23,23 +23,21 @@
 
 package org.fao.geonet.services.resources.handlers;
 
-import java.io.InputStream;
-
 import jeeves.server.context.ServiceContext;
-
 import org.jdom.Element;
+
+import java.io.InputStream;
 
 public interface IResourceUploadHandler {
     /**
-     *
      * @param context
      * @param params
      * @param metadataId
      * @throws ResourceHandlerException
      */
     @Deprecated
-    public void onUpload(ServiceContext context, Element params, int metadataId,
-                         String fileName, double fileSize) throws ResourceHandlerException;
+    void onUpload(ServiceContext context, Element params, int metadataId,
+                  String fileName, double fileSize) throws ResourceHandlerException;
 
     /**
      * @param inputStream
@@ -50,9 +48,8 @@ public interface IResourceUploadHandler {
      * @param fname
      * @param parseDouble
      */
-    public void onUpload(InputStream inputStream, ServiceContext context,
-                         String access, String overwrite, int parseInt, String fname,
-                         double parseDouble) throws ResourceHandlerException;
+    void onUpload(InputStream inputStream, ServiceContext context,
+                  String access, String overwrite, int parseInt, String fname,
+                  double parseDouble) throws ResourceHandlerException;
 
-    ;
 }

@@ -26,8 +26,8 @@ package org.fao.geonet.kernel.harvest.harvester;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.DailyRollingFileAppender;
-import org.apache.log4j.PatternLayout;
+import org.apache.log4j.EnhancedPatternLayout;
+import org.apache.log4j.FileAppender;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
@@ -70,6 +70,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -80,7 +81,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,6 +96,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -200,14 +202,20 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
             directory = d.getParent() + File.separator;
         }
 
-        DailyRollingFileAppender fa = new DailyRollingFileAppender();
+        FileAppender fa = new FileAppender();
         fa.setName(harvesterName);
         String logfile = directory + "harvester_" + packageType + "_"
             + harvesterName + "_"
             + dateFormat.format(new Date(System.currentTimeMillis()))
             + ".log";
         fa.setFile(logfile);
-        fa.setLayout(new PatternLayout("%d{ISO8601} %-5p [%c] - %m%n"));
+
+        String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE);
+        if (StringUtils.isBlank(timeZoneSetting)) {
+            timeZoneSetting = TimeZone.getDefault().getID();
+        }
+        fa.setLayout(new EnhancedPatternLayout("%d{yyyy-MM-dd'T'HH:mm:ss,SSSZ}{" + timeZoneSetting +"} %-5p [%c] - %m%n"));
+
         fa.setThreshold(log.getThreshold());
         fa.setAppend(true);
         fa.activateOptions();
@@ -247,7 +255,8 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
     private void initInfo(ServiceContext context) {
         final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
         Specification<HarvestHistory> spec = HarvestHistorySpecs.hasHarvesterUuid(getParams().getUuid());
-        Pageable pageRequest = new PageRequest(0, 1, new Sort(Sort.Direction.DESC, SortUtils.createPath(HarvestHistory_.harvestDate)));
+        Pageable pageRequest = PageRequest.of(0, 1,
+            Sort.by(Sort.Direction.DESC, SortUtils.createPath(HarvestHistory_.harvestDate)));
         final Page<HarvestHistory> page = historyRepository.findAll(spec, pageRequest);
         if (page.hasContent()) {
             final HarvestHistory history = page.getContent().get(0);
@@ -269,6 +278,32 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
     private void doUnschedule() throws SchedulerException {
         getScheduler().deleteJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
+    }
+
+    /**
+     * Deletes the harvester job from the scheduler and schedule it again.
+     * @throws SchedulerException
+     */
+    public void doReschedule() throws SchedulerException {
+        doUnschedule();
+        doSchedule();
+    }
+
+    /**
+     * Get the timezone of the harvester cron trigger.
+     * @return a time zone.
+     * @throws SchedulerException
+     */
+    public TimeZone getTriggerTimezone() throws SchedulerException {
+        Scheduler scheduler = getScheduler();
+        List<? extends Trigger> jobTriggers = scheduler.getTriggersOfJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
+        for (Trigger t : jobTriggers) {
+            if (t instanceof CronTrigger) {
+                CronTrigger ct = (CronTrigger) t;
+                return ct.getTimeZone();
+            }
+        }
+        return null;
     }
 
     public static Scheduler getScheduler() throws SchedulerException {
@@ -296,7 +331,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                 final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
                 final Resources resources = context.getBean(Resources.class);
 
-                final Specifications<? extends AbstractMetadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
+                final Specification<? extends AbstractMetadata> ownedByHarvester = Specification.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
                 Set<String> sources = new HashSet<>();
                 for (Integer id : metadataRepository.findAllIdsBy(ownedByHarvester)) {
                     sources.add(metadataUtils.findOne(id).getSourceInfo().getSourceId());
@@ -306,10 +341,12 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                 // Remove all sources related to the harvestUuid if they are not linked to any record anymore
                 for (String sourceUuid : sources) {
                     Long ownedBySource =
-                        metadataRepository.count(Specifications.where(MetadataSpecs.hasSource(sourceUuid)));
-                    if (ownedBySource == 0 && !sourceUuid.equals(params.getUuid()) && sourceRepository.exists(sourceUuid)) {
+                        metadataRepository.count(Specification.where(MetadataSpecs.hasSource(sourceUuid)));
+                    if (ownedBySource == 0
+                        && !sourceUuid.equals(params.getUuid())
+                        && sourceRepository.existsById(sourceUuid)) {
                         removeIcon(resources, sourceUuid);
-                        sourceRepository.delete(sourceUuid);
+                        sourceRepository.deleteById(sourceUuid);
                     }
                 }
 
@@ -583,7 +620,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         UserRepository repository = this.context.getBean(UserRepository.class);
         User user = null;
         if (StringUtils.isNotEmpty(ownerId)) {
-            user = repository.findOne(ownerId);
+            user = repository.findById(Integer.parseInt(ownerId)).get();
         }
 
         // for harvesters created before owner was added to the harvester code,
@@ -803,7 +840,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
     private void doDestroy(final Resources resources) {
         removeIcon(resources, getParams().getUuid());
 
-        context.getBean(SourceRepository.class).delete(getParams().getUuid());
+        context.getBean(SourceRepository.class).deleteById(getParams().getUuid());
         // FIXME: Should also delete the categories we have created for servers
     }
 
@@ -1075,7 +1112,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
     public String getOwnerEmail() {
         String ownerId = getParams().getOwnerIdGroup();
 
-        final Group group = context.getBean(GroupRepository.class).findOne(Integer.parseInt(ownerId));
+        final Group group = context.getBean(GroupRepository.class).findById(Integer.parseInt(ownerId)).get();
         return group.getEmail();
     }
 

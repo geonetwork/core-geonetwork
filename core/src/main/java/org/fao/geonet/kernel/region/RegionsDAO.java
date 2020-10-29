@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.region;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 import jeeves.server.context.ServiceContext;
 

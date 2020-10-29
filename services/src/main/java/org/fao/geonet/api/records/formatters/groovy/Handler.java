@@ -35,7 +35,7 @@ import java.util.List;
  * @author Jesse on 10/15/2014.
  */
 public abstract class Handler extends Selectable implements Comparable<Handler> {
-    private Closure handlerFunction;
+    private final Closure handlerFunction;
     private boolean group = false;
 
     public Handler(int priority, Closure handlerFunction) {

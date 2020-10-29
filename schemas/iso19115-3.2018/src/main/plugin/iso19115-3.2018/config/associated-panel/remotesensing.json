@@ -1,0 +1,290 @@
+{
+  "config": {
+    "display": "select",
+    "types": [
+      {
+        "group": "onlineDiscover",
+        "label": "onlineDiscoverThumbnail",
+        "sources": {
+          "filestore": true,
+          "thumbnailMaker": true
+        },
+        "icon": "fa gn-icon-thumbnail",
+        "fileStoreFilter": "*.{jpg,JPG,jpeg,JPEG,png,PNG,gif,GIF}",
+        "process": "thumbnail-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false,
+            "param": "thumbnail_url"
+          },
+          "name": {
+            "param": "thumbnail_desc"
+          }
+        }
+      },
+      {
+        "group": "directAccess",
+        "label": "localFilePath",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "NETWORK:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "directAccess",
+        "label": "ftp",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "FTP",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "directAccess",
+        "label": "onlineDownloadWWW",
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "directAccess",
+        "label": "thredds",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "THREDDS",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "services",
+        "label": "onlineDiscoverWMS",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": "OGC:WMS or WMS or view"
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "OGC:WMS",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "services",
+        "label": "Opendap",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "OPENDAP",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "Tools",
+        "label": "Naiad",
+        "copyLabel": "name",
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "information",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "documents",
+        "label": "UserGuide",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {
+            "value": "User guide"
+          },
+          "desc": {},
+          "function": {
+            "value": "information",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "documents",
+        "label": "ProcessingAndValidation",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {
+            "value": "Processing and validation"
+          },
+          "desc": {},
+          "function": {
+            "value": "information",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "documents",
+        "label": "Other document",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "information",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      }
+    ]
+  }
+}

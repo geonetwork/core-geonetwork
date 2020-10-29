@@ -31,7 +31,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.11.0-SNAPSHOT</version>
+    <version>4.0.1-SNAPSHOT</version>
   </parent>
 
 
@@ -39,7 +39,7 @@
   <!-- Module Description -->
   <!-- =========================================================== -->
   <groupId>org.geonetwork-opensource</groupId>
-  <artifactId>cachingxslt</artifactId>
+  <artifactId>gn-cachingxslt</artifactId>
   <packaging>jar</packaging>
   <name>Caching xslt module</name>
   <description>
@@ -65,7 +65,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>common</artifactId>
+      <artifactId>gn-common</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

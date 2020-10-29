@@ -81,13 +81,13 @@ public class OwsUtils {
                 Short.class)) {
             type = "integer";
         } else if (descriptor.getType().getBinding().getSuperclass().isAssignableFrom(
-                        com.vividsolutions.jts.geom.Geometry.class)
+                        org.locationtech.jts.geom.Geometry.class)
                 || descriptor.getType().getBinding().getSuperclass().isAssignableFrom(
-                        com.vividsolutions.jts.geom.GeometryCollection.class)
+                        org.locationtech.jts.geom.GeometryCollection.class)
                 || descriptor.getType().getBinding().isAssignableFrom(
-                        com.vividsolutions.jts.geom.Geometry.class)
+                        org.locationtech.jts.geom.Geometry.class)
                 || descriptor.getType().getBinding().isAssignableFrom(
-                        com.vividsolutions.jts.geom.GeometryCollection.class)) {
+                        org.locationtech.jts.geom.GeometryCollection.class)) {
             type = "geometry";
         } else {
             type = "string";

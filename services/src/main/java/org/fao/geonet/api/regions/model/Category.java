@@ -6,6 +6,9 @@ import javax.xml.bind.annotation.XmlAttribute;
  * Created by francois on 21/06/16.
  */
 public class Category {
+    private String id;
+    private String label;
+
     public Category(String id, String label) {
         this.id = id;
         this.label = label;
@@ -28,7 +31,4 @@ public class Category {
     public void setLabel(String label) {
         this.label = label;
     }
-
-    private String id;
-    private String label;
 }

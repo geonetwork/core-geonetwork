@@ -25,11 +25,8 @@ package org.fao.geonet.api.users.transfer;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
@@ -38,10 +35,9 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.jdom.Element;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -65,7 +61,7 @@ public class OwnershipUtils {
         if (!us.isAuthenticated())
             return new ArrayList<Element>();
 
-        List<User> users = context.getBean(UserRepository.class).findAll(Specifications.not(UserSpecs.hasProfile(Profile.RegisteredUser)));
+        List<User> users = context.getBean(UserRepository.class).findAll(Specification.not(UserSpecs.hasProfile(Profile.RegisteredUser)));
         return getUsers(context, us, users);
     }
 

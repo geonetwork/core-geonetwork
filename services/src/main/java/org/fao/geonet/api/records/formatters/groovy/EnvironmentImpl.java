@@ -25,25 +25,15 @@ package org.fao.geonet.api.records.formatters.groovy;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexableField;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopFieldCollector;
+import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterParams;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.search.IndexAndTaxonomy;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -57,8 +47,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-
-import jeeves.server.context.ServiceContext;
 
 /**
  * The actual Environment implementation.
@@ -77,7 +65,7 @@ public class EnvironmentImpl implements Environment {
     private final ServiceContext serviceContext;
     private final WebRequest webRequest;
     private final FormatterWidth width;
-    private Multimap<String, String> indexInfo = null;
+    private final Multimap<String, String> indexInfo = null;
 
     public EnvironmentImpl(FormatterParams fparams, IsoLanguagesMapper mapper) {
         jdomMetadata = fparams.metadata;
@@ -201,30 +189,33 @@ public class EnvironmentImpl implements Environment {
     @Override
     public synchronized Map<String, Collection<String>> getIndexInfo() throws Exception {
         if (this.indexInfo == null) {
-            final SearchManager searchManager = getBean(SearchManager.class);
+            final EsSearchManager searchManager = getBean(EsSearchManager.class);
 
-            try (IndexAndTaxonomy newIndexReader = searchManager.getNewIndexReader(getLang3())) {
-                TopFieldCollector collector = TopFieldCollector.create(Sort.RELEVANCE, 1, true, false, false, false);
-                IndexSearcher searcher = new IndexSearcher(newIndexReader.indexReader);
-                Query query = new TermQuery(new Term("_id", String.valueOf(getMetadataId())));
-                searcher.search(query, collector);
-                ScoreDoc[] topDocs = collector.topDocs().scoreDocs;
+            throw new NotImplementedException("Not implemented in ES");
 
-                Multimap<String, String> fields = HashMultimap.create();
-                for (ScoreDoc scoreDoc : topDocs) {
-                    Document doc = searcher.doc(scoreDoc.doc);
-                    for (IndexableField field : doc) {
-                        fields.put(field.name(), field.stringValue());
-                    }
-                }
-                this.indexInfo = fields;
-            }
+//            try (IndexAndTaxonomy newIndexReader = searchManager.getNewIndexReader(getLang3())) {
+//                TopFieldCollector collector = TopFieldCollector.create(Sort.RELEVANCE, 1, true, false, false, false);
+//                IndexSearcher searcher = new IndexSearcher(newIndexReader.indexReader);
+//                Query query = new TermQuery(new Term("_id", String.valueOf(getMetadataId())));
+//                searcher.search(query, collector);
+//                ScoreDoc[] topDocs = collector.topDocs().scoreDocs;
+//
+//                Multimap<String, String> fields = HashMultimap.create();
+//                for (ScoreDoc scoreDoc : topDocs) {
+//                    Document doc = searcher.doc(scoreDoc.doc);
+//                    for (IndexableField field : doc) {
+//                        fields.put(field.name(), field.stringValue());
+//                    }
+//                }
+//                this.indexInfo = fields;
+//            }
 
         }
         return Collections.unmodifiableMap(this.indexInfo.asMap());
     }
 
-    @Override public ServiceContext getContext() {
+    @Override
+    public ServiceContext getContext() {
         return this.serviceContext;
     }
 

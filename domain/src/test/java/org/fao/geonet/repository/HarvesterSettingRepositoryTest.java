@@ -220,7 +220,7 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
         HarvesterSetting child3 = _repo.save(newSetting().setParent(parent).setName("2"));
         _repo.save(newSetting().setParent(child3).setName("4"));
 
-        _repo.delete(parent.getId());
+        _repo.deleteById(parent.getId());
 
         assertEquals(0, _repo.count());
     }
@@ -250,7 +250,7 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
         assertEquals("3", list.get(2).getName());
         assertEquals("4", list.get(3).getName());
 
-        List<HarvesterSetting> list2 = _repo.findAll(new Sort(Direction.DESC, SortUtils.createPath(Setting_.name)));
+        List<HarvesterSetting> list2 = _repo.findAll(Sort.by(Direction.DESC, SortUtils.createPath(Setting_.name)));
         assertEquals("4", list2.get(0).getName());
         assertEquals("3", list2.get(1).getName());
         assertEquals("2", list2.get(2).getName());

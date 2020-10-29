@@ -26,7 +26,6 @@ package org.fao.geonet.services.relations;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataRelationId;
 import org.fao.geonet.repository.MetadataRelationRepository;
@@ -63,7 +62,7 @@ public class Remove extends NotInReadOnlyModeService {
             params, context, Params.CHILD_UUID, Params.CHILD_ID));
 
         final MetadataRelationRepository relationRepository = context.getBean(MetadataRelationRepository.class);
-        relationRepository.delete(new MetadataRelationId(parentId, childId));
+        relationRepository.deleteById(new MetadataRelationId(parentId, childId));
 
         return new Element(Jeeves.Elem.RESPONSE);
     }

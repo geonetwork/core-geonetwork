@@ -26,6 +26,13 @@ package org.fao.geonet.api.records.model;
 import org.fao.geonet.domain.StatusValueType;
 
 public class MetadataStatusParameter {
+    private StatusValueType type;
+    private int status;
+    private String changeMessage;
+    private String dueDate;
+    private String closeDate;
+    private Integer owner;
+
     public StatusValueType getType() {
         return type;
     }
@@ -73,11 +80,4 @@ public class MetadataStatusParameter {
     public void setOwner(Integer owner) {
         this.owner = owner;
     }
-
-    private StatusValueType type;
-    private int status;
-    private String changeMessage;
-    private String dueDate;
-    private String closeDate;
-    private Integer owner;
 }

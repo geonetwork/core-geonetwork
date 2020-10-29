@@ -41,7 +41,7 @@ public class LocalizedStringSerializer extends JsonSerializer<ILocalizedStringPr
     public void serialize(
         ILocalizedStringProperty localizedStringProperty,
         JsonGenerator jgen,
-        SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+        SerializerProvider serializerProvider) throws IOException {
         jgen.writeStartObject();
         for (LocalizedString l : localizedStringProperty.getValue()) {
             jgen.writeStringField(l.getLang(), l.getValue());

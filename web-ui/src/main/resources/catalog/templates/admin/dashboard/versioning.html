@@ -8,10 +8,10 @@
         <div data-gn-history=""></div>
 
         <!-- VCS history - old features not much supported now. -->
-        <section>
-          <h2><i class="fa fa-fw fa-chevron-left"/><span data-translate="">vcshistory</span></h2>
+        <fieldset>
+          <legend data-translate="">vcshistory</legend>
 
-          <div class="panel-body" data-ng-controller="GnVcsController">
+          <div data-ng-controller="GnVcsController">
             <div class="alert alert-info"
                  data-ng-show="logs.length === 0"
                  data-translate="">
@@ -25,7 +25,7 @@
               </li>
             </ul>
           </div>
-        </section>
+        </fieldset>
       </div>
     </div>
   </div>

@@ -31,16 +31,16 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.11.0-SNAPSHOT</version>
+    <version>4.0.1-SNAPSHOT</version>
   </parent>
 
 
   <!-- =========================================================== -->
   <!-- Module Description -->
   <!-- =========================================================== -->
-  <artifactId>common</artifactId>
+  <artifactId>gn-common</artifactId>
   <packaging>jar</packaging>
-  <name>common utils</name>
+  <name>GeoNetwork common utils</name>
   <description>
     Utility classes used by many or all geonetwork modules.
   </description>
@@ -58,6 +58,16 @@
     <dependency>
       <groupId>org.jdom</groupId>
       <artifactId>jdom</artifactId>
+      <exclusions>
+         <exclusion>
+           <groupId>maven-plugins</groupId>
+           <artifactId>maven-cobertura-plugin</artifactId>
+         </exclusion>
+         <exclusion>
+           <groupId>maven-plugins</groupId>
+           <artifactId>maven-findbugs-plugin</artifactId>
+         </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>jdbm</groupId>
@@ -126,6 +136,10 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>

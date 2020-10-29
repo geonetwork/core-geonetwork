@@ -32,10 +32,6 @@
                 exclude-result-prefixes="#all"
                 version="2.0">
 
-  <xsl:param name="displayInfo"/>
-
-  <!-- =================================================================== -->
-
   <!-- Convert ISO profile elements to their base type -->
   <xsl:template match="*[@gco:isoType]">
     <xsl:element name="{@gco:isoType}">
@@ -46,6 +42,8 @@
   <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
     <xsl:variable name="info" select="geonet:info"/>
     <xsl:element name="{if (@gco:isoType) then @gco:isoType else name()}">
+      <xsl:apply-templates select="@*"/>
+
       <xsl:apply-templates select="gmd:fileIdentifier"/>
       <xsl:apply-templates select="gmd:language"/>
       <xsl:apply-templates select="gmd:characterSet"/>
@@ -60,12 +58,6 @@
       <xsl:apply-templates select="gmd:identificationInfo"/>
       <xsl:apply-templates select="gmd:distributionInfo"/>
       <xsl:apply-templates select="gmd:dataQualityInfo"/>
-
-      <!-- GeoNetwork elements added when resultType is equal to results_with_summary -->
-      <xsl:if test="$displayInfo = 'true'">
-        <xsl:copy-of select="$info"/>
-      </xsl:if>
-
     </xsl:element>
   </xsl:template>
 
@@ -141,8 +133,6 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- =================================================================== -->
-
   <xsl:template match="gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='originator'
     or gmd:role/gmd:CI_RoleCode/@codeListValue='author'
     or gmd:role/gmd:CI_RoleCode/@codeListValue='publisher']">
@@ -151,23 +141,17 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- =================================================================== -->
-
   <xsl:template match="gmd:MD_LegalConstraints">
     <xsl:copy>
       <xsl:apply-templates select="gmd:accessConstraints"/>
     </xsl:copy>
   </xsl:template>
 
-  <!-- =================================================================== -->
-
   <xsl:template match="gmd:MD_BrowseGraphic">
     <xsl:copy>
       <xsl:apply-templates select="gmd:fileName"/>
     </xsl:copy>
   </xsl:template>
-
-  <!-- =================================================================== -->
 
   <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification|
                        gmd:identificationInfo/*[contains(@gco:isoType, 'MD_DataIdentification')]|
@@ -197,8 +181,6 @@
     </xsl:element>
   </xsl:template>
 
-  <!-- =================================================================== -->
-
   <xsl:template match="srv:SV_OperationMetadata">
     <xsl:copy>
       <xsl:apply-templates select="srv:operationName"/>
@@ -206,10 +188,6 @@
       <xsl:apply-templates select="srv:connectPoint"/>
     </xsl:copy>
   </xsl:template>
-
-  <!-- =================================================================== -->
-  <!-- === copy template === -->
-  <!-- =================================================================== -->
 
   <xsl:template match="@*|node()">
     <xsl:copy>

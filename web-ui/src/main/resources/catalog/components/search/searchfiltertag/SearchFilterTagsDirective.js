@@ -179,25 +179,62 @@
                 }
 
                 // general case
-                scope.currentFilters.push({
-                  key: filterKey,
-                  value: value
-                });
+                if (filterKey==="query_string"){
+                  angular.forEach(JSON.parse(value), function(facetValues, facetKey) {
+                    if (typeof facetValues === 'object') {
+                      angular.forEach(facetValues, function (values, facetValuesKey) {
+                        var elem = {};
+                        elem[facetValuesKey]=values;
+                        scope.currentFilters.push({
+                          key: facetKey,
+                          value: elem
+                        })
+                      })
+                    }
+                    else {
+                      scope.currentFilters.push({
+                        key: facetKey,
+                        value: facetValues
+                      })
+                    }
+                  })
+                }
+                if (scope.isSpecificParameter(filterKey)) {
+                  scope.currentFilters.push({
+                    key: filterKey,
+                    value: value
+                  })
+                }
               }
             }, true);
 
+            scope.isSpecificParameter = function(key) {
+              // full text search and uuid on selection only
+              // are not like facet.
+              return key === 'any' || key === 'uuid';
+            }
+
+            scope.isNegative = function(value) {
+              return value === false
+                     || (value && value.match && value.match(/^-\(.*\)$/) != null);
+            };
+
             scope.removeFilter = function(filter) {
-              if (filter.isFacet) {
-                var facetQuery = removeFacet(filter.facetKey, getSearchParams()['facet.q']);
-                setSearchParameter('facet.q', facetQuery);
+              removeFacetElement=[];
+              removeFacetElement.push(filter.key);
+              var keys = Object.keys(filter.value);
+              if (angular.isObject(filter.value) && keys[0] != 0) {
+                removeFacetElement.push(keys[0])
+                ngSearchFormCtrl.updateState(removeFacetElement, filter.value[keys[0]]);
               } else {
-                setSearchParameter(filter.key, null);
+                removeFacetElement.push(filter.value)
+                ngSearchFormCtrl.updateState(removeFacetElement, true);
               }
             };
 
             scope.removeAll = function() {
               removeAllFilters();
-            }
+            };
           }
         };
 
@@ -207,26 +244,18 @@
   module.filter('translatearray', ['$translate', function($translate) {
 
     var filterFunc = function(input, separator) {
-      var sep = separator;
-      if (!separator) {
-        sep = ' or ';
+      var result;
+      if (angular.isString(input) && input.startsWith("+dateStamp:")) {
+        result = input.split(/\[(.*?)\]/)[1]
       }
-
-      if (!input || !angular.isString(input)) {
-        return input;
+      else if (angular.isString(input)){
+        result = input;
       }
-
-      var tokens = input.split(sep);
-
-      var result = '';
-      angular.forEach(tokens, function(token, index) {
-        result += $translate.instant(token.trim());
-        if (index != tokens.length - 1) {
-          var sepTranslated = $translate.instant(sep.trim());
-          result += ' ' + sepTranslated + ' ';
-        }
-      });
-
+      else {
+        angular.forEach(input, function(value, key) {
+          result = key
+        })
+      }
       return result;
     };
 

@@ -23,17 +23,15 @@
 
 package org.fao.geonet.kernel.datamanager.draft;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
-
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataDraft;
+import org.fao.geonet.domain.MetadataSourceInfo;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
-import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.Updater;
@@ -42,7 +40,10 @@ import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
-import jeeves.server.context.ServiceContext;
+import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DraftMetadataManager extends BaseMetadataManager implements IMetadataManager {
 
@@ -82,19 +83,13 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
                 if (countDraft > 0) {
                     throw new Exception("The metadata " + findOne.getUuid() + " has a draft version. Cancel the modification to be able to remove the approved version.");
                 }
-
             }
 
             deleteMetadataFromDB(context, metadataId);
-
-            // Notifies the metadata change to metatada notifier service
-            if (isMetadata) {
-                context.getBean(MetadataNotifierManager.class).deleteMetadata(metadataId, findOne.getUuid(), context);
-            }
         }
 
         // --- update search criteria
-        getSearchManager().delete(metadataId + "");
+        getSearchManager().delete(String.format("+id:%s", metadataId));
         // _entityManager.flush();
         // _entityManager.clear();
     }
@@ -105,7 +100,7 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
     public synchronized void updateMetadataOwner(final int id, final String owner, final String groupOwner)
         throws Exception {
 
-        if (metadataDraftRepository.exists(id)) {
+        if (metadataDraftRepository.existsById(id)) {
             metadataDraftRepository.update(id, new Updater<MetadataDraft>() {
                 @Override
                 public void apply(@Nonnull MetadataDraft entity) {
@@ -169,8 +164,8 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
     @Override
     public void delete(Integer id) {
         super.delete(id);
-        if (metadataDraftRepository.exists(id)) {
-            metadataDraftRepository.delete(id);
+        if (metadataDraftRepository.existsById(id)) {
+            metadataDraftRepository.deleteById(id);
         }
     }
 
@@ -199,7 +194,7 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
             // That's fine, maybe we are on the draft side
         }
         try {
-            res.putAll(metadataDraftRepository.findAllSourceInfo((Specification<MetadataDraft>) specs));
+            res.putAll(metadataDraftRepository.findSourceInfo((Specification<MetadataDraft>) specs));
         } catch (ClassCastException t) {
             // That's fine, maybe we are on the metadata side
         }

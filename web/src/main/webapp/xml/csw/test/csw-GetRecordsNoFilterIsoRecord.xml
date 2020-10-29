@@ -28,13 +28,11 @@
                 resultType="results"
                 outputSchema="http://www.isotc211.org/2005/gmd">
   <csw:Query typeNames="gmd:MD_Metadata">
+    <csw:ElementSetName>summary</csw:ElementSetName>
     <!--
         <csw:ElementSetName>brief</csw:ElementSetName>
         <csw:ElementSetName>summary</csw:ElementSetName>
         <csw:ElementSetName>full</csw:ElementSetName>
     -->
-    <csw:Constraint version="1.1.0">
-      <Filter xmlns="http://www.opengis.net/ogc"/>
-    </csw:Constraint>
   </csw:Query>
 </csw:GetRecords>

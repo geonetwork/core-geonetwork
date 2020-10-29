@@ -65,8 +65,8 @@ public class MetadataIdentifierTemplateRepositoryTest extends AbstractSpringData
         MetadataIdentifierTemplate mdUrnTemplate2 = newMetadataUrnTemplate();
         mdUrnTemplate2 = _repo.save(mdUrnTemplate2);
 
-        assertEquals(mdUrnTemplate2, _repo.findOne(mdUrnTemplate2.getId()));
-        assertEquals(mdUrnTemplate1, _repo.findOne(mdUrnTemplate1.getId()));
+        assertEquals(mdUrnTemplate2, _repo.findById(mdUrnTemplate2.getId()).get());
+        assertEquals(mdUrnTemplate1, _repo.findById(mdUrnTemplate1.getId()).get());
     }
 
     @Test

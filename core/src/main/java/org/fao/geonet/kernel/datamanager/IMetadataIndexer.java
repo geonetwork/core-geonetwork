@@ -36,7 +36,7 @@ import jeeves.server.context.ServiceContext;
 
 /**
  * Interface to handle all indexing operations
- * 
+ *
  * @author delawen
  *
  */
@@ -57,7 +57,7 @@ public interface IMetadataIndexer {
 
     /**
      * Remove the records that matches the specification
-     * 
+     *
      * @param specification
      * @return
      * @throws Exception
@@ -85,14 +85,14 @@ public interface IMetadataIndexer {
 
     /**
      * Is the platform currently indexing?
-     * 
+     *
      * @return
      */
     boolean isIndexing();
 
     /**
      * Index the list of records passed as parameter in order.
-     * 
+     *
      * @param metadataIds
      * @throws Exception
      */
@@ -100,17 +100,17 @@ public interface IMetadataIndexer {
 
     /**
      * Index one record defined by metadataId
-     * 
+     *
      * @param metadataId
      * @param forceRefreshReaders
-     * @param searchManager
      * @throws Exception
      */
-    void indexMetadata(String metadataId, boolean forceRefreshReaders, ISearchManager searchManager) throws Exception;
+    void indexMetadata(String metadataId, boolean forceRefreshReaders) throws Exception;
+    void indexMetadataPrivileges(String uuid, int id) throws Exception;
 
     /**
      * Start record versioning
-     * 
+     *
      * @param context
      * @param id
      * @param md
@@ -119,32 +119,16 @@ public interface IMetadataIndexer {
     void versionMetadata(ServiceContext context, String id, Element md) throws Exception;
 
     /**
-     * Reschedule the Index Optimizer Manager (Lucene)
-     * 
-     * @param beginAt
-     * @param interval
-     * @throws Exception
-     */
-    void rescheduleOptimizer(Calendar beginAt, int interval) throws Exception;
-
-    /**
-     * Disable the Index Optimizer (Lucene)
-     * 
-     * @throws Exception
-     */
-    void disableOptimizer() throws Exception;
-
-    /**
      * Helper function to avoid loop circular dependencies
-     * 
+     *
      * @param metadataUtils
      */
     void setMetadataUtils(IMetadataUtils metadataUtils);
 
     /**
      * Helper function to avoid loop circular dependencies
-     * 
-     * @param metadataUtils
+     *
+     * @param baseMetadataManager
      */
     void setMetadataManager(IMetadataManager baseMetadataManager);
 

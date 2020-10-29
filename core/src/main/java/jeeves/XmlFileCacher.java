@@ -18,25 +18,20 @@
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //===
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: GeoNetwork@fao.org
+//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
 package jeeves;
-
-import jeeves.server.overrides.ConfigurationOverrides;
 
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
-
-import javax.servlet.ServletContext;
-
-//=============================================================================
 
 public class XmlFileCacher {
     private ServletContext servletContext;
@@ -48,11 +43,6 @@ public class XmlFileCacher {
 
     private Element elem;
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
     public XmlFileCacher(Path file, Path appPath) {
         this(file, null, appPath);
     }
@@ -66,8 +56,6 @@ public class XmlFileCacher {
         this(file, 10, servletContext, appPath);
     }
 
-    //--------------------------------------------------------------------------
-
     /**
      * @param servletContext if non-null the config-overrides can be applied to the xml file when it
      *                       is loaded
@@ -78,12 +66,6 @@ public class XmlFileCacher {
         this.servletContext = servletContext;
         this.appPath = appPath;
     }
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //--------------------------------------------------------------------------
 
     public Element get() throws JDOMException, IOException {
         if (elem == null) {
@@ -109,24 +91,8 @@ public class XmlFileCacher {
         return elem;
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Protected methods
-    //---
-    //--------------------------------------------------------------------------
-
-    /**
-     * Overriding this method makes it possible a conversion to XML on the fly of files in other
-     * formats
-     */
-
     protected Element load() throws JDOMException, IOException {
         Element xml = Xml.loadFile(file);
-        ConfigurationOverrides.DEFAULT.updateWithOverrides(file.toString(), servletContext, appPath, xml);
         return xml;
     }
 }
-
-//=============================================================================
-
-

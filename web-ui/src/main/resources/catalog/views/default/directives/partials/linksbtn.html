@@ -2,7 +2,7 @@
 
   <a class="gn-md-edit-btn btn btn-default"
      data-ng-show="user.canEditRecord(md)"
-     data-ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{md['geonet:info'].uuid}}"
+     data-ng-href="catalog.edit#/metadata/{{md.id}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{md.uuid}}"
      title="{{'edit' | translate}}"
      aria-label="{{'edit' | translate}}">
     <i class="fa fa-pencil"></i>
@@ -69,7 +69,7 @@
   <button type="button"
           role="button"
           class="btn btn-default"
-          data-ng-disabled="md['geonet:info'].dynamic == 'false'"
+          data-ng-disabled="md.dynamic == 'false'"
           data-ng-if="isMapViewerEnabled && layers.length == 1"
           data-ng-click="resultviewFns.addMdLayerToMap(layers[0], md)"
           title="{{'view' | translate}}"

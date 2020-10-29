@@ -25,19 +25,14 @@ package org.fao.geonet.api.records.formatters.groovy.template;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import groovy.util.slurpersupport.GPathResult;
-
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.Constants;
 import org.springframework.beans.BeanUtils;
 
+import javax.annotation.Nonnull;
 import java.beans.PropertyDescriptor;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -45,8 +40,6 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.annotation.Nonnull;
 
 /**
  * A render context for rendering a Template Tree.

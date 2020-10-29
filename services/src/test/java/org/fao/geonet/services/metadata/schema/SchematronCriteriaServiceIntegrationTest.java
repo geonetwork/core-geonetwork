@@ -34,6 +34,8 @@ import org.fao.geonet.repository.SchematronCriteriaRepository;
 import org.jdom.Element;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.fao.geonet.domain.Pair.read;
 import static org.fao.geonet.services.metadata.schema.SchematronServiceAction.*;
 import static org.junit.Assert.*;
@@ -200,7 +202,7 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         result = createService(EXISTS).exec(params, context);
         assertEquals(Boolean.TRUE.toString(), result.getText());
 
-        final SchematronCriteria saved = context.getBean(SchematronCriteriaRepository.class).findOne(Integer.parseInt(id));
+        final SchematronCriteria saved = context.getBean(SchematronCriteriaRepository.class).findById(Integer.parseInt(id)).get();
 
         assertEquals(value, saved.getValue());
         assertEquals(criteriaType, saved.getType());
@@ -230,17 +232,17 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
             read(SchematronCriteriaService.PARAM_UI_VALUE, uivalue)
         );
 
-        assertFalse(context.getBean(SchematronCriteriaGroupRepository.class).exists(new SchematronCriteriaGroupId(newName,
+        assertFalse(context.getBean(SchematronCriteriaGroupRepository.class).existsById(new SchematronCriteriaGroupId(newName,
             schematronId)));
 
         Element result = createService(ADD).exec(params, context);
         assertSuccessfulAdd(result);
         String id = result.getChildText("id");
 
-        final SchematronCriteriaGroup found = context.getBean(SchematronCriteriaGroupRepository.class).findOne(new
+        final Optional<SchematronCriteriaGroup> found = context.getBean(SchematronCriteriaGroupRepository.class).findById(new
             SchematronCriteriaGroupId(newName, schematronId));
-        assertTrue(found != null);
-        assertEquals(SchematronRequirement.REQUIRED, found.getRequirement());
+        assertTrue(found.isPresent());
+        assertEquals(SchematronRequirement.REQUIRED, found.get().getRequirement());
 
         params = createParams(
             read(Params.ID, id)
@@ -249,7 +251,7 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         result = createService(EXISTS).exec(params, context);
         assertEquals(Boolean.TRUE.toString(), result.getText());
 
-        final SchematronCriteria saved = context.getBean(SchematronCriteriaRepository.class).findOne(Integer.parseInt(id));
+        final SchematronCriteria saved = context.getBean(SchematronCriteriaRepository.class).findById(Integer.parseInt(id)).get();
 
         assertEquals(value, saved.getValue());
         assertEquals(criteriaType, saved.getType());
@@ -280,7 +282,7 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
 
         assertEquals("ok", createService(EDIT).exec(params, context).getName());
 
-        final SchematronCriteria saved = context.getBean(SchematronCriteriaRepository.class).findOne(criteriaId);
+        final SchematronCriteria saved = context.getBean(SchematronCriteriaRepository.class).findById(criteriaId).get();
 
         assertEquals(value, saved.getValue());
         assertEquals(criteriaType, saved.getType());
@@ -304,7 +306,7 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
 
         assertEquals("ok", createService(EDIT).exec(params, context).getName());
 
-        final SchematronCriteria saved = context.getBean(SchematronCriteriaRepository.class).findOne(criteriaId);
+        final SchematronCriteria saved = context.getBean(SchematronCriteriaRepository.class).findById(criteriaId).get();
 
         assertEquals(newValue, saved.getValue());
         assertEquals(criteria.getType(), saved.getType());
@@ -329,7 +331,7 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
 
         assertEquals("ok", createService(EDIT).exec(params, context).getName());
 
-        final SchematronCriteria saved = context.getBean(SchematronCriteriaRepository.class).findOne(criteriaId);
+        final SchematronCriteria saved = context.getBean(SchematronCriteriaRepository.class).findById(criteriaId).get();
 
         assertEquals(criteria.getValue(), saved.getValue());
         assertEquals(newType, saved.getType());
@@ -370,7 +372,7 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         final int id = _group1_Name1_SchematronId1.getCriteria().get(0).getId();
 
         int badId = id + 100;
-        while (_schematronCriteriaRepository.findOne(badId) != null) {
+        while (_schematronCriteriaRepository.findById(badId).isPresent()) {
             badId++;
         }
         Element deleteParams = createParams(

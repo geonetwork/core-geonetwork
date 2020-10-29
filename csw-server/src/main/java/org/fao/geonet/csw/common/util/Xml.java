@@ -137,7 +137,6 @@ public class Xml {
         } else {
             Map<String, Object> params = new HashMap<>();
             params.put("lang", displayLanguage);
-            params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
 
             try {
                 result = org.fao.geonet.utils.Xml.transform(result, styleSheet, params);

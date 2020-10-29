@@ -23,12 +23,10 @@
 
 package org.fao.geonet.constants;
 
-import org.apache.lucene.util.Version;
+import jeeves.constants.Jeeves;
 import org.jdom.Namespace;
 
 import javax.xml.XMLConstants;
-
-import jeeves.constants.Jeeves;
 
 /**
  * TODO javadoc.
@@ -43,11 +41,7 @@ public final class Geonet {
     public static final String DEFAULT_LANGUAGE = "eng";
 
     public static final String CC_API_REST_URL = "http://api.creativecommons.org/rest/1.5/simple/chooser";
-    public static final String LUCENE_LOCALE_KEY = "_locale";
-    //
-    //--- logging
-    //
-    public static final String LANGUAGEDETECTOR = "LanguageDetector";
+
     public static final String GEONETWORK = "geonetwork";
     public static final String HARVEST_MAN = GEONETWORK + ".harvest-man";
     public static final String HARVESTER = GEONETWORK + ".harvester";
@@ -60,11 +54,8 @@ public final class Geonet {
     public static final String THESAURUS_MAN = GEONETWORK + ".thesaurus-man";
     public static final String THESAURUS = GEONETWORK + ".thesaurus";
     public static final String SEARCH_ENGINE = GEONETWORK + ".search";
-    public static final String FACET_ENGINE = GEONETWORK + ".facet";
     public static final String CUSTOM_ELEMENTSET = GEONETWORK + ".customelementset";
     public static final String INDEX_ENGINE = GEONETWORK + ".index";
-    public static final String LUCENE = GEONETWORK + ".lucene";
-    public static final String LUCENE_TRACKING = LUCENE + ".tracking";
     public static final String MEF = GEONETWORK + ".mef";
     public static final String CSW = GEONETWORK + ".csw";
     public static final String LDAP = GEONETWORK + ".ldap";
@@ -86,7 +77,6 @@ public final class Geonet {
     public static final String SEARCH_LOGGER = GEONETWORK + ".search-logger";
     public static final String THREADPOOL = GEONETWORK + ".threadpool";
     public static final String DATA_DIRECTORY = GEONETWORK + ".data.directory";
-    public static final Version LUCENE_VERSION = Version.LUCENE_4_9;
     public static final String FEEDBACK = GEONETWORK + ".feedback";
     public static final String GEOPUBLISH = GEONETWORK + ".geopublisher";
     public static final String FORMATTER = GEONETWORK + ".formatter";
@@ -102,12 +92,6 @@ public final class Geonet {
      */
     public static final class File {
         public static final String SCHEMA = "schema.xsd";
-        public static final String SCHEMATRON = "schematron.xsl";
-        public static final String SCHEMATRON_XML = "schematron_xml.xsl";
-        public static final String SCHEMATRON_VERBID = "schematron_verbid.xsl";
-        public static final String SEARCH_LUCENE = "lucene.xsl";
-        public static final String SEARCH_Z3950_CLIENT = "z3950Client.xsl";
-        public static final String SEARCH_Z3950_SERVER = "z3950Server.xsl";
         public static final String UPDATE_FIXED_INFO = "update-fixed-info.xsl";
         public static final String UPDATE_FIXED_INFO_SUBTEMPLATE = "update-fixed-info-subtemplate.xsl";
         public static final String UPDATE_CHILD_FROM_PARENT_INFO = "update-child-from-parent-info.xsl";
@@ -116,11 +100,8 @@ public final class Geonet {
         public static final String EXTRACT_SKOS_FROM_ISO19135 = "xml_iso19135ToSKOS.xsl";
         public static final String EXTRACT_DATE_MODIFIED = "extract-date-modified.xsl";
         public static final String SET_UUID = "set-uuid.xsl";
-        public static final String EXTRACT_THUMBNAILS = "extract-thumbnails.xsl";
         public static final String SET_CREATIVECOMMONS = "set-creativecommons.xsl";
         public static final String SET_DATACOMMONS = "set-datacommons.xsl";
-        public static final String SET_THUMBNAIL = "set-thumbnail.xsl";
-        public static final String UNSET_THUMBNAIL = "unset-thumbnail.xsl";
         public static final String SCHEMA_SUGGESTIONS = "schema-suggestions.xml";
         public static final String SCHEMA_SUBSTITUTES = "schema-substitutes.xml";
         public static final String SCHEMA_CONVERSIONS = "schema-conversions.xml";
@@ -130,12 +111,6 @@ public final class Geonet {
         public static final String SORT_HARVESTERS = "sort-harvesters.xsl";
         public static final String JZKITAPPLICATIONCONTEXT = "JZkitApplicationContext.xml";
         public static final String INFLATE_METADATA = "inflate-metadata.xsl";
-
-        /**
-         * Stylesheet to convert a CQL parameter to a filter.
-         */
-        public static final String CQL_TO_FILTER = "cql-to-filter.xsl";
-        public static final String FILTER_TO_LUCENE = "filter-to-lucene.xsl";
         public static final String LICENSE_ANNEX = "license-annex.html";
         public static final String LICENSE_ANNEX_XSL = "metadata-license-annex.xsl";
         public static final String METADATA_BRIEF = "metadata-brief.xsl";
@@ -221,6 +196,9 @@ public final class Geonet {
         public static final String SEARCH_REQUEST = "search.request";
         public static final String METADATA_SHOW = "metadata.show";
         public static final String METADATA_EDITING = "metadata.editing";
+        // Used to track the creation of a draft copy when the metadata is edited,
+        // to be able to remove it if the user cancels the editing without saving any change
+        public static final String METADATA_EDITING_CREATED_DRAFT = "metadata.editing.created.draft";
         public static final String METADATA_BEFORE_ANY_CHANGES = "metadata.before.any.changes";
         public static final String METADATA_EDITING_TAB = "metadata.editing.tab";
         public static final String METADATA_POSITION = "metadata.position";
@@ -501,10 +479,6 @@ public final class Geonet {
             public static final String RESULTS = "results";
             public static final String HITS = "hits";
             public static final String VALIDATE = "validate";
-            /**
-             * Contains CSW results response with a GeoNetwork summary of the current search.
-             */
-            public static final String RESULTS_WITH_SUMMARY = "results_with_summary";
             public static final String SUGGESTIONS = "suggestions";
         }
 
@@ -556,7 +530,7 @@ public final class Geonet {
      */
     public static final class Config {
         public static final String HTMLCACHE_DIR = "htmlCacheDir";
-        public static final String LUCENE_DIR = "luceneDir";
+        public static final String INDEX_CONFIG_DIR = "indexConfigDir";
         /**
          * Profiles of languages for autodetection using https://code.google.com/p/language-detection/.
          */
@@ -645,45 +619,63 @@ public final class Geonet {
         public static final Namespace SLD = Namespace.getNamespace("sld", "http://www.opengis.net/sld");
         public static final Namespace SE = Namespace.getNamespace("se", "http://www.opengis.net/se");
         public static final Namespace XML = Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
+        public static final Namespace ATOM = Namespace.getNamespace("atom", "http://www.w3.org/2005/Atom");
     }
 
     public static class IndexFieldNames {
-
         public static final String HASXLINKS = "_hasxlinks";
         public static final String XLINK = "_xlink";
         public static final String ROOT = "_root";
-        public static final String SCHEMA = "_schema";
-        public static final String DATABASE_CREATE_DATE = "_createDate";
-        public static final String DATABASE_CHANGE_DATE = "_changeDate";
+        public static final String SCHEMA = "schema";
+        public static final String DATABASE_CREATE_DATE = "createDate";
+        public static final String DATABASE_CHANGE_DATE = "changeDate";
         public static final String SOURCE = "_source";
-        public static final String IS_TEMPLATE = "_isTemplate";
-        public static final String UUID = "_uuid";
-        public static final String IS_HARVESTED = "_isHarvested";
-        public static final String OWNER = "_owner";
+        public static final String HARVESTUUID = "harvesterUuid";
+        public static final String IS_TEMPLATE = "isTemplate";
+        public static final String UUID = "uuid";
+        public static final String IS_HARVESTED = "isHarvested";
+        public static final String OWNER = "owner";
         public static final String OWNERNAME = "recordOwner";
-        public static final String DUMMY = "_dummy";
         public static final String POPULARITY = "_popularity";
         public static final String RATING = "_rating";
         public static final String DISPLAY_ORDER = "_displayOrder";
         public static final String EXTRA = "_extra";
         public static final String USERINFO = "_userinfo";
-        public static final String GROUP_OWNER = "_groupOwner";
+        public static final String GROUP_OWNER = "groupOwner";
         public static final String GROUP_WEBSITE = "_groupWebsite";
         public static final String LOGO = "_logo";
-        public static final String OP_PREFIX = "_op";
+        public static final String OP_PREFIX = "op";
         public static final String GROUP_PUBLISHED = "_groupPublished";
         public static final String CAT = "_cat";
-        public static final String STATUS = "_status";
-        public static final String STATUS_CHANGE_DATE = "_statusChangeDate";
+        public static final String STATUS = "mdStatus";
+        public static final String STATUS_CHANGE_DATE = "mdStatusChangeDate";
         public static final String VALID = "_valid";
+        public static final String ID = "id";
         public static final String VALID_INSPIRE = "_valid_inspire";
-        public static final String ID = "_id";
         public static final String ANY = "any";
         public static final String LOCALE = "locale";
-		public static final String IS_PUBLISHED_TO_ALL = "_isPublishedToAll";
+        public static final String IS_PUBLISHED_TO_ALL = "_isPublishedToAll";
         public static final String FEEDBACKCOUNT = "feedbackCount";
-        public static final String DRAFT = "_draft";
+        public static final String DRAFT = "draft";
+        public static final String RESOURCETITLE = "resourceTitle";
+        public static final String RESOURCEABSTRACT = "resourceAbstract";
+        public static final String PARENTUUID = "parentUuid";
+        public static final String RECORDOPERATESON = "recordOperateOn";
+        public static final String FEATUREOFRECORD = "featureOfRecord";
+        public static final String RECORDLINKFLAG = "record";
+        public static final String RECORDLINK = "recordLink";
+        public static class RecordLink {
+            public static final String ORIGIN = "origin";
+            public static final String TO = "to";
+            public static final String TYPE = "type";
+            public static final String TITLE = "title";
+            public static final String URL = "url";
+        }
         public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
         public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
+    }
+
+    public static class SearchConfig {
+        public static final String SEARCH_IGNORE_PORTAL_FILTER_OPTION = "ignorePortalFilter";
     }
 }

@@ -25,7 +25,6 @@ package org.fao.geonet.api.records.formatters.groovy.template;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
-
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.records.formatters.groovy.Handlers;

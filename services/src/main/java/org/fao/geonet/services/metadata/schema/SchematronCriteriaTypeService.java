@@ -24,13 +24,11 @@
 package org.fao.geonet.services.metadata.schema;
 
 import com.google.common.collect.Lists;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.SchematronCriteriaGroup;
 import org.fao.geonet.domain.SchematronCriteriaType;
@@ -52,7 +50,7 @@ import java.util.List;
 
 /**
  * A service for the metadata validation administration UI.
- *
+ * <p>
  * Created by Jesse on 2/9/14.
  */
 public class SchematronCriteriaTypeService implements Service {
@@ -61,7 +59,7 @@ public class SchematronCriteriaTypeService implements Service {
     private static final String EL_VALUE = "value";
     private static final String EL_NAME = "name";
     private static final String EL_LABEL = "label";
-    private SchematronService schematronService = new SchematronService();
+    private final SchematronService schematronService = new SchematronService();
 
     @Override
     public void init(Path appPath, ServiceConfig params) throws Exception {

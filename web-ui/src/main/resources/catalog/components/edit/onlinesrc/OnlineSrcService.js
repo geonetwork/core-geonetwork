@@ -384,11 +384,15 @@
             process: mode + '-add'
           };
           if (mode == 'fcats') {
-            params.uuidref = md.getUuid();
+            params.uuidref = md.uuid;
           }
           else {
-            params[mode + 'Uuid'] = md.getUuid();
+            params[mode + 'Uuid'] = md.uuid;
           }
+          params[mode + 'Url'] = md.remoteUrl || '';
+          params[mode + 'Title'] = md.title // Remote
+            || md.resourceTitle // not multilingual eg. 19110
+            || md.resourceTitleObject.default;
           return runProcess(this, params).then(function() {
             closePopup(popupid);
           });
@@ -446,10 +450,11 @@
             var qParams = setParams('dataset-add', params);
             if (addOnlineSrcInDataset) {
               return runProcess(scope, {
-                scopedName: qParams.name || '',
+                scopedName: qParams.remote ? '' : (qParams.name || ''),
                 uuidref: qParams.uuidSrv,
                 uuid: qParams.uuidDS,
                 url: qParams.url,
+                title: qParams.name,
                 source: qParams.identifier || '',
                 protocol: qParams.protocol,
                 process: qParams.process
@@ -465,23 +470,30 @@
 
           // Add link to the dataset in the service
           var qParams = setParams('service-add', params);
-          return gnBatchProcessing.runProcessMd({
-            scopedName: qParams.name || '',
-            uuidref: qParams.uuidDS,
-            uuid: qParams.uuidSrv,
-            source: qParams.identifier || '',
-            process: qParams.process
-          }, true).then(addDatasetToServiceFn, function(error) {
-            // Current user may not be able to edit
-            // the targeted dataset. Notify user in this case
-            // that only the service will be updated.
-            $rootScope.$broadcast('StatusUpdated', {
-              title: $translate.instant('linkToServiceError'),
-              msg: $translate.instant('cantAddLinkToDataset'),
-              timeout: 0,
-              type: 'danger'});
+          if (qParams.remote) {
+            // We can't update a remote record.
+            // Only make link in current dataset.
             addDatasetToServiceFn();
-          });
+          } else {
+            return gnBatchProcessing.runProcessMd({
+              scopedName: qParams.remote ? '' : (qParams.name || ''),
+              uuidref: qParams.uuidDS,
+              title: qParams.datasetTitle,
+              uuid: qParams.uuidSrv,
+              source: qParams.identifier || '',
+              process: qParams.process
+            }, true).then(addDatasetToServiceFn, function(error) {
+              // Current user may not be able to edit
+              // the targeted dataset. Notify user in this case
+              // that only the service will be updated.
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('linkToServiceError'),
+                msg: $translate.instant('cantAddLinkToDataset'),
+                timeout: 0,
+                type: 'danger'});
+              addDatasetToServiceFn();
+            });
+          }
         },
 
         /**
@@ -510,9 +522,12 @@
               // See #setLayersParams
               // In this case, dataset-add.xsl MUST not add coupledResource
               // So setting it to empty
-              scopedName: params.name === qParams.name ? '' : qParams.name,
+              scopedName: params.remote ? '' :
+                (params.name === qParams.name ? '' : qParams.name),
               uuidref: qParams.uuidDS,
               uuid: qParams.uuidSrv,
+              url: qParams.remote ? qParams.url : '',
+              title: qParams.remote ? qParams.name : '',
               source: qParams.identifier || '',
               process: qParams.process
             }).then(function() {
@@ -520,7 +535,9 @@
             });
           };
 
-          if (addOnlineSrcToDataset) {
+          // We can't update a remote record.
+          // Only make link in current dataset.
+          if (!params.remote && addOnlineSrcToDataset) {
             var qParams = setParams('onlinesrc-add', params);
             return gnBatchProcessing.runProcessMd({
               name: qParams.name,

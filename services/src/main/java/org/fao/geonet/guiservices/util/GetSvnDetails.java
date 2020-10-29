@@ -26,18 +26,14 @@ package org.fao.geonet.guiservices.util;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.utils.Log;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SvnManager;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 import java.nio.file.Path;
-
-//=============================================================================
 
 /**
  * This service returns useful information about the subversion manager
@@ -45,12 +41,6 @@ import java.nio.file.Path;
 public class GetSvnDetails implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
-
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Service
-    // ---
-    // --------------------------------------------------------------------------
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

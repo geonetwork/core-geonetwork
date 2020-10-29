@@ -25,8 +25,6 @@
 <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
                 service="CSW" version="2.0.2">
   <csw:Query typeNames="csw:Record">
-    <csw:Constraint version="1.1.0">
-      <Filter xmlns="http://www.opengis.net/ogc"/>
-    </csw:Constraint>
+    <csw:ElementSetName>summary</csw:ElementSetName>
   </csw:Query>
 </csw:GetRecords>

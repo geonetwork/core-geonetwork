@@ -17,7 +17,7 @@
 //===	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //===
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: GeoNetwork@fao.org
+//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
 package org.fao.geonet.kernel;
@@ -67,14 +67,8 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.Nonnull;
@@ -103,6 +97,13 @@ public class Thesaurus {
     private String keywordUrl;
 
     private IsoLanguagesMapper isoLanguageMapper;
+
+    private Map<String, String> multilingualTitles = new Hashtable<String,String>();
+
+    // map of lang -> dictionary of values
+    //                 key is a dublinCore element (i.e. https://guides.library.ucsc.edu/c.php?g=618773&p=4306386)
+    // see #retrieveDublinCore() for example
+    private Map<String, Map<String,String>> dublinCoreMultilingual =   new Hashtable<String,Map<String,String>>();
 
 /*    @SuppressWarnings("unused")
     private String version;
@@ -174,6 +175,14 @@ public class Thesaurus {
         return type + "." + dname + "." + name;
     }
 
+    public Map<String, String> getMultilingualTitles() {
+        return Collections.unmodifiableMap(this.multilingualTitles);
+    }
+
+    public Map<String,Map<String, String>> getDublinCoreMultilingual() {
+        return Collections.unmodifiableMap(this.dublinCoreMultilingual);
+    }
+
     /**
      * @return Thesaurus identifier
      */
@@ -240,7 +249,7 @@ public class Thesaurus {
         if (type.equals(Geonet.CodeList.REGISTER)) {
             return siteUrl + "?uuid=" + fname.substring(0, fname.indexOf(".rdf"));
         } else {
-            return siteUrl + "thesaurus.download?ref=" + Thesaurus.buildThesaurusKey(fname, type, dname);
+            return siteUrl.substring(0, siteUrl.length() - 4) + "api/registries/vocabularies/" + Thesaurus.buildThesaurusKey(fname, type, dname);
         }
     }
 
@@ -357,11 +366,6 @@ public class Thesaurus {
         // Define namespace
         String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
         String namespaceGml = "http://www.opengis.net/gml#";
-        String namespace = keyword.getNameSpaceCode();
-
-        if (namespace.equals("#")) {
-            namespace = this.defaultNamespace;
-        }
 
         // Create subject
         URI mySubject = myFactory.createURI(keyword.getUriCode());
@@ -697,6 +701,93 @@ public class Thesaurus {
 
         repository.addGraph(myGraph);
     }
+    //   <skos:ConceptScheme rdf:about="http://www.thesaurus.gc.ca/#CoreSubjectThesaurus">
+    //      <dc:title>main title</dc:title>
+    //      <dc:title xml:lang="en">title en</dc:title>
+    //      <dc:title xml:lang="fr">title fr</dc:title>
+    //      <dc:publisher xml:lang="en">publisher en</dc:publisher>
+    //      <dc:publisher xml:lang="fr">publisher fr</dc:publisher>
+    //    <dc:description></dc:description>
+    //  </skos:ConceptScheme>
+    //
+    // This will setup the dublinCoreMultilingual like so;
+    //
+    //dublinCoreMultilingual := {
+    //     "en" ->  {
+    //                  "title" -> "title en",
+    //                  "publisher" -> "publisher en"
+    //              }
+    //     "fr" ->  {
+    //                  "title" -> "title fr",
+    //                  "publisher" -> "publisher fr"
+    //              }
+    //  }
+    //
+    // note - only looks at language-specified elements
+    //
+    private void retrieveDublinCore(Element thesaurusEl) {
+        List<Namespace> theNSs = new ArrayList<Namespace>();
+        theNSs.add(Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"));
+        theNSs.add(Namespace.getNamespace("skos", "http://www.w3.org/2004/02/skos/core#"));
+        theNSs.add(Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/"));
+        theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
+
+        Namespace xmlNS = Namespace.getNamespace("xml","http://www.w3.org/XML/1998/namespace");
+        try {
+            List<Element> multiLingualTitles = (List<Element>) Xml.selectNodes(thesaurusEl,
+                "skos:ConceptScheme/dc:*[@xml:lang]|skos:ConceptScheme/dcterms:*[@xml:lang]", theNSs);
+            dublinCoreMultilingual.clear();
+            for (Element el: multiLingualTitles) {
+                String lang = isoLanguageMapper.iso639_2_to_iso639_1(el.getAttribute("lang", xmlNS).getValue());
+                String value = el.getTextTrim();
+                String name = el.getName();
+                if (!dublinCoreMultilingual.containsKey(lang)) {
+                    dublinCoreMultilingual.put(lang,new HashMap<String,String>());
+                }
+                dublinCoreMultilingual.get(lang).put(name,value);
+
+                int t=0;
+            }
+        } catch (Exception e) {
+            Log.warning(Geonet.THESAURUS,"error extracting multilingual dublin core items from thesaurus",e);
+        }
+    }
+
+    //    <rdf:RDF>
+    //    <skos:ConceptScheme rdf:about="http://www.thesaurus.gc.ca/#CoreSubjectThesaurus">
+    //          <dc:title>Main GN Title</dc:title>
+    //          <dc:title xml:lang="en">English Version (en)</dc:title>
+    //          <dc:title xml:lang="fr">French Version (fr)</dc:title>
+    //          <dc:description></dc:description>
+    //     </skos:ConceptScheme>
+    //
+    // This will setup;
+    //  {
+    //      "en": "English Version (en)",
+    //      "fr": "French Version (fr)"
+    //  }
+    private void retrieveMultiLingualTitles(Element thesaurusEl) {
+        List<Namespace> theNSs = new ArrayList<Namespace>();
+        theNSs.add(Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"));
+        theNSs.add(Namespace.getNamespace("skos", "http://www.w3.org/2004/02/skos/core#"));
+        theNSs.add(Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/"));
+        theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
+
+        Namespace xmlNS = Namespace.getNamespace("xml","http://www.w3.org/XML/1998/namespace");
+
+        try {
+            List<Element> multiLingualTitles = (List<Element>) Xml.selectNodes(thesaurusEl,
+                "skos:ConceptScheme/dc:title[@xml:lang]|skos:ConceptScheme/dcterms:title[@xml:lang]", theNSs);
+            multilingualTitles.clear();
+            for (Element el: multiLingualTitles) {
+                     String lang = isoLanguageMapper.iso639_2_to_iso639_1(el.getAttribute("lang", xmlNS).getValue());
+                     String title = el.getTextTrim();
+                     multilingualTitles.put(lang,title);
+            }
+        } catch (Exception e) {
+            Log.warning(Geonet.THESAURUS,"error extracting multilingual titles from thesaurus",e);
+        }
+    }
 
     /**
      * Retrieves the thesaurus title from rdf file.
@@ -719,6 +810,9 @@ public class Thesaurus {
             theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
 
             this.defaultNamespace = null;
+            retrieveMultiLingualTitles(thesaurusEl);
+            retrieveDublinCore(thesaurusEl);
+
             Element title = Xml.selectElement(thesaurusEl,
                 "skos:ConceptScheme/dc:title|skos:ConceptScheme/dcterms:title|" +
                     "skos:Collection/dc:title|skos:Collection/dcterms:title|" +
@@ -736,10 +830,6 @@ public class Thesaurus {
                 new java.net.URI(this.defaultNamespace);
             } catch (Exception e) {
                 this.defaultNamespace = DEFAULT_THESAURUS_NAMESPACE;
-            }
-
-            if (!this.defaultNamespace.endsWith("#")) {
-                this.defaultNamespace += "#";
             }
 
             Element dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued|skos:Collection/dc:date", theNSs);
@@ -1104,4 +1194,54 @@ public class Thesaurus {
     public Map<String, String> getTitles(ApplicationContext context) throws JDOMException, IOException {
         return LangUtils.translate(context, getKey());
     }
+
+    public List <String> getKeywordHierarchy(String keywordLabel, String langCode) {
+        KeywordBean term = this.getKeywordWithLabel(keywordLabel, langCode);
+
+        List<ArrayList <String>> result = new ArrayList<ArrayList<String>>();
+
+        result = this.classify(term, langCode);
+
+        List <String> hierarchies = new ArrayList <String>();
+        for ( List <String> hierachy : result) {
+            hierarchies.add(String.join("^", hierachy));
+        }
+        return hierarchies;
+    }
+
+    public List<ArrayList <String>> classify(KeywordBean term, String langCode) {
+
+        List<ArrayList <String>> result = new ArrayList<ArrayList <String>>();
+        if (this.hasBroader(term.getUriCode())) {
+            result.addAll(classifyTermWithBroaderTerms(term, langCode));
+        } else {
+            result.add(classifyTermWithNoBroaderTerms(term, langCode));
+        }
+        return result;
+    }
+
+    private List<ArrayList <String>> classifyTermWithBroaderTerms(KeywordBean term, String langCode) {
+        List<ArrayList <String>> result = new ArrayList<ArrayList <String>>();
+        for (ArrayList <String> stringToBroaderTerm : classifyBroaderTerms(term, langCode)) {
+            stringToBroaderTerm.add(term.getPreferredLabel(langCode));
+            result.add(stringToBroaderTerm);
+        }
+        return result;
+    }
+
+    private List<ArrayList <String>> classifyBroaderTerms(KeywordBean term, String langCode) {
+        List<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+
+        for (KeywordBean broaderTerm : this.getBroader(term.getUriCode(), langCode)) {
+            result.addAll(this.classify(broaderTerm, langCode));
+        }
+        return result;
+    }
+
+    private ArrayList <String> classifyTermWithNoBroaderTerms(KeywordBean term, String langCode) {
+        ArrayList <String> list = new ArrayList <String>();
+        list.add(term.getPreferredLabel(langCode));
+        return list;
+    }
+
 }

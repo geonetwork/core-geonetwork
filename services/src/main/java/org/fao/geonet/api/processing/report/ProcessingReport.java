@@ -23,18 +23,20 @@
 
 package org.fao.geonet.api.processing.report;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAnyElement;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.processing.report.registry.IRegisteredProcess;
 import org.fao.geonet.api.processing.report.registry.ProcessingReportRegistry;
 import org.fao.geonet.domain.ISODate;
 import org.springframework.context.ApplicationContext;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import javax.xml.bind.annotation.*;
 
 /**
  * A report about a processing.
@@ -57,7 +59,7 @@ public abstract class ProcessingReport
      */
     protected List<InfoReport> infos = Collections.synchronizedList(new ArrayList<InfoReport>());
     private ProcessingReportRegistry registry;
-    private String uuid;
+    private final String uuid;
     private ISODate startDateTime;
     private ISODate endDateTime;
 

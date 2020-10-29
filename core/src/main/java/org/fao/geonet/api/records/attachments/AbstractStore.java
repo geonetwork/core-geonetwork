@@ -205,7 +205,7 @@ public abstract class AbstractStore implements Store {
 
     protected String getFilename(final String metadataUuid, final String resourceId) {
         // It's not always clear when we get a resourceId or a filename
-        String prefix = metadataUuid + "/attachements/";
+        String prefix = metadataUuid + "/attachments/";
         if (resourceId.startsWith(prefix)) {
             // It was a resourceId
             return resourceId.substring(prefix.length());

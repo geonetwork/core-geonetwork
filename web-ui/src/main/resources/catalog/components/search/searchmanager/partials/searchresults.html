@@ -13,9 +13,9 @@
           {{selection.length}} <span data-translate="">selected</span><span class="caret"/>
         </button>
         <ul class="dropdown-menu">
-          <li><a data-ng-click="selectAll(true)" data-translate="">selectAll</a>
+          <li><a href="" data-ng-click="selectAll(true)" data-translate="">selectAll</a>
           </li>
-          <li><a data-ng-click="selectAll(false)" data-translate="">selectNone</a>
+          <li><a href="" data-ng-click="selectAll(false)" data-translate="">selectNone</a>
           </li>
         </ul>
       </div>
@@ -26,29 +26,29 @@
     <div class="list-group fixed">
       <li class="list-group-item gn-record"
           data-ng-repeat="md in searchResults.records"
-          id="gn-record-{{md['geonet:info'].uuid}}"
+          id="gn-record-{{md.uuid}}"
           href=""
           data-ng-class="isSelected(md) ? 'active' : ''"
           data-ng-click="onClick(md)">
         <div data-ng-if="options.mode == 'title'">
           <gn-md-type-widget metadata="md"></gn-md-type-widget>
-          {{md.title || md.defaultTitle}}
+          {{md.resourceTitle}}
         </div>
         <div class="row" data-ng-if="options.mode == 'simple'">
           <div class="col-lg-12"
-               title="{{md.abstract}}">
-            <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
-            <strong>{{md.title || md.defaultTitle}}</strong>
-            <p ng-if="::md.abstract" class="small">{{md.abstract | characters:200}}</p>
+               title="{{md.resourceAbstract}}">
+            <i class="fa gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"/>
+            <strong>{{md.resourceTitle}}</strong>
+            <p ng-if="::md.resourceAbstract" class="small">{{md.resourceAbstract | characters:200}}</p>
           </div>
         </div>
         <div data-ng-if="options.mode == 'directory'">
           <div class="flex-row flex-align-center">
             <gn-md-type-widget metadata="md"></gn-md-type-widget>
             <div class="flex-spacer" />
-            <strong>{{md.title || md.defaultTitle}}</strong>
+            <strong>{{md.resourceTitle}}</strong>
           </div>
-          <p ng-if="::md.abstract" class="small">{{md.abstract | characters:200}}</p>
+          <p ng-if="::md.resourceAbstract" class="small">{{md.resourceAbstract | characters:200}}</p>
         </div>
       </li>
     </div>

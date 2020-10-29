@@ -1,0 +1,33 @@
+{
+  "config": {
+    "display": "radio",
+    "types": [
+      {
+        "label": "addOnlinesrc",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlainesrc",aaa
+        "process": "onlinesrc-add",
+        "fields": {
+          "protocol": {
+            "value": "WWW:LINK-1.0-http--link",
+            "isMultilingual": false,
+            "required": true
+          },
+          "url": {
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "isMultilingual": false
+          },
+          "applicationProfile": {
+            "isMultilingual": false
+          }
+        }
+      }
+    ]
+  }
+}

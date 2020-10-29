@@ -44,7 +44,8 @@
         'gnHttpServices',
         'gnUrlUtils',
         '$http',
-        function(gnHttpServices, gnUrlUtils, $http) {
+        'gnESClient',
+        function(gnHttpServices, gnUrlUtils, $http, gnESClient) {
 
           /**
            * @ngdoc method
@@ -99,14 +100,8 @@
            * @param {string} val any filter
            * @return {HttpPromise} promise
            */
-          this.getAnySuggestions = function(val) {
-            var url = this.getUrl(val, 'anylight',
-                ('STARTSWITHFIRST'));
-
-            return $http.get(url, {
-            }).then(function(res) {
-              return res.data[1];
-            });
+          this.getAnySuggestions = function(val, searchObj) {
+            return gnESClient.suggest('resourceTitle', val, searchObj);
           };
 
 
