@@ -267,14 +267,14 @@
                 </td>
               </tr>
               <tr data-ng-if="mdView.current.record.MD_LegalConstraintsUseLimitation
-                              || mdView.current.record.MD_LegalConstraintsOtherConstraints">
+                              || mdView.current.record.MD_LegalConstraintsOtherConstraints">
                 <th data-translate="">legalConstraints</th>
                 <td>
-                  <p data-gn-text-field="mdView.current.record"
-                     data-gn-text-field-key="MD_LegalConstraintsOtherConstraints">
+                  <p>
+                    {{mdView.current.record.MD_LegalConstraintsOtherConstraints}}
                   </p>
-                  <p data-gn-text-field="mdView.current.record"
-                     data-gn-text-field-key="MD_LegalConstraintsUseLimitation">
+                  <p>
+                    {{mdView.current.record.MD_LegalConstraintsUseLimitation}}
                   </p>
                 </td>
               </tr>
@@ -282,8 +282,8 @@
               <tr data-ng-if="mdView.current.record.MD_SecurityConstraintsUseLimitation">
                 <th data-translate="">securityConstraints</th>
                 <td>
-                  <p data-gn-text-field="mdView.current.record"
-                     data-gn-text-field-key="MD_SecurityConstraintsUseLimitation">
+                  <p>
+                    {{mdView.current.record.MD_SecurityConstraintsUseLimitation}}
                   </p>
                 </td>
               </tr>
@@ -291,8 +291,8 @@
               <tr data-ng-if="mdView.current.record.MD_ConstraintsUseLimitation">
                 <th data-translate="">resourceConstraints</th>
                 <td>
-                  <p data-gn-text-field="mdView.current.record"
-                     data-gn-text-field-key="MD_ConstraintsUseLimitation">
+                  <p>
+                    {{mdView.current.record.MD_ConstraintsUseLimitation}}
                   </p>
                 </td>
               </tr>
@@ -557,6 +557,7 @@
                 <i class="fa fa-fw fa-clock-o"></i>
                 <span data-translate="">tempExtent</span>
               </h2>
+
 
               <div class="flex-row flex-align-center gn-period"
                   data-ng-repeat="range in mdView.current.record.resourceTemporalExtentDateRange">
