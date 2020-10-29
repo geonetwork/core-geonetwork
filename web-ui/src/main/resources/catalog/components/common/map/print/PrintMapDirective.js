@@ -214,7 +214,7 @@
       };
       defaultPage['lang' + lang] = true;
       var encLayers = [];
-      var encLegends;
+      var encLegends = [];
       var attributions = [];
       var layers = $scope.map.getLayers();
       pdfLegendsToDownload = [];
@@ -249,6 +249,16 @@
       var scales = $scope.config.scales.map(function(scale) {
         return parseInt(scale.value);
       });
+
+      // encode url to remove accents
+      encLegends.map(function(url) {
+        try {
+          return new URL(url).toString();
+        } catch (e) {
+          return url;
+        }
+      });
+
       var spec = {
         layout: $scope.config.layout.name,
         srs: proj.getCode(),
