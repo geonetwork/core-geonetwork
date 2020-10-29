@@ -297,19 +297,33 @@
        * @returns es request params
        */
       this.getSuggestParams = function(field, query, searchObj) {
-        var params = {};
+
+        var params = {}, defaultScore = {
+          "script_score" : {
+            "script" : {
+              "source": "_score"
+            }
+          }
+        }, autocompleteQuery = {};
+        angular.copy(gnGlobalSettings.gnCfg.mods.search.autocompleteConfig.query, autocompleteQuery);
+        angular.copy({"query": {
+          "function_score": gnGlobalSettings.gnCfg.mods.search.scoreConfig ?
+            gnGlobalSettings.gnCfg.mods.search.scoreConfig : defaultScore
+        }}, params);
+        params.query.function_score['query'] = autocompleteQuery;
+
+
         var currentSearch = {};
-        angular.copy(gnGlobalSettings.gnCfg.mods.search.autocompleteConfig, params);
         angular.copy(searchObj, currentSearch);
 
         // The multi_match will take care of the any filter.
         currentSearch.params.any = undefined;
 
         try {
-          params.query.bool.must[0].multi_match.query = query;
+          params.query.function_score.query.bool.must[0].multi_match.query = query;
 
           // Inject current search to contextualize suggestions
-          var queryHook = params.query.bool;
+          var queryHook = params.query.function_score.query.bool;
           var luceneQueryString = currentSearch.state && currentSearch.state.filters ? gnEsLuceneQueryParser.facetsToLuceneQuery(currentSearch.state.filters) : undefined;
 
           this.buildQueryClauses(queryHook, currentSearch.params, luceneQueryString);
