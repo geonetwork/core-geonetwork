@@ -30,6 +30,15 @@
     target.parentElement.classList.add('active');
 
     var displayAll = lang === '';
+    
+    document.querySelectorAll(
+      'section.gn-md-side-access > div > a.btn-primary').forEach(
+      function (btn) {
+      btn.setAttribute('href',
+        btn.getAttribute('href')
+          .replace(/(.*\/srv\/)([a-z]{3})/, '$1' + lang))
+      });
+
     document.querySelectorAll('div[xml\\:lang]').forEach(
       function (div) {
         if (displayAll) {
