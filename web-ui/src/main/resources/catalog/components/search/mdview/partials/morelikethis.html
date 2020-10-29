@@ -9,7 +9,11 @@
        class="list-group-item flex-row flex-align-center"
        data-ng-hide="md.uuid === record._source.uuid">
       <span>
-      {{record._source.resourceTitleObject.default}}
+        {{record._source.resourceTitleObject.default}}<br/>
+        <div data-ng-if="record._source.codelist_status_text.length > 0"
+             title="{{record._source.codelist_status_text[0]}}"
+             class="gn-status gn-status-{{record._source.codelist_status[0]}}">{{record._source.codelist_status_text[0]}}
+        </div>
       </span>
       <div class="flex-spacer flex-grow"></div>
       <img data-ng-if="record._source.overview"
