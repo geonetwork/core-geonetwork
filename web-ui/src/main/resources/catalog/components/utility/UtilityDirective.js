@@ -1576,50 +1576,6 @@
   }]);
   /**
    * @ngdoc directive
-   * @name gn_utility.directive:gnTextField
-   *
-   * @description
-   *  Render a multilingual field as an object having:
-   *  {
-   *   langfre: "Français", -> The default language is the first property
-   *   langeng: "English",
-   *   ...
-   *   (optional) link: "http://" -> Anchor xlink:href attribute
-   *  }
-   *
-   */
-  module.directive('gnTextField', ['$compile', 'gnLangs',
-    function($compile, gnLangs) {
-      return {
-        restrict: 'A',
-        scope: {
-          md: '=gnTextField',
-          key: '@gnTextFieldKey'
-        },
-        template: '<p data-ng-repeat="v in values"' +
-          '           data-ng-init="text = v.default;">' +
-          '<a data-ng-show="::v.link" ' +
-          '   data-ng-href="{{::v.link}}" ' +
-          '   data-ng-bind-html="::text | newlines"</a>' +
-          '<span data-ng-hide="::v.link" ' +
-          '      data-ng-bind-html="::text | linky | newlines"></span>' +
-          '</p>',
-        link: function(scope, element, attrs) {
-          scope.values = scope.md[scope.key + 'Object'] || scope.md[scope.key];
-          // TODO: Multilingual field value based on UI language
-        }
-      };
-    }
-  ]);
-
-  module.filter('gnTextField', ['gnLangs',
-    function(gnLangs) {
-      return function(value) {
-        return angular.isDefined(value) ? value.default : ''; // TODO Return value based on UI language
-      }}
-  ]);
-  /**
-   * @ngdoc directive
    * @name gn_utility.directive:gnLynky
    *
    * @description
