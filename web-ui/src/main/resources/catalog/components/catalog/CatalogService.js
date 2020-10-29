@@ -583,12 +583,26 @@
 
     Metadata.prototype = {
       translate: function(fieldName) {
-        var translation = this[fieldName]['lang' + gnLangs.current];
+        var fieldValues = this[fieldName];
 
-        if (translation) {
-          return translation;
-        } else if (this[fieldName].default) {
-          return this[fieldName].default;
+        if (angular.isArray(fieldValues)) {
+          var translatedValues = [];
+          angular.forEach(fieldValues, function(v, i) {
+            translation = fieldValues[i]['lang' + gnLangs.current]
+            if (translation) {
+              translatedValues.push(translation);
+            } else if (fieldValues[i][fieldName].default) {
+              translatedValues.push(fieldValues[i][fieldName].default);
+            }
+          });
+          return translatedValues;
+        } else if (angular.isObject(fieldValues)) {
+          translation = fieldValues['lang' + gnLangs.current]
+          if (translation) {
+            return translation;
+          } else if (this[fieldName].default) {
+            return this[fieldName].default;
+          }
         } else {
           console.warn(fieldName + ' is not defined in this record.');
         }
