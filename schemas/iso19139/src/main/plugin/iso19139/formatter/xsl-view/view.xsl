@@ -157,7 +157,7 @@
 
             <xsl:for-each select="current-group()">
               <xsl:sort select="."/>
-              <a href="#/search?keyword={.}">
+              <a href='#/search?query_string=%7B"tag":%7B"{.}":true%7D%7D'>
                 <span class="badge"><xsl:copy-of select="."/></span>
               </a>
             </xsl:for-each>
@@ -169,7 +169,7 @@
         <xsl:otherwise>
           <xsl:for-each select="$tags/tag">
             <xsl:sort select="."/>
-            <a href="#/search?keyword={.}">
+              <a href='#/search?query_string=%7B"tag":%7B"{.}":true%7D%7D'>
               <span class="badge"><xsl:copy-of select="."/></span>
             </a>
           </xsl:for-each>
