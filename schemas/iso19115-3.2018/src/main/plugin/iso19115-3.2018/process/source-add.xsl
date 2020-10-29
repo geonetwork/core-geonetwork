@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--  
+<!--
 Stylesheet used to update metadata adding a reference to a source record.
 -->
 <xsl:stylesheet version="2.0"
@@ -13,7 +13,9 @@ Stylesheet used to update metadata adding a reference to a source record.
 
   <!-- Source metadata record UUID -->
   <xsl:param name="sourceUuid"/>
-  <xsl:param name="siteUrl"/>
+  <xsl:param name="nodeUrl"/>
+  <xsl:param name="sourceUrl" select="''"/>
+  <xsl:param name="sourceTitle" select="''"/>
 
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">
@@ -57,8 +59,7 @@ Stylesheet used to update metadata adding a reference to a source record.
                 <xsl:apply-templates select="mrl:additionalDocumentation"/>
                 <xsl:apply-templates select="mrl:source"/>
                 <xsl:if test="position() = 1">
-                  <mrl:source uuidref="{$sourceUuid}"
-                              xlink:href="{$siteUrl}/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://standards.iso.org/iso/19115/-3/mdb/2.0&amp;elementSetName=full&amp;id={$sourceUuid}"/>
+                  <xsl:call-template name="make-source-link"/>
                 </xsl:if>
                 <xsl:apply-templates select="mrl:processStep"/>
               </mrl:LI_Lineage>
@@ -68,8 +69,7 @@ Stylesheet used to update metadata adding a reference to a source record.
         <xsl:otherwise>
           <mdb:resourceLineage>
             <mrl:LI_Lineage>
-              <mrl:source uuidref="{$sourceUuid}"
-                          xlink:href="{$siteUrl}/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://standards.iso.org/iso/19115/-3/mdb/2.0&amp;elementSetName=full&amp;id={$sourceUuid}"/>
+              <xsl:call-template name="make-source-link"/>
             </mrl:LI_Lineage>
           </mdb:resourceLineage>
         </xsl:otherwise>
@@ -82,6 +82,23 @@ Stylesheet used to update metadata adding a reference to a source record.
       <xsl:apply-templates select="mdb:acquisitionInformation"/>
     </xsl:copy>
 
+  </xsl:template>
+
+  <xsl:template name="make-source-link">
+    <mrl:source uuidref="{$sourceUuid}">
+      <xsl:if test="$sourceTitle != ''">
+        <xsl:attribute name="xlink:title" select="$sourceTitle"/>
+      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="$sourceUrl != ''">
+          <xsl:attribute name="xlink:href" select="$sourceUrl"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="xlink:href"
+                         select="concat($nodeUrl, 'api/records/', $sourceUuid)"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </mrl:source>
   </xsl:template>
 
   <!-- Remove geonet:* elements. -->

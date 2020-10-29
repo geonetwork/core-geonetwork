@@ -2155,7 +2155,7 @@
     <label>Classification system</label>
     <description>Name of the classification system</description>
   </element>
-  <element name="mri:cloudCoverPercentage" id="248.0">
+  <element name="mrc:cloudCoverPercentage" id="248.0">
     <label>Cloud cover percentage</label>
     <description>Area of the dataset obscured by clouds, expressed as a
       percentage of the
@@ -2451,6 +2451,7 @@
       <option value="500000">1:500´000</option>
       <option value="1000000">1:1´000´000</option>
     </helper>
+
   </element>
   <element name="mrd:density" id="293.0">
     <label>Density</label>
@@ -3948,7 +3949,6 @@
       <option value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</option>
       <option value="RBNB:DATATURBINE">Data Turbine</option>
       <option value="UKST">Unknown Service Type</option>
-      <option value="ANNOTATIONS">Annotations</option>
     </helper>
   </element>
   <element name="mri:purpose" id="26.0">

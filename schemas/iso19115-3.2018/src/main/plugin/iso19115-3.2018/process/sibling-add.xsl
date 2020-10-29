@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--  
+<!--
 Stylesheet used to add a reference to a related record using aggregation info.
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -7,13 +7,20 @@ Stylesheet used to add a reference to a related record using aggregation info.
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 exclude-result-prefixes="#all" version="2.0">
 
   <!-- The uuid of the target record -->
   <xsl:param name="uuidref"/>
+  <xsl:param name="nodeUrl"/>
 
-  <!-- A list of uuids of the target records -->
+  <!-- A list of uuids of the target records
+  Each record is described by
+  'uuid#associationType#initiativeType#title#remoteUrl,uuid#...'
+  and are comma separated.
+  title and remoteUrl may be empty for local record.
+  -->
   <xsl:param name="uuids"/>
 
   <!-- (optional) The association type. Default: crossReference. -->
@@ -80,6 +87,8 @@ Stylesheet used to add a reference to a related record using aggregation info.
               <xsl:with-param name="context" select="$context"/>
               <xsl:with-param name="associationType" select="$tokens[2]"/>
               <xsl:with-param name="initiativeType" select="$tokens[3]"/>
+              <xsl:with-param name="title" select="$tokens[4]"/>
+              <xsl:with-param name="remoteUrl" select="$tokens[5]"/>
             </xsl:call-template>
           </xsl:when>
           <xsl:otherwise>
@@ -101,6 +110,8 @@ Stylesheet used to add a reference to a related record using aggregation info.
     <xsl:param name="context"/>
     <xsl:param name="initiativeType" select="$initiativeType" required="no"/>
     <xsl:param name="associationType" select="$associationType" required="no"/>
+    <xsl:param name="title" select="''" required="no"/>
+    <xsl:param name="remoteUrl" select="''" required="no"/>
 
     <xsl:variable name="notExist" select="count($context/mri:associatedResource/mri:MD_AssociatedResource[
 			mri:metadataReference/@uuidref = $uuid
@@ -124,7 +135,20 @@ Stylesheet used to add a reference to a related record using aggregation info.
                   codeListValue="{$initiativeType}"/>
             </mri:initiativeType>
           </xsl:if>
-          <mri:metadataReference uuidref="{$uuid}"/>
+          <mri:metadataReference uuidref="{$uuid}">
+            <xsl:choose>
+              <xsl:when test="$remoteUrl != ''">
+                <xsl:attribute name="xlink:href" select="$remoteUrl"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:attribute name="xlink:href"
+                               select="concat($nodeUrl, 'api/records/', $uuid)"/>
+              </xsl:otherwise>
+            </xsl:choose>
+            <xsl:if test="$title != ''">
+              <xsl:attribute name="xlink:title" select="$title"/>
+            </xsl:if>
+          </mri:metadataReference>
         </mri:MD_AssociatedResource>
       </mri:associatedResource>
     </xsl:if>

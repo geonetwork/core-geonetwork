@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--  
+<!--
 Stylesheet used to remove a reference to a source record.
 -->
 <xsl:stylesheet version="2.0"
                 xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:gn="http://www.fao.org/geonetwork">
+                xmlns:gn="http://www.fao.org/geonetwork"
+                exclude-result-prefixes="#all">
 
   <!-- Source metadata record UUID -->
   <xsl:param name="sourceUuid"/>

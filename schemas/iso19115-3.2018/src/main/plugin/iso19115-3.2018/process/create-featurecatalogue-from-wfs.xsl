@@ -157,10 +157,6 @@
     <xsl:variable name="featureTypeNameNoNamespace"
                   select="if (contains($featureCatWfsFeatureType, ':')) then tokenize($featureCatWfsFeatureType, ':')[2] else $featureCatWfsFeatureType"/>
 
-    <xsl:message><xsl:value-of select="$featureCatWfsUrl"/> </xsl:message>
-    <xsl:message><xsl:value-of select="$featureCatWfsFeatureType"/> </xsl:message>
-    <xsl:message><xsl:value-of select="$featureTypeNameNoNamespace"/> </xsl:message>
-
     <xsl:variable name="sep"
                   select="if (contains($featureCatWfsUrl, '?')) then '&amp;' else '?'"/>
     <!-- TODO: Improve which layer to analyze
@@ -174,7 +170,6 @@
                           then util:downloadJsonAsXML($url)
                           else document($url)"/>
 
-    <xsl:message><xsl:copy-of select="$describeFeatureType"/> </xsl:message>
     <xsl:choose>
       <xsl:when test="$describeFeatureType">
         <mdb:contentInfo>

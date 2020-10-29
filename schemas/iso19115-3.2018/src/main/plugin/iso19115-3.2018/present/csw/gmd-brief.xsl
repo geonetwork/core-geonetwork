@@ -21,8 +21,6 @@
 
   <xsl:import href="../../convert/ISO19139/toISO19139.xsl"/>
 
-  <xsl:param name="displayInfo"/>
-
   <xsl:template match="/">
     <xsl:for-each select="/*">
       <xsl:variable name="info" select="gn:info"/>
@@ -35,10 +33,6 @@
         <xsl:apply-templates select="mdb:metadataIdentifier"/>
         <xsl:apply-templates select="mdb:metadataScope"/>
         <xsl:apply-templates select="mdb:identificationInfo"/>
-
-        <xsl:if test="$displayInfo = 'true'">
-          <xsl:copy-of select="$info"/>
-        </xsl:if>
       </xsl:element>
     </xsl:for-each>
   </xsl:template>

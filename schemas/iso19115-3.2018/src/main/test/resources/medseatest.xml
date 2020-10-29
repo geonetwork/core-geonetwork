@@ -361,7 +361,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.medsea.challenges">geonetwork.thesaurus.local.theme.medsea.challenges</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/api/registries/vocabularies/local.theme.medsea.challenges">geonetwork.thesaurus.local.theme.medsea.challenges</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -385,7 +385,7 @@
               Information upon request to the data provider
             </gco:CharacterString>
           </mri:keyword>
-          <!-- 
+          <!--
            1.Data sets are not referenced in a catalogue or are referenced in a non public catalogue
            2.The datasets are referenced in a public national catalogue, in an international catalogue service
            3.The datasets are provided through an EU Inspire catalogue service (OGC)
@@ -410,8 +410,8 @@
               EU service or DS name if available
             </gco:CharacterString>
           </mri:keyword>
-          
-          <!-- 
+
+          <!--
             1.No information was found on data delivery mechanisms
             2.Manual process: Order form/invoice is requested
             3.Online downloading services
@@ -438,7 +438,7 @@
               On-line discovery + viewing + downloading + advanced services (High resolution viewing,3D viewing services, Processing/Mapping services...)
             </gco:CharacterString>
           </mri:keyword>
-          
+
           <!-- Not modified -->
           <mri:keyword>
             <gco:CharacterString>Not documented
@@ -466,7 +466,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.medsea.environmental.matrix">geonetwork.thesaurus.local.theme.medsea.environmental.matrix</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/api/registries/vocabularies/local.theme.medsea.environmental.matrix">geonetwork.thesaurus.local.theme.medsea.environmental.matrix</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -498,7 +498,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.medsea.environmental.matrix">geonetwork.thesaurus.local.theme.medsea.production.mode</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/api/registries/vocabularies/local.theme.medsea.environmental.matrix">geonetwork.thesaurus.local.theme.medsea.production.mode</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -530,7 +530,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.medsea.visibility">geonetwork.thesaurus.local.theme.medsea.visibility</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/api/registries/vocabularies/local.theme.medsea.visibility">geonetwork.thesaurus.local.theme.medsea.visibility</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -562,7 +562,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.medsea.policy.visibility">geonetwork.thesaurus.local.theme.medsea.policy.visibility</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/api/registries/vocabularies/local.theme.medsea.policy.visibility">geonetwork.thesaurus.local.theme.medsea.policy.visibility</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -599,7 +599,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.medsea.readyness">geonetwork.thesaurus.local.theme.medsea.readyness</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/api/registries/vocabularies/local.theme.medsea.readyness">geonetwork.thesaurus.local.theme.medsea.readyness</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -631,7 +631,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.parameter.NVS.P02">geonetwork.thesaurus.external.parameter.NVS.P02</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/api/registries/vocabularies/external.parameter.NVS.P02">geonetwork.thesaurus.external.parameter.NVS.P02</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -666,7 +666,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">geonetwork.thesaurus.external.theme.inspire-theme</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/api/registries/vocabularies/external.theme.inspire-theme">geonetwork.thesaurus.external.theme.inspire-theme</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -698,7 +698,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.medsea.level.of.characteristics">geonetwork.thesaurus.local.theme.medsea.level.of.characteristics</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/api/registries/vocabularies/local.theme.medsea.level.of.characteristics">geonetwork.thesaurus.local.theme.medsea.level.of.characteristics</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -730,7 +730,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.medsea.data.delivery.mechanism">geonetwork.thesaurus.local.theme.medsea.data.delivery.mechanism</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/api/registries/vocabularies/local.theme.medsea.data.delivery.mechanism">geonetwork.thesaurus.local.theme.medsea.data.delivery.mechanism</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -762,7 +762,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.parameter.NVS.P01">geonetwork.thesaurus.external.parameter.NVS.P01</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.parameter.NVS.P01">geonetwork.thesaurus.external.parameter.NVS.P01</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -822,7 +822,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.parameter.NVS.P03">geonetwork.thesaurus.external.parameter.NVS.P03</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/api/registries/vocabularies/external.parameter.NVS.P03">geonetwork.thesaurus.external.parameter.NVS.P03</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -854,7 +854,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=local.theme.medsea.service.extent">geonetwork.thesaurus.local.theme.medsea.service.extent</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/api/registries/vocabularies/local.theme.medsea.service.extent">geonetwork.thesaurus.local.theme.medsea.service.extent</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -887,7 +887,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=local.theme.medsea.reliability">geonetwork.thesaurus.local.theme.medsea.reliability</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/api/registries/vocabularies/local.theme.medsea.reliability">geonetwork.thesaurus.local.theme.medsea.reliability</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -920,7 +920,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.status">geonetwork.thesaurus.local.theme.medsea.status</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/api/registries/vocabularies/external.theme.medsea.status">geonetwork.thesaurus.local.theme.medsea.status</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -943,7 +943,7 @@
       </mri:resourceConstraints>
       <mri:resourceConstraints>
         <mco:MD_Constraints>
-          <!-- ## Updated by 
+          <!-- ## Updated by
             1.Not or not well documented
             2.Commercial charge
             3.Distribution charge
@@ -980,7 +980,7 @@
       </mri:supplementalInformation>
     </mri:MD_DataIdentification>
   </mdb:identificationInfo>
-  <!-- ## Identification without medsea.status. 
+  <!-- ## Identification without medsea.status.
   A keyword block is added. -->
   <mdb:identificationInfo>
     <mri:MD_DataIdentification>
@@ -1017,7 +1017,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.bob">geonetwork.thesaurus.local.theme.medsea.bob</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/api/registries/vocabularies/external.theme.medsea.bob">geonetwork.thesaurus.local.theme.medsea.bob</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -1025,8 +1025,8 @@
           </mri:thesaurusName>
         </mri:MD_Keywords>
       </mri:descriptiveKeywords>
-      
-      
+
+
       <mri:descriptiveKeywords>
         <mri:MD_Keywords>
           <mri:type>
@@ -1051,7 +1051,7 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.emodnet-medsea.readyness">geonetwork.thesaurus.local.theme.medsea.readyness</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/api/registries/vocabularies/local.theme.emodnet-medsea.readyness">geonetwork.thesaurus.local.theme.medsea.readyness</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
@@ -1157,13 +1157,13 @@
           <mdq:result>
             <mdq:DQ_QuantitativeResult>
               <!--## Updated by
-                            
+
                 1.No information is found on response time
                 2.More than 1 week for release
                 3.Less or equal to 1 week for release
                 4.Online downloading (i.e. a few hours or less) for release
 
-              --> 
+              -->
               <mdq:value>
                 <gco:Record>Less than 1 week</gco:Record>
               </mdq:value>

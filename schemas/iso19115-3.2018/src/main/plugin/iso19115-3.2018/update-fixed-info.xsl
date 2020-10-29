@@ -359,8 +359,6 @@
           <xsl:variable name="isInPTFreeText"
                         select="count(lan:PT_FreeText/*/lan:LocalisedCharacterString[
                                             @locale = concat('#', $mainLanguageId)]) = 1"/>
-
-
           <xsl:choose>
             <xsl:when test="$isInPTFreeText">
               <!-- Update gco:CharacterString to contains
@@ -449,28 +447,6 @@
     </xsl:attribute>
   </xsl:template>
 
-
-  <!-- Do not allow to expand operatesOn sub-elements
-    and constrain users to use uuidref attribute to link
-    service metadata to datasets. This will avoid to have
-    error on XSD validation.  |mrc:featureCatalogueCitation[@uuidref] -->
-  <xsl:template match="srv:operatesOn">
-    <xsl:copy>
-      <xsl:copy-of select="@uuidref"/>
-      <xsl:if test="@uuidref">
-        <xsl:choose>
-          <xsl:when test="not(string(@xlink:href)) or starts-with(@xlink:href, /root/env/siteURL)">
-            <xsl:attribute name="xlink:href">
-              <xsl:value-of select="concat(/root/env/siteURL,'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',@uuidref)"/>
-            </xsl:attribute>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:copy-of select="@xlink:href"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:if>
-    </xsl:copy>
-  </xsl:template>
 
   <!-- For XLinked subtemplates, the lang parameter MUST be in the same order as in the record.
   Main language first, then other locales. If not, then the default CharacterString does not contain
@@ -634,6 +610,7 @@
       </xsl:copy>
     </xsl:if>
   </xsl:template>
+
 
 
   <!-- Remove empty DQ elements, empty transfer options. -->

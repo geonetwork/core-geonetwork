@@ -12,6 +12,22 @@
         <value>mdb:identificationInfo/*/mri:citation/*/cit:title/*/lan:textGroup/lan:LocalisedCharacterString</value>
       </util:list>
     </property>
+    <!--
+    When using a custom parent relation mechanism, the editor needs to be
+    updated in order to create the proper link (instead of the default parentMetadata mode).
+    See web-ui/src/main/resources/catalog/components/edit/onlinesrc/partials/onlinesrcList.html
+      <li data-ng-show="gnCurrentEdit.metadata['geonet:info'].schema == 'iso19115-3.2018'
+          && !gnCurrentEdit.isService
+          && gnCurrentEdit.metadata.type.indexOf('series') === -1">
+            <a href=""
+               data-ng-click="onlinesrcService.onOpenPopup('sibling', {associationType: 'partOfSeamlessDatabase', initiativeType: 'collection'})">
+              <i class="fa gn-icon-sibling"></i>
+              <i class="icon-external-link"></i>&nbsp;
+              <span data-translate="">linkToParent</span>
+            </a>
+          </li>
+    -->
+    <property name="parentAssociatedResourceType" value="partOfSeamlessDatabase"/>
     <property name="elementsToProcess">
       <util:list value-type="java.lang.String">
         <value>gco:CharacterString</value>

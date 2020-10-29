@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet 
+<xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
   xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:gn="http://www.fao.org/geonetwork"
   exclude-result-prefixes="#all" >
-  
+
   <!-- Parent metadata record UUID -->
   <xsl:param name="parentUuid"/>
-  
+  <xsl:param name="parentUrl" select="''"/>
+  <xsl:param name="parentTitle" select="''"/>
+
+
   <xsl:template match="/mdb:MD_Metadata|*[contains(@gco:isoType, 'mdb:MD_Metadata')]">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates select="mdb:metadataIdentifier"/>
       <xsl:apply-templates select="mdb:defaultLocale"/>
-      
+
       <!-- Only one parent identifier allowed
         - overwriting existing one. -->
       <xsl:if test="normalize-space($parentUuid) != ''">
-        <mdb:parentMetadata uuidref="{$parentUuid}"/>
+        <mdb:parentMetadata uuidref="{$parentUuid}">
+          <xsl:if test="$parentUrl != ''">
+            <xsl:attribute name="xlink:href" select="$parentUrl"/>
+          </xsl:if>
+          <xsl:if test="$parentTitle != ''">
+            <xsl:attribute name="xlink:title" select="$parentTitle"/>
+          </xsl:if>
+        </mdb:parentMetadata>
       </xsl:if>
-      
+
       <xsl:apply-templates select="mdb:metadataScope"/>
       <xsl:apply-templates select="mdb:contact"/>
       <xsl:apply-templates select="mdb:dateInfo"/>
@@ -44,10 +55,10 @@
       <xsl:apply-templates select="mdb:acquisitionInformation"/>
     </xsl:copy>
   </xsl:template>
-  
+
   <!-- Remove geonet:* elements. -->
   <xsl:template match="gn:*" priority="2"/>
-  
+
   <!-- Copy everything. -->
   <xsl:template match="@*|node()">
     <xsl:copy>

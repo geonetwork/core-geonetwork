@@ -369,7 +369,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelCfg/*"/>
-      <xsl:with-param name="value" select="if ($isMultilingualElement) then $values else *"/>
+      <xsl:with-param name="value" select="if ($isMultilingualElement) then $values else *[namespace-uri(.) != $gnUri]"/>
       <xsl:with-param name="errors" select="$errors"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
@@ -390,7 +390,7 @@
             </xsl:element>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:copy-of select="gn-fn-metadata:getFieldDirective($editorConfig, name(), $xpath)"/>
+            <xsl:copy-of select="gn-fn-metadata:getFieldDirective($editorConfig, name(), name($theElement), $xpath)"/>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:with-param>
@@ -400,12 +400,7 @@
       <xsl:with-param name="listOfValues" select="$helper"/>
       <xsl:with-param name="toggleLang" select="$isMultilingualElementExpanded"/>
       <xsl:with-param name="forceDisplayAttributes" select="$forceDisplayAttributes"/>
-      <!-- When overriding the label, the element is also considered as first one
-      in order to display its label. -->
-      <xsl:with-param name="isFirst"
-                      select="if ($overrideLabel != '')
-                              then true()
-                              else count(preceding-sibling::*[name() = $elementName]) = 0"/>
+      <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $elementName]) = 0"/>
       <xsl:with-param name="isDisabled" select="$isDisabled"/>
     </xsl:call-template>
   </xsl:template>
@@ -500,7 +495,7 @@
           <element>
             <label><xsl:value-of select="$overrideLabel"/></label>
           </element>
-      	</xsl:when>
+	</xsl:when>
         <xsl:otherwise>
           <xsl:copy-of select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
         </xsl:otherwise>

@@ -300,7 +300,7 @@
     <xsl:apply-templates mode="mode-iso19115-3.2018" select="*"/>
   </xsl:template>
 
-
+  
   <!--
     Display contact as table when mode is flat (eg. simple view) or if using xsl mode
     Match first node (or added one)

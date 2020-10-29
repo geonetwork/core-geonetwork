@@ -13,6 +13,7 @@ import org.fao.geonet.kernel.schema.LinkPatternStreamer.RawLinkPatternStreamer;
 import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -45,6 +46,8 @@ public class ISO19115_3_2018SchemaPlugin
     private static Map<String, Namespace> allTypenames;
     private static Map<String, String> allExportFormats;
 
+    private String parentAssociatedResourceType = null;
+
     static {
         allNamespaces = ImmutableSet.<Namespace>builder()
                 .add(ISO19115_3_2018Namespaces.GCO)
@@ -76,14 +79,18 @@ public class ISO19115_3_2018SchemaPlugin
     public Set<AssociatedResource> getAssociatedResourcesUUIDs(Element metadata) {
         String XPATH_FOR_AGGRGATIONINFO = "*//mri:associatedResource/*" +
                 "[mri:metadataReference/@uuidref " +
-                "and mri:associationType/mri:DS_AssociationTypeCode/@codeListValue != '']";
+                "and %s]";
         Set<AssociatedResource> listOfResources = new HashSet<AssociatedResource>();
         List<?> sibs = null;
         try {
             sibs = Xml
                     .selectNodes(
                             metadata,
-                            XPATH_FOR_AGGRGATIONINFO,
+                            String.format(XPATH_FOR_AGGRGATIONINFO,
+                                StringUtils.isNotEmpty(parentAssociatedResourceType) ?
+                                    String.format("mri:associationType/*/@codeListValue != '%s'", parentAssociatedResourceType) :
+                                    "mri:associationType/mri:DS_AssociationTypeCode/@codeListValue != ''"
+                                ),
                             allNamespaces.asList());
 
 
@@ -117,12 +124,32 @@ public class ISO19115_3_2018SchemaPlugin
 
     @Override
     public Set<String> getAssociatedParentUUIDs(Element metadata) {
+        String XPATH_FOR_PARENT_IN_AGGRGATIONINFO = "*//mri:associatedResource/*" +
+            "[mri:associationType/*/@codeListValue = '%s']/mri:metadataReference/@uuidref";
+
         ElementFilter elementFilter = new ElementFilter("parentMetadata", ISO19115_3_2018Namespaces.MDB);
-        return Xml.filterElementValues(
+        Set<String> parents = Xml.filterElementValues(
                 metadata,
                 elementFilter,
                 null, null,
                 "uuidref");
+
+        if (StringUtils.isNotEmpty(parentAssociatedResourceType)) {
+            try {
+                final List<?> associatedParents = Xml
+                    .selectNodes(
+                        metadata,
+                        String.format(XPATH_FOR_PARENT_IN_AGGRGATIONINFO, parentAssociatedResourceType),
+                        allNamespaces.asList());
+                for (Object o : associatedParents) {
+                    if (o instanceof Attribute) {
+                        parents.add(((Attribute) o).getValue());
+                    }
+                }
+            } catch (JDOMException e) {
+            }
+        }
+        return parents;
     }
 
     public Set<String> getAssociatedDatasetUUIDs (Element metadata) {
@@ -480,5 +507,19 @@ public class ISO19115_3_2018SchemaPlugin
         // TODO: Add xlink:href ?
         patternStreamer.setRawTextXPath(".//*[name() = 'gco:CharacterString' or name() = 'lan:LocalisedCharacterString']");
         return patternStreamer;
+    }
+
+    /**
+     * If not empty defind if parent metadata reference
+     * should also be searched in associated resources.
+     * Define the value of associationType to use.
+     * @return
+     */
+    public String getParentAssociatedResourceType() {
+        return parentAssociatedResourceType;
+    }
+
+    public void setParentAssociatedResourceType(String parentAssociatedResourceType) {
+        this.parentAssociatedResourceType = parentAssociatedResourceType;
     }
 }

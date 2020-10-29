@@ -127,7 +127,6 @@
               </xsl:call-template>
             </xsl:for-each>
           </xsl:variable>
-
           <xsl:for-each select="mri:keyword">
             <tag thesaurus="{$thesaurusTitle}">
               <xsl:call-template name="get-iso19115-3.2018-localised">
@@ -196,13 +195,13 @@
 
   <xsl:template mode="getExtent" match="mdb:MD_Metadata">
     <section class="gn-md-side-extent">
-      <!--<h2>
+      <h2>
         <i class="fa fa-fw fa-map-marker"><xsl:comment select="'image'"/></i>
         <span><xsl:comment select="name()"/>
           <xsl:value-of select="$schemaStrings/spatialExtent"/>
         </span>
       </h2>
-      -->
+
       <xsl:choose>
         <xsl:when test=".//gex:EX_BoundingPolygon">
           <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
@@ -244,33 +243,17 @@
 
 
   <xsl:template mode="getMetadataHeader" match="mdb:MD_Metadata">
-    <xsl:if test="normalize-space(mdb:identificationInfo/*/mri:abstract) != ''">
-      <div class="gn-abstract">
-        <xsl:for-each select="mdb:identificationInfo/*/mri:abstract">
-          <xsl:variable name="txt">
-            <xsl:call-template name="get-iso19115-3.2018-localised">
-              <xsl:with-param name="langId" select="$langId"/>
-            </xsl:call-template>
-          </xsl:variable>
-          <xsl:call-template name="addLineBreaksAndHyperlinks">
-            <xsl:with-param name="txt" select="$txt"/>
+    <div class="gn-abstract">
+      <xsl:for-each select="mdb:identificationInfo/*/mri:abstract">
+        <xsl:variable name="txt">
+          <xsl:call-template name="get-iso19115-3.2018-localised">
+            <xsl:with-param name="langId" select="$langId"/>
           </xsl:call-template>
-        </xsl:for-each>
-      </div>
-    </xsl:if>
-
-    <div class="md-network-link-description">
-      <xsl:variable name="networkLink"
-                    select="$metadata//cit:CI_OnlineResource[cit:protocol/*/text() = 'NETWORK:LINK']"/>
-      <xsl:if test="count($networkLink) > 0">
-        <strong>
-          <xsl:value-of select="$schemaStrings/sxt-view-networkLink"/>
-        </strong>&#160;
-        <xsl:for-each select="$networkLink">
-          <xsl:value-of select="cit:linkage/gco:CharacterString"/>
-          <br/>
-        </xsl:for-each>
-      </xsl:if>
+        </xsl:variable>
+        <xsl:call-template name="addLineBreaksAndHyperlinks">
+          <xsl:with-param name="txt" select="$txt"/>
+        </xsl:call-template>
+      </xsl:for-each>
     </div>
 
     <xsl:if test="$withJsonLd = 'true'">
@@ -284,7 +267,8 @@
 
   <xsl:template mode="getMetadataCitation" match="mdb:MD_Metadata">
     <xsl:variable name="displayCitation"
-                  select="count(.//cit:protocol[* = ('WWW:LINK-1.0-http--metadata-URL', 'WWW:LINK-1.0-http--publication-URL', 'DOI')]) > 0"/>
+                  select="true()"/>
+
     <xsl:variable name="doiUrl"
                   select=".//cit:onlineResource/*[cit:protocol/* = ('WWW:LINK-1.0-http--metadata-URL', 'WWW:LINK-1.0-http--publication-URL', 'DOI')]/cit:linkage/*"/>
     <xsl:variable name="landingPageUrl"
@@ -391,7 +375,7 @@
                        *[gco:Record = '']|*[gco:RecordType = '']|
                        *[gco:LocalName = '']|*[lan:PT_FreeText = '']|
                        *[gml:beginPosition = '']|*[gml:endPosition = '']|
-                       gml:description[. = '']|gml:timePosition[. = '']|
+                       gml:description[. != '']|gml:timePosition[. != '']|
                        *[gco:Date = '']|*[gco:DateTime = '']|*[gco:TM_PeriodDuration = '']"
                 priority="500"/>
   <xsl:template mode="render-field"
@@ -564,34 +548,32 @@
   </xsl:template>
 
 
+  <xsl:template mode="render-field"
+                match="gex:EX_BoundingPolygon/gex:polygon"
+                priority="100">
+    <xsl:copy-of select="gn-fn-render:extent($metadataUuid,
+        count(ancestor::mri:extent/preceding-sibling::mri:extent/*/*[local-name() = 'geographicElement']/*) +
+        count(../../preceding-sibling::gex:geographicElement) + 1)"/>
+    <br/>
+    <br/>
+  </xsl:template>
+
   <!-- Display spatial extents containing bounding polygons on a map -->
 
   <xsl:template mode="render-field"
-                match="gex:EX_Extent[gex:geographicElement/*/gex:polygon]"
+                match="gex:EX_Extent"
                 priority="100">
     <div class="entry name">
-      <h4>
-        <xsl:call-template name="render-field-label">
+    <h4>
+      <xsl:call-template name="render-field-label">
           <xsl:with-param name="languages" select="$allLanguages"/>
         </xsl:call-template>
-        <xsl:apply-templates mode="render-value"
-                             select="@*"/>
-      </h4>
-      <div class="target">
-
-        <xsl:apply-templates mode="render-field" select="gex:description"/>
-
-        <!-- Display all included bounding polygons/boxes on the one map -->
-
-        <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
-
-        <!-- Display any included geographic descriptions separately after map -->
-
-        <xsl:apply-templates mode="render-field" select="gex:geographicElement[gex:EX_GeographicDescription]"/>
-
-        <xsl:apply-templates mode="render-field" select="gex:temporalElement"/>
-        <xsl:apply-templates mode="render-field" select="gex:verticalElement"/>
-
+      <xsl:apply-templates mode="render-value"
+                           select="@*"/>
+    </h4>
+    <div class="target">
+      <xsl:apply-templates mode="render-field"
+                           select="gex:*"/>
       </div>
     </div>
   </xsl:template>
@@ -698,6 +680,10 @@
                   </div>
                 </xsl:for-each>
                 <xsl:for-each select="cit:onlineResource/*/cit:linkage[normalize-space(.) != '']">
+                  <xsl:variable name="linkDescription">
+                    <xsl:apply-templates mode="render-value"
+                                         select="../cit:description"/>
+                  </xsl:variable>
                   <xsl:variable name="linkage">
                     <xsl:apply-templates mode="render-value" select="."/>
                   </xsl:variable>
@@ -706,7 +692,10 @@
                     <xsl:value-of select="if (../cit:name)
                                           then ../cit:name/* else
                                           normalize-space(linkage)"/><xsl:comment select="'.'"/>
-                  </a>
+>                 </a>
+                  <p>
+                    <xsl:value-of select="normalize-space($linkDescription)"/>
+                  </p>
                 </xsl:for-each>
                 <xsl:for-each select="cit:hoursOfService">
                   <span>
@@ -736,7 +725,7 @@
         <xsl:text> (</xsl:text>
       </xsl:if>
       <xsl:apply-templates mode="render-value"
-                           select="cit:positionName"/>
+                            select="cit:positionName"/>
       <xsl:if test="cit:name">
         <xsl:text>)</xsl:text>
       </xsl:if>
@@ -812,7 +801,7 @@
           <xsl:value-of select="if(ends-with($prefix, '/')) then $prefix else concat($prefix, '/')"/>
         </xsl:if>
         <xsl:apply-templates mode="render-value"
-                             select="*/mcc:code"/>
+                               select="*/mcc:code"/>
         <p>
           <xsl:apply-templates mode="render-field"
                                select="*/mcc:authority"/>
@@ -1048,8 +1037,7 @@
                 match="gco:Integer|gco:Decimal|
                        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Angle|
                        gco:Scale|gco:Record|gco:RecordType|
-                       gco:LocalName|
-                       gml:beginPosition|gml:endPosition|gml:description|gml:timePosition">
+                       gco:LocalName|gml:beginPosition|gml:endPosition">
     <xsl:choose>
       <xsl:when test="contains(., 'http')">
         <!-- Replace hyperlink in text by an hyperlink -->
@@ -1112,14 +1100,14 @@
 
 
 
+
   <xsl:template mode="render-value"
                 match="*[gco:Distance|gco:Measure]">
     <xsl:apply-templates mode="render-value"
                          select="gco:Distance|gco:Measure"/>
   </xsl:template>
-
   <xsl:template mode="render-value"
-                match="gco:Distance|gco:Measure" priority="99">
+                match="gco:Distance|gco:Measure">
     <span><xsl:value-of select="."/>&#10;<xsl:value-of select="@uom"/></span>
   </xsl:template>
 
@@ -1149,7 +1137,7 @@
                 match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
                       |gml:beginPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]
                       |gml:endPosition[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
-    <span data-gn-humanize-time="{.}" data-format="DD MMM YYYY">
+    <span data-gn-humanize-time="{.}">
       <xsl:value-of select="."/>
     </span>
   </xsl:template>
