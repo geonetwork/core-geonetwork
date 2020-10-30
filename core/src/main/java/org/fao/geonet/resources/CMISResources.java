@@ -79,20 +79,23 @@ public class CMISResources extends Resources {
             }
         }
 
-        String pathString;
+        String key;
         // For windows it may be "\" in which case we need to change it to folderDelimiter which is normally "/"
         if (keyPath.getFileSystem().getSeparator().equals(CMISConfiguration.getFolderDelimiter())) {
-            pathString = keyPath.toString();
+            key = keyPath.toString();
         } else {
-            pathString = keyPath.toString().replace(keyPath.getFileSystem().getSeparator(), CMISConfiguration.getFolderDelimiter());
+            key = keyPath.toString().replace(keyPath.getFileSystem().getSeparator(), CMISConfiguration.getFolderDelimiter());
+        }
+        // For Windows, the pathString may start with // so remove one if this is the case.
+        if (key.startsWith("//")) {
+            key = key.substring(1);
         }
 
-        String key;
-        if (pathString.startsWith(CMISConfiguration.getFolderDelimiter())) {
-            // remove leading / from path since the base path already ends with "/". Absolute paths will have 2 "/"
-            return (keyPath.isAbsolute() ? pathString.substring(1) : pathString);
+        // Make sure the key that is returns starts with "/"
+        if (key.startsWith(CMISConfiguration.getFolderDelimiter())) {
+            return key;
         } else {
-            return CMISConfiguration.getFolderDelimiter() + pathString;
+            return CMISConfiguration.getFolderDelimiter() + key;
         }
     }
 
@@ -198,7 +201,7 @@ public class CMISResources extends Resources {
         if (resourcesDir != null) {
             key = getKey(resourcesDir, filename);
         } else {
-            key = filename;
+            key = CMISConfiguration.getFolderDelimiter() +  filename;
         }
 
 
