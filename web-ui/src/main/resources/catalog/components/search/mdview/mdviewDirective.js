@@ -99,6 +99,14 @@
           var moreLikeThisQuery = {};
           angular.copy(gnGlobalSettings.gnCfg.mods.search.moreLikeThisConfig, moreLikeThisQuery);
           var query = {
+            "_source": {
+              "include": ['id',
+                'uuid',
+                'overview.*',
+                'resource*',
+                'codelist_status*'
+              ],
+            },
             "query": {
               "bool": {
                 "must": [
@@ -177,7 +185,7 @@
 
         link: function(scope, element, attrs, controller) {
           scope.isRatingEnabled = false;
-          
+
           gnConfigService.load().then(function(c) {
             var statusSystemRating =
               gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
