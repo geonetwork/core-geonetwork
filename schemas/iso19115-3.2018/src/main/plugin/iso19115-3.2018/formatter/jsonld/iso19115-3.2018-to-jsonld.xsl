@@ -166,14 +166,14 @@
                 mode="getJsonLD" match="mdb:MD_Metadata">
   {
     "@context": "http://schema.org/",
-    <xsl:choose>
-      <xsl:when test="mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue != ''">
-        "@type": "<xsl:value-of select="schema-org-fn:getType(mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue,'')"/>",
-      </xsl:when>
-      <xsl:otherwise>
-        "@type": "Dataset",
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:variable name="hierarchyLevels"
+                  select="distinct-values(mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue[. != ''])"/>
+    <xsl:for-each select="$hierarchyLevels">
+      "@type": "<xsl:value-of select="schema-org-fn:getType(., 'schema:')"/>",
+    </xsl:for-each>
+    <xsl:if test="count($hierarchyLevels) = 0">
+      "@type": "schema:Dataset",
+    </xsl:if>
     <!-- TODO: Use the identifier property to attach any relevant Digital Object identifiers (DOIs). -->
     "@id": "<xsl:value-of select="concat($baseUrl, 'api/records/', mdb:metadataIdentifier[1]/*/mcc:code/*/text())"/>",
     "includedInDataCatalog":[{"@type":"DataCatalog","url":"<xsl:value-of select="concat($baseUrl, 'search#', $catalogueName)"/>","name":"<xsl:value-of select="$catalogueName"/>"}],
