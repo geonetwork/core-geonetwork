@@ -542,7 +542,8 @@
                       console.warn('Erreur lors de la lecture de l\'élément applicationProfile', e);
                     }
 
-                    if (appProfile.compositeLayer) {
+                    if (appProfile.compositeLayer && !scope.member.get('compositeInitialized')) {
+                      scope.member.set('compositeInitialized', true);
                       var featureType = wfsLink.url + '#' + wfsLink.name;
                       var minHeatmapCount = appProfile.compositeLayer.minHeatmapCount || 1000;
                       var maxTooltipCount = appProfile.compositeLayer.maxTooltipCount || 1000;
