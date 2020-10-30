@@ -33,6 +33,7 @@ import static org.fao.geonet.kernel.security.SecurityProviderConfiguration.Login
  *
  */
 public class KeycloakConfiguration implements SecurityProviderConfiguration {
+    public static final String REDIRECT_PLACEHOLDER = "{RedirecUrl}";
     private final String SECURITY_PROVIDER = "KEYCLOAK";
     private String DEFAULT_ROLE_GROUP_SEPARATOR = ":";
 
@@ -41,10 +42,29 @@ public class KeycloakConfiguration implements SecurityProviderConfiguration {
 
     private String organisationKey;
 
+    // IDP logout url.  If null then it will not be used.
+    // If supplied then it will redirect to this url before returning to the application.
+    // This can be used if the IDP does not support back channel logout.
+    // It required {RedirecUrl} to appear
+    // i.e. https://idp.example.com/logout?redirect={RedirecUrl}
+    private String IDPLogoutUrl;
+
     private boolean updateProfile;
     private boolean updateGroup;
 
     private String roleGroupSeparator;
+
+    public String getIDPLogoutUrl() {
+        return IDPLogoutUrl;
+    }
+
+    public void setIDPLogoutUrl(String IDPLogoutUrl) {
+        if (IDPLogoutUrl != null && !IDPLogoutUrl.contains(REDIRECT_PLACEHOLDER)) {
+            // IDPLogoutUrl must contain  REDIRECT_PLACEHOLDER
+            throw new BadParameterEx("IDPLogoutUrl", IDPLogoutUrl);
+        }
+        this.IDPLogoutUrl = IDPLogoutUrl;
+    }
 
     public String getOrganisationKey() {
         return organisationKey;

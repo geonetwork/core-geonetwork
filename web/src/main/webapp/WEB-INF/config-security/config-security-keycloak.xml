@@ -56,6 +56,7 @@
     <property name="updateProfile" value="${keycloakConfiguration.updateProfile}"/>
     <property name="updateGroup" value="${keycloakConfiguration.updateGroup}"/>
     <property name="roleGroupSeparator" value="${keycloakConfiguration.roleGroupSeparator}"/>
+    <property name="IDPLogoutUrl" value="${keycloakConfiguration.IDPLogoutUrl}"/>
   </bean>
 
   <bean id="keycloakUserUtils"

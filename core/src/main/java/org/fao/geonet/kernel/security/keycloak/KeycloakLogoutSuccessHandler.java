@@ -23,6 +23,11 @@
 
 package org.fao.geonet.kernel.security.keycloak;
 
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Constants;
+import org.keycloak.adapters.AdapterDeploymentContext;
+import org.keycloak.adapters.KeycloakDeployment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -31,20 +36,26 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 public class KeycloakLogoutSuccessHandler implements LogoutSuccessHandler {
+    @Autowired
+    private KeycloakConfiguration keycloakConfiguration;
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request,
                                 HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
-        if(authentication != null) {
-            System.out.println(authentication.getName());
-        }
+        String url = request.getRequestURL().toString();
+        String redirectUrl = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath();
 
-        String URL = request.getContextPath();
+        // If the IDP does not support back channel logout then we will redirect the client to the IDP logout url
+        if (keycloakConfiguration.getIDPLogoutUrl() != null) {
+            // The redirect url should be in the format similar to https://idp.example.com/logout?redirect={RedirecUrl} we need to replace {RedirecUrl}
+            redirectUrl=keycloakConfiguration.getIDPLogoutUrl().replace(KeycloakConfiguration.REDIRECT_PLACEHOLDER, URLEncoder.encode(redirectUrl, Constants.ENCODING));
+        }
         response.setStatus(HttpStatus.OK.value());
-        response.sendRedirect(URL);
+        response.sendRedirect(redirectUrl);
     }
 }
 
