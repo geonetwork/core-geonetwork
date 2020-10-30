@@ -126,14 +126,14 @@
                 mode="getJsonLD" match="gmd:MD_Metadata">
 	{
 		"@context": "http://schema.org/",
-    <xsl:choose>
-      <xsl:when test="gmd:hierarchyLevel/*/@codeListValue != ''">
-		    "@type": "<xsl:value-of select="schema-org-fn:getType(gmd:hierarchyLevel/*/@codeListValue, 'schema:')"/>",
-      </xsl:when>
-      <xsl:otherwise>
-        "@type": "schema:Dataset",
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:variable name="hierarchyLevels"
+                  select="distinct-values(gmd:hierarchyLevel/*/@codeListValue[. != ''])"/>
+    <xsl:for-each select="$hierarchyLevels">
+      "@type": "<xsl:value-of select="schema-org-fn:getType(., 'schema:')"/>",
+    </xsl:for-each>
+    <xsl:if test="count($hierarchyLevels) = 0">
+      "@type": "schema:Dataset",
+    </xsl:if>
     <!-- TODO: Use the identifier property to attach any relevant Digital Object identifiers (DOIs). -->
 		"@id": "<xsl:value-of select="concat($baseUrl, 'api/records/', gmd:fileIdentifier/*/text())"/>",
 		"includedInDataCatalog":[{"url":"<xsl:value-of select="concat($baseUrl, 'search#', $catalogueName)"/>","name":"<xsl:value-of select="$catalogueName"/>"}],
