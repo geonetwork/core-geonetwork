@@ -17,7 +17,8 @@
     <p class="help-block ng-scope" data-translate="">registry-help</p>
   </div>
 
-  <div class="form-group">
+  <div class="form-group"
+       data-ng-show="languages.length > 0">
     <label class="form-label"
            data-translate="">
       registryChooseLanguages
@@ -39,7 +40,8 @@
     </div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group"
+       data-ng-show="itemClass.length > 0">
     <label class="form-label"
            data-translate="">
     registryChooseType
@@ -50,7 +52,7 @@
   </div>
 
   <div class="form-group"
-       data-ng-show="!isSimple">
+       data-ng-show="itemClass.length > 0 && !isSimple">
     <label class="form-label"
            data-translate="">
       registryChooseItem
@@ -63,5 +65,6 @@
   </div>
 
   <input type="hidden" name="registryUrl" value="{{selectedCollection}}">
+  <input type="hidden" name="registryType" value="{{registryType}}">
 
 </div>

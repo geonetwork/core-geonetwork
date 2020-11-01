@@ -36,6 +36,24 @@
     function($http, $q) {
       var responseFormat = '.json';
 
+      this.guessTool = function(url) {
+        var deferred = $q.defer();
+        $http({
+          url: url + '?_format=jsonld',
+          method: 'GET',
+          headers: {
+            "Accept": "application/ld+json"
+          },
+          cache: true
+        }).then(function (r) {
+          deferred.resolve(
+            r.data['@graph'] ? 'ldRegistry' : 're3gistry');
+        }, function (r) {
+          deferred.resolve('re3gistry');
+        });
+        return deferred.promise;
+      };
+
       this.loadLanguages = function (url) {
         var languages = [];
         var deferred = $q.defer();
@@ -61,25 +79,38 @@
         return deferred.promise;
       };
 
-      this.loadItemClass = function (url, lang) {
+      this.loadItemClass = function (url, type, lang) {
         var itemClass = [];
 
-        var deferred = $q.defer();
+        var deferred = $q.defer(),
+          urlForCollection =
+            (type === 'ldRegistry') ? url + '?_format=jsonld'
+              : url + '/registry/registry.' + lang + responseFormat;
 
         $http({
-          url: url + '/registry/registry.' + lang + responseFormat,
+          url: urlForCollection,
           method: 'GET',
           cache: true
         }).then(function (r) {
-          if (angular.isUndefined(r.data.registry)) {
-            deferred.reject(r);
-          } else {
+          if (type === 'ldRegistry' && r.data['@graph']) {
+            angular.forEach(r.data['@graph'], function (value, key) {
+              var label = value['rdfs:label'];
+              itemClass.push({
+                key: value['@id'],
+                label: angular.isArray(label) ? label[0]['@value']
+                  : (angular.isObject(label) ? label['@value'] : label)
+              });
+            });
+            deferred.resolve(itemClass);
+          } else if (type === 're3gistry' && r.data.registry) {
             angular.forEach(r.data.registry.registers, function (value, key) {
               itemClass.push({
                 key: value.register.id,
                 label: value.register.label.text})
             });
             deferred.resolve(itemClass);
+          } else {
+            deferred.reject(r);
           }
         }, function (r) {
           deferred.reject(r);
