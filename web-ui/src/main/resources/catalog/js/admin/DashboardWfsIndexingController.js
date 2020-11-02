@@ -73,10 +73,10 @@
       $scope.indexUrl = gnHttp.getService('featureindexproxy') + '?_=_search';
 
       // URL of the message producer CRUD API endpoint
-      $scope.messageProducersApiUrl = gnHttp.getService('wfsMessageProducers');
+      $scope.messageProducersApiUrl = '../api/msg_producers';
 
       // URL of the WFS indexing actions
-      $scope.wfsWorkersApiUrl = gnHttp.getService('wfsWorkersActions');
+      $scope.wfsWorkersApiUrl = '../api/workers/data/wfs/actions';
 
       // dictionary of wfs indexing jobs received from the index
       // key is url#typename
@@ -453,7 +453,7 @@
       });
 
       $scope.updateParamsFromApplicationProfile = function(job) {
-        return wfsFilterService.getApplicationProfile(job.mdUuid,
+        return wfsFilterService.getApplicationProfile(null, job.mdUuid,
           job.featureType,
           job.url,
           'WFS').then(
