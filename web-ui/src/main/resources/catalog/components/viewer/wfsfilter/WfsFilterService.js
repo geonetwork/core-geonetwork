@@ -275,13 +275,40 @@
        * @param {string} ftName featuretype name
        * @param {string} wfsUrl url of the wfs service
        */
-      this.getApplicationProfile = function(uuid, ftName, wfsUrl, protocol) {
-        return $http.post('../api/0.1/records/' + uuid +
-          '/query/wfs-indexing-config', {
-          url: wfsUrl,
-          name: ftName,
-          protocol: protocol
-        });
+      this.getApplicationProfile = function(md, uuid, ftName, wfsUrl, protocol) {
+        // Metadata is set (it will not on map reload)
+        // and has a linksTree field
+        if (md && md.linksTree) {
+          var deferred = $q.defer();
+          var applicationProfile = md.linksTree.map(function (d) {
+              return d.filter(function (e) {
+                return e.protocol === 'OGC:WFS';
+              });
+            }).filter(function (f) {
+              return f[0] ? f[0].name : undefined;
+            }).find(function (s) {
+              return s[0].name === ftName;
+            })[0].applicationProfile;
+
+          try {
+            JSON.parse(applicationProfile);
+            deferred.resolve({
+              '0': applicationProfile
+            });
+          } catch (e) {
+            deferred.resolve({
+              '0': '{}'
+            }); // no ApplicationProfile for current md
+          }
+          return deferred.promise;
+        } else {
+          return $http.post('../api/records/' + uuid +
+            '/query/wfs-indexing-config', {
+            url: wfsUrl,
+            name: ftName,
+            protocol: protocol
+          });
+        }
       };
 
       /**
@@ -377,7 +404,7 @@
 
         return $http({
           method: 'POST',
-          url: '../api/0.1/tools/ogc/sld',
+          url: '../api/tools/ogc/sld',
           data: $.param(params),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
@@ -392,7 +419,7 @@
        */
       this.indexWFSFeatures = function(
         url, type, idxConfig, treeFields, uuid, version) {
-        return $http.put('../api/0.1/workers/data/wfs/actions/start', {
+        return $http.put('../api/workers/data/wfs/actions/start', {
             url: url,
             typeName: type,
             version: version || '1.1.0',

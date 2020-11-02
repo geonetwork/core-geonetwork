@@ -189,6 +189,9 @@
            * all different feature types.
            */
           function init() {
+            if (scope.layer == null) {
+              return;
+            }
 
             var source = scope.layer.getSource();
             if (!source || !(source instanceof ol.source.ImageWMS ||
@@ -218,7 +221,7 @@
             scope.featureTypeName = ftName;
 
             appProfile = null;
-            appProfilePromise = wfsFilterService.getApplicationProfile(uuid,
+            appProfilePromise = wfsFilterService.getApplicationProfile(scope.md, uuid,
               ftName,
               gnGlobalSettings.getNonProxifiedUrl(scope.wfsUrl ? scope.url : scope.mdUrl),
               // A WFS URL is in the metadata or we're guessing WFS has
@@ -816,31 +819,17 @@
            * Only available for administrators.
            */
           scope.indexWFSFeatures = function(version) {
-            var applicationProfile = scope.md.linksTree.map(function (d) {
-              return d.filter(function (e) {
-                return e.protocol === 'OGC:WFS';
-              });
-            }).filter(function (f) {
-              return f[0] ? f[0].name : undefined;
-            }).find(function (s) {
-              return s[0].name === ftName;
-            })[0].applicationProfile;
+            appProfilePromise.then(function() {
+              wfsFilterService.indexWFSFeatures(
+                scope.url,
+                ftName,
+                appProfile ? appProfile.tokenizedFields : null,
+                appProfile ? appProfile.treeFields : null,
+                uuid,
+                version);
 
-            try {
-              applicationProfile = JSON.parse(applicationProfile);
-            } catch(e) {
-              applicationProfile = null; // no ApplicationProfile for current md
-            };
-            wfsFilterService.indexWFSFeatures(
-              scope.url,
-              ftName,
-              applicationProfile ? applicationProfile.tokenizedFields : null,
-              applicationProfile ? applicationProfile.treeFields : null,
-              uuid,
-              version);
-
-            // save WFS indexing job if not done already
-            scope.saveWfsIndexingJob();
+              scope.saveWfsIndexingJob();
+            });
           };
 
           // Init the directive
@@ -991,7 +980,7 @@
           }
 
           // check whether the WFS service is already in the database
-          scope.messageProducersApiUrl = gnHttp.getService('wfsMessageProducers');
+          scope.messageProducersApiUrl = '../api/msg_producers';
           var wfsIndexJobSavedPromise = $http.get(
             scope.messageProducersApiUrl + '/find?url=' + scope.wfsUrl + '&featureType=' + scope.featureTypeName
           )

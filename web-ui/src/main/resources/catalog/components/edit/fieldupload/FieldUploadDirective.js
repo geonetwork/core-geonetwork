@@ -137,7 +137,7 @@
             scope.queue = [];
             scope.filestoreUploadOptions = {
               autoUpload: true,
-              url: '../api/0.1/records/' + gnCurrentEdit.uuid +
+              url: '../api/records/' + gnCurrentEdit.uuid +
                 '/attachments?visibility=public',
               dropZone: $('#gn-overview-dropzone'),
               singleUpload: true,
