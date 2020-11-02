@@ -100,9 +100,9 @@
         <i class="fa fa-filter"></i>&nbsp;
         <span data-translate="">applyFilter</span>
       </button>
-      <button  ng-if="::sextant" class="btn btn-default btn-xs"
-               title="{{'refresh' | translate}}"
-               data-ng-click="initIndexRequest()">
+      <button class="btn btn-default btn-xs"
+              title="{{'refresh' | translate}}"
+              data-ng-click="initIndexRequest()">
         <i class="fa fa-refresh"></i>
       </button>
       <button data-ng-if="user.canEditRecord(md) || md.isHarvested == 'y'"
