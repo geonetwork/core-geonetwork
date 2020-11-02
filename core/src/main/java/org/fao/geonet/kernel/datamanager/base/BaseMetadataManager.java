@@ -142,6 +142,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -507,13 +508,15 @@ public class BaseMetadataManager implements IMetadataManager {
                 List<?> titleNodes = null;
                 try {
                     titleNodes = Xml.selectNodes(xml, path, new ArrayList<Namespace>(schemaPlugin.getNamespaces()));
-
+                    // Use ISO 8601 GMT
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
                     for (Object o : titleNodes) {
                         if (o instanceof Element) {
                             Element title = (Element) o;
                             title.setText(String
                                 .format(messages.getString("metadata.title.createdFrom" + (fromTemplate ? "Template" : "Record")),
-                                    title.getTextTrim(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+                                    title.getTextTrim(), simpleDateFormat.format(new Date())));
                         }
                     }
                 } catch (JDOMException e) {
