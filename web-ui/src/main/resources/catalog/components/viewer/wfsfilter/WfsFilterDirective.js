@@ -132,7 +132,8 @@
           featureTypeName: '@',
           wfsUrl: '@',
           displayCount: '@',
-          baseLayer: '=layer'
+          baseLayer: '=baseLayer',
+          layer: '=layer'
         },
         controller: function() {},
         link: function(scope, element, attrs, ctrl) {
@@ -174,6 +175,13 @@
 
           var textInputsHistory = {};
 
+          // use nested wms if we're in a group
+          if (scope.baseLayer && scope.baseLayer.get('originalWms')) {
+            scope.layer = scope.baseLayer.get('originalWms');
+          } else if (scope.baseLayer) {
+            scope.layer = scope.baseLayer
+          }
+
           /**
            * Init the directive when the scope.layer has changed.
            * If the layer is given through the isolate scope object, the init
@@ -200,7 +208,7 @@
                 scope.wfsUrl || scope.layer.get('url').replace(/wms/i, 'wfs'))
             });
 
-            uuid = scope.md && scope.md.getUuid();
+            uuid = scope.md && scope.md.uuid;
             // FIXME ? This comes from Sextant probably and
             // does not work here when current layer change
             // the previous featureTypeName is still used.
