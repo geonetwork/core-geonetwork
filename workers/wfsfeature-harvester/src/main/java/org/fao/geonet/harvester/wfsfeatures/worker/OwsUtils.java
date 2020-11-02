@@ -70,9 +70,11 @@ public class OwsUtils {
                 Float.class)) {
             type = "double";
         } else if (descriptor.getType().getBinding().isAssignableFrom(
-                Date.class) ||
+                java.util.Date.class) ||
                    descriptor.getType().getBinding().isAssignableFrom(
-               Timestamp.class)) {
+                java.sql.Timestamp.class) ||
+                   descriptor.getType().getBinding().isAssignableFrom(
+                java.sql.Date.class)) {
             type = "date";
         } else if (descriptor.getType().getBinding().isAssignableFrom(
                 Long.class)) {

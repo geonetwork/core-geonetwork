@@ -171,7 +171,8 @@ public class EsWFSFeatureIndexer {
             throw new InvalidArgumentException("Missing WFS harvester configuration.");
         }
 
-        LOGGER.info("Initializing harvester configuration for uuid '{}', url '{}', feature type '{}'. Exchange id is '{}'.", new Object[] {
+        LOGGER.info("Initializing harvester configuration for uuid '{}', url '{}'," +
+            "feature type '{}'. treefields are {}, tokenizedFields are {} Exchange id is '{}'.", new Object[] {
             configuration.getMetadataUuid(),
             configuration.getUrl(),
             configuration.getTypeName(),
@@ -208,11 +209,11 @@ public class EsWFSFeatureIndexer {
             new Object[]{url, typeName, index, indexType});
         try {
             long begin = System.currentTimeMillis();
-            client.deleteByQuery(index, String.format("+featureTypeId:\\\"%s\\\"", getIdentifier(url, typeName)));
+            client.deleteByQuery(index, String.format("+featureTypeId:\"%s\"", getIdentifier(url, typeName)));
             LOGGER.info("  Features deleted in {} ms.", System.currentTimeMillis() - begin);
 
             begin = System.currentTimeMillis();
-            client.deleteByQuery(index, String.format("+id:\\\"%s\\\"",
+            client.deleteByQuery(index, String.format("+id:\"%s\"",
                 getIdentifier(url, typeName)));
             LOGGER.info("  Report deleted in {} ms.", System.currentTimeMillis() - begin);
 
