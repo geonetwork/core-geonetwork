@@ -32,6 +32,7 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,20 +41,24 @@ import java.util.Map;
 /**
  * Created by fgravin on 11/5/15.
  */
-public class WFSHarvesterExchangeState {
-    Logger logger = Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
-
+public class WFSHarvesterExchangeState implements Serializable {
     private WFSHarvesterParameter parameters;
+    private transient Logger logger = Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
+    private transient Map<String, String> fields = new LinkedHashMap<String, String>();
+    private transient WFSDataStore wfsDatastore = null;
 
     public WFSHarvesterParameter getParameters() {
         return parameters;
     }
 
+    public WFSHarvesterExchangeState(WFSHarvesterParameter parameters) {
+        this.parameters = parameters;
+        checkTaskParameters();
+    }
     public void setParameters(WFSHarvesterParameter parameters) {
         this.parameters = parameters;
     }
 
-    private Map<String, String> fields = new LinkedHashMap<String, String>();
 
     public void setFields(Map<String, String> fields) {
         this.fields = fields;
@@ -63,8 +68,6 @@ public class WFSHarvesterExchangeState {
         return fields;
     }
 
-    private WFSDataStore wfsDatastore = null;
-
     public void setWfsDatastore(WFSDataStore wfsDatastore) {
         this.wfsDatastore = wfsDatastore;
     }
@@ -73,10 +76,6 @@ public class WFSHarvesterExchangeState {
         return wfsDatastore;
     }
 
-    WFSHarvesterExchangeState(WFSHarvesterParameter parameters) {
-        this.parameters = parameters;
-        checkTaskParameters();
-    }
 
     private void checkTaskParameters() {
         logger.info("Checking parameters ...");
@@ -98,6 +97,9 @@ public class WFSHarvesterExchangeState {
      * all schema infos (attributes names and types).
      */
     public void initDataStore() throws Exception {
+//        WFSDataStoreStrategyWithNameSpaceForMapServer factory = new WFSDataStoreStrategyWithNameSpaceForMapServer();
+//        factory.init(parameters.getUrl(), parameters.getTypeName());
+
         WFSDataStoreFactory factory = new WFSDataStoreFactory();
         Map m = new HashMap();
 
@@ -115,6 +117,7 @@ public class WFSHarvesterExchangeState {
             m.put(WFSDataStoreFactory.USEDEFAULTSRS.key, true);
             m.put(WFSDataStoreFactory.OUTPUTFORMAT.key, "GML3"); // seems to be mandatory with wfs 1.1.0 sources
             m.put(WFSDataStoreFactory.LENIENT.key, true);
+//            m.put(WFSDataStoreFactory.WFS_STRATEGY.key, "mapserver");
 
             if (parameters.getMaxFeatures() != -1) {
                 m.put(WFSDataStoreFactory.MAXFEATURES.key, parameters.getMaxFeatures());

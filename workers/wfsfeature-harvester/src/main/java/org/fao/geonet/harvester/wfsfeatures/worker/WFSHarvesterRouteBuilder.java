@@ -39,6 +39,7 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
     public static final String LOGGER_NAME = "geonetwork.harvest.wfs.features";
     public static final String MESSAGE_HARVEST_WFS_FEATURES = "harvest-wfs-features";
     public static final String MESSAGE_DELETE_WFS_FEATURES = "delete-wfs-features";
+    public static final String HARVEST_WFS_FEATURES_QUEUE_URI = "activemq:queue:" + MESSAGE_HARVEST_WFS_FEATURES + "?concurrentConsumers=5";
 
     private boolean startsFromXMLConfigurationFile = false;
 
@@ -52,7 +53,7 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
 
 
     @Override
-    public void configure() throws Exception {
+    public void configure() {
         onException(Exception.class)
                 .handled(true)
                 .log(LoggingLevel.ERROR, LOGGER_NAME,
@@ -95,7 +96,7 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
          * types and the WFSDatastore.
          * This bean will be pass to next Route.
          */
-        from("activemq:queue:" + MESSAGE_HARVEST_WFS_FEATURES + "?concurrentConsumers=5")
+        from(HARVEST_WFS_FEATURES_QUEUE_URI)
                 .id("harvest-wfs-start-from-message")
                 .log(LoggingLevel.INFO, LOGGER_NAME, "Harvest features message received.")
                 .log(LoggingLevel.INFO, LOGGER_NAME, "${body}")
