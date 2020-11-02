@@ -116,12 +116,11 @@
     'gnGlobalSettings',
     'gnSearchSettings',
     'gnFeaturesTableManager',
-    'gnHttp',
     'gnAlertService',
     'gnFacetTree',
     function($http, wfsFilterService, $q, $rootScope, $translate,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
-             gnSearchSettings, gnFeaturesTableManager, gnHttp,
+             gnSearchSettings, gnFeaturesTableManager,
              gnAlertService, gnFacetTree) {
       return {
         restrict: 'A',
@@ -138,7 +137,8 @@
         controller: function() {},
         link: function(scope, element, attrs, ctrl) {
 
-          var indexUrl, uuid, ftName, appProfile, appProfilePromise;
+          var indexUrl, uuid, ftName, appProfile,
+            appProfilePromise, wfsIndexJobSavedPromise;
           scope.map = scope.$parent.map;
           var map = scope.map;
 
@@ -238,6 +238,16 @@
             scope.indexObject = indexObject;
             scope.layer.set('indexObject', indexObject);
 
+            // check whether the WFS service is already in the database
+            scope.messageProducersApiUrl = '../api/msg_producers';
+            wfsIndexJobSavedPromise = $http.get(
+              scope.messageProducersApiUrl + '/find?url=' + encodeURIComponent(scope.url) + '&featureType=' + scope.featureTypeName
+            )
+              .then(function() {
+                return true
+              }, function() {
+                return false
+              });
 
             scope.checkWFSServerUrl();
             scope.initIndexRequest();
@@ -979,25 +989,14 @@
             return newItems;
           }
 
-          // check whether the WFS service is already in the database
-          scope.messageProducersApiUrl = '../api/msg_producers';
-          var wfsIndexJobSavedPromise = $http.get(
-            scope.messageProducersApiUrl + '/find?url=' + scope.wfsUrl + '&featureType=' + scope.featureTypeName
-          )
-            .then(function() {
-              return true
-            }, function() {
-              return false
-            });
-
           scope.saveWfsIndexingJob = function() {
             wfsIndexJobSavedPromise.then(function(saved) {
               if (saved) return;
               var payload = {
                 wfsHarvesterParam: {
-                  url: scope.wfsUrl,
+                  url: scope.url,
                   typeName: scope.featureTypeName,
-                  metadataUuid: scope.md && scope.md.getUuid()
+                  metadataUuid: scope.md && scope.md.uuid
                 },
                 cronExpression: null
               };

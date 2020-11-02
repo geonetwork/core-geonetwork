@@ -114,8 +114,8 @@
         if (md.error) {
           alert.text($translate.instant(md.error));
           alert.css({ display: 'block' });
-        } else if (md.title) {
-          title.text(md.title);
+        } else if (md.resourceTitle) {
+          title.text(md.resourceTitle);
           link.css({ display: 'block' });
         }
       }
@@ -252,7 +252,7 @@
               }
 
               gnMetadataManager.getMdObjByUuid(job.mdUuid).then(function(md) {
-                if (!md['geonet:info']) {
+                if (!md) {
                   job.md = {
                     error: 'wfsIndexingMetadataNotFound'
                   };
@@ -370,13 +370,14 @@
                 var labelDelete = $translate.instant('wfsDeleteWfsIndexing');
 
                 return '<div class="dropdown">' +
-                  '  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">' +
-                  '    ' + $translate.instant('wfsHarvesterActions') + '&nbsp;<span class="caret"></span>' +
+                  '  <button class="btn btn-default dropdown-toggle" ' +
+                  '          title="' + $translate.instant('wfsHarvesterActions') + '"' +
+                  '          type="button" data-toggle="dropdown"><icon class="fa fa-fw fa-cog"></icon><span class="caret"></span>' +
                   '  </button>' +
                   '  <ul class="dropdown-menu dropdown-menu-right">' +
-                  '    <li><a href="#" data-job-key="' + key + '">' + labelEdit + '</a></li>' +
-                  '    <li><a href="#" data-trigger-job-key="' + key + '">' + labelNow + '</a></li>' +
-                  '    <li><a href="#" data-delete-key="' + key + '">' + labelDelete + '</a></li>' +
+                  '    <li><a href="#" data-job-key="' + key + '"><icon class="fa fa-fw fa-calendar"/>' + labelEdit + '</a></li>' +
+                  '    <li><a href="#" data-trigger-job-key="' + key + '"><icon class="fa fa-fw fa-play"/>' + labelNow + '</a></li>' +
+                  '    <li><a href="#" data-delete-key="' + key + '"><icon class="fa fa-fw fa-times"/>' + labelDelete + '</a></li>' +
                   '  </ul>' +
                   '</div>';
               }
@@ -453,6 +454,14 @@
       });
 
       $scope.updateParamsFromApplicationProfile = function(job) {
+        var params = {
+          typeName: job.featureType,
+          url: job.url,
+          metadataUuid: job.mdUuid,
+          tokenizedFields: null,
+          treeFields : null
+        };
+
         return wfsFilterService.getApplicationProfile(null, job.mdUuid,
           job.featureType,
           job.url,
@@ -460,16 +469,13 @@
           function(response) {
             if (response.status == 200) {
               var appProfile = angular.fromJson(response.data['0']);
-              var params = {
-                typeName: job.featureType,
-                url: job.url,
-                metadataUuid: job.mdUuid,
-                tokenizedFields: appProfile ? appProfile.tokenizedFields : null,
-                treeFields : appProfile ? appProfile.treeFields : null
-              };
+              params.tokenizedFields = appProfile.tokenizedFields;
+              params.treeFields = appProfile.treeFields;
               return params
             }
-          }).catch(function() {});
+          }).catch(function() {
+          return params
+        });
       };
 
       $scope.triggerIndexing = function(key) {
