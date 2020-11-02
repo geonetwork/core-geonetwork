@@ -43,7 +43,8 @@
                 select="format-dateTime(current-dateTime(),$df)"/>
 
   <xsl:variable name="registryBase"
-                select="//(skos:ConceptScheme|reg:RegisterItem)"/>
+                select="//(skos:ConceptScheme
+                          |reg:RegisterItem[reg:itemClass/@rdf:resource = 'http://www.w3.org/2004/02/skos/core#ConceptScheme'])"/>
 
   <xsl:variable name="thesaurusId"
                 select="$registryBase/@rdf:about"/>
@@ -52,6 +53,12 @@
                 select="$registryBase/dcterms:modified"/>
 
   <xsl:template match="/documents">
+
+    <xsl:variable name="concepts">
+      <xsl:apply-templates mode="concept"
+                           select="*//(skos:Concept
+                                      |reg:RegisterItem[reg:itemClass/@rdf:resource = 'http://www.w3.org/2004/02/skos/core#Concept'])"/>
+    </xsl:variable>
 
     <rdf:RDF xmlns:skos="http://www.w3.org/2004/02/skos/core#"
              xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -66,18 +73,12 @@
         <dcterms:issued><xsl:value-of select="if ($thesaurusDate != '') then $thesaurusDate else $now"/></dcterms:issued>
         <dcterms:modified><xsl:value-of select="if ($thesaurusDate != '') then $thesaurusDate else $now"/></dcterms:modified>
 
-        <!-- Add top concepts for all items with no parent
-        <xsl:for-each select="*[1]/*:containeditems/*[not(*:parents)]">
-          <skos:hasTopConcept rdf:resource="{@id}"/>
-        </xsl:for-each>-->
+        <xsl:for-each select="distinct-values($concepts/*[skos:narrower and not(skos:broader)]/@rdf:about)">
+          <skos:hasTopConcept rdf:resource="{.}"/>
+        </xsl:for-each>
       </skos:ConceptScheme>
 
-      <!-- We assume that the first codelist contains the full
-      list of items to describes and that the following contains
-      translations for each items of the first one. -->
-      <xsl:apply-templates mode="concept"
-                           select="*//skos:Concept"/>
-
+      <xsl:copy-of select="$concepts"/>
     </rdf:RDF>
   </xsl:template>
 
@@ -105,33 +106,56 @@
 
 
   <xsl:template mode="concept"
-                match="skos:Concept">
+                match="skos:Concept|reg:RegisterItem">
 
     <xsl:variable name="conceptId"
                   select="@rdf:about"/>
 
-    <xsl:variable name="items"
-                  select="/documents/*[1]/*:containeditems/*"/>
-
     <skos:Concept rdf:about="{$conceptId}">
-      <xsl:copy-of select="skos:prefLabel|skos:inScheme"
-                   copy-namespaces="no"/>
+      <xsl:if test="local-name() = 'RegisterItem' or local-name(..) = 'hasTopConcept'">
+        <skos:inScheme rdf:resource="{$thesaurusId}"/>
+      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="skos:prefLabel">
+          <xsl:copy-of select="skos:prefLabel"
+                       copy-namespaces="no"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:for-each select="rdfs:label">
+            <skos:prefLabel>
+              <xsl:copy-of select="@xml:lang|text()"/>
+            </skos:prefLabel>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:for-each select="dcterms:description">
         <skos:scopeNote>
           <xsl:copy-of select="@xml:lang|text()"/>
         </skos:scopeNote>
       </xsl:for-each>
 
-      <!-- Add broader and narrower links
-      <xsl:if test="$hasBroaderNarrowerLinks">
-        <xsl:for-each select="*:parents/*:parent">
-          <skos:broader rdf:resource="{@id}"/>
-        </xsl:for-each>
+      <xsl:for-each select="distinct-values(
+                            skos:broader/skos:Concept/@rdf:about
+                            |skos:broader/@rdf:resource
+                            |//skos:broader[
+                                ../name() = 'skos:Concept'
+                                and /@rdf:about = $conceptId]/(@rdf:resource|skos:Concept/@rdf:about)
+                            |//skos:Concept[skos:narrower[@rdf:resource = $conceptId or skos:Concept/@rdf:about = $conceptId]]/@rdf:about)">
+        <skos:broader rdf:resource="{.}"/>
+      </xsl:for-each>
 
-        <xsl:for-each select="$items[*:parents/*:parent/@id = $conceptId]">
-          <skos:narrower rdf:resource="{@id}"/>
-        </xsl:for-each>
-      </xsl:if>-->
+
+      <xsl:for-each select="distinct-values(
+                            skos:narrower/skos:Concept/@rdf:about
+                            |skos:narrower/@rdf:resource
+                            |//skos:narrower[
+                                ../name() = 'skos:Concept'
+                                and /@rdf:about = $conceptId]/(@rdf:resource|skos:Concept/@rdf:about)
+                            |//skos:Concept[skos:broader[@rdf:resource = $conceptId or skos:Concept/@rdf:about = $conceptId]]/@rdf:about
+                            )">
+        <skos:narrower rdf:resource="{.}"/>
+      </xsl:for-each>
+
     </skos:Concept>
   </xsl:template>
 

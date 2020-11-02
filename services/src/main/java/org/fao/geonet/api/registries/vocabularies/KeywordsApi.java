@@ -869,7 +869,7 @@ public class KeywordsApi {
         if (lang != null) {
             Element documents = new Element("documents");
             if (registryType == REGISTRY_TYPE.ldRegistry) {
-                Path localRdf = getXMLContentFromUrl(registryUrl + "?_format=rdf", context);
+                Path localRdf = getXMLContentFromUrl(registryUrl + "?_view=with_metadata&_format=rdf", context);
                 Element ldRegistryCodelistAsRdf = Xml.loadFile(localRdf);
                 documents.addContent(ldRegistryCodelistAsRdf);
             } else {

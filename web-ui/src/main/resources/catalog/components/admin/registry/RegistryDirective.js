@@ -54,10 +54,21 @@
           scope.registryUrl = '';
           // Can be re3gistry or ldRegistry
           scope.registryType = null;
-          scope.defaultRegistry = 'https://inspire.ec.europa.eu';
+          scope.registries = [{
+              name: 'INSPIRE',
+              url: 'https://inspire.ec.europa.eu'
+            },
+            {
+              name: 'BRGM',
+              url: 'https://data.geoscience.fr/ncl/'
+            },
+            {
+              name: 'CSIRO',
+              url: 'http://registry.it.csiro.au/'
+            }];
 
-          scope.setDefault = function() {
-            scope.registryUrl = scope.defaultRegistry;
+          scope.setDefault = function(url) {
+            scope.registryUrl = url;
           }
 
           function getMainLanguage() {
@@ -91,6 +102,10 @@
               return;
             }
 
+            scope.selectedClass = null;
+            scope.selectedCollection = null;
+            scope.itemCollection = [];
+
             scope.registryType = gnRegistryService.guessTool(scope.registryUrl)
               .then(function(TYPE) {
               scope.registryType = TYPE;
@@ -100,9 +115,6 @@
               gnRegistryService.loadLanguages(scope.registryUrl).then(
                 function (languages) {
                   scope.languages = languages;
-                  scope.selectedClass = null;
-                  scope.selectedCollection = null;
-                  scope.itemCollection = [];
 
                   if (languages.length > 0) {
                     selectPreferredLanguage();
