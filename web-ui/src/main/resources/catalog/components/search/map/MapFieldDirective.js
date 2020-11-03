@@ -175,6 +175,8 @@
                 var densifyEdges = function(feat, parts=4) {
                   let outCoords = [];
                   let inCoords = feat.getGeometry().getCoordinates()[0];
+                  // No need to densify if shape already has a reasonable amount of points
+                  if (inCoords.length > 4 * parts) return;
                   for (let i = 0; i < inCoords.length - 1; i++) {
                     let p0, p1, x0, y0, dX;
                     p0 = inCoords[i];
@@ -269,7 +271,7 @@
                 }
 
                 /**
-                 * Makes a "cut" at the meridian from the geometry edge up or down to the polar coordinate.
+                 * Makes a "cut" at the datum line from the geometry edge up or down to the polar coordinate.
                  * The feature geometry is also transformed to WGS 1984 (EPSG:4326).
                  * NOTE: This is not suitable for complex or multipart polygons!
                  * 
@@ -288,15 +290,10 @@
                 var modifyPolarExtent = function(feat, polarCoord) {
                   const atNorthPole = polarCoord == northPole;
                   const polarLat = atNorthPole ? 90 : -90;
-                  const projDef = proj4.defs[proj];
                   const parts = feat.getGeometry().getCoordinates();
 
-                  if (!projDef || !projDef.lat0 || !projDef.long0) {
-                    throw ReferenceError(proj + ' projection has not been defined');
-                  }
-
-                  // Set the point of origin (where "meridian" line towards polar coordinate starts)
-                  let originCoord = getXY(projDef.long0, projDef.lat0);
+                  // Set the point of origin at equator (where datum line towards polar coordinate starts)
+                  let originCoord = getXY(180, 0);
 
                   // Show some warnings/info (when in debug mode)
                   console.log('Search extent contains ' + (atNorthPole ? 'north' : 'south') + ' pole');
@@ -304,48 +301,51 @@
                     console.warn('Multi-polygon polar search extents are not supported: this will produce unexpected results');
                   }
 
-                  // Find (1st) polar-side segment that crosses the "meridian".
-                  // NOTE: this also works for non-square shapes, but NOT for shapes that cross the meridian multiple times!
+                  // Find (1st) polar-side line segment that crosses the "datum".
+                  // NOTE: this also works for non-square shapes, but NOT for shapes that cross the datum line multiple times!
                   let coords = parts[0];
-                  let crossingSegment = {
-                    insertPos: -1,
-                    firstPoint: null,
-                    lastPoint: null
-                  };
+                  let intersectionPointIndex = -1;
+                  let lineStart = null;
+                  let lineEnd = null;
                   for (let i = 0; i < coords.length - 1; i++) {
                     const p1 = coords[i];
                     const p2 = coords[i + 1];
                     if (linesIntersect(p1, p2, originCoord, polarCoord)) {
-                      crossingSegment.insertPos = i + 1;
-                      crossingSegment.firstPoint = p1;
-                      crossingSegment.lastPoint = p2;
+                      intersectionPointIndex = i + 1;
+                      lineStart = p1;
+                      lineEnd = p2;
                       break;
                     }
                   }
                   
-                  if (crossingSegment.firstPoint !== null) {
-                    // Calculate intersection point between extent segment and "meridian" line
-                    let intersectionPoint = getIntersection(crossingSegment.firstPoint, crossingSegment.lastPoint, originCoord, polarCoord);
-                    coords.splice(crossingSegment.insertPos, 0, intersectionPoint);
+                  if (lineStart !== null) {
+                    // Calculate intersection point between extent segment and datum line
+                    let intersectionPoint = getIntersection(lineStart, lineEnd, originCoord, polarCoord);
+                    coords.splice(intersectionPointIndex, 0, intersectionPoint);
                     feat.setGeometry(new ol.geom.Polygon([coords]));
                   }
 
                   // Transform to WGS 1984 (EPSG:4326)
                   feat.getGeometry().transform(proj, 'EPSG:4326');
                   
-                  if (crossingSegment.insertPos >= 0) {
-                    // Get all (transformed) coordinates
+                  if (intersectionPointIndex >= 0) {
+                    // Get all (transformed) coordinates and previous and next longitudes
                     coords = feat.getGeometry().getCoordinates()[0];
-                    // Get coordinate before inserted one above
-                    const prevCoord = coords[crossingSegment.insertPos - 1];
-                    const lon1 = prevCoord[0] < 0 ? -180 : 180;
-                    const lon2 = -lon1; 
-                    // Set longitude of inserted coordinate to the correct hemisphere and max degrees ((-)180)                  
-                    coords[crossingSegment.insertPos][0] = lon1;
+                    const prevLon = coords[intersectionPointIndex - 1][0];
+                    const nextLon = coords[intersectionPointIndex + 1][0];
+                    // Determine polar longitudes (order)
+                    const polarLon1 = prevLon < 0 && nextLon > 0 ? -180 : 180;
+                    const polarLon2 = -polarLon1;
+                    // Get longitude of inserted coordinate, negate if needed (ensure correct hemisphere)
+                    let insertedLon = coords[intersectionPointIndex][0];
+                    if ((insertedLon > 0 && polarLon1 < 0) || (insertedLon < 0 && polarLon1 > 0)) {
+                      insertedLon = -insertedLon;
+                      coords[intersectionPointIndex][0] = insertedLon;
+                    }                
                     // Get latitude of inserted coordinate
-                    const lat = coords[crossingSegment.insertPos][1];
-                    // Insert 3 coordinates at [lon1, (-)90], [lon2, (-)90] and [lon2, lat]
-                    coords.splice(crossingSegment.insertPos + 1, 0, [lon1, polarLat], [lon2, polarLat], [lon2, lat]);
+                    const insertedLat = coords[intersectionPointIndex][1];
+                    // Insert 3 coordinates (2 at either side of the pole) to create the "cut"
+                    coords.splice(intersectionPointIndex + 1, 0, [polarLon1, polarLat], [polarLon2, polarLat], [-insertedLon, insertedLat]);
                     feat.setGeometry(new ol.geom.Polygon([coords]));
                   }
                 }
