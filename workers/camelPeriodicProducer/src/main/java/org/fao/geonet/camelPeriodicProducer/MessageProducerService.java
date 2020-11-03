@@ -60,9 +60,18 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
     @Autowired
     protected MessageProducerRepository msgProducerRepository;
     @Autowired
-    private EsSearchManager searchManager;
-    @Autowired
     MetadataRepository metadataRepository;
+    @Autowired
+    MetadataSavedQueryApi savedQueryApi;
+
+    public MessageProducerService() {
+    }
+
+    public MessageProducerService(MetadataRepository metadataRepository,
+                                  MetadataSavedQueryApi savedQueryApi) {
+        this.metadataRepository = metadataRepository;
+        this.savedQueryApi = savedQueryApi;
+    }
 
     @Override
     public void onApplicationEvent(ServerStartup serverStartup) {
@@ -136,16 +145,17 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
     private HashMap<String, Object> getApplicationProfile(String metadataUuid, String typeName) {
         try {
             Metadata metadata = metadataRepository.findOneByUuid(metadataUuid);
-            MetadataSavedQueryApi queryApi = ApplicationContextHolder.get().getBean(MetadataSavedQueryApi.class);
-            HashMap<String, String> params = new HashMap<>();
-            params.put("protocol", "WFS");
-            params.put("name", typeName);
-            Map<String, String> wfsConfig = queryApi.query(metadata,
-                "wfs-indexing-config", params
+            if(metadata != null) {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("protocol", "WFS");
+                params.put("name", typeName);
+                Map<String, String> wfsConfig = savedQueryApi.query(metadata,
+                    "wfs-indexing-config", params
                 );
-            if (wfsConfig.size() > 0 && StringUtils.isNotEmpty(wfsConfig.get("0"))) {
-                ObjectReader reader = new ObjectMapper().readerFor(Map.class);
-                return reader.readValue(wfsConfig.get("0"));
+                if (wfsConfig.size() > 0 && StringUtils.isNotEmpty(wfsConfig.get("0"))) {
+                    ObjectReader reader = new ObjectMapper().readerFor(Map.class);
+                    return reader.readValue(wfsConfig.get("0"));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
