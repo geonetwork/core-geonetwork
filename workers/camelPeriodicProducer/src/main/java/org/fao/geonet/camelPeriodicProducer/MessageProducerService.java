@@ -23,21 +23,29 @@
 
 package org.fao.geonet.camelPeriodicProducer;
 
-import org.apache.camel.CamelContext;
-import org.fao.geonet.IndexedMetadataFetcher;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.records.MetadataSavedQueryApi;
 import org.fao.geonet.domain.MessageProducerEntity;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.events.server.ServerStartup;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterExchangeState;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.repository.MessageProducerRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder.MESSAGE_HARVEST_WFS_FEATURES;
 
@@ -54,9 +62,7 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
     @Autowired
     private EsSearchManager searchManager;
     @Autowired
-    private CamelContext camelContext;
-    @Autowired
-    private ConfigurableApplicationContext applicationContext;
+    MetadataRepository metadataRepository;
 
     @Override
     public void onApplicationEvent(ServerStartup serverStartup) {
@@ -102,12 +108,13 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
             metadataUuid);
 
         try {
-            IndexedMetadataFetcher indexedMetadataFetcher = new IndexedMetadataFetcher(searchManager);
-            indexedMetadataFetcher.getApplicationProfileFromLuceneIndex(metadataUuid, typeName);
-            wfsHarvesterParam.setTreeFields(indexedMetadataFetcher.getTreeField()); //optional
-            wfsHarvesterParam.setTokenizedFields(indexedMetadataFetcher.getTokenizedField()); //optional
+            HashMap<String, Object> applicationProfile = getApplicationProfile(metadataUuid, typeName);
+            if(applicationProfile != null) {
+                wfsHarvesterParam.setTreeFields(getTreeField(applicationProfile)); //optional
+                wfsHarvesterParam.setTokenizedFields(getTokenizedField(applicationProfile)); //optional
+            }
         } catch (Exception e) {
-            LOGGER.info("could not fetch tree field and tokenized field for metadata uuid {} and typename {}", metadataUuid, typeName);
+            LOGGER.info("Could not fetch tree field and tokenized field for metadata uuid {} and typename {}", metadataUuid, typeName);
         }
 
         return (MessageProducer<WFSHarvesterExchangeState>) new MessageProducer()
@@ -115,5 +122,34 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
             .setCronExpession(messageProducerEntity.getCronExpression())
             .setTarget(consumerUri)
             .setId(messageProducerEntity.getId());
+    }
+
+
+    public List<String> getTreeField(HashMap<String, Object> map) {
+        return (List<String>) map.get("treeFields");
+    }
+
+    public Map<String, String> getTokenizedField(HashMap<String, Object> map) {
+        return (Map<String, String>) map.get("tokenizedFields");
+    }
+
+    private HashMap<String, Object> getApplicationProfile(String metadataUuid, String typeName) {
+        try {
+            Metadata metadata = metadataRepository.findOneByUuid(metadataUuid);
+            MetadataSavedQueryApi queryApi = ApplicationContextHolder.get().getBean(MetadataSavedQueryApi.class);
+            HashMap<String, String> params = new HashMap<>();
+            params.put("protocol", "WFS");
+            params.put("name", typeName);
+            Map<String, String> wfsConfig = queryApi.query(metadata,
+                "wfs-indexing-config", params
+                );
+            if (wfsConfig.size() > 0 && StringUtils.isNotEmpty(wfsConfig.get(0))) {
+                ObjectReader reader = new ObjectMapper().readerFor(Map.class);
+                return reader.readValue(wfsConfig.get(0));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -47,6 +47,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.*;
 
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
@@ -134,6 +135,11 @@ public class MetadataSavedQueryApi {
 
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
 
+        return query(metadata, savedQuery, parameters);
+    }
+
+    public Map<String, String> query(AbstractMetadata metadata, String savedQuery, HashMap<String, String> parameters) throws ResourceNotFoundException, IOException, NoResultsFoundException {
+        String metadataUuid = metadata.getUuid();
         String schemaIdentifier = metadata.getDataInfo().getSchemaId();
         SchemaPlugin schemaPlugin = schemaManager.getSchema(schemaIdentifier).getSchemaPlugin();
         if (schemaPlugin == null) {
