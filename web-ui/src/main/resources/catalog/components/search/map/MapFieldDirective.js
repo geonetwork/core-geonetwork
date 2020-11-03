@@ -288,14 +288,15 @@
                 var modifyPolarExtent = function(feat, polarCoord) {
                   const atNorthPole = polarCoord == northPole;
                   const polarLat = atNorthPole ? 90 : -90;
+                  const projDef = proj4.defs[proj];
                   const parts = feat.getGeometry().getCoordinates();
 
-                  let nullIsland = getXY(0, 0);
-                  if (atNorthPole && nullIsland[1] < 0) {
-                    nullIsland.reverse();
-                  } else if (!atNorthPole && nullIsland[1] > 0) {
-                    nullIsland[1] = -nullIsland[1];
+                  if (!projDef || !projDef.lat0 || !projDef.long0) {
+                    throw ReferenceError(proj + ' projection has not been defined');
                   }
+
+                  // Set the point of origin (where "meridian" line towards polar coordinate starts)
+                  let originCoord = getXY(projDef.long0, projDef.lat0);
 
                   // Show some warnings/info (when in debug mode)
                   console.log('Search extent contains ' + (atNorthPole ? 'north' : 'south') + ' pole');
@@ -303,7 +304,7 @@
                     console.warn('Multi-polygon polar search extents are not supported: this will produce unexpected results');
                   }
 
-                  // Find (1st) polar-side segment that crosses the meridian.
+                  // Find (1st) polar-side segment that crosses the "meridian".
                   // NOTE: this also works for non-square shapes, but NOT for shapes that cross the meridian multiple times!
                   let coords = parts[0];
                   let crossingSegment = {
@@ -314,7 +315,7 @@
                   for (let i = 0; i < coords.length - 1; i++) {
                     const p1 = coords[i];
                     const p2 = coords[i + 1];
-                    if (linesIntersect(p1, p2, nullIsland, polarCoord)) {
+                    if (linesIntersect(p1, p2, originCoord, polarCoord)) {
                       crossingSegment.insertPos = i + 1;
                       crossingSegment.firstPoint = p1;
                       crossingSegment.lastPoint = p2;
@@ -323,8 +324,8 @@
                   }
                   
                   if (crossingSegment.firstPoint !== null) {
-                    // Calculate intersection point between segment and meridian line
-                    let intersectionPoint = getIntersection(crossingSegment.firstPoint, crossingSegment.lastPoint, nullIsland, polarCoord);
+                    // Calculate intersection point between extent segment and "meridian" line
+                    let intersectionPoint = getIntersection(crossingSegment.firstPoint, crossingSegment.lastPoint, originCoord, polarCoord);
                     coords.splice(crossingSegment.insertPos, 0, intersectionPoint);
                     feat.setGeometry(new ol.geom.Polygon([coords]));
                   }
@@ -332,15 +333,14 @@
                   // Transform to WGS 1984 (EPSG:4326)
                   feat.getGeometry().transform(proj, 'EPSG:4326');
                   
-                  // Get all transformed coordinates again, set longitude of inserted one to (-)180
                   if (crossingSegment.insertPos >= 0) {
-                    // Get all coordinates
+                    // Get all (transformed) coordinates
                     coords = feat.getGeometry().getCoordinates()[0];
                     // Get coordinate before inserted one above
                     const prevCoord = coords[crossingSegment.insertPos - 1];
                     const lon1 = prevCoord[0] < 0 ? -180 : 180;
                     const lon2 = -lon1; 
-                    // Set longitude of inserted coordinate to the correct hemisphere                  
+                    // Set longitude of inserted coordinate to the correct hemisphere and max degrees ((-)180)                  
                     coords[crossingSegment.insertPos][0] = lon1;
                     // Get latitude of inserted coordinate
                     const lat = coords[crossingSegment.insertPos][1];
