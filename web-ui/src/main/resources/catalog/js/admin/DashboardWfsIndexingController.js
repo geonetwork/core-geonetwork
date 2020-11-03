@@ -25,7 +25,7 @@
   goog.provide('gn_dashboard_wfs_indexing_controller');
 
   var module = angular.module('gn_dashboard_wfs_indexing_controller',
-      ['bsTable']);
+    ['bsTable']);
 
   module.controller('GnDashboardWfsIndexingController', [
     '$q',
@@ -73,10 +73,10 @@
       $scope.indexUrl = gnHttp.getService('featureindexproxy') + '?_=_search';
 
       // URL of the message producer CRUD API endpoint
-      $scope.messageProducersApiUrl = gnHttp.getService('wfsMessageProducers');
+      $scope.messageProducersApiUrl = '../api/msg_producers';
 
       // URL of the WFS indexing actions
-      $scope.wfsWorkersApiUrl = gnHttp.getService('wfsWorkersActions');
+      $scope.wfsWorkersApiUrl = '../api/workers/data/wfs/actions';
 
       // dictionary of wfs indexing jobs received from the index
       // key is url#typename
@@ -114,8 +114,8 @@
         if (md.error) {
           alert.text($translate.instant(md.error));
           alert.css({ display: 'block' });
-        } else if (md.title) {
-          title.text(md.title);
+        } else if (md.resourceTitle) {
+          title.text(md.resourceTitle);
           link.css({ display: 'block' });
         }
       }
@@ -182,9 +182,9 @@
       $scope.filterWfsBsWithInput = function() {
         $scope.refreshBsTable(
           $scope.jobsArray.filter(function (job) {
-          return $scope.filterItemsinArray(
-            $scope.wfsFilterValue, Object.values($scope.jobsArrayFiltered(job))).length > 0;
-        }));
+            return $scope.filterItemsinArray(
+              $scope.wfsFilterValue, Object.values($scope.jobsArrayFiltered(job))).length > 0;
+          }));
       };
 
       $scope.wfsFilterValue = null;
@@ -223,6 +223,7 @@
                 featureType: featureType,
                 status: 'not started',
                 mdUuid: producer.wfsHarvesterParam.metadataUuid,
+                strategy: producer.wfsHarvesterParam.strategy || '',
                 cronScheduleExpression: producer.cronExpression,
                 cronScheduleProducerId: producer.id
               };
@@ -370,13 +371,14 @@
                 var labelDelete = $translate.instant('wfsDeleteWfsIndexing');
 
                 return '<div class="dropdown">' +
-                  '  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">' +
-                  '    ' + $translate.instant('wfsHarvesterActions') + '&nbsp;<span class="caret"></span>' +
+                  '  <button class="btn btn-default dropdown-toggle" ' +
+                  '          title="' + $translate.instant('wfsHarvesterActions') + '"' +
+                  '          type="button" data-toggle="dropdown"><icon class="fa fa-fw fa-cog"></icon><span class="caret"></span>' +
                   '  </button>' +
                   '  <ul class="dropdown-menu dropdown-menu-right">' +
-                  '    <li><a href="#" data-job-key="' + key + '">' + labelEdit + '</a></li>' +
-                  '    <li><a href="#" data-trigger-job-key="' + key + '">' + labelNow + '</a></li>' +
-                  '    <li><a href="#" data-delete-key="' + key + '">' + labelDelete + '</a></li>' +
+                  '    <li><a href="#" data-job-key="' + key + '"><icon class="fa fa-fw fa-calendar"/>' + labelEdit + '</a></li>' +
+                  '    <li><a href="#" data-trigger-job-key="' + key + '"><icon class="fa fa-fw fa-play"/>' + labelNow + '</a></li>' +
+                  '    <li><a href="#" data-delete-key="' + key + '"><icon class="fa fa-fw fa-times"/>' + labelDelete + '</a></li>' +
                   '  </ul>' +
                   '</div>';
               }
@@ -453,23 +455,29 @@
       });
 
       $scope.updateParamsFromApplicationProfile = function(job) {
-        return wfsFilterService.getApplicationProfile(job.mdUuid,
+        var params = {
+          typeName: job.featureType,
+          url: job.url,
+          strategy: job.strategy,
+          metadataUuid: job.mdUuid,
+          tokenizedFields: null,
+          treeFields : null
+        };
+
+        return wfsFilterService.getApplicationProfile(null, job.mdUuid,
           job.featureType,
           job.url,
           'WFS').then(
           function(response) {
             if (response.status == 200) {
               var appProfile = angular.fromJson(response.data['0']);
-              var params = {
-                typeName: job.featureType,
-                url: job.url,
-                metadataUuid: job.mdUuid,
-                tokenizedFields: appProfile ? appProfile.tokenizedFields : null,
-                treeFields : appProfile ? appProfile.treeFields : null
-              };
+              params.tokenizedFields = appProfile.tokenizedFields;
+              params.treeFields = appProfile.treeFields;
               return params
             }
-          }).catch(function() {});
+          }).catch(function() {
+          return params
+        });
       };
 
       $scope.triggerIndexing = function(key) {
@@ -477,7 +485,7 @@
         $scope.updateParamsFromApplicationProfile(job).then(
           function(params) {
             $http.put($scope.wfsWorkersApiUrl + '/start',
-            params).then(function() {
+              params).then(function() {
               gnAlertService.addAlert({
                 msg: $translate.instant('wfsIndexingTriggerSuccess'),
                 type: 'success'
@@ -486,9 +494,9 @@
               gnAlertService.addAlert({
                 msg: $translate.instant('wfsIndexingTriggerError'),
                 type: 'danger'
+              });
             });
           });
-        });
       };
 
       // this will delete both the message producer and the indexed data

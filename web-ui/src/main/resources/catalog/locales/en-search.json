@@ -327,7 +327,7 @@
   "textStrokeWidth": "Stroke width",
   "textWidth":"Size",
   "textFont":"Font",
-  "textInput":"Type your text",
+  "textContent":"Text to display",
   "drawFillColor":"Fill color",
   "drawStrokeColor":"Stroke color",
   "drawWidth":"Width",

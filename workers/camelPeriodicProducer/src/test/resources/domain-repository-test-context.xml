@@ -61,8 +61,9 @@
     <entry key="hibernate.enable_lazy_load_no_trans" value="true"/>
   </util:map>
 
+
   <jpa:repositories base-package="org.fao.geonet.repository"
-                    factory-class="org.fao.geonet.repository.GeonetRepositoryFactoryBean"
+                    base-class="org.fao.geonet.repository.GeonetRepositoryImpl"
                     entity-manager-factory-ref="entityManagerFactory"
                     transaction-manager-ref="transactionManager"/>
 
@@ -84,5 +85,8 @@
   <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
     <property name="entityManagerFactory" ref="entityManagerFactory"/>
   </bean>
+
+  <bean id="savedQuery" class="org.fao.geonet.api.records.MetadataSavedQueryApi"/>
+  <bean id="schemaManager" class="org.fao.geonet.kernel.SchemaManager"/>
 
 </beans>

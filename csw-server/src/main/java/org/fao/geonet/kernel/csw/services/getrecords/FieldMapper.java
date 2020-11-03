@@ -23,28 +23,30 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
+import java.util.HashMap;
+import java.util.Set;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogConfigurationGetRecordsField;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashMap;
-import java.util.Set;
-
 public class FieldMapper implements IFieldMapper {
+
     @Autowired
     private CatalogConfiguration _catalogConfig;
 
     public String map(String field) {
-        CatalogConfigurationGetRecordsField fieldInfo = _catalogConfig.getFieldMapping().get(getAbsolute(field));
+        CatalogConfigurationGetRecordsField fieldInfo = _catalogConfig.getFieldMapping()
+            .get(getAbsolute(field));
 
-        return (fieldInfo != null)?fieldInfo.getLuceneField():"";
+        return (fieldInfo != null) ? fieldInfo.getLuceneField() : field;
     }
 
     public String mapXPath(String field, String schema) {
         String xpath = null;
 
-        CatalogConfigurationGetRecordsField fieldInfo = _catalogConfig.getFieldMapping().get(getAbsolute(field));
+        CatalogConfigurationGetRecordsField fieldInfo = _catalogConfig.getFieldMapping()
+            .get(getAbsolute(field));
 
         if (fieldInfo != null) {
             HashMap<String, String> xpaths = fieldInfo.getXpaths();
@@ -58,9 +60,10 @@ public class FieldMapper implements IFieldMapper {
     }
 
     public String mapSort(String field) {
-        CatalogConfigurationGetRecordsField fieldInfo = _catalogConfig.getFieldMapping().get(getAbsolute(field));
+        CatalogConfigurationGetRecordsField fieldInfo = _catalogConfig.getFieldMapping()
+            .get(getAbsolute(field));
 
-        return (fieldInfo != null)?fieldInfo.getLuceneSortField():"";
+        return (fieldInfo != null) ? fieldInfo.getLuceneSortField() : "";
     }
 
     public Iterable<CatalogConfigurationGetRecordsField> getMappedFields() {
@@ -71,10 +74,13 @@ public class FieldMapper implements IFieldMapper {
         String name = elem.getQualifiedName();
 
         for (String field : elemNames)
-            // Here we supposed that namespaces prefix are equals when removing elements
-            // when an ElementName parameter is set.
-            if (field.equals(name))
+        // Here we supposed that namespaces prefix are equals when removing elements
+        // when an ElementName parameter is set.
+        {
+            if (field.equals(name)) {
                 return true;
+            }
+        }
 
         return false;
     }
@@ -84,12 +90,14 @@ public class FieldMapper implements IFieldMapper {
     }
 
     private String getAbsolute(String field) {
-        if (field.startsWith("./"))
+        if (field.startsWith("./")) {
             field = field.substring(2);
+        }
 
         // Remove any namespaces ... to be validated
-        if (field.contains(":"))
+        if (field.contains(":")) {
             field = field.substring(field.indexOf(':') + 1);
+        }
 
         return field.toLowerCase();
     }

@@ -33,10 +33,8 @@ import org.opengis.feature.type.AttributeDescriptor;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by fgravin on 11/5/15.
@@ -46,6 +44,7 @@ public class WFSHarvesterExchangeState implements Serializable {
     private transient Logger logger = Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
     private transient Map<String, String> fields = new LinkedHashMap<String, String>();
     private transient WFSDataStore wfsDatastore = null;
+    private String resolvedTypeName = null;
 
     public WFSHarvesterParameter getParameters() {
         return parameters;
@@ -76,6 +75,10 @@ public class WFSHarvesterExchangeState implements Serializable {
         return wfsDatastore;
     }
 
+    public String getResolvedTypeName() {
+        return resolvedTypeName;
+    }
+
 
     private void checkTaskParameters() {
         logger.info("Checking parameters ...");
@@ -97,15 +100,23 @@ public class WFSHarvesterExchangeState implements Serializable {
      * all schema infos (attributes names and types).
      */
     public void initDataStore() throws Exception {
-        WFSDataStoreStrategyWithNameSpaceForMapServer factory = new WFSDataStoreStrategyWithNameSpaceForMapServer();
-        factory.init(parameters.getUrl(), parameters.getTypeName());
+        // Used to manage QGIS-Server based WFS
+        WFSDataStoreFactory factory = null;
+        if ("investigator".equals(parameters.getStrategy())) {
+            factory = new WFSDataStoreWithStrategyInvestigator();
+            ((WFSDataStoreWithStrategyInvestigator) factory).init(
+                parameters.getUrl(), parameters.getTypeName());
+        } else {
+            factory = new WFSDataStoreFactory();
+        }
+
         Map m = new HashMap();
 
         try {
             String getCapUrl = OwsUtils.getGetCapabilitiesUrl(
-                    parameters.getUrl(), "1.0.0"); //parameters.getVersion());
+                    parameters.getUrl(), parameters.getVersion());
             logger.info(String.format(
-                    "Connecting using GetCapabilities URL '%s'.",
+                    "Connecting using GetCatapbilities URL '%s'.",
                     getCapUrl));
 
             m.put(WFSDataStoreFactory.URL.key, getCapUrl);
@@ -115,7 +126,10 @@ public class WFSHarvesterExchangeState implements Serializable {
             m.put(WFSDataStoreFactory.USEDEFAULTSRS.key, true);
             m.put(WFSDataStoreFactory.OUTPUTFORMAT.key, "GML3"); // seems to be mandatory with wfs 1.1.0 sources
             m.put(WFSDataStoreFactory.LENIENT.key, true);
-            m.put(WFSDataStoreFactory.WFS_STRATEGY.key, "mapserver");
+            if(!"investigator".equals(parameters.getStrategy())
+                && StringUtils.isNotEmpty(parameters.getStrategy())) {
+                m.put(WFSDataStoreFactory.WFS_STRATEGY.key, parameters.getStrategy());
+            }
 
             if (parameters.getMaxFeatures() != -1) {
                 m.put(WFSDataStoreFactory.MAXFEATURES.key, parameters.getMaxFeatures());
@@ -126,7 +140,35 @@ public class WFSHarvesterExchangeState implements Serializable {
             logger.info(String.format(
                     "Reading feature type '%s' schema structure.",
                     parameters.getTypeName()));
-            SimpleFeatureType sft = wfsDatastore.getSchema(parameters.getTypeName());
+            SimpleFeatureType sft = null;
+            try {
+                sft = wfsDatastore.getSchema(parameters.getTypeName());
+                resolvedTypeName = parameters.getTypeName();
+            } catch (IOException e) {
+                String[] typeNames = wfsDatastore.getTypeNames();
+                String typeNamesList = Arrays.stream(typeNames).collect(Collectors.joining(", "));
+                logger.info(String.format(
+                    "Type '%s' not found in data store. Available types are %s. Trying to found a match ignoring namespace.",
+                    parameters.getTypeName(),
+                    typeNamesList
+                   ));
+                Optional<String> typeFound = Arrays.stream(typeNames)
+                    .filter(t -> t.endsWith(parameters.getTypeName())).findFirst();
+                if (typeFound.isPresent()) {
+                    resolvedTypeName = typeFound.get();
+                    logger.info(String.format(
+                        "Found a type '%s'.",
+                        resolvedTypeName
+                    ));
+                    sft = wfsDatastore.getSchema(resolvedTypeName);
+                } else {
+                    throw new NoSuchElementException(String.format(
+                        "No type found for '%s' (with or without namespace match).",
+                        parameters.getTypeName()
+                    ));
+                }
+            }
+
             List<AttributeDescriptor> attributesDesc = sft.getAttributeDescriptors();
 
             for (AttributeDescriptor desc : attributesDesc) {

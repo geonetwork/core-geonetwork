@@ -39,7 +39,6 @@
           .replace(/(.*\/srv\/)([a-z]{3})/, '$1' + lang))
       });
 
-
     document.querySelectorAll('div[xml\\:lang]').forEach(
       function (div) {
         if (displayAll) {

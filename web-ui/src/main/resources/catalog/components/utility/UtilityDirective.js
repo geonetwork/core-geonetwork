@@ -1447,7 +1447,7 @@
               // the thumbnails url might end with `?approved=false/true`, which is not
               // present on img
               if (imgs.list[i].url.indexOf(url) === 0) {
-                img = imgs.list[i].url;
+                img = imgs.list[i];
                 break;
               }
             }

@@ -1,11 +1,36 @@
+/*
+ * Copyright (C) 2001-2015 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.camelPeriodicProducer;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.component.quartz2.QuartzComponent;
+import org.fao.geonet.api.records.MetadataSavedQueryApi;
 import org.fao.geonet.domain.MessageProducerEntity;
 import org.fao.geonet.domain.WfsHarvesterParamEntity;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.repository.MessageProducerRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +65,13 @@ public class MessageProducerControllerTest {
     @Autowired
     private TestCamelNetwork testCamelNetwork;
 
-    private  QuartzComponent quartzComponent;
+    @Autowired
+    MetadataRepository metadataRepository;
+
+    @Autowired
+    MetadataSavedQueryApi savedQueryApi;
+
+    private QuartzComponent quartzComponent;
 
     private MessageProducerFactory messageProducerFactory;
 
@@ -67,7 +98,7 @@ public class MessageProducerControllerTest {
         assertEquals("typeName", received.get(0).getTypeName());
 
         List<MessageProducerEntity> persisted = toTest.msgProducerRepository.findAll();
-        assertEquals(1,persisted.size());
+        assertEquals(1, persisted.size());
         assertEquals(testCamelNetwork.getWfsHarvesterParamConsumer().getFromURI(), "quartz2://" + persisted.get(0).getId());
 
         toTest.delete(persisted.get(0).getId());
@@ -112,9 +143,9 @@ public class MessageProducerControllerTest {
         messageProducerEntity.setCronExpression("i am not a cron expression");
 
         ResponseEntity<?> response = toTest.create(messageProducerEntity);
-        String message = ((MessageProducerController.ErrorResponse)response.getBody()).getMessage();
+        String message = ((MessageProducerController.ErrorResponse) response.getBody()).getMessage();
 
-        assertEquals("CronExpression 'i am not a cron expression' is invalid,.", message);
+        assertEquals("CronExpression 'i am not a cron expression' is invalid.", message);
         assertEquals(0, toTest.msgProducerRepository.findAll().size());
     }
 
@@ -122,14 +153,14 @@ public class MessageProducerControllerTest {
     public void rollbackWhenUpdateTroubleAtCamelSide() throws Exception {
         MessageProducerController toTest = createToTest();
         MessageProducerEntity messageProducerEntity = createMessageProducerEntity();
-        messageProducerEntity = ((ResponseEntity<MessageProducerEntity>)toTest.create(messageProducerEntity)).getBody();
+        messageProducerEntity = ((ResponseEntity<MessageProducerEntity>) toTest.create(messageProducerEntity)).getBody();
         messageProducerEntity.setCronExpression("i am not a cron expression");
 
         ResponseEntity<?> response = toTest.update(messageProducerEntity.getId(), messageProducerEntity);
-        String message = ((MessageProducerController.ErrorResponse)response.getBody()).getMessage();
+        String message = ((MessageProducerController.ErrorResponse) response.getBody()).getMessage();
 
-        assertEquals("CronExpression 'i am not a cron expression' is invalid,.", message);
-        assertEquals(EVERY_SECOND, toTest.msgProducerRepository.findOne(messageProducerEntity.getId()).getCronExpression());
+        assertEquals("CronExpression 'i am not a cron expression' is invalid.", message);
+        assertEquals(EVERY_SECOND, toTest.msgProducerRepository.findById(messageProducerEntity.getId()).get().getCronExpression());
         toTest.delete(messageProducerEntity.getId());
     }
 
@@ -138,10 +169,10 @@ public class MessageProducerControllerTest {
         MessageProducerController toTest = createToTest();
         MessageProducerEntity messageProducerEntity = createMessageProducerEntity();
         MessageProducerEntity messageProducerEntity2 = createMessageProducerEntity();
-        messageProducerEntity = ((ResponseEntity<MessageProducerEntity>)toTest.create(messageProducerEntity)).getBody();
+        messageProducerEntity = ((ResponseEntity<MessageProducerEntity>) toTest.create(messageProducerEntity)).getBody();
 
         ResponseEntity<?> response = toTest.create(messageProducerEntity2);
-        String message = ((MessageProducerController.ErrorResponse)response.getBody()).getMessage();
+        String message = ((MessageProducerController.ErrorResponse) response.getBody()).getMessage();
 
         assertTrue(message.startsWith("Unique index or primary key violation"));
         toTest.delete(messageProducerEntity.getId());
@@ -151,14 +182,14 @@ public class MessageProducerControllerTest {
     public void unicityWhenUpdate() throws Exception {
         MessageProducerController toTest = createToTest();
         MessageProducerEntity messageProducerEntity = createMessageProducerEntity();
-        messageProducerEntity = ((ResponseEntity<MessageProducerEntity>)toTest.create(messageProducerEntity)).getBody();
+        messageProducerEntity = ((ResponseEntity<MessageProducerEntity>) toTest.create(messageProducerEntity)).getBody();
         MessageProducerEntity messageProducerEntity2 = createMessageProducerEntity();
         messageProducerEntity2.getWfsHarvesterParam().setUrl("i am different");
-        messageProducerEntity2 = ((ResponseEntity<MessageProducerEntity>)toTest.create(messageProducerEntity2)).getBody();
+        messageProducerEntity2 = ((ResponseEntity<MessageProducerEntity>) toTest.create(messageProducerEntity2)).getBody();
         messageProducerEntity2.getWfsHarvesterParam().setUrl("url");
 
         ResponseEntity<?> response = toTest.update(messageProducerEntity2.getId(), messageProducerEntity2);
-        String message = ((MessageProducerController.ErrorResponse)response.getBody()).getMessage();
+        String message = ((MessageProducerController.ErrorResponse) response.getBody()).getMessage();
 
         assertTrue(message.startsWith("Unique index or primary key violation"));
         toTest.delete(messageProducerEntity.getId());
@@ -168,7 +199,7 @@ public class MessageProducerControllerTest {
     private MessageProducerController createToTest() {
         MessageProducerController toTest = new MessageProducerController(messageProducerRepository);
         toTest.entityManager = entityManager;
-        toTest.messageProducerService = new MessageProducerService();
+        toTest.messageProducerService = new MessageProducerService(metadataRepository, savedQueryApi);
         toTest.messageProducerService.messageProducerFactory = messageProducerFactory;
         toTest.messageProducerService.consumerUri = testCamelNetwork.getWfsHarvesterParamConsumer().getUri();
         return toTest;
@@ -180,6 +211,7 @@ public class MessageProducerControllerTest {
         WfsHarvesterParamEntity wfsHarvesterParamEntity = new WfsHarvesterParamEntity();
         wfsHarvesterParamEntity.setMetadataUuid("uuid");
         wfsHarvesterParamEntity.setTypeName("typeName");
+        wfsHarvesterParamEntity.setStrategy("strategy");
         wfsHarvesterParamEntity.setUrl("url");
         messageProducerEntity.setWfsHarvesterParam(wfsHarvesterParamEntity);
         return messageProducerEntity;
@@ -203,7 +235,9 @@ public class MessageProducerControllerTest {
             return uri;
         }
 
-        public String getFromURI() { return fromURI; }
+        public String getFromURI() {
+            return fromURI;
+        }
 
         public void consume(Exchange exchange) {
             WFSHarvesterParameter configuration = (WFSHarvesterParameter) exchange.getProperty("configuration");

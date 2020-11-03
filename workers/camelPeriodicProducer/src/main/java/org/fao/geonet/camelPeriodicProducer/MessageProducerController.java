@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2015 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.camelPeriodicProducer;
 
 import org.fao.geonet.domain.MessageProducerEntity;
@@ -6,15 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,6 +37,7 @@ import javax.persistence.PersistenceException;
 import java.io.Closeable;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/{portal}/api/msg_producers")
@@ -37,35 +53,11 @@ public class MessageProducerController {
 
     protected MessageProducerRepository msgProducerRepository;
 
-    class ErrorResponse {
-        ErrorResponse(String error, String message) {
-            this.error = error;
-            this.message = message;
-        }
-        public String getError() {
-            return error;
-        }
-
-        public void setError(String error) {
-            this.error = error;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-        private String error;
-        private String message;
-    }
-
     public MessageProducerController(MessageProducerRepository msgProducerRepository) {
         this.msgProducerRepository = msgProducerRepository;
     }
 
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @GetMapping
     public List findAll() {
         return msgProducerRepository.findAll();
@@ -74,14 +66,15 @@ public class MessageProducerController {
     @PreAuthorize("hasRole('Administrator')")
     @GetMapping(path = "/{id}")
     public ResponseEntity<MessageProducerEntity> findById(@PathVariable long id) {
-        if (msgProducerRepository.exists(id)) {
-            return (ResponseEntity.ok().body(msgProducerRepository.findOne(id)));
+        Optional<MessageProducerEntity> message = msgProducerRepository.findById(id);
+        if (message.isPresent()) {
+            return (ResponseEntity.ok().body(message.get()));
         } else {
             return (new ResponseEntity(HttpStatus.NOT_FOUND));
         }
     }
 
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @GetMapping(path = "/find")
     public ResponseEntity<MessageProducerEntity> findByUrlAndFeatureType(@RequestParam String url, @RequestParam String featureType) {
         MessageProducerEntity msg = msgProducerRepository.findOneByUrlAndFeatureType(url, featureType);
@@ -92,7 +85,7 @@ public class MessageProducerController {
         }
     }
 
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @PostMapping
     public ResponseEntity<?> create(@RequestBody MessageProducerEntity messageProducerEntity) {
         InnerEntityManager innerEntityManager = new InnerEntityManager();
@@ -114,10 +107,10 @@ public class MessageProducerController {
         }
     }
 
-    @PreAuthorize("hasRole('Administrator')")
-    @PutMapping(value="/{id}")
-    public  ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody MessageProducerEntity messageProducerEntity) {
-        if (msgProducerRepository.exists(id)) {
+    @PreAuthorize("hasAuthority('Administrator')")
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody MessageProducerEntity messageProducerEntity) {
+        if (msgProducerRepository.existsById(id)) {
             InnerEntityManager innerEntityManager = new InnerEntityManager();
             try {
                 messageProducerEntity.setId(id);
@@ -141,11 +134,11 @@ public class MessageProducerController {
         }
     }
 
-    @PreAuthorize("hasRole('Administrator')")
-    @DeleteMapping(path ={"/{id}"})
+    @PreAuthorize("hasAuthority('Administrator')")
+    @DeleteMapping(path = {"/{id}"})
     public ResponseEntity<?> delete(@PathVariable("id") long id) throws Exception {
-        if (msgProducerRepository.exists(id)) {
-            msgProducerRepository.delete(id);
+        if (msgProducerRepository.existsById(id)) {
+            msgProducerRepository.deleteById(id);
             messageProducerService.destroy(id);
             return ResponseEntity.ok().build();
         } else {
@@ -156,14 +149,40 @@ public class MessageProducerController {
     private String sqlCause(PersistenceException e) {
         Throwable cause = e;
         int level = 0;
-        while (level < 5 && cause.getCause() !=null && ! (cause instanceof SQLException)) {
+        while (level < 5 && cause.getCause() != null && !(cause instanceof SQLException)) {
             cause = cause.getCause();
-            level ++;
+            level++;
         }
         if (cause instanceof SQLException) {
             return cause.getMessage();
         } else {
             return e.getMessage();
+        }
+    }
+
+    class ErrorResponse {
+        private String error;
+        private String message;
+
+        ErrorResponse(String error, String message) {
+            this.error = error;
+            this.message = message;
+        }
+
+        public String getError() {
+            return error;
+        }
+
+        public void setError(String error) {
+            this.error = error;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
         }
     }
 
@@ -191,7 +210,7 @@ public class MessageProducerController {
             innerEntityMananger.getTransaction().commit();
         }
 
-        public void close () {
+        public void close() {
             innerEntityMananger.close();
         }
     }

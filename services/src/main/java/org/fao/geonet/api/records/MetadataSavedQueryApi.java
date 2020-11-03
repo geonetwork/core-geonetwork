@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -47,6 +48,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.*;
 
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
@@ -134,6 +136,11 @@ public class MetadataSavedQueryApi {
 
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
 
+        return query(metadata, savedQuery, parameters);
+    }
+
+    public Map<String, String> query(AbstractMetadata metadata, String savedQuery, HashMap<String, String> parameters) throws ResourceNotFoundException, IOException, NoResultsFoundException {
+        String metadataUuid = metadata.getUuid();
         String schemaIdentifier = metadata.getDataInfo().getSchemaId();
         SchemaPlugin schemaPlugin = schemaManager.getSchema(schemaIdentifier).getSchemaPlugin();
         if (schemaPlugin == null) {
@@ -211,6 +218,8 @@ public class MetadataSavedQueryApi {
                         value = ((Attribute) o).getValue();
                     } else if (o instanceof Text) {
                         value = ((Text) o).getText();
+                    } else if (o instanceof String && StringUtils.isNotEmpty((String) o)) {
+                        value = (String) o;
                     }
 
                     response.put(key, value);

@@ -36,10 +36,9 @@
   <packaging>pom</packaging>
 
   <modules>
-<!--    <module>wfsfeature-harvester</module>-->
-<!--    <module>camelPeriodicProducer</module>-->
+    <module>camelPeriodicProducer</module>
+    <module>wfsfeature-harvester</module>
   </modules>
-
   <dependencies>
 
     <!--Camel-->

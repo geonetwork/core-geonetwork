@@ -40,11 +40,10 @@
           <property name="id"
                     value="wfs-indexing-config"/>
           <property name="xpath"
-                    value="*//cit:CI_OnlineResource[
+                    value="normalize-space(*//cit:CI_OnlineResource[
                       contains(cit:protocol/gco:CharacterString, '{{protocol}}') and
-                      cit:name/gco:CharacterString = '{{name}}' and
-                      cit:linkage/gco:CharacterString = '{{url}}']
-                    /cit:applicationProfile/gco:CharacterString/text()"/>
+                      cit:name/gco:CharacterString = '{{name}}']
+                    /cit:applicationProfile/gco:CharacterString/text())"/>
         </bean>
       </list>
     </property>

@@ -37,6 +37,8 @@ public class WFSHarvesterParameter implements Serializable {
 
     private String url;
 
+    private String strategy;
+
     private String typeName;
 
     private String version = "1.1.0";
@@ -73,6 +75,14 @@ public class WFSHarvesterParameter implements Serializable {
     }
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @XmlAttribute
+    public String getStrategy() {
+        return strategy;
+    }
+    public void setStrategy(String strategy) {
+        this.strategy = strategy;
     }
 
     @XmlAttribute
@@ -143,6 +153,7 @@ public class WFSHarvesterParameter implements Serializable {
     public String toString() {
         StringBuffer sb = new StringBuffer(this.getClass().getSimpleName());
         sb.append("\nurl: ").append(url);
+        sb.append("\nstrategy: ").append(strategy);
         sb.append("\ntypeName: ").append(typeName);
         sb.append("\nversion:").append(version);
         sb.append("\nmetadataUuid:").append(metadataUuid);

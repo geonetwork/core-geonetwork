@@ -162,14 +162,19 @@
     };
 
     this.addFacets = function(esParams, type) {
-      var aggs = typeof type === 'string' ?
+      var esFacet = this, aggs = typeof type === 'string' ?
         angular.copy(this.configs[type].facets, {}) :
         type;
       angular.forEach(aggs, function(facet) {
-        delete facet.userHasRole;
-        delete facet.collapsed;
+        esFacet.removeInternalFacetConfig(facet);
       });
       esParams.aggregations = aggs;
+    };
+
+    this.removeInternalFacetConfig = function (facet) {
+      delete facet.userHasRole;
+      delete facet.collapsed;
+      return facet;
     };
 
     this.addSourceConfiguration = function(esParams, type) {

@@ -1,5 +1,5 @@
 <form name="wfsFilterForm">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+  <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <!--WFS not available alert-->
   <div data-ng-show="isWfsAvailable == false" class="alert alert-warning">
@@ -36,15 +36,15 @@
 
       <!-- value filter field -->
       <div class="filter-input sxt-layertree-filter"
-        ng-if="!field.dates && (field.more || facetFilters[field.name] || (field.tree.nodes.length > 20))" ng-show="field.expanded">
+           ng-if="!field.dates && (field.more || facetFilters[field.name] || (field.tree.nodes.length > 20))" ng-show="field.expanded">
         <span class="fa fa-times-circle clear" title="clear"
-          ng-click="facetFilters[field.name] = ''; onFilterInputChange(field)"
-          ng-show="facetFilters[field.name]"></span>
+              ng-click="facetFilters[field.name] = ''; onFilterInputChange(field)"
+              ng-show="facetFilters[field.name]"></span>
         <input type="text" class="form-control input-sm layerfilter"
-          placeholder="{{ 'filter' | translate }}"
-          ng-model="facetFilters[field.name]"
-          ng-model-options="{debounce: 300}"
-          ng-change="onFilterInputChange(field)">
+               placeholder="{{ 'filter' | translate }}"
+               ng-model="facetFilters[field.name]"
+               ng-model-options="{debounce: 300}"
+               ng-change="onFilterInputChange(field)">
       </div>
 
       <div data-ng-class="{'collapse': !field.expanded, 'is-date': !!field.dates}">
@@ -62,12 +62,12 @@
           </div>
 
           <div ng-if="field.dates"
-              gn-facet-daterange="output[field.name].values"
-              available-dates="field.dates"
-              show-graph="{{field.display == 'graph'}}"
-              graph-expanded="field.expanded"
-              dates-count="field.datesCount"
-              callback="onUpdateDateRange(field, from, to)">
+               gn-facet-daterange="output[field.name].values"
+               available-dates="field.dates"
+               show-graph="{{field.display == 'graph'}}"
+               graph-expanded="field.expanded"
+               dates-count="field.datesCount"
+               callback="onUpdateDateRange(field, from, to)">
           </div>
         </div>
         <a href class="see-more" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">
@@ -95,14 +95,14 @@
     <!--admin buttons-->
     <div class="btn-group dropup wfs-filter-group">
       <button class="btn btn-default btn-xs" ng-class="{ disabled: !filtersChanged }"
-        data-gn-click-and-spin="filterWMS()"
-        data-gn-click-and-spin-stay-disabled="true">
+              data-gn-click-and-spin="filterWMS()"
+              data-gn-click-and-spin-stay-disabled="true">
         <i class="fa fa-filter"></i>&nbsp;
         <span data-translate="">applyFilter</span>
       </button>
-      <button  ng-if="::sextant" class="btn btn-default btn-xs"
-         title="{{'refresh' | translate}}"
-         data-ng-click="initIndexRequest()">
+      <button ng-if="::sextant" class="btn btn-default btn-xs"
+              title="{{'refresh' | translate}}"
+              data-ng-click="initIndexRequest()">
         <i class="fa fa-refresh"></i>
       </button>
       <button data-ng-if="user.canEditRecord(md) || md.isHarvested == 'y'"

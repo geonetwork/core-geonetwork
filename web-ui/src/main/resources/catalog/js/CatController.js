@@ -68,7 +68,8 @@ goog.require('gn_alert');
       },
       'mods': {
         'global': {
-          'humanizeDates': true
+          'humanizeDates': true,
+          'dateFormat': 'YYYY-MM-DD'
         },
         'footer':{
           'enabled': true,
@@ -107,6 +108,29 @@ goog.require('gn_alert');
         'home': {
           'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/home',
+          'showSocialBarInFooter': true,
+          'fluidLayout': true,
+          'facetConfig': {
+            'inspireThemeUri': {
+              'terms': {
+                'field': 'inspireThemeUri',
+                'size': 34
+                // "order" : { "_key" : "asc" }
+              }
+            },
+            'topic_text': {
+              'terms': {
+                'field': 'topic_text',
+                'size': 20
+              }
+            },
+            'codelist_hierarchyLevel_text': {
+              'terms': {
+                'field': 'codelist_hierarchyLevel_text',
+                'size': 10
+              }
+            }
+          },
           'fluidLayout': true
         },
         'search': {
@@ -116,46 +140,261 @@ goog.require('gn_alert');
           'paginationInfo': {
             'hitsPerPage': 30
           },
-          'facetsSummaryType': 'details',
-          'defaultSearchString': '',
-          'facetTabField': '',
-          'facetConfig': [
+          // Full text on all fields
+          // 'queryBase': '${any}',
+          // Full text but more boost on title match
+          'queryBase': 'any:(${any}) resourceTitleObject.default:(${any})^2',
+          'exactMatchToggle': true,
+          // Score query may depend on where we are in the app?
+          'scoreConfig': {
+            // Score experiments:
+            // a)Score down old records
             // {
-            // key: 'createDateYear',
-            // labels: {
-            //   eng: 'Published',
-            //   fre: 'Publication'
-            // }}
-          ],
-          'filters': {
-            'type': 'dataset or series or publication or nonGeographicDataset or map'
+            //   "gauss": {
+            //     "dateStamp": {
+            //       "scale":  "200d"
+            //     }
+            //   }
+            // }
+            // b)Promote grids!
+            // "boost": "5",
+            // "functions": [
+            //   {
+            //     "filter": { "match": { "codelist_spatialRepresentationType": "vector" } },
+            //     "random_score": {},
+            //     "weight": 23
+            //   },
+            //   {
+            //     "filter": { "match": { "codelist_spatialRepresentationType": "grid" } },
+            //     "weight": 42
+            //   }
+            // ],
+            // "max_boost": 42,
+            // "score_mode": "max",
+            // "boost_mode": "multiply",
+            // "min_score" : 42
+            // "script_score" : {
+            //   "script" : {
+            //     "source": "_score"
+            //     // "source": "Math.log(2 + doc['rating'].value)"
+            //   }
+            // }
+            "boost": "5",
+            "functions": [
+              // Boost down member of a series
+              {
+                "filter": { "exists": { "field": "parentUuid" } },
+                "weight": 0.3
+              },
+              // Boost down obsolete records
+              {
+                "filter": { "match": { "codelist_status": "obsolete" } },
+                "weight": 0.3
+              },
+              // {
+              //   "filter": { "match": { "codelist_resourceScope": "service" } },
+              //   "weight": 0.8
+              // },
+              // Start boosting down records more than 3 months old
+              {
+                "gauss": {
+                  "dateStamp": {
+                    "scale":  "365d",
+                    "offset": "90d",
+                    "decay": 0.5
+                  }
+                }
+              }
+            ],
+            "score_mode": "multiply"
           },
+          'autocompleteConfig': {
+            'query': {
+              'bool': {
+                'must': [{
+                  'multi_match': {
+                    "query": "",
+                    "type": "bool_prefix",
+                    "fields": [
+                      "resourceTitleObject.*",
+                      "resourceAbstractObject.*",
+                      "tag",
+                      "resourceIdentifier"
+                      // "anytext",
+                      // "anytext._2gram",
+                      // "anytext._3gram"
+                    ]
+                  }
+                }]
+              }
+            },
+            '_source': ['resourceTitleObject'],
+            // Fuzzy autocomplete
+            // {
+            //   query: {
+            //     // match_phrase_prefix: match
+            //     "multi_match" : {
+            //       "query" : query,
+            //         // "type":       "phrase_prefix",
+            //         "fields" : [ field + "^3", "tag" ]
+            //     }
+            //   },
+            //   _source: [field]
+            // }
+            "from": 0,
+            "size": 20
+          },
+          'moreLikeThisConfig': {
+            "more_like_this" : {
+              "fields" : ["resourceTitleObject.default", "resourceAbstractObject.default", "tag.raw"],
+              "like" : null,
+              "min_term_freq" : 1,
+              "max_query_terms" : 12
+            }
+          },
+          // TODOES
+          'facetTabField': '',
+          'facetConfig': {
+            'codelist_hierarchyLevel_text': {
+              'terms': {
+                'field': 'codelist_hierarchyLevel_text'
+              },
+              'aggs': {
+                'format': {
+                  'terms': {
+                    'field': 'format'
+                  }
+                }
+              }
+            },
+            'codelist_spatialRepresentationType': {
+              'terms': {
+                'field': 'codelist_spatialRepresentationType',
+                'size': 10
+              }
+            },
+            'availableInServices': {
+              'filters': {
+                //"other_bucket_key": "others",
+                // But does not support to click on it
+                'filters': {
+                  'availableInViewService': {
+                    'query_string': {
+                      'query': '+linkProtocol:/OGC:WMS.*/'
+                    }
+                  },
+                  'availableInDownloadService': {
+                    'query_string': {
+                      'query': '+linkProtocol:/OGC:WFS.*/'
+                    }
+                  }
+                }
+              }
+            },
+            'thesaurus_geonetworkthesaurusexternalthemegemet_tree': {
+              'terms': {
+                'field': 'thesaurus_geonetworkthesaurusexternalthemegemet_tree',
+                'size': 100,
+                "order" : { "_key" : "asc" },
+                "include": "[^\^]+^?[^\^]+"
+                // Limit to 2 levels
+              }
+            },
+            // 'thesaurus_geonetworkthesaurusexternalthemehttpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree': {
+            //   'terms': {
+            //     'field': 'thesaurus_geonetworkthesaurusexternalthemehttpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree',
+            //     'size': 100,
+            //     "order" : { "_key" : "asc" }
+            //   }
+            // },
+            'tag': {
+              'terms': {
+                'field': 'tag',
+                'include': '.*',
+                'size': 10
+              }
+            },
+            'thesaurus_geonetworkthesaurusexternalplaceregions_tree': {
+              'terms': {
+                'field': 'thesaurus_geonetworkthesaurusexternalplaceregions_tree',
+                'size': 100,
+                "order" : { "_key" : "asc" }
+                //"include": "EEA.*"
+              }
+            },
+            'resolutionScaleDenominator': {
+              'collapsed': true,
+              'terms': {
+                'field': 'resolutionScaleDenominator',
+                'size': 10,
+                'order': {'_key': "asc"}
+              }
+            },
+            'creationYearForResource': {
+              'collapsed': true,
+              'terms': {
+                'field': 'creationYearForResource',
+                'size': 10,
+                'order': {'_key': "desc"}
+              }
+            },
+            'OrgForResource': {
+              'terms': {
+                'field': 'OrgForResource',
+                'size': 15
+              }
+            },
+            'codelist_maintenanceAndUpdateFrequency_text': {
+              'collapsed': true,
+              'terms': {
+                'field': 'codelist_maintenanceAndUpdateFrequency_text',
+                'size': 10
+              }
+            },
+            'codelist_status_text': {
+              'terms': {
+                'field': 'codelist_status_text',
+                'size': 10
+              }
+            },
+            'dateStamp' : {
+              'userHasRole': 'isReviewerOrMore',
+              // 'collapsed': true,
+              'auto_date_histogram' : {
+                'field' : 'dateStamp',
+                'buckets': 50
+              }
+            }
+          },
+          'filters': null,
+          // 'filters': [{
+          //     "query_string": {
+          //       "query": "-resourceType:service"
+          //     }
+          //   }],
           'sortbyValues': [{
+            'sortBy': 'relevance',
+            'sortOrder': ''
+          }, {
+            'sortBy': 'dateStamp',
+            'sortOrder': 'desc'
+          }, {
+            'sortBy': 'createDate',
+            'sortOrder': 'desc'
+          }, {
+            'sortBy': 'resourceTitleObject.default.keyword',
+            'sortOrder': ''
+          }, {
+            'sortBy': 'rating',
+            'sortOrder': 'desc'
+          }, {
             'sortBy': 'popularity',
-            'sortOrder': ''
-          }, {
-            'sortBy': 'title',
-            'sortOrder': 'reverse'
-          }, {
-            'sortBy': 'changeDate',
-            'sortOrder': ''
-            // }, {
-            //   'sortBy': 'rating',
-            //   'sortOrder': ''
-            // }, {
-            //   'sortBy': 'popularity',
-            //   'sortOrder': ''
-            // }, {
-            //   'sortBy': 'denominatorDesc',
-            //   'sortOrder': ''
-            // }, {
-            //   'sortBy': 'denominatorAsc',
-            //   'sortOrder': 'reverse'
+            'sortOrder': 'desc'
           }],
-          'sortBy': 'popularity',
+          'sortBy': 'relevance',
           'resultViewTpls': [{
             'tplUrl': '../../catalog/components/' +
-                'search/resultsview/partials/viewtemplates/grid.html',
+              'search/resultsview/partials/viewtemplates/grid.html',
             'tooltip': 'Grid',
             'icon': 'fa-th'
           },{
@@ -164,8 +403,8 @@ goog.require('gn_alert');
             'tooltip': 'List',
             'icon': 'fa-bars'
           }],
-          'resultTemplate': '../../catalog/views/' +
-              'sextant/templates/mdview/grid.html',
+          'resultTemplate': '../../catalog/components/' +
+            'search/resultsview/partials/viewtemplates/grid.html',
           'formatter': {
             'list': [{
               'label': 'defaultView',
@@ -199,13 +438,13 @@ goog.require('gn_alert');
             'layers': ['OGC', 'ESRI:REST'],
             'maps': ['ows']
           },
-          'isFilterTagsDisplayedInSearch': false,
+          'isFilterTagsDisplayedInSearch': true,
           'usersearches': {
             'enabled': false,
             'displayFeaturedSearchesPanel': false
           },
           'savedSelection': {
-            'enabled': true
+            'enabled': false
           }
         },
         'map': {
@@ -232,6 +471,9 @@ goog.require('gn_alert');
           'projectionList': [{
             'code': 'urn:ogc:def:crs:EPSG:6.6:4326',
             'label': 'WGS84 (EPSG:4326)'
+          }, {
+            'code': 'EPSG:3857',
+            'label': 'Google mercator (EPSG:3857)'
           }],
           'switcherProjectionList': [{
             'code': 'EPSG:3857',
@@ -248,19 +490,20 @@ goog.require('gn_alert');
             'print': false,
             'mInteraction': false,
             'graticule': false,
+            'mousePosition': true,
             'syncAllLayers': false,
             'drawVector': false
           },
           'graticuleOgcService': {},
           'map-viewer': {
-            'context': '',
+            'context': '../../map/config-viewer.xml',
             'extent': [0, 0, 0, 0],
             'layers': []
           },
           'map-search': {
-            'context': '',
+            'context': '../../map/config-viewer.xml',
             'extent': [0, 0, 0, 0],
-            'layers': [{'type': 'osm'}]
+            'layers': []
           },
           'map-editor': {
             'context': '',
@@ -270,8 +513,8 @@ goog.require('gn_alert');
           'autoFitOnLayer': false
         },
         'geocoder': {
-            'enabled': true,
-            'appUrl': 'https://secure.geonames.org/searchJSON'
+          'enabled': true,
+          'appUrl': 'https://secure.geonames.org/searchJSON'
         },
         'recordview': {
           'enabled': true,
@@ -281,11 +524,87 @@ goog.require('gn_alert');
           'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/catalog.edit',
           'isUserRecordsOnly': false,
+          'minUserProfileToCreateTemplate': '',
           'isFilterTagsDisplayed': false,
           'fluidEditorLayout': true,
           'createPageTpl':
-              '../../catalog/templates/editor/new-metadata-horizontal.html',
-          'editorIndentType': ''
+            '../../catalog/templates/editor/new-metadata-horizontal.html',
+          'editorIndentType': '',
+          'allowRemoteRecordLink': true,
+          'facetConfig': {
+            'resourceType': {
+              'terms': {
+                'field': 'resourceType',
+                'size': 20
+              }
+            },
+            'codelist_status_text': {
+              'terms': {
+                'field': 'codelist_status_text',
+                'size': 15
+              }
+            },
+            'sourceCatalogue': {
+              'terms': {
+                'field': 'sourceCatalogue',
+                'size': 15
+              }
+            },
+            'isValid': {
+              'terms': {
+                'field': 'isValid',
+                'size': 10
+              }
+            },
+            'isValidInspire': {
+              'terms': {
+                'field': 'isValidInspire',
+                'size': 10
+              }
+            },
+            'groupOwner': {
+              'terms': {
+                'field': 'groupOwner',
+                'size': 10
+              }
+            },
+            'recordOwner': {
+              'terms': {
+                'field': 'recordOwner',
+                'size': 10
+              }
+            },
+            'groupPublished': {
+              'terms': {
+                'field': 'groupPublished',
+                'size': 10
+              }
+            },
+            'documentStandard': {
+              'terms': {
+                'field': 'documentStandard',
+                'size': 10
+              }
+            },
+            'isHarvested': {
+              'terms': {
+                'field': 'isHarvested',
+                'size': 2
+              }
+            },
+            'isTemplate': {
+              'terms': {
+                'field': 'isTemplate',
+                'size': 5
+              }
+            },
+            'isPublishedToAll': {
+              'terms': {
+                'field': 'isPublishedToAll',
+                'size': 2
+              }
+            }
+          }
         },
         'admin': {
           'enabled': true,
@@ -303,13 +622,13 @@ goog.require('gn_alert');
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/page'
         }
       },
-
       // SEXTANT SPECIFIC
       // this key holds the equivalent of the legacy sxtSettings object
       // by default no sextant settings is specified
       'sextant': null
       // END SEXTANT SPECIFIC
     };
+
 
     return {
       proxyUrl: '',
@@ -318,7 +637,7 @@ goog.require('gn_alert');
       requireProxy: [],
       gnCfg: angular.copy(defaultConfig),
       gnUrl: '',
-      docUrl: 'https://geonetwork-opensource.org/manuals/3.8.x/',
+      docUrl: 'https://geonetwork-opensource.org/manuals/3.4.x/',
       //docUrl: '../../doc/',
       modelOptions: {
         updateOn: 'default blur',
@@ -740,7 +1059,7 @@ goog.require('gn_alert');
             // A second filter is for harvested record
             // if the catalogue admin defined that those
             // records could be harvested.
-            if (md.isHarvested === 'y') {
+            if (Boolean(md.isHarvested) == true) {
               return gnConfig['system.harvester.enableEditing'] === true &&
                   editable;
             }

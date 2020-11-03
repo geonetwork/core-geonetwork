@@ -648,17 +648,33 @@
     };
 
     Metadata.prototype = {
-      getUuid: function() {
-        return this['geonet:info'].uuid;
-      },
-      getId: function() {
-        return this['geonet:info'].id;
-      },
-      getTitle: function() {
-        return this.title || this.defaultTitle;
+      translate: function(fieldName) {
+        var fieldValues = this[fieldName];
+
+        if (angular.isArray(fieldValues)) {
+          var translatedValues = [];
+          angular.forEach(fieldValues, function(v, i) {
+            translation = fieldValues[i]['lang' + gnLangs.current]
+            if (translation) {
+              translatedValues.push(translation);
+            } else if (fieldValues[i][fieldName].default) {
+              translatedValues.push(fieldValues[i][fieldName].default);
+            }
+          });
+          return translatedValues;
+        } else if (angular.isObject(fieldValues)) {
+          translation = fieldValues['lang' + gnLangs.current]
+          if (translation) {
+            return translation;
+          } else if (this[fieldName].default) {
+            return this[fieldName].default;
+          }
+        } else {
+          console.warn(fieldName + ' is not defined in this record.');
+        }
       },
       isPublished: function() {
-        return this['geonet:info'].isPublishedToAll === 'true';
+        return this.isPublishedToAll === 'true';
       },
       isValid: function() {
         return this.valid === '1';
@@ -667,22 +683,29 @@
         return (this.valid > -1);
       },
       isOwned: function() {
-        return this['geonet:info'].owner === 'true';
+        return this.owner === 'true';
       },
       getOwnerId: function() {
-        return this['geonet:info'].ownerId;
+        return this.ownerId;
       },
       getGroupOwner: function() {
-        return this['geonet:info'].owner;
+        return this.owner;
       },
       getSchema: function() {
-        return this['geonet:info'].schema;
+        return this.schema;
       },
       publish: function() {
-        this['geonet:info'].isPublishedToAll = this.isPublished() ?
-            'false' : 'true';
+        this.isPublishedToAll = this.isPublished() ?
+          'false' : 'true';
       },
-
+      getFields: function(filter) {
+        var values = {}, props = this, keys = Object.keys(this)
+        .filter(function(name) {return new RegExp(filter).test(name)});
+        keys.forEach(function (k) {
+          values[k] = props[k];
+        });
+        return values;
+      },
       getLinks: function() {
         return this.link;
       },
@@ -707,6 +730,7 @@
        *
        * @return {*} an Array of links
        */
+
       getLinksByType: function() {
         var ret = [];
 
@@ -722,57 +746,28 @@
           return this.linksCache[key];
         }
         angular.forEach(this.link, function(link) {
-          var linkInfo = formatLink(link);
           if (types.length > 0) {
             types.forEach(function(type) {
               if (type.substr(0, 1) == '#') {
-                if (linkInfo.protocol == type.substr(1, type.length - 1) &&
-                    (!groupId || groupId == linkInfo.group)) {
-                  ret.push(linkInfo);
+                if (link.protocol == type.substr(1, type.length - 1) &&
+                  (!groupId || groupId == link.group)) {
+                  ret.push(link);
                 }
               }
               else {
-                if (linkInfo.protocol.toLowerCase().indexOf(
-                    type.toLowerCase()) >= 0 &&
-                    (!groupId || groupId == linkInfo.group)) {
-                  ret.push(linkInfo);
+                if (link.protocol.toLowerCase().indexOf(
+                  type.toLowerCase()) >= 0 &&
+                  (!groupId || groupId == link.group)) {
+                  ret.push(link);
                 }
               }
             });
           } else {
-            ret.push(linkInfo);
+            ret.push(link);
           }
         });
         this.linksCache[key] = ret;
         return ret;
-      },
-      getThumbnails: function() {
-        var images = {list: []};
-        if (angular.isArray(this.image)) {
-          for (var i = 0; i < this.image.length; i++) {
-            var s = this.image[i].split('|');
-            var insertFn = 'push';
-            if (s[0] === 'thumbnail') {
-              images.small = s[1];
-              var insertFn = 'unshift';
-            } else if (s[0] === 'overview') {
-              images.big = s[1];
-            }
-
-            //Is it a draft?
-            if( s[1].indexOf("/api/records/") >= 0
-                &&  s[1].indexOf("/api/records/")<  s[1].indexOf("/attachments/")) {
-              s[1] += "?approved=" + (this.draft != 'y');
-            }
-
-
-            images.list[insertFn]({url: s[1], label: s[2]});
-          }
-        } else if (angular.isDefined(this.image)){
-          var s = this.image.split('|');
-          images.list.push({url: s[1], label: s[2]});
-        }
-        return images;
       },
       /**
        * Return an object containing metadata contacts
@@ -781,76 +776,14 @@
        * @return {{metadata: Array, resource: Array}}
        */
       getAllContacts: function() {
-        if (angular.isUndefined(this.allContacts) &&
-            angular.isDefined(this.responsibleParty)) {
-          this.allContacts = {metadata: [], resource: []};
-          for (var i = 0; i < this.responsibleParty.length; i++) {
-            var s = this.responsibleParty[i].split('|');
-            var contact = {
-              role: s[0] || '',
-              org: s[2] || '',
-              logo: s[3] || '',
-              email: s[4] || '',
-              name: s[5] || '',
-              position: s[6] || '',
-              address: s[7] || '',
-              phone: s[8] || '',
-              website: s[11] || ''
-            };
-            if (s[1] === 'resource') {
-              this.allContacts.resource.push(contact);
-            } else if (s[1] === 'metadata') {
-              this.allContacts.metadata.push(contact);
-            }
-          }
+        this.allContacts = {metadata:[], resource:[]};
+        if (this.contact && this.contact.length > 0){
+          this.allContacts.metadata = this.contact;
+        }
+        if (this.contactForResource && this.contactForResource.length > 0){
+          this.allContacts.resource = this.contactForResource;
         }
         return this.allContacts;
-      },
-      /**
-       * Deprecated. Use getAllContacts instead
-       */
-      getContacts: function() {
-        var ret = {};
-        if (angular.isArray(this.responsibleParty)) {
-          for (var i = 0; i < this.responsibleParty.length; i++) {
-            var s = this.responsibleParty[i].split('|');
-            if (s[1] === 'resource') {
-              ret.resource = s[2];
-            } else if (s[1] === 'metadata') {
-              ret.metadata = s[2];
-            }
-          }
-        }
-        return ret;
-      },
-      getCredits: function() {
-        if (this.credits) return this.credits;
-        if (this.credit) {
-          this.credits = angular.isArray(this.credit) ? this.credit.join(', ') :
-              this.credit;
-          return this.credits;
-        }
-      },
-      getBoxAsPolygon: function(i) {
-        // Polygon((4.6810%2045.9170,5.0670%2045.9170,
-        // 5.0670%2045.5500,4.6810%2045.5500,4.6810%2045.9170))
-        var bboxes = [];
-        if (this.geoBox[i]) {
-          var coords = this.geoBox[i].split('|');
-          return 'Polygon((' +
-              coords[0] + ' ' +
-              coords[1] + ',' +
-              coords[2] + ' ' +
-              coords[1] + ',' +
-              coords[2] + ' ' +
-              coords[3] + ',' +
-              coords[0] + ' ' +
-              coords[3] + ',' +
-              coords[0] + ' ' +
-              coords[1] + '))';
-        } else {
-          return null;
-        }
       },
       getOwnername: function() {
         if (this.userinfo) {
@@ -871,8 +804,8 @@
       isWorkflowEnabled: function() {
         var st = this.mdStatus;
         var res = st &&
-            //Status is unknown
-            (!isNaN(st) && st != '0');
+          //Status is unknown
+          (!isNaN(st) && st != '0');
 
         //What if it is an array: gmd:MD_ProgressCode
         if (!res && Array.isArray(st)) {

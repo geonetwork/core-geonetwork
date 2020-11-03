@@ -535,12 +535,14 @@
       <scope>test</scope>
     </dependency>
 
-    <!--<dependency>
+
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>gn-camelPeriodicProducer</artifactId>
       <version>${project.version}</version>
-    </dependency>-->
-    <!--<dependency>
+    </dependency>
+
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>gn-wfsfeature-harvester</artifactId>
       <version>${project.version}</version>
@@ -562,7 +564,7 @@
           <artifactId>jsp-api-2.1</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>-->
+    </dependency>
 
     <dependency>
       <groupId>javax.servlet</groupId>

@@ -45,7 +45,7 @@
 
       var buildIndexUrl = function(params) {
         return gnUrlUtils.append(indexProxyUrl + '/query',
-            gnUrlUtils.toKeyValue(params));
+          gnUrlUtils.toKeyValue(params));
       };
 
       // transform date from dd-MM-YYYY to ISO (YYYY-MM-dd)
@@ -74,7 +74,7 @@
       var getIdxNameObj = function(name, idxFields) {
         for (var i = 0; i < idxFields.length; i++) {
           if (idxFields[i].label == name ||
-              idxFields[i].idxName == name) {
+            idxFields[i].idxName == name) {
             return idxFields[i];
           }
         }
@@ -160,28 +160,28 @@
             if (tokenSeparator !== undefined) {
               // handle 3 cases for a tokenized field: value is first, last or between both
               filters.push({
-                filter_type: 'PropertyIsLike',
-                params: [k + tokenSeparator + '*']
-              }, {
-                filter_type: 'PropertyIsLike',
-                params: ['*' + tokenSeparator + k]
-              }, {
-                filter_type: 'PropertyIsLike',
-                params: ['*' + tokenSeparator + k + tokenSeparator + '*']
-              }, {
-                // PropertyIsEqualTo ne fonctionne pas sur les CLOB, remplace par un PropertyIsLike
-                filter_type: 'PropertyIsLike',
-                params: [k]
-              }
+                  filter_type: 'PropertyIsLike',
+                  params: [k + tokenSeparator + '*']
+                }, {
+                  filter_type: 'PropertyIsLike',
+                  params: ['*' + tokenSeparator + k]
+                }, {
+                  filter_type: 'PropertyIsLike',
+                  params: ['*' + tokenSeparator + k + tokenSeparator + '*']
+                }, {
+                  // PropertyIsEqualTo ne fonctionne pas sur les CLOB, remplace par un PropertyIsLike
+                  filter_type: 'PropertyIsLike',
+                  params: [k]
+                }
 
 
               );
             }
             else {
-                filters.push({
-                  filter_type: 'PropertyIsEqualTo',
-                  params: [k]
-                });
+              filters.push({
+                filter_type: 'PropertyIsEqualTo',
+                params: [k]
+              });
             }
 
 
@@ -275,13 +275,40 @@
        * @param {string} ftName featuretype name
        * @param {string} wfsUrl url of the wfs service
        */
-      this.getApplicationProfile = function(uuid, ftName, wfsUrl, protocol) {
-        return $http.post('../api/records/' + uuid +
-            '/query/wfs-indexing-config', {
-              url: wfsUrl,
-              name: ftName,
-              protocol: protocol
+      this.getApplicationProfile = function(md, uuid, ftName, wfsUrl, protocol) {
+        // Metadata is set (it will not on map reload)
+        // and has a linksTree field
+        if (md && md.linksTree) {
+          var deferred = $q.defer();
+          var applicationProfile = md.linksTree.map(function (d) {
+              return d.filter(function (e) {
+                return e.protocol === 'OGC:WFS';
+              });
+            }).filter(function (f) {
+              return f[0] ? f[0].name : undefined;
+            }).find(function (s) {
+              return s[0].name === ftName;
+            })[0].applicationProfile;
+
+          try {
+            JSON.parse(applicationProfile);
+            deferred.resolve({
+              '0': applicationProfile
             });
+          } catch (e) {
+            deferred.resolve({
+              '0': '{}'
+            }); // no ApplicationProfile for current md
+          }
+          return deferred.promise;
+        } else {
+          return $http.post('../api/records/' + uuid +
+            '/query/wfs-indexing-config', {
+            url: wfsUrl,
+            name: ftName,
+            protocol: protocol
+          });
+        }
       };
 
       /**
@@ -391,15 +418,16 @@
        * @return {httpPromise} when indexing is done
        */
       this.indexWFSFeatures = function(
-          url, type, idxConfig, treeFields, uuid, version) {
+        url, type, idxConfig, treeFields, uuid, version, strategy) {
         return $http.put('../api/workers/data/wfs/actions/start', {
-          url: url,
-          typeName: type,
-          version: version || '1.1.0',
-          tokenizedFields: idxConfig,
-          treeFields: treeFields,
-          metadataUuid: uuid
-        }
+            url: url,
+            strategy: strategy, // means that the targetNs of GFI is used to define strategy.
+            typeName: type,
+            version: version || '1.1.0',
+            tokenizedFields: idxConfig,
+            treeFields: treeFields,
+            metadataUuid: uuid
+          }
         ).then(function(data) {
         }, function(response) {
         });
@@ -515,9 +543,9 @@
           if (state.geometry) {
             result.geometry = [
               state.geometry[0][0] + ',' +
-                  state.geometry[1][1] + ',' +
-                  state.geometry[1][0] + ',' +
-                  state.geometry[0][1]
+              state.geometry[1][1] + ',' +
+              state.geometry[1][0] + ',' +
+              state.geometry[0][1]
             ];
           }
         }

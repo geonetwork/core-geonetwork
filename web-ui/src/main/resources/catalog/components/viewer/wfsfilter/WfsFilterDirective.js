@@ -116,30 +116,33 @@
     'gnGlobalSettings',
     'gnSearchSettings',
     'gnFeaturesTableManager',
-    'gnHttp',
     'gnAlertService',
-    'gnTreeFromSlash',
-        function($http, wfsFilterService, $q, $rootScope, $translate,
+    'gnFacetTree',
+    function($http, wfsFilterService, $q, $rootScope, $translate,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
-             gnSearchSettings, gnFeaturesTableManager, gnHttp,
-             gnAlertService, gnTreeFromSlash) {
+             gnSearchSettings, gnFeaturesTableManager,
+             gnAlertService, gnFacetTree) {
       return {
         restrict: 'A',
         replace: true,
         templateUrl: '../../catalog/components/viewer/wfsfilter/' +
-            'partials/wfsfilterfacet.html',
+          'partials/wfsfilterfacet.html',
         scope: {
           featureTypeName: '@',
           wfsUrl: '@',
           displayCount: '@',
-          baseLayer: '=layer'
+          baseLayer: '=baseLayer',
+          layer: '=layer'
         },
         controller: function() {},
         link: function(scope, element, attrs, ctrl) {
 
-          var indexUrl, uuid, ftName, appProfile, appProfilePromise;
+          var indexUrl, uuid, ftName, appProfile,
+            appProfilePromise, wfsIndexJobSavedPromise;
           scope.map = scope.$parent.map;
           var map = scope.map;
+
+          scope.strategy = 'investigator';
 
           // Only admin can index the features
           scope.user = $rootScope.user;
@@ -174,14 +177,12 @@
 
           var textInputsHistory = {};
 
-          // SEXTANT SPECIFIC
           // use nested wms if we're in a group
-          if (scope.baseLayer.get('originalWms')) {
+          if (scope.baseLayer && scope.baseLayer.get('originalWms')) {
             scope.layer = scope.baseLayer.get('originalWms');
-          } else {
+          } else if (scope.baseLayer) {
             scope.layer = scope.baseLayer
           }
-          // END SEXTANT SPECIFIC
 
           /**
            * Init the directive when the scope.layer has changed.
@@ -190,10 +191,13 @@
            * all different feature types.
            */
           function init() {
+            if (scope.layer == null) {
+              return;
+            }
 
             var source = scope.layer.getSource();
             if (!source || !(source instanceof ol.source.ImageWMS ||
-                source instanceof ol.source.TileWMS)) {
+              source instanceof ol.source.TileWMS)) {
               return;
             }
 
@@ -209,7 +213,7 @@
                 scope.wfsUrl || scope.layer.get('url').replace(/wms/i, 'wfs'))
             });
 
-            uuid = scope.md && scope.md.getUuid();
+            uuid = scope.md && scope.md.uuid;
             // FIXME ? This comes from Sextant probably and
             // does not work here when current layer change
             // the previous featureTypeName is still used.
@@ -219,7 +223,8 @@
             scope.featureTypeName = ftName;
 
             appProfile = null;
-            appProfilePromise = wfsFilterService.getApplicationProfile(uuid,
+
+            appProfilePromise = wfsFilterService.getApplicationProfile(scope.md, uuid,
               ftName,
               gnGlobalSettings.getNonProxifiedUrl(scope.wfsUrl ? scope.url : scope.mdUrl),
               // A WFS URL is in the metadata or we're guessing WFS has
@@ -236,6 +241,16 @@
             scope.indexObject = indexObject;
             scope.layer.set('indexObject', indexObject);
 
+            // check whether the WFS service is already in the database
+            scope.messageProducersApiUrl = '../api/msg_producers';
+            wfsIndexJobSavedPromise = $http.get(
+              scope.messageProducersApiUrl + '/find?url=' + encodeURIComponent(scope.url) + '&featureType=' + scope.featureTypeName
+            )
+              .then(function() {
+                return true
+              }, function() {
+                return false
+              });
 
             scope.checkWFSServerUrl();
             scope.initIndexRequest();
@@ -247,11 +262,11 @@
            */
           scope.checkWFSServerUrl = function() {
             return $http.get(scope.url)
-                .then(function() {
-                  scope.isWfsAvailable = true;
-                }, function() {
-                  scope.isWfsAvailable = false;
-                });
+              .then(function() {
+                scope.isWfsAvailable = true;
+              }, function() {
+                scope.isWfsAvailable = false;
+              });
           };
 
           /**
@@ -266,7 +281,7 @@
             if (appProfile && appProfile.fields) {
 
               indexObject.indexFields =
-                  wfsFilterService.indexMergeApplicationProfile(
+                wfsFilterService.indexMergeApplicationProfile(
                   indexObject.filteredDocTypeFieldsInfo, appProfile);
               indexObject.initBaseParams();
               if (!appProfile.extendOnly) {
@@ -279,7 +294,7 @@
           function getDataModelLabel(fieldId) {
             for (var j = 0; j < scope.md.attributeTable.length; j++) {
               if (fieldId ==
-                  scope.md.attributeTable[j].name) {
+                scope.md.attributeTable[j].name) {
                 return scope.md.attributeTable[j].definition;
               }
             }
@@ -320,9 +335,9 @@
           };
           scope.dropFeatures = function() {
             return $http.delete(
-                '../api/workers/data/wfs/actions?serviceUrl=' +
-                encodeURIComponent(scope.url) +
-                '&typeName=' + encodeURIComponent(ftName)).then(function() {
+              '../api/workers/data/wfs/actions?serviceUrl=' +
+              encodeURIComponent(scope.url) +
+              '&typeName=' + encodeURIComponent(ftName)).then(function() {
               scope.initIndexRequest();
             }, function() {
               console.warn('Failed to remove features for type ' + id);
@@ -488,14 +503,14 @@
                 params: facetsState,
                 geometry: scope.filterGeometry
               }, aggs).
-                  then(function(resp) {
-                    searchResponseHandler(resp, filterInputUpdate);
-                    angular.forEach(scope.fields, function(f) {
-                      if (expandedFields.indexOf(f.name) >= 0) {
-                        f.expanded = true;
-                      }
-                    });
-                  });
+              then(function(resp) {
+                searchResponseHandler(resp, filterInputUpdate);
+                angular.forEach(scope.fields, function(f) {
+                  if (expandedFields.indexOf(f.name) >= 0) {
+                    f.expanded = true;
+                  }
+                });
+              });
             }
           };
 
@@ -524,10 +539,10 @@
               && agg.bbox_xmin.value && agg.bbox_ymin.value
               && agg.bbox_xmax.value && agg.bbox_ymax.value) {
               var isPoint = agg.bbox_xmin.value === agg.bbox_xmax.value
-                            && agg.bbox_ymin.value === agg.bbox_ymax.value,
-                  radius = .05,
-                  extent = [agg.bbox_xmin.value, agg.bbox_ymin.value,
-                            agg.bbox_xmax.value, agg.bbox_ymax.value];
+                && agg.bbox_ymin.value === agg.bbox_ymax.value,
+                radius = .05,
+                extent = [agg.bbox_xmin.value, agg.bbox_ymin.value,
+                  agg.bbox_xmax.value, agg.bbox_ymax.value];
 
               if (isPoint) {
                 var point = new ol.geom.Point([agg.bbox_xmin.value, agg.bbox_ymin.value]);
@@ -552,16 +567,16 @@
           scope.accentify = function(str) {
             var searchStr = str.toLocaleLowerCase()
             var accents = {
-                a: 'àáâãäåæa',
-                c: 'çc',
-                e: 'èéêëæe',
-                i: 'ìíîïi',
-                n: 'ñn',
-                o: 'òóôõöøo',
-                s: 'ßs',
-                u: 'ùúûüu',
-                y: 'ÿy'
-              }
+              a: 'àáâãäåæa',
+              c: 'çc',
+              e: 'èéêëæe',
+              i: 'ìíîïi',
+              n: 'ñn',
+              o: 'òóôõöøo',
+              s: 'ßs',
+              u: 'ùúûüu',
+              y: 'ÿy'
+            }
             return accents.hasOwnProperty(searchStr) ? accents[searchStr] : str
           }
 
@@ -611,7 +626,7 @@
 
             // load all facet and fill ui structure for the list
             return indexObject.searchWithFacets({}, aggs).
-                then(function(resp) {
+            then(function(resp) {
               searchResponseHandler(resp, false);
             });
           };
@@ -751,10 +766,10 @@
             scope.output = initialFilters.qParams || {};
             if (initialFilters.geometry) {
               scope.ctrl.searchGeometry =
-                  initialFilters.geometry[0][0] + ',' +
-                  initialFilters.geometry[1][1] + ',' +
-                  initialFilters.geometry[1][0] + ',' +
-                  initialFilters.geometry[0][1];
+                initialFilters.geometry[0][0] + ',' +
+                initialFilters.geometry[1][1] + ',' +
+                initialFilters.geometry[1][0] + ',' +
+                initialFilters.geometry[0][1];
             }
 
             var aggs = {};
@@ -821,13 +836,13 @@
             }
             else {
               layer.setExtent(
-                  ol.proj.transformExtent(extentFilter, 'EPSG:4326',
-                      scope.map.getView().getProjection()));
+                ol.proj.transformExtent(extentFilter, 'EPSG:4326',
+                  scope.map.getView().getProjection()));
 
             }
             if (sldConfig.filters.length > 0) {
               wfsFilterService.getSldUrl(sldConfig, layer.get('directUrl') || layer.get('url'),
-                  ftName).success(function(sldURL) {
+                ftName).success(function(sldURL) {
                 // Do not activate it
                 // Usually return 414 Request-URI Too Large
                 var useSldBody = false;
@@ -861,31 +876,18 @@
            * Only available for administrators.
            */
           scope.indexWFSFeatures = function(version) {
-            var applicationProfile = scope.md.linksTree.map(function (d) {
-              return d.filter(function (e) {
-                return e.protocol === 'OGC:WFS';
-              });
-            }).filter(function (f) {
-              return f[0] ? f[0].name : undefined;
-            }).find(function (s) {
-              return s[0].name === ftName;
-            })[0].applicationProfile;
-
-            try {
-              applicationProfile = JSON.parse(applicationProfile);
-            } catch(e) {
-              applicationProfile = null; // no ApplicationProfile for current md
-            };
-            wfsFilterService.indexWFSFeatures(
+            appProfilePromise.then(function() {
+              wfsFilterService.indexWFSFeatures(
                 scope.url,
                 ftName,
-                applicationProfile ? applicationProfile.tokenizedFields : null,
-                applicationProfile ? applicationProfile.treeFields : null,
+                appProfile ? appProfile.tokenizedFields : null,
+                appProfile ? appProfile.treeFields : null,
                 uuid,
-                version);
+                version,
+                scope.strategy);
 
-            // save WFS indexing job if not done already
-            scope.saveWfsIndexingJob();
+              scope.saveWfsIndexingJob();
+            });
           };
 
           // Init the directive
@@ -965,13 +967,13 @@
             function normalize(s) { return (s || '').replace(',,,', ''); }
 
             var geomChanged = normalize(scope.ctrl.searchGeometry) !==
-                normalize(scope.previousFilterState.geometry);
+              normalize(scope.previousFilterState.geometry);
 
             // only compare params object if necessary
             var paramsChanged = false;
             if (!geomChanged) {
               paramsChanged = !angular.equals(
-                  scope.previousFilterState.params, scope.output);
+                scope.previousFilterState.params, scope.output);
             }
 
             scope.filtersChanged = paramsChanged || geomChanged;
@@ -992,7 +994,7 @@
 
             // special case for dates
             if (scope.output[facetName].type == 'date' ||
-                scope.output[facetName].type == 'rangeDate') {
+              scope.output[facetName].type == 'rangeDate') {
               var values = scope.output[facetName].values;
 
               // no dates defined: leave
@@ -1004,11 +1006,11 @@
               var lowerBound = field.dates && field.dates[0];
               var upperBound = field.dates && field.dates[field.dates.length - 1];
               var lowerActive = values.from &&
-                  moment(values.from, 'DD-MM-YYYY').startOf('day').valueOf() >
-                  lowerBound;
+                moment(values.from, 'DD-MM-YYYY').startOf('day').valueOf() >
+                lowerBound;
               var upperActive = values.to &&
-                  moment(values.to, 'DD-MM-YYYY').endOf('day').valueOf() <
-                  upperBound;
+                moment(values.to, 'DD-MM-YYYY').endOf('day').valueOf() <
+                upperBound;
               return lowerActive || upperActive;
             }
 
@@ -1035,25 +1037,15 @@
             return newItems;
           }
 
-          // check whether the WFS service is already in the database
-          scope.messageProducersApiUrl = gnHttp.getService('wfsMessageProducers');
-          var wfsIndexJobSavedPromise = $http.get(
-            scope.messageProducersApiUrl + '/find?url=' + scope.wfsUrl + '&featureType=' + scope.featureTypeName
-          )
-            .then(function() {
-              return true
-            }, function() {
-              return false
-            });
-
           scope.saveWfsIndexingJob = function() {
             wfsIndexJobSavedPromise.then(function(saved) {
               if (saved) return;
               var payload = {
                 wfsHarvesterParam: {
-                  url: scope.wfsUrl,
+                  url: scope.url,
                   typeName: scope.featureTypeName,
-                  metadataUuid: scope.md && scope.md.getUuid()
+                  strategy: scope.strategy,
+                  metadataUuid: scope.md && scope.md.uuid
                 },
                 cronExpression: null
               };
@@ -1091,7 +1083,7 @@
           wfsFilterCrl: '^^gnWfsFilterFacets'
         },
         template: '<div gn-wfs-filter-facets-tree-item=' +
-            '"treeCtrl.field.tree"></div>',
+          '"treeCtrl.field.tree"></div>',
         bindToController: true,
         controllerAs: 'treeCtrl',
         controller: function() {
@@ -1125,7 +1117,7 @@
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/viewer/wfsfilter/' +
-            'partials/wfsfilterfacetTreeItem.html',
+          'partials/wfsfilterfacetTreeItem.html',
         scope: {
           node: '<gnWfsFilterFacetsTreeItem'
         },
@@ -1138,7 +1130,7 @@
         controller: ['$attrs', '$element', function($attrs, $element) {
           this.element = $element;
           this.isRoot = $attrs['gnWfsFilterFacetsTreeItemNotroot'] ===
-              undefined;
+            undefined;
 
           this.$onInit = function() {
             this.onCheckboxTreeClick = function() {

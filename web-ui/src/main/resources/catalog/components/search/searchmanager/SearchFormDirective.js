@@ -34,14 +34,12 @@
 
 
   goog.require('gn_catalog_service');
-  goog.require('gn_facets');
   goog.require('gn_search_form_results_directive');
   goog.require('gn_selection_directive');
   goog.require('search_filter_tags_directive');
 
   var module = angular.module('gn_search_form_controller', [
     'gn_catalog_service',
-    'gn_facets',
     'gn_selection_directive',
     'gn_search_form_results_directive',
     'search_filter_tags_directive'
@@ -51,371 +49,487 @@
    * Controller to create new metadata record.
    */
   var searchFormController =
-      function($scope, $location, gnSearchManagerService,
-               gnFacetService, Metadata, gnSearchLocation) {
-    var defaultParams = {
-      fast: 'index',
-      _content_type: 'json'
-    };
-    var self = this;
+    function($scope, $location, $parse, $translate, gnSearchManagerService,
+      Metadata, gnSearchLocation, gnESClient,
+      gnESService, gnESFacet, gnAlertService) {
+      var defaultParams = {};
+      var self = this;
 
-    var hiddenParams = $scope.searchObj.hiddenParams;
+      var hiddenParams = $scope.searchObj.hiddenParams;
+      $scope.searchObj.configId = $scope.searchObj.configId || 'search';
+      $scope.searchObj.state = {
+        filters: {}
+      };
 
-    /** State of the facets of the current search */
-    $scope.currentFacets = [];
-
-    /** Object where are stored result search information */
-    $scope.searchResults = {
-      records: [],
-      count: -1,
-      selectionBucket:
+      /** Object where are stored result search information */
+      $scope.searchResults = {
+        records: [],
+        count: -1,
+        selectionBucket:
           $scope.searchObj.selectionBucket ||
           (Math.random() + '').replace('.', '')
-    };
-    $scope.finalParams = {};
+      };
+      $scope.finalParams = {};
 
-    $scope.searching = 0;
-    $scope.paginationInfo = $scope.paginationInfo || {};
+      $scope.searching = 0;
+      $scope.paginationInfo = $scope.paginationInfo || {};
 
-    /**
-     * Return the current search parameters.
-     **/
-    this.getSearchParams = function() {
-      return $scope.searchObj.params;
-    };
+      /**
+       * Return the current search parameters.
+       **/
+      this.getSearchParams = function() {
+        return $scope.searchObj.params;
+      };
 
-    this.getFinalParams = function() {
-      return $scope.finalParams;
-    };
+      this.getFinalParams = function() {
+        return $scope.finalParams;
+      };
 
-    this.getSearchResults = function() {
-      return $scope.searchResults;
-    };
+      this.getSearchResults = function() {
+        return $scope.searchResults;
+      };
 
-    /**
-     * Tells if there is a pagination directive nested to this one.
-     * Mainly activated by pagination directive link function.
-     */
-    $scope.hasPagination = false;
-    this.activatePagination = function() {
-      $scope.hasPagination = true;
-      if (!$scope.searchObj.permalink || (
+      /**
+       * Tells if there is a pagination directive nested to this one.
+       * Mainly activated by pagination directive link function.
+       */
+      $scope.hasPagination = false;
+      this.activatePagination = function() {
+        $scope.hasPagination = true;
+        if (!$scope.searchObj.permalink || (
           angular.isUndefined($scope.searchObj.params.from) &&
           angular.isUndefined($scope.searchObj.params.to)
-          )) {
-        self.resetPagination();
-      }
-    };
-
-
-
-    /**
-     * Reset pagination 'from' and 'to' params and merge them
-     * to $scope.params
-     */
-    this.resetPagination = function(customPagination) {
-      if ($scope.hasPagination) {
-        $scope.paginationInfo.currentPage = 1;
-        this.updateSearchParams(this.getPaginationParams(customPagination));
-      }
-    };
-
-    var cleanSearchParams = function(params) {
-      for (v in params) {
-        if (params[v] == '') {
-          delete params[v];
+        )) {
+          self.resetPagination();
         }
-      }
-    };
+      };
 
-    /**
-     * triggerSearch
-     *
-     * Run a search with the actual $scope.params
-     * merged with the params from facets state.
-     * Update the paginationInfo object with the total
-     * count of metadata found.
-     *
-     * @param {boolean} resetPagination If true, then
-     * don't reset pagination info.
-     */
-    this.triggerSearchFn = function(keepPagination) {
 
-      function searchFn() {
+
+      /**
+       * Reset pagination 'from' and 'to' params and merge them
+       * to $scope.params
+       */
+      this.resetPagination = function(customPagination) {
+        if ($scope.hasPagination) {
+          $scope.paginationInfo.currentPage = 1;
+          this.updateSearchParams(this.getPaginationParams(customPagination));
+        }
+      };
+
+      var cleanSearchParams = function(params) {
+        for (v in params) {
+          if (params[v] == '') {
+            delete params[v];
+          }
+        }
+      };
+
+      /**
+       * triggerSearch
+       *
+       * Run a search with the actual $scope.params
+       * Update the paginationInfo object with the total
+       * count of metadata found.
+       *
+       * @param {boolean} resetPagination If true, then
+        don't reset pagination info.
+       */
+
+      this.triggerSearchFn = function(keepPagination) {
         $scope.searching++;
         $scope.searchObj.params = angular.extend({},
           $scope.searchObj.defaultParams || defaultParams,
           $scope.searchObj.params,
           defaultParams);
 
-        // Add hidden filters which may
-        // restrict search (do not add an existing filter)
-        if ($scope.searchObj.filters) {
-          angular.forEach($scope.searchObj.filters,
-            function(value, key) {
-              var p = $scope.searchObj.params[key];
-              if (p) {
-                if (p !== value && (!p.indexOf || p.indexOf(value) === -1)) {
-                  if (!angular.isArray(p)) {
-                    $scope.searchObj.params[key] = [p];
-                  }
-                  $scope.searchObj.params[key].push(value);
-                }
-              } else {
-                $scope.searchObj.params[key] = value;
-              }
-            });
-        }
-
         // Set default pagination if not set
         if ((!keepPagination &&
-            !$scope.searchObj.permalink) ||
-            (angular.isUndefined($scope.searchObj.params.from) ||
+          !$scope.searchObj.permalink) ||
+          (angular.isUndefined($scope.searchObj.params.from) ||
             angular.isUndefined($scope.searchObj.params.to))) {
           self.resetPagination();
         }
 
         // Set default sortBy
         if (angular.isUndefined($scope.searchObj.params.sortBy)) {
-          angular.extend($scope.searchObj.params,
-              $scope.searchObj.sortbyDefault);
+          angular.extend($scope.searchObj.params, $scope.searchObj.sortbyDefault);
         }
 
-        // Don't add facet extra params to $scope.params but
-        // compute them each time on a search.
         var params = angular.copy($scope.searchObj.params);
-
-        if ($scope.currentFacets.length > 0) {
-          angular.extend(params,
-              gnFacetService.getParamsFromFacets($scope.currentFacets));
-        }
-
-
-        // SEXTANT SPECIFIC
-        delete params.owscontext;
-        delete params.wmsurl;
-        delete params.layername;
-
-        var finalParams = angular.extend({}, hiddenParams, params);
+        var finalParams = angular.extend(params, hiddenParams);
         $scope.finalParams = finalParams;
-        // only run internal queries if necessary
-        if ($scope.searchObj.internal !== undefined ) {
-          gnSearchManagerService.gnSearch(
-            finalParams, null,
-            $scope.searchObj.internal).then(
-            function (data) {
-              $scope.searchResults.records = [];
-              for (var i = 0; i < data.metadata.length; i++) {
-                $scope.searchResults.records.push(new Metadata(data.metadata[i]));
-              }
+        var esParams = gnESService.generateEsRequest(finalParams, $scope.searchObj.state,
+          $scope.searchObj.configId, $scope.searchObj.filters);
+        gnESClient.search(esParams, $scope.searchResults.selectionBucket || 'metadata', $scope.searchObj.configId)
+        .then(function(data) {
+          // data is not an object: this is an error
+          if (typeof data !== 'object') {
+            console.warn('An error occurred while searching. Response is not an object.', esParams, data.data);
+            gnAlertService.addAlert({
+              id: 'searchError',
+              msg: $translate.instant('searchInvalidResponse'),
+              type: 'danger'
             });
-        }
+            return;
+          }
 
-        finalParams.bucket = $scope.searchResults.selectionBucket || 'metadata';
-
-        gnSearchManagerService.gnSearch(finalParams).then(
-            function(data) {
-              $scope.searchResults.records = [];
-              for (var i = 0; i < data.metadata.length; i++) {
-                $scope.searchResults.records.
-                    push(new Metadata(data.metadata[i]));
-              }
-              $scope.searchResults.count = data.count;
-              $scope.searchResults.facet = data.facet;
-              $scope.searchResults.dimension = data.dimension;
-
-            // compute page number for pagination
-            if ($scope.hasPagination) {
-
-                var paging = $scope.paginationInfo;
-
-                // Means the `from` and `to` params come from permalink
-                if ((paging.currentPage - 1) *
-                    paging.hitsPerPage + 1 != params.from) {
-                  paging.currentPage =
-                      (params.from - 1) / paging.hitsPerPage + 1;
-                }
-
-                paging.resultsCount = $scope.searchResults.count;
-                paging.to = Math.min(
-                    data.count,
-                    paging.currentPage * paging.hitsPerPage
-                    );
-                paging.pages = Math.ceil(
-                    $scope.searchResults.count /
-                    paging.hitsPerPage, 0
-                    );
-                paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
-              }
-            }).finally(function() {
-              $scope.searching--;
-            });;
-      };
-
-      if ($scope.userLoginPromise && $scope.userLoginPromise.finally) {
-        $scope.userLoginPromise.finally(searchFn);
-      } else {
-        searchFn();
-      }
-    };
-
-
-    /**
-     * triggerWildSubtemplateSearch
-     *
-     * Run a search with the actual $scope.params
-     * merged with the params from facets state.
-     * Update the paginationInfo object with the total
-     * count of metadata found. Note that this search
-     * is for subtemplates with _root element provided as function
-     * param and wildcard char appended
-     */
-    this.triggerWildSubtemplateSearch = function(element) {
-
-      angular.extend($scope.params, defaultParams);
-
-      // Don't add facet extra params to $scope.params but
-      // compute them each time on a search.
-      var params = angular.copy($scope.params);
-      if ($scope.currentFacets.length > 0) {
-        angular.extend(params,
-            gnFacetService.getParamsFromFacets($scope.currentFacets));
-      }
-
-      // Add wildcard char to search, limit to subtemplates and the _root
-      // element of the subtemplate we want
-      if (params.any) params.any = params.any + '*';
-      else params.any = '*';
-
-      params._isTemplate = 's';
-      params._root = element;
-      params.from = '1';
-      params.to = '20';
-
-      gnSearchManagerService.gnSearch(params).then(
-          function(data) {
-            $scope.searchResults.records = data.metadata;
-            $scope.searchResults.count = data.count;
-            $scope.searchResults.facet = data.facet;
-
-            // compute page number for pagination
-            if ($scope.searchResults.records.length > 0 &&
-                $scope.hasPagination) {
-              $scope.paginationInfo.pages = Math.ceil(
-                  $scope.searchResults.count /
-                      $scope.paginationInfo.hitsPerPage, 0);
-            }
+          // make sure we have a hits object if ES did not give back anything
+          data.hits = data.hits || { hits: [], total: 0 };
+          var records = data.hits.hits.map(function(r) {
+            return new Metadata(r);
           });
-    };
+          $scope.searchResults.records = records;
+          $scope.searchResults.count = data.hits.total.value;
+          $scope.searchResults.facets = data.facets || {}
 
-    /**
-     * If we use permalink, the triggerSerach call will in fact just update
-     * the url with the params, then the event $locationChangeSuccess will call
-     * the geonetwork search from url params.
-     */
-    if ($scope.searchObj.permalink) {
-      var triggerSearchFn = self.triggerSearchFn;
-      var facetsParams;
+          // compute page number for pagination
+          if ($scope.hasPagination) {
 
-      self.triggerSearch = function(keepPagination) {
-        if (!keepPagination) {
-          self.resetPagination();
-        }
+            var paging = $scope.paginationInfo;
 
-        facetsParams = gnFacetService.getParamsFromFacets($scope.currentFacets);
-        $scope.$broadcast('beforesearch');
-        var params = angular.copy($scope.searchObj.params);
-        cleanSearchParams(params);
-        angular.extend(params, facetsParams);
+            // Means the `from` and `to` params come from permalink
+            if ((paging.currentPage - 1) *
+              paging.hitsPerPage + 1 != params.from) {
+              paging.currentPage = (params.from - 1) / paging.hitsPerPage + 1;
+            }
 
-        if (angular.equals(params, $location.search())) {
-          triggerSearchFn(false);
-        } else {
-          gnSearchLocation.setSearch(params);
-        }
+            paging.resultsCount = $scope.searchResults.count;
+            paging.to = Math.min(
+              $scope.searchResults.count,
+              paging.currentPage * paging.hitsPerPage
+            );
+            paging.pages = Math.ceil(
+              $scope.searchResults.count /
+              paging.hitsPerPage, 0
+            );
+            paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
+          }
+        },function(data){
+          console.warn('An error occurred while searching. Bad request.', esParams, data.data);
+          gnAlertService.addAlert({
+            id: 'searchError',
+            msg: $translate.instant('searchBadRequest'),
+            type: 'danger'
+          });
+        }).then(function() {
+          $scope.searching--;
+        });
       };
 
-      $scope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl) {
-        // We are not in a url search so leave
-        if (!gnSearchLocation.isSearch()) return;
 
-        // We are getting back to the search, no need to reload it
-        if (newUrl == gnSearchLocation.lastSearchUrl) return;
+      /**
+       * triggerWildSubtemplateSearch
+       *
+       * Run a search with the actual $scope.params
+       * Update the paginationInfo object with the total
+       * count of metadata found. Note that this search
+       * is for subtemplates with _root element provided as function
+       * param and wildcard char appended
+       */
+      this.triggerWildSubtemplateSearch = function(element) {
 
-        gnSearchLocation.lastSearchUrl = newUrl;
-        var params = angular.copy($location.search());
-        gnFacetService.removeFacetsFromParams($scope.currentFacets, params);
+        angular.extend($scope.params, defaultParams);
 
-        for (var o in facetsParams) {
-          delete params[o];
-        }
+        var params = angular.copy($scope.params);
 
-        $scope.searchObj.params = params;
-        triggerSearchFn();
-      });
-    }
-    else {
-      this.triggerSearch = this.triggerSearchFn;
-    }
+        // Add wildcard char to search, limit to subtemplates and the _root
+        // element of the subtemplate we want
+        if (params.any) params.any = params.any + '*';
+        else params.any = '*';
 
-    /**
-     * update $scope.params by merging it with given params
-     * @param {!Object} params
-     */
-    this.updateSearchParams = function(params) {
-      angular.extend($scope.searchObj.params, params);
-    };
+        params.isTemplate = 's';
+        params._root = element;
+        params.from = '1';
+        params.to = '20';
 
-    this.resetSearch = function(searchParams, preserveGeometrySearch) {
+        // TODOES: use ES client
 
-      // Only if it is a real reset
-      if (!searchParams) {
+        // gnSearchManagerService.gnSearch(params).then(
+        //     function(data) {
+        //       $scope.searchResults.records = data.metadata;
+        //       $scope.searchResults.count = data.count;
+
+        //       // compute page number for pagination
+        //       if ($scope.searchResults.records.length > 0 &&
+        //           $scope.hasPagination) {
+        //         $scope.paginationInfo.pages = Math.ceil(
+        //             $scope.searchResults.count /
+        //                 $scope.paginationInfo.hitsPerPage, 0);
+        //       }
+        //     });
+      };
+
+      /**
+       * If we use permalink, the triggerSerach call will in fact just update
+       * the url with the params, then the event $locationChangeSuccess will call
+       * the geonetwork search from url params.
+       */
+      if ($scope.searchObj.permalink) {
+        var triggerSearchFn = self.triggerSearchFn;
+
+        self.triggerSearch = function(keepPagination) {
+          if (!keepPagination) {
+            self.resetPagination();
+          }
+
+          $scope.$broadcast('beforesearch');
+
+          var params = angular.copy($scope.searchObj.params);
+          cleanSearchParams(params);
+
+          // Synch query_string and state filter.
+          var filters = $scope.searchObj.state.filters;
+          if(angular.isObject(filters)) {
+            var query_string = JSON.stringify(filters);
+            if (Object.keys(filters).length) {
+              params.query_string = query_string
+            } else {
+              delete params.query_string
+            }
+          } else {
+            if (filters != '') {
+              params.query_string = filters;
+              $scope.searchObj.state.filters = JSON.parse(filters);
+            } else {
+              delete params.query_string
+            }
+          }
+
+          if (angular.equals(params, gnSearchLocation.getParams())) {
+            triggerSearchFn(false);
+          } else {
+            gnSearchLocation.setSearch(params);
+          }
+        };
+
+        $scope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl) {
+          // We are not in a url search so leave
+          if (!gnSearchLocation.isSearch()) return;
+
+          // We are getting back to the search, no need to reload it
+          if (newUrl == gnSearchLocation.lastSearchUrl) return;
+
+          var params = gnSearchLocation.getParams();
+          if(params.query_string) {
+            $scope.searchObj.state.filters = JSON.parse(params.query_string);
+          } else {
+            $scope.searchObj.state.filters = {};
+          }
+
+          $scope.searchObj.params = params;
+          triggerSearchFn();
+        });
+      }
+      else {
+        this.triggerSearch = this.triggerSearchFn;
+      }
+
+      /**
+       * update $scope.params by merging it with given params
+       * @param {!Object} params
+       */
+      this.updateSearchParams = function(params) {
+        angular.extend($scope.searchObj.params, params);
+      };
+
+      this.resetSearch = function(searchParams, preserveGeometrySearch) {
+
         $scope.$broadcast('beforeSearchReset', preserveGeometrySearch);
-      }
 
-      if (searchParams) {
-        $scope.searchObj.params = searchParams;
-      } else {
-        $scope.searchObj.params = {};
-      }
-      if ($scope.searchObj.sortbyDefault) {
-        angular.extend($scope.searchObj.params, $scope.searchObj.sortbyDefault);
-      }
+        $scope.searchObj.state.exactMatch = false;
+        if (searchParams) {
+          $scope.searchObj.params = searchParams;
+        } else {
+          $scope.searchObj.params = {};
+        }
+        if ($scope.searchObj.sortbyDefault) {
+          angular.extend($scope.searchObj.params, $scope.searchObj.sortbyDefault);
+        }
 
-      var customPagination = searchParams;
+        var customPagination = searchParams;
 
-      self.resetPagination(customPagination);
-      $scope.currentFacets = [];
-      $scope.triggerSearch();
-      $scope.$broadcast('resetSelection');
-    };
-    $scope.$on('resetSearch', function(evt, searchParams, preserveGeometrySearch) {
-      $scope.controller.resetSearch(searchParams, preserveGeometrySearch);
-    });
-
-    $scope.$on('search', function() {
-      $scope.triggerSearch();
-    });
-
-    $scope.$on('clearResults', function() {
-      $scope.searchResults = {
-        records: [],
-        count: 0,
-        selectionBucket: $scope.searchObj.selectionBucket
+        self.resetPagination(customPagination);
+        $scope.searchObj.state = {
+          filters: {}
+        }
+        $scope.triggerSearch();
+        $scope.$broadcast('resetSelection');
       };
-    });
+      $scope.$on('resetSearch', function(evt, searchParams, preserveGeometrySearch) {
+        $scope.controller.resetSearch(searchParams, preserveGeometrySearch);
+      });
 
-    $scope.triggerSearch = this.triggerSearch;
-    $scope.triggerWildSubtemplateSearch = this.triggerWildSubtemplateSearch;
-  };
+      $scope.$on('search', function() {
+        $scope.triggerSearch();
+      });
+
+      $scope.$on('clearResults', function() {
+        $scope.searchResults = {
+          records: [],
+          count: 0,
+          selectionBucket: $scope.searchObj.selectionBucket
+        };
+      });
+
+      $scope.triggerSearch = this.triggerSearch;
+      $scope.triggerWildSubtemplateSearch = this.triggerWildSubtemplateSearch;
+
+      /*
+       * Implement AngularJS $parse without the restriction of expressions
+       */
+      var parse = function(path) {
+        var fn =  function(obj) {
+          var paths = path.split('^^^')
+            , current = obj
+            , i;
+
+          for (i = 0; i < paths.length; ++i) {
+            if (current[paths[i]] == undefined) {
+              return undefined;
+            } else {
+              current = current[paths[i]];
+            }
+          }
+          return current;
+        }
+        fn.assign = function(obj, value) {
+          var paths = path.split('^^^')
+            , current = obj
+            , i;
+
+          for (i = 0; i < paths.length-1; ++i) {
+            if (current[paths[i]] == undefined) {
+              current[paths[i]] = {}
+            }
+            current = current[paths[i]];
+          }
+          current[paths[paths.length-1]] = value
+        }
+        return fn;
+      };
+
+      var removeKey = function(obj, keys) {
+        var head = keys[0];
+        var tail = keys.slice(1);
+        for (var prop in obj) {
+          obj.hasOwnProperty(prop) && (head.toString() === prop && tail.length === 0 ?
+            delete obj[prop] :
+            'object' === typeof (obj[prop]) && (removeKey(obj[prop], tail),
+            0 === Object.keys(obj[prop]).length && delete obj[prop]))
+        }
+      }
+
+      this.updateState = function(path, value, doNotRemove) {
+        if(path[0] === 'any' || path[0] === 'uuid') {
+          delete $scope.searchObj.params[path[0]];
+        } else {
+          var filters = $scope.searchObj.state.filters;
+          var getter = parse(path.join('^^^'));
+          var existingValue = getter(filters);
+          if(angular.isUndefined(existingValue) || doNotRemove) {
+            var setter = getter.assign;
+            setter(filters, value)
+          } else {
+            if(existingValue !== value) {
+              var setter = getter.assign;
+              setter(filters, value)
+            } else {
+              removeKey(filters, path)
+            }
+          }
+        }
+        this.triggerSearch();
+      }
+
+      this.isInSearch = function(path) {
+        if(!path) return;
+        var filters = $scope.searchObj.state.filters;
+        var getter = parse(path.join('^^^'));
+        var res = getter(filters);
+        return angular.isDefined(res);
+      }
+
+      this.hasChildInSearch = function(path) {
+        if(!path) return;
+        var filters = $scope.searchObj.state.filters;
+        if(filters[path[0]]) {
+          return Object.keys(filters[path[0]]).some(function(key) {
+            return key.indexOf(path[1]) === 0 && key != path[1];
+          });
+        } else {
+          return false;
+        }
+      }
+
+      this.isNegativeSearch = function(path) {
+        if(!path) return;
+        var filters = $scope.searchObj.state.filters;
+        var getter = parse(path.join('^^^'));
+        var res = getter(filters);
+        if(angular.isString(res)) {
+          return res.indexOf('-(') === 0;
+        } else {
+          return res === false;
+        }
+      }
+
+      this.hasFiltersForKey = function(key) {
+        return !!$scope.searchObj.state.filters[key];
+      }
+
+      this.loadMoreTerms = function(facet, moreItemsNumber) {
+        var facetConfigs = {};
+        for (var i = 0; i < facet.path.length; i++) {
+          if ((i + 1) % 2 === 0) continue;
+          var key = facet.path[i];
+          facetConfigs[key] =
+            gnESFacet.removeInternalFacetConfig($scope.facetConfig[key]);
+        }
+        var request = gnESService.generateEsRequest($scope.finalParams, $scope.searchObj.state,
+          $scope.searchObj.configId, $scope.searchObj.filters);
+        return gnESClient.getTermsParamsWithNewSizeOrFilter(
+          request.query,
+          facet.path,
+          facet.items.length + (moreItemsNumber || 20),
+          undefined, undefined,
+          facetConfigs
+        );
+      }
+
+      this.filterTerms = function(facet) {
+        var facetConfigs = {};
+        for (var i = 0; i < facet.path.length; i++) {
+          if ((i + 1) % 2 === 0) continue;
+          var key = facet.path[i];
+          facetConfigs[key] =
+            gnESFacet.removeInternalFacetConfig($scope.facetConfig[key]);
+        }
+        var request = gnESService.generateEsRequest($scope.finalParams, $scope.searchObj.state,
+          $scope.searchObj.configId, $scope.searchObj.filters)
+        return gnESClient.getTermsParamsWithNewSizeOrFilter(
+          request.query,
+          facet.path,
+          undefined,
+          facet.include,
+          facet.exclude,
+          facetConfigs
+        );
+      }
+    };
 
   searchFormController['$inject'] = [
     '$scope',
     '$location',
+    '$parse',
+    '$translate',
     'gnSearchManagerService',
-    'gnFacetService',
     'Metadata',
-    'gnSearchLocation'
+    'gnSearchLocation',
+    'gnESClient',
+    'gnESService',
+    'gnESFacet',
+    'gnAlertService'
   ];
 
   /**
@@ -424,8 +538,8 @@
    *  * waitForUser: wait until a user id is available to trigger the search.
    */
   module.directive('ngSearchForm', [
-    'gnSearchLocation',
-    function(gnSearchLocation) {
+    'gnSearchLocation', 'gnESService',
+    function(gnSearchLocation, gnESService) {
       return {
         restrict: 'A',
         scope: true,
@@ -460,12 +574,16 @@
           // Don't run it on page load if the permalink is 'on' and the
           // $location is not set to 'search'
           if (attrs.runsearch &&
-              (!scope.searchObj.permalink || gnSearchLocation.isSearch())) {
+            (!scope.searchObj.permalink || gnSearchLocation.isSearch())) {
 
             // get permalink params on page load
             if (scope.searchObj.permalink) {
-              angular.extend(scope.searchObj.params,
-                  gnSearchLocation.getParams());
+              scope.searchObj.params = gnSearchLocation.getParams();
+
+              if(scope.searchObj.params.query_string) {
+                scope.searchObj.state.filters = scope.searchObj.params.query_string;
+              }
+
             }
 
             if (attrs.waitForUser === "true") {

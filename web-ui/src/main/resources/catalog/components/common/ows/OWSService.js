@@ -592,7 +592,7 @@
            * @param {string} name
            * @return {string} name without namespace
            */
-          getNameWithoutNamespace(name) {
+          getNameWithoutNamespace: function(name) {
             var parts = name.split(':', 2);
             return parts[parts.length - 1];
           }
