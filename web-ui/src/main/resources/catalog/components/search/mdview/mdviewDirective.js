@@ -106,7 +106,7 @@
                 'overview.*',
                 'resource*',
                 'codelist_status*'
-              ],
+              ]
             },
             "query": {
               "bool": {
