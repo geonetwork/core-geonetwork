@@ -128,9 +128,13 @@
           <lastmod>
             <xsl:value-of select="substring($changedate,1,10)"/>
           </lastmod>
+          
+          <!--
           <dct:format>
               <xsl:value-of select="$schemaid"/>
           </dct:format>
+          -->
+
         </url>
       </xsl:for-each>
     </urlset>
