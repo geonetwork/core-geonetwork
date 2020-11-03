@@ -25,10 +25,12 @@ package org.fao.geonet.camelPeriodicProducer;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.component.quartz2.QuartzComponent;
+import org.fao.geonet.api.records.MetadataSavedQueryApi;
 import org.fao.geonet.domain.MessageProducerEntity;
 import org.fao.geonet.domain.WfsHarvesterParamEntity;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.repository.MessageProducerRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,6 +64,12 @@ public class MessageProducerControllerTest {
 
     @Autowired
     private TestCamelNetwork testCamelNetwork;
+
+    @Autowired
+    MetadataRepository metadataRepository;
+
+    @Autowired
+    MetadataSavedQueryApi savedQueryApi;
 
     private QuartzComponent quartzComponent;
 
@@ -137,7 +145,7 @@ public class MessageProducerControllerTest {
         ResponseEntity<?> response = toTest.create(messageProducerEntity);
         String message = ((MessageProducerController.ErrorResponse) response.getBody()).getMessage();
 
-        assertEquals("CronExpression 'i am not a cron expression' is invalid,.", message);
+        assertEquals("CronExpression 'i am not a cron expression' is invalid.", message);
         assertEquals(0, toTest.msgProducerRepository.findAll().size());
     }
 
@@ -151,7 +159,7 @@ public class MessageProducerControllerTest {
         ResponseEntity<?> response = toTest.update(messageProducerEntity.getId(), messageProducerEntity);
         String message = ((MessageProducerController.ErrorResponse) response.getBody()).getMessage();
 
-        assertEquals("CronExpression 'i am not a cron expression' is invalid,.", message);
+        assertEquals("CronExpression 'i am not a cron expression' is invalid.", message);
         assertEquals(EVERY_SECOND, toTest.msgProducerRepository.findById(messageProducerEntity.getId()).get().getCronExpression());
         toTest.delete(messageProducerEntity.getId());
     }
@@ -191,7 +199,7 @@ public class MessageProducerControllerTest {
     private MessageProducerController createToTest() {
         MessageProducerController toTest = new MessageProducerController(messageProducerRepository);
         toTest.entityManager = entityManager;
-        toTest.messageProducerService = new MessageProducerService();
+        toTest.messageProducerService = new MessageProducerService(metadataRepository, savedQueryApi);
         toTest.messageProducerService.messageProducerFactory = messageProducerFactory;
         toTest.messageProducerService.consumerUri = testCamelNetwork.getWfsHarvesterParamConsumer().getUri();
         return toTest;
@@ -203,7 +211,7 @@ public class MessageProducerControllerTest {
         WfsHarvesterParamEntity wfsHarvesterParamEntity = new WfsHarvesterParamEntity();
         wfsHarvesterParamEntity.setMetadataUuid("uuid");
         wfsHarvesterParamEntity.setTypeName("typeName");
-        wfsHarvesterParamEntity.setTypeName("strategy");
+        wfsHarvesterParamEntity.setStrategy("strategy");
         wfsHarvesterParamEntity.setUrl("url");
         messageProducerEntity.setWfsHarvesterParam(wfsHarvesterParamEntity);
         return messageProducerEntity;
