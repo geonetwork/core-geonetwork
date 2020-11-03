@@ -421,6 +421,7 @@
         url, type, idxConfig, treeFields, uuid, version) {
         return $http.put('../api/workers/data/wfs/actions/start', {
             url: url,
+            strategy: 'investigator', // means that the targetNs of GFI is used to define strategy.
             typeName: type,
             version: version || '1.1.0',
             tokenizedFields: idxConfig,

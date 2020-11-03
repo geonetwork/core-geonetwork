@@ -232,6 +232,7 @@ public class EsWFSFeatureIndexer {
 
         String url                              = state.getParameters().getUrl();
         String typeName                         = state.getParameters().getTypeName();
+        String resolvedTypeName                 = state.getResolvedTypeName();
         Map<String, String> tokenizedFields     = state.getParameters().getTokenizedFields();
         WFSDataStore wfs                        = state.getWfsDatastore();
         Map<String, String> featureAttributes   = state.getFields();
@@ -255,16 +256,6 @@ public class EsWFSFeatureIndexer {
             throw new RuntimeException("couldn't initialize es report, don't even try to go further querying wfs.");
         }
 
-        Query query = new Query();
-//        CoordinateReferenceSystem wgs84;
-//        if (wfs.getInfo().getVersion().equals("1.0.0")) {
-//            wgs84 = CRS.getAuthorityFactory(true).createCoordinateReferenceSystem("EPSG:4326");
-//        } else {
-//            wgs84 = CRS.getAuthorityFactory(true).createCoordinateReferenceSystem("urn:x-ogc:def:crs:EPSG::4326");
-//        }
-//
-//        query.setCoordinateSystemReproject(wgs84);
-
         try {
             nbOfFeatures = 0;
 
@@ -274,7 +265,7 @@ public class EsWFSFeatureIndexer {
             long begin = System.currentTimeMillis();
 //            FeatureIterator<SimpleFeature> features = wfs.getFeatureSource(typeName).getFeatures(query).features();
 
-            SimpleFeatureCollection fc = wfs.getFeatureSource(typeName).getFeatures();
+            SimpleFeatureCollection fc = wfs.getFeatureSource(resolvedTypeName).getFeatures();
             ReprojectingFeatureCollection rfc = new ReprojectingFeatureCollection(fc, CRS.decode("urn:ogc:def:crs:OGC:1.3:CRS84"));
             FeatureIterator<SimpleFeature> features = rfc.features();
 
