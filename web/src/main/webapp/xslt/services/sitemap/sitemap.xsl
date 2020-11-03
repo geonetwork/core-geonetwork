@@ -57,7 +57,7 @@
     <sitemapindex
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd">
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 https://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd">
 
       <xsl:call-template name="displayIndexDocs">
         <xsl:with-param name="pStart" select="1"/>
@@ -104,10 +104,10 @@
 
   <xsl:template name="xml">
     <urlset
-      xmlns:geo="http://www.google.com/geo/schemas/sitemap/1.0"
+      xmlns:dct="http://purl.org/dc/terms/"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 https://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
       <xsl:for-each select="metadata/record">
         <xsl:variable name="uuid" select="uuid"/>
         <xsl:variable name="schemaid" select="schemaid"/>
@@ -126,13 +126,11 @@
             </xsl:choose>
           </loc>
           <lastmod>
-            <xsl:value-of select="$changedate"/>
+            <xsl:value-of select="substring($changedate,1,10)"/>
           </lastmod>
-          <geo:geo>
-            <geo:format>
+          <dct:format>
               <xsl:value-of select="$schemaid"/>
-            </geo:format>
-          </geo:geo>
+          </dct:format>
         </url>
       </xsl:for-each>
     </urlset>
