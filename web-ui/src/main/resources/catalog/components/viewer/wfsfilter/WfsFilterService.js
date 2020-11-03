@@ -418,10 +418,10 @@
        * @return {httpPromise} when indexing is done
        */
       this.indexWFSFeatures = function(
-        url, type, idxConfig, treeFields, uuid, version) {
+        url, type, idxConfig, treeFields, uuid, version, strategy) {
         return $http.put('../api/workers/data/wfs/actions/start', {
             url: url,
-            strategy: 'investigator', // means that the targetNs of GFI is used to define strategy.
+            strategy: strategy, // means that the targetNs of GFI is used to define strategy.
             typeName: type,
             version: version || '1.1.0',
             tokenizedFields: idxConfig,

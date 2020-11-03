@@ -203,6 +203,7 @@ public class MessageProducerControllerTest {
         WfsHarvesterParamEntity wfsHarvesterParamEntity = new WfsHarvesterParamEntity();
         wfsHarvesterParamEntity.setMetadataUuid("uuid");
         wfsHarvesterParamEntity.setTypeName("typeName");
+        wfsHarvesterParamEntity.setTypeName("strategy");
         wfsHarvesterParamEntity.setUrl("url");
         messageProducerEntity.setWfsHarvesterParam(wfsHarvesterParamEntity);
         return messageProducerEntity;
