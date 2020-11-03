@@ -18,6 +18,17 @@
                           else $key"/>
   </xsl:function>
 
+  <xsl:function name="gn-fn-render:get-schema-labels" as="xs:string">
+    <xsl:param name="strings" as="node()"/>
+    <xsl:param name="key" as="xs:string"/>
+
+    <xsl:variable name="nameInStrings"
+                  select="$strings/element[@name= $key]/label"/>
+    <xsl:value-of select="if ($nameInStrings != '')
+                          then $nameInStrings
+                          else $key"/>
+  </xsl:function>
+
   <!-- Render coordinates of bbox and an images of the geometry
   using the region API -->
   <xsl:function name="gn-fn-render:bbox">

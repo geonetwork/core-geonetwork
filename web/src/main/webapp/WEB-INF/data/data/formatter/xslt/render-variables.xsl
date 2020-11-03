@@ -77,6 +77,9 @@
   <xsl:variable name="schemaStrings"
                 select="/root/schemas/*[name() = $schema]/strings"/>
 
+  <xsl:variable name="schemaLabels"
+                select="/root/schemas/*[name() = $schema]/labels"/>
+
   <!-- Get params from requests parameters or use the first view configured -->
   <xsl:variable name="viewConfig" select="$configuration/editor/views/view[@name = $view]"/>
 
