@@ -142,6 +142,8 @@
           scope.map = scope.$parent.map;
           var map = scope.map;
 
+          scope.strategy = 'investigator';
+
           // Only admin can index the features
           scope.user = $rootScope.user;
 
@@ -836,7 +838,8 @@
                 appProfile ? appProfile.tokenizedFields : null,
                 appProfile ? appProfile.treeFields : null,
                 uuid,
-                version);
+                version,
+                scope.strategy);
 
               scope.saveWfsIndexingJob();
             });
@@ -996,6 +999,7 @@
                 wfsHarvesterParam: {
                   url: scope.url,
                   typeName: scope.featureTypeName,
+                  strategy: scope.strategy,
                   metadataUuid: scope.md && scope.md.uuid
                 },
                 cronExpression: null

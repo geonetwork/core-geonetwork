@@ -36,6 +36,8 @@ public class WfsHarvesterParamEntity implements Serializable {
 
     private String url;
 
+    private String strategy;
+
     private String typeName;
 
     public String getMetadataUuid() {
@@ -60,5 +62,13 @@ public class WfsHarvesterParamEntity implements Serializable {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName;
+    }
+
+    public String getStrategy() {
+        return strategy;
+    }
+
+    public void setStrategy(String strategy) {
+        this.strategy = strategy;
     }
 }
