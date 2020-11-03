@@ -39,6 +39,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.rest.RestStatus;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.index.es.EsRestClient;
 import org.geotools.data.Query;
@@ -470,13 +471,13 @@ public class EsWFSFeatureIndexer {
             request.source(report);
             try {
                 IndexResponse response = client.getClient().index(request, RequestOptions.DEFAULT);
-                if (response.status().getStatus() != 201) {
+                if (response.status() == RestStatus.CREATED || response.status() == RestStatus.OK) {
+                    LOGGER.info("Report saved for service {} and typename {}. Report id is {}",
+                        url, typeName, report.get("id"));
+                } else {
                     LOGGER.info("Failed to save report for {}. Error message when saving report was '{}'.",
                         typeName,
                         response.getResult());
-                } else {
-                    LOGGER.info("Report saved for service {} and typename {}. Report id is {}",
-                        url, typeName, report.get("id"));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
