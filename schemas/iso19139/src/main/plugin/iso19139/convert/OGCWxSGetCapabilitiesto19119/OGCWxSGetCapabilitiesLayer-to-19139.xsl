@@ -223,31 +223,29 @@
                     </URL>
                   </linkage>
                   <protocol>
-                    <gco:CharacterString>
-                      <xsl:choose>
-                        <xsl:when test="name(.)='WMT_MS_Capabilities'">
-                          <gco:CharacterString>OGC:WMS-1.1.1-http-get-map
-                          </gco:CharacterString>
-                        </xsl:when>
-                        <xsl:when test="name(.)='WMS_Capabilities'">
-                          <gco:CharacterString>OGC:WMS-1.3.0-http-get-map
-                          </gco:CharacterString>
-                        </xsl:when>
-                        <xsl:when test="local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wmts/1.0'">OGC:WMTS</xsl:when>
-                        <xsl:when test="$ows='true'">
-                          <gco:CharacterString>OGC:WFS-1.1.0-http-get-feature
-                          </gco:CharacterString>
-                        </xsl:when>
-                        <xsl:when test="name(.)='WFS_Capabilities'">
-                          <gco:CharacterString>OGC:WFS-1.0.0-http-get-feature
-                          </gco:CharacterString>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <gco:CharacterString>OGC:WCS-1.0.0-http-get-coverage
-                          </gco:CharacterString>
-                        </xsl:otherwise>
-                      </xsl:choose>
-                    </gco:CharacterString>
+                    <xsl:choose>
+                      <xsl:when test="name(.)='WMT_MS_Capabilities'">
+                        <gco:CharacterString>OGC:WMS-1.1.1-http-get-map
+                        </gco:CharacterString>
+                      </xsl:when>
+                      <xsl:when test="name(.)='WMS_Capabilities'">
+                        <gco:CharacterString>OGC:WMS-1.3.0-http-get-map
+                        </gco:CharacterString>
+                      </xsl:when>
+                      <xsl:when test="local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wmts/1.0'">OGC:WMTS</xsl:when>
+                      <xsl:when test="$ows='true'">
+                        <gco:CharacterString>OGC:WFS-1.1.0-http-get-feature
+                        </gco:CharacterString>
+                      </xsl:when>
+                      <xsl:when test="name(.)='WFS_Capabilities'">
+                        <gco:CharacterString>OGC:WFS-1.0.0-http-get-feature
+                        </gco:CharacterString>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <gco:CharacterString>OGC:WCS-1.0.0-http-get-coverage
+                        </gco:CharacterString>
+                      </xsl:otherwise>
+                    </xsl:choose>
                   </protocol>
                   <name>
                     <gco:CharacterString>
