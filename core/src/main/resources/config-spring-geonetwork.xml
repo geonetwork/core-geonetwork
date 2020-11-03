@@ -74,6 +74,7 @@
         class="org.fao.geonet.kernel.search.EsSearchManager"
         lazy-init="false">
     <property name="indexList" ref="indexList"/>
+    <property name="defaultIndex" value="\${es.index.records}"/>
   </bean>
 
 
