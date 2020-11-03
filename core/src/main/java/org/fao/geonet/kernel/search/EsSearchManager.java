@@ -136,8 +136,12 @@ public class EsSearchManager implements ISearchManager {
     @Value("${es.index.records.type:records}")
     private String indexType = "records";
 
-    public String getIndex() {
+    public String getDefaultIndex() {
         return defaultIndex;
+    }
+
+    public void setDefaultIndex(String defaultIndex) {
+        this.defaultIndex = defaultIndex;
     }
 
     public String getIndexType() {
@@ -157,10 +161,6 @@ public class EsSearchManager implements ISearchManager {
     public Map<String, String> listOfDocumentsToIndex =
         Collections.synchronizedMap(new HashMap<>());
     private Map<String, String> indexList;
-
-    public String getDefaultIndex() {
-        return defaultIndex;
-    }
 
     private Path getXSLTForIndexing(Path schemaDir, MetadataType metadataType) {
         Path xsltForIndexing = schemaDir
