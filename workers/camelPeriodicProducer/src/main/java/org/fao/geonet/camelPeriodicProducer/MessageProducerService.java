@@ -143,9 +143,9 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
             Map<String, String> wfsConfig = queryApi.query(metadata,
                 "wfs-indexing-config", params
                 );
-            if (wfsConfig.size() > 0 && StringUtils.isNotEmpty(wfsConfig.get(0))) {
+            if (wfsConfig.size() > 0 && StringUtils.isNotEmpty(wfsConfig.get("0"))) {
                 ObjectReader reader = new ObjectMapper().readerFor(Map.class);
-                return reader.readValue(wfsConfig.get(0));
+                return reader.readValue(wfsConfig.get("0"));
             }
         } catch (Exception e) {
             e.printStackTrace();

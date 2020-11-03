@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -217,6 +218,8 @@ public class MetadataSavedQueryApi {
                         value = ((Attribute) o).getValue();
                     } else if (o instanceof Text) {
                         value = ((Text) o).getText();
+                    } else if (o instanceof String && StringUtils.isNotEmpty((String) o)) {
+                        value = (String) o;
                     }
 
                     response.put(key, value);
