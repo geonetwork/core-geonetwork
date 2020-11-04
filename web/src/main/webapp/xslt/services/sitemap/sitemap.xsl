@@ -81,7 +81,7 @@
               <xsl:value-of select="concat($nodeUrl, 'api/sitemap?', $formatParam, 'doc=', $pStart)"/>
             </loc>
             <lastmod>
-              <xsl:value-of select="substring($changedate,1,10)"/>
+              <xsl:value-of select="substring($changeDate,1,10)"/>
             </lastmod>
           </sitemap>
         </xsl:when>
