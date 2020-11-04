@@ -29,11 +29,11 @@
       <li class="clearfix hidden-xs" data-ng-if="gnCfg.mods.home.enabled">
         <a class="pull-left gn-logo-link" 
            data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
-          <img class="gn-logo gn-margin-right"
+          <img class="gn-logo"
                data-ng-hide="{{gnCfg.mods.header.isLogoInHeader}}"
                alt="{{'siteLogo' | translate}}"
                data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
-          <span class="gn-name"
+          <span class="gn-name hidden-sm gn-margin-left"
                 data-ng-if="gnCfg.mods.header.showGNName"
                 data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
                 title="{{info['node/name'] || info['system/site/name']}}">
@@ -44,15 +44,15 @@
       <li class="gn-menuitem-xs" data-ng-if="gnCfg.mods.search.enabled">
         <a data-gn-active-tb-item="{{gnCfg.mods.search.appUrl}}"
           title="{{'search' | translate}}">
-          <i class="fa fa-fw fa-search hidden-sm"></i>
+          <i class="fa fa-fw fa-search"></i>
           <span translate>search</span>
         </a>
       </li>
       <li class="gn-menuitem-xs" data-ng-if="gnCfg.mods.map.enabled">
         <a data-gn-active-tb-item="{{isExternalViewerEnabled ? externalViewerUrl : gnCfg.mods.map.appUrl}}"
           title="{{'map' | translate}}">
-          <i class="fa fa-fw fa-globe hidden-sm"></i>
-          <span translate>makeYourMap</span>
+          <i class="fa fa-fw fa-globe"></i>
+          <span translate class="">makeYourMap</span>
           <span data-gnv-layer-indicator=""/>
         </a>
       </li>
@@ -63,8 +63,8 @@
            title="{{'editorBoard' | translate}}"
            class="dropdown-toggle gn-menuheader-xs"
            role="button" aria-expanded="false">
-          <i class="fa fa-fw fa-pencil hidden-sm"></i>
-          <span translate>contribute</span>
+          <i class="fa fa-fw fa-pencil"></i>
+          <span translate class="hidden-md hidden-sm">contribute</span>
         </a>
         <ul class="dropdown-menu gn-menu-xs clearfix" role="list">
           <li class="gn-menuitem-xs" role="menuitem">
@@ -105,8 +105,8 @@
            title="{{'adminConsole' | translate}}"
            class="dropdown-toggle gn-menuheader-xs"
            role="button" aria-expanded="false">
-          <i class="fa fa-fw fa-wrench hidden-sm"></i>
-          <span translate>adminConsole</span>
+          <i class="fa fa-fw fa-wrench"></i>
+          <span translate class="hidden-md hidden-sm">adminConsole</span>
         </a>
         <ul data-ng-if="user.isUserAdmin()" class="dropdown-menu gn-menu-xs" role="list">
           <li class="gn-menuitem-xs" role="menuitem">
@@ -160,7 +160,7 @@
           <img class="img-circle"
             alt="{{'avatar' | translate}}"
             data-ng-src="../api/users/{{(user.id)}}.png?size=18"/>
-          <div class="gn-user-info hidden-sm hidden-md">
+          <div class="gn-user-info">
             <span class="gn-user-name">{{user.name}} {{user.surname}}</span><br>
             <span class="gn-user-role">{{user.profile | translate}}</span>
           </div>
