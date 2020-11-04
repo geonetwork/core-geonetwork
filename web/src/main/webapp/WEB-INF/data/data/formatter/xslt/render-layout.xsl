@@ -300,6 +300,8 @@
               </xsl:apply-templates>
             </xsl:if>
 
+            <div data-gn-more-like-this="md"/>
+
 
             <br/>
             <xsl:if test="$css != 'checkpoint' and
