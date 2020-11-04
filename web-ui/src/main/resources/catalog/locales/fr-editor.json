@@ -407,12 +407,12 @@
     "saveLinkToSibling": "Enregistrer la liaison entre les métadonnées",
     "addTheFollowingLinkInDataset": "Ajouter le lien suivant au jeu de données (en tant que ressource en ligne dans la section distribution) :",
     "confirmCloseInvalidTitle": "Confirmer la fermeture",
+    "confirmCloseInvalidMetadata": "La fiche en cours d'édition est invalide. La fermeture du formulaire va dépublier la fiche.<br><br>Confirmez-vous la fermeture ?",
     "hotkeyDirectory": "Gérer les annuaires",
     "hotkeyImportRecord": "Importer des fiches",
     "hotkeyAddRecord": "Ajouter une fiche",
     "hotkeyBatchEdit": "Édition en série",
     "hotkeyEditorBoard": "Accueil édition",
-    "confirmCloseInvalidMetadata": "La fiche en cours d'édition est invalide. La fermeture du formulaire va dépublier la fiche.<br><br>Confirmez-vous la fermeture ?",
     "cancelMetadataError": "Il y a eu une erreur. Rechargez la page.",
     "showMessages": "Afficher les détails",
     "hotkeyAccessManager": "Tableaux des privilèges",
@@ -422,5 +422,8 @@
     "accessManagerChooseGroups": "Sélectionner un ou plusieurs groupes",
     "accessManagerChooseOperations": "Sélectionner un ou plusieurs types d'opération",
     "status-no-status": "Cycle de vie désactivé",
-    "draft": "Brouillon"
+    "badGmlProjectionCode": "The geometry projection <b>{{srsName}}</b> defined in the XML is not valid. Please edit the xml to fix the srs name or enter a new geometry.",
+    "draft": "Brouillon",
+    "link": "Lien",
+    "link-text": "Link text"
 }

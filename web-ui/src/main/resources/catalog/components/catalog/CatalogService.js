@@ -176,7 +176,6 @@
             headers: {
               'Content-Type': 'application/xml'
             }
-
           });
         },
 
@@ -202,17 +201,17 @@
            */
         create: function(id, groupId, withFullPrivileges,
             isTemplate, isChild, tab, metadataUuid, hasCategoryOfSource) {
+
           return this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild, metadataUuid, hasCategoryOfSource)
               .success(function(id) {
                 var path = '/metadata/' + id;
-
                 if (tab) {
                   path += '/tab/' + tab;
                 }
                 $location.path(path)
-                    .search('justcreated')
-                    .search('redirectUrl', 'catalog.edit');
+                .search('justcreated')
+                .search('redirectUrl', 'catalog.edit');
               });
         },
 
@@ -224,16 +223,27 @@
          * @description
          * Get the metadata js object from catalog. Trigger a search and
          * return a promise.
-         * @param {string} uuid of the metadata
-         * @param {string} isTemplate optional isTemplate value (s, t...)
-         * @return {HttpPromise} of the $http get
+         * @param {string} uuid or id of the metadata
+         * @param {array} isTemplate optional isTemplate value (y, n, s, t...)
+         * @return {HttpPromise} of the $http post
          */
         getMdObjByUuid: function(uuid, isTemplate) {
-          return $http.get('qi?_uuid=' + encodeURIComponent(uuid) + '' +
-              '&fast=index&_content_type=json&buildSummary=false' +
-              (isTemplate !== undefined ? '&isTemplate=' + isTemplate : '')).
-              then(function(resp) {
-                return new Metadata(resp.data.metadata);
+          return $http.post('../api/search/records/_search', {"query": {
+              "bool" : {
+                "must": [
+                  {"multi_match": {
+                      "query": uuid,
+                      "fields": ['id', 'uuid']}},
+                  {"terms": {"isTemplate": isTemplate !== undefined ? isTemplate : ['n']}},
+                  {"terms": {"draft": ["n", "y", "e"]}}
+                ]
+              }
+            }}).then(function(r) {
+              if (r.data.hits.total.value > 0) {
+                return new Metadata(r.data.hits.hits[0]);
+              } else {
+                console.warn("Record with UUID/ID " + uuid + " not found.")
+              }
               });
         },
 
@@ -246,16 +256,11 @@
          * Get the metadata js object from catalog. Trigger a search and
          * return a promise.
          * @param {string} id of the metadata
-         * @param {string} isTemplate optional isTemplate value (s, t...)
-         * @return {HttpPromise} of the $http get
+         * @param {array} isTemplate optional isTemplate value (y, n, s, t...)
+         * @return {HttpPromise} of the $http post
          */
         getMdObjById: function(id, isTemplate) {
-          return $http.get('q?_id=' + id + '' +
-              '&fast=index&_content_type=json&buildSummary=false' +
-              (isTemplate !== undefined ? '&_isTemplate=' + isTemplate : '')).
-              then(function(resp) {
-                return new Metadata(resp.data.metadata);
-              });
+          return this.getMdObjByUuid(id, isTemplate);
         },
 
         /**
@@ -270,7 +275,7 @@
          * @return {HttpPromise} of the $http get
          */
         updateMdObj: function(md) {
-          return this.getMdObjByUuid(md.getUuid()).then(
+          return this.getMdObjByUuid(md.uuid).then(
               function(md_) {
                 angular.extend(md, md_);
                 return md;
@@ -292,11 +297,7 @@
    */
 
   module.value('gnHttpServices', {
-    mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
-    mdGetRDF: 'rdf.metadata.get',
-    mdGetMEF: 'mef.export', // Deprecated service
     mdGetXML19139: 'xml_iso19139',
-    csv: 'csv.search',
 
     publish: 'md.publish',
     unpublish: 'md.unpublish',
@@ -314,13 +315,10 @@
     removeThumbnail: 'md.thumbnail.remove?_content_type=json&',
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
     suggest: 'suggest',
-    facetConfig: 'search/facet/config',
     selectionLayers: 'selection.layers',
 
     featureindexproxy: '../../index/features',
-    indexproxy: '../../index/records',
-    wfsMessageProducers: '../api/msg_producers',
-    wfsWorkersActions: '../api/workers/data/wfs/actions'
+    indexproxy: '../../index/records'
   });
 
 
@@ -394,7 +392,7 @@
               url = remote.proxy + encodeURIComponent(remote.gnUrl + url);
             }
             var config = {
-              url: url,
+              url: gnHttpServices[serviceKey] || serviceKey,
               params: params,
               method: 'GET'
             };
@@ -471,8 +469,8 @@
    */
   module.factory('gnConfigService', [
     '$http', '$q',
-    'gnConfig',
-    function($http, $q, gnConfig) {
+    'gnConfig', 'gnGlobalSettings',
+    function($http, $q, gnConfig, gnGlobalSettings) {
       var defer = $q.defer();
       var loadPromise = defer.promise;
       return {
@@ -510,7 +508,10 @@
                   .then(function (response) {
                     gnConfig['ui.config'] = JSON.parse(response.data.configuration);
                     defer.resolve(gnConfig);
-                  })
+                  }, function() {
+                    gnConfig['ui.config'] = gnGlobalSettings.getDefaultConfig();
+                    defer.resolve(gnConfig);
+                  });
                 // END SPECIFIC SEXTANT
               }, function() {
                 defer.reject();
@@ -529,7 +530,7 @@
          *
          * @return {String} service url.
          */
-        getServiceURL: function() {
+        getServiceURL: function(useDefaultNode) {
           var port = '';
           if (gnConfig['system.server.protocol'] === 'http' &&
              gnConfig['system.server.port'] &&
@@ -547,10 +548,13 @@
 
           }
 
+          var node = (!useDefaultNode?
+            gnConfig.env.node:gnConfig.env.defaultNode);
+
           var url = gnConfig['system.server.protocol'] + '://' +
               gnConfig['system.server.host'] + port +
               gnConfig.env.baseURL + '/' +
-              gnConfig.env.node + '/';
+              node + '/';
           return url;
         }
       };
@@ -566,86 +570,36 @@
    * json output of the search service. It also provides some functions
    * on the metadata.
    */
-  module.factory('Metadata', function() {
+  module.factory('Metadata', ['gnLangs', function(gnLangs) {
     function Metadata(k) {
-      $.extend(true, this, k);
-      var listOfArrayFields = ['topicCat', 'category', 'keyword',
-        'securityConstraints', 'resourceConstraints', 'legalConstraints',
-        'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
-        'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
-        'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
-        'creationDate', 'publicationDate', 'revisionDate', 'spatialRepresentationType_text'];
-      var listOfJsonFields = ['keywordGroup', 'crsDetails', 'featureTypes'];
-      // See below; probably not necessary
+      // Move _source properties to the root.
+      var source = k._source;
+      delete k._source;
+      $.extend(true, this, k, source);
+
       var record = this;
+
+      // See EsSearchManager#documentToJson to define fields as array.
+      // var listOfArrayFields = ; // Except for geom
+      if (angular.isDefined(record.geom) &&
+        !angular.isArray(record.geom)) {
+        record.geom = [record.geom];
+      }
+
+      // Multilingual mode: object
+      $.each(this, function(key, value) {
+        var fieldName = key;
+        if (key.endsWith('Object')) {
+          record[fieldName.slice(0, -6)] = record.translate(fieldName);
+        }
+      });
+
+      // See below; probably not necessary
       this.linksCache = [];
-      $.each(listOfArrayFields, function(idx) {
-        var field = listOfArrayFields[idx];
-        if (angular.isDefined(record[field]) &&
-            !angular.isArray(record[field])) {
-          record[field] = [record[field]];
-        }
-      });
-      // Note: this step does not seem to be necessary; TODO: remove or refactor
-      $.each(listOfJsonFields, function(idx) {
-        var fieldName = listOfJsonFields[idx];
-        if (angular.isDefined(record[fieldName])) {
-          try {
-            record[fieldName] = angular.fromJson(record[fieldName]);
-            var field = record[fieldName];
 
-            // Combine all document keywordGroup fields
-            // in one object. Applies to multilingual records
-            // which may have multiple values after combining
-            // documents from all index
-            // fixme: not sure how to precess this, take first array as main
-            // object or take last arrays when they appear (what is done here)
-            if (fieldName === 'keywordGroup' && angular.isArray(field)) {
-              var thesaurusList = {};
-              for (var i = 0; i < field.length; i++) {
-                var thesauri = field[i];
-                $.each(thesauri, function(key) {
-                  if (!thesaurusList[key] && thesauri[key].length)
-                    thesaurusList[key] = thesauri[key];
-                });
-              }
-              record[fieldName] = thesaurusList;
-            }
-          } catch (e) {}
-        }
-      }.bind(this));
-
-      // Create a structure that reflects the transferOption/onlinesrc tree
-      var links = [];
-      angular.forEach(this.link, function(link) {
-        var linkInfo = formatLink(link);
-        var idx = linkInfo.group - 1;
-        if (!links[idx]) {
-          links[idx] = [linkInfo];
-        }
-        else if (angular.isArray(links[idx])) {
-          links[idx].push(linkInfo);
-        }
-      });
-      this.linksTree = links;
+      this.getAllContacts();
     };
 
-    function formatLink(sLink) {
-      var linkInfos = sLink.split('|');
-      return {
-        name: linkInfos[0],
-        title: linkInfos[0],
-        url: linkInfos[2],
-        desc: linkInfos[1],
-        protocol: linkInfos[3],
-        contentType: linkInfos[4],
-        group: linkInfos[5] ? parseInt(linkInfos[5]) : undefined,
-        applicationProfile: linkInfos[6]
-      };
-    }
-    function parseLink(sLink) {
-
-    };
 
     Metadata.prototype = {
       translate: function(fieldName) {
@@ -657,8 +611,8 @@
             translation = fieldValues[i]['lang' + gnLangs.current]
             if (translation) {
               translatedValues.push(translation);
-            } else if (fieldValues[i][fieldName].default) {
-              translatedValues.push(fieldValues[i][fieldName].default);
+            } else if (fieldValues[i].default) {
+              translatedValues.push(fieldValues[i].default);
             }
           });
           return translatedValues;
@@ -819,7 +773,7 @@
       }
     };
     return Metadata;
-  });
+  }]);
 
 
 })();

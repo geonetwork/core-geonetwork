@@ -39,12 +39,13 @@
     'gnMetadataManager',
     'gnConfigService',
     'gnConfig',
+    'Metadata',
     function($scope, $routeParams, $http, $rootScope, $translate, $compile,
             gnSearchManagerService,
             gnUtilityService,
             gnMetadataManager,
             gnConfigService,
-            gnConfig) {
+            gnConfig, Metadata) {
 
       $scope.isTemplate = false;
       $scope.hasTemplates = true;
@@ -124,37 +125,38 @@
 
           // Metadata creation could be on a template
           // or by duplicating an existing record
-          var query = '';
+          var query = [];
           if ($routeParams.childOf || $routeParams.from) {
-            query = '_id=' + ($routeParams.childOf || $routeParams.from);
+            query.push({"term": {"id": ($routeParams.childOf || $routeParams.from)}});
           } else {
-            query = 'template=y';
+            query.push({"terms": {"isTemplate": ["y"]}});
           }
 
-
-
-          // TODO: Better handling of lots of templates
-          gnSearchManagerService.search('qi?_content_type=json&' +
-              query + '&fast=index&from=1&to=200&_isTemplate=y or n').
-              then(function(data) {
-
-                $scope.mdList = data;
-                $scope.hasTemplates = data.count != '0';
+          $http.post('../api/search/records/_search', {"query": {
+              "bool" : {
+                "must": query
+              }
+            }, "from": 0, "size": 1000}).then(function(r) {
+              if (r.data.hits.total.value > 0) {
+                for (var i = 0; i < r.data.hits.hits.length; i ++) {
+                  r.data.hits.hits[i] = new Metadata(r.data.hits.hits[i]);
+                }
+                $scope.mdList = r.data.hits.hits;
 
                 var types = [];
                 // TODO: A faster option, could be to rely on facet type
                 // But it may not be available
-                for (var i = 0; i < data.metadata.length; i++) {
-                  var type = data.metadata[i].type || unknownType;
+                for (var i = 0; i < $scope.mdList.length; i++) {
+                  var type = $scope.mdList[i].resourceType || unknownType;
                   if (type instanceof Array) {
                     for (var j = 0; j < type.length; j++) {
                       if ($.inArray(type[j], dataTypesToExclude) === -1 &&
-                          $.inArray(type[j], types) === -1) {
+                        $.inArray(type[j], types) === -1) {
                         types.push(type[j]);
                       }
                     }
                   } else if ($.inArray(type, dataTypesToExclude) === -1 &&
-                      $.inArray(type, types) === -1) {
+                    $.inArray(type, types) === -1) {
                     types.push(type);
                   }
                 }
@@ -163,14 +165,18 @@
 
                 // Select the default one or the first one
                 if (defaultType &&
-                    $.inArray(defaultType, $scope.mdTypes) > -1) {
+                  $.inArray(defaultType, $scope.mdTypes) > -1) {
                   $scope.getTemplateNamesByType(defaultType);
                 } else if ($scope.mdTypes[0]) {
                   $scope.getTemplateNamesByType($scope.mdTypes[0]);
                 } else {
                   // No templates available ?
                 }
-              });
+                $scope.hasTemplates = true;
+              } else {
+                $scope.hasTemplates = false;
+              }
+            });
         }
       };
 
@@ -180,10 +186,9 @@
        */
       $scope.getTemplateNamesByType = function(type) {
         var tpls = [];
-        for (var i = 0; i < $scope.mdList.metadata.length; i++) {
-          var md = $scope.mdList.metadata[i];
-          md.title = md.title || md.defaultTitle;
-          var mdType = md.type || unknownType;
+        for (var i = 0; i < $scope.mdList.length; i++) {
+          var md = $scope.mdList[i];
+          var mdType = md.resourceType || unknownType;
           if (mdType instanceof Array) {
             if (mdType.indexOf(type) >= 0) {
               tpls.push(md);
@@ -195,9 +200,9 @@
 
         // Sort template list
         function compare(a, b) {
-          if (a.title < b.title)
+          if (a.resourceTitle < b.resourceTitle)
             return -1;
-          if (a.title > b.title)
+          if (a.resourceTitle > b.resourceTitle)
             return 1;
           return 0;
         }
@@ -215,11 +220,11 @@
 
 
       if ($routeParams.childOf) {
-        $scope.title = $translate.instant('createChildOf');
+        $scope.resourceTitle = $translate.instant('createChildOf');
       } else if ($routeParams.from) {
-        $scope.title = $translate.instant('createCopyOf');
+        $scope.resourceTitle = $translate.instant('createCopyOf');
       } else {
-        $scope.title = $translate.instant('createA');
+        $scope.resourceTitle = $translate.instant('createA');
       }
 
       $scope.createNewMetadata = function(isPublic) {
@@ -247,7 +252,7 @@
         }
 
         return gnMetadataManager.create(
-            $scope.activeTpl['geonet:info'].id,
+            $scope.activeTpl.id,
             $scope.ownerGroup,
             // IsPublic is defined if user can select the button
             // in the dropdown ie. Reviewer only.
@@ -257,11 +262,12 @@
             $scope.isTemplate,
             $routeParams.childOf ? true : false,
             undefined,
-            metadataUuid
+            metadataUuid,
+            true
         ).error(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate.instant('createMetadataError'),
-            error: data.error,
+            error: data.description?data.description:data.error,
             timeout: 0,
             type: 'danger'});
         });

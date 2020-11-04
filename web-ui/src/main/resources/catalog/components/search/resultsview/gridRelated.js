@@ -40,20 +40,18 @@
       return {
         restrict: 'A',
         scope: {
-          records: '<gnGridRelatedQuery'
+          records: '<gnGridRelatedQuery',
+          validatorFn: '&'
         },
         link: function(scope, element, attrs) {
 
           var types = gnGlobalSettings.gnCfg.mods.search.grid.related;
           gnGridRelatedList.types = types;
 
-          scope.$watch('records', function(mds) {
-            var uuids = mds.map(function(md) {
-              return md.getUuid();
-            });
-            if (uuids.length) {
+          scope.$watch('records', function(mds, o) {
+            if (mds !== o && mds.length) {
               gnGridRelatedList.promise =
-                  gnRelatedService.getMdsRelated(uuids, types).then(
+                  gnRelatedService.getMdsRelated(mds, types).then(
                   function(response) {
                     gnGridRelatedList.list = response.data;
                   });
@@ -65,11 +63,13 @@
 
   module.directive('gnGridRelated', [
     'gnGlobalSettings', 'gnRelatedService', 'gnGridRelatedList',
-    function(gnGlobalSettings, gnRelatedService, gnGridRelatedList) {
-
+    'gnConfigService', 'gnConfig',
+    function(gnGlobalSettings, gnRelatedService, gnGridRelatedList,
+             gnConfigService, gnConfig) {
       return {
         restrict: 'A',
         scope: {
+          recordLink: '=gnGridRelated',
           uuid: '<gnGridRelatedUuid'
         },
         templateUrl: function(elem, attrs) {
@@ -80,19 +80,25 @@
           scope.location = window.location;
           scope.max = attrs['max'] || 5;
           scope.displayState = {};
-          gnGridRelatedList.promise.then(function() {
-            var related = gnGridRelatedList.list[scope.uuid];
-            if(related) {
-              scope.types = gnGridRelatedList.types;
-              var hasProp = false;
-              for (var p in related) {
-                if (related[p]) {
-                  hasProp = true;
+
+          gnConfigService.load().then(function(c) {
+            scope.indexingTimeRecordLink = gnConfig['system.index.indexingTimeRecordLink'];
+            if (scope.indexingTimeRecordLink !== true) {
+              gnGridRelatedList.promise.then(function() {
+                var related = gnGridRelatedList.list[scope.uuid];
+                if (related) {
+                  scope.types = gnGridRelatedList.types;
+                  var hasProp = false;
+                  for (var p in related) {
+                    if (related[p]) {
+                      hasProp = true;
+                    }
+                  }
+                  if (hasProp) {
+                    scope.relations = related;
+                  }
                 }
-              }
-              if (hasProp) {
-                scope.relations = related;
-              }
+              });
             }
           });
         }

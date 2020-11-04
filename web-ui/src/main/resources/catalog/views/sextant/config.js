@@ -211,7 +211,7 @@
       searchSettings.formatter = {
         defaultUrl: function(md) {
           var url;
-          var uuid = encodeURIComponent(md.getUuid());
+          var uuid = encodeURIComponent(md.uuid);
 
           // a formatter is specified in the configuration: use it
           // else: determine formatter url based on schema
@@ -384,29 +384,30 @@
       // Define if the 'related' dropdown should show source/hassource relations
       searchSettings.hideSourceRelations = false;
 
+      // SEXTANT DEPRECATED
       // TODO: Too many changes made in sextant
       // compared to GeoNetwork facet config
-      searchSettings.facetConfig = [{
-        key: 'publishedForGroup',
-        index: '_groupPublished',
-        filter: true
-      }, {
-        key: 'sextantTheme',
-        tree: true
-      }, {
-        langs: {
-          eng: 'inspireTheme_en',
-          fre: 'inspireTheme_fr'
-        }
-      }, {
-        key: 'keyword'
-      }, {
-        key: 'orgName'
-      }, {
-        key: 'createDateYear'
-      }, {
-        key: 'mdActions'
-      }];
+      // searchSettings.facetConfig = [{
+      //   key: 'publishedForGroup',
+      //   index: '_groupPublished',
+      //   filter: true
+      // }, {
+      //   key: 'sextantTheme',
+      //   tree: true
+      // }, {
+      //   langs: {
+      //     eng: 'inspireTheme_en',
+      //     fre: 'inspireTheme_fr'
+      //   }
+      // }, {
+      //   key: 'keyword'
+      // }, {
+      //   key: 'orgName'
+      // }, {
+      //   key: 'createDateYear'
+      // }, {
+      //   key: 'mdActions'
+      // }];
 
       if(typeof sxtSettings != 'undefined') {
         angular.extend(searchSettings, sxtSettings);
@@ -505,13 +506,13 @@
           }
         );
       }
-
-      searchSettings.configWhat = searchSettings.configWhat || '';
-      if(searchSettings.configWhat) {
-        angular.extend(searchSettings.filters, {
-          _groupPublished: searchSettings.configWhat.replace(/,/g, ' or ')
-        })
-      }
+      // SEXTANT DEPRECATED?
+      // searchSettings.configWhat = searchSettings.configWhat || '';
+      // if(searchSettings.configWhat) {
+      //   angular.extend(searchSettings.filters, {
+      //     _groupPublished: searchSettings.configWhat.replace(/,/g, ' or ')
+      //   })
+      // }
 
       var searchMap = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
       var viewerMap = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);

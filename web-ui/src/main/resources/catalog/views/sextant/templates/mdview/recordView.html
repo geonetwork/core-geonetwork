@@ -35,13 +35,13 @@
         </a>
       </li>
       <li>
-        <a data-ng-href="xml.metadata.get?uuid={{mdView.current.record.getUuid()}}" target="_blank">
+        <a data-ng-href="xml.metadata.get?uuid={{mdView.current.record.uuid}}" target="_blank">
           <i class="fa fa-file-code-o"></i>&nbsp;
           <span data-translate="">exportXML</span>
         </a>
       </li>
       <li>
-        <a data-ng-href="" data-ng-click="gnMetadataActions.metadataPrint(mdView.current.record.getUuid())">
+        <a data-ng-href="" data-ng-click="gnMetadataActions.metadataPrint(mdView.current.record.uuid)">
           <i class="fa fa-file-pdf-o"></i>&nbsp;
           <span data-translate="">exportPDF</span>
         </a>
@@ -74,13 +74,13 @@
     <div class="col-md-9 gn-record">
       <h2>
         <!-- <i class="fa gn-icon-{{mdView.current.record.type[0]}}"/> -->
-        {{mdView.current.record.title || mdView.current.record.defaultTitle}}
+        {{mdView.current.record.resourceTitle}}
       </h2>
 
       <div class="pull-right">
         <i class="fa fa-calendar"></i>
         <span data-translate="">updatedOn</span>
-        <span data-gn-humanize-time="{{mdView.current.record['geonet:info'].changeDate}}"
+        <span data-gn-humanize-time="{{mdView.current.record.changeDate}}"
           data-from-now=""></span>
       </div>
 
@@ -162,9 +162,9 @@
           </p>
         </dd>
 
-        <dt data-ng-if="mdView.current.record.abstract" data-translate="">abstract</dt>
-        <dd data-ng-if="mdView.current.record.abstract">
-          {{mdView.current.record.abstract | striptags}}
+        <dt data-ng-if="mdView.current.record.resourceAbstract" data-translate="">abstract</dt>
+        <dd data-ng-if="mdView.current.record.resourceAbstract">
+          {{mdView.current.record.resourceAbstract | striptags}}
         </dd>
 
         <dt data-ng-if="mdView.current.record.keyword" data-translate="">keywords</dt>
@@ -193,7 +193,7 @@
         <dt data-ng-if="mdView.current.record.lineage" translate>lineage</dt>
         <dd data-ng-if="mdView.current.record.lineage">
           {{mdView.current.record.lineage}}
-          <div data-gn-related="{{mdView.current.record['geonet:info'].uuid}}"
+          <div data-gn-related="{{mdView.current.record.uuid}}"
             data-types="source"
             data-title="{{'sourceDatasets' | translate}}">
           </div>

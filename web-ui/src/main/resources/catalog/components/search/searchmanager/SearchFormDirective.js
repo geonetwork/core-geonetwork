@@ -51,7 +51,7 @@
   var searchFormController =
     function($scope, $location, $parse, $translate, gnSearchManagerService,
       Metadata, gnSearchLocation, gnESClient,
-      gnESService, gnESFacet, gnAlertService) {
+      gnESService, gnESFacet, gnAlertService, gnSearchSettings) {
       var defaultParams = {};
       var self = this;
 
@@ -61,6 +61,10 @@
         filters: {}
       };
 
+      // SEXTANT HACK - facetConfig is undefined in sextant view
+      if ($scope.facetConfig == undefined) {
+        $scope.facetConfig = gnSearchSettings.facetConfig;
+      }
       /** Object where are stored result search information */
       $scope.searchResults = {
         records: [],
@@ -529,7 +533,8 @@
     'gnESClient',
     'gnESService',
     'gnESFacet',
-    'gnAlertService'
+    'gnAlertService',
+    'gnSearchSettings'
   ];
 
   /**

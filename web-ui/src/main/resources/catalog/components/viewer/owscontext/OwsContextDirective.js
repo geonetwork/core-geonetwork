@@ -113,6 +113,7 @@
            * @type {HTMLAnchorElement}
            */
           var downloadEl = element.find('.download-element')[0];
+
           function getMapAsImage($event, scaleFactor) {
             var defer = $q.defer();
             if (scope.isExportMapAsImageEnabled) {

@@ -121,8 +121,8 @@
             angular.forEach(md.getLinksByType(type), function(link) {
               if (link.url) {
                 scope.catServicesList.push({
-                  title: md.title || md.defaultTitle,
-                  uuid: md.getUuid(),
+                  title: md.resourceTitle,
+                  uuid: md.uuid,
                   name: link.name,
                   desc: link.desc,
                   type: type,
@@ -134,14 +134,18 @@
           // Get the list of services registered in the catalog
           if (attrs.servicesListFromCatalog) {
             // FIXME: Only load the first 100 services
-            gnSearchManagerService.gnSearch({
-              fast: 'index',
-              _content_type: 'json',
-              from: 1,
-              to: 100,
-              serviceType: 'OGC:WMS or OGC:WFS or OGC:WMTS'
+            gnESClient.search(
+              {
+                'from': 0,
+                'size':100,
+                'sort': [{'resourceTitleObject.default.keyword': 'asc'}],
+                'query':{
+                  'query_string': {
+                    'query': '+isTemplate:n +serviceType:("OGC:WMS" OR "OGC:WFS" OR "OGC:WMTS")'
+                  }
+                }
             }).then(function(data) {
-              angular.forEach(data.metadata, function(record) {
+              angular.forEach(data.hits.hits, function(record) {
                 var md = new Metadata(record);
                 if (scope.format === 'all') {
                   addLinks(md, 'wms');

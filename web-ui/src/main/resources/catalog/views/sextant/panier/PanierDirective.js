@@ -196,7 +196,7 @@
                       scope.settings.formats['raster']);
 
               scope.form = {
-                id: scope.element.md.getUuid(),
+                id: scope.element.md.uuid,
                 input: {
                   format: dataType,
                   epsg: inputCrs,

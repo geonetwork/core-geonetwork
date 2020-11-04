@@ -54,15 +54,21 @@
     </div>
   </div>
 
-  <div class="btn-group print-btn sxt-btn-group" role="group">
-    <button class="btn btn-default btn-block" ng-class="{'disabled': printing}"
-            data-ng-click="submit()">
-      <i class="fa fa-print" ng-if="!printing"></i>
-      <i class="fa fa-spinner fa-spin" ng-if="printing"></i>
-      &nbsp;
-      <span ng-if="!printing">{{'Print'|translate}}</span>
-      <span ng-if="printing">{{'Printing'|translate}}</span>
-    </button>
+  <div class="alert alert-warning flex-row flex-align-center small" role="alert" ng-if="unsupportedLayers.length > 0">
+    <span class="fa fa-warning"></span>
+    <div class="flex-spacer"></div>
+    <div>
+      <span translate>printUnsupportedLayerTypes</span>:
+      <strong>{{unsupportedLayers.join(', ')}}</strong>
+    </div>
   </div>
 
+  <button class="btn btn-default btn-block" ng-class="{'disabled': printing}"
+          data-ng-click="submit()">
+    <i class="fa fa-print" ng-if="!printing"></i>
+    <i class="fa fa-spinner fa-spin" ng-if="printing"></i>
+    &nbsp;
+    <span ng-if="!printing">{{'Print'|translate}}</span>
+    <span ng-if="printing">{{'Printing'|translate}}</span>
+  </button>
 </form>

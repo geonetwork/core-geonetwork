@@ -2,15 +2,16 @@
 
   <!--Downloads to panier button-->
   <div class="btn-group pull-right" ng-if="downloads.length > 1" sxt-popover-dropdown placement="bottom" container="{{container}}" className="sxt-popover-grid">
-    <button type="button" class="btn btn-default dropdown-toggle btn-sm" title="{{'download' | translate}}" data-ng-disabled="md['geonet:info'].download == 'false'">
+    <button type="button" class="btn btn-default dropdown-toggle btn-sm" title="{{'download' | translate}}"
+            data-ng-disabled="md.download == 'false'">
       <span class="fa fa-download"></span>
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu small-dropdown" role="menu">
       <li ng-repeat="link in downloads">
-        <a href="" ng-click="resultviewFns.addMdLayerToPanier(link, md, $event)" title="{{link.desc || (link.name + ' - ' + link.contentType)}}">
+        <a href="" ng-click="resultviewFns.addMdLayerToPanier(link, md, $event)" title="{{link.description || (link.name + ' - ' + link.contentType)}}">
           <span class="fa fa-file-zip-o" ng-if="link.contentType=='application/zip'"></span>
-          {{link.desc || (link.name + ' - ' + link.contentType) }} </a></li>
+          {{link.description || (link.name + ' - ' + link.contentType) }} </a></li>
       <li class="divider"></li>
       <li>
         <a href="" data-ng-click="resultviewFns.addAllMdLayersToPanier(downloads, md)">
@@ -23,14 +24,14 @@
 
     </ul>
   </div>
-  <button type="button" class="btn btn-default btn-sm pull-right" data-ng-disabled="md['geonet:info'].download == 'false'"
+  <button type="button" class="btn btn-default btn-sm pull-right" data-ng-disabled="md.download == 'false'"
           ng-if="downloads.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md, $event)" title="{{'download' | translate}}">
     <span class="fa fa-download"></span>
   </button>
 
   <!--Layers to map button-->
   <div class="btn-group pull-right" ng-if="isMap && layers.length > 1 " sxt-popover-dropdown placement="bottom" container="{{container}}" className="sxt-popover-grid">
-    <button type="button" class="btn btn-default dropdown-toggle btn-sm" title="{{'view' | translate}}" data-ng-disabled="md['geonet:info'].dynamic == 'false'">
+    <button type="button" class="btn btn-default dropdown-toggle btn-sm" title="{{'view' | translate}}" data-ng-disabled="md.dynamic == 'false'">
       <span class="fa fa-globe"></span>
       <span class="caret"></span>
     </button>
@@ -52,7 +53,7 @@
       </li>
     </ul>
   </div>
-  <button type="button" class="btn btn-default btn-sm pull-right" data-ng-disabled="md['geonet:info'].dynamic == 'false'"
+  <button type="button" class="btn btn-default btn-sm pull-right" data-ng-disabled="md.dynamic == 'false'"
           ng-if="isMap && layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0], md, $event)" title="{{'view' | translate}}">
     <span class="fa fa-globe"></span>
   </button>
@@ -64,8 +65,8 @@
     </button>
     <ul class="dropdown-menu small-dropdown" role="menu">
       <li ng-repeat="link in links">
-      <a href="{{link.url}}" target="_blank" title="{{::(link.desc || link.name || link.url)}}">
-        {{::(link.desc || link.name || link.url)}}
+      <a href="{{link.url}}" target="_blank" title="{{::(link.description || link.name || link.url)}}">
+        {{::(link.description || link.name || link.url)}}
       </a></li>
     </ul>
   </div>

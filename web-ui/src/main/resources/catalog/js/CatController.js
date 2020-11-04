@@ -255,43 +255,51 @@ goog.require('gn_alert');
           // TODOES
           'facetTabField': '',
           'facetConfig': {
-            'codelist_hierarchyLevel_text': {
+            'groupPublished': {
               'terms': {
-                'field': 'codelist_hierarchyLevel_text'
-              },
-              'aggs': {
-                'format': {
-                  'terms': {
-                    'field': 'format'
-                  }
-                }
+                'field': 'groupPublished',
+                'size': 200,
+                "order" : { "_key" : "asc" },
+                'include': '.*'
               }
             },
-            'codelist_spatialRepresentationType': {
+            'thesaurus_geonetworkthesauruslocalthemesextanttheme_tree': {
               'terms': {
-                'field': 'codelist_spatialRepresentationType',
-                'size': 10
+                'field': 'thesaurus_geonetworkthesauruslocalthemesextanttheme_tree',
+                'size': 100,
+                "order" : { "_key" : "asc" }
+                // "include": "[^\^]+^?[^\^]+"
+                // Limit to 2 levels
               }
             },
-            'availableInServices': {
-              'filters': {
-                //"other_bucket_key": "others",
-                // But does not support to click on it
-                'filters': {
-                  'availableInViewService': {
-                    'query_string': {
-                      'query': '+linkProtocol:/OGC:WMS.*/'
-                    }
-                  },
-                  'availableInDownloadService': {
-                    'query_string': {
-                      'query': '+linkProtocol:/OGC:WFS.*/'
-                    }
-                  }
-                }
+            "thesaurus_geonetworkthesaurusexternalthemehttpinspireeceuropaeuthemetheme": {
+              'collapsed': true,
+              "terms": {
+                "field": "thesaurus_geonetworkthesaurusexternalthemehttpinspireeceuropaeuthemetheme",
+                "size": 34,
+                "exclude": "http.*"
               }
             },
+            // 'codelist_hierarchyLevel_text': {
+            //   'terms': {
+            //     'field': 'codelist_hierarchyLevel_text'
+            //   },
+            //   'aggs': {
+            //     'format': {
+            //       'terms': {
+            //         'field': 'format'
+            //       }
+            //     }
+            //   }
+            // },
+            // 'codelist_spatialRepresentationType': {
+            //   'terms': {
+            //     'field': 'codelist_spatialRepresentationType',
+            //     'size': 10
+            //   }
+            // },
             'thesaurus_geonetworkthesaurusexternalthemegemet_tree': {
+              'collapsed': true,
               'terms': {
                 'field': 'thesaurus_geonetworkthesaurusexternalthemegemet_tree',
                 'size': 100,
@@ -314,14 +322,14 @@ goog.require('gn_alert');
                 'size': 10
               }
             },
-            'thesaurus_geonetworkthesaurusexternalplaceregions_tree': {
-              'terms': {
-                'field': 'thesaurus_geonetworkthesaurusexternalplaceregions_tree',
-                'size': 100,
-                "order" : { "_key" : "asc" }
-                //"include": "EEA.*"
-              }
-            },
+            // 'thesaurus_geonetworkthesaurusexternalplaceregions_tree': {
+            //   'terms': {
+            //     'field': 'thesaurus_geonetworkthesaurusexternalplaceregions_tree',
+            //     'size': 100,
+            //     "order" : { "_key" : "asc" }
+            //     //"include": "EEA.*"
+            //   }
+            // },
             'resolutionScaleDenominator': {
               'collapsed': true,
               'terms': {
@@ -352,17 +360,42 @@ goog.require('gn_alert');
               }
             },
             'codelist_status_text': {
+              'collapsed': true,
               'terms': {
                 'field': 'codelist_status_text',
                 'size': 10
               }
             },
             'dateStamp' : {
+              'collapsed': true,
               'userHasRole': 'isReviewerOrMore',
               // 'collapsed': true,
               'auto_date_histogram' : {
                 'field' : 'dateStamp',
                 'buckets': 50
+              }
+            },
+            'availableInServices': {
+              'filters': {
+                //"other_bucket_key": "others",
+                // But does not support to click on it
+                'filters': {
+                  'availableInViewService': {
+                    'query_string': {
+                      'query': '+linkProtocol:/OGC:WMS.*/'
+                    }
+                  },
+                  'availableInDownloadService': {
+                    'query_string': {
+                      'query': '+linkProtocol:/OGC:WFS.*/'
+                    }
+                  },
+                  'availableInProcessingService': {
+                    'query_string': {
+                      'query': '+linkProtocol:/OGC:WPS.*/'
+                    }
+                  }
+                }
               }
             }
           },
@@ -393,18 +426,13 @@ goog.require('gn_alert');
           }],
           'sortBy': 'relevance',
           'resultViewTpls': [{
-            'tplUrl': '../../catalog/components/' +
-              'search/resultsview/partials/viewtemplates/grid.html',
+            'tplUrl': '../../catalog/views/' +
+              'sextant/templates/mdview/grid.html',
             'tooltip': 'Grid',
             'icon': 'fa-th'
-          },{
-            'tplUrl': '../../catalog/components/' +
-              'search/resultsview/partials/viewtemplates/list.html',
-            'tooltip': 'List',
-            'icon': 'fa-bars'
           }],
-          'resultTemplate': '../../catalog/components/' +
-            'search/resultsview/partials/viewtemplates/grid.html',
+          'resultTemplate': '../../catalog/views/' +
+            'sextant/templates/mdview/grid.html',
           'formatter': {
             'list': [{
               'label': 'defaultView',
@@ -637,7 +665,7 @@ goog.require('gn_alert');
       requireProxy: [],
       gnCfg: angular.copy(defaultConfig),
       gnUrl: '',
-      docUrl: 'https://geonetwork-opensource.org/manuals/3.4.x/',
+      docUrl: 'https://geonetwork-opensource.org/manuals/4.0.x/',
       //docUrl: '../../doc/',
       modelOptions: {
         updateOn: 'default blur',
@@ -662,6 +690,10 @@ goog.require('gn_alert');
               }
             }
           }, config).mods.header.languages;
+
+          this.gnCfg.mods.search.scoreConfig = config.mods.search.scoreConfig;
+          this.gnCfg.mods.search.facetConfig = config.mods.search.facetConfig;
+          this.gnCfg.mods.home.facetConfig = config.mods.home.facetConfig;
         }
 
         if (gnUrl) {
@@ -694,6 +726,10 @@ goog.require('gn_alert');
         var copy = angular.copy(defaultConfig);
         copy.mods.header.languages = {};
         copy.mods.search.grid.related = [];
+        copy.mods.home.facetConfig = {};
+        copy.mods.search.facetConfig = {};
+        copy.mods.search.scoreConfig = {};
+        copy.mods.map["map-editor"].layers = [];
         return copy;
       },
       getProxyUrl: function() {
@@ -817,9 +853,8 @@ goog.require('gn_alert');
       $scope.socialMediaLink = $location.absUrl();
       $scope.getPermalink = gnUtilityService.getPermalink;
       $scope.getSextantPermalink = function(md) {
-        var url = $location.absUrl().split('#')[0] + '#/metadata/' +
-          md.getUuid();
-        gnUtilityService.getPermalink(md.title || md.defaultTitle, url);
+        var url = $location.absUrl().split('#')[0] + '#/metadata/' + md.uuid;
+        gnUtilityService.getPermalink(md.resourceTitle, url);
       };
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
       $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
@@ -883,6 +918,7 @@ goog.require('gn_alert');
       gnGlobalSettings.nodeId = $scope.nodeId;
       gnConfig.env = gnConfig.env ||  {};
       gnConfig.env.node = $scope.nodeId;
+      gnConfig.env.defaultNode = defaultNode;
       gnConfig.env.baseURL = detectBaseURL(gnGlobalSettings.gnCfg.baseURLDetector);
 
       $scope.signoutUrl = gnGlobalSettings.gnCfg.mods.signout.appUrl
@@ -905,6 +941,7 @@ goog.require('gn_alert');
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
       $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
+      $scope.shibbolethHideLogin = gnGlobalSettings.shibbolethHideLogin;
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
 
@@ -928,7 +965,7 @@ goog.require('gn_alert');
       });
       //If no csrf, ask for one:
       if (!$rootScope.csrf) {
-        $http.post('info?type=me');
+        $http.get('../api/me');
       }
       //Comment the upper lines if you want to remove csrf support
 
@@ -1043,27 +1080,30 @@ goog.require('gn_alert');
           isConnected: function() {
             return !this.isAnonymous();
           },
+          canCreateTemplate: function() {
+            var profile = gnGlobalSettings.gnCfg.mods.editor.minUserProfileToCreateTemplate
+              || '',
+              fnName = (profile !== '' ?
+                ('is' + profile[0].toUpperCase() + profile.substring(1) + 'OrMore') :
+                '');
+            return angular.isFunction(this[fnName]) ? this[fnName]() : this.isConnected();
+          },
+          // The md provide the information about
+          // if the current user can edit records or not
+          // based on record operation allowed. See edit property.
           canEditRecord: function(md) {
             if (!md || this.isAnonymous()) {
               return false;
             }
-
-            // The md provide the information about
-            // if the current user can edit records or not.
-            var editable = angular.isDefined(md) &&
-                angular.isDefined(md['geonet:info']) &&
-                angular.isDefined(md['geonet:info'].edit) &&
-                md['geonet:info'].edit == 'true';
-
 
             // A second filter is for harvested record
             // if the catalogue admin defined that those
             // records could be harvested.
             if (Boolean(md.isHarvested) == true) {
               return gnConfig['system.harvester.enableEditing'] === true &&
-                  editable;
+                md.edit;
             }
-            return editable;
+            return md.edit;
           }
         };
         // Build is<ProfileName> and is<ProfileName>OrMore functions
@@ -1122,16 +1162,45 @@ goog.require('gn_alert');
         $scope.userLoginPromise = userLogin;
 
         // Retrieve main search information
-        userLogin.then(function(value) {
-          var url = 'qi?_content_type=json&summaryOnly=true';
-          angular.forEach(gnGlobalSettings.gnCfg.mods.search.filters,
-              function(v, k) {
-                url += '&' + k + '=' + v;
+        var searchInfo = userLogin.then(function(value) {
+          // Check index status.
+          $http.get('../api/site/index/status').then(function(r) {
+            gnConfig['indexStatus'] = r.data;
+
+            if (r.data.state.id.match(/^(green|yellow)$/) == null) {
+              $rootScope.$broadcast('StatusUpdated', {
+                id: 'indexStatus',
+                title: r.data.state.title,
+                error: {
+                  message: r.data.message
+                },
+                // type: r.data.state.icon,
+                type: 'danger'
               });
-          return gnSearchManagerService.search(url).
-              then(function(data) {
-                $scope.searchInfo = data;
+            } else {
+              return $http.post('../api/search/records/_search',
+                {size: 0,
+                    track_total_hits: true,
+                    query: {query_string: {query: "+isTemplate:n"}},
+                    aggs: gnGlobalSettings.gnCfg.mods.home.facetConfig}).
+              then(function(r) {
+                $scope.searchInfo = r.data;
+                var keys = Object.keys(gnGlobalSettings.gnCfg.mods.home.facetConfig);
+                    selectedFacet = keys[0];
+                for (var i = 0; i < keys.length; i ++) {
+                  if ($scope.searchInfo.aggregations[keys[i]].buckets.length > 0) {
+                    selectedFacet = keys[i];
+                    break;
+                  }
+                }
+                $scope.homeFacet = {
+                  list: keys,
+                  key: selectedFacet,
+                  lastKey: keys[keys.length - 1]
+                };
               });
+            }
+          });
         });
       };
       $scope.userAdminMenu = gnAdminMenu.UserAdmin;
@@ -1158,11 +1227,22 @@ goog.require('gn_alert');
 
 
       $scope.healthCheck = {};
+      // Flag to show the health index error panel
+      // By default hidden, only to be displayed if the
+      // health check for the index returns an error.
+      $scope.showHealthIndexError = false;
+
       function healthCheckStatus(data) {
         angular.forEach(data, function(o) {
           $scope.healthCheck[o.name] = (o.status === 'OK');
         });
+
+        $scope.showHealthIndexError = (!$scope.healthCheck) ||
+          ($scope.healthCheck && $scope.healthCheck.IndexHealthCheck == false);
       };
+      $http.get('../../warninghealthcheck')
+        .success(healthCheckStatus)
+        .error(healthCheckStatus);
     }]);
 
 })();

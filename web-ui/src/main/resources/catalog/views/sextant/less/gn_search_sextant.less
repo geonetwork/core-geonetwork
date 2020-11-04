@@ -1589,13 +1589,26 @@ ul.invalid {
   position: fixed !important; // `absolute` is set in element
 }
 
+.gn-facet-list.panel {
+  border: none;
+  margin: 0px;
+  padding: 0px;
+  .panel-heading {
+    display:none;
+  }
+  .panel-body {
+    padding: 0px;
+  }
+}
 .gn-facet {
-  font-size: @sxt-fontsize;
   .fa {
     margin-right: 4px;
   }
-
-  h5 .fa {
+  a.gn-facet-header {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+  }
+  a.gn-facet-header .fa {
     color: @sxt-base-color;
     &.gn-field-empty {
       color: #d3d3d3;
@@ -1604,6 +1617,7 @@ ul.invalid {
 
   > div {
     overflow: auto;
+    overflow-x: hidden;
     max-height: 9.7em;
     &.is-date {
       overflow: hidden;

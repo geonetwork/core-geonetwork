@@ -147,6 +147,8 @@
 
           scope.setRegion = function(regionType) {
             scope.regionType = regionType;
+            // clear the input field
+            scope.resetRegion();
           };
         }
       };
@@ -328,7 +330,6 @@
           }
           scope.$watch('regionType', function(val) {
             if (scope.regionType) {
-
               if (scope.regionType.id == 'geonames') {
                 $(element).typeahead('destroy');
                 var url = gnViewerSettings.geocoder;
@@ -455,6 +456,7 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
+          scope.prefix = attrs['prefix'] || '';
           element.attr('placeholder', '...');
           element.on('focus', function() {
             $http.get('../api/isolanguages', {}, {
@@ -465,6 +467,7 @@
               angular.forEach(data, function(lang) {
                 var defaultName = lang.label['eng'];
                 lang.name = lang.label[scope.lang] || defaultName;
+                lang.code = scope.prefix + lang.code;
                 lang.tokens = [lang.name, lang.code, defaultName];
               });
               var source = new Bloodhound({
@@ -505,10 +508,13 @@
           fromNow: '@'
         },
         link: function linkFn(scope, element, attr) {
-          var useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
+          var useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.humanizeDates,
+              format = gnGlobalSettings.gnCfg.mods.global.dateFormat;
           scope.$watch('date', function(originalDate) {
             if (originalDate) {
-              var attempt = gnHumanizeTimeService(originalDate, scope.format, scope.fromNow !== undefined)
+              var attempt = gnHumanizeTimeService(originalDate,
+                scope.format || format,
+                scope.fromNow !== undefined)
               if (attempt !== undefined) {
                 scope.value = attempt.value;
                 scope.title = attempt.title;
@@ -538,16 +544,15 @@
            restrict: 'A',
            link: function(scope, element, attrs) {
              element.attr('placeholder', '...');
-             var displayField = attrs['displayField'] || 'defaultTitle';
+             var displayField = attrs['displayField'] || 'resourceTitle';
              var valueField = attrs['valueField'] || displayField;
              var params = angular.fromJson(element.attr('params') || '{}');
 
              var url = gnUrlUtils.append('q?_content_type=json',
               gnUrlUtils.toKeyValue(angular.extend({
-               _isTemplate: 'n',
+               isTemplate: 'n',
                any: '*QUERY*',
-               sortBy: 'title',
-               fast: 'index'
+               sortBy: 'resourceTitleObject.default.keyword'
              }, params)
               )
              );
@@ -573,7 +578,7 @@
                name: 'metadata',
                displayKey: function(data) {
                  if (valueField === 'uuid') {
-                   return data['geonet:info'].uuid;
+                   return data.uuid;
                  } else {
                    return data[valueField];
                  }
@@ -647,13 +652,12 @@
 
              var url = gnUrlUtils.append('q@json',
               gnUrlUtils.toKeyValue({
-                _isTemplate: 's',
+                isTemplate: 's',
                 any: '*QUERY*',
-                _root: 'gmd:CI_ResponsibleParty',
-                sortBy: 'title',
-                sortOrder: 'reverse',
-                resultType: 'subtemplates',
-                fast: 'index'
+                root: 'gmd:CI_ResponsibleParty',
+                sortBy: 'resourceTitleObject.default.keyword',
+                sortOrder: '',
+                resultType: 'subtemplates'
               })
              );
              var parseResponse = function(data) {
@@ -750,8 +754,8 @@
    * the element to indicate the status
    * collapsed or expanded.
    */
-  module.directive('gnSlideToggle', [
-    function() {
+  module.directive('gnSlideToggle', ["$timeout",
+    function($timeout) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -778,7 +782,9 @@
             });
           });
           if (attrs['gnSlideToggle'] == 'true') {
-            element.click();
+            $timeout(function() {
+                 element.click();
+            },0); //this needs to be done after the DOM is updated
           }
         }
       };
@@ -800,7 +806,7 @@
               element.addClass('disabled');
               icon.addClass('hidden');
               spinner = element.
-                  prepend('<i class="fa fa-spinner fa-spin"></i>');
+                  prepend('<i class="fa fa-fw fa-spinner fa-spin"></i>');
             };
             var done = function() {
               running = false;
@@ -1391,6 +1397,13 @@
       }
     }
   });
+  module.filter('geojsonToWkt', function() {
+    return function(val) {
+      var wkt_format = new ol.format.WKT();
+      var geojson_format = new ol.format.GeoJSON();
+      return wkt_format.writeGeometry(geojson_format.readGeometry(val));
+    }
+  });
   module.filter('encodeURIComponent', function() {
     return window.encodeURIComponent;
   });
@@ -1430,8 +1443,7 @@
       }
     };
   });
-
-  module.directive('gnImgModal', function() {
+  module.directive('gnImgModal', ['$filter', function($filter) {
     return {
       restrict: 'A',
       link: function(scope, element, attr, ngModel) {
@@ -1440,8 +1452,8 @@
         element.bind('click', function() {
           var imgOrMd = scope.$eval(attr['gnImgModal']);
           var img = undefined;
-          if(angular.isDefined(imgOrMd) && imgOrMd.getThumbnails) {
-            var imgs = imgOrMd.getThumbnails();
+          if(imgOrMd.overview) {
+            var imgs = imgOrMd.overview;
             var url = $(element).attr('src');
             for (var i = 0; i < imgs.list.length; i++) {
               // the thumbnails url might end with `?approved=false/true`, which is not
@@ -1451,50 +1463,37 @@
                 break;
               }
             }
-          } else if (angular.isDefined(imgOrMd)) {
-            img = imgOrMd;
           } else {
-            img = $(element).attr('src');
+            img = imgOrMd;
           }
 
+          // Toggle the modal if already displayed
+          if (modalElt) {
+            modalElt.modal('hide');
+            modalElt = null;
+            return;
+          }
           if (img) {
-            var modalElt = angular.element(
-                '<div class="modal fade in gn-img-modal">' +
-                '  <div class="modal-dialog in">' +
-                '    <img src="' + img + '"/>' +
-                '    <button type=button class="btn btn-default ' +
-                '    gn-btn-modal-img">&times</button>' +
-                '  </div>' +
-                '</div>');
-            var dial = modalElt.find('.modal-dialog');
-            var imgEl = modalElt.find('img');
-            dial.css('overflow', 'hidden');
-            dial.css('height', '6em');
-            imgEl.css('opacity', 0);
-            if (modalElt.find('img')[0].naturalWidth == 0) {
-              dial.css('width', '3em');
-              dial.prepend($('<i class="fa fa-spinner fa-spin fa-3x"></i>'));
-            } else {
-              dial.css('width', modalElt.find('img')[0].naturalWidth + 'px');
-              dial.css('height', 'auto');
-              imgEl.css('opacity', 0);
-            }
-            modalElt.find('img').on('load', function() {
-              dial.find('i').remove();
-              dial.css('width', this.naturalWidth + 'px');
-              dial.css('height', 'auto');
-              dial.css('overflow', 'visible');
-              imgEl.css('opacity', 1);
-            });
+            var label = (img.label || (
+              $filter('gnLocalized')(img.title, scope.lang)) || '');
+            var labelDiv =
+              '<div class="gn-img-background">' +
+              '  <div class="gn-img-thumbnail-caption">' +
+              label + '</div>' +
+              '</div>';
+            modalElt = angular.element('' +
+              '<div class="modal fade in"' +
+              '     id="gn-img-modal-"' + img.id + '>' +
+              '<div class="modal-dialog gn-img-modal in">' +
+              '  <button type=button class="btn btn-link gn-btn-modal-img">' +
+              '<i class="fa fa-times text-danger"/></button>' +
+              '  <img src="' + (img.url || img.id) + '"/>' +
+              (label != '' ? labelDiv : '') +
+              '</div>' +
+              '</div>');
 
-            $('.g').append(modalElt);
+            $(document.body).append(modalElt);
             modalElt.modal();
-            modalElt.on('shown.bs.modal', function() {
-              $('.g').append(modalElt.data('bs.modal').$backdrop);
-              // in one API site, the modal is still display none, we must
-              // force the show
-              modalElt.show();
-            });
             modalElt.on('hidden.bs.modal', function() {
               if (modalElt) {
                 modalElt.remove();
@@ -1504,10 +1503,57 @@
               modalElt.modal('hide');
             });
           }
+      //     if (img) {
+      //       var modalElt = angular.element(
+      //           '<div class="modal fade in gn-img-modal">' +
+      //           '  <div class="modal-dialog in">' +
+      //           '    <img src="' + img + '"/>' +
+      //           '    <button type=button class="btn btn-default ' +
+      //           '    gn-btn-modal-img">&times</button>' +
+      //           '  </div>' +
+      //           '</div>');
+      //       var dial = modalElt.find('.modal-dialog');
+      //       var imgEl = modalElt.find('img');
+      //       dial.css('overflow', 'hidden');
+      //       dial.css('height', '6em');
+      //       imgEl.css('opacity', 0);
+      //       if (modalElt.find('img')[0].naturalWidth == 0) {
+      //         dial.css('width', '3em');
+      //         dial.prepend($('<i class="fa fa-spinner fa-spin fa-3x"></i>'));
+      //       } else {
+      //         dial.css('width', modalElt.find('img')[0].naturalWidth + 'px');
+      //         dial.css('height', 'auto');
+      //         imgEl.css('opacity', 0);
+      //       }
+      //       modalElt.find('img').on('load', function() {
+      //         dial.find('i').remove();
+      //         dial.css('width', this.naturalWidth + 'px');
+      //         dial.css('height', 'auto');
+      //         dial.css('overflow', 'visible');
+      //         imgEl.css('opacity', 1);
+      //       });
+      //
+      //       $('.g').append(modalElt);
+      //       modalElt.modal();
+      //       modalElt.on('shown.bs.modal', function() {
+      //         $('.g').append(modalElt.data('bs.modal').$backdrop);
+      //         // in one API site, the modal is still display none, we must
+      //         // force the show
+      //         modalElt.show();
+      //       });
+      //       modalElt.on('hidden.bs.modal', function() {
+      //         if (modalElt) {
+      //           modalElt.remove();
+      //         }
+      //       });
+      //       modalElt.find('.gn-btn-modal-img').on('click', function() {
+      //         modalElt.modal('hide');
+      //       });
+      //     }
         });
       }
     };
-  });
+  }]);
 
   module.directive('gnPopoverDropdown', ['$timeout', function($timeout) {
     return {

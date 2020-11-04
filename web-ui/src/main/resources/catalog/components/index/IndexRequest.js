@@ -385,7 +385,6 @@
     var rangeDates = {};
 
     this.filteredDocTypeFieldsInfo.forEach(function(field) {
-
       // Not required for hidden fields
       if (field.hidden) {
         return

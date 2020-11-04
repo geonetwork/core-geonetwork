@@ -42,34 +42,29 @@
     this.feedMd = function(scope) {
       var md = scope.md;
 
-      if (md.type) {
-        if(md.type.indexOf('dataset')>=0) {
+      if (md.resourceType) {
+        if(md.resourceType.indexOf('dataset')>=0) {
           md.icon = {cls: 'fa-database', title: 'dataset'}
         }
-        else if(md.type.indexOf('series')>=0) {
+        else if(md.resourceType.indexOf('series')>=0) {
           md.icon = {cls: 'fa-database', title: 'series'}
         }
-        else if(md.type.indexOf('software')>=0) {
+        else if(md.resourceType.indexOf('software')>=0) {
           md.icon = {cls: 'fa-hdd-o', title: 'software'}
         }
-        else if(md.type.indexOf('map')>=0) {
+        else if(md.resourceType.indexOf('map')>=0) {
           md.icon = {cls: 'fa-globe', title: 'map'}
         }
-        else if(md.type.indexOf('application')>=0) {
+        else if(md.resourceType.indexOf('application')>=0) {
           md.icon = {cls: 'fa-hdd-o', title: 'application'}
         }
-        else if(md.type.indexOf('basicgeodata')>=0) {
+        else if(md.resourceType.indexOf('basicgeodata')>=0) {
           md.icon = {cls: 'fa-globe', title: 'basicgeodata'}
         }
-        else if(md.type.indexOf('service')>=0) {
+        else if(md.resourceType.indexOf('service')>=0) {
           md.icon = {cls: 'fa-globe', title: 'service'}
         }
       }
-
-      var thumbs = md.getThumbnails();
-      md.thumbnail = thumbs && (thumbs.small || thumbs.big || (
-        thumbs.list.length && thumbs.list[0].url
-      ));
 
       var status = md.mdStatus;
       var user = scope.user;
@@ -87,35 +82,36 @@
         }
       });
 
-      scope.downloads = [];
-      scope.layers = [];
-
-      angular.forEach(md.linksTree, function(transferOptions, i) {
-
-        // get all layers and downloads for this transferOptions
-        var layers = md.getLinksByType.apply(md,
-          [i+1].concat(layerTypes));
-
-        var downloads = md.getLinksByType.apply(md,
-          [i+1].concat(downloadTypes));
-
-        if(downloads.length > 0) {
-          // If only one layer, hide any WFS or WCS links unless there are several
-          // note: this does not apply if there is only one download link (otherwise we might end up with 0 links)
-          // https://gitlab.ifremer.fr/sextant/geonetwork/-/wikis/Catalogue#les-protocoles
-          if(layers.length === 1 && downloads.length > 1) {
-            var multipleWxS = md.getLinksByType(i+1, '#OGC:WFS', '#OGC:WCS').length > 1;
-
-            if (!multipleWxS) {
-              downloads = md.getLinksByType.apply(md,
-                [i+1].concat(downloadTypesWithoutWxS));
-            }
-          }
-
-          scope.downloads = scope.downloads.concat(downloads);
-        }
-        scope.layers = scope.layers.concat(layers);
-      }.bind(this));
+      scope.downloads = md.getLinksByType.apply(md, downloadTypes);
+      scope.layers = md.getLinksByType.apply(md, layerTypes);
+      // scope.layers = [];
+      //
+      // angular.forEach(md.linksTree, function(transferOptions, i) {
+      //
+      //   // get all layers and downloads for this transferOptions
+      //   var layers = md.getLinksByType.apply(md,
+      //     [i+1].concat(layerTypes));
+      //
+      //   var downloads = md.getLinksByType.apply(md,
+      //     [i+1].concat(downloadTypes));
+      //
+      //   if(downloads.length > 0) {
+      //     // If only one layer, hide any WFS or WCS links unless there are several
+      //     // note: this does not apply if there is only one download link (otherwise we might end up with 0 links)
+      //     // https://gitlab.ifremer.fr/sextant/geonetwork/-/wikis/Catalogue#les-protocoles
+      //     if(layers.length === 1 && downloads.length > 1) {
+      //       var multipleWxS = md.getLinksByType(i+1, '#OGC:WFS', '#OGC:WCS').length > 1;
+      //
+      //       if (!multipleWxS) {
+      //         downloads = md.getLinksByType.apply(md,
+      //           [i+1].concat(downloadTypesWithoutWxS));
+      //       }
+      //     }
+      //
+      //     scope.downloads = scope.downloads.concat(downloads);
+      //   }
+      //   scope.layers = scope.layers.concat(layers);
+      // }.bind(this));
     };
 
   }]);

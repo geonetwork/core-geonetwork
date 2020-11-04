@@ -48,14 +48,14 @@
           <div data-ng-switch-when="WMS">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{(r.title | gnLocalized: lang).replaceAll('\'', '\\\'')}}'}">
                 wmsLinkDetails</span>
             </p>
           </div>
           <div data-ng-switch-when="WMTS">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{(r.title | gnLocalized: lang).replaceAll('\'', '\\\'')}}'}">
                 wmtsLinkDetails</span>
             </p>
           </div>
@@ -141,7 +141,7 @@
           <div data-ng-switch-when="DB">
             <p class="text-muted">
             <span data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  data-translate-values="{url:'{{(r.url | gnLocalized: lang).replaceAll('\\', '\\\\')}}', layer:'{{r.title | gnLocalized: lang}}'}">
               databaseLayerDetails</span>
             </p>
           </div>
@@ -149,7 +149,7 @@
           <div data-ng-switch-when="FILE">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', name:'{{r.title | gnLocalized: lang}}'}">
+                    data-translate-values="{url:'{{(r.url | gnLocalized: lang).replaceAll('\\', '\\\\')}}', name:'{{r.title | gnLocalized: lang}}'}">
                 fileLayerDetails</span>
               <input class="form-control"
                      type="text"
@@ -158,7 +158,8 @@
             </p>
           </div>
 
-          <div data-ng-switch-when="MDFCATS">
+          <div data-ng-switch-when="MDFCATS"
+               data-ng-if="r.featureType">
             <p data-translate="">technicalInformation</p>
             <div data-gn-attribute-table-renderer="r.featureType.attributeTable.element">
             </div>
@@ -166,9 +167,10 @@
 
           <div data-ng-switch-default>
             <p class="text-muted"
-               data-ng-if="mainType.indexOf('MD') == 0 && r.id">
+               data-ng-if="mainType.indexOf('MD') == 0 && r.id
+                    && r.description && (r.description | gnLocalized: lang).length > 0">
               <span class="gn-related-description">
-                {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a href="#/metadata/{{r.id}}">{{'more' |
+                {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a data-ng-click="config.showMore(r, md)" href="">{{'more' |
                 translate}}...</a>
               </span>
             </p>
@@ -188,6 +190,10 @@
                 data-ng-click="config.doAction(mainType, r, md)">
 
           <span class="visible-lg-*">
+            <i class="fa"
+               title="{{r.origin === 'remote' ? ('remoteRecord' | translate) : ''}}"
+               data-ng-class="{'fa-external-link': r.origin === 'remote'}"></i>
+
             {{::(config.getLabel(mainType, type)) | translate}}
           </span>
           <br/>

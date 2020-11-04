@@ -2,19 +2,22 @@
 
   <!--any field-->
   <div class="input-group gn-search-input">
+
+<!--    ng-blur="showTitleSearchToggle(false)"-->
+<!--    ng-focus="showTitleSearchToggle(true)"-->
+<!--    typeahead-popup-template-url="../../catalog/views/sextant/templates/searchForm-typeahead.html"-->
     <input type="text"
            placeholder="{{'anyPlaceHolder' | translate}}"
            class="form-control"
-           id="anySearchField" autocomplete="off"
-           ng-model="searchInput.model"
-           ng-blur="showTitleSearchToggle(false)"
-           ng-focus="showTitleSearchToggle(true)"
-           typeahead="address for address in getAnySuggestions($viewValue)"
+           id="anySearchField"
+           autocomplete="off"
+           data-ng-model="searchObj.params.any"
+           data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
+           data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
            typeahead-focus-first="false"
            typeahead-loading="anyLoading"
            typeahead-min-length="1"
-           typeahead-wait-ms="300"
-           typeahead-popup-template-url="../../catalog/views/sextant/templates/searchForm-typeahead.html">
+           typeahead-wait-ms="300">
     <span class="input-group-btn">
       <button type="submit" data-ng-click="triggerSearch()" class="btn btn-default search-btn">
         <i class="fa fa-search"></i>
@@ -27,21 +30,19 @@
        template="../../catalog/views/sextant/templates/map/mapfield.html"></div>
 
   <div class="sxt-searchform-content">
-
-    <div data-ng-repeat="facet in ::facetConfig">
-
-      <!--Standard multi facet panel-->
-      <div data-ng-if="::!facet.tree" gn-facet-multiselect="{{::facet.langs[lang] || facet.key}}" gn-facet-multiselect-title="{{facet.labels[lang]}}"
-           gn-facet-multiselect-filter="{{::facet.filter}}"
-           gn-facet-multiselect-collapsed="{{::facet.opened !== true && isFacetsCollapse(facet.langs[lang] || facet.index || facet.key)}}"></div>
-
-      <!--Tree facets-->
-      <div data-ng-if="::facet.tree" sxt-facet-tree="{{::facet.langs[lang] || facet.key}}" sxt-facet-tree-title="{{facet.labels[lang]}}"
-           sxt-facet-tree-filter="{{::facet.filter}}"
-           sxt-facet-tree-collapsed="{{::facet.opened !== true && isFacetsCollapse(facet.langs[lang] || facet.index || facet.key)}}"></div>
-
+    <div data-search-filter-tags
+         data-dimensions="searchResults.facets"
+         data-use-location-parameters="true"
+         ng-if="isFilterTagsDisplayedInSearch && searchResults.facets">
     </div>
+
+    <div data-ng-show="searchResults.records.length > 0"
+         data-es-facets="searchResults.facets"></div>
   </div>
 </div>
 
-<button type="submit" data-ng-click="resetSearch()" class="btn btn-default sxt-reset-btn" data-ng-disabled="!searchObj.canReset" translate>resetFilter</button>
+<button type="submit"
+        data-ng-click="resetSearch()"
+        class="btn btn-default sxt-reset-btn"
+        data-ng-disabled="!searchObj.canReset"
+        translate>resetFilter</button>

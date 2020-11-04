@@ -26,11 +26,13 @@
 
   goog.require('gn_ows');
   goog.require('gn_wfs_service');
+  goog.require('gn_esri_service');
 
 
   var module = angular.module('gn_map_service', [
     'gn_ows',
-    'gn_wfs_service'
+    'gn_wfs_service',
+    'gn_esri_service'
   ]);
 
   var ARCGIS_SERVICES_MAP = {
@@ -69,11 +71,13 @@
       'gnViewerService',
       'gnAlertService',
       'wfsFilterService',
+      '$http',
+      'gnEsriUtils',
       function(olDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
           gnGlobalSettings, gnViewerSettings, gnViewerService, gnAlertService,
-               wfsFilterService) {
+         wfsFilterService, $http, gnEsriUtils) {
 
         /**
          * @description
@@ -436,35 +440,47 @@
            */
           getBboxFeatureFromMd: function(md, proj) {
             var feat = new ol.Feature();
-            var extent = this.getBboxFromMd(md);
+            var wkts = md.geom;
             var projExtent = proj.getExtent();
-            if (extent) {
+            if (wkts && wkts.length) {
+
               var geometry;
-              // If is composed of one geometry of type point
-              if (extent.length === 1 &&
-                  extent[0][0] === extent[0][2] &&
-                  extent[0][1] === extent[0][3]) {
-                geometry = new ol.geom.Point([extent[0][0], extent[0][1]]);
-              } else {
-                // Build multipolygon from the set of bboxes
-                geometry = new ol.geom.MultiPolygon([]);
-                for (var j = 0; j < extent.length; j++) {
-                  // TODO: Point will not be supported in multi geometry
-                  var projectedExtent = ol.proj.transformExtent(extent[j], 'EPSG:4326', proj);
-                  if (!ol.extent.intersects(projectedExtent, projExtent)) {
-                    continue;
-                  }
-                  var coords = this.getPolygonFromExtent(
-                    ol.extent.getIntersection(projectedExtent, projExtent)
-                  );
-                  geometry.appendPolygon(new ol.geom.Polygon(coords));
-                }
-              }
-              // no valid bbox was found: clear geometry
-              if (!geometry.getPolygons().length) {
-                geometry = null;
-              }
-              feat.setGeometry(geometry);
+              var geoms = [];
+              var format = new ol.format.GeoJSON();
+              wkts.forEach(function(wkt) {
+                var geom = format.readGeometry(wkt, {
+                  featureProjection: proj,
+                  dataProjection: 'EPSG:4326'
+                })
+                geoms.push(geom);
+              })
+              var geometryCollection = new ol.geom.GeometryCollection(geoms);
+              feat.setGeometry(geometryCollection);
+              // // If is composed of one geometry of type point
+              // if (extent.length === 1 &&
+              //     extent[0][0] === extent[0][2] &&
+              //     extent[0][1] === extent[0][3]) {
+              //   geometry = new ol.geom.Point([extent[0][0], extent[0][1]]);
+              // } else {
+              //   // Build multipolygon from the set of bboxes
+              //   geometry = new ol.geom.MultiPolygon([]);
+              //   for (var j = 0; j < extent.length; j++) {
+              //     // TODO: Point will not be supported in multi geometry
+              //     var projectedExtent = ol.proj.transformExtent(extent[j], 'EPSG:4326', proj);
+              //     if (!ol.extent.intersects(projectedExtent, projExtent)) {
+              //       continue;
+              //     }
+              //     var coords = this.getPolygonFromExtent(
+              //       ol.extent.getIntersection(projectedExtent, projExtent)
+              //     );
+              //     geometry.appendPolygon(new ol.geom.Polygon(coords));
+              //   }
+              // }
+              // // no valid bbox was found: clear geometry
+              // if (!geometry.getPolygons().length) {
+              //   geometry = null;
+              // }
+              // feat.setGeometry(geometry);
             }
             return feat;
           },
@@ -1362,7 +1378,7 @@
               gnWmsQueue.add(url, name, style ? style.Name : '');
               gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
                 var capL = gnOwsCapabilities.getLayerInfoFromCap(
-                    name, capObj, md && md.getUuid && md.getUuid()),
+                    name, capObj, md && md.uuid),
                     olL;
 
                 if (!capL) {
@@ -1420,6 +1436,7 @@
                         then(gnViewerSettings.getPreAddLayerPromise).
                         finally(
                         function() {
+                          // SEXTANT SPECIFIC
                           var wfsConfigs = olL.get('wfs');
                           if (wfsConfigs && wfsConfigs.length) {
                             var wfsConfig = wfsConfigs[0];
@@ -1474,64 +1491,92 @@
           },
 
           addEsriRestFromScratch: function(map, url, name, createOnly, md) {
-            var defer = $q.defer();
-            var $this = this;
-
-            var serviceUrl = url.replace(/(.*\/MapServer).*/, '$1')
-            var layer = url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$2');
+            var serviceUrl = url.replace(/(.*\/MapServer).*/, '$1');
+            var layer = !!name && parseInt(name).toString() === name
+              ? name
+              : url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$2');
             name = url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$1 $2');
 
-            if (!isLayerInMap(map, name, url)) {
-              gnWmsQueue.add(url, name);
-              var params = {};
-              if (layer != '') {
-                params.LAYERS = layer;
+            var olLayer = getTheLayerFromMap(map, name, url);
+            if (olLayer !== null) {
+              if(md) {
+                olLayer.set('md', md);
               }
-              var layerOptions = {
-                url: url,
-                opacity: 1,
-                visible: true,
-                source: new ol.source.ImageArcGISRest({
-                  // ratio: 1.01,
-                  params: params,
-                  url: serviceUrl
-                })
-              };
-
-              olL = new ol.layer.Image(layerOptions);
-
-              olL.set('name', name);
-              olL.set('label', name);
-              olL.displayInLayerManager = true;
-              // FIXME: Layer tree visibility toggle does not work
-              olL.visible = layerOptions.visible;
-
-              var finishCreation = function() {
-                $q.resolve(olL).
-                    then(gnViewerSettings.getPreAddLayerPromise).
-                    finally(
-                    function() {
-                      if (!createOnly) {
-                        map.addLayer(olL);
-                      }
-                      gnWmsQueue.removeFromQueue(url, name);
-                      defer.resolve(olL);
-                    });
-              };
-
-              var feedMdPromise = md ?
-                $q.resolve(md).then(function(md) {
-                  olL.set('md', md);
-                }) : $this.feedLayerMd(olL);
-
-              feedMdPromise.then(finishCreation);
-            } else {
-              var olL = getTheLayerFromMap(map, name, url);
-                if(olL && md) {
-                  olL.set('md', md);
-                }
+              return $q.resolve(olLayer);
             }
-            return defer.promise;
+
+            gnWmsQueue.add(url, name);
+
+            var params = {};
+            if (!!layer) {
+              params.LAYERS = 'show:' + layer;
+            }
+            var layerOptions = {
+              url: url,
+              opacity: 1,
+              visible: true,
+              source: new ol.source.ImageArcGISRest({
+                // ratio: 1.01,
+                params: params,
+                url: serviceUrl
+              })
+            };
+
+            olLayer = new ol.layer.Image(layerOptions);
+            olLayer.displayInLayerManager = true;
+            olLayer.set('name', name);
+            olDecorateLayer(olLayer);
+
+            var feedMdPromise
+            if (md) {
+              feedMdPromise = $q.resolve();
+              olLayer.set('md', md);
+            } else {
+              feedMdPromise = this.feedLayerMd(olLayer);
+            }
+
+            // query layer info
+            var layerInfoUrl = url + (url.indexOf('?') > -1 ? '&' : '?') + 'f=json';
+            var layerInfoPromise = $http.get(layerInfoUrl).then(function (response) {
+              var info = response.data;
+
+              // we're pointing at a layer group
+              if (!!info.mapName) {
+                return {
+                  extent: info.fullExtent,
+                  title: info.mapName
+                };
+              }
+              return {
+                extent: info.extent,
+                title: info.name
+              }
+            });
+
+            var legendUrl = serviceUrl + '/legend?f=json';
+            var legendPromise = $http.get(legendUrl).then(function (response) {
+              return gnEsriUtils.renderLegend(response.data, layer);
+            })
+
+            // layer title and extent are set after the layer info promise resolves
+            return $q.all([layerInfoPromise, legendPromise, feedMdPromise])
+              .then(function (results) {
+                var layerInfo = results[0];
+                var legendUrl = results[1];
+                var extent =
+                  [layerInfo.extent.xmin, layerInfo.extent.ymin, layerInfo.extent.xmax, layerInfo.extent.ymax];
+                olLayer.set('label', layerInfo.title);
+                olLayer.set('legend', legendUrl);
+                olLayer.set('extent', extent);
+              })
+              .then(gnViewerSettings.getPreAddLayerPromise)
+              .then(function() {
+                if (!createOnly) {
+                  map.addLayer(olLayer);
+                }
+                gnWmsQueue.removeFromQueue(url, name);
+                return olLayer;
+              });
           },
 
           /**
@@ -1599,7 +1644,7 @@
               gnOwsCapabilities.getWMTSCapabilities(url).then(function(capObj) {
 
                 var capL = gnOwsCapabilities.getLayerInfoFromCap(
-                    name, capObj, md && md.getUuid());
+                    name, capObj, md && md.uuid);
                 if (!capL) {
                   gnWmsQueue.removeFromQueue(url, name, map);
                   // If layer not found in the GetCapabilities
@@ -1685,7 +1730,7 @@
             gnWmsQueue.add(url, name, map);
             gnWfsService.getCapabilities(url).then(function(capObj) {
               var capL = gnOwsCapabilities.
-                  getLayerInfoFromWfsCap(name, capObj, md.getUuid()),
+                  getLayerInfoFromWfsCap(name, capObj, md.uuid),
                   olL;
               if (!capL) {
                 gnWmsQueue.removeFromQueue(url, name, map);
@@ -1760,17 +1805,25 @@
 
               //OpenLayers expects an array of style objects having isDefault property
               angular.forEach(cap.Contents.Layer,function(l){
-                if (!angular.isArray(l.Style)){
-                  // use "default" for style if empty
-                  l.Style=[{Identifier:l.Style || 'default',isDefault:true}]
-                }
+                if (!angular.isArray(l.Style)){ l.Style=[{Identifier:l.Style,isDefault:true}] };
               });
 
-              var options = ol.source.WMTS.optionsFromCapabilities(cap, {
-                layer: getCapLayer.Identifier,
-                matrixSet: map.getView().getProjection().getCode(),
-                projection: map.getView().getProjection().getCode()
-              });
+              var options;
+
+              try {
+                options = ol.source.WMTS.optionsFromCapabilities(cap, {
+                  layer: getCapLayer.Identifier,
+                  matrixSet: map.getView().getProjection().getCode(),
+                  projection: map.getView().getProjection().getCode()
+                });
+              } catch (e) {
+                gnAlertService.addAlert({
+                  msg: $translate.instant('wmtsLayerNoUsableMatrixSet'),
+                  delay: 5000,
+                  type: 'danger'
+                });
+                return;
+              }
 
               //Configuring url for service
               var url = capabilities.operationsMetadata ?
@@ -1971,14 +2024,6 @@
                   }),
                   title: title ||  'Bing ' + opt.name
                 });
-              case 'arcgis':
-                return new ol.layer.Tile({
-                  _bgId: type + '_' + opt.name,
-                  source: new ol.source.XYZ({
-                    url: ARCGIS_SERVICES_MAP[opt.name]
-                  }),
-                  title: title ||  'ArcGIS ' + opt.name
-                });
               case 'stamen':
                 //We make watercolor the default layer
                 var type = opt && opt.name ? opt.name : 'watercolor',
@@ -2016,6 +2061,31 @@
                   break;
                 }
                 this.addWmsFromScratch(map, opt.url, opt.name)
+                    .then(function(layer) {
+                      if (title) {
+                        layer.set('title', title);
+                        layer.set('label', title);
+                      }
+                      return layer;
+                    });
+                break;
+              // SPECIFIC SEXTANT
+              case 'arcgis-disabled':
+                return new ol.layer.Tile({
+                  _bgId: type + '_' + opt.name,
+                  source: new ol.source.XYZ({
+                    url: ARCGIS_SERVICES_MAP[opt.name]
+                  }),
+                  title: title ||  'ArcGIS ' + opt.name
+                });
+              case 'arcgis':
+                if (!opt.url) {
+                  $log.warn('A required parameter (url) ' +
+                      'is missing in the specified ArcGIS layer:',
+                      opt);
+                  break;
+                }
+                this.addEsriRestFromScratch(map, opt.url, opt.name)
                     .then(function(layer) {
                       if (title) {
                         layer.set('title', title);
@@ -2078,7 +2148,7 @@
               return gnSearchManagerService.gnSearch({
                 uuid: layer.get('metadataUuid'),
                 fast: 'index',
-                _draft: 'n or e',
+                draft: 'n or e',
                 _content_type: 'json'
               }).then(function(data) {
                 if (data.metadata.length == 1) {

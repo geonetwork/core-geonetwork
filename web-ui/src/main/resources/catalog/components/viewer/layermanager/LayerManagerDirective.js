@@ -178,7 +178,7 @@
           if (layer.get('md')) {
             var d = layer.get('downloads');
             var downloadable =
-                layer.get('md')['geonet:info'].download == 'true';
+                layer.get('md').download == 'true';
             if (angular.isArray(d) && downloadable) {
               scope.download = d[0];
             }
@@ -192,6 +192,11 @@
             if (angular.isArray(p)) {
               scope.process = p;
             }
+          }
+
+          scope.hasDownload = true;
+          if (layer.getSource() instanceof ol.source.ImageArcGISRest) {
+            scope.hasDownload = false;
           }
 
           scope.showWPS = function(process) {

@@ -106,8 +106,6 @@
       this.openProcessesTool = function(serviceUrl) {
         this.openTool('processes', '', serviceUrl);
       };
-
-    }
-  ]);
-
+    }]
+  );
 })();

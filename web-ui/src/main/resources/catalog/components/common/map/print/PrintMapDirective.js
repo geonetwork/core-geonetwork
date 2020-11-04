@@ -275,7 +275,7 @@
         rotation: -((view.getRotation() * 180.0) / Math.PI),
         lang: lang,
         dpi: $scope.config.dpi.value,
-        outputFormat: $scope.config.format,
+        outputFormat: $scope.config.format.name,
         layers: encLayers,
         legends: encLegends,
         enableLegends: $scope.enableLegends && encLegends ? true : false,

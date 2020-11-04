@@ -75,7 +75,7 @@
             scope.setBgLayer(layer);
           };
 
-          // Specific sextant
+          // SEXTANT SPECIFIC
        /*   scope.$watch(function() { return gnViewerSettings.bgLayers},
               function(bgLayers) {
                 if(bgLayers && bgLayers.length && bgLayers.length > 0 ) {

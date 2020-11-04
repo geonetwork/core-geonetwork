@@ -19,7 +19,7 @@
         link: function(scope, element, attrs) {
           scope.annotationsUuid = scope.layer.get('annotationsUuid');
           scope.metadataObj = scope.layer.get('md');
-          scope.metadataUuid = scope.metadataObj ? scope.metadataObj.getUuid() : null;
+          scope.metadataUuid = scope.metadataObj ? scope.metadataObj.uuid : null;
 
           var user = $rootScope.user;
 

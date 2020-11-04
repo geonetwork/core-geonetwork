@@ -62,6 +62,18 @@
                   };
 
                   /**
+                   * When the geomtry is updated, set this value in
+                   * scope.currentExtent and remove relation param if
+                   * geometry is null.
+                   */
+                  scope.$watch(scope.gnDrawBboxBtn, function(v) {
+                    if (!v) {
+                      delete scope.searchObj.params.relation;
+                    }
+                    scope.currentExtent = scope.$eval(scope.gnDrawBboxBtn);
+                  });
+
+                  /**
                    * Set active relation (intersect, within, etc..). Run search
                    * when changed.
                    */
@@ -174,7 +186,7 @@
               scope.$watch('interaction.active', function(v, o) {
                 if (!v && o) {
                   resetSpatialFilter();
-                  if (scope.searchObj && !!scope.searchObj.params.geometry) {
+                  if (!!scope.searchObj.params.geometry) {
                     scope.triggerSearch();
                   }
                 }

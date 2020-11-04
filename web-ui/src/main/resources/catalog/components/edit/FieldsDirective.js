@@ -237,7 +237,7 @@
                  if (records.metadata) {
                    var count = 0;
                    for (var i = 0; i < records.metadata.length; i++) {
-                     if (records.metadata[i]['geonet:info'].id !==
+                     if (records.metadata[i].id !==
                      gnCurrentEdit.id) {
                        count++;
                      }

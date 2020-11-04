@@ -88,9 +88,13 @@
         var allPromises = [];
 
         // Not needed in Sextant options.locales.push('custom');
+        options.locales.push('v4');
+        options.locales.push('../api/tools/i18n/db/translations');
 
         angular.forEach(options.locales, function(value, index) {
-          var langUrl = buildUrl(options.prefix, options.key,
+          var langUrl = value.startsWith('../') ?
+                          value :
+                          buildUrl(options.prefix, options.key,
               value, options.suffix);
 
           var deferredInst = $q.defer();
@@ -101,7 +105,8 @@
             url: langUrl,
             headers: {
               'Accept-Language': options.key
-            }
+            },
+            cache: true
           }).success(function(data) {
             deferredInst.resolve(data);
           }).error(function() {

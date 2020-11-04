@@ -5,10 +5,10 @@
 
       <div class="row gn-md-view-header">
 
-        <div class="col-md-8 gn-title" title="{{md.title || md.defaultTitle}}">
+        <div class="col-md-8 gn-title" title="{{md.resourceTitle}}">
           <i class="fa" data-ng-class="md.icon.cls"
              title="{{md.icon.title | translate}}"></i>
-          {{md.title || md.defaultTitle}}
+          {{md.resourceTitle}}
         </div>
 
         <div class="col-md-4 gn-links pull-right text-right">
@@ -24,11 +24,11 @@
             <ul class="dropdown-menu" role="menu">
               <li>
                 <!-- Force CERSAT record to use UI in english. -->
-                <a ng-show="md.standardName === 'ISO 19115-3:2018 - Remote Sensing'" ng-href="{{::gnUrl}}../eng/catalog.edit#/metadata/{{::md['geonet:info'].id}}" target="_blank">
+                <a ng-show="md.standardName === 'ISO 19115-3:2018 - Remote Sensing'" ng-href="{{::gnUrl}}../eng/catalog.edit#/metadata/{{::md.id}}" target="_blank">
                   <i class="fa fa-pencil"></i>
                   <span translate>edit</span>
                 </a>
-                <a ng-hide="md.standardName === 'ISO 19115-3:2018 - Remote Sensing'" ng-href="{{::gnUrl}}catalog.edit#/metadata/{{::md['geonet:info'].id}}" target="_blank">
+                <a ng-hide="md.standardName === 'ISO 19115-3:2018 - Remote Sensing'" ng-href="{{::gnUrl}}catalog.edit#/metadata/{{::md.id}}" target="_blank">
                   <i class="fa fa-pencil"></i>
                   <span translate>edit</span>
                 </a>

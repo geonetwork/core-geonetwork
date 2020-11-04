@@ -1,4 +1,5 @@
 {
+    "Administrator": "Administrateur",
     "all": "Tout sélectionner",
     "allInPage": "Tout sélectionner dans la page",
     "addToSelection": "Ajouter à ...",
@@ -44,6 +45,7 @@
     "_groupOwner": "Groupe",
     "_groupPublished": "Publier dans ce groupe",
     "_indexingError": "Erreur d'indexation",
+    "indexRecords": "Indexer les fiches",
     "_source": "Catalogue",
     "previousKeywords": "Précédent",
     "previousPage": "Page précédente",
@@ -336,7 +338,7 @@
     "duplicate": "Dupliquer",
     "createChild": "Créer un enfant",
     "privileges": "Privilèges",
-    "whoCanAccess": "Qui a accès ?",
+    "whoCanAccess": "Qui à accès ?",
     "actions": "Actions",
     "reset": "Réinitialiser",
     "stop": "Arrêter",
@@ -520,5 +522,7 @@
     "warnPublishDraft": "Lors de la publication d'une fiche ayant un statut brouillon, le statut passera à approuvé. Voulez-vous continuer ?",
     "cancelWorkingCopy": "Annuler la copie de travail",
     "deleteWorkingCopyRecordConfirm": "Voulez-vous vraiment supprimer la copie de travail ?",
-    "workingCopy": "Brouillon"
+    "workingCopy": "Brouillon",
+    "metadataValidated": "Fiches validées",
+    "wmtsLayerNoUsableMatrixSet": "La couche WMTS n'a pas été ajoutée. Cela peut être lié au fait qu'aucune des projections supportées par le service ne correspond à celles de l'application."
 }

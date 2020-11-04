@@ -509,7 +509,7 @@
             if (scope.member.get('md')) {
               var d =  scope.member.get('downloads');
               var downloadable =
-                scope.member.get('md')['geonet:info'].download == 'true';
+                scope.member.get('md').download == 'true';
               if(angular.isArray(d) && downloadable) {
                 scope.download = d[0];
               }
@@ -564,7 +564,7 @@
               }
 
               var processable =
-                scope.member.get('md')['geonet:info'].process == 'true';
+                scope.member.get('md').process == 'true';
               var p = scope.member.get('processes');
               if(angular.isArray(p) && processable) {
                 scope.process = p;

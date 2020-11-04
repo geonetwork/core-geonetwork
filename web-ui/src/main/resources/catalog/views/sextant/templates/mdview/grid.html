@@ -19,37 +19,44 @@
           <span class="fa" data-ng-class="::md.icon.cls"
                 title="{{::md.icon.title | translate}}"></span>
 
-          <h4 title="{{::md.title || md.defaultTitle}}">
+          <h4 title="{{::md.resourceTitle}}">
             <a gn-metadata-open="::md" sxt-truncate>
-              {{::(md.title || md.defaultTitle)}}</a>
+              {{::(md.resourceTitle)}}</a>
           </h4>
 
         </div>
 
 
-        <div class="gn-md-details" title="{{::(md.abstract || md.defaultAbstract) | striptags}}">
+        <div class="gn-md-details" title="{{::md.resourceAbstract | striptags}}">
 
             <!-- Thumbnail -->
             <div class="gn-md-thumbnail" ng-class="::{'gn-md-emptythumbnail': !md.thumbnail}">
-              <img gn-img-modal="md" class="gn-img-thumbnail" data-ng-src="{{::md.thumbnail}}" data-ng-if="::md.thumbnail"/>
+              <img gn-img-modal="md" class="gn-img-thumbnail"
+                   data-ng-src="{{::md.overview[0].url}}?size=140"
+                   data-ng-if="::md.overview[0]"/>
             </div>
 
             <div class="text-justify md-abstract ellipsis">
               <div>
-                <p>{{::(md.abstract || md.defaultAbstract) | striptags}}</p>
+                <p>{{::md.resourceAbstract | striptags}}</p>
               </div>
             </div>
 
-            <p data-ng-if="::md.getCredits()" class="gn-md-source" title="{{::md.getCredits()}}">
+            <p data-ng-if="::md.resourceCredit[0]"
+               class="gn-md-source"
+               title="{{::md.resourceCredit[0]}}">
               <!--<h5 data-translate="">contacts</h5>-->
-              Source: {{::md.getCredits() | characters : 50}}
+              Source: {{::md.resourceCredit[0] | characters : 50}}
             </p>
 
           </div>
 
 
       <div class="sx-md-footer">
-        <div class="btn-group pull-left md-admin" ng-if="::user.canEditRecord(md)" sxt-popover-dropdown placement="bottom" container=".gn-grid-item" className="sxt-popover-grid" >
+        <div class="btn-group pull-left md-admin"
+             ng-if="::user.canEditRecord(md)"
+             sxt-popover-dropdown placement="bottom"
+             container=".gn-grid-item" className="sxt-popover-grid" >
           <!--admin button-->
             <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{::'toAdmin' | translate}}">
               <span class="fa fa-gear"></span>
@@ -58,11 +65,11 @@
             <ul class="dropdown-menu small-dropdown" role="menu">
               <li>
                 <!-- Force CERSAT record to use UI in english. -->
-                <a ng-show="md.standardName === 'ISO 19115-3:2018 - Remote Sensing'" ng-href="{{::gnUrl}}../eng/catalog.edit#/metadata/{{::md['geonet:info'].id}}" target="_blank">
+                <a ng-show="md.standardName === 'ISO 19115-3:2018 - Remote Sensing'" ng-href="{{::gnUrl}}../eng/catalog.edit#/metadata/{{::md.id}}" target="_blank">
                   <i class="fa fa-pencil"></i>
                   <span translate>edit</span>
                 </a>
-                <a ng-hide="md.standardName === 'ISO 19115-3:2018 - Remote Sensing'" ng-href="{{::gnUrl}}catalog.edit#/metadata/{{::md['geonet:info'].id}}" target="_blank">
+                <a ng-hide="md.standardName === 'ISO 19115-3:2018 - Remote Sensing'" ng-href="{{::gnUrl}}catalog.edit#/metadata/{{::md.id}}" target="_blank">
                   <i class="fa fa-pencil"></i>
                   <span translate>edit</span>
                 </a>
@@ -186,7 +193,7 @@
         </div>
 
         <sxt-links-btn></sxt-links-btn>
-        <div gn-grid-related gn-grid-related-uuid="::md.getUuid()" class="gn-md-relations pull-right"
+        <div gn-grid-related gn-grid-related-uuid="::md.uuid" class="gn-md-relations pull-right"
              template="../../catalog/views/sextant/templates/grid-related.html"></div>
 
 

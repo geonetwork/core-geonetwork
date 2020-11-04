@@ -223,7 +223,6 @@
             scope.featureTypeName = ftName;
 
             appProfile = null;
-
             appProfilePromise = wfsFilterService.getApplicationProfile(scope.md, uuid,
               ftName,
               gnGlobalSettings.getNonProxifiedUrl(scope.wfsUrl ? scope.url : scope.mdUrl),

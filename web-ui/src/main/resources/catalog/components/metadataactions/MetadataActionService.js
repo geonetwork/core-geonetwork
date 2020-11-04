@@ -27,17 +27,9 @@
 
 
 
-
+  goog.require('gn_category');
   goog.require('gn_popup');
-
-
-
-
-
-
-goog.require('gn_category');
-goog.require('gn_popup');
-goog.require('gn_share');
+  goog.require('gn_share');
 
 
   var module = angular.module('gn_mdactions_service', [
@@ -155,7 +147,7 @@ goog.require('gn_share');
       this.metadataPrint = function(params, bucket, prefix) {
         var url = prefix ? prefix : '';
         if (angular.isObject(params) && params.sortBy) {
-          url += gnHttp.getService('mdGetPDFSelection');
+          url = '../api/records/pdf';
           url += '?sortBy=' + params.sortBy;
           if (params.sortOrder) {
             url += '&sortOrder=' + params.sortOrder;
@@ -205,7 +197,7 @@ goog.require('gn_share');
        */
       this.metadataMEF = function(uuid, bucket, approved) {
 
-        var url = gnHttp.getService('mdGetMEF') + '?version=2';
+        var url = printConfigUrlPrefix + '../api/records/zip?';
         url += angular.isDefined(uuid) ?
             '&uuid=' + uuid : '&format=full';
         url += angular.isDefined(bucket) ?
@@ -217,14 +209,35 @@ goog.require('gn_share');
       };
 
       this.exportCSV = function(bucket) {
-        window.open(gnHttp.getService('csv') +
+        window.open(printConfigUrlPrefix + '../api/records/csv' +
             '?bucket=' + bucket, windowName, windowOption);
+      };
+      this.validateMdLinks = function(bucket) {
+        $rootScope.$broadcast('operationOnSelectionStart');
+        return gnHttp.callService('../api/records/links?' +
+          'bucket=' + bucket, null, {
+          method: 'POST'
+        }).then(function(data) {
+          $rootScope.processReport = data.data;
+
+          // A report is returned
+          gnUtilityService.openModal({
+            title: translations.metadataLinksValidated,
+            content: '<div gn-batch-report="processReport"></div>',
+            className: 'gn-validation-popup',
+            onCloseCallback: function () {
+              $rootScope.$broadcast('operationOnSelectionStop');
+              $rootScope.$broadcast('search');
+              $rootScope.processReport = null;
+            }
+          }, $rootScope, 'metadataLinksValidated');
+        });
       };
       this.validateMd = function(md, bucket) {
 
         $rootScope.$broadcast('operationOnSelectionStart');
         if (md) {
-          return gnMetadataManager.validate(md.getId()).then(function() {
+          return gnMetadataManager.validate(md.id).then(function() {
             $rootScope.$broadcast('operationOnSelectionStop');
             $rootScope.$broadcast('search');
           });
@@ -251,35 +264,42 @@ goog.require('gn_share');
       };
 
       this.deleteMd = function(md, bucket) {
-        $rootScope.$broadcast('operationOnSelectionStart');
+        var deferred = $q.defer();
         if (md) {
-          return gnMetadataManager.remove(md.getId()).then(function() {
+          gnMetadataManager.remove(md.id).then(function(data) {
+            $timeout(function() {
+              $rootScope.$broadcast('search');
+            }, 5000);
+            deferred.resolve(data);
+          }, function(data) {
+            deferred.reject(data);
+          });
+        } else {
+          $rootScope.$broadcast('operationOnSelectionStart');
+          $http.delete('../api/records?' +
+              'bucket=' + bucket).then(function(data) {
             $rootScope.$broadcast('mdSelectNone');
             $rootScope.$broadcast('operationOnSelectionStop');
-            // TODO: Here we may introduce a delay to not display the deleted
-            // record in results.
-            // https://github.com/geonetwork/core-geonetwork/issues/759
             $rootScope.$broadcast('search');
+            $timeout(function() {
+              $rootScope.$broadcast('search');
+            }, 5000);
+            deferred.resolve(data);
+          }, function(data) {
+            deferred.reject(data);
           });
         }
-        else {
-          return $http.delete('../api/records?' +
-              'bucket=' + bucket).then(function() {
-            $rootScope.$broadcast('mdSelectNone');
-            $rootScope.$broadcast('operationOnSelectionStop');
-            $rootScope.$broadcast('search');
-          });
-        }
+        return deferred.promise;
       };
 
 
       this.openPrivilegesPanel = function(md, scope) {
-        // specific Sextant
+        // SEXTANT SPECIFIC
         openPopup({
         // gnUtilityService.openModal({
           title: $translate.instant('privileges') + ' - ' +
-              (md.title || md.defaultTitle),
-          content: '<div gn-share="' + md.getId() + '"></div>',
+              md.resourceTitle,
+          content: '<div gn-share="' + md.id + '"></div>',
           className: 'gn-privileges-popup'
         }, scope, 'PrivilegesUpdated');
       };
@@ -296,7 +316,7 @@ goog.require('gn_share');
       };
 
       this.startWorkflow = function(md, scope) {
-        return $http.put('../api/records/' + md.getId() +
+        return $http.put('../api/records/' + md.id +
             '/status', {status: 1, changeMessage: 'Enable workflow'}).then(
             function(response) {
               gnMetadataManager.updateMdObj(md);
@@ -338,7 +358,7 @@ goog.require('gn_share');
       };
 
       this.openTransferOwnership = function(md, bucket, scope) {
-        var uuid = md ? md.getUuid() : '';
+        var uuid = md ? md.uuid : '';
         var ownerId = md ? md.getOwnerId() : '';
         var groupOwner = md ? md.getGroupOwner() : '';
         gnUtilityService.openModal({
@@ -354,7 +374,7 @@ goog.require('gn_share');
        * @param {string} md
        */
       this.duplicate = function(md) {
-        duplicateMetadata(md.getId(), false);
+        duplicateMetadata(md.id, false);
       };
 
       /**
@@ -362,7 +382,7 @@ goog.require('gn_share');
        * @param {string} md
        */
       this.createChild = function(md) {
-        duplicateMetadata(md.getId(), true);
+        duplicateMetadata(md.id, true);
       };
 
       /**
@@ -393,7 +413,7 @@ goog.require('gn_share');
         var onOrOff = flag === 'on';
 
         return gnShareService.publish(
-            angular.isDefined(md) ? md.getId() : undefined,
+            angular.isDefined(md) ? md.id : undefined,
             angular.isDefined(md) ? undefined : bucket,
             onOrOff, $rootScope.user)
             .then(
@@ -485,8 +505,8 @@ goog.require('gn_share');
        */
       this.getPermalink = function(md) {
         var url = $location.absUrl().split('#')[0] + '#/metadata/' +
-            md.getUuid();
-        gnUtilityService.getPermalink(md.title || md.defaultTitle, url);
+            md.uuid;
+        gnUtilityService.getPermalink(md.resourceTitle, url);
       };
 
       /**

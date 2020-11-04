@@ -90,24 +90,20 @@
           <i class="fa fa-user"></i>&nbsp;<span translate>transferOwnership</span>
         </a>
       </li>
-      <li  data-ng-show="!excludePattern.test('index')"
-           data-ng-if="user.isUserAdminOrMore()">
-        <a href="" data-ng-click="mdService.indexSelection(searchResults.selectionBucket)">
-          <i class="fa fa-cogs"></i>&nbsp;<span translate>index</span>
-        </a>
-      </li>
+
       <li class="divider" data-ng-if="user.isConnected()"></li>
-      <li  data-ng-show="!excludePattern.test('updateCategories')"
-           data-ng-if="user.isEditorOrMore()">
-        <a href="" data-ng-click="mdService.openCategoriesBatchPanel(searchResults.selectionBucket, getCatScope())">
-          <i class="fa fa-tags"></i>&nbsp;<span translate>updateCategories</span>
-        </a>
-      </li>
       <li  data-ng-show="!excludePattern.test('validate')"
            data-ng-if="user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.validateMd(undefined, searchResults.selectionBucket)"
            data-gn-confirm-click="{{'validateSelectedRecordConfirm' | translate:searchResults}}">
           <i class="fa fa-check"></i>&nbsp;<span translate>validate</span>
+        </a>
+      </li>
+      <li  data-ng-show="!excludePattern.test('validate')"
+           data-ng-if="user.isEditorOrMore()">
+        <a href="" data-ng-click="mdService.validateMdLinks(undefined, searchResults.selectionBucket)"
+           data-gn-confirm-click="{{'validateLinksSelectedRecordConfirm' | translate:searchResults}}">
+          <i class="fa fa-link"></i>&nbsp;<span translate>validateLinks</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('validate')"
@@ -117,6 +113,14 @@
           <i class="fa fa-check"></i>&nbsp;<span translate>validateInspire</span>
         </a>
       </li>
+
+      <li class="divider" data-ng-if="user.isConnected()"></li>
+      <li  data-ng-show="!excludePattern.test('updateCategories')"
+           data-ng-if="user.isEditorOrMore()">
+        <a href="" data-ng-click="mdService.openCategoriesBatchPanel(searchResults.selectionBucket, getCatScope())">
+          <i class="fa fa-tags"></i>&nbsp;<span translate>updateCategories</span>
+        </a>
+      </li>
       <li  data-ng-show="!excludePattern.test('delete')"
            data-ng-if="user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.deleteMd(undefined, searchResults.selectionBucket)"
@@ -124,11 +128,17 @@
           <i class="fa fa-times"></i>&nbsp;<span translate>delete</span>
         </a>
       </li>
+      <li  data-ng-show="!excludePattern.test('index')"
+           data-ng-if="user.isUserAdminOrMore()">
+        <a href="" data-ng-click="mdService.indexSelection(searchResults.selectionBucket)">
+          <i class="fa fa-cogs"></i>&nbsp;<span translate>indexRecords</span>
+        </a>
+      </li>
       <li class="divider" data-ng-if="user.isConnected()"></li>
       <li ng-if="user.isEditorOrMore()">
         <a href=""
            target="_blank"
-           data-ng-href="../api/0.1/processes/report-checkpoint.csv?appendFirst=true&bucket=e101">
+           data-ng-href="../api/processes/report-checkpoint.csv?appendFirst=true&bucket=e101">
         <i class="fa fa-fw"></i>&nbsp;
           <span translate>dqReportCheckpoint</span>
         </a>

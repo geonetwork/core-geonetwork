@@ -16,13 +16,13 @@
       </a>
     </li>-->
     <li>
-      <a data-ng-href="#/metadata/{{md.getUuid() | encodeURIComponent}}">
+      <a data-ng-href="#/metadata/{{md.uuid | encodeURIComponent}}">
         <i class="fa fa-file-o"/>&nbsp;
         <span data-translate="">default</span>
       </a>
     </li>
     <li>
-      <a data-ng-href="#/metadata/{{md.getUuid() | encodeURIComponent}}/formatters/xsl-view?root=div&view=advanced&header=false&related=">
+      <a data-ng-href="#/metadata/{{md.uuid | encodeURIComponent}}/formatters/xsl-view?root=div&view=advanced&header=false&related=">
         <i class="fa fa-file-text-o"/>&nbsp;
         <span data-translate="">full</span>
       </a>
@@ -30,13 +30,13 @@
     <li role="separator" class="divider"></li>
     <li role="presentation" class="dropdown-header" data-translate>export</li>
     <li>
-      <a data-ng-href="{{gnUrl}}../api/records/{{md.getUuid() | encodeURIComponent}}/formatters/xml" target="_blank">
+      <a data-ng-href="{{gnUrl}}../api/records/{{md.uuid | encodeURIComponent}}/formatters/xml" target="_blank">
         <i class="fa fa-file-code-o"></i>&nbsp;
         <span data-translate="">sxtExportXML</span>
       </a>
     </li>
     <li>
-      <a data-ng-href="{{gnUrl}}../api/records/{{md.getUuid() | encodeURIComponent}}/formatters/xsl-view?view=advanced&output=pdf" target="_blank">
+      <a data-ng-href="{{gnUrl}}../api/records/{{md.uuid | encodeURIComponent}}/formatters/xsl-view?view=advanced&output=pdf" target="_blank">
         <i class="fa fa-file-pdf-o"></i>&nbsp;
         <span data-translate="">sxtExportPDF</span>
       </a>
