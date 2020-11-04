@@ -40,9 +40,10 @@ UPDATE metadata
     WHERE data LIKE '%thesaurus.download?ref=%';
 
 UPDATE Settings SET value='4.0.0' WHERE name='system/platform/version';
-UPDATE Settings SET value='alpha.2' WHERE name='system/platform/subVersion';
+UPDATE Settings SET value='0' WHERE name='system/platform/subVersion';
 
-UPDATE settings SET value = 'default' WHERE name = 'system/ui/defaultView';
+DELETE FROM settings_ui;
+
 UPDATE settings SET value = '1' WHERE name = 'system/threadedindexing/maxthreads';
 DELETE FROM settings_ui;
 
