@@ -65,8 +65,8 @@
 
         // data precision is deduced from current zoom view
         var geohashLength = 2;
-        if (zoom > 3) { geohashLength = 3; }
-        if (zoom > 5) { geohashLength = 4; }
+        if (zoom > 3.3) { geohashLength = 3; }
+        if (zoom > 5.6) { geohashLength = 4; }
 
         // viewbox filter
         var topLeft = ol.extent.getTopLeft(extent);
@@ -85,7 +85,10 @@
           query: {
             bool: {
               must: [{
-                match_all: {}
+                query_string: {
+                  query: params || '*:*'
+                }
+
               }, {
                 match_phrase: {
                   featureTypeId: {
@@ -180,7 +183,8 @@
           [min[0], min[1]],
           [max[0], min[1]],
           [max[0], max[1]],
-          [min[0], max[1]]
+          [min[0], max[1]],
+          [min[0], min[1]]
         ]], 'XY');
       };
 
