@@ -14,7 +14,7 @@
       <span class="fa fa-times text-danger delete-icon"></span>
       <strong class="text-no-wrap text-uppercase" translate>{{filter.key}}</strong>
       <div class="flex-spacer"></div>
-      <span translate>{{filter.value | translatearray}}</span>
+      <span translate>{{filter.value | htmlToPlaintext | translatearray}}</span>
     </a>
   </div>
 </div>
