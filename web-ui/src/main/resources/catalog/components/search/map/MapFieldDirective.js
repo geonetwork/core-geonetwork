@@ -25,10 +25,10 @@
 
   goog.provide('gn_map_field_directive');
 
-  goog.require('gn_map_field_service');
+  goog.require('gn_geometry_service');
 
   angular.module('gn_map_field_directive', [
-    'gn_map_field_service'
+    'gn_geometry_service'
   ]).directive('gnMapField', [
     'gnMap',
     function (gnMap) {
@@ -98,9 +98,9 @@
       '$parse',
       '$translate',
       'gnSearchSettings',
-      'gnMapFieldService',
+      'gnGeometryService',
       'gnMap',
-      function (olDecorateInteraction, $parse, $translate, gnSearchSettings, gnMapFieldService) {
+      function (olDecorateInteraction, $parse, $translate, gnSearchSettings, gnGeometryService) {
         return {
           restrict: 'A',
           scope: true,
@@ -142,7 +142,7 @@
 
               // Transform extent to WGS 1984 (EPSG:4326) if needed
               var lonlatFeat, writer, wkt;
-              lonlatFeat = gnMapFieldService.toLonLat(feature, proj);
+              lonlatFeat = gnGeometryService.featureToLonLat(feature, proj);
 
               // Write the extent as 4326 WKT polygon
               writer = new ol.format.WKT();
