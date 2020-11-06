@@ -591,8 +591,8 @@
             translation = fieldValues[i]['lang' + gnLangs.current]
             if (translation) {
               translatedValues.push(translation);
-            } else if (fieldValues[i][fieldName].default) {
-              translatedValues.push(fieldValues[i][fieldName].default);
+            } else if (fieldValues[i].default) {
+              translatedValues.push(fieldValues[i].default);
             }
           });
           return translatedValues;
