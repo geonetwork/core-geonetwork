@@ -521,7 +521,7 @@ public class EsSearchManager implements ISearchManager {
             .add("MD_ConstraintsUseLimitationObject")
             .add("resourceType")
             .add("type")
-            .add("resourceDates")
+            .add("resourceDate")
             .add("link")
             .add("crsDetails")
             .add("format")
