@@ -41,6 +41,7 @@ import org.fao.geonet.utils.XPath;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -117,6 +118,9 @@ public class MetadataExtentApi {
 
     @Autowired
     SettingManager settingManager;
+
+    @Value("${metadata.extentApi.disableFullUrlBackgroundMapServices:true}")
+    private boolean disableFullUrlBackgroundMapServices;
 
     @ApiOperation(
         value = "Get all record extents as image",
@@ -270,6 +274,11 @@ public class MetadataExtentApi {
 
         if (width == null && height == null) {
             throw new BadParameterEx(WIDTH_PARAM, WIDTH_AND_HEIGHT_BOTH_MISSING_MESSAGE);
+        }
+
+        if ((background != null) && (background.startsWith("http")) && (disableFullUrlBackgroundMapServices)) {
+           throw new BadParameterEx(BACKGROUND_PARAM, "Background layers from provided are not supported, " +
+                "use a preconfigured background layers map service.");
         }
 
         String regionId;
