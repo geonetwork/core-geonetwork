@@ -95,19 +95,27 @@
         }).then(function (r) {
           if (type === 'ldRegistry' && r.data['@graph']) {
             angular.forEach(r.data['@graph'], function (value, key) {
-              var label = value['rdfs:label'];
-              itemClass.push({
-                key: value['@id'],
-                label: angular.isArray(label) ? label[0]['@value']
-                  : (angular.isObject(label) ? label['@value'] : label)
-              });
+              var labels = value['rdfs:label'],
+                descriptions = value['dct:description'],
+                label = angular.isArray(labels) ? labels[0]['@value']
+                  : (angular.isObject(labels) ? labels['@value'] : labels),
+                description = angular.isArray(descriptions) ? descriptions[0]['@value']
+                  : (angular.isObject(descriptions) ? descriptions['@value'] : descriptions);
+              if (label !== 'root') {
+                itemClass.push({
+                  key: value['@id'],
+                  label: label,
+                  description: description
+                });
+              }
             });
             deferred.resolve(itemClass);
           } else if (type === 're3gistry' && r.data.registry) {
             angular.forEach(r.data.registry.registers, function (value, key) {
               itemClass.push({
                 key: value.register.id,
-                label: value.register.label.text})
+                label: value.register.label.text,
+                description: ''})
             });
             deferred.resolve(itemClass);
           } else {

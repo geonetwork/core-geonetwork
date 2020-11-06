@@ -44,20 +44,20 @@
 
   <xsl:variable name="registryBase"
                 select="//(skos:ConceptScheme
-                          |reg:RegisterItem[reg:itemClass/@rdf:resource = 'http://www.w3.org/2004/02/skos/core#ConceptScheme'])"/>
+                          |reg:RegisterItem[reg:itemClass/@rdf:resource = ('http://www.w3.org/2004/02/skos/core#ConceptScheme', 'http://purl.org/linked-data/registry#Register')])"/>
 
   <xsl:variable name="thesaurusId"
-                select="$registryBase/@rdf:about"/>
+                select="$registryBase[1]/@rdf:about"/>
 
   <xsl:variable name="thesaurusDate"
-                select="$registryBase/dcterms:modified"/>
+                select="$registryBase[1]/dcterms:modified"/>
 
   <xsl:template match="/documents">
 
     <xsl:variable name="concepts">
       <xsl:apply-templates mode="concept"
                            select="*//(skos:Concept
-                                      |reg:RegisterItem[reg:itemClass/@rdf:resource = 'http://www.w3.org/2004/02/skos/core#Concept'])"/>
+                           |*[rdf:type/@rdf:resource='http://www.w3.org/2004/02/skos/core#Concept'])"/>
     </xsl:variable>
 
     <rdf:RDF xmlns:skos="http://www.w3.org/2004/02/skos/core#"
@@ -66,8 +66,8 @@
              xmlns:dcterms="http://purl.org/dc/terms/">
       <skos:ConceptScheme rdf:about="{$thesaurusId}">
         <xsl:apply-templates mode="concept-scheme"
-                           select="$registryBase/rdfs:label
-                                   |$registryBase/dcterms:description"/>
+                           select="$registryBase[1]/rdfs:label
+                                   |$registryBase[1]/dcterms:description"/>
 
 
         <dcterms:issued><xsl:value-of select="if ($thesaurusDate != '') then $thesaurusDate else $now"/></dcterms:issued>
@@ -106,13 +106,16 @@
 
 
   <xsl:template mode="concept"
-                match="skos:Concept|reg:RegisterItem">
+                match="skos:Concept
+                      |*[rdf:type/@rdf:resource='http://www.w3.org/2004/02/skos/core#Concept']">
 
     <xsl:variable name="conceptId"
                   select="@rdf:about"/>
 
     <skos:Concept rdf:about="{$conceptId}">
-      <xsl:if test="local-name() = 'RegisterItem' or local-name(..) = 'hasTopConcept'">
+      <xsl:if test="local-name() = 'RegisterItem'
+                    or local-name(..) = 'hasTopConcept'
+                    or skos:topConceptOf">
         <skos:inScheme rdf:resource="{$thesaurusId}"/>
       </xsl:if>
       <xsl:choose>
@@ -137,6 +140,7 @@
       <xsl:for-each select="distinct-values(
                             skos:broader/skos:Concept/@rdf:about
                             |skos:broader/@rdf:resource
+                            |skos:broader/*[rdf:type/@rdf:resource='http://www.w3.org/2004/02/skos/core#Concept']/@rdf:about
                             |//skos:broader[
                                 ../name() = 'skos:Concept'
                                 and /@rdf:about = $conceptId]/(@rdf:resource|skos:Concept/@rdf:about)
@@ -148,6 +152,7 @@
       <xsl:for-each select="distinct-values(
                             skos:narrower/skos:Concept/@rdf:about
                             |skos:narrower/@rdf:resource
+                            |skos:narrower/*[rdf:type/@rdf:resource='http://www.w3.org/2004/02/skos/core#Concept']/@rdf:about
                             |//skos:narrower[
                                 ../name() = 'skos:Concept'
                                 and /@rdf:about = $conceptId]/(@rdf:resource|skos:Concept/@rdf:about)

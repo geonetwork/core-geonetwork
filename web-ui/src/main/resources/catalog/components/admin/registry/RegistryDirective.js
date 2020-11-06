@@ -61,10 +61,6 @@
             {
               name: 'BRGM',
               url: 'https://data.geoscience.fr/ncl/'
-            },
-            {
-              name: 'CSIRO',
-              url: 'http://registry.it.csiro.au/'
             }];
 
           scope.setDefault = function(url) {
