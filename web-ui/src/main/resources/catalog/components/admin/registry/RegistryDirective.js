@@ -56,7 +56,7 @@
           scope.registryType = null;
           scope.registries = [{
               name: 'INSPIRE',
-              url: 'https://inspire.ec.europa.eu'
+              url: 'https://inspire.ec.europa.eu/registry'
             },
             {
               name: 'BRGM',

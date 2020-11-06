@@ -83,9 +83,10 @@
         var itemClass = [];
 
         var deferred = $q.defer(),
+          urlToken = url.split('/'),
           urlForCollection =
             (type === 'ldRegistry') ? url + '?_format=jsonld'
-              : url + '/registry/registry.' + lang + responseFormat;
+              : url +  '/' + urlToken[urlToken.length - 1] + '.' + lang + responseFormat;
 
         $http({
           url: urlForCollection,
