@@ -85,7 +85,9 @@
     <property name="serviceProperties" ref="serviceProperties"/>
     <property name="authenticationDetailsSource">
       <bean
-        class="org.springframework.security.cas.web.authentication.ServiceAuthenticationDetailsSource"/>
+        class="org.springframework.security.cas.web.authentication.ServiceAuthenticationDetailsSource">
+        <constructor-arg name="serviceProperties" ref="serviceProperties"/>
+      </bean>
     </property>
   </bean>
 
