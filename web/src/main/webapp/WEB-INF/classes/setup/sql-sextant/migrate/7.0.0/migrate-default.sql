@@ -11,8 +11,7 @@ ALTER TABLE schematrondes ALTER COLUMN label TYPE varchar(255);
 -- Increase the length of Validation type (where the schematron file name is stored)
 ALTER TABLE Validation ALTER COLUMN valType TYPE varchar(128);
 
--- New setting for server timezone
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/timeZone', '', 0, 260, 'n');
+
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/users/identicon', 'gravatar:mp', 0, 9110, 'n');
 
 ALTER TABLE usersearch ALTER COLUMN url TYPE text;
