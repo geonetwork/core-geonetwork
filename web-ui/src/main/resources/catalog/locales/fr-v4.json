@@ -28,7 +28,7 @@
   "groupPublished": "Publié dans ce groupe",
   "indexingError": "Erreur d'indexation",
   "source": "Catalogue",
-  "ui-sortBy-help": "Define default sort by option. eg. 'relevance' to use the computed search score (see score configuration) or 'dateStamp#desc' to return last updated record first.",
+  "ui-sortBy-help": "Définir l'option de tri. eg. 'relevance' pour utiliser la configuration du score ci-dessus, ou bien 'dateStamp#desc' pour les dernières fiches mises à jour.",
   "sortBy-dateStamp": "dernières mises à jour",
   "sortBy-createDate": "nouvelles fiches",
   "sortBy-resourceTitleObject.default.keyword": "titre",
@@ -104,5 +104,18 @@
   "searchBadRequest": "La recherche a échouée. Pour plus d'information. Vérifier la console.",
   "searchInvalidResponse": "La réponse du service de recherche est invalide. Vérifier la console.",
   "exactMatch": "Correspondance exacte",
-  "exactMatch-help": "Correspondance exacte signifie que des \\\"' sont ajoutés autour des termes recherchés."
+  "exactMatch-help": "Correspondance exacte signifie que des \\\"' sont ajoutés autour des termes recherchés.",
+  "wfsIndexingEndDate": "Dernière exécution",
+  "wfsIndexingScheduled": "Planifié ?",
+  "wfsIndexingNewSchedule": "Ajouter un moissoneur",
+  "wfsIndexingCreateSchedule": "Enregistrer",
+  "wfsIndexingUpdateSchedule": "Mise à jour de",
+  "wfsIndexingEditSchedule": "Planification",
+  "wfsIndexingTrigger": "Démarrer",
+  "wfsDeleteWfsIndexing": "Supprimer",
+  "wfsDeleteWfsIndexingSuccess": "Tâche supprimée.",
+  "wfsDeleteWfsIndexingError": "Erreur lors de la suppression.",
+  "wfsIndexingTriggerSuccess": "Tâche démarrée.",
+  "wfsIndexingTriggerError": "Erreur lors du démarrage de la tâche.",
+  "wfsHarvesterActions": "Actions"
 }
