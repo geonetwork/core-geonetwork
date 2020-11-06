@@ -268,8 +268,8 @@
     </entry>
     <entry key="4.0.0">
       <list>
-        <value>java:v4000.UpdateAllSequenceValueToMax</value>
-        <value>WEB-INF/classes/setup/sql/migrate/v4000/migrate-</value>
+        <value>java:v400.UpdateAllSequenceValueToMax</value>
+        <value>WEB-INF/classes/setup/sql/migrate/v400/migrate-</value>
       </list>
     </entry>
     <entry key="4.0.1">

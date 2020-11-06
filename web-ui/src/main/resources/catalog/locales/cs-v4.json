@@ -104,5 +104,18 @@
   "searchBadRequest": "Dotaz vrátil chybu. Podrobnosti najdete na konzole.",
   "searchInvalidResponse": "Dotaz vrátil neplatnou odpověď. Podrobnosti najdete na konzole.",
   "exactMatch": "Přesná shoda",
-  "exactMatch-help": "Přesná shoda znamená, že k hledaným výrazům je přidán znak  '\"' ."
+  "exactMatch-help": "Přesná shoda znamená, že k hledaným výrazům je přidán znak  '\"' .",
+  "wfsIndexingEndDate": "Last indexing date",
+  "wfsIndexingScheduled": "Scheduled?",
+  "wfsIndexingNewSchedule": "Add WFS harvester",
+  "wfsIndexingCreateSchedule": "Uložit",
+  "wfsIndexingUpdateSchedule": "Aktualizovat",
+  "wfsIndexingEditSchedule": "Harmonogram",
+  "wfsIndexingTrigger": "Start",
+  "wfsDeleteWfsIndexing": "Smazat",
+  "wfsDeleteWfsIndexingSuccess": "Harvesting task removed.",
+  "wfsDeleteWfsIndexingError": "An error occurred while removing the task.",
+  "wfsIndexingTriggerSuccess": "Harvesting task started.",
+  "wfsIndexingTriggerError": "An error occurred while starting the task.",
+  "wfsHarvesterActions": "Akce"
 }

@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.PasswordUtil;
+import org.fao.geonet.util.XslUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -97,13 +98,13 @@ public class PasswordApi {
         if (user == null) {
             return new ResponseEntity<>(String.format(
                 messages.getString("user_not_found"),
-                username
+                XslUtil.encodeForJavaScript(username)
             ), HttpStatus.PRECONDITION_FAILED);
         }
         if (LDAPConstants.LDAP_FLAG.equals(user.getSecurity().getAuthType())) {
             return new ResponseEntity<>(String.format(
                 messages.getString("user_from_ldap_cant_get_password"),
-                username
+                XslUtil.encodeForJavaScript(username)
             ), HttpStatus.PRECONDITION_FAILED);
         }
 
@@ -119,7 +120,7 @@ public class PasswordApi {
         if (!passwordMatches) {
             return new ResponseEntity<>(String.format(
                 messages.getString("user_password_invalid_changekey"),
-                passwordAndChangeKey.getChangeKey(), username
+                passwordAndChangeKey.getChangeKey(), XslUtil.encodeForJavaScript(username)
             ), HttpStatus.PRECONDITION_FAILED);
         }
 
@@ -147,7 +148,7 @@ public class PasswordApi {
         }
         return new ResponseEntity<>(String.format(
             messages.getString("user_password_changed"),
-            username
+            XslUtil.encodeForJavaScript(username)
         ), HttpStatus.CREATED);
     }
 
@@ -179,13 +180,13 @@ public class PasswordApi {
         if (user == null) {
             return new ResponseEntity<>(String.format(
                 messages.getString("user_not_found"),
-                username
+                XslUtil.encodeForJavaScript(username)
             ), HttpStatus.PRECONDITION_FAILED);
         }
         if (LDAPConstants.LDAP_FLAG.equals(user.getSecurity().getAuthType())) {
             return new ResponseEntity<>(String.format(
                 messages.getString("user_from_ldap_cant_get_password"),
-                username
+                XslUtil.encodeForJavaScript(username)
             ), HttpStatus.PRECONDITION_FAILED);
         }
 
@@ -193,7 +194,7 @@ public class PasswordApi {
         if (StringUtils.isEmpty(email)) {
             return new ResponseEntity<>(String.format(
                 messages.getString("user_has_no_email"),
-                username
+                XslUtil.encodeForJavaScript(username)
             ), HttpStatus.PRECONDITION_FAILED);
         }
 
@@ -231,7 +232,7 @@ public class PasswordApi {
         }
         return new ResponseEntity<>(String.format(
             messages.getString("user_password_sent"),
-            username, email
+            XslUtil.encodeForJavaScript(username), email
         ), HttpStatus.CREATED);
     }
 }
