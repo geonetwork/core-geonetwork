@@ -33,6 +33,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
@@ -90,6 +91,9 @@ public class GetMap {
 
     @Autowired
     private ServiceManager serviceManager;
+
+    @Value("${metadata.extentApi.disableFullUrlBackgroundMapServices:true}")
+    private boolean disableFullUrlBackgroundMapServices;
 
     public static AffineTransform worldToScreenTransform(Envelope mapExtent, Dimension screenSize) {
         return MapRenderer.worldToScreenTransform(mapExtent, screenSize);
@@ -156,6 +160,11 @@ public class GetMap {
         }
         if (id != null && geomParam != null) {
             throw new BadParameterEx(Params.ID, "Only one of " + GEOM_PARAM + " or " + Params.ID + " is permitted");
+        }
+
+        if ((background != null) && (background.startsWith("http")) && (disableFullUrlBackgroundMapServices)) {
+            throw new BadParameterEx(BACKGROUND_PARAM, "Background layers from provided are not supported, " +
+                "use a preconfigured background layers map service.");
         }
 
         if (width != null && height != null) {

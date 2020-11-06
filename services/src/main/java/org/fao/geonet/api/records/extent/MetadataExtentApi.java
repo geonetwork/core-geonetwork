@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -99,6 +100,9 @@ public class MetadataExtentApi {
 
     @Autowired
     private ServiceManager serviceManager;
+
+    @Value("${metadata.extentApi.disableFullUrlBackgroundMapServices:true}")
+    private boolean disableFullUrlBackgroundMapServices;
 
     public static AffineTransform worldToScreenTransform(Envelope mapExtent, Dimension screenSize) {
         return MapRenderer.worldToScreenTransform(mapExtent, screenSize);
@@ -164,6 +168,11 @@ public class MetadataExtentApi {
             throw new BadParameterEx(WIDTH_PARAM, "One of " + WIDTH_PARAM + " or " + HEIGHT_PARAM
                 + " parameters must be included in the request");
 
+        }
+
+        if ((background != null) && (background.startsWith("http")) && (disableFullUrlBackgroundMapServices)) {
+            throw new BadParameterEx(BACKGROUND_PARAM, "Background layers from provided are not supported, " +
+                "use a preconfigured background layers map service.");
         }
 
         String outputFileName = metadataUuid + "-extent.png";
