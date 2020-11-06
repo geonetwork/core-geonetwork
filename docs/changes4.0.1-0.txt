@@ -1,0 +1,94 @@
+================================================================================
+===
+=== GeoNetwork 4.0.1: List of changes
+===
+================================================================================
+- Record view / Multilingual field without default value
+- Merge pull request #5170 from fxprunayre/401-dbmig-folder
+- Home / Latest news = Last created records
+- ISO19115-3 / ISO19139 conversion / CI_Responsibility with multiple individuals was creating invalid record
+- Merge remote-tracking branch 'origin/4.0.x' into 401-dbmig-folder
+- Updates from transifex.
+- Merge remote-tracking branch 'origin/master' into 401-dbmig-folder
+- Index / Array field / Fix name for dates
+- Editor / Fix category selector
+- DB migration / Fix 400 folder name.
+- Configuration option to retrict the map services supported in map extent API's (region.getmap and {metadatauuid}/extents.png) the usage of non-predefined map services (#5166)
+- Encode username value in http error responses for password recovery  to prevent potential XSS (#5164)
+- Transifex update.
+- Harvester / OGC WxS / Fix nested CharacterString.
+- Global exception controller should  not return body content if requested text/html. Fixes #5042
+- Xslt formatter - resolve section names with meteadata element names using labels.xml
+- Formatter / JSON-LD / Avoid error on multiple hierarchyLevel (#5109)
+- ISO19139 / Codelist / Hierarchy level / Don't use radio mode
+- API / Language / Delete / Add missing source translation table (#5111)
+- add some common languages to prevent 404's (#5093)
+- missing comma in array in json-ld (#5088)
+- Allow the use of ThesaurusService in search page (#5086)
+- Index / Set default index properly if custom name is used.
+- WFS Indexing / Heat map service
+- Fix typo, related to #5111 (#5163)
+- Add missing migration script for older versions. (#5085)
+- Update sitemap.xsl (#5148)
+- Move value to config.properties file
+- Fix region map url for WMS service to use https, fixes #2951
+- prevent display of html or {...} in filtertags (#5104)
+- WRO4J / Fix warning
+- WFS Indexing / Update test - JPA, Autowire required bean.
+- WFS Indexing / Save strategy with job properties.
+- WFS Indexing / Do not log an error on report UPDATE which is fine.
+- WFS Indexing / Parameters may be fine tuned using applicationProfile. Restore retreival of applicationProfile ... / Missing changes.
+- WFS Indexing / Parameters may be fine tuned using applicationProfile. Restore retreival of applicationProfile ...
+- Harvested records / Editable depending on config.
+- WFS Indexing / Add custom WFSClient to use GFI target namespace to define the strategy.
+- WFS Indexing / Dashboard to start/stop/schedule harvesting.
+- WFS indexing / Fix delete and backport changes on date type.
+- WFS indexing / Remove version number from API path. Use a promise for appProfile if no linksTree field. Fix non existing constant.
+- WFS indexing / Fix UI init.
+- Wro4j / remove remaining ref to closure lib
+- Backports of WFS filter & indexing (admin) from Sextant
+- Utility / Fix thumbnail modal not working for records using draft mode
+- Wro4j / reorder bs-table extensions to avoid CSV export not showing in tables
+- Print / handle legend URLs with accented chars in it
+- Print / handle XYZ layers with a different path format (e.g. z/y/x)
+- Print / remove reference to MapQuest
+- Editor / improve add directory entry modal layout
+- Map / handle layer names with multiple ':'
+- Map / prevent adding several times the same layer when not specifying style
+- Map / Allow adding a WMTS layer from cap without OperationsMetadata in it
+- Md View / prepend current URL path for MD links in search results
+- IndexRequest / fix array unique filter in index request builder
+- Draw / fix text input in style form
+- Draw / refactor to allow modifying text and simplify logic
+- Draw / make the draw options layout more compact
+- Draw / Allow saving even on empty source if save callback defined
+- Draw / allow undefined save callback in draw directive
+- Draw / draw directive takes an optional callback
+- WPS / send geometries in the map view CRS
+- WPS / handle point geometries for QGis server
+- Small fix and style improvements for the PDF output: (#5139)
+- Harvester / OGC WxS / Fix nested CharacterString.
+- Global exception controller should  not return body content if requested text/html. Fixes #5042
+- DOI / Store it as resource identifier.
+- CSW / Restore the possibility to query any index fields (#5127)
+- Validation / Inspire / Slot name (#5116)
+- Xslt formatter - resolve section names with meteadata element names using labels.xml
+- Formatter / JSON-LD / Avoid error on multiple hierarchyLevel (#5109)
+- Indexing / Error / In case of ES error create a better error document (#5120)
+- Suggestion / Apply the score function to the suggestion
+- Record view / Keep translations of field value simple (#5135)
+- More like this / Improvements (#5134)
+- Advanced view / Side bar / Fix link to keyword search (#5132)
+- Landing page / Set link in side bar based on selected language
+- Facet / Do not capitalize the title
+- Validation / INSPIRE / Add configuration for Conformance Class 2b (#5117)
+- Facet / More with collapse state (#5122)
+- UI / Config / Default sort by helper text
+- Facet / Label improvements
+- ISO19139 / Codelist / Hierarchy level / Don't use radio mode
+- Home / Featured searches / Styling fix
+- Update version to 4.0.1-SNAPSHOT
+- API / Language / Delete / Add missing source translation table (#5111)
+- add some common languages to prevent 404's (#5093)
+- missing comma in array in json-ld (#5088)
+- Allow the use of ThesaurusService in search page (#5086)
