@@ -36,6 +36,7 @@ import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.nio.charset.StandardCharsets;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
@@ -97,14 +98,25 @@ public class EsHTTPProxy {
         "       \t\t\"query\": \"%s\"\n" +
         "       \t}\n" +
         "}";
+
     @Autowired
     AccessManager accessManager;
+
     @Autowired
     NodeInfo node;
+
     @Autowired
     SourceRepository sourceRepository;
+
     @Value("${es.index.records:gn-records}")
     private String defaultIndex;
+
+    @Value("${es.username}")
+    private String username;
+
+    @Value("${es.password}")
+    private String password;
+
     @Autowired
     private EsRestClient client;
 
@@ -460,6 +472,13 @@ public class EsHTTPProxy {
 
                 // copy headers from client's request to request that will be send to the final host
                 copyHeadersToConnection(request, connectionWithFinalHost);
+                if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
+                    String auth = username + ":" + password;
+                    byte[] encodedAuth = Base64.getEncoder().encode(
+                        auth.getBytes(StandardCharsets.UTF_8));
+                    String authHeaderValue = "Basic " + new String(encodedAuth);
+                    connectionWithFinalHost.setRequestProperty("Authorization", authHeaderValue);
+                }
 
                 connectionWithFinalHost.setDoOutput(true);
                 connectionWithFinalHost.getOutputStream().write(requestBody.getBytes(Constants.ENCODING));
