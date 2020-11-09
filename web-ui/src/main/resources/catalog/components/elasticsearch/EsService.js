@@ -95,6 +95,7 @@
           }
           queryHook.must.push({
             query_string: {
+              default_field: "any",
               query: queryStringParams.join(' AND ').trim()
             }
           });
