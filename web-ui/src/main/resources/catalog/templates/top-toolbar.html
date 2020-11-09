@@ -33,7 +33,7 @@
                data-ng-hide="{{gnCfg.mods.header.isLogoInHeader}}"
                alt="{{'siteLogo' | translate}}"
                data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
-          <span class="gn-name hidden-sm gn-margin-left"
+          <span class="gn-name hidden-sm hidden-md gn-margin-left"
                 data-ng-if="gnCfg.mods.header.showGNName"
                 data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
                 title="{{info['node/name'] || info['system/site/name']}}">
@@ -45,14 +45,14 @@
         <a data-gn-active-tb-item="{{gnCfg.mods.search.appUrl}}"
           title="{{'search' | translate}}">
           <i class="fa fa-fw fa-search"></i>
-          <span translate>search</span>
+          <span translate class="hidden-sm">search</span>
         </a>
       </li>
       <li class="gn-menuitem-xs" data-ng-if="gnCfg.mods.map.enabled">
         <a data-gn-active-tb-item="{{isExternalViewerEnabled ? externalViewerUrl : gnCfg.mods.map.appUrl}}"
           title="{{'map' | translate}}">
           <i class="fa fa-fw fa-globe"></i>
-          <span translate class="">makeYourMap</span>
+          <span translate class="hidden-sm">makeYourMap</span>
           <span data-gnv-layer-indicator=""/>
         </a>
       </li>
@@ -64,7 +64,7 @@
            class="dropdown-toggle gn-menuheader-xs"
            role="button" aria-expanded="false">
           <i class="fa fa-fw fa-pencil"></i>
-          <span translate class="hidden-md hidden-sm">contribute</span>
+          <span translate class="hidden-sm">contribute</span>
         </a>
         <ul class="dropdown-menu gn-menu-xs clearfix" role="list">
           <li class="gn-menuitem-xs" role="menuitem">
@@ -106,7 +106,7 @@
            class="dropdown-toggle gn-menuheader-xs"
            role="button" aria-expanded="false">
           <i class="fa fa-fw fa-wrench"></i>
-          <span translate class="hidden-md hidden-sm">adminConsole</span>
+          <span translate class="hidden-sm">adminConsole</span>
         </a>
         <ul data-ng-if="user.isUserAdmin()" class="dropdown-menu gn-menu-xs" role="list">
           <li class="gn-menuitem-xs" role="menuitem">
