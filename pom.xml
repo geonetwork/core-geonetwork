@@ -1395,6 +1395,9 @@
     <landingPage.formatter>landingpage?portalLink=group</landingPage.formatter>
     <landingPage.language>all</landingPage.language>
 
+    <baseUrl>https://sextant.ifremer.fr/geonetwork</baseUrl>
+<!--    <baseUrl>https://sextant-test.ifremer.fr/geonetwork</baseUrl>-->
+
     <!-- Proxy security configuration:
     * NONE: allow all.
     * DB_LINK_CHECK:
@@ -1428,6 +1431,7 @@
     <es.index.analyzer.default>standard</es.index.analyzer.default>
 <!--    <es.default.analyzer>french_light</es.default.analyzer>-->
     <es.index.mapping.total_fields.limit>4000</es.index.mapping.total_fields.limit>
+    <es.index.query.bool.max_clause_count>3000</es.index.query.bool.max_clause_count>
 
     <!-- A user with read/write privileges -->
     <es.username>admin</es.username>
