@@ -1099,7 +1099,7 @@ goog.require('gn_alert');
             // A second filter is for harvested record
             // if the catalogue admin defined that those
             // records could be harvested.
-            if (Boolean(md.isHarvested) == true) {
+            if (JSON.parse(md.isHarvested) == true) {
               return gnConfig['system.harvester.enableEditing'] === true &&
                 md.edit;
             }
