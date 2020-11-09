@@ -280,11 +280,13 @@ goog.require('gn_alert');
                 'filters': {
                   'availableInViewService': {
                     'query_string': {
+                      'default_field': 'linkProtocol',
                       'query': '+linkProtocol:/OGC:WMS.*/'
                     }
                   },
                   'availableInDownloadService': {
                     'query_string': {
+                      'default_field': 'linkProtocol',
                       'query': '+linkProtocol:/OGC:WFS.*/'
                     }
                   }
