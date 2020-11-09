@@ -80,8 +80,8 @@
         class="org.springframework.security.cas.web.CasAuthenticationFilter">
     <property name="authenticationManager" ref="authenticationManager"/>
     <property name="proxyGrantingTicketStorage" ref="pgtStorage"/>
-<!--    <property name="proxyReceptorUrl"-->
-<!--              value="${geonetwork.https.url}/cas-security-proxyreceptor"/>-->
+    <property name="proxyReceptorUrl"
+              value="${geonetwork.https.url}/cas-security-proxyreceptor"/>
     <property name="serviceProperties" ref="serviceProperties"/>
     <property name="authenticationDetailsSource">
       <bean
