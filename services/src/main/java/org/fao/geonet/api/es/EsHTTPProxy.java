@@ -95,7 +95,7 @@ public class EsHTTPProxy {
      */
     private static final String filterTemplate = " {\n" +
         "       \t\"query_string\": {\n" +
-        "       \t\t\"query\": \"%s\"\n" +
+        "       \t\t\"default_field\": \"any\", \"query\": \"%s\"\n" +
         "       \t}\n" +
         "}";
 
