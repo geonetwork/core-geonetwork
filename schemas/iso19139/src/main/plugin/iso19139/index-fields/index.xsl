@@ -236,7 +236,7 @@
       <gmd:accessConstraints>
         <gmd:MD_RestrictionCode codeListValue="otherRestrictions"
         is indexed as
-        codelist_accessConstraints:otherRestrictions
+        cl_accessConstraints:otherRestrictions
 
         Exclude some useless codelist like
         Contact role, Date type.
@@ -252,7 +252,7 @@
                       select="name()"/>
         <xsl:variable name="value"
                       select="@codeListValue"/>
-        <xsl:element name="codelist_{$parentName}">
+        <xsl:element name="cl_{$parentName}">
           <xsl:value-of select="$value"/>
         </xsl:element>
 
@@ -260,11 +260,11 @@
           <xsl:variable name="translation"
                         select="util:getCodelistTranslation(string($name), string($value), string(@value))"/>
           <xsl:if test="@id = 'default'">
-            <xsl:element name="codelist_{$parentName}_text">
+            <xsl:element name="cl_{$parentName}_text">
               <xsl:value-of select="$translation"/>
             </xsl:element>
           </xsl:if>
-          <xsl:element name="codelist_{$parentName}_text_lang{@value}">
+          <xsl:element name="cl_{$parentName}_text_lang{@value}">
             <xsl:value-of select="$translation"/>
           </xsl:element>
         </xsl:for-each>
@@ -535,7 +535,7 @@
           <xsl:variable name="key">
             <xsl:choose>
               <xsl:when test="$thesaurusId != ''">
-                <xsl:value-of select="$thesaurusId"/>
+                <xsl:value-of select="tokenize($thesaurusId, '\.')[last()]"/>
               </xsl:when>
               <!-- Try to build a thesaurus key based on the name
               by removing space - to be improved. -->
@@ -550,7 +550,7 @@
              and element like gmx:Anchor including the href attribute
              which may contains keyword identifier. -->
             <xsl:variable name="thesaurusField"
-                          select="concat('thesaurus_', replace($key, '[^a-zA-Z0-9]', ''))"/>
+                          select="concat('th_', replace($key, '[^a-zA-Z0-9]', ''))"/>
 
             <xsl:element name="{$thesaurusField}Number">
               <xsl:value-of select="count(gmd:keyword/(*[normalize-space() != '']))"/>

@@ -526,7 +526,7 @@
               },
               {
                 "terms": {
-                  "codelist_hierarchyLevel": ["service"]
+                  "cl_hierarchyLevel": ["service"]
                 }
               }]
             }
@@ -557,7 +557,7 @@
               },
                 {
                   "terms": {
-                    "codelist_hierarchyLevel": ["dataset"]
+                    "cl_hierarchyLevel": ["dataset"]
                   }
                 }]
             }

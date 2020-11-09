@@ -124,9 +124,9 @@ goog.require('gn_alert');
                 'size': 20
               }
             },
-            'codelist_hierarchyLevel_text': {
+            'cl_hierarchyLevel_text': {
               'terms': {
-                'field': 'codelist_hierarchyLevel_text',
+                'field': 'cl_hierarchyLevel_text',
                 'size': 10
               }
             }
@@ -160,12 +160,12 @@ goog.require('gn_alert');
             // "boost": "5",
             // "functions": [
             //   {
-            //     "filter": { "match": { "codelist_spatialRepresentationType": "vector" } },
+            //     "filter": { "match": { "cl_spatialRepresentationType": "vector" } },
             //     "random_score": {},
             //     "weight": 23
             //   },
             //   {
-            //     "filter": { "match": { "codelist_spatialRepresentationType": "grid" } },
+            //     "filter": { "match": { "cl_spatialRepresentationType": "grid" } },
             //     "weight": 42
             //   }
             // ],
@@ -188,11 +188,11 @@ goog.require('gn_alert');
               },
               // Boost down obsolete records
               {
-                "filter": { "match": { "codelist_status": "obsolete" } },
+                "filter": { "match": { "cl_status": "obsolete" } },
                 "weight": 0.3
               },
               // {
-              //   "filter": { "match": { "codelist_resourceScope": "service" } },
+              //   "filter": { "match": { "cl_resourceScope": "service" } },
               //   "weight": 0.8
               // },
               // Start boosting down records more than 3 months old
@@ -255,9 +255,9 @@ goog.require('gn_alert');
           // TODOES
           'facetTabField': '',
           'facetConfig': {
-            'codelist_hierarchyLevel_text': {
+            'cl_hierarchyLevel_text': {
               'terms': {
-                'field': 'codelist_hierarchyLevel_text'
+                'field': 'cl_hierarchyLevel_text'
               },
               'aggs': {
                 'format': {
@@ -267,9 +267,9 @@ goog.require('gn_alert');
                 }
               }
             },
-            'codelist_spatialRepresentationType': {
+            'cl_spatialRepresentationType': {
               'terms': {
-                'field': 'codelist_spatialRepresentationType',
+                'field': 'cl_spatialRepresentationType',
                 'size': 10
               }
             },
@@ -291,18 +291,18 @@ goog.require('gn_alert');
                 }
               }
             },
-            'thesaurus_geonetworkthesaurusexternalthemegemet_tree': {
+            'th_gemet_tree': {
               'terms': {
-                'field': 'thesaurus_geonetworkthesaurusexternalthemegemet_tree',
+                'field': 'th_gemet_tree',
                 'size': 100,
                 "order" : { "_key" : "asc" },
                 "include": "[^\^]+^?[^\^]+"
                 // Limit to 2 levels
               }
             },
-            // 'thesaurus_geonetworkthesaurusexternalthemehttpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree': {
+            // 'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree': {
             //   'terms': {
-            //     'field': 'thesaurus_geonetworkthesaurusexternalthemehttpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree',
+            //     'field': 'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree',
             //     'size': 100,
             //     "order" : { "_key" : "asc" }
             //   }
@@ -314,9 +314,9 @@ goog.require('gn_alert');
                 'size': 10
               }
             },
-            'thesaurus_geonetworkthesaurusexternalplaceregions_tree': {
+            'th_regions_tree': {
               'terms': {
-                'field': 'thesaurus_geonetworkthesaurusexternalplaceregions_tree',
+                'field': 'th_regions_tree',
                 'size': 100,
                 "order" : { "_key" : "asc" }
                 //"include": "EEA.*"
@@ -344,16 +344,16 @@ goog.require('gn_alert');
                 'size': 15
               }
             },
-            'codelist_maintenanceAndUpdateFrequency_text': {
+            'cl_maintenanceAndUpdateFrequency_text': {
               'collapsed': true,
               'terms': {
-                'field': 'codelist_maintenanceAndUpdateFrequency_text',
+                'field': 'cl_maintenanceAndUpdateFrequency_text',
                 'size': 10
               }
             },
-            'codelist_status_text': {
+            'cl_status_text': {
               'terms': {
-                'field': 'codelist_status_text',
+                'field': 'cl_status_text',
                 'size': 10
               }
             },
@@ -538,9 +538,9 @@ goog.require('gn_alert');
                 'size': 20
               }
             },
-            'codelist_status_text': {
+            'cl_status_text': {
               'terms': {
-                'field': 'codelist_status_text',
+                'field': 'cl_status_text',
                 'size': 15
               }
             },
