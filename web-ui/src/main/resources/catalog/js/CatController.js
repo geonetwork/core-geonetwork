@@ -392,6 +392,7 @@ goog.require('gn_alert');
                   },
                   'availableInProcessingService': {
                     'query_string': {
+                      'default_field': 'linkProtocol',
                       'query': '+linkProtocol:/OGC:WPS.*/'
                     }
                   }
