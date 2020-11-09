@@ -265,7 +265,7 @@
                  path="[gmd:identificationInfo//gmd:MD_DataIdentification/gmd:resourceConstraints//gmd:otherConstraints/gco:CharacterString|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints//gmd:otherConstraints/gco:CharacterString"/>
         </parameter>
 
-        <parameter name="Classification" field="codelist_classification" type="AdditionalQueryables">
+        <parameter name="Classification" field="cl_classification" type="AdditionalQueryables">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:classification/gmd:MD_ClassificationCode/@codeListValue|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:classification/gmd:MD_ClassificationCode/@codeListValue"/>
         </parameter>

@@ -108,7 +108,7 @@
                 <!-- TODOES Link label to icons? -->
                 <span class="badge-icon badge-result-topic pull-left">
                   <i class="fa fa-3x gn-icon gn-icon-{{facet.key.toLowerCase().replace('/', '').replace(' ', '')}}"
-                     data-ng-show="homeFacet.key === 'topic_text' || homeFacet.key === 'codelist_hierarchyLevel_text'">
+                     data-ng-show="homeFacet.key === 'topic_text' || homeFacet.key === 'cl_hierarchyLevel_text'">
                   </i>
                 </span>
                 <span class="badge-text pull-left">
@@ -153,7 +153,7 @@
                   data-ng-href='#/search?query_string={"{{homeFacet.lastKey}}": {"{{facet.key}}": true} }'>
                   <span class="badge-icon pull-left">
                     <i class="fa fa-3x gn-icon gn-icon-{{facet.key.toLowerCase().replace('/', '').replace(' ', '')}}"
-                       data-ng-show="homeFacet.lastKey === 'topic_text' || homeFacet.lastKey === 'codelist_hierarchyLevel_text'">
+                       data-ng-show="homeFacet.lastKey === 'topic_text' || homeFacet.lastKey === 'cl_hierarchyLevel_text'">
                     </i>
                   </span>
                   <span class="badge-text pull-left">

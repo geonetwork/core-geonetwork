@@ -585,7 +585,7 @@ public class EsSearchManager implements ISearchManager {
             boolean isArray = nodeElements.size() > 1
                 || arrayFields.contains(propertyName)
                 || propertyName.endsWith("DateForResource")
-                || propertyName.startsWith("codelist_");
+                || propertyName.startsWith("cl_");
             if (isArray) {
                 ArrayNode arrayNode = doc.putArray(propertyName);
                 for (Element node : nodeElements) {

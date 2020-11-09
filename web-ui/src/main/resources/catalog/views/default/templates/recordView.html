@@ -143,10 +143,10 @@
             data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"/>
 
           <!-- Display the first metadata status (apply to ISO19139 record) -->
-          <div data-ng-if="mdView.current.record.codelist_status_text.length > 0"
-               data-ng-repeat="c in mdView.current.record.codelist_status_text track by $index"
+          <div data-ng-if="mdView.current.record.cl_status_text.length > 0"
+               data-ng-repeat="c in mdView.current.record.cl_status_text track by $index"
                title="{{c}}"
-               class="gn-status gn-status-mdview gn-status-{{mdView.current.record.codelist_status[$index]}}">
+               class="gn-status gn-status-mdview gn-status-{{mdView.current.record.cl_status[$index]}}">
               {{c}}
           </div>
 
@@ -260,10 +260,10 @@
                   </ul>
                 </td>
               </tr>
-              <tr data-ng-if="mdView.current.record.codelist_classification_text.length > 0">
+              <tr data-ng-if="mdView.current.record.cl_classification_text.length > 0">
                 <th data-translate="">classification</th>
                 <td>
-                  <p data-ng-repeat="c in mdView.current.record.codelist_classification_text">{{c}}</p>
+                  <p data-ng-repeat="c in mdView.current.record.cl_classification_text">{{c}}</p>
                 </td>
               </tr>
               <tr data-ng-if="mdView.current.record.MD_LegalConstraintsUseLimitation
@@ -309,10 +309,10 @@
                 <td><p data-ng-repeat="c in mdView.current.record.resourceCredit">{{c}}</p></td>
               </tr>
 
-              <tr data-ng-if="mdView.current.record.codelist_status_text.length > 0">
+              <tr data-ng-if="mdView.current.record.cl_status_text.length > 0">
                 <th data-translate="">resourceStatus</th>
                 <td>
-                  <p data-ng-repeat="c in mdView.current.record.codelist_status_text">{{c}}</p>
+                  <p data-ng-repeat="c in mdView.current.record.cl_status_text">{{c}}</p>
                 </td>
               </tr>
 
@@ -376,18 +376,18 @@
 
           <table class="table table-striped">
             <tbody>
-            <tr data-ng-if="mdView.current.record.codelist_maintenanceAndUpdateFrequency_text.length > 0">
+            <tr data-ng-if="mdView.current.record.cl_maintenanceAndUpdateFrequency_text.length > 0">
               <th data-translate="">updateFrequency</th>
               <td>
-                <p data-ng-repeat="c in mdView.current.record.codelist_maintenanceAndUpdateFrequency_text">
+                <p data-ng-repeat="c in mdView.current.record.cl_maintenanceAndUpdateFrequency_text">
                   {{c}}
                 </p>
               </td>
             </tr>
-            <tr data-ng-if="mdView.current.record.codelist_spatialRepresentationType_text.length > 0">
+            <tr data-ng-if="mdView.current.record.cl_spatialRepresentationType_text.length > 0">
               <th data-translate="">spatialRepresentationType</th>
               <td>
-                <p data-ng-repeat="c in mdView.current.record.codelist_spatialRepresentationType_text">
+                <p data-ng-repeat="c in mdView.current.record.cl_spatialRepresentationType_text">
                   {{c}}
                 </p>
               </td>

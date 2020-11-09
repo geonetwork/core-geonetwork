@@ -221,13 +221,13 @@
               </xsl:when>
               <xsl:otherwise></xsl:otherwise>
             </xsl:choose>
-            <Field name="keyword" string="{$place}" store="true" index="true"/>
+            <tag><xsl:value-of select="$place"/></tag>
           </xsl:when>
           <xsl:otherwise>
-            <Field name="keyword" string="{.}" store="true" index="true"/>
+            <tag><xsl:value-of select="."/></tag>
           </xsl:otherwise>
         </xsl:choose>
-      </xsl:for-each>-->
+      </xsl:for-each>
     </doc>
   </xsl:template>
 </xsl:stylesheet>
