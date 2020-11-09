@@ -1475,6 +1475,10 @@
           }
         }
       },
+      "allKeywords": {
+        "type": "object",
+        "enabled": false
+      },
       "scope": {
         "type": "keyword"
       },
