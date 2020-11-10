@@ -441,6 +441,7 @@ goog.require('gn_alert');
           'isFilterTagsDisplayedInSearch': true,
           'usersearches': {
             'enabled': false,
+            'includePortals': true,
             'displayFeaturedSearchesPanel': false
           },
           'savedSelection': {
