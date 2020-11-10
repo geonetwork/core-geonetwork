@@ -41,7 +41,7 @@ import java.util.Map;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ListRegionsResponse {
     @XmlAttribute
-    @JsonProperty("@count")
+    @JsonProperty("count")
     private int count;
 
     @XmlElement
@@ -79,13 +79,13 @@ public class ListRegionsResponse {
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class RegionResponse {
         @XmlAttribute
-        @JsonProperty("@hasGeom")
+        @JsonProperty("hasGeom")
         private boolean hasGeom;
         @XmlAttribute
-        @JsonProperty("@categoryId")
+        @JsonProperty("categoryId")
         private String categoryId;
         @XmlAttribute
-        @JsonProperty("@id")
+        @JsonProperty("id")
         private String id;
         @XmlElement
         @JsonProperty
@@ -107,10 +107,7 @@ public class ListRegionsResponse {
             this.categoryId = input.getCategoryId();
             this.hasGeom = input.hasGeom();
         }
-
-        @XmlElement(name = "id")
-        @JsonProperty("id")
-        public String getIdElement() {
+        public String getId() {
             return id;
         }
     }
