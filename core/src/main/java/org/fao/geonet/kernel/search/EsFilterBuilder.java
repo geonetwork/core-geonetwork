@@ -82,7 +82,7 @@ public class EsFilterBuilder {
             final Optional<Source> portal = sourceRepository.findById(node.getId());
             if (portal.isPresent() && StringUtils.isNotEmpty(portal.get().getFilter())) {
                 //LOGGER.debug("Applying portal filter: {}", portal.getFilter());
-                return portal.get().getFilter();
+                return portal.get().getFilter().replace("\"", "\\\"");
             }
         }
         return "";
