@@ -35,8 +35,8 @@
   <import resource="config-security-mapping.xml"/>
 
   <import resource="config-security-ldap.xml"/>
-  <!--<import resource="config-security-cas.xml"/>
-  <import resource="config-security-cas-ldap.xml"/>-->
+  <import resource="config-security-cas.xml"/>
+  <import resource="config-security-cas-ldap.xml"/>
 
   <!--<import resource="config-security-ldap.xml"/>-->
   <!--<import resource="config-security-ldap-recursive.xml"/>-->
