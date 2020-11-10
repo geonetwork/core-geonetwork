@@ -513,7 +513,10 @@ public class MetadataUtils {
         }
 
         final SearchResponse result = searchMan.query(
-            String.format("+%s:(%s)%s", relatedIndexFields.get(type), uuid, excludeQuery), portalFilter, FIELDLIST_CORE, fromValue, (toValue - fromValue));
+            String.format("+%s:(%s)%s", relatedIndexFields.get(type), uuid, excludeQuery),
+            ignorePortalFilter ? null : portalFilter,
+            FIELDLIST_CORE,
+            fromValue, (toValue - fromValue));
 
         Element typeResponse = new Element(type.equals("brothersAndSisters") ? "siblings" : type);
         if (result.getHits().getTotalHits().value > 0) {

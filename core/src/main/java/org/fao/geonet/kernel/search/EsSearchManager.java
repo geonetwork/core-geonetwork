@@ -115,6 +115,7 @@ public class EsSearchManager implements ISearchManager {
             .put("datasets", "uuid")
             .put("fcats", "uuid")
             .put("sources", "uuid")
+            .put("siblings", "uuid")
             .put("parent", "uuid")
             .put("uuid", "uuid")
             .build();
