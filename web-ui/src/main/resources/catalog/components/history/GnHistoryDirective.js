@@ -101,14 +101,16 @@
 
   module
     .directive(
-      'gnRecordHistoryStep', ['gnRecordTaskService', 'gnRecordHistoryService',
-        function(gnRecordTaskService, gnRecordHistoryService) {
+      'gnRecordHistoryStep', ['gnRecordTaskService', 'gnRecordHistoryService', '$translate', '$window',
+        function(gnRecordTaskService, gnRecordHistoryService, $translate, $window) {
           return {
             restrict: 'A',
             replace: true,
             scope: {
               h: '=gnRecordHistoryStep',
               noTitle: '@noTitle',
+              noSourceViewOption: '@noTitle',
+              noRecoverOption: '@noTitle',
               allowRemoval: '=allowRemoval'
             },
             templateUrl:
@@ -142,6 +144,36 @@
                 gnRecordHistoryService.delete(s).then(function(r) {
                   scope.$parent.loadHistory();
                 });
+              };
+
+              scope.restoreHistoryElement = function(statusId) {
+                confirmMessage = $translate.instant('confirmRestore');
+                if($window.confirm(confirmMessage)) {
+                    return gnRecordHistoryService.restoreHistoryElement(statusId).then(function(r) {
+                          message = $translate.instant('recordRestored');
+                          scope.$emit('StatusUpdated', {
+                              msg: message,
+                              timeout: 0,
+                              type: 'info'});
+                          // Reload the page to load the new value
+                          $window.location.reload();
+                    }, function(response) {
+                          message = '';
+                          if(response.status === 403) {
+                              message = $translate.instant('notAllowedError');
+                          } else if(response.status === 404) {
+                              message = $translate.instant('notFoundError');
+                          } else if(response.status === 500) {
+                              message = $translate.instant('internalServerError');
+                          } else {
+                              message = $translate.instant('internalServerError');
+                          }
+                          scope.$emit('StatusUpdated', {
+                              msg: message,
+                              timeout: 0,
+                              type: 'danger'});
+                    });
+                }
               };
 
               scope.closeTask = function(status) {

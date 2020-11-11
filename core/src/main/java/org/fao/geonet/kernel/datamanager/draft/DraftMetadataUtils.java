@@ -41,7 +41,6 @@ import org.fao.geonet.domain.MetadataRatingByIp;
 import org.fao.geonet.domain.MetadataRatingByIpId;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.Pair;
@@ -52,6 +51,7 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
@@ -114,6 +114,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     @Autowired
     private AccessManager am;
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     private ServiceContext context;
 
@@ -575,13 +577,13 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
             for (Integer mdId : metadataIds) {
                 MetadataStatus metadataStatus = new MetadataStatus();
-
-                MetadataStatusId mdStatusId = new MetadataStatusId().setStatusId(status).setMetadataId(mdId)
-                    .setChangeDate(new ISODate()).setUserId(author);
-
-                metadataStatus.setId(mdStatusId);
+                metadataStatus.setMetadataId(mdId);
+                metadataStatus.setUuid(uuid);
+                metadataStatus.setChangeDate(new ISODate());
+                metadataStatus.setUserId(author);
                 metadataStatus.setStatusValue(statusValue);
                 metadataStatus.setChangeMessage("Editing instance created");
+                metadataStatus.setTitles(metadataUtils.extractTitles(newMetadata.getDataInfo().getSchemaId(), xml));
 
                 List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                 listOfStatusChange.add(metadataStatus);

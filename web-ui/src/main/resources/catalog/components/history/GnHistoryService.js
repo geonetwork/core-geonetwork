@@ -35,17 +35,22 @@
         '$http', '$filter',
       function($http, $filter) {
         this.delete = function (step) {
-          return $http.delete('../api/records/' + step.id.metadataId + '/status/' +
-            step.id.statusId + '.' + step.id.userId + '.' + step.id.changeDate.dateAndTime);
+          return $http.delete('../api/records/' + step.metadataId + '/status/' +
+            step.statusId + '.' + step.userId + '.' + step.changeDate.dateAndTime);
         };
 
         this.close = function (step, optionalDateOrNow) {
-          return $http.put('../api/records/' + step.id.metadataId + '/status/' +
-            step.id.statusId + '.' + step.id.userId + '.' +
-            step.id.changeDate.dateAndTime +
+          return $http.put('../api/records/' + step.metadataId + '/status/' +
+            step.statusId + '.' + step.userId + '.' +
+            step.changeDate.dateAndTime +
             '/close?closeDate=' + (optionalDateOrNow || moment().format('YYYY-MM-DDTHH:mm:ss')));
         };
 
+        this.restoreHistoryElement = function(step) {
+          return $http.post('../api/records/' + step.metadataId + '/status/' +
+              step.statusId + '.' + step.userId + '.' +
+              step.changeDate.dateAndTime + '/restore');
+        };
 
         function buildFilter(filter) {
           var filters = [];
@@ -93,10 +98,10 @@
 
           this.doiCreationTask = {
             check: function (status) {
-              return $http.get('../api/records/' + status.id.metadataId + '/doi/checkPreConditions');
+              return $http.get('../api/records/' + status.metadataId + '/doi/checkPreConditions');
             },
             create: function (status) {
-              return $http.put('../api/records/' + status.id.metadataId + '/doi');
+              return $http.put('../api/records/' + status.metadataId + '/doi');
             }
           };
         }]);

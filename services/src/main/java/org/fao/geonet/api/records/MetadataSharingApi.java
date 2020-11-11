@@ -31,7 +31,6 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasM
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -90,7 +89,6 @@ import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -986,7 +984,7 @@ public class MetadataSharingApi {
         if (!allowPublishNonApprovedMd) {
             MetadataStatus metadataStatus = metadataStatusRepository.getStatus(metadata.getId());
             if (metadataStatus != null) {
-                String statusId = metadataStatus.getId().getStatusId() + "";
+                String statusId = metadataStatus.getStatusValue().getId() + "";
                 boolean isApproved = statusId.equals(StatusValue.Status.APPROVED);
 
                 if (!isApproved) {

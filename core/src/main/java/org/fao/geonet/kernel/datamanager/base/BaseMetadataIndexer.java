@@ -36,7 +36,6 @@ import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.InspireAtomFeed;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId_;
 import org.fao.geonet.domain.MetadataStatus_;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.MetadataValidation;
@@ -551,14 +550,13 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             // get status
-            Sort statusSort = new Sort(Sort.Direction.DESC,
-                MetadataStatus_.id.getName() + "." + MetadataStatusId_.changeDate.getName());
-            List<MetadataStatus> statuses = statusRepository.findAllByIdAndByType(id$, StatusValueType.workflow, statusSort);
+            Sort statusSort = new Sort(Sort.Direction.DESC, MetadataStatus_.changeDate.getName());
+            List<MetadataStatus> statuses = statusRepository.findAllByMetadataIdAndByType(id$, StatusValueType.workflow, statusSort);
             if (!statuses.isEmpty()) {
                 MetadataStatus stat = statuses.get(0);
-                String status = String.valueOf(stat.getId().getStatusId());
+                String status = String.valueOf(stat.getStatusValue().getId());
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS, status, true, true));
-                String statusChangeDate = stat.getId().getChangeDate().getDateAndTime();
+                String statusChangeDate = stat.getChangeDate().getDateAndTime();
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS_CHANGE_DATE, statusChangeDate,
                     true, true));
             }

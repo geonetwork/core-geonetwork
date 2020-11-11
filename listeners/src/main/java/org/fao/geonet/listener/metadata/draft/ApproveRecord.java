@@ -29,10 +29,10 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.events.md.MetadataStatusChanged;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
@@ -63,6 +63,9 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 
     @Autowired
     private DraftUtilities draftUtilities;
+
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     @Override
     public void onApplicationEvent(MetadataStatusChanged event) {
@@ -135,13 +138,11 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
             MetadataStatus status = new MetadataStatus();
             status.setChangeMessage(event.getMessage());
             status.setStatusValue(event.getStatus());
-
-            MetadataStatusId mdStatusId = new MetadataStatusId();
-            mdStatusId.setStatusId(event.getStatus().getId());
-            mdStatusId.setMetadataId(md.getId());
-            mdStatusId.setChangeDate(new ISODate());
-            mdStatusId.setUserId(event.getUser());
-            status.setId(mdStatusId);
+            status.setMetadataId(md.getId());
+            status.setUuid(md.getUuid());
+            status.setTitles(metadataUtils.extractTitles(Integer.toString(md.getId())));
+            status.setChangeDate(new ISODate());
+            status.setUserId(event.getUser());
 
             metadataStatus.setStatusExt(status);
 

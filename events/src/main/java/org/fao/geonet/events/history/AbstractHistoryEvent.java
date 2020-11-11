@@ -23,8 +23,12 @@
 
 package org.fao.geonet.events.history;
 
+import org.fao.geonet.domain.MetadataStatus;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public abstract class AbstractHistoryEvent extends ApplicationEvent {
 
@@ -91,6 +95,34 @@ public abstract class AbstractHistoryEvent extends ApplicationEvent {
      */
     public Integer getUserId() {
         return userId;
+    }
+
+    /*
+     * uuid identifier of the metadata
+     *
+     * @return
+             */
+    public String getUuid() {
+        return null;
+    }
+
+
+    /*
+     * titles for the metadata
+     *
+     * @return
+     */
+    public LinkedHashMap<String, String> getTitles() {
+        return null;
+    }
+
+    /**
+     * A metadataStatus for which this is related to.  i.e. for a restore, it will be the metadata status it was restored from
+     *
+     * @return
+     */
+    public MetadataStatus getRelatedMetadataStatus() {
+        return null;
     }
 
     /**

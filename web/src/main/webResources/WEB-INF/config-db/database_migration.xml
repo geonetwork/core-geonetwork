@@ -268,6 +268,7 @@
     </entry>
     <entry key="3.11.0">
       <list>
+        <value>java:v3110.UpdateMetadataStatus</value>
         <value>WEB-INF/classes/setup/sql/migrate/v3110/migrate-</value>
       </list>
     </entry>
