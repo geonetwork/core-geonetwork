@@ -8,16 +8,30 @@
              data-ng-model="registryUrl"
              class="form-control"
              placeholder="https://"/>
-      <span class="input-group-btn">
-        <div class="btn btn-default"
-                data-ng-click="setDefault()"
-                data-translate="">registryUseInspireOne</div>
-      </span>
+
+      <div class="input-group-btn">
+        <button type="button"
+                class="btn btn-default dropdown-toggle"
+                title="{{::'registryList' | translate}}"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+          <i class="fa fa-fw fa-th-list"></i>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li data-ng-repeat="r in registries">
+            <a data-ng-click="setDefault(r.url)"
+               title="{{r.url}}">{{r.name}}</a>
+          </li>
+        </ul>
+      </div>
     </div>
     <p class="help-block ng-scope" data-translate="">registry-help</p>
   </div>
 
-  <div class="form-group">
+  <div class="form-group"
+       data-ng-show="registryType === 're3gistry' && languages.length > 0">
     <label class="form-label"
            data-translate="">
       registryChooseLanguages
@@ -39,18 +53,22 @@
     </div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group"
+       data-ng-show="itemClass.length > 0">
     <label class="form-label"
            data-translate="">
     registryChooseType
     </label>
     <select class="form-control"
-            data-ng-options="t as t.label for t in itemClass track by t.key"
-            data-ng-model="selectedClassUrl"/>
+            data-ng-options="t as t.label for t in itemClass | orderBy:'label' track by t.key"
+            data-ng-model="selectedClassUrl">
+      <!--<option data-ng-repeat="t in itemClass | orderBy:'label' track by t.key"
+              value="{{t}}" title="{{t.description}}">{{t.label}}</option>-->
+    </select>
   </div>
 
   <div class="form-group"
-       data-ng-show="!isSimple">
+       data-ng-show="itemClass.length > 0 && !isSimple">
     <label class="form-label"
            data-translate="">
       registryChooseItem
@@ -63,5 +81,6 @@
   </div>
 
   <input type="hidden" name="registryUrl" value="{{selectedCollection}}">
+  <input type="hidden" name="registryType" value="{{registryType}}">
 
 </div>
