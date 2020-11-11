@@ -131,21 +131,18 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
             List<MetadataStatus> metadataStatusList = metadataStatusRepository.findAll(
                 MetadataStatusSpecs.hasUserId(oldOwner.getId()));
             for (MetadataStatus metadataStatus : metadataStatusList) {
-                MetadataStatusId metadataStatusId = metadataStatus.getId();
-
-                MetadataStatusId newMetadataStatusId = new MetadataStatusId();
-                newMetadataStatusId.setUserId(newMetadataOwner.getId());
-                newMetadataStatusId.setMetadataId(metadataStatusId.getMetadataId());
-                newMetadataStatusId.setChangeDate(metadataStatusId.getChangeDate());
-                metadataStatusId.setStatusId(metadataStatusId.getStatusId());
-
                 MetadataStatus newMetadataStatus = new MetadataStatus();
-                newMetadataStatus.setId(newMetadataStatusId);
+                newMetadataStatus.setUserId(newMetadataOwner.getId());
+                newMetadataStatus.setMetadataId(metadataStatus.getMetadataId());
+                newMetadataStatus.setUuid(metadataStatus.getUuid());
+                newMetadataStatus.setTitles(metadataStatus.getTitles());
+                newMetadataStatus.setChangeDate(metadataStatus.getChangeDate());
+                newMetadataStatus.setStatusValue(metadataStatus.getStatusValue());
                 newMetadataStatus.setChangeMessage(metadataStatus.getChangeMessage());
                 newMetadataStatus.setStatusValue(metadataStatus.getStatusValue());
                 metadataStatusRepository.save(newMetadataStatus);
             }
-            metadataStatusRepository.deleteAllById_UserId(oldOwner.getId());
+            metadataStatusRepository.deleteAllByIdUserId(oldOwner.getId());
             metadataStatusRepository.saveAll(metadataStatusList);
 
             dataManager.indexMetadata(Lists.transform(metadataList, new Function<Metadata, String>() {

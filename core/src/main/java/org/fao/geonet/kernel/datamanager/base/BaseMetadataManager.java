@@ -172,8 +172,9 @@ public class BaseMetadataManager implements IMetadataManager {
     /**
      * Refresh index if needed. Can also be called after GeoNetwork startup in
      * order to rebuild the lucene index
-     *t
-     * @param force Force reindexing all from scratch
+     * t
+     *
+     * @param force        Force reindexing all from scratch
      * @param asynchronous
      **/
     public void synchronizeDbWithIndex(ServiceContext context, Boolean force, Boolean asynchronous) throws Exception {
@@ -232,7 +233,7 @@ public class BaseMetadataManager implements IMetadataManager {
         // if anything to index then schedule it to be done after servlet is
         // up so that any links to local fragments are resolvable
         if (toIndex.size() > 0) {
-            if(asynchronous) {
+            if (asynchronous) {
                 Set<Integer> integerList = toIndex.stream().map(Integer::parseInt).collect(Collectors.toSet());
                 new BatchOpsMetadataReindexer(
                     context.getBean(DataManager.class),
@@ -302,7 +303,6 @@ public class BaseMetadataManager implements IMetadataManager {
         int intId = Integer.parseInt(id);
         metadataRatingByIpRepository.deleteAllById_MetadataId(intId);
         metadataValidationRepository.deleteAllById_MetadataId(intId);
-        metadataStatusRepository.deleteAllById_MetadataId(intId);
         userSavedSelectionRepository.deleteAllByUuid(metadataUtils.getMetadataUuid(id));
 
         // Logical delete for metadata file uploads
@@ -384,7 +384,7 @@ public class BaseMetadataManager implements IMetadataManager {
      */
     @Override
     public String createMetadata(ServiceContext context, String templateId, String groupOwner, String source, int owner,
-        String parentUuid, String isTemplate, boolean fullRightsForGroup) throws Exception {
+                                 String parentUuid, String isTemplate, boolean fullRightsForGroup) throws Exception {
 
         return createMetadata(context, templateId, groupOwner, source, owner, parentUuid, isTemplate, fullRightsForGroup,
             UUID.randomUUID().toString());
@@ -399,7 +399,7 @@ public class BaseMetadataManager implements IMetadataManager {
      */
     @Override
     public String createMetadata(ServiceContext context, String templateId, String groupOwner, String source, int owner,
-        String parentUuid, String isTemplate, boolean fullRightsForGroup, String uuid) throws Exception {
+                                 String parentUuid, String isTemplate, boolean fullRightsForGroup, String uuid) throws Exception {
         AbstractMetadata templateMetadata = metadataUtils.findOne(templateId);
         if (templateMetadata == null) {
             throw new IllegalArgumentException("Template id not found : " + templateId);
@@ -472,18 +472,20 @@ public class BaseMetadataManager implements IMetadataManager {
                 List<?> titleNodes = null;
                 try {
                     titleNodes = Xml.selectNodes(xml, path, new ArrayList<Namespace>(schemaPlugin.getNamespaces()));
-
+                    // Use ISO 8601 GMT
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
                     for (Object o : titleNodes) {
                         if (o instanceof Element) {
                             Element title = (Element) o;
                             title.setText(String
                                 .format(messages.getString("metadata.title.createdFrom" + (fromTemplate ? "Template" : "Record")),
-                                    title.getTextTrim(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+                                    title.getTextTrim(), simpleDateFormat.format(new Date())));
                         }
                     }
                 } catch (JDOMException e) {
                     LOGGER_DATA_MANAGER
-                        .debug("Check xpath '{}' for schema plugin '{}'. Error is '{}'.", new Object[] { path, schema, e.getMessage() });
+                        .debug("Check xpath '{}' for schema plugin '{}'. Error is '{}'.", new Object[]{path, schema, e.getMessage()});
                 }
             });
         }
@@ -612,7 +614,7 @@ public class BaseMetadataManager implements IMetadataManager {
      */
     @Override
     public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean applyOperationsFilters,
-        boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
+                               boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
         boolean doXLinks = getXmlSerializer().resolveXLinks();
         Element metadataXml = getXmlSerializer().selectNoXLinkResolver(id, false, applyOperationsFilters);
         if (metadataXml == null)
@@ -708,8 +710,8 @@ public class BaseMetadataManager implements IMetadataManager {
      */
     @Override
     public synchronized AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
-        final boolean validate, final boolean ufo, final boolean index, final String lang, final String changeDate,
-        final boolean updateDateStamp) throws Exception {
+                                                        final boolean validate, final boolean ufo, final boolean index, final String lang, final String changeDate,
+                                                        final boolean updateDateStamp) throws Exception {
         Log.trace(Geonet.DATA_MANAGER, "Update record with id " + metadataId);
 
         Element metadataXml = md;
@@ -804,6 +806,7 @@ public class BaseMetadataManager implements IMetadataManager {
         String popularity = "" + dataInfo.getPopularity();
         String rating = "" + dataInfo.getRating();
         String owner = "" + metadata.getSourceInfo().getOwner();
+        Integer groupOwner = metadata.getSourceInfo().getGroupOwner();
         String displayOrder = "" + dataInfo.getDisplayOrder();
 
         Element info = new Element(Edit.RootChild.INFO, Edit.NAMESPACE);
@@ -839,6 +842,15 @@ public class BaseMetadataManager implements IMetadataManager {
         if (user.isPresent()) {
             String ownerName = user.get().getName();
             addElement(info, Edit.Info.Elem.OWNERNAME, ownerName);
+        }
+
+        // add groupowner name
+        if (groupOwner != null) {
+            java.util.Optional<Group> group = groupRepository.findById(groupOwner);
+            if (group.isPresent()) {
+                String groupOwnerName = group.get().getName();
+                addElement(info, Edit.Info.Elem.GROUPOWNERNAME, groupOwnerName);
+            }
         }
 
         for (MetadataCategory category : metadata.getCategories()) {
@@ -897,7 +909,7 @@ public class BaseMetadataManager implements IMetadataManager {
      */
     @Override
     public Element updateFixedInfo(String schema, Optional<Integer> metadataId, String uuid, Element md, String parentUuid,
-        UpdateDatestamp updateDatestamp, ServiceContext context) throws Exception {
+                                   UpdateDatestamp updateDatestamp, ServiceContext context) throws Exception {
         boolean autoFixing = settingManager.getValueAsBool(Settings.SYSTEM_AUTOFIXING_ENABLE, true);
         if (autoFixing) {
             LOGGER_DATA_MANAGER.debug("Autofixing is enabled, trying update-fixed-info (updateDatestamp: {})", updateDatestamp.name());
@@ -1033,7 +1045,7 @@ public class BaseMetadataManager implements IMetadataManager {
             if (!childSchema.equals(parentSchema)) {
                 untreatedChildSet.add(childId);
                 LOGGER_DATA_MANAGER.debug("Could not update child ({}) because schema ({}) is different from the parent one ({}).",
-                    new Object[] { childId, childSchema, parentSchema });
+                    new Object[]{childId, childSchema, parentSchema});
                 continue;
             }
             LOGGER_DATA_MANAGER.debug("Updating child ({}) ...", childId);
@@ -1132,7 +1144,7 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     protected SetMultimap<Integer, ReservedOperation> loadOperationsAllowed(ServiceContext context,
-        Specification<OperationAllowed> operationAllowedSpec) {
+                                                                            Specification<OperationAllowed> operationAllowedSpec) {
         final OperationAllowedRepository operationAllowedRepo = context.getBean(OperationAllowedRepository.class);
         List<OperationAllowed> operationsAllowed = operationAllowedRepo.findAll(operationAllowedSpec);
         SetMultimap<Integer, ReservedOperation> operationsPerMetadata = HashMultimap.create();
@@ -1229,7 +1241,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
     @Override
     public void createBatchUpdateQuery(PathSpec<? extends AbstractMetadata, String> servicesPath, String newUuid,
-        Specification<? extends AbstractMetadata> harvested) {
+                                       Specification<? extends AbstractMetadata> harvested) {
         try {
             metadataRepository
                 .createBatchUpdateQuery((PathSpec<Metadata, String>) servicesPath, newUuid, (Specification<Metadata>) harvested);
