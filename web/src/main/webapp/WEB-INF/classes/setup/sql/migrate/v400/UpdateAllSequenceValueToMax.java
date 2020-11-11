@@ -83,7 +83,7 @@ public class UpdateAllSequenceValueToMax extends DatabaseMigrationTask {
         updateTableSequence(connection, MetadataDraft.TABLENAME, "id", AbstractMetadata.ID_SEQ_NAME);
     }
 
-    private void processClass(final Connection connection, final Class<?> cl) throws SQLException {
+    public static void processClass(final Connection connection, final Class<?> cl) throws SQLException {
 
         // Get sequence name
         String sequenceName = cl.getAnnotation(SequenceGenerator.class).sequenceName();
@@ -136,7 +136,7 @@ public class UpdateAllSequenceValueToMax extends DatabaseMigrationTask {
         updateTableSequence(connection, tablename, keyColumnName, sequenceName);
     }
 
-    private void updateTableSequence(final Connection connection, final String tableName, final String keyColumnName, final String sequenceName) throws SQLException {
+    private static void updateTableSequence(final Connection connection, final String tableName, final String keyColumnName, final String sequenceName) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             final String tableMaxIdSQL = "SELECT max(" + keyColumnName + ") as NB FROM " + tableName;
 
@@ -166,7 +166,7 @@ public class UpdateAllSequenceValueToMax extends DatabaseMigrationTask {
         }
     }
 
-    private void updateSequence(final Connection connection, final String sequenceName, long desiredVal) throws SQLException {
+    private static void updateSequence(final Connection connection, final String sequenceName, long desiredVal) throws SQLException {
         DialectResolutionInfo dialectResolutionInfo = new DatabaseMetaDataDialectResolutionInfoAdapter(connection.getMetaData());
         Dialect dialect = new StandardDialectResolver().resolveDialect(dialectResolutionInfo);
         PreparedStatement preparedStatement = null;
