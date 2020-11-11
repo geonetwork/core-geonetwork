@@ -44,10 +44,10 @@
             deferred.resolve({
               data:
                 usersearches.concat(alldata[1].data
-                .filter(p => {
+                .filter(function(p) {
                   return p.filter != ''
                 })
-                .map(p => {
+                .map(function(p) {
                   return {
                     names: p.label,
                     url: 'any=' + encodeURIComponent('q(' + p.filter + ')'),
