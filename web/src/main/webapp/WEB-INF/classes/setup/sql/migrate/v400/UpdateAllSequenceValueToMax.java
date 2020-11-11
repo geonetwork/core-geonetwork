@@ -100,6 +100,9 @@ public class UpdateAllSequenceValueToMax extends DatabaseMigrationTask {
         String tablename;
         if (cl.isAnnotationPresent(Table.class)) {
             tablename = cl.getAnnotation(Table.class).name();
+            if (StringUtils.isEmpty(tablename)) {
+                tablename = cl.getSimpleName();
+            }
         } else {
             tablename = cl.getSimpleName();
         }
