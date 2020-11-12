@@ -141,19 +141,24 @@
         class="org.fao.geonet.web.RedirectLogoutSuccessHandler">
     <property name="defaultTargetUrl" value="${cas.logout.url}"></property>
   </bean>
+  <bean id="casTicketCache"
+        class="net.sf.ehcache.Cache"
+        init-method="initialise"
+        destroy-method="dispose">
+    <constructor-arg value="casTickets"/>
+    <constructor-arg value="50"/>
+    <constructor-arg><null/></constructor-arg>
+    <constructor-arg value="true"/>
+    <constructor-arg value="{java.io.tmpdir}"/>
+    <constructor-arg value="false"/>
+    <constructor-arg value="3600"/>
+    <constructor-arg value="900"/>
+    <constructor-arg value="false"/>
+    <constructor-arg value="120"/>
+    <constructor-arg><null/></constructor-arg>
+  </bean>
   <bean id="casStatelessTicketCache"
         class="org.springframework.security.cas.authentication.EhCacheBasedTicketCache">
-    <property name="cache">
-      <bean class="net.sf.ehcache.Cache" init-method="initialise"
-            destroy-method="dispose">
-        <constructor-arg value="casTickets"/>
-        <constructor-arg value="50"/>
-        <constructor-arg value="true"/>
-        <constructor-arg value="false"/>
-        <constructor-arg value="3600"/>
-        <constructor-arg value="900"/>
-        <property name="diskStorePath" value="${java.io.tmpdir}"></property>
-      </bean>
-    </property>
+    <property name="cache" ref="casTicketCache"/>
   </bean>
 </beans>
