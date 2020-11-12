@@ -62,6 +62,8 @@
   <!-- To load js files -->
   <xsl:param name="loadJS" select="'true'"/>
 
+  <xsl:param name="output" select="''"/>
+
 
   <!-- TODO: schema is not part of the XML -->
   <xsl:variable name="schema"

@@ -30,7 +30,8 @@
       </div>
       <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-8 col-sm-8'">
         <!-- Always display title if available -->
-        <a data-ng-if="::(r.title | gnLocalized: lang).length" href="#/metadata/{{r.id}}">
+        <a data-ng-if="::(r.title | gnLocalized: lang).length"
+           href="{{location.origin}}{{location.pathname}}#/metadata/{{r.id}}">
           {{::(r.title | gnLocalized: lang)}}
         </a>
         <!-- Display description if available -->
@@ -170,8 +171,9 @@
                data-ng-if="mainType.indexOf('MD') == 0 && r.id
                     && r.description && (r.description | gnLocalized: lang).length > 0">
               <span class="gn-related-description">
-                {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a data-ng-click="config.showMore(r, md)" href="">{{'more' |
-                translate}}...</a>
+                {{ (r.description | gnLocalized: lang | striptags | words:35)}}
+                <a href="{{location.origin}}{{location.pathname}}#/metadata/{{r.id}}">
+                  {{'more' | translate}}...</a>
               </span>
             </p>
 

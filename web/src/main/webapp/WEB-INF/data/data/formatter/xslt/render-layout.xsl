@@ -319,7 +319,7 @@
                      src="{$nodeUrl}../images/logos/{$source}.png" />
               </section>-->
 
-              <xsl:if test="$isSocialbarEnabled">
+              <xsl:if test="$isSocialbarEnabled and $output != 'pdf'">
                 <section class="gn-md-side-social">
                   <h3>
 <!--                    <i class="fa fa-fw fa-share-square-o"><xsl:comment select="'icon'"/></i>-->

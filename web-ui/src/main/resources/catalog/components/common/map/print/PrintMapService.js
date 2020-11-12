@@ -386,7 +386,7 @@
             name: layer.get('title') || layer.get('label'),
             classes: [{
               name: '',
-              icon: layer.get('legend')
+              icon: new URL(layer.get('legend')).toString()
             }]
           };
         }
