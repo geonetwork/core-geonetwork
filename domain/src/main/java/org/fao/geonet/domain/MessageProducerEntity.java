@@ -28,21 +28,23 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"url", "typeName"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "url", "typeName" }))
+@SequenceGenerator(name = MessageProducerEntity.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class MessageProducerEntity {
+    public static final String ID_SEQ_NAME = "message_producer_entity_id_seq";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     private Long id;
 
     private WfsHarvesterParamEntity wfsHarvesterParamEntity;
 
-    @Nullable
-    private String cronExpression;
+    @Nullable private String cronExpression;
 
     public WfsHarvesterParamEntity getWfsHarvesterParam() {
         return wfsHarvesterParamEntity;

@@ -279,6 +279,7 @@
     </entry>
     <entry key="4.0.2">
       <list>
+        <value>java:v402.SetSequenceValueToMaxOfMessageProducerEntity</value>
         <value>WEB-INF/classes/setup/sql/migrate/v402/migrate-</value>
       </list>
     </entry>
