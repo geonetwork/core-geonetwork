@@ -24,6 +24,9 @@
               sxtService.feedMd(scope);
             });
           }
+          // START sextant SPECIFIC
+          scope.location = window.location;
+          // END sextant SPECIFIC
         }
       };
     }
