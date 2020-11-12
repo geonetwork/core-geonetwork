@@ -189,13 +189,13 @@
   </rule>
 
 
-  <rule>
+  <!--<rule>
     <note>
       Redirect virtual CSW to equivalent subportal
     </note>
     <from>^/srv/([a-z]{3})/csw-([^?]*)\??(.*)?</from>
     <to type="permanent-redirect">%{context-path}/$2/$1/csw?$3</to>
-  </rule>
+  </rule>-->
 
   <rule>
     <note>
