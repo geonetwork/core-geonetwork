@@ -105,7 +105,7 @@
                 'uuid',
                 'overview.*',
                 'resource*',
-                'codelist_status*'
+                'cl_status*'
               ]
             },
             "query": {

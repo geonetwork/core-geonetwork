@@ -115,6 +115,7 @@ public class EsSearchManager implements ISearchManager {
             .put("datasets", "uuid")
             .put("fcats", "uuid")
             .put("sources", "uuid")
+            .put("siblings", "uuid")
             .put("parent", "uuid")
             .put("uuid", "uuid")
             .build();
@@ -521,7 +522,7 @@ public class EsSearchManager implements ISearchManager {
             .add("MD_ConstraintsUseLimitationObject")
             .add("resourceType")
             .add("type")
-            .add("resourceDates")
+            .add("resourceDate")
             .add("link")
             .add("crsDetails")
             .add("format")
@@ -585,7 +586,7 @@ public class EsSearchManager implements ISearchManager {
             boolean isArray = nodeElements.size() > 1
                 || arrayFields.contains(propertyName)
                 || propertyName.endsWith("DateForResource")
-                || propertyName.startsWith("codelist_");
+                || propertyName.startsWith("cl_");
             if (isArray) {
                 ArrayNode arrayNode = doc.putArray(propertyName);
                 for (Element node : nodeElements) {

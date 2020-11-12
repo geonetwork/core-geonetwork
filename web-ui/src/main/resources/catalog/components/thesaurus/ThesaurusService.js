@@ -129,6 +129,9 @@
                                               gnGlobalSettings
                                             );
                   var result = [currentUILang_3char];
+                  if (angular.isUndefined(gnCurrentEdit.allLanguages)) {
+                      return result;
+                  }
 
                   // SEXTANT CHECK
                   var currentUILang2_3char = gnCurrentEdit.allLanguages ? gnCurrentEdit.allLanguages.iso2code[currentUILang_3char] : {};

@@ -1,7 +1,8 @@
 {
   "settings": {
-    "index.mapping.total_fields.limit": ${es.index.mapping.total_fields.limit},
     "index": {
+      "query.default_field": "any",
+      "mapping.total_fields.limit": ${es.index.mapping.total_fields.limit},
       "analysis": {
         "analyzer": {
           "trigram": {
@@ -996,7 +997,7 @@
       },
       {
         "codelist": {
-          "match": "codelist_*",
+          "match": "cl_*",
           "mapping": {
             "type": "keyword"
           }
@@ -1020,7 +1021,7 @@
       },
       {
         "thesaurus": {
-          "match": "thesaurus_*",
+          "match": "th_*",
           "mapping": {
             "type": "keyword"
           }

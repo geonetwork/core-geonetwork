@@ -657,6 +657,27 @@
     </gmd:editionDate>
   </xsl:template>
 
+  <!-- One CI_Responsibility may produce many CI_ResponsibleParty -->
+  <xsl:template match="*[cit:CI_Responsibility]" priority="5">
+    <xsl:variable name="responsibleParties">
+      <xsl:apply-templates select="cit:CI_Responsibility"/>
+    </xsl:variable>
+
+    <xsl:variable name="nameSpacePrefix">
+      <xsl:call-template name="getNamespacePrefix"/>
+    </xsl:variable>
+    
+    <xsl:variable name="parentName"
+                  select="local-name()"/>
+
+    <xsl:for-each select="$responsibleParties/*">
+      <xsl:element name="{concat($nameSpacePrefix, ':', $parentName)}">
+        <xsl:apply-templates select="@*"/>
+        <xsl:copy-of select="."/>
+      </xsl:element>
+    </xsl:for-each>
+  </xsl:template>
+  
   <xsl:template match="cit:CI_Responsibility" priority="5">
     <xsl:choose>
       <xsl:when test="count(cit:party/cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:name/gco2:CharacterString) +

@@ -418,7 +418,7 @@ public class EsHTTPProxy {
                 LOGGER.warn("Null portal " + node);
             } else if (StringUtils.isNotEmpty(portal.get().getFilter())) {
                 LOGGER.debug("Applying portal filter: {}", portal.get().getFilter());
-                return portal.get().getFilter();
+                return portal.get().getFilter().replace("\"", "\\\"");
             }
         }
         return "";

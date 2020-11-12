@@ -59,7 +59,7 @@
       'isHarvested',
       'dateStamp',
       'documentStandard',
-      'codelist_status*',
+      'cl_status*',
       'recordLink'
     ]};
     this.configs = {

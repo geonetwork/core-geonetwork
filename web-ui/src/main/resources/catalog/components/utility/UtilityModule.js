@@ -115,11 +115,11 @@
         };
       })
 
-      /* filter to strip html tags, for strings
+      /* filter to strip html tags & accolades, for strings
       that come in via userinput to prevent xss */
       .filter('htmlToPlaintext', function() {
         return function(text) {
-          return text ? String(text).replace(/<[^>]+>+/gm, '') : '';
+          return text ? String(text).replace(/<[^>]+>+/gm, '').replace(/\{|\}/g,'') : '';
         };
       })
 

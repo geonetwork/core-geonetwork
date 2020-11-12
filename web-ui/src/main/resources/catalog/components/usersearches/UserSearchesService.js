@@ -30,8 +30,37 @@
   module.service('gnUserSearchesService', [
     '$http', '$q',
     function($http, $q) {
-      this.loadFeaturedUserSearches = function(type) {
-        return $http.get('../api/usersearches/featured?type=' + type);
+      this.loadFeaturedUserSearches = function(type, withPortal) {
+        var deferred = $q.defer(),
+            usersearches = $http.get('../api/usersearches/featured?type=' + type);
+            apiCalls = [usersearches];
+        if (withPortal) {
+          apiCalls.push($http.get('../api/sources/subportal'));
+        }
+        $q.all(apiCalls).then(function(alldata) {
+          var usersearches = [];
+          usersearches = usersearches.concat(alldata[0].data)
+          if (alldata[1]) {
+            deferred.resolve({
+              data:
+                usersearches.concat(alldata[1].data
+                .filter(function(p) {
+                  return p.filter != ''
+                })
+                .map(function(p) {
+                  return {
+                    names: p.label,
+                    url: 'any=' + encodeURIComponent('q(' + p.filter + ')'),
+                    logo: '../../images/harvesting/' + p.logo,
+                    featuredType: 'p'
+                  }
+                }))
+            });
+          } else {
+            deferred.resolve({data: usersearches});
+          }
+        });
+        return deferred.promise;
       };
 
       this.loadUserSearches = function () {

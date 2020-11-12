@@ -730,6 +730,10 @@ public class KeywordsApi {
     }
 
 
+    public enum REGISTRY_TYPE {
+        re3gistry,
+        ldRegistry
+    }
 
     /**
      * Upload thesaurus.
@@ -768,6 +772,11 @@ public class KeywordsApi {
             description = "If set, try to download from a registry.")
         @RequestParam(value = "registryUrl", required = false)
             String registryUrl,
+        @Parameter(
+            description = "If using registryUrl, then define the type of registry." +
+                " If not set, default mode is re3gistry.")
+        @RequestParam(value = "registryType", required = false)
+            REGISTRY_TYPE registryType,
         @Parameter(
             description = "Languages to download from a registry.")
         @RequestParam(value = "registryLanguage", required = false)
@@ -820,7 +829,7 @@ public class KeywordsApi {
 
             String itemName = registryUrl.substring((registryUrl.lastIndexOf("/") + 1));
 
-            rdfFile = extractSKOSFromRegistry(registryUrl, itemName, registryLanguage, context);
+            rdfFile = extractSKOSFromRegistry(registryUrl, registryType, itemName, registryLanguage, context);
             fname = registryUrl.replaceAll("[^A-Za-z]+", "") +
                 "-" +
                 itemName + ".rdf";
@@ -876,30 +885,39 @@ public class KeywordsApi {
      * them into one XML document which is then XSLT processed for SKOS conversion.
      *
      * @param registryUrl the registry url
+     * @param registryType
      * @param itemName    the item name
      * @param lang        the selected languages
      * @param context     the context
      * @return the path
      * @throws Exception the exception
      */
-    private Path extractSKOSFromRegistry(String registryUrl, String itemName, String[] lang, ServiceContext context)
+    private Path extractSKOSFromRegistry(String registryUrl, REGISTRY_TYPE registryType, String itemName, String[] lang, ServiceContext context)
         throws Exception {
         if (lang != null) {
             Element documents = new Element("documents");
-            for (String language : lang) {
-                try {
-                    String languageFileUrl = registryUrl + "/" + itemName + "." + language + ".xml";
-                    Path localRdf = getXMLContentFromUrl(languageFileUrl, context);
-                    Element codeList = Xml.loadFile(localRdf);
-                    documents.addContent(codeList);
-                } catch (Exception e) {
-                    Log.debug(Geonet.THESAURUS, "Thesaurus not found for the requested translation: " + itemName + " " + language);
-                    throw new ResourceNotFoundException("Thesaurus not found for the requested translation: " + itemName + " " + language);
+            if (registryType == REGISTRY_TYPE.ldRegistry) {
+                Path localRdf = getXMLContentFromUrl(registryUrl + "?_view=with_metadata&_format=rdf", context);
+                Element ldRegistryCodelistAsRdf = Xml.loadFile(localRdf);
+                documents.addContent(ldRegistryCodelistAsRdf);
+            } else {
+                for (String language : lang) {
+                    try {
+                        String languageFileUrl = registryUrl + "/" + itemName + "." + language + ".xml";
+                        Path localRdf = getXMLContentFromUrl(languageFileUrl, context);
+                        Element codeList = Xml.loadFile(localRdf);
+                        documents.addContent(codeList);
+                    } catch (Exception e) {
+                        Log.debug(Geonet.THESAURUS, "Thesaurus not found for the requested translation: " + itemName + " " + language);
+                        throw new ResourceNotFoundException("Thesaurus not found for the requested translation: " + itemName + " " + language);
+                    }
                 }
             }
 
             // Convert to SKOS
-            Path skosTransform = dataDirectory.getWebappDir().resolve("xslt/services/thesaurus/registry-to-skos.xsl");
+            Path skosTransform = dataDirectory.getWebappDir().resolve(String.format(
+                "xslt/services/thesaurus/%s-to-skos.xsl",
+                registryType == REGISTRY_TYPE.ldRegistry ? "ldregistry" : "registry"));
             Element transform = Xml.transform(documents, skosTransform);
             // Convert to file and return
             Path rdfFile = Files.createTempFile("thesaurus", ".rdf");

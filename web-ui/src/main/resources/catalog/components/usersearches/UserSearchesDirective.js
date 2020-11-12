@@ -33,9 +33,9 @@
    */
   module.directive('gnUserSearchesList', [
     'gnUserSearchesService', 'gnConfigService', 'gnConfig', 'gnLangs',
-    '$http', '$translate', '$location',
+    '$http', '$translate', '$location', 'gnGlobalSettings',
     function(gnUserSearchesService, gnConfigService, gnConfig, gnLangs,
-             $http, $translate, $location) {
+             $http, $translate, $location, gnGlobalSettings) {
       return {
         restrict: 'A',
         replace: true,
@@ -46,10 +46,13 @@
         link: function postLink(scope, element, attrs) {
           scope.lang = gnLangs.current;
           scope.type = attrs['type'] || 'h';
+          scope.withPortal = scope.isDefaultNode
+            && gnGlobalSettings.gnCfg.mods.search.usersearches.includePortals;
+
           scope.sortByLabel = function(i) {
             return i.names[scope.lang];
           };
-          gnUserSearchesService.loadFeaturedUserSearches(scope.type).then(
+          gnUserSearchesService.loadFeaturedUserSearches(scope.type, scope.withPortal).then(
             function(featuredSearchesCollection) {
               scope.featuredSearches = featuredSearchesCollection.data;
             }, function() {

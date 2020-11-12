@@ -360,7 +360,7 @@
     "emodnet-checkpoint.challenges": "Checkpoint challenges",
     "_op0": "Visible by",
     "mdStatus": "Workflow progress",
-    "codelist_status_text": "Status",
+    "cl_status_text": "Status",
     "_status": "Status",
     "_schema": "Standard",
     "checkCapabilityUrl": "URL {{url}} returned status '{{status}}'. You should check the URL or check that the service is running.",

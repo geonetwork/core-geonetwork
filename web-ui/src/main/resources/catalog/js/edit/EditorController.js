@@ -194,7 +194,7 @@
               $scope.mdSchema = gnCurrentEdit.metadata.schema;
               gnCurrentEdit.schema = $scope.mdSchema;
               $scope.mdCategories = {values: []};
-              var categories = gnCurrentEdit.metadata.category;
+              var categories = gnCurrentEdit.metadata.cat;
               if (categories) {
                 if (angular.isArray(categories)) {
                   $scope.mdCategories.values = categories;

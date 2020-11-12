@@ -560,7 +560,10 @@
       <div id="gn-section-{generate-id()}" class="gn-tab-content">
         <xsl:if test="@name">
           <xsl:variable name="title"
-                        select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
+                        select="
+                        if (contains( @name, ':'))
+                        then gn-fn-render:get-schema-labels($schemaLabels, @name)
+                        else gn-fn-render:get-schema-strings($schemaStrings, @name) "/>
           <xsl:element name="h{1 + count(ancestor-or-self::*[name(.) = 'section'])}">
             <xsl:value-of select="$title"/>
           </xsl:element>

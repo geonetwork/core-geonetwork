@@ -52,10 +52,19 @@
           scope.loadingCollection = false;
 
           scope.registryUrl = '';
-          scope.defaultRegistry = 'https://inspire.ec.europa.eu';
+          // Can be re3gistry or ldRegistry
+          scope.registryType = null;
+          scope.registries = [{
+              name: 'INSPIRE',
+              url: 'https://inspire.ec.europa.eu/registry'
+            },
+            {
+              name: 'BRGM',
+              url: 'https://data.geoscience.fr/ncl/'
+            }];
 
-          scope.setDefault = function() {
-            scope.registryUrl = scope.defaultRegistry;
+          scope.setDefault = function(url) {
+            scope.registryUrl = url;
           }
 
           function getMainLanguage() {
@@ -89,49 +98,53 @@
               return;
             }
 
+            scope.selectedClass = null;
+            scope.selectedCollection = null;
+            scope.itemCollection = [];
 
-            // On init,
-            // * load language first (select the first one)
-            // * load available itemClass (select the firs one)
-            gnRegistryService.loadLanguages(scope.registryUrl).then(
-              function (languages) {
-                scope.languages = languages;
-                scope.selectedClass = null;
-                scope.selectedCollection = null;
-                scope.itemCollection = [];
+            scope.registryType = gnRegistryService.guessTool(scope.registryUrl)
+              .then(function(TYPE) {
+              scope.registryType = TYPE;
+              // On init,
+              // * load language first (select the first one)
+              // * load available itemClass (select the firs one)
+              gnRegistryService.loadLanguages(scope.registryUrl).then(
+                function (languages) {
+                  scope.languages = languages;
 
-                if (languages.length > 0) {
-                  selectPreferredLanguage();
+                  if (languages.length > 0) {
+                    selectPreferredLanguage();
 
-                  gnRegistryService.loadItemClass(
-                    scope.registryUrl, getMainLanguage()).then(
-                    function (itemClass) {
-                      scope.itemClass = itemClass;
+                    gnRegistryService.loadItemClass(
+                      scope.registryUrl, scope.registryType, getMainLanguage()).then(
+                      function (itemClass) {
+                        scope.itemClass = itemClass;
 
-                      if (itemClass.length > 0) {
-                        scope.selectedClassUrl = itemClass[0];
-                        loadCollection();
-                      } else {
+                        if (itemClass.length > 0) {
+                          scope.selectedClassUrl = itemClass[0];
+                          loadCollection();
+                        } else {
+                          $rootScope.$broadcast('StatusUpdated', {
+                            title: $translate.instant('registryNoClassFound'),
+                            timeout: 3,
+                            type: 'warning'});
+                        }
+                      }, function () {
                         $rootScope.$broadcast('StatusUpdated', {
-                          title: $translate.instant('registryNoClassFound'),
+                          title: $translate.instant('registryFailedToLoadClass'),
                           timeout: 3,
-                          type: 'warning'});
+                          type: 'danger'});
                       }
-                    }, function () {
-                      $rootScope.$broadcast('StatusUpdated', {
-                        title: $translate.instant('registryFailedToLoadClass'),
-                        timeout: 3,
-                        type: 'danger'});
-                    }
-                  );
-                } else {
-                  $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate.instant('registryNoLanguage'),
-                    timeout: 3,
-                    type: 'warning'});
+                    );
+                  } else {
+                    $rootScope.$broadcast('StatusUpdated', {
+                      title: $translate.instant('registryNoLanguage'),
+                      timeout: 3,
+                      type: 'warning'});
+                  }
                 }
-              }
-            );
+              );
+            });
           }
 
           scope.$watch('registryUrl', function (n, o) {
@@ -161,7 +174,9 @@
           // TODO: Should be identified by analysing registry response ?
           scope.isSimple = false;
           function isSimpleList() {
-            if (scope.selectedClass.match(
+            if (scope.registryType === 'ldRegistry') {
+              scope.isSimple = true;
+            } else if (scope.selectedClass.match(
               'theme|applicationschema|featureconcept|' +
                 'document|glossary|layer|media-types|producers')) {
               scope.isSimple = true;

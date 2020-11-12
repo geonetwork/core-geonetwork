@@ -1038,7 +1038,7 @@
       },
       {
         "codelist": {
-          "match": "codelist_*",
+          "match": "cl_*",
           "mapping": {
             "type": "keyword"
           }
@@ -1062,7 +1062,7 @@
       },
       {
         "thesaurus": {
-          "match": "thesaurus_*",
+          "match": "th_*",
           "mapping": {
             "type": "keyword"
           }
@@ -1474,6 +1474,10 @@
             "type": "completion"
           }
         }
+      },
+      "allKeywords": {
+        "type": "object",
+        "enabled": false
       },
       "scope": {
         "type": "keyword"
