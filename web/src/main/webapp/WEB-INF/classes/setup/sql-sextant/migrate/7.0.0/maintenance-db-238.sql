@@ -10,9 +10,9 @@ WHERE uuid not in (SELECT distinct(source) FROM metadata);
 
 
 -- Migrate virtual csw to portal
-INSERT INTO sources (uuid, name, islocal, creationdate, filter, groupowner, logo, servicerecord, type, uiconfig)
+INSERT INTO sources (uuid, name, creationdate, filter, groupowner, logo, servicerecord, type, uiconfig)
 SELECT replace(s.name, 'csw-', ''), replace(s.name, 'csw-', ''),
-       'n', '20201022', '+' || p.name || ':' || p.value,
+       '20201022', '+' || p.name || ':' || p.value,
        null, null, null, 'subportal', null
  FROM services s LEFT JOIN serviceparameters p
  ON s.id = p.service;
