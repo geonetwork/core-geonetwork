@@ -75,3 +75,6 @@ SELECT setval('selection_id_seq', (SELECT max(id) + 1 FROM selections));
 SELECT setval('status_value_id_seq', (SELECT max(id) + 1 FROM statusvalues));
 SELECT setval('user_id_seq', (SELECT max(id) + 1 FROM users));
 SELECT setval('user_search_id_seq', (SELECT max(id) + 1 FROM usersearch));
+
+
+UPDATE messageproducerentity SET strategy = 'investigator';
