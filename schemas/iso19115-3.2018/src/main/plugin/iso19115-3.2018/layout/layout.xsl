@@ -191,7 +191,7 @@
   <xsl:template mode="mode-iso19115-3.2018" priority="200"
                 match="*[gco:CharacterString|gcx:Anchor|gco:Integer|gco:Decimal|
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
-       gco:Scale|gco:RecordType|gmx:MimeFileType|gco:LocalName|gco:ScopedName|gco:RecordType|
+       gco:Scale|gco:RecordType|gcx:MimeFileType|gco:LocalName|gco:ScopedName|gco:RecordType|
        gco:Record|lan:PT_FreeText|mcc:URI|gco:TM_PeriodDuration]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
@@ -258,7 +258,7 @@
                   select="gco:CharacterString|gcx:Anchor|gco:Integer|gco:Decimal|
                           gco:Boolean|gco:Real|gco:Measure|gco:Length|
                           gco:Distance|gco:Angle|gmx:FileName|
-                          gco:Scale|gco:RecordType|gmx:MimeFileType|
+                          gco:Scale|gco:RecordType|gcx:MimeFileType|
                           gco:LocalName|gco:ScopedName|gco:RecordType|
                           gco:Record|mcc:URI|gco:TM_PeriodDuration"/>
     <xsl:variable name="theElement"
