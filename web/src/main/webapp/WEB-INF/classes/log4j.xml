@@ -197,10 +197,10 @@
     <appender-ref ref="fileAppender" />
   </logger>
   <logger name="org.springframework.security">
-    <level value="WARN" />
+    <level value="DEBUG" />
   </logger>
   <logger name="org.springframework.security.ldap">
-    <level value="WARN" />
+    <level value="DEBUG" />
   </logger>
   <logger name="org.springframework.aop.framework.CglibAopProxy">
     <level value="ERROR" />
