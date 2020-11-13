@@ -114,7 +114,10 @@
       <artifactId>h2</artifactId>
       <scope>test</scope>
     </dependency>
-
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache-core</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
