@@ -1098,13 +1098,16 @@
 
         <xsl:for-each select="mrd:transferOptions/*/
                                 mrd:onLine/*[cit:linkage/gco:CharacterString != '']">
-          <xsl:variable name="protocol" select="cit:protocol/gco:CharacterString/text()"/>
+          <xsl:variable name="transferGroup"
+                        select="count(ancestor::mrd:transferOptions/preceding-sibling::mrd:transferOptions)"/>
+
+          <xsl:variable name="protocol" select="cit:protocol/*/text()"/>
 
           <linkUrl>
             <xsl:value-of select="cit:linkage/gco:CharacterString"/>
           </linkUrl>
           <linkProtocol>
-            <xsl:value-of select="cit:protocol/gco:CharacterString/text()"/>
+            <xsl:value-of select="$protocol"/>
           </linkProtocol>
           <xsl:element name="linkUrlProtocol{replace($protocol, '[^a-zA-Z0-9]', '')}">
             <xsl:value-of select="cit:linkage/*/text()"/>
@@ -1113,7 +1116,9 @@
             "protocol":"<xsl:value-of select="gn-fn-index:json-escape(cit:protocol/*/text())"/>",
             "url":"<xsl:value-of select="gn-fn-index:json-escape(cit:linkage/*/text())"/>",
             "name":"<xsl:value-of select="gn-fn-index:json-escape((cit:name/*/text())[1])"/>",
-            "description":"<xsl:value-of select="gn-fn-index:json-escape((cit:description/*/text())[1])"/>"
+            "description":"<xsl:value-of select="gn-fn-index:json-escape((cit:description/*/text())[1])"/>",
+            "applicationProfile":"<xsl:value-of select="gn-fn-index:json-escape(cit:applicationProfile/gco:CharacterString/text())"/>",
+            "group": <xsl:value-of select="$transferGroup"/>
             }
           </link>
 
