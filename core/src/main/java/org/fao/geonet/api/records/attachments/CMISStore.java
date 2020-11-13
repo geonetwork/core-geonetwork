@@ -34,6 +34,7 @@ import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisConstraintException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
+import org.apache.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -172,37 +173,21 @@ public class CMISStore extends AbstractStore {
         if (changeDate != null) {
             properties.put(PropertyIds.LAST_MODIFICATION_DATE, changeDate);
         }
-
-        ContentStream contentStream = CMISConfiguration.getClient().getObjectFactory().createContentStream(key, is.available(), Files.probeContentType(new File(key).toPath()), is);
+        int isLength=is.available();
+        ContentStream contentStream = CMISConfiguration.getClient().getObjectFactory().createContentStream(key, isLength, Files.probeContentType(new File(key).toPath()), is);
 
         Document doc;
         try {
             // If the document is found then we are updating the existing document.
             doc = (Document) CMISConfiguration.getClient().getObjectByPath(key, oc);
-/* Versioning failing with runtimeexception error...
-            if (doc.isVersionable()) {
-                if (doc.getAllowableActions().getAllowableActions().contains(Action.CAN_CHECK_OUT)) {
-                    doc.refresh();
-Fails here --->     ObjectId idOfCheckedOutDocument = doc.checkOut();
-                    Document pwc = (Document) CMISConfiguration.getClient().getObject(idOfCheckedOutDocument);
-                    try {
-                        ObjectId objectId = pwc.checkIn(true, properties, contentStream, "");
-                        doc = (Document) CMISConfiguration.getClient().getObject(objectId, oc);
-                    } catch (Exception e) {
-                        pwc.cancelCheckOut();
-                        throw e;
-                    }
-                } else {
-                    throw new NotAllowedException(String.format(
-                            "No permissions to modify existing metadata resource '%s' for metadata '%s'.", key, metadataUuid));
-                }
-            } else {
-*/                // If it is not versionable then lets just overwrite the content.
             doc.updateProperties(properties, true);
             doc.setContentStream(contentStream, true, true);
             //           }
-            Log.info(Geonet.RESOURCES,
-                    String.format("Updated metadata resource '%s' for metadata '%s'. Current version '%s'.", key, metadataUuid, doc.getVersionLabel()));
+            // Avoid CMIS API call is info is not enabled.
+            if (Logger.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
+                Log.info(Geonet.RESOURCES,
+                        String.format("Updated metadata resource '%s' for metadata '%s'. Current version '%s'.", key, metadataUuid, doc.getVersionLabel()));
+            }
         } catch (CmisPermissionDeniedException ex) {
             Log.warning(Geonet.RESOURCES, String.format(
                     "No permissions to update metadata resource '%s' for metadata '%s' due to constraint violation or lock.", key, metadataUuid));
@@ -219,10 +204,10 @@ Fails here --->     ObjectId idOfCheckedOutDocument = doc.checkOut();
 
             // Get parent folder.
             Folder parentFolder;
-            //syncronize folder creation.
+            // synchronize folder creation.
             // This will prevent cases where multiple files are uploaded on the interface
             // In this case there will be a race condition to create the same folder.
-            // And if this is not syncronized then there will be a lot or CmisContentAlreadyExistsException errors.
+            // And if this is not synchronized then there will be a lot or CmisContentAlreadyExistsException errors.
             synchronized (this) {
                 try {
                     parentFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(parentKey, oc);
@@ -234,8 +219,11 @@ Fails here --->     ObjectId idOfCheckedOutDocument = doc.checkOut();
             }
             try {
                 doc = parentFolder.createDocument(properties, contentStream, VersioningState.MAJOR);
-                Log.info(Geonet.RESOURCES,
-                        String.format("Added resource metadata resource '%s' for metadata '%s'.", doc.getPaths().get(0), metadataUuid));
+                // Avoid CMIS API call is info is not enabled.
+                if (Logger.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
+                    Log.info(Geonet.RESOURCES,
+                            String.format("Added resource metadata resource '%s' for metadata '%s'.", doc.getPaths().get(0), metadataUuid));
+                }
             } catch (CmisPermissionDeniedException ex) {
                 Log.warning(Geonet.RESOURCES, String.format(
                         "No permissions to add metadata resource '%s' for metadata '%s'.", key, metadataUuid));
@@ -244,7 +232,7 @@ Fails here --->     ObjectId idOfCheckedOutDocument = doc.checkOut();
             }
         }
 
-        return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, doc.getContentStreamLength(),
+        return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, isLength,
                 doc.getLastModificationDate().getTime(), doc.getVersionLabel(), metadataId);
     }
 
@@ -352,8 +340,8 @@ Fails here --->     ObjectId idOfCheckedOutDocument = doc.checkOut();
             return String.format("Unable to located metadata '%s' directory to be removed.", metadataId);
         } catch (CmisPermissionDeniedException e) {
             Log.warning(Geonet.RESOURCES,
-                    String.format("Insuficient privledges, unable to remove metadata '%s' directory due to insuficient privledges.", metadataId));
-            return String.format("Insuficient privledges, unable to remove metadata '%s' directory due to insuficient privledges.", metadataId);
+                    String.format("Insufficient privileges, unable to remove metadata '%s' directory.", metadataId));
+            return String.format("Insufficient privileges, unable to remove metadata '%s' directory.", metadataId);
         } catch (CmisConstraintException e) {
             Log.warning(Geonet.RESOURCES,
                     String.format("Unable to remove metadata '%s' directory due so constraint violation or locks.", metadataId));

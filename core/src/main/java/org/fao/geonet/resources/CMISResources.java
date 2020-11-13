@@ -4,6 +4,7 @@ package org.fao.geonet.resources;
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 import org.apache.chemistry.opencmis.client.api.*;
+import org.apache.chemistry.opencmis.client.runtime.DocumentImpl;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.chemistry.opencmis.commons.enums.VersioningState;
@@ -204,8 +205,16 @@ public class CMISResources extends Resources {
             key = CMISConfiguration.getFolderDelimiter() +  filename;
         }
 
+        boolean keyExists=false;
+        // Use getObjectByPath as it does caching while existsPath does not.
+        try {
+            CMISConfiguration.getClient().getObjectByPath(key);
+            keyExists = true;
+        } catch (CmisObjectNotFoundException e) {
+            keyExists=false;
+        }
 
-        if (!CMISConfiguration.getClient().existsPath(key)) {
+        if (!keyExists) {
             Path webappCopy = null;
             if (context != null) {
                 final String realPath = context.getRealPath(filename);
@@ -286,20 +295,16 @@ public class CMISResources extends Resources {
     @Override
     protected void addFiles(final DirectoryStream.Filter<Path> iconFilter, final Path webappDir,
                             final HashSet<Path> result) {
-        // Don't use caching for this process.
-        OperationContext oc = CMISConfiguration.getClient().createOperationContext();
-        oc.setCacheEnabled(false);
 
-        String key = getKey(webappDir) + CMISConfiguration.getFolderDelimiter();
-        CmisObject cmisObject = CMISConfiguration.getClient().getObjectByPath(key, oc);
+        String keyFolder = getKey(webappDir) + CMISConfiguration.getFolderDelimiter();
+        CmisObject cmisObject = CMISConfiguration.getClient().getObjectByPath(keyFolder);
         Folder folder = (Folder) cmisObject;
 
-        ItemIterable<CmisObject> children = folder.getChildren(oc);
+        ItemIterable<CmisObject> children = folder.getChildren();
 
         for (CmisObject object : children) {
             if (object instanceof Document) {
-                // Todo don't beleive this will be correct as it will probably not contain the full path?
-                final Path curPath = getKeyPath(object.getName());
+                final Path curPath = getKeyPath(((DocumentImpl) object).getPaths().get(0));
                 try {
                     if (iconFilter.accept(curPath)) {
                         result.add(curPath);
