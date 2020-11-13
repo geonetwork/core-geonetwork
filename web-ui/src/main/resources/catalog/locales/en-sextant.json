@@ -1,5 +1,6 @@
 {
-  "facet-thesaurus_geonetworkthesauruslocalthemesextanttheme_tree": "Sextant themes",
+  "layerSource": "Sources",
+  "facet-th_sextanttheme_tree": "Sextant themes",
   "resetFilter": "Reset filters",
   "applyFilter": "Apply filters",
   "view": "View",
