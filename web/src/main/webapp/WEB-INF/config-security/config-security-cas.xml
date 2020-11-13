@@ -149,7 +149,7 @@
     <constructor-arg value="50"/>
     <constructor-arg><null/></constructor-arg>
     <constructor-arg value="true"/>
-    <constructor-arg value="{java.io.tmpdir}"/>
+    <constructor-arg value="${java.io.tmpdir}"/>
     <constructor-arg value="false"/>
     <constructor-arg value="3600"/>
     <constructor-arg value="900"/>
