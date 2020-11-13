@@ -3,59 +3,71 @@
 		ng-init="parentIndex=$index">
 		<td>
 			<div class="input-group">
-				<span class="input-group-addon" data-translate="">ui-label</span> <input
-					type="text" class="form-control" data-ng-model="opt.label" />
-			</div>
-			<div class="input-group">
-				<p class="help-block" data-translate="">ui-label-help</p>
-			</div>
-			<div class="input-group">
-				<span class="input-group-addon" data-translate="">ui-code</span> <input
-					type="text" class="form-control" data-ng-model="opt.code" />
+				<span class="input-group-addon" data-translate="">ui-code</span> 
+				<input type="text" class="form-control" data-ng-model="opt.code" 
+					data-ng-required="!epsgHelpers.isValidEpsgCode(opt.code)" />
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" 
+						title="{{'ui-getProj' | translate:epsgHelpers.getServiceName()}}"
+						data-ng-click="populateProjSettings(mCfg[key][$index])">
+						<i class="fa fa-globe" />
+					</button>
+				</span>
 			</div>
 			<div class="input-group">
 				<p class="help-block" data-translate="">ui-code-help</p>
 			</div>
 			<div class="input-group">
+				<span class="input-group-addon" data-translate="">ui-label</span> <input
+					type="text" class="form-control" data-ng-model="opt.label" required />
+			</div>
+			<div class="input-group">
+				<p class="help-block" data-translate="">ui-label-help</p>
+			</div>
+			<div class="input-group">
 				<span class="input-group-addon" data-translate="">ui-definition</span>
-				<input type="text" class="form-control" data-ng-model="opt.def" />
+				<input type="text" class="form-control" data-ng-model="opt.def" 
+					data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" />
 			</div>
 			<div class="input-group">
 				<p class="help-block" data-translate="">ui-definition-help</p>
 			</div>
 			<div class="input-group">
 				<span class="input-group-addon" data-translate="">ui-minx</span> <input
-					type="number" step="any" class="form-control" data-ng-model="opt.extent[0]" />
+					type="number" step="any" class="form-control" data-ng-model="opt.extent[0]" 
+						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" />
 				<span class="input-group-addon" data-translate="">ui-miny</span> <input
-					type="number" step="any" class="form-control" data-ng-model="opt.extent[1]" />
+					type="number" step="any" class="form-control" data-ng-model="opt.extent[1]" 
+						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" />
 				<span class="input-group-addon" data-translate="">ui-maxx</span> <input
-					type="number" step="any" class="form-control" data-ng-model="opt.extent[2]" />
+					type="number" step="any" class="form-control" data-ng-model="opt.extent[2]" 
+						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" />
 				<span class="input-group-addon" data-translate="">ui-maxy</span> <input
-					type="number" step="any" class="form-control" data-ng-model="opt.extent[3]" />
+					type="number" step="any" class="form-control" data-ng-model="opt.extent[3]" 
+						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" />
 			</div>
 			<div class="input-group">
 				<p class="help-block" data-translate="">ui-extent-help</p>
 			</div>
 			<div class="input-group">
-				<span class="input-group-addon" data-translate="">ui-minx</span> <input
-					type="number" step="any" class="form-control"
-					data-ng-model="opt.worldExtent[0]" /> <span
-					class="input-group-addon" data-translate="">ui-miny</span> <input
-					type="number" step="any" class="form-control"
-					data-ng-model="opt.worldExtent[1]" /> <span
-					class="input-group-addon" data-translate="">ui-maxx</span> <input
-					type="number" step="any" class="form-control"
-					data-ng-model="opt.worldExtent[2]" /> <span
-					class="input-group-addon" data-translate="">ui-maxy</span> <input
-					type="number" step="any" class="form-control"
-					data-ng-model="opt.worldExtent[3]" />
+				<span class="input-group-addon" data-translate="">ui-minlon</span> <input
+					type="number" step="any" class="form-control" data-ng-model="opt.worldExtent[0]" 
+						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" /> 
+				<span class="input-group-addon" data-translate="">ui-minlat</span> <input 
+					type="number" step="any" class="form-control" data-ng-model="opt.worldExtent[1]" 
+						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" /> 
+				<span class="input-group-addon" data-translate="">ui-maxlon</span> <input
+					type="number" step="any" class="form-control" data-ng-model="opt.worldExtent[2]" 
+						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" /> 
+				<span class="input-group-addon" data-translate="">ui-maxlat</span> <input
+					type="number" step="any" class="form-control" data-ng-model="opt.worldExtent[3]" 
+						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" />
 			</div>
 			<div class="input-group">
 				<p class="help-block" data-translate="">ui-worldExtent-help</p>
 			</div>
 			<div class="input-group">
 				<span class="input-group-addon" data-translate="">ui-resolutions</span>
-
 				<table class="table table-striped">
 					<tr data-ng-repeat="resolution in opt.resolutions track by $index">
 						<td><input type="number" class="form-control"
@@ -87,8 +99,8 @@
 	<tr>
 		<td><a class="btn btn-link" title="{{'add' | translate}}"
 			data-ng-click="addItem(mCfg[key], {'label': '', 'code': 
-			'EPSG:', 'extent': [], worldExtent: [], resolutions: []})">
-				<i class="fa fa-plus" />
+				'EPSG:', 'extent': [], worldExtent: [], resolutions: []})">
+					<i class="fa fa-plus" />
 		</a></td>
 	</tr>
 </table>
