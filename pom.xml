@@ -1416,7 +1416,7 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>7.9.2</es.version>
+    <es.version>7.5.2</es.version>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
 
@@ -1426,7 +1426,6 @@
     <es.url>${es.protocol}://${es.host}:${es.port}</es.url>
     <es.index.features>geo-features</es.index.features>
     <es.index.features.type>features</es.index.features.type>
-    <es.index.features.commitInterval>1000</es.index.features.commitInterval>
     <es.index.records>geo-records</es.index.records>
     <es.index.records_public>geo-records-public</es.index.records_public>
     <es.index.records.type>records</es.index.records.type>
