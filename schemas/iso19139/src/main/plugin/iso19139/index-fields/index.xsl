@@ -1077,10 +1077,12 @@
         <xsl:for-each select="gmd:transferOptions/*/
                                 gmd:onLine/*[gmd:linkage/gmd:URL != '']">
 
+          <xsl:variable name="transferGroup"
+                        select="count(ancestor::gmd:transferOptions/preceding-sibling::gmd:transferOptions)"/>
           <xsl:variable name="protocol"
-                        select="gmd:protocol/gco:CharacterString/text()"/>
+                        select="gmd:protocol/*/text()"/>
           <xsl:variable name="linkName"
-                        select="gn-fn-index:json-escape(gmd:name/gco:CharacterString/text())"/>
+                        select="gn-fn-index:json-escape(gmd:name/*/text())"/>
 
           <linkUrl>
             <xsl:value-of select="gmd:linkage/gmd:URL"/>
@@ -1095,7 +1097,9 @@
             "protocol":"<xsl:value-of select="gn-fn-index:json-escape((gmd:protocol/*/text())[1])"/>",
             "url":"<xsl:value-of select="gn-fn-index:json-escape(gmd:linkage/gmd:URL)"/>",
             "name":"<xsl:value-of select="$linkName"/>",
-            "description":"<xsl:value-of select="gn-fn-index:json-escape(gmd:description/gco:CharacterString/text())"/>"
+            "description":"<xsl:value-of select="gn-fn-index:json-escape(gmd:description/gco:CharacterString/text())"/>",
+            "applicationProfile":"<xsl:value-of select="gn-fn-index:json-escape(gmd:applicationProfile/gco:CharacterString/text())"/>",
+            "group": <xsl:value-of select="$transferGroup"/>
             }
             <!--Link object in Angular used to be
             //     name: linkInfos[0],

@@ -356,7 +356,7 @@
         };
 
         var urlSplit = originUrl.pathname.split('/');
-        if (urlSplit.lenght < 3) {
+        if (urlSplit.length < 3) {
           //TODO manage error
         }
         else {
@@ -696,15 +696,16 @@
           groupId = types[0];
           types.splice(0, 1);
         }
-        if (this.linksCache[key] && !groupId) {
+        if (this.linksCache[key] && groupId === undefined) {
           return this.linksCache[key];
         }
         angular.forEach(this.link, function(link) {
           if (types.length > 0) {
             types.forEach(function(type) {
               if (type.substr(0, 1) == '#') {
-                if (link.protocol == type.substr(1, type.length - 1) &&
-                  (!groupId || groupId == link.group)) {
+                var protocolMatch = link.protocol == type.substr(1, type.length - 1);
+                if ((protocolMatch && groupId === undefined) ||
+                    (protocolMatch && groupId != undefined && groupId == link.group)) {
                   ret.push(link);
                 }
               }

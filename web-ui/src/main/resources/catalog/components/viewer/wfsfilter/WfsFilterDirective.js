@@ -142,7 +142,8 @@
           scope.map = scope.$parent.map;
           var map = scope.map;
 
-          scope.strategy = 'investigator';
+          scope.strategy = attrs['strategy'] || 'investigator';
+          var mode = attrs['mode'] || 'replacement';
 
           // Only admin can index the features
           scope.user = $rootScope.user;
@@ -201,6 +202,29 @@
               return;
             }
 
+            function getWfsUrl(mode, layer) {
+              if (mode === 'scope') {
+                // Use the WFS URL provided
+                return scope.wfsUrl;
+              } else if (mode === 'replacement') {
+                // Simply try to replace wms in URL by wfs
+                // expecting that the layer as a corresponding feature type
+                // with same name.
+                return layer.get('url').replace(/wms/i, 'wfs');
+              } else if (mode === 'group') {
+                // Collect WFS URL in the same transfer option group
+                // as the WMS URL. Get the group
+                var group = layer.get('md').getLinkGroup(scope.layer);
+                // Get the corresponding WFS and optional application profile
+                var wfs = layer.get('md').getLinksByType(group, '#OGC:WFS');
+                if (wfs.length > 0) {
+                  return wfs[0].url;
+                }
+              }
+            }
+
+            scope.wfsUrl = getWfsUrl(mode, scope.layer);
+
             angular.extend(scope, {
               fields: [],
               isWfsAvailable: undefined,
@@ -209,8 +233,7 @@
               // FIXME: On page reload the md is undefined and the filter does not work
               md: scope.layer.get('md'),
               mdUrl: scope.layer.get('url'),
-              url: gnGlobalSettings.getNonProxifiedUrl(
-                scope.wfsUrl || scope.layer.get('url').replace(/wms/i, 'wfs'))
+              url: gnGlobalSettings.getNonProxifiedUrl(scope.wfsUrl)
             });
 
             uuid = scope.md && scope.md.uuid;
