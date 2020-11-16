@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+  <bean id="toTest" class="org.fao.geonet.kernel.security.ldap.LDAPProfileToDbUserSynchronizer" />
+
+  <bean id="contextSource"
+        class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+    <constructor-arg value="ldap://localhost:#{ systemEnvironment['ldapPort'] }/dc=ifremer,dc=fr"/>
+    <property name="userDn" value="cn=admin,dc=ifremer,dc=fr"/>
+    <property name="password" value="secret"/>
+  </bean>
+
+  <bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+    <constructor-arg ref="contextSource" />
+  </bean>
+
+  <bean id="ldapUtils" class="org.fao.geonet.kernel.security.ldap.LDAPUtils"/>
+
+  <!-- these are some beans defined in config-security-ldap.xml which allow
+    LDAP user to db user mappings -->
+
+  <bean id="ldapUserContextMapper" class="org.fao.geonet.kernel.security.ldap.SextantLDAPUserDetailsContextMapper">
+    <property name="mapping">
+      <util:map map-class="java.util.HashMap" key-type="java.lang.String" value-type="java.lang.String[]">
+        <entry key="name" value="givenName,"/>
+        <entry key="surname" value="sn,"/>
+        <entry key="mail" value="mail,data@myorganization.org"/>
+        <entry key="organization" value="o,myorganization"/>
+        <entry key="kind" value="title,"/>
+        <entry key="privilege" value="listesiteweb,sample"/>
+        <entry key="profile" value="profile,RegisteredUser"/>
+      </util:map>
+    </property>
+    <property name="profileMapping">
+      <map/>
+    </property>
+    <property name="importPrivilegesFromLdap" value="true"/>
+    <property name="createNonExistingLdapGroup" value="false" />
+    <property name="createNonExistingLdapUser" value="false" />
+
+    <property name="ldapManager" ref="ldapUserDetailsService" />
+
+    <property name="privilegePattern" value="SXT5_(.*)_(.*)" />
+    <property name="groupIndexInPattern" value="1"/>
+    <property name="profilIndexInPattern" value="2"/>
+
+    <property name="contextSource" ref="contextSource" />
+    <property name="ldapUsernameCaseInsensitive" value="true"/>
+  </bean>
+
+    <bean id="ldapUserDetailsService" class="org.fao.geonet.kernel.security.ldap.LdapUserDetailsManager">
+      <constructor-arg ref="contextSource" />
+      <property name="groupSearchBase" value="" />
+      <property name="usernameMapper" ref="usernameMapper" />
+      <property name="userDetailsMapper" ref="ldapUserContextMapper"/>
+    </bean>
+
+    <bean id="usernameMapper" class="org.springframework.security.ldap.DefaultLdapUsernameToDnMapper">
+    <constructor-arg index="0" type="java.lang.String" name="userDnBase" value="${ldap.base.search.base}" />
+    <constructor-arg index="1" type="java.lang.String" name="usernameAttribute" value="${ldap.sync.user.search.attribute}" />
+  </bean>
+
+
+  <!-- Following are the beans for all the JPA stuff -->
+
+    <jpa:repositories base-package="org.fao.geonet.repository"
+                    factory-class="org.fao.geonet.repository.GeonetRepositoryFactoryBean"
+                    entity-manager-factory-ref="entityManagerFactory"
+                    transaction-manager-ref="transactionManager"/>
+
+  <util:map id="jpaPropertyMap">
+    <entry key="shared-cache-mode" value="ENABLE_SELECTIVE" />
+    <entry key="javax.persistence.lock.timeout" value="30000" />
+    <entry key="org.hibernate.flushMode" value="AUTO" />
+    <entry key="access" value="PROPERTY" />
+    <entry key="hibernate.id.new_generator_mappings" value="true" />
+    <entry key="hibernate.cache.use_second_level_cache" value="true" />
+    <!--<entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.internal.NoCachingRegionFactory"/> -->
+    <entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory" />
+    <entry key="hibernate.jdbc.batch_size" value="3" />
+    <entry key="hibernate.jdbc.batch_versioned_data" value="true" />
+    <entry key="hibernate.enable_lazy_load_no_trans" value="true" />
+    <entry key="hibernate.default_schema" value="public"/>
+    <entry key="hibernate.dialect" value="org.fao.geonet.dialect.CustomPostgreSQLDialect" />
+  </util:map>
+
+  <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+      <property name="dataSource" ref="jdbcDataSource"/>
+      <property name="packagesToScan" value="org.fao.geonet.domain"/>
+      <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+      <property name="jpaPropertyMap" ref="jpaPropertyMap"/>
+    </bean>
+
+  <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    <property name="entityManagerFactory" ref="entityManagerFactory"/>
+  </bean>
+
+  <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+    <property name="generateDdl" ref="generateDdl"/>
+    <property name="showSql" value="false"/>
+    <property name="database" value="POSTGRESQL"/>
+  </bean>
+
+  <bean id="generateDdl" class="java.lang.String" scope="singleton">
+    <constructor-arg value="true"/>
+  </bean>
+
+  <bean id="jdbcDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+    <property name="driverClassName" value="org.postgresql.Driver" />
+    <property name="Url" value="jdbc:postgresql://localhost:#{ systemEnvironment['pgsqlPort'] }/sextant" />
+    <property name="username" value="sextant" />
+    <property name="password" value="sextant" />
+  </bean>
+
+
+</beans>

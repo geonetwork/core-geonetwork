@@ -1,0 +1,45 @@
+dn: cn=ifremer,cn=schema,cn=config
+objectClass: olcSchemaConfig
+cn: ifremer
+olcAttributeTypes: {0}( 1.1.2.1.1 NAME 'groupeunix' EQUALITY caseIgnoreMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+olcAttributeTypes: {1}( 1.1.2.1.2 NAME 'listesiteweb' EQUALITY caseIgnoreMat
+ ch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+olcAttributeTypes: {2}( 1.1.2.1.3 NAME 'centre' EQUALITY caseIgnoreMatch SYN
+ TAX 1.3.6.1.4.1.1466.115.121.1.15 )
+olcAttributeTypes: {3}( 1.1.2.1.4 NAME 'debut' EQUALITY caseIgnoreMatch SYNT
+ AX 1.3.6.1.4.1.1466.115.121.1.15 )
+olcAttributeTypes: {4}( 1.1.2.1.5 NAME 'extpasswd' EQUALITY caseIgnoreMatch 
+ SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+olcAttributeTypes: {5}( 1.1.2.1.6 NAME 'extuid' EQUALITY caseIgnoreMatch SYN
+ TAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+olcAttributeTypes: {6}( 1.1.2.1.7 NAME 'fin' EQUALITY caseIgnoreMatch SYNTAX
+  1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+olcAttributeTypes: {7}( 1.1.2.1.8 NAME 'liste' EQUALITY caseIgnoreMatch SYNT
+ AX 1.3.6.1.4.1.1466.115.121.1.15 )
+olcAttributeTypes: {8}( 1.1.2.1.9 NAME 'numeroabrege' EQUALITY caseIgnoreMat
+ ch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+olcAttributeTypes: {9}( 1.1.2.1.10 NAME 'responsablechantier' EQUALITY caseI
+ gnoreMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+olcAttributeTypes: {10}( 1.1.2.1.11 NAME 'responsabledefi' EQUALITY caseIgno
+ reMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+olcAttributeTypes: {11}( 1.1.2.1.12 NAME 'responsabletheme' EQUALITY caseIgn
+ oreMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+olcAttributeTypes: {12}( 1.1.2.1.13 NAME 'service' EQUALITY caseIgnoreMatch 
+ SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+olcObjectClasses: {0}( 1.1.2.2.1 NAME 'ficheannuaireextranet' SUP top STRUCT
+ URAL MUST uid MAY ( cn $ employeenumber $ facsimiletelephonenumber $ gidnum
+ ber $ givenname $ groupeunix $ listesiteweb $ mail $ o $ sn $ telephonenumb
+ er $ uidnumber $ userpassword ) )
+olcObjectClasses: {1}( 1.1.2.2.2 NAME 'membresitesweb' SUP top STRUCTURAL MA
+ Y listesiteweb )
+olcObjectClasses: {2}( 1.1.2.2.3 NAME 'extuser' SUP top STRUCTURAL MUST ( ex
+ tpasswd $ extuid ) )
+olcObjectClasses: {3}( 1.1.2.2.4 NAME 'ficheannuaire' SUP top STRUCTURAL MUS
+ T employeenumber MAY ( centre $ cn $ debut $ employeetype $ facsimileteleph
+ onenumber $ fin $ gidnumber $ givenname $ groupeunix $ homedirectory $ l $ 
+ liste $ loginshell $ mail $ manager $ numeroabrege $ o $ responsablechantie
+ r $ responsabledefi $ responsabletheme $ service $ sn $ telephonenumber $ t
+ itle $ uid $ uidnumber $ usercertificate $ userpassword $ userpkcs12 $ user
+ smimecertificate ) )
+

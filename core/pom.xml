@@ -21,19 +21,15 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
     <version>3.11.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-
   <artifactId>core</artifactId>
   <name>GeoNetwork core</name>
-
   <dependencies>
     <dependency>
       <groupId>net.objecthunter</groupId>
@@ -136,7 +132,6 @@
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-config</artifactId>
     </dependency>
-
     <!-- Monitoring libraries -->
     <dependency>
       <groupId>com.yammer.metrics</groupId>
@@ -154,22 +149,18 @@
       <groupId>com.yammer.metrics</groupId>
       <artifactId>metrics-log4j</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>fop</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>fop-pdf-images</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.apache.jcs</groupId>
       <artifactId>jcs</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-dbcp2</artifactId>
@@ -178,7 +169,6 @@
       <groupId>commons-pool</groupId>
       <artifactId>commons-pool</artifactId>
     </dependency>
-
     <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>
@@ -366,12 +356,10 @@
       <artifactId>events</artifactId>
       <version>${project.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.tmatesoft.svnkit</groupId>
       <artifactId>svnkit</artifactId>
     </dependency>
-
     <!-- Print service: MapFish -->
     <dependency>
       <groupId>org.mapfish.print</groupId>
@@ -428,7 +416,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-
     <!-- ====================== -->
     <!-- Generated dependencies -->
     <dependency>
@@ -451,12 +438,12 @@
       <artifactId>schema-iso19139</artifactId>
       <version>${gn.schemas.version}</version>
     </dependency>
-    <dependency> <!-- dummy API for ARC SDE stuff -->
+    <dependency>
+      <!-- dummy API for ARC SDE stuff -->
       <groupId>${project.groupId}</groupId>
       <artifactId>dummy-api</artifactId>
       <version>${project.version}</version>
     </dependency>
-
     <!-- Handled locally by a temporarly repository -->
     <dependency>
       <groupId>dlib</groupId>
@@ -491,7 +478,6 @@
       <artifactId>netcdf</artifactId>
       <version>4.3.23</version>
     </dependency>
-
     <!-- language detection -->
     <dependency>
       <groupId>com.cybozu.labs</groupId>
@@ -543,7 +529,6 @@
       <version>1.11.618</version>
     </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>
@@ -583,9 +568,115 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.22.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <environmentVariables>
+            <pgsqlPort>${database_container.port}</pgsqlPort>
+            <ldapPort>${ldap_container.port}</ldapPort>
+          </environmentVariables>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>0.34.1</version>
+        <executions>
+          <execution>
+            <id>build-containers</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+            <configuration>
+              <images>
+                <image>
+                  <name>sextant-ldap</name>
+                  <build>
+                    <dockerFile>${project.basedir}/src/test/docker/ldap/Dockerfile</dockerFile>
+                  </build>
+                </image>
+              </images>
+              <skip>${skipTests}</skip>
+            </configuration>
+          </execution>
+          <execution>
+            <id>launch-containers</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start</goal>
+            </goals>
+            <configuration>
+              <images>
+                <image>
+                  <name>postgres:9.6-alpine</name>
+                  <alias>database</alias>
+                  <run>
+                    <env>
+                      <POSTGRES_USER>sextant</POSTGRES_USER>
+                      <POSTGRES_PASSWORD>sextant</POSTGRES_PASSWORD>
+                      <POSTGRES_DB>sextant</POSTGRES_DB>
+                    </env>
+                    <ports>
+                      <port>database_container.port:5432</port>
+                    </ports>
+                    <wait>
+                      <time>20000</time>
+                      <tcp>
+                        <mode>mapped</mode>
+                        <ports>
+                          <port>5432</port>
+                        </ports>
+                      </tcp>
+                    </wait>
+                  </run>
+                </image>
+                <image>
+                  <name>sextant-ldap</name>
+                  <alias>ldap</alias>
+                  <run>
+                    <ports>
+                      <port>ldap_container.port:389</port>
+                    </ports>
+                    <wait>
+                      <time>20000</time>
+                      <tcp>
+                        <mode>mapped</mode>
+                        <ports>
+                          <port>389</port>
+                        </ports>
+                      </tcp>
+                    </wait>
+                  </run>
+                </image>
+              </images>
+              <skip>${skipTests}</skip>
+            </configuration>
+          </execution>
+          <execution>
+            <id>remove-containers</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+            <configuration>
+              <skip>${skipTests}</skip>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
-
   <profiles>
     <profile>
       <id>run-static-analysis</id>
@@ -607,5 +698,4 @@
   <properties>
     <rootProjectDir>${basedir}/..</rootProjectDir>
   </properties>
-
 </project>

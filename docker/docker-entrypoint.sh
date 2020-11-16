@@ -77,13 +77,23 @@ if [ "$1" = 'catalina.sh' ]; then
 EOF
     fi
 
+    # Reconfigure LDAP admin user
+    if [ "$LDAP_ADMIN_DN" != "" ] && [ "$LDAP_ADMIN_PASSWORD" != "" ] ; then
+        augtool -r /usr/local/tomcat/webapps/geonetwork/WEB-INF/config-security/ --noautoload --transform "Properties.lns incl /config-security.properties" <<EOF
+            set '/files/config-security.properties/ldap.security.principal' "${LDAP_ADMIN_DN}"
+            set '/files/config-security.properties/ldap.security.credentials' "${LDAP_ADMIN_PASSWORD}"
+        save
+EOF
+    fi
+
     # Reconfigure CAS
-    if [ "CAS_URL" != "" ] ; then
+    if [ "$CAS_URL" != "" ] &&  [ "$CAS_TICKET_VALIDATION_URL" != "" ] && [ "$GN_URL" != "" ]; then
         augtool -r /usr/local/tomcat/webapps/geonetwork/WEB-INF/config-security/ --noautoload --transform "Properties.lns incl /config-security.properties" <<EOF
             set '/files/config-security.properties/cas.baseURL' "${CAS_URL}"
-            set '/files/config-security.properties/cas.ticket.validator.url' "${CAS_URL}"
+            set '/files/config-security.properties/cas.ticket.validator.url' "${CAS_TICKET_VALIDATION_URL}"
             set '/files/config-security.properties/cas.login.url' "${CAS_URL}/login"
-            set '/files/config-security.properties/cas.logout.url' "${CAS_URL}/logout?url=\${geonetwork.https.url}"
+            set '/files/config-security.properties/cas.logout.url' "${CAS_URL}/logout?url=${GN_URL}"
+            set '/files/config-security.properties/geonetwork.https.url' "${GN_URL}"
             save
 EOF
     fi
@@ -103,6 +113,21 @@ EOF
 EOF
     fi
 
+    # Reconfigure the tomcat connector
+    if [ "$CONNECTOR_PROXY_NAME" != "" ] && [ "$CONNECTOR_PROXY_PORT" != "" ] ; then
+        augtool -r /usr/local/tomcat/conf --noautoload --transform "Xml.lns incl /server.xml" <<EOF
+            set '/files/server.xml/Server/Service/Connector/#attribute/proxyName' "${CONNECTOR_PROXY_NAME}"
+            set '/files/server.xml/Server/Service/Connector/#attribute/proxyPort' "${CONNECTOR_PROXY_PORT}"
+            save
+EOF
+    fi
+
+    # TODO: Needed to have CAS ticket validation working
+    # Might need to modify from the sources directly ?
+    augtool -r /usr/local/tomcat/webapps/geonetwork/WEB-INF/config-security/ --noautoload --transform "Xml.lns incl /config-security-cas.xml" <<EOF
+        rm /files/config-security-cas.xml/beans/bean[#attribute/id="casTicketValidator"]/property[#attribute/name="proxyCallbackUrl"]
+        save
+EOF
 fi
 
 exec "$@"
