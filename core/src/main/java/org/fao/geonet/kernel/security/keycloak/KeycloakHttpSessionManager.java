@@ -1,24 +1,34 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates
- * and other contributors as indicated by the @author tags.
+ * Copyright (C) 2001-2017 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-// Changes were taken from org.keycloak/keycloak-adapter-core/11.0.1 as there were bugs in current version
-// that we prevending the Admin URL client backchannel logout from working.
-// If upgrading maven dependency then it may be possible that the most recent KeycloakHttpSessionManager can be used
-// and this file may be removed.
+/* Maven dependencies 4.8.3 seems to contains bugs related to the admin url.
+ * It was preventing the Admin URL client backchannel logout from working.
+ * Issues is explained in the following https://issues.redhat.com/browse/KEYCLOAK-10266 and seems to be fixed in version 8 or greater
+ * If upgrading maven dependency to 8 or greater then it should be possible to update spring security configuration
+ * to use org.keycloak.adapters.springsecurity.management.HttpSessionManager and remove this version.
+ * At the time of writing this code, the goal was to target usage of RedHat SSO version 7.3 which was based on keycloak 4.8.20
+ * https://access.redhat.com/articles/2342881.  It is unclear if newer client drivers are supported with this version.
+ */
 
 package org.fao.geonet.kernel.security.keycloak;
 
@@ -68,7 +78,7 @@ public class KeycloakHttpSessionManager implements ApplicationListener<Applicati
         }
     }
 
- @Override
+    @Override
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof HttpSessionCreatedEvent) {
             HttpSessionCreatedEvent e = (HttpSessionCreatedEvent) event;
