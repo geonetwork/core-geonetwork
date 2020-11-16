@@ -47,7 +47,7 @@
               var url = wfsLink.url;
               var featureTypeName = wfsLink.name;
 
-              var el = angular.element('<div ng-show="active.WFSFILTER == layer && layer.visible" data-gn-wfs-filter-facets="" data-layer="layer" data-wfs-url="'+url+'" data-feature-type-name="'+featureTypeName+'"></div><!--<div data-gn-data-table="layer.get(\'solrQ\')" data-gn-data-table-solr-type="WfsFilter" data-gn-data-table-solr-name="facets" data-exclude-cols="excludeCols"></div>-->');
+              var el = angular.element('<div ng-show="active.WFSFILTER == layer && layer.visible" data-gn-wfs-filter-facets="" data-layer="layer" data-wfs-url="'+url+'" data-feature-type-name="'+featureTypeName+'" data-mode="group"></div><!--<div data-gn-data-table="layer.get(\'solrQ\')" data-gn-data-table-solr-type="WfsFilter" data-gn-data-table-solr-name="facets" data-exclude-cols="excludeCols"></div>-->');
               $compile(el)(scope);
               var element = $('.sxt-wfsfilter-panel');
               element.append(el);
@@ -509,7 +509,7 @@
             if (scope.member.get('md')) {
               var d =  scope.member.get('downloads');
               var downloadable =
-                scope.member.get('md').download == 'true';
+                scope.member.get('md').download == true;
               if(angular.isArray(d) && downloadable) {
                 scope.download = d[0];
               }
