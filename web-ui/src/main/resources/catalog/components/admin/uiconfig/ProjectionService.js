@@ -51,38 +51,54 @@
       };
 
       var parseProjDef = function(data) {
+
+        var code = 'EPSG:';
+        var extent = [null, null, null, null];
+        var worldExtent = [null, null, null, null];
+
+        // check if there's a useful response
         if (data.status !== 'ok' || data.number_result === 0) {
           return {
             label: null,
-            code: null,
+            code: code,
             def: null,
-            extent: null,
-            worldExtent: null,
+            extent: extent,
+            worldExtent: worldExtent
           };
         }
 
+        // get first result, set EPSG code
         var firstResult = data.results[0];
-        var bbox = firstResult.bbox;
-        var code = 'EPSG:' + firstResult.code;
+        code += firstResult.code;
+
         // register projection so we can transform extent
-        proj4.defs(code, firstResult.proj4);
-        ol.proj.proj4.register(proj4);
-        // EPSG.io returns bbox as lat-lon, but we want lon-lat
-        var worldExtent = [bbox[1], bbox[2], bbox[3], bbox[0]];
-        // check if the world extent crosses the dateline
-        if (bbox[1] > bbox[3]) {
-          worldExtent = [bbox[1], bbox[2], bbox[3] + 360, bbox[0]];
+        var def = firstResult.proj4;
+        if (def) {
+          proj4.defs(code, firstResult.proj4);
+          ol.proj.proj4.register(proj4);
         }
-        // transform world extent to projected extent
-        var extent = ol.proj.transformExtent(worldExtent, EPSG_LL_WGS84, code, 8);
+
+        // get bounding box and define defaults
+        var bbox = firstResult.bbox;
+
+        if (bbox && bbox.length === 4) {
+          // EPSG.io returns bbox as lat-lon, but we want lon-lat
+          worldExtent = [bbox[1], bbox[2], bbox[3], bbox[0]];
+          // check if the world extent crosses the dateline
+          if (bbox[1] > bbox[3]) {
+            worldExtent = [bbox[1], bbox[2], bbox[3] + 360, bbox[0]];
+          }
+          // transform world extent to projected extent
+          extent = ol.proj.transformExtent(worldExtent, EPSG_LL_WGS84, code, 8);
+        } 
+
         return {
           label: firstResult.name,
           code: code,
-          def: firstResult.proj4,
+          def: def,
           extent: extent,
           worldExtent: worldExtent
         }
-
       };
 
       return {
