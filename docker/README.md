@@ -4,6 +4,8 @@ Cette documentation fournit les étapes à suivre afin d'obtenir une composition
 docker fonctionnelle comportant les éléments suivants:
 
 * Sextant (GN fork)
+* CAS (version 4.2.7)
+* LDAP (contenant les schémas ifremer)
 * PostGreSQL / PostGIS
 * Elasticsearch
 
@@ -13,7 +15,7 @@ Il est nécessaire de compiler la webapp au préalable, à la racine du dépot, 
 la commande suivante:
 
 ```
-$ mvn clean install -U -DskipTests -Dmaven.test.skip=true -Dsxt.properties=ifr-test -Pes
+$ mvn clean install -U -DskipTests -Dmaven.test.skip=true -Dsxt.properties=docker -Pes
 ```
 
 Puis de copier la webapp résultante dans le répertoire courant (`docker`):
@@ -58,3 +60,14 @@ curl -X PUT http://172.30.0.3:9200/sxt-searchlogs -H "Content-Type:application/j
 curl -X PUT http://172.30.0.3:9200/sxt-checkpoint -H "Content-Type:application/json"  -d @config/checkpoint.json
 
 ```
+
+# Utilisateurs
+
+Des utilisateurs de test sont créés dans le LDAP. Vous pouvez retrouver la
+specification LDIF dans le répertoire suivant:
+`core/src/test/docker/ldap/ldif`.
+
+Les mots de passe sont en général les mêmes que l'identifiant `uid` (par
+exemple l'utilisateur 'pmauduit' a pour mot de passe 'pmauduit', l'utilisateur
+admin a pour mot de passe 'admin', ...).
+

@@ -54,6 +54,7 @@ import org.fao.geonet.utils.Log;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specifications;
@@ -68,6 +69,9 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
     private ConfigurableApplicationContext applicationContext;
 
     private DefaultSpringSecurityContextSource contextSource;
+
+    @Autowired
+    LDAPProfileToDbUserSynchronizer ldapProfileToDbUserSynchronizer;
 
     @Override
     protected void executeInternal(final JobExecutionContext jobExecContext)
@@ -104,7 +108,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
         }
     }
 
-    private void runInTransaction(JobExecutionContext jobExecContext) {
+    private void runInTransaction(JobExecutionContext jobExecContext) throws JobExecutionException {
         // Get LDAP information defining which users to sync
         final JobDataMap jdm = jobExecContext.getJobDetail().getJobDataMap();
         contextSource = (DefaultSpringSecurityContextSource) jdm.get("contextSource");
@@ -142,6 +146,8 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                 throw new RuntimeException(e);
             }
         }
+
+        ldapProfileToDbUserSynchronizer.doExecute();
     }
 
 

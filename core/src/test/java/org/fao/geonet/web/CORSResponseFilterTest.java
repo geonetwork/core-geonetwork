@@ -85,9 +85,10 @@ public class CORSResponseFilterTest {
         HttpServletResponse httpServletResponse = spy(new MockHttpServletResponse());
         FilterChain filterChain = mock(FilterChain.class);
 
-        when(httpServletRequest.getHeader("origin")).thenReturn("http://www.geonetwork-opensource.org");
+        when(httpServletRequest.getHeader("Origin")).thenReturn("http://www.geonetwork-opensource.org");
         buildFilter("*").doFilter(httpServletRequest, httpServletResponse, filterChain);
-        assertEquals("*", httpServletResponse.getHeader("Access-Control-Allow-Origin"));
+        assertEquals("http://www.geonetwork-opensource.org",
+            httpServletResponse.getHeader("Access-Control-Allow-Origin"));
     }
 
     @Test
@@ -98,17 +99,17 @@ public class CORSResponseFilterTest {
 
 
         CORSResponseFilter filter = buildFilter("www.geonetwork-opensource.org,osgeo.org");
-        when(httpServletRequest.getHeader("origin")).thenReturn("http://www.geonetwork-opensource.org");
+        when(httpServletRequest.getHeader("Origin")).thenReturn("http://www.geonetwork-opensource.org");
         filter.doFilter(httpServletRequest, httpServletResponse, filterChain);
-        assertEquals("*", httpServletResponse.getHeader("Access-Control-Allow-Origin"));
+        assertEquals("http://www.geonetwork-opensource.org", httpServletResponse.getHeader("Access-Control-Allow-Origin"));
 
         httpServletResponse = spy(new MockHttpServletResponse());
-        when(httpServletRequest.getHeader("origin")).thenReturn("http://osgeo.org");
+        when(httpServletRequest.getHeader("Origin")).thenReturn("http://osgeo.org");
         filter.doFilter(httpServletRequest, httpServletResponse, filterChain);
-        assertEquals("*", httpServletResponse.getHeader("Access-Control-Allow-Origin"));
+        assertEquals("http://osgeo.org", httpServletResponse.getHeader("Access-Control-Allow-Origin"));
 
         httpServletResponse = spy(new MockHttpServletResponse());
-        when(httpServletRequest.getHeader("origin")).thenReturn("http://www.dummy.org");
+        when(httpServletRequest.getHeader("Origin")).thenReturn("http://www.dummy.org");
         filter.doFilter(httpServletRequest, httpServletResponse, filterChain);
         assertNull(httpServletResponse.getHeader("Access-Control-Allow-Origin"));
     }
@@ -120,8 +121,9 @@ public class CORSResponseFilterTest {
         HttpServletResponse httpServletResponse = spy(new MockHttpServletResponse());
         FilterChain filterChain = mock(FilterChain.class);
 
-        when(httpServletRequest.getHeader("origin")).thenReturn("http://www.geonetwork-opensource.org");
+        when(httpServletRequest.getHeader("Origin")).thenReturn("http://www.geonetwork-opensource.org");
         buildFilter("db").doFilter(httpServletRequest, httpServletResponse, filterChain);
-        assertEquals("*", httpServletResponse.getHeader("Access-Control-Allow-Origin"));
+        assertEquals("http://www.geonetwork-opensource.org",
+            httpServletResponse.getHeader("Access-Control-Allow-Origin"));
     }
 }

@@ -3,13 +3,44 @@ volumes:
   geonetwork:
 
 services:
+  frontend:
+    image: nginx
+    ports:
+      - 8080:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - cas
+      - geonetwork
+
+  ldap:
+    build:
+      context: ../core/src/test/docker/ldap
+    image: sextant-ldap:latest
+
+  cas:
+    build:
+      context: ./cas
+      dockerfile: Dockerfile
+    image: sextant-cas:latest
+    environment:
+      JAVA_OPTS: -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+    ports:
+      - 5005:5005
+    depends_on:
+      - ldap
+
   geonetwork:
     build: .
     image: sextant-geonetwork:elastic
     restart: always
-    ports:
-      - 8080:8080
     environment:
+      # configure the tomcat connector
+      # Needed for GN to send a service
+      # URL to CAS which would be coherent
+      # with what CAS expects
+      CONNECTOR_PROXY_NAME: localhost
+      CONNECTOR_PROXY_PORT: 8080
       DATA_DIR: /var/lib/geonetwork_data
       ES_HOST: elasticsearch
       ES_PROTOCOL: http
@@ -22,15 +53,23 @@ services:
       POSTGRES_DB_NAME: sextant
       POSTGRES_DB_USERNAME: sxt
       POSTGRES_DB_PASSWORD: sxt
-      LDAP_URL: "ldap://ldap.ifremer.fr:389"
-      CAS_URL: "https://cas.ifremer.fr"
+      # To be set in accordance with the ldap container
+      LDAP_URL: "ldap://ldap:389"
+      LDAP_ADMIN_DN: cn=admin,dc=ifremer,dc=fr
+      LDAP_ADMIN_PASSWORD: secret
+      CAS_URL: "http://localhost:8080/cas"
+      GN_URL: "http://localhost:8080/geonetwork"
+      CAS_TICKET_VALIDATION_URL: "http://cas:8080/cas"
       PANIER_XML_PATH_LOGGED: "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/intranet"
       PANIER_XML_PATH_ANONYMOUS: "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/anonymous"
+      JAVA_OPTS: -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
     volumes:
       - geonetwork:/var/lib/geonetwork_data
     depends_on:
       - elasticsearch
       - database
+    ports:
+      - 5006:5005
 
   elasticsearch:
     image: elasticsearch:7.6.2
@@ -43,4 +82,3 @@ services:
       POSTGRES_USER: sxt
       POSTGRES_PASSWORD: sxt
       POSTGRES_DB: sextant
-

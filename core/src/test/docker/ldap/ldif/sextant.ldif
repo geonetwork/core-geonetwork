@@ -1,0 +1,77 @@
+version: 1
+
+dn: ou=annuaire,dc=ifremer,dc=fr
+objectClass: top
+objectClass: organizationalUnit
+ou: annuaire
+
+dn: uid=pmauduit,ou=annuaire,dc=ifremer,dc=fr
+objectClass: ficheannuaireextranet
+cn: Pierre Mauduit
+employeeNumber: 02
+givenName: Pierre
+mail: pierre.mauduit@camptocamp.com
+sn: Mauduit
+uid: pmauduit
+uidNumber: 2
+userPassword:: e1NIQX1RczZ3Qkc0QW5rRUZMaUN5MENXTk1FUWovVHc9
+listesiteweb: SXT5_GRANULATS
+listesiteweb: SXT5_GRANULATS_Administrator
+listesiteweb: SXT5_MIMEL
+
+dn: uid=admin,ou=annuaire,dc=ifremer,dc=fr
+objectClass: ficheannuaireextranet
+cn: Administrator
+employeeNumber: 01
+givenName: admin
+mail: dev_ifremermaintenancesextant2010@camptocamp.com
+sn: admin
+uid: admin
+uidNumber: 1
+userPassword:: e1NIQX0wRFBpS3VOSXJyVm1EOElVQ3V3MWhReE5xWmM9
+listesiteweb: SXT5_ADMIN
+listesiteweb: SXT5_ALL_Administrator
+
+dn: uid=jeichar,ou=annuaire,dc=ifremer,dc=fr
+objectClass: ficheannuaireextranet
+cn: Jesse Eichar
+employeeNumber: 010
+givenName: Jesse
+mail: jesse.eichar@camptocamp.com
+sn: Eichar
+uid: jeichar
+uidNumber: 9
+userPassword:: e1NIQX1XV0t3cEx1enZWRUNnUXNMb296bFBocVBlbEU9
+listesiteweb: SAA_GASCOGNE
+listesiteweb: SUZ_SHOM
+listesiteweb: SXT5_MIMEL_Reviewer
+listesiteweb: SXT5_INTERRISK_Reviewer
+listesiteweb: SXT5_SHOM_Editor
+
+dn: uid=bbinet,ou=annuaire,dc=ifremer,dc=fr
+objectClass: ficheannuaireextranet
+cn: Bruno Binet
+employeeNumber: 05
+givenName: Bruno
+mail: bruno.binet@camptocamp.com
+o: IFREMER
+sn: Binet
+uid: bbinet
+uidNumber: 5
+userPassword:: e1NIQX1JY3BFL0t1cEZMbzROTEZkVUdWOC8relozRHc9
+listesiteweb: SXT5_MIMEL_Editor
+listesiteweb:: IA==
+
+dn: uid=fvanderbiest,ou=annuaire,dc=ifremer,dc=fr
+objectClass: ficheannuaireextranet
+cn: Francois Van Der Biest
+employeeNumber: 07
+givenName: Francois
+mail: francois.vanderbiest@camptocamp.com
+o: IFREMER
+sn: Van Der Biest
+uid: fvanderbiest
+uidNumber: 7
+userPassword:: e1NIQX1lUEkxMEh1L2xoeERvcTdwVFpOVDNuRmMvMlk9
+listesiteweb: SXT5_NATURA2000_Editor
+listesiteweb: SXT5_MIMEL_Reviewer
