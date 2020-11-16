@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns:ldaptive="http://www.ldaptive.org/schema/spring-ext"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+       http://www.ldaptive.org/schema/spring-ext http://www.ldaptive.org/schema/spring-ext.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <util:map id="authenticationHandlersResolvers">
+        <entry key-ref="proxyAuthenticationHandler" value-ref="proxyPrincipalResolver" />
+        <entry key-ref="primaryAuthenticationHandler" value-ref="primaryPrincipalResolver" />
+        <entry key-ref="ldapAuthenticationHandler" value="#{null}" />
+    </util:map>
+
+    <util:list id="authenticationMetadataPopulators">
+        <ref bean="successfulHandlerMetaDataPopulator" />
+        <ref bean="rememberMeAuthenticationMetaDataPopulator" />
+    </util:list>
+
+    <bean id="attributeRepository" class="org.jasig.services.persondir.support.NamedStubPersonAttributeDao"
+          p:backingMap-ref="attrRepoBackingMap" />
+
+    <alias name="acceptUsersAuthenticationHandler" alias="primaryAuthenticationHandler" />
+    <alias name="personDirectoryPrincipalResolver" alias="primaryPrincipalResolver" />
+
+    <util:map id="attrRepoBackingMap">
+        <entry key="uid" value="uid" />
+        <entry key="eduPersonAffiliation" value="eduPersonAffiliation" />
+        <entry key="groupMembership" value="groupMembership" />
+        <entry>
+            <key><value>memberOf</value></key>
+            <list>
+                <value>faculty</value>
+                <value>staff</value>
+                <value>org</value>
+            </list>
+        </entry>
+    </util:map>
+
+        <bean id="ldapAuthenticationHandler"
+            class="org.jasig.cas.authentication.LdapAuthenticationHandler"
+            p:principalIdAttribute="uid"
+            c:authenticator-ref="authenticator" />
+
+
+        <!-- the format attribute below does not go through the spring properties resolver, strangely -->
+        <ldaptive:direct-authenticator id="authenticator"
+            format="uid=%s,ou=annuaire,dc=ifremer,dc=fr"
+            ldapUrl="${ldap.url}"
+            connectTimeout="${ldap.connectTimeout}"
+            validateOnCheckOut="${ldap.pool.validateOnCheckout}"
+            failFastInitialize="true"
+            blockWaitTime="${ldap.pool.blockWaitTime}"
+            idleTime="${ldap.pool.idleTime}"
+            usePasswordPolicy="${ldap.usePpolicy:false}"
+            maxPoolSize="${ldap.pool.maxSize}"
+            minPoolSize="${ldap.pool.minSize}"
+            validatePeriodically="${ldap.pool.validatePeriodically}"
+            validatePeriod="${ldap.pool.validatePeriod}"
+            prunePeriod="${ldap.pool.prunePeriod}"
+            useSSL="${ldap.use.ssl:false}"
+            useStartTLS="${ldap.useStartTLS}" />
+
+        <bean id="serviceRegistryDao"
+            class="org.jasig.cas.services.InMemoryServiceRegistryDaoImpl"
+            p:registeredServices-ref="registeredServicesList" />
+
+        <util:list id="registeredServicesList">
+            <bean class="org.jasig.cas.services.RegexRegisteredService"
+                p:id="1"
+                p:name="HTTP and IMAP services"
+                p:serviceId="^(http|imap)://.*"
+                p:evaluationOrder="0"
+                p:proxyPolicy-ref="proxyPolicy" />
+        </util:list>
+
+        <bean id="proxyPolicy" class="org.jasig.cas.services.RegexMatchingRegisteredServiceProxyPolicy">
+            <constructor-arg type="java.lang.String" value=".*"/>
+        </bean>
+
+    <alias name="serviceThemeResolver" alias="themeResolver" />
+
+
+    <alias name="defaultTicketRegistry" alias="ticketRegistry" />
+    
+    <alias name="ticketGrantingTicketExpirationPolicy" alias="grantingTicketExpirationPolicy" />
+    <alias name="multiTimeUseOrTimeoutExpirationPolicy" alias="serviceTicketExpirationPolicy" />
+
+    <alias name="anyAuthenticationPolicy" alias="authenticationPolicy" />
+    <alias name="acceptAnyAuthenticationPolicyFactory" alias="authenticationPolicyFactory" />
+
+    <bean id="auditTrailManager"
+          class="org.jasig.inspektr.audit.support.Slf4jLoggingAuditTrailManager"
+          p:entrySeparator="${cas.audit.singleline.separator:|}"
+          p:useSingleLine="${cas.audit.singleline:false}"/>
+
+    <alias name="neverThrottle" alias="authenticationThrottle" />
+
+    <util:list id="monitorsList">
+        <ref bean="memoryMonitor" />
+        <ref bean="sessionMonitor" />
+    </util:list>
+
+    <alias name="defaultPrincipalFactory" alias="principalFactory" />
+    <alias name="defaultAuthenticationTransactionManager" alias="authenticationTransactionManager" />
+    <alias name="defaultPrincipalElectionStrategy" alias="principalElectionStrategy" />
+    <alias name="tgcCipherExecutor" alias="defaultCookieCipherExecutor" />
+</beans>

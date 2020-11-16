@@ -296,7 +296,6 @@
           <argLine>-Dfile.encoding=UTF-8 -Xmx1G -Djava.awt.headless=true</argLine>
           <!--<rerunFailingTestsCount>5</rerunFailingTestsCount>-->
           <runOrder>alphabetical</runOrder>
-          <forkCount>${system.numCores}</forkCount>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
           <excludes>
             <exclude>**/*PerformanceTest.java</exclude>
@@ -1507,7 +1506,6 @@
     <!-- Sextant property file
      Check web/src/main/filters/deployment for available configurations. -->
     <sxt.properties>ifr-exp</sxt.properties>
-
     <skipIT>true</skipIT> <!-- disable integration tests by default, use the "it" profile to run them which enables them -->
   </properties>
 </project>

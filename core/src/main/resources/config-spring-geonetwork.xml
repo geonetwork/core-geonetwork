@@ -31,6 +31,7 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+
     ">
 
   <context:property-placeholder location="${app.properties}"
@@ -150,6 +151,7 @@
     <!--<property name="jobClass"
               value="org.fao.geonet.kernel.WithHeldCheckTaskJob"/>-->
   </bean>
+
   <bean id="withHeldTaskTrigger"
         class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
     <property name="jobDetail" ref="withHeldCheckTaskJob"/>
@@ -173,7 +175,6 @@
     <property name="cronExpression" value="${usersavedselection.watchlist.frequency}"/>
     <property name="startDelay" value="60000"/>
   </bean>
-
 
 
   <bean id="gnBackgroundJobScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">

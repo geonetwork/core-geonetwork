@@ -30,6 +30,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.google.common.collect.Multimap;
 
+import javax.annotation.PostConstruct;
+
 public class SextantLDAPUserDetailsContextMapper extends
 		AbstractLDAPUserDetailsContextMapper {
 
@@ -40,11 +42,32 @@ public class SextantLDAPUserDetailsContextMapper extends
 
 	@Autowired
 	private UserGroupRepository userGroupRepository;
-	
+
 	@Autowired
 	private GroupRepository groupRepository;
-	
-	public void setPrivilegePattern(String privilegePattern) {
+
+	@Autowired
+    private LDAPUtils ldapUtils;
+
+	private Profile defaultProfile = Profile.RegisteredUser;
+    // unused anyway ?
+    private String defaultGroup = "";
+
+	@PostConstruct
+    public void init() {
+        String[] strsProf = mapping.get("profile");
+        if (strsProf.length > 1) {
+            if (strsProf[1] != null) {
+                defaultProfile = Profile.valueOf(strsProf[1]);
+            }
+        }
+        String[] privs = mapping.get("privilege");
+        if (privs.length > 1) {
+            defaultGroup = privs[1];
+        }
+    }
+
+    public void setPrivilegePattern(String privilegePattern) {
 		this.privilegePattern = privilegePattern;
 		pattern = Pattern.compile(privilegePattern);
 	}
@@ -57,56 +80,66 @@ public class SextantLDAPUserDetailsContextMapper extends
 		this.profilIndexInPattern = profilIndexInPattern;
 	}
 
-	// This does basically the same as
-	// AbstractLDAPUserDetailsContextMapper.mapUserFromContext(), but avoids to
-	// update the LDAP directory (no saveUser()), and ensures that the group
-	// ownership from the LDAP directory is correctly imported.	
-	
+    /**
+     * Gets the GeoNetwork LDAP user
+     * @param username the user identifier as a string
+     * @param userCtx a DirContextOperation describing the user from the LDAP
+     * @return a LDAPUser object.
+     */
+	public LDAPUser getGeoNetworkUserFromContext(String username, DirContextOperations userCtx) {
+        Map<String, ArrayList<String>> userInfo = ldapUtils
+            .convertAttributes(userCtx.getAttributes().getAll());
+
+        LDAPUser userDetails = new LDAPUser(username);
+        User user = userDetails.getUser();
+
+        user.setName(getUserInfo(userInfo, "name"))
+            .setSurname(getUserInfo(userInfo, "surname"))
+            .setOrganisation(getUserInfo(userInfo, "organisation"));
+        user.getEmailAddresses().clear();
+        user.getEmailAddresses().add(getUserInfo(userInfo, "mail"));
+        user.getPrimaryAddress().setAddress(getUserInfo(userInfo, "address"))
+            .setState(getUserInfo(userInfo, "state"))
+            .setZip(getUserInfo(userInfo, "zip"))
+            .setCity(getUserInfo(userInfo, "city"))
+            .setCountry(getUserInfo(userInfo, "country"));
+
+        user.getSecurity().setAuthType(LDAPConstants.LDAP_FLAG);
+
+        if (importPrivilegesFromLdap) {
+            // Sets privileges for the user. If not, privileges are handled
+            // in local database
+            setProfilesAndPrivileges(defaultProfile, defaultGroup, userInfo,
+                userDetails);
+        }
+
+
+        return userDetails;
+    }
+
+
+    /**
+     * This method does basically the same as AbstractLDAPUserDetailsContextMapper.mapUserFromContext(),
+     * but avoids to update the LDAP directory (no saveUser() implemented), and ensures that the group
+     * ownership from the LDAP directory is correctly imported.
+     *
+     * @param userCtx
+     * @param username
+     * @param authorities
+     * @return
+     */
 	@Override
 	public UserDetails mapUserFromContext(DirContextOperations userCtx,
 			String username, Collection<? extends GrantedAuthority> authorities) {
 
-		Profile defaultProfile;
-		if (mapping.get("profile")[1] != null) {
-			defaultProfile = Profile.valueOf(mapping.get("profile")[1]);
-		} else {
-			defaultProfile = Profile.RegisteredUser;
-		}
-		String defaultGroup = mapping.get("privilege")[1];
+	    LDAPUser userDetails = getGeoNetworkUserFromContext(username, userCtx);
+	    User user = userDetails.getUser();
 
-        LDAPUtils ldapUtils = ApplicationContextHolder.get().getBean(LDAPUtils.class);
-
-        Map<String, ArrayList<String>> userInfo = ldapUtils
-				.convertAttributes(userCtx.getAttributes().getAll());
-
-		LDAPUser userDetails = new LDAPUser(username);
-        User user = userDetails.getUser();
-
-		user.setName(getUserInfo(userInfo, "name"))
-				.setSurname(getUserInfo(userInfo, "surname"))
-				.setOrganisation(getUserInfo(userInfo, "organisation"));
-		user.getEmailAddresses().clear();
-		user.getEmailAddresses().add(getUserInfo(userInfo, "mail"));
-		user.getPrimaryAddress().setAddress(getUserInfo(userInfo, "address"))
-				.setState(getUserInfo(userInfo, "state"))
-				.setZip(getUserInfo(userInfo, "zip"))
-				.setCity(getUserInfo(userInfo, "city"))
-				.setCountry(getUserInfo(userInfo, "country"));
-		// Set privileges for the user. If not, privileges are handled
-		// in local database
-		user.getSecurity().setAuthType(LDAPConstants.LDAP_FLAG);
-
-		if (importPrivilegesFromLdap) {
-			setProfilesAndPrivileges(defaultProfile, defaultGroup, userInfo,
-					userDetails);
-		}
-
-		// Assign default profile if not set by LDAP info or local database
-		if (user.getProfile() == null) {
-			user.setProfile(defaultProfile);
-		}
-
-		// Saves the user
+        // Assign default profile if not set by LDAP info or local database
+        if (user.getProfile() == null) {
+            user.setProfile(defaultProfile);
+        }
+		// Saves / updates the user
         saveUser(userDetails);
 
 		// updates the groups informations
@@ -134,7 +167,7 @@ public class SextantLDAPUserDetailsContextMapper extends
 			if (cProfs.isEmpty())
 				continue;
 			Profile[] profs = cProfs.toArray(new Profile[cProfs.size()]);
-			
+
 			String[] sProfs = new String[profs.length];
 			for (int i = 0 ;  i < profs.length ; i++) {
 				sProfs[i] = profs[i].name();
@@ -142,10 +175,10 @@ public class SextantLDAPUserDetailsContextMapper extends
 			String sProf = getHighestProfile(sProfs);
 			if (sProf == null)
 				continue;
-			
+
 			Profile prof = Profile.findProfileIgnoreCase(sProf);
-			
-			
+
+
 			UserGroup newUg = new UserGroup().setGroup(group).setUser(u.getUser()).setProfile(prof);
 			userGroupRepository.saveAndFlush(newUg);
 			// if Reviewer, then the user is also considered as Editor
@@ -192,11 +225,9 @@ public class SextantLDAPUserDetailsContextMapper extends
 			if (userDetails.getOrganisation().equals("IFREMER")) {
 				// If the user is admin, no need to add the following privilege
 				// (SXT issue #18395)
-				if (!isSuperAdmin) {
-					privileges.add("SXT5_IFREMER_RegisteredUser");
-				}
-			}
-			// fixing Mantis issue #18255
+                privileges.add("SXT5_IFREMER_RegisteredUser");
+            }
+			// Mantis issue #18255
 			// removing leading / trailing whitespaces on the group names
 			for (int i = 0; i < privileges.size(); i++) {
 				privileges.set(i, privileges.get(i).trim());

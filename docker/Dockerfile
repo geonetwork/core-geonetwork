@@ -16,7 +16,9 @@ ENV KB_URL http://localhost:5601
 
 ENV LDAP_URL "ldap://ldap.ifremer.fr:389"
 
-ENV CAS_URL "https://cas.ifremer.fr"
+ENV CAS_URL "http://localhost:8080/cas"
+ENV CAS_TICKET_VALIDATION_URL "http://cas:8080/cas"
+ENV GN_URL "http://localhost:8080/geonetwork"
 
 ENV PANIER_XML_PATH_LOGGED "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/intranet"
 ENV PANIER_XML_PATH_ANONYMOUS "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/anonymous"
