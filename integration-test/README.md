@@ -22,11 +22,15 @@ With GeoNetwork running and accessible on http://localhost:8080/geonetwork, go t
 
 `mvn test -Dbrowser=firefox`
 
-* If you are not testing GeoNetwork runnig on localhost:8080 then you can change the property **endPointToTest.url** in `src/test/resources/system.properties` or by passing the parameter `-DendPointToTest=YOUR_URL` to the mvn command.
+Additional configuration parameters:
 
-* By default the mvn command will run all the tests in the folder `src/test/resources/features`. To specify a different folder use the parameter `-Dcucumber.options="your path"`
+* If you are not testing GeoNetwork running on localhost:8080 then you can change the property **endPointToTest.url** in `src/test/resources/system.properties` or by passing the parameter `-DendPointToTest=YOUR_URL` to the mvn command.
 
-* To specify a path for the reports use the option `-Dcucumber.options="--plugin html:./report` in case you need to specify your path, the path must go after `-Dcucumber.options="--plugin html:./report your path`
+* By default, the mvn command will run all the tests in the folder `src/test/resources/features`. To specify a different folder use the parameter `-Dcucumber.options="your path"`
+
+* To display the output in the console use the parameter `-Dcucumber.options="--plugin pretty"`
+
+* By default, an HTML report it is created in the folder `./target/cucumberHtmlReport`. To specify a path for the reports use the option `-Dcucumber.options="--plugin html:./report` in case you need to specify your path, the path must go after `-Dcucumber.options="--plugin html:./report your path`
 
 
 
@@ -42,6 +46,8 @@ Chrome: (http://chromedriver.chromium.org/downloads).
 ## Writing a test
 
 The cucumber features go in the `features` library and should have the ".feature" extension.
+
+Documentation about the syntax supported can be found in [Canned Steps](./doc/canned_steps.md).
 
 ### The filename of each test follows these conventions:
 
