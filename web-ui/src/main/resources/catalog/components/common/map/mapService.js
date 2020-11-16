@@ -412,17 +412,15 @@
            * @param {Object} md to extract bbox from
            */
           getBboxFromMd: function(md) {
-            if (angular.isUndefined(md.geoBox)) return;
-            var bboxes = [];
-            angular.forEach(md.geoBox, function(bbox) {
-              var c = bbox.split('|');
-              if (angular.isArray(c) && c.length == 4) {
-                bboxes.push([parseFloat(c[0]),
-                      parseFloat(c[1]),
-                      parseFloat(c[2]),
-                      parseFloat(c[3])]);
-              }
-            });
+            if (angular.isUndefined(md.geom)) return;
+            var bboxes = [],
+              c = md.geom[0].coordinates[0];
+            if (angular.isArray(c) && c.length == 5) {
+              bboxes.push([parseFloat(c[0]),
+                    parseFloat(c[1]),
+                    parseFloat(c[2]),
+                    parseFloat(c[3])]);
+            }
             return bboxes;
           },
 
