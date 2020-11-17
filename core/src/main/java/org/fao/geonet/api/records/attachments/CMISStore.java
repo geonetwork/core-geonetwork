@@ -57,6 +57,8 @@ import javax.annotation.Nullable;
 
 public class CMISStore extends AbstractStore {
 
+    private Path baseMetadataDir = null;
+
     @Autowired
     CMISConfiguration CMISConfiguration;
 
@@ -422,7 +424,13 @@ public class CMISStore extends AbstractStore {
     private String getMetadataDir(ServiceContext context, final int metadataId) {
 
         Path metadataFullDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
-        Path metadataDir = Paths.get(CMISConfiguration.getBaseRepositoryPath()).resolve(getDataDirectory(context).getSystemDataDir().relativize(metadataFullDir));
+        Path baseMetadataDir = getBaseMetadataDir(context, metadataFullDir);
+        Path metadataDir;
+        if (baseMetadataDir.toString().equals(".")) {
+            metadataDir = Paths.get(CMISConfiguration.getBaseRepositoryPath()).resolve(metadataFullDir);
+        } else {
+            metadataDir = Paths.get(CMISConfiguration.getBaseRepositoryPath()).resolve(baseMetadataDir.relativize(metadataFullDir));
+        }
 
         // For windows it may be "\" in which case we need to change it to folderDelimiter which is normally "/"
         if (metadataDir.getFileSystem().getSeparator().equals(CMISConfiguration.getFolderDelimiter())) {
@@ -430,6 +438,27 @@ public class CMISStore extends AbstractStore {
         } else {
             return metadataDir.toString().replace(metadataDir.getFileSystem().getSeparator(), CMISConfiguration.getFolderDelimiter());
         }
+    }
+
+    private Path getBaseMetadataDir(ServiceContext context, Path metadataFullDir) {
+        //If we not already figured out the base metadata dir then lets figure it out.
+        if (baseMetadataDir == null) {
+            Path systemFullDir = getDataDirectory(context).getSystemDataDir();
+
+            // If the metadata full dir is relative from the system dir then use system dir as the base dir.
+            if (metadataFullDir.toString().startsWith(systemFullDir.toString())) {
+                baseMetadataDir = systemFullDir;
+            } else {
+                // If the metadata full dir is an absolute folder then use that as the base dir.
+                if (getDataDirectory(context).getMetadataDataDir().isAbsolute()) {
+                    baseMetadataDir = metadataFullDir.getRoot();
+                } else {
+                    // use it as a relative url.
+                    baseMetadataDir = Paths.get(".");
+                }
+            }
+        }
+        return baseMetadataDir;
     }
 
     private GeonetworkDataDirectory getDataDirectory(ServiceContext context) {
