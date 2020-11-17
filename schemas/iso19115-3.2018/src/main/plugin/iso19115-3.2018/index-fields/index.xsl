@@ -257,26 +257,11 @@
                           group-by="@codeListValue">
         <xsl:variable name="parentName"
                       select="local-name(..)"/>
-        <xsl:variable name="name"
-                      select="name()"/>
-        <xsl:variable name="value"
-                      select="@codeListValue"/>
-        <xsl:element name="cl_{$parentName}">
-          <xsl:value-of select="$value"/>
-        </xsl:element>
+        <xsl:variable name="fieldName"
+                      select="concat('cl_', $parentName)"/>
 
-        <xsl:for-each select="$allLanguages/lang">
-          <xsl:variable name="translation"
-                        select="util:getCodelistTranslation(string($name), string($value), string(@value))"/>
-          <xsl:if test="@id = 'default'">
-            <xsl:element name="cl_{$parentName}_text">
-              <xsl:value-of select="$translation"/>
-            </xsl:element>
-          </xsl:if>
-          <xsl:element name="cl_{$parentName}_text_lang{@value}">
-            <xsl:value-of select="$translation"/>
-          </xsl:element>
-        </xsl:for-each>
+        <xsl:copy-of select="gn-fn-index:add-codelist-field(
+                                  $fieldName, ., $allLanguages)"/>
       </xsl:for-each-group>
 
 

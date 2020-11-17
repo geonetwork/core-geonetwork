@@ -181,6 +181,46 @@ public class StandardsApi implements ApplicationContextAware {
     }
 
 
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get multiple codelist translations",
+        description = "All translations are combined in the same object. " +
+            "No distinction by codelist. This is useful if you need " +
+            "lots of codelists terms to be loaded.")
+    @RequestMapping(value = "/{schema}/codelists",
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    @ResponseBody
+    public Map<String, String> getCodelistsTranslations(
+        @Parameter(description = "Schema identifier",
+            required = true,
+            example = "iso19139")
+        @PathVariable String schema,
+        @Parameter(
+            description = "Codelist element name or alias"
+        )
+        @RequestParam String[] codelist,
+        HttpServletRequest request
+    ) throws Exception {
+        Map<String, String> response = new LinkedHashMap<String, String>();
+        final ServiceContext context = ApiUtils.createServiceContext(request);
+        Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
+        context.setLanguage(language.getISO3Language());
+
+        for (String c : codelist) {
+            Element e = StandardsUtils.getCodelist(c, schemaManager,
+                schema, null, null, null, context, null);
+
+            List<Element> listOfEntry = e.getChildren("entry");
+            for (Element entry : listOfEntry) {
+                response.put(entry.getChildText("code"), entry.getChildText("label"));
+            }
+        }
+        return response;
+    }
+
+
     @io.swagger.v3.oas.annotations.Operation(summary = "Get codelist translations")
     @RequestMapping(value = "/{schema}/codelists/{codelist}",
         method = RequestMethod.GET,

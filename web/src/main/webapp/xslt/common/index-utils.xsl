@@ -147,9 +147,6 @@
   </xsl:function>
 
   <!-- Add a multilingual field to the index.
-   A multilingual field is composed of one root field
-   with the default language value. Then one field per language
-   is added with a suffix "_lang{{iso3letterLangCode}}".
 
    Function can produce an XML document or a JSON format properties
    when translations have to be added to an object field.
@@ -162,6 +159,34 @@
   </xsl:function>
 
   <!--
+   Multilingual fields are stored as an object.
+   ```json
+   {
+    default: "Français", -> The default language
+    langfre: "Français", -> The default language is the first property
+    langeng: "English",
+    ...
+    (optional) link: "http://" -> Anchor xlink:href attribute
+   }
+   ```
+
+    A multilingual field in ISO19139 looks like:
+    ```xml
+    <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+      <gco:CharacterString|gmx:Anchor xlink:href="http">Template for Vector data in ISO19139 (multilingual)</gco:CharacterString>
+      <gmd:PT_FreeText>
+        <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#FRE">Modèle de données vectorielles en
+            ISO19139 (multilingue)
+          </gmd:LocalisedCharacterString>
+        </gmd:textGroup>
+      ```
+
+      A multilingual record in Dublin core
+      ```xml
+      <dc:title xml:lang="en">...
+      <dc:title xml:lang="fr">...
+      ```
    -->
   <xsl:function name="gn-fn-index:add-multilingual-field" as="node()*">
     <xsl:param name="fieldName" as="xs:string"/>
@@ -171,120 +196,10 @@
 
     <xsl:variable name="mainLanguage"
                   select="$languages/lang[@id='default']/@value"/>
-    <!--
-          <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
-            <gco:CharacterString|gmx:Anchor xlink:href="http">Template for Vector data in ISO19139 (multilingual)</gco:CharacterString>
-            <gmd:PT_FreeText>
-              <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#FRE">Modèle de données vectorielles en
-                  ISO19139 (multilingue)
-                </gmd:LocalisedCharacterString>
-              </gmd:textGroup>
-    -->
+
     <!--<xsl:message>gn-fn-index:add-field <xsl:value-of select="$fieldName"/></xsl:message>-->
     <!--<xsl:message>gn-fn-index:add-field languages <xsl:copy-of select="$languages"/></xsl:message>-->
-   <!--
-   Multilingual mode, one field per language.
 
-   <xsl:variable name="isArray"
-                  select="count($elements) > 1"/>
-    <xsl:for-each select="$elements">
-      <xsl:variable name="element"
-                    select="."/>
-
-      <xsl:variable name="field">
-        <xsl:choose>
-          <xsl:when test="$languages">
-
-            <xsl:for-each select="$element//*:LocalisedCharacterString[. != '']">
-              <xsl:variable name="elementLanguage"
-                            select="replace(@locale, '#', '')"/>
-              <xsl:variable name="elementLanguage3LetterCode"
-                            select="$languages/lang[@id = $elementLanguage]/@value"/>
-              <xsl:variable name="field"
-                            select="if ($elementLanguage3LetterCode = '') then $fieldName else concat($fieldName, '_lang', $elementLanguage3LetterCode)"/>
-
-              <xsl:choose>
-                <xsl:when test="$asJson">
-                  <xsl:value-of select="concat($doubleQuote, $field, $doubleQuote, ':',
-                                               $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote,
-                                               if ($element//(*:CharacterString|*:Anchor)) then ',' else '')"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:element name="{$field}">
-                    <xsl:value-of select="gn-fn-index:json-escape(.)"/>
-                  </xsl:element>
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:for-each>
-
-            &lt;!&ndash; The default language &ndash;&gt;
-            <xsl:for-each select="$element//(*:CharacterString|*:Anchor)[. != '']">
-              <xsl:choose>
-                <xsl:when test="$asJson">
-                  <xsl:value-of select="concat($doubleQuote, $fieldName, $doubleQuote, ':',
-                                               $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:element name="{$fieldName}">
-                    <xsl:value-of select="."/>
-                  </xsl:element>
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:for-each>
-          </xsl:when>
-          <xsl:otherwise>
-            &lt;!&ndash; Index each values in a field. &ndash;&gt;
-            <xsl:for-each select="distinct-values($element[. != ''])">
-              <xsl:choose>
-                <xsl:when test="$asJson">
-                  <xsl:value-of select="concat($doubleQuote, $fieldName, $doubleQuote, ':',
-                                               $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:element name="{$fieldName}">
-                    <xsl:value-of select="gn-fn-index:json-escape(.)"/>
-                  </xsl:element>
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:for-each>
-          </xsl:otherwise>
-        </xsl:choose>
-
-        <xsl:for-each select="$element//*:Anchor/@xlink:href">
-          <xsl:element name="{$fieldName}_link">
-            <xsl:value-of select="gn-fn-index:json-escape(.)"/>
-          </xsl:element>
-        </xsl:for-each>
-      </xsl:variable>
-
-  &lt;!&ndash;    <xsl:message>gn-fn-index:add-field <xsl:copy-of select="$field"/></xsl:message>&ndash;&gt;
-      <xsl:choose>
-        <xsl:when test="$asJson">
-          <xsl:if test="$isArray and position() = 1">[</xsl:if>
-          {<xsl:value-of select="$field"/>}
-          <xsl:if test="$isArray and position() != last()">,</xsl:if>
-          <xsl:if test="$isArray and position() = last()">]</xsl:if>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:copy-of select="$field"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:for-each>-->
-
-    <!--
-    Experimental for multilingual field
-    Multilingual mode : Object
-   Add a multilingual field as an object having:
-   {
-    default: "Français", -> The default property should be removed at some point
-    (temporary as long as multilingual support is not available).
-    langfre: "Français", -> The default language is the first property
-    langeng: "English",
-    ...
-    (optional) link: "http://" -> Anchor xlink:href attribute
-   }
-    -->
     <xsl:variable name="isArray"
                   select="count($elements[not(@xml:lang)]) > 1"/>
     <xsl:for-each select="$elements">
@@ -359,6 +274,94 @@
       </xsl:if>
     </xsl:for-each>
   </xsl:function>
+
+
+  <!--
+
+      <spatialRepresentationType>
+        <MD_SpatialRepresentationTypeCode codeListValue="vector"
+                                          codeList="./resources/codeList.xml#MD_SpatialRepresentationTypeCode"/>
+
+
+  "cl_spatialRepresentationType" : {
+    "key": "grid",
+    "default": "Grid",
+    "langeng": "Grid",
+    "langfre": "Grid",
+    "text": "", > inner text of the element,
+    "link": "./resources/codeList.xml#MD_SpatialRepresentationTypeCode",
+  }
+  -->
+  <xsl:function name="gn-fn-index:add-codelist-field" as="node()*">
+    <xsl:param name="fieldName" as="xs:string"/>
+    <xsl:param name="value" as="node()"/>
+    <xsl:param name="languages" as="node()?"/>
+    <xsl:copy-of select="gn-fn-index:add-codelist-field($fieldName, $value, $languages, false())"/>
+  </xsl:function>
+
+  <xsl:function name="gn-fn-index:add-codelist-field" as="node()*">
+    <xsl:param name="fieldName" as="xs:string"/>
+    <xsl:param name="value" as="node()"/>
+    <xsl:param name="languages" as="node()?"/>
+    <xsl:param name="asJson" as="xs:boolean?"/>
+
+    <xsl:variable name="mainLanguage"
+                  select="$languages/lang[@id = 'default']/@value"/>
+    <xsl:variable name="codelistType"
+                  select="$value/name()"/>
+
+<!--    <xsl:message>gn-fn-index:add-codelist <xsl:value-of select="$fieldName"/></xsl:message>-->
+<!--    <xsl:message>gn-fn-index:add-codelist value <xsl:copy-of select="$value"/></xsl:message>-->
+<!--    <xsl:message>gn-fn-index:add-codelist languages <xsl:copy-of select="$languages"/></xsl:message>-->
+<!--    <xsl:message>gn-fn-index:add-codelist type <xsl:copy-of select="$codelistType"/></xsl:message>-->
+
+    <xsl:variable name="textObject">
+      <!-- The codelist key -->
+      <xsl:value-of select="concat($doubleQuote, 'key', $doubleQuote, ':',
+                                       $doubleQuote, gn-fn-index:json-escape($value/@codeListValue), $doubleQuote)"/>
+
+      <xsl:variable name="translation"
+                    select="util:getCodelistTranslation(
+                          string($codelistType), string($value/@codeListValue), string($mainLanguage))"/>
+
+      <xsl:value-of select="concat(',', $doubleQuote, 'default', $doubleQuote, ':',
+                                       $doubleQuote, gn-fn-index:json-escape($translation), $doubleQuote)"/>
+      <xsl:value-of select="concat(',', $doubleQuote, 'lang', $mainLanguage, $doubleQuote, ':',
+                                     $doubleQuote, gn-fn-index:json-escape($translation), $doubleQuote)"/>
+
+
+      <xsl:for-each select="$languages/lang[@id != 'default']/@value">
+        <xsl:variable name="translation"
+                      select="util:getCodelistTranslation(
+                        string($codelistType), string($value/@codeListValue), string(.))"/>
+        <xsl:value-of select="concat(',', $doubleQuote, 'lang', ., $doubleQuote, ':',
+                                   $doubleQuote, gn-fn-index:json-escape($translation), $doubleQuote)"/>
+      </xsl:for-each>
+
+      <xsl:for-each select="$value/@codeList">
+        <xsl:value-of select="concat(',', $doubleQuote, 'link', $doubleQuote, ':',
+                                         $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+      </xsl:for-each>
+      <xsl:for-each select="$value/text()">
+        <xsl:value-of select="concat(',', $doubleQuote, 'text', $doubleQuote, ':',
+                                         $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:if test="$textObject != ''">
+      <xsl:choose>
+        <xsl:when test="$asJson">
+          {<xsl:value-of select="$textObject"/>}
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:element name="{$fieldName}">
+            <xsl:attribute name="type" select="'object'"/>
+            {<xsl:value-of select="$textObject"/>}
+          </xsl:element>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
+  </xsl:function>
+
 
   <xsl:function name="gn-fn-index:json-escape" as="xs:string?">
     <xsl:param name="v" as="xs:string?"/>

@@ -132,9 +132,19 @@
       if (!input || angular.isObject(input)) {
         return input;
       }
+      // A specific facet key eg. "isHarvested-true"
       var translationId = (facetKeyToTranslationGroupMap.get(facetKey) || facetKey) + '-' + input,
         translation = $translate.instant(translationId);
-      return translation !== translationId ? translation : input;
+      if (translation !== translationId) {
+        return translation;
+      } else {
+        // A common translations ?
+        translation = $translate.instant(input);
+        if (translation != input) {
+          return translation;
+        }
+      }
+      return input;
     };
   }]);
 

@@ -118,15 +118,15 @@ goog.require('gn_alert');
                 // "order" : { "_key" : "asc" }
               }
             },
-            'topic_text': {
+            'cl_topic.key': {
               'terms': {
-                'field': 'topic_text',
+                'field': 'cl_topic.key',
                 'size': 20
               }
             },
-            'cl_hierarchyLevel_text': {
+            'cl_hierarchyLevel.key': {
               'terms': {
-                'field': 'cl_hierarchyLevel_text',
+                'field': 'cl_hierarchyLevel.key',
                 'size': 10
               }
             }
@@ -160,12 +160,12 @@ goog.require('gn_alert');
             // "boost": "5",
             // "functions": [
             //   {
-            //     "filter": { "match": { "cl_spatialRepresentationType": "vector" } },
+            //     "filter": { "match": { "cl_spatialRepresentationType.key": "vector" } },
             //     "random_score": {},
             //     "weight": 23
             //   },
             //   {
-            //     "filter": { "match": { "cl_spatialRepresentationType": "grid" } },
+            //     "filter": { "match": { "cl_spatialRepresentationType.key": "grid" } },
             //     "weight": 42
             //   }
             // ],
@@ -188,7 +188,7 @@ goog.require('gn_alert');
               },
               // Boost down obsolete records
               {
-                "filter": { "match": { "cl_status": "obsolete" } },
+                "filter": { "match": { "cl_status.key": "obsolete" } },
                 "weight": 0.3
               },
               // {
@@ -255,9 +255,9 @@ goog.require('gn_alert');
           // TODOES
           'facetTabField': '',
           'facetConfig': {
-            'cl_hierarchyLevel_text': {
+            'cl_hierarchyLevel.key': {
               'terms': {
-                'field': 'cl_hierarchyLevel_text'
+                'field': 'cl_hierarchyLevel.key'
               },
               'aggs': {
                 'format': {
@@ -267,9 +267,9 @@ goog.require('gn_alert');
                 }
               }
             },
-            'cl_spatialRepresentationType': {
+            'cl_spatialRepresentationType.key': {
               'terms': {
-                'field': 'cl_spatialRepresentationType',
+                'field': 'cl_spatialRepresentationType.key',
                 'size': 10
               }
             },
@@ -344,16 +344,16 @@ goog.require('gn_alert');
                 'size': 15
               }
             },
-            'cl_maintenanceAndUpdateFrequency_text': {
+            'cl_maintenanceAndUpdateFrequency.key': {
               'collapsed': true,
               'terms': {
-                'field': 'cl_maintenanceAndUpdateFrequency_text',
+                'field': 'cl_maintenanceAndUpdateFrequency.key',
                 'size': 10
               }
             },
-            'cl_status_text': {
+            'cl_status.key': {
               'terms': {
-                'field': 'cl_status_text',
+                'field': 'cl_status.key',
                 'size': 10
               }
             },
@@ -539,9 +539,9 @@ goog.require('gn_alert');
                 'size': 20
               }
             },
-            'cl_status_text': {
+            'cl_status.key': {
               'terms': {
-                'field': 'cl_status_text',
+                'field': 'cl_status.key',
                 'size': 15
               }
             },

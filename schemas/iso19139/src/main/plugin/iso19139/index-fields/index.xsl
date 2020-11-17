@@ -230,45 +230,25 @@
         <xsl:with-param name="fieldSuffix" select="''"/>
       </xsl:apply-templates>
 
-      <!-- Indexing all codelist
+      <!-- Indexing all codelists.
 
-      Indexing method is:
-      <gmd:accessConstraints>
-        <gmd:MD_RestrictionCode codeListValue="otherRestrictions"
-        is indexed as
-        cl_accessConstraints:otherRestrictions
-
-        Exclude some useless codelist like
-        Contact role, Date type.
+        Exclude some codelist like
+        Contact role, Date type indexed in other fields.
       -->
-      <xsl:for-each select=".//*[@codeListValue != '' and
+      <xsl:for-each-group select=".//*[@codeListValue != '' and
                             name() != 'gmd:CI_RoleCode' and
                             name() != 'gmd:CI_DateTypeCode' and
                             name() != 'gmd:LanguageCode'
-                            ]">
+                            ]"
+                          group-by="@codeListValue">
         <xsl:variable name="parentName"
                       select="local-name(..)"/>
-        <xsl:variable name="name"
-                      select="name()"/>
-        <xsl:variable name="value"
-                      select="@codeListValue"/>
-        <xsl:element name="cl_{$parentName}">
-          <xsl:value-of select="$value"/>
-        </xsl:element>
+        <xsl:variable name="fieldName"
+                      select="concat('cl_', $parentName)"/>
 
-        <xsl:for-each select="$allLanguages/lang">
-          <xsl:variable name="translation"
-                        select="util:getCodelistTranslation(string($name), string($value), string(@value))"/>
-          <xsl:if test="@id = 'default'">
-            <xsl:element name="cl_{$parentName}_text">
-              <xsl:value-of select="$translation"/>
-            </xsl:element>
-          </xsl:if>
-          <xsl:element name="cl_{$parentName}_text_lang{@value}">
-            <xsl:value-of select="$translation"/>
-          </xsl:element>
-        </xsl:for-each>
-      </xsl:for-each>
+        <xsl:copy-of select="gn-fn-index:add-codelist-field(
+                                $fieldName, ., $allLanguages)"/>
+      </xsl:for-each-group>
 
 
       <!-- Indexing resource information
@@ -682,23 +662,13 @@
 
 
         <xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
-          <xsl:variable name="value"
-                        select="."/>
-          <topic>
-            <xsl:value-of select="."/>
-          </topic>
-          <xsl:for-each select="$allLanguages/lang">
-            <xsl:variable name="translation"
-                          select="util:getCodelistTranslation('gmd:MD_TopicCategoryCode', string($value), string(@value))"/>
-            <xsl:if test="@id = 'default'">
-              <xsl:element name="topic_text">
-                <xsl:value-of select="$translation"/>
-              </xsl:element>
-            </xsl:if>
-            <xsl:element name="topic_text_lang{@value}">
-              <xsl:value-of select="$translation"/>
-            </xsl:element>
-          </xsl:for-each>
+          <xsl:variable name="value" as="node()">
+            <xsl:copy>
+              <xsl:attribute name="codeListValue" select="."/>
+            </xsl:copy>
+          </xsl:variable>
+          <xsl:copy-of select="gn-fn-index:add-codelist-field(
+                                'cl_topic', $value, $allLanguages)"/>
         </xsl:for-each>
 
 
@@ -715,13 +685,6 @@
               <xsl:value-of select="concat(., ' ', @uom)"/>
             </resolutionDistance>
           </xsl:for-each>
-        </xsl:for-each>
-
-        <xsl:for-each
-          select="gmd:spatialRepresentationType/gmd:MD_SpatialRepresentationTypeCode/@codeListValue[. != '']">
-          <spatialRepresentationType>
-            <xsl:value-of select="."/>
-          </spatialRepresentationType>
         </xsl:for-each>
 
 

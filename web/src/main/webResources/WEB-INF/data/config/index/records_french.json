@@ -1039,8 +1039,23 @@
       {
         "codelist": {
           "match": "cl_*",
-          "mapping": {
-            "type": "keyword"
+            "mapping": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "keyword"
+                },
+                  "default": {
+                  "type": "text"
+                },
+                  "text": {
+                  "type": "text"
+                },
+                  "link": {
+                  "type": "keyword"
+                }
+              }
+            }
           }
         }
       },
