@@ -225,15 +225,15 @@
                     <li data-ng-repeat="k in t.keywords track by $index"
                         data-ng-if="k"
                         class="tt-cursor">
-                        <span data-ng-hide="!!k.link">{{k.value}}</span>
+                        <span data-ng-hide="::!!k.link">{{::k.default | capitalize}}</span>
                         <a href=""
-                          data-ng-href="{{k.link}}"
-                          data-ng-show="!!k.link">
-                          {{k.value}}</a>&nbsp;
+                          data-ng-href="{{::k.link}}"
+                          data-ng-show="::!!k.link">
+                          {{::k.default | capitalize}}</a>&nbsp;
                         <a href=""
-                           title="{{'clickToFilterOn' | translate}} {{k.value}}"
-                           aria-label="{{'clickToFilterOn' | translate}} {{k.value}}"
-                           data-ng-click="filterBy('tag', k.value)">
+                           title="{{'clickToFilterOn' | translate}} {{::k.default | capitalize}}"
+                           aria-label="{{'clickToFilterOn' | translate}} {{::k.default | capitalize}}"
+                           data-ng-click="filterBy('tag', k.default)">
                           <i class="fa fa-search"/>
                         </a>
                     </li>

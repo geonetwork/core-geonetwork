@@ -448,26 +448,23 @@
         </xsl:if>
 
 
-        <!-- Index all keywords -->
         <xsl:variable name="keywords"
-                      select="*/gmd:MD_Keywords/
-                                gmd:keyword/(
-                                  gco:CharacterString|
-                                  gmx:Anchor|
-                                  gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString)"/>
+                      select=".//gmd:keyword[*/normalize-space() != '']"/>
 
-        <tagNumber>
-          <xsl:value-of select="count($keywords)"/>
-        </tagNumber>
-
-        <xsl:for-each select="$keywords">
-          <tag>
-            <xsl:value-of select="text()"/>
+        <xsl:if test="count($keywords) > 0">
+          <tag type="object">
+            [<xsl:for-each select="$keywords">
+            <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', ., $allLanguages)/text()"/>
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>]
           </tag>
-        </xsl:for-each>
+        </xsl:if>
 
         <xsl:variable name="isOpenData">
-          <xsl:for-each select="$keywords">
+          <xsl:for-each select="$keywords/(
+                                gco:CharacterString|
+                                gmx:Anchor|
+                                */gmd:textGroup/gmd:LocalisedCharacterString)">
             <xsl:if test="matches(
                             normalize-unicode(replace(normalize-unicode(
                               lower-case(normalize-space(text())), 'NFKD'), '\p{Mn}', ''), 'NFKC'),
@@ -498,6 +495,23 @@
           </geotag>
         </xsl:for-each>
 
+        <xsl:variable name="geokeywords"
+                      select=".//gmd:keyword[
+                      ../gmd:type/gmd:MD_KeywordTypeCode/@codeListValue = 'place'
+                      and */normalize-space() != '']
+                          |//gmd:geographicElement/gmd:EX_GeographicDescription/
+                                gmd:geographicIdentifier/gmd:MD_Identifier/
+                                  gmd:code[*/normalize-space(.) != '']"/>
+
+        <xsl:if test="count($geokeywords) > 0">
+          <geotag type="object">
+            [<xsl:for-each select="$geokeywords">
+            <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', ., $allLanguages)/text()"/>
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>]
+          </geotag>
+        </xsl:if>
+
 
         <!-- Index all keywords having a specific thesaurus -->
         <xsl:for-each
@@ -526,40 +540,16 @@
           </xsl:variable>
 
           <xsl:if test="normalize-space($key) != ''">
-            <!-- Index keyword characterString including multilingual ones
-             and element like gmx:Anchor including the href attribute
-             which may contains keyword identifier. -->
-            <xsl:variable name="thesaurusField"
-                          select="concat('th_', replace($key, '[^a-zA-Z0-9]', ''))"/>
+            <xsl:variable name="keywords"
+                          select="gmd:keyword[*/normalize-space() != '']"/>
 
-            <xsl:element name="{$thesaurusField}Number">
-              <xsl:value-of select="count(gmd:keyword/(*[normalize-space() != '']))"/>
-            </xsl:element>
-
-            <xsl:for-each select="gmd:keyword/(*[normalize-space() != '']|
-                                  */@xlink:href[normalize-space() != '']|
-                                  gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space() != ''])">
-              <xsl:element name="{$thesaurusField}">
-                <xsl:value-of select="normalize-space(.)"/>
-              </xsl:element>
-            </xsl:for-each>
-
-
-            <xsl:call-template name="build-tree-values">
-              <xsl:with-param name="values"
-                              select="gmd:keyword/(*[normalize-space() != '']|
-                                */@xlink:href[normalize-space() != '']|
-                                gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space() != ''])"/>
-              <xsl:with-param name="thesaurus"
-                              select="$thesaurusId"/>
-              <xsl:with-param name="language"
-                              select="$mainLanguageCode"/>
-              <xsl:with-param name="fieldName"
-                              select="concat($thesaurusField, '_tree')"/>
-              <xsl:with-param name="allTreeField"
-                              select="true()"/>
+            <xsl:call-template name="build-thesaurus-fields">
+              <xsl:with-param name="thesaurus" select="$key"/>
+              <xsl:with-param name="thesaurusId" select="$thesaurusId"/>
+              <xsl:with-param name="keywords" select="$keywords"/>
+              <xsl:with-param name="mainLanguage" select="$mainLanguage"/>
+              <xsl:with-param name="allLanguages" select="$allLanguages"/>
             </xsl:call-template>
-
           </xsl:if>
         </xsl:for-each>
 
@@ -599,14 +589,8 @@
                 "theme": "<xsl:value-of select="gn-fn-index:json-escape(gmd:type/*/@codeListValue)"/>",
                 "link": "<xsl:value-of select="gn-fn-index:json-escape(@xlink:href)"/>",
                 "keywords": [
-              <xsl:for-each select="gmd:keyword/(*[normalize-space() != '']|
-                                    gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space() != ''])">
-                <!-- TODOES: Index translations -->
-                {"value": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"
-                <xsl:if test="@xlink:href">,
-                  "link": "<xsl:value-of select="gn-fn-index:json-escape(@xlink:href)"/>"
-                </xsl:if>
-                }
+              <xsl:for-each select="gmd:keyword[*/normalize-space() != '']">
+                <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', ., $allLanguages)/text()"/>
                 <xsl:if test="position() != last()">,</xsl:if>
               </xsl:for-each>
               ]}
@@ -644,15 +628,8 @@
             "keywords": [
             <xsl:for-each select="$keywordWithNoThesaurus
                                     [if ($thesaurusType = '') then not(gmd:type) or gmd:type/*/@codeListValue = '' else gmd:type/*/@codeListValue = $thesaurusType]
-                                    /gmd:keyword/(
-                                      *[normalize-space() != '']|
-                                      /gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space() != ''])">
-              <!-- TODOES: Index translations -->
-              {"value": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"
-              <xsl:if test="@xlink:href">,
-                "link": "<xsl:value-of select="gn-fn-index:json-escape(@xlink:href)"/>"
-              </xsl:if>
-              }
+                                    /gmd:keyword[*/normalize-space() != '']">
+              <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', ., $allLanguages)/text()"/>
               <xsl:if test="position() != last()">,</xsl:if>
             </xsl:for-each>
             ]}
@@ -722,16 +699,6 @@
         </xsl:for-each>
 
         <xsl:for-each select="*/gmd:EX_Extent">
-
-          <xsl:for-each select="gmd:geographicElement/gmd:EX_GeographicDescription/
-            gmd:geographicIdentifier/gmd:MD_Identifier/
-            gmd:code/gco:CharacterString[normalize-space(.) != '']">
-            <geoTag>
-              <xsl:value-of select="gn-fn-index:json-escape(.)"/>
-            </geoTag>
-          </xsl:for-each>
-
-
           <xsl:copy-of select="gn-fn-index:add-multilingual-field('extentDescription', gmd:description, $allLanguages)"/>
 
           <!-- TODO: index bounding polygon -->
@@ -1045,7 +1012,7 @@
           <xsl:variable name="protocol"
                         select="gmd:protocol/*/text()"/>
           <xsl:variable name="linkName"
-                        select="gn-fn-index:json-escape(gmd:name/*/text())"/>
+                        select="gn-fn-index:json-escape((gmd:name/*/text())[1])"/>
 
           <linkUrl>
             <xsl:value-of select="gmd:linkage/gmd:URL"/>

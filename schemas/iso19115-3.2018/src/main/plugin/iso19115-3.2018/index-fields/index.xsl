@@ -455,27 +455,24 @@
           </hasInspireTheme>
         </xsl:if>
 
-        <!-- Index all keywords -->
+
         <xsl:variable name="keywords"
-                      select="*/mri:MD_Keywords/mri:keyword/(
-                                gco:CharacterString|
-                                gcx:Anchor|
-                                lan:PT_FreeText/lan:textGroup/
-                            lan:LocalisedCharacterString)"/>
+                      select=".//mri:keyword[*/normalize-space() != '']"/>
 
-        <tagNumber>
-          <xsl:value-of select="count($keywords)"/>
-        </tagNumber>
-
-        <xsl:for-each
-          select="$keywords">
-          <tag>
-            <xsl:value-of select="text()"/>
+        <xsl:if test="count($keywords) > 0">
+          <tag type="object">
+            [<xsl:for-each select="$keywords">
+            <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', ., $allLanguages)/text()"/>
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>]
           </tag>
-        </xsl:for-each>
+        </xsl:if>
 
         <xsl:variable name="isOpenData">
-          <xsl:for-each select="$keywords">
+          <xsl:for-each select="$keywords/(
+                                gco:CharacterString|
+                                gcx:Anchor|
+                                */lan:textGroup/lan:LocalisedCharacterString)">
             <xsl:if test="matches(
                             normalize-unicode(replace(normalize-unicode(
                               lower-case(normalize-space(text())), 'NFKD'), '\p{Mn}', ''), 'NFKC'),
@@ -493,18 +490,23 @@
           </xsl:otherwise>
         </xsl:choose>
 
-        <!-- Index keywords which are of type place -->
-        <xsl:for-each
-          select="*/mri:MD_Keywords/
-                          mri:keyword[mri:type/mri:MD_KeywordTypeCode/@codeListValue = 'place']/
-                            gco:CharacterString|
-                        */mri:MD_Keywords/
-                          mri:keyword[mri:type/mri:MD_KeywordTypeCode/@codeListValue = 'place']/
-                            lan:PT_FreeText/lan:textGroup/lan:LocalisedCharacterString">
-          <geotag>
-            <xsl:value-of select="text()"/>
+        <xsl:variable name="geokeywords"
+                      select=".//mri:keyword[
+                      ../mri:type/mri:MD_KeywordTypeCode/@codeListValue = 'place'
+                      and */normalize-space() != '']
+                          |//gex:geographicElement/gex:EX_GeographicDescription/
+                                gex:geographicIdentifier/mcc:MD_Identifier/
+                                  mcc:code[*/normalize-space(.) != '']"/>
+
+        <xsl:if test="count($geokeywords) > 0">
+          <geotag type="object">
+            [<xsl:for-each select="$geokeywords">
+            <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', ., $allLanguages)/text()"/>
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>]
           </geotag>
-        </xsl:for-each>
+        </xsl:if>
+
 
 
         <!-- Index all keywords having a specific thesaurus -->
@@ -534,37 +536,15 @@
           </xsl:variable>
 
           <xsl:if test="normalize-space($key) != ''">
-            <!-- Index keyword characterString including multilingual ones
-             and element like gmx:Anchor including the href attribute
-             which may contains keyword identifier. -->
-            <xsl:variable name="thesaurusField"
-                          select="concat('th_', replace($key, '[^a-zA-Z0-9]', ''))"/>
+            <xsl:variable name="keywords"
+                          select="mri:keyword[*/normalize-space() != '']"/>
 
-            <xsl:element name="{$thesaurusField}Number">
-              <xsl:value-of select="count(mri:keyword/(*[normalize-space() != '']))"/>
-            </xsl:element>
-
-            <xsl:for-each select="mri:keyword/(*[normalize-space() != '']|
-                                  */@xlink:href[normalize-space() != '']|
-                                  lan:PT_FreeText/lan:textGroup/lan:LocalisedCharacterString[normalize-space() != ''])">
-              <xsl:element name="{$thesaurusField}">
-                <xsl:value-of select="tokenize($thesaurusId, '.')[last()]"/>
-              </xsl:element>
-            </xsl:for-each>
-
-            <xsl:call-template name="build-tree-values">
-              <xsl:with-param name="values"
-                              select="mri:keyword/(*[normalize-space() != '']|
-                                      */@xlink:href[normalize-space() != '']|
-                                      lan:PT_FreeText/lan:textGroup/lan:LocalisedCharacterString[normalize-space() != ''])"/>
-              <xsl:with-param name="thesaurus"
-                              select="$thesaurusId"/>
-              <xsl:with-param name="language"
-                              select="$mainLanguage"/>
-              <xsl:with-param name="fieldName"
-                              select="concat($thesaurusField, '_tree')"/>
-              <xsl:with-param name="allTreeField"
-                              select="true()"/>
+            <xsl:call-template name="build-thesaurus-fields">
+              <xsl:with-param name="thesaurus" select="$key"/>
+              <xsl:with-param name="thesaurusId" select="$thesaurusId"/>
+              <xsl:with-param name="keywords" select="$keywords"/>
+              <xsl:with-param name="mainLanguage" select="$mainLanguage"/>
+              <xsl:with-param name="allLanguages" select="$allLanguages"/>
             </xsl:call-template>
           </xsl:if>
         </xsl:for-each>
@@ -605,14 +585,8 @@
               "theme": "<xsl:value-of select="gn-fn-index:json-escape(mri:type/*/@codeListValue)"/>",
               "link": "<xsl:value-of select="gn-fn-index:json-escape(@xlink:href)"/>",
               "keywords": [
-              <xsl:for-each select="mri:keyword/(*[normalize-space() != '']|
-                                    lan:PT_FreeText/lan:textGroup/lan:LocalisedCharacterString[normalize-space() != ''])">
-                <!-- TODOES: Index translations -->
-                {"value": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"
-                <xsl:if test="@xlink:href">,
-                  "link": "<xsl:value-of select="gn-fn-index:json-escape(@xlink:href)"/>"
-                </xsl:if>
-                }
+              <xsl:for-each select="mri:keyword[*/normalize-space() != '']">
+                <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', ., $allLanguages)/text()"/>
                 <xsl:if test="position() != last()">,</xsl:if>
               </xsl:for-each>
               ]}
@@ -649,15 +623,8 @@
             "keywords": [
             <xsl:for-each select="$keywordWithNoThesaurus
                                     [if ($thesaurusType = '') then not(mri:type) or mri:type/*/@codeListValue = '' else mri:type/*/@codeListValue = $thesaurusType]
-                                    /mri:keyword/(
-                                      *[normalize-space() != '']|
-                                      /lan:PT_FreeText/lan:textGroup/lan:LocalisedCharacterString[normalize-space() != ''])">
-              <!-- TODOES: Index translations -->
-              {"value": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"
-              <xsl:if test="@xlink:href">,
-                "link": "<xsl:value-of select="gn-fn-index:json-escape(@xlink:href)"/>"
-              </xsl:if>
-              }
+                                    /mri:keyword[*/normalize-space() != '']">
+              <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', ., $allLanguages)/text()"/>
               <xsl:if test="position() != last()">,</xsl:if>
             </xsl:for-each>
             ]}
@@ -668,23 +635,13 @@
 
 
         <xsl:for-each select="mri:topicCategory/mri:MD_TopicCategoryCode">
-          <xsl:variable name="value"
-                        select="."/>
-          <topic>
-            <xsl:value-of select="."/>
-          </topic>
-          <xsl:for-each select="$allLanguages/lang">
-            <xsl:variable name="translation"
-                          select="util:getCodelistTranslation('gmd:MD_TopicCategoryCode', string($value), string(@value))"/>
-            <xsl:if test="@id = 'default'">
-              <xsl:element name="topic_text">
-                <xsl:value-of select="$translation"/>
-              </xsl:element>
-            </xsl:if>
-            <xsl:element name="topic_text_lang{@value}">
-              <xsl:value-of select="$translation"/>
-            </xsl:element>
-          </xsl:for-each>
+          <xsl:variable name="value" as="node()">
+            <xsl:copy>
+              <xsl:attribute name="codeListValue" select="."/>
+            </xsl:copy>
+          </xsl:variable>
+          <xsl:copy-of select="gn-fn-index:add-codelist-field(
+                                'cl_topic', $value, $allLanguages)"/>
         </xsl:for-each>
 
 
@@ -743,15 +700,6 @@
         </xsl:for-each>
 
         <xsl:for-each select="*/gex:EX_Extent">
-
-          <xsl:for-each select="gex:geographicElement/gex:EX_GeographicDescription/
-                                  gex:geographicIdentifier/mcc:MD_Identifier/
-                                    mcc:code/gco:CharacterString[normalize-space(.) != '']">
-            <geoTag>
-              <xsl:value-of select="."/>
-            </geoTag>
-          </xsl:for-each>
-
           <!-- TODO: index bounding polygon -->
           <xsl:for-each select=".//gex:EX_GeographicBoundingBox[
                                 ./gex:westBoundLongitude/gco:Decimal castable as xs:decimal and

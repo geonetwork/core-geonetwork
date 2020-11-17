@@ -1,7 +1,8 @@
 {
   "settings": {
-    "index.mapping.total_fields.limit": ${es.index.mapping.total_fields.limit},
     "index": {
+      "query.default_field": "any",
+      "mapping.total_fields.limit": ${es.index.mapping.total_fields.limit},
       "analysis": {
         "analyzer": {
           "trigram": {
@@ -90,13 +91,27 @@
             "max_shingle_size": 3
           },
           "french_stop": {
-            "type":       "stop",
-            "stopwords":  "_french_"
+            "type": "stop",
+            "stopwords": "_french_"
           },
           "french_elision": {
             "type": "elision",
             "articles_case": true,
-            "articles": ["l", "m", "t", "qu", "n", "s", "j", "d", "c", "jusqu", "quoiqu", "lorsqu", "puisqu"]
+            "articles": [
+              "l",
+              "m",
+              "t",
+              "qu",
+              "n",
+              "s",
+              "j",
+              "d",
+              "c",
+              "jusqu",
+              "quoiqu",
+              "lorsqu",
+              "puisqu"
+            ]
           },
           "french_synonym": {
             "type": "synonym",
@@ -1002,6 +1017,14 @@
   "mappings": {
     "dynamic_templates": [
       {
+        "numbers": {
+          "match": "*Number",
+          "mapping": {
+            "type": "short"
+          }
+        }
+      },
+      {
         "textField": {
           "match": "*Object",
           "mapping": {
@@ -1039,25 +1062,25 @@
       {
         "codelist": {
           "match": "cl_*",
-            "mapping": {
-              "type": "object",
-              "properties": {
-                "key": {
-                  "type": "keyword"
-                },
-                  "default": {
-                  "type": "text"
-                },
-                  "text": {
-                  "type": "text"
-                },
-                  "link": {
-                  "type": "keyword"
-                }
+          "mapping": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "keyword"
+              },
+              "default": {
+                "type": "text"
+              },
+              "text": {
+                "type": "text"
+              },
+              "link": {
+                "type": "keyword"
               }
             }
           }
         }
+      }
       },
       {
         "linkUrlProtocol": {
@@ -1076,18 +1099,44 @@
         }
       },
       {
-        "thesaurus": {
-          "match": "th_*",
+        "tree": {
+          "match": "th_*_tree",
           "mapping": {
-            "type": "keyword"
+            "type": "object",
+            "properties": {
+              "default": {
+                "type": "keyword"
+              },
+              "key": {
+                "type": "keyword"
+              }
+            }
           }
         }
       },
       {
-        "tree": {
-          "match": "*_tree*",
+        "tag": {
+          "match": "th_*",
           "mapping": {
-            "type": "keyword"
+            "type": "object",
+            "copy_to": [
+              "th_tag"
+            ],
+            "properties": {
+              "default": {
+                "type": "keyword",
+                "copy_to": [
+                  "any",
+                  "anytext"
+                ]
+              },
+              "text": {
+                "type": "keyword"
+              },
+              "link": {
+                "type": "keyword"
+              }
+            }
           }
         }
       },
@@ -1104,14 +1153,6 @@
                 "type": "keyword"
               }
             }
-          }
-        }
-      },
-      {
-        "numbers": {
-          "match": "*Number",
-          "mapping": {
-            "type": "short"
           }
         }
       },
@@ -1227,6 +1268,42 @@
       },
       "anytext": {
         "type": "search_as_you_type"
+      },
+      "tag": {
+        "type": "object",
+        "properties": {
+          "default": {
+            "type": "keyword",
+            "copy_to": [
+              "any",
+              "anytext"
+            ]
+          },
+          "text": {
+            "type": "keyword"
+          },
+          "link": {
+            "type": "keyword"
+          }
+        }
+      },
+      "geoTag": {
+        "type": "object",
+        "properties": {
+          "default": {
+            "type": "keyword",
+            "copy_to": [
+              "any",
+              "anytext"
+            ]
+          },
+          "text": {
+            "type": "keyword"
+          },
+          "link": {
+            "type": "keyword"
+          }
+        }
       },
       "dateStamp": {
         "type": "date"
@@ -1452,9 +1529,6 @@
         "type": "keyword",
         "copy_to": "any"
       },
-      "geoTag": {
-        "type": "keyword"
-      },
       "serviceType": {
         "type": "keyword"
       },
@@ -1470,46 +1544,12 @@
       "schema": {
         "type": "keyword"
       },
-      "tag": {
-        "type": "keyword",
-        "copy_to": [
-          "any",
-          "anytext"
-        ],
-        "fields": {
-          "trigram": {
-            "type": "text",
-            "analyzer": "trigram"
-          },
-          "reverse": {
-            "type": "text",
-            "analyzer": "reverse"
-          },
-          "completion": {
-            "type": "completion"
-          }
-        }
-      },
       "allKeywords": {
         "type": "object",
         "enabled": false
       },
       "scope": {
         "type": "keyword"
-      },
-      "topic_text": {
-        "type": "keyword",
-        "copy_to": [
-          "any",
-          "anytext"
-        ]
-      },
-      "topic": {
-        "type": "keyword",
-        "copy_to": [
-          "any",
-          "anytext"
-        ]
       },
       "validReport": {
         "type": "text",
