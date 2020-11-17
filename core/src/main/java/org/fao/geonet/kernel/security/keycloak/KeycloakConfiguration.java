@@ -130,8 +130,8 @@ public class KeycloakConfiguration implements SecurityProviderConfiguration {
             case AUTOLOGIN:
                 break;
             case DEFAULT:
-                // Default to autologin
-                parsedLoginType= AUTOLOGIN;
+                // Default to link
+                parsedLoginType= LINK;
                 break;
             default:
                 // Currently don't support anything else
