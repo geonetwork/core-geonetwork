@@ -56,8 +56,7 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
-import org.fao.geonet.kernel.security.shibboleth.ShibbolethUserConfiguration;
-import org.fao.geonet.kernel.security.shibboleth.ShibbolethUserUtils;
+import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.url.UrlChecker;
@@ -352,29 +351,46 @@ public final class XslUtil {
         return null;
     }
 
+	/**
+	 * Check if security provider require login form
+	 */
+	public static boolean isDisableLoginForm() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            // No login form if providing a link or autologin
+            return securityProviderConfiguration.getLoginType().equals(SecurityProviderConfiguration.LoginType.AUTOLOGIN.toString().toLowerCase())
+                || securityProviderConfiguration.getLoginType().equals(SecurityProviderConfiguration.LoginType.LINK.toString().toLowerCase());
+        }
+        // If we cannot find SecurityProviderConfiguration then default to false.
+        return false;
+	}
+
     /**
-     * Check if bean is defined in the context
-     *
-     * @param beanId id of the bean to look up
+     * Check if security provider require login link
      */
-    public static boolean existsBean(String beanId) {
-        return ProfileManager.existsBean(beanId);
+    public static boolean isShowLoginAsLink() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.getLoginType().equals(SecurityProviderConfiguration.LoginType.LINK.toString().toLowerCase());
+        }
+        // If we cannot find SecurityProviderConfiguration then default to false.
+        return false;
     }
 
-	/**
-	 * Check if Shibboleth should show login
-	 *
-	 * @param beanId
-	 *            id of the bean to look up
-	 */
-	public static boolean shibbolethHideLogin() {
-		if (existsBean("shibbolethConfiguration")) {
-			ServiceContext serviceContext = ServiceContext.get();
-			ShibbolethUserConfiguration shib = serviceContext.getBean(ShibbolethUserConfiguration.class);
-			return shib.getHideLogin();
-		}
-		return false;
-	}
+    /**
+     * get security provider
+     */
+    public static String getSecurityProvider() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.getSecurityProvider();
+        }
+        // If we cannot find SecurityProviderConfiguration then default to empty string.
+        return "";
+    }
 
     /**
      * Optimistically check if user can access a given url.  If not possible to determine then the

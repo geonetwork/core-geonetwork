@@ -29,6 +29,7 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
+import org.keycloak.KeycloakPrincipal;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AbstractAuthenticationEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -62,12 +63,23 @@ public class UpdateTimestampListener implements
             || e instanceof AuthenticationSwitchUserEvent) {
 
             try {
-                UserDetails userDetails = (UserDetails) e.getAuthentication()
-                    .getPrincipal();
+                Object principal = e.getAuthentication().getPrincipal();
+                String username;
+                if (principal instanceof UserDetails) {
+                    username = ((UserDetails)principal).getUsername();
+                } else {
+                    if (principal instanceof KeycloakPrincipal && ((KeycloakPrincipal) e.getAuthentication().getPrincipal()).getKeycloakSecurityContext().getIdToken() != null) {
+                        username = ((KeycloakPrincipal) e.getAuthentication().getPrincipal()).getKeycloakSecurityContext().getIdToken().getPreferredUsername();
+                    } else {
+                        username = principal.toString();
+                    }
+                }
 
-                User user = userRepo.findOneByUsername(userDetails.getUsername());
-                user.setLastLoginDate(new ISODate().toString());
-                userRepo.save(user);
+                User user = userRepo.findOneByUsername(username);
+                if (user != null) {
+                    user.setLastLoginDate(new ISODate().toString());
+                    userRepo.save(user);
+                }
 
             } catch (Exception ex) {
                 Log.error(Geonet.GEONETWORK, "UpdateTimestampListener error: " + ex.getMessage(), ex);
