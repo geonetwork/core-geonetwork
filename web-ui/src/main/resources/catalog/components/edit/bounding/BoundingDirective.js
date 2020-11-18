@@ -173,7 +173,7 @@
 
             function getEnlargedExtent(feature) {
               var extent = feature.getGeometry().getExtent();
-              var buffer = ol.extent.getSize(extent).reduce(x => Math.min(x)) * 0.1;
+              var buffer = Math.min.apply(ol.extent.getSize(extent)) * 0.1;
               return ol.extent.buffer(extent, buffer);
             };
 
