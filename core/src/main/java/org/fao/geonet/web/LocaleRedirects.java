@@ -23,6 +23,8 @@
 
 package org.fao.geonet.web;
 
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 import jeeves.constants.Jeeves;
 
 import org.fao.geonet.NodeInfo;
@@ -196,6 +198,14 @@ public class LocaleRedirects {
                               @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false) final String langHeader) {
         String lang = lang(langParam, langCookie, langHeader);
         return redirectURL(createServiceUrl(request, "catalog.signin", lang, node));
+    }
+
+    @RequestMapping(value = "/casRedirect")
+    public void redirect(
+        final HttpServletResponse response,
+        @RequestParam(value = "service", required = false)
+            String serviceUrl) throws IOException {
+        response.sendRedirect(serviceUrl == null ? "/" : serviceUrl);
     }
 
     @RequestMapping(value = "/accessDenied.jsp")
