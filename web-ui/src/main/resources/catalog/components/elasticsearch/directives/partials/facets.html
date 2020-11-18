@@ -7,15 +7,15 @@
       <div class="gn-facet-toggle btn-group"
            role="group"
            ng-hide="isTabMode || ctrl.searchCtrl.getSearchResults().count === 0">
-        <button type="button" 
+        <button type="button"
                 class="btn btn-default btn-xs gn-facet-toggle-btn"
-                ng-click="ctrl.collapseAll()" 
+                ng-click="ctrl.collapseAll()"
                 title="{{'collapseAllFacet' | translate}}">
           <i class="fa fa-fw fa-caret-right"/>
         </button>
         <button type="button"
                 class="btn btn-default btn-xs gn-facet-toggle-btn"
-                ng-click="ctrl.expandAll()" 
+                ng-click="ctrl.expandAll()"
                 title="{{'expandAllFacet' | translate}}">
           <i class="fa fa-fw fa-caret-down"/>
         </button>
@@ -36,7 +36,7 @@
         class="gn-facet-header flex-row width-100"
         ng-class="{'gn-facet-panel-active': ctrl.searchCtrl.isInSearch([facet.key])}"
         gn-collapsible="::ctrl.fLvlCollapse[facet.key]">
-        <span class="flex-shrink text-ellipsis">{{('facet-' + facet.key) | translate}}</span>
+        <span class="flex-shrink text-ellipsis">{{('facet-' + facet.key) | facetKeyTranslator}}</span>
         <span class="fa fa-fw"
               ng-class="ctrl.fLvlCollapse[facet.key] ? 'fa-caret-right' : 'fa-caret-down'"></span>
       </a>

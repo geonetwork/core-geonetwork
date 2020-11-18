@@ -398,7 +398,7 @@
      and element like gmx:Anchor including the href attribute
      which may contains keyword identifier. -->
     <xsl:variable name="thesaurusField"
-                  select="concat('th_', replace($thesaurus, '[^a-zA-Z0-9]', ''))"/>
+                  select="concat('th_', replace($thesaurus, '[^a-zA-Z0-9-]', ''))"/>
 
     <xsl:element name="{$thesaurusField}Number">
       <xsl:value-of select="count($keywords)"/>
@@ -422,7 +422,7 @@
                                           |*:Anchor/@xlink:href"/>
               <xsl:if test="not(*:Anchor)">
                 <xsl:variable name="uri"
-                              select="util:getKeywordUri(*/text(), $thesaurusId, $mainLanguage)"/>
+                              select="util:getKeywordUri((*/text())[1], $thesaurusId, $mainLanguage)"/>
                 <xsl:if test="$uri != ''">
                   <xsl:attribute name="xlink:href" select="$uri"/>
                 </xsl:if>

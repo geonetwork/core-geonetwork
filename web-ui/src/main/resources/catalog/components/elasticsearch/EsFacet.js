@@ -228,9 +228,9 @@
 
         if (reqAgg.hasOwnProperty('terms')) {
 
-          if(fieldId.endsWith('_tree')) {
+          if(fieldId.contains('_tree')) {
             facetModel.type = 'tree';
-            var tree = gnFacetTree.getTree(respAgg.buckets);
+            var tree = gnFacetTree.getTree(respAgg.buckets, fieldId, respAgg.meta);
             facetModel.items = tree.items;
           } else {
             facetModel.type = 'terms';
