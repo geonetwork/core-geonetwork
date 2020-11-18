@@ -311,7 +311,7 @@
             format = new ol.format.GML({
               featureNS: 'http://www.opengis.net/gml',
               featureType: 'feature'
-            });
+            });            
             var fullXml = '<featureMembers>' +
                 '<gml:feature xmlns:gml="http://www.opengis.net/gml">' +
                 '<geometry>' +
@@ -324,7 +324,7 @@
               dataProjection: options.crs,
               featureProjection: outputProjection
             })[0];
-            outputValue = feature.getGeometry();
+            outputValue = fixGmlGeometryLayout(feature.getGeometry(), input);
             break;
 
           // no valid format specified: handle as object
@@ -342,6 +342,29 @@
 
         return outputValue;
       };
+
+      /**
+       * Forces geometry that has been created from GML to become 2D
+       * if the srsDimension attribute in the GML equals 2. 
+       * OpenLayers GML parser always outputs 3D feature members.
+       * If the srsDimension attribute is 3 (Z) or 4 (ZM), no fix is applied.
+       * NOTE: the fix is applied in-place.
+       * 
+       * @param {ol.geom.Geometry} geom geometry to check and fix
+       * @param {string} gmlString original GML used to create the geometry
+       * @returns {ol.geom.Geometry} a (possibly) modified geometry
+       */
+      var fixGmlGeometryLayout = function(geom, gmlString) {
+        // Get dimensions from GML
+        var dim = gmlString.match(new RegExp('srsDimension=\"([^"]*)\"'));
+        // If srsDimension > 2 OR geometry is already 2D, return unmodified geometry
+        if ((dim && dim.length === 2 && dim[1] >= 3) || 
+            (geom.layout === 'XY' && geom.stride === 2)) 
+              return geom;            
+        // Drop Z (and M)
+        geom.setCoordinates(geom.getCoordinates(), 'XY');
+        return geom;
+      }
 
       /**
        * Checks if the feature geometry contains the north or south pole.
