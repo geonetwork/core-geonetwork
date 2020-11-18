@@ -15,7 +15,7 @@ Il est nécessaire de compiler la webapp au préalable, à la racine du dépot, 
 la commande suivante:
 
 ```
-$ mvn clean install -U -DskipTests -Dmaven.test.skip=true -Dsxt.properties=docker
+$ mvn clean install -U -DskipTests -Dsxt.properties=docker
 ```
 
 Puis de copier la webapp résultante dans le répertoire courant (`docker`):

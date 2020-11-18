@@ -38,9 +38,14 @@ if [ "$1" = 'catalina.sh' ]; then
     sed -i -e 's#5432#${jdbc.port}#g' $CATALINA_HOME/webapps/geonetwork/WEB-INF/config-db/postgres.xml
 
     # Reconfigure Elasticsearch & Kibana if necessary
-    if [ "$ES_HOST" != "localhost" ]; then
+    if [ "$ES_HOST" != "localhost" ] || [ "$ES_PORT" != "9200" ] || [ "$ES_PROTOCOL" != "http" ] ; then
       sed -i "s#http://localhost:9200#${ES_PROTOCOL}://${ES_HOST}:${ES_PORT}#g" $CATALINA_HOME/webapps/geonetwork/WEB-INF/web.xml ;
-      sed -i "s#es.url=http://localhost:9200#es.url=${ES_PROTOCOL}://${ES_HOST}:${ES_PORT}#" $CATALINA_HOME/webapps/geonetwork/WEB-INF/config.properties ;
+      augtool -r /usr/local/tomcat/webapps/geonetwork/WEB-INF/ --noautoload --transform "Properties.lns incl /config.properties" <<EOF
+            set '/files/config.properties/es.host' "${ES_HOST}"
+            set '/files/config.properties/es.port' "${ES_PORT}"
+            set '/files/config.properties/es.protocol' "${ES_PROTOCOL}"
+            save
+EOF
     fi;
 
     if [ "$ES_USERNAME" != "" ] ; then
