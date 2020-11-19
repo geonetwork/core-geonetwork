@@ -359,22 +359,49 @@ goog.require('gn_alert');
                 //"include": "EEA.*"
               }
             },
-            'resolutionScaleDenominator': {
+            // "resolutionScaleDenominator": {
+            //   "terms": {
+            //     "field": "resolutionScaleDenominator",
+            //     "size": 20,
+            //     "order": {
+            //       "_key": "asc"
+            //     }
+            //   }
+            // },
+            "resolutionScaleDenominator": {
               'collapsed': true,
-              'terms': {
-                'field': 'resolutionScaleDenominator',
-                'size': 10,
-                'order': {'_key': "asc"}
+              "histogram": {
+                "field": "resolutionScaleDenominator",
+                "interval": 10000,
+                "keyed" : true,
+                'min_doc_count': 1
               }
             },
-            'creationYearForResource': {
+            // "serviceType": {
+            //   'collapsed': true,
+            //   "terms": {
+            //     "field": "serviceType",
+            //     "size": 10
+            //   }
+            // },
+            "creationYearForResource": {
               'collapsed': true,
-              'terms': {
-                'field': 'creationYearForResource',
-                'size': 10,
-                'order': {'_key': "desc"}
+              "histogram": {
+                "field": "creationYearForResource",
+                "interval": 5,
+                "keyed" : true,
+                'min_doc_count': 1
               }
             },
+            // "creationYearForResource": {
+            //   "terms": {
+            //     "field": "creationYearForResource",
+            //     "size": 10,
+            //     "order": {
+            //       "_key": "desc"
+            //     }
+            //   }
+            // },
             'OrgForResource': {
               'terms': {
                 'field': 'OrgForResource',
