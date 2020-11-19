@@ -313,15 +313,15 @@ goog.require('gn_alert');
             // GEMET configuration for multilingual catalog
             // The key is translated on client side by loading
             // required concepts
-            'th_gemet_tree.key': {
-              'terms': {
-                'field': 'th_gemet_tree.key',
-                'size': 100,
-                "order" : { "_key" : "asc" },
-                "include": "[^\^]+^?[^\^]+"
-                // Limit to 2 levels
-              }
-            },
+            // 'th_gemet_tree.key': {
+            //   'terms': {
+            //     'field': 'th_gemet_tree.key',
+            //     'size': 100,
+            //     "order" : { "_key" : "asc" },
+            //     "include": "[^\^]+^?[^\^]+"
+            //     // Limit to 2 levels
+            //   }
+            // },
             // (Experimental) A tree field which contains a URI
             // eg. http://www.ifremer.fr/thesaurus/sextant/theme#52
             // but with a translation which contains a hierarchy with a custom separator
