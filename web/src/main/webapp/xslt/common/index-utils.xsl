@@ -197,34 +197,34 @@
     <xsl:variable name="mainLanguage"
                   select="$languages/lang[@id='default']/@value"/>
 
-    <!--<xsl:message>gn-fn-index:add-field <xsl:value-of select="$fieldName"/></xsl:message>-->
-    <!--<xsl:message>gn-fn-index:add-field languages <xsl:copy-of select="$languages"/></xsl:message>-->
+<!--    <xsl:message>gn-fn-index:add-field <xsl:value-of select="$fieldName"/></xsl:message>-->
+<!--    <xsl:message>gn-fn-index:add-field languages <xsl:copy-of select="$languages"/></xsl:message>-->
 
     <xsl:variable name="isArray"
                   select="count($elements[not(@xml:lang)]) > 1"/>
     <xsl:for-each select="$elements">
       <xsl:variable name="element" select="."/>
-      <xsl:variable name="textObject">
+      <xsl:variable name="textObject" as="node()*">
         <xsl:choose>
           <!-- Not ISO but multilingual eg. DC or DCAT -->
           <xsl:when test="$languages and count($element//(*:CharacterString|*:Anchor|*:LocalisedCharacterString)) = 0">
 
             <xsl:if test="position() = 1">
-              <xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
-                                             $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+              <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
+                                             $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
               <xsl:for-each select="$elements">
-                <xsl:value-of select="concat(',', $doubleQuote, 'lang', @xml:lang, $doubleQuote, ':',
-                                             $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+                <value><xsl:value-of select="concat($doubleQuote, 'lang', @xml:lang, $doubleQuote, ':',
+                                             $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
               </xsl:for-each>
             </xsl:if>
           </xsl:when>
           <xsl:when test="$languages">
             <!-- The default language -->
             <xsl:for-each select="$element//(*:CharacterString|*:Anchor)[. != '']">
-              <xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
-                                           $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote, ', ')"/>
-              <xsl:value-of select="concat($doubleQuote, 'lang', $mainLanguage, $doubleQuote, ':',
-                                           $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+              <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
+                                           $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
+            <value><xsl:value-of select="concat($doubleQuote, 'lang', $mainLanguage, $doubleQuote, ':',
+                                           $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
             </xsl:for-each>
 
             <xsl:for-each select="$element//*:LocalisedCharacterString[. != '']">
@@ -232,42 +232,46 @@
                             select="replace(@locale, '#', '')"/>
               <xsl:variable name="elementLanguage3LetterCode"
                             select="$languages/lang[@id = $elementLanguage]/@value"/>
-              <xsl:variable name="field"
-                            select="concat('lang', if ($elementLanguage3LetterCode = '') then $mainLanguage else $elementLanguage3LetterCode)"/>
-              <xsl:value-of select="concat(
-                                      ',',
-                                      $doubleQuote, $field, $doubleQuote, ':',
-                                      $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+
+              <xsl:if test="$elementLanguage3LetterCode != ''">
+                <xsl:variable name="field"
+                              select="concat('lang', $elementLanguage3LetterCode)"/>
+                <value><xsl:value-of select="concat(
+                                        $doubleQuote, $field, $doubleQuote, ':',
+                                        $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
+              </xsl:if>
             </xsl:for-each>
+
           </xsl:when>
           <xsl:otherwise>
             <!-- Index each values in a field. -->
             <xsl:for-each select="distinct-values($element[. != ''])">
-              <xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
-                                           $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote, ', ')"/>
-              <xsl:value-of select="concat($doubleQuote, 'lang', $mainLanguage, $doubleQuote, ':',
-                                           $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+              <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
+                                           $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
+              <value><xsl:value-of select="concat($doubleQuote, 'lang', $mainLanguage, $doubleQuote, ':',
+                                           $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
             </xsl:for-each>
           </xsl:otherwise>
         </xsl:choose>
 
         <xsl:for-each select="$element//*:Anchor/@xlink:href">
-          <xsl:value-of select="concat(',', $doubleQuote, 'link', $doubleQuote, ':',
-                                           $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+          <value><xsl:value-of select="concat($doubleQuote, 'link', $doubleQuote, ':',
+                                           $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
         </xsl:for-each>
       </xsl:variable>
+
       <xsl:if test="$textObject != ''">
         <xsl:choose>
           <xsl:when test="$asJson">
             <xsl:if test="$isArray and position() = 1">[</xsl:if>
-            {<xsl:value-of select="$textObject"/>}
+            {<xsl:value-of select="string-join($textObject/text(), ', ')"/>}
             <xsl:if test="$isArray and position() != last()">,</xsl:if>
             <xsl:if test="$isArray and position() = last()">]</xsl:if>
           </xsl:when>
           <xsl:otherwise>
             <xsl:element name="{$fieldName}Object">
               <xsl:attribute name="type" select="'object'"/>
-              {<xsl:value-of select="$textObject"/>}
+              {<xsl:value-of select="string-join($textObject/text(), ', ')"/>}
             </xsl:element>
           </xsl:otherwise>
         </xsl:choose>

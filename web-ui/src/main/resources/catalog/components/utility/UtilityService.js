@@ -629,6 +629,7 @@
       var tree = {
         nodes: []
       },
+       deferred = $q.defer(),
         // Browse the tree, collect keys and load translations
         // Experimental - The idea was to build the tree
         // based on translations and not the buckets returned.
@@ -647,28 +648,31 @@
 
       buildTree(list, fieldId, tree, meta);
 
-      loadTranslation(fieldId, tree).then(function(translations) {
-        if (angular.isObject(translations)) {
-          var t ={};
-          t[gnLangs.current] = {};
-          t[gnLangs.current] = angular.extend({},
-            gnLangs.provider.translations()[gnLangs.current],
-            translations);
-          gnLangs.provider.useLoader('inlineLoaderFactory', t);
-          console.log('injecting', translations);
-          $timeout(function() {
+      if(Object.keys(translationsToLoad[fieldId]).length > 0) {
+        loadTranslation(fieldId, tree).then(function(translations) {
+          if (angular.isObject(translations)) {
+            var t = {};
+            t[gnLangs.current] = {};
+            t[gnLangs.current] = angular.extend({},
+              gnLangs.provider.translations()[gnLangs.current],
+              translations);
+            gnLangs.provider.useLoader('inlineLoaderFactory', t);
             $translate.refresh();
-            console.log('refresh');
-            }, 3000);
-          if (translateOnLoad) {
-            if (tree.items) {
-              tree.items.length = 0;
+            if (translateOnLoad) {
+              if (tree.items) {
+                tree.items.length = 0;
+              }
+              $timeout(function() {
+                buildTree(list, fieldId, tree, meta);
+              });
             }
-            buildTree(list, fieldId, tree, meta);
+            deferred.resolve(tree);
           }
-        }
-      });
-      return tree;
+        });
+      } else {
+        deferred.resolve(tree);
+      }
+      return deferred.promise;
     };
   }]);
 

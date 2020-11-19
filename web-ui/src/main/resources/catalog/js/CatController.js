@@ -301,15 +301,15 @@ goog.require('gn_alert');
               }
             },
             // GEMET configuration for non multilingual catalog
-            // 'th_gemet_tree.default': {
-            //   'terms': {
-            //     'field': 'th_gemet_tree.default',
-            //     'size': 100,
-            //     "order" : { "_key" : "asc" },
-            //     "include": "[^\^]+^?[^\^]+"
-            //     // Limit to 2 levels
-            //   }
-            // },
+            'th_gemet_tree.default': {
+              'terms': {
+                'field': 'th_gemet_tree.default',
+                'size': 100,
+                "order" : { "_key" : "asc" },
+                "include": "[^\^]+^?[^\^]+"
+                // Limit to 2 levels
+              }
+            },
             // GEMET configuration for multilingual catalog
             // The key is translated on client side by loading
             // required concepts
@@ -326,24 +326,24 @@ goog.require('gn_alert');
             // eg. http://www.ifremer.fr/thesaurus/sextant/theme#52
             // but with a translation which contains a hierarchy with a custom separator
             // /Regulation and Management/Technical and Management Zonations/Sensitive Zones
-            'th_sextant-theme_tree.key': {
-              'terms': {
-                'field': 'th_sextant-theme_tree.key',
-                'size': 100,
-                "order" : { "_key" : "asc" }
-              },
-              'meta': {
-                'translateOnLoad': true,
-                'treeKeySeparator': '/'
-              }
-            },
-            // 'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree.default': {
+            // 'th_sextant-theme_tree.key': {
             //   'terms': {
-            //     'field': 'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree.default',
+            //     'field': 'th_sextant-theme_tree.key',
             //     'size': 100,
             //     "order" : { "_key" : "asc" }
+            //   },
+            //   'meta': {
+            //     'translateOnLoad': true,
+            //     'treeKeySeparator': '/'
             //   }
             // },
+            'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree.default': {
+              'terms': {
+                'field': 'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree.default',
+                'size': 100,
+                "order" : { "_key" : "asc" }
+              }
+            },
             'tag.default': {
               'terms': {
                 'field': 'tag.default',
