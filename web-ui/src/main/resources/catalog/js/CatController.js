@@ -278,6 +278,24 @@ goog.require('gn_alert');
                 'treeKeySeparator': '/'
               }
             },
+            // 'th_type_jeux_donnee_tree.key': {
+            //   'terms': {
+            //     'field': 'th_type_jeux_donnee_tree.key',
+            //     'size': 100,
+            //     "order" : { "_key" : "asc" }
+            //   }
+            // },
+            // 'th_type_jeux_donnee_tree.key': {
+            //   'terms': {
+            //     'field': 'th_type_jeux_donnee_tree.key',
+            //     'size': 100,
+            //     "order" : { "_key" : "asc" }
+            //   },
+            //   'meta': {
+            //     'translateOnLoad': true,
+            //     'treeKeySeparator': '/'
+            //   }
+            // },
             // Use .default for not multilingual catalogue with one language only UI.
             // 'cl_spatialRepresentationType.default': {
             //   'terms': {
@@ -345,22 +363,40 @@ goog.require('gn_alert');
             //     //"include": "EEA.*"
             //   }
             // },
-            'resolutionScaleDenominator': {
+            "resolutionScaleDenominator": {
               'collapsed': true,
-              'terms': {
-                'field': 'resolutionScaleDenominator',
-                'size': 10,
-                'order': {'_key': "asc"}
+              "histogram": {
+                "field": "resolutionScaleDenominator",
+                "interval": 10000,
+                "keyed" : true,
+                'min_doc_count': 1
               }
             },
-            'creationYearForResource': {
+            // "serviceType": {
+            //   'collapsed': true,
+            //   "terms": {
+            //     "field": "serviceType",
+            //     "size": 10
+            //   }
+            // },
+            "creationYearForResource": {
               'collapsed': true,
-              'terms': {
-                'field': 'creationYearForResource',
-                'size': 10,
-                'order': {'_key': "desc"}
+              "histogram": {
+                "field": "creationYearForResource",
+                "interval": 5,
+                "keyed" : true,
+                'min_doc_count': 1
               }
             },
+            // "creationYearForResource": {
+            //   "terms": {
+            //     "field": "creationYearForResource",
+            //     "size": 10,
+            //     "order": {
+            //       "_key": "desc"
+            //     }
+            //   }
+            // },
             'OrgForResource': {
               'terms': {
                 'field': 'OrgForResource',
