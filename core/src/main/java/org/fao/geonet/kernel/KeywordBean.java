@@ -336,7 +336,7 @@ public class KeywordBean {
      * @return this keyword bean
      */
     public KeywordBean setValue(String value, String lang) {
-        if (defaultLang == null) {
+        if (defaultLang == null && org.apache.commons.lang.StringUtils.isNotEmpty(value)) {
             defaultLang = to3CharLang(lang);
         }
         values.put(to3CharLang(lang), value);
@@ -371,9 +371,6 @@ public class KeywordBean {
      * @return this keyword
      */
     public KeywordBean setDefinition(String definition, String lang) {
-        if (defaultLang == null) {
-            defaultLang = to3CharLang(lang);
-        }
         definitions.put(to3CharLang(lang), definition);
         return this;
     }

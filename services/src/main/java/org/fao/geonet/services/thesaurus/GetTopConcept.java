@@ -57,7 +57,11 @@ public class GetTopConcept implements Service {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
 
+        Element response = new Element("descKeys");
         Thesaurus the = thesaurusMan.getThesaurusByName(sThesaurusName);
+        if (the == null) {
+            return response;
+        }
         String langForThesaurus = the.getIsoLanguageMapper().iso639_2_to_iso639_1(lang);
 
         KeywordsSearcher searcher = null;
@@ -65,7 +69,6 @@ public class GetTopConcept implements Service {
         // perform the search for the top concepts of the concept scheme
         searcher = new KeywordsSearcher(context, thesaurusMan);
 
-        Element response = new Element("descKeys");
         try {
             searcher.searchTopConcepts(sThesaurusName, langForThesaurus);
 

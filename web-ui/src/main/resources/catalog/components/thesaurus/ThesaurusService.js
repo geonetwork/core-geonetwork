@@ -315,7 +315,10 @@
                 '../api/registries/vocabularies/keyword',
                     gnUrlUtils.toKeyValue(params)
                     );
-                $http.get(url, { cache: true }).
+                $http.get(url, { cache: true,
+                  headers: {
+                    'Accept': 'application/xml'
+                  } }).
                     success(function(data, status) {
                       // TODO: could be a global constant ?
                       var xmlDeclaration =

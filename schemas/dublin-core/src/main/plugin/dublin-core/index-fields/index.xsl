@@ -133,12 +133,27 @@
         <useLimitation><xsl:value-of select="string(.)"/></useLimitation>
       </xsl:for-each>
 
-      <xsl:for-each select="dct:spatial">
-        <geoTag><xsl:value-of select="string(.)"/></geoTag>
-      </xsl:for-each>
-      <xsl:for-each select="dc:subject">
-        <tag><xsl:value-of select="string(.)"/></tag>
-      </xsl:for-each>
+      <xsl:variable name="geoTags"
+                    select="dct:spatial[. != '']"/>
+      <xsl:if test="count($geoTags) > 0">
+        <geoTag type="object">[
+          <xsl:for-each select="$geoTags">
+            <xsl:value-of select="concat($doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>
+        ]</geoTag>
+      </xsl:if>
+
+      <xsl:variable name="tags"
+                    select="dc:subject[. != '']"/>
+      <xsl:if test="count($tags) > 0">
+        <tag type="object">[
+          <xsl:for-each select="$tags">
+            <xsl:value-of select="concat($doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>
+          ]</tag>
+      </xsl:if>
 
 
 
@@ -219,13 +234,8 @@
                   </xsl:otherwise>
                 </xsl:choose>
               </xsl:when>
-              <xsl:otherwise></xsl:otherwise>
             </xsl:choose>
-            <tag><xsl:value-of select="$place"/></tag>
           </xsl:when>
-          <xsl:otherwise>
-            <tag><xsl:value-of select="."/></tag>
-          </xsl:otherwise>
         </xsl:choose>
       </xsl:for-each>
     </doc>

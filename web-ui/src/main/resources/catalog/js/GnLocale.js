@@ -58,6 +58,14 @@
   });
   module.constant('$LOCALES', ['core']);
 
+  module.factory('inlineLoaderFactory', ['$q', function($q) {
+    return function(options) {
+      var deferred = $q.defer();
+      deferred.resolve(options[options.key]);
+      return deferred.promise;
+    };
+  }]);
+
   module.factory('localeLoader', [
     '$http', '$q', 'gnLangs', '$translate', '$timeout',
     function($http, $q, gnLangs, $translate, $timeout) {
@@ -147,6 +155,7 @@
           gnGlobalSettings.gnCfg.langDetector,
           gnGlobalSettings
       );
+      gnLangs.provider = $translateProvider;
 
       $translateProvider.preferredLanguage(gnGlobalSettings.iso3lang);
       // $translateProvider.useSanitizeValueStrategy('escape');

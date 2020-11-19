@@ -80,6 +80,7 @@ import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.UiSetting;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -1237,5 +1238,30 @@ public final class XslUtil {
         } catch (Exception ex) {
         }
         return res;
+    }
+
+
+    public static String getKeywordUri(String keyword, String thesaurusId, String langCode) {
+        if (StringUtils.isEmpty(thesaurusId)) {
+            return "";
+        }
+
+        try {
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
+            ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+
+            thesaurusId = thesaurusId.replaceAll("geonetwork.thesaurus.", "");
+            Thesaurus thesaurus = thesaurusManager.getThesaurusByName(thesaurusId);
+
+            if (thesaurus != null) {
+                KeywordBean keywordBean = thesaurus.getKeywordWithLabel(keyword, langCode);
+                if (keywordBean != null) {
+                    return keywordBean.getUriCode();
+                }
+            }
+            return "";
+        } catch (Exception ex) {
+        }
+        return "";
     }
 }

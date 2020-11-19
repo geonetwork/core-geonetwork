@@ -56,11 +56,7 @@
     $LOCALES.push('/../api/tools/i18n/db?' +
         'type=MetadataCategory&type=Operation&type=Group&type=StatusValue&type=Source');
     $LOCALES.push('/../api/standards/iso19139/' +
-        'codelists/gmd%3AMD_TopicCategoryCode');
-    $LOCALES.push('/../api/standards/iso19139/' +
-        'codelists/gmd%3ADS_AssociationTypeCode');
-    $LOCALES.push('/../api/standards/iso19139/' +
-        'codelists/gmd%3ADS_InitiativeTypeCode');
+        'codelists?codelist=gmd%3AMD_TopicCategoryCode&codelist=gmd%3AMD_ScopeCode&codelist=gmd%3AMD_MaintenanceFrequencyCode&codelist=gmd%3AMD_ProgressCode&codelist=gmd%3ADS_InitiativeTypeCode&codelist=gmd%3AMD_SpatialRepresentationTypeCode');
     $LOCALES.push('/../api/standards/iso19115-3.2018/' +
         'codelists/cit%3ACI_DateTypeCode');
   }]);

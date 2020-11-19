@@ -83,7 +83,6 @@
                 q = queryBase.replace(
                       /\$\{any\}/g,
                       exactMatch === true ? '\"' + searchString + '\"' : searchString);
-              console.log(q);
               queryStringParams.push(q);
             } else {
               queryStringParams.push(queryExpression[1]);

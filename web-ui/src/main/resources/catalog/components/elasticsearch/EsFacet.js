@@ -228,10 +228,12 @@
 
         if (reqAgg.hasOwnProperty('terms')) {
 
-          if(fieldId.endsWith('_tree')) {
+          if(fieldId.contains('_tree')) {
             facetModel.type = 'tree';
-            var tree = gnFacetTree.getTree(respAgg.buckets);
-            facetModel.items = tree.items;
+            facetModel.items = [];
+            gnFacetTree.getTree(respAgg.buckets, fieldId, respAgg.meta).then(function (tree) {
+              this.items = tree.items;
+            }.bind(facetModel));
           } else {
             facetModel.type = 'terms';
             facetModel.size = reqAgg.terms.size;

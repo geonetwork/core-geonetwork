@@ -506,8 +506,12 @@
     };
   }]);
 
-  module.service('gnFacetTree', [function() {
+  module.service('gnFacetTree', [
+    '$http', 'gnLangs', '$q', '$translate', '$timeout',
+    function($http, gnLangs, $q, $translate, $timeout) {
     var separator = '^';
+    var translationsToLoad = [];
+
     var findChild = function(node, name) {
       var n;
       if (node.nodes) {
@@ -527,9 +531,17 @@
       return 0;
     };
 
-    var createNode = function(node, g, index, e) {
+    var registerTranslation = function(keyword, fieldId) {
+      if (keyword.indexOf('http') === 0 &&
+        $translate.instant(keyword) == keyword) {
+        translationsToLoad[fieldId][keyword] = '';
+      }
+    };
+
+    var createNode = function(node, fieldId, g, index, e) {
       var group = g[index];
       if (group) {
+        registerTranslation(group, fieldId);
         var newNode = findChild(node, group);
         if (!newNode) {
           newNode = {
@@ -542,7 +554,7 @@
           node.items = node.nodes;
           //node.nodes.sort(sortNodeFn);
         }
-        createNode(newNode, g, index + 1, e);
+        createNode(newNode, fieldId, g, index + 1, e);
       } else {
         node.key = e.key;
         node.count = e.doc_count;
@@ -551,16 +563,116 @@
       }
     };
 
-    this.getTree = function(list) {
-      var tree = {
-        nodes: []
-      };
+    function loadTranslation(fieldId) {
+      var keys = Object.keys(translationsToLoad[fieldId]);
+      var deferred = $q.defer();
+      if (keys.length > 0) {
+        var uris = [];
+        angular.copy(keys, uris);
+        translationsToLoad[fieldId] = {};
+        $http.get('../api/registries/vocabularies/keyword' +
+          '?thesaurus=' + fieldId.replace(/th_(.*)_tree.key/, '$1') +
+          '&id=' + encodeURIComponent(uris.join(',')) +
+          // Get Keyword in current UI language or fallback to any UI language
+          '&lang=' + gnLangs.getCurrent() + ',' + Object.keys(gnLangs.langs).join(','), {
+          cache: true,
+          headers: {
+            'Accept': 'application/json'
+          }
+        }).then(function(r) {
+          deferred.resolve(r.data);
+        })
+      } else {
+        deferred.resolve();
+      }
+      return deferred.promise;
+    };
+
+    function buildTree(list, fieldId, tree, meta) {
+      var translateOnLoad = meta && meta.translateOnLoad;
       list.forEach(function(e) {
         var name = e.key;
+        if (translateOnLoad) {
+          var t = $translate.instant(name);
+          if (t !== name) {
+            name = t;
+
+            // using a custom separator?
+            // eg. 'th_sextant-theme_tree.key': {
+            //   'terms': {
+            //     'field': 'th_sextant-theme_tree.key',
+            //       'size': 100,
+            //       "order" : { "_key" : "asc" }
+            //   },
+            //   'meta': {
+            //     'translateOnLoad': true,
+            //     'treeKeySeparator': '/'
+            //   }
+            // },
+            if(meta && meta.treeKeySeparator) {
+              name = t.replaceAll(meta.treeKeySeparator, '^');
+            }
+
+            if (name.indexOf(separator) === 0) {
+              name = name.slice(1);
+            }
+          }
+        }
+
+
         var g = name.split(separator);
-        createNode(tree, g, 0, e);
+        createNode(tree, fieldId, g, 0, e);
       });
-      return tree;
+    }
+
+    this.getTree = function(list, fieldId, meta) {
+      var tree = {
+        nodes: []
+      },
+       deferred = $q.defer(),
+        // Browse the tree, collect keys and load translations
+        // Experimental - The idea was to build the tree
+        // based on translations and not the buckets returned.
+        // It sounds hard to refresh the tree once created.
+        // A better approach is to do this operation at indexing time.
+        // or load the thesaurus (if not too big) on app load
+        translateOnLoad = meta && meta.translateOnLoad;
+
+
+      // If bucket key starts with http, we assume they are
+      // thesaurus URI and translation will be loaded (if not yet loaded)
+      // and injected into translations.
+      if (translationsToLoad[fieldId] === undefined) {
+        translationsToLoad[fieldId] = [];
+      }
+
+      buildTree(list, fieldId, tree, meta);
+
+      if(Object.keys(translationsToLoad[fieldId]).length > 0) {
+        loadTranslation(fieldId, tree).then(function(translations) {
+          if (angular.isObject(translations)) {
+            var t = {};
+            t[gnLangs.current] = {};
+            t[gnLangs.current] = angular.extend({},
+              gnLangs.provider.translations()[gnLangs.current],
+              translations);
+            gnLangs.provider.useLoader('inlineLoaderFactory', t);
+            $translate.refresh();
+            if (translateOnLoad) {
+              if (tree.items) {
+                tree.items.length = 0;
+              }
+              $timeout(function() {
+                buildTree(list, fieldId, tree, meta);
+              });
+            }
+            deferred.resolve(tree);
+          }
+        });
+      } else {
+        deferred.resolve(tree);
+      }
+      return deferred.promise;
     };
   }]);
 
