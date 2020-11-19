@@ -25,6 +25,8 @@ services:
     image: sextant-cas:latest
     environment:
       JAVA_OPTS: -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+    volumes:
+      - ./cas/cas-overlay-template-6.2/etc/cas:/etc/cas
     ports:
       - 5005:5005
     depends_on:
@@ -34,6 +36,8 @@ services:
     build: .
     image: sextant-geonetwork:elastic
     restart: always
+    env_file:
+      - ./.env
     environment:
       # configure the tomcat connector
       # Needed for GN to send a service

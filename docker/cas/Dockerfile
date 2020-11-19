@@ -1,17 +1,15 @@
-FROM maven:3.6.3-jdk-8 AS builder
+FROM openjdk:11.0.9-jdk AS builder
 
-COPY cas-overlay-template-4.2 /cas-overlay-template
-RUN cd /cas-overlay-template/ && mvn clean package
+COPY cas-overlay-template-6.2 /cas-overlay-template
+RUN cd /cas-overlay-template/ && ./gradlew build
 
 
-FROM tomcat:8.5-jdk8
+FROM tomcat:9.0-jdk11
 
-COPY --from=builder /cas-overlay-template/target/cas.war ${CATALINA_HOME}/webapps/
+COPY --from=builder /cas-overlay-template/build/libs/cas.war ${CATALINA_HOME}/webapps/
 RUN cd $CATALINA_HOME/webapps                                                                                      && \
   unzip -d cas cas.war                                                                                             && \
   rm -f cas.war
 
-COPY cas.properties ${CATALINA_HOME}/webapps/cas/WEB-INF/classes/
-COPY deployerConfigContext.xml ${CATALINA_HOME}/webapps/cas/WEB-INF/
-COPY casLoginView.jsp ${CATALINA_HOME}/webapps/cas/WEB-INF/view/jsp/default/ui/
+COPY cas-overlay-template-6.2/etc/cas /etc/cas
 
