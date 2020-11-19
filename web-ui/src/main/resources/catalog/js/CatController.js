@@ -118,15 +118,15 @@ goog.require('gn_alert');
                 // "order" : { "_key" : "asc" }
               }
             },
-            'topic_text': {
+            'cl_topic.key': {
               'terms': {
-                'field': 'topic_text',
+                'field': 'cl_topic.key',
                 'size': 20
               }
             },
-            'cl_hierarchyLevel_text': {
+            'cl_hierarchyLevel.key': {
               'terms': {
-                'field': 'cl_hierarchyLevel_text',
+                'field': 'cl_hierarchyLevel.key',
                 'size': 10
               }
             }
@@ -160,12 +160,12 @@ goog.require('gn_alert');
             // "boost": "5",
             // "functions": [
             //   {
-            //     "filter": { "match": { "cl_spatialRepresentationType": "vector" } },
+            //     "filter": { "match": { "cl_spatialRepresentationType.key": "vector" } },
             //     "random_score": {},
             //     "weight": 23
             //   },
             //   {
-            //     "filter": { "match": { "cl_spatialRepresentationType": "grid" } },
+            //     "filter": { "match": { "cl_spatialRepresentationType.key": "grid" } },
             //     "weight": 42
             //   }
             // ],
@@ -188,7 +188,7 @@ goog.require('gn_alert');
               },
               // Boost down obsolete records
               {
-                "filter": { "match": { "cl_status": "obsolete" } },
+                "filter": { "match": { "cl_status.key": "obsolete" } },
                 "weight": 0.3
               },
               // {
@@ -255,9 +255,9 @@ goog.require('gn_alert');
           // TODOES
           'facetTabField': '',
           'facetConfig': {
-            'cl_hierarchyLevel_text': {
+            'cl_hierarchyLevel.key': {
               'terms': {
-                'field': 'cl_hierarchyLevel_text'
+                'field': 'cl_hierarchyLevel.key'
               },
               'aggs': {
                 'format': {
@@ -267,9 +267,18 @@ goog.require('gn_alert');
                 }
               }
             },
-            'cl_spatialRepresentationType': {
+            // Use .default for not multilingual catalogue with one language only UI.
+            // 'cl_spatialRepresentationType.default': {
+            //   'terms': {
+            //     'field': 'cl_spatialRepresentationType.default',
+            //     'size': 10
+            //   }
+            // },
+            // Use .key for codelist for multilingual catalogue.
+            // The codelist translation needs to be loaded in the client app. See GnSearchModule.js
+            'cl_spatialRepresentationType.key': {
               'terms': {
-                'field': 'cl_spatialRepresentationType',
+                'field': 'cl_spatialRepresentationType.key',
                 'size': 10
               }
             },
@@ -291,32 +300,60 @@ goog.require('gn_alert');
                 }
               }
             },
-            'th_gemet_tree': {
+            // GEMET configuration for non multilingual catalog
+            'th_gemet_tree.default': {
               'terms': {
-                'field': 'th_gemet_tree',
+                'field': 'th_gemet_tree.default',
                 'size': 100,
                 "order" : { "_key" : "asc" },
                 "include": "[^\^]+^?[^\^]+"
                 // Limit to 2 levels
               }
             },
-            // 'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree': {
+            // GEMET configuration for multilingual catalog
+            // The key is translated on client side by loading
+            // required concepts
+            'th_gemet_tree.key': {
+              'terms': {
+                'field': 'th_gemet_tree.key',
+                'size': 100,
+                "order" : { "_key" : "asc" },
+                "include": "[^\^]+^?[^\^]+"
+                // Limit to 2 levels
+              }
+            },
+            // (Experimental) A tree field which contains a URI
+            // eg. http://www.ifremer.fr/thesaurus/sextant/theme#52
+            // but with a translation which contains a hierarchy with a custom separator
+            // /Regulation and Management/Technical and Management Zonations/Sensitive Zones
+            // 'th_sextant-theme_tree.key': {
             //   'terms': {
-            //     'field': 'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree',
+            //     'field': 'th_sextant-theme_tree.key',
             //     'size': 100,
             //     "order" : { "_key" : "asc" }
+            //   },
+            //   'meta': {
+            //     'translateOnLoad': true,
+            //     'treeKeySeparator': '/'
             //   }
             // },
-            'tag': {
+            'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree.default': {
               'terms': {
-                'field': 'tag',
+                'field': 'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree.default',
+                'size': 100,
+                "order" : { "_key" : "asc" }
+              }
+            },
+            'tag.default': {
+              'terms': {
+                'field': 'tag.default',
                 'include': '.*',
                 'size': 10
               }
             },
-            'th_regions_tree': {
+            'th_regions_tree.default': {
               'terms': {
-                'field': 'th_regions_tree',
+                'field': 'th_regions_tree.default',
                 'size': 100,
                 "order" : { "_key" : "asc" }
                 //"include": "EEA.*"
@@ -344,16 +381,16 @@ goog.require('gn_alert');
                 'size': 15
               }
             },
-            'cl_maintenanceAndUpdateFrequency_text': {
+            'cl_maintenanceAndUpdateFrequency.key': {
               'collapsed': true,
               'terms': {
-                'field': 'cl_maintenanceAndUpdateFrequency_text',
+                'field': 'cl_maintenanceAndUpdateFrequency.key',
                 'size': 10
               }
             },
-            'cl_status_text': {
+            'cl_status.key': {
               'terms': {
-                'field': 'cl_status_text',
+                'field': 'cl_status.key',
                 'size': 10
               }
             },
@@ -539,9 +576,9 @@ goog.require('gn_alert');
                 'size': 20
               }
             },
-            'cl_status_text': {
+            'cl_status.key': {
               'terms': {
-                'field': 'cl_status_text',
+                'field': 'cl_status.key',
                 'size': 15
               }
             },

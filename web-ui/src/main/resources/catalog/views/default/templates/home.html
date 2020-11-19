@@ -108,11 +108,11 @@
                 <!-- TODOES Link label to icons? -->
                 <span class="badge-icon badge-result-topic pull-left">
                   <i class="fa fa-3x gn-icon gn-icon-{{facet.key.toLowerCase().replace('/', '').replace(' ', '')}}"
-                     data-ng-show="homeFacet.key === 'topic_text' || homeFacet.key === 'cl_hierarchyLevel_text'">
+                     data-ng-show="homeFacet.key === 'topic.key' || homeFacet.key === 'cl_hierarchyLevel.key'">
                   </i>
                 </span>
                 <span class="badge-text pull-left">
-                  <span class="gn-icon-label">{{facet.key}}</span>
+                  <span class="gn-icon-label">{{facet.key | facetTranslator: homeFacet.key | capitalize}}</span>
                 </span>
               </a>
               <span class="badge pull-left">{{facet.doc_count}}</span>
@@ -153,11 +153,11 @@
                   data-ng-href='#/search?query_string={"{{homeFacet.lastKey}}": {"{{facet.key}}": true} }'>
                   <span class="badge-icon pull-left">
                     <i class="fa fa-3x gn-icon gn-icon-{{facet.key.toLowerCase().replace('/', '').replace(' ', '')}}"
-                       data-ng-show="homeFacet.lastKey === 'topic_text' || homeFacet.lastKey === 'cl_hierarchyLevel_text'">
+                       data-ng-show="homeFacet.lastKey === 'topic_text' || homeFacet.lastKey === 'cl_hierarchyLevel.key'">
                     </i>
                   </span>
                   <span class="badge-text pull-left">
-                    <span class="gn-icon-label">{{facet.key}}</span>
+                    <span class="gn-icon-label">{{facet.key | facetTranslator: homeFacet.key | capitalize}}</span>
                   </span>
                 </a>
                 <span class="badge pull-left">{{facet.doc_count}}</span>

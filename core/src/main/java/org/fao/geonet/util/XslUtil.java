@@ -45,10 +45,7 @@ import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.Thesaurus;
-import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.Translator;
@@ -1152,5 +1149,30 @@ public final class XslUtil {
         } catch (Exception ex) {
         }
         return res;
+    }
+
+
+    public static String getKeywordUri(String keyword, String thesaurusId, String langCode) {
+        if (StringUtils.isEmpty(thesaurusId)) {
+            return "";
+        }
+
+        try {
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
+            ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+
+            thesaurusId = thesaurusId.replaceAll("geonetwork.thesaurus.", "");
+            Thesaurus thesaurus = thesaurusManager.getThesaurusByName(thesaurusId);
+
+            if (thesaurus != null) {
+                KeywordBean keywordBean = thesaurus.getKeywordWithLabel(keyword, langCode);
+                if (keywordBean != null) {
+                    return keywordBean.getUriCode();
+                }
+            }
+            return "";
+        } catch (Exception ex) {
+        }
+        return "";
     }
 }

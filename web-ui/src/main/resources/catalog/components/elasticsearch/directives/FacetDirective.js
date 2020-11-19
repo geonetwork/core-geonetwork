@@ -132,9 +132,36 @@
       if (!input || angular.isObject(input)) {
         return input;
       }
+
+      // Tree aggregation
+      if (input.indexOf && input.indexOf('^') !== -1) {
+        return input.split('\^')
+                    .map(function(t) {return $translate.instant(t)})
+                    .join(' / ');
+      }
+
+      // A specific facet key eg. "isHarvested-true"
       var translationId = (facetKeyToTranslationGroupMap.get(facetKey) || facetKey) + '-' + input,
         translation = $translate.instant(translationId);
-      return translation !== translationId ? translation : input;
+      if (translation !== translationId) {
+        return translation;
+      } else {
+        // A common translations ?
+        translation = $translate.instant(input);
+        if (translation != input) {
+          return translation;
+        }
+      }
+      return input;
+    };
+  }]);
+
+  /**
+   * Ignore object field suffix
+   */
+  module.filter('facetKeyTranslator', ['$translate', function($translate) {
+    return function(input) {
+      return $translate.instant(input.replace(/(.key|.default|.lang{3}[a-z])$/, ''));
     };
   }]);
 
