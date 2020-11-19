@@ -402,7 +402,7 @@
      and element like gmx:Anchor including the href attribute
      which may contains keyword identifier. -->
     <xsl:variable name="thesaurusField"
-                  select="concat('th_', replace($thesaurus, '[^a-zA-Z0-9-]', ''))"/>
+                  select="concat('th_', replace($thesaurus, '[^a-zA-Z0-9-_]', ''))"/>
 
     <xsl:element name="{$thesaurusField}Number">
       <xsl:value-of select="count($keywords)"/>
