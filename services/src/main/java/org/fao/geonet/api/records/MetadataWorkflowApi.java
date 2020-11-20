@@ -476,7 +476,7 @@ public class MetadataWorkflowApi {
             produces = {
                     MediaType.APPLICATION_XML_VALUE
             })
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Previous version of the record."),
             @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
@@ -507,7 +507,7 @@ public class MetadataWorkflowApi {
                     MediaType.APPLICATION_XML_VALUE
             })
 
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Version of the record after changes."),
             @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
@@ -534,7 +534,7 @@ public class MetadataWorkflowApi {
             value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}/restore",
             method = RequestMethod.POST
             )
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Record restored."),
             @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
@@ -664,8 +664,8 @@ public class MetadataWorkflowApi {
             }
 
             if (s.getStatusValue().getType().equals(StatusValueType.event)) {
-                status.setCurrentState(extractCurrentStatus(s));
-                status.setPreviousState(extractPreviousStatus(s));
+                status.setCurrentStatus(extractCurrentStatus(s));
+                status.setPreviousStatus(extractPreviousStatus(s));
             }
 
             if (s.getTitles() != null && s.getTitles().size() > 0) {

@@ -160,6 +160,15 @@ public class MetadataStatusResponse extends MetadataStatus {
         }
     }
 
+    public MetadataStatusResponse setCurrentStatus(String currentStatus) {
+        this.currentStatus = currentStatus;
+        return this;
+    }
+
+    public MetadataStatusResponse setPreviousStatus(String previousStatus) {
+        this.previousStatus = previousStatus;
+        return this;
+    }
     public String getTitle() {
         return title;
     }
