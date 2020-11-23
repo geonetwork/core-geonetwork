@@ -51,14 +51,15 @@ import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.quartz.SchedulerException;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -613,7 +614,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         Element historyEl = new Element("result");
         historyEl.addContent(new Element("cleared").
             setAttribute("recordsRemoved", numberOfRecordsRemoved + ""));
-        final String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
+        final String lastRun = OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME);
         ISODate lastRunDate = new ISODate(lastRun);
 
         HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);

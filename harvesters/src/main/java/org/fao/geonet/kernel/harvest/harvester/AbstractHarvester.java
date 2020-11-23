@@ -68,8 +68,6 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.QuartzSchedulerUtils;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
@@ -81,13 +79,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -662,7 +663,8 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                     errors.clear();
                     final Logger logger = this.log;
                     final String nodeName = getParams().getName() + " (" + getClass().getSimpleName() + ")";
-                    final String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
+                    final String lastRun = ZonedDateTime.from(Instant.now()).withZoneSameInstant(ZoneOffset.UTC)
+                            .format(DateTimeFormatter.ISO_DATE_TIME);
                     try {
                         login();
 

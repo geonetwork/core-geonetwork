@@ -50,9 +50,6 @@ import org.geotools.feature.FeatureIterator;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.referencing.CRS;
 import org.geotools.util.logging.Logging;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.ISODateTimeFormat;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
@@ -60,7 +57,6 @@ import org.locationtech.jts.geom.PrecisionModel;
 import org.locationtech.jts.precision.GeometryPrecisionReducer;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.geometry.BoundingBox;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +65,10 @@ import org.springframework.beans.factory.annotation.Value;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -76,8 +76,6 @@ import java.util.Map;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import static org.fao.geonet.index.es.EsRestClient.ROUTING_KEY;
 
 
 // TODO: GeoServer WFS 1.0.0 in some case return
@@ -457,10 +455,8 @@ public class EsWFSFeatureIndexer {
         public void success(int nbOfFeatures) {
             report.put("status_s","success");
             report.put("totalRecords_i", nbOfFeatures);
-            DateTime dateTime = new DateTime(DateTimeZone.UTC);
-            report.put("endDate_dt", String.format("%sT%s",
-                ISODateTimeFormat.yearMonthDay().print(dateTime),
-                ISODateTimeFormat.timeNoMillis().print(dateTime).replace("Z","")));
+            OffsetDateTime dateTime = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS);
+            report.put("endDate_dt", dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
             report.put("isPointOnly", pointOnlyForGeoms);
 
         }

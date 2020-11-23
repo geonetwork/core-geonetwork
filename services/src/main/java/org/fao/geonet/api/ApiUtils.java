@@ -172,7 +172,9 @@ public class ApiUtils {
             Log.trace(Geonet.DATA_MANAGER, uuidOrInternalId + " not recognized as UUID. Trying ID.");
             metadata = metadataRepository.findOne(uuidOrInternalId);
             if (metadata != null) {
-                Log.trace(Geonet.DATA_MANAGER, "ApiUtils.getRecord(" + uuidOrInternalId + ") -> " + metadata);
+                if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
+                    Log.trace(Geonet.DATA_MANAGER, "ApiUtils.getRecord(" + uuidOrInternalId + ") -> " + metadata);
+                }
                 return metadata;
             }
         } catch (NumberFormatException e) {
