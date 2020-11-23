@@ -296,19 +296,29 @@ public class ISODateTest {
     public void testParseISODateTime() {
         // Format: yyyy-mm-ddThh.mm:ss[+hh:mm|=+hh:mm] Time zone
         String datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2010-10-10T00:00:00+02:00");
-        assertTrue(datetimeInIsoFormat.equals("2010-10-09T22:00:00.000Z"));
+        assertEquals("2010-10-09T22:00:00.000Z", datetimeInIsoFormat);
 
         // Format: yyyy-mm-ddThh.mm:ss.ms[+hh:mm|=+hh:mm] Time zone
         datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2010-10-10T00:00:00.000+02:00");
-        assertTrue(datetimeInIsoFormat.equals("2010-10-09T22:00:00.000Z"));
+        assertEquals("2010-10-09T22:00:00.000Z", datetimeInIsoFormat);
 
         // Format: yyyy-mm-ddThh.mm:ssZ (UTC)
         datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2010-10-10T00:00:00Z");
-        assertTrue(datetimeInIsoFormat.equals("2010-10-10T00:00:00.000Z"));
+        assertEquals("2010-10-10T00:00:00.000Z", datetimeInIsoFormat);
 
         // Format: yyyy-mm-ddThh.mm:ss.msZ (UTC)
         datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2010-10-10T00:00:00.000Z");
-        assertTrue(datetimeInIsoFormat.equals("2010-10-10T00:00:00.000Z"));
+        assertEquals("2010-10-10T00:00:00.000Z", datetimeInIsoFormat);
+
+        // Format: yyyy-mm-ddThh.mm:ss.msZ (UTC) (ms with less than 3 digits)
+        datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2020-11-23T07:41:29.1Z");
+        assertEquals("2020-11-23T07:41:29.100Z", datetimeInIsoFormat);
+        datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2020-11-23T07:41:29.12Z");
+        assertEquals("2020-11-23T07:41:29.120Z", datetimeInIsoFormat);
+        datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2020-11-23T07:41:29.123Z");
+        assertEquals("2020-11-23T07:41:29.123Z", datetimeInIsoFormat);
+
+
     }
 
     @Test

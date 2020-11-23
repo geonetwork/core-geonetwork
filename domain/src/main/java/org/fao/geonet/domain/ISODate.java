@@ -84,7 +84,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
                 .toFormatter();
 
         CATCH_ALL_DATE_TIME_FORMATTER = new DateTimeFormatterBuilder().parseCaseInsensitive()
-                .appendPattern("yyyy[-M][-d['T'H[:m[:s[.SSS]][XXX]]]]").parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
+                .appendPattern("yyyy[-M][-d['T'H[:m[:s[.SSS][.SS][.S]][XXX]]]]").parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
                 .parseDefaulting(ChronoField.DAY_OF_MONTH, 1).parseDefaulting(HOUR_OF_DAY, 0).parseDefaulting(MINUTE_OF_HOUR, 0)
                 .parseDefaulting(SECOND_OF_MINUTE, 0).parseDefaulting(NANO_OF_SECOND, 0).toFormatter();
                 //.parseDefaulting(ChronoField.OFFSET_SECONDS, ZoneOffset.systemDefault()..getTotalSeconds()).toFormatter();
