@@ -1,29 +1,25 @@
-//==============================================================================
-//===
-//===   ISODate
-//===
-//==============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
-//==============================================================================
+/*
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 
 package org.fao.geonet.domain;
 
@@ -40,21 +36,27 @@ import javax.xml.bind.annotation.XmlValue;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetTime;
 import java.time.Period;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.time.temporal.ChronoField.HOUR_OF_DAY;
-import static java.time.temporal.ChronoField.MILLI_OF_SECOND;
 import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
 import static java.time.temporal.ChronoField.NANO_OF_SECOND;
 import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
@@ -84,8 +86,8 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
         CATCH_ALL_DATE_TIME_FORMATTER = new DateTimeFormatterBuilder().parseCaseInsensitive()
                 .appendPattern("yyyy[-M][-d['T'H[:m[:s[.SSS]][XXX]]]]").parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
                 .parseDefaulting(ChronoField.DAY_OF_MONTH, 1).parseDefaulting(HOUR_OF_DAY, 0).parseDefaulting(MINUTE_OF_HOUR, 0)
-                .parseDefaulting(SECOND_OF_MINUTE, 0).parseDefaulting(NANO_OF_SECOND, 0)
-                .parseDefaulting(ChronoField.OFFSET_SECONDS, ZoneOffset.of("Z").getTotalSeconds()).toFormatter();
+                .parseDefaulting(SECOND_OF_MINUTE, 0).parseDefaulting(NANO_OF_SECOND, 0).toFormatter();
+                //.parseDefaulting(ChronoField.OFFSET_SECONDS, ZoneOffset.systemDefault()..getTotalSeconds()).toFormatter();
     }
 
     // Pattern to check dates
@@ -118,7 +120,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
      * and system default timezone.
      */
     public ISODate() {
-        internalDateTime = ZonedDateTime.now();
+        internalDateTime = ZonedDateTime.now().withZoneSameInstant(ZoneOffset.UTC);
     }
 
     // ---------------------------------------------------------------------------
@@ -130,8 +132,14 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
      * @param shortDate         {@code true} if the format is {@code yyyy-mm-dd}.
      */
     public ISODate(final long timeInEpochMillis, final boolean shortDate) {
+        ZoneId zoneId;
+        if (shortDate) {
+            zoneId = ZoneOffset.UTC;
+        } else {
+            zoneId = ZoneId.systemDefault();
+        }
         Instant instantParam = Instant.ofEpochMilli(timeInEpochMillis);
-        internalDateTime = ZonedDateTime.ofInstant(instantParam, ZoneOffset.systemDefault()).truncatedTo(ChronoUnit.SECONDS);
+        internalDateTime = ZonedDateTime.ofInstant(instantParam, zoneId).truncatedTo(ChronoUnit.MILLIS);
         _shortDate = shortDate;
     }
 
@@ -269,8 +277,8 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
         Matcher matcher;
         if (stringToParse.length() == 8 && !stringToParse.startsWith("T")) {
             result = ZonedDateTime.parse(stringToParse, DateTimeFormatter.BASIC_ISO_DATE);
-        } else if (stringToParse.startsWith("T") && !stringToParse.contains(":")) {
-            result = ZonedDateTime.parse(stringToParse, DateTimeFormatter.ISO_TIME);
+        } else if (stringToParse.startsWith("T") && stringToParse.contains(":")) {
+           result = parseTime(stringToParse);
         } else if (stringToParse.contains("T") && !stringToParse.contains(":") && !stringToParse.contains("-")) {
             result = ZonedDateTime.parse(stringToParse, DateTimeFormatter.ISO_DATE_TIME);
         } else if ((matcher = gsYearMonth.matcher(stringToParse)).matches()) {
@@ -349,7 +357,37 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
 
             result = generateDate(year, month, day, second, minute, hour, timezone);
         } else {
-            result = ZonedDateTime.parse(stringToParse, CATCH_ALL_DATE_TIME_FORMATTER);
+            TemporalAccessor dt = CATCH_ALL_DATE_TIME_FORMATTER.parseBest(stringToParse, ZonedDateTime::from, LocalDateTime::from);
+            if (dt instanceof  ZonedDateTime) {
+                result = (ZonedDateTime) dt;
+            } else if (dt instanceof LocalDateTime) {
+                LocalDateTime ldt = (LocalDateTime) dt;
+                result = ldt.atZone(TimeZone.getDefault().toZoneId());
+            } else {
+                result = null;
+            }
+            //result = ZonedDateTime.parse(stringToParse, CATCH_ALL_DATE_TIME_FORMATTER);
+        }
+        return result;
+    }
+
+    /**
+     * Parses a time an return current date at that time. Both local and offset formats are supported, such as '10:15', '10:15:30' or
+     * '10:15:30+01:00' starting by 'T' or not. If offset is present then it is used set the date in UTC zone. If the time doesn't have an
+     * offset it is interpreted as a time in local time and converted to UTC.
+     * @param time the string to parse
+     * @return a date and time in UTC zone with date the being the current day.
+     * @throws DateTimeParseException if the time can'\t be parsed.
+     */
+    public static ZonedDateTime parseTime(String time) throws DateTimeParseException {
+        ZonedDateTime result;
+        TemporalAccessor ta = DateTimeFormatter.ISO_TIME.parseBest(StringUtils.removeStartIgnoreCase(time, "T"), OffsetTime::from, LocalTime::from);
+        if (ta instanceof OffsetTime) {
+            result = ((OffsetTime) ta).atDate(LocalDate.now()).atZoneSameInstant(ZoneOffset.UTC);
+        } else if (ta instanceof LocalTime) {
+            result = ((LocalTime) ta).atDate(LocalDate.now()).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC);
+        } else {
+            result = null;
         }
         return result;
     }
@@ -475,47 +513,54 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
         if (_shortDate || _shortDateYearMonth || _shortDateYear) {
             return getDateAsString();
         } else {
-            return internalDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            return internalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         }
     }
 
+    /**
+     * Get the date and time in ISO format and UTC offset format.
+     * @return The date and time in ISO format.
+     */
+    @Transient
+    public String getDateAndTimeUtc() {
+        return internalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(ISODate.ISO_OFFSET_DATE_TIME_NANOSECONDS);
+    }
+    public void setDateAndTimeUtc(String isoDate) {
+        setDateAndTime(isoDate);
+    }
+
     public void setDateAndTime(String isoDate) {
+
         String timeAndDate = isoDate;
         if (timeAndDate == null) {
             throw new IllegalArgumentException("Date string is null");
         }
 
-        int indexOfT = timeAndDate.indexOf('T');
-        if (indexOfT > -1) {
-            // Check if ISO date contains time info and if using non UTC time
-            // zone. This class converts to UTC format to avoid timezones
-            // issues.
-            String afterT = timeAndDate.substring(indexOfT + 1);
-            boolean timeZoneInfo = afterT.contains("+") || afterT.contains("-") || afterT.toUpperCase().endsWith("Z");
+        if (timeAndDate.indexOf('T') >= 0 && StringUtils.contains(timeAndDate, ':')) {
+            timeAndDate = convertToISOZuluDateTime(timeAndDate);
 
-            if (timeZoneInfo) {
-                timeAndDate = convertToISOZuluDateTime(timeAndDate);
+            if (timeAndDate == null) {
+                throw new IllegalArgumentException("Not parsable date: " + isoDate);
             }
+            internalDateTime = ZonedDateTime.parse(timeAndDate, ISODate.ISO_OFFSET_DATE_TIME_NANOSECONDS);
+            return;
         }
-        if (timeAndDate == null) {
-            throw new IllegalArgumentException("Not parsable date: " + isoDate);
-        }
+
 
         String[] parts = timeAndDate.toUpperCase().split("T", 2);
 
-        if (parts.length == 1) {
-            if (parts[0].contains(":")) {
-                parseTime(parts[0]);
-            } else {
-                parseDate(parts[0]);
+        if (StringUtils.contains(timeAndDate, ':')) {
+            // its a time
+            try {
+                internalDateTime = parseTime(StringUtils.remove(StringUtils.remove(timeAndDate, 't'), 'T'));
+                _shortDate = false;
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Invalid ISO time: " + isoDate, e);
             }
         } else {
-            if (!parts[0].trim().isEmpty()) {
-                parseDate(parts[0]);
-            }
-            if (!parts[1].trim().isEmpty()) {
-                parseTime(parts[1]);
-            }
+            // its a date
+            parseDate(StringUtils.remove(StringUtils.remove(timeAndDate, 't'), 'T'));
+
         }
     }
 
@@ -609,6 +654,11 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
         return internalDateTime.getSecond();
     }
 
+    @Transient
+    public ZonedDateTime getInternalDateTime() {
+        return internalDateTime;
+    }
+
     @Override
     public int hashCode() {
         return getTimeAsString().hashCode();
@@ -685,35 +735,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
         }
     }
 
-    private void parseTime(@Nonnull String isoDate) {
-        try {
-            String[] parts = isoDate.split(":");
-            if (parts.length == 1 || parts.length > 3) {
-                throw new IllegalArgumentException("Invalid ISO date: " + isoDate);
-            }
 
-            int hour = Integer.parseInt(parts[0]);
-            int minute = Integer.parseInt(parts[1]);
-            int second = 0;
-            if (parts.length == 3) {
-                String secondsToParse = parts[2];
-                int indexOfZ = secondsToParse.toUpperCase().indexOf('Z');
-                if (indexOfZ > -1) {
-                    secondsToParse = secondsToParse.substring(0, indexOfZ);
-                    internalDateTime = internalDateTime.withZoneSameInstant(ZoneOffset.UTC);
-                }
-
-                second = (int) Float.parseFloat(secondsToParse);
-            }
-
-            internalDateTime = internalDateTime.with(HOUR_OF_DAY, hour).with(MINUTE_OF_HOUR, minute).with(SECOND_OF_MINUTE, second)
-                    .with(MILLI_OF_SECOND, 0).with(NANO_OF_SECOND, 0);
-
-            _shortDate = false;
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid ISO date: " + isoDate, e);
-        }
-    }
 
     @Transient
     public String getTimeAsString() {

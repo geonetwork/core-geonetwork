@@ -43,8 +43,8 @@ import javax.persistence.Transient;
 public class MetadataDataInfo implements Serializable {
     private static final long serialVersionUID = 8049813754167665960L;
     private String _title;
-    private ISODate _changeDate = new ISODate();
-    private ISODate _createDate = new ISODate();
+    private ISODate _changeDate;
+    private ISODate _createDate;
     private String _schemaId;
     private char _template = Constants.YN_FALSE;
     private String _root;
@@ -53,6 +53,12 @@ public class MetadataDataInfo implements Serializable {
     private Integer _displayOrder = 0;
     private int _rating = 0;
     private int _popularity = 0;
+
+    public MetadataDataInfo() {
+        long currentTime = System.currentTimeMillis();
+        this._changeDate = new ISODate(currentTime);
+        this._createDate = new ISODate(currentTime);
+    }
 
     /**
      * Get title of metadata.

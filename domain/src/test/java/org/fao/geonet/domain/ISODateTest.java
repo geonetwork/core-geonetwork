@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -25,15 +25,19 @@ package org.fao.geonet.domain;
 
 import org.junit.Test;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import static java.util.Calendar.YEAR;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ISODateTest {
@@ -140,69 +144,97 @@ public class ISODateTest {
 
         ISODate date = new ISODate();
         date.setDateAndTime("1976-06-03T01:02:03");
+        LocalDateTime ldt = LocalDateTime.parse("1976-06-03T01:02:03");
+        ZonedDateTime zdt = ldt.atZone(ZoneId.systemDefault());
+        zdt = zdt.withZoneSameInstant(ZoneOffset.UTC);
 
-        assertEquals(false, date.isDateOnly());
-        assertEquals(1976, date.getYears());
-        assertEquals(6, date.getMonths());
-        assertEquals(3, date.getDays());
-        assertEquals(1, date.getHours());
-        assertEquals(2, date.getMinutes());
-        assertEquals(3, date.getSeconds());
+        assertEquals("1976-06-03T01:02:03 - date only", false, date.isDateOnly());
+        assertEquals("1976-06-03T01:02:03 - year", zdt.get(ChronoField.YEAR), date.getYears());
+        assertEquals("1976-06-03T01:02:03 - month", zdt.get(ChronoField.MONTH_OF_YEAR), date.getMonths());
+        assertEquals("1976-06-03T01:02:03 - day", zdt.get(ChronoField.DAY_OF_MONTH), date.getDays());
+        assertEquals("1976-06-03T01:02:03 - hour", zdt.get(ChronoField.HOUR_OF_DAY), date.getHours());
+        assertEquals("1976-06-03T01:02:03 - minute", zdt.get(ChronoField.MINUTE_OF_HOUR), date.getMinutes());
+        assertEquals("1976-06-03T01:02:03 - second", zdt.get(ChronoField.SECOND_OF_MINUTE), date.getSeconds());
 
         date = new ISODate();
         date.setDateAndTime("T01:02:03");
+        ldt = LocalDateTime.now();
+        ldt = ldt.withHour(1).withMinute(2).withSecond(3);
+        zdt = ldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC);
 
-        assertEquals(false, date.isDateOnly());
-        assertEquals(Calendar.getInstance().get(Calendar.YEAR), date.getYears());
-        assertEquals(Calendar.getInstance().get(Calendar.MONTH) + 1, date.getMonths());
-        assertEquals(Calendar.getInstance().get(Calendar.DAY_OF_MONTH), date.getDays());
-        assertEquals(1, date.getHours());
-        assertEquals(2, date.getMinutes());
-        assertEquals(3, date.getSeconds());
+        assertEquals("T01:02:03 - date only", false, date.isDateOnly());
+        assertEquals("T01:02:03 - year", zdt.get(ChronoField.YEAR), date.getYears());
+        assertEquals("T01:02:03 - month", zdt.get(ChronoField.MONTH_OF_YEAR), date.getMonths());
+        assertEquals("T01:02:03 - day", zdt.get(ChronoField.DAY_OF_MONTH), date.getDays());
+        assertEquals("T01:02:03 - hour", zdt.get(ChronoField.HOUR_OF_DAY), date.getHours());
+        assertEquals("T01:02:03 - minute", zdt.get(ChronoField.MINUTE_OF_HOUR), date.getMinutes());
+        assertEquals("T01:02:03 - second", zdt.get(ChronoField.SECOND_OF_MINUTE), date.getSeconds());
+
+        date = new ISODate();
+        date.setDateAndTime("T01:02:03+05:00");
+        zdt = ZonedDateTime.now(ZoneOffset.of("+05:00")).withHour(1).withMinute(2).withSecond(3).withZoneSameInstant(ZoneOffset.UTC);
+
+        assertEquals("T01:02:03+05:00 - date only", false, date.isDateOnly());
+        assertEquals("T01:02:03+05:00 - year", zdt.get(ChronoField.YEAR), date.getYears());
+        assertEquals("T01:02:03+05:00 - month", zdt.get(ChronoField.MONTH_OF_YEAR), date.getMonths());
+        assertEquals("T01:02:03+05:00 - day", zdt.get(ChronoField.DAY_OF_MONTH), date.getDays());
+        assertEquals("T01:02:03+05:00 - hour", zdt.get(ChronoField.HOUR_OF_DAY), date.getHours());
+        assertEquals("T01:02:03+05:00 - minute", zdt.get(ChronoField.MINUTE_OF_HOUR), date.getMinutes());
+        assertEquals("T01:02:03+05:00 - second", zdt.get(ChronoField.SECOND_OF_MINUTE), date.getSeconds());
 
         date = new ISODate();
         date.setDateAndTime("01:02:03");
+        ldt = LocalDateTime.now();
+        ldt = ldt.withHour(1).withMinute(2).withSecond(3);
+        zdt = ldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC);
 
-        assertEquals(false, date.isDateOnly());
-        assertEquals(Calendar.getInstance().get(Calendar.YEAR), date.getYears());
-        assertEquals(Calendar.getInstance().get(Calendar.MONTH) + 1, date.getMonths());
-        assertEquals(Calendar.getInstance().get(Calendar.DAY_OF_MONTH), date.getDays());
-        assertEquals(1, date.getHours());
-        assertEquals(2, date.getMinutes());
-        assertEquals(3, date.getSeconds());
+        assertEquals("01:02:03 - date only", false, date.isDateOnly());
+        assertEquals("01:02:03 - year", zdt.get(ChronoField.YEAR), date.getYears());
+        assertEquals("01:02:03 - month", zdt.get(ChronoField.MONTH_OF_YEAR), date.getMonths());
+        assertEquals("01:02:03 - day", zdt.get(ChronoField.DAY_OF_MONTH), date.getDays());
+        assertEquals("01:02:03 - hour", zdt.get(ChronoField.HOUR_OF_DAY), date.getHours());
+        assertEquals("01:02:03 - minute", zdt.get(ChronoField.MINUTE_OF_HOUR), date.getMinutes());
+        assertEquals("01:02:03 - second", zdt.get(ChronoField.SECOND_OF_MINUTE), date.getSeconds());
 
         date = new ISODate();
         date.setDateAndTime("1976-6-3T1:2:3");
 
-        assertEquals(false, date.isDateOnly());
-        assertEquals(1976, date.getYears());
-        assertEquals(6, date.getMonths());
-        assertEquals(3, date.getDays());
-        assertEquals(1, date.getHours());
-        assertEquals(2, date.getMinutes());
-        assertEquals(3, date.getSeconds());
+        ldt = LocalDateTime.of(1976, 6, 3, 1, 2, 3);
+        zdt = ldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC);
+
+        assertEquals("1976-6-3T1:2:3 - date only", false, date.isDateOnly());
+        assertEquals("1976-6-3T1:2:3 - year", zdt.get(ChronoField.YEAR), date.getYears());
+        assertEquals("1976-6-3T1:2:3 - month", zdt.get(ChronoField.MONTH_OF_YEAR), date.getMonths());
+        assertEquals("1976-6-3T1:2:3 - day", zdt.get(ChronoField.DAY_OF_MONTH), date.getDays());
+        assertEquals("1976-6-3T1:2:3 - hour", zdt.get(ChronoField.HOUR_OF_DAY), date.getHours());
+        assertEquals("1976-6-3T1:2:3 - minute", zdt.get(ChronoField.MINUTE_OF_HOUR), date.getMinutes());
+        assertEquals("1976-6-3T1:2:3 - second", zdt.get(ChronoField.SECOND_OF_MINUTE), date.getSeconds());
 
         date = new ISODate();
         date.setDateAndTime("1976-6-3T1:2:3Z");
+        ldt = LocalDateTime.of(1976, 6, 3, 1, 2, 3);
+        zdt = ZonedDateTime.of(ldt, ZoneOffset.UTC);
 
-        assertEquals(false, date.isDateOnly());
-        assertEquals(1976, date.getYears());
-        assertEquals(6, date.getMonths());
-        assertEquals(3, date.getDays());
-        assertEquals(1, date.getHours());
-        assertEquals(2, date.getMinutes());
-        assertEquals(3, date.getSeconds());
+        assertEquals("1976-6-3T1:2:3Z - date only", false, date.isDateOnly());
+        assertEquals("1976-6-3T1:2:3Z - year", zdt.get(ChronoField.YEAR), date.getYears());
+        assertEquals("1976-6-3T1:2:3Z - month", zdt.get(ChronoField.MONTH_OF_YEAR), date.getMonths());
+        assertEquals("1976-6-3T1:2:3Z - day", zdt.get(ChronoField.DAY_OF_MONTH), date.getDays());
+        assertEquals("1976-6-3T1:2:3Z - hour", zdt.get(ChronoField.HOUR_OF_DAY), date.getHours());
+        assertEquals("1976-6-3T1:2:3Z - minute", zdt.get(ChronoField.MINUTE_OF_HOUR), date.getMinutes());
+        assertEquals("1976-6-3T1:2:3Z - second", zdt.get(ChronoField.SECOND_OF_MINUTE), date.getSeconds());
 
         date = new ISODate();
         date.setDateAndTime("1976-6-3T10:02");
+        ldt = LocalDateTime.of(1976, 6, 3, 10, 2);
+        zdt = ZonedDateTime.of(ldt, ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC);
 
-        assertEquals(false, date.isDateOnly());
-        assertEquals(1976, date.getYears());
-        assertEquals(6, date.getMonths());
-        assertEquals(3, date.getDays());
-        assertEquals(10, date.getHours());
-        assertEquals(2, date.getMinutes());
-        assertEquals(0, date.getSeconds());
+        assertEquals("1976-6-3T10:02 - date only", false, date.isDateOnly());
+        assertEquals("1976-6-3T10:02 - year", zdt.get(ChronoField.YEAR), date.getYears());
+        assertEquals("1976-6-3T10:02 - month", zdt.get(ChronoField.MONTH_OF_YEAR), date.getMonths());
+        assertEquals("1976-6-3T10:02 - day", zdt.get(ChronoField.DAY_OF_MONTH), date.getDays());
+        assertEquals("1976-6-3T10:02 - hour", zdt.get(ChronoField.HOUR_OF_DAY), date.getHours());
+        assertEquals("1976-6-3T10:02 - minute", zdt.get(ChronoField.MINUTE_OF_HOUR), date.getMinutes());
+        assertEquals("1976-6-3T10:02 - second", zdt.get(ChronoField.SECOND_OF_MINUTE), date.getSeconds());
     }
 
     @Test
@@ -244,10 +276,14 @@ public class ISODateTest {
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 2);
         cal.set(Calendar.SECOND, 3);
+        cal.set(Calendar.MILLISECOND, 0);
 
         ISODate date = new ISODate(cal.getTimeInMillis(), false);
+        Instant instant = Instant.ofEpochMilli(cal.getTimeInMillis());
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+        String expectedDateTime = zdt.withZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
-        assertEquals("1990-12-05T23:02:03", date.getDateAndTime());
+        assertEquals(expectedDateTime, date.getDateAndTime());
         assertEquals("1990-12-05", date.getDateAsString());
 
         date = new ISODate(cal.getTimeInMillis(), true);
@@ -361,17 +397,25 @@ public class ISODateTest {
         // Date format
         ISODate isoDate = new ISODate("2013-10-10");
         assertEquals("2013-10-10", isoDate.toString());
-        assertTrue(isoDate.isDateOnly());
+        assertTrue("2013-10-10 - date only", isoDate.isDateOnly());
 
         isoDate = new ISODate("2013-10-10Z");
         assertEquals("2013-10-10", isoDate.toString());
+        assertTrue("2013-10-10Z - date only", isoDate.isDateOnly());
 
         // Datetime format
         isoDate = new ISODate("2013-10-10T13:20:00");
-        assertEquals("2013-10-10T13:20:00", isoDate.toString());
+        LocalDateTime ldt = LocalDateTime.parse("2013-10-10T13:20:00");
+        ZonedDateTime zdt = ldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC);
+        String expected = zdt.format(DateTimeFormatter.ISO_DATE_TIME);
+        assertFalse("2013-10-10T13:20:00 - date only", isoDate.isDateOnly());
+        assertEquals("2013-10-10T13:20:00", expected, isoDate.toString());
 
         isoDate = new ISODate("2013-10-10T13:20:00Z");
-        assertEquals("2013-10-10T13:20:00", isoDate.toString());
+        zdt = ZonedDateTime.parse("2013-10-10T13:20:00Z");
+        expected = zdt.format(DateTimeFormatter.ISO_DATE_TIME);
+        assertFalse("2013-10-10T13:20:00Z - date only", isoDate.isDateOnly());
+        assertEquals("2013-10-10T13:20:00Z", expected, isoDate.toString());
     }
 
     @Test
@@ -388,16 +432,20 @@ public class ISODateTest {
         // Datetime format
         isoDate = new ISODate();
         isoDate.setDateAndTime("2013-10-10T13:20:00");
-        assertEquals("2013-10-10T13:20:00", isoDate.toString());
+        LocalDateTime ldt = LocalDateTime.parse("2013-10-10T13:20:00");
+        ZonedDateTime zdt = ldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC);
+        String expected = zdt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+
+        assertEquals(expected, isoDate.toString());
 
         isoDate = new ISODate();
         isoDate.setDateAndTime("2013-10-10T13:20:00Z");
-        assertEquals("2013-10-10T13:20:00", isoDate.toString());
+        assertEquals("2013-10-10T13:20:00Z", isoDate.toString());
 
         // Datetime with non UTC zone
         isoDate = new ISODate();
         isoDate.setDateAndTime("2013-10-10T13:20:00+02:00");
-        assertEquals("2013-10-10T11:20:00", isoDate.toString());
+        assertEquals("2013-10-10T11:20:00Z", isoDate.toString());
     }
 
     @Test
@@ -475,5 +523,40 @@ public class ISODateTest {
                 2019, 6, 1, 0, 0, 0, 0, ZoneId.of("UTC-04:00").normalized());
         expected = estDateTime.toInstant().truncatedTo(ChronoUnit.SECONDS);
         assertEquals( "UTC-04:00", expected, instant );
+    }
+
+    @Test
+    public void testGetDateAndTimeUtc() {
+        ISODate isoDate = new ISODate("2019-06-01T00:00Z");
+        String actualDateAndTime = isoDate.getDateAndTimeUtc();
+        String expectedDateTimeString = "2019-06-01T00:00:00.000Z";
+        assertEquals( "From a Z datetime", expectedDateTimeString, actualDateAndTime );
+
+        ISODate pstDate = new ISODate("2019-06-01T00:00-07:00");
+        actualDateAndTime = pstDate.getDateAndTimeUtc();
+        expectedDateTimeString = "2019-06-01T07:00:00.000Z";
+        assertEquals( "From a UTC-07:00 datetime", expectedDateTimeString, actualDateAndTime);
+
+        ISODate estDate = new ISODate("2019-06-01T00:00-04:00");
+        actualDateAndTime = estDate.getDateAndTimeUtc();
+        expectedDateTimeString = "2019-06-01T04:00:00.000Z";
+        assertEquals( " From a UTC-04:00 datetime", expectedDateTimeString, actualDateAndTime);
+
+        ISODate utcPlus2 = new ISODate("2019-06-01T00:00+02:00");
+        actualDateAndTime = utcPlus2.getDateAndTimeUtc();
+        expectedDateTimeString = "2019-05-31T22:00:00.000Z";
+        assertEquals( " From a UTC+02:00 datetime", expectedDateTimeString, actualDateAndTime);
+
+        ISODate localTime = new ISODate("2020-11-15T02:30:00");
+        actualDateAndTime = localTime.getDateAndTimeUtc();
+        ZonedDateTime expectedLocalDateTime =
+                ZonedDateTime.of(
+                        2020, 11, 15, 2, 30, 0, 0, ZoneId.systemDefault().normalized());
+        expectedDateTimeString = expectedLocalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(ISODate.ISO_OFFSET_DATE_TIME_NANOSECONDS);
+        assertEquals( " From a Local datetime", expectedDateTimeString, actualDateAndTime);
+
+
+
+
     }
 }
