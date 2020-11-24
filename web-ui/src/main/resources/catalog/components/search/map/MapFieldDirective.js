@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -51,7 +51,12 @@
                   var opt = scope.$eval(iAttrs['gnMapFieldOpt']) || {};
                   scope.relations = opt.relations;
 
-                  scope.gnMap = gnMap;
+              scope.autoTriggerSearch = true;
+              if (angular.isDefined(opt.autoTriggerSearch)) {
+                scope.autoTriggerSearch = opt.autoTriggerSearch;
+              }
+
+              scope.gnMap = gnMap;
 
                   /**
                    * Fit map view to map projection max extent
@@ -73,22 +78,33 @@
                     scope.currentExtent = scope.$eval(scope.gnDrawBboxBtn);
                   });
 
-                  /**
-                   * Set active relation (intersect, within, etc..). Run search
-                   * when changed.
-                   */
-                  scope.setRelation = function(rel) {
-                    scope.searchObj.params.relation = rel;
-                    if (!!scope.searchObj.params.geometry) {
-                      scope.triggerSearch();
-                    }
-                  };
+              /**
+               * Set active relation (intersect, within, etc..). Run search
+               * when changed.
+               */
+              scope.setRelation = function(rel) {
+                scope.searchObj.params.relation = rel;
+                if (scope.autoTriggerSearch && !!scope.searchObj.params.geometry) {
+                  scope.triggerSearch();
                 }
               };
+
+              scope.renderMap = function() {
+                scope.map.renderSync();
+              };
+
+              var loadPromise = scope.map.get('sizePromise');
+              if (loadPromise) {
+                loadPromise.then(function() {
+                  scope.renderMap();
+                });
+              }
             }
           };
         }
-      ])
+      };
+    }
+  ])
 
       .directive('gnDrawBboxBtn', [
         'olDecorateInteraction',
@@ -161,9 +177,11 @@
               scope.interaction.on('boxend', function() {
                 scope.$apply(function() {
                   updateField(scope.interaction.getGeometry());
+                if (scope.autoTriggerSearch) {
                   scope.triggerSearch();
-                });
+                }
               });
+            });
 
               function resetSpatialFilter() {
                 feature.setGeometry(null);
@@ -174,7 +192,7 @@
               scope.$watch('interaction.active', function(v, o) {
                 if (!v && o) {
                   resetSpatialFilter();
-                  if (!!scope.searchObj.params.geometry) {
+                  if (scope.autoTriggerSearch && !!scope.searchObj.params.geometry) {
                     scope.triggerSearch();
                   }
                 }

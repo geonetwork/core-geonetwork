@@ -343,7 +343,8 @@
         viewerMap: viewerMap,
         searchMap: searchMap,
         mapfieldOption: {
-          relations: ['within_bbox']
+          relations: ['within_bbox'],
+          autoTriggerSearch: true
         },
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         filters: gnSearchSettings.filters,
