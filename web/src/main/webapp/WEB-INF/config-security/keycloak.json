@@ -12,6 +12,7 @@
   "enable-cors" : true,
   "cors-max-age" : 1000,
   "cors-allowed-methods" : "POST, PUT, DELETE, GET",
-  "cors-exposed-headers" : "WWW-Authenticate"
+  "cors-exposed-headers" : "WWW-Authenticate",
+  "autodetect-bearer-only" : true
 }
 

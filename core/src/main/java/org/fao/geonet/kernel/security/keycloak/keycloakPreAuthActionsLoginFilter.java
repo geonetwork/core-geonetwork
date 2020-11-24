@@ -20,10 +20,11 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
- 
+
 package org.fao.geonet.kernel.security.keycloak;
 
 import org.fao.geonet.Constants;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.keycloak.adapters.spi.UserSessionManagement;
 import org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,9 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
     @Autowired
     LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint;
 
+    @Autowired
+    SettingManager settingManager;
+
     public keycloakPreAuthActionsLoginFilter(UserSessionManagement userSessionManagement) {
         super(userSessionManagement);
     }
@@ -62,8 +66,20 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
                 !(servletRequest.getPathInfo()).equals("/k_logout")  &&
                 !isAuthenticated() ) {
 
+            String returningUrl = servletRequest.getRequestURL().toString();
+            // If the application is behind a proxy, it is possible that it will get an http request instead of https
+            // As this redirect goes back to the client, we need to tell the client to use https
+            if (settingManager.getServerURL().startsWith("https://") && returningUrl.startsWith("http://")) {
+                returningUrl = returningUrl.replaceFirst("(?i)^http://", "https://");
+            }
+
+            // Append query string
+            if (servletRequest.getQueryString() != null) {
+                returningUrl =  returningUrl + "?" + servletRequest.getQueryString();
+            }
+
             String encodedRedirectURL = ((HttpServletResponse) response).encodeRedirectURL(
-                    servletRequest.getContextPath() + KeycloakUtil.getSigninPath() + "?redirectUrl=" + URLEncoder.encode(servletRequest.getRequestURL().toString(), Constants.ENCODING));
+                    servletRequest.getContextPath() + KeycloakUtil.getSigninPath() + "?redirectUrl=" + URLEncoder.encode(returningUrl, Constants.ENCODING));
 
             servletResponse.sendRedirect(encodedRedirectURL);
 
