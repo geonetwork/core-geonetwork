@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.resources;
 
 import org.apache.chemistry.opencmis.client.api.Repository;
@@ -182,7 +205,7 @@ public class CMISConfiguration {
     @Nonnull
     public Boolean isVersioningEnabled() {
         if (versioningEnabled == null) {
-            
+
             return CMIS_DEFAULT_VERSIONING_ENABLED;
         } else {
             return versioningEnabled;
@@ -386,12 +409,6 @@ public class CMISConfiguration {
                         break;
                     }
                 }
-            } else {
-                // If repository id is not set then lets get the first repository.
-                // Some product only have one repository.
-                Repository repository = factory.getRepositories(parameters).get(0);
-                this.repositoryId = repository.getId();
-                this.repositoryName = repository.getName();
             }
         } else {
             // Try to find the repository name for the id that we have specified..
@@ -401,6 +418,10 @@ public class CMISConfiguration {
                     break;
                 }
             }
+        }
+
+        if (repositoryId == null) {
+            throw new IllegalArgumentException("CMIS Repository ID not found for repositoryId=\"" + repositoryId + "\" and repositoryName=\"" + repositoryName + "\"");
         }
 
         parameters.put(SessionParameter.REPOSITORY_ID, repositoryId);
@@ -430,7 +451,7 @@ public class CMISConfiguration {
      */
     private String getServiceUrl(String baseUrl, String serviceUrl, String defaultServicePathInfo) {
         // If no service url was not supplied then lets default to the base url plus the default path info
-        if (serviceUrl == null || serviceUrl.isEmpty()) {
+        if (StringUtils.isEmpty(serviceUrl)) {
             return baseUrl + defaultServicePathInfo;
         // If the service url supplied starts with / then default to base url plus supplied service url
         } else if (serviceUrl.startsWith("/")) {

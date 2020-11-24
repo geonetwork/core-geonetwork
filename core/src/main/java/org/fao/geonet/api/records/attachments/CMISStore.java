@@ -78,8 +78,6 @@ public class CMISStore extends AbstractStore {
         PathMatcher matcher =
                 FileSystems.getDefault().getPathMatcher("glob:" + filter);
 
-        OperationContext operationContext = CMISConfiguration.getClient().createOperationContext();
-
         try {
             Folder parentFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(resourceTypeDir);
 
@@ -117,10 +115,11 @@ public class CMISStore extends AbstractStore {
             versionValue = version;
         }
 
-        MetadataResource.ExternalResourceManagementProperties externalResourceManagementProperties = getExternalResourceManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, version);
+        MetadataResource.ExternalResourceManagementProperties externalResourceManagementProperties =
+            getExternalResourceManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, version);
 
         return new FilesystemStoreResource(metadataUuid, filename,
-                settingManager.getNodeURL() + "api/records/", visibility, size, lastModification, versionValue, externalResourceManagementProperties);
+            settingManager.getNodeURL() + "api/records/", visibility, size, lastModification, versionValue, externalResourceManagementProperties);
     }
 
     private static String getFilename(final String key) {
@@ -137,12 +136,12 @@ public class CMISStore extends AbstractStore {
             final CmisObject object = CMISConfiguration.getClient().getObjectByPath(getKey(context, metadataUuid, metadataId, visibility, resourceId));
             final SettingManager settingManager = context.getBean(SettingManager.class);
             return new ResourceHolderImpl(object, createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId,
-                    ((Document) object).getContentStreamLength(),
-                    object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), metadataId));
+                ((Document) object).getContentStreamLength(),
+                object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), metadataId));
         } catch (CmisObjectNotFoundException e) {
             Log.warning(Geonet.RESOURCES, String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
             throw new ResourceNotFoundException(
-                    String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
+                String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
         }
     }
 

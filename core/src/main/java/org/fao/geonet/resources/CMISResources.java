@@ -1,5 +1,27 @@
-package org.fao.geonet.resources;
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 
+package org.fao.geonet.resources;
 
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
@@ -411,63 +433,66 @@ public class CMISResources extends Resources {
             if (path == null) {
                 return;
             }
-            if (writeOnClose && Files.isReadable(path)) {
-                // Don't use caching for this process.
-                OperationContext oc = CMISConfiguration.getClient().createOperationContext();
-                oc.setCacheEnabled(false);
+            try {
+                if (writeOnClose && Files.isReadable(path)) {
+                    // Don't use caching for this process.
+                    OperationContext oc = CMISConfiguration.getClient().createOperationContext();
+                    oc.setCacheEnabled(false);
 
-                // Split the filename and parent folder from the key.
-                int lastFolderDelimiterKeyIndex = key.lastIndexOf(CMISConfiguration.getFolderDelimiter());
-                String filenameKey = key.substring(lastFolderDelimiterKeyIndex + 1);
-                String parentKey = key.substring(0, lastFolderDelimiterKeyIndex);
+                    // Split the filename and parent folder from the key.
+                    int lastFolderDelimiterKeyIndex = key.lastIndexOf(CMISConfiguration.getFolderDelimiter());
+                    String filenameKey = key.substring(lastFolderDelimiterKeyIndex + 1);
+                    String parentKey = key.substring(0, lastFolderDelimiterKeyIndex);
 
-                Map<String, Object> properties = new HashMap<String, Object>();
-                properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
-                properties.put(PropertyIds.NAME, filenameKey);
+                    Map<String, Object> properties = new HashMap<String, Object>();
+                    properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
+                    properties.put(PropertyIds.NAME, filenameKey);
 
-                InputStream stream = Files.newInputStream(path);
-                ContentStream contentStream = CMISConfiguration.getClient().getObjectFactory().createContentStream(key, Files.size(path), Files.probeContentType(path), stream);
+                    InputStream stream = Files.newInputStream(path);
+                    ContentStream contentStream = CMISConfiguration.getClient().getObjectFactory().createContentStream(key, Files.size(path), Files.probeContentType(path), stream);
 
-                if (CMISConfiguration.getClient().existsPath(key)) {
-                    try {
-                        // If the document is found then we are updating the existing document.
-                        Document doc = (Document) CMISConfiguration.getClient().getObjectByPath(key, oc);
-                        doc.updateProperties(properties, true);
-                        doc.setContentStream(contentStream, true, true);
-
-                        Log.info(Geonet.RESOURCES,
-                                String.format("Updated resource '%s'. Current version '%s'.", key, doc.getVersionLabel()));
-                    } catch (CmisPermissionDeniedException ex) {
-                        Log.warning(Geonet.RESOURCES, String.format(
-                                "No permissions to update resource '%s'.", key));
-                        throw new NotAllowedException(String.format(
-                                "No permissions to update resource '%s'.", key));
-                    }
-                } else {
-                    // Get parent folder.
-                    try {
-                        Folder parentFolder;
+                    if (CMISConfiguration.getClient().existsPath(key)) {
                         try {
-                            parentFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(parentKey, oc);
-                        } catch (CmisObjectNotFoundException e) {
-                            // Create parent folder if it does not exists.
-                            ObjectId objectId = CMISConfiguration.getClient().createPath(parentKey, "cmis:folder");
-                            parentFolder = (Folder) CMISConfiguration.getClient().getObject(objectId, oc);
+                            // If the document is found then we are updating the existing document.
+                            Document doc = (Document) CMISConfiguration.getClient().getObjectByPath(key, oc);
+                            doc.updateProperties(properties, true);
+                            doc.setContentStream(contentStream, true, true);
+
+                            Log.info(Geonet.RESOURCES,
+                                String.format("Updated resource '%s'. Current version '%s'.", key, doc.getVersionLabel()));
+                        } catch (CmisPermissionDeniedException ex) {
+                            Log.warning(Geonet.RESOURCES, String.format(
+                                "No permissions to update resource '%s'.", key));
+                            throw new NotAllowedException(String.format(
+                                "No permissions to update resource '%s'.", key));
                         }
+                    } else {
+                        // Get parent folder.
+                        try {
+                            Folder parentFolder;
+                            try {
+                                parentFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(parentKey, oc);
+                            } catch (CmisObjectNotFoundException e) {
+                                // Create parent folder if it does not exists.
+                                ObjectId objectId = CMISConfiguration.getClient().createPath(parentKey, "cmis:folder");
+                                parentFolder = (Folder) CMISConfiguration.getClient().getObject(objectId, oc);
+                            }
 
-                        Document doc = parentFolder.createDocument(properties, contentStream, VersioningState.MAJOR);
+                            Document doc = parentFolder.createDocument(properties, contentStream, VersioningState.MAJOR);
 
-                        Log.info(Geonet.RESOURCES,
+                            Log.info(Geonet.RESOURCES,
                                 String.format("Added resource '%s'.", doc.getPaths().get(0)));
-                    } catch (CmisPermissionDeniedException ex) {
-                        Log.warning(Geonet.RESOURCES, String.format(
+                        } catch (CmisPermissionDeniedException ex) {
+                            Log.warning(Geonet.RESOURCES, String.format(
                                 "No permissions to add resource '%s'.", key));
-                        throw new NotAllowedException(String.format(
+                            throw new NotAllowedException(String.format(
                                 "No permissions to add resource '%s'.", key));
+                        }
                     }
                 }
+            } finally {
+                java.nio.file.Files.delete(path);
             }
-            java.nio.file.Files.delete(path);
         }
     }
 

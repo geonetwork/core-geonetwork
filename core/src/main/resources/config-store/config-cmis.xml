@@ -32,6 +32,7 @@
 <!--   If you want data stored in cmis compliant application, use the following: -->
 <!-- Alfrsco sample -->
 <!--    <bean id="cmisconfiguration" class="org.fao.geonet.resources.CMISConfiguration">-->
+<!--      &lt;!&ndash;property name="repositoryId" value="-default-"/&ndash;&gt;-->
 <!--      <property name="baseRepositoryPath" value="geonetwork"/>-->
 <!--      <property name="servicesBaseUrl" value="http://localhost:8080/alfresco"/>-->
 <!--      <property name="bindingType" value="browser"/>-->
@@ -41,7 +42,9 @@
 <!--      &lt;!&ndash;property name="bindingType" value="atompub"/>-->
 <!--      <property name="atompubUrl" value="/api/-default-/public/cmis/versions/1.1/atom"/&ndash;&gt;-->
 <!--      &lt;!&ndash;property name="bindingType" value="webservices"/>-->
-<!--      <property name="webservicesBaseUrl" value="/cmisws"/&ndash;&gt;-->
+<!--      <property name="externalResourceManagementUrl" value="http://localhost:8080/share/page/document-details?nodeRef=workspace://SpacesStore/{cmisobjectid}"/>-->
+<!--      <property name="externalResourceManagementWindowParameters" value="toolbar=0,width=600,height=600"/>-->
+<!--      <property name="externalResourceManagementModalEnabled" value="true"/>-->
 <!--    </bean>-->
 
 <!-- Open Text sample -->
@@ -56,16 +59,19 @@
 <!--    &lt;!&ndash;property name="bindingType" value="atompub"/>-->
 <!--    <property name="atompubUrl" value="/api/-default-/public/cmis/versions/1.1/atom"/&ndash;&gt;-->
 <!--    &lt;!&ndash;property name="bindingType" value="webservices"/>-->
-<!--    <property name="webservicesBaseUrl" value="/cmisws"/&ndash;&gt;-->
 <!--</bean>-->
+
     <!-- Using default configuration which collect values from env variables.
+       CMIS_REPOSITORY_ID=-default-
        CMIS_USERNAME=username
        CMIS_PASSWORD=password
        CMIS_SERVICES_BASE_URL=http://localhost:8080/alfresco
        CMIS_BASE_REPOSITORY_PATH=geonetwork
        CMIS_BINDING_TYPE=browser
        CMIS_BROWSER_URL=/api/-default-/public/cmis/versions/1.1/browser
-       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_URL= http://localhost:8080/share/page/document-details?nodeRef=workspace://SpacesStore/{cmisobjectid}
+       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_URL=http://localhost:8080/share/page/document-details?nodeRef=workspace://SpacesStore/{cmisobjectid}
+       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_WINDOW_PARAMETERS=toolbar=0,width=600,height=600
+       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_MODAL_ENABLED=true
        CMIS_VERSIONING_ENABLED=true
     -->
     <bean id="cmisconfiguration" class="org.fao.geonet.resources.CMISConfiguration">
