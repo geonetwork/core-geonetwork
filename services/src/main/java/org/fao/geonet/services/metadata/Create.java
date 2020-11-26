@@ -40,17 +40,13 @@ import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specifications;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
@@ -150,7 +146,7 @@ public class Create extends NotInReadOnlyModeService {
 
 
         try {
-            StoreUtils.copyDataDir(context, Integer.parseInt(id), Integer.parseInt(newId), true);
+            StoreUtils.copyDataDir(context, Integer.parseInt(id), Integer.parseInt(newId), true, true);
         } catch (Exception e) {
             Log.warning(Geonet.DATA_MANAGER, "Error while copying metadata resources. " + e.toString() +
                 ". Metadata is created but without resources from record with id:" + id);

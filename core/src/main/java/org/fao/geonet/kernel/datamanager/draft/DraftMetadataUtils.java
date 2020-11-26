@@ -599,7 +599,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     @Override
     public void cloneFiles(AbstractMetadata original, AbstractMetadata dest) {
         try {
-            StoreUtils.copyDataDir(context, original.getUuid(), dest.getUuid(), true);
+            StoreUtils.copyDataDir(context, original.getUuid(), dest.getUuid(), true, false);
             cloneStoreFileUploadRequests(original, dest);
 
         } catch (Exception ex) {
