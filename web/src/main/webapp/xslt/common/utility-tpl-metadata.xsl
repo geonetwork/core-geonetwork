@@ -146,7 +146,7 @@
         <errors>
           <xsl:for-each select="gn:validationReport|*/gn:validationReport">
             <error type="xsd">
-              <xsl:value-of select="gn:parse-xsd-error(@gn:message, $schema, $labels, $strings)"/>
+              <xsl:value-of select="gn:parse-xsd-error(@gn:message, $schema, $labels, $codelists, $strings)"/>
             </error>
           </xsl:for-each>
 

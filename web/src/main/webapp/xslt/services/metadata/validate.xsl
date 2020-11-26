@@ -106,6 +106,7 @@
             <xsl:value-of select="geonet:parse-xsd-error(geonet:message,
                         $metadataSchema,
                         /root/*[name() = $metadataSchema]/labels,
+                        /root/*[name() = $metadataSchema]/codelists,
                         /root/*[name() = $metadataSchema]/strings)"/>
           </title>
           <rules>
@@ -127,7 +128,7 @@
     <xsl:variable name="errors" select="count(.//svrl:failed-assert)"/>
     <xsl:variable name="successes" select="count(.//svrl:successful-report)"/>
     <xsl:variable name="schematronVerificationError" select="./geonet:schematronVerificationError"/>
-    
+
     <report>
       <id>
         <xsl:value-of select="$rulename"/>

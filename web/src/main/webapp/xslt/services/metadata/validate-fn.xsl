@@ -80,6 +80,7 @@
     <xsl:param name="error" as="xs:string"/>
     <xsl:param name="schema" as="xs:string"/>
     <xsl:param name="labels" as="node()"/>
+    <xsl:param name="codelists" as="node()"/>
     <xsl:param name="strings" as="node()"/>
 
     <!-- Set of rules processed : -->
@@ -91,13 +92,13 @@
       <rule errorType="complex-type.2.4.bwithparent">The content of element '(.*)' is not complete. One of '\{"(.*)\}' is expected\. \(Element: (.*) with parent element: (.*)\)</rule>
       <rule errorType="complex-type.2.4.b">The content of element '(.*)' is not complete. One of '\{"(.*)\}' is expected\.</rule>
       <!--cvc-datatype-valid.1.2.1: '' is not a valid value for 'dateTime'. (Element: gco:DateTime with parent element: gmd:date)-->
-      <!--cvc-datatype-valid.1.2.1: 'DUMMY_DENOMINATOR' is not a valid value for 'integer'. (Element: gco:Integer with parent element: gmd:denominator)-->
-      <rule errorType="datatype-valid.1.2.1withparent">'(.*)' is not a valid value for '(.*)'\. \(Element: ([a-z]{3}):(.*) with parent element: (.*)\)</rule>
+      <!--cvc-datatype-valid.1.2.1: 'DUMMY_DENOMINATOR' is not a valid value for 'integer'.-->
+      <rule errorType="datatype-valid.1.2.1withparent">'(.*)' is not a valid value for '(.*)'\.</rule>
       <rule errorType="datatype-valid.1.2.1">'(.*)' is not a valid value for '(.*)'\.</rule>
-      <!--cvc-type.3.1.3: The value 'DUMMY_DENOMINATOR' of element 'gco:Integer' is not valid. (Element: gco:Integer with parent element: gmd:denominator)-->
-      <rule errorType="type.3.1.3withparent">The value '(.*)' of element '(.*)' is not valid\. \(Element: ([a-z]{3}):(.*) with parent element: (.*)\)</rule>
+      <!--cvc-type.3.1.3: The value 'DUMMY_DENOMINATOR' of element 'gco:Integer' is not valid.-->
+      <rule errorType="type.3.1.3withparent">The value '(.*)' of element '(.*)' is not valid\.</rule>
       <rule errorType="type.3.1.3">The value '(.*)' of element '(.*)' is not valid\.</rule>
-      <rule errorType="enumeration-valid">Value '(.*)' is not facet-valid with respect to enumeration '\[(.*)\]'\. It must be a value from the enumeration\. \(Element: ([a-z]{3}):(.*) with parent element: (.*)\)</rule>
+      <rule errorType="enumeration-valid">Value '(.*)' is not facet-valid with respect to enumeration '\[(.*)\]'\. It must be a value from the enumeration\.</rule>
     </xsl:variable>
 
     <xsl:variable name="errorWithParentName"
@@ -186,14 +187,10 @@
                   </xsl:if>
                 </xsl:when>
                 <xsl:when test="$errorType = 'enumeration-valid'">
-                  <xsl:value-of select="$strings/enum1"/> '<xsl:value-of
-                  select="regex-group(1)"/>'
-                  <xsl:value-of select="$strings/enum2"/>
-                  <xsl:value-of
-                    select="geonet:getTitleWithoutContext($schema, concat(regex-group(3), ':', regex-group(4)), $labels)"
-                  /> (<xsl:value-of select="concat(regex-group(3), ':', regex-group(4))"/>).
+                  <!--The topic category must be found in the following list-->
                   <xsl:value-of select="$strings/enum3"/>
-                  <xsl:value-of select="regex-group(2)"/>.
+                  <!--The code list with translation text-->
+                  (<xsl:value-of select="$codelists//codelist[@name='gmd:MD_TopicCategoryCode']/entry/value" separator=", " />)
                 </xsl:when>
               </xsl:choose>
             </xsl:variable>
@@ -219,13 +216,14 @@
     <xsl:param name="error" as="xs:string"/>
     <xsl:param name="schema" as="xs:string"/>
     <xsl:param name="labels" as="node()"/>
+    <xsl:param name="codelists" as="node()"/>
     <xsl:param name="strings" as="node()"/>
 
     <!-- Extract XSD error type and message-->
     <xsl:analyze-string select="$error" regex=".*cvc-([\w\-0-9\.]+): (.*)">
       <xsl:matching-substring>
         <xsl:value-of
-          select="geonet:parse-xsd-error-msg(regex-group(1), regex-group(2), $schema, $labels, $strings)"/>
+          select="geonet:parse-xsd-error-msg(regex-group(1), regex-group(2), $schema, $labels, $codelists, $strings)"/>
       </xsl:matching-substring>
       <xsl:non-matching-substring>
         <xsl:value-of select="$error"/>
