@@ -65,7 +65,29 @@ public class CMISResources extends Resources {
 
     @Override
     public Path locateResourcesDir(final ServletContext context, final ApplicationContext applicationContext) {
-        this.resourceBaseDir = applicationContext.getBean(GeonetworkDataDirectory.class).getSystemDataDir().relativize(applicationContext.getBean(GeonetworkDataDirectory.class).getResourcesDir());
+        if (this.resourceBaseDir == null) {
+            Path systemFullDir = applicationContext.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
+            Path resourceFullDir = applicationContext.getBean(GeonetworkDataDirectory.class).getResourcesDir();
+
+            // If the metadata full dir is relative from the system dir then use system dir as the base dir.
+            if (resourceFullDir.toString().startsWith(systemFullDir.toString())) {
+                this.resourceBaseDir = systemFullDir;
+            } else {
+                // If the metadata full dir is an absolute folder then use that as the base dir.
+                if (resourceFullDir.isAbsolute()) {
+                    this.resourceBaseDir = resourceFullDir.getRoot();
+                } else {
+                    // use it as a relative url.
+                    this.resourceBaseDir = Paths.get(".");
+                }
+            }
+
+            if (this.resourceBaseDir.toString().equals(".")) {
+                this.resourceBaseDir = Paths.get(CMISConfiguration.getBaseRepositoryPath()).resolve(resourceFullDir);
+            } else {
+                this.resourceBaseDir = Paths.get(CMISConfiguration.getBaseRepositoryPath()).resolve(this.resourceBaseDir.relativize(resourceFullDir));
+            }
+        }
         return this.resourceBaseDir;
     }
 
@@ -86,7 +108,7 @@ public class CMISResources extends Resources {
 
         if (resourceBaseDir != null) {
             // If it starts with resource folder then it is missing the basePath so add it.
-            if (keyPath.startsWith(resourceBaseDir)) {
+            if (keyPath.startsWith(Paths.get(CMISConfiguration.getBaseRepositoryPath()).relativize(resourceBaseDir))) {
                 keyPath = Paths.get(CMISConfiguration.getBaseRepositoryPath()).resolve(keyPath);
             } else {
                 Path resourceDir = Paths.get(CMISConfiguration.getBaseRepositoryPath()).resolve(resourceBaseDir);
@@ -188,7 +210,7 @@ public class CMISResources extends Resources {
                                     final Path appPath, final String filename, final byte[] defaultValue,
                                     final long loadSince) throws IOException {
         final Path file = locateResource(resourcesDir, context, appPath, filename);
-        final String key = getKey(file);
+        final String key = getKey(file, filename);
         try {
             final CmisObject object = CMISConfiguration.getClient().getObjectByPath(key);
             if (object != null) {
@@ -246,18 +268,18 @@ public class CMISResources extends Resources {
             }
 
             if (webappCopy == null) {
-                webappCopy = appPath.resolve(filename);  // TODO: this won't work...
+                webappCopy = appPath.resolve(filename);
             }
-            if (!java.nio.file.Files.isReadable(webappCopy)) {
+            if (!Files.isReadable(webappCopy)) {
                 final ConfigurableApplicationContext applicationContext =
                         JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(context);
                 if (resourcesDir.equals(locateResourcesDir(context, applicationContext))) {
                     webappCopy = super.locateResourcesDir(context, applicationContext).resolve(filename);
                 }
             }
-            if (java.nio.file.Files.isReadable(webappCopy)) {
+            if (Files.isReadable(webappCopy)) {
                 try (ResourceHolder holder = new CMISResourceHolder(key, true)) {
-                    Log.info(Log.RESOURCES, "Copying " + webappCopy + " to " + key);
+                    Log.info(Log.RESOURCES, "Copying " + webappCopy + " to " + holder.getPath() + " for resource " + key);
                     Files.copy(webappCopy, holder.getPath(), StandardCopyOption.REPLACE_EXISTING);
                 }
             } else {
@@ -284,7 +306,7 @@ public class CMISResources extends Resources {
                                 try (ResourceHolder in = new CMISResourceHolder(object.getName(), true);
                                      ResourceHolder out = new CMISResourceHolder(key, true)) {
                                     try (InputStream inS = IO.newInputStream(in.getPath());
-                                         OutputStream outS = java.nio.file.Files.newOutputStream(out.getPath())) {
+                                         OutputStream outS = Files.newOutputStream(out.getPath())) {
                                         Log.info(Log.RESOURCES, "Converting " + cmisFilePath + " to " + key);
                                         BufferedImage image = ImageIO.read(inS);
                                         ImageIO.write(image, suffix, outS);
@@ -318,11 +340,15 @@ public class CMISResources extends Resources {
     protected void addFiles(final DirectoryStream.Filter<Path> iconFilter, final Path webappDir,
                             final HashSet<Path> result) {
 
-        String keyFolder = getKey(webappDir) + CMISConfiguration.getFolderDelimiter();
-        CmisObject cmisObject = CMISConfiguration.getClient().getObjectByPath(keyFolder);
+        // Don't use caching for this process.
+        OperationContext oc = CMISConfiguration.getClient().createOperationContext();
+        oc.setCacheEnabled(false);
+
+        String keyFolder = getKey(webappDir);
+        CmisObject cmisObject = CMISConfiguration.getClient().getObjectByPath(keyFolder, oc);
         Folder folder = (Folder) cmisObject;
 
-        ItemIterable<CmisObject> children = folder.getChildren();
+        ItemIterable<CmisObject> children = folder.getChildren(oc);
 
         for (CmisObject object : children) {
             if (object instanceof Document) {
@@ -346,11 +372,7 @@ public class CMISResources extends Resources {
         final String key = getKey(file);
         try {
             final CmisObject object = CMISConfiguration.getClient().getObjectByPath(key);
-            if (object == null) {
-                return null;
-            } else {
-                return FileTime.from(object.getLastModificationDate().toInstant());
-            }
+            return FileTime.from(object.getLastModificationDate().toInstant());
         } catch (CmisObjectNotFoundException e) {
             // Ignore not found error.
         }
@@ -369,6 +391,7 @@ public class CMISResources extends Resources {
     private class CMISResourceHolder implements ResourceHolder {
         private final String key;
         private Path path = null;
+        private Path tempFolderPath = null;
         private boolean writeOnClose = false;
 
         private CMISResourceHolder(final String key, boolean writeOnClose) {
@@ -383,25 +406,26 @@ public class CMISResources extends Resources {
             }
             final String[] splittedKey = key.split(CMISConfiguration.getFolderDelimiter());
             try {
-                path = java.nio.file.Files.createTempFile("", splittedKey[splittedKey.length - 1]);
+                // Preserve filename by putting the files into a temporary folder and using the same filename.
+                tempFolderPath = Files.createTempDirectory("gn-res-" + splittedKey[splittedKey.length - 2] + "-");
+                tempFolderPath.toFile().deleteOnExit();
+                path = tempFolderPath.resolve(splittedKey[splittedKey.length - 1]);
+
                 try {
                     final CmisObject object = CMISConfiguration.getClient().getObjectByPath(key);
-                    if (object == null) {
-                        if (writeOnClose) {
-                            Files.delete(path);
-                        }
-                    } else {
-                        try (InputStream in = ((Document) object).getContentStream().getStream()) {
-                            java.nio.file.Files.copy(in, path,
-                                    StandardCopyOption.REPLACE_EXISTING);
-                        }
+                    try (InputStream in = ((Document) object).getContentStream().getStream()) {
+                        Files.copy(in, path,
+                            StandardCopyOption.REPLACE_EXISTING);
                     }
                 } catch (CmisObjectNotFoundException e) {
-                    if (writeOnClose) {
+                    // As there is no cmis file, we will also remove the path if it exists so that the current file does not get saved on close.
+                    if (writeOnClose && Files.exists(path)) {
                         Files.delete(path);
                     }
                 }
             } catch (IOException e) {
+                Log.error(Geonet.RESOURCES, String.format(
+                    "Error getting path for resource '%s'.", key), e);
                 throw new RuntimeException(e);
             }
 
@@ -415,11 +439,13 @@ public class CMISResources extends Resources {
 
         @Override
         public FileTime getLastModifiedTime() {
-            final CmisObject object = CMISConfiguration.getClient().getObjectByPath(key);
-            if (object == null) {
-                return null;
-            } else {
+            try {
+                final CmisObject object = CMISConfiguration.getClient().getObjectByPath(key);
                 return FileTime.from(object.getLastModificationDate().toInstant());
+            } catch (CmisObjectNotFoundException e) {
+                Log.error(Geonet.RESOURCES,
+                    String.format("Unable to locate resource '%s'.", key), e);
+                return null;
             }
         }
 
@@ -491,7 +517,10 @@ public class CMISResources extends Resources {
                     }
                 }
             } finally {
-                java.nio.file.Files.delete(path);
+                // Delete temporary file and folder.
+                IO.deleteFileOrDirectory(tempFolderPath, true);
+                path=null;
+                tempFolderPath = null;
             }
         }
     }

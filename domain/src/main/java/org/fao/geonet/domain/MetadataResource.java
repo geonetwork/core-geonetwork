@@ -79,6 +79,12 @@ public interface MetadataResource {
 
     String getFilename();
 
+    boolean isApproved();
+
+    int getMetadataId();
+
+    String getMetadataUuid();
+
     String getVersion();
 
     ExternalResourceManagementProperties getExternalResourceManagementProperties();
