@@ -232,7 +232,7 @@ public class MetadataTagApi {
 
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Add tags to one or more records",
+        summary = "Add or remove tags to one or more records",
         description = "")
     @RequestMapping(
         value = "/tags",
@@ -261,10 +261,16 @@ public class MetadataTagApi {
             String bucket,
         @Parameter(
             description = API_PARAM_TAG_IDENTIFIER,
-            required = true
+            required = false
         )
-        @RequestParam
+        @RequestParam(required = false)
             Integer[] id,
+        @Parameter(
+            description = API_PARAM_TAG_IDENTIFIER + " to remove.",
+            required = false
+        )
+        @RequestParam(required = false)
+            Integer[] removeId,
         @Parameter(
             description = ApiParams.API_PARAM_CLEAR_ALL_BEFORE_INSERT,
             required = false
@@ -312,6 +318,20 @@ public class MetadataTagApi {
                             } else {
                                 report.addMetadataInfos(info.getId(), String.format(
                                     "Can't assign non existing category with id '%d' to record '%s'",
+                                    c, info.getUuid()
+                                ));
+                            }
+                        }
+                    }
+                    if (removeId != null) {
+                        for (int c : removeId) {
+                            final MetadataCategory category = categoryRepository.findById(c).get();
+                            if (category != null) {
+                                info.getCategories().remove(category);
+                                listOfUpdatedRecords.add(String.valueOf(info.getId()));
+                            } else {
+                                report.addMetadataInfos(info.getId(), String.format(
+                                    "Can't remove non existing category with id '%d' to record '%s'",
                                     c, info.getUuid()
                                 ));
                             }
