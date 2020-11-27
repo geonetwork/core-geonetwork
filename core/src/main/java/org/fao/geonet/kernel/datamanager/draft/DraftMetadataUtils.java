@@ -34,6 +34,7 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
@@ -82,6 +83,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     @Autowired
     private AccessManager am;
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     private ServiceContext context;
 
@@ -554,13 +557,13 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             if (statusValue.isPresent()) {
                 for (Integer mdId : metadataIds) {
                     MetadataStatus metadataStatus = new MetadataStatus();
-
-                    MetadataStatusId mdStatusId = new MetadataStatusId().setStatusId(status).setMetadataId(mdId)
-                        .setChangeDate(new ISODate()).setUserId(author);
-
-                    metadataStatus.setId(mdStatusId);
+                    metadataStatus.setMetadataId(mdId);
+                    metadataStatus.setUuid(uuid);
+                    metadataStatus.setChangeDate(new ISODate());
+                    metadataStatus.setUserId(author);
                     metadataStatus.setStatusValue(statusValue.get());
                     metadataStatus.setChangeMessage("Editing instance created");
+                    metadataStatus.setTitles(metadataUtils.extractTitles(newMetadata.getDataInfo().getSchemaId(), xml));
 
                     List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                     listOfStatusChange.add(metadataStatus);

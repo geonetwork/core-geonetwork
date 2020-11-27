@@ -49,6 +49,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordCreateEvent;
+import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.events.history.RecordImportedEvent;
 import org.fao.geonet.exceptions.BadFormatEx;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -75,6 +76,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.input.JDOMParseException;
+import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -145,6 +147,9 @@ public class MetadataInsertDeleteApi {
     @Autowired
     private AccessManager accessManager;
 
+    @Autowired
+    IMetadataUtils metadataUtils;
+
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete a record", description = "User MUST be able to edit the record to delete it. "
         + "By default, a backup is made in ZIP format. After that, "
         + "the record attachments are removed, the document removed "
@@ -167,7 +172,9 @@ public class MetadataInsertDeleteApi {
         }
 
         store.delResources(context, metadata.getUuid(), true);
+        RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, metadata.getId() + "");
         metadataManager.deleteMetadata(context, metadata.getId() + "");
+        recordDeletedEvent.publish(ApplicationContextHolder.get());
 
         dataManager.forceIndexChanges();
     }
@@ -211,7 +218,9 @@ public class MetadataInsertDeleteApi {
 
                 store.delResources(context, metadata.getUuid());
 
+                RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, String.valueOf(metadata.getId()));
                 metadataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
+                recordDeletedEvent.publish(ApplicationContextHolder.get());
 
                 report.incrementProcessedRecords();
                 report.addMetadataId(metadata.getId());
@@ -709,6 +718,29 @@ public class MetadataInsertDeleteApi {
             ObjectJSONUtils.convertObjectInJsonObject(userSession.getPrincipal(), RecordCreateEvent.FIELD),
             metadata.getData()).publish(applicationContext);
     }
+
+    /**
+     * This triggers a metadata created event (after save)
+     *
+     * @param request
+     * @param uuid    or id of metadata
+     * @throws Exception
+     */
+    private RecordDeletedEvent triggerDeletionEvent(HttpServletRequest request, String uuid)
+            throws Exception {
+        AbstractMetadata metadata = ApiUtils.getRecord(uuid);
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        DataManager dataMan = applicationContext.getBean(DataManager.class);
+        Element beforeMetadata = dataMan.getMetadata(serviceContext, String.valueOf(metadata.getId()), false, false, false);
+        XMLOutputter outp = new XMLOutputter();
+        String xmlBefore = outp.outputString(beforeMetadata);
+        LinkedHashMap<String, String> titles = metadataUtils.extractTitles(Integer.toString(metadata.getId()));
+        return new RecordDeletedEvent(metadata.getId(), metadata.getUuid(), titles, userSession.getUserIdAsInt(), xmlBefore);
+    }
+
 
     /**
      * This triggers a metadata created event (after save)

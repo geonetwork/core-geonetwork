@@ -23,8 +23,8 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
-import com.google.common.collect.Multimap;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
@@ -35,12 +35,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.IndexMetadataTask;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.SvnManager;
-import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -49,12 +44,7 @@ import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexFields;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.InspireAtomFeedRepository;
-import org.fao.geonet.repository.MetadataStatusRepository;
-import org.fao.geonet.repository.MetadataValidationRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ThreadUtils;
@@ -78,8 +68,6 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
@@ -485,13 +473,13 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
                 // get status
                 Sort statusSort = Sort.by(Sort.Direction.DESC,
-                    MetadataStatus_.id.getName() + "." + MetadataStatusId_.changeDate.getName());
-                List<MetadataStatus> statuses = statusRepository.findAllByIdAndByType(id$, StatusValueType.workflow, statusSort);
+                    MetadataStatus_.changeDate.getName());
+                List<MetadataStatus> statuses = statusRepository.findAllByMetadataIdAndByType(id$, StatusValueType.workflow, statusSort);
                 if (!statuses.isEmpty()) {
                     MetadataStatus stat = statuses.get(0);
-                    String status = String.valueOf(stat.getId().getStatusId());
+                    String status = String.valueOf(stat.getStatusValue().getId());
                     fields.put(Geonet.IndexFieldNames.STATUS, status);
-                    String statusChangeDate = stat.getId().getChangeDate().getDateAndTime();
+                    String statusChangeDate = stat.getChangeDate().getDateAndTime();
                     fields.put(Geonet.IndexFieldNames.STATUS_CHANGE_DATE, statusChangeDate);
                 }
 
@@ -567,6 +555,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 Optional<Group> g = groupRepository.findById(groupId);
                 if (g.isPresent()) {
                     privilegesFields.put(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.get().getName());
+
 
                     if (g.get().getId() == ReservedGroup.all.getId()) {
                         isPublishedToAll = true;

@@ -23,34 +23,40 @@
 
 package org.fao.geonet.events.history;
 
+import org.fao.geonet.domain.MetadataStatus;
 import org.springframework.context.ApplicationContext;
 
-import java.util.LinkedHashMap;
-
-public class RecordDeletedEvent extends AbstractHistoryEvent {
+public class RecordRestoredEvent extends AbstractHistoryEvent {
 
     private static final long serialVersionUID = 1110999025730522535L;
 
-    private String xmlRecord;
-    private String uuid;
-    private LinkedHashMap<String, String> titles;
+    private String xmlRecordBefore, xmlRecordAfter, uuid;
+    MetadataStatus relatedMetadataStatus;
 
-    public RecordDeletedEvent(Integer mdId, String uuid, LinkedHashMap<String, String> titles, Integer userId, String xmlRecord) {
+    public RecordRestoredEvent(Integer mdId, String uuid, Integer userId, String xmlRecordBefore, String xmlRecordAfter, MetadataStatus relatedMetadataStatus) {
         super(mdId, userId);
-        this.xmlRecord = xmlRecord;
-        this.uuid=uuid;
-        this.titles=titles;
+        this.uuid = uuid;
+        this.xmlRecordBefore = xmlRecordBefore;
+        this.xmlRecordAfter = xmlRecordAfter;
+        this.relatedMetadataStatus = relatedMetadataStatus;
     }
 
-    public RecordDeletedEvent(Long mdId, String uuid, LinkedHashMap<String, String> titles, Integer userId) {
+    public RecordRestoredEvent(Long mdId, String uuid, Integer userId, String xmlRecordBefore, String xmlRecordAfter, MetadataStatus relatedMetadataStatus) {
         super(mdId, userId);
-        this.uuid=uuid;
-        this.titles=titles;
+        this.uuid = uuid;
+        this.xmlRecordBefore = xmlRecordBefore;
+        this.xmlRecordAfter = xmlRecordAfter;
+        this.relatedMetadataStatus = relatedMetadataStatus;
+    }
+
+    @Override
+    public String getCurrentState() {
+        return xmlRecordAfter;
     }
 
     @Override
     public String getPreviousState() {
-        return xmlRecord;
+        return xmlRecordBefore;
     }
 
     @Override
@@ -59,8 +65,8 @@ public class RecordDeletedEvent extends AbstractHistoryEvent {
     }
 
     @Override
-    public LinkedHashMap<String, String> getTitles() {
-        return titles;
+    public MetadataStatus getRelatedMetadataStatus() {
+        return relatedMetadataStatus;
     }
 
     @Override

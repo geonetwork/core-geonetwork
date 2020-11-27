@@ -171,12 +171,12 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
         dataManager.setStatus(serviceContext, metadataId, 0, changeDate, changeMessage);
 
         MetadataStatus loadedStatus = dataManager.getStatus(metadataId);
-        assertEquals(changeDate, loadedStatus.getId().getChangeDate());
+        assertEquals(changeDate, loadedStatus.getChangeDate());
         assertEquals(changeMessage, loadedStatus.getChangeMessage());
         assertEquals(0, loadedStatus.getStatusValue().getId());
-        assertEquals(metadataId, loadedStatus.getId().getMetadataId());
-        assertEquals(0, loadedStatus.getId().getStatusId());
-        assertEquals(serviceContext.getUserSession().getUserIdAsInt(), loadedStatus.getId().getUserId());
+        assertEquals(metadataId, loadedStatus.getMetadataId());
+        assertEquals(0, loadedStatus.getStatusValue().getId());
+        assertEquals(serviceContext.getUserSession().getUserIdAsInt(), loadedStatus.getUserId());
     }
 
     @Test
