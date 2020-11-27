@@ -5,7 +5,7 @@
         <div data-ng-repeat="c in categories">
           <label>
             <input type="checkbox"
-                   name="cat"
+                   name="{{c.id}}"
                    data-ng-model="c.checked"/>&nbsp;
             <span class="fa gn-icon-{{c.name}}"></span>&nbsp;
             {{c.label[lang] | translate}}
@@ -19,12 +19,19 @@
     </div>
 
     <div class="btn-toolbar">
+      <button type="reset" class="btn btn-default pull-right"
+              title="{{'clearCheckboxFormChanges' | translate}}"
+              data-ng-click="reset()">
+        <i class="fa fa-undo"></i>&nbsp;
+      </button>
       <button type="button" class="btn btn-primary pull-right"
+              title="{{'addThoseCategories-help' | translate}}"
               data-gn-click-and-spin="save()">
         <i class="fa fa-save"></i>&nbsp;
         <span data-translate="">addThoseCategories</span>
       </button>
       <button type="button" class="btn btn-primary pull-right"
+              title="{{'replaceByThoseCategories-help' | translate}}"
               data-gn-click-and-spin="save(true)">
         <i class="fa fa-eraser"></i>&nbsp;
         <span data-translate="">replaceByThoseCategories</span>

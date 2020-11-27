@@ -111,7 +111,7 @@
     "docPageNotFoundAtUrl": "Documentation page not available at URL:",
     "dut": "Nederlands",
     "east": "East",
-    "addThoseCategories": "Add selected",
+    "addThoseCategories": "Append selected",
     "replaceByThoseCategories": "Replace by selected",
     "categoriesBatchAlert": "When updating categories, user can choose to add the new categories to the existing ones or to replace them.",
     "editorBoard": "Add new record",

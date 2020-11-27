@@ -117,5 +117,8 @@
   "wfsDeleteWfsIndexingError": "An error occurred while removing the task.",
   "wfsIndexingTriggerSuccess": "Harvesting task started.",
   "wfsIndexingTriggerError": "An error occurred while starting the task.",
-  "wfsHarvesterActions": "Actions"
+  "wfsHarvesterActions": "Actions",
+  "clearCheckboxFormChanges": "Clear modified checkbox state. Checkboxes with '*' means that those values will be removed from the selection.",
+  "addThoseCategories-help": "Add (checked) or remove (checkbox with *) selected categories.",
+  "replaceByThoseCategories-help": "Remove record categories and then add (checked) or remove (checkbox with *) selected categories."
 }
