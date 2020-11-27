@@ -1230,17 +1230,23 @@ goog.require('gn_alert');
       // health check for the index returns an error.
       $scope.showHealthIndexError = false;
 
-      function healthCheckStatus(data) {
+      function healthCheckStatus(r) {
+        var data = r.data, isCritical = r.config.url.indexOf('critical') !== -1;
         angular.forEach(data, function(o) {
           $scope.healthCheck[o.name] = (o.status === 'OK');
         });
 
-        $scope.showHealthIndexError = (!$scope.healthCheck) ||
-          ($scope.healthCheck && $scope.healthCheck.IndexHealthCheck == false);
+        if(isCritical) {
+          $scope.showHealthIndexError =
+            (!$scope.healthCheck) ||
+            ($scope.healthCheck
+              && $scope.healthCheck.IndexHealthCheck == false);
+        }
       };
+      $http.get('../../criticalhealthcheck')
+        .then(healthCheckStatus, healthCheckStatus);
       $http.get('../../warninghealthcheck')
-        .success(healthCheckStatus)
-        .error(healthCheckStatus);
+        .then(healthCheckStatus, healthCheckStatus);
     }]);
 
 })();

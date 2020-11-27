@@ -550,7 +550,7 @@ public class BaseMetadataManager implements IMetadataManager {
         boolean fullRightsForGroup = false;
 
         int finalId = insertMetadata(context, newMetadata, metadataXml, index, ufo, UpdateDatestamp.NO,
-            fullRightsForGroup, false).getId();
+            fullRightsForGroup, index).getId();
 
         return String.valueOf(finalId);
     }
