@@ -86,6 +86,12 @@
 
       var firstLoad = true;
 
+      // Regex for matching type and layer in context layer name attribute.
+      // eg. name="{type=arcgis,name=0,1,2,3,4}"
+      var reT = /type=([^,}|^]*)/;
+      var reL = /name=([^}]*)\}?\s*$/;
+
+
       /**
        * @ngdoc method
        * @name gnOwsContextService#loadContext
@@ -198,13 +204,13 @@
             if (layer.group == 'Background layers') {
 
               // {type=bing_aerial} (mapquest, osm ...)
-              var re = this.getREForPar('type');
-              type = layer.name.match(re) ? re.exec(layer.name)[1] : null;
-              if (type && type != 'wmts' && type != 'wms') {
+              // {type=arcgis,name=0,1,2}
+              // type=wms,name=lll
+              type = layer.name.match(reT) ? reT.exec(layer.name)[1] : null;
+              if (type && type != 'wmts' && type != 'wms' && type != 'arcgis') {
                 var opt;
-                re = this.getREForPar('name');
-                if (layer.name.match(re)) {
-                  var lyr = re.exec(layer.name)[1];
+                if (layer.name.match(reL)) {
+                  var lyr = reL.exec(layer.name)[1];
 
                   if (layer.server) {
                     var server = layer.server[0];
@@ -214,7 +220,7 @@
                           url: res};
                 }
                 var olLayer =
-                    gnMap.createLayerForType(type, opt, layer.title);
+                    gnMap.createLayerForType(type, opt, layer.title, map);
                 if (olLayer) {
                   olLayer.displayInLayerManager = false;
                   olLayer.background = true;
@@ -229,7 +235,7 @@
                 }
               }
 
-              // {type=wmts,name=Ocean_Basemap} or WMS
+              // {type=wmts,name=Ocean_Basemap} or WMS or arcgis
               else {
 
                 // to push in bgLayers not in the map
@@ -611,9 +617,6 @@
 
         var server = layer.server[0];
         var res = server.onlineResource[0];
-        var reT = /type\s*=\s*([^,|^}|^\s]*)/;
-        var reL = /name\s*=\s*([^,|^}|^\s]*)/;
-
         var createOnly = angular.isDefined(bgIdx) || angular.isDefined(index);
 
         if (layer.name.match(reT)) {
@@ -679,21 +682,6 @@
               }).catch(function() {});
         }
       };
-
-      /**
-       * @ngdoc method
-       * @name gnOwsContextService#getREForPar
-       * @methodOf gn_viewer.service:gnOwsContextService
-       *
-       * @description
-       * Creates a regular expression for a given parameter
-       *
-       * * @param {Object} context parameter
-       */
-      this.getREForPar = function(par) {
-        return re = new RegExp(par + '\\s*=\\s*([^,|^}|^\\s]*)');
-      };
-
     }
   ]);
 })();
