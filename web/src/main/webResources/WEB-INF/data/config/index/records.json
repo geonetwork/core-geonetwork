@@ -1013,7 +1013,7 @@
                 "type": "keyword"
               },
               "default": {
-                "type": "text"
+                "type": "keyword"
               },
               "text": {
                 "type": "text"
