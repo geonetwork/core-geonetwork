@@ -80,7 +80,7 @@ public class ResourceLoggerStore extends AbstractStore {
             ResourceHolder holder = decoratedStore.getResource(context, metadataUuid, visibility, resourceId, approved);
             if (holder != null) {
                 // TODO: Add Requester details which may have been provided by a form ?
-                storeGetRequest(context, metadataUuid, holder.getMetadata().getId(), "", "", "", "", new ISODate().toString());
+                storeGetRequest(context, metadataUuid, holder.getMetadata().getId(), "", "", "", "", new ISODate().toString(), approved);
             }
             return holder;
         }
@@ -95,7 +95,7 @@ public class ResourceLoggerStore extends AbstractStore {
             final MetadataResource resource = decoratedStore
                     .putResource(context, metadataUuid, filename, is, changeDate, visibility, approved);
             if (resource != null) {
-                storePutRequest(context, metadataUuid, resource.getId(), resource.getSize());
+                storePutRequest(context, metadataUuid, resource.getId(), resource.getSize(), approved);
             }
             return resource;
         }
@@ -123,7 +123,7 @@ public class ResourceLoggerStore extends AbstractStore {
         if (decoratedStore != null) {
             String response = decoratedStore.delResource(context, metadataUuid, resourceId, approved);
             if (response != null) {
-                storeDeleteRequest(metadataUuid, resourceId);
+                storeDeleteRequest(metadataUuid, resourceId, approved);
             }
         }
         return null;
@@ -136,7 +136,7 @@ public class ResourceLoggerStore extends AbstractStore {
         if (decoratedStore != null) {
             String response = decoratedStore.delResource(context, metadataUuid, metadataResourceVisibility, resourceId, approved);
             if (response != null) {
-                storeDeleteRequest(metadataUuid, resourceId);
+                storeDeleteRequest(metadataUuid, resourceId, approved);
             }
         }
         return null;
@@ -157,8 +157,8 @@ public class ResourceLoggerStore extends AbstractStore {
      */
     private void storeGetRequest(ServiceContext context, final String metadataUuid, final String resourceId, final String requesterName,
                                  final String requesterMail, final String requesterOrg, final String requesterComments,
-                                 final String downloadDate) throws Exception {
-        final int metadataId = Integer.valueOf(context.getBean(IMetadataUtils.class).getMetadataId(metadataUuid));
+                                 final String downloadDate, Boolean approved) throws Exception {
+        final int metadataId = getAndCheckMetadataId(metadataUuid, approved);
         final MetadataFileUploadRepository uploadRepository = context.getBean(MetadataFileUploadRepository.class);
         final MetadataFileDownloadRepository repo = context.getBean(MetadataFileDownloadRepository.class);
         final String userName = context.getUserSession().getUsername();
@@ -205,9 +205,9 @@ public class ResourceLoggerStore extends AbstractStore {
     /**
      * Stores a file upload delete request in the MetadataFileUploads table.
      */
-    private void storeDeleteRequest(final String metadataUuid, final String fileName) throws Exception {
+    private void storeDeleteRequest(final String metadataUuid, final String fileName, Boolean approved) throws Exception {
         final ConfigurableApplicationContext context = ApplicationContextHolder.get();
-        final int metadataId = Integer.valueOf(context.getBean(IMetadataUtils.class).getMetadataId(metadataUuid));
+        final int metadataId = getAndCheckMetadataId(metadataUuid, approved);
 
         MetadataFileUploadRepository repo = context.getBean(MetadataFileUploadRepository.class);
 
@@ -225,10 +225,13 @@ public class ResourceLoggerStore extends AbstractStore {
     /**
      * Stores a file upload request in the MetadataFileUploads table.
      */
-    private void storePutRequest(ServiceContext context, final String metadataUuid, final String fileName, final double fileSize)
+    private void storePutRequest(ServiceContext context, final String metadataUuid, final String fileName, final double fileSize, Boolean approved)
             throws Exception {
         final MetadataFileUploadRepository repo = context.getBean(MetadataFileUploadRepository.class);
-        final int metadataId = Integer.valueOf(context.getBean(IMetadataUtils.class).getMetadataId(metadataUuid));
+        final int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+
+        // In some stores, it allows the same file to be uploaded and overwritten if this occurs then we should delete the old and add the new.
+        storeDeleteRequest(metadataUuid,fileName, approved);
 
         MetadataFileUpload metadataFileUpload = new MetadataFileUpload();
 
