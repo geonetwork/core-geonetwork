@@ -537,7 +537,19 @@
   and the coordinates displayed around -->
   <xsl:template mode="render-field"
                 match="gex:EX_GeographicBoundingBox[
-                            gex:westBoundLongitude/gco:Decimal != '']" priority="100">
+                            gex:westBoundLongitude/gco:Decimal != '' and $view = 'earthObservation']" priority="100">
+
+    <dl>
+      <dt></dt>
+      <dd>
+        <xsl:value-of select="concat('N ', gex:northBoundLatitude/gco:Decimal, ' S ', gex:eastBoundLongitude/gco:Decimal, ' W ', gex:westBoundLongitude/gco:Decimal, ' E ', gex:eastBoundLongitude/gco:Decimal)"/>
+      </dd>
+    </dl>
+  </xsl:template>
+
+  <xsl:template mode="render-field"
+                match="gex:EX_GeographicBoundingBox[
+                            gex:westBoundLongitude/gco:Decimal != '' and $view != 'earthObservation']" priority="100">
     <xsl:copy-of select="gn-fn-render:bbox(
                             xs:double(gex:westBoundLongitude/gco:Decimal),
                             xs:double(gex:southBoundLatitude/gco:Decimal),
@@ -546,7 +558,6 @@
     <br/>
     <br/>
   </xsl:template>
-
 
   <xsl:template mode="render-field"
                 match="gex:EX_BoundingPolygon/gex:polygon"
