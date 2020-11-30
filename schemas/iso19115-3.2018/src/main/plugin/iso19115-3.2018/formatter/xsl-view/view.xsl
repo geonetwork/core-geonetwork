@@ -121,11 +121,31 @@
                                             or mri:thesaurusName/*/cit:identifier/*/mcc:code/*/
                                                 text() != '')]">
           <xsl:variable name="thesaurusTitle">
-            <xsl:for-each select="mri:thesaurusName/*/cit:title">
-              <xsl:call-template name="get-iso19115-3.2018-localised">
-                <xsl:with-param name="langId" select="$langId"/>
-              </xsl:call-template>
-            </xsl:for-each>
+
+            <!-- Editor configuration for the requested view may override
+            thesaurus title by a custom strings. Match can be done on title or code.
+
+            <field name="eo-main-ig-parameters"
+                   xpath="/*/mdb:identificationInfo/*/mri:descriptiveKeywords
+                              [contains(*/mri:thesaurusName/*/cit:title/(gcx:Anchor|gco:CharacterString),
+                              'Cersat - Parameter')]"/>
+            -->
+            <xsl:variable name="title"
+                          select="mri:thesaurusName/*/cit:title/*/text()"/>
+            <xsl:variable name="editorThesaurusField"
+                          select="($viewConfig//field[contains(@xpath, $title)]/@name)[1]"/>
+            <xsl:choose>
+              <xsl:when test="$editorThesaurusField">
+                <xsl:value-of select="$schemaStrings/*[name() = $editorThesaurusField]"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:for-each select="mri:thesaurusName/*/cit:title">
+                  <xsl:call-template name="get-iso19115-3.2018-localised">
+                    <xsl:with-param name="langId" select="$langId"/>
+                  </xsl:call-template>
+                </xsl:for-each>
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:variable>
           <xsl:for-each select="mri:keyword">
             <tag thesaurus="{$thesaurusTitle}">
