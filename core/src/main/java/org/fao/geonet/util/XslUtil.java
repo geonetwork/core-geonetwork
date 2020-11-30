@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2017 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,7 +23,9 @@
 
 package org.fao.geonet.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import jeeves.component.ProfileManager;
@@ -39,6 +41,16 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.lucene.search.join.ScoreMode;
+import org.elasticsearch.action.search.MultiSearchRequest;
+import org.elasticsearch.action.search.MultiSearchResponse;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
@@ -48,6 +60,7 @@ import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.UiSetting;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SchemaManager;
@@ -1193,5 +1206,163 @@ public final class XslUtil {
         } catch (Exception ex) {
         }
         return "";
+    }
+
+    /**
+     * Associated resource like
+     * <ul>
+     * <li>parent</li>
+     * <li>source</li>
+     * <li>dataset (for service record)</li>
+     * <li>siblings</li>
+     * <li>feature catalogue</li>
+     * </ul>
+     * are stored in current records
+     * BUT
+     * some other relations are stored in the other side of the relation record ie.
+     * <ul>
+     * <li>service operatingOn current = +recordOperateOn:currentUuid</li>
+     * <li>siblings of current = +recordLink.type:siblings +recordLink.to:currentUuid</li>
+     * <li>children of current = +parentUuid:currentUuid</li>
+     * <li>brothersAndSisters = +parentUuid:currentParentUuid</li>
+     * </ul>
+     * Instead of relying on related API, it can make sense to index all relations
+     * (including bidirectional links) at indexing time to speed up rendering of
+     * associated resources which is slow task on search results.
+     *
+     * MetadataUtils#getRelated has the logic to search for all associated resources
+     * and also takes into account privileges in case of target record is not visible
+     * to current user.
+     *
+     * BTW in some cases, all records are public (or it is not an issue to only display
+     * a title of a private record) and a more direct approach can be used.
+     *
+     * @param uuid
+     * @return
+     */
+    public static Element getTargetAssociatedResources(String uuid, String parentUuid) {
+        EsRestClient client = ApplicationContextHolder.get().getBean(EsRestClient.class);
+        EsSearchManager searchManager = ApplicationContextHolder.get().getBean(EsSearchManager.class);
+        Element recordLinks = new Element("recordLinks");
+
+        try {
+            MultiSearchRequest request = new MultiSearchRequest();
+
+
+            SearchRequest serviceRequest = new SearchRequest(searchManager.getDefaultIndex());
+            SearchSourceBuilder serviceSearchSourceBuilder = new SearchSourceBuilder();
+            serviceSearchSourceBuilder.fetchSource(
+                    new String[]{"resourceTitleObject.default"},
+                    null
+            );
+            serviceSearchSourceBuilder.query(QueryBuilders.matchQuery(
+                    "recordOperateOn", uuid));
+            serviceRequest.source(serviceSearchSourceBuilder);
+            request.add(serviceRequest);
+
+
+            SearchRequest childrenRequest = new SearchRequest(searchManager.getDefaultIndex());
+            SearchSourceBuilder childrenSearchSourceBuilder = new SearchSourceBuilder();
+            childrenSearchSourceBuilder.fetchSource(
+                    new String[]{"resourceTitleObject.default"},
+                    null
+            );
+            childrenSearchSourceBuilder.query(QueryBuilders.matchQuery(
+                    "parentUuid", uuid));
+            childrenRequest.source(childrenSearchSourceBuilder);
+            request.add(childrenRequest);
+
+
+            SearchRequest siblingsRequest = new SearchRequest(searchManager.getDefaultIndex());
+            SearchSourceBuilder siblingsSearchSourceBuilder = new SearchSourceBuilder();
+            siblingsSearchSourceBuilder.fetchSource(
+                    new String[]{"resourceTitleObject.default"},
+                    null
+            );
+            BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+            List<QueryBuilder> must = boolQuery.must();
+            must.add(QueryBuilders.matchQuery("recordLink.type", "siblings"));
+            must.add(QueryBuilders.matchQuery("recordLink.to", uuid));
+            siblingsSearchSourceBuilder.query(
+                    QueryBuilders.nestedQuery(
+                            Geonet.IndexFieldNames.RECORDLINK,
+                            boolQuery,
+                            ScoreMode.Avg));
+            siblingsRequest.source(siblingsSearchSourceBuilder);
+            request.add(siblingsRequest);
+
+
+
+            boolean hasParent = StringUtils.isNotEmpty(parentUuid);
+            if (hasParent) {
+                SearchRequest brothersAndSistersRequest = new SearchRequest(searchManager.getDefaultIndex());
+                SearchSourceBuilder brothersAndSistersSearchSourceBuilder = new SearchSourceBuilder();
+                brothersAndSistersSearchSourceBuilder.fetchSource(
+                        new String[]{"resourceTitleObject.default"},
+                        null
+                );
+                brothersAndSistersSearchSourceBuilder.query(QueryBuilders.matchQuery(
+                        "parentUuid", parentUuid));
+                brothersAndSistersRequest.source(brothersAndSistersSearchSourceBuilder);
+                request.add(brothersAndSistersRequest);
+            }
+
+
+            MultiSearchResponse response = client.getClient().msearch(request, RequestOptions.DEFAULT);
+            recordLinks.addContent(buildRecordLink(response.getResponses()[0].getResponse().getHits(), "services"));
+            recordLinks.addContent(buildRecordLink(response.getResponses()[1].getResponse().getHits(), "children"));
+            recordLinks.addContent(buildRecordLink(response.getResponses()[2].getResponse().getHits(), "siblings"));
+
+            if (hasParent) {
+                recordLinks.addContent(buildRecordLink(response.getResponses()[3].getResponse().getHits(), "brothersAndSisters"));
+            }
+        } catch (Exception e) {
+            Log.error(Geonet.GEONETWORK,
+                    "Get related document error: " + e.getMessage(), e);
+        }
+        return recordLinks;
+    }
+
+    public static Node getTargetAssociatedResourcesAsNode(String uuid, String parentUuid) {
+        DOMOutputter outputter = new DOMOutputter();
+        try {
+            return outputter.output(
+                    new Document(
+                            getTargetAssociatedResources(uuid, parentUuid)));
+        } catch (Exception e) {
+            Log.error(Geonet.GEONETWORK,
+                    "Get related document error: " + e.getMessage(), e);
+        }
+        return null;
+    }
+
+    private static List<Element> buildRecordLink(SearchHits hits, String type) {
+        ObjectMapper mapper = new ObjectMapper();
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        String recordUrlPrefix = settingManager.getNodeURL() + "api/records/";
+        ArrayList<Element> listOfLinks = new ArrayList<>();
+        hits.forEach(record -> {
+            Element recordLink = new Element("recordLink");
+            recordLink.setAttribute("type", "object");
+            ObjectNode recordLinkProperties = mapper.createObjectNode();
+
+            recordLinkProperties.put("to", record.getId());
+            recordLinkProperties.put("origin", "catalog");
+            recordLinkProperties.put("created", "bySearch");
+            Map<String, String> titleObject = (Map<String, String>) record.getSourceAsMap().get("resourceTitleObject");
+            if (titleObject != null) {
+                recordLinkProperties.put("title", titleObject.get("default"));
+            }
+            recordLinkProperties.put("url", recordUrlPrefix + record.getId());
+            recordLinkProperties.put("type", type);
+
+            try {
+                recordLink.setText(mapper.writeValueAsString(recordLinkProperties));
+                listOfLinks.add(recordLink);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+        return listOfLinks;
     }
 }
