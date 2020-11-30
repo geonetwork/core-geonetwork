@@ -118,14 +118,18 @@
                  moment(isDateTime ? tokens[0] : scope.value)
                    .utc().format());
 
-               var time = tokens[1],
-                   hasTimezone = time.length > 8;
+               var time = tokens[1];
 
-               scope.time = isDateTime ?
-                 moment(time, 'HH:mm:ss').toDate() :
-                 undefined;
+               if (time != undefined) {
+                 scope.time = isDateTime ?
+                   moment(time, 'HH:mm:ss').toDate():
+                   undefined;
 
-               scope.timezone = time.substr(8);
+                 scope.timezone = time.substr(8);
+               } else {
+                 scope.time = '';
+                 scope.timezone = ''
+               }
              }
              if (scope.dateTypeSupported !== true) {
                scope.dateInput = scope.value;
