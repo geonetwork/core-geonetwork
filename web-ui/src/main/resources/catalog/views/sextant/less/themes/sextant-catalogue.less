@@ -10,8 +10,14 @@
     color: white !important;
 }
 
-.gn-metadata-view dl > dt {
-  overflow: auto;
+.gn-metadata-view {
+  // Force size to abstract and list item to 14px
+  p, ul > li {
+    font-size: 14px !important;
+  }
+  dl > dt {
+    overflow: auto;
+  }
 }
 // https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/138#note_22437
 body > div > article .c_content, #body.fullscreen .c_content, .c_showlocation.fullscreen > .c_content > .c_body > div {
