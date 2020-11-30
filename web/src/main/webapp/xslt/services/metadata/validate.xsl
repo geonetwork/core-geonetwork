@@ -106,7 +106,6 @@
             <xsl:value-of select="geonet:parse-xsd-error(geonet:message,
                         $metadataSchema,
                         /root/*[name() = $metadataSchema]/labels,
-                        /root/*[name() = $metadataSchema]/codelists,
                         /root/*[name() = $metadataSchema]/strings)"/>
           </title>
           <rules>
