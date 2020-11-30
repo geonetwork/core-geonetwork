@@ -1080,7 +1080,7 @@
     </xsl:variable>
 
     <xsl:choose>
-      <xsl:when test="$link != ''">
+      <xsl:when test="$link != '' and $link != 'http://custom.shared.obj.ch/concept#'">
         <a href="{$link}">
           <xsl:value-of select="$txt"/>
         </a>
