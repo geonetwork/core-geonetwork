@@ -136,7 +136,7 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
             MetadataResourceVisibility.PUBLIC,
             resource.getVisibility());
         assertEquals("Resource URL is correct",
-            "http://localhost:8080/srv/api/records/" + metadataUuid + "/attachments/" + filename + "?approved=true",
+            "http://localhost:8080/srv/api/records/" + metadataUuid + "/attachments/" + filename,
             resource.getUrl());
 
         try (final Store.ResourceHolder path = getStore().getResource(
@@ -186,7 +186,7 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
                          MetadataResourceVisibility.PUBLIC,
                          resource.getVisibility());
             assertEquals("Resource URL is correct",
-                         "http://localhost:8080/srv/api/records/" + metadataUuid + "/attachments/" + filename + "?approved=true",
+                         "http://localhost:8080/srv/api/records/" + metadataUuid + "/attachments/" + filename,
                          resource.getUrl());
         } finally {
             getStore().delResources(context, metadataUuid, true);
@@ -220,7 +220,7 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
                          MetadataResourceVisibility.PUBLIC,
                          resource.getVisibility());
             assertEquals("Resource URL is correct",
-                         "http://localhost:8080/srv/api/records/" + metadataUuid + "/attachments/" + filename + "?approved=true",
+                         "http://localhost:8080/srv/api/records/" + metadataUuid + "/attachments/" + filename,
                          resource.getUrl());
         } finally {
             getStore().delResources(context, metadataUuid, true);

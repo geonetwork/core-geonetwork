@@ -63,7 +63,7 @@ public class FilesystemStoreResource implements MetadataResource {
         this.metadataId = metadataId;
         this.approved=approved;
         this.filename = filename;
-        this.url = baseUrl + getId() + "?approved=" + approved;
+        this.url = baseUrl + getId();
         this.metadataResourceVisibility = metadataResourceVisibility;
         this.size = size;
         this.lastModification = lastModification;
