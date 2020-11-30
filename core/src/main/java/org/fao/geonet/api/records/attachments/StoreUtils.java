@@ -40,19 +40,19 @@ public abstract class StoreUtils {
      * @param context
      * @param oldMetadataId               The source metadata ID
      * @param newMetadataId               The destination metadata ID
-     * @param oldApproved                 Old approved flag to use for the source.
      * @param newApproved                 New approved flag to use on the destination.
+     *                                    Used when creating a working copy where the destination will have the approved flag to false.
      * @throws Exception
      */
-    public static void copyDataDir(ServiceContext context, int oldMetadataId, int newMetadataId, boolean oldApproved, boolean newApproved) throws Exception {
+    public static void copyDataDir(ServiceContext context, int oldMetadataId, int newMetadataId, boolean newApproved) throws Exception {
         final Store store = context.getBean("resourceStore", Store.class);
         final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
         final String oldUuid = metadataUtils.getMetadataUuid(String.valueOf(oldMetadataId));
         final String newUuid = metadataUtils.getMetadataUuid(String.valueOf(newMetadataId));
         for (MetadataResourceVisibility visibility: MetadataResourceVisibility.values()) {
-            final List<MetadataResource> resources = store.getResources(context, oldUuid, visibility, null, oldApproved);
+            final List<MetadataResource> resources = store.getResources(context, oldUuid, visibility, null, true);
             for (MetadataResource resource: resources) {
-                try (Store.ResourceHolder holder = store.getResource(context, oldUuid, visibility, resource.getFilename(), oldApproved)) {
+                try (Store.ResourceHolder holder = store.getResource(context, oldUuid, visibility, resource.getFilename(), true)) {
                     store.putResource(context, newUuid, holder.getPath(), visibility, newApproved);
                 }
             }
@@ -64,16 +64,16 @@ public abstract class StoreUtils {
      * @param context
      * @param oldUuid               The source metadata ID
      * @param newUuid               The destination metadata ID
-     * @param oldApproved                 Old approved flag to use for the source.
-     * @param newApproved                 New approved flag to use on the destination.
+     * @param newApproved           New approved flag to use on the destination.
+     *                              Used when creating a working copy where the destination will have the approved flag to false.
      * @throws Exception
      */
-    public static void copyDataDir(ServiceContext context, String oldUuid, String newUuid, boolean oldApproved, boolean newApproved) throws Exception {
+    public static void copyDataDir(ServiceContext context, String oldUuid, String newUuid, boolean newApproved) throws Exception {
         final Store store = context.getBean("resourceStore", Store.class);
         for (MetadataResourceVisibility visibility: MetadataResourceVisibility.values()) {
-            final List<MetadataResource> resources = store.getResources(context, oldUuid, visibility, null, oldApproved);
+            final List<MetadataResource> resources = store.getResources(context, oldUuid, visibility, null, true);
             for (MetadataResource resource: resources) {
-                try (Store.ResourceHolder holder = store.getResource(context, oldUuid, visibility, resource.getFilename(), oldApproved)) {
+                try (Store.ResourceHolder holder = store.getResource(context, oldUuid, visibility, resource.getFilename(), true)) {
                     store.putResource(context, newUuid, holder.getPath(), visibility, newApproved);
                 }
             }

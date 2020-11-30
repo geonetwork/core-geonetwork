@@ -476,7 +476,7 @@ public class MetadataInsertDeleteApi {
         dataManager.activateWorkflowIfConfigured(context, newId, group);
 
         try {
-            StoreUtils.copyDataDir(context, sourceMetadata.getId(), Integer.parseInt(newId), true, true);
+            StoreUtils.copyDataDir(context, sourceMetadata.getId(), Integer.parseInt(newId), true);
         } catch (Exception e) {
             Log.warning(Geonet.DATA_MANAGER,
                     String.format(

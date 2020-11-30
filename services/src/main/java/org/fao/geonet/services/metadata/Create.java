@@ -146,7 +146,7 @@ public class Create extends NotInReadOnlyModeService {
 
 
         try {
-            StoreUtils.copyDataDir(context, Integer.parseInt(id), Integer.parseInt(newId), true, true);
+            StoreUtils.copyDataDir(context, Integer.parseInt(id), Integer.parseInt(newId), true);
         } catch (Exception e) {
             Log.warning(Geonet.DATA_MANAGER, "Error while copying metadata resources. " + e.toString() +
                 ". Metadata is created but without resources from record with id:" + id);
