@@ -625,7 +625,7 @@
         }
       },
       isPublished: function() {
-        return this.isPublishedToAll === 'true';
+        return this.isPublishedToAll === true;
       },
       isValid: function() {
         return this.valid === '1';
