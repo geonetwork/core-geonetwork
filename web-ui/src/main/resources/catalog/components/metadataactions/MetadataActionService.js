@@ -477,20 +477,36 @@
        * Validates the current selection of metadata records.
        * @param {String} bucket
        */
-      this.validateMdInspire = function(bucket) {
+      this.validateMdInspire = function(bucket, mode) {
 
         $rootScope.$broadcast('operationOnSelectionStart');
         $rootScope.$broadcast('inspireMdValidationStart');
 
-        return gnHttp.callService('../api/records/validate/inspire?' +
-          'bucket=' + bucket, null, {
+        var url = '../api/records/validate/inspire?' +
+          'bucket=' + bucket;
+        if (angular.isDefined(mode)) {
+          url += '&mode=' + mode;
+        }
+        return gnHttp.callService(url, null, {
           method: 'PUT'
         }).then(function(data) {
           $rootScope.$broadcast('inspireMdValidationStop');
           $rootScope.$broadcast('operationOnSelectionStop');
           $rootScope.$broadcast('search');
         });
+      };
 
+
+      this.clearValidationStatus = function(bucket) {
+        $rootScope.$broadcast('operationOnSelectionStart');
+        var url = '../api/records/validate?' +
+          'bucket=' + bucket;
+        return gnHttp.callService(url, null, {
+          method: 'DELETE'
+        }).then(function(data) {
+          $rootScope.$broadcast('operationOnSelectionStop');
+          $rootScope.$broadcast('search');
+        });
       };
 
       /**
