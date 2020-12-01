@@ -1238,8 +1238,8 @@
            * @param {Object} getCapLayer object to convert
            * @param {string} style of the style to use
            */
-          addWmsToMapFromCap: function(map, getCapLayer, style) {
-            var layer = this.createOlWMSFromCap(map, getCapLayer, null, style);
+          addWmsToMapFromCap: function(map, getCapLayer, url, style) {
+            var layer = this.createOlWMSFromCap(map, getCapLayer, url, style);
             map.addLayer(layer);
             return layer;
           },
