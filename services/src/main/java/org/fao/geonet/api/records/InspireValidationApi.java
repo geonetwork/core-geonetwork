@@ -264,7 +264,7 @@ public class InspireValidationApi {
 
                 InputStream metadataToTest = convertElement2InputStream(md);
                 testId = inspireValidatorUtils.submitFile(context, URL, metadataToTest, testsuite, metadata.getUuid());
-            } else if (StringUtils.isNotEmpty(mode)) {
+            } else {
                 String portal = NodeInfo.DEFAULT_NODE;
                 if (!NodeInfo.DEFAULT_NODE.equals(mode)) {
                     Source source = sourceRepository.findOneByUuid(mode);

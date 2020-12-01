@@ -185,7 +185,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
                                                 if (StringUtils.isEmpty(mode)) {
                                                     testId = inspireValidatorUtils.submitFile(serviceContext, URL,
                                                         new ByteArrayInputStream(mdToValidate.getBytes()), entry.getKey(), record.getUuid());
-                                                } else if (StringUtils.isNotEmpty(mode)) {
+                                                } else {
                                                     String portal = null;
                                                     if (!NodeInfo.DEFAULT_NODE.equals(mode)) {
                                                         Source source = appContext.getBean(SourceRepository.class).findOneByUuid(mode);
