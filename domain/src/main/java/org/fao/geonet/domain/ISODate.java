@@ -547,8 +547,6 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
         }
 
 
-        String[] parts = timeAndDate.toUpperCase().split("T", 2);
-
         if (StringUtils.contains(timeAndDate, ':')) {
             // its a time
             try {

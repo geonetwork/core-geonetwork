@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2020 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -85,9 +85,8 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
@@ -663,8 +662,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                     errors.clear();
                     final Logger logger = this.log;
                     final String nodeName = getParams().getName() + " (" + getClass().getSimpleName() + ")";
-                    final String lastRun = ZonedDateTime.from(Instant.now()).withZoneSameInstant(ZoneOffset.UTC)
-                            .format(DateTimeFormatter.ISO_DATE_TIME);
+                    final String lastRun = OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME);
                     try {
                         login();
 
