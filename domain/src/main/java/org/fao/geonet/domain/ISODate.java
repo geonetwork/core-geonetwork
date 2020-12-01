@@ -619,7 +619,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
      */
     @Transient
     public int getMonths() {
-        return internalDateTime.getMonth().getValue();
+        return internalDateTime.getMonthValue();
     }
 
     /**

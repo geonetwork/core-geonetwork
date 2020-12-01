@@ -28,6 +28,8 @@ import org.junit.Test;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -173,7 +175,7 @@ public class ISODateTest {
 
         date = new ISODate();
         date.setDateAndTime("T01:02:03+05:00");
-        zdt = ZonedDateTime.now(ZoneOffset.of("+05:00")).withHour(1).withMinute(2).withSecond(3).withZoneSameInstant(ZoneOffset.UTC);
+        zdt = LocalDate.now().atTime(OffsetTime.parse("01:02:03+05:00")).atZoneSameInstant(ZoneOffset.UTC);
 
         assertEquals("T01:02:03+05:00 - date only", false, date.isDateOnly());
         assertEquals("T01:02:03+05:00 - year", zdt.get(ChronoField.YEAR), date.getYears());
