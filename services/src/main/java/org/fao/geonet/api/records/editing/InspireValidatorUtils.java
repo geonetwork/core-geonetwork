@@ -66,8 +66,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-// Utility class to access methods in Inspire Service.
-// Based on ETF Web API v.2 BETA
+/**
+ * Utility class to access methods in Inspire Service.
+ *
+ * Based on ETF Web API v.2
+ * See https://docs.etf-validator.net/v2.0/Developer_manuals/WEB-API.html
+ */
 public class InspireValidatorUtils {
 
     @Autowired
@@ -333,6 +337,7 @@ public class InspireValidatorUtils {
     /**
      * Test run.
      *
+     *
      * @param endPoint the end point
      * @param fileId   the file id
      * @param testList the test list
@@ -340,7 +345,7 @@ public class InspireValidatorUtils {
      * @throws IOException   Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
-    private String testRun(ServiceContext context, String endPoint, String fileId, List<String> testList, String testTitle) {
+    private String  testRun(ServiceContext context, String endPoint, String fileId, List<String> testList, String testTitle) {
 
         HttpPost request = new HttpPost(endPoint + TestRuns_URL);
         request.setHeader("Content-type", ACCEPT);
@@ -351,22 +356,28 @@ public class InspireValidatorUtils {
         try {
             JSONObject json = new JSONObject();
             JSONArray tests = new JSONArray();
-            JSONObject argumets = new JSONObject();
+            JSONObject arguments = new JSONObject();
             JSONObject testObject = new JSONObject();
 
             json.put("label", "TEST " + testTitle + " - " + System.currentTimeMillis());
             json.put("executableTestSuiteIds", tests);
-            json.put("argumets", argumets);
+            json.put("arguments", arguments);
             json.put("testObject", testObject);
 
             for (String test : testList) {
                 tests.put(test);
             }
 
-            argumets.put("files_to_test", ".*");
-            argumets.put("tests_to_execute", ".*");
+            arguments.put("files_to_test", ".*");
+            arguments.put("tests_to_execute", ".*");
 
-            testObject.put("id", fileId);
+            if (fileId.startsWith("http")) {
+                JSONObject resourceObject = new JSONObject();
+                resourceObject.put("data", fileId);
+                testObject.put("resources", resourceObject);
+            } else {
+                testObject.put("id", fileId);
+            }
 
             StringEntity entity = new StringEntity(json.toString());
             request.setEntity(entity);
@@ -563,6 +574,41 @@ public class InspireValidatorUtils {
                 }
                 // Return test id from Inspire service
                 return testRun(context, serviceEndpoint, testFileId, tests, testTitle);
+
+            } else {
+                ServiceNotFoundEx ex = new ServiceNotFoundEx(serviceEndpoint);
+                Log.error(Log.SERVICE, "Service unavailable.", ex);
+                throw ex;
+            }
+        } finally {
+            // client.close();
+        }
+    }
+
+    /**
+     * Submit URL to the external ETF validator.
+     *
+     * @param record    the record
+     * @param testsuite
+     * @return the string
+     * @throws IOException   Signals that an I/O exception has occurred.
+     * @throws JSONException the JSON exception
+     */
+    public String submitUrl(ServiceContext context, String serviceEndpoint, String getRecordById, String testsuite, String testTitle)
+        throws IOException {
+
+        try {
+            if (checkServiceStatus(context, serviceEndpoint)) {
+                // Get the tests to execute
+                List<String> tests = getTests(context, serviceEndpoint, testsuite);
+                if (tests == null || tests.size() == 0) {
+                    Log.error(Log.SERVICE,
+                        "Default test sequence not supported. Check org.fao.geonet.api.records.editing.InspireValidatorUtils.TESTS_TO_RUN_TG13.",
+                        new Exception());
+                    return null;
+                }
+                // Return test id from Inspire service
+                return testRun(context, serviceEndpoint, getRecordById, tests, testTitle);
 
             } else {
                 ServiceNotFoundEx ex = new ServiceNotFoundEx(serviceEndpoint);

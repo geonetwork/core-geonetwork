@@ -4,22 +4,24 @@ import jeeves.server.context.ServiceContext;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpStatus;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.records.editing.InspireValidatorUtils;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterApi;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.api.records.formatters.cache.Key;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.MetadataValidation;
-import org.fao.geonet.domain.MetadataValidationId;
-import org.fao.geonet.domain.MetadataValidationStatus;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -122,7 +124,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
         });
     }
 
-    public void processMetadata(Set<String> uuids) throws Exception {
+    public void processMetadata(Set<String> uuids, String mode) throws Exception {
         IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
         MetadataValidationRepository metadataValidationRepository = appContext.getBean(MetadataValidationRepository.class);
         AccessManager accessManager = appContext.getBean(AccessManager.class);
@@ -177,33 +179,65 @@ public class MInspireEtfValidateProcess implements SelfNaming {
                                             }
 
                                             if (applyCondition) {
-                                                String testId = inspireValidatorUtils.submitFile(serviceContext, URL,
-                                                    new ByteArrayInputStream(mdToValidate.getBytes()), entry.getKey(), record.getUuid());
 
-                                                inspireValidatorUtils.waitUntilReady(serviceContext, URL, testId);
+                                                String testId = null;
+                                                String getRecordByIdUrl = null;
+                                                if (mode == null) {
+                                                    testId = inspireValidatorUtils.submitFile(serviceContext, URL,
+                                                        new ByteArrayInputStream(mdToValidate.getBytes()), entry.getKey(), record.getUuid());
+                                                } else if (StringUtils.isNotEmpty(mode)) {
+                                                    String portal = null;
+                                                    if (!NodeInfo.DEFAULT_NODE.equals(mode)) {
+                                                        Source source = appContext.getBean(SourceRepository.class).findOneByUuid(mode);
+                                                        if (source == null) {
+                                                            metadataAnalysedInError++;
+                                                            Log.warning(API.LOG_MODULE_NAME, String.format(
+                                                                "Portal %s not found. There is no CSW endpoint at this URL " +
+                                                                    "that we can send to the validator.", mode));
+                                                        }
+                                                        portal = mode;
+                                                    } else {
+                                                        portal = NodeInfo.DEFAULT_NODE;
+                                                    }
 
-                                                String reportUrl = inspireValidatorUtils.getReportUrl(URL, testId);
-                                                String reportXmlUrl = InspireValidatorUtils.getReportUrlXML(URL, testId);
-                                                String reportXml = inspireValidatorUtils.retrieveReport(serviceContext, reportXmlUrl);
+                                                    if (portal  != null) {
+                                                        getRecordByIdUrl = String.format(
+                                                            "%s%s/eng/csw?SERVICE=CSW&REQUEST=GetRecordById&VERSION=2.0.2&" +
+                                                                "OUTPUTSCHEMA=%s&ELEMENTSETNAME=full&ID=%s",
+                                                            appContext.getBean(SettingManager.class).getBaseURL(),
+                                                            portal,
+                                                            ISO19139Namespaces.GMD.getURI(),
+                                                            record.getUuid());
+                                                        testId = inspireValidatorUtils.submitUrl(serviceContext, URL, getRecordByIdUrl, entry.getKey(), record.getUuid());
+                                                    }
+                                                }
+                                                if (testId != null) {
 
-                                                String validationStatus = inspireValidatorUtils.isPassed(serviceContext, URL, testId);
+                                                    inspireValidatorUtils.waitUntilReady(serviceContext, URL, testId);
 
-                                                MetadataValidationStatus metadataValidationStatus =
-                                                    inspireValidatorUtils.calculateValidationStatus(validationStatus);
+                                                    String reportUrl = inspireValidatorUtils.getReportUrl(URL, testId);
+                                                    String reportXmlUrl = InspireValidatorUtils.getReportUrlXML(URL, testId);
+                                                    String reportXml = inspireValidatorUtils.retrieveReport(serviceContext, reportXmlUrl);
 
-                                                MetadataValidation metadataValidation = new MetadataValidation()
-                                                    .setId(new MetadataValidationId(record.getId(), "inspire"))
-                                                    .setStatus(metadataValidationStatus).setRequired(false)
-                                                    .setReportUrl(reportUrl).setReportContent(reportXml);
+                                                    String validationStatus = inspireValidatorUtils.isPassed(serviceContext, URL, testId);
 
-                                                metadataValidationRepository.save(metadataValidation);
+                                                    MetadataValidationStatus metadataValidationStatus =
+                                                        inspireValidatorUtils.calculateValidationStatus(validationStatus);
 
-                                                //new RecordValidationTriggeredEvent(record.getId(),
-                                                //    ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
-                                                //    metadataValidation.getStatus().getCode()).publish(appContext);
+                                                    MetadataValidation metadataValidation = new MetadataValidation()
+                                                        .setId(new MetadataValidationId(record.getId(), "inspire"))
+                                                        .setStatus(metadataValidationStatus).setRequired(false)
+                                                        .setReportUrl(reportUrl).setReportContent(reportXml);
 
-                                                reindexMetadata = true;
-                                                inspireMetadata = true;
+                                                    metadataValidationRepository.save(metadataValidation);
+
+                                                    //new RecordValidationTriggeredEvent(record.getId(),
+                                                    //    ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
+                                                    //    metadataValidation.getStatus().getCode()).publish(appContext);
+
+                                                    reindexMetadata = true;
+                                                    inspireMetadata = true;
+                                                }
                                             }
                                         }
                                     }
