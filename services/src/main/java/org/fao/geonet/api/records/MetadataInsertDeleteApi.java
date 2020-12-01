@@ -51,6 +51,7 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataType;
@@ -208,7 +209,12 @@ public class MetadataInsertDeleteApi {
             MetadataUtils.backupRecord(metadata, context);
         }
 
-        store.delResources(context, metadata.getUuid(), true);
+        boolean approved=true;
+        if (metadata instanceof MetadataDraft) {
+            approved=false;
+        }
+
+        store.delResources(context, metadata.getUuid(), approved);
         metadataManager.deleteMetadata(context, metadata.getId() + "");
 
         searchManager.forceIndexChanges();
