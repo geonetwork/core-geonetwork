@@ -269,8 +269,13 @@ header div.gn-abstract {
 
   /* Table mode as no label. Consider the section header is the label
   like in the editor */
-  dl.gn-table dt {
-    display: none !important;
+  dl.gn-table {
+    dt {
+      display: none !important;
+    }
+    dd {
+      width: 100%;
+    }
   }
 
   /* In sextant view turn off 2 columns layout */
