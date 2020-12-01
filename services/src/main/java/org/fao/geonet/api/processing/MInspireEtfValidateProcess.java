@@ -182,7 +182,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
 
                                                 String testId = null;
                                                 String getRecordByIdUrl = null;
-                                                if (mode == null) {
+                                                if (StringUtils.isEmpty(mode)) {
                                                     testId = inspireValidatorUtils.submitFile(serviceContext, URL,
                                                         new ByteArrayInputStream(mdToValidate.getBytes()), entry.getKey(), record.getUuid());
                                                 } else if (StringUtils.isNotEmpty(mode)) {

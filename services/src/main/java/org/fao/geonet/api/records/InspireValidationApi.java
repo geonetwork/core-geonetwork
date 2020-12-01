@@ -223,7 +223,7 @@ public class InspireValidationApi {
                 // TODO: Add support for such validation from not editing session ?
             }
 
-            if (mode == null) {
+            if (StringUtils.isEmpty(mode)) {
                 // Use formatter to convert the record
                 if (!schema.equals("iso19139")) {
                     try {

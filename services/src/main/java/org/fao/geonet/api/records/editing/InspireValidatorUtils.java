@@ -580,8 +580,6 @@ public class InspireValidatorUtils {
                 Log.error(Log.SERVICE, "Service unavailable.", ex);
                 throw ex;
             }
-        } finally {
-            // client.close();
         }
     }
 
