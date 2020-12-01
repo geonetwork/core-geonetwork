@@ -709,9 +709,11 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
             }
 
             int day;
+            ZoneId offset = ZoneId.systemDefault();
             if (_shortDate) {
 
                 if (parts[2].toLowerCase().endsWith("z")) {
+                    offset = ZoneOffset.UTC;
                     day = Integer.parseInt(parts[2].substring(0, parts[2].length() - 1));
                 } else {
                     day = Integer.parseInt(parts[2]);
@@ -722,11 +724,9 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
             }
 
             _shortDate = true;
-
-            int hour = 0;
-            int minute = 0;
-            int second = 0;
-            internalDateTime = ZonedDateTime.of(year, month, day, hour, minute, second, 0, ZoneOffset.UTC);
+            internalDateTime = ZonedDateTime.now(offset).withYear(year).withMonth(month).withDayOfMonth(day)
+                    .withHour(0).withMinute(0).withSecond(0).withNano(0);
+            //..ZonedDateTime.of(year, month, day, hour, minute, second, 0, offset);
 
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid ISO date: " + isoDate, e);

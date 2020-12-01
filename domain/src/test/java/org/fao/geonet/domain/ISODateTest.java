@@ -26,6 +26,7 @@ package org.fao.geonet.domain;
 import org.junit.Test;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -280,8 +281,8 @@ public class ISODateTest {
 
         ISODate date = new ISODate(cal.getTimeInMillis(), false);
         Instant instant = Instant.ofEpochMilli(cal.getTimeInMillis());
-        ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
-        String expectedDateTime = zdt.withZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC);
+        String expectedDateTime = zdt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         assertEquals(expectedDateTime, date.getDateAndTime());
         assertEquals("1990-12-05", date.getDateAsString());
@@ -406,7 +407,9 @@ public class ISODateTest {
     public void testCreateISODateValid() throws Exception {
         // Date format
         ISODate isoDate = new ISODate("2013-10-10");
-        assertEquals("2013-10-10", isoDate.toString());
+        ZonedDateTime ld = LocalDate.parse("2013-10-10").atStartOfDay(ZoneId.systemDefault());
+
+        assertEquals(ld.format(DateTimeFormatter.ISO_LOCAL_DATE), isoDate.toString());
         assertTrue("2013-10-10 - date only", isoDate.isDateOnly());
 
         isoDate = new ISODate("2013-10-10Z");
@@ -432,8 +435,9 @@ public class ISODateTest {
     public void testSetDateISODateValid() throws Exception {
         // Date format
         ISODate isoDate = new ISODate();
-        isoDate.setDateAndTime("2013-10-10");
-        assertEquals("2013-10-10", isoDate.toString());
+        isoDate.setDateAndTime("2013-10-05");
+        ZonedDateTime zdt = LocalDate.parse("2013-10-05").atStartOfDay(ZoneId.systemDefault());
+        assertEquals(DateTimeFormatter.ISO_LOCAL_DATE.format(zdt), isoDate.toString());
 
         isoDate = new ISODate();
         isoDate.setDateAndTime("2013-10-10Z");
@@ -443,7 +447,7 @@ public class ISODateTest {
         isoDate = new ISODate();
         isoDate.setDateAndTime("2013-10-10T13:20:00");
         LocalDateTime ldt = LocalDateTime.parse("2013-10-10T13:20:00");
-        ZonedDateTime zdt = ldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC);
+        zdt = ldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC);
         String expected = zdt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         assertEquals(expected, isoDate.toString());
