@@ -554,39 +554,36 @@ public class InspireValidatorUtils {
     public String submitFile(ServiceContext context, String serviceEndpoint, InputStream record, String testsuite, String testTitle)
         throws IOException {
 
-        try {
-            if (checkServiceStatus(context, serviceEndpoint)) {
-                // Get the tests to execute
-                List<String> tests = getTests(context, serviceEndpoint, testsuite);
-                // Upload file to test
-                String testFileId = uploadMetadataFile(context, serviceEndpoint, record);
+        if (checkServiceStatus(context, serviceEndpoint)) {
+            // Get the tests to execute
+            List<String> tests = getTests(context, serviceEndpoint, testsuite);
+            // Upload file to test
+            String testFileId = uploadMetadataFile(context, serviceEndpoint, record);
 
-                if (testFileId == null) {
-                    Log.error(Log.SERVICE, "File not valid.", new IllegalArgumentException());
-                    return null;
-                }
-
-                if (tests == null || tests.size() == 0) {
-                    Log.error(Log.SERVICE,
-                        "Default test sequence not supported. Check org.fao.geonet.api.records.editing.InspireValidatorUtils.TESTS_TO_RUN_TG13.",
-                        new Exception());
-                    return null;
-                }
-                // Return test id from Inspire service
-                return testRun(context, serviceEndpoint, testFileId, tests, testTitle);
-
-            } else {
-                ServiceNotFoundEx ex = new ServiceNotFoundEx(serviceEndpoint);
-                Log.error(Log.SERVICE, "Service unavailable.", ex);
-                throw ex;
+            if (testFileId == null) {
+                Log.error(Log.SERVICE, "File not valid.", new IllegalArgumentException());
+                return null;
             }
+
+            if (tests == null || tests.size() == 0) {
+                Log.error(Log.SERVICE,
+                    "Default test sequence not supported. Check org.fao.geonet.api.records.editing.InspireValidatorUtils.TESTS_TO_RUN_TG13.",
+                    new Exception());
+                return null;
+            }
+            // Return test id from Inspire service
+            return testRun(context, serviceEndpoint, testFileId, tests, testTitle);
+
+        } else {
+            ServiceNotFoundEx ex = new ServiceNotFoundEx(serviceEndpoint);
+            Log.error(Log.SERVICE, "Service unavailable.", ex);
+            throw ex;
         }
     }
 
     /**
      * Submit URL to the external ETF validator.
      *
-     * @param record    the record
      * @param testsuite
      * @return the string
      * @throws IOException   Signals that an I/O exception has occurred.
