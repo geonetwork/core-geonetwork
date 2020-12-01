@@ -212,15 +212,20 @@
           </td>
         </tr>
       </xsl:if>
-      <tr>
-        <td>
-          <xsl:value-of select="$schemaStrings/sxt-view-lineage"/>
-        </td>
-        <td>
-          <xsl:apply-templates mode="render-value"
-                               select="$metadata/gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement"/>
-        </td>
-      </tr>
+
+      <xsl:variable name="lineage"
+                    select="$metadata/gmd:dataQualityInfo/*/gmd:lineage/*[normalize-space(gmd:statement) != '']"/>
+      <xsl:if test="count($lineage) > 0">
+        <tr>
+          <td>
+            <xsl:value-of select="$schemaStrings/sxt-view-lineage"/>
+          </td>
+          <td>
+            <xsl:apply-templates mode="render-value"
+                                 select="$metadata/gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement"/>
+          </td>
+        </tr>
+      </xsl:if>
       <tr>
         <td>
           <xsl:value-of select="$schemaStrings/sxt-view-constraints"/>
