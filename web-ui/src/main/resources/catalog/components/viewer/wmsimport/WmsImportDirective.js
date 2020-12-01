@@ -86,7 +86,7 @@
             }
             if ($scope.format == 'wms') {
               var layer =
-                  gnMap.createOlWMSFromCap($scope.map, getCapLayer, null, style);
+                  gnMap.createOlWMSFromCap($scope.map, getCapLayer, $scope.url, style);
               gnMap.feedLayerMd(layer);
               gnViewerSettings.getPreAddLayerPromise(layer).then($scope.map.addLayer(layer));
               return layer;
