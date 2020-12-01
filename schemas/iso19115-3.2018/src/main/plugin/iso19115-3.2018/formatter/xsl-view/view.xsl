@@ -227,9 +227,18 @@
           <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:apply-templates mode="render-field"
-                               select=".//gex:EX_GeographicBoundingBox">
-          </xsl:apply-templates>
+          <!--<xsl:apply-templates mode="render-field"
+                               select=".//gex:EX_GeographicBoundingBox"/>-->
+          <!-- Some views want custom rendering in main form and in side bar. -->
+          <xsl:for-each select=".//gex:EX_GeographicBoundingBox">
+            <xsl:copy-of select="gn-fn-render:bbox(
+                            xs:double(gex:westBoundLongitude/gco:Decimal),
+                            xs:double(gex:southBoundLatitude/gco:Decimal),
+                            xs:double(gex:eastBoundLongitude/gco:Decimal),
+                            xs:double(gex:northBoundLatitude/gco:Decimal))"/>
+            <br/>
+            <br/>
+          </xsl:for-each>
         </xsl:otherwise>
       </xsl:choose>
     </section>
@@ -560,7 +569,11 @@
                             gex:westBoundLongitude/gco:Decimal != '' and $view = 'earthObservation']" priority="100">
 
     <dl>
-      <dt></dt>
+      <dt>
+        <xsl:call-template name="render-field-label">
+          <xsl:with-param name="languages" select="$allLanguages"/>
+        </xsl:call-template>
+      </dt>
       <dd>
         <xsl:value-of select="concat('N ', gex:northBoundLatitude/gco:Decimal, ' S ', gex:eastBoundLongitude/gco:Decimal, ' W ', gex:westBoundLongitude/gco:Decimal, ' E ', gex:eastBoundLongitude/gco:Decimal)"/>
       </dd>
@@ -848,6 +861,13 @@
                 match="mri:descriptiveKeywords[
                   normalize-space(string-join(*/mri:keyword//text(), '')) = ''
                   or count(*/mri:keyword) = 0]" priority="200"/>
+
+  <!-- We consider all keywords are displayed in the right panel,
+  so don't show them in the view. -->
+  <xsl:template mode="render-field"
+                match="mri:descriptiveKeywords[$view = 'earthObservation']"
+                priority="200"/>
+
   <xsl:template mode="render-field"
                 match="mri:descriptiveKeywords[
                         */mri:thesaurusName/cit:CI_Citation/cit:title]"
