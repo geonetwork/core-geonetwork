@@ -47,17 +47,7 @@ import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordCreateEvent;
 import org.fao.geonet.events.history.RecordDeletedEvent;
@@ -204,7 +194,12 @@ public class MetadataInsertDeleteApi {
             MetadataUtils.backupRecord(metadata, context);
         }
 
-        store.delResources(context, metadata.getUuid(), true);
+        boolean approved=true;
+        if (metadata instanceof MetadataDraft) {
+            approved=false;
+        }
+
+        store.delResources(context, metadata.getUuid(), approved);
         RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, metadata.getId() + "");
         metadataManager.deleteMetadata(context, metadata.getId() + "");
         recordDeletedEvent.publish(appContext);
