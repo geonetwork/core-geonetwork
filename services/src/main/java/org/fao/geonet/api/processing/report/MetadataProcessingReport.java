@@ -23,6 +23,9 @@
 
 package org.fao.geonet.api.processing.report;
 
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.MetadataDraft;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -89,24 +92,38 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
         return metadataErrors;
     }
 
-    public synchronized void addMetadataError(int metadataId, Exception error) {
+    public synchronized void addMetadataError(int metadataId, String metadataUUID, boolean draft, Exception error) {
+        Report errorReport = new ErrorReport(error);
+        errorReport.setUuid(metadataUUID);
+        errorReport.setDraft(draft);
         if (this.metadataErrors.get(metadataId) == null) {
             List<Report> errors = new ArrayList<>();
-            errors.add(new ErrorReport(error));
+            errors.add(errorReport);
             this.metadataErrors.put(metadataId, errors);
         } else {
-            this.metadataErrors.get(metadataId).add(new ErrorReport(error));
+            this.metadataErrors.get(metadataId).add(errorReport);
         }
     }
 
-    public synchronized void addMetadataError(int metadataId, String error) {
+    public void addMetadataError(AbstractMetadata metadata, Exception error) {
+        addMetadataError(metadata.getId(), metadata.getUuid(), metadata instanceof MetadataDraft, error);
+    }
+
+    public synchronized void addMetadataError(int metadataId, String metadataUUID, boolean draft, String error) {
+        Report errorReport = new ErrorReport(error);
+        errorReport.setUuid(metadataUUID);
+        errorReport.setDraft(draft);
         if (this.metadataErrors.get(metadataId) == null) {
             List<Report> errors = new ArrayList<>();
-            errors.add(new ErrorReport(error));
+            errors.add(errorReport);
             this.metadataErrors.put(metadataId, errors);
         } else {
-            this.metadataErrors.get(metadataId).add(new ErrorReport(error));
+            this.metadataErrors.get(metadataId).add(errorReport);
         }
+    }
+
+    public void addMetadataError(AbstractMetadata metadata, String error) {
+        addMetadataError(metadata.getId(), metadata.getUuid(), metadata instanceof MetadataDraft, error);
     }
 
     @XmlElement(name = "infos")
@@ -114,14 +131,21 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
         return metadataInfos;
     }
 
-    public void addMetadataInfos(int metadataId, String message) {
+    public void addMetadataInfos(int metadataId, String metadataUUID, boolean draft, String message) {
+        InfoReport infoReport = new InfoReport(message);
+        infoReport.setUuid(metadataUUID);
+        infoReport.setDraft(draft);
         if (this.metadataInfos.get(metadataId) == null) {
             List<InfoReport> infos = new ArrayList<>();
-            infos.add(new InfoReport(message));
+            infos.add(infoReport);
             this.metadataInfos.put(metadataId, infos);
         } else {
-            this.metadataInfos.get(metadataId).add(new InfoReport(message));
+            this.metadataInfos.get(metadataId).add(infoReport);
         }
+    }
+
+    public void addMetadataInfos(AbstractMetadata metadata, String message) {
+        addMetadataInfos(metadata.getId(), metadata.getUuid(), metadata instanceof MetadataDraft, message);
     }
 
     @XmlTransient

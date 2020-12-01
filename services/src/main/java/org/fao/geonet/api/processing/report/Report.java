@@ -31,6 +31,8 @@ import org.opengis.annotation.XmlElement;
  */
 public abstract class Report {
     private String message;
+    private String uuid;
+    private boolean draft;
     private ISODate date;
 
     public Report(String message) {
@@ -45,6 +47,26 @@ public abstract class Report {
 
     public Report setMessage(String message) {
         this.message = message;
+        return this;
+    }
+
+    @XmlElement(value = "uuid")
+    public String getUuid() {
+        return uuid;
+    }
+
+    public Report setUuid(String uuid) {
+        this.uuid = uuid;
+        return this;
+    }
+
+    @XmlElement(value = "isDraft")
+    public boolean isDraft() {
+        return draft;
+    }
+
+    public Report setDraft(boolean draft) {
+        this.draft = draft;
         return this;
     }
 

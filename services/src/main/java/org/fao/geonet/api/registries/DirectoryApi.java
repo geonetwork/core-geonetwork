@@ -310,7 +310,7 @@ public class DirectoryApi {
                             collectResults.getEntryIdentifiers().values()
                         );
                         report.incrementProcessedRecords();
-                        report.addMetadataInfos(record.getId(), String.format(
+                        report.addMetadataInfos(record, String.format(
                             "%d entry(ies) extracted from record '%s'. UUID(s): %s",
                             collectResults.getEntryIdentifiers().size(),
                             record.getUuid(),
@@ -320,7 +320,7 @@ public class DirectoryApi {
                         listOfEntries.addAll(collectResults.getEntries().values());
                     }
                 } catch (Exception ex) {
-                    report.addMetadataError(record.getId(), ex);
+                    report.addMetadataError(record, ex);
                 }
             }
         }
@@ -499,9 +499,9 @@ public class DirectoryApi {
                                 validate, ufo, index, context.getLanguage(),
                                 new ISODate().toString(), true);
                             listOfRecordInternalId.add(record.getId());
-                            report.addMetadataInfos(record.getId(), "Metadata updated.");
+                            report.addMetadataInfos(record, "Metadata updated.");
                         } catch (Exception e) {
-                            report.addMetadataError(record.getId(), e);
+                            report.addMetadataError(record, e);
                         }
                     } else {
                         if (collectResults.isRecordUpdated()) {
@@ -510,7 +510,7 @@ public class DirectoryApi {
                     }
                     report.incrementProcessedRecords();
                 } catch (Exception e) {
-                    report.addMetadataError(record.getId(), e);
+                    report.addMetadataError(record, e);
                 }
             }
         }
