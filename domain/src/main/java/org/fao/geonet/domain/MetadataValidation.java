@@ -117,7 +117,7 @@ public class MetadataValidation extends GeonetEntity {
      *
      * @return The moment that the validation completed.
      */
-    @AttributeOverride(name = "dateAndTime", column = @Column(name = "valDate", length = 30))
+    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = "valDate", length = 30))
     public ISODate getValidationDate() {
         return validationDate;
     }

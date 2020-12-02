@@ -30,6 +30,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
@@ -153,6 +154,7 @@ public class Link implements Serializable {
         this.lastState = lastState;
     }
 
+    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = "dateandtime", length = 30))
     public ISODate getLastCheck() {
         return lastCheck;
     }

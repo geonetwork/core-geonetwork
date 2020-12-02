@@ -222,7 +222,7 @@ public class Source extends Localized {
      * @return the creation date.
      */
     @AttributeOverride(
-        name = "dateAndTime",
+        name = "dateAndTimeUtc",
         column = @Column(
             name = "creationDate",
             nullable = true,

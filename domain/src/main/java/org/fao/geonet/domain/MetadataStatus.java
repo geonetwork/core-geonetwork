@@ -251,7 +251,7 @@ public class MetadataStatus extends GeonetEntity {
      *
      * @return the due date of the status change in string form.
      */
-    @AttributeOverride(name = "dateAndTime", column = @Column(name = "dueDate", nullable = true, length = 30))
+    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = "dueDate", nullable = true, length = 30))
     public ISODate getDueDate() {
         return _duedate;
     }
@@ -273,7 +273,7 @@ public class MetadataStatus extends GeonetEntity {
      *
      * @return the close date of the status change in string form.
      */
-    @AttributeOverride(name = "dateAndTime", column = @Column(name = "closeDate", nullable = true, length = 30))
+    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = "closeDate", nullable = true, length = 30))
     public ISODate getCloseDate() {
         return _closedate;
     }

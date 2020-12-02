@@ -71,11 +71,11 @@ import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
 public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, XmlEmbeddable {
     private static final String DEFAULT_DATE_TIME = "3000-01-01T00:00:00.000Z"; // JUNK
 
-    public static final DateTimeFormatter ISO_OFFSET_DATE_TIME_NANOSECONDS;
-    public static final DateTimeFormatter CATCH_ALL_DATE_TIME_FORMATTER;
-    public static final DateTimeFormatter YEAR_MONTH_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
-    public static final DateTimeFormatter YEAR_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy");
-    public static final DateTimeFormatter YEAR_MONTH_DAYS_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    @XmlTransient public static final DateTimeFormatter ISO_OFFSET_DATE_TIME_NANOSECONDS;
+    @XmlTransient public static final DateTimeFormatter CATCH_ALL_DATE_TIME_FORMATTER;
+    @XmlTransient public static final DateTimeFormatter YEAR_MONTH_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
+    @XmlTransient public static final DateTimeFormatter YEAR_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy");
+    @XmlTransient public static final DateTimeFormatter YEAR_MONTH_DAYS_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     static {
         ISO_OFFSET_DATE_TIME_NANOSECONDS = new DateTimeFormatterBuilder().parseCaseInsensitive().append(DateTimeFormatter.ISO_LOCAL_DATE)
@@ -509,6 +509,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
      * Get the Time and Date encoded as a String.
      */
     @XmlValue
+    @Transient
     public String getDateAndTime() {
         if (_shortDate || _shortDateYearMonth || _shortDateYear) {
             return getDateAsString();
@@ -521,7 +522,6 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
      * Get the date and time in ISO format and UTC offset format.
      * @return The date and time in ISO format.
      */
-    @Transient
     public String getDateAndTimeUtc() {
         return internalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(ISODate.ISO_OFFSET_DATE_TIME_NANOSECONDS);
     }

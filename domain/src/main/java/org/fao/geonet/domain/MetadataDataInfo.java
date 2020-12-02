@@ -288,7 +288,7 @@ public class MetadataDataInfo implements Serializable {
      * @return the date of the last change made to the metadata.
      */
 
-    @AttributeOverride(name = "dateAndTime", column = @Column(name = "changeDate", nullable = false, length = 30))
+    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = "changeDate", nullable = false, length = 30))
     public ISODate getChangeDate() {
         return _changeDate;
     }
@@ -309,7 +309,7 @@ public class MetadataDataInfo implements Serializable {
      *
      * @return the creation date.
      */
-    @AttributeOverride(name = "dateAndTime", column = @Column(name = "createDate", nullable = false, length = 30))
+    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = "createDate", nullable = false, length = 30))
     public ISODate getCreateDate() {
         return _createDate;
     }

@@ -107,7 +107,7 @@ public class HarvestHistory extends GeonetEntity {
      * @return the harvest date
      */
 
-    @AttributeOverride(name = "dateAndTime", column = @Column(name = "harvestdate", length = 30))
+    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = "harvestdate", length = 30))
     public ISODate getHarvestDate() {
         return _harvestDate;
     }
