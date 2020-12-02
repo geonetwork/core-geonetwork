@@ -671,7 +671,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
         if (getClass() != obj.getClass())
             return false;
         ISODate other = (ISODate) obj;
-        return getTimeAsString().equals(other.getTimeAsString());
+        return other.internalDateTime.isEqual(this.internalDateTime);
     }
 
     private void parseDate(@Nonnull String isoDate) {
