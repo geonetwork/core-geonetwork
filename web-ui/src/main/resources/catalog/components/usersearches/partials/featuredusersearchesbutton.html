@@ -11,12 +11,14 @@
   <span class="sr-only" data-translate="">search</span>
   </button>
   <ul class="dropdown-menu">
-    <li data-ng-repeat="row in featuredSearches | orderBy:sortByLabel">
+    <li data-ng-repeat="row in featuredSearches | orderBy:sortByLabel"
+        data-ng-init="name = (row.names[lang] || row.names['eng'] || ('userSearchNameMissing' | translate))"
+        title="{{::name.indexOf('|') ? name.split('|')[1] : ''}}">
       <a data-ng-click="search(row.url)">
-        {{row.names[lang] || row.names['eng'] || ('userSearchNameMissing' | translate)}}
+        {{::name.indexOf('|') ? name.split('|')[0] : name}}
 
-        <img data-ng-if="row.logo"
-             data-ng-src="{{row.logo}}"
+        <img data-ng-if="::row.logo"
+             data-ng-src="{{::row.logo}}"
              class="gn-source-logo"/>
       </a>
     </li>
