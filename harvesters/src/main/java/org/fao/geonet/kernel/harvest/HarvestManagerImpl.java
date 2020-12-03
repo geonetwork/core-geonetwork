@@ -634,22 +634,19 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
     @Override
     public void rescheduleActiveHarvesters() {
-        String timeZoneSetting = applicationContext.getBean(SettingManager.class).getValue(Settings.SYSTEM_SERVER_TIMEZONE, true);
-        if (StringUtils.isBlank(timeZoneSetting)) {
-            timeZoneSetting = TimeZone.getDefault().getID();
-        }
+        String defaultTimeZoneId = TimeZone.getDefault().getID();
 
         for (Map.Entry<String, AbstractHarvester> pair : hmHarvesters.entrySet()) {
            AbstractHarvester harvester = pair.getValue();
            if ( Common.Status.ACTIVE.equals(harvester.getStatus())) {
                try {
                    TimeZone triggerTimeZone =  harvester.getTriggerTimezone();
-                   String triggerTimeZoneId = TimeZone.getDefault().getID();
+                   String triggerTimeZoneId = defaultTimeZoneId;
                    if (triggerTimeZone != null) {
                        triggerTimeZoneId = triggerTimeZone.getID();
                    }
 
-                   if (!StringUtils.equals(timeZoneSetting, triggerTimeZoneId)) {
+                   if (!StringUtils.equals(defaultTimeZoneId, triggerTimeZoneId)) {
                        harvester.doReschedule();
                    }
                } catch (SchedulerException e) {

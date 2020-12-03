@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2013 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2020 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -23,6 +23,8 @@
 
 package org.fao.geonet.kernel.setting;
 
+import jeeves.server.context.ServiceContext;
+import jeeves.server.sources.http.ServletPathFinder;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
@@ -31,7 +33,6 @@ import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.SettingDataType;
 import org.fao.geonet.domain.Setting_;
-import org.fao.geonet.domain.Source;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SortUtils;
@@ -40,17 +41,20 @@ import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.sql.SQLException;
-import java.util.*;
-
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletContext;
-
-import jeeves.server.context.ServiceContext;
-import jeeves.server.sources.http.ServletPathFinder;
+import java.sql.SQLException;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.TimeZone;
 
 import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_NAME_PATH;
@@ -61,6 +65,13 @@ import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_NAME_PATH;
  * of the settings need to be modified.
  */
 public class SettingManager {
+
+    /**
+     * This value stores the original server timezone id had when it was started and  can be used to
+     * recover the server timezone in case the value of the setting {@link Settings#SYSTEM_SERVER_TIMEZONE}
+     * is set to empty or {@code null}.
+     */
+    public static final ZoneId DEFAULT_SERVER_TIMEZONE = ZoneId.systemDefault();
 
     @PersistenceContext
     private EntityManager _entityManager;
@@ -79,6 +90,10 @@ public class SettingManager {
     @PostConstruct
     private void init() {
         this.pathFinder = new ServletPathFinder(servletContext);
+        // Set the default timezone
+        String zoneId = StringUtils.defaultIfBlank(getValue(Settings.SYSTEM_SERVER_TIMEZONE), DEFAULT_SERVER_TIMEZONE.getId());
+        TimeZone tzFromSettings = TimeZone.getTimeZone(zoneId);
+        TimeZone.setDefault(tzFromSettings);
     }
 
     public List<Setting> getAll() {
