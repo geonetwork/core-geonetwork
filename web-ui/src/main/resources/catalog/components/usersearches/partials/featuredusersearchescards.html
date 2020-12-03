@@ -2,19 +2,21 @@
   <li
     data-ng-repeat="row in featuredSearches"
     data-ng-click="search(row.url)"
+    data-ng-init="name = (row.names[lang] || row.names['eng'] || ('userSearchNameMissing' | translate))"
     id="gn-info-list-mw-{row.id}}">
     <section class="resultcard clearfix"
+             title="{{::name.indexOf('|') ? name.split('|')[1] : ''}}"
              data-ng-class="row.url ? 'hasThumbnail' : 'noThumbnail'">
 
       <div class="title">
         <a>
-          <h4>{{row.names[lang] || row.names['eng'] || ('userSearchNameMissing' | translate)}}&nbsp;</h4>
+          <h4>{{::name.indexOf('|') ? name.split('|')[0] : name}}</h4>
         </a>
       </div>
 
       <div class="gn-md-thumbnail">
         <div class="gn-img-thumbnail"
-             style="background-image: url({{row.logo}})">
+             style="background-image: url({{::row.logo}})">
         </div>
       </div>
     </section>
