@@ -54,6 +54,7 @@ import org.springframework.util.StringUtils;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
 public class CMISStore extends AbstractStore {
@@ -172,6 +173,7 @@ public class CMISStore extends AbstractStore {
 
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
+        setCmisMetadataUUIDPrimary(properties, metadataUuid);
         properties.put(PropertyIds.NAME, filenameKey);
         if (changeDate != null) {
             properties.put(PropertyIds.LAST_MODIFICATION_DATE, changeDate);
@@ -185,7 +187,10 @@ public class CMISStore extends AbstractStore {
             doc = (Document) CMISConfiguration.getClient().getObjectByPath(key, oc);
             doc.updateProperties(properties, true);
             doc.setContentStream(contentStream, true, true);
-            //           }
+            if (CMISConfiguration.existSecondaryProperty()) {
+                //need to reload document to avoid  "Document is not the latest version" when updating secondary types.
+                doc = (Document) CMISConfiguration.getClient().getObjectByPath(key, oc);
+            }
             // Avoid CMIS API call is info is not enabled.
             if (Logger.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
                 Log.info(Geonet.RESOURCES,
@@ -235,8 +240,53 @@ public class CMISStore extends AbstractStore {
             }
         }
 
+        // The optional metadata UUID is assigned to a user-defined property in the content management system.
+        // In some content management systems, custom properties appear as CMIS Secondary properties.
+        // CMIS Secondary properties cannot be set in the same call that creates the document and sets it's properties,
+        // so this is done in the following call after the document is created
+        if (CMISConfiguration.existSecondaryProperty()) {
+            Map<String, Object> secondaryProperties = new HashMap<String, Object>();
+            setCmisMetadataUUIDSecondary(doc, secondaryProperties, metadataUuid);
+            try {
+                doc.updateProperties(secondaryProperties);
+            } catch (Exception e) {
+                Log.error(Geonet.RESOURCES,
+                    String.format("Unable to update CMIS secondary property on metadata resource '%s' for metadata '%s'.", key, metadataUuid), e);
+            }
+        }
+
         return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, isLength,
                 doc.getLastModificationDate().getTime(), doc.getVersionLabel(), metadataId, approved);
+    }
+
+    private void setCmisMetadataUUIDPrimary(Map<String, Object> properties, String metadataUuid) {
+        if (!StringUtils.isEmpty(CMISConfiguration.getCmisMetadataUUIDPropertyName()) &&
+            !CMISConfiguration.getCmisMetadataUUIDPropertyName().contains(CMISConfiguration.getSecondaryPropertySeparator())) {
+            properties.put(CMISConfiguration.getCmisMetadataUUIDPropertyName(), metadataUuid);
+        }
+    }
+
+    private void setCmisMetadataUUIDSecondary(Document doc, Map<String, Object> properties, String metadataUuid) {
+        if (!StringUtils.isEmpty(CMISConfiguration.getCmisMetadataUUIDPropertyName()) &&
+            CMISConfiguration.getCmisMetadataUUIDPropertyName().contains(CMISConfiguration.getSecondaryPropertySeparator())) {
+            String[] splitPropertyNames = CMISConfiguration.getCmisMetadataUUIDPropertyName().split(Pattern.quote(CMISConfiguration.getSecondaryPropertySeparator()));
+            String aspectName = splitPropertyNames[0];
+            String secondaryPropertyName = splitPropertyNames[1];
+            List<Object> aspects = null;
+            Property secondaryProperty = doc.getProperty(PropertyIds.SECONDARY_OBJECT_TYPE_IDS);
+            if (secondaryProperty != null) {
+                aspects = secondaryProperty.getValues();
+            }
+            if (aspects == null) {
+                aspects = new ArrayList<>();
+            }
+            if (!aspects.contains(aspectName)) {
+                aspects.add(aspectName);
+            }
+
+            properties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, aspects);
+            properties.put(secondaryPropertyName, metadataUuid);
+        }
     }
 
     @Override

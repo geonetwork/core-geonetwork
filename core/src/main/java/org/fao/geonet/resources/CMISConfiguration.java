@@ -38,6 +38,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Configuration parameters are based on the following
@@ -47,6 +48,7 @@ public class CMISConfiguration {
     private Session client = null;
 
     private final String CMIS_FOLDER_DELIMITER = "/"; // Specs indicate that "/" is the folder delimiter/separator - not sure if other delimiter can be used?.
+    private final String CMIS_SECONDARY_PROPERTY_SEPARATOR ="->";
     private final String CMIS_DEFAULT_WEBSERVICES_ACL_SERVICE = "/services/ACLService?wsdl";
     private final String CMIS_DEFAULT_WEBSERVICES_DISCOVERY_SERVICE = "/services/DiscoveryService?wsdl";
     private final String CMIS_DEFAULT_WEBSERVICES_MULTIFILING_SERVICE = "/services/MultiFilingService?wsdl";
@@ -71,6 +73,7 @@ public class CMISConfiguration {
     private String password = System.getenv("CMIS_PASSWORD");
     private String repositoryId = System.getenv("CMIS_REPOSITORY_ID");
     private String repositoryName = System.getenv("CMIS_REPOSITORY_NAME");
+    private String cmisMetadataUUIDPropertyName = System.getenv("CMIS_METADATA_UUID_PROPERTY_NAME");
     /**
      * Url used for managing enhanced resource properties related to the metadata.
      */
@@ -97,6 +100,8 @@ public class CMISConfiguration {
     private String browserUrl = System.getenv("CMIS_BROWSER_URL");
 
     private String atompubUrl = System.getenv("CMIS_ATOMPUB_URL");
+
+    private boolean secondaryPropertyExists=false;
 
     @Nonnull
     public String getServicesBaseUrl() {
@@ -337,8 +342,33 @@ public class CMISConfiguration {
         this.atompubUrl = atompubUrl;
     }
 
+    public String getCmisMetadataUUIDPropertyName() {
+            return cmisMetadataUUIDPropertyName;
+    }
+
+    public void setCmisMetadataUUIDPropertyName(String cmisMetadataUUIDPropertyName) {
+        if (!StringUtils.isEmpty(cmisMetadataUUIDPropertyName) && cmisMetadataUUIDPropertyName.contains(CMIS_SECONDARY_PROPERTY_SEPARATOR)) {
+            String[] splitPropertyNames = cmisMetadataUUIDPropertyName.split(Pattern.quote(CMIS_SECONDARY_PROPERTY_SEPARATOR));
+            if (splitPropertyNames.length != 2) {
+                Log.error(Geonet.RESOURCES,
+                    String.format("Invalid format for property name %s property will not be used", cmisMetadataUUIDPropertyName));
+                this.cmisMetadataUUIDPropertyName = null;
+                this.secondaryPropertyExists=false;
+                return;
+            } else {
+                this.secondaryPropertyExists=true;
+            }
+        }
+        this.cmisMetadataUUIDPropertyName = cmisMetadataUUIDPropertyName;
+    }
+
     @PostConstruct
     public void init() {
+        // If we have a cmisMetadataUUIDPropertyName then call the set so that it also validates the value.
+        if (cmisMetadataUUIDPropertyName != null) {
+            setCmisMetadataUUIDPropertyName(cmisMetadataUUIDPropertyName);
+        }
+
         // default factory implementation
         Map<String, String> parameters = new HashMap<String, String>();
 
@@ -439,6 +469,14 @@ public class CMISConfiguration {
 
     public String getFolderDelimiter() {
         return CMIS_FOLDER_DELIMITER;
+    }
+
+    public String getSecondaryPropertySeparator() {
+        return CMIS_SECONDARY_PROPERTY_SEPARATOR;
+    }
+
+    public boolean existSecondaryProperty() {
+        return secondaryPropertyExists;
     }
 
     /**
