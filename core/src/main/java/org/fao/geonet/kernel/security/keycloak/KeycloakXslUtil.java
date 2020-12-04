@@ -25,7 +25,9 @@ package org.fao.geonet.kernel.security.keycloak;
 
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
+import org.fao.geonet.utils.Log;
 import org.keycloak.adapters.AdapterDeploymentContext;
 import org.keycloak.adapters.KeycloakDeployment;
 import java.util.*;
@@ -42,6 +44,7 @@ public final class KeycloakXslUtil {
         }
 
         if (keycloakConfiguration == null) {
+            Log.debug(Geonet.SECURITY, "Keycloak security provider configuration is not found");
             throw new RuntimeException("Keycloak security provider configuration is not found");
         }
 
@@ -50,6 +53,7 @@ public final class KeycloakXslUtil {
         }
 
         if (keycloakDeployment == null) {
+            Log.debug(Geonet.SECURITY, "Cannot locate keycloak resolver to read the keycloak.json file");
             throw new RuntimeException("Cannot locate keycloak resolver to read the keycloak.json file");
         }
     }
