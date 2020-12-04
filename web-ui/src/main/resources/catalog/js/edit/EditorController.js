@@ -519,7 +519,7 @@
               $scope.saveError = true;
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('saveMetadataError'),
-                error: error,
+                error: error.message.toString().contains("AccessDeniedException")? $translate.instant('accessDenied'):error,
                 timeout: 0,
                 type: 'danger'});
             });
@@ -559,7 +559,8 @@
                 closeEditor();
               }, function(reason) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant(reason.data.error.message),
+                  title: $translate.instant('cancelMetadataError'),
+                  error: reason.data.message.toString().contains("AccessDeniedException")? $translate.instant('accessDenied'):reason.data.message,
                   timeout: 0,
                   type: 'danger'
                 });
@@ -579,7 +580,7 @@
                 $scope.savedStatus = gnCurrentEdit.savedStatus;
                 $rootScope.$broadcast('StatusUpdated', {
                   title: $translate.instant('cancelMetadataError'),
-                  error: error,
+                  error: error.toString().contains("AccessDeniedException")? $translate.instant('accessDenied'):error,
                   timeout: 0,
                   type: 'danger'});
               });
@@ -619,8 +620,8 @@
               $scope.saveError = true;
 
               $rootScope.$broadcast('StatusUpdated', {
-                title: error ? error.message : $translate.instant('saveMetadataError'),
-                error: error,
+                title: error.message.toString().contains("AccessDeniedException") ? $translate.instant('saveMetadataError'): error.message,
+                error: error.message.toString().contains("AccessDeniedException")? $translate.instant('accessDenied'):error,
                 timeout: 0,
                 type: 'danger'});
             });
