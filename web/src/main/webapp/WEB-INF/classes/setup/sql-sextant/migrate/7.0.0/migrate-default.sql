@@ -78,3 +78,8 @@ SELECT setval('user_search_id_seq', (SELECT max(id) + 1 FROM usersearch));
 
 
 UPDATE messageproducerentity SET strategy = 'investigator';
+
+
+CREATE TABLE metadatastatus_backup AS SELECT * FROM metadatastatus;
+DROP TABLE metadatastatus;
+-- TODO: Migrate data
