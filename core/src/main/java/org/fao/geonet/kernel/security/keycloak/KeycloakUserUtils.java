@@ -78,7 +78,7 @@ public class KeycloakUserUtils {
             for (String role : keycloakPrincipal.getKeycloakSecurityContext().getToken().getResourceAccess(keycloakPrincipal.getKeycloakSecurityContext().getToken().issuedFor).getRoles()) {
                 // Only use the profiles we know off
                 if (role.contains(roleGroupSeparator)) {
-                    Log.debug(Geonet.SECURITY, "Add the following role to the group: " + role);
+                    Log.debug(Geonet.SECURITY, "Identified role " + role + " from user token.");
                     roleGroupList.add(role);
                 }
             }
@@ -95,7 +95,7 @@ public class KeycloakUserUtils {
                 user = new User();
                 user.setUsername(baselUser.getUsername());
                 newUserFlag = true;
-                Log.debug(Geonet.SECURITY, "Add a new user: " + user);
+                Log.debug(Geonet.SECURITY, "Adding a new user: " + user);
             }
 
             if (!StringUtils.isEmpty(baselUser.getSurname())) {

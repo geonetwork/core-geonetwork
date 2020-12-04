@@ -36,13 +36,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.utils.Log;
 import org.keycloak.adapters.spi.UserSessionManagement;
 import org.keycloak.adapters.springsecurity.management.LocalSessionManagementStrategy;
 import org.keycloak.adapters.springsecurity.management.SessionManagementStrategy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.web.session.HttpSessionCreatedEvent;
@@ -57,10 +53,9 @@ import org.springframework.security.web.session.HttpSessionDestroyedEvent;
 public class KeycloakHttpSessionManager implements ApplicationListener<ApplicationEvent>, UserSessionManagement {
     private SessionManagementStrategy sessions = new LocalSessionManagementStrategy();
 
-   
+
     @Override
     public void logoutAll() {
-        Log.info(Geonet.SECURITY, "Received request to log out all users.");
         for (HttpSession session : sessions.getAll()) {
             session.invalidate();
         }
@@ -69,7 +64,6 @@ public class KeycloakHttpSessionManager implements ApplicationListener<Applicati
 
     @Override
     public void logoutHttpSessions(List<String> ids) {
-        Log.info(Geonet.SECURITY, "Received request to log out " +  ids.size() + " session(s):" + ids);
         for (String id : ids) {
             HttpSession session = sessions.remove(id);
             if (session != null) {
@@ -83,13 +77,11 @@ public class KeycloakHttpSessionManager implements ApplicationListener<Applicati
         if (event instanceof HttpSessionCreatedEvent) {
             HttpSessionCreatedEvent e = (HttpSessionCreatedEvent) event;
             HttpSession session = e.getSession();
-            Log.info(Geonet.SECURITY, "Session created: " + session.getId());
             sessions.store(session);
         } else if (event instanceof HttpSessionDestroyedEvent) {
             HttpSessionDestroyedEvent e = (HttpSessionDestroyedEvent) event;
             HttpSession session = e.getSession();
             sessions.remove(session.getId());
-            Log.info(Geonet.SECURITY, "Session destroyed: " + session.getId());
         }
     }
 }
