@@ -206,10 +206,11 @@
               // {type=bing_aerial} (mapquest, osm ...)
               // {type=arcgis,name=0,1,2}
               // type=wms,name=lll
-              type = layer.name.match(reT) ? reT.exec(layer.name)[1] : null;
+              type = layer.name && layer.name.match(reT) ?
+                reT.exec(layer.name)[1] : null;
               if (type && type != 'wmts' && type != 'wms' && type != 'arcgis') {
                 var opt;
-                if (layer.name.match(reL)) {
+                if (layer.name && layer.name.match(reL)) {
                   var lyr = reL.exec(layer.name)[1];
 
                   if (layer.server) {
@@ -619,7 +620,7 @@
         var res = server.onlineResource[0];
         var createOnly = angular.isDefined(bgIdx) || angular.isDefined(index);
 
-        if (layer.name.match(reT)) {
+        if (layer.name && layer.name.match(reT)) {
           var type = reT.exec(layer.name)[1];
           var name = reL.exec(layer.name)[1];
           var promise;
