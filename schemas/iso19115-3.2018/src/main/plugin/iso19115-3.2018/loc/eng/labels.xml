@@ -4804,11 +4804,11 @@
     <description/>
   </element>
   <element name="gml:TimePosition">
-    <label>Time position</label>
+    <label>Date</label>
     <description/>
   </element>
   <element name="gml:timePosition">
-    <label>Time position</label>
+    <label>Date</label>
     <description/>
   </element>
   <element name="gml:TimePeriod">
