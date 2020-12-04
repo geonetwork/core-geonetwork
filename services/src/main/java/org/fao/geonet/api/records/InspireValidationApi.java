@@ -29,8 +29,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -43,6 +45,7 @@ import org.fao.geonet.api.records.formatters.cache.Key;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.events.history.RecordValidationTriggeredEvent;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
@@ -50,6 +53,8 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -90,17 +95,30 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 @ReadWriteController
 public class InspireValidationApi {
 
+    public static final String API_PARAM_INSPIRE_VALIDATION_MODE = "Define the encoding of the record to use. "
+        + "By default, ISO19139 are used as is and "
+        + "ISO19115-3 are converted to ISO19139."
+        + "If mode = csw, a GetRecordById request is used."
+        + "If mode = any portal id, then a GetRecordById request is used on this portal "
+        + "CSW entry point which may define custom CSW post processing. "
+        + "See https://github.com/geonetwork/core-geonetwork/pull/4493.";
     @Autowired
     SettingManager settingManager;
+
     @Autowired
     InspireValidatorUtils inspireValidatorUtils;
+
     @Autowired
     LanguageUtils languageUtils;
+
+    @Autowired
+    SourceRepository sourceRepository;
+
     String supportedSchemaRegex = "(iso19139|iso19115-3).*";
+
     @Autowired
     private SchemaManager schemaManager;
-    @Autowired
-    private MetadataValidationRepository metadataValidationRepository;
+
     @Autowired
     private ThreadPool threadPool;
 
@@ -160,6 +178,11 @@ public class InspireValidationApi {
             required = false)
         @RequestParam
             String testsuite,
+        @Parameter(
+            description = API_PARAM_INSPIRE_VALIDATION_MODE,
+            required = false)
+        @RequestParam(required = false)
+            String mode,
         HttpServletResponse response,
         @Parameter(hidden = true)
             HttpServletRequest request,
@@ -188,6 +211,9 @@ public class InspireValidationApi {
         String id = String.valueOf(metadata.getId());
 
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        String getRecordByIdUrl = null;
+        String testId = null;
 
         try {
             Element md = (Element) ApiUtils.getUserSession(session).getProperty(Geonet.Session.METADATA_EDITING + id);
@@ -197,49 +223,69 @@ public class InspireValidationApi {
                 // TODO: Add support for such validation from not editing session ?
             }
 
-            // Use formatter to convert the record
-            if (!schema.equals("iso19139")) {
-                try {
-                    ServiceContext context = ApiUtils.createServiceContext(request);
-                    Key key = new Key(metadata.getId(), metadata.getUuid(), "eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
 
-                    final FormatterApi.FormatMetadata formatMetadata =
-                        new FormatterApi().new FormatMetadata(context, key, nativeRequest);
-                    final byte[] data = formatMetadata.call().data;
-                    md = Xml.loadString(new String(data, StandardCharsets.UTF_8), false);
-                } catch (Exception e) {
-                    response.setStatus(HttpStatus.SC_NOT_FOUND);
-                    return String.format("Metadata with id '%s' is in schema '%s'. No iso19139 formatter found. Error is %s", id, schema, e.getMessage());
+            if (StringUtils.isEmpty(mode)) {
+                // Use formatter to convert the record
+                if (!schema.equals("iso19139")) {
+                    try {
+                        Key key = new Key(metadata.getId(), metadata.getUuid(), "eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
+
+                        final FormatterApi.FormatMetadata formatMetadata =
+                            new FormatterApi().new FormatMetadata(context, key, nativeRequest);
+                        final byte[] data = formatMetadata.call().data;
+                        md = Xml.loadString(new String(data, StandardCharsets.UTF_8), false);
+                    } catch (Exception e) {
+                        response.setStatus(HttpStatus.SC_NOT_FOUND);
+                        return String.format("Metadata with id '%s' is in schema '%s'. No iso19139 formatter found. Error is %s", id, schema, e.getMessage());
+                    }
+                } else {
+                    // Cleanup metadocument elements
+                    EditLib editLib = appContext.getBean(DataManager.class).getEditLib();
+                    editLib.removeEditingInfo(md);
+                    editLib.contractElements(md);
                 }
+
+
+                md.detach();
+                Attribute schemaLocAtt = schemaManager.getSchemaLocation(
+                    "iso19139", context);
+
+                if (schemaLocAtt != null) {
+                    if (md.getAttribute(
+                        schemaLocAtt.getName(),
+                        schemaLocAtt.getNamespace()) == null) {
+                        md.setAttribute(schemaLocAtt);
+                        // make sure namespace declaration for schemalocation is present -
+                        // remove it first (does nothing if not there) then add it
+                        md.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
+                        md.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+                    }
+                }
+
+
+                InputStream metadataToTest = convertElement2InputStream(md);
+                testId = inspireValidatorUtils.submitFile(context, URL, metadataToTest, testsuite, metadata.getUuid());
             } else {
-                // Cleanup metadocument elements
-                EditLib editLib = appContext.getBean(DataManager.class).getEditLib();
-                editLib.removeEditingInfo(md);
-                editLib.contractElements(md);
-            }
-
-
-            md.detach();
-            ServiceContext context = ApiUtils.createServiceContext(request);
-            Attribute schemaLocAtt = schemaManager.getSchemaLocation(
-                "iso19139", context);
-
-            if (schemaLocAtt != null) {
-                if (md.getAttribute(
-                    schemaLocAtt.getName(),
-                    schemaLocAtt.getNamespace()) == null) {
-                    md.setAttribute(schemaLocAtt);
-                    // make sure namespace declaration for schemalocation is present -
-                    // remove it first (does nothing if not there) then add it
-                    md.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
-                    md.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+                String portal = NodeInfo.DEFAULT_NODE;
+                if (!NodeInfo.DEFAULT_NODE.equals(mode)) {
+                    Source source = sourceRepository.findOneByUuid(mode);
+                    if (source == null) {
+                        response.setStatus(HttpStatus.SC_NOT_FOUND);
+                        return String.format(
+                            "Portal %s not found. There is no CSW endpoint at this URL " +
+                                "that we can send to the validator.", mode);
+                    }
+                    portal = mode;
                 }
+                getRecordByIdUrl = String.format(
+                    "%s%s/eng/csw?SERVICE=CSW&REQUEST=GetRecordById&VERSION=2.0.2&" +
+                        "OUTPUTSCHEMA=%s&ELEMENTSETNAME=full&ID=%s",
+                    settingManager.getBaseURL(),
+                    portal,
+                    ISO19139Namespaces.GMD.getURI(),
+                    metadataUuid);
+                testId = inspireValidatorUtils.submitUrl(context, URL, getRecordByIdUrl, testsuite, metadata.getUuid());
             }
-
-
-            InputStream metadataToTest = convertElement2InputStream(md);
-
-            String testId = inspireValidatorUtils.submitFile(context, URL, metadataToTest, testsuite, metadata.getUuid());
 
             threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));
 

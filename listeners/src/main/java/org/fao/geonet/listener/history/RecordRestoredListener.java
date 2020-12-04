@@ -23,15 +23,15 @@
 package org.fao.geonet.listener.history;
 
 import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.events.history.RecordDeletedEvent;
+import org.fao.geonet.events.history.RecordRestoredEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RecordDeletedListener extends GenericMetadataEventListener implements ApplicationListener<RecordDeletedEvent> {
+public class RecordRestoredListener extends GenericMetadataEventListener implements ApplicationListener<RecordRestoredEvent> {
 
     private String changeMessage = "";
-    private String eventType = StatusValue.Events.RECORDDELETED;
+    private String eventType = StatusValue.Events.RECORDRESTORED;
 
     @Override
     public String getChangeMessage() {
@@ -44,7 +44,7 @@ public class RecordDeletedListener extends GenericMetadataEventListener implemen
     }
 
     @Override
-    public void onApplicationEvent(RecordDeletedEvent event) {
+    public void onApplicationEvent(RecordRestoredEvent event) {
         handleEvent(event);
     }
 }

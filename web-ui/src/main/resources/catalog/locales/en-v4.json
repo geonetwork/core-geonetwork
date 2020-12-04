@@ -66,7 +66,6 @@
   "facet-th_gemet_tree": "Environmental tags",
   "facet-th_regions_tree": "Regions",
   "facet-th_httpinspireeceuropaeuthemetheme": "INSPIRE themes",
-  "facet-cl_spatialRepresentationType": "Representation types",
   "facet-creationYearForResource":  "Years",
   "facet-resolutionScaleDenominator": "Scales",
   "facet-cl_maintenanceAndUpdateFrequency": "Update frequencies",
@@ -94,6 +93,9 @@
   "rebuildIndexHelp": "While rebuilding index, search may return incomplete results and the CSW GetRecords operation can be disabled (if you selected the option in the settings). Use this function, when catalog traffic is low. It's recommended to rebuild index manually from here when making changes directly in the database. If you change index mapping (cf. <a href='https://github.com/geonetwork/core-geonetwork/blob/es/web/src/main/webResources/WEB-INF/data/config/index/records.json'>records.json</a>), then you have to click on 'Delete index and reindex'.",
   "indexInEsDoneError": "There is an error with the index. See the logs for details",
   "indexInEsDone": "The indexing operation was successfull",
+  "indexCommit": "Commit index changes",
+  "indexCommit-help": "To use only if indexing task is hanging.",
+  "indexCommitError": "Error while committing index changes.",
   "ui-moreLikeThisConfig": "More like this configuration",
   "ui-moreLikeThisConfig-help": "Configuration must have a more_like_this.like which will be set with the record title to search for similar records.",
   "ui-autocompleteConfig": "Autocompletion configuration",
@@ -119,5 +121,9 @@
   "wfsDeleteWfsIndexingError": "An error occurred while removing the task.",
   "wfsIndexingTriggerSuccess": "Harvesting task started.",
   "wfsIndexingTriggerError": "An error occurred while starting the task.",
-  "wfsHarvesterActions": "Actions"
+  "wfsHarvesterActions": "Actions",
+  "clearCheckboxFormChanges": "Clear modified checkbox state. Checkboxes with '*' means that those values will be removed from the selection.",
+  "addThoseCategories-help": "Add (checked) or remove (checkbox with *) selected categories.",
+  "replaceByThoseCategories-help": "Remove record categories and then add (checked) or remove (checkbox with *) selected categories.",
+  "clearValidationStatus": "Clear validation status"
 }

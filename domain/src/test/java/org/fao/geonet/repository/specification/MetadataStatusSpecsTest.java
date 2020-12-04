@@ -33,7 +33,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.repository.specification.MetadataStatusSpecs.hasMetadataId;
 import static org.fao.geonet.repository.specification.MetadataStatusSpecs.hasUserId;
@@ -55,7 +54,7 @@ public class MetadataStatusSpecsTest extends AbstractSpringDataTest {
         MetadataStatus md1 = _repo.save(newMetadataStatus());
         _repo.save(newMetadataStatus());
 
-        final List<MetadataStatus> found = _repo.findAll(hasMetadataId(md1.getId().getMetadataId()));
+        final List<MetadataStatus> found = _repo.findAll(hasMetadataId(md1.getMetadataId()));
         assertEquals(1, found.size());
         assertEquals(md1.getId(), found.get(0).getId());
     }
@@ -65,7 +64,7 @@ public class MetadataStatusSpecsTest extends AbstractSpringDataTest {
         MetadataStatus md1 = _repo.save(newMetadataStatus());
         _repo.save(newMetadataStatus());
 
-        final List<MetadataStatus> found = _repo.findAll(hasUserId(md1.getId().getUserId()));
+        final List<MetadataStatus> found = _repo.findAll(hasUserId(md1.getUserId()));
         assertEquals(1, found.size());
         assertEquals(md1.getId(), found.get(0).getId());
     }

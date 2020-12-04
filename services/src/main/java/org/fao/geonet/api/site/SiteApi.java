@@ -637,6 +637,24 @@ public class SiteApi {
         return info;
     }
 
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Force to commit pending documents in index.",
+        description = "May be used when indexing task is hanging.")
+    @PutMapping(
+        path = "/index/commit")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Changes committed.")
+    })
+    @ResponseStatus(HttpStatus.CREATED)
+    public void commitIndexChanges(
+    ) throws Exception {
+        ApplicationContextHolder.get()
+            .getBean(EsSearchManager.class)
+            .forceIndexChanges();
+    }
+
+
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get build details",
         description = "To know when and how this version of the application was built.")

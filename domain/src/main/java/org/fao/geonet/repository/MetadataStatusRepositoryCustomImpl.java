@@ -39,7 +39,6 @@ import javax.persistence.criteria.Root;
 
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId_;
 import org.fao.geonet.domain.MetadataStatus_;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.domain.StatusValueType;
@@ -60,7 +59,7 @@ public class MetadataStatusRepositoryCustomImpl implements MetadataStatusReposit
 
     @Nonnull
     @Override
-    public List<MetadataStatus> findAllByIdAndByType(int metadataId, StatusValueType type, Sort sort) {
+    public List<MetadataStatus> findAllByMetadataIdAndByType(int metadataId, StatusValueType type, Sort sort) {
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<MetadataStatus> query = cb.createQuery(MetadataStatus.class);
         Root<MetadataStatus> metadataStatusRoot = query.from(MetadataStatus.class);
@@ -69,9 +68,9 @@ public class MetadataStatusRepositoryCustomImpl implements MetadataStatusReposit
         query.select(metadataStatusRoot);
 
         Predicate metadataIdEqualsPredicate = cb
-                .equal(metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.metadataId), metadataId);
+                .equal(metadataStatusRoot.get(MetadataStatus_.metadataId), metadataId);
 
-        Predicate mdIdEquals = cb.equal(metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.statusId),
+        Predicate mdIdEquals = cb.equal(metadataStatusRoot.get(MetadataStatus_.statusValue),
                 statusValueRoot.get(StatusValue_.id));
 
         Predicate statusTypePredicate = cb.equal(statusValueRoot.get(StatusValue_.type), type);
@@ -97,11 +96,11 @@ public class MetadataStatusRepositoryCustomImpl implements MetadataStatusReposit
      * @param recordIds
      * @param dateFrom
      * @param dateTo
-     * @param from
-     * @param size
      * @return
      */
-    public List<MetadataStatus> searchStatus(List<StatusValueType> types,
+    public List<MetadataStatus> searchStatus(List<Integer> ids,
+                                             List<String> uuids,
+                                             List<StatusValueType> types,
                                              List<Integer> ownerIds,
                                              List<Integer> authorIds,
                                              List<Integer> recordIds,
@@ -112,26 +111,36 @@ public class MetadataStatusRepositoryCustomImpl implements MetadataStatusReposit
         final Root<MetadataStatus> metadataStatusRoot = cbQuery.from(MetadataStatus.class);
         final Root<StatusValue> statusValueRoot = cbQuery.from(StatusValue.class);
 
-        final Path<Integer> statusIdInMetadataPath = metadataStatusRoot.get(MetadataStatus_.id)
-                .get(MetadataStatusId_.statusId);
-        final Path<ISODate> statusIdDatePath = metadataStatusRoot.get(MetadataStatus_.id)
-                .get(MetadataStatusId_.changeDate);
+        final Path<StatusValue> statusIdInMetadataPath = metadataStatusRoot.get(MetadataStatus_.statusValue);
+        final Path<ISODate> statusIdDatePath = metadataStatusRoot.get(MetadataStatus_.changeDate);
         final Path<Integer> statusIdPath = statusValueRoot.get(StatusValue_.id);
         final Path<StatusValueType> statusTypePath = statusValueRoot.get(StatusValue_.type);
 
         Predicate statusIdJoin = cb.equal(statusIdInMetadataPath, statusIdPath);
 
+        Predicate idPredicate = null;
+        Predicate uuidPredicate = null;
         Predicate typeFilter = null;
         Predicate authorPredicate = null;
         Predicate ownerPredicate = null;
         Predicate recordPredicate = null;
+        if (ids != null) {
+            final Path<Integer> idPath = metadataStatusRoot.get(MetadataStatus_.id);
+            idPredicate = idPath.in(ids);
+        }
+
+        if (uuids != null) {
+            final Path<String> uuidPath = metadataStatusRoot.get(MetadataStatus_.uuid);
+            uuidPredicate = uuidPath.in(uuids);
+        }
+
         if (types != null) {
             Predicate typePredicate = statusTypePath.in(types);
             typeFilter = cb.and(statusIdJoin, typePredicate);
         }
 
         if (authorIds != null) {
-            final Path<Integer> authorIdPath = metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.userId);
+            final Path<Integer> authorIdPath = metadataStatusRoot.get(MetadataStatus_.userId);
             authorPredicate = authorIdPath.in(authorIds);
         }
         if (ownerIds != null) {
@@ -140,12 +149,17 @@ public class MetadataStatusRepositoryCustomImpl implements MetadataStatusReposit
         }
 
         if (recordIds != null) {
-            final Path<Integer> recordIdPath = metadataStatusRoot.get(MetadataStatus_.id)
-                    .get(MetadataStatusId_.metadataId);
+            final Path<Integer> recordIdPath = metadataStatusRoot.get(MetadataStatus_.metadataId);
             recordPredicate = recordIdPath.in(recordIds);
         }
 
         Predicate whereClause = cb.and(statusIdJoin);
+        if (idPredicate != null) {
+            whereClause.getExpressions().add(idPredicate);
+        }
+        if (uuidPredicate != null) {
+            whereClause.getExpressions().add(uuidPredicate);
+        }
         if (typeFilter != null) {
             whereClause.getExpressions().add(typeFilter);
         }

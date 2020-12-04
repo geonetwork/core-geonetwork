@@ -31,9 +31,9 @@
      -->
     <criticalHealthCheck class=".DatabaseHealthCheck"/>
     <criticalHealthCheck class=".CswGetCapabilitiesHealthCheck"/>
+    <criticalHealthCheck class=".IndexHealthCheck"/>
     <warningHealthCheck class=".DeadlockedThreadsHealthCheck"/>
     <warningHealthCheck class=".HarvestersHealthCheck"/>
-    <warningHealthCheck class=".IndexHealthCheck"/>
     <warningHealthCheck class=".DashboardAppHealthCheck"/>
     <warningHealthCheck class=".NoIndexErrorsHealthCheck"/>
     <warningHealthCheck class=".FreeConnectionsHealthCheck"/>

@@ -32,7 +32,6 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -59,7 +58,6 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -907,7 +905,7 @@ public class MetadataSharingApi {
         if (!allowPublishNonApprovedMd) {
             MetadataStatus metadataStatus = metadataStatusRepository.getStatus(metadata.getId());
             if (metadataStatus != null) {
-                String statusId = metadataStatus.getId().getStatusId() + "";
+                String statusId = metadataStatus.getStatusValue().getId() + "";
                 boolean isApproved = statusId.equals(StatusValue.Status.APPROVED);
 
                 if (!isApproved) {

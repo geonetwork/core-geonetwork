@@ -44,7 +44,12 @@
             class="fa fa-chevron-right"/>&nbsp;
 
           <span>{{key}}</span>
-      </a>
+        </a>
+        <!--
+        Validation using main CSW entry point.
+        <a class="btn btn-link pull-right" data-gn-click-and-spin="validateInspire(key, 'srv')">using csw</a>
+        Validation using "inspire" portal CSW entry point (which may post process outputs).
+        <a class="btn btn-link pull-right" data-gn-click-and-spin="validateInspire(key, 'inspire')">using INSPIRE endpoint</a>-->
       </li>
 
       <li role="presentation" data-ng-show="isDownloadingRecord">

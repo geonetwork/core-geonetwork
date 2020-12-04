@@ -63,7 +63,7 @@ public class MessageProducerController {
         return msgProducerRepository.findAll();
     }
 
-    @PreAuthorize("hasRole('Administrator')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @GetMapping(path = "/{id}")
     public ResponseEntity<MessageProducerEntity> findById(@PathVariable long id) {
         Optional<MessageProducerEntity> message = msgProducerRepository.findById(id);

@@ -551,7 +551,7 @@ public class Importer {
         //
         int userid = context.getUserSession().getUserIdAsInt();
         String docType = null, category = null;
-        boolean ufo = false, indexImmediate = true;
+        boolean ufo = false, indexImmediate = false;
 
         String metadataId = metadataManager
             .insertMetadata(context, schema, md.get(index), uuid, userid, groupId, source, isTemplate.codeString, docType, category,

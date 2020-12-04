@@ -78,20 +78,20 @@ public class SextantStatusActions extends DefaultStatusActions {
 
         // -- process the metadata records to set status
         for (MetadataStatus status : listOfStatus) {
-            String currentStatus = dm.getCurrentStatus(status.getId().getMetadataId());
-            String statusId = status.getId().getStatusId() + "";
+            String currentStatus = dm.getCurrentStatus(status.getMetadataId());
+            String statusId = status.getStatusValue().getId() + "";
             Set<Integer> listOfId = new HashSet<>(1);
-            listOfId.add(status.getId().getMetadataId());
+            listOfId.add(status.getMetadataId());
 
             // --- if the status is already set to value of status then do nothing
             if (status.equals(currentStatus)) {
-                unchanged.add(status.getId().getMetadataId());
+                unchanged.add(status.getMetadataId());
             }
 
             if (status.equals(StatusValue.Status.APPROVED)) {
                 // setAllOperations(mid); - this is a short cut that could be enabled
             } else if (status.equals(StatusValue.Status.RETIRED)) {
-                unsetAllOperations(status.getId().getMetadataId());
+                unsetAllOperations(status.getMetadataId());
             }
 
             // --- set status, indexing is assumed to take place later
@@ -104,7 +104,7 @@ public class SextantStatusActions extends DefaultStatusActions {
             } catch (Exception e) {
                 context.warning(String.format(
                     "Failed to send notification on status change for metadata %s with status %s. Error is: %s",
-                    status.getId().getMetadataId(), status.getId().getStatusId(), e.getMessage()));
+                    status.getMetadataId(), status.getStatusValue().getId(), e.getMessage()));
             }
 
         }

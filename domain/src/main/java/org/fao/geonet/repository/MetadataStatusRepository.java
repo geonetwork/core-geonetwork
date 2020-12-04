@@ -27,8 +27,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -40,7 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Jesse
  */
-public interface MetadataStatusRepository extends GeonetRepository<MetadataStatus, MetadataStatusId>, 
+public interface MetadataStatusRepository extends GeonetRepository<MetadataStatus, Integer>,
 	MetadataStatusRepositoryCustom,
 	JpaSpecificationExecutor<MetadataStatus> {
     /**
@@ -51,8 +51,43 @@ public interface MetadataStatusRepository extends GeonetRepository<MetadataStatu
      * @return all the MetadataStatus objects by the associated metadata id.
      */
     @Nonnull
-    List<MetadataStatus> findAllById_MetadataId(int metadataId, Sort sort);
-    
+    List<MetadataStatus> findAllByMetadataId(int metadataId, Sort sort);
+
+    /**
+     * Find the MetadataStatus objects by the associated metadata id, status id, user id and change date.
+     *
+     * @param metadataId the metadata id.
+     * @param statusId status id
+     * @param userId user id
+     * @param changeDate change date
+     * @return all the MetadataStatus objects by the associated metadata id.
+     */
+    @Nonnull
+    MetadataStatus findOneByMetadataIdAndStatusValue_IdAndUserIdAndChangeDate(int metadataId, int statusId, int userId, ISODate changeDate);
+
+    /**
+     * Find the MetadataStatus objects by the associated metadata id, status id, user id and change date.
+     *
+     * @param uuid the metadata uuid id.
+     * @param statusId status id
+     * @param userId user id
+     * @param changeDate change date
+     * @return all the MetadataStatus objects by the associated metadata id.
+     */
+    @Nonnull
+    MetadataStatus findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(String uuid, int statusId, int userId, ISODate changeDate);
+
+    /**
+     * Find the MetadataStatus objects by the associated status id, user id and change date.
+     *
+     * @param statusId status id
+     * @param userId user id
+     * @param changeDate change date
+     * @return all the MetadataStatus objects by the associated metadata id.
+     */
+    @Nonnull
+    MetadataStatus findOneByStatusValue_IdAndUserIdAndChangeDate(int statusId, int userId, ISODate changeDate);
+
     /**
      * Delete all the entities that are related to the indicated metadata.
      *
@@ -75,7 +110,6 @@ public interface MetadataStatusRepository extends GeonetRepository<MetadataStatu
     @Modifying(clearAutomatically=true)
     @Transactional
     @Query(value="DELETE FROM MetadataStatus s WHERE s.id.userId = ?1")
-    int deleteAllById_UserId(Integer userId);
-
+    int deleteAllByIdUserId(Integer userId);
 
 }

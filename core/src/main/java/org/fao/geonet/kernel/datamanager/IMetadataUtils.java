@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.datamanager;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -109,6 +110,13 @@ public interface IMetadataUtils {
 
 
     String extractDefaultLanguage(String schema, Element md) throws Exception;
+
+    /**
+     * Extract Multilinugal titles from the metadata record using the schema XSL for title extraction)
+     */
+    LinkedHashMap<String, String> extractTitles(String schema, Element md) throws Exception;
+
+    LinkedHashMap<String, String> extractTitles(@Nonnull String id) throws Exception;
 
     /**
      * Extract the last editing date from the record
@@ -243,6 +251,11 @@ public interface IMetadataUtils {
      * Retrieves a metadata (in xml) given its id with no geonet:info.
      */
     Element getMetadataNoInfo(ServiceContext srvContext, String id) throws Exception;
+
+    /**
+     * remove the geonet:info element from the supplied metadata.
+     */
+    Element removeMetadataInfo(Element md) throws Exception;
 
     /**
      * Retrieves a metadata element given it's ref.

@@ -73,17 +73,20 @@
                 });
               });
 
-              scope.validateInspire = function(test) {
+              scope.validateInspire = function(test, mode) {
 
                 if (scope.isEnabled) {
 
                   scope.isDownloadingRecord = true;
                   scope.token = null;
-
+                  var url = '../api/records/' + scope.inspMdUuid +
+                    '/validate/inspire?testsuite=' + test;
+                  if (angular.isDefined(mode)) {
+                    url += '&mode=' + mode;
+                  }
                   $http({
                     method: 'PUT',
-                    url: '../api/records/' + scope.inspMdUuid +
-                    '/validate/inspire?testsuite=' + test
+                    url: url
                   }).then(function mySucces(response) {
                     if (angular.isDefined(response.data) && response.data != null) {
                       scope.checkInBackgroud(response.data);

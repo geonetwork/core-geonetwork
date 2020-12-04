@@ -449,6 +449,20 @@
             });
       };
 
+      $scope.commitIndexChanges = function(dropFirst) {
+        return $http.put('../api/site/index/commit')
+            .success(function(data) {
+              checkIsIndexing();
+            })
+            .error(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('indexCommitError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
+      };
+
       $scope.clearXLinkCache = function() {
         return $http.get('admin.index.rebuildxlinks')
             .success(function(data) {

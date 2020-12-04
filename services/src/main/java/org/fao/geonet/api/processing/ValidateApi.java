@@ -36,6 +36,7 @@ import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.processing.report.registry.IProcessingReportRegistry;
 import org.fao.geonet.api.records.editing.InspireValidatorUtils;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.events.history.RecordValidationTriggeredEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -62,9 +63,11 @@ import javax.management.MalformedObjectNameException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayDeque;
+import java.util.List;
 import java.util.Set;
 
 import static org.fao.geonet.api.ApiParams.*;
+import static org.fao.geonet.api.records.InspireValidationApi.API_PARAM_INSPIRE_VALIDATION_MODE;
 
 @RequestMapping(value = {
     "/{portal}/api/records"
@@ -191,6 +194,77 @@ public class ValidateApi {
     }
 
 
+    @io.swagger.v3.oas.annotations.Operation(summary = "Clear validation status of one or more records",
+        description = "")
+    @RequestMapping(
+        value = "/validate",
+        method = RequestMethod.DELETE,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        }
+    )
+    @PreAuthorize("hasAuthority('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Records validation status cleared."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public SimpleMetadataProcessingReport cleanValidationStatus(
+        @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION,
+            required = false,
+            example = "")
+        @RequestParam(required = false)
+            String[] uuids,
+        @Parameter(
+            description = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
+        @Parameter(hidden = true)
+            HttpSession session,
+        @Parameter(hidden = true)
+            HttpServletRequest request
+    ) throws Exception {
+        UserSession userSession = ApiUtils.getUserSession(session);
+
+        SimpleMetadataProcessingReport report =
+            new SimpleMetadataProcessingReport();
+        try {
+            ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+
+            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
+
+            for (String uuid : records) {
+                if (!metadataRepository.existsMetadataUuid(uuid)) {
+                    report.incrementNullRecords();
+                }
+                for (AbstractMetadata record : metadataRepository.findAllByUuid(uuid)) {
+                    if (!accessMan.canEdit(serviceContext, String.valueOf(record.getId()))) {
+                        report.addNotEditableMetadataId(record.getId());
+                    } else {
+                        List<MetadataValidation> validationStatus = metadataValidationRepository.findAllById_MetadataId(record.getId());
+                        metadataValidationRepository.deleteAll(validationStatus);
+                        report.addMetadataId(record.getId());
+                        report.incrementProcessedRecords();
+                    }
+                }
+            }
+
+            // index records
+            BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, report.getMetadata());
+            r.process(true);
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            report.close();
+        }
+        return report;
+    }
+
+
     @io.swagger.v3.oas.annotations.Operation(summary = "Validate one or more records in INSPIRE validator",
         description = "Update validation status for all records.")
     @RequestMapping(
@@ -220,6 +294,11 @@ public class ValidateApi {
             required = false
         )
             String bucket,
+        @Parameter(
+            description = API_PARAM_INSPIRE_VALIDATION_MODE,
+            required = false)
+        @RequestParam(required = false)
+            String mode,
         @Parameter(hidden = true)
             HttpSession session,
         @Parameter(hidden = true)
@@ -235,7 +314,7 @@ public class ValidateApi {
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
 
-        registredMAnalyseProcess.processMetadata(records);
+        registredMAnalyseProcess.processMetadata(records, mode);
         return new ResponseEntity(HttpStatus.CREATED);
     }
 

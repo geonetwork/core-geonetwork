@@ -87,6 +87,12 @@
 
       var firstLoad = true;
 
+      // Regex for matching type and layer in context layer name attribute.
+      // eg. name="{type=arcgis,name=0,1,2,3,4}"
+      var reT = /type=([^,}|^]*)/;
+      var reL = /name=([^}]*)\}?\s*$/;
+
+
       /**
        * @ngdoc method
        * @name gnOwsContextService#loadContext
@@ -218,33 +224,32 @@
             }
             // end specific emodnet
 
-            if (layer.name) {
-              if (layer.group == 'Background layers') {
+            if (layer.group == 'Background layers') {
 
-                // {type=bing_aerial} (mapquest, osm ...)
-                var re = this.getREForPar('type');
-                type = layer.name.match(re) ? re.exec(layer.name)[1] : null;
-                if (type && type != 'wmts' && type != 'wms') {
-                  var opt;
-                  re = this.getREForPar('name');
-                  if (layer.name.match(re)) {
-                    var lyr = re.exec(layer.name)[1];
+              // {type=bing_aerial} (mapquest, osm ...)
+              // {type=arcgis,name=0,1,2}
+              // type=wms,name=lll
+              type = layer.name.match(reT) ? reT.exec(layer.name)[1] : null;
+              if (type && type != 'wmts' && type != 'wms' && type != 'arcgis') {
+                var opt;
+                if (layer.name.match(reL)) {
+                  var lyr = reL.exec(layer.name)[1];
 
-                    if (layer.server) {
-                      var server = layer.server[0];
-                      var res = server.onlineResource[0].href;
-                    }
-                    opt = {name: lyr,
-                            url: res};
+                  if (layer.server) {
+                    var server = layer.server[0];
+                    var res = server.onlineResource[0].href;
                   }
-
-                  // to push in bgLayers not in the map
-                  var loadingLayer = new ol.layer.Image({
-                    loading: true,
-                    label: 'loading',
-                    url: '',
-                    visible: false
-                  });
+                  opt = {name: lyr,
+                          url: res};
+                }
+                var olLayer =
+                    gnMap.createLayerForType(type, opt, layer.title, map);
+                if (olLayer) {
+                  olLayer.displayInLayerManager = false;
+                  olLayer.background = true;
+                  olLayer.set('group', 'Background layers');
+                  olLayer.setVisible(!layer.hidden);
+                  bgLayers.push(olLayer);
 
                   if (!layer.hidden && !isFirstBgLayer) {
                     isFirstBgLayer = true;
@@ -272,8 +277,8 @@
                   })(layerIndex, loadingLayer, layer, type, opt);
                 }
 
-                // {type=wmts,name=Ocean_Basemap} or WMS
-                else {
+              // {type=wmts,name=Ocean_Basemap} or WMS or arcgis
+              else {
 
                   // to push in bgLayers not in the map
                   var loadingLayer = new ol.layer.Image({
@@ -717,9 +722,6 @@
 
         var server = layer.server[0];
         var res = server.onlineResource[0];
-        var reT = /type\s*=\s*([^,|^}|^\s]*)/;
-        var reL = /name\s*=\s*([^,|^}|^\s]*)/;
-
         var createOnly = angular.isDefined(bgIdx) || angular.isDefined(index);
 
         if (layer.name.match(reT)) {
@@ -800,20 +802,6 @@
                 return olL;
               }).catch(function() {});
         }
-      };
-
-      /**
-       * @ngdoc method
-       * @name gnOwsContextService#getREForPar
-       * @methodOf gn_viewer.service:gnOwsContextService
-       *
-       * @description
-       * Creates a regular expression for a given parameter
-       *
-       * * @param {Object} context parameter
-       */
-      this.getREForPar = function(par) {
-        return re = new RegExp(par + '\\s*=\\s*([^,|^}|^\\s]*)');
       };
     }
   ]);

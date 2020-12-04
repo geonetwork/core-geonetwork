@@ -25,9 +25,9 @@ package org.fao.geonet.listener.history;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.events.history.AbstractHistoryEvent;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataStatusRepository;
@@ -41,10 +41,13 @@ public abstract class GenericMetadataEventListener {
     private SettingManager settingManager;
 
     @Autowired
-    private MetadataStatusRepository statusRepository;
+    private MetadataStatusRepository metadataStatusRepository;
 
     @Autowired
     private StatusValueRepository statusValueRepository;
+
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     public abstract String getChangeMessage();
 
@@ -64,30 +67,55 @@ public abstract class GenericMetadataEventListener {
      * Stores the event in the database
      *
      * @param event
-     * @param statusRepository
-     * @param statusValueRepository
      */
     public final void storeContentHistoryEvent(AbstractHistoryEvent event) {
 
         if(settingManager.getValueAsBool(Settings.SYSTEM_METADATA_HISTORY_ENABLED)) {
 
-            Integer metadataUuid = Math.toIntExact(event.getMdId());
-            MetadataStatusId metadataStatusId = new MetadataStatusId().setMetadataId(metadataUuid)
-                    .setStatusId(Integer.parseInt(getEventType())).setUserId(event.getUserId())
-                    .setChangeDate(new ISODate(System.currentTimeMillis()));
+            Integer metadataid = Math.toIntExact(event.getMdId());
 
             StatusValue status = statusValueRepository.findOneById(Integer.parseInt(getEventType()));
 
             if (status != null) {
                 MetadataStatus metadataStatus = new MetadataStatus();
-                metadataStatus.setId(metadataStatusId);
+                metadataStatus.setMetadataId(metadataid);
+                metadataStatus.setUserId(event.getUserId());
+                metadataStatus.setChangeDate(new ISODate(System.currentTimeMillis()));
                 metadataStatus.setStatusValue(status);
                 metadataStatus.setOwner(event.getUserId());
+                // Used the uuid if supplied otherwise try to look it up.
+                if (event.getUuid() != null && event.getUuid().length() > 0) {
+                    metadataStatus.setUuid(event.getUuid());
+                } else {
+                    try {
+                        metadataStatus.setUuid(metadataUtils.getMetadataUuid(Integer.toString(metadataid)));
+                    } catch (Exception e) {
+                        Log.error(Geonet.DATA_MANAGER, String.format(
+                                "Error locating uuid for metadata id: %d", + metadataid), e);
+                    }
+                    if (metadataStatus.getUuid() == null || metadataStatus.getUuid().length() == 0) {
+                        Log.error(Geonet.DATA_MANAGER, String.format(
+                                "Could not located uuid for metadata id: %d", +metadataid));
+                    }
+                }
+
+                if (event.getTitles() != null && event.getTitles().size() > 0) {
+                    metadataStatus.setTitles(event.getTitles());
+                } else {
+                    try {
+                        metadataStatus.setTitles(metadataUtils.extractTitles(Integer.toString(metadataid)));
+                    } catch (Exception e) {
+                        Log.error(Geonet.DATA_MANAGER, String.format(
+                                "Error locating titles for metadata id: %d", +metadataid), e);
+                    }
+                }
+
                 metadataStatus.setChangeMessage(getChangeMessage());
                 metadataStatus.setCurrentState(event.getCurrentState());
                 metadataStatus.setPreviousState(event.getPreviousState());
+                metadataStatus.setRelatedMetadataStatus(event.getRelatedMetadataStatus());
 
-                statusRepository.save(metadataStatus);
+                metadataStatusRepository.save(metadataStatus);
             } else {
                 Log.warning(Geonet.DATA_MANAGER, String.format(
                         "Status with id '%s' not found in database. Check database migration SQL file to add default status if you want to log record history.",

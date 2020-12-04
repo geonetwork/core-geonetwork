@@ -29,13 +29,13 @@ import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
-import org.fao.geonet.domain.MetadataStatusId_;
 import org.fao.geonet.domain.MetadataStatus_;
 import org.fao.geonet.domain.StatusValue;
 import org.junit.Test;
@@ -54,12 +54,15 @@ public class MetadataStatusRepositoryTest extends AbstractSpringDataTest {
 
         MetadataStatus metadataStatus = new MetadataStatus();
 
-        MetadataStatusId id = new MetadataStatusId();
-        id.setMetadataId(inc.incrementAndGet());
-        id.setChangeDate(new ISODate());
-        id.setUserId(inc.incrementAndGet());
-        metadataStatus.setId(id);
+        metadataStatus.setMetadataId(inc.incrementAndGet());
+        metadataStatus.setChangeDate(new ISODate());
+        metadataStatus.setUserId(inc.incrementAndGet());
         metadataStatus.setChangeMessage("change message " + val);
+        metadataStatus.setOwner(1);
+        metadataStatus.setUuid(UUID.randomUUID().toString());
+        metadataStatus.setTitles(new LinkedHashMap<String, String>(){{
+            put("eng", "SampleTitle");
+        }});
         final StatusValue statusValue = statusRepo.save(StatusValueRepositoryTest.newStatusValue(inc));
         metadataStatus.setStatusValue(statusValue);
 
@@ -79,15 +82,15 @@ public class MetadataStatusRepositoryTest extends AbstractSpringDataTest {
     }
 
     @Test
-    public void testDeleteAllById_MetadataId() throws Exception {
+    public void testDeleteAllByMetadataId() throws Exception {
         MetadataStatus status1 = _repo.save(newMetadataStatus());
         MetadataStatus status2 = newMetadataStatus();
-        status2.getId().setMetadataId(status1.getId().getMetadataId());
+        status2.setMetadataId(status1.getMetadataId());
         status2 = _repo.save(status2);
         MetadataStatus status3 = _repo.save(newMetadataStatus());
 
         assertEquals(3, _repo.count());
-        _repo.deleteAllById_MetadataId(status1.getId().getMetadataId());
+        _repo.deleteAllById_MetadataId(status1.getMetadataId());
         assertEquals(1, _repo.count());
         assertFalse(_repo.findById(status1.getId()).isPresent());
         assertFalse(_repo.findById(status2.getId()).isPresent());
@@ -99,20 +102,20 @@ public class MetadataStatusRepositoryTest extends AbstractSpringDataTest {
     }
 
     @Test
-    public void testFindAllById_MetadataId() {
+    public void testFindAllByMetadataId() {
         MetadataStatus status = newMetadataStatus();
         status = _repo.save(status);
         MetadataStatus status2 = newMetadataStatus();
-        status2.getId().setMetadataId(status.getId().getMetadataId());
+        status2.setMetadataId(status.getMetadataId());
         status2 = _repo.save(status2);
 
         MetadataStatus status1 = newMetadataStatus();
         status1 = _repo.save(status1);
 
 
-        final Sort sort = SortUtils.createSort(MetadataStatus_.id, MetadataStatusId_.metadataId);
-        assertEquals(2, _repo.findAllById_MetadataId(status.getId().getMetadataId(), sort).size());
-        assertEquals(1, _repo.findAllById_MetadataId(status1.getId().getMetadataId(), sort).size());
+        final Sort sort = SortUtils.createSort(MetadataStatus_.metadataId);
+        assertEquals(2, _repo.findAllByMetadataId(status.getMetadataId(), sort).size());
+        assertEquals(1, _repo.findAllByMetadataId(status1.getMetadataId(), sort).size());
     }
 
     private MetadataStatus newMetadataStatus() {
