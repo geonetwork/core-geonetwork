@@ -25,7 +25,7 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:date="http://exslt.org/dates-and-times"
                 xmlns:java="java:org.fao.geonet.util.XslUtil"
-                xmlns:joda="java:org.fao.geonet.domain.ISODate"
+                xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
                 xmlns:mime="java:org.fao.geonet.util.MimeTypeFinder"
                 version="2.0"
                 exclude-result-prefixes="#all">
@@ -137,8 +137,8 @@
     </xsl:variable>
 
     <!-- must be a full ISODateTimeFormat - so parse it and make sure it is
-             returned as a long format using the joda Java Time library -->
-    <xsl:variable name="output" select="joda:parseISODateTimes($value1,$value2)"/>
+         returned as a long format (Check org.fao.geonet.utils.DateUtil.parseIsoDateTimes formatter -->
+    <xsl:variable name="output" select="date-util:parseISODateTimes($value1,$value2)"/>
     <xsl:value-of select="$output"/>
 
   </xsl:template>

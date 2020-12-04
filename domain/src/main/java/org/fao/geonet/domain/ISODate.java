@@ -24,7 +24,7 @@
 package org.fao.geonet.domain;
 
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.DateUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -34,32 +34,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
 import java.io.Serializable;
-import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.OffsetTime;
-import java.time.Period;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAccessor;
 import java.util.Date;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static java.time.temporal.ChronoField.HOUR_OF_DAY;
-import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
-import static java.time.temporal.ChronoField.NANO_OF_SECOND;
-import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
 
 /**
  * Represents a date at a given time. Provides methods for representing the date as a string and
@@ -69,34 +51,11 @@ import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
 @Embeddable
 @XmlRootElement
 public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, XmlEmbeddable {
-    private static final String DEFAULT_DATE_TIME = "3000-01-01T00:00:00.000Z"; // JUNK
-
-    @XmlTransient public static final DateTimeFormatter ISO_OFFSET_DATE_TIME_NANOSECONDS;
-    @XmlTransient public static final DateTimeFormatter CATCH_ALL_DATE_TIME_FORMATTER;
     @XmlTransient public static final DateTimeFormatter YEAR_MONTH_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
     @XmlTransient public static final DateTimeFormatter YEAR_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy");
     @XmlTransient public static final DateTimeFormatter YEAR_MONTH_DAYS_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    static {
-        ISO_OFFSET_DATE_TIME_NANOSECONDS = new DateTimeFormatterBuilder().parseCaseInsensitive().append(DateTimeFormatter.ISO_LOCAL_DATE)
-                .appendLiteral('T').appendValue(ChronoField.HOUR_OF_DAY, 2).appendLiteral(':').appendValue(MINUTE_OF_HOUR, 2)
-                .appendLiteral(':').appendValue(SECOND_OF_MINUTE, 2).appendFraction(NANO_OF_SECOND, 3, 9, true).appendOffsetId()
-                .toFormatter();
 
-        CATCH_ALL_DATE_TIME_FORMATTER = new DateTimeFormatterBuilder().parseCaseInsensitive()
-                .appendPattern("yyyy[-M][-d['T'H[:m[:s[.SSS][.SS][.S]][XXX]]]]").parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
-                .parseDefaulting(ChronoField.DAY_OF_MONTH, 1).parseDefaulting(HOUR_OF_DAY, 0).parseDefaulting(MINUTE_OF_HOUR, 0)
-                .parseDefaulting(SECOND_OF_MINUTE, 0).parseDefaulting(NANO_OF_SECOND, 0).toFormatter();
-                //.parseDefaulting(ChronoField.OFFSET_SECONDS, ZoneOffset.systemDefault()..getTotalSeconds()).toFormatter();
-    }
-
-    // Pattern to check dates
-    @XmlTransient private static final Pattern gsYear = Pattern.compile("([0-9]{4})(-([0-2][0-9]):([0-5][0-9])([A-Z]))?");
-    @XmlTransient private static final Pattern gsYearMonth = Pattern.compile("([0-9]{4})-([0-1][0-9])(-([0-2][0-9]):([0-5][0-9])([A-Z]))?");
-
-    // Fri Jan 01 2010 00:00:00 GMT+0100 (CET)
-    @XmlTransient private static final Pattern htmlFormat = Pattern
-            .compile("([a-zA-Z]{3}) ([a-zA-Z]{3}) ([0-9]{2}) ([0-9]{4}) ([0-2][0-9]):([0-5][0-9]):([0-5][0-9]) (.+)");
 
     /**
      * {@code true} if the format is {@code yyyy-mm-dd}.
@@ -161,271 +120,6 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
      */
     public ISODate(@Nonnull final String isoDateString) {
         setDateAndTime(isoDateString);
-    }
-
-    /**
-     * Converts a given ISO date time into the form used to index in Lucene.
-     * Returns null if it gets back a ridiculous value.
-     *
-     * @param stringToParse the string to parse.
-     * @return the parameter parsed and shown with {@code yyyy-MM-dd'T'HH:mm:ss.SSSXXX'Z'} format
-     * or {@code null} if it can't be parsed.
-     */
-    public static String convertToISOZuluDateTime(final String stringToParse) {
-        String parsedDateTime = parseISODateTimes(stringToParse, null);
-        if (parsedDateTime.equals(DEFAULT_DATE_TIME)) {
-            return null;
-        } else {
-            return parsedDateTime;
-        }
-    }
-
-    /**
-     * Converts two ISO date times into standard form used to index in Lucene
-     * Always returns something because it is used during the indexing of the
-     * metadata record in Lucene - if exception during parsing then it is
-     * something ridiculous like JUNK value above.
-     *
-     * @param dateTimeString           a string containing a date or a date with time in ISO 8601 format.
-     * @param durationOrDateTimeString a string containing datetime or a duration in ISO 8601 format
-     *                                 ({@code P[n]Y[n]M[n]DT[n]H[n]M[n]S or P[n]W}. For example,
-     *                                 {@code "P3Y6M4DT12H30M5S"} represents a duration of
-     *                                 "three years, six months, four days, twelve hours, thirty
-     *                                 minutes, and five seconds").
-     * @return A date and time in ISO 8601 format or {@link ISODate#DEFAULT_DATE_TIME} if the
-     * parameters cannot be parsed as valid values. If {@code durationOrDateTimeString} is {@code null}
-     * then it is ignored.
-     * If it is a duration then its value is added or subtracted to {@code dateTimeString} and the result
-     * is concatenated to the parsed value of {@code dateTimeString} using the {@code "|"} as separator character.
-     * If it is a dateTime string then the result is the parsed value of {@code dateTimeString}, a {@code "|"}
-     * character and the parsed value of {@code durationOrDateTimeString}.
-     */
-    public static String parseISODateTimes(String dateTimeString, String durationOrDateTimeString) {
-
-        ZonedDateTime odt1;
-        String odt;
-
-        // dateTimeString should be some sort of ISO time
-        // eg. basic: 20080909, full: 2008-09-09T12:21:00 etc
-        // convert everything to UTC so that we remove any timezone
-        // problems
-        try {
-            ZonedDateTime idt = parseBasicOrFullDateTime(dateTimeString);
-
-            odt1 = idt.withZoneSameInstant(ZoneOffset.UTC);
-            odt = idt.withZoneSameInstant(ZoneOffset.UTC).format(ISO_OFFSET_DATE_TIME_NANOSECONDS);
-
-        } catch (Exception e) {
-            Log.error("geonetwork.domain", "Error parsing ISO DateTimes, error: " + e.getMessage(), e);
-            return DEFAULT_DATE_TIME;
-        }
-
-        if (StringUtils.isBlank(durationOrDateTimeString))
-            return odt;
-
-        // durationOrDateTimeString can be an ISO time as for dateTimeString but also an ISO time period
-        // eg. -P3D or P3D - if an ISO time period then it must be added to the
-        // DateTime generated for dateTimeString (odt1)
-        // convert everything to UTC so that we remove any timezone
-        // problems
-        try {
-            boolean minus = false;
-            if (durationOrDateTimeString.startsWith("-P")) {
-                durationOrDateTimeString = durationOrDateTimeString.substring(1);
-                minus = true;
-            }
-
-            if (durationOrDateTimeString.startsWith("P")) {
-                String[] periodAndDurationArray = durationOrDateTimeString.split("T");
-                String periodString = periodAndDurationArray[0];
-                String durationString = "PT" + periodAndDurationArray[1];
-
-                // Period ip =p.parsePeriod(durationOrDateTimeString);
-                Period ip = Period.parse(periodString);
-                Duration duration = Duration.parse(durationString);
-                ZonedDateTime odt2;
-                if (!minus) {
-                    odt2 = odt1.plus(ip).plus(duration);
-                } else {
-                    odt2 = odt1.minus(ip).minus(duration);
-                }
-                odt = odt + "|" + odt2.toString();
-            } else {
-                ZonedDateTime idt = parseBasicOrFullDateTime(durationOrDateTimeString);
-                ZonedDateTime odt2 = idt.withZoneSameInstant(ZoneOffset.UTC);
-                odt = odt + "|" + odt2.toString();
-            }
-        } catch (Exception e) {
-            Log.error("geonetwork.domain", "Error parsing ISO DateTimes, error: " + e.getMessage(), e);
-            return odt + "|" + DEFAULT_DATE_TIME;
-        }
-
-        return odt;
-    }
-
-    /**
-     * Parse the parameter and return a {@link ZonedDateTime} object.
-     *
-     * @param stringToParse the string to parse. It can have multiple formats:
-     *                      {@link DateTimeFormatter#BASIC_ISO_DATE}, {@link DateTimeFormatter#ISO_TIME},
-     *                      {@link DateTimeFormatter#ISO_DATE_TIME}, or {@code yyyy[-MM][-dd['T'HH[:mm[:ss[.SSS]][XXX]]]]}.
-     *                      Stings in HTML format (e.g. {@code Fri Jan 01 2010 00:00:00 GMT+0100 (CET)}) are also accepted.
-     * @return a {@link ZonedDateTime}
-     */
-    public static ZonedDateTime parseBasicOrFullDateTime(String stringToParse) {
-        ZonedDateTime result;
-        Matcher matcher;
-        if (stringToParse.length() == 8 && !stringToParse.startsWith("T")) {
-            result = ZonedDateTime.parse(stringToParse, DateTimeFormatter.BASIC_ISO_DATE);
-        } else if (stringToParse.startsWith("T") && stringToParse.contains(":")) {
-           result = parseTime(stringToParse);
-        } else if (stringToParse.contains("T") && !stringToParse.contains(":") && !stringToParse.contains("-")) {
-            result = ZonedDateTime.parse(stringToParse, DateTimeFormatter.ISO_DATE_TIME);
-        } else if ((matcher = gsYearMonth.matcher(stringToParse)).matches()) {
-            String year = matcher.group(1);
-            String month = matcher.group(2);
-            String minute = "00";
-            String hour = "00";
-            String timezone = "Z";
-            if (matcher.group(4) != null) {
-                minute = matcher.group(5);
-                hour = matcher.group(4);
-                timezone = matcher.group(6);
-            }
-
-            result = generateDate(year, month, minute, hour, timezone);
-        } else if ((matcher = gsYear.matcher(stringToParse)).matches()) {
-            String year = matcher.group(1);
-            String month = "01";
-            String minute = "00";
-            String hour = "00";
-            String timezone = "Z";
-            if (matcher.group(3) != null) {
-                minute = matcher.group(4);
-                hour = matcher.group(3);
-                timezone = matcher.group(5);
-            }
-
-            result = generateDate(year, month, minute, hour, timezone);
-        } else if ((matcher = htmlFormat.matcher(stringToParse)).matches()) {
-            // Fri Jan 01 2010 00:00:00 GMT+0100 (CET)
-            String month = matcher.group(2);
-            switch (month) {
-            case "Jan":
-                month = "1";
-                break;
-            case "Feb":
-                month = "2";
-                break;
-            case "Mar":
-                month = "3";
-                break;
-            case "Apr":
-                month = "4";
-                break;
-            case "May":
-                month = "5";
-                break;
-            case "Jun":
-                month = "6";
-                break;
-            case "Jul":
-                month = "7";
-                break;
-            case "Aug":
-                month = "8";
-                break;
-            case "Sep":
-                month = "9";
-                break;
-            case "Oct":
-                month = "10";
-                break;
-            case "Nov":
-                month = "11";
-                break;
-            default:
-                month = "12";
-                break;
-            }
-            String day = matcher.group(3);
-            String year = matcher.group(4);
-            String hour = matcher.group(5);
-            String minute = matcher.group(6);
-            String second = matcher.group(7);
-            String timezone = matcher.group(8);
-
-            result = generateDate(year, month, day, second, minute, hour, timezone);
-        } else {
-            TemporalAccessor dt = CATCH_ALL_DATE_TIME_FORMATTER.parseBest(stringToParse, ZonedDateTime::from, LocalDateTime::from);
-            if (dt instanceof  ZonedDateTime) {
-                result = (ZonedDateTime) dt;
-            } else if (dt instanceof LocalDateTime) {
-                LocalDateTime ldt = (LocalDateTime) dt;
-                result = ldt.atZone(TimeZone.getDefault().toZoneId());
-            } else {
-                result = null;
-            }
-            //result = ZonedDateTime.parse(stringToParse, CATCH_ALL_DATE_TIME_FORMATTER);
-        }
-        return result;
-    }
-
-    /**
-     * Parses a time an return current date at that time. Both local and offset formats are supported, such as '10:15', '10:15:30' or
-     * '10:15:30+01:00' starting by 'T' or not. If offset is present then it is used set the date in UTC zone. If the time doesn't have an
-     * offset it is interpreted as a time in local time and converted to UTC.
-     * @param time the string to parse
-     * @return a date and time in UTC zone with date the being the current day.
-     * @throws DateTimeParseException if the time can'\t be parsed.
-     */
-    public static ZonedDateTime parseTime(String time) throws DateTimeParseException {
-        ZonedDateTime result;
-        TemporalAccessor ta = DateTimeFormatter.ISO_TIME.parseBest(StringUtils.removeStartIgnoreCase(time, "T"), OffsetTime::from, LocalTime::from);
-        if (ta instanceof OffsetTime) {
-            result = ((OffsetTime) ta).atDate(LocalDate.now()).atZoneSameInstant(ZoneOffset.UTC);
-        } else if (ta instanceof LocalTime) {
-            result = ((LocalTime) ta).atDate(LocalDate.now()).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC);
-        } else {
-            result = null;
-        }
-        return result;
-    }
-
-    /**
-     * @param year     the year
-     * @param month    the month, from 1 to 12
-     * @param day      the day of the month, from 1 to 31
-     * @param second   the second of the minute, from 0 to 59
-     * @param minute   the minute of the hour, from 0 to 59
-     * @param hour     the hour of the day, from 0 to 23.
-     * @param timezone the time zone
-     * @return a new {@link ZonedDateTime} created with the values passed
-     */
-    private static ZonedDateTime generateDate(String year, String month, String day, String second, String minute, String hour,
-            String timezone) {
-        TimeZone zone = TimeZone.getTimeZone(timezone);
-        ZonedDateTime result = ZonedDateTime
-                .of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day), Integer.parseInt(hour),
-                        Integer.parseInt(minute), Integer.parseInt(second), 0, zone.toZoneId());
-
-        return result.withZoneSameInstant(TimeZone.getDefault().toZoneId());
-
-    }
-
-    /**
-     * Generate a datetime with the parameters used. Sets the day as the first of the month.
-     *
-     * @param year     the year
-     * @param month    the month, from 1 to 12
-     * @param minute   the minute of the hour, from 0 to 59
-     * @param hour     the hour of the day, from 0 to 23
-     * @param timezone the timezone
-     * @return a new {@link ZonedDateTime} with the values passed and the day as teh first day of the month
-     */
-    private static ZonedDateTime generateDate(String year, String month, String minute, String hour, String timezone) {
-
-        return generateDate(year, month, "1", "00", minute, hour, timezone);
     }
 
     /**
@@ -523,7 +217,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
      * @return The date and time in ISO format.
      */
     public String getDateAndTimeUtc() {
-        return internalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(ISODate.ISO_OFFSET_DATE_TIME_NANOSECONDS);
+        return internalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS);
     }
     public void setDateAndTimeUtc(String isoDate) {
         setDateAndTime(isoDate);
@@ -537,12 +231,12 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
         }
 
         if (timeAndDate.indexOf('T') >= 0 && StringUtils.contains(timeAndDate, ':')) {
-            timeAndDate = convertToISOZuluDateTime(timeAndDate);
+            timeAndDate = DateUtil.convertToISOZuluDateTime(timeAndDate);
 
             if (timeAndDate == null) {
                 throw new IllegalArgumentException("Not parsable date: " + isoDate);
             }
-            internalDateTime = ZonedDateTime.parse(timeAndDate, ISODate.ISO_OFFSET_DATE_TIME_NANOSECONDS);
+            internalDateTime = ZonedDateTime.parse(timeAndDate, DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS);
             return;
         }
 
@@ -550,7 +244,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
         if (StringUtils.contains(timeAndDate, ':')) {
             // its a time
             try {
-                internalDateTime = parseTime(StringUtils.remove(StringUtils.remove(timeAndDate, 't'), 'T'));
+                internalDateTime = DateUtil.parseTime(StringUtils.remove(StringUtils.remove(timeAndDate, 't'), 'T'));
                 _shortDate = false;
             } catch (Exception e) {
                 throw new IllegalArgumentException("Invalid ISO time: " + isoDate, e);

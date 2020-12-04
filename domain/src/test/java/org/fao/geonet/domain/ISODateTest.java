@@ -23,12 +23,12 @@
 
 package org.fao.geonet.domain;
 
+import org.fao.geonet.utils.DateUtil;
 import org.junit.Test;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -295,82 +295,6 @@ public class ISODateTest {
         assertEquals("1990-12-05", date.getDateAsString());
     }
 
-    @Test
-    public void testParseISODateTime() {
-        // Format: yyyy-mm-ddThh.mm:ss[+hh:mm|=+hh:mm] Time zone
-        String datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2010-10-10T00:00:00+02:00");
-        assertEquals("2010-10-09T22:00:00.000Z", datetimeInIsoFormat);
-
-        // Format: yyyy-mm-ddThh.mm:ss.ms[+hh:mm|=+hh:mm] Time zone
-        datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2010-10-10T00:00:00.000+02:00");
-        assertEquals("2010-10-09T22:00:00.000Z", datetimeInIsoFormat);
-
-        // Format: yyyy-mm-ddThh.mm:ssZ (UTC)
-        datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2010-10-10T00:00:00Z");
-        assertEquals("2010-10-10T00:00:00.000Z", datetimeInIsoFormat);
-
-        // Format: yyyy-mm-ddThh.mm:ss.msZ (UTC)
-        datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2010-10-10T00:00:00.000Z");
-        assertEquals("2010-10-10T00:00:00.000Z", datetimeInIsoFormat);
-
-        // Format: yyyy-mm-ddThh.mm:ss.msZ (UTC) (ms with less than 3 digits)
-        datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2020-11-23T07:41:29.1Z");
-        assertEquals("2020-11-23T07:41:29.100Z", datetimeInIsoFormat);
-        datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2020-11-23T07:41:29.12Z");
-        assertEquals("2020-11-23T07:41:29.120Z", datetimeInIsoFormat);
-        datetimeInIsoFormat = ISODate.convertToISOZuluDateTime("2020-11-23T07:41:29.123Z");
-        assertEquals("2020-11-23T07:41:29.123Z", datetimeInIsoFormat);
-
-
-    }
-
-    @Test
-    public void testParseYearMonthDateTime() throws Exception {
-        // xs:gYearMonth
-        for (int i = 0; i < 10; i++) {
-            String year = "20" + getRandom(1, 0) + getRandom(9, 0);
-            String month = "0" + getRandom(9, 1);
-            String hour = getRandom(1, 0) + "" + getRandom(9, 0);
-            String minutes = getRandom(5, 1) + "" + getRandom(9, 0);
-
-            // Format: yyyy-MM-hh:mm Time zone
-            String tmp = year + "-" + month + "-" + hour + ":" + minutes + "Z";
-            String dateTimeInIsoFormat = ISODate.convertToISOZuluDateTime(tmp);
-            assertEquals(dateTimeInIsoFormat, year + "-" + month + "-01T" + hour + ":" + minutes + ":00.000Z");
-
-            year = "20" + getRandom(1, 0) + getRandom(9, 0);
-            month = "0" + getRandom(9, 1);
-            // Format: yyyy-MM
-            tmp = year + "-" + month;
-            dateTimeInIsoFormat = ISODate.convertToISOZuluDateTime(tmp);
-            assertEquals(dateTimeInIsoFormat, tmp + "-01T00:00:00.000Z");
-
-        }
-    }
-
-    @Test
-    public void testParseYearDateTime() throws Exception {
-        // xs:gYear
-        for (int i = 0; i < 10; i++) {
-            String year = "20" + getRandom(1, 0) + getRandom(9, 0);
-            String hour = getRandom(1, 0) + "" + getRandom(9, 0);
-            String minutes = getRandom(5, 1) + "" + getRandom(9, 0);
-
-            // Format: yyyy-hh:mm Time zone
-            String datetimeInIsoFormat = ISODate.convertToISOZuluDateTime(year + "-" + hour + ":" + minutes + "Z");
-            assertEquals(datetimeInIsoFormat, year + "-01-01T" + hour + ":" + minutes + ":00.000Z");
-
-            year = "20" + getRandom(1, 0) + getRandom(9, 0);
-
-            // Format: yyyy
-            datetimeInIsoFormat = ISODate.convertToISOZuluDateTime(year);
-            assertEquals(datetimeInIsoFormat, year + "-01-01T00:00:00.000Z");
-        }
-    }
-
-    private String getRandom(int max, int min) {
-        return Integer.toString(min + (int) (Math.random() * ((max - min) + 1)));
-    }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateISODateExceptionBecauseOfNull() throws Exception {
@@ -568,7 +492,7 @@ public class ISODateTest {
         ZonedDateTime expectedLocalDateTime =
                 ZonedDateTime.of(
                         2020, 11, 15, 2, 30, 0, 0, ZoneId.systemDefault().normalized());
-        expectedDateTimeString = expectedLocalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(ISODate.ISO_OFFSET_DATE_TIME_NANOSECONDS);
+        expectedDateTimeString = expectedLocalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS);
         assertEquals( " From a Local datetime", expectedDateTimeString, actualDateAndTime);
 
 
