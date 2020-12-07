@@ -28,12 +28,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.utils.Log;
 import org.keycloak.KeycloakPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -76,6 +78,7 @@ public class KeycloakUserUtils {
             for (String role : keycloakPrincipal.getKeycloakSecurityContext().getToken().getResourceAccess(keycloakPrincipal.getKeycloakSecurityContext().getToken().issuedFor).getRoles()) {
                 // Only use the profiles we know off
                 if (role.contains(roleGroupSeparator)) {
+                    Log.debug(Geonet.SECURITY, "Identified role " + role + " from user token.");
                     roleGroupList.add(role);
                 }
             }
@@ -92,6 +95,7 @@ public class KeycloakUserUtils {
                 user = new User();
                 user.setUsername(baselUser.getUsername());
                 newUserFlag = true;
+                Log.debug(Geonet.SECURITY, "Adding a new user: " + user);
             }
 
             if (!StringUtils.isEmpty(baselUser.getSurname())) {

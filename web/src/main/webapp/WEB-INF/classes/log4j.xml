@@ -136,6 +136,9 @@
   <logger name="geonetwork.backup">
     <level value="ERROR"/>
   </logger>
+  <logger name="geonetwork.security">
+    <level value="ERROR"/>
+  </logger>
 
   <!--  Jeeves module and submodule logger configuration -->
   <logger name="jeeves" additivity="false">
