@@ -679,7 +679,17 @@ goog.require('gn_alert');
               });
         });
 
-
+        // Retreive portal information
+        var getPortalSources = promiseStart.then(function(value) {
+          return $http.get('../api/sources').
+            success(function(data) {
+              for (var i = 0; i < data.length; i++) {
+                if (data[i].type === 'portal') {
+                  $scope.portal = data[i];
+                }
+              }
+            });
+        });
 
         // Utility functions for user
         var userFn = {
