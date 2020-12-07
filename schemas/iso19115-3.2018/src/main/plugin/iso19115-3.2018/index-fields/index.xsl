@@ -353,7 +353,7 @@
         <xsl:for-each select="$overviews">
           <!-- TODO can be multilingual desc and name -->
           <overview type="object">{
-            "url": "<xsl:value-of select="."/>"
+            "url": "<xsl:value-of select="normalize-space(.)"/>"
             <xsl:if test="count(../../mcc:fileDescription) > 0">,
               "text":
               <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../mcc:fileDescription, $allLanguages, true())"/>
@@ -490,22 +490,32 @@
           </xsl:otherwise>
         </xsl:choose>
 
-        <xsl:variable name="geokeywords"
-                      select=".//mri:keyword[
-                      ../mri:type/mri:MD_KeywordTypeCode/@codeListValue = 'place'
-                      and */normalize-space() != '']
-                          |//gex:geographicElement/gex:EX_GeographicDescription/
-                                gex:geographicIdentifier/mcc:MD_Identifier/
-                                  mcc:code[*/normalize-space(.) != '']"/>
 
-        <xsl:if test="count($geokeywords) > 0">
-          <geotag type="object">
-            [<xsl:for-each select="$geokeywords">
+
+        <!-- Index keywords by types -->
+        <xsl:variable name="keywordTypes"
+                      select="distinct-values(.//mri:descriptiveKeywords/*/
+                                mri:type/*/@codeListValue[. != ''])"/>
+        <xsl:variable name="geoDesciption"
+                      select="//gex:geographicElement/gex:EX_GeographicDescription/
+                                gex:geographicIdentifier/mcc:MD_Identifier/
+                                  mcc:code[*/normalize-space(.) != '']
+                              |//gex:EX_Extent/gex:description[*/normalize-space(.) != '']"/>
+
+        <xsl:for-each select="$keywordTypes">
+          <xsl:variable name="type"
+                        select="."/>
+          <xsl:variable name="keywordsForType"
+                        select="$keywords[../mri:type/*/@codeListValue = $type]
+                        |$geoDesciption[$type = 'place']"/>
+          <xsl:element name="keywordType-{$type}">
+            <xsl:attribute name="type" select="'object'"/>
+            [<xsl:for-each select="$keywordsForType">
             <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', ., $allLanguages)/text()"/>
             <xsl:if test="position() != last()">,</xsl:if>
           </xsl:for-each>]
-          </geotag>
-        </xsl:if>
+          </xsl:element>
+        </xsl:for-each>
 
 
 

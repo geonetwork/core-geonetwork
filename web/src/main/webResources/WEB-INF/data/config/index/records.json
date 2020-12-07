@@ -1084,6 +1084,22 @@
         }
       },
       {
+        "keywordType": {
+          "match": "keywordType-*",
+          "mapping": {
+            "type": "object",
+            "properties": {
+              "default": {
+                "type": "keyword"
+              },
+              "link": {
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      {
         "contact": {
           "match": "*contact*",
           "mapping": {
@@ -1207,24 +1223,6 @@
         "type": "search_as_you_type"
       },
       "tag": {
-        "type": "object",
-        "properties": {
-          "default": {
-            "type": "keyword",
-            "copy_to": [
-              "any",
-              "anytext"
-            ]
-          },
-          "text": {
-            "type": "keyword"
-          },
-          "link": {
-            "type": "keyword"
-          }
-        }
-      },
-      "geoTag": {
         "type": "object",
         "properties": {
           "default": {
