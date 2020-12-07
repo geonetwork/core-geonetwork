@@ -113,7 +113,7 @@
         <format><xsl:value-of select="string(.)"/></format>
       </xsl:for-each>
 
-      <xsl:for-each select="dc:type">
+      <xsl:for-each select="dc:type[. != '']">
         <resourceType><xsl:value-of select="string(.)"/></resourceType>
       </xsl:for-each>
 
@@ -136,12 +136,12 @@
       <xsl:variable name="geoTags"
                     select="dct:spatial[. != '']"/>
       <xsl:if test="count($geoTags) > 0">
-        <geoTag type="object">[
+        <keywordType-place type="object">[
           <xsl:for-each select="$geoTags">
-            <xsl:value-of select="concat($doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+            {"default": <xsl:value-of select="concat($doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>}
             <xsl:if test="position() != last()">,</xsl:if>
           </xsl:for-each>
-        ]</geoTag>
+        ]</keywordType-place>
       </xsl:if>
 
       <xsl:variable name="tags"
@@ -149,7 +149,7 @@
       <xsl:if test="count($tags) > 0">
         <tag type="object">[
           <xsl:for-each select="$tags">
-            <xsl:value-of select="concat($doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+            {"default": <xsl:value-of select="concat($doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>}
             <xsl:if test="position() != last()">,</xsl:if>
           </xsl:for-each>
           ]</tag>

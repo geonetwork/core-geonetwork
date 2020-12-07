@@ -343,7 +343,7 @@
         <xsl:for-each select="$overviews">
           <!-- TODO can be multilingual desc and name -->
           <overview type="object">{
-            "url": "<xsl:value-of select="."/>"
+            "url": "<xsl:value-of select="normalize-space(.)"/>"
             <xsl:if test="normalize-space(../../gmd:fileDescription) != ''">,
               "text": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
             </xsl:if>
@@ -482,35 +482,30 @@
           </xsl:otherwise>
         </xsl:choose>
 
-        <!-- Index keywords which are of type place -->
-        <xsl:for-each
-          select="*/gmd:MD_Keywords/
-                          gmd:keyword[gmd:type/gmd:MD_KeywordTypeCode/@codeListValue = 'place']/
-                            gco:CharacterString|
-                        */gmd:MD_Keywords/
-                          gmd:keyword[gmd:type/gmd:MD_KeywordTypeCode/@codeListValue = 'place']/
-                            gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
-          <geotag>
-            <xsl:value-of select="text()"/>
-          </geotag>
-        </xsl:for-each>
-
-        <xsl:variable name="geokeywords"
-                      select=".//gmd:keyword[
-                      ../gmd:type/gmd:MD_KeywordTypeCode/@codeListValue = 'place'
-                      and */normalize-space() != '']
-                          |//gmd:geographicElement/gmd:EX_GeographicDescription/
+        <!-- Index keywords by types -->
+        <xsl:variable name="keywordTypes"
+                      select="distinct-values(.//gmd:descriptiveKeywords/*/
+                                gmd:type/*/@codeListValue[. != ''])"/>
+        <xsl:variable name="geoDesciption"
+                      select="//gmd:geographicElement/gmd:EX_GeographicDescription/
                                 gmd:geographicIdentifier/gmd:MD_Identifier/
-                                  gmd:code[*/normalize-space(.) != '']"/>
+                                  gmd:code[*/normalize-space(.) != '']
+                              |//gmd:EX_Extent/gmd:description[*/normalize-space(.) != '']"/>
 
-        <xsl:if test="count($geokeywords) > 0">
-          <geotag type="object">
-            [<xsl:for-each select="$geokeywords">
+        <xsl:for-each select="$keywordTypes">
+          <xsl:variable name="type"
+                        select="."/>
+          <xsl:variable name="keywordsForType"
+                        select="$keywords[../gmd:type/*/@codeListValue = $type]
+                        |$geoDesciption[$type = 'place']"/>
+          <xsl:element name="keywordType-{$type}">
+            <xsl:attribute name="type" select="'object'"/>
+            [<xsl:for-each select="$keywordsForType">
             <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', ., $allLanguages)/text()"/>
             <xsl:if test="position() != last()">,</xsl:if>
           </xsl:for-each>]
-          </geotag>
-        </xsl:if>
+          </xsl:element>
+        </xsl:for-each>
 
 
         <!-- Index all keywords having a specific thesaurus -->
