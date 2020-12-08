@@ -27,6 +27,7 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.keycloak.adapters.spi.UserSessionManagement;
 import org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter;
+import org.keycloak.constants.AdapterConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -62,9 +63,14 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
         HttpServletResponse servletResponse = (HttpServletResponse) response;
 
         if (servletRequest.getPathInfo() != null &&
-                !(servletRequest.getContextPath() + KeycloakUtil.getSigninPath()).equals(servletRequest.getRequestURI())  &&
-                !(servletRequest.getPathInfo()).equals("/k_logout")  &&
-                !isAuthenticated() ) {
+            !KeycloakAuthenticationProcessingFilter.DEFAULT_REQUEST_MATCHER.matches(servletRequest) &&
+            !isAuthenticated() &&
+            !(servletRequest.getContextPath() + KeycloakUtil.getSigninPath()).equals(servletRequest.getRequestURI())  &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_LOGOUT) &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_PUSH_NOT_BEFORE) &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_VERSION) &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_TEST_AVAILABLE) &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_JWKS)) {
 
             String returningUrl = servletRequest.getRequestURL().toString();
             // If the application is behind a proxy, it is possible that it will get an http request instead of https
@@ -75,11 +81,11 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
 
             // Append query string
             if (servletRequest.getQueryString() != null) {
-                returningUrl =  returningUrl + "?" + servletRequest.getQueryString();
+                returningUrl = returningUrl + "?" + servletRequest.getQueryString();
             }
 
             String encodedRedirectURL = ((HttpServletResponse) response).encodeRedirectURL(
-                    servletRequest.getContextPath() + KeycloakUtil.getSigninPath() + "?redirectUrl=" + URLEncoder.encode(returningUrl, Constants.ENCODING));
+                servletRequest.getContextPath() + KeycloakUtil.getSigninPath() + "?redirectUrl=" + URLEncoder.encode(returningUrl, Constants.ENCODING));
 
             servletResponse.sendRedirect(encodedRedirectURL);
 
