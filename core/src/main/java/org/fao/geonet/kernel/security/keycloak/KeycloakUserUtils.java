@@ -31,6 +31,7 @@ import javax.transaction.Transactional.TxType;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider;
 import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -49,6 +50,9 @@ public class KeycloakUserUtils {
 
     @Autowired
     private GroupRepository groupRepository;
+
+    @Autowired
+    private LanguageRepository langRepository;
 
     @Autowired
     private UserGroupRepository userGroupRepository;
@@ -167,6 +171,12 @@ public class KeycloakUserUtils {
             if (group == null) {
                 group = new Group();
                 group.setName(rgGroup);
+
+                // Populate languages for the group
+                for (Language l : langRepository.findAll()) {
+                    group.getLabelTranslations().put(l.getId(), group.getName());
+                }
+
                 groupRepository.save(group);
             }
 
