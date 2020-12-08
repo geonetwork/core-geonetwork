@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.security.keycloak;
 
 import org.fao.geonet.Constants;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.keycloak.adapters.spi.UserSessionManagement;
 import org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter;
 import org.keycloak.constants.AdapterConstants;
@@ -49,9 +48,6 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
     @Autowired
     LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint;
 
-    @Autowired
-    SettingManager settingManager;
-
     public keycloakPreAuthActionsLoginFilter(UserSessionManagement userSessionManagement) {
         super(userSessionManagement);
     }
@@ -73,11 +69,6 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
             !servletRequest.getRequestURI().endsWith(AdapterConstants.K_JWKS)) {
 
             String returningUrl = servletRequest.getRequestURL().toString();
-            // If the application is behind a proxy, it is possible that it will get an http request instead of https
-            // As this redirect goes back to the client, we need to tell the client to use https
-            if (settingManager.getServerURL().startsWith("https://") && returningUrl.startsWith("http://")) {
-                returningUrl = returningUrl.replaceFirst("(?i)^http://", "https://");
-            }
 
             // Append query string
             if (servletRequest.getQueryString() != null) {
