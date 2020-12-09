@@ -59,6 +59,9 @@ public class ISO19115_3_2018SchemaPlugin
                 .add(ISO19115_3_2018Namespaces.MRI)
                 .add(ISO19115_3_2018Namespaces.SRV)
                 .add(ISO19115_3_2018Namespaces.XLINK)
+                .add(ISO19115_3_2018Namespaces.GCX)
+                .add(ISO19115_3_2018Namespaces.CIT)
+                .add(ISO19115_3_2018Namespaces.MCC)
                 .build();
 
         allTypenames = ImmutableMap.<String, Namespace>builder()
@@ -78,28 +81,40 @@ public class ISO19115_3_2018SchemaPlugin
 
     public Set<AssociatedResource> getAssociatedResourcesUUIDs(Element metadata) {
         String XPATH_FOR_AGGRGATIONINFO = "*//mri:associatedResource/*" +
-                "[mri:metadataReference/@uuidref " +
-                "and %s]";
+                "[(mri:metadataReference/@uuidref " +
+                "and %s) or (mri:name/cit:CI_Citation/cit:identifier/mcc:MD_Identifier/mcc:code/gcx:Anchor/@xlink:href and %s)]";
         Set<AssociatedResource> listOfResources = new HashSet<AssociatedResource>();
         List<?> sibs = null;
         try {
+            String condition =  StringUtils.isNotEmpty(parentAssociatedResourceType) ?
+                String.format("mri:associationType/*/@codeListValue != '%s'", parentAssociatedResourceType) :
+                "mri:associationType/mri:DS_AssociationTypeCode/@codeListValue != ''";
+
             sibs = Xml
                     .selectNodes(
                             metadata,
-                            String.format(XPATH_FOR_AGGRGATIONINFO,
-                                StringUtils.isNotEmpty(parentAssociatedResourceType) ?
-                                    String.format("mri:associationType/*/@codeListValue != '%s'", parentAssociatedResourceType) :
-                                    "mri:associationType/mri:DS_AssociationTypeCode/@codeListValue != ''"
-                                ),
+                            String.format(XPATH_FOR_AGGRGATIONINFO, condition, condition),
                             allNamespaces.asList());
-
 
             for (Object o : sibs) {
                 if (o instanceof Element) {
                     Element sib = (Element) o;
-                    Element agId = (Element) sib.getChild("metadataReference", ISO19115_3_2018Namespaces.MRI);
+                    Element agId = sib.getChild("metadataReference", ISO19115_3_2018Namespaces.MRI);
+
                     // TODO: Reference may be defined in Citation identifier
-                    String sibUuid = agId.getAttributeValue("uuidref");
+                    String sibUuid = "";
+                    if (agId != null) {
+                        sibUuid = agId.getAttributeValue("uuidref");
+                    } else {
+                        agId = sib.getChild("name", ISO19115_3_2018Namespaces.MRI)
+                            .getChild("CI_Citation", ISO19115_3_2018Namespaces.CIT)
+                            .getChild("identifier", ISO19115_3_2018Namespaces.CIT)
+                            .getChild("MD_Identifier", ISO19115_3_2018Namespaces.MCC)
+                            .getChild("code", ISO19115_3_2018Namespaces.MCC)
+                            .getChild("Anchor", ISO19115_3_2018Namespaces.GCX);
+
+                        sibUuid = agId.getAttributeValue("href", ISO19115_3_2018Namespaces.XLINK);
+                    }
 
                     String associationType = sib.getChild("associationType", ISO19115_3_2018Namespaces.MRI)
                         .getChild("DS_AssociationTypeCode", ISO19115_3_2018Namespaces.MRI)

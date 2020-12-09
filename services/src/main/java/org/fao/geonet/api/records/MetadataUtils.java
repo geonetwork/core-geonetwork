@@ -181,16 +181,29 @@ public class MetadataUtils {
             if (listOfAssociatedResources != null) {
                 for (AssociatedResource resource : listOfAssociatedResources) {
                     String origin;
-                    // Search in the index to use the portal filter and verify the metadata is available for the portal
-                    Element searchResult = search(resource.getUuid(), RelatedItemType.siblings.value(), context, from, to, fast, null, false);
-                    // If can't be find, skip the result.
-                    if (hasResult(searchResult)) {
-                        origin = ORIGIN_PORTAL;
-                    } else {
-                        origin = ORIGIN_CATALOG;
-                    }
 
-                    Element sibContent = getRecord(resource.getUuid(), context, dm);
+                    Element sibContent;
+
+                    // If can't be find, skip the result.
+                    if (resource.getUuid().startsWith("http")) {
+                        origin = ORIGIN_REMOTE;
+
+                        sibContent = new Element("metadata");
+                        sibContent.setAttribute("origin", ORIGIN_REMOTE);
+                        sibContent.addContent(new Element("url").setText(resource.getUuid()));
+                        sibContent.addContent(new Element("title").setText(resource.getUuid()));
+                    } else {
+                        // Search in the index to use the portal filter and verify the metadata is available for the portal
+                        Element searchResult = search(resource.getUuid(), RelatedItemType.siblings.value(), context, from, to, fast, null, false);
+
+                        if (hasResult(searchResult)) {
+                            origin = ORIGIN_PORTAL;
+                        } else {
+                            origin = ORIGIN_CATALOG;
+                        }
+                        sibContent = getRecord(resource.getUuid(), context, dm);
+
+                    }
 
                     if (sibContent != null) {
                         Element sibling = new Element("sibling");

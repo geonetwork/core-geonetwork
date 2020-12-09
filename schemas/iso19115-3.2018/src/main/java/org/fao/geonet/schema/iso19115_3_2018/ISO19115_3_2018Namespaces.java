@@ -35,4 +35,11 @@ public class ISO19115_3_2018Namespaces {
                     "http://standards.iso.org/iso/19115/-3/gcx/1.0");
     public static final Namespace XLINK =
         Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
+    public static final Namespace CIT =
+        Namespace.getNamespace("cit",
+            "http://standards.iso.org/iso/19115/-3/cit/2.0");
+    public static final Namespace MCC =
+        Namespace.getNamespace("mcc",
+            "http://standards.iso.org/iso/19115/-3/mcc/1.0");
+
 }

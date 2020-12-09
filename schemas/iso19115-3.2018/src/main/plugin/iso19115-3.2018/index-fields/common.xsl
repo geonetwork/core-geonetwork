@@ -540,7 +540,10 @@
         <xsl:variable name="code"
                       select="if (mri:metadataReference/@uuidref != '')
                               then mri:metadataReference/@uuidref
-                              else mri:metadataReference/cit:CI_Citation/cit:identifier/mcc:MD_Identifier/mcc:code/gco:CharacterString"/>
+                              else if (mri:metadataReference/cit:CI_Citation/cit:identifier/mcc:MD_Identifier/mcc:code/gco:CharacterString != '')
+                              then mri:metadataReference/cit:CI_Citation/cit:identifier/mcc:MD_Identifier/mcc:code/gco:CharacterString
+                              else mri:name/cit:CI_Citation/cit:identifier/mcc:MD_Identifier/mcc:code/gcx:Anchor/@xlink:href"/>
+
         <xsl:if test="$code != ''">
           <xsl:variable name="associationType" select="mri:associationType/mri:DS_AssociationTypeCode/@codeListValue"/>
 
