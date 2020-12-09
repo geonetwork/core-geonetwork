@@ -82,7 +82,7 @@ public class DateUtil {
      * or {@code null} if it can't be parsed.
      */
     public static String convertToISOZuluDateTime(final String stringToParse) {
-        String parsedDateTime = parseISODateTimes(stringToParse, null);
+        String parsedDateTime = parseISODateTimes(StringUtils.trim(stringToParse), null);
         if (parsedDateTime.equals(DEFAULT_DATE_TIME)) {
             return null;
         } else {
