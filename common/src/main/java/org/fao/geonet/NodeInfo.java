@@ -52,6 +52,8 @@ public class NodeInfo implements Serializable {
             .add("xml")
             .add("xsl")
             .add("xslt")
+            .add("accessDenied.jsp")
+            .add("service-not-allowed")
             .build();
     }
 
