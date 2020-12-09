@@ -61,6 +61,7 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordCreateEvent;
+import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.events.history.RecordImportedEvent;
 import org.fao.geonet.exceptions.BadFormatEx;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -211,6 +212,8 @@ public class MetadataInsertDeleteApi {
         store.delResources(context, metadata.getUuid(), true);
         metadataManager.deleteMetadata(context, metadata.getId() + "");
 
+        triggerDeleteEvent(request, metadata);
+
         searchManager.forceIndexChanges();
     }
 
@@ -258,6 +261,8 @@ public class MetadataInsertDeleteApi {
                 store.delResources(context, metadata.getUuid());
 
                 metadataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
+
+                triggerDeleteEvent(request, metadata);
 
                 report.incrementProcessedRecords();
                 report.addMetadataId(metadata.getId());
@@ -739,7 +744,7 @@ public class MetadataInsertDeleteApi {
     }
 
     /**
-     * This triggers a metadata created event (after save)
+     * This triggers a metadata created event (after save).
      *
      * @param request
      * @param uuid    or id of metadata
@@ -757,7 +762,7 @@ public class MetadataInsertDeleteApi {
     }
 
     /**
-     * This triggers a metadata created event (after save)
+     * This triggers a metadata created event (after save).
      *
      * @param request
      * @param uuid    or id of metadata
@@ -771,6 +776,20 @@ public class MetadataInsertDeleteApi {
         new RecordImportedEvent(metadata.getId(), userSession.getUserIdAsInt(),
                 ObjectJSONUtils.convertObjectInJsonObject(userSession.getPrincipal(), RecordImportedEvent.FIELD),
                 metadata.getData()).publish(applicationContext);
+    }
+
+    /**
+     * Triggers a metadata delete event.
+     *
+     * @param request
+     * @param metadata
+     * @throws Exception
+     */
+    private void triggerDeleteEvent(HttpServletRequest request, AbstractMetadata metadata) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+
+        new RecordDeletedEvent(metadata.getId(), userSession.getUserIdAsInt(), metadata.getData()).publish(applicationContext);
     }
 
     private Pair<Integer, String> loadRecord(MetadataType metadataType, Element xmlElement,
