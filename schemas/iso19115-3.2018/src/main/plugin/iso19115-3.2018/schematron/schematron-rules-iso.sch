@@ -1534,7 +1534,7 @@
 
 
     <sch:rule
-            context="//mri:MD_DataIdentification/mri:associatedResource/*|                        //srv:SV_ServiceIdentification/mri:associatedResource/*">
+            context="//mri:MD_DataIdentification/mri:associatedResource/*[namespace-uri(.) != 'http://www.fao.org/geonetwork']|                        //srv:SV_ServiceIdentification/mri:associatedResource/*[namespace-uri(.) != 'http://www.fao.org/geonetwork']">
 
       <!-- May be a CharacterString or LocalisedCharacterString -->
 
@@ -1599,11 +1599,11 @@
 
     <sch:title xml:lang="fr">Langue de la ressource</sch:title>
 
-    <!-- 
+    <!--
     QUESTION-TODO: "includes textual information" may not be easy to define.
-    Imagery will not. Could we consider that this rule applies to 
+    Imagery will not. Could we consider that this rule applies to
     a resource having a feature catalog ? For services ?
-    
+
     Here the context define that the rule applies to DataIdentification
     having FeatureCatalog siblings.
     -->
@@ -1661,7 +1661,7 @@
 
     <sch:title xml:lang="fr">Taxonomie des services</sch:title>
 
-    <!-- 
+    <!--
     QUESTION-TODO: Is this the list to check against ?
       The list is not multilingual ?
     -->
@@ -1678,7 +1678,7 @@
                value="count($serviceTaxonomies) &gt; 0"/>
 
       <!-- SHALL <sch:assert test="$hasAtLeastOneTaxonomy"
-        diagnostics="rule.mri.servicetaxonomy-failure-en 
+        diagnostics="rule.mri.servicetaxonomy-failure-en
                      rule.mri.servicetaxonomy-failure-fr"/> -->
 
 
