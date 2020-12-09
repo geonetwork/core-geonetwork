@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2020 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -33,7 +34,7 @@
                 version="2.0">
 
   <xsl:variable name="dateFormat" as="xs:string"
-                select="'[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]'"/>
+                select="'[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][ZN]'"/>
 
   <xsl:variable name="separator" as="xs:string"
                 select="'|'"/>

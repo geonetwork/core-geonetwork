@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2020 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -42,6 +42,7 @@
                 xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
                 xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -189,6 +190,8 @@
       </xsl:for-each>
 
 
+      <!-- Since GN sets the timezone in system/server/timeZone setting as Java system default
+        timezone we can rely on XSLT functions to get current date in the right timezone -->
       <indexingDate>
         <xsl:value-of select="format-dateTime(current-dateTime(), $dateFormat)"/>
       </indexingDate>
@@ -196,14 +199,13 @@
 
       <!-- Indexing record information -->
       <!-- # Date -->
-      <!-- TODO improve date formatting maybe using Joda parser
-      Select first one because some records have 2 dates !
+      <!-- Select first one because some records have 2 dates !
       eg. fr-784237539-bdref20100101-0105
       -->
       <xsl:for-each select="(mdb:dateInfo/
                               cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'revision']/
                                 cit:date/*[gn-fn-index:is-isoDate(.)])[1]">
-        <dateStamp><xsl:value-of select="."/></dateStamp>
+        <dateStamp><xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space(.))"/></dateStamp>
       </xsl:for-each>
 
 
@@ -283,7 +285,7 @@
             <xsl:variable name="date"
                           select="string(cit:date/gco:Date|cit:date/gco:DateTime)"/>
             <xsl:element name="{$dateType}DateForResource">
-              <xsl:value-of select="$date"/>
+              <xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($date))"/>
             </xsl:element>
             <xsl:element name="{$dateType}YearForResource">
               <xsl:value-of select="substring($date, 0, 5)"/>
@@ -300,7 +302,7 @@
               <xsl:variable name="date"
                             select="string(cit:date/gco:Date|cit:date/gco:DateTime)"/>
             <resourceDate type="object">
-              {"type": "<xsl:value-of select="$dateType"/>", "date": "<xsl:value-of select="$date"/>"}
+              {"type": "<xsl:value-of select="$dateType"/>", "date": "<xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($date))"/>"}
             </resourceDate>
           </xsl:for-each>
 
@@ -310,8 +312,8 @@
                                 group-by=".">
 
               <resourceTemporalDateRange type="object">{
-                "gte": "<xsl:value-of select="."/>",
-                "lte": "<xsl:value-of select="."/>"
+                "gte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(.)"/>",
+                "lte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(.)"/>"
                 }</resourceTemporalDateRange>
             </xsl:for-each-group>
           </xsl:if>
@@ -786,15 +788,15 @@
                           select="gml:endPosition|gml:end/gml:TimeInstant/gml:timePosition"/>
             <xsl:if test="gn-fn-index:is-isoDate($start)">
               <resourceTemporalDateRange type="object">{
-                "gte": "<xsl:value-of select="normalize-space($start)"/>"
+                "gte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($start))"/>"
                 <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
-                  ,"lte": "<xsl:value-of select="normalize-space($end)"/>"
+                  ,"lte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($end))"/>"
                 </xsl:if>
                 }</resourceTemporalDateRange>
               <resourceTemporalExtentDateRange type="object">{
-                "gte": "<xsl:value-of select="normalize-space($start)"/>"
+                "gte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($start))"/>"
                 <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
-                  ,"lte": "<xsl:value-of select="normalize-space($end)"/>"
+                  ,"lte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($end))"/>"
                 </xsl:if>
                 }</resourceTemporalExtentDateRange>
               <xsl:if test="$start &gt; $end">

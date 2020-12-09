@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2020 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -28,6 +28,7 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:daobs="http://daobs.org"
                 xmlns:saxon="http://saxon.sf.net/"
+                xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
                 version="2.0">
@@ -47,7 +48,7 @@
                 select="'opendata|open data|donnees ouvertes'"/>
 
   <xsl:variable name="dateFormat" as="xs:string"
-                select="'[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]'"/>
+                select="'[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][ZN]'"/>
 
   <xsl:variable name="separator" as="xs:string"
                 select="'|'"/>
@@ -84,6 +85,8 @@
         <xsl:value-of select="$identifier"/>
       </metadataIdentifier>
 
+      <!-- Since GN sets the timezone in system/server/timeZone setting as Java system default
+        timezone we can rely on XSLT functions to get current date in the right timezone -->
       <harvestedDate>
         <xsl:value-of select="format-dateTime(current-dateTime(), $dateFormat)"/>
       </harvestedDate>
@@ -101,11 +104,11 @@
       </xsl:for-each>
 
       <xsl:for-each select="dc:date">
-        <creationDateForResource><xsl:value-of select="string(.)"/></creationDateForResource>
+        <creationDateForResource><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></creationDateForResource>
       </xsl:for-each>
 
       <xsl:for-each select="dct:modified">
-        <revisionDateForResource><xsl:value-of select="string(.)"/></revisionDateForResource>
+        <revisionDateForResource><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></revisionDateForResource>
       </xsl:for-each>
 
       <xsl:for-each select="dc:format">
