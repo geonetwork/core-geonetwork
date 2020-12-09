@@ -655,8 +655,15 @@ public class EditLib {
                         propEl.addContent(child);
                     } else if (childHasSameTypeAsTarget) {
                         Element parent = propEl.getParentElement();
-                        int index = parent.indexOf(propEl);
-                        parent.addContent(index, child);
+                        if (parent == null) {
+                            LOGGER_ADD_ELEMENT.error(String.format(
+                                " > adding fragment from XPath in element %s which has no parent. This usually means that the element is not allowed in the XSD. Check this element in the metadata record.",
+                                propEl.getName()
+                                ));
+                        } else {
+                            int index = parent.indexOf(propEl);
+                            parent.addContent(index, child);
+                        }
                     } else {
                         // Add an element of same type in the target node
                         final Element newElement = addElement(metadataSchema, propEl, child.getQualifiedName());
