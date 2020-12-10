@@ -1,10 +1,11 @@
 <h5 translate>whoCanAccess</h5>
 
 <!--Message alert-->
-<div ng-if="alertMsg" class="alert alert-warning"
+<p ng-if="alertMsg"
      role="alert"
+     class="help-block gn-margin-top gn-margin-bottom gn-padding-bottom"
      translate>privilegesBatchAlert
-</div>
+</p>
 
 <!--Search inpup-->
 <div class="col-md-4 input-group input-group-sm gn-searchgroup-input">
@@ -108,19 +109,22 @@
        data-icon-only="true"></div> 
   <button type="button" class="btn btn-primary"
           id="gn-share-btn-replace"
+          title="{{'replaceByThoseOperations-help' | translate}}"
           data-gn-click-and-spin="save(true)">
     <i class="fa fa-eraser"></i>&nbsp;
     <span data-translate="">replaceByThoseOperations</span>
   </button>
   <button type="button" class="btn btn-primary"
           id="gn-share-btn-add"
+          title="{{'addThoseOperations-help' | translate}}"
           data-gn-click-and-spin="save(false)"
           data-ng-show="batch">
-    <i class="fa fa-plus"></i>&nbsp;
+    <i class="fa fa-save"></i>&nbsp;
     <span data-translate="">addThoseOperations</span>
   </button>
   <button type="button" class="btn btn-default"
           id="gn-share-btn-reset"
+          title="{{'clearCheckboxFormChanges' | translate}}"
           data-ng-click="reset()"
           data-ng-show="batch"
           title="{{'resetOps' | translate}}">
