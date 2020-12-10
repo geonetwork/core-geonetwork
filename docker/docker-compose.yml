@@ -13,10 +13,10 @@ services:
       #      - cas
       - geonetwork
 
-  ldap:
-    build:
-      context: ../core/src/test/docker/ldap
-    image: sextant-ldap:latest
+      #  ldap:
+      #    build:
+      #      context: ../core/src/test/docker/ldap
+      #    image: sextant-ldap:latest
 
       #  cas:
       #    build:
