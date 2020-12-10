@@ -10,7 +10,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - cas
+      #      - cas
       - geonetwork
 
   ldap:
@@ -18,19 +18,19 @@ services:
       context: ../core/src/test/docker/ldap
     image: sextant-ldap:latest
 
-  cas:
-    build:
-      context: ./cas
-      dockerfile: Dockerfile
-    image: sextant-cas:latest
-    environment:
-      JAVA_OPTS: -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
-    volumes:
-      - ./cas/cas-overlay-template-6.2/etc/cas:/etc/cas
-    ports:
-      - 5005:5005
-    depends_on:
-      - ldap
+      #  cas:
+      #    build:
+      #      context: ./cas
+      #      dockerfile: Dockerfile
+      #    image: sextant-cas:latest
+      #    environment:
+      #      JAVA_OPTS: -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+      #    volumes:
+      #      - ./cas/cas-overlay-template-6.2/etc/cas:/etc/cas
+      #    ports:
+      #      - 5005:5005
+      #    depends_on:
+      #      - ldap
 
   geonetwork:
     build: .
@@ -61,9 +61,9 @@ services:
       LDAP_URL: "ldap://ldap:389"
       LDAP_ADMIN_DN: cn=admin,dc=ifremer,dc=fr
       LDAP_ADMIN_PASSWORD: secret
-      CAS_URL: "http://${DOCKER_HOST_ADDRESS}:8080/cas"
+      CAS_URL: "https://users.marine-id.org"
       GN_URL: "http://${DOCKER_HOST_ADDRESS}:8080/geonetwork"
-      CAS_TICKET_VALIDATION_URL: "http://cas:8080/cas"
+      CAS_TICKET_VALIDATION_URL: "https://users.marine-id.org"
       PANIER_XML_PATH_LOGGED: "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/intranet"
       PANIER_XML_PATH_ANONYMOUS: "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/anonymous"
       JAVA_OPTS: -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
