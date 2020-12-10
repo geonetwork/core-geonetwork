@@ -23,8 +23,10 @@
 
 package org.fao.geonet.api.processing.report;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataDraft;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,10 +94,12 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
         return metadataErrors;
     }
 
-    public synchronized void addMetadataError(int metadataId, String metadataUUID, boolean draft, Exception error) {
+    public synchronized void addMetadataError(int metadataId, String metadataUUID, boolean draft, boolean approved,
+                                              Exception error) {
         Report errorReport = new ErrorReport(error);
         errorReport.setUuid(metadataUUID);
         errorReport.setDraft(draft);
+        errorReport.setApproved(approved);
         if (this.metadataErrors.get(metadataId) == null) {
             List<Report> errors = new ArrayList<>();
             errors.add(errorReport);
@@ -106,13 +110,16 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
     }
 
     public void addMetadataError(AbstractMetadata metadata, Exception error) {
-        addMetadataError(metadata.getId(), metadata.getUuid(), metadata instanceof MetadataDraft, error);
+        addMetadataError(metadata.getId(), metadata.getUuid(), isMetadataDraft(metadata.getId()),
+            isMetadataApproved(metadata.getId()), error);
     }
 
-    public synchronized void addMetadataError(int metadataId, String metadataUUID, boolean draft, String error) {
+    public synchronized void addMetadataError(int metadataId, String metadataUUID, boolean draft, boolean approved,
+                                              String error) {
         Report errorReport = new ErrorReport(error);
         errorReport.setUuid(metadataUUID);
         errorReport.setDraft(draft);
+        errorReport.setApproved(approved);
         if (this.metadataErrors.get(metadataId) == null) {
             List<Report> errors = new ArrayList<>();
             errors.add(errorReport);
@@ -123,7 +130,8 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
     }
 
     public void addMetadataError(AbstractMetadata metadata, String error) {
-        addMetadataError(metadata.getId(), metadata.getUuid(), metadata instanceof MetadataDraft, error);
+        addMetadataError(metadata.getId(), metadata.getUuid(), isMetadataDraft(metadata.getId()),
+            isMetadataApproved(metadata.getId()), error);
     }
 
     @XmlElement(name = "infos")
@@ -131,10 +139,11 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
         return metadataInfos;
     }
 
-    public void addMetadataInfos(int metadataId, String metadataUUID, boolean draft, String message) {
+    public void addMetadataInfos(int metadataId, String metadataUUID, boolean draft, boolean approved, String message) {
         InfoReport infoReport = new InfoReport(message);
         infoReport.setUuid(metadataUUID);
         infoReport.setDraft(draft);
+        infoReport.setApproved(approved);
         if (this.metadataInfos.get(metadataId) == null) {
             List<InfoReport> infos = new ArrayList<>();
             infos.add(infoReport);
@@ -145,7 +154,28 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
     }
 
     public void addMetadataInfos(AbstractMetadata metadata, String message) {
-        addMetadataInfos(metadata.getId(), metadata.getUuid(), metadata instanceof MetadataDraft, message);
+        addMetadataInfos(metadata.getId(), metadata.getUuid(), isMetadataDraft(metadata.getId()),
+            isMetadataApproved(metadata.getId()), message);
+    }
+
+    private boolean isMetadataDraft(int metadataId) {
+        boolean metadataDraft = false;
+        try {
+            metadataDraft = ApplicationContextHolder.get().getBean(IMetadataUtils.class).isMetadataDraft(metadataId);
+        } catch (Exception e) {
+            throw new RuntimeException("Error detecting if metadata is draft");
+        }
+        return metadataDraft;
+    }
+
+    private boolean isMetadataApproved(int metadataId) {
+        boolean metadataApproved = false;
+        try {
+            metadataApproved = ApplicationContextHolder.get().getBean(IMetadataUtils.class).isMetadataApproved(metadataId);
+        } catch (Exception e) {
+            throw new RuntimeException("Error detecting if metadata is draft");
+        }
+        return metadataApproved;
     }
 
     @XmlTransient

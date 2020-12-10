@@ -120,6 +120,9 @@ public class ValidateApi {
     MetadataValidationRepository metadataValidationRepository;
 
     @Autowired
+    IMetadataUtils metadataUtils;
+
+    @Autowired
     protected ApplicationContext appContext;
 
     @Autowired
@@ -193,9 +196,12 @@ public class ValidateApi {
             for (String uuid : records) {
                 int loopConditionCount = 0;
                 for (AbstractMetadata record : metadataRepository.findAllByUuid(uuid)) {
+                    //determine if this is an approved record.
+                    Boolean isMetadataApproved = metadataUtils.isMetadataApproved(record.getId());
+
                     if (approved == null ||
-                        (approved == true && !(record instanceof MetadataDraft)) ||
-                        (approved == false && record instanceof MetadataDraft)) {
+                        (approved == true && isMetadataApproved) ||
+                        (approved == false && !isMetadataApproved)) {
                         loopConditionCount++;
                         // If we processed more than one record in this loop then we will also increase the total records
                         // as it means that we are processing both and approved and draft and that was not calculated in the original total.

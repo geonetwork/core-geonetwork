@@ -33,6 +33,7 @@ public abstract class Report {
     private String message;
     private String uuid;
     private boolean draft;
+    private boolean approved;
     private ISODate date;
 
     public Report(String message) {
@@ -60,13 +61,23 @@ public abstract class Report {
         return this;
     }
 
-    @XmlElement(value = "isDraft")
+    @XmlElement(value = "draft")
     public boolean isDraft() {
         return draft;
     }
 
     public Report setDraft(boolean draft) {
         this.draft = draft;
+        return this;
+    }
+
+    @XmlElement(value = "approved")
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public Report setApproved(boolean approved) {
+        this.approved = approved;
         return this;
     }
 
