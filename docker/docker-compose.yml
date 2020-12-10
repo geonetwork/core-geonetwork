@@ -33,7 +33,7 @@ services:
       #      - ldap
 
   geonetwork:
-    build: .
+    build: geonetwork
     image: sextant-geonetwork:elastic
     restart: always
     env_file:
