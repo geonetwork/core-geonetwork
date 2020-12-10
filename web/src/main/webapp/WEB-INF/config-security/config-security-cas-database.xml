@@ -27,5 +27,8 @@
           http://www.springframework.org/schema/beans/spring-beans.xsd"
   xmlns="http://www.springframework.org/schema/beans">
 
+  <!-- this will use the default geonetworkAuthenticationProvider, but
+       will require that the user identified on the remote CAS service
+       already exists in the database. If not it will receive a 401 error -->
   <alias name="geonetworkAuthenticationProvider" alias="casUserService"/>
 </beans>
