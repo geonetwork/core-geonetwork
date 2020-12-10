@@ -436,9 +436,9 @@
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.list!?.*"
                            access="hasRole('RegisteredUser')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.update!?.*"
-                           access="hasRole('RegisteredUser')"/>
+                           access="hasRole('Guest')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.resetpassword"
-                           access="hasRole('RegisteredUser')"/>
+                           access="hasRole('Guest')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.remove!?.*"
                            access="hasRole('UserAdmin')"/>
 
@@ -750,7 +750,7 @@
                            access="permitAll"/>
 
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.console!?.*"
-                           access="hasRole('RegisteredUser')"/>
+                           access="hasRole('Guest')"/>
 
         <!-- Formatter services -->
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/md.format.public..[^?]+(\?.*)?"
