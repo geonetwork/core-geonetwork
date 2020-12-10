@@ -22,6 +22,7 @@
     <div class="btn-toolbar">
       <button type="reset" class="btn btn-default pull-right"
               title="{{'clearCheckboxFormChanges' | translate}}"
+              data-ng-disabled="!categoryIsSelected"
               data-ng-click="reset()">
         <i class="fa fa-undo"></i>&nbsp;
       </button>

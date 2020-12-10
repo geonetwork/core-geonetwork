@@ -62,6 +62,7 @@
           <input type="checkbox"
                  name="{{g.group + '-' + key}}"
                  data-ng-disabled="!isAdminOrReviewer"
+                 data-ng-click="selectPrivilege()"
                  data-ng-class="internalGroups.indexOf(g.group) != -1 &&
                                 internalOperations.indexOf(key) != -1 ? 'hidden' : ''"
                  data-ng-model="g.operations[key]"/>
@@ -84,6 +85,7 @@
         <td data-ng-repeat="key in operations" class="text-center">
           <input type="checkbox"
                  name="{{g.group + '-' + key}}"
+                 data-ng-click="selectPrivilege()"
                  data-ng-disabled="g.privileges[key].disabled"
                  data-ng-model="g.operations[key]"/>
         </td>
@@ -127,6 +129,7 @@
           title="{{'clearCheckboxFormChanges' | translate}}"
           data-ng-click="reset()"
           data-ng-show="batch"
+          data-ng-disabled="!privilegeIsSelected"
           title="{{'resetOps' | translate}}">
     <i class="fa fa-undo"></i>&nbsp;
   </button>
