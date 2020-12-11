@@ -25,11 +25,13 @@ package org.fao.geonet.api;
 
 import com.google.common.collect.Sets;
 import org.fao.geonet.api.exception.*;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.doi.client.DoiClientException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.InvalidMediaTypeException;
@@ -57,6 +59,9 @@ import java.util.stream.Collectors;
  */
 @ControllerAdvice
 public class GlobalExceptionController {
+
+    @Autowired
+    private LanguageUtils languageUtils;
 
     @ResponseBody
     @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -86,8 +91,14 @@ public class GlobalExceptionController {
         SecurityException.class,
         AccessDeniedException.class
     })
-    public Object securityHandler(final Exception exception) {
-        return new ApiError("forbidden", exception.getClass().getSimpleName(), exception.getMessage());
+    public Object securityHandler(final HttpServletRequest request, final Exception exception) {
+        //Translate error description to front end.
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        String language = locale.getISO3Language();
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
+        return new ApiError("forbidden", exception.getClass().getSimpleName(), messages.getString("access.denied.error"));
+
     }
 
     @ResponseBody

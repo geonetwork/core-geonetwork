@@ -420,6 +420,5 @@
     "badGmlProjectionCode": "The geometry projection <b>{{srsName}}</b> defined in the XML is not valid. Please edit the xml to fix the srs name or enter a new geometry.",
     "draft": "Brouillon",
     "link": "Lien",
-    "link-text": "Link text",
-    "accessDenied": "L'accès est refusé"
+    "link-text": "Link text"
 }

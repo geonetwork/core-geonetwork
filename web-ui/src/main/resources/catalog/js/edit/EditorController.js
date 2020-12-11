@@ -519,7 +519,7 @@
               $scope.saveError = true;
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('saveMetadataError'),
-                error: error.message.toString().contains("AccessDeniedException")? $translate.instant('accessDenied'):error,
+                error: error.description,
                 timeout: 0,
                 type: 'danger'});
             });
@@ -560,7 +560,7 @@
               }, function(reason) {
                 $rootScope.$broadcast('StatusUpdated', {
                   title: $translate.instant('cancelMetadataError'),
-                  error: reason.data.message.toString().contains("AccessDeniedException")? $translate.instant('accessDenied'):reason.data.message,
+                  error: reason.data.description,
                   timeout: 0,
                   type: 'danger'
                 });
@@ -577,10 +577,12 @@
                 //  gnEditor.refreshEditorForm(null, true);
                 closeEditor();
               }, function(error) {
+                var xmlDoc = $.parseXML(error);
+                var description = xmlDoc.getElementsByTagName("description")[0];
                 $scope.savedStatus = gnCurrentEdit.savedStatus;
                 $rootScope.$broadcast('StatusUpdated', {
                   title: $translate.instant('cancelMetadataError'),
-                  error: error.toString().contains("AccessDeniedException")? $translate.instant('accessDenied'):error,
+                  error: description.childNodes[0].nodeValue,
                   timeout: 0,
                   type: 'danger'});
               });
@@ -621,7 +623,7 @@
 
               $rootScope.$broadcast('StatusUpdated', {
                 title: error.message.toString().contains("AccessDeniedException") ? $translate.instant('saveMetadataError'): error.message,
-                error: error.message.toString().contains("AccessDeniedException")? $translate.instant('accessDenied'):error,
+                error: error.description,
                 timeout: 0,
                 type: 'danger'});
             });
