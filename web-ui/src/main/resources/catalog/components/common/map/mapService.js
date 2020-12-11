@@ -998,7 +998,9 @@
                   if (dimension.name == 'time') {
                     layer.set('time', {
                       units: dimension.units,
-                      values: dimension.values.split(',')
+                      values: dimension.values
+                        .split(',')
+                        .map(function(e){return e.trim()})
                     });
 
                     if (dimension.default) {
