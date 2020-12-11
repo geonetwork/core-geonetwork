@@ -393,6 +393,78 @@
                 match="mdb:dataQualityInfo[position() > 1]"
                 priority="9999"/>-->
 
+  <!-- MedSea data quality section is rendered in a table -->
+  <xsl:template mode="render-field"
+                match="mdb:dataQualityInfo[contains(
+                          $metadata/mdb:metadataStandard/*/cit:title/gco:CharacterString,
+                          'Emodnet Checkpoint')]"
+                priority="9999">
+    <!-- Only render quality section for a component, not for errors
+    that are in the index and rendered by the directive. -->
+    <xsl:if test="*/@uuid[not(ends-with(., '#QE'))]">
+      <xsl:variable name="cptId" select="*/@uuid"/>
+      <div>
+        <h3 style="width:100%">
+          <xsl:value-of select="util:getIndexField('',
+                                string(tokenize($cptId, '/')[3]), '_defaultTitle', 'eng')"/>
+          <!--<xsl:text> - </xsl:text>
+          <xsl:value-of select="*/mdq:scope/*/mcc:levelDescription[1]/*/mcc:other/*"/>-->
+          <xsl:if test="*/mdq:scope/*/mcc:levelDescription[2]/*/mcc:other/* != ''">
+            <xsl:text> - </xsl:text>
+            <xsl:value-of select="*/mdq:scope/*/mcc:levelDescription[2]/*/mcc:other/*"/>
+          </xsl:if>
+        </h3>
+
+        <xsl:variable name="sqr"
+                      select=".//mdq:standaloneQualityReport/*"/>
+        <xsl:variable name="isCovered"
+                      select="not(contains($sqr/mdq:reportReference/*/cit:title, 'Component is not covered'))"/>
+
+        <xsl:if test="not($isCovered)">
+          <xsl:apply-templates select="$sqr/mdq:reportReference/*/cit:title"
+                               mode="render-field">
+            <xsl:with-param name="fieldName" select="'&#160;'"/>
+          </xsl:apply-templates>
+          <xsl:apply-templates select="$sqr/mdq:abstract"
+                               mode="render-field">
+            <xsl:with-param name="fieldName" select="'&#160;'"/>
+          </xsl:apply-templates>
+        </xsl:if>
+
+        <xsl:for-each select="*/mdq:scope/*/mcc:extent/*">
+          <xsl:for-each select="gex:geographicElement/*[
+                number(gex:westBoundLongitude/gco:Decimal)
+                and number(gex:southBoundLatitude/gco:Decimal)
+                and number(gex:eastBoundLongitude/gco:Decimal)
+                and number(gex:northBoundLatitude/gco:Decimal)
+                and normalize-space(gex:westBoundLongitude/gco:Decimal) != ''
+                and normalize-space(gex:southBoundLatitude/gco:Decimal) != ''
+                and normalize-space(gex:eastBoundLongitude/gco:Decimal) != ''
+                and normalize-space(gex:northBoundLatitude/gco:Decimal) != '']">
+            <xsl:copy-of select="gn-fn-render:bbox(
+                                    xs:double(gex:westBoundLongitude/gco:Decimal),
+                                    xs:double(gex:southBoundLatitude/gco:Decimal),
+                                    xs:double(gex:eastBoundLongitude/gco:Decimal),
+                                    xs:double(gex:northBoundLatitude/gco:Decimal))"/>
+
+          </xsl:for-each>
+
+          <xsl:apply-templates select="gex:temporalElement/*/gex:extent/gml:*/gml:beginPosition"
+                               mode="render-field"/>
+          <xsl:apply-templates select="gex:temporalElement/*/gex:extent/gml:*/gml:endPosition"
+                               mode="render-field"/>
+
+          <xsl:apply-templates select="gex:verticalElement"
+                               mode="render-field"/>
+        </xsl:for-each>
+
+        <xsl:if test="$isCovered">
+          <div data-gn-data-quality-measure-renderer="{$metadataId}"
+               data-cpt-id="{$cptId}">&#160;</div>
+        </xsl:if>
+      </div>
+    </xsl:if>
+  </xsl:template>
 
   <!-- Most of the elements are ... -->
   <!-- Most of the elements are ... -->

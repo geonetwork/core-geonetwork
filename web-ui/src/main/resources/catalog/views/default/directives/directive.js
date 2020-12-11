@@ -126,11 +126,20 @@
             var q1 = $q.defer();
 
             if (scope.isUd || scope.isTdp) {
-              $http.get('qi?fast=index&_content_type=json&_uuid=' + dpsKey, {
-                cache: true
-              }).then(function (r) {
-                if (r.data.metadata && r.data.metadata.dqValues) {
-                  var values = r.data.metadata.dqValues;
+              $http.post('../api/search/records/_search', {"query": {
+                  "bool" : {
+                    "must": [
+                      {"multi_match": {
+                          "query": dpsKey,
+                          "fields": ['id', 'uuid']}},
+                      {"terms": {"isTemplate": ["n", "y"]}},
+                      {"terms": {"draft": ["n", "y", "e"]}}
+                    ]
+                  }},
+                  "_source": ["dq*"]
+                }, {cache: true}).then(function (r) {
+                if (r.data.hits.hits[0]._source && r.data.hits.hits[0]._source.dqValues) {
+                  var values = r.data.hits.hits[0]._source.dqValues;
                   for(var i = 0; i < values.length; i ++) {
                     var v = values[i];
                     if (v.indexOf(tokens[0] + '/' + tokens[1]) === 0 &&
@@ -149,11 +158,20 @@
                 if (tokens.length >= 3) {
                   var tdpKey = tokens[2];
                   var q2 = $q.defer();
-                  $http.get('qi?fast=index&_content_type=json&_uuid=' + tdpKey, {
-                    cache: true
-                  }).then(function (r) {
-                    if (r.data.metadata && r.data.metadata.dqValues) {
-                      var values = r.data.metadata.dqValues;
+                  $http.post('../api/search/records/_search', {"query": {
+                      "bool" : {
+                        "must": [
+                          {"multi_match": {
+                              "query": tdpKey,
+                              "fields": ['id', 'uuid']}},
+                          {"terms": {"isTemplate": ["n", "y"]}},
+                          {"terms": {"draft": ["n", "y", "e"]}}
+                        ]
+                      }},
+                      "_source": ["dq*"]
+                    }, {cache: true}).then(function (r) {
+                    if (r.data.hits.hits[0]._source && r.data.hits.hits[0]._source.dqValues) {
+                      var values = r.data.hits.hits[0]._source.dqValues;
                       for(var i = 0; i < values.length; i ++) {
                         var v = values[i];
                         if (v.indexOf(tokens[0] + '/' + tokens[1] + '/' + tokens[2]) === 0 &&
@@ -210,14 +228,24 @@
           function loadValues() {
             scope.isUd = false;
             scope.isTdp = false;
-            $http.get('qi?_content_type=json&fast=index&_id=' +
-              scope.recordId).then(
+            $http.post('../api/search/records/_search', {"query": {
+                "bool" : {
+                  "must": [
+                    {"multi_match": {
+                        "query": scope.recordId,
+                        "fields": ['id', 'uuid']}},
+                    {"terms": {"isTemplate": ["n", "y"]}},
+                    {"terms": {"draft": ["n", "y", "e"]}}
+                  ]
+                }},
+                "_source": ["dq*", "standardName"]
+              }, {cache: true}).then(
               function (r) {
-                scope.isUd = r.data.metadata.standardName
+                scope.isUd = r.data.hits.hits[0]._source.standardName
                               .indexOf('Upstream Data') !== -1;
-                scope.isTdp = r.data.metadata.standardName
+                scope.isTdp = r.data.hits.hits[0]._source.standardName
                               .indexOf('Targeted Data Product') !== -1;
-                scope.qm = r.data.metadata.dqValues;
+                scope.qm = r.data.hits.hits[0]._source.dqValues;
                 angular.forEach(scope.qm, function (value, idx) {
                   scope.qm[idx] = value.split('|');
                 });

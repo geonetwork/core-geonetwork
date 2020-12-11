@@ -103,6 +103,11 @@
 
   <xsl:variable name="siteUrl" select="util:getSiteUrl()" />
 
+  <!-- Boolean flag for checpoint records. -->
+  <xsl:variable name="isCheckpoint"
+                select="count(//mdb:metadataStandard/cit:CI_Citation/
+                                  cit:title/gco:CharacterString[starts-with(., 'ISO 19115-3 - Emodnet Checkpoint - ')]) > 0"/>
+
   <xsl:template match="/">
     <xsl:apply-templates mode="index"/>
   </xsl:template>
@@ -311,8 +316,8 @@
                                 group-by=".">
 
               <resourceTemporalDateRange type="object">{
-                "gte": "<xsl:value-of select="."/>",
-                "lte": "<xsl:value-of select="."/>"
+                "gte": "<xsl:value-of select="normalize-space(.)"/>",
+                "lte": "<xsl:value-of select="normalize-space(.)"/>"
                 }</resourceTemporalDateRange>
             </xsl:for-each-group>
           </xsl:if>
@@ -785,7 +790,7 @@
                           select="gml:beginPosition|gml:begin/gml:TimeInstant/gml:timePosition"/>
             <xsl:variable name="end"
                           select="gml:endPosition|gml:end/gml:TimeInstant/gml:timePosition"/>
-            <xsl:if test="gn-fn-index:is-isoDate($start)">
+            <xsl:if test="gn-fn-index:is-isoDate($start/text())">
               <resourceTemporalDateRange type="object">{
                 "gte": "<xsl:value-of select="normalize-space($start)"/>"
                 <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
@@ -798,7 +803,7 @@
                   ,"lte": "<xsl:value-of select="normalize-space($end)"/>"
                 </xsl:if>
                 }</resourceTemporalExtentDateRange>
-              <xsl:if test="$start &gt; $end">
+              <xsl:if test="normalize-space($start) &gt; normalize-space($end)">
                 <indexingErrorMsg>Warning / Field resourceTemporalDateRange /
                   Lower range bound '<xsl:value-of select="."/>' can not be
                   greater than upper bound '<xsl:value-of select="$end"/>'.
@@ -1019,6 +1024,69 @@
           </xsl:for-each>
         </xsl:for-each>
       </xsl:for-each>
+
+
+
+      <!-- Checkpoint QM indexing -->
+      <xsl:variable name="isDps"
+                    select="count(
+                            mdb:metadataStandard/*/cit:title/*[text() =
+                              'ISO 19115-3 - Emodnet Checkpoint - Data Product Specification']
+                          ) = 1"/>
+
+      <xsl:for-each select="mdb:dataQualityInfo">
+        <!-- Checpoint / Index component id.
+          If not set, then index by dq section position. -->
+        <xsl:variable name="cptId" select="*/@uuid"/>
+        <xsl:variable name="cptName" select="*/mdq:scope/*/mcc:levelDescription[1]/*/mcc:other/*/text()"/>
+        <xsl:variable name="dqId" select="if ($cptId != '') then $cptId else position()"/>
+
+        <dqCpt><xsl:value-of select="$dqId"/></dqCpt>
+
+        <xsl:for-each select="*/mdq:standaloneQualityReport/*[
+                              mdq:reportReference/*/cit:title/*/text() != ''
+                            ]">
+          <dqSReport><xsl:value-of select="normalize-space(concat(
+                          mdq:reportReference/*/cit:title/*/text(),
+                          '|',
+                          mdq:abstract/*/text()))"/></dqSReport>
+        </xsl:for-each>
+
+        <xsl:for-each select="*/mdq:report/*[
+                            mdq:measure/*/mdq:measureIdentification/*/mcc:code/*/text() != ''
+                          ]">
+
+          <xsl:variable name="qmId" select="mdq:measure/*/mdq:measureIdentification/*/mcc:code/*/text()"/>
+          <xsl:variable name="qmName" select="mdq:measure/*/mdq:nameOfMeasure/*/text()"/>
+          <xsl:variable name="qmDefinition" select="mdq:measure/*/mdq:measureDescription/*/text()"/>
+
+          <!-- Search record by measure id or measure name. -->
+          <dqMeasure><xsl:value-of select="$qmId"/></dqMeasure>
+          <dqMeasureName><xsl:value-of select="qmName"/></dqMeasureName>
+
+          <xsl:for-each select="mdq:result/mdq:DQ_QuantitativeResult">
+            <xsl:variable name="qmDate" select="mdq:dateTime/gco:Date/text()"/>
+            <xsl:variable name="qmValue" select="normalize-space(mdq:value/gco:Record/text())"/>
+            <xsl:variable name="qmStatement" select="normalize-space(../../mdq:result/mdq:DQ_DescriptiveResult/mdq:statement/gco:CharacterString/text())"/>
+            <xsl:variable name="qmUnit" select="mdq:valueUnit/*/gml:identifier/text()"/>
+
+            <xsl:choose>
+              <xsl:when test="$isDps and $qmId = 'AP.5.1'"></xsl:when>
+              <xsl:otherwise>
+                <dqValues><xsl:value-of select="concat(
+                $dqId, '|', $cptName, '|', $qmId, '|', $qmName, '|',
+                $qmDate, '|', $qmValue, '|', $qmUnit, '|',
+                 $qmDefinition, '|', $qmStatement)"/></dqValues>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+        </xsl:for-each>
+      </xsl:for-each>
+
+
+
+
+
 
 
       <xsl:for-each select="mdb:distributionInfo/*">

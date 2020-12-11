@@ -2027,7 +2027,7 @@
 
           <!-- Then user can encode QM values. -->
           <xsl xpath="/mdb:MD_Metadata/mdb:dataQualityInfo"
-               mode="iso19115-3-qm"/>
+               mode="iso19115-3.2018-qm"/>
 
           <!-- Compute QE and FU
           Hack on uuid because the metadata document contains another uuid attribute
@@ -2516,7 +2516,7 @@
         <section>
           <xsl xpath="/mdb:MD_Metadata/mdb:dataQualityInfo"
                or="report"
-               mode="iso19115-3-qm"/>
+               mode="iso19115-3.2018-qm"/>
 
 
           <action type="add"
@@ -3614,7 +3614,7 @@
           <!-- Then user can encode QM values. -->
           <xsl xpath="/mdb:MD_Metadata/mdb:dataQualityInfo"
                or="report"
-               mode="iso19115-3-qm"/>
+               mode="iso19115-3.2018-qm"/>
 
           <!-- Compute QE and FU -->
           <action type="process"
