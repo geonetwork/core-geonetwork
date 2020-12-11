@@ -425,7 +425,7 @@
     <xsl:param name="fieldName" select="''" as="xs:string"/>
 
     <xsl:variable name="elementName" select="if (@codeListValue) then name(..) else name(.)"/>
-    <dl>
+    <dl class="gn-{local-name()}">
       <dt>
         <xsl:call-template name="render-field-label">
           <xsl:with-param name="fieldName" select="$fieldName"/>
