@@ -643,15 +643,22 @@ ul.container-list {
       display: none;
   }
   #gn-tab-eo-history > div.gn-tab-content > div {
-      > h2 {
-        display: none;
-      }
-      > div.target {
-        padding-bottom: 10px;
-
-
-      }
+    > h2 {
+      display: none;
+    }
+    > div.target {
+      padding-bottom: 10px;
+    }
   }
+
+  #gn-tab-eo-history,
+  #gn-tab-eo-access-and-usage {
+    .gn-specificUsage,
+    .gn-level {
+      display: none;
+    }
+  }
+
 }
 
 [data-gn-metadata-contacts], [gn-metadata-contacts] {
