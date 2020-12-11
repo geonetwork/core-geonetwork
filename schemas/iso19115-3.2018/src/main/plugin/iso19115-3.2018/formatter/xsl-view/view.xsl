@@ -1110,7 +1110,7 @@
 
 
     <xsl:if test="@uom">
-      <xsl:comment select="'.'"/><xsl:value-of select="@uom"/>
+      <xsl:comment select="'.'"/>&#160;<xsl:value-of select="@uom"/>
     </xsl:if>
   </xsl:template>
 
@@ -1159,7 +1159,7 @@
   </xsl:template>
   <xsl:template mode="render-value"
                 match="gco:Distance|gco:Measure">
-    <span><xsl:value-of select="."/>&#10;<xsl:value-of select="@uom"/></span>
+    <span><xsl:value-of select="."/>&#160;<xsl:value-of select="@uom"/></span>
   </xsl:template>
 
   <xsl:template mode="render-value"
