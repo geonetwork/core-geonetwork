@@ -966,10 +966,22 @@
                       units: dimension.units,
                       values: dimension.values.split(',')
                     });
+
+                    if (dimension.default) {
+                      layer.getSource().updateParams({ ELEVATION: dimension.default });
+                    }
                   }
                   if (dimension.name == 'time') {
-                    layer.set('time',
-                        dimension.values.split(','));
+                    layer.set('time', {
+                      units: dimension.units,
+                      values: dimension.values
+                        .split(',')
+                        .map(function(e){return e.trim()})
+                    });
+
+                    if (dimension.default) {
+                        layer.getSource().updateParams({ TIME: dimension.default });
+                    }
                   }
                 }
               }
