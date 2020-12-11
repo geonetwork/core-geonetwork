@@ -245,21 +245,26 @@
           } else if(md.getSchema() == 'iso19110') {
             url = '../api/records/' + uuid + '/formatters/xsl-view?root=div';
           } else if(md.getSchema() == 'iso19115-3.2018') {
-            url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&header=false&view=earthObservation&related=';
-          } else if(md.getSchema() == 'iso19115-3') {
+
             var view;
-            if(md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Upstream Data') {
-              view = 'medsea'
+            if(md.standardName === 'ISO 19115-3:2018 - Remote Sensing') {
+              url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&header=false&view=earthObservation&related=';
+            } else {
+              if(md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Upstream Data') {
+                view = 'medsea'
+              }
+              else if(md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product') {
+                view = 'checkpoint-tdp'
+              }
+              else if(md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Data Product Specification') {
+                view = 'checkpoint-dps'
+              } else {
+                view = 'default';
+              }
+              url = view ?
+                '../api/records/' + uuid + '/formatters/xsl-view?root=div&loadJS=false&tabs=false&css=checkpoint&related=&header=false&view=' + view :
+                '../api/records/' + uuid + '/formatters/xsl-view';
             }
-            else if(md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product') {
-              view = 'checkpoint-tdp'
-            }
-            else if(md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Data Product Specification') {
-              view = 'checkpoint-dps'
-            }
-            url = view ?
-              '../api/records/' + uuid + '/formatters/xsl-view?root=div&loadJS=false&tabs=false&css=checkpoint&related=&header=false&view=' + view :
-              '../api/records/' + uuid + '/formatters/xsl-view';
           } else {
             if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY' ||
                 md.standardName === 'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY') {
