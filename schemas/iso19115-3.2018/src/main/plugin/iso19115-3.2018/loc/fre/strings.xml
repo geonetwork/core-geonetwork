@@ -128,6 +128,7 @@
   <eo-issues-add>Ajouter un problème</eo-issues-add>
   <eo-processstep-add>Ajouter une étape de processus</eo-processstep-add>
 
+  <addCrs>Add coordinate system</addCrs>
   <addCrs4326>WGS 84</addCrs4326>
   <addCrs4258>ETRS89</addCrs4258>
   <addCrs3035>ETRS89 / LAEA Europe</addCrs3035>
@@ -137,4 +138,287 @@
   <extent>Étendue spatiale</extent>
   <spatialExtent>Étendue spatiale</spatialExtent>
   <freeTextKeywords>Other keywords</freeTextKeywords>
+
+
+
+  <!-- Medsea-->
+  <edmo>EDMO</edmo>
+  <edmerp>EDMERP</edmerp>
+  <beginPosition>Begin</beginPosition>
+  <endPosition>End</endPosition>
+  <medsea>Emodnet Checkpoint</medsea>
+  <challengeExpertOpinion>Challenge expert opinion</challengeExpertOpinion>
+  <orAddPointOfContact>or add point of contact</orAddPointOfContact>
+  <checkpoint-dps>Emodnet Checkpoint data product specification</checkpoint-dps>
+  <checkpoint-dps-characteristics>DPS  identification and overview</checkpoint-dps-characteristics>
+  <checkpoint-dps-add-component>Add component</checkpoint-dps-add-component>
+  <checkpoint-tdp-add-component>Choose a DPS and then a component</checkpoint-tdp-add-component>
+  <checkpoint-ud-add-component>Choose a TDP and then a component</checkpoint-ud-add-component>
+  <checkpoint-dps-component>Component</checkpoint-dps-component>
+  <checkpoint-dps-component-name>Name*</checkpoint-dps-component-name>
+  <checkpoint-dps-component-description>Description*</checkpoint-dps-component-description>
+  <checkpoint-dps-component-details>Details</checkpoint-dps-component-details>
+  <checkpoint-dps-main>Identification</checkpoint-dps-main>
+  <checkpoint-add-revision>Add revision date</checkpoint-add-revision>
+  <checkpoint-dps-distribution>Distribution</checkpoint-dps-distribution>
+  <checkpoint-dps-spatial>Spatial information</checkpoint-dps-spatial>
+  <checkpoint-dps-component-lineage>Lineage*</checkpoint-dps-component-lineage>
+  <checkpoint-measure-date>Date</checkpoint-measure-date>
+  <checkpoint-add-deliverable-link>Add deliverable report link</checkpoint-add-deliverable-link>
+  <checkpoint-copy-dps-props>Copy properties from DPS</checkpoint-copy-dps-props>
+  <checkpoint-copy-dps-props-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">
+          Replace current TDP properties (spatial, vertical and temporal extents,
+          Challenge, Processing level, Production mode and INSPIRE theme) by
+          the one from the related DPS.
+        </p>
+      </div>
+    </div>
+  </checkpoint-copy-dps-props-help>
+  <checkpoint-ve>Vertical extent</checkpoint-ve>
+  <checkpoint-tdp-productName>Product name*</checkpoint-tdp-productName>
+  <checkpoint-tdp-productIdentifier>Product identifier</checkpoint-tdp-productIdentifier>
+  <checkpoint-dps-dq>Components &amp; quality measures</checkpoint-dps-dq>
+  <checkpoint-deliverable>Deliverable identifier*</checkpoint-deliverable>
+  <checkpoint-tdp>Emodnet Checkpoint targeted product</checkpoint-tdp>
+  <checkpoint-tdp-characteristics>TDP  identification and overview</checkpoint-tdp-characteristics>
+  <checkpoint-tdp-main>Identification</checkpoint-tdp-main>
+  <checkpoint-tdp-qm>Components &amp; quality measures</checkpoint-tdp-qm>
+  <checkpoint-dps-value>DPS value</checkpoint-dps-value>
+  <checkpoint-tdp-value>TDP value</checkpoint-tdp-value>
+  <checkpoint-ud-qm>Appropriateness</checkpoint-ud-qm>
+  <checkpoint-linkToSpecification>Link to a specification</checkpoint-linkToSpecification>
+  <checkpoint-linkToSpecification-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">
+          To describe quality measures for this targeted data product,
+          you need to link it with a data specification. Once the specification
+          is associated, you can then select component to evaluate.
+        </p>
+      </div>
+    </div>
+  </checkpoint-linkToSpecification-help>
+  <checkpoint-linkToTargetedDataProduct>Link to a targeted data product</checkpoint-linkToTargetedDataProduct>
+  <checkpoint-linkToTargetedDataProduct-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">
+          To describe quality measures for this upstream data,
+          you need to link it with a targeted data product first.
+          This can be done in the related targeted data product.
+          <!-- TODO: Could we add link to the TDP ? -->
+        </p>
+      </div>
+    </div>
+  </checkpoint-linkToTargetedDataProduct-help>
+  <checkpoint-linkToUpstreamData>Link to one or more upstream data</checkpoint-linkToUpstreamData>
+  <checkpoint-linkToUpstreamData-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">
+          Choose related upstream data to this targeted data product.
+          This is required in order to be able to encode component quality measure
+          in upstream data.
+        </p>
+      </div>
+    </div>
+  </checkpoint-linkToUpstreamData-help>
+  <checkpoint-compute-qe>Compute or update quality errors</checkpoint-compute-qe>
+  <checkpoint-compute-qe-fu>Compute or update quality errors and fitness for use values</checkpoint-compute-qe-fu>
+  <checkpoint-compute-qe-fuHelp></checkpoint-compute-qe-fuHelp>
+  <checkpoint-pointOfContact>Contact for the resource*</checkpoint-pointOfContact>
+  <checkpoint-abstract>Abstract*</checkpoint-abstract>
+  <checkpoint-purpose>Purpose*</checkpoint-purpose>
+  <checkpoint-date>Date*</checkpoint-date>
+  <checkpoint-qe>Quality errors (%)</checkpoint-qe>
+  <checkpoint-fu>Indicator</checkpoint-fu>
+  <medsea-metadata>Metadata information</medsea-metadata>
+  <medsea-metadata-tp>Identification</medsea-metadata-tp>
+  <medsea-dq>Quality</medsea-dq>
+  <medseaTitle>Data collection name or data set name*</medseaTitle>
+  <medseaTitle-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">
+          Copy data set name given by the provider or give an internal name if none has been given by the provider.
+        </p>
+      </div>
+    </div>
+  </medseaTitle-help>
+  <characteristics>Characteristics</characteristics>
+  <medseaHierarchyLevel>Hierarchy data level*</medseaHierarchyLevel>
+  <datasources>Data sources</datasources>
+  <validation>Publication status</validation>
+  <overview>Overview</overview>
+  <phone>Phone</phone>
+  <spatialCoverage>Spatial coverage</spatialCoverage>
+  <timeCoverage>Time coverage</timeCoverage>
+  <accessibility>Availability</accessibility>
+  <datasetVisibility>Visibility of dataset</datasetVisibility>
+  <datasetAccessibility>Accessibility of dataset</datasetAccessibility>
+  <programName>Program name*</programName>
+  <programNameWebsite>Program/project web site URL</programNameWebsite>
+  <edmerpNameGlobal>Program name/project name*</edmerpNameGlobal>
+  <edmerpName>Program name/project name (EDMERP)*</edmerpName>
+  <orAddEdmerpName>or add a program name if none found in EDMERP</orAddEdmerpName>
+  <edmoNameGlobal>Data provider*</edmoNameGlobal>
+  <edmoName>Data provider (EDMO)*</edmoName>
+  <orAddEdmoName>or add a data provider if none found in EDMO</orAddEdmoName>
+  <edmoNameWebsite>Data provider website</edmoNameWebsite>
+  <edmoProducerName>Data originator</edmoProducerName>
+  <edmoProducerNameSearch>Data originator (EDMO)*</edmoProducerNameSearch>
+  <producerName>Data originator*</producerName>
+  <orAddProducerName>or add a data originator if none found in EDMO</orAddProducerName>
+  <producerNameWebsite>Data originator website</producerNameWebsite>
+  <datasourceAcronym>Data collection name or data set name given by the provider</datasourceAcronym>
+  <dataProvider>Data provider*</dataProvider>
+  <uniqueIdentifier>Unique identifier*</uniqueIdentifier>
+  <serviceExtent>EU catalogue service*</serviceExtent>
+  <useByChallenges>Used by challenges</useByChallenges>
+  <datasetPerf>Performance of dataset</datasetPerf>
+  <environmental-matrix>Environmental matrix</environmental-matrix>
+  <sdn-parameter-discovery>Parameter Discovery Vocabulary (P02)</sdn-parameter-discovery>
+  <p03>Group of Category of characteristics (P03)</p03>
+  <p02>Category of characteristics (P02)</p02>
+  <p01>Characteristic name (P01)</p01>
+  <production-mode>Production mode</production-mode>
+  <checkpoint-production-mode>Production mode*</checkpoint-production-mode>
+  <level-of-characteristics>Processing level of characteristics*</level-of-characteristics>
+  <processing-level>Processing level*</processing-level>
+  <providerSpecification>Purpose of characteristics production*</providerSpecification>
+  <providerSpecification-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">Provider specification</p>
+      </div>
+    </div>
+  </providerSpecification-help>
+  <selectRegion>Select predefined regions</selectRegion>
+  <processStepReference>Production and quality assessment specifications reference</processStepReference>
+  <useOfTheCharacteristics>Title of the intended  use of the characteristic by the challenge*</useOfTheCharacteristics>
+  <intendedUse>Intended use description: objective, process description, output data*</intendedUse>
+  <geographicalAreaCode>Geographical area code</geographicalAreaCode>
+  <horizontalAndVerticalInfo>Horizontal and vertical information</horizontalAndVerticalInfo>
+  <horResolution>Horizontal resolution (meters)</horResolution>
+  <minDepth>Min depth (meters)</minDepth>
+  <maxDepth>Max depth (meters)</maxDepth>
+  <checkpoint-minDepth>Min depth* (meters, positive below sea level of reference)</checkpoint-minDepth>
+  <checkpoint-maxDepth>Max depth* (meters, positive below sea level of reference)</checkpoint-maxDepth>
+  <verticalResolution>Vertical resolution (meters)</verticalResolution>
+  <listOfObservationLevel>Vertical observation levels (meters > 0 above sea level)</listOfObservationLevel>
+  <timeResolution>Time resolution</timeResolution>
+  <dataDelivery>Data delivery mechanisms*</dataDelivery>
+  <dataPolicy>Data policy*</dataPolicy>
+  <policyVisibility>Visibility of data policy*</policyVisibility>
+  <otherP01>Characteristic name</otherP01>
+  <costBasis>Pricing*</costBasis>
+  <visibility>Easily found*</visibility>
+  <readyness>Readiness</readyness>
+  <losi>Level of service information</losi>
+  <dataFormats>Data formats and conventions</dataFormats>
+  <dataFormats-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">
+          Insert as many format as needed
+        </p>
+      </div>
+    </div>
+  </dataFormats-help>
+  <temporalExtent>Temporal extent*</temporalExtent>
+  <responsiveness>Responsiveness*</responsiveness>
+  <reliability>Reliability</reliability>
+  <medseaDataSourceCatalogueName>Catalogue name from provider</medseaDataSourceCatalogueName>
+  <medseaDataSourceCatalogueURL>Catalog URL</medseaDataSourceCatalogueURL>
+  <medseaDataSourceIdentifier>Dataset identifier in the catalog</medseaDataSourceIdentifier>
+  <medseaDataSourceDOI>Dataset URL</medseaDataSourceDOI>
+  <challenge>Challenge*</challenge>
+  <acronym>Program acronym</acronym>
+  <projectTitle>Program title</projectTitle>
+  <edmerpId>Identifier (automatically given if program registred in EDMERP)</edmerpId>
+  <edmoId>Identifier (automatically given if organisation registred in EDMO)</edmoId>
+  <associatedResources>Associated resources</associatedResources>
+  <additionalInfo>Additional information</additionalInfo>
+  <listOfOL-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">
+          Enter as free text like "-10, -20, -50"
+        </p>
+      </div>
+    </div>
+  </listOfOL-help>
+  <temporalExtent-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">
+          For ongoing collection of data, select "now"
+        </p>
+      </div>
+    </div>
+  </temporalExtent-help>
+  <edmerp-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">The European Directory for Marine Environment Research Project (EDMERP) contains descriptions of many projects. This catalogue is maintained by Seadatanet. To take advantage of the existing descriptions, it is required to extract the Identifier associated to the project name from EDMERP.</p>
+      </div>
+    </div>
+  </edmerp-help>
+  <separator>
+    <div class="row">
+      <div class="col-md-12">
+        <hr/>
+      </div>
+    </div>
+  </separator>
+  <dataCollection-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">This is the dataset or the dataset collection name as known by the data provider.</p>
+        <p class="help-block">In the case of in-situ observations, the number of datasets can be very high and undetermined. In such case (eg Seadatanet, Emodnet physics…),  use the name of the subset of the data collection available on the discovery services eg “Sea Level” of the Emodnet “Physics” ).</p>
+      </div>
+    </div>
+  </dataCollection-help>
+
+  <medsea-more-help>
+    <div class="alert alert-info">
+      <strong>For more information</strong>, see the
+      <a href="">Methodology for classifying the existing upstream data
+        Guidelines</a>
+    </div>
+  </medsea-more-help>
+
+  <indeterminatePosition>Indeterminate position</indeterminatePosition>
+  <pointOfContact>Contact for the resource</pointOfContact>
+  <metadataPointOfContact>Contact for the metadata</metadataPointOfContact>
+  <organisationName>Organisation name</organisationName>
+  <electronicMailAddress>Email</electronicMailAddress>
+  <role>Role</role>
+  <format>Format</format>
+  <format_version>Version</format_version>
+  <medsea-what>What</medsea-what>
+  <medsea-when>When</medsea-when>
+  <medsea-where>Where</medsea-where>
+  <medsea-who>Who</medsea-who>
+  <medsea-access>How to access</medsea-access>
+  <medsea-upstream-data>Upstream data</medsea-upstream-data>
+  <medsea-upstream-data-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">Link this product to upstream data.</p>
+        <p class="help-block">To link upstream data,
+          <ul>
+            <li>use the related resources panel on the right and
+              choose "link to source dataset"</li>
+            <li>search for the upstream data</li>
+            <li>click "link to source dataset".</li>
+          </ul>
+        </p>
+      </div>
+    </div>
+  </medsea-upstream-data-help>
+
 </strings>

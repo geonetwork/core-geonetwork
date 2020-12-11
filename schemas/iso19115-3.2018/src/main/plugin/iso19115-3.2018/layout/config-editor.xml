@@ -1203,6 +1203,2441 @@
 
       <tab id="xml" default="true"/>
     </view>
+
+
+
+
+
+
+
+    <!--
+    Checkpoint view
+    https://forge.ifremer.fr/mantis/view.php?id=21605
+    -->
+    <view name="medsea"
+          upAndDownControlHidden="true"
+          displayIfRecord="ends-with(mdb:MD_Metadata/mdb:metadataStandard/
+                                        */cit:title/gco:CharacterString, 'Emodnet Checkpoint - Upstream Data')">
+      <thesaurusList>
+        <thesaurus key="local.theme.emodnet-checkpoint.environmental.matrix" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.status" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.visibility" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.policy.visibility" maxtags="1"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.level.of.characteristics" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.production.mode" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.readyness" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.data.delivery.mechanism" maxtags="1"/>
+        <thesaurus key="external.parameter.NVS.P03" maxtags="1"/>
+        <thesaurus key="external.parameter.NVS.P01" maxtags="1"/>
+        <thesaurus key="external.parameter.NVS.P02" maxtags="1"/>
+      </thesaurusList>
+
+      <sidePanel>
+        <directive data-gn-onlinesrc-list="thumbnail|onlinesrc|associated"/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+      </sidePanel>
+
+      <tab id="characteristics" mode="flat" default="true" formatter-order="2">
+        <section>
+
+          <field
+            name="environmental-matrix"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                    mri:descriptiveKeywords
+                    [contains(*/mri:thesaurusName/cit:CI_Citation/cit:title/gco:CharacterString,
+                    'Environmental matrix')]"/>
+
+          <section name="characteristics">
+
+            <field
+              name="p03"
+              xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                      mri:descriptiveKeywords
+                      [contains(*/mri:thesaurusName/cit:CI_Citation/cit:identifier/*/mcc:code/*/text(),
+                      'NVS.P03')]"/>
+
+            <field
+              name="p02"
+              xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                      mri:descriptiveKeywords
+                      [contains(*/mri:thesaurusName/cit:CI_Citation/cit:identifier/*/mcc:code/*/text(),
+                      'NVS.P02')]"/>
+
+            <field
+              name="p01"
+              xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                      mri:descriptiveKeywords
+                      [contains(*/mri:thesaurusName/cit:CI_Citation/cit:identifier/*/mcc:code/*/text(),
+                      'parameter.NVS.P01')]"/>
+            <field
+              name="otherP01"
+              xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                      mri:descriptiveKeywords/*
+                      [contains(mri:thesaurusName/cit:CI_Citation/cit:title/gco:CharacterString,
+                      'Parameter Usage Vocabulary (other)')]/mri:keyword"/>
+
+          </section>
+
+          <field
+            name="inspireTheme"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                    mri:descriptiveKeywords
+                    [contains(*/mri:thesaurusName/cit:CI_Citation/cit:title/gco:CharacterString,
+                    'INSPIRE themes')]"/>
+
+
+          <field
+            name="level-of-characteristics"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                    mri:descriptiveKeywords
+                    [contains(*/mri:thesaurusName/cit:CI_Citation/cit:title/gco:CharacterString,
+                    'Processing level of characteristics')]"/>
+
+          <field
+            name="production-mode"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                    mri:descriptiveKeywords
+                    [contains(*/mri:thesaurusName/cit:CI_Citation/cit:title/gco:CharacterString,
+                    'Production mode')]"/>
+        </section>
+      </tab>
+
+
+
+      <tab id="datasources" formatter-order="3">
+        <section>
+          <field name="edmerpNameGlobal" templateModeOnly="true" notDisplayedIfMissing="true"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:pointOfContact[*/cit:role/*/@codeListValue='edmerp']"
+                 del="."
+                 if="count(mdb:MD_Metadata/mdb:identificationInfo/*) > 0">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="projectTitle"
+                     xpath="*/cit:party/*/cit:name/gco:CharacterString"/>
+                <key label="acronym"
+                     xpath="*/cit:party/*/cit:individual/*/cit:name/gco:CharacterString"/>
+                <key label="programNameWebsite"
+                     xpath="*/cit:party/*/cit:contactInfo/*/cit:onlineResource/*/cit:linkage/gco:CharacterString"/>
+                <key label="edmerpId"
+                     xpath="cit:CI_Responsibility/@id"/>
+              </values>
+              <snippet>
+                <mri:pointOfContact>
+                  <cit:CI_Responsibility id="{{edmerpId}}">
+                    <gn:copy select="cit:role"/>
+                    <gn:copy select="cit:extent"/>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString>{{projectTitle}}</gco:CharacterString>
+                        </cit:name>
+                        <cit:contactInfo>
+                          <cit:CI_Contact>
+                            <gn:copy select="cit:phone"/>
+                            <gn:copy select="cit:address"/>
+                            <cit:onlineResource>
+                              <cit:CI_OnlineResource>
+                                <cit:linkage>
+                                  <gco:CharacterString>{{programNameWebsite}}</gco:CharacterString>
+                                </cit:linkage>
+                                <gn:copy select="cit:protocol"/>
+                                <gn:copy select="cit:applicationProfile"/>
+                                <gn:copy select="cit:name"/>
+                                <gn:copy select="cit:description"/>
+                                <gn:copy select="cit:function"/>
+                                <gn:copy select="cit:protocolRequest"/>
+                              </cit:CI_OnlineResource>
+                            </cit:onlineResource>
+                            <gn:copy select="cit:hoursOfService"/>
+                            <gn:copy select="cit:contactInstructions"/>
+                            <gn:copy select="cit:contactType"/>
+                          </cit:CI_Contact>
+                        </cit:contactInfo>
+                        <gn:copy select="cit:logo"/>
+                        <cit:individual>
+                          <cit:CI_Individual>
+                            <cit:name>
+                              <gco:CharacterString>{{acronym}}</gco:CharacterString>
+                            </cit:name>
+                            <gn:copy select="cit:contactInfo"/>
+                          </cit:CI_Individual>
+                        </cit:individual>
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mri:pointOfContact>
+              </snippet>
+            </template>
+          </field>
+
+
+          <action type="add"
+                  name="edmerpName"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="pointOfContact"
+                  in="/mdb:MD_Metadata/mdb:identificationInfo/*">
+            <directiveAttributes
+              data-template-add-action="false"
+              data-search-action="false"
+              data-popup-action="true"
+              data-template-type="contact"
+              data-filter='{"_groupPublished": "CONTACTS_EDMERP"}'
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~edmerp"
+              data-transformation="contact-from-iso19139-to-iso19115-3"/>
+          </action>
+
+          <action type="add" name="orAddEdmerpName"
+                  or="pointOfContact"
+                  in="/mdb:MD_Metadata/mdb:identificationInfo/*">
+            <template>
+              <snippet>
+                <mri:pointOfContact>
+                  <cit:CI_Responsibility>
+                    <cit:role>
+                      <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode"
+                                       codeListValue="edmerp">edmerp</cit:CI_RoleCode>
+                    </cit:role>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString></gco:CharacterString>
+                        </cit:name>
+                        <cit:contactInfo>
+                          <cit:CI_Contact>
+                            <cit:onlineResource>
+                              <cit:CI_OnlineResource>
+                                <cit:linkage>
+                                  <gco:CharacterString></gco:CharacterString>
+                                </cit:linkage>
+                              </cit:CI_OnlineResource>
+                            </cit:onlineResource>
+                          </cit:CI_Contact>
+                        </cit:contactInfo>
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mri:pointOfContact>
+              </snippet>
+            </template>
+          </action>
+
+          <text ref="separator"/>
+
+          <field name="edmoNameGlobal" templateModeOnly="true" notDisplayedIfMissing="true"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:pointOfContact[*/cit:role/*/@codeListValue='edmo']"
+                 del="."
+                 if="count(mdb:MD_Metadata/mdb:identificationInfo/*/mri:pointOfContact[*/cit:role/*/@codeListValue='edmo']) != 0">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="*/cit:party/*/cit:name/gco:CharacterString"/>
+                <key label="edmoNameWebsite"
+                     xpath="*/cit:party/*/cit:contactInfo/*/cit:onlineResource/*/cit:linkage/gco:CharacterString"/>
+                <key label="edmoId"
+                     xpath="*/@id"/>
+              </values>
+              <snippet>
+                <mri:pointOfContact>
+                  <cit:CI_Responsibility id="{{edmoId}}">
+                    <gn:copy select="cit:role"/>
+                    <gn:copy select="cit:extent"/>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                        </cit:name>
+                        <cit:contactInfo>
+                          <cit:CI_Contact>
+                            <gn:copy select="cit:phone"/>
+                            <gn:copy select="cit:address"/>
+                            <cit:onlineResource>
+                              <cit:CI_OnlineResource>
+                                <cit:linkage>
+                                  <gco:CharacterString>{{edmoNameWebsite}}</gco:CharacterString>
+                                </cit:linkage>
+                                <gn:copy select="cit:protocol"/>
+                                <gn:copy select="cit:applicationProfile"/>
+                                <gn:copy select="cit:name"/>
+                                <gn:copy select="cit:description"/>
+                                <gn:copy select="cit:function"/>
+                                <gn:copy select="cit:protocolRequest"/>
+                              </cit:CI_OnlineResource>
+                            </cit:onlineResource>
+                            <gn:copy select="cit:hoursOfService"/>
+                            <gn:copy select="cit:contactInstructions"/>
+                            <gn:copy select="cit:contactType"/>
+                          </cit:CI_Contact>
+                        </cit:contactInfo>
+                        <gn:copy select="cit:logo"/>
+                        <gn:copy select="cit:individual"/>
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mri:pointOfContact>
+              </snippet>
+            </template>
+          </field>
+
+          <action type="add"
+                  name="edmoName"
+                  forceLabel="true"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="pointOfContact"
+                  in="/mdb:MD_Metadata/mdb:identificationInfo/*">
+            <directiveAttributes
+              data-template-add-action="false"
+              data-search-action="false"
+              data-popup-action="true"
+              data-template-type="contact"
+              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~edmo"
+              data-transformation="contact-from-iso19139-to-iso19115-3"/>
+          </action>
+
+          <action type="add" name="orAddEdmoName"
+                  or="pointOfContact"
+                  in="/mdb:MD_Metadata/mdb:identificationInfo/*">
+            <template>
+              <snippet>
+                <mri:pointOfContact>
+                  <cit:CI_Responsibility>
+                    <cit:role>
+                      <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode"
+                                       codeListValue="edmo">edmo</cit:CI_RoleCode>
+                    </cit:role>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString></gco:CharacterString>
+                        </cit:name>
+                        <cit:contactInfo>
+                          <cit:CI_Contact>
+                            <cit:onlineResource>
+                              <cit:CI_OnlineResource>
+                                <cit:linkage>
+                                  <gco:CharacterString></gco:CharacterString>
+                                </cit:linkage>
+                              </cit:CI_OnlineResource>
+                            </cit:onlineResource>
+                          </cit:CI_Contact>
+                        </cit:contactInfo>
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mri:pointOfContact>
+              </snippet>
+            </template>
+          </action>
+
+          <text ref="separator"/>
+
+          <!-- edmoProducerName -->
+          <field name="edmoProducerName" templateModeOnly="true"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:pointOfContact[
+                                            */cit:role/*/@codeListValue = 'originator']"
+                 del="."
+                 if="count(mdb:MD_Metadata/mdb:identificationInfo/*/mri:pointOfContact[*/cit:role/*/@codeListValue='originator']) != 0">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="*/cit:party/*/cit:name/gco:CharacterString"/>
+                <key label="producerNameWebsite"
+                     xpath="*/cit:party/*/cit:contactInfo/*/cit:onlineResource/*/cit:linkage/gco:CharacterString"/>
+                <key label="edmoId"
+                     xpath="*/@id"/>
+              </values>
+              <snippet>
+                <mri:pointOfContact>
+                  <cit:CI_Responsibility id="{{edmoId}}">
+                    <gn:copy select="cit:role"/>
+                    <gn:copy select="cit:extent"/>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                        </cit:name>
+                        <cit:contactInfo>
+                          <cit:CI_Contact>
+                            <gn:copy select="cit:phone"/>
+                            <gn:copy select="cit:address"/>
+                            <cit:onlineResource>
+                              <cit:CI_OnlineResource>
+                                <cit:linkage>
+                                  <gco:CharacterString>{{producerNameWebsite}}</gco:CharacterString>
+                                </cit:linkage>
+                                <gn:copy select="cit:protocol"/>
+                                <gn:copy select="cit:applicationProfile"/>
+                                <gn:copy select="cit:name"/>
+                                <gn:copy select="cit:description"/>
+                                <gn:copy select="cit:function"/>
+                                <gn:copy select="cit:protocolRequest"/>
+                              </cit:CI_OnlineResource>
+                            </cit:onlineResource>
+                            <gn:copy select="cit:hoursOfService"/>
+                            <gn:copy select="cit:contactInstructions"/>
+                            <gn:copy select="cit:contactType"/>
+                          </cit:CI_Contact>
+                        </cit:contactInfo>
+                        <gn:copy select="cit:logo"/>
+                        <gn:copy select="cit:individual"/>
+                        <!--<cit:individual>
+                          <cit:CI_Individual>
+                            <cit:name>
+                              <gco:CharacterString>{{acronym}}</gco:CharacterString>
+                            </cit:name>
+                          </cit:CI_Individual>
+                        </cit:individual>-->
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mri:pointOfContact>
+              </snippet>
+            </template>
+          </field>
+
+
+          <action type="add"
+                  name="edmoProducerNameSearch"
+                  forceLabel="true"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="pointOfContact"
+                  in="/mdb:MD_Metadata/mdb:identificationInfo/*">
+            <directiveAttributes
+              data-template-add-action="false"
+              data-search-action="false"
+              data-popup-action="true"
+              data-template-type="contact"
+              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~originator"
+              data-transformation="contact-from-iso19139-to-iso19115-3"/>
+          </action>
+          <action type="add" name="orAddProducerName"
+                  or="pointOfContact"
+                  in="/mdb:MD_Metadata/mdb:identificationInfo/*">
+            <template>
+              <snippet>
+                <mri:pointOfContact>
+                  <cit:CI_Responsibility>
+                    <cit:role>
+                      <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode"
+                                       codeListValue="originator">originator</cit:CI_RoleCode>
+                    </cit:role>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString></gco:CharacterString>
+                        </cit:name>
+                        <cit:contactInfo>
+                          <cit:CI_Contact>
+                            <cit:onlineResource>
+                              <cit:CI_OnlineResource>
+                                <cit:linkage>
+                                  <gco:CharacterString></gco:CharacterString>
+                                </cit:linkage>
+                              </cit:CI_OnlineResource>
+                            </cit:onlineResource>
+                          </cit:CI_Contact>
+                        </cit:contactInfo>
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mri:pointOfContact>
+              </snippet>
+            </template>
+          </action>
+
+
+          <field name="medseaHierarchyLevel"
+                 xpath="/mdb:MD_Metadata/mdb:metadataScope/mdb:MD_MetadataScope/
+                          mdb:resourceScope"/>
+
+          <field
+            name="medseaDataSourceCatalogueName"
+            xpath="/mdb:MD_Metadata/mdb:distributionInfo/*/
+                            mrd:transferOptions/*/mrd:onLine[1]/*/cit:name"/>
+
+          <field
+            name="medseaDataSourceCatalogueURL"
+            xpath="/mdb:MD_Metadata/mdb:distributionInfo/*/
+                            mrd:transferOptions/*/mrd:onLine[1]/*/cit:linkage"/>
+
+          <field
+            name="datasourceAcronym"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/cit:otherCitationDetails"/>
+
+          <text ref="dataCollection-help"/>
+
+          <field
+            name="medseaTitle"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/cit:alternateTitle"/>
+
+
+          <text ref="medseaTitle-help"/>
+
+          <field
+            name="medseaDataSourceIdentifier"
+            xpath="/mdb:MD_Metadata/mdb:distributionInfo/*/
+                      mrd:transferOptions/*/mrd:onLine[2]/*/cit:name"/>
+          <field
+            name="medseaDataSourceDOI"
+            xpath="/mdb:MD_Metadata/mdb:distributionInfo/*/
+                  mrd:transferOptions/*/mrd:onLine[2]/*/cit:linkage"/>
+
+          <text ref="medsea-more-help"/>
+
+        </section>
+      </tab>
+
+
+      <tab id="overview" formatter-order="4">
+        <section>
+          <field
+            name="providerSpecification"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:purpose"/>
+          <text ref="providerSpecification-help"/>
+
+          <field
+            name="processStepReference"
+            xpath="/mdb:MD_Metadata/mdb:resourceLineage/*/mrl:statement"/>
+
+          <field
+            name="useOfTheCharacteristics"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                          mri:citation/*/cit:identifier/*/
+                          mcc:authority//*/cit:title"/>
+
+
+          <field name="useByChallenges"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                mri:descriptiveKeywords
+                [contains(*/mri:thesaurusName/*/cit:title/gco:CharacterString,
+                'Used by challenges')]"/>
+
+          <field
+            name="intendedUse"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                  mri:environmentDescription"/>
+
+        </section>
+      </tab>
+      <tab id="spatialCoverage" mode="flat" formatter-order="5">
+        <section name="selectRegion">
+          <field
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+              mri:extent/*/gex:geographicElement/gex:EX_GeographicBoundingBox"/>
+
+
+        </section>
+        <section name="horizontalAndVerticalInfo">
+
+
+          <!-- Note there is a mri:MD_Resolution_TypeCHOICE_ELEMENT0
+           in the metadocument to take care of in the XPath -->
+          <field
+            name="horResolution"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                            mri:spatialResolution/mri:MD_Resolution"/>
+
+          <field
+            name="minDepth"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                            mri:extent/*/
+                            gex:verticalElement/*/gex:minimumValue"/>
+
+          <field
+            name="maxDepth"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                            mri:extent/*/
+                            gex:verticalElement/*/gex:maximumValue"/>
+
+          <field
+            name="verticalResolution"
+            xpath="/mdb:MD_Metadata/mdb:spatialRepresentationInfo/
+                            msr:MD_Georectified/msr:numberOfDimensions"/>
+
+
+          <field name="listOfObservationLevel"
+                 xpath="/mdb:MD_Metadata/mdb:contentInfo/
+                            mrc:MD_CoverageDescription/mrc:attributeGroup/*/
+                            mrc:attribute/mrc:MD_RangeDimension/mrc:description"/>
+
+          <text ref="listOfOL-help"/>
+        </section>
+      </tab>
+      <tab id="timeCoverage" formatter-order="6">
+        <section>
+
+
+          <field name="temporalExtent" templateModeOnly="true"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/*/gex:temporalElement"
+                 if="count(mdb:MD_Metadata/mdb:identificationInfo/*) > 0">
+            <template>
+              <values>
+                <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+                <key label="beginPosition"
+                     xpath="gex:EX_TemporalExtent/gex:extent/gml:TimePeriod//gml:beginPosition"
+                     use="gn-date-picker"
+                     tooltip="gex:extent|gex:EX_TemporalExtent">
+                  <directiveAttributes data-tag-name="gml:beginPosition"/>
+                </key>
+                <key label="endPosition"
+                     xpath="gex:EX_TemporalExtent/gex:extent/gml:TimePeriod//gml:endPosition"
+                     use="gn-date-picker"
+                     tooltip="gex:extent|gex:EX_TemporalExtent"
+                >
+                  <directiveAttributes
+                    data-tag-name="gml:endPosition"
+                    data-indeterminate-position="eval#gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+                </key>
+              </values>
+              <snippet>
+                <gex:temporalElement>
+                  <gex:EX_TemporalExtent>
+                    <gex:extent>
+                      <gml:TimePeriod gml:id="">
+                        {{beginPosition}}
+                        {{endPosition}}
+                      </gml:TimePeriod>
+                    </gex:extent>
+                  </gex:EX_TemporalExtent>
+                </gex:temporalElement>
+              </snippet>
+            </template>
+          </field>
+
+          <text ref="temporalExtent-help"/>
+
+          <field
+            name="timeResolution"
+            xpath="/mdb:MD_Metadata/mdb:spatialRepresentationInfo/msr:MD_Georectified/
+                            msr:axisDimensionProperties/msr:MD_Dimension/msr:resolution"/>
+          <field
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceMaintenance/*/mmi:maintenanceAndUpdateFrequency"/>
+
+        </section>
+      </tab>
+      <tab id="accessibility" mode="flat" formatter-order="7">
+        <section name="datasetVisibility">
+
+          <field name="visibility"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                          mri:descriptiveKeywords
+                          [contains(*/mri:thesaurusName/cit:CI_Citation/cit:identifier/*/mcc:code/*/text(),
+                          'emodnet-checkpoint.visibility')]"/>
+
+          <field
+            name="serviceExtent"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                          mri:descriptiveKeywords
+                          [contains(*/mri:thesaurusName/cit:CI_Citation/cit:identifier/*/mcc:code/*/text(),
+                          'theme.emodnet-checkpoint.service.extent')]"/>
+        </section>
+        <section name="datasetAccessibility">
+          <field name="policyVisibility"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                          mri:descriptiveKeywords
+                          [contains(*/mri:thesaurusName/cit:CI_Citation/cit:identifier/*/mcc:code/*/text(),
+                          'emodnet-checkpoint.policy.visibility')]"/>
+
+          <field name="dataDelivery"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                          mri:descriptiveKeywords
+                          [contains(*/mri:thesaurusName/cit:CI_Citation/cit:title/gco:CharacterString,
+                          'Data delivery mechanism')]"/>
+
+          <field
+            name="dataPolicy"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                          mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints"/>
+
+
+          <field
+            name="costBasis"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                            mri:resourceConstraints/mco:MD_Constraints/mco:useLimitation"/>
+
+
+
+          <field name="readyness"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                          mri:descriptiveKeywords
+                          [contains(*/mri:thesaurusName/cit:CI_Citation/cit:identifier/*/mcc:code/*/text(),
+                          'emodnet-checkpoint.readyness')]"/>
+
+
+          <field
+            name="dataFormats"
+            templateModeOnly="true"
+            xpath="/mdb:MD_Metadata/mdb:distributionInfo/*/mrd:distributionFormat/
+                            mrd:MD_Format/mrd:formatSpecificationCitation"
+            del="../..">
+            <template>
+              <values>
+                <key label="format"
+                     xpath="cit:CI_Citation/cit:title/gco:CharacterString"
+                     tooltip="cit:title">
+                  <helper name="cit:title" context="/mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:distributionFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title"/>
+                </key>
+              </values>
+              <snippet>
+                <mrd:formatSpecificationCitation>
+                  <cit:CI_Citation>
+                    <cit:title>
+                      <gco:CharacterString>{{format}}</gco:CharacterString>
+                    </cit:title>
+                  </cit:CI_Citation>
+                </mrd:formatSpecificationCitation>
+              </snippet>
+            </template>
+          </field>
+
+          <text ref="dataFormats-help"/>
+
+          <action type="add" name="dataFormats" or="distributionFormat"
+                  in="/mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution">
+            <template>
+              <snippet>
+                <mrd:distributionFormat>
+                  <mrd:MD_Format>
+                    <mrd:formatSpecificationCitation>
+                      <cit:CI_Citation>
+                        <cit:title>
+                          <gco:CharacterString></gco:CharacterString>
+                        </cit:title>
+                      </cit:CI_Citation>
+                    </mrd:formatSpecificationCitation>
+                  </mrd:MD_Format>
+                </mrd:distributionFormat>
+              </snippet>
+            </template>
+          </action>
+        </section>
+
+
+        <section name="datasetPerf">
+          <field name="responsiveness"
+                 xpath="/mdb:MD_Metadata/mdb:dataQualityInfo/*/
+                      mdq:report/mdq:DQ_DomainConsistency[mdq:measure/*/mdq:nameOfMeasure/gco:CharacterString = 'Responsiveness']/
+                      mdq:result/mdq:DQ_QuantitativeResult/mdq:value"/>
+
+        </section>
+      </tab>
+      <tab id="medsea-metadata" mode="flat" formatter-order="1">
+        <section>
+
+          <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/cit:CI_Citation/cit:title"/>
+
+          <field name="challenge" xpath="/mdb:MD_Metadata/mdb:metadataScope/mdb:MD_MetadataScope/mdb:name"/>
+
+          <field name="metadataPointOfContact"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 xpath="/mdb:MD_Metadata/mdb:contact"
+                 del=".">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="*/cit:party/*/cit:name/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                     xpath="*/cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress/gco:CharacterString"
+                     use="email"/>
+                <key label="phone"
+                     xpath="*/cit:party/*/cit:contactInfo/*/cit:phone/*[cit:numberType/*/@codeListValue = 'voice']/cit:number/gco:CharacterString"
+                     use="text"/>
+              </values>
+              <snippet>
+                <mdb:contact>
+                  <cit:CI_Responsibility>
+                    <gn:copy select="cit:role"/>
+                    <gn:copy select="cit:extent"/>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                        </cit:name>
+                        <cit:contactInfo>
+                          <cit:CI_Contact>
+                            <cit:phone>
+                              <cit:CI_Telephone>
+                                <cit:number>
+                                  <gco:CharacterString>{{phone}}</gco:CharacterString>
+                                </cit:number>
+                                <cit:numberType>
+                                  <cit:CI_TelephoneTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_TelephoneTypeCode"
+                                                            codeListValue="voice"/>
+                                </cit:numberType>
+                              </cit:CI_Telephone>
+                            </cit:phone>
+                            <!--<gn:copy select="cit:phone"/>-->
+                            <cit:address>
+                              <cit:CI_Address>
+                                <cit:electronicMailAddress>
+                                  <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                                </cit:electronicMailAddress>
+                              </cit:CI_Address>
+                            </cit:address>
+                            <gn:copy select="cit:onlineResource"/>
+                            <gn:copy select="cit:hoursOfService"/>
+                            <gn:copy select="cit:contactInstructions"/>
+                            <gn:copy select="cit:contactType"/>
+                          </cit:CI_Contact>
+                        </cit:contactInfo>
+                        <gn:copy select="cit:logo"/>
+                        <gn:copy select="cit:individual"/>
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mdb:contact>
+              </snippet>
+            </template>
+          </field>
+
+
+          <field xpath="/mdb:MD_Metadata/mdb:dateInfo[*/cit:dateType/*/@codeListValue = 'revision']"/>
+
+
+          <field
+            name="validation"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                    mri:descriptiveKeywords
+                    [contains(*/mri:thesaurusName/cit:CI_Citation/cit:identifier/*/mcc:code/*/text(),
+                    'emodnet-checkpoint.status')]"/>
+        </section>
+      </tab>
+      <tab id="checkpoint-ud-qm" mode="flat" formatter-order="9">
+        <section>
+          <!-- If no TDP associated, warn user to choose one first. -->
+          <text ref="checkpoint-linkToTargetedDataProduct-help"
+                if="count(//mri:associatedResource/*/mri:initiativeType/*[@codeListValue = 'targetedDataProduct']) = 0"
+          />
+          <!-- Then user can pick up one component from the TDP. -->
+          <action type="add"
+                  name="checkpoint-ud-add-component"
+                  or="dataQualityInfo"
+                  in="/mdb:MD_Metadata"
+                  addDirective="data-gn-record-fragment-selector">
+            <directiveAttributes
+              data-search-query="{'agg_associated': '{uuid}', 'standardName':'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product'}"
+              data-exclude="xpath::string-join(
+              //mcc:other/gco:CharacterString, '#')"
+            />
+          </action>
+
+          <!-- Then user can encode QM values. -->
+          <xsl xpath="/mdb:MD_Metadata/mdb:dataQualityInfo"
+               mode="iso19115-3-qm"/>
+
+          <!-- Compute QE and FU
+          Hack on uuid because the metadata document contains another uuid attribute
+          with the ref of the element.
+          -->
+          <action type="process"
+                  process="checkpoint-compute-qe-fu"
+                  btnClass="fa fa-calculator"
+                  if="count(//mdb:dataQualityInfo[contains(string-join(*/@uuid, ''), '/CP')]) > 0"/>
+
+        </section>
+      </tab>
+    </view>
+
+
+
+
+
+    <view name="checkpoint-dps"
+          upAndDownControlHidden="true"
+          displayIfRecord="contains(mdb:MD_Metadata/mdb:metadataStandard/
+                                        */cit:title/gco:CharacterString,
+                                        'Emodnet Checkpoint - Data Product Specification')">
+
+      <thesaurusList>
+        <thesaurus key="local.theme.emodnet-checkpoint.environmental.matrix" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.status" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.challenges" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.visibility" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.policy.visibility" maxtags="1"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.level.of.characteristics" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.production.mode" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.readyness" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.data.delivery.mechanism" maxtags="1"/>
+      </thesaurusList>
+
+      <sidePanel>
+        <directive data-gn-onlinesrc-list="thumbnail|onlinesrc|associated"/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+      </sidePanel>
+
+      <tab id="checkpoint-dps-characteristics" default="true">
+        <section name="checkpoint-dps-main">
+
+          <field
+            name="validation"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                    mri:descriptiveKeywords
+                    [contains(*/mri:thesaurusName/cit:CI_Citation/cit:identifier/*/mcc:code/*/text(),
+                    'emodnet-checkpoint.status')]"/>
+
+
+          <!-- DPS - Challenge number + name  -->
+          <field name="challenge"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                  mri:descriptiveKeywords
+                  [contains(*/mri:thesaurusName/*/cit:title/gco:CharacterString,
+                  'Used by challenges')]"/>
+
+
+          <!-- DPS - Product name -->
+          <field name="checkpoint-tdp-productName"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/cit:CI_Citation/cit:title"/>
+
+          <!-- DPS - Deliverable identifier -->
+          <field name="checkpoint-deliverable"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/
+                          */cit:series/*/cit:issueIdentification"/>
+
+          <!--
+          DPS - Responsible party (point of contact) : organisation name
+          DPS - E-mail of responsible party -->
+          <field name="checkpoint-pointOfContact"
+                 templateModeOnly="true" notDisplayedIfMissing="true"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:pointOfContact"
+                 del=".">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="*/cit:party/*/cit:name/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                     xpath="*/cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress/gco:CharacterString"/>
+
+              </values>
+              <snippet>
+                <mri:pointOfContact>
+                  <cit:CI_Responsibility>
+                    <gn:copy select="cit:role"/>
+                    <gn:copy select="cit:extent"/>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                        </cit:name>
+                        <cit:contactInfo>
+                          <cit:CI_Contact>
+                            <gn:copy select="cit:phone"/>
+                            <cit:address>
+                              <cit:CI_Address>
+                                <gn:copy select="deliveryPoint"/>
+                                <gn:copy select="city"/>
+                                <gn:copy select="administrativeArea"/>
+                                <gn:copy select="postalCode"/>
+                                <gn:copy select="country"/>
+                                <cit:electronicMailAddress>
+                                  <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                                </cit:electronicMailAddress>
+                              </cit:CI_Address>
+                            </cit:address>
+                            <gn:copy select="cit:onlineResource"/>
+                            <gn:copy select="cit:hoursOfService"/>
+                            <gn:copy select="cit:contactInstructions"/>
+                            <gn:copy select="cit:contactType"/>
+                          </cit:CI_Contact>
+                        </cit:contactInfo>
+                        <gn:copy select="cit:logo"/>
+                        <cit:individual>
+                          <cit:CI_Individual>
+                            <gn:copy select="cit:name"/>
+                            <gn:copy select="cit:contactInfo"/>
+                          </cit:CI_Individual>
+                        </cit:individual>
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mri:pointOfContact>
+              </snippet>
+            </template>
+          </field>
+          <action type="add" name="checkpoint-pointOfContact"
+                  or="pointOfContact"
+                  in="/mdb:MD_Metadata/mdb:identificationInfo/*">
+            <template>
+              <snippet>
+                <mri:pointOfContact>
+                  <cit:CI_Responsibility>
+                    <cit:role>
+                      <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode"
+                                       codeListValue="pointOfContact">pointOfContact</cit:CI_RoleCode>
+                    </cit:role>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString></gco:CharacterString>
+                        </cit:name>
+                        <cit:contactInfo>
+                          <cit:CI_Contact>
+                            <cit:address>
+                              <cit:CI_Address>
+                                <cit:electronicMailAddress>
+                                  <gco:CharacterString/>
+                                </cit:electronicMailAddress>
+                              </cit:CI_Address>
+                            </cit:address>
+                          </cit:CI_Contact>
+                        </cit:contactInfo>
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mri:pointOfContact>
+              </snippet>
+            </template>
+          </action>
+
+
+
+          <!-- DPS - Metadataset creation date  (DD/MM/YYYY) -->
+          <!-- DPS - Metadataset revision date  (DD/MM/YYYY) -->
+          <field name="checkpoint-date"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                          mri:citation/*/cit:date[
+                            */cit:dateType/*/@codeListValue = 'creation' or
+                            */cit:dateType/*/@codeListValue = 'revision']"/>
+
+          <action type="add"
+                  btnLabel="checkpoint-add-revision"
+                  or="date"
+                  in="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                          mri:citation/*"
+                  if="count(mdb:MD_Metadata/mdb:identificationInfo/*/
+                          mri:citation/*/cit:date[
+                            */cit:dateType/*/@codeListValue = 'revision']) = 0">
+            <template>
+              <snippet>
+                <cit:date>
+                  <cit:CI_Date>
+                    <cit:date>
+                      <gco:Date/>
+                    </cit:date>
+                    <cit:dateType>
+                      <cit:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                           codeListValue="revision"/>
+                    </cit:dateType>
+                  </cit:CI_Date>
+                </cit:date>
+              </snippet>
+            </template>
+          </action>
+
+
+
+          <!-- DPS - E-mail of metadata contact -->
+          <field name="metadataPointOfContact"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 xpath="/mdb:MD_Metadata/mdb:contact"
+                 del=".">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="*/cit:party/*/cit:name/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                     xpath="*/cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress/gco:CharacterString"
+                     use="email"/>
+                <key label="phone"
+                     xpath="*/cit:party/*/cit:contactInfo/*/cit:phone/*[cit:numberType/*/@codeListValue = 'voice']/cit:number/gco:CharacterString"
+                     use="text"/>
+              </values>
+              <snippet>
+                <mdb:contact>
+                  <cit:CI_Responsibility>
+                    <gn:copy select="cit:role"/>
+                    <gn:copy select="cit:extent"/>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                        </cit:name>
+                        <cit:contactInfo>
+                          <cit:CI_Contact>
+                            <cit:phone>
+                              <cit:CI_Telephone>
+                                <cit:number>
+                                  <gco:CharacterString>{{phone}}</gco:CharacterString>
+                                </cit:number>
+                                <cit:numberType>
+                                  <cit:CI_TelephoneTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_TelephoneTypeCode"
+                                                            codeListValue="voice"/>
+                                </cit:numberType>
+                              </cit:CI_Telephone>
+                            </cit:phone>
+                            <!--<gn:copy select="cit:phone"/>-->
+                            <cit:address>
+                              <cit:CI_Address>
+                                <cit:electronicMailAddress>
+                                  <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                                </cit:electronicMailAddress>
+                              </cit:CI_Address>
+                            </cit:address>
+                            <gn:copy select="cit:onlineResource"/>
+                            <gn:copy select="cit:hoursOfService"/>
+                            <gn:copy select="cit:contactInstructions"/>
+                            <gn:copy select="cit:contactType"/>
+                          </cit:CI_Contact>
+                        </cit:contactInfo>
+                        <gn:copy select="cit:logo"/>
+                        <gn:copy select="cit:individual"/>
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mdb:contact>
+              </snippet>
+            </template>
+          </field>
+
+
+
+          <!-- DPS - Purpose -->
+          <field name="checkpoint-purpose"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:purpose"/>
+
+
+          <!-- DPS - Abstract -->
+          <field name="checkpoint-abstract"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:abstract"/>
+
+          <!-- DPS - Processing level -->
+          <field
+            name="processing-level"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                    mri:descriptiveKeywords
+                    [contains(*/mri:thesaurusName/cit:CI_Citation/cit:title/gco:CharacterString,
+                    'Processing level of characteristics')]"/>
+
+
+          <!-- DPS - Production mode -->
+          <field
+            name="checkpoint-production-mode"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                    mri:descriptiveKeywords
+                    [contains(*/mri:thesaurusName/cit:CI_Citation/cit:title/gco:CharacterString,
+                    'Production mode')]"/>
+
+          <field
+            name="inspireThemeMandatory"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                    mri:descriptiveKeywords
+                    [contains(*/mri:thesaurusName/cit:CI_Citation/cit:title/gco:CharacterString,
+                    'INSPIRE themes')]"/>
+
+        </section>
+
+        <section name="checkpoint-dps-spatial">
+          <!-- DPS - Horizontal Coordinate Reference System
+          DPS - Vertical coordinate reference system
+          DPS - Temporal reference system -->
+          <field xpath="/mdb:MD_Metadata/mdb:referenceSystemInfo/*/
+                          mrs:referenceSystemIdentifier/*/mcc:description"
+                 name="referenceSystemInfo"
+                 del="../../../.."/>
+
+          <action type="add"
+                  btnLabel="addCrs"
+                  name="referenceSystemInfo" or="referenceSystemInfo"
+                  in="/mdb:MD_Metadata">
+            <template>
+              <snippet label="addCrs4326">
+                <mdb:referenceSystemInfo>
+                  <mrs:MD_ReferenceSystem>
+                    <mrs:referenceSystemIdentifier>
+                      <mcc:MD_Identifier>
+                        <mcc:code>
+                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/4326</gco:CharacterString>
+                        </mcc:code>
+                        <mcc:description>
+                          <gco:CharacterString>WGS 84 (EPSG:4326)</gco:CharacterString>
+                        </mcc:description>
+                      </mcc:MD_Identifier>
+                    </mrs:referenceSystemIdentifier>
+                  </mrs:MD_ReferenceSystem>
+                </mdb:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs4258">
+                <mdb:referenceSystemInfo>
+                  <mrs:MD_ReferenceSystem>
+                    <mrs:referenceSystemIdentifier>
+                      <mcc:MD_Identifier>
+                        <mcc:code>
+                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/4258</gco:CharacterString>
+                        </mcc:code>
+                        <mcc:description>
+                          <gco:CharacterString>ETRS89 (EPSG:4258)</gco:CharacterString>
+                        </mcc:description>
+                      </mcc:MD_Identifier>
+                    </mrs:referenceSystemIdentifier>
+                  </mrs:MD_ReferenceSystem>
+                </mdb:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs3035">
+                <mdb:referenceSystemInfo>
+                  <mrs:MD_ReferenceSystem>
+                    <mrs:referenceSystemIdentifier>
+                      <mcc:MD_Identifier>
+                        <mcc:code>
+                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3035</gco:CharacterString>
+                        </mcc:code>
+                        <mcc:description>
+                          <gco:CharacterString>ETRS89 / LAEA Europe (EPSG:3035)</gco:CharacterString>
+                        </mcc:description>
+                      </mcc:MD_Identifier>
+                    </mrs:referenceSystemIdentifier>
+                  </mrs:MD_ReferenceSystem>
+                </mdb:referenceSystemInfo>
+              </snippet>
+            </template>
+          </action>
+
+          <!-- DPS - Spatial representation -->
+          <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:spatialRepresentationType"/>
+
+          <!-- DPS - Number of component - See Quality section -->
+
+
+          <field name="checkpoint-dps-extent"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                        mri:extent/*/gex:geographicElement/gex:EX_GeographicBoundingBox"/>
+
+
+          <field name="temporalExtent" templateModeOnly="true"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/*/gex:temporalElement"
+                 if="count(mdb:MD_Metadata/mdb:identificationInfo/*) > 0">
+            <template>
+              <values>
+                <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+                <key label="beginPosition"
+                     xpath="gex:EX_TemporalExtent/gex:extent/gml:TimePeriod//gml:beginPosition"
+                     use="gn-date-picker"
+                     tooltip="gex:extent|gex:EX_TemporalExtent">
+                  <directiveAttributes data-tag-name="gml:beginPosition"/>
+                </key>
+                <key label="endPosition"
+                     xpath="gex:EX_TemporalExtent/gex:extent/gml:TimePeriod//gml:endPosition"
+                     use="gn-date-picker"
+                     tooltip="gex:extent|gex:EX_TemporalExtent"
+                >
+                  <directiveAttributes
+                    data-tag-name="gml:endPosition"
+                    data-indeterminate-position="eval#gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+                </key>
+              </values>
+              <snippet>
+                <gex:temporalElement>
+                  <gex:EX_TemporalExtent>
+                    <gex:extent>
+                      <gml:TimePeriod gml:id="">
+                        {{beginPosition}}
+                        {{endPosition}}
+                      </gml:TimePeriod>
+                    </gex:extent>
+                  </gex:EX_TemporalExtent>
+                </gex:temporalElement>
+              </snippet>
+            </template>
+          </field>
+
+          <section name="checkpoint-ve">
+            <field
+              name="checkpoint-minDepth"
+              xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                                mri:extent/*/
+                                gex:verticalElement/*/gex:minimumValue"/>
+
+            <field
+              name="checkpoint-maxDepth"
+              xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                                mri:extent/*/
+                                gex:verticalElement/*/gex:maximumValue"/>
+          </section>
+        </section>
+
+        <section name="checkpoint-dps-distribution">
+
+          <!-- DPS - Product distribution format -->
+          <field
+            name="dataFormats"
+            templateModeOnly="true"
+            xpath="/mdb:MD_Metadata/mdb:distributionInfo/*/mrd:distributionFormat/
+                            mrd:MD_Format/mrd:formatSpecificationCitation"
+            del="../..">
+            <template>
+              <values>
+                <key label="format"
+                     xpath="cit:CI_Citation/cit:title/gco:CharacterString"
+                     tooltip="cit:title">
+                  <helper name="cit:title" context="/mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:distributionFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title"/>
+                </key>
+              </values>
+              <snippet>
+                <mrd:formatSpecificationCitation>
+                  <cit:CI_Citation>
+                    <cit:title>
+                      <gco:CharacterString>{{format}}</gco:CharacterString>
+                    </cit:title>
+                  </cit:CI_Citation>
+                </mrd:formatSpecificationCitation>
+              </snippet>
+            </template>
+          </field>
+          <text ref="dataFormats-help"/>
+
+          <action type="add" name="dataFormats" or="distributionFormat"
+                  in="/mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution">
+            <template>
+              <snippet>
+                <mrd:distributionFormat>
+                  <mrd:MD_Format>
+                    <mrd:formatSpecificationCitation>
+                      <cit:CI_Citation>
+                        <cit:title>
+                          <gco:CharacterString></gco:CharacterString>
+                        </cit:title>
+                      </cit:CI_Citation>
+                    </mrd:formatSpecificationCitation>
+                  </mrd:MD_Format>
+                </mrd:distributionFormat>
+              </snippet>
+            </template>
+          </action>
+
+        </section>
+      </tab>
+
+      <tab id="checkpoint-dps-dq" mode="flat">
+        <section>
+          <xsl xpath="/mdb:MD_Metadata/mdb:dataQualityInfo"
+               or="report"
+               mode="iso19115-3-qm"/>
+
+
+          <action type="add"
+                  btnLabel="checkpoint-dps-add-component"
+                  name="dataQualityInfo" or="dataQualityInfo"
+                  in="/mdb:MD_Metadata">
+            <template>
+              <snippet>
+                <mdb:dataQualityInfo>
+                  <mdq:DQ_DataQuality uuid="DPSUUID/CPUUID">
+                    <mdq:scope>
+                      <mcc:MD_Scope>
+                        <mcc:level>
+                          <mcc:MD_ScopeCode codeListValue="datasetComponent"
+                                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"/>
+                        </mcc:level>
+                        <mcc:levelDescription>
+                          <mcc:MD_ScopeDescription>
+                            <mcc:other>
+                              <gco:CharacterString>Component name</gco:CharacterString>
+                            </mcc:other>
+                          </mcc:MD_ScopeDescription>
+                        </mcc:levelDescription>
+                        <mcc:levelDescription>
+                          <mcc:MD_ScopeDescription>
+                            <mcc:other>
+                              <gco:CharacterString>Component description</gco:CharacterString>
+                            </mcc:other>
+                          </mcc:MD_ScopeDescription>
+                        </mcc:levelDescription>
+                        <mcc:levelDescription>
+                          <mcc:MD_ScopeDescription>
+                            <mcc:other>
+                              <gco:CharacterString></gco:CharacterString>
+                            </mcc:other>
+                          </mcc:MD_ScopeDescription>
+                        </mcc:levelDescription>
+                        <!-- Extent is copied from the DPS extent -->
+                      </mcc:MD_Scope>
+                    </mdq:scope>
+                    <mdq:standaloneQualityReport>
+                      <mdq:DQ_StandaloneQualityReportInformation>
+                        <mdq:reportReference>
+                          <cit:CI_Citation>
+                            <cit:title>
+                              <gco:CharacterString></gco:CharacterString>
+                            </cit:title>
+                          </cit:CI_Citation>
+                        </mdq:reportReference>
+                        <mdq:abstract>
+                          <gco:CharacterString></gco:CharacterString>
+                        </mdq:abstract>
+                      </mdq:DQ_StandaloneQualityReportInformation>
+                    </mdq:standaloneQualityReport>
+                    <mdq:report>
+                      <mdq:DQ_CompletenessOmission>
+                        <mdq:measure>
+                          <mdq:DQ_MeasureReference>
+                            <mdq:measureIdentification>
+                              <mcc:MD_Identifier>
+                                <mcc:code>
+                                  <gco:CharacterString>AP.1.1</gco:CharacterString>
+                                </mcc:code>
+                              </mcc:MD_Identifier>
+                            </mdq:measureIdentification>
+                            <mdq:nameOfMeasure>
+                              <gco:CharacterString>Horizontal Spatial Coverage</gco:CharacterString>
+                            </mdq:nameOfMeasure>
+                            <mdq:measureDescription>
+                              <gco:CharacterString>Horizontal coverage extent of product (eg : surface of the Mediterranean Sea)</gco:CharacterString>
+                            </mdq:measureDescription>
+                          </mdq:DQ_MeasureReference>
+                        </mdq:measure>
+                        <mdq:result>
+                          <mdq:DQ_QuantitativeResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:value>
+                              <gco:Record></gco:Record>
+                            </mdq:value>
+                            <mdq:valueUnit>
+                              <gml:UnitDefinition gml:id="">
+                                <gml:identifier codeSpace="">km**2</gml:identifier>
+                              </gml:UnitDefinition>
+                            </mdq:valueUnit>
+                            <mdq:valueRecordType>
+                              <gco:RecordType>Real</gco:RecordType>
+                            </mdq:valueRecordType>
+                          </mdq:DQ_QuantitativeResult>
+                        </mdq:result>
+                        <mdq:result>
+                          <mdq:DQ_DescriptiveResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:statement gco:nilReason="missing">
+                              <gco:CharacterString/>
+                            </mdq:statement>
+                          </mdq:DQ_DescriptiveResult>
+                        </mdq:result>
+                      </mdq:DQ_CompletenessOmission>
+                    </mdq:report>
+                    <mdq:report>
+                      <mdq:DQ_CompletenessOmission>
+                        <mdq:measure>
+                          <mdq:DQ_MeasureReference>
+                            <mdq:measureIdentification>
+                              <mcc:MD_Identifier>
+                                <mcc:code>
+                                  <gco:CharacterString>AP.1.2</gco:CharacterString>
+                                </mcc:code>
+                              </mcc:MD_Identifier>
+                            </mdq:measureIdentification>
+                            <mdq:nameOfMeasure>
+                              <gco:CharacterString>Vertical Spatial Coverage</gco:CharacterString>
+                            </mdq:nameOfMeasure>
+                            <mdq:measureDescription>
+                              <gco:CharacterString>Vertical coverage extent of product</gco:CharacterString>
+                            </mdq:measureDescription>
+                          </mdq:DQ_MeasureReference>
+                        </mdq:measure>
+                        <mdq:result>
+                          <mdq:DQ_QuantitativeResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:value>
+                              <gco:Record></gco:Record>
+                            </mdq:value>
+                            <mdq:valueUnit>
+                              <gml:UnitDefinition gml:id="">
+                                <gml:identifier codeSpace="">meters</gml:identifier>
+                              </gml:UnitDefinition>
+                            </mdq:valueUnit>
+                            <mdq:valueRecordType>
+                              <gco:RecordType>Real</gco:RecordType>
+                            </mdq:valueRecordType>
+                          </mdq:DQ_QuantitativeResult>
+                        </mdq:result>
+                        <mdq:result>
+                          <mdq:DQ_DescriptiveResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:statement gco:nilReason="missing">
+                              <gco:CharacterString/>
+                            </mdq:statement>
+                          </mdq:DQ_DescriptiveResult>
+                        </mdq:result>
+                      </mdq:DQ_CompletenessOmission>
+                    </mdq:report>
+                    <mdq:report>
+                      <mdq:DQ_CompletenessOmission>
+                        <mdq:measure>
+                          <mdq:DQ_MeasureReference>
+                            <mdq:measureIdentification>
+                              <mcc:MD_Identifier>
+                                <mcc:code>
+                                  <gco:CharacterString>AP.1.3</gco:CharacterString>
+                                </mcc:code>
+                              </mcc:MD_Identifier>
+                            </mdq:measureIdentification>
+                            <mdq:nameOfMeasure>
+                              <gco:CharacterString>Temporal Coverage</gco:CharacterString>
+                            </mdq:nameOfMeasure>
+                            <mdq:measureDescription>
+                              <gco:CharacterString>Temporal coverage extent of product</gco:CharacterString>
+                            </mdq:measureDescription>
+                          </mdq:DQ_MeasureReference>
+                        </mdq:measure>
+                        <mdq:result>
+                          <mdq:DQ_QuantitativeResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:value>
+                              <gco:Record/>
+                            </mdq:value>
+                            <mdq:valueUnit>
+                              <gml:UnitDefinition gml:id="">
+                                <gml:identifier codeSpace="">days</gml:identifier>
+                              </gml:UnitDefinition>
+                            </mdq:valueUnit>
+                            <mdq:valueRecordType>
+                              <gco:RecordType>Integer</gco:RecordType>
+                            </mdq:valueRecordType>
+                          </mdq:DQ_QuantitativeResult>
+                        </mdq:result>
+                        <mdq:result>
+                          <mdq:DQ_DescriptiveResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:statement gco:nilReason="missing">
+                              <gco:CharacterString/>
+                            </mdq:statement>
+                          </mdq:DQ_DescriptiveResult>
+                        </mdq:result>
+                      </mdq:DQ_CompletenessOmission>
+                    </mdq:report><mdq:report>
+                    <mdq:DQ_CompletenessOmission>
+                      <mdq:measure>
+                        <mdq:DQ_MeasureReference>
+                          <mdq:measureIdentification>
+                            <mcc:MD_Identifier>
+                              <mcc:code>
+                                <gco:CharacterString>AP.1.4</gco:CharacterString>
+                              </mcc:code>
+                            </mcc:MD_Identifier>
+                          </mdq:measureIdentification>
+                          <mdq:nameOfMeasure>
+                            <gco:CharacterString>Number of items</gco:CharacterString>
+                          </mdq:nameOfMeasure>
+                          <mdq:measureDescription>
+                            <gco:CharacterString>Count of all items in the dataset or sample. Describe the items which are counted. If the number is determined by sampling unit (density), define the sampling unit (eg size of mesh).</gco:CharacterString>
+                          </mdq:measureDescription>
+                        </mdq:DQ_MeasureReference>
+                      </mdq:measure>
+                      <mdq:result>
+                        <mdq:DQ_QuantitativeResult>
+                          <mdq:dateTime>
+                            <gco:Date/>
+                          </mdq:dateTime>
+                          <mdq:value>
+                            <gco:Record/>
+                          </mdq:value>
+                          <mdq:valueRecordType>
+                            <gco:RecordType>Integer</gco:RecordType>
+                          </mdq:valueRecordType>
+                        </mdq:DQ_QuantitativeResult>
+                      </mdq:result>
+                      <mdq:result>
+                        <mdq:DQ_DescriptiveResult>
+                          <mdq:dateTime>
+                            <gco:Date/>
+                          </mdq:dateTime>
+                          <mdq:statement gco:nilReason="missing">
+                            <gco:CharacterString/>
+                          </mdq:statement>
+                        </mdq:DQ_DescriptiveResult>
+                      </mdq:result>
+                    </mdq:DQ_CompletenessOmission>
+                  </mdq:report>
+                    <mdq:report>
+                      <mdq:DQ_ConceptualConsistency>
+                        <mdq:measure>
+                          <mdq:DQ_MeasureReference>
+                            <mdq:measureIdentification>
+                              <mcc:MD_Identifier>
+                                <mcc:code>
+                                  <gco:CharacterString>AP.2.1</gco:CharacterString>
+                                </mcc:code>
+                              </mcc:MD_Identifier>
+                            </mdq:measureIdentification>
+                            <mdq:nameOfMeasure>
+                              <gco:CharacterString>Number of Characteristics</gco:CharacterString>
+                            </mdq:nameOfMeasure>
+                            <mdq:measureDescription>
+                              <gco:CharacterString>Number of characteristics in product</gco:CharacterString>
+                            </mdq:measureDescription>
+                          </mdq:DQ_MeasureReference>
+                        </mdq:measure>
+                        <mdq:result>
+                          <mdq:DQ_QuantitativeResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:value>
+                              <gco:Record/>
+                            </mdq:value>
+                            <mdq:valueRecordType>
+                              <gco:RecordType>Integer</gco:RecordType>
+                            </mdq:valueRecordType>
+                          </mdq:DQ_QuantitativeResult>
+                        </mdq:result>
+                        <mdq:result>
+                          <mdq:DQ_DescriptiveResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:statement gco:nilReason="missing">
+                              <gco:CharacterString/>
+                            </mdq:statement>
+                          </mdq:DQ_DescriptiveResult>
+                        </mdq:result>
+                      </mdq:DQ_ConceptualConsistency>
+                    </mdq:report>
+                    <mdq:report>
+                      <mdq:DQ_ThematicClassificationCorrectness>
+                        <mdq:measure>
+                          <mdq:DQ_MeasureReference>
+                            <mdq:measureIdentification>
+                              <mcc:MD_Identifier>
+                                <mcc:code>
+                                  <gco:CharacterString>AP.3.1</gco:CharacterString>
+                                </mcc:code>
+                              </mcc:MD_Identifier>
+                            </mdq:measureIdentification>
+                            <mdq:nameOfMeasure>
+                              <gco:CharacterString>Horizontal resolution</gco:CharacterString>
+                            </mdq:nameOfMeasure>
+                            <mdq:measureDescription>
+                              <gco:CharacterString>Horizontal mesh size or equivalent value for the given scale of product (eg 50m for 1/50 000)</gco:CharacterString>
+                            </mdq:measureDescription>
+                          </mdq:DQ_MeasureReference>
+                        </mdq:measure>
+                        <mdq:result>
+                          <mdq:DQ_QuantitativeResult>
+                            <mdq:value>
+                              <gco:Record/>
+                            </mdq:value>
+                            <mdq:valueUnit>
+                              <gml:UnitDefinition gml:id="">
+                                <gml:identifier codeSpace="">meters</gml:identifier>
+                              </gml:UnitDefinition>
+                            </mdq:valueUnit>
+                            <mdq:valueRecordType>
+                              <gco:RecordType>Integer</gco:RecordType>
+                            </mdq:valueRecordType>
+                          </mdq:DQ_QuantitativeResult>
+                        </mdq:result>
+                        <mdq:result>
+                          <mdq:DQ_DescriptiveResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:statement gco:nilReason="missing">
+                              <gco:CharacterString/>
+                            </mdq:statement>
+                          </mdq:DQ_DescriptiveResult>
+                        </mdq:result>
+                      </mdq:DQ_ThematicClassificationCorrectness>
+                    </mdq:report>
+                    <mdq:report>
+                      <mdq:DQ_ThematicClassificationCorrectness>
+                        <mdq:measure>
+                          <mdq:DQ_MeasureReference>
+                            <mdq:measureIdentification>
+                              <mcc:MD_Identifier>
+                                <mcc:code>
+                                  <gco:CharacterString>AP.3.2</gco:CharacterString>
+                                </mcc:code>
+                              </mcc:MD_Identifier>
+                            </mdq:measureIdentification>
+                            <mdq:nameOfMeasure>
+                              <gco:CharacterString>Vertical resolution</gco:CharacterString>
+                            </mdq:nameOfMeasure>
+                            <mdq:measureDescription>
+                              <gco:CharacterString>Average vertical sampling</gco:CharacterString>
+                            </mdq:measureDescription>
+                          </mdq:DQ_MeasureReference>
+                        </mdq:measure>
+                        <mdq:result>
+                          <mdq:DQ_QuantitativeResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:value>
+                              <gco:Record/>
+                            </mdq:value>
+                            <mdq:valueUnit>
+                              <gml:UnitDefinition gml:id="">
+                                <gml:identifier codeSpace="">meters</gml:identifier>
+                              </gml:UnitDefinition>
+                            </mdq:valueUnit>
+                            <mdq:valueRecordType>
+                              <gco:RecordType>Real</gco:RecordType>
+                            </mdq:valueRecordType>
+                          </mdq:DQ_QuantitativeResult>
+                        </mdq:result>
+                        <mdq:result>
+                          <mdq:DQ_DescriptiveResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:statement gco:nilReason="missing">
+                              <gco:CharacterString/>
+                            </mdq:statement>
+                          </mdq:DQ_DescriptiveResult>
+                        </mdq:result>
+                      </mdq:DQ_ThematicClassificationCorrectness>
+                    </mdq:report>
+                    <mdq:report>
+                      <mdq:DQ_ThematicClassificationCorrectness>
+                        <mdq:measure>
+                          <mdq:DQ_MeasureReference>
+                            <mdq:measureIdentification>
+                              <mcc:MD_Identifier>
+                                <mcc:code>
+                                  <gco:CharacterString>AP.3.3</gco:CharacterString>
+                                </mcc:code>
+                              </mcc:MD_Identifier>
+                            </mdq:measureIdentification>
+                            <mdq:nameOfMeasure>
+                              <gco:CharacterString>Temporal resolution</gco:CharacterString>
+                            </mdq:nameOfMeasure>
+                            <mdq:measureDescription>
+                              <gco:CharacterString>Temporal sampling interval of product</gco:CharacterString>
+                            </mdq:measureDescription>
+                          </mdq:DQ_MeasureReference>
+                        </mdq:measure>
+                        <mdq:result>
+                          <mdq:DQ_QuantitativeResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:value>
+                              <gco:Record/>
+                            </mdq:value>
+                            <mdq:valueUnit>
+                              <gml:UnitDefinition gml:id="">
+                                <gml:identifier codeSpace="">days</gml:identifier>
+                              </gml:UnitDefinition>
+                            </mdq:valueUnit>
+                            <mdq:valueRecordType>
+                              <gco:RecordType>Real</gco:RecordType>
+                            </mdq:valueRecordType>
+                          </mdq:DQ_QuantitativeResult>
+                        </mdq:result>
+                        <mdq:result>
+                          <mdq:DQ_DescriptiveResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:statement gco:nilReason="missing">
+                              <gco:CharacterString/>
+                            </mdq:statement>
+                          </mdq:DQ_DescriptiveResult>
+                        </mdq:result>
+                      </mdq:DQ_ThematicClassificationCorrectness>
+                    </mdq:report>
+                    <mdq:report>
+                      <mdq:DQ_QuantitativeAttributeAccuracy>
+                        <mdq:measure>
+                          <mdq:DQ_MeasureReference>
+                            <mdq:measureIdentification>
+                              <mcc:MD_Identifier>
+                                <mcc:code>
+                                  <gco:CharacterString>AP.3.4</gco:CharacterString>
+                                </mcc:code>
+                              </mcc:MD_Identifier>
+                            </mdq:measureIdentification>
+                            <mdq:nameOfMeasure>
+                              <gco:CharacterString>Thematic accuracy</gco:CharacterString>
+                            </mdq:nameOfMeasure>
+                            <mdq:measureDescription>
+                              <gco:CharacterString>Percentage error of the product and description of  error concept for the product (100 words max) provided by expert</gco:CharacterString>
+                            </mdq:measureDescription>
+                          </mdq:DQ_MeasureReference>
+                        </mdq:measure>
+                        <mdq:result>
+                          <mdq:DQ_QuantitativeResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:value>
+                              <gco:Record/>
+                            </mdq:value>
+                            <mdq:valueUnit>
+                              <gml:UnitDefinition gml:id="">
+                                <gml:identifier codeSpace="">%</gml:identifier>
+                              </gml:UnitDefinition>
+                            </mdq:valueUnit>
+                            <mdq:valueRecordType>
+                              <gco:RecordType>Percentage</gco:RecordType>
+                            </mdq:valueRecordType>
+                          </mdq:DQ_QuantitativeResult>
+                        </mdq:result>
+                        <mdq:result>
+                          <mdq:DQ_DescriptiveResult>
+                            <mdq:statement gco:nilReason="missing">
+                              <gco:CharacterString/>
+                            </mdq:statement>
+                          </mdq:DQ_DescriptiveResult>
+                        </mdq:result>
+                      </mdq:DQ_QuantitativeAttributeAccuracy>
+                    </mdq:report>
+                    <mdq:report>
+                      <mdq:DQ_TemporalValidity>
+                        <mdq:measure>
+                          <mdq:DQ_MeasureReference>
+                            <mdq:measureIdentification>
+                              <mcc:MD_Identifier>
+                                <mcc:code>
+                                  <gco:CharacterString>AP.4.1</gco:CharacterString>
+                                </mcc:code>
+                              </mcc:MD_Identifier>
+                            </mdq:measureIdentification>
+                            <mdq:nameOfMeasure>
+                              <gco:CharacterString>Temporal validity</gco:CharacterString>
+                            </mdq:nameOfMeasure>
+                            <mdq:measureDescription>
+                              <gco:CharacterString>Max elapsed time between last input data records  update and product creation date. Minimum value 1/24 day.</gco:CharacterString>
+                            </mdq:measureDescription>
+                          </mdq:DQ_MeasureReference>
+                        </mdq:measure>
+                        <mdq:result>
+                          <mdq:DQ_QuantitativeResult>
+                            <mdq:value>
+                              <gco:Record/>
+                            </mdq:value>
+                            <mdq:valueUnit>
+                              <gml:UnitDefinition gml:id="">
+                                <gml:identifier codeSpace="">days</gml:identifier>
+                              </gml:UnitDefinition>
+                            </mdq:valueUnit>
+                            <mdq:valueRecordType>
+                              <gco:RecordType>Integer</gco:RecordType>
+                            </mdq:valueRecordType>
+                          </mdq:DQ_QuantitativeResult>
+                        </mdq:result>
+                        <mdq:result>
+                          <mdq:DQ_DescriptiveResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:statement gco:nilReason="missing">
+                              <gco:CharacterString/>
+                            </mdq:statement>
+                          </mdq:DQ_DescriptiveResult>
+                        </mdq:result>
+                      </mdq:DQ_TemporalValidity>
+                    </mdq:report>
+                    <mdq:report>
+                      <mdq:DQ_UsabilityElement>
+                        <mdq:measure>
+                          <mdq:DQ_MeasureReference>
+                            <mdq:measureIdentification>
+                              <mcc:MD_Identifier>
+                                <mcc:code>
+                                  <gco:CharacterString>AP.5.1</gco:CharacterString>
+                                </mcc:code>
+                              </mcc:MD_Identifier>
+                            </mdq:measureIdentification>
+                            <mdq:nameOfMeasure>
+                              <gco:CharacterString>Usability</gco:CharacterString>
+                            </mdq:nameOfMeasure>
+                            <mdq:measureDescription>
+                              <gco:CharacterString></gco:CharacterString>
+                            </mdq:measureDescription>
+                          </mdq:DQ_MeasureReference>
+                        </mdq:measure>
+                        <mdq:result>
+                          <mdq:DQ_QuantitativeResult>
+                            <mdq:value>
+                              <gco:Record/>
+                            </mdq:value>
+                          </mdq:DQ_QuantitativeResult>
+                        </mdq:result>
+                        <mdq:result>
+                          <mdq:DQ_DescriptiveResult>
+                            <mdq:dateTime>
+                              <gco:Date/>
+                            </mdq:dateTime>
+                            <mdq:statement gco:nilReason="missing">
+                              <gco:CharacterString/>
+                            </mdq:statement>
+                          </mdq:DQ_DescriptiveResult>
+                        </mdq:result>
+                      </mdq:DQ_UsabilityElement>
+                    </mdq:report>
+                  </mdq:DQ_DataQuality>
+                </mdb:dataQualityInfo>
+              </snippet>
+            </template>
+          </action>
+
+        </section>
+      </tab>
+
+    </view>
+
+
+
+
+
+    <view name="checkpoint-tdp"
+          upAndDownControlHidden="true"
+          displayIfRecord="contains(mdb:MD_Metadata/mdb:metadataStandard/
+                                        */cit:title/gco:CharacterString,
+                                        'Emodnet Checkpoint - Targeted Data Product')">
+
+      <thesaurusList>
+        <thesaurus key="local.theme.emodnet-checkpoint.environmental.matrix" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.status" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.visibility" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.challenges" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.policy.visibility" maxtags="1"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" maxtags="1"/>
+        <thesaurus key="local.theme.emodbnet-checkpoint.level.of.characteristics" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.production.mode" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.readyness" maxtags="1"/>
+        <thesaurus key="local.theme.emodnet-checkpoint.data.delivery.mechanism" maxtags="1"/>
+      </thesaurusList>
+
+      <sidePanel>
+        <directive data-gn-onlinesrc-list="thumbnail|onlinesrc|associated"/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+      </sidePanel>
+
+      <tab id="checkpoint-tdp-characteristics" default="true">
+        <section name="checkpoint-tdp-main">
+
+
+          <field
+            name="validation"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                    mri:descriptiveKeywords
+                    [contains(*/mri:thesaurusName/cit:CI_Citation/cit:identifier/*/mcc:code/*/text(),
+                    'emodnet-checkpoint.status')]"/>
+
+
+          <!-- If no DPS associated, warn user to choose one first. -->
+          <text ref="checkpoint-linkToSpecification-help"
+                if="count(//mri:associatedResource/*/mri:initiativeType/*[@codeListValue = 'specification']) = 0"
+          />
+          <action type="associatedResource"
+                  name="checkpoint-linkToSpecification"
+                  if="count(//mri:associatedResource/*/mri:initiativeType/*[@codeListValue = 'specification']) = 0"
+                  process="sibling">
+            <directiveAttributes>{"associationType": "crossReference", "initiativeType": "specification"}</directiveAttributes>
+          </action>
+
+          <!-- Compute QE and FU -->
+          <action type="process"
+                  process="checkpoint-copy-dps-props"
+                  btnClass="fa fa-clone"
+                  if="count(//mri:associatedResource/*/mri:initiativeType/*[@codeListValue = 'specification']) = 1"/>
+
+          <text ref="checkpoint-copy-dps-props-help"
+                if="count(//mri:associatedResource/*/mri:initiativeType/*[@codeListValue = 'specification']) = 1"
+          />
+
+
+          <!-- DPS - Challenge number + name  -->
+          <field name="challenge"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                  mri:descriptiveKeywords
+                  [contains(*/mri:thesaurusName/*/cit:title/gco:CharacterString,
+                  'Used by challenges')]"/>
+
+          <!-- DPS - Product name -->
+          <field name="checkpoint-tdp-productName"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/cit:CI_Citation/cit:title"/>
+
+          <!-- DPS - Deliverable identifier -->
+          <field name="checkpoint-deliverable"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/
+                          */cit:series/*/cit:issueIdentification"/>
+
+          <!--
+          DPS - Responsible party (point of contact) : organisation name
+          DPS - E-mail of responsible party -->
+          <field name="pointOfContact"
+                 templateModeOnly="true" notDisplayedIfMissing="true"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:pointOfContact"
+                 del=".">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="*/cit:party/*/cit:name/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                     xpath="*/cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress/gco:CharacterString"/>
+
+              </values>
+              <snippet>
+                <mri:pointOfContact>
+                  <cit:CI_Responsibility>
+                    <gn:copy select="cit:role"/>
+                    <gn:copy select="cit:extent"/>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                        </cit:name>
+                        <cit:contactInfo>
+                          <cit:CI_Contact>
+                            <gn:copy select="cit:phone"/>
+                            <cit:address>
+                              <cit:CI_Address>
+                                <gn:copy select="deliveryPoint"/>
+                                <gn:copy select="city"/>
+                                <gn:copy select="administrativeArea"/>
+                                <gn:copy select="postalCode"/>
+                                <gn:copy select="country"/>
+                                <cit:electronicMailAddress>
+                                  <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                                </cit:electronicMailAddress>
+                              </cit:CI_Address>
+                            </cit:address>
+                            <gn:copy select="cit:onlineResource"/>
+                            <gn:copy select="cit:hoursOfService"/>
+                            <gn:copy select="cit:contactInstructions"/>
+                            <gn:copy select="cit:contactType"/>
+                          </cit:CI_Contact>
+                        </cit:contactInfo>
+                        <gn:copy select="cit:logo"/>
+                        <cit:individual>
+                          <cit:CI_Individual>
+                            <gn:copy select="cit:name"/>
+                            <gn:copy select="cit:contactInfo"/>
+                          </cit:CI_Individual>
+                        </cit:individual>
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mri:pointOfContact>
+              </snippet>
+            </template>
+          </field>
+
+          <action type="add" name="pointOfContact"
+                  or="pointOfContact"
+                  in="/mdb:MD_Metadata/mdb:identificationInfo/*">
+            <template>
+              <snippet>
+                <mri:pointOfContact>
+                  <cit:CI_Responsibility>
+                    <cit:role>
+                      <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode"
+                                       codeListValue="pointOfContact">pointOfContact</cit:CI_RoleCode>
+                    </cit:role>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString></gco:CharacterString>
+                        </cit:name>
+                        <cit:contactInfo>
+                          <cit:CI_Contact>
+                            <cit:address>
+                              <cit:CI_Address>
+                                <cit:electronicMailAddress>
+                                  <gco:CharacterString/>
+                                </cit:electronicMailAddress>
+                              </cit:CI_Address>
+                            </cit:address>
+                          </cit:CI_Contact>
+                        </cit:contactInfo>
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mri:pointOfContact>
+              </snippet>
+            </template>
+          </action>
+
+
+
+          <!-- DPS - Metadataset creation date  (DD/MM/YYYY) -->
+          <!-- DPS - Metadataset revision date  (DD/MM/YYYY) -->
+          <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                          mri:citation/*/cit:date[
+                            */cit:dateType/*/@codeListValue = 'creation' or
+                            */cit:dateType/*/@codeListValue = 'revision']"/>
+
+
+          <action type="add"
+                  btnLabel="checkpoint-add-revision"
+                  or="date"
+                  in="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                          mri:citation/*"
+                  if="count(mdb:MD_Metadata/mdb:identificationInfo/*/
+                          mri:citation/*/cit:date[
+                            */cit:dateType/*/@codeListValue = 'revision']) = 0">
+            <template>
+              <snippet>
+                <cit:date>
+                  <cit:CI_Date>
+                    <cit:date>
+                      <gco:Date/>
+                    </cit:date>
+                    <cit:dateType>
+                      <cit:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                           codeListValue="revision"/>
+                    </cit:dateType>
+                  </cit:CI_Date>
+                </cit:date>
+              </snippet>
+            </template>
+          </action>
+
+
+          <!-- DPS - E-mail of metadata contact -->
+          <field name="metadataPointOfContact"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 xpath="/mdb:MD_Metadata/mdb:contact"
+                 del=".">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="*/cit:party/*/cit:name/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                     xpath="*/cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress/gco:CharacterString"
+                     use="email"/>
+                <key label="phone"
+                     xpath="*/cit:party/*/cit:contactInfo/*/cit:phone/*[cit:numberType/*/@codeListValue = 'voice']/cit:number/gco:CharacterString"
+                     use="text"/>
+              </values>
+              <snippet>
+                <mdb:contact>
+                  <cit:CI_Responsibility>
+                    <gn:copy select="cit:role"/>
+                    <gn:copy select="cit:extent"/>
+                    <cit:party>
+                      <cit:CI_Organisation>
+                        <cit:name>
+                          <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                        </cit:name>
+                        <cit:contactInfo>
+                          <cit:CI_Contact>
+                            <cit:phone>
+                              <cit:CI_Telephone>
+                                <cit:number>
+                                  <gco:CharacterString>{{phone}}</gco:CharacterString>
+                                </cit:number>
+                                <cit:numberType>
+                                  <cit:CI_TelephoneTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_TelephoneTypeCode"
+                                                            codeListValue="voice"/>
+                                </cit:numberType>
+                              </cit:CI_Telephone>
+                            </cit:phone>
+                            <!--<gn:copy select="cit:phone"/>-->
+                            <cit:address>
+                              <cit:CI_Address>
+                                <cit:electronicMailAddress>
+                                  <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                                </cit:electronicMailAddress>
+                              </cit:CI_Address>
+                            </cit:address>
+                            <gn:copy select="cit:onlineResource"/>
+                            <gn:copy select="cit:hoursOfService"/>
+                            <gn:copy select="cit:contactInstructions"/>
+                            <gn:copy select="cit:contactType"/>
+                          </cit:CI_Contact>
+                        </cit:contactInfo>
+                        <gn:copy select="cit:logo"/>
+                        <gn:copy select="cit:individual"/>
+                      </cit:CI_Organisation>
+                    </cit:party>
+                  </cit:CI_Responsibility>
+                </mdb:contact>
+              </snippet>
+            </template>
+          </field>
+
+
+
+          <!-- DPS - Purpose -->
+          <field name="checkpoint-purpose" xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:purpose"/>
+
+
+          <!-- DPS - Abstract -->
+          <field name="checkpoint-abstract" xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:abstract"/>
+
+          <!-- DPS - Processing level -->
+          <field
+            name="processing-level"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                    mri:descriptiveKeywords
+                    [contains(*/mri:thesaurusName/cit:CI_Citation/cit:title/gco:CharacterString,
+                    'Processing level of characteristics')]"/>
+
+
+          <!-- DPS - Production mode -->
+          <field
+            name="checkpoint-production-mode"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                    mri:descriptiveKeywords
+                    [contains(*/mri:thesaurusName/cit:CI_Citation/cit:title/gco:CharacterString,
+                    'Production mode')]"/>
+
+          <field
+            name="inspireThemeMandatory"
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                    mri:descriptiveKeywords
+                    [contains(*/mri:thesaurusName/cit:CI_Citation/cit:title/gco:CharacterString,
+                    'INSPIRE themes')]"/>
+
+
+
+          <!--
+          Champ Use Limitation de Constraints
+          Field name: Challenge expert opinion
+          Assign  an overall product quality score with respect to the objectives and explain why according to the following scale :
+          -->
+          <!-- 2 use limitation are defined. One for expert score,
+          one for expert opinion -->
+          <xsl xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_Constraints"
+               mode="checkpoint-expert-score"/>
+
+
+          <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints"/>
+
+        </section>
+
+        <section name="checkpoint-dps-spatial">
+          <!-- DPS - Horizontal Coordinate Reference System
+          DPS - Vertical coordinate reference system
+          DPS - Temporal reference system -->
+          <field xpath="/mdb:MD_Metadata/mdb:referenceSystemInfo/*/
+                          mrs:referenceSystemIdentifier/*/mcc:description"
+                 name="referenceSystemInfo"
+                 del="../../../.."/>
+
+          <action type="add"
+                  btnLabel="addCrs"
+                  name="referenceSystemInfo" or="referenceSystemInfo"
+                  in="/mdb:MD_Metadata">
+            <template>
+              <snippet label="addCrs4326">
+                <mdb:referenceSystemInfo>
+                  <mrs:MD_ReferenceSystem>
+                    <mrs:referenceSystemIdentifier>
+                      <mcc:MD_Identifier>
+                        <mcc:code>
+                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/4326</gco:CharacterString>
+                        </mcc:code>
+                        <mcc:description>
+                          <gco:CharacterString>WGS 84 (EPSG:4326)</gco:CharacterString>
+                        </mcc:description>
+                      </mcc:MD_Identifier>
+                    </mrs:referenceSystemIdentifier>
+                  </mrs:MD_ReferenceSystem>
+                </mdb:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs4258">
+                <mdb:referenceSystemInfo>
+                  <mrs:MD_ReferenceSystem>
+                    <mrs:referenceSystemIdentifier>
+                      <mcc:MD_Identifier>
+                        <mcc:code>
+                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/4258</gco:CharacterString>
+                        </mcc:code>
+                        <mcc:description>
+                          <gco:CharacterString>ETRS89 (EPSG:4258)</gco:CharacterString>
+                        </mcc:description>
+                      </mcc:MD_Identifier>
+                    </mrs:referenceSystemIdentifier>
+                  </mrs:MD_ReferenceSystem>
+                </mdb:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs3035">
+                <mdb:referenceSystemInfo>
+                  <mrs:MD_ReferenceSystem>
+                    <mrs:referenceSystemIdentifier>
+                      <mcc:MD_Identifier>
+                        <mcc:code>
+                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3035</gco:CharacterString>
+                        </mcc:code>
+                        <mcc:description>
+                          <gco:CharacterString>ETRS89 / LAEA Europe (EPSG:3035)</gco:CharacterString>
+                        </mcc:description>
+                      </mcc:MD_Identifier>
+                    </mrs:referenceSystemIdentifier>
+                  </mrs:MD_ReferenceSystem>
+                </mdb:referenceSystemInfo>
+              </snippet>
+            </template>
+          </action>
+
+          <!-- DPS - Spatial representation -->
+          <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:spatialRepresentationType"/>
+
+          <!-- DPS - Number of component - See Quality section -->
+
+
+          <field
+            xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+              mri:extent/*/gex:geographicElement/gex:EX_GeographicBoundingBox"/>
+
+
+          <field name="temporalExtent" templateModeOnly="true"
+                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/*/gex:temporalElement"
+                 if="count(mdb:MD_Metadata/mdb:identificationInfo/*) > 0">
+            <template>
+              <values>
+                <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+                <key label="beginPosition"
+                     xpath="gex:EX_TemporalExtent/gex:extent/gml:TimePeriod//gml:beginPosition"
+                     use="gn-date-picker"
+                     tooltip="gex:extent|gex:EX_TemporalExtent">
+                  <directiveAttributes data-tag-name="gml:beginPosition"/>
+                </key>
+                <key label="endPosition"
+                     xpath="gex:EX_TemporalExtent/gex:extent/gml:TimePeriod//gml:endPosition"
+                     use="gn-date-picker"
+                     tooltip="gex:extent|gex:EX_TemporalExtent"
+                >
+                  <directiveAttributes
+                    data-tag-name="gml:endPosition"
+                    data-indeterminate-position="eval#gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+                </key>
+              </values>
+              <snippet>
+                <gex:temporalElement>
+                  <gex:EX_TemporalExtent>
+                    <gex:extent>
+                      <gml:TimePeriod gml:id="">
+                        {{beginPosition}}
+                        {{endPosition}}
+                      </gml:TimePeriod>
+                    </gex:extent>
+                  </gex:EX_TemporalExtent>
+                </gex:temporalElement>
+              </snippet>
+            </template>
+          </field>
+
+
+          <section name="checkpoint-ve">
+            <field
+              name="minDepth"
+              xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                                mri:extent/*/
+                                gex:verticalElement/*/gex:minimumValue"/>
+
+            <field
+              name="maxDepth"
+              xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/
+                                mri:extent/*/
+                                gex:verticalElement/*/gex:maximumValue"/>
+          </section>
+        </section>
+
+        <section name="checkpoint-dps-distribution">
+
+          <!-- DPS - Product distribution format -->
+          <field
+            name="dataFormats"
+            templateModeOnly="true"
+            xpath="/mdb:MD_Metadata/mdb:distributionInfo/*/mrd:distributionFormat/
+                            mrd:MD_Format/mrd:formatSpecificationCitation"
+            del="../..">
+            <template>
+              <values>
+                <key label="format"
+                     xpath="cit:CI_Citation/cit:title/gco:CharacterString"
+                     tooltip="cit:title">
+                  <helper name="cit:title" context="/mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution/mrd:distributionFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title"/>
+                </key>
+              </values>
+              <snippet>
+                <mrd:formatSpecificationCitation>
+                  <cit:CI_Citation>
+                    <cit:title>
+                      <gco:CharacterString>{{format}}</gco:CharacterString>
+                    </cit:title>
+                  </cit:CI_Citation>
+                </mrd:formatSpecificationCitation>
+              </snippet>
+            </template>
+          </field>
+          <text ref="dataFormats-help"/>
+
+          <action type="add" name="dataFormats" or="distributionFormat"
+                  in="/mdb:MD_Metadata/mdb:distributionInfo/mrd:MD_Distribution">
+            <template>
+              <snippet>
+                <mrd:distributionFormat>
+                  <mrd:MD_Format>
+                    <mrd:formatSpecificationCitation>
+                      <cit:CI_Citation>
+                        <cit:title>
+                          <gco:CharacterString></gco:CharacterString>
+                        </cit:title>
+                      </cit:CI_Citation>
+                    </mrd:formatSpecificationCitation>
+                  </mrd:MD_Format>
+                </mrd:distributionFormat>
+              </snippet>
+            </template>
+          </action>
+
+        </section>
+      </tab>
+
+      <tab id="checkpoint-tdp-qm" mode="flat">
+        <section>
+
+          <!-- Then user can pick up one component from the DPS. -->
+          <action type="add"
+                  name="checkpoint-tdp-add-component"
+                  or="dataQualityInfo"
+                  in="/mdb:MD_Metadata"
+                  if="count(//mri:associatedResource/*/mri:initiativeType/*[@codeListValue = 'specification']) > 0"
+                  addDirective="data-gn-record-fragment-selector">
+            <directiveAttributes data-source-records="xpath::string-join(
+              //mri:associatedResource/*[mri:initiativeType/*/@codeListValue = 'specification']
+                /mri:metadataReference/@uuidref, ',')"/>
+          </action>
+
+          <!-- Then user can encode QM values. -->
+          <xsl xpath="/mdb:MD_Metadata/mdb:dataQualityInfo"
+               or="report"
+               mode="iso19115-3-qm"/>
+
+          <!-- Compute QE and FU -->
+          <action type="process"
+                  process="checkpoint-compute-qe"
+                  btnClass="fa fa-calculator"
+                  if="count(//mdb:dataQualityInfo[contains(string-join(*/@uuid, ''), '/CP')]) > 0"/>
+
+          <!-- If no UD associated, warn user to choose one or more. -->
+          <text ref="checkpoint-linkToUpstreamData-help"
+                if="count(//mri:associatedResource/*/mri:initiativeType/*[@codeListValue = 'upstreamData']) = 0"
+          />
+        </section>
+      </tab>
+    </view>
+
+
+
+
+
+
+
+
+
   </views>
 
   <batchEditing>
