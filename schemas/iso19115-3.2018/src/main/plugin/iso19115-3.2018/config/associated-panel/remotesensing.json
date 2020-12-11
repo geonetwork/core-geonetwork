@@ -60,7 +60,7 @@
             "isMultilingual": false
           },
           "protocol": {
-            "value": "FTP",
+            "value": "WWW:FTP",
             "hidden": true,
             "isMultilingual": false
           },
@@ -107,7 +107,7 @@
             "isMultilingual": false
           },
           "protocol": {
-            "value": "THREDDS",
+            "value": "WWW:LINK",
             "hidden": true,
             "isMultilingual": false
           },
@@ -163,7 +163,7 @@
             "isMultilingual": false
           },
           "protocol": {
-            "value": "OPENDAP",
+            "value": "WWW:OPENDAP",
             "hidden": true,
             "isMultilingual": false
           },
