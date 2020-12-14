@@ -4,6 +4,7 @@
 *.iml
 *.launch
 *.old
+*.log
 .DS_Store
 .project
 git*.properties
@@ -26,7 +27,6 @@ docs/schema-loc-*.rst
 eclipse/
 es/elasticsearch-*
 es/es-dashboards/kibana-*
-harvesters/harvester_*.log
 idea/
 jcs_caching/
 node_modules
