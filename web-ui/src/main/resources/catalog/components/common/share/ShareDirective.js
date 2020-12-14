@@ -134,8 +134,9 @@
           scope.reset = function() {
             $('#opsForm').find('input.ng-dirty').each(function(idx, el) {
               el.checked = false;
-              $(el).removeClass('ng-dirty');
             });
+            scope.opsForm.$setPristine();
+            scope.opsForm.$setUntouched();
             scope.privilegeIsSelected = false;
           };
 

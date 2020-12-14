@@ -2,16 +2,18 @@
   <div>
     <div class="row">
       <div class="col-lg-6">
-        <div data-ng-repeat="c in categories">
-          <label>
-            <input type="checkbox"
-                   name="{{c.id}}"
-                   data-ng-click="selectCategory()"
-                   data-ng-model="c.checked"/>&nbsp;
-            <span class="fa gn-icon-{{c.name}}"></span>&nbsp;
-            <span class="text">{{c.label[lang] | translate}}</span>
-          </label>
-        </div>
+        <form name="catsForm" id="catsForm">
+          <div data-ng-repeat="c in categories">
+            <label>
+              <input type="checkbox"
+                    name="{{c.id}}"
+                    data-ng-click="selectCategory()"
+                    data-ng-model="c.checked"/>&nbsp;
+              <span class="fa gn-icon-{{c.name}}"></span>&nbsp;
+              <span class="text">{{c.label[lang] | translate}}</span>
+            </label>
+          </div>
+        </form>
       </div>
       <div class="col-lg-6">
         <p class="help-block"

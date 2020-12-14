@@ -85,8 +85,9 @@
           scope.reset = function() {
             element.find('input.ng-dirty').each(function(idx, el) {
               el.checked = false;
-              $(el).removeClass('ng-dirty');
             });
+            scope.catsForm.$setPristine();
+            scope.catsForm.$setUntouched();
             scope.categoryIsSelected = false;
           };
 
