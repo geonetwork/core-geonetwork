@@ -69,6 +69,8 @@
                                   this.changeLayerProjection(subLayer, oldProj,
                                       newProj);
                                 });
+                          } else if (layer instanceof ol.layer.Image) {
+                            gnMap.updateWmsLayerForProj(scope.map, layer, newProj);
                           } else if (layer instanceof ol.layer.Tile) {
                             var tileLoadFunc = layer.getSource()
                                 .getTileLoadFunction();
@@ -93,8 +95,7 @@
                             return;
                           }
 
-                          // First, get all the info to populate the map
-
+                          // Get all the info to populate the map
                           var projectionConfig = {};
 
                           gnViewerSettings.mapConfig.switcherProjectionList
@@ -107,10 +108,6 @@
                           var newExtent = ol.proj.transformExtent(view
                               .calculateExtent(scope.map.getSize()), oldProj,
                               newProj);
-
-                          if (newProj.getExtent()) {
-                            newExtent = newProj.getExtent();
-                          }
 
                           var mapsConfig = {
                             projection : newProj
