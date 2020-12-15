@@ -39,23 +39,22 @@
       <li data-ng-show="!excludePattern.test('exportMEF')">
         <a href="" data-ng-disabled="operationOnSelectionInProgress"
            data-ng-click="mdService.metadataMEF(undefined, searchResults.selectionBucket)">
-          <i class="fa fa-file-zip-o"></i>&nbsp;
-          <span translate>exportMEF</span>
+          <i class="fa fa-fw fa-file-zip-o"></i>&nbsp;<span translate>exportMEF</span>
         </a>
       </li>
       <li data-ng-show="!excludePattern.test('exportPDF')">
         <a href="" data-ng-click="mdService.metadataPrint(searchObj.params, searchResults.selectionBucket)">
-          <i class="fa fa-file-pdf-o"></i>&nbsp;<span translate>exportPDF</span>
+          <i class="fa fa-fw fa-file-pdf-o"></i>&nbsp;<span translate>exportPDF</span>
         </a>
       </li>
       <li data-ng-show="!excludePattern.test('exportCSV')">
         <a href="" data-ng-click="mdService.exportCSV(searchResults.selectionBucket)">
-          <i class="fa fa-file-excel-o"></i>&nbsp;<span translate>exportCSV</span>
+          <i class="fa fa-fw fa-file-excel-o"></i>&nbsp;<span translate>exportCSV</span>
         </a>
       </li>
       <li data-ng-show="!excludePattern.test('viewSelectionOnly')">
         <a href="" data-ng-click="viewSelectionOnly()">
-          <i class="fa fa-check"></i>&nbsp;<span translate>viewSelectionOnly</span>
+          <i class="fa fa-fw fa-check"></i>&nbsp;<span translate>viewSelectionOnly</span>
         </a>
       </li>
 
@@ -63,32 +62,32 @@
       <li  data-ng-show="!excludePattern.test('updatePrivileges')"
            data-ng-if="user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.openPrivilegesBatchPanel(getCatScope(), searchResults.selectionBucket)">
-          <i class="fa fa-key"></i>&nbsp;<span translate>updatePrivileges</span>
+          <i class="fa fa-fw fa-key"></i>&nbsp;<span translate>updatePrivileges</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('editRecords')"
            data-ng-if="v.service === 'catalog.edit' && user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.openBatchEditing(getCatScope())">
-          <i class="fa fa-pencil"></i>&nbsp;<span translate>editRecords</span>
+          <i class="fa fa-fw fa-pencil"></i>&nbsp;<span translate>editRecords</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('publish')"
            data-ng-if="user.isReviewerOrMore()">
         <a href="" data-ng-click="mdService.publish(undefined, searchResults.selectionBucket, 'on', getCatScope())">
-          <i class="fa fa-unlock"></i>&nbsp;<span translate>publish</span>
+          <i class="fa fa-fw fa-unlock"></i>&nbsp;<span translate>publish</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('unpublish')"
            data-ng-if="user.isReviewerOrMore()">
         <a href="" data-ng-click="mdService.publish(undefined, searchResults.selectionBucket, 'off', getCatScope())">
-          <i class="fa fa-lock"></i>&nbsp;<span translate>unpublish</span>
+          <i class="fa fa-fw fa-lock"></i>&nbsp;<span translate>unpublish</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('transferOwnership')"
            data-ng-if="user.isUserAdminOrMore()">
         <a href=""
            data-ng-click="mdService.openTransferOwnership(undefined, searchResults.selectionBucket, getCatScope())">
-          <i class="fa fa-user"></i>&nbsp;<span translate>transferOwnership</span>
+          <i class="fa fa-fw fa-user"></i>&nbsp;<span translate>transferOwnership</span>
         </a>
       </li>
 
@@ -97,21 +96,21 @@
            data-ng-if="user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.validateMd(undefined, searchResults.selectionBucket)"
            data-gn-confirm-click="{{'validateSelectedRecordConfirm' | translate:searchResults}}">
-          <i class="fa fa-check"></i>&nbsp;<span translate>validate</span>
+          <i class="fa fa-fw fa-check"></i>&nbsp;<span translate>validate</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('validate')"
            data-ng-if="user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.validateMdLinks(undefined, searchResults.selectionBucket)"
            data-gn-confirm-click="{{'validateLinksSelectedRecordConfirm' | translate:searchResults}}">
-          <i class="fa fa-link"></i>&nbsp;<span translate>validateLinks</span>
+          <i class="fa fa-fw fa-link"></i>&nbsp;<span translate>validateLinks</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('validate')"
            data-ng-if="user.isEditorOrMore() && isInspireValidationEnabled">
         <a href="" data-ng-click="mdService.validateMdInspire(searchResults.selectionBucket)"
                    data-gn-confirm-click="{{'validateSelectedRecordINSPIREConfirm' | translate:searchResults}}">
-          <i class="fa fa-check"></i>&nbsp;<span translate>validateInspire</span>
+          <i class="fa fa-fw fa-check"></i>&nbsp;<span translate>validateInspire</span>
         </a>
       </li>
 
@@ -119,20 +118,20 @@
       <li  data-ng-show="!excludePattern.test('updateCategories')"
            data-ng-if="user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.openCategoriesBatchPanel(searchResults.selectionBucket, getCatScope())">
-          <i class="fa fa-tags"></i>&nbsp;<span translate>updateCategories</span>
+          <i class="fa fa-fw fa-tags"></i>&nbsp;<span translate>updateCategories</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('delete')"
            data-ng-if="user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.deleteMd(undefined, searchResults.selectionBucket)"
            data-gn-confirm-click="{{'deleteSelectedRecordConfirm' | translate:searchResults}}">
-          <i class="fa fa-times"></i>&nbsp;<span translate>delete</span>
+          <i class="fa fa-fw fa-times"></i>&nbsp;<span translate>delete</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('index')"
            data-ng-if="user.isUserAdminOrMore()">
         <a href="" data-ng-click="mdService.indexSelection(searchResults.selectionBucket)">
-          <i class="fa fa-cogs"></i>&nbsp;<span translate>indexRecords</span>
+          <i class="fa fa-fw fa-cogs"></i>&nbsp;<span translate>indexRecords</span>
         </a>
       </li>
 
