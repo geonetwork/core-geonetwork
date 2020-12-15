@@ -34,10 +34,12 @@
   var EPSG_WEB_MERCATOR = 'EPSG:3857';
   var EPSG_REGEX = new RegExp('^EPSG:\\d{4,6}$');
 
+  var _cachedDefs = {};
+
   module.provider('gnProjService', function() {
-    this.$get = ['$http', '$q', '$translate', 'gnUrlUtils', 
+    this.$get = ['$http', '$q', '$translate', 'gnUrlUtils',
      function($http, $q, $translate, gnUrlUtils) {
-      
+
       var buildRestUrl = function(searchTerm) {
         // Add GET query parameters to serviceUrl
         if (searchTerm.toUpperCase().startsWith('EPSG:')) {
@@ -49,6 +51,17 @@
               format: 'json'
             }));
       };
+
+      var isDefaultProjection = function(code) {
+        return code === EPSG_LL_WGS84 || code === EPSG_WEB_MERCATOR;
+      }
+
+      var getCachedDef = function(code) {
+        if (!(code in proj4.defs) || isDefaultProjection(code)) {
+          return;
+        }
+        return _cachedDefs[code];
+      }
 
       var parseProjDef = function(data) {
 
@@ -76,6 +89,8 @@
         if (def) {
           proj4.defs(code, firstResult.proj4);
           ol.proj.proj4.register(proj4);
+          // cache definition
+          _cachedDefs[code] = def;
         }
 
         // get bounding box and define defaults
@@ -90,7 +105,7 @@
           }
           // transform world extent to projected extent
           extent = ol.proj.transformExtent(worldExtent, EPSG_LL_WGS84, code, 8);
-        } 
+        }
 
         return {
           label: firstResult.name,
@@ -101,6 +116,36 @@
         }
       };
 
+      var getProj4Def = function(code) {
+        var defer = $q.defer();
+
+        var cachedDef = getCachedDef(code);
+        if (cachedDef) {
+          // return cached Proj4 definition
+          defer.resolve(cachedDef);
+        } else {
+          var url = buildRestUrl(code);
+
+          // send EPSG.io request and decode result
+          if (true) {
+            $http.get(url, {
+              cache: true,
+              timeout: REQUEST_TIMEOUT
+            })
+            .success(function(data) {
+              try {
+                console.log("Returning EPSG.io result");
+                defer.resolve(parseProjDef(data).def);
+              } catch (e) {
+                console.error(e);
+              }
+            })
+          }
+        }
+
+        return defer.promise;
+      };
+
       return {
 
         helpers: {
@@ -108,12 +153,10 @@
             // Get API service name without http(s) prefix for display purposes
             return {
               value: SERVICE_REST_URL.substr(SERVICE_REST_URL.indexOf('://') + 3)
-            } 
+            }
           },
 
-          isDefaultProjection: function(code) {
-            return code === EPSG_LL_WGS84 || code === EPSG_WEB_MERCATOR;
-          },
+          isDefaultProjection: isDefaultProjection,
 
           isValidEpsgCode: function(code) {
             return code.search(EPSG_REGEX) >= 0;
@@ -121,7 +164,7 @@
         },
 
         getProjectionSettings: function(searchTerm) {
-          var defer = $q.defer();          
+          var defer = $q.defer();
           var url = buildRestUrl(searchTerm);
 
           // send request and decode result
@@ -140,11 +183,21 @@
               })
               .error(function(data, status) {
                 defer.reject(
-                $translate.instant(
-                  status === 401 ? 'checkProjectionUrlUnauthorized' : 'checkProjectionUrl',
-                {url: url, status: status}));
+                  $translate.instant(
+                    status === 401 ? 'checkProjectionUrlUnauthorized' : 'checkProjectionUrl',
+                    {url: url, status: status}));
               });
-          }
+            }
+          return defer.promise;
+        },
+
+        isCustomProj4Def: function(code) {
+          var defer = $q.defer();
+
+          getProj4Def(code).then(function (result) {
+            defer.resolve(result !== proj4.defs[code]); 
+          });
+
           return defer.promise;
         }
       };
