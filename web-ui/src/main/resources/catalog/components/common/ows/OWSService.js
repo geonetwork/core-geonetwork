@@ -94,19 +94,87 @@
       'gnUrlUtils', 'gnGlobalSettings',
       function($http, $q, $translate,
                gnUrlUtils, gnGlobalSettings) {
-        var displayFileContent = function(data, withGroupLayer, getCapabilitiesUrl) {
-          if (!cachedGetCapabilitiesUrls.hasOwnProperty(getCapabilitiesUrl)) {
-            var parser = new ol.format.WMSCapabilities();
-            cachedGetCapabilitiesUrls[getCapabilitiesUrl] = parser.read(data);
+
+        var getLayerBounds = function(layer) {
+          var bboxProp;
+          ['EX_GeographicBoundingBox', 'WGS84BoundingBox'].forEach(
+            function(prop) {
+              if (angular.isArray(layer[prop])) {
+                bboxProp = layer[prop];
+              }
+            });
+          return bboxProp;
+        };
+
+        var getWMSCapabilities = function(data) {
+          var ol_parser = new ol.format.WMSCapabilities();
+          var result = ol_parser.read(data);
+          var ol_layer = result.Capability.Layer;
+
+          // If no CRS property is available, we're probably dealing with an older WMS (e.g. 1.1.1)
+          // WMS versions prior to 1.3.0 are not (fully) supported by OL's WMSCapabilities parser
+          if (!result.Capability.Layer.CRS) {
+            var parser = new X2JS();
+            var jsonData = parser.xml_str2json(data);
+
+            for (var p in jsonData) {
+              // Get root element
+              if (jsonData.hasOwnProperty(p)) {
+                var layer = jsonData[p].Capability.Layer;
+
+                // Copy SRS to Layer.CRS
+                ol_layer.CRS = layer.SRS || layer._SRS;
+
+                // Copy _SRS to BoundingBox.crs for each BoundingBox (if equal array length)
+                if (layer.BoundingBox && layer.BoundingBox.length > 0 &&
+                  layer.BoundingBox.length === ol_layer.BoundingBox.length) {
+
+                  for (var i = 0; i < layer.BoundingBox.length; i++) {
+                    var bbox = layer.BoundingBox[i];
+                    ol_layer.BoundingBox[i].crs = bbox._SRS || bbox.SRS;
+                  }
+                }
+
+                // Create EX_GeographicBoundingBox extent from LatLonBoundingBox properties
+                if (layer.LatLonBoundingBox) {
+                  var minx = layer.LatLonBoundingBox._minx;
+                  var miny = layer.LatLonBoundingBox._miny;
+                  var maxx = layer.LatLonBoundingBox._maxx;
+                  var maxy = layer.LatLonBoundingBox._maxy;
+                  if (angular.isDefined(minx) && angular.isDefined(miny) &&
+                      angular.isDefined(maxx) && angular.isDefined(maxy)) {
+                    ol_layer.EX_GeographicBoundingBox = ol.extent.boundingExtent([
+                      [parseFloat(minx), parseFloat(miny)],
+                      [parseFloat(maxx), parseFloat(maxy)]
+                    ]);
+                  }
+                }
+                break;
+              }
+            }
           }
+
+          return result;
+        };
+
+        var parseWMSCapabilities = function(data, withGroupLayer, getCapabilitiesUrl) {
+
+          var resolvedUrl = gnUrlUtils.urlResolve(getCapabilitiesUrl);
+          resolvedUrl.port = '';
+          getCapabilitiesUrl = resolvedUrl.href;
+
+          if (!cachedGetCapabilitiesUrls.hasOwnProperty(getCapabilitiesUrl)) {
+            cachedGetCapabilitiesUrls[getCapabilitiesUrl] = getWMSCapabilities(data);
+          }
+
           var result = angular.copy(cachedGetCapabilitiesUrls[getCapabilitiesUrl], {});
           var layers = [];
           var url = result.Capability.Request.GetMap.
               DCPType[0].HTTP.Get.OnlineResource;
-
+          var bbox = getLayerBounds(result.Capability.Layer);
 
           // Push all leaves into a flat array of Layers
-          // Also adjust crs (by inheritance) and url
+          // Also adjust CRS (by inheritance) and set URL and geographic bounds
           var getFlatLayers = function(layer, inheritedCrs) {
             if (angular.isArray(layer)) {
               if (withGroupLayer && layer.Name) {
@@ -116,14 +184,16 @@
                 getFlatLayers(layer[i], inheritedCrs);
               }
             } else if (angular.isDefined(layer)) {
+
               // replace with complete CRS list if available
               if (layer.CRS && layer.CRS.length > inheritedCrs.length) {
                 inheritedCrs = layer.CRS;
               }
 
-              // add to flat layer array if we're on a leave (layer w/o child)
+              // add to flat layer array if we're on a leaf (layer w/o child)
               layer.url = url;
               layer.CRS = inheritedCrs;
+              layer.EX_GeographicBoundingBox = layer.EX_GeographicBoundingBox || bbox;
               layers.push(layer);
 
               // make sure Layer element is an array
@@ -242,7 +312,7 @@
           for (var p in urlParams) {
             defaultParams[p] = urlParams[p];
             if (defaultParams.hasOwnProperty(p.toLowerCase()) &&
-                p != p.toLowerCase()) {
+              p != p.toLowerCase()) {
               delete defaultParams[p.toLowerCase()];
             }
           }
@@ -271,7 +341,7 @@
                 })
                     .success(function(data) {
                       try {
-                        defer.resolve(displayFileContent(data, withGroupLayer, url));
+                        defer.resolve(parseWMSCapabilities(data, withGroupLayer, url));
                       } catch (e) {
                         defer.reject(
                         $translate.instant('failedToParseCapabilities'));
@@ -390,51 +460,61 @@
             return defer.promise;
           },
 
-          getLayerExtentFromGetCap: function(map, getCapLayer) {
+          getWmsLayerExtentFromGetCap: function(map, getCapLayer, isCustomDef) {
             var extent = null;
             var layer = getCapLayer;
             var proj = map.getView().getProjection();
+            var projCode = proj.getCode();
+            var supportsEpsg4326 = false;
 
-            //var ext = layer.BoundingBox[0].extent;
-            //var olExtent = [ext[1],ext[0],ext[3],ext[2]];
-            // TODO fix using layer.BoundingBox[0].extent
-            // when sextant fix his capabilities
-
-            var bboxProp;
-            ['EX_GeographicBoundingBox', 'WGS84BoundingBox'].forEach(
-                function(prop) {
-                  if (angular.isArray(layer[prop])) {
-                    bboxProp = layer[prop];
-                  }
-                });
-
-            if (bboxProp) {
-              extent = proj.getWorldExtent() && ol.extent.containsExtent(proj.getWorldExtent(),
-                      bboxProp) ?
-                      ol.proj.transformExtent(bboxProp, 'EPSG:4326', proj) :
-                      proj.getExtent();
-            } else if (angular.isArray(layer.BoundingBox)) {
+            // Try and fetch extent from layer for current CRS first
+            if (angular.isArray(layer.BoundingBox)) {
               for (var i = 0; i < layer.BoundingBox.length; i++) {
                 var bbox = layer.BoundingBox[i];
-                // Use the bbox with the code matching the map projection
-                // or the first one.
-                if (bbox.crs === proj.getCode() ||
-                    layer.BoundingBox.length === 1) {
+                // Check if EPSG:4326 / WGS84 is supported
+                if (bbox.crs === 'EPSG:4326' || bbox.crs === 'CRS:84') {
+                  supportsEpsg4326 = true;
+                }
 
-                  extent =
-                      ol.extent.containsExtent(
-                          proj.getWorldExtent(),
-                          bbox.extent) ?
-                          ol.proj.transformExtent(bbox.extent,
-                      bbox.crs || 'EPSG:4326', proj) :
-                          proj.getExtent();
+                // Use the bbox with the code matching the map projection
+                if (bbox.crs === projCode && bbox.extent) {
+                  extent = bbox.extent;
+                }
+
+                if (extent && supportsEpsg4326) {
+                  // No need to continue searching: we have all we need
                   break;
                 }
               }
             }
-            return extent;
-          },
 
+            if (!extent || (extent && isCustomDef)) {
+              var bbox = getLayerBounds(layer);
+              if (bbox) {
+                if (extent && isCustomDef) {
+                  // WMS supports the current projection EPSG code,
+                  // but the Proj4 definition differs from the standard one:
+                  // Get WGS84 bounds and transform into custom projection
+                  extent = ol.proj.transformExtent(bbox, 'EPSG:4326', projCode);
+                  if (!ol.extent.containsExtent(proj.getExtent(), extent)) {
+                    // Only use the extent if it's within map bounds
+                    extent = null;
+                  }
+                } else if (supportsEpsg4326 && 
+                  ol.extent.containsExtent(proj.getWorldExtent(), bbox)) {
+                  // WMS does not support the current EPSG code,
+                  // but WGS84 is supported: use bbox as-is if within map bounds
+                  extent = bbox;
+                  projCode = 'EPSG:4326';
+                }
+              }
+            }
+
+            return {
+              epsg: projCode,
+              extent: extent
+            };
+          },
 
           getLayerInfoFromCap: function(layerName, capObj, uuid) {
             var needles = [];
@@ -442,7 +522,7 @@
 
             // Layer name may be a list of comma separated layers
             layerList = layerName.split(',');
-            layersLoop:
+
             for (var j = 0; j < layerList.length; j ++) {
               var name = layerList[j];
               //non namespaced lowercase name
@@ -521,7 +601,6 @@
               return;
             }
           },
-
 
           getLayerInfoFromWfsCap: function(name, capObj, uuid) {
             var needles = [];
