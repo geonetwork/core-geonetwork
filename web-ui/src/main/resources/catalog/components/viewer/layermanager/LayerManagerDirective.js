@@ -174,9 +174,7 @@
             layer.set('currentStyle', style);
           };
           scope.zoomToExtent = function(layer, map) {
-            if (layer.get('cextent')) {
-              map.getView().fit(layer.get('cextent'), map.getSize());
-            } else if (layer.get('extent')) {
+            if (layer.get('extent')) {
               map.getView().fit(layer.get('extent'), map.getSize());
             }
           };
