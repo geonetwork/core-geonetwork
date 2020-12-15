@@ -1,18 +1,21 @@
 <div class="dynamic-list" data-ng-hide="categories.length === 0">
   <div>
     <div class="row">
-      <div class="col-lg-8">
-        <div data-ng-repeat="c in categories">
-          <label>
-            <input type="checkbox"
-                   name="{{c.id}}"
-                   data-ng-model="c.checked"/>&nbsp;
-            <span class="fa gn-icon-{{c.name}}"></span>&nbsp;
-            {{c.label[lang] | translate}}
-          </label>
-        </div>
+      <div class="col-lg-6">
+        <form name="catsForm" id="catsForm">
+          <div data-ng-repeat="c in categories">
+            <label>
+              <input type="checkbox"
+                    name="{{c.id}}"
+                    data-ng-click="selectCategory()"
+                    data-ng-model="c.checked"/>&nbsp;
+              <span class="fa gn-icon-{{c.name}}"></span>&nbsp;
+              <span class="text">{{c.label[lang] | translate}}</span>
+            </label>
+          </div>
+        </form>
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-6">
         <p class="help-block"
            data-translate="">categoriesBatchAlert</p>
       </div>
@@ -21,6 +24,7 @@
     <div class="btn-toolbar">
       <button type="reset" class="btn btn-default pull-right"
               title="{{'clearCheckboxFormChanges' | translate}}"
+              data-ng-disabled="!categoryIsSelected"
               data-ng-click="reset()">
         <i class="fa fa-undo"></i>&nbsp;
       </button>

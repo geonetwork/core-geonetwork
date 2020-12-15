@@ -73,6 +73,7 @@
           scope.disableAllCol = gnShareConstants.disableAllCol;
           scope.displayProfile = gnShareConstants.displayProfile;
           scope.icons = gnShareConstants.icons;
+          scope.privilegeIsSelected = false;
 
           angular.extend(scope, {
             batch: isBatch,
@@ -86,6 +87,10 @@
           if (angular.isUndefined(scope.id)) {
             scope.alertMsg = true;
           }
+
+          scope.selectPrivilege = function() {
+            scope.privilegeIsSelected = true;
+          };
 
           var loadPrivileges;
           var fillGrid = function(data) {
@@ -119,6 +124,7 @@
               }
               $('[name=' + group.group + '-' + key + ']').addClass('ng-dirty');
             });
+            scope.privilegeIsSelected = true;
           };
 
           scope.sortByLabel = function(group) {
@@ -128,8 +134,10 @@
           scope.reset = function() {
             $('#opsForm').find('input.ng-dirty').each(function(idx, el) {
               el.checked = false;
-              $(el).removeClass('ng-dirty');
             });
+            scope.opsForm.$setPristine();
+            scope.opsForm.$setUntouched();
+            scope.privilegeIsSelected = false;
           };
 
           scope.save = function(replace) {

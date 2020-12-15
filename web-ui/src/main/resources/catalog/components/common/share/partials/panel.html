@@ -1,10 +1,11 @@
 <h5 translate>whoCanAccess</h5>
 
 <!--Message alert-->
-<div ng-if="alertMsg" class="alert alert-warning"
+<p ng-if="alertMsg"
      role="alert"
+     class="help-block gn-margin-top gn-margin-bottom gn-padding-bottom"
      translate>privilegesBatchAlert
-</div>
+</p>
 
 <!--Search inpup-->
 <div class="col-md-4 input-group input-group-sm gn-searchgroup-input">
@@ -61,6 +62,7 @@
           <input type="checkbox"
                  name="{{g.group + '-' + key}}"
                  data-ng-disabled="!isAdminOrReviewer"
+                 data-ng-click="selectPrivilege()"
                  data-ng-class="internalGroups.indexOf(g.group) != -1 &&
                                 internalOperations.indexOf(key) != -1 ? 'hidden' : ''"
                  data-ng-model="g.operations[key]"/>
@@ -83,6 +85,7 @@
         <td data-ng-repeat="key in operations" class="text-center">
           <input type="checkbox"
                  name="{{g.group + '-' + key}}"
+                 data-ng-click="selectPrivilege()"
                  data-ng-disabled="g.privileges[key].disabled"
                  data-ng-model="g.operations[key]"/>
         </td>
@@ -108,21 +111,25 @@
        data-icon-only="true"></div> 
   <button type="button" class="btn btn-primary"
           id="gn-share-btn-replace"
+          title="{{'replaceByThoseOperations-help' | translate}}"
           data-gn-click-and-spin="save(true)">
     <i class="fa fa-eraser"></i>&nbsp;
     <span data-translate="">replaceByThoseOperations</span>
   </button>
   <button type="button" class="btn btn-primary"
           id="gn-share-btn-add"
+          title="{{'addThoseOperations-help' | translate}}"
           data-gn-click-and-spin="save(false)"
           data-ng-show="batch">
-    <i class="fa fa-plus"></i>&nbsp;
+    <i class="fa fa-save"></i>&nbsp;
     <span data-translate="">addThoseOperations</span>
   </button>
   <button type="button" class="btn btn-default"
           id="gn-share-btn-reset"
+          title="{{'clearCheckboxFormChanges' | translate}}"
           data-ng-click="reset()"
           data-ng-show="batch"
+          data-ng-disabled="!privilegeIsSelected"
           title="{{'resetOps' | translate}}">
     <i class="fa fa-undo"></i>&nbsp;
   </button>

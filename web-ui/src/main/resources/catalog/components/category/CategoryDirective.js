@@ -71,6 +71,11 @@
             'batchcategory.html',
         link: function(scope, element, attrs) {
           scope.report = null;
+          scope.categoryIsSelected = false;
+
+          scope.selectCategory = function() {
+            scope.categoryIsSelected = true;
+          };
 
           $http.get('../api/tags', {cache: true}).
               success(function(data) {
@@ -80,8 +85,10 @@
           scope.reset = function() {
             element.find('input.ng-dirty').each(function(idx, el) {
               el.checked = false;
-              $(el).removeClass('ng-dirty');
             });
+            scope.catsForm.$setPristine();
+            scope.catsForm.$setUntouched();
+            scope.categoryIsSelected = false;
           };
 
           scope.save = function(replace) {
