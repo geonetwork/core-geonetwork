@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -36,10 +36,12 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "Validation",
+@Table(name = MetadataValidation.TABLE_NAME,
     indexes = { @Index(name = "idx_validation_metadataid", columnList = "metadataid") })
 @EntityListeners(MetadataValidationEntityListenerManager.class)
 public class MetadataValidation extends GeonetEntity {
+    public static final String TABLE_NAME = "Validation";
+    public static final String VALIDATION_DATE_COLUMN_NAME = "valDate";
     private MetadataValidationId id;
     private MetadataValidationStatus status;
     private int numTests = 0;
@@ -117,7 +119,7 @@ public class MetadataValidation extends GeonetEntity {
      *
      * @return The moment that the validation completed.
      */
-    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = "valDate", length = 30))
+    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = VALIDATION_DATE_COLUMN_NAME, length = 30))
     public ISODate getValidationDate() {
         return validationDate;
     }

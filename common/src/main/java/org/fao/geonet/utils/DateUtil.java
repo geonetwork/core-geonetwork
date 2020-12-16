@@ -82,11 +82,18 @@ public class DateUtil {
      * or {@code null} if it can't be parsed.
      */
     public static String convertToISOZuluDateTime(final String stringToParse) {
-        String parsedDateTime = parseISODateTimes(StringUtils.trim(stringToParse), null);
-        if (parsedDateTime.equals(DEFAULT_DATE_TIME)) {
+        if (StringUtils.trimToNull(stringToParse) == null) {
+            return stringToParse;
+        }
+        try {
+            String parsedDateTime = parseISODateTimes(StringUtils.trim(stringToParse), null);
+            if (parsedDateTime.equals(DEFAULT_DATE_TIME)) {
+                return null;
+            } else {
+                return parsedDateTime;
+            }
+        } catch (DateTimeParseException e) {
             return null;
-        } else {
-            return parsedDateTime;
         }
     }
 
@@ -277,13 +284,17 @@ public class DateUtil {
 
             result = generateDate(year, month, day, second, minute, hour, timezone);
         } else {
-            TemporalAccessor dt = CATCH_ALL_DATE_TIME_FORMATTER.parseBest(stringToParse, ZonedDateTime::from, LocalDateTime::from);
-            if (dt instanceof ZonedDateTime) {
-                result = (ZonedDateTime) dt;
-            } else if (dt instanceof LocalDateTime) {
-                LocalDateTime ldt = (LocalDateTime) dt;
-                result = ldt.atZone(TimeZone.getDefault().toZoneId());
-            } else {
+            try {
+                TemporalAccessor dt = CATCH_ALL_DATE_TIME_FORMATTER.parseBest(stringToParse, ZonedDateTime::from, LocalDateTime::from);
+                if (dt instanceof ZonedDateTime) {
+                    result = (ZonedDateTime) dt;
+                } else if (dt instanceof LocalDateTime) {
+                    LocalDateTime ldt = (LocalDateTime) dt;
+                    result = ldt.atZone(TimeZone.getDefault().toZoneId());
+                } else {
+                    result = null;
+                }
+            } catch(DateTimeParseException e) {
                 result = null;
             }
             //result = ZonedDateTime.parse(stringToParse, CATCH_ALL_DATE_TIME_FORMATTER);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -44,9 +44,12 @@ import java.util.UUID;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "Sources")
+@Table(name = Source.TABLE_NAME)
 @EntityListeners(SourceEntityListenerManager.class)
 public class Source extends Localized {
+    public static final String TABLE_NAME = "Sources";
+    public static final String ID_COLUMN_NAME = "uuid";
+    public static final String CREATION_DATE_COLUMN_NAME = "creationDate";
 
     private String _uuid = UUID.randomUUID().toString();
     private String _name;
@@ -96,6 +99,7 @@ public class Source extends Localized {
      * @return the uuid of the source.
      */
     @Id
+    @Column(name = ID_COLUMN_NAME)
     public String getUuid() {
         return _uuid;
     }
@@ -224,7 +228,7 @@ public class Source extends Localized {
     @AttributeOverride(
         name = "dateAndTimeUtc",
         column = @Column(
-            name = "creationDate",
+            name = CREATION_DATE_COLUMN_NAME,
             nullable = true,
             length = 30))
     public ISODate getCreationDate() {

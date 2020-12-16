@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -35,10 +35,14 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "MetadataFileUploads",
+@Table(name = MetadataFileUpload.TABLE_NAME,
     indexes = { @Index(name = "ix_metadatafileuploads_mdid", columnList = "metadataid") })
 @SequenceGenerator(name = MetadataFileUpload.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class MetadataFileUpload extends GeonetEntity {
+    public static final String TABLE_NAME = "MetadataFileUploads";
+    public static final String ID_COLUMN_NAME = "id";
+    public static final String UPLOAD_DATE_COLUMN_NAME = "uploadDate";
+    public static final String DELETED_DATE_COLUMN_NAME = "deletedDate";
     static final String ID_SEQ_NAME = "metadata_fileupload_id_seq";
     private int _id;
     private int _metadataId;
@@ -55,6 +59,7 @@ public class MetadataFileUpload extends GeonetEntity {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @Column(name = ID_COLUMN_NAME)
     public int getId() {
         return _id;
     }
@@ -76,7 +81,7 @@ public class MetadataFileUpload extends GeonetEntity {
      *
      * @return the validation status for this entity.
      */
-    @Column(nullable = false)
+    @Column(name = UPLOAD_DATE_COLUMN_NAME, nullable = false)
     public String getUploadDate() {
         return _uploadDate;
     }
@@ -183,7 +188,7 @@ public class MetadataFileUpload extends GeonetEntity {
      *
      * @return the user name for this entity.
      */
-    @Column(nullable = true)
+    @Column(name = DELETED_DATE_COLUMN_NAME, nullable = true)
     public String getDeletedDate() {
         return _deletedDate;
     }

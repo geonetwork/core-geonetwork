@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -62,6 +62,14 @@ public class MetadataStatus extends GeonetEntity {
     public static final String ID_SEQ_NAME = "metadataStatus_id_seq";
 
     public static final String TABLE_NAME = "MetadataStatus";
+    public static final String ID_COLUMN_NAME = "id";
+    public static final String CHANGE_DATE_COLUMN_NAME = "changeDate";
+    public static final String DUE_DATE_COLUMN_NAME = "dueDate";
+    public static final String CLOSE_DATE_COLUMN_NAME = "closeDate";
+    public static final String METADATA_ID_COLUMN_NAME = "metadataId";
+    public static final String STATUS_ID_COLUMN_NAME = "statusId";
+    public static final String USER_ID_COLUMN_NAME = "userId";
+
     /**
      * The Root element of the xml returned by {@link #getAsXml}.
      */
@@ -132,7 +140,7 @@ public class MetadataStatus extends GeonetEntity {
      *
      * @return the date of the status change in string form.
      */
-    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = "changeDate", nullable = false, length = 30))
+    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = CHANGE_DATE_COLUMN_NAME, nullable = false, length = 30))
     public ISODate getChangeDate() {
         return _changedate;
     }
@@ -151,7 +159,7 @@ public class MetadataStatus extends GeonetEntity {
      *
      * @return the id of the metadata the status is related to.
      */
-    @Column(nullable = false)
+    @Column(name = METADATA_ID_COLUMN_NAME, nullable = false)
     public int getMetadataId() {
         return metadataId;
     }
@@ -171,7 +179,7 @@ public class MetadataStatus extends GeonetEntity {
      *
      * @return the user who is responsible for changing the status.
      */
-    @Column(nullable = false)
+    @Column(name = USER_ID_COLUMN_NAME, nullable = false)
     public int getUserId() {
         return userId;
     }
@@ -218,7 +226,7 @@ public class MetadataStatus extends GeonetEntity {
      * type is {@link StatusValueType#task}.
      *
      *
-     * Note the author of the status is set in {@link #setId(Id)}.
+     * Note the author of the status is set in {@link#setId(Id)}.
      *
      * @return the user responsible for this task.
      */
@@ -251,7 +259,7 @@ public class MetadataStatus extends GeonetEntity {
      *
      * @return the due date of the status change in string form.
      */
-    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = "dueDate", nullable = true, length = 30))
+    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = DUE_DATE_COLUMN_NAME, nullable = true, length = 30))
     public ISODate getDueDate() {
         return _duedate;
     }
@@ -273,7 +281,7 @@ public class MetadataStatus extends GeonetEntity {
      *
      * @return the close date of the status change in string form.
      */
-    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = "closeDate", nullable = true, length = 30))
+    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = CLOSE_DATE_COLUMN_NAME, nullable = true, length = 30))
     public ISODate getCloseDate() {
         return _closedate;
     }
@@ -289,7 +297,7 @@ public class MetadataStatus extends GeonetEntity {
     }
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "statusId", columnDefinition="integer", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = STATUS_ID_COLUMN_NAME, columnDefinition="integer", nullable = false, referencedColumnName = "id")
     public StatusValue getStatusValue() {
         return statusValue;
     }

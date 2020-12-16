@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -60,11 +60,14 @@ import java.util.List;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "HarvestHistory")
+@Table(name = HarvestHistory.TABLE_NAME)
 @EntityListeners(HarvestHistoryEntityListenerManager.class)
 @SequenceGenerator(name = HarvestHistory.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class HarvestHistory extends GeonetEntity {
+    public static final String TABLE_NAME = "HarvestHistory";
     static final String ID_SEQ_NAME = "harvest_history_id_seq";
+    public static final String HARVEST_DATE_COLUMN_NAME = "harvestdate";
+    public static final String ID_COLUMN_NAME = "id";
     private int _id;
     private ISODate _harvestDate;
     private int _elapsedTime;
@@ -84,6 +87,7 @@ public class HarvestHistory extends GeonetEntity {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @Column(name = ID_COLUMN_NAME)
     public int getId() {
         return _id;
     }
@@ -107,7 +111,7 @@ public class HarvestHistory extends GeonetEntity {
      * @return the harvest date
      */
 
-    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = "harvestdate", length = 30))
+    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = HARVEST_DATE_COLUMN_NAME, length = 30))
     public ISODate getHarvestDate() {
         return _harvestDate;
     }
