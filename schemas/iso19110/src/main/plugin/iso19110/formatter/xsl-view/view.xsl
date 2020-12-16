@@ -307,11 +307,9 @@
   </xsl:template>
 
   <xsl:template mode="render-value" match="gmx:Anchor">
-    <xsl:message>faa</xsl:message>
     <xsl:choose>
       <xsl:when test="starts-with(./@xlink:href,'http')">
         <a href="{./@xlink:href}"><xsl:value-of select="gfc:code/*/text()"/></a>
-        <xsl:message>foo</xsl:message>
       </xsl:when> 
       <xsl:otherwise><xsl:value-of select="./text()"/></xsl:otherwise>
     </xsl:choose>
