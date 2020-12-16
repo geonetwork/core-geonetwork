@@ -20,7 +20,7 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
- 
+
 package org.fao.geonet.kernel.security.keycloak;
 
 import org.apache.commons.lang.LocaleUtils;
@@ -29,6 +29,9 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.keycloak.KeycloakPrincipal;
 
+import org.keycloak.OAuth2Constants;
+import org.keycloak.adapters.springsecurity.filter.QueryParamPresenceRequestMatcher;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,6 +42,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -59,8 +65,16 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
     @Autowired
     private KeycloakUserUtils keycloakUserUtils;
 
+    // Change login from DEFAULT_LOGIN_URL to geonetwork signin url
+    public static final RequestMatcher DEFAULT_REQUEST_MATCHER =
+        new OrRequestMatcher(
+            new AntPathRequestMatcher(KeycloakUtil.getSigninPath()),
+            new RequestHeaderRequestMatcher(AUTHORIZATION_HEADER),
+            new QueryParamPresenceRequestMatcher(OAuth2Constants.ACCESS_TOKEN)
+        );
+
     public KeycloakAuthenticationProcessingFilter(AuthenticationManager authenticationManager) {
-        super(authenticationManager, new AntPathRequestMatcher(KeycloakUtil.getSigninPath()));
+        super(authenticationManager, DEFAULT_REQUEST_MATCHER);
     }
 
     @Override
@@ -86,7 +100,7 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                     username = userDetails.getUsername();
                     if (Log.isDebugEnabled(Geonet.SECURITY)) {
                         Log.debug(
-                            Geonet.SECURITY,
+                                Geonet.SECURITY,
                                 "Keycloak user found " + userDetails.getUsername()
                                         + " with authorities: "
                                         + userDetails.getAuthorities());
@@ -101,38 +115,48 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                             + "' properly authenticated via Keycloak");
 
 
-                    if (requestCache != null) {
-                        String redirect = null;
+                    if (((KeycloakAuthenticationToken) authResult).isInteractive()) {
+                        if (requestCache != null) {
+                            String redirect = null;
 
-                        SavedRequest savedReq = requestCache.getRequest(request,
+                            SavedRequest savedReq = requestCache.getRequest(request,
                                 response);
-                        if (savedReq != null) {
-                            redirect = savedReq.getRedirectUrl();
-                            Log.debug(Geonet.SECURITY,
+                            if (savedReq != null) {
+                                redirect = savedReq.getRedirectUrl();
+                                Log.debug(Geonet.SECURITY,
                                     "Found saved request location: " + redirect);
+                            } else {
+                                Log.debug(Geonet.SECURITY, "No saved request found");
+                            }
+
+                            if (redirect != null) {
+                                Log.info(Geonet.SECURITY, "Redirecting to " + redirect);
+
+                                // Removing original request, since we want to
+                                // retain current headers.
+                                // If request remains in cache, requestCacheFilter
+                                // will reinstate the original headers and we don't
+                                // want it.
+                                requestCache.removeRequest(request, response);
+
+                                response.sendRedirect(redirect);
+                            }
                         } else {
-                            Log.debug(Geonet.SECURITY, "No saved request found");
+                            Map<String, List<String>> qsMap = splitQueryString(request.getQueryString());
+                            if (qsMap.containsKey("redirectUrl")) {
+                                response.sendRedirect(qsMap.get("redirectUrl").get(0));
+                            } else {
+                                // If the redirect url did not exist then lets redirect back to the context home.
+                                response.sendRedirect(request.getContextPath());
+                            }
                         }
 
-                        if (redirect != null) {
-                            Log.info(Geonet.SECURITY, "Redirecting to " + redirect);
-
-                            // Removing original request, since we want to
-                            // retain current headers.
-                            // If request remains in cache, requestCacheFilter
-                            // will reinstate the original headers and we don't
-                            // want it.
-                            requestCache.removeRequest(request, response);
-
-                            response.sendRedirect(redirect);
-                        }
                     } else {
-                        Map<String, List<String>> qsMap = splitQueryString(request.getQueryString());
-                        if (qsMap.containsKey("redirectUrl")) {
-                            response.sendRedirect(qsMap.get("redirectUrl").get(0));
-                        } else {
-                            // If the redirect url did not exist then lets redirect back to the context home.
-                            response.sendRedirect(request.getContextPath());
+                        // For bearer token
+                        try {
+                            chain.doFilter(request, response);
+                        } finally {
+                            SecurityContextHolder.clearContext();
                         }
                     }
 
@@ -151,10 +175,9 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                 // It may have been triggered at the beginning of the authentication when the user information was not available for new users.
                 // Firing the event again as the user information now exists.
                 if (this.eventPublisher != null) {
-                    Log.debug(Geonet.SECURITY, "publish the authentication success event");
                     eventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(authResult, this.getClass()));
                 }
-                // No further action required as we are redirecting to new page
+                // No further action required as we are redirecting to new page or handling auth token
                 return;
             } catch (Exception ex) {
                 Log.warning(Geonet.SECURITY, "Error during Keycloak login for user "
