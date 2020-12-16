@@ -27,6 +27,7 @@
                 xmlns:gfc="http://www.isotc211.org/2005/gfc"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
@@ -303,6 +304,18 @@
        gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
        gco:LocalName|gml:beginPosition|gml:endPosition">
     <xsl:value-of select="."/>
+  </xsl:template>
+
+  <xsl:template mode="render-value" match="gmx:Anchor">
+    <xsl:message>faa</xsl:message>
+    <xsl:choose>
+      <xsl:when test="starts-with(./@xlink:href,'http')">
+        <a href="{./@xlink:href}"><xsl:value-of select="gfc:code/*/text()"/></a>
+        <xsl:message>foo</xsl:message>
+      </xsl:when> 
+      <xsl:otherwise><xsl:value-of select="./text()"/></xsl:otherwise>
+    </xsl:choose>
+
   </xsl:template>
 
   <xsl:template mode="render-value" match="gmd:PT_FreeText">

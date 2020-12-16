@@ -56,27 +56,29 @@
     <description>Catalogue date</description>
   </element>
   <element name="gfc:producer">
-    <label>Catalogue producer</label>
-    <description>Catalogue responsible</description>
+    <label>Producer</label>
+    <description>Feature catalogue responsible</description>
   </element>
   <element name="gfc:featureType">
-    <label>Property description</label>
-    <description>Property description</description>
+    <label>Featuretype</label>
+    <btnLabel>Add featuretype</btnLabel>
+    <description>Describes a type of features</description>
   </element>
   <element name="gfc:isAbstract">
     <label>Abstract</label>
-    <description>Is this element an abstract element ?</description>
+    <description>Is this element an abstract element?</description>
   </element>
   <element name="gfc:FC_FeatureType">
-    <label>Attribute table description</label>
-    <description>Attribute table description</description>
+    <label>Featuretype</label>
+    <description>Description of a type of features</description>
   </element>
   <element name="gfc:typeName">
-    <label>Property name</label>
-    <description></description>
+    <label>Typename</label>
+    <description>Describes a type of feature</description>
   </element>
   <element name="gfc:carrierOfCharacteristics">
-    <label>Elements</label>
+    <label>Carrier of Characteristics</label>
+    <btnLabel>Add carrier</btnLabel>
     <description>Association, attribute, operation, ...</description>
   </element>
   <element name="gfc:definition">
@@ -112,7 +114,8 @@
     <description/>
   </element>
   <element name="gfc:listedValue">
-    <label>Codelist</label>
+    <label>Codelist value</label>
+    <btnLabel>Add codelist value</btnLabel>
     <description>List of values for this element.</description>
   </element>
   <element name="gfc:constrainedBy">
@@ -261,22 +264,102 @@
     <label>Scope</label>
     <description>Scope definition</description>
   </element>
-  <element name="gmx:versionNumber">
-    <label>Version</label>
-    <description>Catalogue version</description>
+
+  <element name="gmx:subCatalogue">
+    <label>Sub catalogue</label>
+    <btnLabel>Add sub catalogue</btnLabel>
+    <description>Describes a sub catalogue</description>
   </element>
-  <element name="gmx:versionDate">
-    <label>Date</label>
-    <description>Catalogue date</description>
-  </element>
-  <element name="gmx:fieldOfApplication">
-    <label>Field of application</label>
-    <description>Field of application</description>
-  </element>
+
   <element name="gco:nilReason">
     <label>Nil reason</label>
-    <description/>
-    <help/>
-    <condition/>
   </element>
+
+<element name="codeSpace">
+    <label>Codespace</label>
+</element>
+<element name="gfc:FC_Binding">
+    <label>Binding</label>
+</element>
+<element name="gfc:FC_BoundFeatureAttribute">
+    <label>Bound Feature Attribute</label>
+</element>
+<element name="gfc:FC_BoundAssociationRole">
+    <label>Bound Association Role</label>
+</element>
+
+<element name="isInfinite">
+    <label>Infinite</label>
+</element>
+<element name="xsi:nil">
+    <label>Nill</label>
+</element>
+
+<element name="gml:BaseUnit">
+    <label>BaseUnit</label>
+</element>
+<element name="gmx:ML_BaseUnit">
+    <label>BaseUnit</label>
+</element>
+<element name="gml:DerivedUnit">
+    <label>DerivedUnit</label>
+</element>
+<element name="gmx:ML_DerivedUnit">
+    <label>DerivedUnit</label>
+</element>
+<element name="gml:ConventionalUnit">
+    <label>ConventionalUnit</label>
+</element>
+<element name="gmx:ML_ConventionalUnit">
+    <label>ConventionalUnit</label>
+</element>
+<element name="gmx:ML_UnitDefinition">
+    <label>UnitDefinition</label>
+</element>
+<element name="gml:UnitDefinition">
+    <label>UnitDefinition</label>
+</element>
+<element name="gmd:individualName">
+    <label>Individual</label>
+</element>
+<element name="gmd:organisationName">
+    <label>Organisation</label>
+</element>
+<element name="gmd:positionName">
+    <label>Position</label>
+</element>
+<element name="gmd:voice">
+    <label>Telephone</label>
+</element>
+<element name="gmd:facsimile">
+    <label>Fax</label>
+</element>
+<element name="gmd:deliveryPoint">
+    <label>Delivery point</label>
+</element>
+<element name="gmd:city">
+    <label>City</label>
+</element>
+<element name="gmd:administrativeArea">
+    <label>Administrative area</label>
+</element>
+<element name="gmd:postalCode">
+    <label>Postalcode</label>
+</element>
+<element name="gmd:country">
+    <label>country</label>
+</element>
+<element name="gmd:electronicMailAddress">
+    <label>Email Address</label>
+</element>
+<element name="gmx:fieldOfApplication">
+    <label>Field Of Application</label>
+</element>
+<element name="gmx:versionDate">
+    <label>Version Date</label>
+</element>
+<element name="xlink:href">
+    <label>Link</label>
+</element>
+
 </labels>
