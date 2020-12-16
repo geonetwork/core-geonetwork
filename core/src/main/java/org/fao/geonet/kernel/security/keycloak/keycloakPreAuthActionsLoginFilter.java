@@ -20,12 +20,13 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
- 
+
 package org.fao.geonet.kernel.security.keycloak;
 
 import org.fao.geonet.Constants;
 import org.keycloak.adapters.spi.UserSessionManagement;
 import org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter;
+import org.keycloak.constants.AdapterConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -57,13 +58,31 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
 
+        // Lets redirect the user to the signin page if
+        //     - The session is not authenticate
+        //     - This is not a request for the signin page (we don't want endless loop to sign in page)
+        //     - It does not match the default request matcher (which is mostly used to validate bearer tokens request for api's)
+        //       No sign in page required for api calls.
+        //     - and it is not an internal k_* request which should be processed by keycloak adapter and also don't required login page.
         if (servletRequest.getPathInfo() != null &&
-                !(servletRequest.getContextPath() + KeycloakUtil.getSigninPath()).equals(servletRequest.getRequestURI())  &&
-                !(servletRequest.getPathInfo()).equals("/k_logout")  &&
-                !isAuthenticated() ) {
+            !KeycloakAuthenticationProcessingFilter.DEFAULT_REQUEST_MATCHER.matches(servletRequest) &&
+            !isAuthenticated() &&
+            !(servletRequest.getContextPath() + KeycloakUtil.getSigninPath()).equals(servletRequest.getRequestURI())  &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_LOGOUT) &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_PUSH_NOT_BEFORE) &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_VERSION) &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_TEST_AVAILABLE) &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_JWKS)) {
+
+            String returningUrl = servletRequest.getRequestURL().toString();
+
+            // Append query string
+            if (servletRequest.getQueryString() != null) {
+                returningUrl = returningUrl + "?" + servletRequest.getQueryString();
+            }
 
             String encodedRedirectURL = ((HttpServletResponse) response).encodeRedirectURL(
-                    servletRequest.getContextPath() + KeycloakUtil.getSigninPath() + "?redirectUrl=" + URLEncoder.encode(servletRequest.getRequestURL().toString(), Constants.ENCODING));
+                servletRequest.getContextPath() + KeycloakUtil.getSigninPath() + "?redirectUrl=" + URLEncoder.encode(returningUrl, Constants.ENCODING));
 
             servletResponse.sendRedirect(encodedRedirectURL);
 
