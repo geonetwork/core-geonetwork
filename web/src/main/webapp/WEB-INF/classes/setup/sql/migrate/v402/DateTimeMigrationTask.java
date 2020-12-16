@@ -162,7 +162,7 @@ public class DateTimeMigrationTask extends DatabaseMigrationTask {
         parametersMap.put("CREATE_DATE_VALUE", Source.CREATION_DATE_COLUMN_NAME);
 
         Map<String, SqlParameter> primaryKeyMap = new LinkedHashMap<>();
-        primaryKeyMap.put("ID_VALUE", new SqlParameter(Source.ID_COLUMN_NAME, Types.INTEGER));
+        primaryKeyMap.put("ID_VALUE", new SqlParameter(Source.ID_COLUMN_NAME, Types.VARCHAR));
         processTable(jdbcTemplate, getAllSourceSql, updateSourceSql, primaryKeyMap, parametersMap);
     }
 
