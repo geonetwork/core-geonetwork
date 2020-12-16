@@ -173,7 +173,7 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
         try {
             metadataApproved = ApplicationContextHolder.get().getBean(IMetadataUtils.class).isMetadataApproved(metadataId);
         } catch (Exception e) {
-            throw new RuntimeException("Error detecting if metadata is draft");
+            throw new RuntimeException("Error detecting if metadata is approved");
         }
         return metadataApproved;
     }
