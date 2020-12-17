@@ -87,7 +87,7 @@ public class GetDomain extends AbstractOperation implements CatalogService {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
             EsSearchManager sm = gc.getBean(EsSearchManager.class);
-            throw new NotImplementedException("CSW not implemented in ES");
+            throw new NotImplementedException("CSW GetDomain operation not implemented in ES");
 
 //            IndexAndTaxonomy indexAndTaxonomy = sm.getNewIndexReader(null);
 //            try {
