@@ -639,7 +639,10 @@ public class MetadataWorkflowApi {
                 listOfUsers.put(s.getUserId(), userRepository.findById(s.getUserId()).get());
             }
             if (s.getOwner() != null && listOfUsers.get(s.getOwner()) == null) {
-                listOfUsers.put(s.getOwner(), userRepository.findById(s.getOwner()).get());
+                Optional<User> user = userRepository.findById(s.getOwner());
+                if (user.isPresent()) {
+                    listOfUsers.put(s.getOwner(), user.get());
+                }
             }
         }
 
