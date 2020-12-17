@@ -1463,6 +1463,12 @@
                         return;
                       }
                       
+                      if (!lyr.version && capObj.version) {
+                        // Inherit parent WMS version:
+                        // this is required for OL to form a proper request!
+                        lyr.version = capObj.version;
+                      }
+
                       var style = layer.getSource().getParams().STYLES;
                       $this.addWmsToMapFromCap(map, lyr, style);
                     });
