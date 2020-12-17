@@ -9,7 +9,7 @@
        data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
       <span class="gn-name"
             data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
-            title="{{portal.label[lang]}}">{{info['node/name'] || portal.label[lang]}}</span>
+            title="{{info['system/site/name']}}">{{info['node/name'] || info['system/site/name']}}</span>
     </a>
     <button type="button"
             class="navbar-toggle collapsed"
@@ -36,8 +36,8 @@
           <span class="gn-name hidden-sm hidden-md gn-margin-left"
                 data-ng-if="gnCfg.mods.header.showGNName"
                 data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
-                title="{{info['node/name'] || portal.label[lang]}}">
-            {{info['node/name'].split('|')[0] || portal.label[lang]}}
+                title="{{info['node/name'] || info['system/site/name']}}">
+            {{info['node/name'].split('|')[0] || info['system/site/name']}}
           </span>
         </a>
       </li>
