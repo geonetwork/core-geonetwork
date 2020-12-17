@@ -22,23 +22,12 @@
  */
 package v402;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.fao.geonet.DatabaseMigrationTask;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.HarvestHistory;
-import org.fao.geonet.domain.Link;
-import org.fao.geonet.domain.LinkStatus;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataDataInfo;
-import org.fao.geonet.domain.MetadataDraft;
-import org.fao.geonet.domain.MetadataFileDownload;
-import org.fao.geonet.domain.MetadataFileUpload;
-import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataValidation;
-import org.fao.geonet.domain.MetadataValidationId;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.migration.DatabaseMigrationException;
 import org.fao.geonet.utils.DateUtil;
 import org.fao.geonet.utils.Log;
@@ -297,7 +286,15 @@ public class DateTimeMigrationTask extends DatabaseMigrationTask {
                 }
                 for (Map.Entry<String, String> entry : timeParameters.entrySet()) {
                     String currentDbValue = rs.getString(entry.getValue());
-                    String newDbValue = DateUtil.convertToISOZuluDateTime(currentDbValue);
+                    String now = new ISODate().getDateAndTimeUtc();
+                    String newDbValue =
+                        StringUtils.isEmpty(currentDbValue)
+                            ? now
+                            : DateUtil.convertToISOZuluDateTime(currentDbValue);
+                    if (newDbValue == null) {
+                        // Can't parse record date, assigning now.
+                        newDbValue = now;
+                    }
                     updateParameters.put(entry.getKey(), newDbValue);
                 }
                 parameters[index[0]] = updateParameters;
