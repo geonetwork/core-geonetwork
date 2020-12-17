@@ -127,12 +127,6 @@ EOF
 EOF
     fi
 
-    # TODO: Needed to have CAS ticket validation working
-    # Might need to modify from the sources directly ?
-    augtool -r /usr/local/tomcat/webapps/geonetwork/WEB-INF/config-security/ --noautoload --transform "Xml.lns incl /config-security-cas.xml" <<EOF
-        rm /files/config-security-cas.xml/beans/bean[#attribute/id="casTicketValidator"]/property[#attribute/name="proxyCallbackUrl"]
-        save
-EOF
 fi
 
 exec "$@"

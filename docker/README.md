@@ -18,10 +18,10 @@ la commande suivante:
 $ mvn clean install -U -DskipTests -Dsxt.properties=docker
 ```
 
-Puis de copier la webapp résultante dans le répertoire courant (`docker`):
+Puis de copier la webapp résultante dans le répertoire geonetwork (`docker/geonetwork`):
 
 ```
-$ cp ../web/target/geonetwork.war .
+$ cp ../web/target/geonetwork.war geonetwork/
 ```
 
 # Docker / Docker-compose
@@ -56,4 +56,13 @@ specification LDIF dans le répertoire suivant:
 Les mots de passe sont en général les mêmes que l'identifiant `uid` (par
 exemple l'utilisateur 'pmauduit' a pour mot de passe 'pmauduit', l'utilisateur
 admin a pour mot de passe 'admin', ...).
+
+# Remote debug
+
+Le conteneur geonetwork écoute sur le port 5005, sur lequel il est possible de
+connecter une socket de debug (JDWP). Ce port est mappé avec le port 5006 de
+l'hôte.
+
+Sur le même principe, le conteneur CAS est connecté sur le port 5005 de l'hôte
+(vers le port 5005 du conteneur).
 
