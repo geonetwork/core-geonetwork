@@ -1032,8 +1032,8 @@
 
 
       <xsl:for-each select="mdb:distributionInfo/*">
-        <xsl:for-each select="mrd:distributionFormat/*/mrd:formatSpecificationCitation/
-                                cit:CI_Citation/cit:title/gco:CharacterString">
+        <xsl:for-each select="mrd:distributionFormat/*/
+                                mrd:formatSpecificationCitation/*/cit:title/*/text()">
           <format>
             <xsl:value-of select="."/>
           </format>
