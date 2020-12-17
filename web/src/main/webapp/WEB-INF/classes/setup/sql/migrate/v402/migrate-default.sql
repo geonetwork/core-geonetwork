@@ -24,16 +24,16 @@ UPDATE Settings SET value = 'Etc/UTC' WHERE name = 'system/server/timeZone' AND 
 -- * Server timezone setting != UTC.
 -- Shift old DB dates from server timezone to UTC
 -- eg. for CET
-UPDATE metadata SET (createdate, changedate) = (
-       to_char(
-           timezone('UTC',
-        to_timestamp(createDate, 'YYYY-MM-DDThh24:mi:ss')
-        AT TIME ZONE (SELECT value FROM Settings WHERE name = 'system/server/timeZone')), 'YYYY-MM-DDThh24:mi:ssZ'),
-       to_char(
-        timezone('UTC',
-         to_timestamp(changedate, 'YYYY-MM-DDThh24:mi:ss')
-         AT TIME ZONE (SELECT value FROM Settings WHERE name = 'system/server/timeZone')), 'YYYY-MM-DDThh24:mi:ssZ')
-       ) WHERE length(createdate) = 19 AND length(changedate) = 19;
+-- UPDATE metadata SET (createdate, changedate) = (
+--        to_char(
+--            timezone('UTC',
+--         to_timestamp(createDate, 'YYYY-MM-DDThh24:mi:ss')
+--         AT TIME ZONE (SELECT value FROM Settings WHERE name = 'system/server/timeZone')), 'YYYY-MM-DDThh24:mi:ssZ'),
+--        to_char(
+--         timezone('UTC',
+--          to_timestamp(changedate, 'YYYY-MM-DDThh24:mi:ss')
+--          AT TIME ZONE (SELECT value FROM Settings WHERE name = 'system/server/timeZone')), 'YYYY-MM-DDThh24:mi:ssZ')
+--        ) WHERE length(createdate) = 19 AND length(changedate) = 19;
 
 
 UPDATE Settings SET value='4.0.2' WHERE name='system/platform/version';
