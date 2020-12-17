@@ -36,7 +36,7 @@
       <select  class="form-control gn-timezone"
              data-ng-class="hideTime == 'true' ? 'hidden' : ''"
              data-ng-model="timezone"
-             data-ng-show="mode === ''"
+             data-ng-hide="hideTimezone"
              data-ng-options="t.offset as (t.name + ' ' + t.offset) for t in timezoneNames"/>
       <div class="input-group-btn">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">

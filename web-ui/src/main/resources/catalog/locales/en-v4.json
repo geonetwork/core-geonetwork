@@ -124,5 +124,13 @@
   "clearCheckboxFormChanges": "Clear modified checkbox state. Checkboxes with '*' means that those values will be removed from the selection.",
   "addThoseCategories-help": "Add (checked) or remove (checkbox with *) selected categories.",
   "replaceByThoseCategories-help": "Remove record categories and then add (checked) or remove (checkbox with *) selected categories.",
-  "clearValidationStatus": "Clear validation status"
+  "clearValidationStatus": "Clear validation status",
+  "ui-dateFormat": "Date format",
+  "ui-dateFormat-help": "Format of the dates in record default view.",
+  "ui-timezone": "User interface time zone",
+  "ui-timezone-help": "The time zone to use to render date in default view and option to be added to editor date picker. If there is no need to handle multiple timezone in the catalog, set this value to the server timezone (see admin > settings). 'browser' indicate to use the browser timezone.",
+  "NoTimezone": "No timezone",
+  "YourTimezone": "Your timezone",
+  "CatalogTimezone": "Server timezone",
+  "CatalogUiTimezone": "Recommended timezone"
 }
