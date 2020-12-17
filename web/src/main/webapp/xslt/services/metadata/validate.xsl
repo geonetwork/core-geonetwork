@@ -137,7 +137,7 @@
       </displayPriority>
       <label>
         <xsl:variable name="translatedTitle"
-                      select="/response/schematronTranslations/*[name() = $rulename]/strings/schematron.title"/>
+                      select="/root/schematronTranslations/*[name() = $rulename]/strings/schematron.title"/>
         <xsl:variable name="defaultTitle"
                       select="svrl:schematron-output/@title"/>
         <xsl:choose>
