@@ -38,8 +38,8 @@
       <list>
         <!-- TODO: This needs to be secured to not access private info -->
         <sec:filter-chain pattern="/index/**" filters=""/>
-        <sec:filter-chain pattern="/jolokia/**" filters="securityContextPersistenceFilter, adminUserFilter"/>
-        <sec:filter-chain pattern="/dashboards/**" filters="securityContextPersistenceFilter, adminUserFilter"/>
+        <sec:filter-chain pattern="/jolokia/**" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
+        <sec:filter-chain pattern="/dashboards/**" filters="securityContextPersistenceFilter, basicAuthenticationFilter, authenticatedUserFilter"/>
         <sec:filter-chain pattern="/doc/**" filters=""/>
         <!-- wroAPI is protected for admin only
         This is causing issue on node-change-warning page.
@@ -376,5 +376,5 @@
     </constructor-arg>
   </bean>
 
-  <bean id="adminUserFilter" class="org.fao.geonet.security.AuthenticathedUserFilter"/>
+  <bean id="authenticatedUserFilter" class="org.fao.geonet.security.AuthenticathedUserFilter"/>
 </beans>

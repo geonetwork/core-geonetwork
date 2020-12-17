@@ -133,7 +133,7 @@ public class MetadataProcessApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Preview process result", description =API_OP_NOTE_PROCESS)
-    @RequestMapping(value = "/{metadataUuid}/processes/{process}", method = {
+    @RequestMapping(value = "/{metadataUuid}/processes/{process:.+}", method = {
         RequestMethod.GET}, produces = MediaType.APPLICATION_XML_VALUE)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
@@ -158,7 +158,7 @@ public class MetadataProcessApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Apply a process", description =API_OP_NOTE_PROCESS)
-    @RequestMapping(value = "/{metadataUuid}/processes/{process}", method = {
+    @RequestMapping(value = "/{metadataUuid}/processes/{process:.+}", method = {
         RequestMethod.POST,}, produces = MediaType.APPLICATION_XML_VALUE)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)

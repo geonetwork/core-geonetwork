@@ -966,10 +966,22 @@
                       units: dimension.units,
                       values: dimension.values.split(',')
                     });
+
+                    if (dimension.default) {
+                      layer.getSource().updateParams({ ELEVATION: dimension.default });
+                    }
                   }
                   if (dimension.name == 'time') {
-                    layer.set('time',
-                        dimension.values.split(','));
+                    layer.set('time', {
+                      units: dimension.units,
+                      values: dimension.values
+                        .split(',')
+                        .map(function(e){return e.trim()})
+                    });
+
+                    if (dimension.default) {
+                        layer.getSource().updateParams({ TIME: dimension.default });
+                    }
                   }
                 }
               }
@@ -1238,8 +1250,8 @@
            * @param {Object} getCapLayer object to convert
            * @param {string} style of the style to use
            */
-          addWmsToMapFromCap: function(map, getCapLayer, style) {
-            var layer = this.createOlWMSFromCap(map, getCapLayer, null, style);
+          addWmsToMapFromCap: function(map, getCapLayer, url, style) {
+            var layer = this.createOlWMSFromCap(map, getCapLayer, url, style);
             map.addLayer(layer);
             return layer;
           },

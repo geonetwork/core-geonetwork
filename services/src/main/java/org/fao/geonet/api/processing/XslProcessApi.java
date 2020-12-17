@@ -99,7 +99,7 @@ public class XslProcessApi {
         description = ApiParams.API_OP_NOTE_PROCESS_PREVIEW +
             " When errors occur during processing, the processing report is returned in JSON format.")
     @RequestMapping(
-        value = "/{process}",
+        value = "/{process:.+}",
         method = RequestMethod.GET,
         consumes = {
             MediaType.TEXT_HTML_VALUE,
@@ -234,7 +234,7 @@ public class XslProcessApi {
         summary = "Apply a process to one or more records",
         description = ApiParams.API_OP_NOTE_PROCESS)
     @RequestMapping(
-        value = "/{process}",
+        value = "/{process:.+}",
         method = RequestMethod.POST,
         produces = {
             MediaType.APPLICATION_JSON_VALUE
