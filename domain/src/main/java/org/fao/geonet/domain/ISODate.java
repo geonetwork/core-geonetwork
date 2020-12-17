@@ -23,6 +23,9 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.utils.DateUtil;
 import org.jdom.Element;
@@ -54,8 +57,6 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
     @XmlTransient public static final DateTimeFormatter YEAR_MONTH_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
     @XmlTransient public static final DateTimeFormatter YEAR_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy");
     @XmlTransient public static final DateTimeFormatter YEAR_MONTH_DAYS_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-
 
     /**
      * {@code true} if the format is {@code yyyy-mm-dd}.
@@ -204,23 +205,14 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
      */
     @XmlValue
     @Transient
+    @JsonSerialize
+    @JsonProperty
     public String getDateAndTime() {
         if (_shortDate || _shortDateYearMonth || _shortDateYear) {
             return getDateAsString();
         } else {
             return internalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         }
-    }
-
-    /**
-     * Get the date and time in ISO format and UTC offset format.
-     * @return The date and time in ISO format.
-     */
-    public String getDateAndTimeUtc() {
-        return internalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS);
-    }
-    public void setDateAndTimeUtc(String isoDate) {
-        setDateAndTime(isoDate);
     }
 
     public void setDateAndTime(String isoDate) {
@@ -240,7 +232,6 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
             return;
         }
 
-
         if (StringUtils.contains(timeAndDate, ':')) {
             // its a time
             try {
@@ -254,6 +245,21 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
             parseDate(StringUtils.remove(StringUtils.remove(timeAndDate, 't'), 'T'));
 
         }
+    }
+
+    /**
+     * Get the date and time in ISO format and UTC offset format.
+     *
+     * @return The date and time in ISO format.
+     */
+    //@JsonProperty("dateAndTime")
+    @JsonIgnore
+    public String getDateAndTimeUtc() {
+        return internalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS);
+    }
+
+    public void setDateAndTimeUtc(String isoDate) {
+        setDateAndTime(isoDate);
     }
 
     /**
@@ -418,16 +424,14 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
             }
 
             _shortDate = true;
-            internalDateTime = ZonedDateTime.now(offset).withYear(year).withMonth(month).withDayOfMonth(day)
-                    .withHour(0).withMinute(0).withSecond(0).withNano(0);
+            internalDateTime = ZonedDateTime.now(offset).withYear(year).withMonth(month).withDayOfMonth(day).withHour(0).withMinute(0)
+                    .withSecond(0).withNano(0);
             //..ZonedDateTime.of(year, month, day, hour, minute, second, 0, offset);
 
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid ISO date: " + isoDate, e);
         }
     }
-
-
 
     @Transient
     public String getTimeAsString() {
