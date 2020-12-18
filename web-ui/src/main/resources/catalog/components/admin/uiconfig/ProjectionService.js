@@ -134,7 +134,6 @@
             })
             .success(function(data) {
               try {
-                console.log("Returning EPSG.io result");
                 defer.resolve(parseProjDef(data).def);
               } catch (e) {
                 console.error(e);
