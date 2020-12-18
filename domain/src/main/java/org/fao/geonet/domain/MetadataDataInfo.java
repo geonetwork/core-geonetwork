@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -42,9 +42,11 @@ import javax.persistence.Transient;
 @Access(AccessType.PROPERTY)
 public class MetadataDataInfo implements Serializable {
     private static final long serialVersionUID = 8049813754167665960L;
+    public static final String CHANGE_DATE_COLUMN_NAME = "changedate";
+    public static final String CREATE_DATE_COLUMN_NAME = "createdate";
     private String _title;
-    private ISODate _changeDate = new ISODate();
-    private ISODate _createDate = new ISODate();
+    private ISODate _changeDate;
+    private ISODate _createDate;
     private String _schemaId;
     private char _template = Constants.YN_FALSE;
     private String _root;
@@ -53,6 +55,12 @@ public class MetadataDataInfo implements Serializable {
     private Integer _displayOrder = 0;
     private int _rating = 0;
     private int _popularity = 0;
+
+    public MetadataDataInfo() {
+        long currentTime = System.currentTimeMillis();
+        this._changeDate = new ISODate(currentTime);
+        this._createDate = new ISODate(currentTime);
+    }
 
     /**
      * Get title of metadata.
@@ -282,7 +290,7 @@ public class MetadataDataInfo implements Serializable {
      * @return the date of the last change made to the metadata.
      */
 
-    @AttributeOverride(name = "dateAndTime", column = @Column(name = "changeDate", nullable = false, length = 30))
+    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = CHANGE_DATE_COLUMN_NAME, nullable = false, length = 30))
     public ISODate getChangeDate() {
         return _changeDate;
     }
@@ -303,7 +311,7 @@ public class MetadataDataInfo implements Serializable {
      *
      * @return the creation date.
      */
-    @AttributeOverride(name = "dateAndTime", column = @Column(name = "createDate", nullable = false, length = 30))
+    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = CREATE_DATE_COLUMN_NAME, nullable = false, length = 30))
     public ISODate getCreateDate() {
         return _createDate;
     }

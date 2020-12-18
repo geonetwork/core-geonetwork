@@ -32,7 +32,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,6 +84,9 @@ public class BatchUpdateQuery<T> {
         // this is a hack because at the moment hibernate JPA 2.1 is in beta and has a
         // but where only one set can be called per execution.
         // later this should be changed so that only one query is executed.
+        _entityManager.flush();
+        _entityManager.clear();
+
         for (int i = 0; i < _paths.size(); i++) {
             final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
             final CriteriaUpdate<T> update = cb.createCriteriaUpdate(_entityClass);

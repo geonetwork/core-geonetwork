@@ -27,6 +27,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.util.Sha1Encoder;
+import org.fao.geonet.utils.DateUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
@@ -150,7 +151,7 @@ class WAFRemoteFile implements RemoteFile {
     }
     public void setChangeDate(String date) {
         try {
-            changeDate = new ISODate(ISODate.parseBasicOrFullDateTime(date).getMillis());
+            changeDate = new ISODate(DateUtil.parseBasicOrFullDateTime(date).toInstant().toEpochMilli());
         } catch (Exception e) {
             changeDate = null;
         }

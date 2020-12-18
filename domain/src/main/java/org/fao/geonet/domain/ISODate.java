@@ -1,45 +1,34 @@
-//==============================================================================
-//===
-//===   ISODate
-//===
-//==============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
-//==============================================================================
+/*
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 
 package org.fao.geonet.domain;
 
-import static java.util.Calendar.DAY_OF_MONTH;
-import static java.util.Calendar.HOUR_OF_DAY;
-import static java.util.Calendar.MINUTE;
-import static java.util.Calendar.MONTH;
-import static java.util.Calendar.SECOND;
-import static java.util.Calendar.YEAR;
-
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.utils.DateUtil;
+import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Embeddable;
@@ -47,355 +36,144 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
-
-import org.fao.geonet.utils.Log;
-import org.jdom.Element;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Period;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
-import org.joda.time.format.ISOPeriodFormat;
-import org.joda.time.format.PeriodFormatter;
+import java.io.Serializable;
+import java.time.Instant;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 /**
  * Represents a date at a given time. Provides methods for representing the date as a string and
- * parsing from string. <p> String format is: yyyy-mm-ddThh:mm:ss </p>
+ * parsing from string.
+ * <p>String format is: {@code yyyy-mm-ddThh:mm:ss}.</p>
  */
 @Embeddable
 @XmlRootElement
-public class ISODate
-    implements Cloneable, Comparable<ISODate>, Serializable, XmlEmbeddable {
-    private static final String DEFAULT_DATE_TIME = "3000-01-01T00:00:00.000Z"; // JUNK
-    // Value
+public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, XmlEmbeddable {
+    @XmlTransient public static final DateTimeFormatter YEAR_MONTH_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
+    @XmlTransient public static final DateTimeFormatter YEAR_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy");
+    @XmlTransient public static final DateTimeFormatter YEAR_MONTH_DAYS_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    // Pattern to check dates
-    @XmlTransient
-    private static Pattern gsYear = Pattern
-        .compile("([0-9]{4})(-([0-2][0-9]):([0-5][0-9])([A-Z]))?");
-    @XmlTransient
-    private static Pattern gsYearMonth = Pattern.compile(
-        "([0-9]{4})-([0-1][0-9])(-([0-2][0-9]):([0-5][0-9])([A-Z]))?");
+    /**
+     * {@code true} if the format is {@code yyyy-mm-dd}.
+     */
+    @XmlTransient private boolean _shortDate;
 
-    // Fri Jan 01 2010 00:00:00 GMT+0100 (CET)
-    @XmlTransient
-    private static Pattern htmlFormat = Pattern.compile(
-        "([a-zA-Z]{3}) ([a-zA-Z]{3}) ([0-9]{2}) ([0-9]{4}) ([0-2][0-9]):([0-5][0-9]):([0-5][0-9]) (.+)");
+    /**
+     * {@code true} if the format is {@code yyyy}.
+     */
+    @XmlTransient private boolean _shortDateYear;
 
-    @XmlTransient
-    private boolean _shortDate; // --- 'true' if the format is yyyy-mm-dd
+    /**
+     * {@code true} if the format is {@code yyyy-mm}.
+     */
+    @XmlTransient private boolean _shortDateYearMonth;
 
-    @XmlTransient
-    private boolean _shortDateYear; // --- 'true' if the format is yyyy
+    @XmlTransient private ZonedDateTime internalDateTime;
 
-    @XmlTransient
-    private boolean _shortDateYearMonth; // --- 'true' if the format is yyyy-mm
-
-    @XmlTransient
-    private Calendar _calendar = Calendar.getInstance();
-
-    // ---------------------------------------------------------------------------
-    // ---
-    // --- Constructor
-    // ---
-    // ---------------------------------------------------------------------------
-
+    /**
+     * Constructs an instance of <code>ISODate</code> with current date, time
+     * and system default timezone.
+     */
     public ISODate() {
+        internalDateTime = ZonedDateTime.now().withZoneSameInstant(ZoneOffset.UTC);
     }
 
     // ---------------------------------------------------------------------------
+
     /**
-     * Create from milliseconds, local timezone.
-     * @param time Time in milliseconds, local timezone.
-     * @param shortDate True to use short yyyy-mm-dd format
+     * Constructs an instance of {@code ISODate} with the time and format passed as parameters, local timezone.
+     *
+     * @param timeInEpochMillis milliseconds passed from 1970-01-01T00:00:00Z (Unix epoch).
+     * @param shortDate         {@code true} if the format is {@code yyyy-mm-dd}.
      */
-    public ISODate(final long time, final boolean shortDate) {
-        _calendar.setTimeInMillis(time);
+    public ISODate(final long timeInEpochMillis, final boolean shortDate) {
+        ZoneId zoneId;
+        if (shortDate) {
+            zoneId = ZoneOffset.UTC;
+        } else {
+            zoneId = ZoneId.systemDefault();
+        }
+        Instant instantParam = Instant.ofEpochMilli(timeInEpochMillis);
+        internalDateTime = ZonedDateTime.ofInstant(instantParam, zoneId).truncatedTo(ChronoUnit.MILLIS);
         _shortDate = shortDate;
     }
 
     /**
-     * Create from milliseconds (UTC).
-     * <p>
-     * Examples:
-     * <ul>
-     *     <li><code>new ISODate(System.currentTimeMillis())</code></li>
-     *     <li><code>new ISODate(new Date().getTime())</code></li>
-     * </ul>
-     * </p>
+     * Constructs an instance of {@code ISODate} with the time passed as parameter and long format  (UTC).
      *
-     * @param time Time in milliseconds, UTC timezone
+     * @param timeInEpochMillis milliseconds passed from 1970-01-01T00:00:00Z (Unix epoch).
      */
-    public ISODate(final long time) {
-        _calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-        _calendar.setTimeInMillis(time);
+    public ISODate(final long timeInEpochMillis) {
+        Instant instantParam = Instant.ofEpochMilli(timeInEpochMillis);
+        internalDateTime = ZonedDateTime.ofInstant(instantParam, ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS);
         _shortDate = false;
     }
 
-    // ---------------------------------------------------------------------------
-
-    public ISODate(@Nonnull final String isoDate) {
-        setDateAndTime(isoDate);
-    }
-
     /**
-     * Converts a given ISO date time into the form used to index in Lucene. Returns null if it gets
-     * back a ridiculous value
+     * Constructs an instance of {@code ISODate} parsing the value passed as parameter.
      *
-     * @param stringToParse the string to parse
+     * @param isoDateString the string to be parsed.
      */
-    public static String parseISODateTime(final String stringToParse) {
-        String newDateTime = parseISODateTimes(stringToParse, null);
-        if (newDateTime.equals(DEFAULT_DATE_TIME)) {
-            return null;
-        } else {
-            return newDateTime;
-        }
-    }
-
-    /*
-     * Converts two ISO date times into standard form used to index in Lucene
-     * Always returns something because it is used during the indexing of the
-     * metadata record in Lucene - if exception during parsing then it is
-     * something ridiculous like JUNK value above
-     */
-    public static String parseISODateTimes(String input1, String input2) {
-        DateTimeFormatter dto = ISODateTimeFormat.dateTime();
-        PeriodFormatter p = ISOPeriodFormat.standard();
-        DateTime odt1;
-        String odt = "";
-
-        // input1 should be some sort of ISO time
-        // eg. basic: 20080909, full: 2008-09-09T12:21:00 etc
-        // convert everything to UTC so that we remove any timezone
-        // problems
-        try {
-            DateTime idt = parseBasicOrFullDateTime(input1);
-            odt1 = dto.parseDateTime(idt.toString())
-                .withZone(DateTimeZone.forID("UTC"));
-            odt = odt1.toString();
-
-        } catch (Exception e) {
-            Log.error("geonetwork.domain", "Error parsing ISO DateTimes, error: " + e.getMessage(), e);
-            return DEFAULT_DATE_TIME;
-        }
-
-        if (input2 == null || input2.equals(""))
-            return odt;
-
-        // input2 can be an ISO time as for input1 but also an ISO time period
-        // eg. -P3D or P3D - if an ISO time period then it must be added to the
-        // DateTime generated for input1 (odt1)
-        // convert everything to UTC so that we remove any timezone
-        // problems
-        try {
-            boolean minus = false;
-            if (input2.startsWith("-P")) {
-                input2 = input2.substring(1);
-                minus = true;
-            }
-
-            if (input2.startsWith("P")) {
-                Period ip = p.parsePeriod(input2);
-                DateTime odt2;
-                if (!minus)
-                    odt2 = odt1.plus(ip.toStandardDuration().getMillis());
-                else
-                    odt2 = odt1.minus(ip.toStandardDuration().getMillis());
-                odt = odt + "|" + odt2.toString();
-            } else {
-                DateTime idt = parseBasicOrFullDateTime(input2);
-                DateTime odt2 = dto.parseDateTime(idt.toString())
-                    .withZone(DateTimeZone.forID("UTC"));
-                odt = odt + "|" + odt2.toString();
-            }
-        } catch (Exception e) {
-            Log.error("geonetwork.domain", "Error parsing ISO DateTimes, error: " + e.getMessage(), e);
-            return odt + "|" + DEFAULT_DATE_TIME;
-        }
-
-        return odt;
-    }
-
-    public static DateTime parseBasicOrFullDateTime(String input1)
-        throws Exception {
-        DateTimeFormatter bd = ISODateTimeFormat.basicDate();
-        DateTimeFormatter bt = ISODateTimeFormat.basicTime();
-        DateTimeFormatter bdt = ISODateTimeFormat.basicDateTime();
-        DateTimeFormatter dtp = ISODateTimeFormat.dateTimeParser();
-        DateTime idt;
-        Matcher matcher;
-        if (input1.length() == 8 && !input1.startsWith("T")) {
-            idt = bd.parseDateTime(input1);
-        } else if (input1.startsWith("T") && !input1.contains(":")) {
-            idt = bt.parseDateTime(input1);
-        } else if (input1.contains("T") && !input1.contains(":")
-            && !input1.contains("-")) {
-            idt = bdt.parseDateTime(input1);
-        } else if ((matcher = gsYearMonth.matcher(input1)).matches()) {
-            String year = matcher.group(1);
-            String month = matcher.group(2);
-            String minute = "00";
-            String hour = "00";
-            String timezone = "Z";
-            if (matcher.group(4) != null) {
-                minute = matcher.group(5);
-                hour = matcher.group(4);
-                timezone = matcher.group(6);
-            }
-
-            idt = generateDate(year, month, minute, hour, timezone);
-        } else if ((matcher = gsYear.matcher(input1)).matches()) {
-            String year = matcher.group(1);
-            String month = "01";
-            String minute = "00";
-            String hour = "00";
-            String timezone = "Z";
-            if (matcher.group(3) != null) {
-                minute = matcher.group(4);
-                hour = matcher.group(3);
-                timezone = matcher.group(5);
-            }
-
-            idt = generateDate(year, month, minute, hour, timezone);
-        } else if ((matcher = htmlFormat.matcher(input1)).matches()) {
-            // Fri Jan 01 2010 00:00:00 GMT+0100 (CET)
-            String month = matcher.group(2);
-            switch (month) {
-                case "Jan":
-                    month = "1";
-                    break;
-                case "Feb":
-                    month = "2";
-                    break;
-                case "Mar":
-                    month = "3";
-                    break;
-                case "Apr":
-                    month = "4";
-                    break;
-                case "May":
-                    month = "5";
-                    break;
-                case "Jun":
-                    month = "6";
-                    break;
-                case "Jul":
-                    month = "7";
-                    break;
-                case "Aug":
-                    month = "8";
-                    break;
-                case "Sep":
-                    month = "9";
-                    break;
-                case "Oct":
-                    month = "10";
-                    break;
-                case "Nov":
-                    month = "11";
-                    break;
-                default:
-                    month = "12";
-                    break;
-            }
-            String day = matcher.group(3);
-            String year = matcher.group(4);
-            String hour = matcher.group(5);
-            String minute = matcher.group(6);
-            String second = matcher.group(7);
-            String timezone = matcher.group(8);
-
-            idt = generateDate(year, month, day, second, minute, hour,
-                timezone);
-        } else {
-            idt = dtp.parseDateTime(input1);
-        }
-        return idt;
+    public ISODate(@Nonnull final String isoDateString) {
+        setDateAndTime(isoDateString);
     }
 
     /**
-     * @param year
-     * @param month
-     * @param day
-     * @param second
-     * @param minute
-     * @param hour
-     * @param timezone
-     * @return
+     * Creates a clone of the object.
+     *
+     * @return a copy of the object
      */
-    private static DateTime generateDate(String year, String month, String day,
-                                         String second, String minute, String hour, String timezone) {
-
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, Integer.valueOf(year));
-        c.set(Calendar.MONTH, Integer.valueOf(month) - 1);
-        c.set(Calendar.DAY_OF_MONTH, Integer.valueOf(day));
-
-        c.set(Calendar.SECOND, Integer.valueOf(second));
-        c.set(Calendar.MILLISECOND, 0);
-        c.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
-        c.set(Calendar.MINUTE, Integer.valueOf(minute));
-
-        TimeZone zone = TimeZone.getTimeZone(timezone);
-        c.setTimeZone(zone);
-
-        return new DateTime(c.getTimeInMillis());
-    }
-
-    /**
-     * @param year
-     * @param month
-     * @param minute
-     * @param hour
-     * @param timezone
-     * @return
-     */
-    private static DateTime generateDate(String year, String month,
-                                         String minute, String hour, String timezone) {
-
-        return generateDate(year, month, "1", "00", minute, hour, timezone);
-    }
-    // ---------------------------------------------------------------------------
-    // ---
-    // --- API methods
-    // ---
-    // ---------------------------------------------------------------------------
-
     public ISODate clone() {
         ISODate clone;
         try {
             clone = (ISODate) super.clone();
-            clone._calendar = (Calendar) _calendar.clone();
+            // Since java.time.ZonedDateTime is immutable we don't need to duplicate the var,
+            // just assign it to the new ISODate instance.
+            clone.internalDateTime = internalDateTime;
+
             clone._shortDate = _shortDate;
             clone._shortDateYear = _shortDateYear;
             clone._shortDateYearMonth = _shortDateYearMonth;
             return clone;
         } catch (CloneNotSupportedException e) {
-            return new ISODate(_calendar.getTimeInMillis(), _shortDate);
+            // this shouldn't happen, since we are Cloneable
+            throw new InternalError(e);
         }
     }
 
     // ---------------------------------------------------------------------------
 
     /**
-     * Subtract a date from this date and return the seconds between them. <p> The value is always
-     * positive so that date1.timeDifferenceInSeconds(date2) == date2.timeDifferenceInSeconds(date1)
-     * </p>
+     * Subtract a date from this date and return the seconds between them.
+     * Value can be negative if parameter is before the caller.
+     *
+     * @param date the ISODate to subtract to this.
      */
     public long timeDifferenceInSeconds(ISODate date) {
-        return getTimeInSeconds() - date.getTimeInSeconds();
+        return ChronoUnit.SECONDS.between(date.internalDateTime, this.internalDateTime);
+
     }
 
-    // --------------------------------------------------------------------------
+    /**
+     * Return a String representing the date part of this object.
+     *
+     * @return a string representing the date part of this object. The format can be
+     * {@code yyyy}, {@code yyyy-MM} or {@code yyyy-MM-dd} depending on the date parsed
+     * when the object was built.
+     */
     @Transient
     public String getDateAsString() {
         if (_shortDateYearMonth) {
-            return getYears() + "-" + pad(getMonths()) ;
+            return internalDateTime.format(YEAR_MONTH_DATE_FORMATTER);
         } else if (_shortDateYear) {
-            return getYears() + "";
+            return internalDateTime.format(YEAR_DATE_FORMATTER);
         } else {
-            return getYears() + "-" + pad(getMonths()) + "-" + pad(getDays());
+            return internalDateTime.format(YEAR_MONTH_DAYS_DATE_FORMATTER);
         }
     }
 
@@ -406,30 +184,34 @@ public class ISODate
     }
 
     /**
-     * Create a java.util.Date object from this.
+     * Create a {@link Date} object from this.
      *
-     * @return a java.util.Date object from this.
+     * @return an old {@code java.utilDate} object from this.
      */
     public Date toDate() {
-        return (Date) _calendar.getTime().clone();
+        return java.util.Date.from(internalDateTime.toInstant());
     }
 
-    // ---------------------------------------------------------------------------
+    /**
+     * @return Return the number of seconds since epoch of 1970-01-01T00:00:00Z.
+     */
     @Transient
     public long getTimeInSeconds() {
-        return _calendar.getTimeInMillis() / 1000;
+        return internalDateTime.toEpochSecond();
     }
 
     /**
      * Get the Time and Date encoded as a String.
      */
-
     @XmlValue
+    @Transient
+    @JsonSerialize
+    @JsonProperty
     public String getDateAndTime() {
         if (_shortDate || _shortDateYearMonth || _shortDateYear) {
             return getDateAsString();
         } else {
-            return getDateAsString() + "T" + getTimeAsString();
+            return internalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         }
     }
 
@@ -437,45 +219,53 @@ public class ISODate
 
         String timeAndDate = isoDate;
         if (timeAndDate == null) {
-            throw new IllegalArgumentException("date string is null");
+            throw new IllegalArgumentException("Date string is null");
         }
 
-        int indexOfT = timeAndDate.indexOf('T');
-        if (indexOfT > -1) {
-            // Check if iso date contains time info and if using non UTC time
-            // zone to parse the date with
-            // JODAISODate. This class converts to UTC format to avoid timezones
-            // issues.
-            String afterT = timeAndDate.substring(indexOfT + 1);
-            boolean timeZoneInfo = afterT.contains("+") || afterT.contains("-")
-                || afterT.toUpperCase().endsWith("Z");
+        if (timeAndDate.indexOf('T') >= 0 && StringUtils.contains(timeAndDate, ':')) {
+            timeAndDate = DateUtil.convertToISOZuluDateTime(timeAndDate);
 
-            if (timeZoneInfo) {
-                timeAndDate = parseISODateTime(timeAndDate);
+            if (timeAndDate == null) {
+                throw new IllegalArgumentException("Not parsable date: " + isoDate);
             }
+            internalDateTime = ZonedDateTime.parse(timeAndDate, DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS);
+            return;
         }
-        String[] parts = timeAndDate.toUpperCase().split("T", 2);
 
-        if (parts.length == 1) {
-            if (parts[0].contains(":")) {
-                parseTime(parts[0]);
-            } else {
-                parseDate(parts[0]);
+        if (StringUtils.contains(timeAndDate, ':')) {
+            // its a time
+            try {
+                internalDateTime = DateUtil.parseTime(StringUtils.remove(StringUtils.remove(timeAndDate, 't'), 'T'));
+                _shortDate = false;
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Invalid ISO time: " + isoDate, e);
             }
         } else {
-            if (!parts[0].trim().isEmpty()) {
-                parseDate(parts[0]);
-            }
-            if (!parts[1].trim().isEmpty()) {
-                parseTime(parts[1]);
-            }
+            // its a date
+            parseDate(StringUtils.remove(StringUtils.remove(timeAndDate, 't'), 'T'));
+
         }
     }
 
     /**
-     * Return true if this object is only the date (year, month, day) and time should be ignored.
+     * Get the date and time in ISO format and UTC offset format.
      *
-     * @return true if this object is only the date (year, month, day) and time should be ignored.
+     * @return The date and time in ISO format.
+     */
+    //@JsonProperty("dateAndTime")
+    @JsonIgnore
+    public String getDateAndTimeUtc() {
+        return internalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS);
+    }
+
+    public void setDateAndTimeUtc(String isoDate) {
+        setDateAndTime(isoDate);
+    }
+
+    /**
+     * This method returns {@code true} if this object is only the date (year, month, day) and time should be ignored.
+     *
+     * @return true if this object is only the date (year, month, day) and time should be ignored
      */
     @Transient
     public boolean isDateOnly() {
@@ -483,9 +273,9 @@ public class ISODate
     }
 
     /**
-     * Return true if this object is only the date (year) and time should be ignored.
+     * This method returns {@code true} if this object is only the date (year) and time should be ignored.
      *
-     * @return true if this object is only the date (year) and time should be ignored.
+     * @return true if this object is only the date (year) and time should be ignored
      */
     @Transient
     public boolean isDateYearOnly() {
@@ -493,9 +283,9 @@ public class ISODate
     }
 
     /**
-     * Return true if this object is only the date (year, month) and time should be ignored.
+     * This method returns {@code true} if this object is only the date (year, month) and time should be ignored.
      *
-     * @return true if this object is only the date (year, month) and time should be ignored.
+     * @return true if this object is only the date (year, month) and time should be ignored
      */
     @Transient
     public boolean isDateYearMonthOnly() {
@@ -503,55 +293,69 @@ public class ISODate
     }
 
     /**
-     * Get the date's year.
+     * This method returns the date's year.
+     *
+     * @return the year
      */
     @Transient
     public int getYears() {
-        return _calendar.get(YEAR);
+        return internalDateTime.getYear();
     }
 
     /**
-     * Get the date's day of month starting at 1.
+     * This method returns the date's day of month starting at 1.
+     *
+     * @return the day of the month from 1 to 31
      */
     @Transient
     public int getDays() {
-        return _calendar.get(DAY_OF_MONTH);
+        return internalDateTime.getDayOfMonth();
     }
 
     /**
      * Get the date's month of the year starting at 1 and going to 12.
+     *
+     * @return the number of the month from 1 (January) to 12 (December)
      */
     @Transient
     public int getMonths() {
-        return _calendar.get(MONTH) + 1;
+        return internalDateTime.getMonthValue();
     }
 
     /**
-     * Get the date's hour in 24 hour time starting at 0 and going to 23
+     * Get the date's hour-of-day, from 0 to 23.
+     *
+     * @return the hour-of-day from 0 to 23
      */
     @Transient
     public int getHours() {
-        return _calendar.get(HOUR_OF_DAY);
+        return internalDateTime.getHour();
     }
 
     /**
-     * Get the date's minute starting at 0 and going to 59
+     * Get the date's minute starting at 0 and going to 59.
+     *
+     * @return the minute-of-hour, from 0 to 59
      */
     @Transient
     public int getMinutes() {
-        return _calendar.get(MINUTE);
+        return internalDateTime.getMinute();
     }
 
     /**
-     * Get the date's second starting at 0 and going to 59
+     * Get the date's second starting at 0 and going to 59.
+     *
+     * @return the second-of-minute, from 0 to 59
      */
     @Transient
     public int getSeconds() {
-        return _calendar.get(SECOND);
+        return internalDateTime.getSecond();
     }
 
-    // ------------------------------- Private methods
-    // ----------------------------------------------------
+    @Transient
+    public ZonedDateTime getInternalDateTime() {
+        return internalDateTime;
+    }
 
     @Override
     public int hashCode() {
@@ -567,15 +371,14 @@ public class ISODate
         if (getClass() != obj.getClass())
             return false;
         ISODate other = (ISODate) obj;
-        return getTimeAsString().equals(other.getTimeAsString());
+        return other.internalDateTime.isEqual(this.internalDateTime);
     }
 
     private void parseDate(@Nonnull String isoDate) {
         try {
-            String[] parts = isoDate.split("-|/");
+            String[] parts = isoDate.split("[-/]");
             if ((parts.length == 0) || (parts.length > 3)) {
-                throw new IllegalArgumentException(
-                    "Invalid ISO date : " + isoDate);
+                throw new IllegalArgumentException("Invalid ISO date: " + isoDate);
             }
 
             _shortDate = (parts.length == 3);
@@ -585,8 +388,7 @@ public class ISODate
             int year;
             if (parts[0].length() < 4) {
                 int shortYear = Integer.parseInt(parts[0]);
-                String thisYear = String
-                    .valueOf(Calendar.getInstance().get(YEAR));
+                String thisYear = String.valueOf(ZonedDateTime.now(ZoneOffset.UTC).getYear());
                 int century = Integer.parseInt(thisYear.substring(0, 2)) * 100;
                 int yearInCentury = Integer.parseInt(thisYear.substring(2));
 
@@ -607,71 +409,33 @@ public class ISODate
             }
 
             int day;
+            ZoneId offset = ZoneId.systemDefault();
             if (_shortDate) {
 
                 if (parts[2].toLowerCase().endsWith("z")) {
-                    day = Integer
-                        .parseInt(parts[2].substring(0, parts[2].length() - 1));
+                    offset = ZoneOffset.UTC;
+                    day = Integer.parseInt(parts[2].substring(0, parts[2].length() - 1));
                 } else {
                     day = Integer.parseInt(parts[2]);
                 }
             } else {
-                _calendar.set(year, month - 1, 1);
-
                 // Calculate the last day for the year/month
-                day = _calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+                day = YearMonth.of(year, month).atEndOfMonth().getDayOfMonth();
             }
 
             _shortDate = true;
+            internalDateTime = ZonedDateTime.now(offset).withYear(year).withMonth(month).withDayOfMonth(day).withHour(0).withMinute(0)
+                    .withSecond(0).withNano(0);
+            //..ZonedDateTime.of(year, month, day, hour, minute, second, 0, offset);
 
-            int hour = 0;
-            int minute = 0;
-            int second = 0;
-
-            _calendar.set(year, month - 1, day, hour, minute, second);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid ISO date : " + isoDate,
-                e);
-        }
-    }
-
-    private void parseTime(@Nonnull String isoDate) {
-        try {
-            String[] parts = isoDate.split(":");
-            if (parts.length == 1 || parts.length > 3) {
-                throw new IllegalArgumentException(
-                    "Invalid ISO date : " + isoDate);
-            }
-
-            int hour = Integer.parseInt(parts[0]);
-            int minute = Integer.parseInt(parts[1]);
-            int second = 0;
-            if (parts.length == 3) {
-                String secondsToParse = parts[2];
-                int indexOfZ = secondsToParse.toUpperCase().indexOf('Z');
-                if (indexOfZ > -1) {
-                    secondsToParse = secondsToParse.substring(0, indexOfZ);
-                    _calendar.setTimeZone( TimeZone.getTimeZone("UTC"));
-                }
-
-                second = (int) Float.parseFloat(secondsToParse);
-            }
-
-            _calendar.set(HOUR_OF_DAY, hour);
-            _calendar.set(MINUTE, minute);
-            _calendar.set(SECOND, second);
-
-            _shortDate = false;
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid ISO date : " + isoDate,
-                e);
+            throw new IllegalArgumentException("Invalid ISO date: " + isoDate, e);
         }
     }
 
     @Transient
     public String getTimeAsString() {
-        return pad(getHours()) + ":" + pad(getMinutes()) + ":"
-            + pad(getSeconds());
+        return pad(getHours()) + ":" + pad(getMinutes()) + ":" + pad(getSeconds());
     }
 
     private String pad(int value) {
@@ -682,8 +446,8 @@ public class ISODate
     }
 
     @Override
-    public int compareTo(ISODate o) {
-        return _calendar.compareTo(o._calendar);
+    public int compareTo(ISODate other) {
+        return this.internalDateTime.compareTo(other.internalDateTime);
     }
 
     @Override

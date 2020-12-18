@@ -358,14 +358,14 @@ public class EsSearchManager implements ISearchManager {
 
     public UpdateResponse updateField(String id, String field, Object value) throws Exception {
         Map<String, Object> updates = new HashMap<>(2);
-        updates.put(field, value);
+        updates.put(getPropertyName(field), value);
         updates.put("indexingDate", new Date());
         return updateFields(id, updates);
     }
 
     public void updateFieldAsynch(String id, String field, Object value) throws Exception {
         Map<String, Object> updates = new HashMap<>(2);
-        updates.put(field, value);
+        updates.put(getPropertyName(field), value);
         updates.put("indexingDate", new Date());
         updateFieldsAsynch(id, updates);
     }
@@ -578,9 +578,7 @@ public class EsSearchManager implements ISearchManager {
             // Register list of already processed names
             elementNames.add(name);
 
-            // Field starting with _ not supported in Kibana
-            // Those are usually GN internal fields
-            String propertyName = name.startsWith("_") ? name.substring(1) : name;
+            String propertyName = getPropertyName(name);
             List<Element> nodeElements = xml.getChildren(name);
 
             boolean isArray = nodeElements.size() > 1
@@ -641,6 +639,14 @@ public class EsSearchManager implements ISearchManager {
             }
         }
         return doc;
+    }
+
+
+    /** Field starting with _ not supported in Kibana
+     * Those are usually GN internal fields
+     */
+    private String getPropertyName(String name) {
+        return name.startsWith("_") ? name.substring(1) : name;
     }
 
     /*

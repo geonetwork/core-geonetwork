@@ -143,7 +143,7 @@
                   sortable: true,
                   formatter: function(val, row) {
                     if (row.lastCheck) {
-                      return gnHumanizeTimeService(row.lastCheck.dateAndTime, null, false).value;
+                      return gnHumanizeTimeService(row.lastCheck.dateAndTime, 'YYYY-MM-DD HH:mm (Z)', false).value;
                     } else {
                       return '';
                     }}.bind(this)}, {

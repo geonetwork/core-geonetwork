@@ -79,7 +79,8 @@ import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -472,15 +473,14 @@ public class BaseMetadataManager implements IMetadataManager {
                 List<?> titleNodes = null;
                 try {
                     titleNodes = Xml.selectNodes(xml, path, new ArrayList<Namespace>(schemaPlugin.getNamespaces()));
-                    // Use ISO 8601 GMT
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
                     for (Object o : titleNodes) {
                         if (o instanceof Element) {
                             Element title = (Element) o;
+                            // Use settings defined timezone to format the date/time
                             title.setText(String
                                 .format(messages.getString("metadata.title.createdFrom" + (fromTemplate ? "Template" : "Record")),
-                                    title.getTextTrim(), simpleDateFormat.format(new Date())));
+                                    title.getTextTrim(), ZonedDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
                         }
                     }
                 } catch (JDOMException e) {

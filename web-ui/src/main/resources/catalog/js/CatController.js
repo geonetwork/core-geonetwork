@@ -69,7 +69,8 @@ goog.require('gn_alert');
       'mods': {
         'global': {
           'humanizeDates': true,
-          'dateFormat': 'YYYY-MM-DD'
+          'dateFormat': 'DD-MM-YYYY HH:mm',
+          'timezone': 'Browser' // Default to browser timezone
         },
         'footer':{
           'enabled': true,

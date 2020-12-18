@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2020 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -287,6 +287,9 @@
       <list>
         <value>java:v402.SetSequenceValueToMaxOfMessageProducerEntity</value>
         <value>WEB-INF/classes/setup/sql/migrate/v402/migrate-</value>
+<!--
+        <value>java:v402.DateTimeMigrationTask</value>
+-->
       </list>
     </entry>
   </util:map>

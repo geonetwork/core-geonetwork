@@ -24,7 +24,8 @@
 (function() {
   goog.provide('gn_date_picker_directive');
 
-  var module = angular.module('gn_date_picker_directive', []);
+  var module = angular.module('gn_date_picker_directive',
+    []);
 
   /**
    *  Create a widget to handle date composed of
@@ -38,8 +39,10 @@
   module.directive('gnDatePicker',
       ['$http', '$rootScope', '$filter', '$timeout',
        'gnSchemaManagerService', 'gnCurrentEdit',
+       'gnConfig', 'gnGlobalSettings', '$translate',
        function($http, $rootScope, $filter, $timeout,
-                gnSchemaManagerService, gnCurrentEdit) {
+                gnSchemaManagerService, gnCurrentEdit,
+                gnConfig, gnGlobalSettings, $translate) {
 
          return {
            restrict: 'A',
@@ -64,6 +67,7 @@
              scope.dateTypeSupported = Modernizr.inputtypes.date;
              scope.isValidDate = true;
              scope.hideTime = scope.hideTime == 'true';
+             scope.hideTimezone = false;
              var datePattern = new RegExp('^\\d{4}$|' +
              '^\\d{4}-\\d{2}$|' +
              '^\\d{4}-\\d{2}-\\d{2}$|' +
@@ -75,8 +79,45 @@
                scope.dateInput = dateTime.format(format);
              };
 
-             scope.mode = scope.year = scope.month = scope.time =
-             scope.date = scope.dateDropDownInput = '';
+             var getTimeZoneOffset = function(date) {
+               return moment.tz(date).format('ZZ')
+                 .replace(/([+-]?[0-9]{2})([0-9]{2})/, '$1:$2')
+             }
+             var userTimezone =  moment.tz.guess();
+
+             scope.timezoneNames = [
+               {name: $translate.instant('NoTimezone'), offset: ''},
+               {
+                 name: $translate.instant('YourTimezone') + ' '
+                   + userTimezone,
+                 offset: getTimeZoneOffset(userTimezone)
+               }];
+             // Add server timezone
+             scope.timezoneNames.push({
+               name: $translate.instant('CatalogTimezone') + ' '
+                 + gnConfig['system.server.timeZone'],
+               offset: getTimeZoneOffset(gnConfig['system.server.timeZone'])
+             })
+             // UI preferred timezone
+             scope.timezoneNames.push({
+               name: $translate.instant('CatalogUiTimezone') + ' '
+                 + gnGlobalSettings.gnCfg.mods.global.timezone,
+               offset: getTimeZoneOffset(gnGlobalSettings.gnCfg.mods.global.timezone)
+             })
+             scope.timezoneNames.push({name: '----', offset: ''})
+             _.each(moment.tz.names(), function(tz, index, list) {
+               scope.timezoneNames.push({
+                 name: tz,
+                 offset: getTimeZoneOffset(tz)
+               })
+             });
+
+             scope.mode = scope.year = scope.month =
+               scope.time = scope.date = scope.dateDropDownInput = '';
+             scope.timezone =
+               getTimeZoneOffset(gnGlobalSettings.gnCfg.mods.global.timezone)
+               || gnConfig['system.server.timeZone']
+               || '';
              scope.withIndeterminatePosition =
              attrs.indeterminatePosition !== undefined;
 
@@ -88,16 +129,36 @@
              } else if (scope.value.length === 4) {
                scope.year = parseInt(scope.value);
                scope.mode = 'year';
+               scope.hideTimezone = true;
              } else if (scope.value.length === 7) {
                scope.month = moment(scope.value, 'YYYY-MM').toDate();
                scope.mode = 'month';
+               scope.hideTimezone = true;
              } else {
                var isDateTime = scope.value.indexOf('T') !== -1;
                var tokens = scope.value.split('T');
-               scope.date = new Date(moment(isDateTime ? tokens[0] : scope.value).utc().format());
-               scope.time = isDateTime ?
-               moment(tokens[1], 'HH:mm:ss').toDate() :
-               undefined;
+
+               scope.date = new Date(
+                 moment(isDateTime ? tokens[0] : scope.value)
+                   .utc().format());
+
+               var time = tokens[1];
+
+               scope.hideTimezone = false;
+               // We could decide to hide timezone if server timezone = ui timezone
+               // scope.hideTimezone =
+               //   gnConfig['system.server.timeZone'] === gnGlobalSettings.gnCfg.mods.global.timezone
+               // && getTimeZoneOffset(gnGlobalSettings.gnCfg.mods.global.timezone) === scope.timezone;
+               if (time != undefined) {
+                 scope.time = isDateTime ?
+                   moment(time, 'HH:mm:ss').toDate():
+                   undefined;
+
+                 scope.timezone = time.substr(8);
+               } else {
+                 scope.time = '';
+                 scope.timezone = '';
+               }
              }
              if (scope.dateTypeSupported !== true) {
                scope.dateInput = scope.value;
@@ -106,6 +167,7 @@
 
              scope.setMode = function(mode) {
                scope.mode = mode;
+               scope.hideTimezone = (mode === 'year' || mode === 'month');
              };
 
              var resetDateIfNeeded = function() {
@@ -119,6 +181,7 @@
                  scope.year = '';
                  scope.month = '';
                  scope.time = '';
+                 scope.timezone = '';
                }
              };
 
@@ -153,7 +216,7 @@
                  var time = $filter('date')(scope.time, 'HH:mm:ss');
                  // TODO: Set seconds, Timezone ?
                  scope.dateTime = $filter('date')(scope.date, 'yyyy-MM-dd');
-                 scope.dateTime += 'T' + time;
+                 scope.dateTime += 'T' + time + scope.timezone;
                } else {
                  scope.dateTime = $filter('date')(scope.date, 'yyyy-MM-dd');
                }
@@ -183,6 +246,7 @@
 
              scope.$watch('date', buildDate);
              scope.$watch('time', buildDate);
+             scope.$watch('timezone', buildDate);
              scope.$watch('year', buildDate);
              scope.$watch('month', buildDate);
              scope.$watch('dateInput', buildDate);

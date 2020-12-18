@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -30,6 +30,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
@@ -55,13 +56,16 @@ import java.util.TreeSet;
  * An entity representing link. A link can be a URL in a metadata record.
  */
 @Entity
-@Table(name = "Links")
+@Table(name = Link.TABLE_NAME)
 @Cacheable
 @Access(AccessType.PROPERTY)
 @EntityListeners(LinkEntityListenerManager.class)
 @SequenceGenerator(name = Link.ID_SEQ_NAME, initialValue = 1, allocationSize = 1)
 public class Link implements Serializable {
     static final String ID_SEQ_NAME = "link_id_seq";
+    public static final  String TABLE_NAME = "Links";
+    public static final String ID_COLUMN_NAME = "id";
+    public static final String LAST_CHECK_COLUMN_NAME = "dateandtime";
 
     private int _id;
     private String _url;
@@ -82,7 +86,7 @@ public class Link implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
-    @Column(nullable = false)
+    @Column(name = ID_COLUMN_NAME, nullable = false)
     public int getId() {
         return _id;
     }
@@ -153,6 +157,7 @@ public class Link implements Serializable {
         this.lastState = lastState;
     }
 
+    @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = LAST_CHECK_COLUMN_NAME, length = 30))
     public ISODate getLastCheck() {
         return lastCheck;
     }

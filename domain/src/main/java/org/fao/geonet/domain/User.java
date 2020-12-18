@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -48,11 +48,14 @@ import java.util.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "Users")
+@Table(name = User.TABLE_NAME)
 @Cacheable
 @EntityListeners(value = {UserEntityListenerManager.class})
 @SequenceGenerator(name = User.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class User extends GeonetEntity implements UserDetails {
+    public static final String TABLE_NAME = "Users";
+    public static final String ID_COLUMN_NAME = "id";
+    public static final String LAST_LOGIN_DATE_COLUMN_NAME = "lastLoginDate";
     public static final String NODE_APPLICATION_CONTEXT_KEY = "jeevesNodeApplicationContext_";
     static final String ID_SEQ_NAME = "user_id_seq";
     private static final long serialVersionUID = 2589607276443866650L;
@@ -82,6 +85,7 @@ public class User extends GeonetEntity implements UserDetails {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @Column(name = ID_COLUMN_NAME)
     public int getId() {
         return _id;
     }
@@ -354,6 +358,7 @@ public class User extends GeonetEntity implements UserDetails {
      * @return the last login date of the user.  May be null
      */
     @Nullable
+    @Column(name= LAST_LOGIN_DATE_COLUMN_NAME)
     public String getLastLoginDate() {
         return _lastLoginDate;
     }

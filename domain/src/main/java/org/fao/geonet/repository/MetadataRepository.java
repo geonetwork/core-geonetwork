@@ -74,14 +74,4 @@ public interface MetadataRepository extends GeonetRepository<Metadata, Integer>,
      */
     @Nonnull
     List<Metadata> findAllByHarvestInfo_Uuid(@Nonnull String uuid);
-
-    /**
-     * Increment popularity of metadata by 1.
-     *
-     * @param mdId the id of the metadata
-     */
-    @Modifying
-    @Transactional
-    @Query("UPDATE " + Metadata.TABLENAME + " m SET m.dataInfo.popularity = m.dataInfo.popularity + 1 WHERE m.id = ?1")
-    void incrementPopularity(int mdId);
 }

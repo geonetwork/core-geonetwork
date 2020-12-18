@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2020 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -28,6 +28,7 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 version="2.0">
 
@@ -65,7 +66,7 @@
       <!-- === Revision date === -->
       <xsl:for-each select="/gfc:FC_FeatureCatalogue/gmx:versionDate/gco:Date|
         /gfc:FC_FeatureCatalogue/gfc:versionDate/gco:Date">
-        <revisionDate><xsl:value-of select="string(.)"/></revisionDate>
+        <revisionDate><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></revisionDate>
       </xsl:for-each>
 
       <xsl:variable name="jsonFeatureTypes">[

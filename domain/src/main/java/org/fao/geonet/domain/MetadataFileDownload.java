@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -35,10 +35,13 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "MetadataFileDownloads",
+@Table(name = MetadataFileDownload.TABLE_NAME,
     indexes = { @Index(name = "ix_metadatafiledownloads_mdid", columnList = "metadataid") })
 @SequenceGenerator(name = MetadataFileDownload.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class MetadataFileDownload {
+    public static final String TABLE_NAME = "MetadataFileDownloads";
+    public static final String ID_COLUMN_NAME = "id";
+    public static final String DOWNLOAD_DATE_COLUMN_NAME = "downloadDate";
     static final String ID_SEQ_NAME = "metadata_filedownload_id_seq";
     private int _id;
     private String _downloadDate;
@@ -58,6 +61,7 @@ public class MetadataFileDownload {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @Column(name = ID_COLUMN_NAME)
     public int getId() {
         return _id;
     }
@@ -79,7 +83,7 @@ public class MetadataFileDownload {
      *
      * @return the download date for this entity.
      */
-    @Column(nullable = false)
+    @Column(name = DOWNLOAD_DATE_COLUMN_NAME, nullable = false)
     public String getDownloadDate() {
         return _downloadDate;
     }
