@@ -1,0 +1,33 @@
+version: 1
+
+dn: ou=users,dc=geonetwork-opensource,dc=org
+objectClass: top
+objectClass: organizationalUnit
+ou: users
+
+dn: uid=admin,ou=users,dc=geonetwork-opensource,dc=org
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: shadowAccount
+objectClass: top
+cn: Administrator
+uid: admin
+sn: admin
+givenName: admin
+mail: administrator@geonetwork-opensource.org
+userPassword: {SSHA}Oh7u6J3V3pf92ZxXepoAGrk7pU/UO0do
+
+dn: uid=user,ou=users,dc=geonetwork-opensource,dc=org
+cn: Regular user
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: shadowAccount
+objectClass: top
+uid: user
+sn: user
+givenName: user
+mail: user@geonetwork-opensource.org
+userPassword: {SSHA}jRAL2TeiQ2xz0NmleA35azbQ8vm7iqE2
+

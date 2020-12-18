@@ -1,0 +1,36 @@
+services:
+
+  frontend:
+    image: nginx
+    ports:
+      - 8080:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - cas
+      - geonetwork
+
+  geonetwork:
+    image: jetty:jre8
+    volumes:
+      - ../../web/target/geonetwork:/var/lib/jetty/webapps/geonetwork
+      - ./geonetwork/config-security.properties:/var/lib/jetty/webapps/geonetwork/WEB-INF/config-security/config-security.properties
+      - ./geonetwork/config-security.xml:/var/lib/jetty/webapps/geonetwork/WEB-INF/config-security/config-security.xml
+    ports:
+      - 5005:5005
+    environment:
+      JAVA_OPTIONS: -Duser.home=/tmp/jetty -Dgeonetwork.dir=/tmp/geonetwork_data -Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+
+  ldap:
+    build:
+      context: ./ldap
+      dockerfile: Dockerfile
+
+  cas:
+    build:
+      context: ./cas
+      dockerfile: Dockerfile
+    volumes:
+      - ./cas/cas-overlay-template-6.2/etc/cas:/etc/cas
+    depends_on:
+      - ldap
