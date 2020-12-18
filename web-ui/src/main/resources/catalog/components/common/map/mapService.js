@@ -1451,6 +1451,9 @@
               return;
             }
 
+            // Get original style
+            var style = layer.getSource().getParams().STYLES;
+
             // Remove the layer from the map
             map.removeLayer(layer);
 
@@ -1468,8 +1471,7 @@
                         // this is required for OL to form a proper request!
                         lyr.version = capObj.version;
                       }
-
-                      var style = layer.getSource().getParams().STYLES;
+                      
                       $this.addWmsToMapFromCap(map, lyr, style);
                     });
                   })
