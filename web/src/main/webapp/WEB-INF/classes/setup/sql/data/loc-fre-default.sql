@@ -535,7 +535,7 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (59,'fre','Changement
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (60,'fre','Fiche mise à jour par le processus {{h.item1}}.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'fre','Fiche supprimée.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'fre','Fiche importée.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'fre','Fiche restauré.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'fre','Fiche restaurée.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'fre','Demande de création de DOI');
 
 
