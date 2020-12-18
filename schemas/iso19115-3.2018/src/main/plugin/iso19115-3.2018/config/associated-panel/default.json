@@ -30,7 +30,7 @@
           "metadataStore": {
             "label": "searchAnApplication",
             "params": {
-              "type": "application"
+              "resourceType": "application"
             }
           }
         },
@@ -63,7 +63,7 @@
           "metadataStore": {
             "label": "searchAservice",
             "params": {
-              "serviceType": "OGC:WMS or WMS or view"
+              "serviceType": ["OGC:WMS", "WMS", "view"]
             }
           }
         },
@@ -132,7 +132,7 @@
           "metadataStore": {
             "label": "searchAservice",
             "params": {
-              "serviceType": "OGC:WMTS or WMTS"
+              "serviceType": ["OGC:WMTS", "WMTS"]
             }
           }
         },
@@ -371,7 +371,7 @@
           "metadataStore": {
             "label": "searchAservice",
             "params": {
-              "serviceType": "OGC:WFS or WFS or download"
+              "serviceType": ["OGC:WFS", "WFS", "download"]
             }
           }
         },
@@ -403,7 +403,7 @@
           "metadataStore": {
             "label": "searchAservice",
             "params": {
-              "serviceType": "OGC:WCS or WCS"
+              "serviceType": ["OGC:WCS", "WCS"]
             }
           }
         },
