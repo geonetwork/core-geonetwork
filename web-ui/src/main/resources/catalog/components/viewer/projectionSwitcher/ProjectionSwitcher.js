@@ -60,26 +60,23 @@
                           scope.listOpen = !scope.listOpen;
                         }
 
-                        // Change the projection of an existing layer
-                        scope.changeLayerProjection = function (layer, oldProj,
-                            newProj) {
-                          if (layer instanceof ol.layer.Group) {
-                            layer.getLayers().forEach(
-                                function (subLayer) {
-                                  this.changeLayerProjection(subLayer, oldProj,
-                                      newProj);
-                                });
-                          } else if (layer instanceof ol.layer.Image) {
-                            gnMap.updateWmsLayerForProj(scope.map, layer, newProj);
-                          } else if (layer instanceof ol.layer.Tile) {
-                            var tileLoadFunc = layer.getSource()
-                                .getTileLoadFunction();
-                            layer.getSource().setTileLoadFunction(tileLoadFunc);
-                          } else if (layer instanceof ol.layer.Vector) {
-                            var features = layer.getSource().getFeatures();
-                            for (var i = 0; i < features.length; i += 1) {
-                              features[i].getGeometry().transform(oldProj,
-                                  newProj);
+                        // Change the projection for all supported layers
+                        scope.changeLayerProjection = function (obj, oldProj, newProj) {
+                          var layers = obj.getLayers().getArray().reverse();
+                          for (var i = layers.length - 1; i >= 0; --i) {
+                            var layer = layers[i];
+                            if (layer instanceof ol.layer.Group) {
+                              this.changeLayerProjection(layer, oldProj, newProj);
+                            } else if (layer instanceof ol.layer.Tile) {
+                              var tileLoadFunc = layer.getSource().getTileLoadFunction();
+                              layer.getSource().setTileLoadFunction(tileLoadFunc);
+                            } else if (layer instanceof ol.layer.Image) {
+                              gnMap.updateWmsLayerForProj(scope.map, layer, newProj);
+                            } else if (layer instanceof ol.layer.Vector) {
+                              var features = layer.getSource().getFeatures();
+                              for (var i = 0; i < features.length; i += 1) {
+                                features[i].getGeometry().transform(oldProj, newProj);
+                              }
                             }
                           }
                         };
@@ -189,11 +186,7 @@
                           gnViewerSettings.bgLayers = bgLayers;
 
                           // Reproject all layers in the map
-                          scope.map.getLayers().forEach(
-                              function (layer) {
-                                scope.changeLayerProjection(layer, oldProj,
-                                    newProj);
-                              });
+                          scope.changeLayerProjection(scope.map, oldProj, newProj);
 
                           // Reproject all controls in the map
                           scope.map.getControls().forEach(function (control) {
