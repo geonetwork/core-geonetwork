@@ -55,21 +55,13 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IsoLanguage;
-import org.fao.geonet.domain.LinkStatus;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.UiSetting;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.index.es.EsRestClient;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.KeywordBean;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.Thesaurus;
-import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.Translator;
-import org.fao.geonet.kernel.security.shibboleth.ShibbolethUserConfiguration;
+import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.url.UrlChecker;
@@ -92,12 +84,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.output.DOMOutputter;
-import org.locationtech.jts.geom.Envelope;
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.MultiPolygon;
-import org.locationtech.jts.geom.Polygon;
-import org.locationtech.jts.geom.PrecisionModel;
+import org.locationtech.jts.geom.*;
 import org.locationtech.jts.operation.valid.IsValidOp;
 import org.locationtech.jts.precision.GeometryPrecisionReducer;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -121,17 +108,7 @@ import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -508,26 +485,47 @@ public final class XslUtil {
         return null;
     }
 
+	/**
+	 * Check if security provider require login form
+	 */
+	public static boolean isDisableLoginForm() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            // No login form if providing a link or autologin
+            return securityProviderConfiguration.getLoginType().equals(SecurityProviderConfiguration.LoginType.AUTOLOGIN.toString().toLowerCase())
+                || securityProviderConfiguration.getLoginType().equals(SecurityProviderConfiguration.LoginType.LINK.toString().toLowerCase());
+        }
+        // If we cannot find SecurityProviderConfiguration then default to false.
+        return false;
+	}
+
     /**
-     * Check if bean is defined in the context
-     *
-     * @param beanId id of the bean to look up
+     * Check if security provider require login link
      */
-    public static boolean existsBean(String beanId) {
-        return ProfileManager.existsBean(beanId);
+    public static boolean isShowLoginAsLink() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.getLoginType().equals(SecurityProviderConfiguration.LoginType.LINK.toString().toLowerCase());
+        }
+        // If we cannot find SecurityProviderConfiguration then default to false.
+        return false;
     }
 
-	/**
-	 * Check if Shibboleth should show login
-	 */
-	public static boolean shibbolethHideLogin() {
-		if (existsBean("shibbolethConfiguration")) {
-			ServiceContext serviceContext = ServiceContext.get();
-			ShibbolethUserConfiguration shib = serviceContext.getBean(ShibbolethUserConfiguration.class);
-			return shib.getHideLogin();
-		}
-		return false;
-	}
+
+    /**
+     * get security provider
+     */
+    public static String getSecurityProvider() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.getSecurityProvider();
+        }
+        // If we cannot find SecurityProviderConfiguration then default to empty string.
+        return "";
+    }
 
     /**
      * Optimistically check if user can access a given url.  If not possible to determine then the

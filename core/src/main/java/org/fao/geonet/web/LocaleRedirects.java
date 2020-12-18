@@ -221,9 +221,6 @@ public class LocaleRedirects {
 
     private String createServiceUrl(HttpServletRequest request, String service, String lang, String node) {
         node = node == null ? currentNode.getId() : node;
-        if (node.equals("accessDenied.jsp")) {
-            node = NodeInfo.DEFAULT_NODE;
-        }
         final Enumeration parameterNames = request.getParameterNames();
         StringBuilder headers = new StringBuilder();
         while (parameterNames.hasMoreElements()) {
