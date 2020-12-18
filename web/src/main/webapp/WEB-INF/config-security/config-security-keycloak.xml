@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/util
+          http://www.springframework.org/schema/util/spring-util.xsd">
+
+  <context:property-override
+          location="WEB-INF/config-security/config-security-keycloak-overrides.properties"
+          ignore-resource-not-found="true"/>
+
+  <context:component-scan base-package="org.keycloak.adapters.springsecurity" />
+
+  <security:authentication-manager alias="authenticationManager">
+    <security:authentication-provider ref="keycloakAuthenticationProvider" />
+  </security:authentication-manager>
+
+  <!-- Configuration bean -->
+  <!-- You may customize the following values by editing the file config-security-keycloak-overrides.properties -->
+  <bean id="keycloakConfiguration"
+        class="org.fao.geonet.kernel.security.keycloak.KeycloakConfiguration">
+    <property name="loginType" value="${keycloakConfiguration.loginType}" />
+    <property name="organisationKey" value="${keycloakConfiguration.organisationKey}"/>
+    <property name="publicClientId" value="${keycloakConfiguration.publicClientId}"/>
+    <property name="updateProfile" value="${keycloakConfiguration.updateProfile}"/>
+    <property name="updateGroup" value="${keycloakConfiguration.updateGroup}"/>
+    <property name="roleGroupSeparator" value="${keycloakConfiguration.roleGroupSeparator}"/>
+    <property name="IDPLogoutUrl" value="${keycloakConfiguration.IDPLogoutUrl}"/>
+  </bean>
+
+  <bean id="keycloakUserUtils"
+        class="org.fao.geonet.kernel.security.keycloak.KeycloakUserUtils">
+  </bean>
+
+  <bean id="adapterDeploymentContext" class="org.keycloak.adapters.springsecurity.AdapterDeploymentContextFactoryBean">
+    <constructor-arg value="/WEB-INF/config-security/keycloak.json"/>
+  </bean>
+
+  <bean id="keycloakAuthenticationEntryPoint" class="org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationEntryPoint">
+    <constructor-arg name="adapterDeploymentContext" ref="adapterDeploymentContext"/>
+  </bean>
+  <bean id="keycloakUtil" class="org.fao.geonet.kernel.security.keycloak.KeycloakUtil" />
+  <bean id="keycloakAuthenticationProvider" class="org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider" />
+  <bean id="userSessionManagement" class="org.fao.geonet.kernel.security.keycloak.KeycloakHttpSessionManager" />
+  <bean id="keycloakPreAuthActionsFilter" class="org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter">
+    <constructor-arg ref="userSessionManagement" />
+  </bean>
+  <bean id="keycloakPreAuthActionsLoginFilter" class="org.fao.geonet.kernel.security.keycloak.keycloakPreAuthActionsLoginFilter" >
+      <constructor-arg ref="userSessionManagement" />
+  </bean>
+  <bean id="keycloakAuthenticationProcessingFilter" class="org.fao.geonet.kernel.security.keycloak.KeycloakAuthenticationProcessingFilter" depends-on="keycloakUtil">
+    <constructor-arg name="authenticationManager" ref="authenticationManager" />
+  </bean>
+
+  <bean id="keycloakLogoutHandler" class="org.fao.geonet.kernel.security.keycloak.KeycloakLogoutHandler">
+    <constructor-arg ref="adapterDeploymentContext" />
+  </bean>
+
+  <bean id="sessionRegistry"  class="org.springframework.security.core.session.SessionRegistryImpl" />
+  <bean id="sessionAuthenticationStrategy" class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
+    <constructor-arg ref="sessionRegistry"/>
+  </bean>
+
+  <bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+    <constructor-arg name="logoutSuccessHandler">
+        <bean class="org.fao.geonet.kernel.security.keycloak.KeycloakLogoutSuccessHandler" />
+    </constructor-arg>
+    <constructor-arg name="handlers">
+      <list>
+        <ref bean="keycloakLogoutHandler" />
+        <bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+      </list>
+    </constructor-arg>
+    <property name="logoutRequestMatcher">
+      <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+        <constructor-arg name="pattern" value="/signout" />
+        <constructor-arg name="httpMethod" value="GET" />
+      </bean>
+    </property>
+  </bean>
+
+  <bean id="filterChainFilters" class="java.util.ArrayList">
+  <constructor-arg
+            ref="#{ keycloakConfiguration.loginType == 'autologin' ? 'keycloakFilterChanFiltersExclusive' : keycloakConfiguration.loginType == 'link' ? 'keycloakFilterChanFiltersLink' : 'keycloakFilterChanFiltersInclusive' }">
+  </constructor-arg>
+   </bean>
+
+  <util:list id="keycloakFilterChanFiltersExclusive">
+    <ref bean="securityContextPersistenceFilter" />
+    <ref bean="logoutFilter" />
+    <ref bean="keycloakPreAuthActionsLoginFilter" />
+    <ref bean="keycloakAuthenticationProcessingFilter" />
+    <ref bean="requestCacheFilter" />
+    <ref bean="anonymousFilter" />
+    <ref bean="sessionMgmtFilter" />
+    <ref bean="exceptionTranslationFilter" />
+    <ref bean="filterSecurityInterceptor" />
+  </util:list>
+
+  <util:list id="keycloakFilterChanFiltersLink">
+    <ref bean="securityContextPersistenceFilter" />
+    <ref bean="logoutFilter" />
+    <ref bean="keycloakPreAuthActionsFilter" />
+    <ref bean="keycloakAuthenticationProcessingFilter" />
+    <ref bean="requestCacheFilter" />
+    <ref bean="anonymousFilter" />
+    <ref bean="sessionMgmtFilter" />
+    <ref bean="exceptionTranslationFilter" />
+    <ref bean="filterSecurityInterceptor" />
+  </util:list>
+
+	<!-- This list should be kept updated based on the one on config-security-core.xml -->
+  <util:list id="keycloakFilterChanFiltersInclusive">
+		<ref bean="securityContextPersistenceFilter" />
+		<!-- To disable csrf security (not recommended) comment the following line -->
+		<ref bean="csrfFilter" />
+		<!-- To disable csrf security (not recommended) comment the upper line -->
+		<ref bean="logoutFilter" />
+		<ref bean="keycloakPreAuthActionsFilter"/>
+		<ref bean="keycloakAuthenticationProcessingFilter"/>
+		<ref bean="basicAuthenticationFilter" />
+		<ref bean="formLoginFilter" />
+		<ref bean="requestCacheFilter" />
+		<ref bean="anonymousFilter" />
+		<ref bean="sessionMgmtFilter" />
+		<ref bean="exceptionTranslationFilter" />
+		<ref bean="filterSecurityInterceptor" />
+	</util:list>
+</beans>

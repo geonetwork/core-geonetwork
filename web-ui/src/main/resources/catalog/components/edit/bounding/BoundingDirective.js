@@ -79,7 +79,7 @@
 
             // init map
             ctrl.map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP);
-            ctrl.map.get('sizePromise').then(function() {
+            ctrl.map.get('creationPromise').then(function() {
               ctrl.initValue();
             });
 
@@ -171,6 +171,12 @@
               return false;
             };
 
+            function getEnlargedExtent(feature) {
+              var extent = feature.getGeometry().getExtent();
+              var buffer = Math.min.apply(ol.extent.getSize(extent)) * 0.1;
+              return ol.extent.buffer(extent, buffer);
+            };
+
             // parse initial input coordinates to display shape
             ctrl.initValue = function() {
               if (ctrl.polygonXml) {
@@ -229,11 +235,9 @@
               if (!feature) return;
 
               // fit view if geom is valid & not empty
-              if ((forceFitView || ctrl.fromTextInput) &&
-                  feature.getGeometry() &&
+              if ((forceFitView || ctrl.fromTextInput) && feature.getGeometry() &&
                   !ol.extent.isEmpty(feature.getGeometry().getExtent())) {
-                ctrl.map.getView().fit(feature.getGeometry(),
-                    ctrl.map.getSize());
+                ctrl.map.getView().fit(getEnlargedExtent(feature), ctrl.map.getSize());
               }
 
               var outputCrs = $attrs['outputCrs'] ? $attrs['outputCrs'] :

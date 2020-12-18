@@ -27,8 +27,8 @@
 
   var module = angular.module('gn_ui_config_directive', ['ui.ace', 'gn_timezone_selector']);
 
-  module.directive('gnUiConfig', ['gnGlobalSettings',
-    function(gnGlobalSettings) {
+  module.directive('gnUiConfig', ['gnGlobalSettings', 'gnProjService',
+    function(gnGlobalSettings, gnProjService) {
 
       return {
         restrict: 'A',
@@ -39,6 +39,7 @@
         templateUrl: '../../catalog/components/admin/uiconfig/partials/' +
             'uiconfig.html',
         link: function(scope, element, attrs) {
+
           var testAppUrl = '../../catalog/views/api/?config=';
 
           function init() {
@@ -62,13 +63,11 @@
 
           scope.sortOrderChoices = ['asc', 'desc'];
 
-
           // ng-model can't bind to object key, so
           // when key value change, reorganize object.
           scope.updateKey = function(obj, new_key, id) {
             var keys = Object.keys(obj);
             var values = Object.values(obj);
-            var old_key = keys[id];
             if (keys.indexOf(new_key) == -1 && new_key.length > 0) {
               for (var i = 0, key; key = keys[i]; i++) {
                 delete obj[key];
@@ -98,6 +97,23 @@
             } else if (angular.isObject(array)) {
               delete array[index];
             }
+          };
+
+          scope.epsgHelpers = gnProjService.helpers;
+
+          scope.populateProjSettings = function(context) {
+            gnProjService.getProjectionSettings(context.code)
+              .then(function(data) {
+                if (!data.code) 
+                  return;
+                for (var key in data) {
+                  if (data.hasOwnProperty(key))
+                    context[key] = data[key];
+                }
+              })
+              .catch(function(error) {
+                console.error(error.message);
+              });
           };
 
           scope.reset = function() {

@@ -347,8 +347,7 @@
               return extent;
             }
             else {
-              return ol.proj.transformExtent(extent,
-                  src, dest);
+              return ol.proj.transformExtent(extent, src, dest, 8);
             }
           },
 

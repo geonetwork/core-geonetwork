@@ -173,7 +173,7 @@ public class ValidateApi {
                             report.addMetadataInfos(record.getId(), "Is valid");
                             new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "1").publish(applicationContext);
                         } else {
-                            report.addMetadataInfos(record.getId(), "Is invalid");
+                            report.addMetadataError(record.getId(), "Is invalid");
                             new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "0").publish(applicationContext);
                         }
                         report.addMetadataId(record.getId());

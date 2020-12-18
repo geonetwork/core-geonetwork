@@ -171,7 +171,12 @@ public class MetadataInsertDeleteApi {
             MetadataUtils.backupRecord(metadata, context);
         }
 
-        store.delResources(context, metadata.getUuid(), true);
+        boolean approved=true;
+        if (metadata instanceof MetadataDraft) {
+            approved=false;
+        }
+
+        store.delResources(context, metadata.getUuid(), approved);
         RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, metadata.getId() + "");
         metadataManager.deleteMetadata(context, metadata.getId() + "");
         recordDeletedEvent.publish(ApplicationContextHolder.get());
