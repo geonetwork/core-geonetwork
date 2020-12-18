@@ -278,7 +278,9 @@
           <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceTitle', cit:title, $allLanguages)"/>
           <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAltTitle', cit:alternateTitle, $allLanguages)"/>
 
-          <xsl:for-each select="cit:date/cit:CI_Date[gn-fn-index:is-isoDate(cit:date/*/text())]">
+          <xsl:for-each select="cit:date/cit:CI_Date[
+                                        cit:date/*/text() != ''
+                                        and gn-fn-index:is-isoDate(cit:date/*/text())]">
             <xsl:variable name="dateType"
                           select="cit:dateType/cit:CI_DateTypeCode/@codeListValue"
                           as="xs:string?"/>
