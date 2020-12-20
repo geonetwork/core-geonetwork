@@ -33,7 +33,6 @@ import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.OperationAllowed_;
-import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -64,6 +63,10 @@ public class LinkSpecs {
             @Override
             public Predicate toPredicate(Root<Link> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<>();
+                Join<Link, MetadataLink> metadataJoin = null;
+                if (query.getResultType() != Long.class && query.getResultType() != long.class) {
+                    metadataJoin = (Join<Link, MetadataLink>) root.fetch(Link_.records, JoinType.LEFT);
+                };
 
                 if (state != null) {
                     Path<Integer> statePath = root.get(Link_.lastState);
@@ -78,15 +81,20 @@ public class LinkSpecs {
                 }
 
                 if (associatedRecord != null) {
-                    Join<Link, MetadataLink> metadataJoin = root.join(Link_.records, JoinType.INNER);
+                    if (metadataJoin == null) {
+                        metadataJoin = root.join(Link_.records, JoinType.LEFT);
+                    };
                     predicates.add(
                         cb.like(
                             metadataJoin.get("metadataUuid"),
                             cb.literal(String.format("%%%s%%", associatedRecord))));
+                    query.distinct(true);
                 }
 
                 if (editingGroupIds != null && editingGroupIds.length > 0) {
-                    Join<Link, MetadataLink> metadataJoin = root.join(Link_.records, JoinType.INNER);
+                    if (metadataJoin == null) {
+                        metadataJoin = root.join(Link_.records, JoinType.LEFT);
+                    };
 
                     Subquery<Integer> subquery = query.subquery(Integer.class);
                     final Root<OperationAllowed> opAllowRoot = subquery.from(OperationAllowed.class);
@@ -112,7 +120,9 @@ public class LinkSpecs {
                 }
 
                 if (groupPublishedIds != null && groupPublishedIds.length > 0) {
-                    Join<Link, MetadataLink> metadataJoin = root.join(Link_.records, JoinType.INNER);
+                    if (metadataJoin == null) {
+                        metadataJoin = root.join(Link_.records, JoinType.LEFT);
+                    };
 
                     Subquery<Integer> subquery = query.subquery(Integer.class);
                     Root<OperationAllowed> opAllowRoot = subquery.from(OperationAllowed.class);
@@ -131,8 +141,10 @@ public class LinkSpecs {
                     query.distinct(true);
                 }
 
-                if (groupOwnerIds != null && groupOwnerIds.length > 0) {
-                    Join<Link, MetadataLink> metadataJoin = root.join(Link_.records, JoinType.INNER);
+                 if (groupOwnerIds != null && groupOwnerIds.length > 0) {
+                     if (metadataJoin == null) {
+                        metadataJoin = root.join(Link_.records, JoinType.LEFT);
+                    };
                     Subquery<Integer> subquery = query.subquery(Integer.class);
                     final Root<Metadata> metadataRoot = subquery.from(Metadata.class);
                     final Predicate groupOwnerPredicate =

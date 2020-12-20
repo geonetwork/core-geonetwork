@@ -117,8 +117,13 @@ public class UrlAnalyzer {
                 .findAll(metadatalinksTargetting(link))
                 .stream()
                 .filter(metadatalink -> isReferencingAnUnknownMetadata((MetadataLink)metadatalink))
-                .forEach(metadataLinkRepository::delete);
+                .forEach(this::clearLink);
         entityManager.flush();
+    }
+
+    private void clearLink(MetadataLink metadataLink) {
+        metadataLink.getLink().getRecords().remove(metadataLink);
+        metadataLinkRepository.delete(metadataLink);
     }
 
     public void deleteAll() {

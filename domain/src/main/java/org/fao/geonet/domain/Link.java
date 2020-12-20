@@ -23,6 +23,7 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.fao.geonet.domain.converter.LinkTypeConverter;
 import org.fao.geonet.entitylistener.LinkEntityListenerManager;
 import org.hibernate.annotations.SortNatural;
@@ -130,8 +131,9 @@ public class Link implements Serializable {
      *
      * @return
      */
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL,
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
         mappedBy = "link",
         orphanRemoval = true)
     @OrderBy("checkDate DESC")
@@ -161,7 +163,7 @@ public class Link implements Serializable {
         this.lastCheck = lastCheck;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,
         mappedBy = "link",
         orphanRemoval = true)
     public Set<MetadataLink> getRecords() {
