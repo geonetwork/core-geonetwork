@@ -57,7 +57,7 @@ public class KeycloakHttpSessionManager implements ApplicationListener<Applicati
     private static final Logger log = LoggerFactory.getLogger(KeycloakHttpSessionManager.class);
     private SessionManagementStrategy sessions = new LocalSessionManagementStrategy();
 
-   
+
     @Override
     public void logoutAll() {
         log.info("Received request to log out all users.");

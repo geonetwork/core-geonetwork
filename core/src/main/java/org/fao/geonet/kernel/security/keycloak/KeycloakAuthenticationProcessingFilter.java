@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.security.keycloak;
 
 import org.apache.commons.lang.LocaleUtils;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.keycloak.KeycloakPrincipal;
 
@@ -79,9 +80,9 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
-        if (Log.isDebugEnabled(Log.JEEVES)) {
+        if (Log.isDebugEnabled(Geonet.SECURITY)) {
             try {
-                Log.debug(Log.JEEVES,
+                Log.debug(Geonet.SECURITY,
                         "Performing Keycloak auth check. Existing auth is "
                                 + SecurityContextHolder.getContext().getAuthentication());
             } catch (Throwable t) {
@@ -97,9 +98,9 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
 
                 if (userDetails != null) {
                     username = userDetails.getUsername();
-                    if (Log.isDebugEnabled(Log.JEEVES)) {
+                    if (Log.isDebugEnabled(Geonet.SECURITY)) {
                         Log.debug(
-                                Log.JEEVES,
+                                Geonet.SECURITY,
                                 "Keycloak user found " + userDetails.getUsername()
                                         + " with authorities: "
                                         + userDetails.getAuthorities());
@@ -110,7 +111,7 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                     auth.setDetails(keycloakPrincipal.getKeycloakSecurityContext());
                     SecurityContextHolder.getContext().setAuthentication(auth);
 
-                    Log.info(Log.JEEVES, "User '" + userDetails.getUsername()
+                    Log.info(Geonet.SECURITY, "User '" + userDetails.getUsername()
                             + "' properly authenticated via Keycloak");
 
 
@@ -122,14 +123,14 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                                 response);
                             if (savedReq != null) {
                                 redirect = savedReq.getRedirectUrl();
-                                Log.debug(Log.JEEVES,
+                                Log.debug(Geonet.SECURITY,
                                     "Found saved request location: " + redirect);
                             } else {
-                                Log.debug(Log.JEEVES, "No saved request found");
+                                Log.debug(Geonet.SECURITY, "No saved request found");
                             }
 
                             if (redirect != null) {
-                                Log.info(Log.JEEVES, "Redirecting to " + redirect);
+                                Log.info(Geonet.SECURITY, "Redirecting to " + redirect);
 
                                 // Removing original request, since we want to
                                 // retain current headers.
@@ -164,7 +165,7 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                         try {
                             response.setLocale(LocaleUtils.toLocale(keycloakPrincipal.getKeycloakSecurityContext().getToken().getLocale()));
                         } catch (IllegalArgumentException e) {
-                            Log.warning(Log.JEEVES, "Unable to parse keycloak locale " + LocaleUtils.toLocale(keycloakPrincipal.getKeycloakSecurityContext().getToken().getLocale() +
+                            Log.warning(Geonet.SECURITY, "Unable to parse keycloak locale " + LocaleUtils.toLocale(keycloakPrincipal.getKeycloakSecurityContext().getToken().getLocale() +
                                     " for use " + username + ": " + e.getMessage()));
                         }
                     }
@@ -179,7 +180,7 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                 // No further action required as we are redirecting to new page or handling auth token
                 return;
             } catch (Exception ex) {
-                Log.warning(Log.JEEVES, "Error during Keycloak login for user "
+                Log.warning(Geonet.SECURITY, "Error during Keycloak login for user "
                         + username + ": " + ex.getMessage(), ex);
             }
         }
