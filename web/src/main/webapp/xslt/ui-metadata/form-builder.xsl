@@ -1549,7 +1549,27 @@
   -->
   <xsl:template mode="render-for-field-for-attribute"
                 match="gn:attribute[not(@name = ('ref', 'parent', 'id', 'uuid', 'type', 'uuidref',
-    'xlink:show', 'xlink:actuate', 'xlink:arcrole', 'xlink:role', 'xlink:title', 'xlink:href'))]"
+    'xlink:show', 'xlink:actuate', 'xlink:arcrole', 'xlink:role', 'xlink:title', 'xlink:href', 'xlink:type'))]"
+                priority="4">
+    <xsl:param name="ref"/>
+    <xsl:param name="insertRef" select="''"/>
+
+    <xsl:variable name="attributeLabel" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
+    <xsl:variable name="fieldName"
+                  select="concat(replace(@name, ':', 'COLON'), '_', $insertRef)"/>
+    <button type="button" class="btn btn-default btn-xs btn-attr btn-nil btn-xs gn-attr-{replace(@name, ':', '_')} {if ($isDisplayingAttributes = true()) then '' else 'hidden'}"
+            id="gn-attr-add-button-{$fieldName}"
+            data-gn-click-and-spin="add('{$ref}', '{@name}', '{$insertRef}', null, true)"
+            title="{$attributeLabel/description}">
+      <i class="fa fa-plus fa-fw"/>
+      <xsl:value-of select="$attributeLabel/label"/>
+    </button>
+  </xsl:template>
+
+  <!-- add attribute for link type -->
+  <xsl:template mode="render-for-field-for-attribute"
+                match="gn:attribute[not(@name = ('ref', 'parent', 'id', 'uuid', 'type', 'uuidref',
+    'xlink:show', 'xlink:actuate', 'xlink:arcrole', 'xlink:role', 'xlink:title', 'xlink:href', 'gco:nilReason'))]"
                 priority="4">
     <xsl:param name="ref"/>
     <xsl:param name="insertRef" select="''"/>

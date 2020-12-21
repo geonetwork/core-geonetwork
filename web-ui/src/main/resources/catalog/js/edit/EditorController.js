@@ -430,8 +430,10 @@
         // Toggle class on all gn-attr widgets
         if (gnCurrentEdit.displayAttributes) {
           $('.gn-attr').removeClass('hidden');
+          $('.btn-nil').removeClass('hidden');
         } else {
           $('.gn-attr').addClass('hidden');
+          $('.btn-nil').addClass('hidden');
         }
       };
 
