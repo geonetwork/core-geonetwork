@@ -38,7 +38,39 @@ UPDATE metadata
     SET data = REGEXP_REPLACE(data, '[a-z]{3}\/thesaurus\.download\?ref=', 'api/registries/vocabularies/', 'g')
     WHERE data LIKE '%thesaurus.download?ref=%';
 
-UPDATE Settings SET value='4.0.0' WHERE name='system/platform/version';
+
+
+
+UPDATE Settings SET value = 'Europe/Paris' WHERE name = 'system/server/timeZone';
+
+
+-- User feedback
+UPDATE Settings SET value = 'advanced', internal = 'n', datatype = 0  WHERE name = 'system/localrating/enable';
+
+INSERT INTO GUF_RatingCriteria (id, name, isinternal) VALUES (-1, 'Average', 'y');
+INSERT INTO GUF_RatingCriteria (id, name, isinternal) VALUES (0, 'Completeness', 'n');
+INSERT INTO GUF_RatingCriteria (id, name, isinternal) VALUES (1, 'Discoverability', 'n');
+INSERT INTO GUF_RatingCriteria (id, name, isinternal) VALUES (2, 'Readability', 'n');
+INSERT INTO GUF_RatingCriteria (id, name, isinternal) VALUES (3, 'DataQuality', 'n');
+INSERT INTO GUF_RatingCriteria (id, name, isinternal) VALUES (4, 'ServiceQuality', 'n');
+
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (-1,'eng', 'Average');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (0,'eng', 'Completeness#Is the information on this page complete enough to know what you can expect from this dataset?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (1,'eng', 'Discoverability#Was it easy to find this information page?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (2,'eng', 'Readability#Was it easy to read and understand the contents of this page?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (3,'eng', 'Data quality#Does the dataset contain the information you expected, the dataset has enough accuracy, the data is valid/up-to-date?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (4,'eng', 'Service quality#The dataset is provided as a service or mediatype that is easy to work with?');
+
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (-1,'fre', 'Moyenne');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (0,'fre', 'Complétude#Est-ce que les informations sur cette page sont suffisamment précises pour savoir ce que vous pouvez attendre de cette ressource ?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (1,'fre', 'Découvrabilité#Était-il facile de trouver cette page ?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (2,'fre', 'Lisibilité#Était-il facile de comprendre le contenu de cette page ?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (3,'fre', 'Qualité des données#Est-ce que cette ressource contient les informations attendues ? Les données sont-elles assez précises ? assez récentes ?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (4,'fre', 'Cette données est elle accessible dans un format ou via un service simple à utiliser ?');
+
+
+
+UPDATE Settings SET value='4.0.2' WHERE name='system/platform/version';
 UPDATE Settings SET value='0' WHERE name='system/platform/subVersion';
 
 DELETE FROM settings_ui;

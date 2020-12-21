@@ -39,3 +39,9 @@ Sélectionner tout.
 Dans http://localhost:8080/geonetwork/doc/api/index.html#/processes/processRecords avec process `iso19115-3.2018-schemaupgrade` pour le bucket `e101`.
 
 
+### Timezone
+
+La timezone pour sextant est fixée à Europe/Paris (cf. admin > settings).
+
+La migration consiste en la migration des dates en bases de données sur UTC. Cf. https://github.com/geonetwork/core-geonetwork/pull/5061
+
