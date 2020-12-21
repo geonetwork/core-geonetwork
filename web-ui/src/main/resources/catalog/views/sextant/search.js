@@ -9,6 +9,7 @@
   goog.require('gn_search_default_directive');
   goog.require('gn_legendpanel_directive');
   goog.require('gn_wps');
+  goog.require('gn_userfeedback');
   goog.require('sxt_directives');
   goog.require('sxt_services');
   goog.require('sxt_panier');
@@ -26,6 +27,7 @@
     'gn_legendpanel_directive',
     'gn_thesaurus',
     'gn_wps',
+    'gn_userfeedback',
     'sxt_directives',
     'sxt_services',
     'sxt_panier',
@@ -140,12 +142,13 @@
     'gnOwsContextService',
     'gnConfig',
     'sxtEmodnetDownload',
+    'gnConfigService',
     function($rootScope, $scope, $location, $window, suggestService,
              $http, gnSearchSettings, sxtService,
              gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
              $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
              $translate, $q, gnUrlUtils, gnGlobalSettings, sxtPanierService,
-             gnOwsContextService, gnConfig, sxtEmodnetDownload) {
+             gnOwsContextService, gnConfig, sxtEmodnetDownload, gnConfigService) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -154,6 +157,20 @@
       $scope.gnMetadataActions = gnMetadataActions;
 
       gnViewerSettings.storage = 'sessionStorage';
+
+      gnConfigService.load().then(function(c) {
+        $scope.isRecordHistoryEnabled = gnConfig['system.metadata.history.enabled'];
+
+        var statusSystemRating =
+          gnConfig['system.localrating.enable'];
+
+        if (statusSystemRating == 'advanced') {
+          $scope.isUserFeedbackEnabled = true;
+        }
+        if (statusSystemRating == 'basic') {
+          $scope.isRatingEnabled = true;
+        }
+      });
 
       if(angular.isDefined(gnSearchSettings.tabOverflow.search)) {
         var updateTabVisibility = function() {

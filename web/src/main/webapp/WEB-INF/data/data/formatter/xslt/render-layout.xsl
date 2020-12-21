@@ -233,6 +233,24 @@
                 <xsl:apply-templates mode="getMetadataCitation" select="$metadata"/>
               </xsl:if>
             </div>
+
+            <br/>
+            <div>
+              <div data-gn-userfeedback='md'
+                   data-gn-user="{{{{user.username}}}}"
+                   data-ng-if="isUserFeedbackEnabled &amp;&amp; md.draft != 'y'"/>
+              <div class="gn-md-feedback-buttons clearfix">
+                <div class="pull-left"
+                     data-gn-userfeedbackfull='md'
+                     data-gn-user="{{{{user.username}}}}"
+                     data-ng-if="isUserFeedbackEnabled &amp;&amp; md.draft != 'y'"/>
+              </div>
+              <div class="pull-left"
+                   data-gn-userfeedbacknew='md'
+                   data-gn-user="{{{{user.username}}}}"
+                   data-ng-if="isUserFeedbackEnabled &amp;&amp; md.draft != 'y'"/>
+            </div>
+            <div data-gn-md-feedback="md"></div>
           </div>
           <div class="gn-md-side gn-md-side-advanced col-md-3">
             <xsl:call-template name="render-language-switcher"/>
@@ -432,6 +450,7 @@
                 data-user="user"
                 data-types="onlines">&#160;</div>
           </xsl:if>
+
         </footer>
       </article>
 
