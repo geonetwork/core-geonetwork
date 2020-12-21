@@ -141,7 +141,7 @@
 
     <form class="navbar-form navbar-right language-switcher">
       <span class="gn-menuheader-xs visible-xs"
-            data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && (!shibbolethEnabled || (shibbolethEnabled && !shibbolethHideLogin))"
+            data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !isShowLoginAsLink && !isDisableLoginForm"
             data-translate="">language</span>
       <div class="form-group"
            data-gn-language-switcher="lang"
@@ -197,8 +197,19 @@
           </li>
         </ul>
       </li>
+      <li class="open signin-dropdown"
+          data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && isShowLoginAsLink">
+        <a href="{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}"
+           title="{{'signIn'|translate}}"
+           class="gn-menuheader-xs"
+           data-ng-keypress="$event"
+           id="signinLink">
+          <i class="fa fa-fw fa-sign-in hidden-sm"></i>
+          {{'signIn' | translate}}
+        </a>
+      </li>
       <li class="dropdown dropdown-hover open signin-dropdown"
-        data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && (!shibbolethEnabled || (shibbolethEnabled && !shibbolethHideLogin))">
+        data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !isShowLoginAsLink && !isDisableLoginForm">
         <a href="{{gnCfg.mods.signin.appUrl | signInLink}}"
            title="{{'signIn'|translate}}"
            class="dropdown-toggle gn-menuheader-xs"

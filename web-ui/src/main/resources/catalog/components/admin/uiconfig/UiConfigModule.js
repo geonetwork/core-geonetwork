@@ -25,8 +25,10 @@
   goog.provide('gn_ui_config');
 
   goog.require('gn_ui_config_directive');
+  goog.require('gn_projection_service')
 
   angular.module('gn_ui_config', [
-    'gn_ui_config_directive'
+    'gn_ui_config_directive',
+    'gn_projection_service'
   ]);
 })();

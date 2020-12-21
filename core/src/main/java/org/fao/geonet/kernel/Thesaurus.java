@@ -32,6 +32,7 @@ import org.fao.geonet.kernel.rdf.Wheres;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.util.LangUtils;
+import org.fao.geonet.utils.DateUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -850,8 +851,8 @@ public class Thesaurus {
             FileTime lastModifiedTime = null;
             if (this.date != null) {
                 try {
-                    lastModifiedTime = FileTime.fromMillis(ISODate.parseBasicOrFullDateTime(this.date).toDate().getTime());
-                } catch (IOException e) {
+                    lastModifiedTime = FileTime.fromMillis(DateUtil.parseBasicOrFullDateTime(this.date).toInstant().toEpochMilli());
+                } catch (Exception e) {
                     Log.warning(Geonet.THESAURUS, "Unable to parse " + this.date + " into an actual java.util.Date object", e);
                 }
             }

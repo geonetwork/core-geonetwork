@@ -403,6 +403,7 @@
                   resource.url['eng'];
 
                 if (resourceUrl.indexOf(baseUrl) == 0) {
+                  //return 'catalog.search#/metadata/' + resource.id;
                   return '../api/records/' + resource.id;
                 } else {
                   return resource.url[scope.lang];
@@ -488,6 +489,7 @@
               pre: function preLink(scope) {
                 scope.searchObj = {
                   internal: true,
+                  state: {filters: ''},
                   params: {}
                 };
                 scope.modelOptions =
@@ -509,6 +511,7 @@
 
                 scope.searchObj = {
                   internal: true,
+                  state: {filters: ''},
                   params: {
                     sortBy: 'resourceTitleObject.default.keyword'
                   }

@@ -58,17 +58,6 @@
   </bean>
   <!-- End overrides -->
 
-  <bean id="casServerPropertyUpdater" class="jeeves.config.springutil.ServerBeanPropertyUpdater">
-    <constructor-arg value="${geonetwork.https.url}"/>
-    <constructor-arg>
-      <map>
-        <entry key-ref="serviceProperties" value="service"/>
-        <entry key-ref="casTicketValidator" value="proxyCallbackUrl"/>
-        <entry key-ref="casFilter" value="proxyReceptorUrl"/>
-        <entry key-ref="logoutSuccessHandler" value="defaultTargetUrl"/>
-      </map>
-    </constructor-arg>
-  </bean>
   <bean id="serviceProperties" class="org.springframework.security.cas.ServiceProperties">
     <property name="service" value="${geonetwork.https.url}/login/cas"/>
     <property name="sendRenew" value="false"/>
@@ -80,8 +69,6 @@
         class="org.springframework.security.cas.web.CasAuthenticationFilter">
     <property name="authenticationManager" ref="authenticationManager"/>
     <property name="proxyGrantingTicketStorage" ref="pgtStorage"/>
-    <property name="proxyReceptorUrl"
-              value="${geonetwork.https.url}/cas-security-proxyreceptor"/>
     <property name="serviceProperties" ref="serviceProperties"/>
     <property name="authenticationDetailsSource">
       <bean
@@ -140,24 +127,13 @@
         class="org.fao.geonet.web.RedirectLogoutSuccessHandler">
     <property name="defaultTargetUrl" value="${cas.logout.url}"></property>
   </bean>
-  <bean id="casTicketCache"
-        class="net.sf.ehcache.Cache"
-        init-method="initialise"
-        destroy-method="dispose">
-    <constructor-arg value="casTickets"/>
-    <constructor-arg value="50"/>
-    <constructor-arg><null/></constructor-arg>
-    <constructor-arg value="true"/>
-    <constructor-arg value="${java.io.tmpdir}"/>
-    <constructor-arg value="false"/>
-    <constructor-arg value="3600"/>
-    <constructor-arg value="900"/>
-    <constructor-arg value="false"/>
-    <constructor-arg value="120"/>
-    <constructor-arg><null/></constructor-arg>
-  </bean>
-  <bean id="casStatelessTicketCache"
-        class="org.springframework.security.cas.authentication.EhCacheBasedTicketCache">
-    <property name="cache" ref="casTicketCache"/>
+
+   <bean id="casStatelessTicketCache"
+         class="org.springframework.security.cas.authentication.SpringCacheBasedTicketCache">
+    <constructor-arg ref="springCasTicketCache" />
+   </bean>
+
+  <bean id="springCasTicketCache" class="org.springframework.cache.concurrent.ConcurrentMapCache">
+    <constructor-arg value="springCasTicketCache" />
   </bean>
 </beans>

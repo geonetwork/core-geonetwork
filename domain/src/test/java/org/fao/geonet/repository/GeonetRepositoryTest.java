@@ -23,17 +23,6 @@
 
 package org.fao.geonet.repository;
 
-import static junit.framework.Assert.assertNull;
-import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataId;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.data.jpa.domain.Specification.where;
-
-import javax.annotation.Nullable;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
-
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo_;
 import org.fao.geonet.domain.Metadata_;
@@ -44,8 +33,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
+
+import javax.annotation.Nullable;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
+
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataId;
+import static org.junit.Assert.*;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 /**
  * Test class for GeonetRepository.
@@ -115,8 +111,9 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
         updateQuery.setSpecification(spec);
 
         int updated = updateQuery.execute();
-
         assertEquals(2, updated);
+
+
         Metadata reloadedMd1 = _repo.findById(md.getId()).get();
         assertEquals(md.getData(), reloadedMd1.getData());
         assertFalse(newGroupId == reloadedMd1.getSourceInfo().getGroupOwner());

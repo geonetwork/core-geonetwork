@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -53,12 +53,15 @@ import javax.persistence.Table;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "LinkStatus",
+@Table(name = LinkStatus.TABLE_NAME,
     indexes = {@Index(name = "idx_linkstatus_isFailing", columnList = "failing")})
 @EntityListeners(LinkStatusEntityListenerManager.class)
 @SequenceGenerator(name = LinkStatus.ID_SEQ_NAME, initialValue = 1, allocationSize = 1)
 public class LinkStatus extends GeonetEntity implements Comparable<LinkStatus> {
     static final String ID_SEQ_NAME = "linkstatus_id_seq";
+    public static final String TABLE_NAME = "LinkStatus";
+    public static final String ID_COLUMN_NAME = "id";
+    public static final String CHECK_DATE_COLUMN_NAME = "checkDate";
     private int id;
     private Link link;
     private ISODate checkDate = new ISODate();
@@ -75,7 +78,7 @@ public class LinkStatus extends GeonetEntity implements Comparable<LinkStatus> {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
-    @Column(nullable = false)
+    @Column(name = ID_COLUMN_NAME, nullable = false)
     public int getId() {
         return id;
     }
@@ -152,8 +155,8 @@ public class LinkStatus extends GeonetEntity implements Comparable<LinkStatus> {
      * @return The moment that the check completed.
      */
 
-    @AttributeOverride(name = "dateAndTime",
-        column = @Column(name = "checkDate", length = 30))
+    @AttributeOverride(name = "dateAndTimeUtc",
+        column = @Column(name = CHECK_DATE_COLUMN_NAME, length = 30))
     public ISODate getCheckDate() {
         return checkDate;
     }

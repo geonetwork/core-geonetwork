@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2020 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -33,8 +33,8 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
-                xmlns:related="java:org.fao.geonet.api.records.MetadataUtils"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
                 xmlns:daobs="http://daobs.org"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
@@ -157,6 +157,8 @@
       </xsl:for-each>
 
 
+      <!-- Since GN sets the timezone in system/server/timeZone setting as Java system default
+        timezone we can rely on XSLT functions to get current date in the right timezone -->
       <indexingDate>
         <xsl:value-of select="format-dateTime(current-dateTime(), $dateFormat)"/>
       </indexingDate>
@@ -171,7 +173,7 @@
       eg. 2017-02-08T13:18:03.138+00:02
       -->
       <xsl:for-each select="(gmd:dateStamp/*[gn-fn-index:is-isoDate(.)])[1]">
-        <dateStamp><xsl:value-of select="."/></dateStamp>
+        <dateStamp><xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space(.))"/></dateStamp>
       </xsl:for-each>
 
 
@@ -274,7 +276,7 @@
             <xsl:choose>
               <xsl:when test="gn-fn-index:is-isoDate(.)">
                 <xsl:element name="{$dateType}DateForResource">
-                  <xsl:value-of select="$date"/>
+                  <xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($date))"/>
                 </xsl:element>
               </xsl:when>
               <xsl:otherwise>
@@ -299,17 +301,16 @@
                           select="string(gmd:date[1]/gco:Date|gmd:date[1]/gco:DateTime)"/>
 
             <resourceDate type="object">
-              {"type": "<xsl:value-of select="$dateType"/>", "date": "<xsl:value-of select="$date"/>"}
+              {"type": "<xsl:value-of select="$dateType"/>", "date": "<xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($date))"/>"}
             </resourceDate>
           </xsl:for-each>
 
           <xsl:if test="$useDateAsTemporalExtent">
             <xsl:for-each-group select="gmd:date/gmd:CI_Date[gn-fn-index:is-isoDate(gmd:date/*/text())]/gmd:date/*/text()"
                                 group-by=".">
-
                 <resourceTemporalDateRange type="object">{
-                  "gte": "<xsl:value-of select="."/>",
-                  "lte": "<xsl:value-of select="."/>"
+                  "gte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(.)"/>",
+                  "lte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(.)"/>"
                   }</resourceTemporalDateRange>
             </xsl:for-each-group>
           </xsl:if>
@@ -343,7 +344,7 @@
         <xsl:for-each select="$overviews">
           <!-- TODO can be multilingual desc and name -->
           <overview type="object">{
-            "url": "<xsl:value-of select="."/>"
+            "url": "<xsl:value-of select="normalize-space(.)"/>"
             <xsl:if test="normalize-space(../../gmd:fileDescription) != ''">,
               "text": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
             </xsl:if>
@@ -482,35 +483,30 @@
           </xsl:otherwise>
         </xsl:choose>
 
-        <!-- Index keywords which are of type place -->
-        <xsl:for-each
-          select="*/gmd:MD_Keywords/
-                          gmd:keyword[gmd:type/gmd:MD_KeywordTypeCode/@codeListValue = 'place']/
-                            gco:CharacterString|
-                        */gmd:MD_Keywords/
-                          gmd:keyword[gmd:type/gmd:MD_KeywordTypeCode/@codeListValue = 'place']/
-                            gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
-          <geotag>
-            <xsl:value-of select="text()"/>
-          </geotag>
-        </xsl:for-each>
-
-        <xsl:variable name="geokeywords"
-                      select=".//gmd:keyword[
-                      ../gmd:type/gmd:MD_KeywordTypeCode/@codeListValue = 'place'
-                      and */normalize-space() != '']
-                          |//gmd:geographicElement/gmd:EX_GeographicDescription/
+        <!-- Index keywords by types -->
+        <xsl:variable name="keywordTypes"
+                      select="distinct-values(.//gmd:descriptiveKeywords/*/
+                                gmd:type/*/@codeListValue[. != ''])"/>
+        <xsl:variable name="geoDesciption"
+                      select="//gmd:geographicElement/gmd:EX_GeographicDescription/
                                 gmd:geographicIdentifier/gmd:MD_Identifier/
-                                  gmd:code[*/normalize-space(.) != '']"/>
+                                  gmd:code[*/normalize-space(.) != '']
+                              |//gmd:EX_Extent/gmd:description[*/normalize-space(.) != '']"/>
 
-        <xsl:if test="count($geokeywords) > 0">
-          <geotag type="object">
-            [<xsl:for-each select="$geokeywords">
+        <xsl:for-each select="$keywordTypes">
+          <xsl:variable name="type"
+                        select="."/>
+          <xsl:variable name="keywordsForType"
+                        select="$keywords[../gmd:type/*/@codeListValue = $type]
+                        |$geoDesciption[$type = 'place']"/>
+          <xsl:element name="keywordType-{$type}">
+            <xsl:attribute name="type" select="'object'"/>
+            [<xsl:for-each select="$keywordsForType">
             <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', ., $allLanguages)/text()"/>
             <xsl:if test="position() != last()">,</xsl:if>
           </xsl:for-each>]
-          </geotag>
-        </xsl:if>
+          </xsl:element>
+        </xsl:for-each>
 
 
         <!-- Index all keywords having a specific thesaurus -->
@@ -789,15 +785,15 @@
                           select="gml:endPosition|gml:end/gml:TimeInstant/gml:timePosition"/>
             <xsl:if test="gn-fn-index:is-isoDate($start)">
               <resourceTemporalDateRange type="object">{
-                "gte": "<xsl:value-of select="normalize-space($start)"/>"
+                "gte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($start))"/>"
                 <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
-                  ,"lte": "<xsl:value-of select="normalize-space($end)"/>"
+                  ,"lte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($end))"/>"
                 </xsl:if>
                 }</resourceTemporalDateRange>
               <resourceTemporalExtentDateRange type="object">{
-                "gte": "<xsl:value-of select="normalize-space($start)"/>"
+                "gte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($start))"/>"
                 <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
-                  ,"lte": "<xsl:value-of select="normalize-space($end)"/>"
+                  ,"lte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($end))"/>"
                 </xsl:if>
                 }</resourceTemporalExtentDateRange>
               <xsl:if test="$start &gt; $end">
@@ -1108,7 +1104,7 @@
                     select="util:getSettingValue('system/index/indexingTimeRecordLink')" />
       <xsl:if test="$indexingTimeRecordLink = 'true'">
         <xsl:variable name="recordsLinks"
-                      select="related:getTargetAssociatedResourcesAsNode(
+                      select="util:getTargetAssociatedResourcesAsNode(
                                         $identifier,
                                         gmd:parentIdentifier/*[text() != '']/text())"/>
         <xsl:copy-of select="$recordsLinks//recordLink"/>

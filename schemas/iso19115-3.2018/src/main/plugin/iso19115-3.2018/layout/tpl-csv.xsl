@@ -78,7 +78,7 @@
       <!-- One column per thesaurus -->
       <xsl:for-each select="mdb:identificationInfo/*/mri:descriptiveKeywords/*[mri:thesaurusName]">
         <xsl:variable name="thesaurusId" select="mri:thesaurusName/*/cit:identifier/*/mcc:code/*/text()"/>
-        <xsl:variable name="thesaurusKey" select="if ($thesaurusId != '') then $thesaurusId else position()"/>
+        <xsl:variable name="thesaurusKey" select="if ($thesaurusId != '') then replace($thesaurusId, '[^a-zA-Z0-9]', '') else position()"/>
 
         <xsl:for-each select="mri:keyword[not(@gco:nilReason)]">
           <xsl:element name="keyword-{$thesaurusKey}">

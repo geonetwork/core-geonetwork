@@ -60,6 +60,7 @@
       'dateStamp',
       'documentStandard',
       'cl_status*',
+      'mdStatus*',
       'recordLink'
     ]};
     this.configs = {
@@ -103,6 +104,7 @@
             'isHarvested',
             'dateStamp',
             'documentStandard',
+            'mdStatus*',
             '*inspire*'
           ]
         },

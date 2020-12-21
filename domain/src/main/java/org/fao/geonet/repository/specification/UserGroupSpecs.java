@@ -37,12 +37,17 @@ public final class UserGroupSpecs {
         // don't permit instantiation
     }
 
-    public static Specification<UserGroup> hasGroupId(final int groupId) {
+    public static Specification<UserGroup> hasGroupId(final Integer groupId) {
         return new Specification<UserGroup>() {
             @Override
             public Predicate toPredicate(Root<UserGroup> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Path<Integer> grpIdAttributePath = root.get(UserGroup_.id).get(UserGroupId_.groupId);
-                Predicate grpIdEqualPredicate = cb.equal(grpIdAttributePath, cb.literal(groupId));
+                Predicate grpIdEqualPredicate;
+                if (groupId == null) {
+                    grpIdEqualPredicate = cb.isNull(grpIdAttributePath);
+                } else {
+                    grpIdEqualPredicate = cb.equal(grpIdAttributePath, cb.literal(groupId));
+                }
                 return grpIdEqualPredicate;
             }
         };

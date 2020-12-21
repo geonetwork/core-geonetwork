@@ -1,0 +1,18 @@
+{
+  "realm": "${env.KEYCLOAK_REALM}",
+  "auth-server-url": "${env.KEYCLOAK_AUTH_SERVER_URL}",
+  "ssl-required": "${env.KEYCLOAK_SSL_REQUIRED:external}",
+  "resource": "${env.KEYCLOAK_RESOURCE}",
+  "credentials": {
+    "secret": "${env.KEYCLOAK_SECRET}"
+  },
+  "confidential-port": "${env.KEYCLOAK_CONFIDENTIAL_PORT:8443}",
+  "disable-trust-manager": "${env.KEYCLOAK_DISABLE_TRUST_MANAGER:false}",
+  "public-client" : "${env.KEYCLOAK_PUBLIC_CLIENT:false}",
+  "enable-cors" : true,
+  "cors-max-age" : 1000,
+  "cors-allowed-methods" : "POST, PUT, DELETE, GET",
+  "cors-exposed-headers" : "WWW-Authenticate",
+  "autodetect-bearer-only" : true
+}
+

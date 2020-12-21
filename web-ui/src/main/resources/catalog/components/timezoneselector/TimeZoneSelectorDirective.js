@@ -42,7 +42,11 @@
         var lastValidValue = scope.elementTimezone;
         $(element).val(lastValidValue);
 
-        var timezoneNames = [];
+        var userTimezone =  moment.tz.guess(),
+          timezoneNames = [{
+            name: userTimezone,
+            offset: moment.tz(userTimezone).format('Z / z')
+          }];
         _.each(moment.tz.names(), function(tz, index, list) {
           timezoneNames.push({
             name: tz,
@@ -51,7 +55,7 @@
         });
         var source = new Bloodhound({
           datumTokenizer: function(datum) {
-            var name = datum.name;
+            var name = datum.name + ' ' + datum.offset;
             var tokens = [name].concat(Bloodhound.tokenizers.nonword(name));
             if (name.indexOf('_') >= 0) {
               tokens.push(name.replace('_', ''));
@@ -73,17 +77,17 @@
             return tokens;
           },
           queryTokenizer: Bloodhound.tokenizers.whitespace,
-          local: timezoneNames,
-          limit: 30
+          limit: 100,
+          local: timezoneNames
         });
 
         element.typeahead({
           hint: true,
           highlight: true,
-          minLen: 2
-          },
-          {
+          minLength: 0
+        }, {
             name: 'timezones',
+            limit: 1000,
             source: source.ttAdapter(),
             display: function (suggestedTz) {
               return  suggestedTz.name;
@@ -94,24 +98,20 @@
           });
 
         $(element).bind('typeahead:change', function(ev, suggestion) {
-
           var normalizedTz = _.find(moment.tz.names(), function (tz) {
             return suggestion.toLowerCase() === tz.toLowerCase();
           });
+
           if (angular.isUndefined(normalizedTz) && suggestion.trim() !== '') {
             normalizedTz = lastValidValue;
           } else if (suggestion.trim() === '') {
             normalizedTz = '';
           }
+
           $(element).val(normalizedTz.trim());
-          lastValidValue= normalizedTz;
+          lastValidValue = normalizedTz;
         });
-
       }
-
-
     };
   }])
-
-
 })();

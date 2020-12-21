@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -52,6 +52,7 @@ import java.util.*;
 public abstract class AbstractMetadata extends GeonetEntity {
     public static final String ID_SEQ_NAME = "metadata_id_seq";
     public static final String METADATA_CATEG_JOIN_TABLE_CATEGORY_ID = "categoryId";
+    public static final String ID_COLUMN_NAME = "id";
     private int _id;
     private String _uuid;
     private String _data;
@@ -68,7 +69,7 @@ public abstract class AbstractMetadata extends GeonetEntity {
     @Id
     @SequenceGenerator(name=AbstractMetadata.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
-    @Column(nullable = false)
+    @Column(name = ID_COLUMN_NAME, nullable = false)
     public int getId() {
         return _id;
     }

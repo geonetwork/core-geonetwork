@@ -69,7 +69,8 @@ goog.require('gn_alert');
       'mods': {
         'global': {
           'humanizeDates': true,
-          'dateFormat': 'YYYY-MM-DD'
+          'dateFormat': 'DD-MM-YYYY HH:mm',
+          'timezone': 'Browser' // Default to browser timezone
         },
         'footer':{
           'enabled': true,
@@ -728,7 +729,8 @@ goog.require('gn_alert');
         }
       },
       current: null,
-      shibbolethEnabled: false,
+      isDisableLoginForm: false,
+      isShowLoginAsLink: false,
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
         // start from the default config to make sure every field is present
         // and override with config arg if required
@@ -993,8 +995,8 @@ goog.require('gn_alert');
       $scope.logoPath = gnGlobalSettings.gnUrl + '../../images/harvesting/';
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
-      $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
-      $scope.shibbolethHideLogin = gnGlobalSettings.shibbolethHideLogin;
+      $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
+      $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
 

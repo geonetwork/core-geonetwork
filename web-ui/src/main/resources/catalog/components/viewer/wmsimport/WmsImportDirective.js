@@ -86,7 +86,12 @@
             }
             if ($scope.format == 'wms') {
               var layer =
-                  gnMap.createOlWMSFromCap($scope.map, getCapLayer, $scope.url, style);
+                  gnMap.addWmsToMapFromCap($scope.map, getCapLayer, $scope.url, style);
+                  gnAlertService.addAlert({
+                    msg: $translate.instant('layerAdded',
+                        {layer: layer.get('label'), extent: layer.get('cextent').toString()}),
+                    type: 'success'
+                  },4);
               gnMap.feedLayerMd(layer);
               gnViewerSettings.getPreAddLayerPromise(layer).then($scope.map.addLayer(layer));
               return layer;

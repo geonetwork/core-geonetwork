@@ -307,7 +307,7 @@
   <!-- In flat mode do not display geographic identifier and description
   because it is part of the map widget - see previous template. -->
   <xsl:template mode="mode-iso19139"
-                match="gmd:extent/*/gmd:description[$isFlatMode]|
+                match="gmd:extent/*/gmd:description[$isFlatMode and not($metadataIsMultilingual)]|
                        gmd:geographicElement[
                           $isFlatMode and
                           preceding-sibling::gmd:geographicElement/gmd:EX_GeographicBoundingBox

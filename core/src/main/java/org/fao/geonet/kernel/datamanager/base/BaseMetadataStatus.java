@@ -274,11 +274,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
         draftCompatible.add(StatusValue.Status.APPROVED);
         draftCompatible.add(StatusValue.Status.RETIRED);
 
-        if (draftCompatible.contains(currentState)) {
-            return true;
-        }
-
-        return false;
+        return draftCompatible.contains(currentState);
     }
 
 }
