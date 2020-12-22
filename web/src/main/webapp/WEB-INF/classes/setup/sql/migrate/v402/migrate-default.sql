@@ -35,6 +35,8 @@ UPDATE Settings SET value = 'Etc/UTC' WHERE name = 'system/server/timeZone' AND 
 --          AT TIME ZONE (SELECT value FROM Settings WHERE name = 'system/server/timeZone')), 'YYYY-MM-DDThh24:mi:ssZ')
 --        ) WHERE length(createdate) = 19 AND length(changedate) = 19;
 
+ALTER TABLE guf_userfeedbacks_guf_rating DROP COLUMN GUF_UserFeedbacks_uuid;
+
 
 UPDATE Settings SET value='4.0.2' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
