@@ -69,6 +69,8 @@ INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (3,'fre', 'Quali
 INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (4,'fre', 'Cette données est elle accessible dans un format ou via un service simple à utiliser ?');
 
 
+ALTER TABLE guf_userfeedbacks_guf_rating DROP COLUMN GUF_UserFeedbacks_uuid;
+
 
 UPDATE Settings SET value='4.0.2' WHERE name='system/platform/version';
 UPDATE Settings SET value='0' WHERE name='system/platform/subVersion';
