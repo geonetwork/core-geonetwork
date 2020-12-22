@@ -81,7 +81,7 @@ public class SettingManager {
     SourceRepository sourceRepository;
 
     @PostConstruct
-    private void init() {
+    public void init() {
         this.pathFinder = new ServletPathFinder(servletContext);
     }
 
