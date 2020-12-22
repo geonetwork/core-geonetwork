@@ -593,7 +593,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             adjustedUrl = settingManager.getSiteURL(lang) + url;
         } else {
             final URI uri = new URI(url);
-            Set allowedRemoteHosts = context.getBean("formatterRemoteFormatAllowedHosts", Set.class);
+            Set allowedRemoteHosts = ApplicationContextHolder.get().getBean("formatterRemoteFormatAllowedHosts", Set.class);
             Assert.isTrue(allowedRemoteHosts.contains(uri.getHost()), "xml.format is not allowed to make requests to " + uri.getHost());
         }
 
