@@ -47,6 +47,7 @@ import java.util.Map;
 
 import javax.annotation.CheckForNull;
 import javax.persistence.EntityManager;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -320,6 +321,10 @@ public class ServiceContext extends BasicContext {
         this._statusCode = statusCode;
     }
 
+    public static void clear2() {
+        THREAD_LOCAL_INSTANCE.remove();;
+        ApplicationContextHolder.clear();;
+    }
 }
 
 //=============================================================================
