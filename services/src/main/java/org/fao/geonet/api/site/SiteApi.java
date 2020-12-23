@@ -221,6 +221,22 @@ public class SiteApi {
                     new Setting().setName(Settings.NODE_NAME)
                         .setValue(source != null ? source.getLabel(iso3langCode) : source.getName()));
             }
+        } else {
+            String defaultSiteId = settingManager.getSiteId();
+            Source source = sourceRepository.findOne(defaultSiteId);
+            if (source != null) {
+                String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
+                final List<Setting> settings = response.getSettings();
+                settings.add(
+                    new Setting().setName(Settings.NODE_DEFAULT)
+                        .setValue("true"));
+                settings.add(
+                    new Setting().setName(Settings.NODE)
+                        .setValue(NodeInfo.DEFAULT_NODE));
+                settings.add(
+                    new Setting().setName(Settings.NODE_NAME)
+                        .setValue(source != null ? source.getLabel(iso3langCode) : source.getName()));
+            }
         }
         return response;
     }
