@@ -138,17 +138,15 @@
       <li gn-static-pages-list-viewer data-section="top" data-language="{{lang}}" />
     </ul>
 
-
-    <form class="navbar-form navbar-right language-switcher">
+    <div class="navbar-form navbar-right language-switcher">
       <span class="gn-menuheader-xs visible-xs"
             data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !isShowLoginAsLink && !isDisableLoginForm"
             data-translate="">language</span>
-      <div class="form-group"
-           data-gn-language-switcher="lang"
+      <div data-gn-language-switcher="lang"
            data-langs="langs"
            data-lang-labels="langLabels">
       </div>
-    </form>
+    </div>
 
     <ul data-ng-if="gnCfg.mods.signin.enabled"
         class="nav navbar-nav navbar-right username-dropdown">
