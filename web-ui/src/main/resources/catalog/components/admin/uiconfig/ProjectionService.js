@@ -63,6 +63,32 @@
         return _cachedDefs[code];
       }
 
+      var isSimilarProjection = function(base, compare) {
+        // This function can actually be used to compare 
+        // all kinds of objects, but we use it to check if
+        // Projection objects have overlapping equal properties.
+        for (var prop in base) {
+          // Compare own properties that exist on both objects
+          if (base.hasOwnProperty(prop) && compare.hasOwnProperty(prop)) {
+            var obj1 = base[prop];
+            var obj2 = compare[prop];
+            if (angular.isArray(obj1) || angular.isArray(obj2)) {
+              // Ignore arrays for now
+              continue;
+            }
+            if (angular.isObject(obj1) && angular.isObject(obj2)) {
+              // Compare child object properties
+              if (!isSimilarProjection(obj1, obj2)) {
+                return false;
+              }
+            } else if (obj1 !== obj2) {
+              return false;
+            }
+          }
+        }
+        return true;
+      };
+
       var parseProjDef = function(data) {
 
         var code = 'EPSG:';
@@ -159,7 +185,10 @@
 
           isValidEpsgCode: function(code) {
             return code.search(EPSG_REGEX) >= 0;
-          }
+          },
+
+          isSimilarProjection: isSimilarProjection
+
         },
 
         getProjectionSettings: function(searchTerm) {
@@ -194,7 +223,8 @@
           var defer = $q.defer();
 
           getProj4Def(code).then(function (result) {
-            defer.resolve(result !== proj4.defs[code]); 
+            var parsedProj = proj4.Proj(result);
+            defer.resolve(!isSimilarProjection(parsedProj, proj4.defs[code])); 
           });
 
           return defer.promise;
