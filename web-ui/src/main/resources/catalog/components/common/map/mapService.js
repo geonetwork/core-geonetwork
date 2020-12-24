@@ -1792,13 +1792,17 @@
               });
 
               var options;
+              var mapProj = map.getView().getProjection();
 
               try {
                 options = ol.source.WMTS.optionsFromCapabilities(cap, {
                   layer: getCapLayer.Identifier,
-                  matrixSet: map.getView().getProjection().getCode(),
-                  projection: map.getView().getProjection().getCode()
+                  projection: mapProj.getCode()
                 });
+                if (!options || !options.matrixSet ||
+                  !proj4.defs.hasOwnProperty(options.projection.getCode())) {
+                  throw Error('No suitable matrixset found in GetCapabilities');
+                }
               } catch (e) {
                 gnAlertService.addAlert({
                   msg: $translate.instant('wmtsLayerNoUsableMatrixSet'),
