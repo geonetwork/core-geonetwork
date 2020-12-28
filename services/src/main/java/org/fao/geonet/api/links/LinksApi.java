@@ -42,7 +42,6 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.url.UrlAnalyzer;
 import org.fao.geonet.repository.LinkRepository;
@@ -54,7 +53,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -79,7 +77,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.List;
@@ -108,8 +105,6 @@ public class LinksApi {
     IMetadataUtils metadataUtils;
     @Autowired
     MetadataRepository metadataRepository;
-    @Autowired
-    DataManager dataManager;
     @Autowired
     UrlAnalyzer urlAnalyser;
     @Autowired
@@ -155,10 +150,7 @@ public class LinksApi {
         @ApiIgnore Pageable pageRequest,
         @ApiParam(hidden = true)
         @ApiIgnore
-            HttpSession session,
-        @ApiParam(hidden = true)
-        @ApiIgnore
-            HttpServletRequest request) throws Exception {
+            HttpSession session) throws Exception {
 
         final UserSession userSession = ApiUtils.getUserSession(session);
         return getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession);
@@ -313,7 +305,7 @@ public class LinksApi {
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('Administrator')")
     @ResponseBody
-    public ResponseEntity purgeAll() throws IOException, JDOMException {
+    public ResponseEntity purgeAll() {
         urlAnalyser.deleteAll();
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -335,19 +327,14 @@ public class LinksApi {
             Integer[] groupIdFilter,
             Integer[] groupOwnerIdFilter,
             Pageable pageRequest,
-            UserSession userSession) throws SQLException, JSONException {
+            UserSession userSession) throws JSONException {
 
-        Integer[] editingGroups = null;
         Integer stateToMatch = null;
         String url = null;
         String associatedRecord = null;
 
-        if (userSession.getProfile() != Profile.Administrator) {
-            final List<Integer> editingGroupList = AccessManager.getGroups(userSession, Profile.Editor);
-            if (editingGroupList.size() == 0) {
-                return new PageImpl<Link>(Collections.emptyList());
-            }
-            editingGroups = editingGroupList.toArray(new Integer[editingGroupList.size()]);
+        if ((groupIdFilter == null || groupIdFilter.length == 0) && userSession.getProfile() != Profile.Administrator) {
+            groupIdFilter = getUserGroup(userSession).stream().toArray(Integer[]::new);
         }
 
         if (filter != null) {
@@ -369,10 +356,18 @@ public class LinksApi {
             }
         }
 
-        if (groupIdFilter != null || groupOwnerIdFilter != null || editingGroups != null || url != null || associatedRecord != null || stateToMatch != null) {
-            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecord, groupIdFilter, groupOwnerIdFilter, editingGroups), pageRequest);
+        if (groupIdFilter != null || groupOwnerIdFilter != null || url != null || associatedRecord != null || stateToMatch != null) {
+            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecord, groupIdFilter, groupOwnerIdFilter), pageRequest);
         } else {
             return linkRepository.findAll(pageRequest);
+        }
+   }
+
+    private Set<Integer> getUserGroup(UserSession userSession) {
+        try {
+            return accessManager.getUserGroups(userSession, null, false);
+        } catch (Exception e) {
+            return Collections.emptySet();
         }
     }
 }

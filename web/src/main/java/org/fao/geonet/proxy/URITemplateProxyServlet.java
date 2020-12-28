@@ -122,7 +122,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
                             ApplicationContextHolder.get().getBean(LinkRepository.class);
                         long linksFound = linkRepository.count(
                             LinkSpecs.filter(host, null, null,
-                                null, null, null));
+                                null, null));
                         if (linksFound == 0) {
                             String message = String.format(
                                 "The proxy does not allow to access '%s' " +
