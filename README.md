@@ -1,4 +1,4 @@
-# GeoNetwork Open-soucce
+# GeoNetwork Open-source
 
 # Build Health
 
