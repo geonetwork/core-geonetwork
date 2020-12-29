@@ -55,13 +55,17 @@ public class LinkSpecs {
                                              Integer state,
                                              String associatedRecord,
                                              Integer[] groupPublishedIds,
-                                             Integer[] groupOwnerIds) {
+                                             Integer[] groupOwnerIds,
+                                             boolean publishedOrOwnerFilter) {
 
         return new Specification<Link>() {
             @Override
             public Predicate toPredicate(Root<Link> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 query.distinct(true);
                 List<Predicate> predicates = new ArrayList<>();
+                Predicate groupOwnerPredicate = null;
+                Predicate groupPublishedPredicate = null;
+
                 Join<Link, MetadataLink> metadataJoin;
                 if (query.getResultType() != Long.class && query.getResultType() != long.class) {
                     metadataJoin = (Join<Link, MetadataLink>) root.fetch(Link_.records, JoinType.LEFT);
@@ -90,7 +94,7 @@ public class LinkSpecs {
                             cb.literal(String.format("%%%s%%", associatedRecord))));
                 }
 
-                if (groupPublishedIds != null && groupPublishedIds.length > 0) {
+                if (groupPublishedIds != null) {
                     Subquery<Integer> subquery = query.subquery(Integer.class);
                     Root<OperationAllowed> fromOperationAllowed = subquery.from(OperationAllowed.class);
                     Predicate publishedToIndicatedGroup =
@@ -103,19 +107,31 @@ public class LinkSpecs {
                     Path<Integer> opAllowedMetadataId = fromOperationAllowed.get(OperationAllowed_.id).get(OperationAllowedId_.metadataId);
                     subquery.select(opAllowedMetadataId);
 
-                    predicates.add(metadataJoin.get(MetadataLink_.metadataId).in(subquery));
+                    groupPublishedPredicate = metadataJoin.get(MetadataLink_.metadataId).in(subquery);
                 }
 
-                 if (groupOwnerIds != null && groupOwnerIds.length > 0) {
+                 if (groupOwnerIds != null) {
                     Subquery<Integer> subquery = query.subquery(Integer.class);
                     Root<Metadata> fromMetadata = subquery.from(Metadata.class);
                     subquery.select(fromMetadata.get(Metadata_.id));
                     Path<Integer> metadataOwner = fromMetadata.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner);
                     subquery.where(metadataOwner.in(groupOwnerIds));
 
-
-                    predicates.add(metadataJoin.get(MetadataLink_.metadataId).in(subquery));
+                    groupOwnerPredicate = metadataJoin.get(MetadataLink_.metadataId).in(subquery);
                 }
+
+                 if (publishedOrOwnerFilter && groupOwnerPredicate != null && groupPublishedPredicate != null) {
+                     Predicate ownerOrPublished = cb.or(groupPublishedPredicate, groupOwnerPredicate);
+                     predicates.add(ownerOrPublished);
+                 } else {
+                     if (groupOwnerPredicate != null) {
+                         predicates.add(groupOwnerPredicate);
+                     }
+                     if (groupPublishedPredicate != null) {
+                         predicates.add(groupPublishedPredicate);
+                     }
+                 }
+
                 return cb.and(predicates.toArray(new Predicate[]{}));
             }
         };

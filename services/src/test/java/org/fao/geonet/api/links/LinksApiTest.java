@@ -133,10 +133,13 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
     public void getLinksAsEditorFromAnotherGroup() throws Exception {
         User editor = createEditor();
         createGroupWithOneEditor(editor);
-        AbstractMetadata md = createMd(createGroupWithOneEditor(createEditor()).getId());
+        int groupId = createGroupWithOneEditor(createEditor()).getId();
+        AbstractMetadata md = createMd(groupId);
         analyzeMdAsAdmin(md);
 
         assertNoLinksReturned(this.loginAs(editor), "", "");
+        assertNoLinksReturned(this.loginAs(editor), String.format("%d,666", groupId), "");
+        assertNoLinksReturned(this.loginAs(editor), "", String.format("%d,666", groupId));
 
         purgeLinkAsAdmin();
     }
@@ -144,10 +147,13 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void getLinksAsEditorFromNoGroup() throws Exception {
         User editor = createEditor();
-        AbstractMetadata md = createMd(createGroupWithOneEditor(createEditor()).getId());
+        int groupId = createGroupWithOneEditor(createEditor()).getId();
+        AbstractMetadata md = createMd(groupId);
         analyzeMdAsAdmin(md);
 
         assertNoLinksReturned(this.loginAs(editor), "", "");
+        assertNoLinksReturned(this.loginAs(editor), String.format("%d,666", groupId), "");
+        assertNoLinksReturned(this.loginAs(editor), "", String.format("%d,666", groupId));
 
         purgeLinkAsAdmin();
     }
@@ -179,7 +185,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    public void getLinksFilteringOnGroupOwner() throws Exception {
+    public void filteringOnGroupOwner() throws Exception {
         User editor = createEditor();
         int groupId = createGroupWithOneEditor(editor).getId();
         AbstractMetadata md = createMd(groupId);
@@ -190,13 +196,13 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         assertNoLinksReturned(this.loginAsAdmin(), "666", "");
         assertLinkForOneMdFound(md, this.loginAs(editor), null, "");
         assertLinkForOneMdFound(md, this.loginAs(editor), String.format("%d,666", groupId), "");
-        assertNoLinksReturned(this.loginAs(editor), "666", "");
+                assertNoLinksReturned(this.loginAs(editor), "666", "");
 
         purgeLinkAsAdmin();
     }
 
     @Test
-    public void getLinksFilteringOnPublishedInGroup() throws Exception {
+    public void filteringOnPublishedInGroup() throws Exception {
         User editor = createEditor();
         int groupId = createGroupWithOneEditor(editor).getId();
         AbstractMetadata md = createMd(createGroupWithOneEditor(createEditor()).getId());
@@ -209,6 +215,25 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         assertLinkForOneMdFound(md, this.loginAs(editor), "", null);
         assertLinkForOneMdFound(md, this.loginAs(editor), "", String.format("%d,666", groupId));
         assertNoLinksReturned(this.loginAs(editor), "", "666");
+
+        purgeLinkAsAdmin();
+    }
+
+    @Test
+    public void filteringOnBothOwnerAndPublished() throws Exception {
+        User editor = createEditor();
+        int groupId = createGroupWithOneEditor(editor).getId();
+        int mdGroupOwner = createGroupWithOneEditor(createEditor()).getId();
+        AbstractMetadata md = createMd(mdGroupOwner);
+        metadataOperations.setOperation(context, md.getId(), groupId, ReservedOperation.view.getId());
+        analyzeMdAsAdmin(md);
+
+        assertLinkForOneMdFound(md, this.loginAsAdmin(), String.format("%d,666", mdGroupOwner), String.format("%d,666", groupId));
+        assertNoLinksReturned(this.loginAsAdmin(), "666", String.format("%d,666", groupId));
+        assertNoLinksReturned(this.loginAsAdmin(), String.format("%d,666", mdGroupOwner), "666");
+        assertNoLinksReturned(this.loginAs(editor), String.format("%d,666", mdGroupOwner), String.format("%d,666", groupId));
+        assertNoLinksReturned(this.loginAs(editor), "666", String.format("%d,666", groupId));
+        assertNoLinksReturned(this.loginAs(editor), String.format("%d,666", mdGroupOwner), "666");
 
         purgeLinkAsAdmin();
     }

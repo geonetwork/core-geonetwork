@@ -78,6 +78,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -332,9 +333,37 @@ public class LinksApi {
         Integer stateToMatch = null;
         String url = null;
         String associatedRecord = null;
+        Integer[] linkFromMdWhoseGroupOwnerInFilter;
+        Integer[] linkFromMdPublishedInGroupFilter;
+        boolean groupOwnerIdFilterSet = groupOwnerIdFilter != null && groupOwnerIdFilter.length != 0;
+        boolean groupIdFilterSet = groupIdFilter != null && groupIdFilter.length != 0;
+        boolean publishedOrOwnerFilter = !groupIdFilterSet && !groupOwnerIdFilterSet;
 
-        if ((groupIdFilter == null || groupIdFilter.length == 0) && userSession.getProfile() != Profile.Administrator) {
-            groupIdFilter = getUserGroup(userSession).stream().toArray(Integer[]::new);
+        if (userSession.getProfile() == Profile.Administrator) {
+            linkFromMdWhoseGroupOwnerInFilter = groupOwnerIdFilterSet ? groupOwnerIdFilter : null;
+        } else {
+            Set<Integer> userGroups = getUserGroup(userSession);
+            if (groupOwnerIdFilterSet) {
+                userGroups.retainAll(Arrays.asList(groupOwnerIdFilter));
+            }
+            linkFromMdWhoseGroupOwnerInFilter = userGroups.stream().toArray(Integer[]::new);
+        }
+
+        if (userSession.getProfile() == Profile.Administrator) {
+            linkFromMdPublishedInGroupFilter = groupIdFilterSet ? groupIdFilter : null;
+        } else {
+            Set<Integer> userGroups = getUserGroup(userSession);
+            if (groupIdFilterSet) {
+                userGroups.retainAll(Arrays.asList(groupIdFilter));
+            }
+            linkFromMdPublishedInGroupFilter = userGroups.stream().toArray(Integer[]::new);
+        }
+
+        if (!groupIdFilterSet && groupOwnerIdFilterSet) {
+            linkFromMdPublishedInGroupFilter = null;
+        }
+        if (groupIdFilterSet && !groupOwnerIdFilterSet) {
+            linkFromMdWhoseGroupOwnerInFilter = null;
         }
 
         if (filter != null) {
@@ -356,8 +385,8 @@ public class LinksApi {
             }
         }
 
-        if (groupIdFilter != null || groupOwnerIdFilter != null || url != null || associatedRecord != null || stateToMatch != null) {
-            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecord, groupIdFilter, groupOwnerIdFilter), pageRequest);
+        if (linkFromMdPublishedInGroupFilter != null || linkFromMdWhoseGroupOwnerInFilter != null || url != null || associatedRecord != null || stateToMatch != null) {
+            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecord, linkFromMdPublishedInGroupFilter, linkFromMdWhoseGroupOwnerInFilter, publishedOrOwnerFilter), pageRequest);
         } else {
             return linkRepository.findAll(pageRequest);
         }
