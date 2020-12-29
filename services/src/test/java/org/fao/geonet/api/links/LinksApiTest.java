@@ -28,10 +28,12 @@ import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.LinkRepository;
@@ -60,12 +62,8 @@ import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class LinksApiTest extends AbstractServiceIntegrationTest {
 
@@ -77,9 +75,6 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     private SchemaManager schemaManager;
-
-    @Autowired
-    private DataManager dataManager;
 
     @Autowired
     private SourceRepository sourceRepository;
@@ -96,6 +91,13 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
     @Autowired
     private GroupRepository groupRepository;
 
+    @Autowired
+    private IMetadataManager metadataManager;
+
+    @Autowired
+    private IMetadataOperations metadataOperations;
+
+
     private MockMvc mockMvc;
     private ServiceContext context;
 
@@ -111,7 +113,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         analyzeMdAsAdmin(md);
         Assert.assertEquals(1, linkRepository.count());
 
-        assertLinkForOneMdFound(md, this.loginAsAdmin());
+        assertLinkForOneMdFound(md, this.loginAsAdmin(), "", "");
 
         purgeLinkAsAdmin();
     }
@@ -122,7 +124,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         AbstractMetadata md = createMd(createGroupWithOneEditor(editor).getId());
         analyzeMdAsAdmin(md);
 
-        assertLinkForOneMdFound(md, this.loginAs(editor));
+        assertLinkForOneMdFound(md, this.loginAs(editor), "", "");
 
         purgeLinkAsAdmin();
     }
@@ -134,10 +136,10 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         AbstractMetadata md = createMd(createGroupWithOneEditor(createEditor()).getId());
         analyzeMdAsAdmin(md);
 
-        assertNoLinksReturned(this.loginAs(editor));
+        assertNoLinksReturned(this.loginAs(editor), "", "");
 
         purgeLinkAsAdmin();
-        }
+    }
 
     @Test
     public void getLinksAsEditorFromNoGroup() throws Exception {
@@ -145,7 +147,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         AbstractMetadata md = createMd(createGroupWithOneEditor(createEditor()).getId());
         analyzeMdAsAdmin(md);
 
-        assertNoLinksReturned(this.loginAs(editor));
+        assertNoLinksReturned(this.loginAs(editor), "", "");
 
         purgeLinkAsAdmin();
     }
@@ -176,6 +178,42 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         purgeLinkAsAdmin();
     }
 
+    @Test
+    public void getLinksFilteringOnGroupOwner() throws Exception {
+        User editor = createEditor();
+        int groupId = createGroupWithOneEditor(editor).getId();
+        AbstractMetadata md = createMd(groupId);
+        analyzeMdAsAdmin(md);
+
+        assertLinkForOneMdFound(md, this.loginAsAdmin(), null, "");
+        assertLinkForOneMdFound(md, this.loginAsAdmin(), String.format("%d,666", groupId), "");
+        assertNoLinksReturned(this.loginAsAdmin(), "666", "");
+        assertLinkForOneMdFound(md, this.loginAs(editor), null, "");
+        assertLinkForOneMdFound(md, this.loginAs(editor), String.format("%d,666", groupId), "");
+        assertNoLinksReturned(this.loginAs(editor), "666", "");
+
+        purgeLinkAsAdmin();
+    }
+
+    @Test
+    public void getLinksFilteringOnPublishedInGroup() throws Exception {
+        User editor = createEditor();
+        int groupId = createGroupWithOneEditor(editor).getId();
+        AbstractMetadata md = createMd(createGroupWithOneEditor(createEditor()).getId());
+        metadataOperations.setOperation(context, md.getId(), groupId, ReservedOperation.view.getId());
+        analyzeMdAsAdmin(md);
+
+        assertLinkForOneMdFound(md, this.loginAsAdmin(), "", null);
+        assertLinkForOneMdFound(md, this.loginAsAdmin(), "", String.format("%d,666", groupId));
+        assertNoLinksReturned(this.loginAsAdmin(), "", "666");
+        assertLinkForOneMdFound(md, this.loginAs(editor), "", null);
+        assertLinkForOneMdFound(md, this.loginAs(editor), "", String.format("%d,666", groupId));
+        assertNoLinksReturned(this.loginAs(editor), "", "666");
+
+        purgeLinkAsAdmin();
+    }
+
+
     private AbstractMetadata createMd(Integer groupOwner) throws Exception {
         loginAsAdmin(context);
 
@@ -197,7 +235,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
                 .setGroupOwner(groupOwner);
         metadata.getHarvestInfo().setHarvested(false);
 
-        return dataManager.insertMetadata(context, metadata, sampleMetadataXml, false, true, false, NO,false, false);
+        return metadataManager.insertMetadata(context, metadata, sampleMetadataXml, false, true, false, NO,false, false);
     }
 
     private Group createGroupWithOneEditor(User editor) throws IOException {
@@ -240,9 +278,12 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         Assert.assertEquals(0, linkRepository.count());
     }
 
-    private void assertLinkForOneMdFound(AbstractMetadata md, MockHttpSession httpSession) throws Exception {
+    private void assertLinkForOneMdFound(AbstractMetadata md, MockHttpSession httpSession, String groupOwnerIdFilter, String groupIdFilter) throws Exception {
+
         this.mockMvc.perform(get("/srv/api/records/links")
             .session(httpSession)
+            .param("groupOwnerIdFilter", groupOwnerIdFilter)
+            .param("groupIdFilter", groupIdFilter)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
@@ -253,9 +294,11 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$.content[0].records[0].metadataUuid").value(equalTo(md.getUuid())));
     }
 
-    private void assertNoLinksReturned(MockHttpSession httpSession) throws Exception {
+    private void assertNoLinksReturned(MockHttpSession httpSession, String groupOwnerIdFilter, String groupIdFilter) throws Exception {
         this.mockMvc.perform(get("/srv/api/records/links")
             .session(httpSession)
+            .param("groupOwnerIdFilter", groupOwnerIdFilter)
+            .param("groupIdFilter", groupIdFilter)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
