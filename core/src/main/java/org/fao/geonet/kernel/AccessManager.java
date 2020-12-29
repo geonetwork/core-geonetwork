@@ -123,11 +123,6 @@ public class AccessManager {
             } else {
                 results = new HashSet<>(operations);
             }
-
-            UserSession us = context.getUserSession();
-            if (us.isAuthenticated() && us.getProfile() == Profile.Editor && us.getProfile() == Profile.Reviewer) {
-                results.add(operationRepository.findReservedOperation(ReservedOperation.view));
-            }
         }
 
         return results;
