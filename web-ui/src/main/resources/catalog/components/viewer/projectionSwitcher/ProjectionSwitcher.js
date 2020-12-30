@@ -60,6 +60,40 @@
                           scope.listOpen = !scope.listOpen;
                         }
 
+                        // Function to fully reload WM(T)S layers
+                        // Simply calling the tile/imageLoadFunction does not always work well
+                        scope.reloadOwsLayer = function(map, layer) { 
+                          var layerUrl = layer.get('url');
+                          var layerName = layer.get('name');
+                          var layerType = layer.get('type') ? layer.get('type').toLowerCase() : '';
+              
+                          if (!layerType) {
+                            // Try and extract layer type from GetCapabilities URL if type was not set
+                            var getCapUrl = layer.get('urlCap');
+                            if (getCapUrl) {
+                              var match = getCapUrl.match(/service=(wm[t]?s)/i);
+                              if (match && match[1]) {
+                                layerType = match[1].toLowerCase();
+                              }
+                            }
+                          }
+              
+                          if (!layerUrl || !layerName || !layerType.startsWith('wm')) {
+                            // Return if properties are missing or we're not dealing with a WM(T)S
+                            return;
+                          }
+              
+                          // Remove the layer from the map
+                          map.removeLayer(layer);
+              
+                          // Reload the layer (with potentially updated extent, projection, matrixSet etc.)
+                          if (layerType === 'wms') {
+                            gnMap.addWmsFromScratch(map, layerUrl, layerName);
+                          } else {
+                            gnMap.addWmtsFromScratch(map, layerUrl, layerName, undefined, layer.get('md'));
+                          }
+                        };
+
                         // Change the projection for all supported layers
                         scope.changeLayerProjection = function (obj, oldProj, newProj) {
                           var layers = obj.getLayers().getArray().reverse();
@@ -67,11 +101,8 @@
                             var layer = layers[i];
                             if (layer instanceof ol.layer.Group) {
                               this.changeLayerProjection(layer, oldProj, newProj);
-                            } else if (layer instanceof ol.layer.Tile) {
-                              var tileLoadFunc = layer.getSource().getTileLoadFunction();
-                              layer.getSource().setTileLoadFunction(tileLoadFunc);
-                            } else if (layer instanceof ol.layer.Image) {
-                              gnMap.updateWmsLayerForProj(scope.map, layer, newProj);
+                            } else if (layer instanceof ol.layer.Tile || layer instanceof ol.layer.Image) {
+                              this.reloadOwsLayer(scope.map, layer);
                             } else if (layer instanceof ol.layer.Vector) {
                               var features = layer.getSource().getFeatures();
                               for (var i = 0; i < features.length; i += 1) {
@@ -102,12 +133,21 @@
                                 }
                               });
 
-                          var newExtent = ol.proj.transformExtent(view
-                              .calculateExtent(scope.map.getSize()), oldProj,
-                              newProj);
+                          // Reproject old extent to new one:
+                          // The old or new projection might need to be patched
+                          // to make up for incorrect axis orientation settings,
+                          // which means we'll first transform to a temporary extent
+                          var oldExtent = view.calculateExtent(scope.map.getSize());
+                          var tmpExtent = ol.proj.transformExtent(
+                            oldExtent, gnMap.patchOlProjection(oldProj),
+                            gnMap.patchOlProjection(newProj), 8
+                          );
+                          var newExtent = ol.proj.transformExtent(
+                            tmpExtent, gnMap.patchOlProjection(newProj),
+                              newProj, 8);
 
                           var mapsConfig = {
-                            projection : newProj
+                            projection : ol.proj.get(projection)                          
                           };
 
                           if (projectionConfig.resolutions
@@ -120,6 +160,7 @@
 
                           // Set the view
                           var newView = new ol.View(mapsConfig);
+                          newView.setViewportSize(scope.map.getSize());
                           scope.map.setView(newView);
 
                           // Rearrange base layers to adapt (if possible) to new
@@ -195,12 +236,10 @@
                             }
                           });
 
-                          // Relocate map to extent
-                          scope.map.getView().fit(newExtent,
-                              scope.map.getSize());
-                          
                           scope.listOpen = false;
 
+                          // Fit view to new extent
+                          newView.fit(newExtent, scope.map.getSize());
                         };
 
                       } ],
