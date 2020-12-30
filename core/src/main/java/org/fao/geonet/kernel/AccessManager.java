@@ -611,15 +611,12 @@ public class AccessManager {
         Set<Operation> results;
         // if user is an administrator OR is the owner of the record then allow all operations
         if (isOwner(context, mdId)) {
-            results = new HashSet<>(operationRepository.findAll());
-        } else {
-            if (operations == null) {
-                results = new HashSet<>(getAllOperations(context, mdId, ip));
-            } else {
-                results = new HashSet<>(operations);
-            }
+            return new HashSet<>(operationRepository.findAll());
         }
-
-        return results;
+        if (operations == null) {
+            return new HashSet<>(getAllOperations(context, mdId, ip));
+        } else {
+            return new HashSet<>(operations);
+        }
     }
 }
