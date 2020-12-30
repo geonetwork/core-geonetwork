@@ -147,7 +147,9 @@
       }
     }).then(function(response) {
 
-      if(infoFormat &&
+      if (!response.data) {
+        this.features = [];
+      } else if(infoFormat &&
         (infoFormat.toLowerCase().localeCompare('application/json') == 0 ||
           infoFormat.toLowerCase().localeCompare('application/geojson') == 0 )) {
         var jsonf = new ol.format.GeoJSON();
