@@ -339,6 +339,58 @@
           /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
+           * @name gnMap#getCorrectAxisOrder
+           *
+           * @description
+           * Returns the correct axis orientation code if the given projection 
+           * has a missing or standard axis orientation "enu" (east/north/up), 
+           * even though it should have "neu" (north/east/up) instead, for example.
+           * This especially applies to transverse Mercator projections, 
+           * like all UTM-based projections (e.g. EPSG:3006).
+           * Returns null if the projection already has a correct orientation.
+           *
+           * @param {ol.proj.ProjectionLike} proj for which to check the axis order
+           * 
+           * @return {string} axis orientation code
+           */
+          getCorrectAxisOrder: function(proj) {
+            if (typeof proj.getCode === 'function') {
+              proj = proj.getCode();
+            }
+            var proj4Def = proj4.defs[proj];
+            if (proj4Def.projName === 'utm' && proj4Def.axis !== 'enu') {
+              // TODO: add more cases in the future (e.g. South-African projections)
+              return 'neu';
+            }
+          },
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#patchOlProjection
+           *
+           * @description
+           * Returns a "patched" copy of the given OL projection if the original
+           * has a bad or missing axis orientation.
+           * If the given projection is fine, the original will be returned.
+           *
+           * @param {ol.proj.Projection} proj for which to check the axis order
+           * 
+           * @return {ol.proj.Projection} OL Projection object
+           */
+          patchOlProjection: function(proj) {
+            var axisCode = this.getCorrectAxisOrder(proj);
+            if (axisCode) {
+              var patchedProj = angular.copy(proj);
+              patchedProj.axisOrientation_ = axisCode;
+              return patchedProj;
+            }
+            return proj;
+          },
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
            * @name gnMap#isPoint
            *
            * @description
@@ -1442,42 +1494,6 @@
             return defer.promise;
           },
 
-          updateWmsLayerForProj: function(map, layer, proj) {
-            var $this = this;
-
-            var layerUrl = layer.get('url');
-            var layerName = layer.get('name');
-            if (!layerUrl || !layerName) {
-              return;
-            }
-
-            // Get original style
-            var style = layer.getSource().getParams().STYLES;
-
-            // Remove the layer from the map
-            map.removeLayer(layer);
-
-            $this.checkProj4Def(proj.getCode())
-              .then(function (isCustomDef) {
-                gnOwsCapabilities.getWMSCapabilities(layerUrl)
-                  .then(function(capObj) {
-                    capObj.layers.forEach(function (lyr) {
-                      if (lyr.Name !== layerName) {
-                        return;
-                      }
-                      
-                      if (!lyr.version && capObj.version) {
-                        // Inherit parent WMS version:
-                        // this is required for OL to form a proper request!
-                        lyr.version = capObj.version;
-                      }
-                      
-                      $this.addWmsToMapFromCap(map, lyr, style);
-                    });
-                  })
-              })
-          },
-
           addEsriRestFromScratch: function(map, url, name, createOnly, md) {
             var serviceUrl = url.replace(/(.*\/MapServer).*/, '$1')
             var layer = !!name ? name : url.replace(/.*\/([^\/]*)\/MapServer\/?(.*)/, '$2');
@@ -1792,12 +1808,15 @@
               });
 
               var options;
-              var mapProj = map.getView().getProjection();
+
+              // Patch projection before the call to OL's optionsFromCapabilities()
+              // if needed (if axis orientation is incorrect/missing).
+              var mapProj = this.patchOlProjection(map.getView().getProjection());
 
               try {
                 options = ol.source.WMTS.optionsFromCapabilities(cap, {
                   layer: getCapLayer.Identifier,
-                  projection: mapProj.getCode()
+                  projection: mapProj
                 });
                 if (!options || !options.matrixSet ||
                   !proj4.defs.hasOwnProperty(options.projection.getCode())) {
@@ -1810,6 +1829,22 @@
                   type: 'danger'
                 });
                 return;
+              }
+
+              // Fix tileGrid origins for projections without reverse axis order (e.g. UTM):
+              // For some reason, OL *does* create a rotated tileGrid extent, but the origins
+              // remain inverted...
+              var tileExtent = options.tileGrid.extent_;
+              if (this.getCorrectAxisOrder(map.getView().getProjection()) === 'neu') {
+                var topLeft = ol.extent.getTopLeft(tileExtent);
+                if (options.tileGrid.origin_) {
+                  options.tileGrid.origin_ = topLeft;
+                }
+                if (angular.isArray(options.tileGrid.origins_)) {
+                  options.tileGrid.origins_.forEach(function (item, index, array) {
+                    array[index] = topLeft;
+                  });
+                }
               }
 
               //Configuring url for service
@@ -1841,8 +1876,8 @@
                 label: getCapLayer.Title,
                 source: new ol.source.WMTS(options),
                 url: url,
-                urlCap: urlCap
-                // extent is not defined in WMTS
+                urlCap: urlCap,
+                extent: tileExtent
               });
 
               //Add GN extras to layer
