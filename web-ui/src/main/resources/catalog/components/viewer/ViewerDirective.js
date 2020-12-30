@@ -112,14 +112,7 @@
               };
               
               scope.zoomToMaxExtent = function(map) {
-                var proj = map.getView().getProjection();
-                var extent = proj.getExtent();
-                if (gnViewerSettings.initialExtent && gnViewerSettings.mapConfig.projection && 
-                  gnViewerSettings.mapConfig.projection !== proj.getCode()) {
-                  // Use reprojected initial extent if it is defined
-                  extent = ol.proj.transformExtent(
-                    gnViewerSettings.initialExtent, gnViewerSettings.mapConfig.projection, proj, 8)
-                }
+                var extent = map.getView().getProjection().getExtent();
                 map.getView().fit(extent, map.getSize());
               };
               scope.ol3d = null;
