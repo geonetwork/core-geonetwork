@@ -107,16 +107,6 @@ public class AccessManager {
         return getOperations(context, mdId, ip, null);
     }
 
-    public Set<String> getOperationNames(ServiceContext context, String mdId, String ip, Collection<Operation> operations) throws Exception {
-        Set<String> names = new HashSet<String>();
-
-        for (Operation op : getOperations(context, mdId, ip, operations)) {
-            names.add(op.getName());
-        }
-
-        return names;
-    }
-
     /**
      * Returns all operations permitted by the user on a particular metadata.
      */
