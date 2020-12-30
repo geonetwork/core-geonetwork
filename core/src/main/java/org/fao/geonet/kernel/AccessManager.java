@@ -104,7 +104,11 @@ public class AccessManager {
      * dynamic group is assigned depending on user location (0 for internal and 1 for external).
      */
     public Set<Operation> getOperations(ServiceContext context, String mdId, String ip) throws Exception {
-        return getOperations(context, mdId, ip, null);
+        // if user is an administrator OR is the owner of the record then allow all operations
+        if (isOwner(context, mdId)) {
+            return new HashSet<>(operationRepository.findAll());
+        }
+        return new HashSet<>(getAllOperations(context, mdId, ip));
     }
 
     /**
@@ -595,13 +599,5 @@ public class AccessManager {
         } else {
             return true;
         }
-    }
-
-    private Set<Operation> getOperations(ServiceContext context, String mdId, String ip, Collection<Operation> operations) throws Exception {
-        // if user is an administrator OR is the owner of the record then allow all operations
-        if (isOwner(context, mdId)) {
-            return new HashSet<>(operationRepository.findAll());
-        }
-        return new HashSet<>(getAllOperations(context, mdId, ip));
     }
 }
