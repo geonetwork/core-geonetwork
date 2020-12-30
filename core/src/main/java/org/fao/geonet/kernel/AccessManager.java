@@ -107,25 +107,6 @@ public class AccessManager {
         return getOperations(context, mdId, ip, null);
     }
 
-    /**
-     * TODO javadoc.
-     */
-    public Set<Operation> getOperations(ServiceContext context, String mdId, String ip, Collection<Operation> operations) throws Exception {
-        Set<Operation> results;
-        // if user is an administrator OR is the owner of the record then allow all operations
-        if (isOwner(context, mdId)) {
-            results = new HashSet<>(operationRepository.findAll());
-        } else {
-            if (operations == null) {
-                results = new HashSet<>(getAllOperations(context, mdId, ip));
-            } else {
-                results = new HashSet<>(operations);
-            }
-        }
-
-        return results;
-    }
-
     public Set<String> getOperationNames(ServiceContext context, String mdId, String ip, Collection<Operation> operations) throws Exception {
         Set<String> names = new HashSet<String>();
 
@@ -624,5 +605,21 @@ public class AccessManager {
         } else {
             return true;
         }
+    }
+
+    private Set<Operation> getOperations(ServiceContext context, String mdId, String ip, Collection<Operation> operations) throws Exception {
+        Set<Operation> results;
+        // if user is an administrator OR is the owner of the record then allow all operations
+        if (isOwner(context, mdId)) {
+            results = new HashSet<>(operationRepository.findAll());
+        } else {
+            if (operations == null) {
+                results = new HashSet<>(getAllOperations(context, mdId, ip));
+            } else {
+                results = new HashSet<>(operations);
+            }
+        }
+
+        return results;
     }
 }
