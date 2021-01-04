@@ -37,38 +37,24 @@ import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataDataInfo;
-import org.fao.geonet.domain.MetadataHarvestInfo;
-import org.fao.geonet.domain.MetadataRatingByIp;
-import org.fao.geonet.domain.MetadataRatingByIpId;
-import org.fao.geonet.domain.MetadataSourceInfo;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
-import org.fao.geonet.repository.MetadataRatingByIpRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SimpleMetadata;
-import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -85,6 +71,7 @@ import com.google.common.base.Optional;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.springframework.data.jpa.domain.Specifications;
 
 public class BaseMetadataUtils implements IMetadataUtils {
     @Autowired
@@ -586,6 +573,33 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public boolean existsMetadataUuid(String uuid) throws Exception {
         return !findAllIdsBy(hasMetadataUuid(uuid)).isEmpty();
+    }
+
+    @Override
+    public boolean isMetadataPublished(int metadataId) throws Exception {
+        // For metadata records)
+        // It will be a draft if the record is not viewable by public
+        final Specification<OperationAllowed> isMdPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
+        final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(metadataId);
+        final OperationAllowed one = ApplicationContextHolder.get().getBean(OperationAllowedRepository.class).findOne(Specifications.where(hasMdId).and(isMdPublished));
+        return (one != null);
+    }
+
+    @Override
+    public boolean isMetadataApproved(int metadataId) throws Exception {
+        boolean isApproved = false;
+        MetadataStatus metadataStatus = ApplicationContextHolder.get().getBean(IMetadataStatus.class).getStatus(metadataId);
+        if (metadataStatus != null) {
+            String statusId = metadataStatus.getStatusValue().getId() + "";
+            isApproved = statusId.equals(StatusValue.Status.APPROVED);
+        }
+        return isApproved;
+    }
+
+    @Override
+    public boolean isMetadataDraft(int metadataId) throws Exception {
+        // It will be a draft if the record is not viewable by public and it is not approved record.
+        return !(isMetadataApproved(metadataId) || isMetadataPublished(metadataId));
     }
 
     /**

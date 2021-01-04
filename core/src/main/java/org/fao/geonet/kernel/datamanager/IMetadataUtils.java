@@ -268,6 +268,12 @@ public interface IMetadataUtils {
      */
     boolean existsMetadata(int id) throws Exception;
 
+    boolean isMetadataPublished(int metadataId) throws Exception;
+
+    boolean isMetadataApproved(int metadataId) throws Exception;
+
+    boolean isMetadataDraft(int metadataId) throws Exception;
+
     /**
      * Returns all the keywords in the system.
      */

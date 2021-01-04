@@ -324,7 +324,7 @@ public class MetadataInsertDeleteApi {
             }
             Pair<Integer, String> pair = loadRecord(metadataType, element, uuidProcessing, group, category,
                     rejectIfInvalid, publishToAll, transformWith, schema, extra, request);
-            report.addMetadataInfos(pair.one(), String.format("Metadata imported from XML with UUID '%s'", pair.two()));
+            report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false, String.format("Metadata imported from XML with UUID '%s'", pair.two()));
 
             triggerImportEvent(request, pair.two());
 
@@ -341,7 +341,7 @@ public class MetadataInsertDeleteApi {
                 if (xmlContent != null) {
                     Pair<Integer, String> pair = loadRecord(metadataType, xmlContent, uuidProcessing, group, category,
                             rejectIfInvalid, publishToAll, transformWith, schema, extra, request);
-                    report.addMetadataInfos(pair.one(),
+                    report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false,
                             String.format("Metadata imported from URL with UUID '%s'", pair.two()));
 
                     triggerImportEvent(request, pair.two());
@@ -387,7 +387,7 @@ public class MetadataInsertDeleteApi {
                                 uuidProcessing, transformWith, settingManager.getSiteId(), metadataType, category,
                                 group, rejectIfInvalid, assignToCatalog, context, f);
                         for (String id : ids) {
-                            report.addMetadataInfos(Integer.parseInt(id),
+                            report.addMetadataInfos(Integer.parseInt(id), id, !publishToAll, false,
                                     String.format("Metadata imported from MEF with id '%s'", id));
                             triggerCreationEvent(request, id);
 
@@ -402,7 +402,7 @@ public class MetadataInsertDeleteApi {
                     try {
                         Pair<Integer, String> pair = loadRecord(metadataType, Xml.loadFile(f), uuidProcessing, group,
                                 category, rejectIfInvalid, publishToAll, transformWith, schema, extra, request);
-                        report.addMetadataInfos(pair.one(),
+                        report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false,
                                 String.format("Metadata imported from server folder with UUID '%s'", pair.two()));
 
                         triggerCreationEvent(request, pair.two());
@@ -574,7 +574,7 @@ public class MetadataInsertDeleteApi {
                             throw new BadFormatEx("Import 0 record, check whether the importing file is a valid MEF archive.");
                         }
                         ids.forEach(e -> {
-                            report.addMetadataInfos(Integer.parseInt(e),
+                            report.addMetadataInfos(Integer.parseInt(e), e, !publishToAll, false,
                                     String.format("Metadata imported with ID '%s'", e));
 
                             try {
@@ -599,7 +599,7 @@ public class MetadataInsertDeleteApi {
                     Pair<Integer, String> pair = loadRecord(metadataType, Xml.loadStream(f.getInputStream()),
                             uuidProcessing, group, category, rejectIfInvalid, publishToAll, transformWith, schema,
                             extra, request);
-                    report.addMetadataInfos(pair.one(), String.format("Metadata imported with UUID '%s'", pair.two()));
+                    report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false, String.format("Metadata imported with UUID '%s'", pair.two()));
 
                     triggerImportEvent(request, pair.two());
 
@@ -740,7 +740,7 @@ public class MetadataInsertDeleteApi {
         }
 
         dataManager.indexMetadata(id);
-        report.addMetadataInfos(Integer.parseInt(id.get(0)), uuid);
+        report.addMetadataInfos(Integer.parseInt(id.get(0)), uuid, !publishToAll, false, uuid);
 
         triggerCreationEvent(request, uuid);
 

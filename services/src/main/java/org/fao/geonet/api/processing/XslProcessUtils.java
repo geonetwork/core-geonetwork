@@ -187,7 +187,7 @@ public class XslProcessUtils {
                 // if there was any change in the record or not.
                 // Using hash on processMd and metadata ?
             } catch (Exception e) {
-                report.addMetadataError(iId, e);
+                report.addMetadataError(info, e);
                 context.error("  Processing failed with error " + e.getMessage());
                 context.error(e);
             }
@@ -290,7 +290,7 @@ public class XslProcessUtils {
                 // if there was any change in the record or not.
                 // Using hash on processMd and metadata ?
             } catch (Exception e) {
-                report.addMetadataError(iId, e);
+                report.addMetadataError(info, e);
                 context.error("  Processing failed with error " + e.getMessage());
                 context.error(e);
             }
