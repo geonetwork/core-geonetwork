@@ -524,5 +524,7 @@
   "geometryFilter": "Bounding Box",
   "GUFname": "Your Name",
   "GUFemail": "Your Email address",
-  "GUForganization": "Your Organization"
+  "GUForganization": "Your Organization",
+  "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed",
+  "rssFeed": "RSS feed"
 }
