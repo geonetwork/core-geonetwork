@@ -25,10 +25,12 @@ package org.fao.geonet.kernel.search;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
-import com.vividsolutions.jts.util.Assert;
+import org.geotools.xsd.Configuration;
+import org.geotools.xsd.Parser;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.index.SpatialIndex;
+import org.locationtech.jts.util.Assert;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
@@ -90,15 +92,12 @@ import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.search.spatial.TouchesFilter;
 import org.fao.geonet.kernel.search.spatial.WithinBBoxFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.util.GMLParsers;
 import org.fao.geonet.utils.Xml;
 import org.geotools.data.DataStore;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Transaction;
-import org.geotools.gml3.GMLConfiguration;
-import org.geotools.xml.Configuration;
-import org.geotools.xml.Parser;
+
 import org.jdom.Content;
 import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
@@ -1550,7 +1549,6 @@ public class SearchManager implements ISearchManager {
         private final Map<String, Constructor<? extends SpatialFilter>> _types;
         private final Transaction _transaction;
         private final int _maxWritesInTransaction;
-        private final Parser[] _gmlParsers;
         private final Lock _lock;
         private SpatialIndexWriter _writer;
         private volatile Committer _committerTask;
@@ -1574,7 +1572,6 @@ public class SearchManager implements ISearchManager {
                 throw new RuntimeException("Unable to create types mapping", e);
             }
             _types = Collections.unmodifiableMap(types);
-            _gmlParsers = GMLParsers.create();
         }
 
         /**
@@ -1609,7 +1606,7 @@ public class SearchManager implements ISearchManager {
         private boolean createWriter(DataStore datastore) throws IOException {
             boolean rebuildIndex;
             try {
-                _writer = new SpatialIndexWriter(datastore, _gmlParsers, _transaction, _maxWritesInTransaction, _lock);
+                _writer = new SpatialIndexWriter(datastore, _transaction, _maxWritesInTransaction, _lock);
                 rebuildIndex = _writer.getFeatureSource().getSchema() == null;
             } catch (Throwable e) {
 
@@ -1705,7 +1702,7 @@ public class SearchManager implements ISearchManager {
 
         private SpatialIndexWriter writerNoLocking() throws Exception {
             if (_writer == null) {
-                _writer = new SpatialIndexWriter(_datastore, _gmlParsers, _transaction, _maxWritesInTransaction, _lock);
+                _writer = new SpatialIndexWriter(_datastore, _transaction, _maxWritesInTransaction, _lock);
             }
             return _writer;
         }

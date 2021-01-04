@@ -105,7 +105,9 @@ public class JeevesContextLoaderListener implements ServletContextListener {
          */
         JeevesApplicationContext jeevesAppContext =
             (JeevesApplicationContext) servletContext.getAttribute(User.NODE_APPLICATION_CONTEXT_KEY);
-        jeevesAppContext.destroy();
+        if (jeevesAppContext != null) {
+            jeevesAppContext.destroy();
+        }
 
         Log.info(Log.ENGINE, "Destroying the parent appContext");
         parentAppContext.destroy();

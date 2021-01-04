@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+ <parent>
+    <artifactId>schemas</artifactId>
+    <groupId>org.geonetwork-opensource.schemas</groupId>
+    <version>3.11.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>schema-iso19115-3.2018</artifactId>
+  <name>GeoNetwork schema plugin for ISO19115-3:2018 standard</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
+      <artifactId>schema-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+
+    <resources>
+      <resource>
+        <directory>src/main/config/translations</directory>
+        <targetPath>META-INF/catalog/locales</targetPath>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+
+    <plugins>
+
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <id>test-jar</id>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>plugin-assembly</id>
+            <phase>package</phase>
+            <goals><goal>single</goal></goals>
+            <inherited>false</inherited>
+            <configuration>
+             <appendAssemblyId>false</appendAssemblyId>
+             <descriptors>
+              <descriptor>src/assembly/schema-plugin.xml</descriptor>
+             </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>run-static-analysis</id>
+      <activation>
+        <property>
+          <name>!skipTests</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>findbugs-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

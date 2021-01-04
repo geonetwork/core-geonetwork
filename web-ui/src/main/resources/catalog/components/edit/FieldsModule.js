@@ -24,9 +24,6 @@
 (function() {
   goog.provide('gn_fields');
 
-
-
-
   goog.require('gn_batch_process_button');
   goog.require('gn_bounding');
   goog.require('gn_checkbox_with_nilreason');
@@ -43,7 +40,8 @@
   goog.require('gn_record_fragment_selector');
   goog.require('gn_template_field_directive');
   goog.require('gn_anchor_switcher_directive')
-
+  goog.require('gn_field_upload_directive');
+  goog.require('gn_multientry_combiner');
 
 
   angular.module('gn_fields', [
@@ -62,6 +60,8 @@
     'gn_checkbox_with_nilreason',
     'gn_md_validation_tools_directive',
     'gn_bounding',
-    'gn_anchor_switcher_directive'
+    'gn_anchor_switcher_directive',
+    'gn_field_upload_directive',
+    'gn_multientry_combiner'
   ]);
 })();

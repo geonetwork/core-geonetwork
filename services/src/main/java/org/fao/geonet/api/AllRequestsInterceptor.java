@@ -23,49 +23,55 @@
 
 package org.fao.geonet.api;
 
+import jeeves.constants.Jeeves;
+import jeeves.server.UserSession;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import jeeves.constants.Jeeves;
-import jeeves.server.UserSession;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * In charge of creating a new {@link UserSession} if not existing. Avoid to create any sessions for
- * crawlers.
+ * In charge of creating a new {@link UserSession} if not existing.
+ * Avoid to create any sessions for crawlers.
  */
 public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
+
     /**
      * List of bots to avoid.
      */
-    public static final String BOT_REGEXP = ".*(bot|crawler|baiduspider|80legs|ia_archiver|"
-        + "voyager|yahoo! slurp|mediapartners-google).*";
+    private final String BOT_REGEXP_FILTER_DEFAULT =
+        ".*(bot|crawler|baiduspider|80legs|ia_archiver|voyager|yahoo! slurp|mediapartners-google|Linguee Bot|SemrushBot).*";
 
-    private static final Pattern regex = Pattern.compile(BOT_REGEXP, Pattern.CASE_INSENSITIVE);
+    @Value("${bot.regexpFilter}")
+    public String botRegexpFilter = null;
+
+    private Pattern regex = null;
+
+    @PostConstruct
+    private void initBotRegexpFilter() {
+        // Check for null or cases where maven resource filter (@bot.regexpFilter@) was not evaluated as it was missing.
+        if (botRegexpFilter == null || "".equals(botRegexpFilter) || "@bot.regexpFilter@".equals(botRegexpFilter)) {
+            botRegexpFilter = BOT_REGEXP_FILTER_DEFAULT;
+        }
+        regex = Pattern.compile(botRegexpFilter, Pattern.CASE_INSENSITIVE);
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         createSessionForAllButNotCrawlers(request);
-
-//        String path = request.getPathInfo();
-//        if (path != null && path.startsWith("/{portal}/api")) {
-//            // TODO: Language resolution
-//
-//        }
-
         return super.preHandle(request, response, handler);
     }
 
     /**
      * Create the {@link UserSession} and add it to the HttpSession.
-     *
+     * <p>
      * If a crawler, check that session is null and if not, invalidate it.
      */
     private void createSessionForAllButNotCrawlers(HttpServletRequest request) {
@@ -99,11 +105,20 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
         }
     }
 
-    public static boolean isCrawler(String userAgent) {
+    public boolean isCrawler(String userAgent) {
         if (StringUtils.isNotBlank(userAgent)) {
             Matcher m = regex.matcher(userAgent);
             return m.find();
         }
         return false;
+    }
+
+    public String getBotRegexpFilter() {
+        return botRegexpFilter;
+    }
+
+    public void setBotRegexpFilter(String botRegexpFilter) {
+        this.botRegexpFilter = botRegexpFilter;
+        initBotRegexpFilter();
     }
 }

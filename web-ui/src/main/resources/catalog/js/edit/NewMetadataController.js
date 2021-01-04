@@ -234,7 +234,7 @@
         ).error(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate.instant('createMetadataError'),
-            error: data.error,
+            error: data.description?data.description:data.error,
             timeout: 0,
             type: 'danger'});
         });

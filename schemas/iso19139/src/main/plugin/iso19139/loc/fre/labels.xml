@@ -6550,4 +6550,8 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
   <element name="gco:Boolean">
     <label>Booléen</label>
   </element>
+  <element name="xlink:type">
+    <label>Link</label>
+    <description>Link type</description>
+  </element>
 </labels>

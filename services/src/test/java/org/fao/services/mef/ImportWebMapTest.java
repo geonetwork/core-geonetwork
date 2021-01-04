@@ -39,10 +39,13 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.mef.ImportWebMap;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.TransformerFactoryFactory;
@@ -53,6 +56,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 
 
 public class ImportWebMapTest {
@@ -68,6 +73,9 @@ public class ImportWebMapTest {
     private DataManager dataManager = Mockito.mock(DataManager.class);
     private IMetadataManager metadataManager = Mockito.mock(IMetadataManager.class);
     private SettingManager sm = Mockito.mock(SettingManager.class);
+    private SourceRepository sourceRepository = Mockito.mock(SourceRepository.class);
+    private LanguageRepository languageRepository = Mockito.mock(LanguageRepository.class);
+    private ConfigurableApplicationContext applicationContext = Mockito.mock(ConfigurableApplicationContext.class);
 
     @Before
     public void setUp() throws Exception {
@@ -98,6 +106,10 @@ public class ImportWebMapTest {
         Mockito.when(geonetContext.getBean(SettingManager.class)).thenReturn(sm);
         Mockito.when(geonetContext.getBean(DataManager.class)).thenReturn(dataManager);
         Mockito.when(geonetContext.getBean(IMetadataManager.class)).thenReturn(metadataManager);
+        Mockito.when(serviceContext.getBean(SourceRepository.class)).thenReturn(sourceRepository);
+        ApplicationContextHolder.set(applicationContext);
+        Mockito.when(applicationContext.getBean(LanguageRepository.class)).thenReturn(languageRepository);
+
         Mockito.when(sm.getSiteId()).thenReturn("1234");
         Mockito.when(sm.getSiteName()).thenReturn("geonetwork-testor");
 

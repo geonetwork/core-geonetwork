@@ -23,25 +23,26 @@
 
 package org.fao.geonet.utils;
 
-import static org.quartz.CronScheduleBuilder.cronSchedule;
-import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
-import static org.quartz.TriggerBuilder.newTrigger;
+import org.quartz.CronExpression;
+import org.quartz.CronScheduleBuilder;
+import org.quartz.DateBuilder;
+import org.quartz.DateBuilder.IntervalUnit;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
+import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.TimeZone;
 
-import org.apache.commons.io.IOUtils;
-import org.quartz.CronExpression;
-import org.quartz.DateBuilder;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
-import org.quartz.DateBuilder.IntervalUnit;
-import org.quartz.impl.StdSchedulerFactory;
+import static org.quartz.CronScheduleBuilder.cronSchedule;
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 public final class QuartzSchedulerUtils {
 
@@ -54,8 +55,8 @@ public final class QuartzSchedulerUtils {
         Scheduler scheduler = new StdSchedulerFactory().getScheduler(schedName);
         if (scheduler == null) {
             String quartzConfigurationFile = "quartz-" + id + ".properties";
-            InputStream in = QuartzSchedulerUtils.class.getClassLoader().getResourceAsStream(quartzConfigurationFile);
-            try {
+            try (InputStream in = QuartzSchedulerUtils.class.getClassLoader().getResourceAsStream(quartzConfigurationFile)) {
+
                 if (in == null) {
                     scheduler = StdSchedulerFactory.getDefaultScheduler();
                 } else {
@@ -69,10 +70,6 @@ public final class QuartzSchedulerUtils {
             } catch (IOException e) {
                 throw new SchedulerException("Unable to load configuration for scheduler " + id + ".  Configuration file "
                     + quartzConfigurationFile + " exists and was loaded but an error occurred during loading", e);
-            } finally {
-                if (in != null) {
-                    IOUtils.closeQuietly(in);
-                }
             }
         }
 
@@ -93,12 +90,15 @@ public final class QuartzSchedulerUtils {
      * @param groupName groupName to assign to trigger
      * @param schedule  the schedule string that needs to be parsed.
      * @param maxEvery  the maximum period to permit
+     * @param tz
      * @return trigger object
      */
-    public static Trigger getTrigger(String id, String groupName, String schedule, long maxEvery) {
+    public static Trigger getTrigger(String id, String groupName, String schedule, long maxEvery, TimeZone tz) {
         TriggerBuilder<Trigger> trigger = newTrigger().withIdentity(id, groupName);
         try {
-            trigger.withSchedule(cronSchedule(new CronExpression(schedule)));
+            CronScheduleBuilder schedulerBuilder = cronSchedule(new CronExpression(schedule));
+            schedulerBuilder.inTimeZone(tz);
+            trigger.withSchedule(schedulerBuilder);
         } catch (ParseException e) {
             int periodMillis = 0;
             try {

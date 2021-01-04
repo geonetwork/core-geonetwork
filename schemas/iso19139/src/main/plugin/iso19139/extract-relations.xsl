@@ -63,10 +63,11 @@
   to the GN localized string structure -->
   <xsl:template mode="get-iso19139-localized-string" match="*">
 
-    <xsl:variable name="mainLanguage"
-                  select="string(ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']/
-                            gmd:language/gco:CharacterString|ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']/
-                            gmd:language/gmd:LanguageCode/@codeListValue)"/>
+    <xsl:variable name="mainLanguage">
+      <xsl:call-template name="langId_from_gmdlanguage19139">
+          <xsl:with-param name="gmdlanguage" select="ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']/gmd:language"/>
+      </xsl:call-template>
+    </xsl:variable>
 
     <xsl:for-each select="gco:CharacterString|gmx:Anchor|
                           gmd:PT_FreeText/*/gmd:LocalisedCharacterString">
@@ -89,10 +90,11 @@
                 match="metadata[gmd:MD_Metadata or *[contains(@gco:isoType, 'MD_Metadata')]]"
                 priority="99">
 
-    <xsl:variable name="mainLanguage"
-                  select="string(
-                            */gmd:language/gco:CharacterString|
-                            */gmd:language/gmd:LanguageCode/@codeListValue)"/>
+    <xsl:variable name="mainLanguage">
+      <xsl:call-template name="langId_from_gmdlanguage19139">
+          <xsl:with-param name="gmdlanguage" select="*/gmd:language"/>
+      </xsl:call-template>
+    </xsl:variable>
 
     <xsl:if test="count(*/descendant::*[name(.) = 'gmd:graphicOverview']/*) > 0">
       <thumbnails>

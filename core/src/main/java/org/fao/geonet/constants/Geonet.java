@@ -81,6 +81,7 @@ public final class Geonet {
     public static final String SRU_SEARCH = SRU + ".search";
     public static final String USER_WATCHLIST = GEONETWORK + ".userwatchlist";
     public static final String OAI = GEONETWORK + ".oai";
+    public static final String SECURITY = GEONETWORK + ".security";
     public static final String OAI_HARVESTER = OAI + ".provider";
     // keys for logging search log
     public static final String SEARCH_LOGGER = GEONETWORK + ".search-logger";
@@ -112,6 +113,7 @@ public final class Geonet {
         public static final String UPDATE_FIXED_INFO_SUBTEMPLATE = "update-fixed-info-subtemplate.xsl";
         public static final String UPDATE_CHILD_FROM_PARENT_INFO = "update-child-from-parent-info.xsl";
         public static final String EXTRACT_UUID = "extract-uuid.xsl";
+        public static final String EXTRACT_TITLES = "extract-titles.xsl";
         public static final String EXTRACT_DEFAULT_LANGUAGE = "extract-default-language.xsl";
         public static final String EXTRACT_SKOS_FROM_ISO19135 = "xml_iso19135ToSKOS.xsl";
         public static final String EXTRACT_DATE_MODIFIED = "extract-date-modified.xsl";
@@ -220,6 +222,9 @@ public final class Geonet {
         public static final String SEARCH_REQUEST = "search.request";
         public static final String METADATA_SHOW = "metadata.show";
         public static final String METADATA_EDITING = "metadata.editing";
+        // Used to track the creation of a draft copy when the metadata is edited,
+        // to be able to remove it if the user cancels the editing without saving any change
+        public static final String METADATA_EDITING_CREATED_DRAFT = "metadata.editing.created.draft";
         public static final String METADATA_BEFORE_ANY_CHANGES = "metadata.before.any.changes";
         public static final String METADATA_EDITING_TAB = "metadata.editing.tab";
         public static final String METADATA_POSITION = "metadata.position";
@@ -644,6 +649,7 @@ public final class Geonet {
         public static final Namespace SLD = Namespace.getNamespace("sld", "http://www.opengis.net/sld");
         public static final Namespace SE = Namespace.getNamespace("se", "http://www.opengis.net/se");
         public static final Namespace XML = Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
+        public static final Namespace ATOM = Namespace.getNamespace("atom", "http://www.w3.org/2005/Atom");
     }
 
     public static class IndexFieldNames {
@@ -684,5 +690,9 @@ public final class Geonet {
         public static final String DRAFT = "_draft";
         public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
         public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
+    }
+
+    public static class SearchConfig {
+        public static final String SEARCH_IGNORE_PORTAL_FILTER_OPTION = "ignorePortalFilter";
     }
 }

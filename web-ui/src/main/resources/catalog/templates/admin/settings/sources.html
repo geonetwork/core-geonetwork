@@ -92,6 +92,11 @@
                      data-ng-model="source.uuid"/>
               <p class="help-block" data-translate="">sourceUuid-help</p>
 
+              <p class="alert alert-info"
+                 data-ng-if="source.uuid != ''"
+                 data-translate=""
+                 data-translate-values="{'uuid': source.uuid, 'lang': lang}">sourceUrlInfo
+              </p>
               <label data-translate="">sourceName</label>
               <input type="text"
                      class="form-control"

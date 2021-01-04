@@ -41,11 +41,10 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.resources.S3Credentials;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -67,13 +66,17 @@ public class S3Store extends AbstractStore {
         if (filter == null) {
             filter = FilesystemStore.DEFAULT_FILTER;
         }
+        PathMatcher matcher =
+                FileSystems.getDefault().getPathMatcher("glob:" + filter);
+
         final ListObjectsV2Result objects = s3.getClient().listObjectsV2(s3.getBucket(), resourceTypeDir);
         for (S3ObjectSummary object: objects.getObjectSummaries()) {
             final String key = object.getKey();
             final String filename = getFilename(key);
-            if (FilenameUtils.wildcardMatch(filename, filter)) {
+            Path keyPath = new File(filename).toPath().getFileName();
+            if (matcher.matches(keyPath)) {
                 MetadataResource resource = createResourceDescription(settingManager, metadataUuid, visibility, filename, object.getSize(),
-                                                                      object.getLastModified());
+                                                                      object.getLastModified(), metadataId, approved);
                 resourceList.add(resource);
             }
         }
@@ -84,9 +87,9 @@ public class S3Store extends AbstractStore {
     }
 
     private MetadataResource createResourceDescription(final SettingManager settingManager, final String metadataUuid,
-            final MetadataResourceVisibility visibility, final String resourceId, long size, Date lastModification) {
-        return new FilesystemStoreResource(metadataUuid, getFilename(metadataUuid, resourceId),
-                                           settingManager.getNodeURL() + "api/records/", visibility, size, lastModification);
+            final MetadataResourceVisibility visibility, final String resourceId, long size, Date lastModification, int metadataId, boolean approved) {
+        return new FilesystemStoreResource(metadataUuid, metadataId, getFilename(metadataUuid, resourceId),
+                                           settingManager.getNodeURL() + "api/records/", visibility, size, lastModification, approved);
     }
 
     private static String getFilename(final String key) {
@@ -105,7 +108,7 @@ public class S3Store extends AbstractStore {
             final SettingManager settingManager = context.getBean(SettingManager.class);
             return new ResourceHolderImpl(object, createResourceDescription(settingManager, metadataUuid, visibility, resourceId,
                                                                             object.getObjectMetadata().getContentLength(),
-                                                                            object.getObjectMetadata().getLastModified()));
+                                                                            object.getObjectMetadata().getLastModified(), metadataId, approved));
         } catch (AmazonServiceException ignored) {
             throw new ResourceNotFoundException(
                     String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
@@ -131,7 +134,7 @@ public class S3Store extends AbstractStore {
         }
         final PutObjectResult putAnswer = s3.getClient().putObject(s3.getBucket(), key, is, metadata);
         return createResourceDescription(settingManager, metadataUuid, visibility, filename, putAnswer.getMetadata().getContentLength(),
-                                         putAnswer.getMetadata().getLastModified());
+                                         putAnswer.getMetadata().getLastModified(), metadataId, approved);
     }
 
     @Override
@@ -152,7 +155,7 @@ public class S3Store extends AbstractStore {
                 } else {
                     // already the good visibility
                     return createResourceDescription(settingManager, metadataUuid, visibility, resourceId, metadata.getContentLength(),
-                                                     metadata.getLastModified());
+                                                     metadata.getLastModified(), metadataId, approved);
                 }
             } catch (AmazonServiceException ignored) {
                 // ignored
@@ -164,7 +167,7 @@ public class S3Store extends AbstractStore {
                 s3.getBucket(), sourceKey, s3.getBucket(), destKey);
             s3.getClient().deleteObject(s3.getBucket(), sourceKey);
             return createResourceDescription(settingManager, metadataUuid, visibility, resourceId, metadata.getContentLength(),
-                                             copyResult.getLastModifiedDate());
+                                             copyResult.getLastModifiedDate(), metadataId, approved);
         } else {
             throw new ResourceNotFoundException(
                     String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
@@ -228,7 +231,7 @@ public class S3Store extends AbstractStore {
         try {
             final ObjectMetadata metadata = s3.getClient().getObjectMetadata(s3.getBucket(), key);
             return createResourceDescription(settingManager, metadataUuid, visibility, filename, metadata.getContentLength(),
-                                             metadata.getLastModified());
+                                             metadata.getLastModified(), metadataId, approved);
         } catch (AmazonServiceException e) {
             return null;
         }

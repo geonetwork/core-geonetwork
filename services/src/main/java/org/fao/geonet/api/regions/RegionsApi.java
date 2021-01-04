@@ -23,7 +23,6 @@
 
 package org.fao.geonet.api.regions;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.*;
 import jeeves.server.context.ServiceContext;
@@ -33,7 +32,6 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.extent.MapRenderer;
 import org.fao.geonet.api.regions.model.Category;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.region.Region;
@@ -61,7 +59,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 import static org.fao.geonet.api.records.extent.MetadataExtentApi.*;
 
 /**
@@ -250,7 +247,7 @@ public class RegionsApi {
         }
 
         MapRenderer renderer = new MapRenderer(context);
-        BufferedImage image = renderer.render(regionId, srs, width, height, background, geomParam, geomType, geomSrs);
+        BufferedImage image = renderer.render(regionId, srs, width, height, background, geomParam, geomType, geomSrs, null, null);
 
         if (image == null) return null;
 

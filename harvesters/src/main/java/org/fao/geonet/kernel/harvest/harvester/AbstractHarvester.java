@@ -26,8 +26,8 @@ package org.fao.geonet.kernel.harvest.harvester;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.DailyRollingFileAppender;
-import org.apache.log4j.PatternLayout;
+import org.apache.log4j.EnhancedPatternLayout;
+import org.apache.log4j.FileAppender;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
@@ -70,6 +70,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -95,6 +96,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -200,14 +202,20 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
             directory = d.getParent() + File.separator;
         }
 
-        DailyRollingFileAppender fa = new DailyRollingFileAppender();
+        FileAppender fa = new FileAppender();
         fa.setName(harvesterName);
         String logfile = directory + "harvester_" + packageType + "_"
             + harvesterName + "_"
             + dateFormat.format(new Date(System.currentTimeMillis()))
             + ".log";
         fa.setFile(logfile);
-        fa.setLayout(new PatternLayout("%d{ISO8601} %-5p [%c] - %m%n"));
+
+        String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE);
+        if (StringUtils.isBlank(timeZoneSetting)) {
+            timeZoneSetting = TimeZone.getDefault().getID();
+        }
+        fa.setLayout(new EnhancedPatternLayout("%d{yyyy-MM-dd'T'HH:mm:ss,SSSZ}{" + timeZoneSetting +"} %-5p [%c] - %m%n"));
+
         fa.setThreshold(log.getThreshold());
         fa.setAppend(true);
         fa.activateOptions();
@@ -269,6 +277,32 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
     private void doUnschedule() throws SchedulerException {
         getScheduler().deleteJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
+    }
+
+    /**
+     * Deletes the harvester job from the scheduler and schedule it again.
+     * @throws SchedulerException
+     */
+    public void doReschedule() throws SchedulerException {
+        doUnschedule();
+        doSchedule();
+    }
+
+    /**
+     * Get the timezone of the harvester cron trigger.
+     * @return a time zone.
+     * @throws SchedulerException
+     */
+    public TimeZone getTriggerTimezone() throws SchedulerException {
+        Scheduler scheduler = getScheduler();
+        List<? extends Trigger> jobTriggers = scheduler.getTriggersOfJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
+        for (Trigger t : jobTriggers) {
+            if (t instanceof CronTrigger) {
+                CronTrigger ct = (CronTrigger) t;
+                return ct.getTimeZone();
+            }
+        }
+        return null;
     }
 
     public static Scheduler getScheduler() throws SchedulerException {

@@ -25,10 +25,10 @@ package org.fao.geonet.kernel.search;
 
 import com.google.common.collect.Sets;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.io.WKTWriter;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.io.WKTWriter;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;

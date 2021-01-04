@@ -36,6 +36,9 @@
   <logger name="geonetwork.search" additivity="false">
     <level value="DEBUG"/>
   </logger>
+  <logger name="geonetwork.domain">
+    <level value="WARNING"/>
+  </logger>
   <logger name="geonetwork.editor" additivity="false">
     <level value="DEBUG"/>
   </logger>
@@ -73,6 +76,11 @@
     <level value="DEBUG"/>
   </logger>
   <logger name="geonetwork.harvester" additivity="false">
+    <level value="DEBUG"/>
+    <appender-ref ref="consoleAppender"/>
+    <appender-ref ref="fileAppender"/>
+  </logger>
+  <logger name="geonetwork.atom" additivity="false">
     <level value="DEBUG"/>
     <appender-ref ref="consoleAppender"/>
     <appender-ref ref="fileAppender"/>

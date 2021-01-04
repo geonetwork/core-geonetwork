@@ -39,13 +39,10 @@
           langLabels: '=',
           lang: '=gnLanguageSwitcher'
         },
-        template:
-            '<select class="form-control" ' +
-            ' aria-label=' + "{{'languageSwitcher'|translate}}" + '"' +
-            ' data-ng-show="isHidden()" ' +
-            ' data-ng-model="lang" ' +
-            ' data-ng-options="key as langLabels[key] ' +
-            ' for (key, value) in langs"/>',
+        templateUrl: function ($element, $attrs) {
+          return $attrs.templateUrl || '../../catalog/components/common/languageswitcher/partials/' +
+            'language-switcher.html'
+        },
         link: function(scope) {
           scope.$watch('lang', function(value, o) {
 
@@ -78,6 +75,10 @@
           scope.isHidden = function() {
             return Object.keys(scope.langs).length > 1;
           };
+
+          scope.switchLanguage = function(newLanguage) {
+            scope.lang = newLanguage;
+          }
         }
       };
     }]);

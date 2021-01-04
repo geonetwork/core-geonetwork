@@ -27,8 +27,8 @@ package org.fao.geonet.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.MultiPolygon;
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -56,6 +56,7 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
+import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.url.UrlChecker;
@@ -72,7 +73,7 @@ import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.geotools.xml.Parser;
+import org.geotools.xsd.Parser;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -81,7 +82,9 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.w3c.dom.Node;
 
 import javax.annotation.Nonnull;
@@ -193,12 +196,16 @@ public final class XslUtil {
      * @return Return the JSON config as string or an empty object.
      */
     public static String getUiConfiguration(String key) {
-        final String defaultUiConfiguration = NodeInfo.DEFAULT_NODE;
-        NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
+        String nodeId = org.fao.geonet.NodeInfo.DEFAULT_NODE;
+        try {
+            org.fao.geonet.NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(org.fao.geonet.NodeInfo.class);
+            nodeId = nodeInfo.getId();
+        } catch (BeanCreationException e) {
+        }
         SourceRepository sourceRepository= ApplicationContextHolder.get().getBean(SourceRepository.class);
         UiSettingsRepository uiSettingsRepository = ApplicationContextHolder.get().getBean(UiSettingsRepository.class);
 
-        Source portal = sourceRepository.findOne(nodeInfo.getId());
+        org.fao.geonet.domain.Source portal = sourceRepository.findOne(nodeId);
 
         if (uiSettingsRepository != null) {
             UiSetting one = null;
@@ -209,7 +216,7 @@ public final class XslUtil {
                 one = uiSettingsRepository.findOne(key);
             }
             else if (one == null) {
-                one = uiSettingsRepository.findOne(defaultUiConfiguration);
+                one = uiSettingsRepository.findOne(org.fao.geonet.NodeInfo.DEFAULT_NODE);
             }
 
             if (one != null) {
@@ -344,13 +351,45 @@ public final class XslUtil {
         return null;
     }
 
+	/**
+	 * Check if security provider require login form
+	 */
+	public static boolean isDisableLoginForm() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            // No login form if providing a link or autologin
+            return securityProviderConfiguration.getLoginType().equals(SecurityProviderConfiguration.LoginType.AUTOLOGIN.toString().toLowerCase())
+                || securityProviderConfiguration.getLoginType().equals(SecurityProviderConfiguration.LoginType.LINK.toString().toLowerCase());
+        }
+        // If we cannot find SecurityProviderConfiguration then default to false.
+        return false;
+	}
+
     /**
-     * Check if bean is defined in the context
-     *
-     * @param beanId id of the bean to look up
+     * Check if security provider require login link
      */
-    public static boolean existsBean(String beanId) {
-        return ProfileManager.existsBean(beanId);
+    public static boolean isShowLoginAsLink() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.getLoginType().equals(SecurityProviderConfiguration.LoginType.LINK.toString().toLowerCase());
+        }
+        // If we cannot find SecurityProviderConfiguration then default to false.
+        return false;
+    }
+
+    /**
+     * get security provider
+     */
+    public static String getSecurityProvider() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.getSecurityProvider();
+        }
+        // If we cannot find SecurityProviderConfiguration then default to empty string.
+        return "";
     }
 
     /**
@@ -715,13 +754,7 @@ public final class XslUtil {
             String srs = geomElement.getAttributeValue("srsName");
             CoordinateReferenceSystem geomSrs = DefaultGeographicCRS.WGS84;
             if (srs != null && !(srs.equals(""))) geomSrs = CRS.decode(srs);
-            Parser[] parsers = GMLParsers.create();
-            Parser parser = null;
-            if (geomElement.getNamespace().equals(Geonet.Namespaces.GML32)) {
-              parser = parsers[1];
-            } else {
-              parser = parsers[0];
-            }
+            Parser parser = GMLParsers.create(geomElement);
             MultiPolygon jts = parseGml(parser, gml);
 
 
@@ -893,28 +926,40 @@ public final class XslUtil {
         return max;
     }
 
-    private static final Cache<String, Boolean> URL_VALIDATION_CACHE;
+    private static final Cache<String, Integer> URL_VALIDATION_CACHE;
 
     static {
-        URL_VALIDATION_CACHE = CacheBuilder.<String, Boolean>newBuilder().
+        URL_VALIDATION_CACHE = CacheBuilder.<String, Integer>newBuilder().
             maximumSize(100000).
             expireAfterAccess(25, TimeUnit.HOURS).
             build();
     }
 
-    public static boolean validateURL(final String urlString) throws ExecutionException {
-        return URL_VALIDATION_CACHE.get(urlString, new Callable<Boolean>() {
+    public static Integer getURLStatus(final String urlString) throws ExecutionException {
+        return URL_VALIDATION_CACHE.get(urlString, new Callable<Integer>() {
             @Override
-            public Boolean call() throws Exception {
+            public Integer call() throws Exception {
                 try {
-                    return (Integer.parseInt(getUrlStatus(urlString)) / 100 == 2);
+                    return Integer.parseInt(getUrlStatus(urlString));
                 } catch (Exception e) {
-                    return false;
+                    Log.info(Geonet.GEONETWORK,"validateURL: exception - ",e);
+                    return -1;
                 }
             }
         });
     }
 
+    public static String getURLStatusAsString(final String urlString) throws ExecutionException {
+        Integer status = getURLStatus(urlString);
+        return status == -1 ? "UNKNOWN" :
+            String.format("%s (%d)",
+                HttpStatus.valueOf(status).name(), status);
+    }
+
+    public static boolean validateURL(final String urlString) throws ExecutionException {
+        Integer status = getURLStatus(urlString);
+        return status == -1 ? false : status / 100 == 2;
+    }
 
     /**
      * Utility method to retrieve the thesaurus dir from xsl processes.

@@ -255,8 +255,8 @@
               }
             }
 
-            // layers
-            if (config.layers && config.layers.length) {
+            // layers: if defined a context file ignore layers
+            if (!config.context && config.layers && config.layers.length) {
               config.layers.forEach(function(layerInfo) {
                 gnMap.createLayerFromProperties(layerInfo, map)
                     .then(function(layer) {

@@ -20,6 +20,7 @@
 
 package org.fao.geonet.kernel.security.shibboleth;
 
+import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.springframework.util.StringUtils;
 
 /**
@@ -30,20 +31,26 @@ import org.springframework.util.StringUtils;
  * @author ETj (etj at geo-solutions.it)
  * @author María Arias de Reyna (delawen)
  */
-public class ShibbolethUserConfiguration {
+public class ShibbolethUserConfiguration implements SecurityProviderConfiguration {
+    private final String SECURITY_PROVIDER = "SHIBBOLETH";
     private String usernameKey;
     private String surnameKey;
     private String firstnameKey;
+    private String organisationKey;
     private String profileKey;
     private String groupKey;
     private String emailKey;
+    private String roleGroupKey;
 
     private String defaultGroup;
 
     private boolean updateProfile;
     private boolean updateGroup;
-    
+
     private String arraySeparator;
+    private String roleGroupSeparator;
+
+    private Boolean hideLogin;
 
     public String getUsernameKey() {
         return usernameKey;
@@ -73,6 +80,17 @@ public class ShibbolethUserConfiguration {
             firstnameKey = "";
         }
         this.firstnameKey = firstnameKey;
+    }
+
+    public String getOrganisationKey() {
+        return organisationKey;
+    }
+
+    public void setOrganisationKey(String organisationKey) {
+        if(StringUtils.isEmpty(organisationKey)) {
+            organisationKey = "";
+        }
+        this.organisationKey = organisationKey;
     }
 
     public String getProfileKey() {
@@ -107,7 +125,7 @@ public class ShibbolethUserConfiguration {
         }
         this.defaultGroup = defaultGroup;
     }
-    
+
     public boolean isUpdateProfile() {
         return updateProfile;
     }
@@ -145,6 +163,49 @@ public class ShibbolethUserConfiguration {
 		}
 		this.arraySeparator = arraySeparator;
 	}
-}
 
+	public Boolean getHideLogin() {
+		return hideLogin;
+	}
+
+	public void setHideLogin(Boolean hideLogin) {
+		if(hideLogin == null) {
+			hideLogin = true;
+		}
+		this.hideLogin = hideLogin;
+	}
+
+	public String getRoleGroupKey() {
+		return roleGroupKey;
+	}
+
+	public void setRoleGroupKey(String roleGroupKey) {
+		this.roleGroupKey = roleGroupKey;
+	}
+
+	public String getRoleGroupSeparator() {
+		return roleGroupSeparator;
+	}
+
+	public void setRoleGroupSeparator(String roleGroupSeparator) {
+		if(StringUtils.isEmpty(arraySeparator)) {
+			arraySeparator = ",";
+		}
+		this.roleGroupSeparator = roleGroupSeparator;
+	}
+
+
+	public String getSecurityProvider() {
+		return SECURITY_PROVIDER;
+	}
+
+	@Override
+	public String getLoginType() {
+        if (this.hideLogin) {
+            return LoginType.AUTOLOGIN.toString();
+        } else {
+            return LoginType.FORM.toString();
+        }
+    }
+}
 

@@ -40,8 +40,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
@@ -225,7 +223,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 		{
 			MetadataStatus metadataStatus = metadataStatusRepository.getStatus(mdId);
 
-			String statusId = metadataStatus.getId().getStatusId() + "";
+			String statusId = metadataStatus.getStatusValue().getId() + "";
 			canPublish = statusId.equals(StatusValue.Status.APPROVED);
 		}
 		return canPublish;

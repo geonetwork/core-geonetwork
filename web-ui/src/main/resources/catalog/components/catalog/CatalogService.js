@@ -509,7 +509,7 @@
          *
          * @return {String} service url.
          */
-        getServiceURL: function() {
+        getServiceURL: function(useDefaultNode) {
           var port = '';
           if (gnConfig['system.server.protocol'] === 'http' &&
              gnConfig['system.server.port'] &&
@@ -527,10 +527,13 @@
 
           }
 
+          var node = (!useDefaultNode?
+            gnConfig.env.node:gnConfig.env.defaultNode);
+
           var url = gnConfig['system.server.protocol'] + '://' +
               gnConfig['system.server.host'] + port +
               gnConfig.env.baseURL + '/' +
-              gnConfig.env.node + '/';
+              node + '/';
           return url;
         }
       };
@@ -555,7 +558,7 @@
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
         'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
         'creationDate', 'publicationDate', 'revisionDate', 'spatialRepresentationType_text'];
-      var listOfJsonFields = ['keywordGroup', 'crsDetails'];
+      var listOfJsonFields = ['keywordGroup', 'crsDetails', 'featureTypes'];
       // See below; probably not necessary
       var record = this;
       this.linksCache = [];

@@ -38,11 +38,7 @@ public class S3Credentials {
     }
 
     public void setKeyPrefix(String keyPrefix) {
-        if (keyPrefix.endsWith("/")) {
-            this.keyPrefix = keyPrefix;
-        } else {
-            this.keyPrefix = keyPrefix + "/";
-        }
+        this.keyPrefix = keyPrefix;
     }
 
     public void setBucket(String bucket) {
@@ -51,6 +47,10 @@ public class S3Credentials {
 
     @PostConstruct
     public void init() {
+        if (!keyPrefix.endsWith("/")) {
+            keyPrefix = keyPrefix + "/";
+        }
+
         if (accessKey != null && secretKey != null) {
             builder.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)));
             accessKey = null;

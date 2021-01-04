@@ -1,4 +1,5 @@
 {
+    "featureCatReplace": "Nahradit stávající katalog funkcí?",
     "add-extent-from-geokeywords": "Z klíčových slov vypočítat rozměr",
     "add-extent-from-geokeywords-help": "Hledejte všechna klíčová slova z tezauru typu 'place' a přidejte odpovídající rozsahy.",
     "addCRS-help": "Přidat nové CRS",
@@ -368,6 +369,7 @@
     "linkToXmlTab": "Některé typy chyb lze opravit pomocí <a href=\"#/metadata/{{metadataId}}?tab=xml\">editoru XML</a>.",
     "directoryManagerSubtitle": "Tato obrazovka umožňuje upravovat položky adresáře, například kontakty, formáty atd. Včetně správy šablon.",
     "directoryManagerSubtitleImport": "Zadejte zde úplný obsah XML položky, kterou chcete importovat do databáze.",
+    "directoryManagerError": "Při importu kompletního XML došlo k chybě",
     "directoryEntryTypes": "Typy položek",
     "directoryTemplates": "Šablony",
     "addNewDirectoryEntry": "Přidat nový záznam",
@@ -415,5 +417,8 @@
     "accessManagerChooseGroups": "Vyberte jednu nebo více skupin",
     "accessManagerChooseOperations": "Vyberte jeden nebo více typů operací",
     "status-no-status": "Pracovní postup není aktivní",
-    "draft": "Pracovní kopie"
+    "badGmlProjectionCode": "Projekce geometrie <b>{{srsName}}</b> definovaná v XML není platná. Upravte xml, abyste opravili název srs nebo zadejte novou geometrii.",
+    "draft": "Pracovní kopie",
+    "link": "Odkaz",
+    "link-text": "Text odkazu"
 }

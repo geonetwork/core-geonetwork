@@ -24,10 +24,10 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import com.google.common.collect.Maps;
-
-import com.vividsolutions.jts.util.Assert;
-
+import org.locationtech.jts.util.Assert;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Logger;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Localized;
@@ -36,6 +36,8 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.MissingParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.HarvestValidationEnum;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.QuartzSchedulerUtils;
@@ -44,9 +46,12 @@ import org.jdom.Element;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 
+import java.time.DateTimeException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import static org.quartz.JobBuilder.newJob;
@@ -57,6 +62,7 @@ import static org.quartz.JobBuilder.newJob;
 public abstract class AbstractParams implements Cloneable {
     public static final String TRANSLATIONS = "translations";
     private static final long MAX_EVERY = Integer.MAX_VALUE;
+    protected Logger log = Log.createLogger(Geonet.HARVEST_MAN);
 
     public abstract String getIcon();
 
@@ -348,7 +354,21 @@ public abstract class AbstractParams implements Cloneable {
      * @return
      */
     public Trigger getTrigger() {
-        return QuartzSchedulerUtils.getTrigger(getUuid(), AbstractHarvester.HARVESTER_GROUP_NAME, getEvery(), MAX_EVERY);
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE, true);
+        TimeZone tz = TimeZone.getDefault();
+        if (StringUtils.isNotBlank(timeZoneSetting)) {
+            try {
+                ZoneId zoneId = ZoneId.of(timeZoneSetting);
+                tz = TimeZone.getTimeZone(zoneId);
+                log.debug("Using timezone in settings to set the Trigger timezone: " + zoneId);
+            } catch (DateTimeException e) {
+                log.error(e);
+            }
+
+        }
+
+        return QuartzSchedulerUtils.getTrigger(getUuid(), AbstractHarvester.HARVESTER_GROUP_NAME, getEvery(), MAX_EVERY, tz);
     }
 
     /**

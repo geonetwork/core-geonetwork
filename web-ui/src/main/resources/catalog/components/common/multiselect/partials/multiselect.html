@@ -2,9 +2,11 @@
   <div class="col-md-5">
     <label data-translate="" class="text-capitalize">unselected</label>
     <input class="form-control"
+           data-ng-disabled="readonlyMode"
            data-ng-model="optionsSearch.$"
            placeholder="{{'filter' | translate}}"/>
     <select multiple=""
+            data-ng-disabled="readonlyMode"
             class="form-control"
             data-ng-model="currentSelectionLeft">
       <option data-ng-repeat="e in options | filter:optionsSearch | orderBy:'langlabel'"
@@ -16,17 +18,21 @@
   <div class="col-md-1">
     <br/>
     <div class="btn-group-vertical">
-      <button class="btn btn-default fa fa-angle-right" data-ng-click="select()"/>
-      <button class="btn btn-default fa fa-angle-left" data-ng-click="unselect()"/>
+      <button class="btn btn-default fa fa-angle-right" data-ng-click="select()"
+              data-ng-disabled="readonlyMode"/>
+      <button class="btn btn-default fa fa-angle-left" data-ng-click="unselect()"
+              data-ng-disabled="readonlyMode"/>
     </div>
   </div>
   <div class="col-md-5">
     <label data-translate="" class="text-capitalize">selected</label>
     <input class="form-control"
+           data-ng-disabled="readonlyMode"
            data-ng-model="selectedSearch.$"
            placeholder="{{'filter' | translate}}"/>
     <select multiple=""
             class="form-control"
+            data-ng-disabled="readonlyMode"
             data-ng-model="currentSelectionRight">
       <option data-ng-repeat="e in selected | filter:selectedSearch | orderBy:'langlabel'"
               value="{{e.id}}"

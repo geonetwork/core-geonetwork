@@ -77,7 +77,7 @@
     <description>Nom de la propriété, c’est-à-dire de la table</description>
   </element>
   <element name="gfc:carrierOfCharacteristics">
-    <label>Caractéristiques des attributs</label>
+    <label>Attribut</label>
     <description>Caractéristiques des attributs</description>
   </element>
   <element name="gfc:definition">
@@ -184,6 +184,12 @@
   <element name="gfc:valueType">
     <label>Type</label>
     <description></description>
+  </element>
+  <element name="gco:aName">
+    <label>Type</label>
+    <description/>
+    <help/>
+    <condition/>
   </element>
   <element name="gfc:memberName">
     <label>Nom</label>

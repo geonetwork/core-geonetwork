@@ -30,12 +30,17 @@
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
   <version>3.11.0-SNAPSHOT</version>
+
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
     resources through the web.
   </description>
   <url>http://geonetwork-opensource.org</url>
+  <organization>
+    <name>Open Source Geospatial Foundation</name>
+    <url>https://www.osgeo.org/</url>
+  </organization>
   <scm>
     <connection>
       scm:git:https://github.com/geonetwork/core-geonetwork
@@ -86,21 +91,6 @@
     </mailingList>
   </mailingLists>
 
-  <!-- TODO developer part-->
-  <developers>
-    <developer>
-      <name/>
-      <id/>
-      <organization/>
-      <organizationUrl/>
-      <email/>
-      <roles>
-        <role/>
-      </roles>
-      <timezone/>
-    </developer>
-  </developers>
-
   <licenses>
     <license>
       <name>General Public License (GPL)</name>
@@ -140,8 +130,13 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>2.6.1</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <groupId>net.alchim31.maven</groupId>
@@ -238,12 +233,12 @@
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.8</version>
+          <version>3.0.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
@@ -270,23 +265,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
-
-      <!-- artifact assembly -->
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptors>
-            <descriptor>release/zip-war.xml</descriptor>
-            <descriptor>release/bin.xml</descriptor>
-          </descriptors>
-          <finalName>geonetwork-${project.version}</finalName>
-          <outputDirectory>${project.build.directory}/release</outputDirectory>
-        </configuration>
-      </plugin>
+   
       <!-- run integration tests after unit tests -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -308,7 +292,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>-Dfile.encoding=UTF-8 -Xmx1G</argLine>
+          <argLine>-Dfile.encoding=UTF-8 -Xmx1G -Djava.awt.headless=true</argLine>
           <!--<rerunFailingTestsCount>5</rerunFailingTestsCount>-->
           <runOrder>alphabetical</runOrder>
           <forkCount>${system.numCores}</forkCount>
@@ -376,9 +360,9 @@
         <version>9.1.0.8b</version>
       </dependency>
       <dependency>
-        <groupId>com.vividsolutions</groupId>
-        <artifactId>jts</artifactId>
-        <version>1.13</version>
+        <groupId>org.locationtech.jts</groupId>
+        <artifactId>jts-core</artifactId>
+        <version>1.16.1</version>
       </dependency>
       <dependency>
         <groupId>com.github.lookfirst</groupId>
@@ -644,13 +628,13 @@
         <version>1.3</version> <!-- TODO check version -->
       </dependency>
       <!-- May be required to register connection unwrappers with
-			     geotools
+           geotools
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-jdbc</artifactId>
         <version>2.5.3</version>
       </dependency>
-			-->
+      -->
       <dependency>
         <groupId>org.eclipse.core</groupId>
         <artifactId>org.eclipse.core.runtime</artifactId>
@@ -679,12 +663,7 @@
         <version>1.0</version>
       </dependency>
 
-      <!-- Geotools and spatial search stuff -->
-      <dependency>
-        <groupId>org.geotools</groupId>
-        <artifactId>gt-api</artifactId>
-        <version>${geotools.version}</version>
-      </dependency>
+      <!-- GeoTools and spatial search stuff -->
       <dependency>
         <groupId>org.geotools.xsd</groupId>
         <artifactId>gt-xsd-gml3</artifactId>
@@ -711,7 +690,7 @@
         <version>${geotools.version}</version>
         <exclusions>
           <exclusion>
-					<!-- org.apache.xml:xml-commons-resolver:jar:1.2 -->
+            <!-- org.apache.xml:xml-commons-resolver:jar:1.2 -->
             <groupId>org.apache.xml</groupId>
             <artifactId>xml-commons-resolver</artifactId>
           </exclusion>
@@ -720,6 +699,16 @@
       <dependency>
         <groupId>org.geotools.xsd</groupId>
         <artifactId>gt-xsd-filter</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-wfs</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-fes</artifactId>
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
@@ -734,13 +723,24 @@
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
+        <artifactId>gt-render</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
         <artifactId>gt-epsg-hsql</artifactId>
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
-        <artifactId>gt-wfs</artifactId>
+        <artifactId>gt-wfs-ng</artifactId>
         <version>${geotools.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.xml</groupId>
+            <artifactId>xml-commons-resolver</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
@@ -843,17 +843,16 @@
         <version>1.7.8</version>
       </dependency>
 
-      <!-- Databased stuff -->
-      <dependency>
-        <groupId>com.h2database</groupId>
-        <artifactId>h2</artifactId>
-        <version>1.3.174</version>
-      </dependency>
       <!-- Other stuff -->
       <dependency>
         <groupId>dlib</groupId>  <!--FIXME Handled by local repository -->
         <artifactId>dlib</artifactId>
         <version>1.0</version> <!-- FIXME totally unknown -->
+      </dependency>
+      <dependency>
+        <groupId>org.mapfish.print</groupId>
+        <artifactId>print-lib</artifactId>
+        <version>2.1.6</version>
       </dependency>
 
       <!-- Lib utils -->
@@ -884,6 +883,7 @@
         <artifactId>metrics-log4j</artifactId>
         <version>${metrics.version}</version>
       </dependency>
+
       <!-- Tests -->
       <dependency>
         <groupId>junit</groupId>
@@ -922,7 +922,12 @@
         <scope>test</scope>
       </dependency>
 
-      <!-- db -->
+      <!-- Databased stuff -->
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>1.3.174</version>
+      </dependency>
       <dependency>
         <groupId>org.postgis</groupId>
         <artifactId>postgis-jdbc</artifactId>
@@ -950,7 +955,14 @@
         <artifactId>ojdbc</artifactId>
         <version>14</version>
       </dependency>
-			-->
+      -->
+      <!-- Oracle changed policy, this is from maven central -->
+      <!-- Oracle Free Use Terms and Conditions (FUTC) -->
+      <dependency>
+         <groupId>com.oracle.database.jdbc</groupId>
+         <artifactId>ojdbc8</artifactId>
+         <version>19.6.0.0</version>
+       </dependency>
       <dependency>
         <groupId>org.codehaus.izpack</groupId>
         <artifactId>izpack-standalone-compiler</artifactId>
@@ -1135,11 +1147,13 @@
         <artifactId>elasticsearch</artifactId>
         <version>${es.version}</version>
       </dependency>-->
+
       <!--Require Lucene 5 <dependency>
         <groupId>org.elasticsearch.client</groupId>
         <artifactId>transport</artifactId>
         <version>${es.version}</version>
       </dependency>-->
+
       <dependency>
         <groupId>io.searchbox</groupId>
         <artifactId>jest</artifactId>
@@ -1193,31 +1207,30 @@
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
-      <id>geotools</id>
-      <name>Geotools repository</name>
-      <url>http://download.osgeo.org/webdav/geotools/</url>
+      <id>osgeo</id>
+      <name>OSGeo repository</name>
+      <url>https://repo.osgeo.org/repository/release/</url>
     </repository>
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>boundless</id>
-      <name>Boundless repository</name>
-      <url>http://repo.boundlessgeo.com/main/</url>
-    </repository>
-    <repository>
+
+    <!-- managed by repo.osgeo.org k-int-cache -->
+    <!-- /marcxml/marcxml/*                    -->
+    <!-- /marc4j/marc4j/*                      -->
+    <!--repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
       <id>k-int</id>
       <name>Developer k-int repository</name>
       <url>http://maven.k-int.com/content/repositories/releases/</url>
-    </repository>
+    </repository-->
 
-
+    <!-- managed by repo.osgeo.org geonetwork-cache     -->
+    <!-- third party jar upload                         -->
+    <!-- TODO: move this content to geonetwork-releases -->
+    <!--
     <repository>
       <snapshots>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
       </snapshots>
       <releases>
         <enabled>true</enabled>
@@ -1226,37 +1239,27 @@
       <name>GeoNetwork remote repository</name>
       <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
-
-    <repository>
-      <id>mvnrepository.com</id>
-      <name>Repository that has juniversalchardet</name>
-      <url>http://mvnrepository.com/artifact</url>
-    </repository>
-    <repository>
-      <id>maven.geo-solutions.it</id>
-      <name>geo-solutions</name>
-      <url>http://maven.geo-solutions.it</url>
-    </repository>
-
-    <repository>
-      <id>maven2</id>
-      <name>Repository maven2</name>
-      <url>https://repo.maven.apache.org/maven2</url>
-    </repository>
-
+    -->
+    <!-- managed by repo.osgeo.org seasar-cache       -->
+    <!-- /net.arnx.jsonic/jsonic/*                    -->
     <!-- seasar repo, has jsonic - used by langdetect -->
+    <!--
     <repository>
       <id>maven.seasar.org</id>
       <name>The Seasar Foundation Maven2 Repository</name>
       <url>http://maven.seasar.org/maven2</url>
     </repository>
-
+    -->
+    <!-- managed by repo.osgeo.org geonetwork-releases  -->
+    <!-- third party jar upload                        -->
+    <!-- org.mapfish.print:print-lib-2.1.6.jar         -->
+    <!--
     <repository>
       <id>georchestra-mfprint</id>
       <name>build-releases</name>
       <url>https://packages.georchestra.org/artifactory/mapfish-print</url>
     </repository>
-
+    -->
   </repositories>
 
 
@@ -1332,8 +1335,56 @@
         <module>jmeter</module>
       </modules>
     </profile>
+    <profile>
+      <id>macOS</id>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>x86_64</arch>
+        </os>
+      </activation>
+      <properties>
+          <es.version.sha512>1e6a707190c274f76f0ebe05400c39a2b923cc1a261ab2e97b3ffe825ad6a73282a31d98284336e4b4f633cc400af47ac8dfad814d636abd497589c8853ec951</es.version.sha512>
+          <es.platform>darwin-x86_64</es.platform>
+          <kb.executable>kibana.sh</kb.executable>
+          <kb.platform>darwin-x86</kb.platform>
+          <kb.installer.extension>tar.gz</kb.installer.extension>
+          <kb.version.sha512>d5eddedc0a945fd085442241fde1652811cd020de62cee630d91e6f6f69089b8c70bcee869dad551beb14a24fa6aee3ac87d1c0e1e0c3d4abd83a65bdcc69823</kb.version.sha512>
+      </properties>
+    </profile>
+     <profile>
+       <id>windows</id>
+       <activation>
+         <os>
+           <family>Windows</family>
+         </os>
+       </activation>
+       <properties>
+         <es.version.sha512>1a5b98f4e2045f6353d1d18360a017d8f04565d23b4dde56b6c647c22b061dd7df7b323b4bd295303d841998c9d0d0f289ef1469db65ef28bc86348acf83e5ce</es.version.sha512>
+         <es.platform>windows-x86_64</es.platform>
+         <es.installer.extension>zip</es.installer.extension>
+         <kb.executable>kibana.bat</kb.executable>
+         <kb.platform>windows-x86</kb.platform>
+         <kb.installer.extension>zip</kb.installer.extension>
+         <kb.version.sha512>d9ed16170f9ef88a2dc4f0d300c52157674d1fe902cd1da3e9472d0830c0810b9417d9d3af6116dcdb328dea038998f9b4c695e0284d6094f43777b6598a7bf4</kb.version.sha512>
+       </properties>
+     </profile>
   </profiles>
 
+  <distributionManagement>
+    <repository>
+      <id>osgeo</id>
+      <name>OSGeo GeoNetwork Release Repository</name>
+      <url>https://repo.osgeo.org/repository/geonetwork-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>osgeo</id>
+      <name>OSGeo GeoNetwork Snapshot Repository</name>
+      <url>https://repo.osgeo.org/repository/geonetwork-snapshots/</url>
+     </snapshotRepository>
+  </distributionManagement>
+
+  <!--
   <distributionManagement>
     <snapshotRepository>
       <id>scp-repository.geonetwork-opensource.org</id>
@@ -1341,6 +1392,7 @@
       <url>scpexe://TO DEFINED</url>
     </snapshotRepository>
   </distributionManagement>
+  -->
 
   <properties>
     <db.properties>WEB-INF/config-db/jdbc.properties</db.properties>
@@ -1351,15 +1403,29 @@
     <!--<app.properties>file:/${geonetwork.dir}/config.properties</app.properties>-->
 
     <!-- Configure database config file to use. Could be
-     h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi-postgres-postgis
+     h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi
      -->
-    <db.type>h2</db.type>
+    <!--
+    The following environment variable can also be set for connecting to the database.
+        GEONETWORK_DB_TYPE=h2
+        GEONETWORK_DB_HOST=localhost
+        GEONETWORK_DB_PORT=
+        GEONETWORK_DB_NAME=gn
+        GEONETWORK_DB_USERNAME=www-data
+        GEONETWORK_DB_PASSWORD=www-data
+        GEONETWORK_DB_CONNECTION_PROPERTIES=
+    -->
+
+    <db.type>${geonetwork.db.type:h2}</db.type>
+    <!-- Instead of using db_type a specific config file can be specified -->
     <db.config.file>../config-db/${db.type}.xml</db.config.file>
-    <db.host>localhost</db.host>
-    <db.port>5432</db.port>
-    <db.name>gn</db.name>
-    <db.username>www-data</db.username>
-    <db.password>www-data</db.password>
+    <db.host>#{systemEnvironment['GEONETWORK_DB_HOST']?:'localhost'}</db.host>
+    <db.port>#{systemEnvironment['GEONETWORK_DB_PORT']}</db.port>
+    <db.name>#{systemEnvironment['GEONETWORK_DB_NAME']?:'gn'}</db.name>
+    <db.username>#{systemEnvironment['GEONETWORK_DB_USERNAME']?:'www-data'}</db.username>
+    <db.password>#{systemEnvironment['GEONETWORK_DB_PASSWORD']?:'www-data'}</db.password>
+    <db.connectionProperties>#{systemEnvironment['GEONETWORK_DB_CONNECTION_PROPERTIES']}</db.connectionProperties>
+
     <db.pool.maxActive>30</db.pool.maxActive>
     <db.pool.maxIdle>10</db.pool.maxIdle>
     <db.pool.initialSize>10</db.pool.initialSize>
@@ -1376,6 +1442,13 @@
      when watchlist notifier is triggered (Default 4AM) -->
     <savedselection.watchlist.frequency>0 0 4 * * ?</savedselection.watchlist.frequency>
 
+    <!-- Proxy security configuration:
+    * NONE: allow all.
+    * DB_LINK_CHECK:
+       * allow all for authenticated user
+       * allow only host registered in metadata link table
+    -->
+    <proxy.securityMode>DB_LINK_CHECK</proxy.securityMode>
 
     <!-- Jetty plugin port configuration -->
     <jetty.port>8080</jetty.port>
@@ -1413,7 +1486,10 @@
 
     <jms.url>tcp://localhost:61616</jms.url>
     <activemq.version>5.6.0</activemq.version>
-    <!-- End es and camel stuffs -->
+
+    <!-- Avoid to create any sessions for crawlers.
+    Define the list of User-Agent to be considered as bot. -->
+    <!-- bot.regexpFilter>.*(bot|crawler|baiduspider|80legs|ia_archiver|voyager|yahoo! slurp|mediapartners-google|Linguee Bot|SemrushBot).*</bot.regexpFilter-->
 
     <!-- List of comma separated values of hosts for which
     CORS headers are added (eg. www.geonetwork-opensource.org,osgeo.org).
@@ -1432,8 +1508,8 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>16.0</geotools.version>
-    <pg.version>9.4.1211</pg.version>
+    <geotools.version>23.0</geotools.version>
+    <pg.version>42.2.5</pg.version>
 
     <lucene.version>4.9.0</lucene.version>
 
@@ -1449,7 +1525,6 @@
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <print-lib.version>2.1.6</print-lib.version>
     <jackson.version>2.10.3</jackson.version>
     <flying-saucer>9.0.7</flying-saucer>
     <camel.version>2.14.4</camel.version>
@@ -1459,6 +1534,5 @@
     <xbean.version>3.18</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.5.9</httpcomponents.version>
-    <gn.schemas.version>3.7</gn.schemas.version>
   </properties>
 </project>

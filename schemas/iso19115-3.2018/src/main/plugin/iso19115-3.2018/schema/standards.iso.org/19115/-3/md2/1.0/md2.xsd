@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0" xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0" xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:md1="http://standards.iso.org/iso/19115/-3/md1/1.0" xmlns:md2="http://standards.iso.org/iso/19115/-3/md2/1.0" xmlns:mex="http://standards.iso.org/iso/19115/-3/mex/1.0" xmlns:mpc="http://standards.iso.org/iso/19115/-3/mpc/1.0" xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/md2/1.0" version="1.0">
+  <annotation>
+    <documentation>Namespace &lt;font color="#1f497d"&gt;that identifies conformance class that includes user-defined metadata extensions in metadata records&lt;/font&gt;</documentation>
+  </annotation>
+  <include schemaLocation="metadataWithExtensions.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/cit/1.0" schemaLocation="../../../../19115/-3/cit/1.0/cit.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gcx/1.0" schemaLocation="../../../../19115/-3/gcx/1.0/gcx.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/lan/1.0" schemaLocation="../../../../19115/-3/lan/1.0/lan.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/md1/1.0" schemaLocation="../../../../19115/-3/md1/1.0/md1.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mex/1.0" schemaLocation="../../../../19115/-3/mex/1.0/mex.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mpc/1.0" schemaLocation="../../../../19115/-3/mpc/1.0/mpc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mri/1.0" schemaLocation="../../../../19115/-3/mri/1.0/mri.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

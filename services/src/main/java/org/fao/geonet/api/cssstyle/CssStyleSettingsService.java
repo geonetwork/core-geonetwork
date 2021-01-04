@@ -300,11 +300,17 @@ public class CssStyleSettingsService {
             final String key = iter.next();
             if (input.getString(key) != null) {
 
-                if(!key.equals("gnBackgroundImage") && !StringUtils.isEmpty(input.getString(key))) {
+                if(!key.equals("gnBackgroundImage") && !key.equals("gnHeaderHeight") && !StringUtils.isEmpty(input.getString(key))) {
                     Pattern pattern = Pattern.compile("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
                     Matcher matcher = pattern.matcher(input.getString(key));
                     if (!matcher.matches()) {
                         throw new JSONException("Invalid color value. It must be in the format #RRGGBB.");
+                    }
+                } else if(key.equals("gnHeaderHeight") && !StringUtils.isEmpty(input.getString(key))) {
+                    Pattern pattern = Pattern.compile("^([0-9])+(px)$");
+                    Matcher matcher = pattern.matcher(input.getString(key));
+                    if (!matcher.matches()) {
+                        throw new JSONException("Invalid pixel value. It must be in the format 100px.");
                     }
                 } else if(key.equals("gnBackgroundImage") && !StringUtils.isEmpty(input.getString(key))) {
                     Pattern pattern = Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");

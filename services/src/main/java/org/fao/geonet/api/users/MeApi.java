@@ -36,8 +36,10 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.users.model.MeResponse;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
@@ -66,6 +68,9 @@ import springfox.documentation.annotations.ApiIgnore;
     description = "Me operations")
 @Controller("me")
 public class MeApi {
+
+    @Autowired
+    AccessManager accessManager;
 
     @ApiOperation(
         value = "Get information about me",
@@ -98,31 +103,14 @@ public class MeApi {
                 .setUsername(userSession.getUsername()).setName(userSession.getName()).setSurname(userSession.getSurname())
                 .setEmail(userSession.getEmailAddr()).setOrganisation(userSession.getOrganisation())
                 .setAdmin(userSession.getProfile().equals(Profile.Administrator))
-                .setGroupsWithRegisteredUser(getGroups(userSession, Profile.RegisteredUser))
-                .setGroupsWithEditor(getGroups(userSession, Profile.Editor))
-                .setGroupsWithReviewer(getGroups(userSession, Profile.Reviewer))
-                .setGroupsWithUserAdmin(getGroups(userSession, Profile.UserAdmin));
+                .setGroupsWithRegisteredUser(accessManager.getGroups(userSession, Profile.RegisteredUser))
+                .setGroupsWithEditor(accessManager.getGroups(userSession, Profile.Editor))
+                .setGroupsWithReviewer(accessManager.getGroups(userSession, Profile.Reviewer))
+                .setGroupsWithUserAdmin(accessManager.getGroups(userSession, Profile.UserAdmin));
 
             return new ResponseEntity<>(myInfos, HttpStatus.OK);
         }
 
         return new ResponseEntity<>(NO_CONTENT);
-    }
-
-    /**
-     *  Retrieves the user's groups ids
-     * @param session
-     * @param profile
-     * @return
-     * @throws SQLException
-     */
-    private List<Integer> getGroups(UserSession session, Profile profile) throws SQLException {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
-
-        Specifications<UserGroup> spec = Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
-        spec = spec.and(UserGroupSpecs.hasProfile(profile));
-
-        return userGroupRepository.findGroupIds(spec);
     }
 }

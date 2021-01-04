@@ -322,7 +322,6 @@ public class MetadataApi {
             isJson ? "json" : "xml"
         ));
         return isJson ? Xml.getJSON(xml) : xml;
-        //return xml;
     }
 
     @ApiOperation(

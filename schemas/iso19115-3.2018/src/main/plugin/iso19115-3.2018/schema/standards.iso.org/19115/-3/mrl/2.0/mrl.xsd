@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" 
+  xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mrl/2.0" version="1.0">
+  <annotation>
+    <documentation>Namespace for XML elements &lt;font color="#1f497d"&gt;used to document the lineage (provenance) of a resource&lt;/font&gt;.</documentation>
+  </annotation>
+  <include schemaLocation="lineage.xsd"/>
+  <include schemaLocation="lineageImagery.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19157/-2/mdq/1.0" version="1.0">
+  <annotation>
+    <documentation>Added by Erling Onstein, 2010-03-11 to follow up the Paris meeting 2010-03-04-05.</documentation>
+  </annotation>
+  <include schemaLocation="mdq.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="DQ_AggregationDerivation" substitutionGroup="mdq:DQ_EvaluationMethod" type="mdq:DQ_AggregationDerivation_Type">
+    <annotation>
+      <documentation>Aggregation or derivation method</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_AggregationDerivation_Type">
+    <complexContent>
+      <extension base="mdq:DQ_EvaluationMethod_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_AggregationDerivation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_AggregationDerivation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractDQ_DataEvaluation" substitutionGroup="mdq:DQ_EvaluationMethod" type="mdq:AbstractDQ_DataEvaluation_Type">
+    <annotation>
+      <documentation>data evaluation method</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractDQ_DataEvaluation_Type">
+    <complexContent>
+      <extension base="mdq:DQ_EvaluationMethod_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractDQ_DataEvaluation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:AbstractDQ_DataEvaluation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_EvaluationMethod" substitutionGroup="gco:AbstractObject" type="mdq:DQ_EvaluationMethod_Type">
+    <annotation>
+      <documentation>Description of the evaluation method and procedure applied</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_EvaluationMethod_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="dateTime" type="gco:DateTime_PropertyType">
+            <annotation>
+              <documentation>date or range of dates on which a data quality measure was applied</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="evaluationMethodDescription" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>description of the evaluation method</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="evaluationProcedure" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>reference to the procedure information</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="referenceDoc" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>Information on documents which are referenced in developing and applying a data quality evaluation method</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="evaluationMethodType" type="mdq:DQ_EvaluationMethodTypeCode_PropertyType">
+            <annotation>
+              <documentation>type of method used to evaluate quality of the data</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_EvaluationMethod_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_EvaluationMethod"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_EvaluationMethodTypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>type of method for evaluating an identified data quality measure</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_EvaluationMethodTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_EvaluationMethodTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_FullInspection" substitutionGroup="mdq:AbstractDQ_DataEvaluation" type="mdq:DQ_FullInspection_Type">
+    <annotation>
+      <documentation>full inspection</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_FullInspection_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_DataEvaluation_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_FullInspection_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_FullInspection"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_IndirectEvaluation" substitutionGroup="mdq:AbstractDQ_DataEvaluation" type="mdq:DQ_IndirectEvaluation_Type">
+    <annotation>
+      <documentation>indirect evaluation</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_IndirectEvaluation_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_DataEvaluation_Type">
+        <sequence>
+          <element maxOccurs="unbounded" name="deductiveSource" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>information on which data are used as sources in deductive evaluation method</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_IndirectEvaluation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_IndirectEvaluation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQ_SampleBasedInspection" substitutionGroup="mdq:AbstractDQ_DataEvaluation" type="mdq:DQ_SampleBasedInspection_Type">
+    <annotation>
+      <documentation>sample based inspection</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQ_SampleBasedInspection_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_DataEvaluation_Type">
+        <sequence>
+          <element name="samplingScheme" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>information of the type of sampling scheme and description of the sampling procedure</documentation>
+            </annotation>
+          </element>
+          <element name="lotDescription" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>information of how lots are defined</documentation>
+            </annotation>
+          </element>
+          <element name="samplingRatio" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>information on how many samples on average are extracted for inspection from each lot of population</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQ_SampleBasedInspection_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:DQ_SampleBasedInspection"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

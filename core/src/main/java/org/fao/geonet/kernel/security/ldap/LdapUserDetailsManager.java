@@ -71,7 +71,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.util.Assert;
 
 /**
- * Made this class because of the stupid implementation of {@link org.springframework.security.ldap.userdetails.LdapUserDetailsManager#setGroupMemberAttributeName(String)}
+ * Made this class because of the stupid implementation of {@link org.springframework.security.ldap.userdetails.LdapUserDetailsManager#setGroupMembeldaprAttributeName(String)}
  *
  * @author delawen
  */
@@ -245,6 +245,7 @@ public class LdapUserDetailsManager implements UserDetailsManager {
                 throws NamingException {
                 DistinguishedName fullDn = LdapUtils.getFullDn(dn, ctx);
                 SearchControls ctrls = new SearchControls();
+                ctrls.setSearchScope(SearchControls.SUBTREE_SCOPE); // search down the tree
                 ctrls.setReturningAttributes(new String[]{groupRoleAttributeName});
 
                 return ctx.search(groupSearchBase, groupSearchFilter,

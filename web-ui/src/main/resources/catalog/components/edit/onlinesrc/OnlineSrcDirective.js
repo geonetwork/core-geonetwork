@@ -194,8 +194,9 @@
    * </ul>
    *
    */
-      .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit', '$filter',
-        function(gnOnlinesrc, gnCurrentEdit, $filter) {
+      .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit',
+        'gnConfigService', '$filter',
+        function(gnOnlinesrc, gnCurrentEdit, gnConfigService, $filter) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -233,6 +234,25 @@
               scope.isCategoryEnable = function(category) {
                 return angular.isUndefined(scope.types) ? true :
                         category.match(scope.types) !== null;
+              };
+
+              /**
+               * Builds metadata url checking if the resource points to internal or external url.
+               *
+               * @param resource
+               * @returns {string|*}
+               */
+              scope.buildMetadataLink = function(resource) {
+                var baseUrl = gnConfigService.getServiceURL();
+
+                var resourceUrl = resource.url[scope.lang] ||
+                  resource.url['eng'];
+
+                if (resourceUrl.indexOf(baseUrl) == 0) {
+                  return '../metadata/' + resource.id;
+                } else {
+                  return resource.url[scope.lang];
+                }
               };
 
               // Reload relations when a directive requires it
@@ -322,6 +342,7 @@
                 scope.ctrl = {};
               },
               post: function(scope, element, attrs) {
+                scope.clearFormOnProtocolChange = !(attrs.clearFormOnProtocolChange == "false"); //default to true (old behavior)
                 scope.popupid = attrs['gnPopupid'];
 
                 scope.config = null;
@@ -484,27 +505,21 @@
                 function getTypeConfig(link) {
                   for (var i = 0; i < scope.config.types.length; i++) {
                     var c = scope.config.types[i];
-                    if (scope.schema === 'iso19115-3') {
-                      var p = c.fields &&
-                              c.fields.protocol &&
-                              c.fields.protocol.value || '',
-                          f = c.fields &&
-                          c.fields.function &&
-                          c.fields.function.value || '',
-                          ap = c.fields &&
-                          c.fields.applicationProfile &&
-                          c.fields.applicationProfile.value || '';
-                      if (c.process.indexOf(link.type) === 0 &&
-                          p === (link.protocol || '') &&
-                          f === (link.function || '') &&
-                          ap === (link.applicationProfile || '')
-                      ) {
-                        return c;
-                      }
-                    } else {
-                      if (c.process.indexOf(link.type) === 0) {
-                        return c;
-                      }
+                    var p = c.fields &&
+                            c.fields.protocol &&
+                            c.fields.protocol.value || '',
+                        f = c.fields &&
+                        c.fields.function &&
+                        c.fields.function.value || '',
+                        ap = c.fields &&
+                        c.fields.applicationProfile &&
+                        c.fields.applicationProfile.value || '';
+                    if (c.process.indexOf(link.type) === 0 &&
+                        p === (link.protocol || '') &&
+                        f === (link.function || '') &&
+                        ap === (link.applicationProfile || '')
+                    ) {
+                      return c;
                     }
                   }
                   return scope.config.types[0];
@@ -540,6 +555,31 @@
                     var typeConfig = linkToEdit ?
                       getTypeConfig(linkToEdit) :
                       getType(linkType);
+
+                    if (gnCurrentEdit.mdOtherLanguages) {
+                       scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
+                       scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
+
+                       // not multilingual {"fre":"#"}
+                       if (Object.keys(scope.mdLangs).length > 1) {
+                         scope.isMdMultilingual = true;
+                         scope.mdLang = gnCurrentEdit.mdLanguage;
+
+                         for (var p in scope.mdLangs) {
+                           var v = scope.mdLangs[p];
+                           if (v.indexOf('#') === 0) {
+                             var l = v.substr(1);
+                             if (!l) {
+                               l = scope.mdLang;
+                             }
+                             scope.mdLangs[p] = l;
+                           }
+                         }
+                       } else {
+                         scope.isMdMultilingual = false;
+                       }
+                    }
+
                     scope.config.multilingualFields = [];
                     angular.forEach(typeConfig.fields, function(f, k) {
                     if (scope.isMdMultilingual &&
@@ -548,29 +588,7 @@
                       }
                     });
 
-                    if (gnCurrentEdit.mdOtherLanguages) {
-                      scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
-                      scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
 
-                      // not multilingual {"fre":"#"}
-                      if (Object.keys(scope.mdLangs).length > 1) {
-                        scope.isMdMultilingual = true;
-                        scope.mdLang = gnCurrentEdit.mdLanguage;
-
-                        for (var p in scope.mdLangs) {
-                          var v = scope.mdLangs[p];
-                          if (v.indexOf('#') === 0) {
-                            var l = v.substr(1);
-                            if (!l) {
-                              l = scope.mdLang;
-                            }
-                            scope.mdLangs[p] = l;
-                          }
-                        }
-                      } else {
-                        scope.isMdMultilingual = false;
-                      }
-                    }
 
                     initThumbnailMaker();
                     resetForm();
@@ -620,9 +638,13 @@
                         if (scope.isFieldMultilingual(field)) {
                           var e = {};
                           $.each(scope.mdLangs, function(key, v) {
-                            e[v] =
-                              (linkToEdit[fields[field]] &&
-                                linkToEdit[fields[field]][key]) || '';
+                          e[v] = ''; // default
+                          // if key is in the values dictionary
+                          if (linkToEdit[fields[field]] && linkToEdit[fields[field]][key])
+                              e[v] = linkToEdit[fields[field]][key];
+                          // otherwise if v is in values dictionary
+                          else if (linkToEdit[fields[field]] && linkToEdit[fields[field]][v])
+                               e[v] = linkToEdit[fields[field]][v];
                           });
                           fields[field] = e;
                         }
@@ -703,18 +725,27 @@
                   scope.layers = [];
                   scope.OGCProtocol = false;
                   if (scope.params && !scope.isEditing) {
-                    scope.params.name = '';
-                    scope.params.desc = '';
-                    initMultilingualFields();
+                    if (scope.clearFormOnProtocolChange) {
+                      scope.params.name = '';
+                      scope.params.desc = '';
+                      initMultilingualFields();
+                    }
+                    else {
+                      initMultilingualFields(['name','desc']);
+                    }
                     scope.params.selectedLayers = [];
                     scope.params.layers = [];
                   }
                 };
 
-                var initMultilingualFields = function() {
+                //doNotmodifyFields - list of field names
+                //   this will NOT update fields in this list.
+                var initMultilingualFields = function(doNotModifyFields) {
                   scope.config.multilingualFields.forEach(function(f) {
-                    scope.params[f] = {};
-                    setParameterValue(f, '');
+                    if ( (!doNotModifyFields) || (!_.contains(doNotModifyFields,f)) ) {
+                      scope.params[f] = {};
+                      setParameterValue(f, '');
+                    }
                   });
                 };
 
@@ -926,7 +957,7 @@
                   if (!angular.isUndefined(scope.params.protocol) && o !== n) {
                     resetProtocol();
                     scope.OGCProtocol = checkIsOgc(scope.params.protocol);
-                    if (scope.OGCProtocol != null && !scope.isEditing) {
+                    if (scope.OGCProtocol != null && !scope.isEditing && scope.clearFormOnProtocolChange) {
                       // Reset parameter in case of multilingual metadata
                       // Those parameters are object.
                       scope.params.name = '';

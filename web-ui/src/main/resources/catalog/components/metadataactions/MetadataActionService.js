@@ -60,8 +60,8 @@
       var windowName = 'geonetwork';
       var windowOption = '';
       var translations = null;
-      $translate(['metadataPublished', 'metadataUnpublished',
-        'metadataPublishedError', 'metadataUnpublishedError']).then(function(t) {
+      $translate(['metadataPublished', 'metadataUnpublished', 'metadataLinksValidated',
+        'metadataPublishedError', 'metadataUnpublishedError', 'metadataValidated']).then(function(t) {
         translations = t;
       });
       var alertResult = function(msg) {
@@ -157,6 +157,27 @@
         window.open(gnHttp.getService('csv') +
             '?bucket=' + bucket, windowName, windowOption);
       };
+      this.validateMdLinks = function(bucket) {
+        $rootScope.$broadcast('operationOnSelectionStart');
+        return gnHttp.callService('../api/records/links?' +
+          'bucket=' + bucket, null, {
+          method: 'POST'
+        }).then(function(data) {
+          $rootScope.processReport = data.data;
+
+          // A report is returned
+          gnUtilityService.openModal({
+            title: translations.metadataLinksValidated,
+            content: '<div gn-batch-report="processReport"></div>',
+            className: 'gn-validation-popup',
+            onCloseCallback: function () {
+              $rootScope.$broadcast('operationOnSelectionStop');
+              $rootScope.$broadcast('search');
+              $rootScope.processReport = null;
+            }
+          }, $rootScope, 'metadataLinksValidated');
+        });
+      };
       this.validateMd = function(md, bucket) {
 
         $rootScope.$broadcast('operationOnSelectionStart');
@@ -170,9 +191,19 @@
               'bucket=' + bucket, null, {
                     method: 'PUT'
                   }).then(function(data) {
-            alertResult(data.data);
-            $rootScope.$broadcast('operationOnSelectionStop');
-            $rootScope.$broadcast('search');
+            $rootScope.processReport = data.data;
+
+            // A report is returned
+            gnUtilityService.openModal({
+              title: translations.metadataValidated,
+              content: '<div gn-batch-report="processReport"></div>',
+              className: 'gn-validation-popup',
+              onCloseCallback: function () {
+                $rootScope.$broadcast('operationOnSelectionStop');
+                $rootScope.$broadcast('search');
+                $rootScope.processReport = null;
+              }
+            }, $rootScope, 'metadataValidationUpdated');
           });
         }
       };

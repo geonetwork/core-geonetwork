@@ -31,6 +31,8 @@
                 version="2.0"
                 exclude-result-prefixes="#all">
 
+  <!-- include extra functions langId19139 and langId_from_gmdlanguage19139 -->
+  <xsl:include href="../../iso19139/convert/functions.xsl"/>
 
   <!-- Template used to return a gco:CharacterString element
       in default metadata language or in a specific locale

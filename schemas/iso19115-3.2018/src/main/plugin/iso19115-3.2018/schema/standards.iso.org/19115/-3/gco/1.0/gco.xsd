@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" 
+	targetNamespace="http://standards.iso.org/iso/19115/-3/gco/1.0" 
+	elementFormDefault="qualified">
+	<!-- ================================= Annotation ================================ -->
+	<xs:annotation>
+		<xs:documentation>This is the root document of the The Geographic COmmon (GCO) http://standards.iso.org/iso/19115/-3/gco/1.0 namespace, a component of the XML Schema Implementation of Geographic Information Metadata (ISO19115-1). Original implementation documented in ISO/TS 19139:2007 is refactored in this implementation for ISO19115-3 to remove dependency of base data types on GML (the only gml element used was the enumeration of nilReasons). GCO includes all the definitions of http://standards.iso.org/iso/19115/-3/gco/1.0 namespace. Elements that are extensions of GML elements are defined in the gmw namespace in ISO19115-3. </xs:documentation>
+	</xs:annotation>
+	<!-- ================================== Imports ================================== -->
+	<xs:include schemaLocation="baseTypes2014.xsd"/>
+	<!-- ########################################################################### -->
+	<!-- ########################################################################### -->
+	<!-- ================================== Classes ================================= -->
+</xs:schema>

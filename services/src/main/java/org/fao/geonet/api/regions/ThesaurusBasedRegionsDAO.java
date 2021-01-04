@@ -23,8 +23,8 @@
 
 package org.fao.geonet.api.regions;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
 
 import jeeves.JeevesCacheManager;
 import jeeves.server.context.ServiceContext;

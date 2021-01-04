@@ -27,6 +27,7 @@ Mapping between :
 - WMS 1.0.0
 - WMS 1.1.1
 - WMS 1.3.0
+- WMTS 1.0.0
 - WCS 1.0.0
 - WFS 1.0.0
 - WFS 1.1.0
@@ -41,6 +42,7 @@ Mapping between :
                 xmlns:wfs="http://www.opengis.net/wfs"
                 xmlns:wcs="http://www.opengis.net/wcs"
                 xmlns:wms="http://www.opengis.net/wms"
+                xmlns:wmts="http://www.opengis.net/wmts/1.0"
                 xmlns:ows="http://www.opengis.net/ows"
                 xmlns:owsg="http://www.opengeospatial.net/ows"
                 xmlns:ows11="http://www.opengis.net/ows/1.1"
@@ -52,58 +54,51 @@ Mapping between :
                 xmlns:inspire_vs="http://inspire.ec.europa.eu/schemas/inspire_vs/1.0"
                 version="2.0"
                 xmlns="http://www.isotc211.org/2005/gmd"
-                extension-element-prefixes="wcs ows wfs ows11 wps wps1 wps2 owsg">
-
-  <!-- ============================================================================= -->
+                exclude-result-prefixes="#all">
 
   <xsl:param name="uuid">uuid</xsl:param>
   <xsl:param name="lang">eng</xsl:param>
   <xsl:param name="topic"></xsl:param>
 
-  <!-- ============================================================================= -->
 
   <xsl:include href="resp-party.xsl"/>
   <xsl:include href="ref-system.xsl"/>
   <xsl:include href="identification.xsl"/>
 
-  <!-- ============================================================================= -->
 
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
 
-  <!-- ============================================================================= -->
+
 
   <xsl:template match="/">
     <xsl:apply-templates/>
   </xsl:template>
 
-  <!-- ============================================================================= -->
 
-  <xsl:template match="WMT_MS_Capabilities|wfs:WFS_Capabilities|wcs:WCS_Capabilities|
-         wps:Capabilities|wps1:Capabilities|wps2:Capabilities|wms:WMS_Capabilities">
+  <xsl:template match="WMT_MS_Capabilities|wfs:WFS_Capabilities|
+                       wcs:WCS_Capabilities|
+                       wps:Capabilities|wps1:Capabilities|wps2:Capabilities|
+                       wms:WMS_Capabilities|wmts:Capabilities">
 
     <xsl:variable name="ows">
       <xsl:choose>
         <xsl:when test="(local-name(.)='WFS_Capabilities' and namespace-uri(.)='http://www.opengis.net/wfs' and @version='1.1.0')
           or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengeospatial.net/wps')
           or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wps/1.0.0')
-          or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wps/2.0')">true</xsl:when>
+          or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wps/2.0')
+          or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wmts/1.0')">true</xsl:when>
         <xsl:otherwise>false</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
 
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 
     <MD_Metadata>
-
-      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
       <fileIdentifier>
         <gco:CharacterString>
           <xsl:value-of select="$uuid"/>
         </gco:CharacterString>
       </fileIdentifier>
-
-      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
       <language>
         <xsl:choose>
@@ -121,39 +116,30 @@ Mapping between :
         </xsl:choose>
       </language>
 
-      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
       <characterSet>
         <MD_CharacterSetCode codeList="./resources/codeList.xml#MD_CharacterSetCode"
                              codeListValue="utf8"/>
       </characterSet>
 
       <!-- parentIdentifier : service have no parent -->
-      <!-- mdHrLv -->
+
       <hierarchyLevel>
         <MD_ScopeCode
           codeList="./resources/codeList.xml#MD_ScopeCode"
           codeListValue="service"/>
       </hierarchyLevel>
 
-      <!-- mdHrLvName -->
-
-      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-      <xsl:choose>
-        <xsl:when test="Service/ContactInformation|
-          wfs:Service/wfs:ContactInformation|
-          wms:Service/wms:ContactInformation|
-                    ows:ServiceProvider|
-          owsg:ServiceProvider|
-          ows11:ServiceProvider|
-          ows2:ServiceProvider">
-          <xsl:for-each select="Service/ContactInformation|
-            wfs:Service/wfs:ContactInformation|
-            wms:Service/wms:ContactInformation|
+      <xsl:variable name="serviceProviderList"
+                    select="Service/ContactInformation|
+                        wfs:Service/wfs:ContactInformation|
+                        wms:Service/wms:ContactInformation|
                         ows:ServiceProvider|
-            owsg:ServiceProvider|
-            ows11:ServiceProvider|
-            ows2:ServiceProvider">
+                        owsg:ServiceProvider|
+                        ows11:ServiceProvider|
+                        ows2:ServiceProvider"/>
+      <xsl:choose>
+        <xsl:when test="$serviceProviderList">
+          <xsl:for-each select="$serviceProviderList">
             <contact>
               <CI_ResponsibleParty>
                 <xsl:apply-templates select="." mode="RespParty"/>
@@ -166,9 +152,8 @@ Mapping between :
         </xsl:otherwise>
       </xsl:choose>
 
-
-      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
+
       <dateStamp>
         <xsl:choose>
           <xsl:when test="//inspire_vs:ExtendedCapabilities/inspire_common:MetadataDate">
@@ -184,8 +169,6 @@ Mapping between :
         </xsl:choose>
       </dateStamp>
 
-      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
       <metadataStandardName>
         <gco:CharacterString>ISO 19119/2005</gco:CharacterString>
       </metadataStandardName>
@@ -193,10 +176,6 @@ Mapping between :
       <metadataStandardVersion>
         <gco:CharacterString>1.0</gco:CharacterString>
       </metadataStandardVersion>
-
-
-      <!--mdExtInfo-->
-      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
       <identificationInfo>
         <srv:SV_ServiceIdentification>
@@ -211,8 +190,6 @@ Mapping between :
         </srv:SV_ServiceIdentification>
       </identificationInfo>
 
-      <!--contInfo-->
-      <!--distInfo -->
       <distributionInfo>
         <MD_Distribution>
           <distributionFormat>
@@ -232,6 +209,9 @@ Mapping between :
                   <linkage>
                     <URL>
                       <xsl:choose>
+                        <xsl:when test="//wmts:Capabilities/wmts:ServiceMetadataURL">
+                          <xsl:value-of select="//wmts:Capabilities/wmts:ServiceMetadataURL/@xlink:href"/>
+                        </xsl:when>
                         <xsl:when test="$ows='true'">
                           <xsl:value-of select="//ows:Operation[@name='GetCapabilities']/ows:DCP/ows:HTTP/ows:Get/@xlink:href|
                                                   //ows11:Operation[@name='GetCapabilities']/ows11:DCP/ows11:HTTP/ows11:Get/@xlink:href|
@@ -267,6 +247,7 @@ Mapping between :
                           test="local-name(.)='WFS_MS_Capabilities' or local-name(.)='WFS_Capabilities'">
                           application/vnd.ogc.wfs_xml
                         </xsl:when>
+                        <xsl:when test="local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wmts/1.0'">OGC:WMTS</xsl:when>
                         <xsl:otherwise>WWW:LINK-1.0-http--link</xsl:otherwise>
                       </xsl:choose>
                     </gco:CharacterString>
@@ -396,14 +377,7 @@ Mapping between :
             </LI_Lineage>
           </lineage>
         </DQ_DataQuality>
-
       </dataQualityInfo>
-      <!--mdConst -->
-      <!--mdMaint-->
-
     </MD_Metadata>
   </xsl:template>
-
-  <!-- ============================================================================= -->
-
 </xsl:stylesheet>

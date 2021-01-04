@@ -58,6 +58,16 @@
     <dependency>
       <groupId>org.jdom</groupId>
       <artifactId>jdom</artifactId>
+      <exclusions>
+         <exclusion>
+           <groupId>maven-plugins</groupId>
+           <artifactId>maven-cobertura-plugin</artifactId>
+         </exclusion>
+         <exclusion>
+           <groupId>maven-plugins</groupId>
+           <artifactId>maven-findbugs-plugin</artifactId>
+         </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>jdbm</groupId>

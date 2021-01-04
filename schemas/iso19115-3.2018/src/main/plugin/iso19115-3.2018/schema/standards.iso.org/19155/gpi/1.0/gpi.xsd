@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gpi="http://standards.iso.org/iso/19155/gpi/1.0" 
+  elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19155/gpi/1.0" version="1.0">
+  <annotation>
+    <documentation>
+      gpi.xsd is the XML Schema document to be referenced by XML documents containing XML elements 
+      in the gpi 1.0 namespace or by XML Schema documents importing the gpi 1.0 namespace. This XML schema 
+      includes (indirectly) all the implemented concepts of the gpi namespace, but it does not contain 
+      the declaration of any types.
+    </documentation>
+  </annotation>
+  <include schemaLocation="placeIdentifier.xsd"/>
+</schema>

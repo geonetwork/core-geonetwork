@@ -31,7 +31,6 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasM
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -90,7 +89,6 @@ import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -454,7 +452,7 @@ public class MetadataSharingApi {
                                 // If building a report of the sharing, annotate the error and continue
                                 // processing the other group privileges, otherwise throw the exception
                                 if (report != null) {
-                                    report.addMetadataError(metadata.getId(), ex.getMessage());
+                                    report.addMetadataError(metadata, ex.getMessage());
                                     break;
                                 } else {
                                     throw ex;
@@ -883,7 +881,7 @@ public class MetadataSharingApi {
                     String.valueOf(metadata.getId()),
                     String.valueOf(groupIdentifier),
                     false);
-                report.addMetadataInfos(metadata.getId(), String.format(
+                report.addMetadataInfos(metadata, String.format(
                     "No privileges for user '%s' on metadata '%s', so setting default privileges",
                     sourceUsr, metadata.getUuid()
                 ));
@@ -986,7 +984,7 @@ public class MetadataSharingApi {
         if (!allowPublishNonApprovedMd) {
             MetadataStatus metadataStatus = metadataStatusRepository.getStatus(metadata.getId());
             if (metadataStatus != null) {
-                String statusId = metadataStatus.getId().getStatusId() + "";
+                String statusId = metadataStatus.getStatusValue().getId() + "";
                 boolean isApproved = statusId.equals(StatusValue.Status.APPROVED);
 
                 if (!isApproved) {
@@ -1018,8 +1016,13 @@ public class MetadataSharingApi {
         //--- and are not sent to the server. So we cannot remove them
         UserSession us = ApiUtils.getUserSession(session);
         boolean isAdmin = Profile.Administrator == us.getProfile();
-        if (!isAdmin && !accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
-            throw new Exception("User not allowed to publish the metadata " + metadataUuid);
+        boolean isMdGroupReviewer = accessManager.getReviewerGroups(us).contains(metadata.getSourceInfo().getGroupOwner());
+        boolean isReviewOperationAllowedOnMdForUser = accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()));
+        boolean isPublishForbiden = !isMdGroupReviewer && !isAdmin && !isReviewOperationAllowedOnMdForUser;
+        if (isPublishForbiden) {
+
+            throw new Exception(String.format("User not allowed to publish the metadata %s. You need to be administrator, or reviewer of the metadata group or reviewer with edit privilege on the metadata.",
+                    metadataUuid));
 
         }
 

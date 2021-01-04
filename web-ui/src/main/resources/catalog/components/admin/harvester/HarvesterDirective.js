@@ -97,8 +97,8 @@
   /**
      * Display harvester schedule configuration.
      */
-  module.directive('gnHarvesterSchedule', ['$translate',
-    function($translate) {
+  module.directive('gnHarvesterSchedule', ['gnConfig','$translate',
+    function(gnConfig, $translate) {
 
       return {
         restrict: 'A',
@@ -115,6 +115,10 @@
                            '0 0/5 14 * * ?',
                            '0 15 10 ? * MON-FRI',
                            '0 15 10 15 * ?'];
+          scope.timeZone = gnConfig['system.server.timeZone'];
+          if (scope.timeZone) {
+            scope.timeZoneOffset = '(GMT' + moment.tz(scope.timeZone).format('Z / z') + ')'
+          }
           scope.setSchedule = function(exp) {
             scope.harvester.options.every = exp;
           };

@@ -147,6 +147,8 @@
 
           scope.setRegion = function(regionType) {
             scope.regionType = regionType;
+            // clear the input field
+            scope.resetRegion();
           };
         }
       };
@@ -751,8 +753,8 @@
    * the element to indicate the status
    * collapsed or expanded.
    */
-  module.directive('gnSlideToggle', [
-    function() {
+  module.directive('gnSlideToggle', ["$timeout",
+    function($timeout) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -779,7 +781,9 @@
             });
           });
           if (attrs['gnSlideToggle'] == 'true') {
-            element.click();
+            $timeout(function() {
+                 element.click();
+            },0); //this needs to be done after the DOM is updated
           }
         }
       };
@@ -1597,6 +1601,36 @@
       };
     }
   ]);
+
+
+  /**
+   * @ngdoc gnApiLink
+   * @name gn_utility.directive:gnApiLink
+   *
+   * @description
+   * Convert the element href attribute
+   * from /srv/api/records/... to a link
+   * for the JS apps. This is usefull if
+   * a formatter is loaded into the JS app
+   * in order to have links to record to
+   * open in current app.
+   */
+  module.directive('gnApiLink', ['$compile',
+    function($compile) {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          var href = $(element).attr('href'),
+              apiPath = '/srv/api/records/';
+          if (href.indexOf(apiPath) != -1) {
+            $(element).attr('href',
+              href.replace(/.*\/srv\/api\/records\//, '#/metadata/'));
+          }
+        }
+      };
+    }
+  ]);
+
 
   /**
    * @ngdoc directive

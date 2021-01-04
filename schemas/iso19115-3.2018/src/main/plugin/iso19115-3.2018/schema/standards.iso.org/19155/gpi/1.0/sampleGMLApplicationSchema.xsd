@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:ex="http://sample.net/sample" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:sch="http://www.ascc.net/xml/schematron" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://sample.net/sample" elementFormDefault="qualified" version="1.0">
+    <xsd:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19136_Schemas/gml.xsd"/>
+    <!-- When a user wants to make a link from his/her application schema to PI specified in this international standard, the 
+        user should define an element to refer PI in his/her application schema. A sample GML application schema which contains 
+        two features that refer PI as one of their properties is shown in the listing below.
+        In this example, the feature “Park” has a geographic name property “LandmarkName”, which has a link to PI, 
+        and the feature “Shop” has a geometric property “LandmarkPosition”, which also has a link to PI.
+ -->
+    <xsd:element name="Dataset">
+        <xsd:complexType>
+            <xsd:choice maxOccurs="unbounded">
+                <xsd:element ref="ex:Park"/>
+                <xsd:element ref="ex:Shop"/>
+                <xsd:any namespace="http://www.opengis.net/gml/3.2"/>
+            </xsd:choice>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="Park" type="ex:ParkType" substitutionGroup="gml:AbstractFeature"/>
+    <xsd:complexType name="ParkType">
+        <xsd:complexContent>
+            <xsd:extension base="gml:AbstractFeatureType">
+                <xsd:sequence>
+                    <xsd:element ref="ex:LandmarkName" minOccurs="0"/>
+                    <xsd:element name="area" type="gml:SurfacePropertyType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element name="Shop" type="ex:ShopType" substitutionGroup="gml:AbstractFeature"/>
+    <xsd:complexType name="ShopType">
+        <xsd:complexContent>
+            <xsd:extension base="gml:AbstractFeatureType">
+                <xsd:sequence>
+                    <xsd:element name="name" type="xsd:string"/>
+                    <xsd:element name="telNumber" type="xsd:string"/>
+                    <xsd:element ref="ex:LandmarkPosition" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element name="LandmarkName" type="ex:LandmarkNameType" substitutionGroup="gml:AbstractGML"/>
+    <xsd:complexType name="LandmarkNameType">
+        <xsd:complexContent>
+            <xsd:extension base="gml:AbstractGMLType">
+                <xsd:sequence>
+                    <xsd:element name="name" type="xsd:string"/>
+                    <xsd:element name="linkedPI" type="gml:ReferenceType" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <gml:targetElement>gpi:PI</gml:targetElement>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element name="LandmarkPosition" type="ex:LandmarkPositionType" substitutionGroup="gml:AbstractGML"/>
+    <xsd:complexType name="LandmarkPositionType">
+        <xsd:complexContent>
+            <xsd:extension base="gml:AbstractGMLType">
+                <xsd:sequence>
+                    <xsd:element name="pos" type="gml:PointPropertyType"/>
+                    <xsd:element name="linkedPI" type="gml:ReferenceType" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <gml:targetElement>gpi:PI</gml:targetElement>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+</xsd:schema>

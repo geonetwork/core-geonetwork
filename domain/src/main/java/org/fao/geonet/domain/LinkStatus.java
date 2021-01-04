@@ -207,7 +207,7 @@ public class LinkStatus extends GeonetEntity implements Comparable<LinkStatus> {
     @Override
     public String toString() {
         return "LinkStatus{" + id +
-            ", link=" + link.getId() +
+            ", link=" + (link == null? "null" : link.getId()) +  // null protection
             ", isFailing=" + isFailing +
             ", checkDate=" + checkDate +
             ", statusValue=" + statusValue +

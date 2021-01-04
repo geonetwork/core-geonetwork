@@ -18,7 +18,7 @@
 //===	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //===
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: GeoNetwork@fao.org
+//===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
 package org.fao.geonet.services.thesaurus;
@@ -72,11 +72,11 @@ public class Download implements Service {
 
         Thesaurus directory = manager.getThesaurusByName(name);
         if (directory == null)
-            throw new IllegalArgumentException("Thesaurus not found --> " + name);
+            throw new IllegalArgumentException("Thesaurus not found: " + name);
 
         Path directoryFile = directory.getFile();
         if (!Files.exists(directoryFile))
-            throw new IllegalArgumentException("Thesaurus file not found --> " + name);
+            throw new IllegalArgumentException("Thesaurus file not found: " + name);
 
         return BinaryFile.encode(200, directoryFile).getElement();
     }

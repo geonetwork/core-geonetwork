@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<!--
+==============================================================================
+=== This Ant build file is used to create the GeoNetwork opensource distro's
+===
+=== Authors : Jeroen Ticheler <ticheler@users.sourceforge.net>
+===           Andrea Carboni <acarboni@users.sourceforge.net>
+==============================================================================
+-->
+
+<project name="geonetwork" default="distributions" basedir=".">
+
+  <condition property="osys" value="macosx">
+    <os family="mac"/>
+  </condition>
+  <condition property="osys" value="win">
+    <os family="windows"/>
+  </condition>
+  <condition property="osys" value="unix">
+    <os family="unix"/>
+  </condition>
+
+  <!-- Project build properties -->
+  <property name="appName" value="GeoNetwork"/>
+  <property name="displayName" value="GeoNetwork opensource"/>
+  <property name="homepage" value="https://geonetwork-opensource.org"/>
+  <property name="version" value="3.11.0"/>
+  <property name="subVersion" value="SNAPSHOT"/>
+  <property name="javaVersion" value="1.8.0"/>
+  <property name="jreUrl" value="http://openjdk.java.net/"/>
+  <property name="OS" value="Compiled on ${os.name} (${osys})"/>
+  <property name="propsdir" value="../.props"/>
+  <property name="ant.build.javac.target" value="1.8"/>
+  <property name="debugOn" value="on"/>
+
+  <!-- Used for copyright year -->
+  <tstamp>
+    <format property="year" pattern="yyyy"/>
+  </tstamp>
+
+  <!-- =================================================================================== -->
+
+  <target name="setProperties">
+
+    <delete dir="${propsdir}"/>
+    <mkdir dir="${propsdir}"/>
+
+    <!-- Extract Git properties -->
+    <exec executable="git" dir=".." output="git.properties">
+      <arg value="remote"/>
+      <arg value="-v"/>
+    </exec>
+    <property prefix="git" file="git.properties"/>
+
+    <exec executable="git" dir=".." output="git2.properties">
+      <arg value="log"/>
+      <arg value="--max-count=1"/>
+    </exec>
+    <property prefix="git2" file="git2.properties"/>
+
+    <!-- Update the properties file -->
+    <propertyfile
+      file="../web/src/main/webapp/WEB-INF/server.prop"
+      comment="GeoNetwork opensource properties. These are also used by geonetwork at runtime">
+      <!-- These are used by geonetwork at runtime -->
+      <!-- DO NOT REMOVE!! -->
+      <entry key="version" value="${version}"/>
+      <entry key="subVersion" value="${subVersion}"/>
+      <entry key="release" value="${version}"/>
+
+      <entry key="javaVersion" value="${javaVersion}"/>
+      <entry key="jre_url" value="${jreUrl}"/>
+      <entry key="ant.build.javac.target" value="1.8"/>
+      <entry key="buildDate" type="date" value="now"
+             pattern="yyyy-MM-dd'T'HH:mm:ssZ"/>
+
+      <entry key="date" type="date" value="now" pattern="yymmddHHmm"/>
+      <entry key="day" type="date" value="now" pattern="dd-M-yyyy"/>
+      <entry key="OS" value="${OS}"/>
+      <entry key="debugOn" value="${debugOn}"/>
+
+      <entry key="git_revision" value="${git2.commit}"/>
+      <entry key="git_url" value="${git.origin}"/>
+
+    </propertyfile>
+
+    <!-- Make sure all files that we need have their version numbers etc. updated -->
+
+    <!-- help file -->
+    <copy file="readme.html"
+          tofile="${propsdir}/readme.html"
+          filtering="on" overwrite="yes"/>
+    
+    <!-- license file -->
+    <copy file="license.html"
+          tofile="${propsdir}/license.html"
+          filtering="on" overwrite="yes"/>    
+
+    <echo message="Replacing template variables in readme files..."/>
+    <replace file="${propsdir}/readme.html"
+             propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
+      <replacefilter token="@version@" property="version"/>
+      <replacefilter token="@subVersion@" property="subVersion"/>
+      <replacefilter token="@day@" property="day"/>
+      <replacefilter token="@jreUrl@" property="jre_url"/>
+      <replacefilter token="@javaVersion@" property="javaVersion"/>
+    </replace>
+    <!-- Replace variables in ReadMe file that are not in server.prop -->
+    <replace file="${propsdir}/readme.html" token="@appName@" value="${appName}"/>
+    <replace file="${propsdir}/readme.html" token="@displayName@" value="${displayName}"/>
+    <replace file="${propsdir}/readme.html" token="@homepage@" value="${homepage}"/>
+    <replace file="${propsdir}/readme.html" token="@year@" value="${year}"/> 
+    <echo message="Done"/>
+  </target>
+
+  <target name="distributions" depends="setProperties">
+    <echo message="Preconditions OK"/>
+    <ant dir="." target="war"/>
+  </target>
+
+  <!-- Create ZIP distribution for GeoNetwork + Jetty + shell scripts -->
+  <target name="zip">
+    <property file="../web/src/main/webapp/WEB-INF/server.prop"/>
+
+    <delete dir="../${appName}-${release}"/>
+    <mkdir dir="../${appName}-${release}"/>
+
+    <echo message="Creating ZIP file for ${appName} ${release}..."/>
+
+    <zip destfile="../${appName}-${release}/${appName}-${release}-${subVersion}.zip">
+      <zipfileset dir="./bin" excludes="**.sh" prefix="bin" />
+      <zipfileset dir="./bin" includes="**.sh" prefix="bin" filemode="774"/>
+      <zipfileset dir="../.props" includes="readme.html, license.html" />
+      <zipfileset dir="./jetty" prefix="jetty" excludes="logs/*.log, logs/archive/*.log" />
+      <zipfileset dir="../web/target/geonetwork" prefix="web/geonetwork" />
+      <zipfileset dir="./data" prefix="web/geonetwork/data" />
+      <zipfileset dir="./schemaPlugins" prefix="web/geonetwork/WEB-INF/data/config/schema_plugins" />
+    </zip>
+
+    <checksum
+      file="../${appName}-${release}/${appName}-${release}-${subVersion}.zip"
+      forceOverwrite="yes"/>
+
+  </target>
+
+  <!-- Copy and rename WAR file and calculate checksum -->
+  <target name="war" depends="zip">
+
+    <copy file="../web/target/geonetwork.war" 
+          tofile="../${appName}-${release}/${appName}-${release}-${subVersion}.war" />    
+
+    <checksum file="../${appName}-${release}/${appName}-${release}-${subVersion}.war"
+              forceOverwrite="yes"/> 
+
+  </target>
+
+</project>

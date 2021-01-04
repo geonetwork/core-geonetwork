@@ -40,10 +40,10 @@
    *
    */
   module.controller('GnHarvestSettingsController', [
-    '$scope', '$http', '$translate', '$injector', '$rootScope',
+    '$scope', '$q', '$http', '$translate', '$injector', '$rootScope',
     'gnSearchManagerService', 'gnUtilityService', '$timeout',
     'Metadata', 'gnMapsManager',
-    function($scope, $http, $translate, $injector, $rootScope,
+    function($scope, $q, $http, $translate, $injector, $rootScope,
              gnSearchManagerService, gnUtilityService, $timeout,
              Metadata, gnMapsManager) {
 
@@ -284,34 +284,45 @@
       };
 
 
-      $scope.saveHarvester = function() {
-        // Activate or disable it
-        $scope.setHarvesterSchedule();
+      $scope.saveHarvester = function () {
 
         var body = window['gnHarvester' + $scope.harvesterSelected['@type']]
-            .buildResponse($scope.harvesterSelected, $scope);
+          .buildResponse($scope.harvesterSelected, $scope);
+        var deferred = $q.defer();
 
-        return $http.post('admin.harvester.' +
-            ($scope.harvesterNew ? 'add' : 'update') +
-            '?_content_type=json', body, {
-              headers: {'Content-type': 'application/xml'}
-            }).success(function(data) {
-          if (!$scope.harvesterSelected['@id']) {
-            $scope.harvesterSelected['@id'] = data[0];
-          }
-          $scope.$parent.loadHarvesters().then(refreshSelectedHarvester);
-          $rootScope.$broadcast('StatusUpdated', {
-            msg: $translate.instant('harvesterUpdated'),
-            timeout: 2,
-            type: 'success'});
-        }).error(function(data) {
-          $rootScope.$broadcast('StatusUpdated', {
-            msg: $translate.instant('harvesterUpdated'),
-            error: data,
-            timeout: 2,
-            type: 'danger'});
-        });
+        $http.post('admin.harvester.' +
+          ($scope.harvesterNew ? 'add' : 'update') +
+          '?_content_type=json', body, {
+          headers: {'Content-type': 'application/xml'}
+        }).success(
+          function (data) {
+            if (!$scope.harvesterSelected['@id']) {
+              $scope.harvesterSelected['@id'] = data[0];
+            }
+            // Activate or disable it
+            $scope.setHarvesterSchedule().finally(function() {
+              $scope.$parent.loadHarvesters().then(refreshSelectedHarvester);
+            });
+
+            $rootScope.$broadcast('StatusUpdated', {
+              msg: $translate.instant('harvesterUpdated'),
+              timeout: 2,
+              type: 'success'
+            });
+            deferred.resolve(data);
+          }).error(function (data) {
+            deferred.reject(data);
+            $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate.instant('harvesterUpdated'),
+                error: data,
+                timeout: 2,
+                type: 'danger'
+              });
+          });
+
+        return deferred.promise;
       };
+
       $scope.selectHarvester = function(h) {
 
         // TODO: Specific to thredds
@@ -423,23 +434,30 @@
       };
 
       $scope.setHarvesterSchedule = function() {
+        var deferred = $q.defer();
+
         if (!$scope.harvesterSelected) {
-          return;
+          deferred.resolve();
+          return deferred.promise;
         }
         var status = $scope.harvesterSelected.options.status;
+
         $http.get('admin.harvester.' +
             (status === 'active' ? 'start' : 'stop') +
             '?_content_type=json&id=' +
             $scope.harvesterSelected['@id'])
             .success(function(data) {
+              deferred.resolve(data);
 
             }).error(function(data) {
+              deferred.reject(data);
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('harvesterSchedule' + status),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
             });
+        return deferred.promise;
       };
 
       // Register status listener
@@ -578,7 +596,7 @@
       };
 
       $scope.$watchCollection('extent', function(n, o) {
-        if (n !== o && $scope.harvesterSelected
+        if (n !== o && n.md != null && $scope.harvesterSelected
           && $scope.harvesterSelected.searches
           && $scope.harvesterSelected.searches[0]
           && $scope.harvesterSelected.searches[0]['bbox-xmin']

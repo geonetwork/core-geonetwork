@@ -90,8 +90,8 @@ public class GetStatus implements Service {
         String status = StatusValue.Status.DRAFT;
         String userId = "-1"; // no userId
         if (stats != null) {
-            status = String.valueOf(stats.getId().getStatusId());
-            userId = String.valueOf(stats.getId().getUserId());
+            status = String.valueOf(stats.getStatusValue().getId());
+            userId = String.valueOf(stats.getUserId());
         }
 
         //-----------------------------------------------------------------------

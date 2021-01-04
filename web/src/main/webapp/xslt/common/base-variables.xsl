@@ -65,8 +65,11 @@
   <xsl:variable name="angularModule"
                 select="if ($angularApp = 'gn_search') then concat('gn_search_', $searchView) else $angularApp"></xsl:variable>
 
-  <xsl:variable name="shibbolethOn"
-                select="util:existsBean('shibbolethConfiguration')"/>
+  <xsl:variable name="isDisableLoginForm"
+                select="util:isDisableLoginForm()"/>
+
+  <xsl:variable name="isShowLoginAsLink"
+                select="util:isShowLoginAsLink()"/>
 
   <!-- Define which JS module to load using Closure -->
   <xsl:variable name="angularApp" select="
@@ -84,6 +87,7 @@
       or $service = 'search'
       or $service = 'md.format.html') then 'gn_search'
     else if ($service = 'display') then 'gn_formatter_viewer'
+    else if ($service = 'portal') then 'gn_portal'
     else 'gn'"/>
 
   <xsl:variable name="customFilename" select="concat($angularApp, '_', $searchView)"></xsl:variable>

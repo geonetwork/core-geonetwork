@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.datamanager;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -118,6 +119,13 @@ public interface IMetadataUtils {
 
 
     String extractDefaultLanguage(String schema, Element md) throws Exception;
+
+    /**
+     * Extract Multilinugal titles from the metadata record using the schema XSL for title extraction)
+     */
+    LinkedHashMap<String, String> extractTitles(String schema, Element md) throws Exception;
+
+    LinkedHashMap<String, String> extractTitles(@Nonnull String id) throws Exception;
 
     /**
      * Extract the last editing date from the record
@@ -254,6 +262,11 @@ public interface IMetadataUtils {
     Element getMetadataNoInfo(ServiceContext srvContext, String id) throws Exception;
 
     /**
+     * remove the geonet:info element from the supplied metadata.
+     */
+    Element removeMetadataInfo(Element md) throws Exception;
+
+    /**
      * Retrieves a metadata element given it's ref.
      */
     Element getElementByRef(Element md, String ref);
@@ -267,6 +280,12 @@ public interface IMetadataUtils {
      * Returns true if the metadata exists in the database.
      */
     boolean existsMetadata(int id) throws Exception;
+
+    boolean isMetadataPublished(int metadataId) throws Exception;
+
+    boolean isMetadataApproved(int metadataId) throws Exception;
+
+    boolean isMetadataDraft(int metadataId) throws Exception;
 
     /**
      * Returns all the keywords in the system.
@@ -388,7 +407,7 @@ public interface IMetadataUtils {
      * Find the record with the UUID uuid
      *
      * @param firstMetadataId
-     * 
+     *
      * @param uuid
      * @return
      */
@@ -397,7 +416,7 @@ public interface IMetadataUtils {
 
     /**
      * Find all records with the UUID uuid
-     * 
+     *
      * @param uuid
      * @return
      */
@@ -439,7 +458,7 @@ public interface IMetadataUtils {
 
     /**
      * Find all the metadata with the identifiers
-     * 
+     *
      * @see org.springframework.data.repository.CrudRepository#findAll(java.lang.Iterable)
      * @param spec
      * @param order
@@ -545,4 +564,13 @@ public interface IMetadataUtils {
      * @return a map of metadataId -> SourceInfo
      */
     Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> spec);
+
+    /**
+     * Copy the files from the original metadata to the destination metadata.
+     * Used when creating a draft version.
+     *
+     * @param original
+     * @param dest
+     */
+    void cloneFiles(AbstractMetadata original, AbstractMetadata dest);
 }

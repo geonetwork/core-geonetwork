@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <!-- XSD error translation -->
+  <invalidElement>Contenu invalide à l'élément </invalidElement>
+  <onElementOf>Un des éléments suivants : </onElementOf>
+  <isExpected> est attendu.</isExpected>
+  <isNotComplete>.</isNotComplete>
+  <elementLocated> L'élément parent est </elementLocated>
+  <missingElement>Élément manquant dans </missingElement>
+  <invalidValue>Valeur manquante ou invalide. </invalidValue>
+  <notValidFor> n'est pas une valeur valide pour </notValidFor>
+  <xsdErrorIs>L'erreur est : </xsdErrorIs>
+  <inElement> contenu dans </inElement>
+  <enum1>La valeur </enum1>
+  <enum2> n'est pas valide pour le champ </enum2>
+  <enum3>Les valeurs possibles sont : </enum3>
+
+  <understandResource>Comprendre la ressource</understandResource>
+  <relatedResources>Service disponible et données associées</relatedResources>
+  <techInfo>Les informations techniques</techInfo>
+  <contactInfo>Les contacts</contactInfo>
+  <mdContactInfo>Contacts pour les métadonnées</mdContactInfo>
+  <temporalRef>Référence(s) temporelle(s)</temporalRef>
+  <refDate>Date(s) de référence</refDate>
+  <constraintInfo>Contraintes d'accès et d'utilisation</constraintInfo>
+  <resourceLineageTab>Lineage</resourceLineageTab>
+
+  <advanced>Complète</advanced>
+  <advanced-help>La vue complète permet d'ajouter tous les descripteurs définis dans le standard. Les champs sont groupés par onglet.</advanced-help>
+  <default>Simple</default>
+  <simple>Simple</simple>
+  <simple-help>La vue simple affiche toutes les informations présentes dans la fiche.</simple-help>
+  <inspire>INSPIRE</inspire>
+  <inspireTheme>Thèmes INSPIRE</inspireTheme>
+  <inspireThemeMandatory>INSPIRE themes*</inspireThemeMandatory>
+  <resource>Ressource</resource>
+  <xml>XML</xml>
+  <xml-help>La vue XML permet de modifier directement le XML de la fiche.</xml-help>
+  <metadata>Métadonnées</metadata>
+  <identificationInfo>Identification</identificationInfo>
+  <distributionInfo>Distribution</distributionInfo>
+  <dataQualityInfo>Qualité</dataQualityInfo>
+  <resourceLineage>Généalogie</resourceLineage>
+  <spatialRepresentationInfo>Rep. spatiale</spatialRepresentationInfo>
+  <referenceSystemInfo>Sys de référence</referenceSystemInfo>
+  <contentInfo>Contenu</contentInfo>
+  <portrayalCatalogueInfo>Représentation</portrayalCatalogueInfo>
+  <metadataConstraints>Md. constraintes</metadataConstraints>
+  <metadataMaintenance>Md. maintenance</metadataMaintenance>
+  <applicationSchemaInfo>Standard ext.</applicationSchemaInfo>
+  <acquisitionInformation>Acquisition</acquisitionInformation>
+  <bboxesSection>Zone géographique</bboxesSection>
+  <citationProposal>Proposition de citation</citationProposal>
+  <citationProposal-help>Cette proposition de citation a été générée automatiquement selon le format suggéré par DataCite. Nous vous invitons à vérifier dans les métadonnées si les auteurs n'ont pas imposé un format de citation spécifique.</citationProposal-help>
+  <associatedResources>Ressources associées</associatedResources>
+
+
+
+  <add-resource-id>Générer un identifiant</add-resource-id>
+  <add-resource-idHelp>Construit un identifiant en utilisant l'URL du catalogue
+    et l'identifiant de la fiche (eg.
+    http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).
+  </add-resource-idHelp>
+  <add-extent-from-geokeywords>Calculer les emprises à partir des mots clés
+  </add-extent-from-geokeywords>
+  <add-extent-from-geokeywordsHelp>Analyse les mots clés de type géographique et
+    ajoute les emprises correspondantes.
+  </add-extent-from-geokeywordsHelp>
+  <noThesaurusName>Mots clés</noThesaurusName>
+  <extent>Étendue spatiale</extent>
+  <spatialExtent>Étendue spatiale</spatialExtent>
+  <freeTextKeywords>Other keywords</freeTextKeywords>
+</strings>

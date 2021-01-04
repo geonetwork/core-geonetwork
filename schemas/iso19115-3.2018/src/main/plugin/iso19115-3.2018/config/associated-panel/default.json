@@ -1,0 +1,801 @@
+{
+  "config": {
+    "display": "select",
+    "types": [
+      {
+        "group": "onlineDiscover",
+        "label": "onlineDiscoverThumbnail",
+        "sources": {
+          "filestore": true,
+          "thumbnailMaker": true
+        },
+        "icon": "fa gn-icon-thumbnail",
+        "fileStoreFilter": "*.{jpg,JPG,jpeg,JPEG,png,PNG,gif,GIF}",
+        "process": "thumbnail-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false,
+            "param": "thumbnail_url"
+          },
+          "name": {
+            "param": "thumbnail_desc"
+          }
+        }
+      },
+      {
+        "group": "onlineDiscover",
+        "label": "onlineDiscoverInApp",
+        "copyLabel": "name",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAnApplication",
+            "params": {
+              "type": "application"
+            }
+          }
+        },
+        "icon": "fa gn-icon-map",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDiscover",
+        "label": "onlineDiscoverWMS",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": "OGC:WMS or WMS or view"
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "OGC:WMS",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDiscover",
+        "label": "onlineDiscoverINSPIREView",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": "view"
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "OGC:WMS",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "applicationProfile": {
+            "value": "inspire-view",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDiscover",
+        "label": "onlineDiscoverWMTS",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": "OGC:WMTS or WMTS"
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "OGC:WMTS",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDiscover",
+        "label": "onlineDiscoverArcGIS",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": "ESRI:REST"
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "ESRI:REST",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDiscover",
+        "label": "onlineDiscoverArcGISTiled",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": "ESRI:REST"
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "ESRI:REST-TILED",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDiscover",
+        "label": "onlineDiscoverKML",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {},
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "applicationProfile": {
+            "value": "application/vnd.google-earth.kml+xml",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDiscover",
+        "label": "onlineDiscoverMap",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-map",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDownload",
+        "label": "onlineDownloadFile",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDownload",
+        "label": "onlineDownloadKML",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "applicationProfile": {
+            "value": "application/vnd.google-earth.kml+xml",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDownload",
+        "label": "onlineDownloadWWW",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDownload",
+        "label": "onlineDownloadWFS",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": "OGC:WFS or WFS or download"
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "OGC:WFS",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDownload",
+        "label": "onlineDownloadWCS",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": "OGC:WCS or WCS"
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "OGC:WCS",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDownload",
+        "label": "onlineDownloadINSPIRE",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": "download"
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "OGC:WFS",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "applicationProfile": {
+            "value": "inspire-download",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDownload",
+        "label": "onlineDownloadINSPIREATOM",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": "download"
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "INSPIRE Atom",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "applicationProfile": {
+            "value": "inspire-download",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "localNetwork",
+        "label": "localNetworkVectorFile",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false,
+            "placeholder": "file://shared/geodata/filename.shp"
+          },
+          "protocol": {
+            "value": "FILE:GEO",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "fileAccess",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "localNetwork",
+        "label": "localNetworkRasterFile",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false,
+            "placeholder": "file://shared/geodata/filename.ecw"
+          },
+          "protocol": {
+            "value": "FILE:RASTER",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "fileAccess",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "localNetwork",
+        "label": "localNetworkDBOracle",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "placeholder": "server:1521:db",
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "DB:ORACLE",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "fileAccess",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "localNetwork",
+        "label": "localNetworkDBPostgis",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "placeholder": "server:5432/db",
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "DB:POSTGIS",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "fileAccess",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineUse",
+        "label": "onlineUseFcats",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa fa-table",
+        "process": "fcats-file-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "name": {}
+        }
+      },
+      {
+        "group": "onlineUse",
+        "label": "onlineUseDQReport",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa fa-table",
+        "process": "dq-report-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "type": {
+            "param": "type",
+            "value": "qualityReport",
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineUse",
+        "label": "onlineUseDQTOR",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa fa-table",
+        "process": "dq-report-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "type": {
+            "param": "type",
+            "value": "qualitySpecification",
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineUse",
+        "label": "onlineUseDQProdReport",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa fa-table",
+        "process": "dq-report-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "type": {
+            "param": "type",
+            "value": "lineage",
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineUse",
+        "label": "onlineUseLegendLYR",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "fileStoreFilter": "*.{lyr,LYR}",
+        "icon": "fa fa-table",
+        "process": "legend-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "name": {}
+        }
+      },
+      {
+        "group": "onlineUse",
+        "label": "onlineUseStyleSLD",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "fileStoreFilter": "*.{sld,SLD}",
+        "icon": "fa fa-table",
+        "process": "legend-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "name": {}
+        }
+      },
+      {
+        "group": "onlineUse",
+        "label": "onlineUseStyleQML",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "fileStoreFilter": "*.{qml,QML}",
+        "icon": "fa fa-table",
+        "process": "legend-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "name": {}
+        }
+      },
+      {
+        "group": "onlineMore",
+        "label": "onlineMoreWWW",
+        "copyLabel": "name",
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "information",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineMore",
+        "label": "onlineMoreFile",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "information",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      }
+    ]
+  }
+}

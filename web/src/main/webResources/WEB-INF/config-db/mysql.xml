@@ -39,7 +39,7 @@
   </bean>
 
   <bean id="jdbcURL" class="java.lang.String">
-    <constructor-arg value="jdbc:mysql://${jdbc.host}:3306/${jdbc.database}"/>
+    <constructor-arg value="jdbc:mysql://${jdbc.host}:${jdbc.port:3306}/${jdbc.database}"/>
   </bean>
 
 </beans>

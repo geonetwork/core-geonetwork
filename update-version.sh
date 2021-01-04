@@ -100,13 +100,12 @@ echo ' * updating docs/manuals/source/conf.py'
 sed $sedopt "s/${version}/${new_version_main}/g" docs/manuals/source/conf.py
 echo
 
-# Update installer
-echo 'Installer'
-echo '  * updating installer/build.xml'
-sed $sedopt "s/property name=\"version\" value=\".*\"/property name=\"version\" value=\"${new_version_main}\"/g" installer/build.xml
-sed $sedopt "s/property name=\"subVersion\" value=\".*\"/property name=\"subVersion\" value=\"${sub_version}\"/g" installer/build.xml
+# Update ZIP distro
+echo 'ZIP distribution'
+echo '  * updating release/build.xml'
+sed $sedopt "s/property name=\"version\" value=\".*\"/property name=\"version\" value=\"${new_version_main}\"/g" release/build.xml
+sed $sedopt "s/property name=\"subVersion\" value=\".*\"/property name=\"subVersion\" value=\"${sub_version}\"/g" release/build.xml
 echo
-
 
 # Update SQL - needs improvements
 echo 'SQL script'

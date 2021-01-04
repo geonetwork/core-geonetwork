@@ -23,15 +23,16 @@
 
 package org.fao.geonet.kernel.search.spatial;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.index.SpatialIndex;
-import com.vividsolutions.jts.index.strtree.STRtree;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.index.SpatialIndex;
+import org.locationtech.jts.index.strtree.STRtree;
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.util.GMLParsers;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.data.DataStore;
@@ -42,14 +43,14 @@ import org.geotools.data.FeatureStore;
 import org.geotools.data.Transaction;
 import org.geotools.data.memory.MemoryFeatureCollection;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.factory.GeoTools;
+import org.geotools.util.factory.GeoTools;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.geotools.xml.Parser;
+import org.geotools.xsd.Parser;
 import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -89,7 +90,6 @@ public class SpatialIndexWriter implements FeatureListener {
     public static final int MAX_WRITES_IN_TRANSACTION = 1000;
     static final String SPATIAL_FILTER_JCS = "SpatialFilterCache";
     private static int _writes;
-    private final Parser[] _parsers;
     private final Transaction _transaction;
     private final Lock _lock;
     private int _maxWrites;
@@ -105,17 +105,11 @@ public class SpatialIndexWriter implements FeatureListener {
      * @param maxWrites Maximum number of writes in a transaction. If set to 1 then AUTO_COMMIT is
      *                  being used.
      */
-    public SpatialIndexWriter(DataStore datastore, Parser[] parsers,
-                              Transaction transaction, int maxWrites, Lock lock)
+    public SpatialIndexWriter(DataStore datastore, Transaction transaction, int maxWrites, Lock lock)
         throws Exception {
         // Note: The Configuration takes a long time to create so it is worth
         // re-using the same Configuration
         _lock = lock;
-        _parsers = parsers;
-        for (Parser _parser : _parsers) {
-          _parser.setStrict(false);
-          _parser.setValidating(false);
-        }
         _transaction = transaction;
         _maxWrites = maxWrites;
 
@@ -131,13 +125,12 @@ public class SpatialIndexWriter implements FeatureListener {
     /**
      * Extracts a Geometry Collection from metadata default visibility for testing access.
      */
-    static MultiPolygon extractGeometriesFrom(Path schemaDir,
-                                              Element metadata, Parser[] parsers, Map<String, String> errorMessage) throws Exception {
-        return getSpatialExtent(schemaDir, metadata, parsers, new SpatialIndexingErrorHandler(errorMessage));
+    static MultiPolygon extractGeometriesFrom(Path schemaDir, Element metadata, Map<String, String> errorMessage) throws Exception {
+        return getSpatialExtent(schemaDir, metadata, new SpatialIndexingErrorHandler(errorMessage));
     }
 
-    public static MultiPolygon getSpatialExtent(Path schemaDir, Element metadata, Parser[] parsers, ErrorHandler errorHandler) throws Exception {
-        org.geotools.util.logging.Logging.getLogger("org.geotools.xml")
+    public static MultiPolygon getSpatialExtent(Path schemaDir, Element metadata, ErrorHandler errorHandler) throws Exception {
+            org.geotools.util.logging.Logging.getLogger("org.geotools.xsd")
             .setLevel(Level.SEVERE);
         Path sSheet = schemaDir.resolve("extract-gml.xsl").toAbsolutePath();
         Element transform = Xml.transform(metadata, sSheet);
@@ -146,12 +139,7 @@ public class SpatialIndexWriter implements FeatureListener {
         }
         List<Polygon> allPolygons = new ArrayList<Polygon>();
         for (Element geom : (List<Element>) transform.getChildren()) {
-        	Parser parser = null;
-        	if (geom.getNamespace().equals(Geonet.Namespaces.GML32)) {
-        	  parser = parsers[1]; // geotools gml3.2 parser
-        	} else {
-        	  parser = parsers[0];
-        	}
+        	Parser parser = GMLParsers.create(geom);
             String srs = geom.getAttributeValue("srsName");
             CoordinateReferenceSystem sourceCRS = DefaultGeographicCRS.WGS84;
             String gml = Xml.getString(geom);
@@ -218,7 +206,7 @@ public class SpatialIndexWriter implements FeatureListener {
         if (value instanceof HashMap) {
             @SuppressWarnings("rawtypes")
             HashMap map = (HashMap) value;
-            List<Polygon> geoms = new ArrayList<Polygon>();
+            List<MultiPolygon> geoms = new ArrayList<MultiPolygon>();
             for (Object entry : map.values()) {
                 addToList(geoms, entry);
             }
@@ -238,14 +226,16 @@ public class SpatialIndexWriter implements FeatureListener {
         }
     }
 
-    public static void addToList(List<Polygon> geoms, Object entry) {
+    public static void addToList(List<MultiPolygon> geoms, Object entry) {
         if (entry instanceof Polygon) {
-            geoms.add((Polygon) entry);
+            geoms.add(toMultiPolygon((Polygon) entry));
+        } else if (entry instanceof MultiPolygon) {
+            geoms.add((MultiPolygon) entry);
         } else if (entry instanceof Collection) {
             @SuppressWarnings("rawtypes")
             Collection collection = (Collection) entry;
             for (Object object : collection) {
-                geoms.add((Polygon) object);
+                geoms.add(toMultiPolygon((Polygon) object));
             }
         }
     }
@@ -267,7 +257,7 @@ public class SpatialIndexWriter implements FeatureListener {
             _index = null;
             errorMessage = new HashMap<>();
             Geometry geometry = extractGeometriesFrom(
-                schemaDir, metadata, _parsers, errorMessage);
+                schemaDir, metadata, errorMessage);
 
             if (geometry != null && !geometry.getEnvelopeInternal().isNull()) {
                 MemoryFeatureCollection features = new MemoryFeatureCollection(_featureStore.getSchema());

@@ -31,9 +31,8 @@
     <version>3.11.0-SNAPSHOT</version>
   </parent>
 
-  <version>3.7</version>
-
   <modelVersion>4.0.0</modelVersion>
+  <groupId>org.geonetwork-opensource.schemas</groupId>
   <artifactId>schemas</artifactId>
   <name>GeoNetwork schema plugins</name>
   <packaging>pom</packaging>
@@ -53,9 +52,12 @@
     <module>iso19139</module>
     <module>iso19115-3.2018</module>
   </modules>
+
+  <profiles>
+  </profiles>
+
   <properties>
     <rootProjectDir>../..</rootProjectDir>
-    <gn.project.version>3.11.0-SNAPSHOT</gn.project.version>
   </properties>
 
 </project>

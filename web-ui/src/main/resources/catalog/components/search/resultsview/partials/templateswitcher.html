@@ -13,7 +13,8 @@
   <ul class="dropdown-menu">
     <li data-ng-repeat="t in listOfResultTemplate"
         data-ng-hide="t.tplUrl == resultTemplate">
-      <a data-ng-click="setResultTemplate(t);"
+      <a href=""
+         data-ng-click="setResultTemplate(t);"
          title="{{t.tooltip | translate}}">
         <i class="fa {{t.icon}}"/>&nbsp;
         {{t.tooltip | translate}}

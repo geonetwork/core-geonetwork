@@ -166,29 +166,58 @@
               <gmd:descriptiveKeywords xlink:href="{$newUrl}"/>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:copy>
-                <xsl:apply-templates select="@*"/>
-                <gmd:MD_Keywords>
-                  <xsl:apply-templates select="*/gmd:keyword"/>
 
 
-                  <!-- Append all keywords added by all thesaurus. -->
-                  <xsl:variable name="thesaurusKey"
-                                select="substring-after(
+              <xsl:variable name="isFreeTextKeywordBlock"
+                            select="not(*/gmd:thesaurusName)"/>
+              <xsl:variable name="freeTextKeywordBlockType"
+                            select="*/gmd:type/*/@codeListValue"/>
+              <xsl:variable name="isFirstFreeTextKeywordBlock"
+                            select="count(preceding-sibling::*[
+                                    name() = $name
+                                    and not(*/gmd:thesaurusName)
+                                    and */gmd:type/*/@codeListValue = $freeTextKeywordBlockType]) = 0"/>
+
+              <xsl:choose>
+                <xsl:when test="$isFreeTextKeywordBlock
+                                and $isFirstFreeTextKeywordBlock = false()">
+                  <!-- All free text keywords are combined in same block -->
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:copy>
+                    <xsl:apply-templates select="@*"/>
+                    <gmd:MD_Keywords>
+                      <xsl:apply-templates select="*/gmd:keyword"/>
+
+                      <!-- Combine all free text keyword of same type -->
+                      <xsl:if test="$isFreeTextKeywordBlock
+                                    and $isFirstFreeTextKeywordBlock">
+                        <xsl:apply-templates select="following-sibling::*[
+                                    name() = $name
+                                    and not(*/gmd:thesaurusName)
+                                    and */gmd:type/*/@codeListValue = $freeTextKeywordBlockType]/*/gmd:keyword"/>
+                      </xsl:if>
+
+
+                      <!-- Append all keywords added by all thesaurus. -->
+                      <xsl:variable name="thesaurusKey"
+                                    select="substring-after(
                                       normalize-space(
                                         */gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*),
                                       'geonetwork.thesaurus.')"/>
-                  <xsl:for-each select="$allThesaurusEl//gmd:keyword[
+                      <xsl:for-each select="$allThesaurusEl//gmd:keyword[
                                       @gco:nilReason = concat('thesaurus::', $thesaurusKey)]">
-                    <gmd:keyword>
-                      <xsl:copy-of select="*"/>
-                    </gmd:keyword>
-                  </xsl:for-each>
+                        <gmd:keyword>
+                          <xsl:copy-of select="*"/>
+                        </gmd:keyword>
+                      </xsl:for-each>
 
 
-                  <xsl:apply-templates select="*/gmd:type|*/gmd:thesaurusName"/>
-                </gmd:MD_Keywords>
-              </xsl:copy>
+                      <xsl:apply-templates select="*/gmd:type|*/gmd:thesaurusName"/>
+                    </gmd:MD_Keywords>
+                  </xsl:copy>
+                </xsl:otherwise>
+              </xsl:choose>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:if>

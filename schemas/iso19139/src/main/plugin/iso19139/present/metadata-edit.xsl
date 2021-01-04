@@ -1069,7 +1069,7 @@
 
   This table is also used for gmd:language element.
   -->
-  <xsl:template mode="iso19139" match="gmd:LanguageCode" priority="2">
+  <xsl:template mode="iso19139" match="gmd:LanguageCode" priority="22">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
 
@@ -4238,8 +4238,11 @@
 
         <xsl:variable name="ptFreeTextTree" select="exslt:node-set($tmpFreeText)"/>
 
-        <xsl:variable name="mainLang"
-                      select="string(/root/*/gmd:language/gco:CharacterString|/root/*/gmd:language/gmd:LanguageCode/@codeListValue)"/>
+        <xsl:variable name="mainLang">
+           <xsl:call-template name="langId19139">
+              <xsl:with-param name="md" select="/root/*"/>
+           </xsl:call-template>
+        </xsl:variable>
         <xsl:variable name="mainLangId">
           <xsl:call-template name="getLangIdFromMetadata">
             <xsl:with-param name="lang" select="$mainLang"/>
@@ -4273,7 +4276,7 @@
               </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:for-each
+               <xsl:for-each
                 select="$ptFreeTextTree//gmd:LocalisedCharacterString[@locale=$mainLangId]">
                 <xsl:call-template name="getElementText">
                   <xsl:with-param name="schema" select="$schema"/>
@@ -4408,8 +4411,11 @@
     to clean multilingual content and add required attribute (xsi:type).
   -->
   <xsl:template name="PT_FreeText_Tree">
-    <xsl:variable name="mainLang"
-                  select="string(/root/*/gmd:language/gco:CharacterString|/root/*/gmd:language/gmd:LanguageCode/@codeListValue)"/>
+   <xsl:variable name="mainLang">
+      <xsl:call-template name="langId19139">
+         <xsl:with-param name="md" select="/root/*"/>
+      </xsl:call-template>
+   </xsl:variable>
     <xsl:variable name="languages"
                   select="/root/*/gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue"/>
 

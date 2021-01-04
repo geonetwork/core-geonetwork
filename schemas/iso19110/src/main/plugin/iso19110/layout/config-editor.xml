@@ -72,7 +72,7 @@
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
       <tab id="default" default="true" mode="flat">
-        <section name="gfc:FC_FeatureCatalogue">
+        <section>
           <!-- Preserve gmx:* in editor for backward compatibility. -->
           <field xpath="/gfc:FC_FeatureCatalogue/gmx:name" or="name" in="/gfc:FC_FeatureCatalogue"/>
           <field xpath="/gfc:FC_FeatureCatalogue/gfc:name"/>
@@ -108,7 +108,6 @@
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
       <tab id="advanced">
-        <section xpath="/gfc:FC_FeatureType"/>
         <section xpath="/gfc:FC_FeatureCatalogue"/>
       </tab>
     </view>

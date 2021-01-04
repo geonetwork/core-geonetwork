@@ -62,6 +62,10 @@
     <listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
   </listener>
 
+  <!-- listeter used to send signout event. Used by keycloak-->
+  <listener>
+    <listener-class>org.fao.geonet.kernel.security.listener.HttpSessionEventPublisher</listener-class>
+  </listener>
   <!-- Spring security -->
   <!--     <filter>
           <filter-name>springSecurityFilterChain</filter-name>
@@ -373,6 +377,10 @@
     <init-param>
       <param-name>http.protocol.handle-redirects</param-name>
       <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>securityMode</param-name>
+      <param-value>${proxy.securityMode}</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>

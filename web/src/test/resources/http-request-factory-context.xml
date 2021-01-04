@@ -22,11 +22,59 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-lazy-init="true"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="
+				http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+				http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+        		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd">
 
   <bean id="httpRequestFactory" class="org.fao.geonet.utils.GeonetHttpRequestFactory"/>
 
+  <bean id="settingManager" class="org.fao.geonet.kernel.setting.SettingManager" />
+
   <bean id="urlChecker" class="org.fao.geonet.kernel.url.UrlChecker"/>
+
+  <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext">
+    <property name="testClass" value="org.fao.geonet.kernel.schema.TestIso19139SchematronDefinition"/>
+  </bean>
+
+  <jpa:repositories base-package="org.fao.geonet.repository"
+                    factory-class="org.fao.geonet.repository.GeonetRepositoryFactoryBean"
+                    entity-manager-factory-ref="entityManagerFactory"
+                    transaction-manager-ref="transactionManager" />
+
+  <bean id="entityManagerFactory"
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <property name="dataSource" ref="jdbcDataSource" />
+    <property name="packagesToScan" value="org.fao.geonet.domain" />
+    <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+  </bean>
+
+  <bean lazy-init="true" id="jpaVendorAdapter"
+        class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+    <property name="generateDdl" ref="generateDdl" />
+    <property name="showSql" value="false" />
+    <property name="database" value="H2" />
+  </bean>
+
+  <bean id="generateDdl" class="java.lang.String" scope="singleton">
+    <constructor-arg value="true" />
+  </bean>
+
+
+  <bean id="jdbcDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close">
+    <property name="driverClassName" value=">org.h2.Driver" />
+    <property name="Url" value="jdbc:h2:mem:test" />
+    <property name="username" value="sa" />
+    <property name="password" value="" />
+  </bean>
+  <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    <property name="entityManagerFactory" ref="entityManagerFactory" />
+  </bean>
 </beans>

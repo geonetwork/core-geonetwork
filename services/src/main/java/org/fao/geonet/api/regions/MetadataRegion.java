@@ -23,7 +23,7 @@
 
 package org.fao.geonet.api.regions;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.api.regions.metadata.MetadataRegionSearchRequest.Id;
@@ -43,12 +43,14 @@ public class MetadataRegion extends Region {
     public MetadataRegion(Id mdId, String id, Geometry geometry) {
         super("metadata" + mdId.getIdentifiedId() + ":" + id, Collections.<String, String>emptyMap(), MetadataRegionDAO.CATEGORY_NAME,
             Collections.<String, String>emptyMap(), true,
-            new ReferencedEnvelope(geometry.getEnvelopeInternal(), WGS84));
+            geometry != null ? new ReferencedEnvelope(geometry.getEnvelopeInternal(), WGS84) : null);
         this.geometry = geometry;
     }
 
     public Geometry getGeometry(CoordinateReferenceSystem projection) throws Exception {
-
+        if (geometry == null) {
+            return null;
+        }
         CoordinateReferenceSystem coordinateReferenceSystem = getBBox().getCoordinateReferenceSystem();
         Integer sourceCode = CRS.lookupEpsgCode(coordinateReferenceSystem, false);
         Integer desiredCode = CRS.lookupEpsgCode(projection, false);

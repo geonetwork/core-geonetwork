@@ -5,12 +5,29 @@
 .navbar {
   margin-bottom: 0;
 }
+[ng-app^="gn_search_"] body, [ng-app="gn_login"] body {
+  &.gn-header-fixed {
+    .gn-top-bar {
+      position: fixed;
+      right: 0;
+      left: 0;
+      top: 0;
+      z-index: 1030;
+    }
+    &.gn-logo-in-header {
+      .gn-top-bar {
+        top: @gn-header-height;
+      }
+    }
+  }
+}
 
 .navbar-default {
   background-color: @gn-menubar-background;
   border-color: @gn-menubar-border-color;
   border-width: 0 0 1px 0;
   z-index: 100;
+  border-radius: 0;
   .navbar-nav > li > a, .navbar-nav > .open > a, .navbar-nav > .active > a {
     height: @gn-menubar-height;
     color: @gn-menubar-color;
@@ -40,13 +57,23 @@
     background-color: @gn-menubar-background-active;
     color: @gn-menubar-color-active;
   }
-  .gn-name.gn-truncate {
-    @media (min-width: @screen-lg-min) {
-      max-width: 230px;
+  .gn-logo-link {
+    padding: 10px 15px;
+    .gn-logo {
+      margin-top: -12px;
+    }
+    .gn-name {
+      margin-top: 5px;
       display: inline-block;
-      .text-overflow();
+      &.gn-truncate {
+        @media (min-width: @screen-lg-min) {
+          max-width: 230px;
+          .text-overflow();
+        }
+      }
     }
   }
+
   // also add `display:none`, this doesn't take whitespace on the navbar
   .badge.invisible {
     display: none
@@ -67,6 +94,8 @@
   }
   // more small screen oriented menu options
   @media (max-width: @screen-xs-max) {
+    padding-left: 0;
+    padding-right: 0;
     .navbar-header {
       .btn-link {
         padding: 13px;
@@ -77,14 +106,14 @@
     }
     .navbar-collapse {
       background-color: #fff;
-      padding-right: 15px;
-      padding-top: 10px;
-      padding-bottom: 10px;
-      margin: 0 -20px;
+      padding: 15px;
       box-shadow: 0 2px 0.5px rgba(0, 0, 0, 0.1) !important;
     }
     .navbar-nav > li > a, .navbar-nav > .open > a, .navbar-nav > .active > a {
       background: none;
+    }
+    .navbar-nav .open .dropdown-menu > li > a {
+      min-width: 0;
     }
     .gn-clear-xs {
       clear: both;
@@ -94,7 +123,7 @@
       padding: 15px 0;
       height: auto;
       font-size: 16px;
-      font-weight: 300;
+      font-weight: 400;
       clear: both;
       i {
         display: none;
@@ -113,7 +142,7 @@
         display: none;
       }
       .gn-menuitem-xs {
-        width: 33%;
+        width: calc(~"33% + 2px");
         height: 64px;
         text-align: center;
         border: 1px solid @navbar-default-border;
@@ -171,6 +200,7 @@
         display: block !important;
         padding: 0;
         margin: 0;
+        border: 0;
         .clearfix();
         // username & password input
         .form-group-sm {
@@ -191,8 +221,10 @@
       }
     }
     .language-switcher {
-      padding-left: 0;
-      padding-right: 0;
+      padding: 10px 15px;
+      .form-control {
+        width: calc(~"100% - 3px");
+      }
     }
     @media (min-width: @screen-sm-min) {
       li.dropdown-hover {

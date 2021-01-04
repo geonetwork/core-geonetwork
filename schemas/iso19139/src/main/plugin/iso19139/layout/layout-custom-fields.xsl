@@ -225,12 +225,13 @@
       </xsl:choose>
     </xsl:variable>
 
+    <xsl:variable name="requiredClass" select="if ($labelConfig/condition = 'mandatory') then 'gn-required' else ''" />
 
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
                       select="$labelVal"/>
       <xsl:with-param name="editInfo" select="../gn:element"/>
-      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="cls" select="concat(local-name(), ' ', $requiredClass)"/>
       <xsl:with-param name="subTreeSnippet">
 
         <xsl:variable name="identifier"
@@ -305,7 +306,7 @@
   <!-- In flat mode do not display geographic identifier and description
   because it is part of the map widget - see previous template. -->
   <xsl:template mode="mode-iso19139"
-                match="gmd:extent/*/gmd:description[$isFlatMode]|
+                match="gmd:extent/*/gmd:description[$isFlatMode and not($metadataIsMultilingual)]|
                        gmd:geographicElement[
                           $isFlatMode and
                           preceding-sibling::gmd:geographicElement/gmd:EX_GeographicBoundingBox

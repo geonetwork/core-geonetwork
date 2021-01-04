@@ -182,7 +182,7 @@
             controller: 'GnUserGroupController',
             resolve: {
               permission: function() {
-                authorizationService.$get[0]().check('Editor');
+                authorizationService.$get[0]().check('Guest');
               }
             }
           }).
@@ -191,7 +191,7 @@
             controller: 'GnUserGroupController',
             resolve: {
               permission: function() {
-                authorizationService.$get[0]().check('RegisteredUser');
+                authorizationService.$get[0]().check('Guest');
               }
             }
           }).

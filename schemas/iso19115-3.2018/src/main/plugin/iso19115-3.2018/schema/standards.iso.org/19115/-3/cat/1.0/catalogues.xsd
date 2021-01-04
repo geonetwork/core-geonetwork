@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/cat/1.0" version="1.0">
+  <annotation>
+    <documentation>Handcrafted</documentation>
+  </annotation>
+  <include schemaLocation="cat.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/lan/1.0" schemaLocation="../../../../19115/-3/lan/1.0/lan.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element abstract="true" name="AbstractCT_Catalogue" substitutionGroup="gco:AbstractObject" type="cat:AbstractCT_Catalogue_Type"/>
+  <complexType abstract="true" name="AbstractCT_Catalogue_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType"/>
+          <element maxOccurs="unbounded" name="scope" type="gco:CharacterString_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="fieldOfApplication" type="gco:CharacterString_PropertyType"/>
+          <element name="versionNumber" type="gco:CharacterString_PropertyType"/>
+          <element name="versionDate" type="gco:Date_PropertyType"/>
+          <element minOccurs="0" name="language" type="gco:CharacterString_PropertyType"/>
+          <element minOccurs="0" name="characterSet" type="lan:MD_CharacterSetCode_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="locale" type="lan:PT_Locale_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractCT_Catalogue_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:AbstractCT_Catalogue"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractCT_Item" substitutionGroup="gco:AbstractObject" type="cat:AbstractCT_Item_Type"/>
+  <complexType abstract="true" name="AbstractCT_Item_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="identifier" type="gco:GenericName_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="name" type="gco:GenericName_PropertyType"/>
+          <element name="definition" type="gco:CharacterString_PropertyType"/>
+          <element minOccurs="0" name="description" type="gco:CharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractCT_Item_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:AbstractCT_Item"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

@@ -302,12 +302,14 @@ public class InspireAtomUtil {
         return atomFeed;
     }
 
-    public static List<AbstractMetadata> searchMetadataByType(ServiceContext context,
-                                                              SearchManager searchMan,
-                                                              String type) {
+    public static List<AbstractMetadata> searchMetadataByTypeAndProtocol(ServiceContext context,
+                                                                         SearchManager searchMan,
+                                                                         String type,
+                                                                         String protocol) {
 
         Element request = new Element(Jeeves.Elem.REQUEST);
         request.addContent(new Element("type").setText(type));
+        request.addContent(new Element("protocol").setText(protocol));
         request.addContent(new Element("fast").setText("true"));
 
         // perform the search and return the results read from the index

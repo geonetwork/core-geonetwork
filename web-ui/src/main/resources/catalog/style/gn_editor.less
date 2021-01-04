@@ -430,8 +430,12 @@ form.gn-editor {
   .gn-value .col-xs-4 {
       padding-right: 0px;
   }
+  
+  div.th-inner {
+    font-size: 12px;
+  }
 
-  .gn-required > div.th-inner:after,
+  .gn-required > div.th-inner:after, legend.gn-required:after,
   label.gn-required:after, .gn-required > label:after,
   label.gn-mandatory:after, .gn-mandatory > label:after {
       content: "*";
@@ -446,7 +450,10 @@ form.gn-editor {
     font-size: 2em;
     margin: -7px 0 0 7px;
   }
-
+  legend.gn-required:after {
+    font-size: 24px;
+    margin: 0px;
+  }
 
   .form-horizontal .form-group {
       margin-left: 0px;
@@ -562,6 +569,7 @@ form.gn-tab-inspire {
         margin-top: 10px;
         overflow: auto;
         padding-bottom: 2px;
+        word-break: break-word;
       }
       &.text-danger {
         border-left: 4px solid @brand-danger;
@@ -936,14 +944,6 @@ gn-draft-validation-widget {
   padding-bottom: 150px;
 }
 @media (min-width: @screen-md-min) {
-  .scrollbar-white() {
-    &::-webkit-scrollbar-track, &::-webkit-scrollbar-thumb {
-      -webkit-box-shadow: inset 0 0 6px #fff;
-    }
-    &::-webkit-scrollbar-thumb:window-inactive {
-      background: #fff;
-    }
-  }
   .gn-editor-sidebar {
     margin-top: 0;
     position: fixed;
@@ -951,7 +951,6 @@ gn-draft-validation-widget {
     overflow: auto;
     max-height: 100%;
     padding-bottom: 110px;
-    .scrollbar-white();
   }
 }
 

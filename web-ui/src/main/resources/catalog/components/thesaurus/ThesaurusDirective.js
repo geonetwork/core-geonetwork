@@ -92,6 +92,11 @@
                }
              }
 
+             //if true, pressing the "add new keywords" button will always
+             //create a new section.  Otherwise, its will do the standard behaviour;
+             // a) if there isn't a freekeyword section, create it
+             // b) if there is a freekeyword section, just add another keyword to it
+             scope.alwaysCreateNewFreekeywordSection = (attrs.alwaysCreateNewFreekeywordSection == 'true');
 
              scope.allowFreeTextKeywords =
              (attrs.allowFreeTextKeywords === undefined) ||
@@ -115,12 +120,24 @@
              });
 
              scope.add = function() {
-               return gnEditor.add(gnCurrentEdit.id,
-                   scope.freekeywordElementRef || scope.elementRef,
-                 scope.freekeywordElementName || scope.elementName,
-                        scope.domId, 'before').then(function() {
-                 gnEditor.save(gnCurrentEdit.id, true);
-               });
+                 var metadataId =gnCurrentEdit.id;
+
+                 //if there is a freekeywordElementRef, then we're just adding a keyword (otherwise, whole section)
+                 var ref = scope.freekeywordElementRef || scope.elementRef;
+                 var name = scope.freekeywordElementName || scope.elementName;
+
+                 //override to always create a new freekeyword section
+                 if (scope.alwaysCreateNewFreekeywordSection) {
+                    ref = scope.elementRef;
+                    name = scope.elementName;
+                 }
+
+                 var insertRef = scope.domId;
+                 var position = 'before';
+                 return gnEditor.add(metadataId,ref,name,insertRef,position)
+                      .then(function() {
+                          gnEditor.save(gnCurrentEdit.id, true);
+                       });
              };
 
              scope.addThesaurus = function(thesaurusIdentifier) {
@@ -129,9 +146,12 @@
                  thesaurusIdentifier;
                } else {
                  gnCurrentEdit.working = true;
+                 var langs = _.map(Object.keys(gnCurrentEdit.allLanguages.code2iso),function(k){
+                          return k.replace("#","");
+                      }).join(',');
                  return gnThesaurusService
                   .getXML(thesaurusIdentifier, null,
-                 attrs.transformation).then(
+                 attrs.transformation,langs).then(
                  function(data) {
                    // Add the fragment to the form
                    scope.snippet = data;
@@ -246,11 +266,18 @@
              scope.transformations.split(',') : [scope.transformations];
              scope.maxTagsLabel = scope.maxTags || '∞';
 
+
+             //examples;
+             //hnap:{"eng":"#eng","fre":"#fra"}
+             //iso19139:{"eng":"#EN","fre":"#FR","ger":"#DE","chi":"#ZH","ara":"#AR","spa":"#ES","rus":"#RU"}
+             scope.langConversion=JSON.parse(scope.lang); //dictionary, as above
+
+             // ["eng","fre"]   OR ["eng","fre","ger","chi","ara","spa", "rus"]
+             scope.baseLangs = _.keys(scope.langConversion);
+
              //Get langs of metadata
-             var langs = [];
-             for (var p in JSON.parse(scope.lang)) {
-               langs.push(p);
-             }
+             var langs = scope.baseLangs;  // ["eng","fre"]   OR ["eng","fre","ger","chi","ara","spa", "rus"]
+
              scope.mainLang = langs[0];
              scope.langs = langs.join(',');
 
@@ -402,8 +429,42 @@
 
                        // Clear typeahead
                        this.tagsinput('input').typeahead('val', '');
+                       field.blur();
+                       field.triggerHandler('input'); // force angular to see changes
                      }, $(id))
                      );
+                     // UX improvement
+                     // When the user presses "enter", allow the item to be selected
+                      field.bind("keydown keypress", function(event){
+                          if (event.isDefaultPrevented()) {
+                              event.stopPropagation(); // need to prevent this from bubbling - or something might action it
+                              field.focus(); //allow to type again
+                              return false;   //this event has already been handled by tt-typeahead, dont do it twice!
+                          }
+                          if (event.keyCode ==13) { // pressed "enter"
+                              event.stopPropagation(); // we are handling the event...
+                              event.preventDefault();
+                              if (element.find(".tt-selectable").length <1)
+                                return; // should be an element (keyword choice) visible
+                              var val = element.find(".tt-selectable").first().text(); //first one
+                              if ( (!val) || (val == ''))
+                                return; // no value, nothing to do
+
+                              //get full keyword info from server
+                              gnThesaurusService.getKeywords(val,
+                                    scope.thesaurusKey, gnLangs.current, 1, 'MATCH')
+                                    .then(function(listOfKeywords) {
+                                        if (listOfKeywords.length == 1) { // should be one match
+                                            field.typeahead().trigger("typeahead:selected", listOfKeywords[0],listOfKeywords[0]);
+                                            field.typeahead('close');
+                                            field.focus(); //allow to type again
+                                            field.triggerHandler('input'); // force angular to see changes
+                                        }
+                                    }
+                              );
+
+                          }
+                      });
 
                      $(id).on('itemRemoved', function() {
                        angular.copy($(this)
@@ -473,7 +534,7 @@
                gnThesaurusService
                 .getXML(scope.thesaurusKey,
                getKeywordIds(), scope.currentTransformation, scope.langs,
-                   scope.textgroupOnly).then(
+                   scope.textgroupOnly,scope.langConversion).then(
                function(data) {
                  scope.snippet = data;
                });
@@ -507,11 +568,13 @@
       return {
         restrict: 'A',
         scope: {
+             fauxMultilingual: '@fauxMultilingual' // we are doing our own multi-lingual support
         },
         link: function(scope, element, attrs) {
           scope.thesaurusKey = attrs.thesaurusKey || '';
           scope.orderById = attrs.orderById || 'false';
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
+          scope.fauxMultilingual = scope.fauxMultilingual==="true"; //default false
 
 
 
@@ -639,14 +702,16 @@
             }).bind('typeahead:selected',
               $.proxy(function(obj, keyword) {
                 var inputs = $(obj.currentTarget).parent().parent().find('input.tt-input');
-                if (isMultilingualMode && inputs.size() > 0) {
+                if ((isMultilingualMode||scope.fauxMultilingual) && inputs.size() > 0) {
                   for (var i = 0; i < inputs.size(); i ++) {
                     var input = inputs.get(i);
                     var lang = input.getAttribute('lang');
                     var value = keyword.props.values[gnCurrentEdit.allLanguages.code2iso['#' + lang]];
                     if (value) {
                       $(input).typeahead('val', value);
-                    }
+                      // this makes sure that angular knows the value has changed
+                      $(input).triggerHandler('input');
+                     }
                     // If no value for the language, value is not set.
                   }
                 } else {

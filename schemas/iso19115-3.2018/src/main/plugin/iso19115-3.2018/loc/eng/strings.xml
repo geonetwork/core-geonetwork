@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+
+  <!-- XSD error translation -->
+  <invalidElement>Invalid content found at element </invalidElement>
+  <onElementOf>One of the following elements </onElementOf>
+  <isExpected> is expected.</isExpected>
+  <isNotComplete> is not complete.</isNotComplete>
+  <elementLocated> Parent element is </elementLocated>
+  <missingElement>Missing element in </missingElement>
+  <invalidValue>Invalid or missing value.</invalidValue>
+  <notValidFor> is not a valid value for </notValidFor>
+  <xsdErrorIs>XSD error is: </xsdErrorIs>
+  <inElement> in element </inElement>
+  <enum1>Value </enum1>
+  <enum2> is not valid for the field </enum2>
+  <enum3>Potential values are: </enum3>
+
+
+  <understandResource>Information about the dataset</understandResource>
+  <relatedResources>Related services and linked data</relatedResources>
+  <techInfo>Technical information</techInfo>
+  <contactInfo>Contact information</contactInfo>
+  <mdContactInfo>Metadata contact</mdContactInfo>
+  <refDate>Reference date</refDate>
+  <temporalRef>Temporal information</temporalRef>
+  <constraintInfo>Access constraint information</constraintInfo>
+  <xml_iso19139>Save this metadata as an ISO19139 XML file</xml_iso19139>
+  <xml_iso19139Tooai_dc>Save this metadata as an OAI Dublin Core XML file
+  </xml_iso19139Tooai_dc>
+  <resourceLineageTab>Lineage</resourceLineageTab>
+
+  <advanced>Full</advanced>
+  <default>Simple</default>
+  <simple>Simple</simple>
+  <inspire>INSPIRE</inspire>
+  <inspireTheme>INSPIRE themes</inspireTheme>
+  <inspireThemeMandatory>INSPIRE themes*</inspireThemeMandatory>
+  <resource>Resource</resource>
+  <xml>XML</xml>
+  <metadata>Metadata</metadata>
+  <identificationInfo>Identification</identificationInfo>
+  <distributionInfo>Distribution</distributionInfo>
+  <dataQualityInfo>Quality</dataQualityInfo>
+  <resourceLineage>Lineage</resourceLineage>
+  <spatialRepresentationInfo>Spatial rep.</spatialRepresentationInfo>
+  <referenceSystemInfo>Ref. system</referenceSystemInfo>
+  <contentInfo>Content</contentInfo>
+  <portrayalCatalogueInfo>Portrayal</portrayalCatalogueInfo>
+  <metadataConstraints>Md. constraints</metadataConstraints>
+  <metadataMaintenance>Md. maintenance</metadataMaintenance>
+  <applicationSchemaInfo>Schema info</applicationSchemaInfo>
+  <acquisitionInformation>Acquisition info</acquisitionInformation>
+  <qualityMeasures>Q. measures</qualityMeasures>
+
+  <bboxesSection>Geographic coverage</bboxesSection>
+  <overviews>Overviews</overviews>
+  <metadataInXML>XML</metadataInXML>
+  <providedBy>Provided by</providedBy>
+  <shareOnSocialSite>Share on social sites</shareOnSocialSite>
+  <viewMode>Views</viewMode>
+  <linkToPortal>Access to the portal</linkToPortal>
+  <linkToPortal-help>Read here the full details and access to the data.</linkToPortal-help>
+  <citationProposal>Citation proposal</citationProposal>
+  <citationProposal-help>This proposal was automatically generated, check if the metadata authors did not specified custom citation requirements.</citationProposal-help>
+  <associatedResources>Associated resources</associatedResources>
+
+
+  <add-resource-id>Compute resource identifier</add-resource-id>
+  <add-resource-idHelp>Compose the resource identifier using the catalog URL and
+    the metadata identifier (eg.
+    http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).
+  </add-resource-idHelp>
+  <add-extent-from-geokeywords>Compute extent from keyword
+  </add-extent-from-geokeywords>
+  <add-extent-from-geokeywordsHelp>Analyze each keyword of type place and add
+    matching extent.
+  </add-extent-from-geokeywordsHelp>
+  <extent>Geographic bounding box</extent>
+  <spatialExtent>Spatial extent</spatialExtent>
+  <freeTextKeywords>Other keywords</freeTextKeywords>
+  <noThesaurusName>Keywords</noThesaurusName>
+</strings>

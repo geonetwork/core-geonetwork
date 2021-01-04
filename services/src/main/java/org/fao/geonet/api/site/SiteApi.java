@@ -23,27 +23,16 @@
 
 package org.fao.geonet.api.site;
 
-import static org.apache.commons.fileupload.util.Streams.checkFileName;
-import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
-
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
-import javax.persistence.criteria.Root;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import jeeves.component.ProfileManager;
+import jeeves.config.springutil.ServerBeanPropertyUpdater;
+import jeeves.server.JeevesProxyInfo;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
@@ -68,6 +57,7 @@ import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
@@ -80,7 +70,6 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.FilePathChecker;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.ProxyInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -96,18 +85,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.component.ProfileManager;
-import jeeves.config.springutil.ServerBeanPropertyUpdater;
-import jeeves.server.JeevesProxyInfo;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.imageio.ImageIO;
+import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+
+import static org.apache.commons.fileupload.util.Streams.checkFileName;
+import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
 
 /**
  *
@@ -179,6 +177,9 @@ public class SiteApi {
         }
         DoiManager doiManager = gc.getBean(DoiManager.class);
         doiManager.loadConfig();
+
+        HarvestManager harvestManager = context.getBean(HarvestManager.class);
+        harvestManager.rescheduleActiveHarvesters();
     }
 
     @ApiOperation(
@@ -216,6 +217,22 @@ public class SiteApi {
                 settings.add(
                     new Setting().setName(Settings.NODE)
                         .setValue(source.getUuid()));
+                settings.add(
+                    new Setting().setName(Settings.NODE_NAME)
+                        .setValue(source != null ? source.getLabel(iso3langCode) : source.getName()));
+            }
+        } else {
+            String defaultSiteId = settingManager.getSiteId();
+            Source source = sourceRepository.findOne(defaultSiteId);
+            if (source != null) {
+                String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
+                final List<Setting> settings = response.getSettings();
+                settings.add(
+                    new Setting().setName(Settings.NODE_DEFAULT)
+                        .setValue("true"));
+                settings.add(
+                    new Setting().setName(Settings.NODE)
+                        .setValue(NodeInfo.DEFAULT_NODE));
                 settings.add(
                     new Setting().setName(Settings.NODE_NAME)
                         .setValue(source != null ? source.getLabel(iso3langCode) : source.getName()));

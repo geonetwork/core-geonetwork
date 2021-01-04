@@ -84,7 +84,29 @@
     <for name="gmd:organisationName" use="data-gn-anchor-switcher"/>
     -->
 
+    <!-- Example of data-gn-field-upload-div directive:
 
+    Create a widget to handle editing of Anchor fields, that require to upload files to the metadata and link them.
+
+    Files are stored in the metadata store, the same way as when adding online resources.
+
+    Format of the xml snippet created:
+
+    <gmd:supplementalInformation>
+      <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/api/records/cde2f47f-4a3f-4da1-8918-9923e7d372f1/attachments/report2019.docx">
+        Report 2019
+      </gmx:Anchor>
+    </gmd:supplementalInformation>
+
+    The directive doesn't support multilingual fields.
+
+    Parameters:
+        data-allow-modify-xlink="true": allows to modify the xlink href (defaults to false)
+
+    <for name="gmd:supplementalInformation" use="data-gn-field-upload-div">
+      <directiveAttributes data-allow-modify-xlink="true" data-link-href="eval#gmx:Anchor/@xlink:href" />
+    </for>
+    -->
 
     <for name="gts:TM_PeriodDuration" use="data-gn-field-duration-div"/>
     <for name="gml:duration" use="data-gn-field-duration-div"/>
@@ -94,6 +116,33 @@
     <for name="gco:Integer" use="number"/>
     <for name="gco:Real" use="number"/>
     <for name="gco:Boolean" use="checkbox"/>
+
+    <!-- Use data-gn-checkbox-with-nilreason for INSPIRE conformity, using xpath attribute.Similar configuration can be
+         applied to other boolean fields that require to handle nilreason value.
+
+         And additional change is required in inflate-metadata.xsl, for the elements to handle with this directive to add gco:Boolean
+         when missing due to nilreason attribute and work nicely with the metadata editor.
+
+         Example with gmd:pass:
+
+           <xsl:template match="gmd:pass[@gco:nilReason and not(gco:Boolean)]">
+            <xsl:copy>
+              <xsl:copy-of select="@*" />
+
+              <gco:Boolean></gco:Boolean>
+            </xsl:copy>
+          </xsl:template>
+
+          Update-fixed-info.xsl already removes gco:Boolean when empty due to nilreason attribute, to avoid xsd errors. No need to change it.
+    -->
+    <!--<for name="gco:Boolean"
+         xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass"
+         use="data-gn-checkbox-with-nilreason">
+      <directiveAttributes
+        data-tag-name="gmd:pass"
+        data-nilreason="eval#@gco:nilReason"
+        data-labels='{"true": "conformant", "false": "notConformant", "unknown": "notEvaluated"}'/>
+    </for>-->
 
 
     <for name="gco:Date" use="data-gn-date-picker"/>

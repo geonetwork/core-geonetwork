@@ -37,6 +37,7 @@
    */
   module.directive('gnWmsImport', [
     'gnOwsCapabilities',
+    'gnAlertService',
     'gnMap',
     '$translate',
     '$timeout',
@@ -44,7 +45,7 @@
     'Metadata',
     'gnViewerSettings',
     'gnGlobalSettings',
-    function(gnOwsCapabilities, gnMap, $translate, $timeout,
+    function(gnOwsCapabilities, gnAlertService, gnMap, $translate, $timeout,
              gnSearchManagerService, Metadata, gnViewerSettings,
              gnGlobalSettings) {
       return {
@@ -69,7 +70,7 @@
           this.addLayer = function(getCapLayer, style) {
             getCapLayer.version = $scope.capability.version;
             getCapLayer.capRequest = $scope.capability.Request;
-  
+
             //check if proxy is needed
             var url = $scope.url.split('/');
             getCapLayer.useProxy = false;
@@ -80,6 +81,11 @@
             if ($scope.format == 'wms') {
               var layer =
                   gnMap.addWmsToMapFromCap($scope.map, getCapLayer, style);
+                  gnAlertService.addAlert({
+                    msg: $translate.instant('layerAdded',
+                        {layer: layer.get('label'), extent: layer.get('cextent').toString()}),
+                    type: 'success'
+                  },4);
               gnMap.feedLayerMd(layer);
               return layer;
             } else if ($scope.format == 'wfs') {
@@ -90,6 +96,8 @@
             } else if ($scope.format == 'wmts') {
               return gnMap.addWmtsToMapFromCap($scope.map, getCapLayer,
                   $scope.capability);
+            } else {
+              console.log($scope.format+ ' not supported');
             }
           };
         }],
@@ -405,7 +413,11 @@
    * gnCapTreeElt directive.
    */
   module.directive('gnCapTreeCol', [
-    function() {
+    '$translate',
+    function($translate) {
+
+      var label= $translate.instant('filter');
+
       return {
         restrict: 'E',
         replace: true,
@@ -414,7 +426,7 @@
         },
         template: "<ul class='gn-layer-tree'><li data-ng-show='collection.length > 10' >" +
             "<div class='input-group input-group-sm'><span class='input-group-addon'><i class='fa fa-filter'></i></span>" + 
-            "<input class='form-control' data-ng-model-options='{debounce: 200}' data-ng-model='layerSearchText'/></div>" +
+            "<input class='form-control' aria-label='" + label + "' data-ng-model-options='{debounce: 200}' data-ng-model='layerSearchText'/></div>" +
             "</li>" +
             '<gn-cap-tree-elt ng-repeat="member in collection | filter:layerSearchText | orderBy: \'Title\'" member="member">' +
             '</gn-cap-tree-elt></ul>'

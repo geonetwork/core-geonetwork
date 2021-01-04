@@ -113,7 +113,8 @@
       </button>
       <ul class="dropdown-menu dropdown-menu-right" role="menu">
         <!-- A draft can not be a template -->
-        <li role="menuitem">
+        <li role="menuitem"
+            data-ng-show="user.canCreateTemplate()">
           <a href=""
              title="{{(isTemplate() ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}"
              data-gn-click-and-spin="switchTypeAndSave(true)">

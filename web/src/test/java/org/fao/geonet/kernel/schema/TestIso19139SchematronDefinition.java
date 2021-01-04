@@ -55,7 +55,7 @@ import static org.junit.Assert.assertEquals;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(inheritLocations = true, locations = {"classpath*:http-request-factory-context.xml"})
+@ContextConfiguration(inheritLocations = true, locations = {"classpath*:http-request-factory-context.xml", "classpath*:domain-repository-test-context.xml"})
 public class TestIso19139SchematronDefinition extends AbstractSchematronTest {
     @Autowired
     protected ConfigurableApplicationContext _applicationContext;

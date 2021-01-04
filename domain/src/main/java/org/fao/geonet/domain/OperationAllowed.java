@@ -36,7 +36,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = OperationAllowed.TABLE_NAME,
-    indexes = { @Index(name = "idx_operationallowed_metadataid", columnList = "metadataid") })
+    indexes = { @Index(name = "ix_operationallowed_mdid", columnList = "metadataid") })
 @Access(AccessType.PROPERTY)
 @EntityListeners(OperationAllowedEntityListenerManager.class)
 public class OperationAllowed extends GeonetEntity {

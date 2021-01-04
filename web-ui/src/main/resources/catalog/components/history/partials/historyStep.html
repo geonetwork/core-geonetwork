@@ -19,7 +19,7 @@
          title="{{'removeHistoryStep' | translate}}">
         <i class="fa fa-times text-danger"/>
       </a>
-      <a data-ng-href="catalog.search#/metadata/{{h.id.metadataId}}"
+      <a data-ng-href="catalog.search#/metadata/{{h.uuid}}"
          data-ng-hide="noTitle"><i>{{h.title}}</i></a>
       <br data-ng-hide="noTitle"/>
       <strong>
@@ -28,7 +28,7 @@
         (h.statusValue.label | gnLocalized | translate:{h: h}) }}
       </strong>
       <span class="text-muted"
-            data-gn-humanize-time="{{h.id.changeDate.dateAndTime}}"
+            data-gn-humanize-time="{{h.changeDate.dateAndTime}}"
             data-from-now=""></span>
 
       <span data-ng-if="h.statusValue.type == 'task'" data-ng-show="h.dueDate != null">,
@@ -49,13 +49,47 @@
       </p>
 
       <img class="img-circle"
-           data-ng-src="//gravatar.com/avatar/{{h.authorEmail | md5}}?s=18"/>
+           data-ng-src="../api/users/{{(h.id.userId)}}.png?size=18"/>
       {{h.authorName}}
+
+      <div class="btn-group btn-group-xs pull-right timeline-btn-group" role="group"
+          data-ng-if="h.statusValue.type === 'event' &&
+          (h.statusValue.id === 51 || h.statusValue.id === 60 || h.statusValue.id === 61 || h.statusValue.id === 63)">
+
+          <a class="btn btn-default"
+             target="_blank"
+             data-ng-href="../api/records/{{h.uuid}}/status/{{h.statusId}}.{{h.userId}}.{{h.changeDate.dateAndTime}}/before"
+             data-ng-if="!h.previousStateEmpty"
+             data-ng-hide="noSourceViewOption">
+            <i class="fa fa-fw fa-search"
+               title="{{'View' | translate}}"></i>
+            <span data-translate="">viewPreviousVersion</span>
+          </a>
+
+          <a class="btn btn-default"
+             target="_blank"
+             data-ng-href="../api/records/{{h.uuid}}/status/{{h.statusId}}.{{h.userId}}.{{h.changeDate.dateAndTime}}/after"
+             data-ng-if="!h.currentStateEmpty"
+             data-ng-hide="noSourceViewOption">
+            <i class="fa fa-fw fa-search"
+               title="{{'View' | translate}}"></i>
+            <span data-translate="">viewChangedVersion</span>
+          </a>
+
+          <span class="btn btn-default"
+                data-gn-click-and-spin="restoreHistoryElement(h)"
+                data-ng-if="!h.previousStateEmpty"
+                data-ng-hide="noRecoverOption">
+          <i class="fa fa-fw fa-magic"
+             title="{{'restore' | translate}}"></i>
+          <span data-translate="">restore</span>
+        </span>
+      </div>
     </div>
     <div class="timeline-body" data-ng-show="h.closeDate == null">
 
       <div data-ng-show="h.statusValue.name == 'doiCreationTask'"
-           data-ng-init="key = h.id.metadataId + '-' + h.id.statusId">
+           data-ng-init="key = h.metadataId + '-' + h.statusId">
         <h2 data-translate="">createDoiForRecord</h2>
         <div class="text-muted" data-translate="">createDoiForRecord-help</div>
 

@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -79,7 +79,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.gml2.GMLConfiguration;
-import org.geotools.xml.Encoder;
+import org.geotools.xsd.Encoder;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;

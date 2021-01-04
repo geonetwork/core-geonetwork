@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" 
+  xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0" xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0" 
+  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" 
+  elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/gex/1.0" version="1.0">
+  <!-- deprecated namespaces:
+  xmlns:gts="http://www.isotc211.org/2005/gts"
+  xmlns:rce="http://standards.iso.org/iso/19111/rce/1.0" -->
+  <!-- <include schemaLocation="gex.xsd"/>-->
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gmw/1.0" schemaLocation="../../../../19115/-3/gmw/1.0/gmw.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--  <import namespace="http://standards.iso.org/iso/19111/rce/1.0" schemaLocation="../../../../19111/rce/1.0/rce.xsd"/>-->
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="EX_BoundingPolygon" substitutionGroup="gex:AbstractEX_GeographicExtent" type="gex:EX_BoundingPolygon_Type">
+    <annotation>
+      <documentation>enclosing geometric object which locates the resource, expressed as a set of (x,y) coordinate (s) NOTE: If a polygon is used it should be closed (last point replicates first point)</documentation>
+    </annotation>
+  </element>
+  <complexType name="EX_BoundingPolygon_Type">
+    <complexContent>
+      <extension base="gex:AbstractEX_GeographicExtent_Type">
+        <sequence>
+          <element maxOccurs="unbounded" name="polygon" type="gmw:GM_Object_PropertyType">
+            <annotation>
+              <documentation>sets of points defining the bounding polygon or any other GM_Object geometry (point, line or polygon)</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="EX_BoundingPolygon_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gex:EX_BoundingPolygon"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="EX_Extent" substitutionGroup="mcc:Abstract_Extent" type="gex:EX_Extent_Type">
+    <annotation>
+      <documentation>extent of the resource</documentation>
+    </annotation>
+  </element>
+  <complexType name="EX_Extent_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_Extent_Type">
+        <sequence>
+          <element minOccurs="0" name="description" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>sets of points defining the bounding polygon or any other GM_Object geometry (point, line or polygon)</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="geographicElement" type="gex:AbstractEX_GeographicExtent_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="temporalElement" type="gex:EX_TemporalExtent_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="verticalElement" type="gex:EX_VerticalExtent_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="EX_Extent_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gex:EX_Extent"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="EX_GeographicBoundingBox" substitutionGroup="gex:AbstractEX_GeographicExtent" type="gex:EX_GeographicBoundingBox_Type">
+    <annotation>
+      <documentation>geographic position of the resource NOTE: This is only an approximate reference so specifying the coordinate reference system is unnecessary and need only be provided with a precision of up to two decimal places</documentation>
+    </annotation>
+  </element>
+  <complexType name="EX_GeographicBoundingBox_Type">
+    <complexContent>
+      <extension base="gex:AbstractEX_GeographicExtent_Type">
+        <sequence>
+          <element name="westBoundLongitude" type="gco:Decimal_PropertyType">
+            <annotation>
+              <documentation>western-most coordinate of the limit of the resource extent, expressed in longitude in decimal degrees (positive east)</documentation>
+            </annotation>
+          </element>
+          <element name="eastBoundLongitude" type="gco:Decimal_PropertyType">
+            <annotation>
+              <documentation>eastern-most coordinate of the limit of the resource extent, expressed in longitude in decimal degrees (positive east)</documentation>
+            </annotation>
+          </element>
+          <element name="southBoundLatitude" type="gco:Decimal_PropertyType">
+            <annotation>
+              <documentation>southern-most coordinate of the limit of the resource extent, expressed in latitude in decimal degrees (positive north)</documentation>
+            </annotation>
+          </element>
+          <element name="northBoundLatitude" type="gco:Decimal_PropertyType">
+            <annotation>
+              <documentation>northern-most, coordinate of the limit of the resource extent expressed in latitude in decimal degrees (positive north)</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="EX_GeographicBoundingBox_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gex:EX_GeographicBoundingBox"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="EX_GeographicDescription" substitutionGroup="gex:AbstractEX_GeographicExtent" type="gex:EX_GeographicDescription_Type">
+    <annotation>
+      <documentation>description of the geographic area using identifiers</documentation>
+    </annotation>
+  </element>
+  <complexType name="EX_GeographicDescription_Type">
+    <complexContent>
+      <extension base="gex:AbstractEX_GeographicExtent_Type">
+        <sequence>
+          <element name="geographicIdentifier" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>identifier used to represent a geographic area e.g. a geographic identifier as described in ISO 19112</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="EX_GeographicDescription_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gex:EX_GeographicDescription"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractEX_GeographicExtent" substitutionGroup="gco:AbstractObject" type="gex:AbstractEX_GeographicExtent_Type">
+    <annotation>
+      <documentation>spatial area of the resource</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractEX_GeographicExtent_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" name="extentTypeCode" type="gco:Boolean_PropertyType">
+            <annotation>
+              <documentation>indication of whether the geographic element encompasses an area covered by the data or an area where data is not present</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractEX_GeographicExtent_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gex:AbstractEX_GeographicExtent"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="EX_SpatialTemporalExtent" substitutionGroup="gex:EX_TemporalExtent" type="gex:EX_SpatialTemporalExtent_Type">
+    <annotation>
+      <documentation>extent with respect to date/time and spatial boundaries</documentation>
+    </annotation>
+  </element>
+  <complexType name="EX_SpatialTemporalExtent_Type">
+    <complexContent>
+      <extension base="gex:EX_TemporalExtent_Type">
+        <sequence>
+          <element minOccurs="0" name="verticalExtent" type="gex:EX_VerticalExtent_PropertyType">
+            <annotation>
+              <documentation>vertical extent component</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="spatialExtent" type="gex:AbstractEX_GeographicExtent_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="EX_SpatialTemporalExtent_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gex:EX_SpatialTemporalExtent"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="EX_TemporalExtent" substitutionGroup="gco:AbstractObject" type="gex:EX_TemporalExtent_Type">
+    <annotation>
+      <documentation>time period covered by the content of the resource</documentation>
+    </annotation>
+  </element>
+  <complexType name="EX_TemporalExtent_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="extent" type="gmw:TM_Primitive_PropertyType">
+            <annotation>
+              <documentation>period for the content of the resource</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="EX_TemporalExtent_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gex:EX_TemporalExtent"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="EX_VerticalExtent" substitutionGroup="gco:AbstractObject" type="gex:EX_VerticalExtent_Type">
+    <annotation>
+      <documentation>vertical domain of resource</documentation>
+    </annotation>
+  </element>
+  <complexType name="EX_VerticalExtent_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="minimumValue" type="gco:Real_PropertyType">
+            <annotation>
+              <documentation>lowest vertical extent contained in the resource</documentation>
+            </annotation>
+          </element>
+          <element name="maximumValue" type="gco:Real_PropertyType">
+            <annotation>
+              <documentation>highest vertical extent contained in the resource</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="verticalCRSId" type="mcc:Abstract_ReferenceSystem_PropertyType"/>
+          <element minOccurs="0" name="verticalCRS" type="gmw:SC_CRS_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="EX_VerticalExtent_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="gex:EX_VerticalExtent"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

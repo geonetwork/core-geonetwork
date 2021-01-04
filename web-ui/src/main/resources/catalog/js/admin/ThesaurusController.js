@@ -315,7 +315,9 @@
         } else {
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate.instant('thesaurusUploadError'),
-            error: r.responseJSON || r.data,
+            error: r.responseJSON ||
+              $(r.responseText).find('description').text() ||
+              $(r.data).find('description').text() || r.data,
             timeout: 0,
             type: 'danger'});
 

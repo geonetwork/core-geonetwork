@@ -7,14 +7,12 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
-import org.fao.geonet.domain.MetadataStatusId_;
 import org.fao.geonet.domain.MetadataStatus_;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
-import org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
@@ -59,9 +57,12 @@ public class DraftUtilities {
 
     @Autowired
     private MetadataRatingByIpRepository metadataRatingByIpRepository;
-    
+
     @Autowired
-    private DraftMetadataUtils draftMetadataUtils;
+    private IMetadataUtils draftMetadataUtils;
+
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     /**
      * Replace the contents of the record with the ones on the draft, if exists, and
@@ -100,8 +101,8 @@ public class DraftUtilities {
         }
 
         // Reassign metadata workflow statuses
-        List<MetadataStatus> statuses = metadataStatusRepository.findAllById_MetadataId(draft.getId(),
-            SortUtils.createSort(MetadataStatus_.id, MetadataStatusId_.metadataId));
+        List<MetadataStatus> statuses = metadataStatusRepository.findAllByMetadataId(draft.getId(),
+            SortUtils.createSort(MetadataStatus_.metadataId));
         for (MetadataStatus old : statuses) {
             MetadataStatus st = new MetadataStatus();
             st.setChangeMessage(old.getChangeMessage());
@@ -110,12 +111,17 @@ public class DraftUtilities {
             st.setOwner(old.getOwner());
             st.setPreviousState(old.getPreviousState());
             st.setStatusValue(old.getStatusValue());
-            MetadataStatusId id = new MetadataStatusId();
-            id.setChangeDate(old.getId().getChangeDate());
-            id.setStatusId(old.getId().getStatusId());
-            id.setUserId(old.getId().getUserId());
-            id.setMetadataId(md.getId());
-            st.setId(id);
+            st.setChangeDate(old.getChangeDate());
+            st.setUserId(old.getUserId());
+            st.setMetadataId(md.getId());
+            st.setUuid(md.getUuid());
+            try {
+                st.setTitles(metadataUtils.extractTitles(Integer.toString(md.getId())));
+            } catch (Exception e) {
+                Log.error(Geonet.DATA_MANAGER, String.format(
+                        "Error locating titles for metadata id: %d", +md.getId()), e);
+            }
+
             metadataStatusRepository.save(st);
             metadataStatusRepository.delete(old);
         }

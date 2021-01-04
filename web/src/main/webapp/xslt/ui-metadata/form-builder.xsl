@@ -156,8 +156,30 @@
             </xsl:choose>
 
             <xsl:attribute name="data-ref" select="concat('_', $editInfo/@ref)"/>
+            <xsl:attribute name="data-parent-ref" select="concat('_', $editInfo/@parent)"/>
             <xsl:attribute name="data-label" select="$label/label"/>
+            <xsl:attribute name="data-element-name" select="name()"/>
             <xsl:attribute name="data-required" select="$isRequired"/>
+
+            <xsl:if test="$directiveAttributes instance of node()+">
+              <xsl:variable name="node" select="." />
+
+              <xsl:for-each select="$directiveAttributes//attribute::*">
+                <xsl:choose>
+                  <xsl:when test="starts-with(., 'eval#')">
+                    <xsl:attribute name="{name()}">
+                      <saxon:call-template name="{concat('evaluate-', $schema)}">
+                        <xsl:with-param name="base" select="$node"/>
+                        <xsl:with-param name="in" select="concat('/', substring-after(., 'eval#'))"/>
+                      </saxon:call-template>
+                    </xsl:attribute>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:copy-of select="."/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:for-each>
+            </xsl:if>
           </span>
           <div class="col-sm-1 gn-control">
             <xsl:if test="not($isDisabled)">
@@ -274,7 +296,7 @@
               <xsl:with-param name="domeElementToMoveRef" select="$editInfo/@ref"/>
             </xsl:call-template>
 
-            <xsl:if test="$attributesSnippet">
+            <xsl:if test="$attributesSnippet and count($attributesSnippet/*) > 0">
               <xsl:variable name="cssDefaultClass" select="'well well-sm'"/>
               <div class="{$cssDefaultClass}
                 {if ($forceDisplayAttributes) then 'gn-attr-mandatory' else 'gn-attr'}
@@ -392,7 +414,7 @@
         </xsl:if>
       </legend>
 
-      <xsl:if test="count($attributesSnippet/*) > 0">
+      <xsl:if test="count($attributesSnippet/*) > 0 and name($attributesSnippet/*[1]) != 'null'">
         <div class="well well-sm gn-attr {if ($isDisplayingAttributes = true()) then '' else 'hidden'}">
           <xsl:copy-of select="$attributesSnippet"/>
         </div>
@@ -1159,20 +1181,51 @@
         <xsl:variable name="isTextareaDirective"
                       select="$isDirective and contains($type, '-textarea')"/>
 
-        <xsl:variable name="textareaOrInput">
-          <xsl:element name="{if ($isTextareaDirective) then 'textarea' else 'input'}">
+        <!-- TODO: Standardize the naming to use div container, currently used for data-gn-checkbox-with-nilreason -->
+        <xsl:variable name="isDivDirective"
+                      select="$isDirective and contains($type, '-checkbox')"/>
+
+        <xsl:variable name="contentSnippet">
+          <xsl:element name="{if ($isDivDirective) then 'div' else if ($isTextareaDirective) then 'textarea' else 'input'}">
 
             <xsl:attribute name="class"
-                           select="concat('form-control ', if ($lang) then 'hidden' else '')"/>
+                           select="concat(if ($isDivDirective) then '' else 'form-control ', if ($lang) then 'hidden' else '')"/>
+
             <xsl:attribute name="id"
                            select="concat('gn-field-', $editInfo/@ref)"/>
+
             <xsl:attribute name="name"
                            select="concat('_', $name)"/>
+
             <xsl:if test="$isDirective">
-              <xsl:attribute name="{$type}"/>
+             <xsl:attribute name="data-element-ref"
+                             select="concat('_X', $editInfo/@parent, '_replace')"/>
+
+              <xsl:attribute name="{$type}">
+                <xsl:value-of
+                  select="."/>
+              </xsl:attribute>
 
               <xsl:if test="$directiveAttributes instance of node()+">
-                <xsl:copy-of select="$directiveAttributes//@*"/>
+
+                <xsl:variable name="node" select="." />
+
+                <xsl:for-each select="$directiveAttributes//attribute::*">
+                  <xsl:choose>
+                    <xsl:when test="starts-with(., 'eval#')">
+                      <xsl:attribute name="{name()}">
+                        <saxon:call-template name="{concat('evaluate-', $schema)}">
+                          <xsl:with-param name="base" select="$node"/>
+                          <xsl:with-param name="in" select="concat('/', substring-after(., 'eval#'))"/>
+                        </saxon:call-template>
+                      </xsl:attribute>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:copy-of select="."/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:for-each>
+
               </xsl:if>
             </xsl:if>
             <xsl:if test="$tooltip">
@@ -1214,7 +1267,8 @@
             </xsl:choose>
           </xsl:element>
         </xsl:variable>
-        <xsl:copy-of select="$textareaOrInput"/>
+
+        <xsl:copy-of select="$contentSnippet"/>
 
       </xsl:otherwise>
     </xsl:choose>

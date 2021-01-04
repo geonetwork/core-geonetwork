@@ -23,14 +23,14 @@
 
 package org.fao.geonet.kernel.search.spatial;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.index.SpatialIndex;
 
 import org.apache.lucene.search.Query;
 import org.fao.geonet.domain.Pair;
 import org.geotools.data.FeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.factory.GeoTools;
+import org.geotools.util.factory.GeoTools;
 import org.geotools.filter.spatial.WithinImpl;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;

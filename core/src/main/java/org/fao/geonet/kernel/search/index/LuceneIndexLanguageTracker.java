@@ -226,7 +226,7 @@ public class LuceneIndexLanguageTracker {
 
             }
             return new IndexAndTaxonomy(finalVersion, new GeonetworkMultiReader(_openReaderCounter, readers, searchers),
-                taxonomyIndexTracker.acquire());
+                taxonomyIndexTracker.acquire()); //this is likely leaking a refCount to the TaxonomyReader
         } finally {
             lock.unlock();
         }

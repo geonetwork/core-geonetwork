@@ -65,7 +65,8 @@
           $scope.redirectUrl = gnUtilityService.getUrlParameter('redirect');
           $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
           $scope.gnConfig = gnConfig;
-          $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
+          $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
+          $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;
 
           function initForm() {
            if ($window.location.pathname.indexOf('new.password') !== -1) {

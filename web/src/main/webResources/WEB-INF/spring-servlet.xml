@@ -68,7 +68,9 @@
   </bean>
 
   <bean id="readWriteMvcInterceptor" class="jeeves.config.springutil.ReadOnlyMvcInterceptor"/>
-  <bean id="apiMvcInterceptor" class="org.fao.geonet.api.AllRequestsInterceptor"/>
+  <bean id="apiMvcInterceptor" class="org.fao.geonet.api.AllRequestsInterceptor">
+    <property name="botRegexpFilter" value="\${bot.regexpFilter}"/>
+  </bean>
 
   <mvc:interceptors>
     <ref bean="localeChangeInterceptor"/>
@@ -96,7 +98,7 @@
   </bean>
 
   <!-- Static resources -->
-  <mvc:resources mapping="/catalog/**" location="/catalog/" order="0"/>
+  <mvc:resources mapping="/catalog/**" location="/catalog/,classpath:/META-INF/catalog/" order="0"/>
   <mvc:resources mapping="/images/**" location="/images/" order="0"/>
   <mvc:resources mapping="/map/**" location="/map/" order="0"/>
   <mvc:resources mapping="/xml/**" location="/xml/" order="0"/>
@@ -122,7 +124,10 @@
       </bean>
     </mvc:message-converters>
     <mvc:argument-resolvers>
-      <bean class="org.springframework.data.web.PageableHandlerMethodArgumentResolver"/>
+      <bean class="org.springframework.data.web.PageableHandlerMethodArgumentResolver">
+        <property name="maxPageSize"
+                  value="\${api.params.maxPageSize}"/>
+      </bean>
       <bean class="org.springframework.data.web.SortHandlerMethodArgumentResolver"/>
     </mvc:argument-resolvers>
   </mvc:annotation-driven>

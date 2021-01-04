@@ -108,7 +108,7 @@
     </gmd:PT_Locale>
   </gmd:locale>
   <gmd:locale>
-    <gmd:PT_Locale id="GE">
+    <gmd:PT_Locale id="DE">
       <gmd:languageCode>
         <gmd:LanguageCode codeList="" codeListValue="ger"/>
       </gmd:languageCode>
@@ -116,7 +116,7 @@
     </gmd:PT_Locale>
   </gmd:locale>
   <gmd:locale>
-    <gmd:PT_Locale id="CH">
+    <gmd:PT_Locale id="ZH">
       <gmd:languageCode>
         <gmd:LanguageCode codeList="" codeListValue="chi"/>
       </gmd:languageCode>
@@ -136,7 +136,7 @@
     </gmd:PT_Locale>
   </gmd:locale>
   <gmd:locale>
-    <gmd:PT_Locale id="SP">
+    <gmd:PT_Locale id="ES">
       <gmd:languageCode>
         <gmd:LanguageCode codeList="" codeListValue="spa"/>
       </gmd:languageCode>
@@ -180,12 +180,12 @@
                 </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#GE">Vorlage für die Vektor-Daten in ISO19139
+                <gmd:LocalisedCharacterString locale="#DE">Vorlage für die Vektor-Daten in ISO19139
                   (mehrsprachig)
                 </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#SP">De plantilla para el vector de datos en
+                <gmd:LocalisedCharacterString locale="#ES">De plantilla para el vector de datos en
                   ISO19139 (multilingüe)
                 </gmd:LocalisedCharacterString>
               </gmd:textGroup>
@@ -200,7 +200,7 @@
                 </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#CH">模板矢量数据ISO19139（多种语言）
+                <gmd:LocalisedCharacterString locale="#ZH">模板矢量数据ISO19139（多种语言）
                 </gmd:LocalisedCharacterString>
               </gmd:textGroup>
             </gmd:PT_FreeText>
@@ -233,7 +233,7 @@
         </gco:CharacterString>
         <gmd:PT_FreeText>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#CH">
+            <gmd:LocalisedCharacterString locale="#ZH">
               元数据标准的ISO19115是首选元数据标准使用。这个模板是多语种的默认语言设置为英语。其他语言可以用来翻译部分的元数据记录。主要语言是界定元一节。其他语言可以增加元数据节/地区因素。
             </gmd:LocalisedCharacterString>
           </gmd:textGroup>
@@ -254,7 +254,7 @@
             </gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#SP">El estándar de metadatos ISO19115 es el
+            <gmd:LocalisedCharacterString locale="#ES">El estándar de metadatos ISO19115 es el
               estándar de metadatos a utilizar. Esta plantilla es multilingüe, con un idioma por
               defecto configurado en Inglés. En otros idiomas puede ser usado para traducir parte
               del registro de metadatos. Idioma principal es definir los metadatos en la sección.
@@ -262,7 +262,7 @@
             </gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#GE">Die ISO19115 Metadaten-Standard ist der
+            <gmd:LocalisedCharacterString locale="#DE">Die ISO19115 Metadaten-Standard ist der
               bevorzugte Metadaten-Standard zu verwenden. Diese Vorlage ist mehrsprachig mit einer
               Standard-Sprache auf Englisch. Andere Sprache verwendet werden könnten, um Teil der
               Metadaten werden. Sprache definieren, ist in Abschnitt Metadaten. Weitere Sprachen

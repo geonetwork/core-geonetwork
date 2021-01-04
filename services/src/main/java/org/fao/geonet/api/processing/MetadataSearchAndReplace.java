@@ -199,7 +199,7 @@ public class MetadataSearchAndReplace extends MetadataIndexerProcessor {
                 if (hasChanges) {
                     report.addMetadataChanges(iId, changesEl);
                 } else {
-                    report.addMetadataInfos(iId, "No changes.");
+                    report.addMetadataInfos(metadataEntity, "No changes.");
                 }
 
                 // --- save metadata and return status
@@ -243,7 +243,7 @@ public class MetadataSearchAndReplace extends MetadataIndexerProcessor {
                     }
                 }
             } catch (Exception e) {
-                report.addMetadataError(iId, e);
+                report.addMetadataError(metadataEntity, e);
             }
             return processedMetadata;
         }

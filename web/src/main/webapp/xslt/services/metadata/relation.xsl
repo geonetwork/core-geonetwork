@@ -27,13 +27,13 @@
   following relatedResponse.xsd.
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:geonet="http://www.fao.org/geonetwork" 
+                xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
-                xmlns:gfc="http://www.isotc211.org/2005/gfc" 
+                xmlns:gfc="http://www.isotc211.org/2005/gfc"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                xmlns:gmx="http://www.isotc211.org/2005/gmx" 
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
-                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 version="2.0" exclude-result-prefixes="#all">
 
   <xsl:include href="../../common/profiles-loader-tpl-brief.xsl"/>
@@ -52,7 +52,7 @@
   <xsl:template mode="relation" match="summary" priority="99"/>
 
 
-  <!-- In Lucene only mode, metadata are retrieved from the index and pass 
+  <!-- In Lucene only mode, metadata are retrieved from the index and pass
     as a simple XML with one level element. Make a simple copy here. -->
   <xsl:template mode="superBrief" match="metadata">
     <xsl:copy>
@@ -75,7 +75,7 @@
       <xsl:variable name="abstract" select="gfc:scope" />
       <xsl:variable name="featureTypes" select="gfc:featureType" />
 
-      
+
         <item>
           <id>
             <xsl:value-of select="$uuid" />
@@ -145,7 +145,7 @@
               </xsl:if>
             </xsl:for-each>
           </featureType>
-        </item>      
+        </item>
     </xsl:for-each>
     </fcats>
   </xsl:template>
@@ -183,8 +183,17 @@
               </value>
             </title>
             <url>
-              <xsl:value-of
-                select="concat(util:getSettingValue('nodeUrl'), 'api/records/', $uuid)"/>
+              <value lang="{$lang}">
+                <xsl:choose>
+                  <xsl:when test="$metadata/url">
+                    <xsl:value-of select="$metadata/url" />
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:value-of
+                      select="concat(util:getSettingValue('nodeUrl'), 'api/records/', $uuid)" />
+                  </xsl:otherwise>
+                </xsl:choose>
+              </value>
             </url>
             <logo>
               <xsl:value-of select="$metadata/logo"/>
@@ -208,9 +217,17 @@
               <initiativeType>
                 <xsl:value-of select="../@initiative"/>
               </initiativeType>
+              <origin>
+                <xsl:value-of select="../@origin"/>
+              </origin>
             </xsl:if>
             <xsl:if test="$type = 'associated'">
               <xsl:copy-of select="$metadata/*[starts-with(name(), 'agg_')]"/>
+            </xsl:if>
+            <xsl:if test="$type != 'siblings'">
+              <origin>
+                <xsl:value-of select="@origin"/>
+              </origin>
             </xsl:if>
           </item>
         </xsl:for-each>
@@ -218,8 +235,8 @@
     </xsl:if>
   </xsl:template>
 
-  <!-- Add the default title as title. This may happen when title is retrieve 
-    from index and the record is not available in current language. eg. iso19110 
+  <!-- Add the default title as title. This may happen when title is retrieve
+    from index and the record is not available in current language. eg. iso19110
     records are only indexed with no language info. -->
   <xsl:template mode="superBrief" match="metadata">
     <xsl:copy-of select="*"/>

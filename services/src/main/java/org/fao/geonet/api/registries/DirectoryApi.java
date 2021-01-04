@@ -68,7 +68,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.BatchOpsMetadataReindexer;
 import org.fao.geonet.utils.Xml;
-import org.geotools.GML;
+import org.geotools.wfs.GML;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;
@@ -76,7 +76,7 @@ import org.geotools.data.Query;
 import org.geotools.data.collection.ListFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureSource;
-import org.geotools.factory.Hints;
+import org.geotools.util.factory.Hints;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
@@ -108,8 +108,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -310,7 +310,7 @@ public class DirectoryApi {
                             collectResults.getEntryIdentifiers().values()
                         );
                         report.incrementProcessedRecords();
-                        report.addMetadataInfos(record.getId(), String.format(
+                        report.addMetadataInfos(record, String.format(
                             "%d entry(ies) extracted from record '%s'. UUID(s): %s",
                             collectResults.getEntryIdentifiers().size(),
                             record.getUuid(),
@@ -320,7 +320,7 @@ public class DirectoryApi {
                         listOfEntries.addAll(collectResults.getEntries().values());
                     }
                 } catch (Exception ex) {
-                    report.addMetadataError(record.getId(), ex);
+                    report.addMetadataError(record, ex);
                 }
             }
         }
@@ -499,9 +499,9 @@ public class DirectoryApi {
                                 validate, ufo, index, context.getLanguage(),
                                 new ISODate().toString(), true);
                             listOfRecordInternalId.add(record.getId());
-                            report.addMetadataInfos(record.getId(), "Metadata updated.");
+                            report.addMetadataInfos(record, "Metadata updated.");
                         } catch (Exception e) {
-                            report.addMetadataError(record.getId(), e);
+                            report.addMetadataError(record, e);
                         }
                     } else {
                         if (collectResults.isRecordUpdated()) {
@@ -510,7 +510,7 @@ public class DirectoryApi {
                     }
                     report.incrementProcessedRecords();
                 } catch (Exception e) {
-                    report.addMetadataError(record.getId(), e);
+                    report.addMetadataError(record, e);
                 }
             }
         }

@@ -34,6 +34,7 @@
                 exclude-result-prefixes="#all">
 
   <xsl:include href="utility-fn.xsl"/>
+  <xsl:include href="utility-tpl.xsl"/>
   <xsl:include href="layout-custom-fields.xsl"/>
 
   <!-- Ignore all gn element -->
@@ -53,8 +54,7 @@
     <xsl:variable name="flatModeException"
                   select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name,  name(..))"/>
 
-    <xsl:if test="$isEditing and (not($isFlatMode) or $flatModeException)">
-
+    <xsl:if test="(not($isFlatMode) or $flatModeException)">
       <xsl:variable name="label"
                     select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>
       <xsl:call-template name="render-element-to-add">
@@ -167,7 +167,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelConfig"/>
-      <xsl:with-param name="value" select="*"/>
+      <xsl:with-param name="value" select="*[namespace-uri(.) != $gnUri]"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
       <xsl:with-param name="widgetParams"/>-->
@@ -235,7 +235,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelConfig"/>
-      <xsl:with-param name="value" select="*"/>
+      <xsl:with-param name="value" select="*[namespace-uri(.) != $gnUri]"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
       <xsl:with-param name="widgetParams"/>-->
@@ -299,23 +299,10 @@
 
   </xsl:template>
 
-
-  <!-- Get the main metadata languages - none for ISO19110 -->
-  <xsl:template name="get-iso19110-language"/>
-
-  <!-- Get the list of other languages -->
-  <xsl:template name="get-iso19110-other-languages"/>
-
-  <xsl:template name="get-iso19110-other-languages-as-json"/>
-
-  <xsl:template name="get-iso19110-online-source-config"/>
-
   <xsl:template name="get-iso19110-title">
     <xsl:value-of select="$metadata/gfc:FC_FeatureCatalogue/gmx:name/gco:CharacterString|
                           $metadata/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|
                           $metadata/gfc:FC_FeatureType/gfc:typeName/gco:LocalName"/>
   </xsl:template>
-
-  <xsl:template name="get-iso19110-extents-as-json">[]</xsl:template>
 
 </xsl:stylesheet>

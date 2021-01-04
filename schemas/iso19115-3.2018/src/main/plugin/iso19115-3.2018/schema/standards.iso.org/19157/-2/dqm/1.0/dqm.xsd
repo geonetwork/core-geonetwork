@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0" xmlns:dqm="http://standards.iso.org/iso/19157/-2/dqm/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:pre="http://standards.iso.org/iso/19135/-2/pre/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19157/-2/dqm/1.0" version="1.0">
+  <include schemaLocation="qualityMeasures.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/cat/1.0" schemaLocation="../../../../19115/-3/cat/1.0/cat.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19135/-2/pre/1.0" schemaLocation="../../../../19135/-2/pre/1.0/pre.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

@@ -3180,4 +3180,8 @@
   <element name="gmd:Country">
     <label>Paese</label>
   </element>
+  <element name="xlink:type">
+    <label>Link</label>
+    <description>Tipo di link</description>
+  </element>
 </labels>

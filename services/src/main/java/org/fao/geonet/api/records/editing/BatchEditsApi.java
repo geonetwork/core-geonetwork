@@ -203,8 +203,11 @@ public class BatchEditsApi implements ApplicationContextAware {
 
                         boolean applyEdit = true;
                         if (StringUtils.isNotEmpty(batchEditParameter.getCondition())) {
+                            applyEdit = false;
                             final Object node = Xml.selectSingle(metadata, batchEditParameter.getCondition(), metadataSchema.getNamespaces());
-                            applyEdit = (node != null) || (node instanceof Boolean && (Boolean)node != false);
+                            if (node != null && node instanceof Boolean && (Boolean)node == true) {
+                                applyEdit = true;
+                            }
                         }
                         if (applyEdit) {
                             metadataChanged = editLib.addElementOrFragmentFromXpath(
@@ -228,7 +231,7 @@ public class BatchEditsApi implements ApplicationContextAware {
                             validate, ufo, index,
                             "eng", // Not used when validate is false
                             changeDate, uds);
-                        report.addMetadataInfos(record.getId(), "Metadata updated.");
+                        report.addMetadataInfos(record, "Metadata updated.");
 
                         Element afterMetadata = dataMan.getMetadata(serviceContext, String.valueOf(record.getId()), false, false, false);
                         XMLOutputter outp = new XMLOutputter();
@@ -237,7 +240,7 @@ public class BatchEditsApi implements ApplicationContextAware {
                         new RecordUpdatedEvent(record.getId(), userSession.getUserIdAsInt(), xmlBefore, xmlAfter).publish(appContext);
                     }
                 } catch (Exception e) {
-                    report.addMetadataError(record.getId(), e);
+                    report.addMetadataError(record, e);
                 }
                 report.incrementProcessedRecords();
             }

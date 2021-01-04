@@ -10,7 +10,8 @@
         <div data-ng-show="searchResults.records.length > 0"
             data-gn-saved-selections-panel="user"></div>
 
-        <div data-gn-user-searches-panel="user"></div>
+        <div data-gn-user-searches-panel="user"
+             data-ng-if="isUserSearchesEnabled && user.isConnected()"></div>
 
         <div data-search-filter-tags
              data-dimensions="searchResults.dimension"
@@ -103,8 +104,8 @@
       </div>
     </div>
     <br>
-  
-  
+
+
     </div>
   </div>
 
@@ -118,6 +119,6 @@
           title="{{'toggleMiniMap' | translate}}"
           class="gn-toggle gn-minimap-toggle btn btn-primary gn-minimap-button hidden-xs">
     <i class="fa fa-angle-double-right" ></i>
-    <b class="gn-minimap-toggle gn-minimap-text" data-translate="">map</b>
+    <strong class="gn-minimap-toggle gn-minimap-text" data-translate="">map</strong>
   </button>
 </div>
