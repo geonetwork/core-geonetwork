@@ -402,8 +402,24 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
             metadataManager.getEditLib().enumerateTree(md);
 
             // Apply custom schematron rules
-            Element errors = applyCustomSchematronRules(schema, metadataId, md, lang, validations);
-            valid = valid && errors == null;
+            Element schemaTronReport = applyCustomSchematronRules(schema, metadataId, md, lang, validations);
+            if (valid && schemaTronReport != null) {
+                List<Namespace> theNSs = new ArrayList<Namespace>();
+                theNSs.add(Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));
+                theNSs.add(Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl"));
+
+                List<?> failedAssert = Xml.selectNodes(schemaTronReport,
+                    "geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/svrl:schematron-output/svrl:failed-assert",
+                    theNSs);
+
+                List<?> failedSchematronVerification = Xml.selectNodes(schemaTronReport,
+                    "geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/geonet:schematronVerificationError",
+                    theNSs);
+
+                if (failedAssert.size() >  0 || failedSchematronVerification.size() > 0) {
+                    valid = false;
+                }
+            }
         } catch (Exception e) {
             LOGGER.error("Could not run schematron validation on metadata {}.", metadataId);
             LOGGER.error("Could not run schematron validation on metadata, exception", e);

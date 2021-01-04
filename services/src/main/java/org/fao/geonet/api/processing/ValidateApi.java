@@ -120,6 +120,9 @@ public class ValidateApi {
     MetadataValidationRepository metadataValidationRepository;
 
     @Autowired
+    IMetadataUtils metadataUtils;
+
+    @Autowired
     protected ApplicationContext appContext;
 
     @Autowired
@@ -162,6 +165,11 @@ public class ValidateApi {
             example = "")
         @RequestParam(required = false)
             String[] uuids,
+        @ApiParam(value = "Use approved version or not", example = "true")
+        @RequestParam(
+            required = false,
+            defaultValue = "")
+            Boolean approved,
         @ApiParam(
             value = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
@@ -183,26 +191,42 @@ public class ValidateApi {
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
+            report.setTotalRecords(records.size());
 
             for (String uuid : records) {
-                if (!metadataRepository.existsMetadataUuid(uuid)) {
-                    report.incrementNullRecords();
-                }
+                int loopConditionCount = 0;
                 for (AbstractMetadata record : metadataRepository.findAllByUuid(uuid)) {
-                    if (!accessMan.canEdit(serviceContext, String.valueOf(record.getId()))) {
-                        report.addNotEditableMetadataId(record.getId());
-                    } else {
-                        boolean isValid = validator.doValidate(record, serviceContext.getLanguage());
-                        if (isValid) {
-                            report.addMetadataInfos(record.getId(), "Is valid");
-                            new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "1").publish(applicationContext);
-                        } else {
-                            report.addMetadataError(record.getId(), "Is invalid");
-                            new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "0").publish(applicationContext);
+                    //determine if this is an approved record.
+                    Boolean isMetadataApproved = metadataUtils.isMetadataApproved(record.getId());
+
+                    if (approved == null ||
+                        (approved == true && isMetadataApproved) ||
+                        (approved == false && !isMetadataApproved)) {
+                        loopConditionCount++;
+                        // If we processed more than one record in this loop then we will also increase the total records
+                        // as it means that we are processing both and approved and draft and that was not calculated in the original total.
+                        if (loopConditionCount > 1) {
+                            report.setTotalRecords(report.getNumberOfRecords() + 1);
                         }
-                        report.addMetadataId(record.getId());
-                        report.incrementProcessedRecords();
+                        if (!accessMan.canEdit(serviceContext, String.valueOf(record.getId()))) {
+                            report.addNotEditableMetadataId(record.getId());
+                        } else {
+                            boolean isValid = validator.doValidate(record, serviceContext.getLanguage());
+                            if (isValid) {
+                                report.addMetadataInfos(record, "Is valid");
+                                new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "1").publish(applicationContext);
+                            } else {
+                                report.addMetadataError(record, "Is invalid");
+                                new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "0").publish(applicationContext);
+                            }
+                            report.addMetadataId(record.getId());
+                            report.incrementProcessedRecords();
+                        }
                     }
+                }
+                // If loopConditionCount is 0 then no data was identified for that uuid.
+                if (loopConditionCount == 0) {
+                    report.incrementNullRecords();
                 }
             }
 
