@@ -180,7 +180,7 @@
             translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
       <item facet="recordOwner" max="45" sortBy="value"/>
       <item facet="publishedForGroup" max="199" sortBy="value"
-            translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
+            translator="db:org.fao.geonet.repository.GroupRepository:findByName"/>
       <item facet="standard" max="15" sortBy="value"/>
       <item facet="isHarvested" max="2" sortBy="value" translator="apploc:"/>
       <item facet="metadataType" max="3" sortBy="value" translator="apploc:recordType-"/>
