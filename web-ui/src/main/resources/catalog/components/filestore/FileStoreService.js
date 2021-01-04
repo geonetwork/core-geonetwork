@@ -43,7 +43,7 @@
              });
            },
            updateStatus: function(resource) {
-             return $http.patch(resource.url + '?visibility=' +
+             return $http.patch(resource.url + '?approved=' + resource.approved + '&visibility=' +
              (resource.visibility == 'PRIVATE' ? 'public' : 'private'));
            },
            delete: function(resource) {

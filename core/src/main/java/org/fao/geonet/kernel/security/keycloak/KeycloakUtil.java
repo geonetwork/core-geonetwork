@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.security.keycloak;
 
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,13 +50,14 @@ public class KeycloakUtil {
                 signinPath = loginUrlAuthenticationEntryPoint.getLoginFormUrl().split("\\?")[0];
             } catch(BeansException e) {
                 // If we cannot find the bean then we will just use a default.
+                Log.debug(Geonet.SECURITY, "Could not find the bean, using the default instead");
             }
             // If signinPath is null then something may have gone wrong.
             // This should generally not happen - if it does then lets set to what it currently expected and then log a warning.
             if (StringUtils.isEmpty(signinPath)) {
                 signinPath = "/signin";
-                Log.warning(Log.JEEVES,
-                        "Could not detect signin path from configuration. Using /signin");
+                Log.warning(Geonet.SECURITY,
+                    "Could not detect signin path from configuration. Using /signin");
             }
         }
         return signinPath;

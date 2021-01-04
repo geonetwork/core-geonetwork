@@ -39,14 +39,16 @@
 
       <div class="btn-toolbar" role="toolbar">
 
+        <!-- back -->
         <div class="btn-group" role="group">
           <button class="btn btn-default"
                   data-ng-click="closeRecord(mdView.current.record)">
-            <i class="fa fa-fw fa-search"></i> <span><span>
-            {{'backTo' + (fromView || 'search') | translate}}</span></span>
+            <span class="fa fa-fw fa-search"></span>
+            {{'backTo' + (fromView || 'search') | translate}}
           </button>
         </div>
 
+        <!-- next/previous -->
         <div class="btn-group" role="group">
           <a class="btn btn-default"
              title="{{mdView.records[mdView.current.index - 1].defaultTitle}}"
@@ -55,9 +57,8 @@
              gn-formatter="formatter.defaultUrl"
              data-ng-class="{'disabled': searchObj.params.from == (mdView.current.index + 1)}"
              data-ng-show="mdView.records.length > 1">
-            <i class="fa fa-fw fa-angle-left"></i>
-<!--            <span data-ng-show="mdView.current.index === 0" data-translate="">previousPage</span>-->
-            <span data-translate="">previous</span>
+            <span class="fa fa-fw fa-angle-left"></span>
+            <span data-translate="" class="hidden-sm hidden-sm">previous</span>
           </a>
           <a class="btn btn-default"
              title="{{mdView.records[mdView.current.index + 1].defaultTitle}}"
@@ -68,58 +69,64 @@
                             searchObj.params.to > searchInfo.count &&
                             searchInfo.count > searchObj.params.from}"
              data-ng-show="mdView.records.length > 1">
-<!--            <span data-ng-show="mdView.current.index === mdView.records.length - 1" data-translate="">nextPage</span>-->
-            <span data-translate="">next</span>
-            <i class="fa fa-fw fa-angle-right"></i>
+            <span data-translate="" class="hidden-sm hidden-sm">next</span>
+            <span class="fa fa-fw fa-angle-right"></span>
           </a>
         </div>
 
-      <div class="btn-group pull-right gn-view-menu-button">
-          <button type="button" class="btn btn-default dropdown-toggle"
-                  data-toggle="dropdown"
-                  aria-label="{{'chooseAView' | translate}}"
-                  aria-expanded="false">
-            <i class="fa fa-fw fa-eye"></i>
-            <span data-translate="" class="hidden-sm hidden-xs">chooseAView</span>
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            <li role="menuitem"
-                data-ng-repeat="f in formatter.list"
-                data-ng-class="currentFormatter === f.url ? 'disabled' : ''">
-              <a href=""
-                 gn-metadata-open="mdView.current.record"
-                 gn-records="mdView.records"
-                 gn-formatter="f && f.url">
-                {{f.label | translate}}
-              </a>
-            </li>
-          </ul>
-        </div>
+        <div class="pull-right">
+          <!-- edit -->
+          <div class="btn-group pull-left" role="group">
+            <a class="btn btn-default gn-md-edit-btn"
+               data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
+               data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.getUuid()}}"
+               title="{{'edit' | translate}}">
+              <span class="fa fa-fw fa-pencil"></span>
+              <span data-translate="" class="hidden-sm hidden-xs">edit</span>
+            </a>
+          </div>
 
-        <div class="gn-md-actions-btn pull-right"
-            data-gn-md-actions-menu="mdView.current.record"/>
+          <!-- delete -->
+          <div class="btn-group pull-left" role="group">
+            <a class="btn btn-default"
+               href
+               data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
+               data-gn-click-and-spin="deleteRecord(mdView.current.record)"
+               data-gn-confirm-click="{{(mdView.current.record.draft != 'y') ? 'deleteRecordConfirm' : 'deleteWorkingCopyRecordConfirm' | translate:mdView.current.record}}"
+               title="{{(mdView.current.record.draft != 'y') ? 'delete' : 'cancelWorkingCopy' | translate}}">
+              <span class="fa fa-fw fa-times"></span>
+              <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft == 'y'">cancelWorkingCopy</span>
+              <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft != 'y'">delete</span>
+            </a>
+          </div>
 
-        <div class="btn-group pull-right" role="group">
-          <a class="btn btn-default"
-            data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
-            data-gn-click-and-spin="deleteRecord(mdView.current.record)"
-            data-gn-confirm-click="{{(mdView.current.record.draft != 'y') ? 'deleteRecordConfirm' : 'deleteWorkingCopyRecordConfirm' | translate:mdView.current.record}}"
-            title="{{(mdView.current.record.draft != 'y') ? 'delete' : 'cancelWorkingCopy' | translate}}">
-            <i class="fa fa-fw fa-times"></i>
-            <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft == 'y'">cancelWorkingCopy</span>
-            <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft != 'y'">delete</span>
-          </a>
-        </div>
+          <!-- manage -->
+          <div class="gn-md-actions-btn pull-left"
+               data-gn-md-actions-menu="mdView.current.record"/>
 
-        <div class="btn-group pull-right" role="group">
-          <a class="btn btn-default gn-md-edit-btn"
-            data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
-            data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.getUuid()}}"
-            title="{{'edit' | translate}}">
-            <i class="fa fa-fw fa-pencil"></i>
-            <span data-translate="" class="hidden-sm hidden-xs">edit</span>
-          </a>
+          <!-- display mode -->
+          <div class="btn-group gn-view-menu-button pull-left">
+            <button type="button" class="btn btn-default dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-label="{{'chooseAView' | translate}}"
+                    aria-expanded="false">
+              <span class="fa fa-fw fa-eye"></span>
+              <span data-translate="" class="hidden-sm hidden-xs">chooseAView</span>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li role="menuitem"
+                  data-ng-repeat="f in formatter.list"
+                  data-ng-class="currentFormatter === f.url ? 'disabled' : ''">
+                <a href=""
+                   gn-metadata-open="mdView.current.record"
+                   gn-records="mdView.records"
+                   gn-formatter="f && f.url">
+                  {{f.label | translate}}
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
