@@ -53,6 +53,25 @@
                   angular.isUndefined(attrs['defaultStatus']) ?
                   'public' : attrs['defaultStatus'];
 
+              scope.openExternalResourceManagement = function(r, $window) {
+                var win = window.open(r.externalResourceManagementProperties.url, "_blank", r.externalResourceManagementProperties.windowParameters)
+                if (r.externalResourceManagementProperties.modal) {
+                  var ZIndex = $('.modal').css("z-index");
+                  $('.modal').css("z-index", 0);
+                  var timer = setInterval(function () {
+                    if (win.closed) {
+                      clearInterval(timer);
+                      $('.modal').css("z-index", ZIndex);
+                    } else {
+                      // whenever user comes back to the browser window give them focus on the popup.
+                      // This will simulat a modal
+                      if (document.hasFocus()) {
+                        win.focus()
+                      }
+                    }
+                  }, 250);
+                }
+              };
               scope.setResource = function(r) {
                 scope.selectCallback({ selected: r });
               };
