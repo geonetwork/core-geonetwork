@@ -12,7 +12,7 @@
           data-ng-repeat="thumb in relations.thumbnails">
         <img class="thumb-small"
              title="{{thumb.title | gnLocalized: lang}}"
-             data-ng-src="{{thumb.lUrl || thumb.id}}"/>
+             data-ng-src="{{onlinesrcService.getApprovedUrl(thumb.lUrl || thumb.id)}}"/>
 
         <a href="" class="onlinesrc-remove"
            data-ng-if="readonly !== true"
