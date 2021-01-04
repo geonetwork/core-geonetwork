@@ -1283,6 +1283,7 @@
     "styleVariable-gnMenubarBorderColor": "Border color",
     "gnBottombarCss": "Bottombar",
     "styleVariable-gnBottombarBackground": "Background",
+    "styleVariable-gnBottombarBackgroundHover": "Background color on hover",
     "styleVariable-gnBottombarColor": "Color",
     "styleVariable-gnBottombarColorHover": "Color on mouse over",
     "styleVariable-gnBottombarBorderColor": "Border color",
