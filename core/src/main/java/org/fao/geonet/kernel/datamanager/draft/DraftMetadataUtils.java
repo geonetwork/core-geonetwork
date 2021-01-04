@@ -52,6 +52,7 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
@@ -114,6 +115,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     @Autowired
     private AccessManager am;
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     private ServiceContext context;
 
