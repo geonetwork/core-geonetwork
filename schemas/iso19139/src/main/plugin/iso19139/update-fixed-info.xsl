@@ -770,4 +770,13 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- gmd:dateTime requires gco:DateTime -->
+  <xsl:template match="gmd:dateTime" priority="200">
+    <xsl:variable name="value" select="gco:Date|gco:DateTime" />
+    <xsl:copy>
+      <gco:DateTime>
+        <xsl:value-of select="$value" /><xsl:if test="string-length($value) = 10">T00:00:00</xsl:if>
+      </gco:DateTime>
+    </xsl:copy>
+  </xsl:template>
 </xsl:stylesheet>
