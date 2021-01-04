@@ -231,7 +231,7 @@ public class BatchEditsApi implements ApplicationContextAware {
                             validate, ufo, index,
                             "eng", // Not used when validate is false
                             changeDate, uds);
-                        report.addMetadataInfos(record.getId(), "Metadata updated.");
+                        report.addMetadataInfos(record, "Metadata updated.");
 
                         Element afterMetadata = dataMan.getMetadata(serviceContext, String.valueOf(record.getId()), false, false, false);
                         XMLOutputter outp = new XMLOutputter();
@@ -240,7 +240,7 @@ public class BatchEditsApi implements ApplicationContextAware {
                         new RecordUpdatedEvent(record.getId(), userSession.getUserIdAsInt(), xmlBefore, xmlAfter).publish(appContext);
                     }
                 } catch (Exception e) {
-                    report.addMetadataError(record.getId(), e);
+                    report.addMetadataError(record, e);
                 }
                 report.incrementProcessedRecords();
             }

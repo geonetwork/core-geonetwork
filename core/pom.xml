@@ -361,6 +361,24 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.chemistry.opencmis</groupId>
+      <artifactId>chemistry-opencmis-client-api</artifactId>
+      <version>1.1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.chemistry.opencmis</groupId>
+      <artifactId>chemistry-opencmis-client-impl</artifactId>
+      <version>1.1.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>xml-resolver</groupId>
+          <artifactId>xml-resolver</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
       <groupId>org.tmatesoft.svnkit</groupId>
       <artifactId>svnkit</artifactId>
     </dependency>

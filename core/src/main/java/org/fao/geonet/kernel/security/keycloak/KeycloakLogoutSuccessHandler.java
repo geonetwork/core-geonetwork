@@ -25,6 +25,8 @@ package org.fao.geonet.kernel.security.keycloak;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 import org.keycloak.adapters.AdapterDeploymentContext;
 import org.keycloak.adapters.KeycloakDeployment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +55,7 @@ public class KeycloakLogoutSuccessHandler implements LogoutSuccessHandler {
         if (keycloakConfiguration.getIDPLogoutUrl() != null) {
             // The redirect url should be in the format similar to https://idp.example.com/logout?redirect={RedirecUrl} we need to replace {RedirecUrl}
             redirectUrl=keycloakConfiguration.getIDPLogoutUrl().replace(KeycloakConfiguration.REDIRECT_PLACEHOLDER, URLEncoder.encode(redirectUrl, Constants.ENCODING));
+            Log.debug(Geonet.SECURITY, "redirectUrl: " + redirectUrl);
         }
         response.setStatus(HttpStatus.OK.value());
         response.sendRedirect(redirectUrl);

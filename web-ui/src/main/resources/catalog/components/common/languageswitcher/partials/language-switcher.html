@@ -1,0 +1,13 @@
+<div class="dropdown"
+     data-ng-show="isHidden()"
+     data-ng-model="lang">
+  <button class="btn btn-default dropdown-toggle" type="button" id="language-switcher" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    {{langLabels[lang]}}
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="language-switcher">
+    <li data-ng-repeat="(key, value) in langs" data-ng-class="{'active': key == lang, '': key != lang}">
+      <a data-ng-click="switchLanguage(key)" href>{{langLabels[key]}}</a>
+    </li>
+  </ul>
+</div>

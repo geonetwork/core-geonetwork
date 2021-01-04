@@ -28,15 +28,18 @@
                 <small class="text-muted"
                        data-gn-humanize-time="{{md['geonet:info'].changeDate}}"
                        data-from-now=""></small>
-                &centerdot;
-                <small class="text-muted gn-status"
-                      data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
-                      data-ng-if="md.mdStatus < 50 && isMdWorkflowEnable">{{('status-' + md.mdStatus) | translate}}</small>
 
-                <small class="text-muted gn-status"
-                      data-ng-class="text-warning"
-                      data-ng-if="!md.mdStatus"
-                      data-ng-translate="">{{'status-no-status' | translate}}</small>
+                <span data-ng-if="isMdWorkflowEnable">
+                  &centerdot;
+                  <small class="text-muted gn-status"
+                        data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
+                        data-ng-if="md.mdStatus < 50 && isMdWorkflowEnable">{{('status-' + md.mdStatus) | translate}}</small>
+
+                  <small class="text-muted gn-status"
+                        data-ng-class="text-warning"
+                        data-ng-if="!md.mdStatus"
+                        data-ng-translate="">{{'status-no-status' | translate}}</small>
+                </span>
               </div>
             </div>
           </div>

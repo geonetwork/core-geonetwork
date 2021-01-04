@@ -83,10 +83,10 @@ public class FilesystemStore extends AbstractStore {
         }
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(resourceTypeDir, filter)) {
             for (Path path: directoryStream) {
-                MetadataResource resource = new FilesystemStoreResource(metadataUuid, path.getFileName().toString(),
+                MetadataResource resource = new FilesystemStoreResource(metadataUuid, metadataId, path.getFileName().toString(),
                                                                         settingManager.getNodeURL() + "api/records/", visibility,
                                                                         Files.size(path),
-                                                                        new Date(Files.getLastModifiedTime(path).toMillis()));
+                                                                        new Date(Files.getLastModifiedTime(path).toMillis()), approved);
                 resourceList.add(resource);
             }
         } catch (IOException ignored) {
@@ -124,6 +124,13 @@ public class FilesystemStore extends AbstractStore {
                                                     final MetadataResourceVisibility visibility, final Path filePath, Boolean approved)
             throws IOException {
         SettingManager settingManager = context.getBean(SettingManager.class);
+        Integer metadataId = null;
+
+        try {
+            metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        } catch (Exception e) {
+            Log.error(Geonet.RESOURCES, e.getMessage(), e);
+        }
 
         long fileSize = -1;
         try {
@@ -131,8 +138,8 @@ public class FilesystemStore extends AbstractStore {
         } catch (IOException e) {
             Log.error(Geonet.RESOURCES, e.getMessage(), e);
         }
-        return new FilesystemStoreResource(metadataUuid, filePath.getFileName().toString(), settingManager.getNodeURL() + "api/records/",
-                                           visibility, fileSize, new Date(Files.getLastModifiedTime(filePath).toMillis()));
+        return new FilesystemStoreResource(metadataUuid, metadataId, filePath.getFileName().toString(), settingManager.getNodeURL() + "api/records/",
+                                           visibility, fileSize, new Date(Files.getLastModifiedTime(filePath).toMillis()), approved);
     }
 
     @Override
