@@ -278,42 +278,47 @@
               var currentStyle;
 
               // load extension content (JSON)
-              if (layer.extension && layer.extension.any) {
-                var extension = JSON.parse(layer.extension.any);
-                var loadingId = layer.name;
-                if (extension.style) {
-                  currentStyle = {Name: extension.style};
-                  loadingId += ' ' + extension.style;
-                }
+              var extension = layer.extension && layer.extension.any ? JSON.parse(layer.extension.any) : {};
 
-                // import saved filters if available
-                if (extension.filters && extension.wfsUrl) {
-                  var url = extension.wfsUrl;
-
-                  // get ES object and save filters on it
-                  // (will be used by the WfsFilterDirective
-                  // when initializing)
-                  var esObj =
-                      wfsFilterService.registerEsObject(url, layer.name);
-                  esObj.initialFilters = extension.filters;
-                }
-
-                // this object holds the WPS input values
-                var defaultInputs = extension.processInputs || {};
+              var loadingId = extension.label ? extension.label : layer.name;
+              if (extension.style) {
+                currentStyle = {Name: extension.style};
+                loadingId += ' ' + extension.style;
               }
+
+              // import saved filters if available
+              if (extension.filters && extension.wfsUrl) {
+                var url = extension.wfsUrl;
+
+                // get ES object and save filters on it
+                // (will be used by the WfsFilterDirective
+                // when initializing)
+                var esObj =
+                    wfsFilterService.registerEsObject(url, layer.name);
+                esObj.initialFilters = extension.filters;
+              }
+
+              // this object holds the WPS input values
+              var defaultInputs = extension.processInputs || {};
 
               // create WMS layer
               if (server.service == 'urn:ogc:serviceType:WMS') {
-
                 var loadingLayer = new ol.layer.Image({
                   loading: true,
-                  label: loadingId || 'loading',
+                  label: loadingId + '...',
                   url: '',
                   visible: false,
                   group: layer.group
                 });
 
                 loadingLayer.displayInLayerManager = true;
+
+                if (extension.label) {
+                  layer.title = extension.label;
+                }
+                if (extension.uuid)  {
+                  layer.metadataUuid = extension.uuid
+                }
 
                 var layerIndex = map.getLayers().push(loadingLayer) - 1;
                 var p = self.createLayer(layer, map, undefined, i, currentStyle);
@@ -527,27 +532,30 @@
 
 
           // apply filters & processes inputs in extension if needed
-          if (layer.get('currentStyle') || filters || processInputs) {
-            var extension = {};
+          var extension = {};
 
-            if (layer.get('currentStyle')) {
-              extension.style = layer.get('currentStyle').Name;
-            }
-
-            if (esObj) {
-              var wfsUrl = esObj.config.params.wfsUrl;
-              if (wfsUrl) {
-                extension.filters = filters;
-                extension.wfsUrl = wfsUrl;
-              }
-            }
-            if (processInputs) { extension.processInputs = processInputs; }
-
-            layerParams.extension = {
-              name: 'Extension',
-              any: JSON.stringify(extension)
-            };
+          if (layer.get('md') && layer.get('md')._id) {
+            extension.uuid = layer.get('md')._id;
+            extension.label = layer.get('label');
           }
+
+          if (layer.get('currentStyle')) {
+            extension.style = layer.get('currentStyle').Name;
+          }
+
+          if (esObj) {
+            var wfsUrl = esObj.config.params.wfsUrl;
+            if (wfsUrl) {
+              extension.filters = filters;
+              extension.wfsUrl = wfsUrl;
+            }
+          }
+          if (processInputs) { extension.processInputs = processInputs; }
+
+          layerParams.extension = {
+            name: 'Extension',
+            any: JSON.stringify(extension)
+          };
 
           resourceList.layer.push(layerParams);
         });
@@ -646,6 +654,7 @@
               olL.set('title', layer.title);
               olL.set('label', layer.title);
             }
+            olL.set('metadataUuid', layer.metadataUuid || '');
             if (bgIdx) {
               olL.set('bgIdx', bgIdx);
             } else if (index) {
@@ -659,7 +668,7 @@
           // even when loaded from a context.
           return gnMap.addWmsFromScratch(
               map, res.href, layer.name,
-              createOnly, null, server.version, style).
+              createOnly, layer.metadataUuid || null, server.version, style).
               then(function(olL) {
                 if (olL) {
                   try {
@@ -676,6 +685,7 @@
                   var title =  layer.title ? layer.title : olL.get('label');
                   olL.set('title', title || '');
                   olL.set('label', title || '');
+                  olL.set('metadataUuid', layer.metadataUuid || '');
                   $rootScope.$broadcast('layerAddedFromContext', olL);
                   return olL;
                 }
