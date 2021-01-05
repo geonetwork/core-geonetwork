@@ -460,58 +460,47 @@
             return defer.promise;
           },
 
-          getWmsLayerExtentFromGetCap: function(map, getCapLayer, isCustomDef) {
+          getWmsLayerExtentFromGetCap: function(mapProj, getCapLayer, patchedProj) {
             var extent = null;
             var layer = getCapLayer;
-            var proj = map.getView().getProjection();
-            var projCode = proj.getCode();
-            var supportsEpsg4326 = false;
+            var projCode = mapProj.getCode();
+            var wmsProj = projCode;
 
             // Try and fetch extent from layer for current CRS first
             if (angular.isArray(layer.BoundingBox)) {
               for (var i = 0; i < layer.BoundingBox.length; i++) {
                 var bbox = layer.BoundingBox[i];
-                // Check if EPSG:4326 / WGS84 is supported
-                if (bbox.crs === 'EPSG:4326' || bbox.crs === 'CRS:84') {
-                  supportsEpsg4326 = true;
+
+                if (!bbox.extent) {
+                  continue;
                 }
 
-                // Use the bbox with the code matching the map projection
-                if (bbox.crs === projCode && bbox.extent) {
+                if (bbox.crs === projCode || (projCode === 'EPSG:3857' && 
+                   (bbox.crs === 'EPSG:3857' || bbox.crs === 'EPSG:900913' ||
+                    bbox.crs === 'EPSG:3785' || bbox.crs === 'EPSG:102113'))) {
+                  // Get the bbox matching the map projection
+                  // Also match to Web Mercator alternatives
                   extent = bbox.extent;
-                }
-
-                if (extent && supportsEpsg4326) {
-                  // No need to continue searching: we have all we need
-                  break;
-                }
+                  wmsProj = bbox.crs;
+                } 
               }
             }
 
-            if (!extent || (extent && isCustomDef)) {
-              var bbox = getLayerBounds(layer);
-              if (bbox) {
-                if (extent && isCustomDef) {
-                  // WMS supports the current projection EPSG code,
-                  // but the Proj4 definition differs from the standard one:
-                  // Get WGS84 bounds and transform into custom projection
-                  extent = ol.proj.transformExtent(bbox, 'EPSG:4326', projCode);
-                  if (!ol.extent.containsExtent(proj.getExtent(), extent)) {
-                    // Only use the extent if it's within map bounds
-                    extent = null;
-                  }
-                } else if (supportsEpsg4326 && 
-                  ol.extent.containsExtent(proj.getWorldExtent(), bbox)) {
-                  // WMS does not support the current EPSG code,
-                  // but WGS84 is supported: use bbox as-is if within map bounds
-                  extent = bbox;
-                  projCode = 'EPSG:4326';
-                }
+            if (extent) {
+              if (layer.version && layer.version >= '1.3.0' && projCode !== 'EPSG:3857') {
+                // Reverse extent coordinates for non-Web Mercator projections and new WMS versions
+                extent = extent.reverse();
               }
-            }
+              // Reproject to (patched) map extent
+              extent = ol.proj.transformExtent(extent, patchedProj, wmsProj, 8);
+              if (projCode !== 'EPSG:3857') {
+                // Output (patched) map extent for WMS on-the-fly reprojection
+                wmsProj = patchedProj;
+              }
+            } 
 
             return {
-              epsg: projCode,
+              projection: wmsProj,
               extent: extent
             };
           },
