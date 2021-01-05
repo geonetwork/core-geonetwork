@@ -197,7 +197,7 @@ public class ServiceRequest {
     }
 
     /**
-     * Write provided response element.
+     * Write provided response element, ending the stream.
      *
      * @param response
      * @throws IOException
