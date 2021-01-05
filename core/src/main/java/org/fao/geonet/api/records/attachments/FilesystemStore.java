@@ -42,6 +42,7 @@ import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -148,7 +149,7 @@ public class FilesystemStore extends AbstractStore {
                                         Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
         Path filePath = getPath(context, metadataId, visibility, filename);
-        Files.copy(is, filePath);
+        Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
         if (changeDate != null) {
             IO.touch(filePath, FileTime.from(changeDate.getTime(), TimeUnit.MILLISECONDS));
         }
