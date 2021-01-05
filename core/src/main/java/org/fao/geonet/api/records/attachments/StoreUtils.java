@@ -88,20 +88,23 @@ public abstract class StoreUtils {
         Map<String,MetadataResource> rMap = new HashMap<>();
         for (MetadataResource mr : r) rMap.put(mr.getId(),mr);
 
-        Iterator<MetadataResource> itr = l.iterator();
+        // Start the results with a copy of the l list.
+        List<MetadataResource> results = new ArrayList<>(l);
+
+        Iterator<MetadataResource> itResults = results.iterator();
         // remove all that exist in rMap
-        while (itr.hasNext()) {
-            MetadataResource m = itr.next();
+        while (itResults.hasNext()) {
+            MetadataResource m = itResults.next();
             if (rMap.containsKey(m.getId())) {
                 MetadataResource mCheck = rMap.get(m.getId());
                 if (mCheck.getFilename().equals(m.getFilename())
                     && mCheck.getMetadataUuid().equals(m.getMetadataUuid())
                     && mCheck.getVisibility().equals(m.getVisibility())) {
-                    itr.remove();
+                    itResults.remove();
                 }
             }
         }
-        return l;
+        return results;
     }
 
     /**
@@ -126,9 +129,9 @@ public abstract class StoreUtils {
             final List<MetadataResource> targetResources = store.getResources(context, targetUuid, visibility, null, targetApproved);
 
             // In order to sync the 2 folders, we need to identify the records to be added, deleted and updated.
-            List<MetadataResource> targetDeleteResources  = exceptMetadataResource(new ArrayList<>(targetResources), sourceResources);
-            List<MetadataResource> targetAddResources = exceptMetadataResource(new ArrayList<>(sourceResources), targetResources);
-            List<MetadataResource> targetUpdateResources = exceptMetadataResource(new ArrayList<>(targetResources), targetDeleteResources);
+            List<MetadataResource> targetDeleteResources  = exceptMetadataResource(targetResources, sourceResources);
+            List<MetadataResource> targetAddResources = exceptMetadataResource(sourceResources, targetResources);
+            List<MetadataResource> targetUpdateResources = exceptMetadataResource(targetResources, targetDeleteResources);
 
             // Add new records
             for (MetadataResource resource: targetAddResources) {
