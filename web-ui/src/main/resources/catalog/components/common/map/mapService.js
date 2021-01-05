@@ -356,7 +356,7 @@
               proj = proj.getCode();
             }
             var proj4Def = proj4.defs[proj];
-            if (proj4Def.projName === 'utm' && proj4Def.axis !== 'enu') {
+            if (proj4Def.projName === 'utm' && proj4Def.axis !== 'neu') {
               // TODO: add more cases in the future (e.g. South-African projections)
               return 'neu';
             }
