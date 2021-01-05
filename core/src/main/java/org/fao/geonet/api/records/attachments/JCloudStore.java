@@ -25,6 +25,8 @@
 package org.fao.geonet.api.records.attachments;
 
 
+import static org.jclouds.blobstore.options.PutOptions.Builder.multipart;
+
 import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.lang.StringUtils;
@@ -83,8 +85,7 @@ public class JCloudStore extends AbstractStore {
             FileSystems.getDefault().getPathMatcher("glob:" + filter);
 
         ListContainerOptions opts = new ListContainerOptions();
-        opts.delimiter(jCloudConfiguration.getFolderDelimiter());
-        opts.prefix(resourceTypeDir);
+        opts.delimiter(jCloudConfiguration.getFolderDelimiter()).prefix(resourceTypeDir);;
 
         // Page through the data
         String marker = null;
@@ -177,8 +178,8 @@ public class JCloudStore extends AbstractStore {
             .payload(is)
             .contentLength(is.available())
             .build();
-        // Upload the Blob
-        jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob);
+        // Upload the Blob in multiple chunks to supports large files.
+        jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob, multipart());
         Blob blobResults = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
 
         return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, blobResults.getMetadata().getSize(),
@@ -235,8 +236,7 @@ public class JCloudStore extends AbstractStore {
         int metadataId = canEdit(context, metadataUuid, approved);
         try {
             ListContainerOptions opts = new ListContainerOptions();
-            opts.delimiter(jCloudConfiguration.getFolderDelimiter());
-            opts.prefix(getMetadataDir(context, metadataId));
+            opts.prefix(getMetadataDir(context, metadataId) + jCloudConfiguration.getFolderDelimiter()).recursive();
 
             // Page through the data
             String marker = null;
@@ -248,8 +248,9 @@ public class JCloudStore extends AbstractStore {
                 PageSet<? extends StorageMetadata> page = jCloudConfiguration.getClient().getBlobStore().list(jCloudConfiguration.getContainerName(), opts);
 
                 for (StorageMetadata storageMetadata : page) {
-                    System.out.println("removing = " + jCloudConfiguration.getContainerName() + ":" + storageMetadata.getName());
-                    jCloudConfiguration.getClient().getBlobStore().removeBlob(jCloudConfiguration.getContainerName(), storageMetadata.getName());
+                    if (storageMetadata.getType() == StorageType.BLOB) {
+                        jCloudConfiguration.getClient().getBlobStore().removeBlob(jCloudConfiguration.getContainerName(), storageMetadata.getName());
+                    }
                 }
                 marker = page.getNextMarker();
             } while (marker != null);

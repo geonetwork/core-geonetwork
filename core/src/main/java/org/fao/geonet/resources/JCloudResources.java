@@ -23,6 +23,8 @@
 
 package org.fao.geonet.resources;
 
+import static org.jclouds.blobstore.options.PutOptions.Builder.multipart;
+
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.httpclient.HttpStatus;
@@ -484,7 +486,7 @@ public class JCloudResources extends Resources {
                         .contentLength(Files.size(path))
                         .build();
                     // Upload the Blob
-                    jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob);
+                    jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob, multipart());
                 }
             } finally {
                 // Delete temporary file and folder.
