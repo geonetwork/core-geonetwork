@@ -1,11 +1,35 @@
-package org.fao.geonet.resources;
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 
+package org.fao.geonet.resources;
 
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.FilenameUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jclouds.blobstore.domain.Blob;
@@ -37,24 +61,36 @@ import javax.servlet.ServletContext;
 
 public class JCloudResources extends Resources {
     @Autowired
-    JCloudCredentials jCloudCredentials;
+    JCloudConfiguration jCloudConfiguration;
 
-    @Override
-    protected Path getBasePath(final ServiceContext context) {
-        // TODO: I'm not sure it can be always the same...
-        return Paths.get("/");
-    }
+    private Path resourceBaseDir = null;
 
     @Override
     public Path locateResourcesDir(final ServletContext context, final ApplicationContext applicationContext) {
-        // TODO: I'm not sure it can be always the same...
-        return Paths.get("/resources");
-    }
+        if (this.resourceBaseDir == null) {
+            Path systemFullDir = applicationContext.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
+            Path resourceFullDir = applicationContext.getBean(GeonetworkDataDirectory.class).getResourcesDir();
 
-    @Override
-    protected Path locateResourcesDir(final ServiceContext context) {
-        // TODO: I'm not sure it can be always the same...
-        return Paths.get("/resources");
+            // If the metadata full dir is relative from the system dir then use system dir as the base dir.
+            if (resourceFullDir.toString().startsWith(systemFullDir.toString())) {
+                this.resourceBaseDir = systemFullDir;
+            } else {
+                // If the metadata full dir is an absolute folder then use that as the base dir.
+                if (resourceFullDir.isAbsolute()) {
+                    this.resourceBaseDir = resourceFullDir.getRoot();
+                } else {
+                    // use it as a relative url.
+                    this.resourceBaseDir = Paths.get(".");
+                }
+            }
+
+            if (this.resourceBaseDir.toString().equals(".")) {
+                this.resourceBaseDir = Paths.get(jCloudConfiguration.getBaseFolder()).resolve(resourceFullDir);
+            } else {
+                this.resourceBaseDir = Paths.get(jCloudConfiguration.getBaseFolder()).resolve(this.resourceBaseDir.relativize(resourceFullDir));
+            }
+        }
+        return this.resourceBaseDir;
     }
 
     private String getKey(final Path dir, final String name) {
@@ -62,19 +98,57 @@ public class JCloudResources extends Resources {
     }
 
     private String getKey(final Path path) {
-        String pathString;
-        // For windows it may be "\" in which case we need to change it to folderDelimiter which is normally "/"
-        if (path.getFileSystem().getSeparator().equals(jCloudCredentials.getFolderDelimiter())) {
-            pathString = path.toString();
+
+        // Get keyPath as a relative path from /.
+        Path keyPath;
+        if (path.startsWith(Paths.get("/"))) {
+            keyPath = Paths.get("/").relativize(path);
         } else {
-            pathString=path.toString().replace(path.getFileSystem().getSeparator(), jCloudCredentials.getFolderDelimiter());
+            keyPath = path;
         }
-        // remove leading / from path since the basefolder already ends with "/". Absolute paths will have 2 "/"
-        return jCloudCredentials.getBaseFolder() + (path.isAbsolute() ? pathString.substring(2) : pathString.substring(1));
+
+
+        if (resourceBaseDir != null) {
+            // If it starts with resource folder then it is missing the basePath so add it.
+            if (keyPath.startsWith(Paths.get(jCloudConfiguration.getBaseFolder()).relativize(resourceBaseDir))) {
+                keyPath = Paths.get(jCloudConfiguration.getBaseFolder()).resolve(keyPath);
+            } else {
+                Path resourceDir = Paths.get(jCloudConfiguration.getBaseFolder()).resolve(resourceBaseDir);
+                // If it starts with the resource dir by not starting with a "/" then add the "/"
+                if (keyPath.startsWith(Paths.get("/").relativize(resourceDir))) {
+                    keyPath = Paths.get("/").resolve(keyPath);
+                } else {
+                    // If it does not start with resource folder then it is missing so add it.
+                    if (!keyPath.startsWith(resourceDir)) {
+                        keyPath = resourceDir.resolve(keyPath);
+                    }
+                }
+            }
+        }
+
+        String key;
+        // For windows it may be "\" in which case we need to change it to folderDelimiter which is normally "/"
+        if (keyPath.getFileSystem().getSeparator().equals(jCloudConfiguration.getFolderDelimiter())) {
+            key = keyPath.toString();
+        } else {
+            key = keyPath.toString().replace(keyPath.getFileSystem().getSeparator(), jCloudConfiguration.getFolderDelimiter());
+        }
+        // For Windows, the pathString may start with // so remove one if this is the case.
+        if (key.startsWith("//")) {
+            key = key.substring(1);
+        }
+
+        // Make sure the key that is returns does not starts with "/" as it is already assumed to be relative to the container.
+        if (key.startsWith(jCloudConfiguration.getFolderDelimiter())) {
+            return key.substring(1);
+        } else {
+            return key;
+        }
     }
 
     private Path getKeyPath(String key) {
-        return Paths.get("/" + key.substring(jCloudCredentials.getBaseFolder().length()));
+        // Keypath should not reference the base path so it should be removed.
+        return Paths.get(key.substring(jCloudConfiguration.getBaseFolder().length()));
     }
 
     @Nullable
@@ -82,12 +156,12 @@ public class JCloudResources extends Resources {
     protected Path findImagePath(final String imageName, final Path logosDir) {
         final String key = getKey(logosDir, imageName);
         if (imageName.indexOf('.') > -1) {
-            if (jCloudCredentials.getClient().getBlobStore().blobExists(jCloudCredentials.getContainerName(), key)) {
+            if (jCloudConfiguration.getClient().getBlobStore().blobExists(jCloudConfiguration.getContainerName(), key)) {
                 return getKeyPath(key);
             }
         } else {
             ListContainerOptions opts = new ListContainerOptions();
-            opts.delimiter(jCloudCredentials.getFolderDelimiter());
+            opts.delimiter(jCloudConfiguration.getFolderDelimiter());
             opts.prefix(key);
 
             // Page through the data
@@ -97,7 +171,7 @@ public class JCloudResources extends Resources {
                     opts.afterMarker(marker);
                 }
 
-                PageSet<? extends StorageMetadata> page = jCloudCredentials.getClient().getBlobStore().list(jCloudCredentials.getContainerName(), opts);
+                PageSet<? extends StorageMetadata> page = jCloudConfiguration.getClient().getBlobStore().list(jCloudConfiguration.getContainerName(), opts);
 
                 for (StorageMetadata storageMetadata : page) {
                     // Only add to the list if it is a blob and it matches the filter.
@@ -111,7 +185,6 @@ public class JCloudResources extends Resources {
                 marker = page.getNextMarker();
             } while (marker != null);
         }
-
         return null;
     }
 
@@ -139,9 +212,9 @@ public class JCloudResources extends Resources {
                                     final Path appPath, final String filename, final byte[] defaultValue,
                                     final long loadSince) throws IOException {
         final Path file = locateResource(resourcesDir, context, appPath, filename);
-        final String key = getKey(file);
+        final String key = getKey(file, filename);
         try {
-            final Blob object = jCloudCredentials.getClient().getBlobStore().getBlob(jCloudCredentials.getContainerName(), key);
+            final Blob object = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
             if (object != null) {
                 final long lastModified = object.getMetadata().getLastModified().toInstant().toEpochMilli();
                 try (InputStream in = object.getPayload().openStream()) {
@@ -155,10 +228,13 @@ public class JCloudResources extends Resources {
                     }
                 }
             } else {
-                Log.info(Log.RESOURCES, "Error loading resource " + jCloudCredentials.getContainerName() + ":" + key);
+                Log.info(Log.RESOURCES, "Error loading resource " + jCloudConfiguration.getContainerName() + ":" + key);
             }
-        } catch(HttpResponseException e) {
-            if (e.getResponse().getStatusCode() != HttpStatus.SC_NOT_FOUND) {
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                Log.warning(Geonet.RESOURCES,
+                    String.format("Unable to locate resource '%s'.", key));
+            } else {
                 throw e;
             }
         }
@@ -176,11 +252,11 @@ public class JCloudResources extends Resources {
         if (resourcesDir != null) {
             key = getKey(resourcesDir, filename);
         } else {
-            key = jCloudCredentials.getBaseFolder() + filename;
+            key = jCloudConfiguration.getFolderDelimiter() + filename;
         }
 
 
-        if (!jCloudCredentials.getClient().getBlobStore().blobExists(jCloudCredentials.getContainerName(), key)) {
+        if (!jCloudConfiguration.getClient().getBlobStore().blobExists(jCloudConfiguration.getContainerName(), key)) {
             Path webappCopy = null;
             if (context != null) {
                 final String realPath = context.getRealPath(filename);
@@ -190,18 +266,18 @@ public class JCloudResources extends Resources {
             }
 
             if (webappCopy == null) {
-                webappCopy = appPath.resolve(filename);  // TODO: this won't work...
+                webappCopy = appPath.resolve(filename);
             }
-            if (!java.nio.file.Files.isReadable(webappCopy)) {
-                if (resourcesDir.equals(Paths.get("/resources"))) {
-                    final ConfigurableApplicationContext applicationContext =
-                        JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(context);
+            if (!Files.isReadable(webappCopy)) {
+                final ConfigurableApplicationContext applicationContext =
+                    JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(context);
+                if (resourcesDir.equals(locateResourcesDir(context, applicationContext))) {
                     webappCopy = super.locateResourcesDir(context, applicationContext).resolve(filename);
                 }
             }
-            if (java.nio.file.Files.isReadable(webappCopy)) {
+            if (Files.isReadable(webappCopy)) {
                 try (ResourceHolder holder = new JCloudResourceHolder(key, true)) {
-                    Log.info(Log.RESOURCES, "Copying " + webappCopy + " to " + key);
+                    Log.info(Log.RESOURCES, "Copying " + webappCopy + " to " + holder.getPath() + " for resource " + key);
                     Files.copy(webappCopy, holder.getPath(), StandardCopyOption.REPLACE_EXISTING);
                 }
             } else {
@@ -212,7 +288,7 @@ public class JCloudResources extends Resources {
                 if (IMAGE_WRITE_SUFFIXES.contains(suffix.toLowerCase())) {
                     final String suffixless = FilenameUtils.removeExtension(key);
                     ListContainerOptions opts = new ListContainerOptions();
-                    opts.delimiter(jCloudCredentials.getFolderDelimiter());
+                    opts.delimiter(jCloudConfiguration.getFolderDelimiter());
                     opts.prefix(suffixless);
 
                     // Page through the data
@@ -222,7 +298,7 @@ public class JCloudResources extends Resources {
                             opts.afterMarker(marker);
                         }
 
-                        PageSet<? extends StorageMetadata> page = jCloudCredentials.getClient().getBlobStore().list(jCloudCredentials.getContainerName(), opts);
+                        PageSet<? extends StorageMetadata> page = jCloudConfiguration.getClient().getBlobStore().list(jCloudConfiguration.getContainerName(), opts);
 
                         for (StorageMetadata storageMetadata : page) {
                             // Only add to the list if it is a blob and it matches the filter.
@@ -240,10 +316,10 @@ public class JCloudResources extends Resources {
                                         } catch (IOException e) {
                                             if (context != null) {
                                                 context.log("Unable to convert image from " + in.getPath() + " to " +
-                                                        out.getPath(), e);
+                                                    out.getPath(), e);
                                             } else {
                                                 Log.warning(Log.RESOURCES, "Unable to convert image from " +
-                                                        in.getPath() + " to " + out.getPath(), e);
+                                                    in.getPath() + " to " + out.getPath(), e);
                                             }
                                         }
                                     }
@@ -263,8 +339,8 @@ public class JCloudResources extends Resources {
     protected void addFiles(final DirectoryStream.Filter<Path> iconFilter, final Path webappDir,
                             final HashSet<Path> result) {
         ListContainerOptions opts = new ListContainerOptions();
-        opts.delimiter(jCloudCredentials.getFolderDelimiter());
-        opts.prefix(getKey(webappDir) + jCloudCredentials.getFolderDelimiter());
+        opts.delimiter(jCloudConfiguration.getFolderDelimiter());
+        opts.prefix(getKey(webappDir) + jCloudConfiguration.getFolderDelimiter());
 
         // Page through the data
         String marker = null;
@@ -273,7 +349,7 @@ public class JCloudResources extends Resources {
                 opts.afterMarker(marker);
             }
 
-            PageSet<? extends StorageMetadata> page = jCloudCredentials.getClient().getBlobStore().list(jCloudCredentials.getContainerName(), opts);
+            PageSet<? extends StorageMetadata> page = jCloudConfiguration.getClient().getBlobStore().list(jCloudConfiguration.getContainerName(), opts);
 
             for (StorageMetadata storageMetadata : page) {
                 // Only add to the list if it is a blob and it matches the filter.
@@ -299,13 +375,13 @@ public class JCloudResources extends Resources {
         final Path file = locateResource(resourcesDir, context, appPath, filename);
         final String key = getKey(file);
         try {
-            final Blob object = jCloudCredentials.getClient().getBlobStore().getBlob(jCloudCredentials.getContainerName(), key);
-            if (object==null) {
+            final Blob object = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
+            if (object == null) {
                 return null;
             } else {
                 return FileTime.from(object.getMetadata().getLastModified().toInstant());
             }
-        } catch(HttpResponseException e) {
+        } catch (HttpResponseException e) {
             if (e.getResponse().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
                 // key does not exist
                 return null;
@@ -319,13 +395,14 @@ public class JCloudResources extends Resources {
     public void deleteImageIfExists(final String image, final Path dir) {
         Path icon = findImagePath(image, dir);
         if (icon != null) {
-            jCloudCredentials.getClient().getBlobStore().removeBlob(jCloudCredentials.getContainerName(), getKey(icon));
+            jCloudConfiguration.getClient().getBlobStore().removeBlob(jCloudConfiguration.getContainerName(), getKey(icon));
         }
     }
 
     private class JCloudResourceHolder implements ResourceHolder {
         private final String key;
         private Path path = null;
+        private Path tempFolderPath = null;
         private boolean writeOnClose = false;
 
         private JCloudResourceHolder(final String key, boolean writeOnClose) {
@@ -338,29 +415,37 @@ public class JCloudResources extends Resources {
             if (path != null) {
                 return path;
             }
-            final String[] splittedKey = key.split("/");
+            final String[] splittedKey = key.split(jCloudConfiguration.getFolderDelimiter());
             try {
-                path = java.nio.file.Files.createTempFile("", splittedKey[splittedKey.length - 1]);
+                // Preserve filename by putting the files into a temporary folder and using the same filename.
+                tempFolderPath = Files.createTempDirectory("gn-res-" + splittedKey[splittedKey.length - 2] + "-");
+                tempFolderPath.toFile().deleteOnExit();
+                path = tempFolderPath.resolve(splittedKey[splittedKey.length - 1]);
+
                 try {
-                    final Blob object = jCloudCredentials.getClient().getBlobStore().getBlob(jCloudCredentials.getContainerName(), key);
+                    final Blob object = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
                     if (object == null) {
-                        if (writeOnClose) {
+                        if (writeOnClose && Files.exists(path)) {
                             Files.delete(path);
                         }
                     } else {
                         try (InputStream in = object.getPayload().openStream()) {
                             java.nio.file.Files.copy(in, path,
-                                    StandardCopyOption.REPLACE_EXISTING);
+                                StandardCopyOption.REPLACE_EXISTING);
                         }
                     }
                 } catch (HttpResponseException e) {
-                    if (e.getResponse().getStatusCode() == HttpStatus.SC_NOT_FOUND && writeOnClose) {
-                        Files.delete(path);
-                    } else if (e.getResponse().getStatusCode() != HttpStatus.SC_NOT_FOUND) {
+                    if (e.getResponse().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                        if (writeOnClose && Files.exists(path)) {
+                            Files.delete(path);
+                        }
+                    } else {
                         throw e;
                     }
                 }
             } catch (IOException e) {
+                Log.error(Geonet.RESOURCES, String.format(
+                    "Error getting path for resource '%s'.", key), e);
                 throw new RuntimeException(e);
             }
 
@@ -374,8 +459,8 @@ public class JCloudResources extends Resources {
 
         @Override
         public FileTime getLastModifiedTime() {
-            final Blob object = jCloudCredentials.getClient().getBlobStore().getBlob(jCloudCredentials.getContainerName(), key);
-            if (object==null) {
+            final Blob object = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
+            if (object == null) {
                 return null;
             } else {
                 return FileTime.from(object.getMetadata().getLastModified().toInstant());
@@ -392,15 +477,21 @@ public class JCloudResources extends Resources {
             if (path == null) {
                 return;
             }
-            if (writeOnClose && Files.isReadable(path)) {
-                Blob blob = jCloudCredentials.getClient().getBlobStore().blobBuilder(key)
+            try {
+                if (writeOnClose && Files.isReadable(path)) {
+                    Blob blob = jCloudConfiguration.getClient().getBlobStore().blobBuilder(key)
                         .payload(path.toFile())
                         .contentLength(Files.size(path))
                         .build();
-                // Upload the Blob
-                jCloudCredentials.getClient().getBlobStore().putBlob(jCloudCredentials.getContainerName(), blob);
+                    // Upload the Blob
+                    jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob);
+                }
+            } finally {
+                // Delete temporary file and folder.
+                IO.deleteFileOrDirectory(tempFolderPath, true);
+                path = null;
+                tempFolderPath = null;
             }
-            java.nio.file.Files.delete(path);
         }
     }
 }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<beans
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="jCloudConfiguration" class="org.fao.geonet.resources.JCloudConfiguration">
+      <property name="provider" value="${JCLOUD_PROVIDER}"/>
+      <property name="folderDelimiter" value="${JCLOUD_FOLDER_DELIMITER:#{'/'}}"/>
+      <property name="containerName" value="${JCLOUD_CONTAINER_NAME:geonetwork}"/>
+      <property name="baseFolder" value="${JCLOUD_BASE_FOLDER:#{null}}"/>
+      <property name="storageAccountName" value="${JCLOUD_STORAGE_ACCOUNT_NAME}"/>
+      <property name="storageAccountKey" value="${JCLOUD_STORAGE_ACCOUNT_KEY}"/>
+      <property name="endpoint" value="${JCLOUD_ENDPOINT:#{null}}"/>
+      <property name="externalResourceManagementUrl" value="${JCLOUD_EXTERNAL_RESOURCE_MANAGEMENT_URL:#{null}}"/>
+      <property name="externalResourceManagementWindowParameters" value="${JCLOUD_EXTERNAL_RESOURCE_MANAGEMENT_WINDOW_PARAMETERS:#{null}}"/>
+      <property name="externalResourceManagementModal" value="${JCLOUD_EXTERNAL_RESOURCE_MANAGEMENT_MODAL_ENABLED:#{null}}"/>
+      <property name="versioningEnabled" value="${JCLOUD_VERSIONING_ENABLED:#{null}}"/>
+    </bean>
+    <bean id="filesystemStore" class="org.fao.geonet.api.records.attachments.JCloudStore" />
+    <bean id="resourceStore"
+          class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">
+      <constructor-arg index="0" ref="filesystemStore"/>
+    </bean>
+    <bean id="resources" class="org.fao.geonet.resources.JCloudResources"/>
+
+</beans>

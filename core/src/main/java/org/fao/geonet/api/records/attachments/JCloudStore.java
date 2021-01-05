@@ -25,25 +25,34 @@
 package org.fao.geonet.api.records.attachments;
 
 
-import io.searchbox.strings.StringUtils;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FilenameUtils;
+
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.resources.JCloudCredentials;
+import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.resources.JCloudConfiguration;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.domain.*;
 import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.support.ResourceHolder;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,24 +61,29 @@ import javax.annotation.Nullable;
 
 public class JCloudStore extends AbstractStore {
 
+    private Path baseMetadataDir = null;
+
     @Autowired
-    JCloudCredentials jCloudCredentials;
+    JCloudConfiguration jCloudConfiguration;
 
     @Override
     public List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid,
                                                final MetadataResourceVisibility visibility, String filter, Boolean approved) throws Exception {
-        final int metadataId = canEdit(context, metadataUuid, approved);
+        final int metadataId = canDownload(context, metadataUuid, visibility, approved);
         final SettingManager settingManager = context.getBean(SettingManager.class);
 
-        final String resourceTypeDir = getMetadataDir(metadataId) + jCloudCredentials.getFolderDelimiter() + visibility.toString() + jCloudCredentials.getFolderDelimiter();
+        final String resourceTypeDir = getMetadataDir(context, metadataId) + jCloudConfiguration.getFolderDelimiter() + visibility.toString() + jCloudConfiguration.getFolderDelimiter();
 
         List<MetadataResource> resourceList = new ArrayList<>();
         if (filter == null) {
             filter = FilesystemStore.DEFAULT_FILTER;
         }
 
+        PathMatcher matcher =
+            FileSystems.getDefault().getPathMatcher("glob:" + filter);
+
         ListContainerOptions opts = new ListContainerOptions();
-        opts.delimiter(jCloudCredentials.getFolderDelimiter());
+        opts.delimiter(jCloudConfiguration.getFolderDelimiter());
         opts.prefix(resourceTypeDir);
 
         // Page through the data
@@ -79,29 +93,42 @@ public class JCloudStore extends AbstractStore {
                 opts.afterMarker(marker);
             }
 
-            PageSet<? extends StorageMetadata> page = jCloudCredentials.getClient().getBlobStore().list(jCloudCredentials.getContainerName(), opts);
+            PageSet<? extends StorageMetadata> page = jCloudConfiguration.getClient().getBlobStore().list(jCloudConfiguration.getContainerName(), opts);
 
             for (StorageMetadata storageMetadata : page) {
                 // Only add to the list if it is a blob and it matches the filter.
-                if (storageMetadata.getType() == StorageType.BLOB && FilenameUtils.wildcardMatch(storageMetadata.getName(), filter)) {
+                Path keyPath = new File(storageMetadata.getName()).toPath().getFileName();
+                if (storageMetadata.getType() == StorageType.BLOB && matcher.matches(keyPath)){
                     final String filename = getFilename(storageMetadata.getName());
-                    MetadataResource resource = createResourceDescription(settingManager, metadataUuid, visibility, filename, storageMetadata.getSize(),
-                            storageMetadata.getLastModified());
+                    MetadataResource resource = createResourceDescription(context, settingManager, metadataUuid, visibility, filename, storageMetadata.getSize(),
+                        storageMetadata.getLastModified(), storageMetadata.getETag(), metadataId, approved);
                     resourceList.add(resource);
                 }
             }
             marker = page.getNextMarker();
         } while (marker != null);
 
+
         resourceList.sort(MetadataResourceVisibility.sortByFileName);
 
         return resourceList;
     }
 
-    private MetadataResource createResourceDescription(final SettingManager settingManager, final String metadataUuid,
-                                                       final MetadataResourceVisibility visibility, final String resourceId, long size, Date lastModification) {
-        return new FilesystemStoreResource(metadataUuid, getFilename(metadataUuid, resourceId),
-                settingManager.getNodeURL() + "api/records/", visibility, size, lastModification);
+    private MetadataResource createResourceDescription(final ServiceContext context, final SettingManager settingManager, final String metadataUuid,
+                                                       final MetadataResourceVisibility visibility, final String resourceId, long size, Date lastModification, String version, int metadataId,
+                                                       boolean approved) {
+        String filename = getFilename(metadataUuid, resourceId);
+
+        String versionValue = null;
+        if (jCloudConfiguration.isVersioningEnabled()) {
+            versionValue = version;
+        }
+
+        MetadataResource.ExternalResourceManagementProperties externalResourceManagementProperties =
+            getExternalResourceManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, version);
+
+        return new FilesystemStoreResource(metadataUuid, metadataId, filename,
+            settingManager.getNodeURL() + "api/records/", visibility, size, lastModification, versionValue, externalResourceManagementProperties, approved);
     }
 
     private static String getFilename(final String key) {
@@ -115,22 +142,23 @@ public class JCloudStore extends AbstractStore {
         // Those characters should not be allowed by URL structure
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         try {
-            final Blob object = jCloudCredentials.getClient().getBlobStore().getBlob(
-                jCloudCredentials.getContainerName(), getKey(metadataUuid, metadataId, visibility, resourceId));
+            final Blob object = jCloudConfiguration.getClient().getBlobStore().getBlob(
+                jCloudConfiguration.getContainerName(), getKey(context, metadataUuid, metadataId, visibility, resourceId));
             final SettingManager settingManager = context.getBean(SettingManager.class);
-            return new ResourceHolderImpl(object, createResourceDescription(settingManager, metadataUuid, visibility, resourceId,
-                                                                            object.getMetadata().getSize(),
-                                                                            object.getMetadata().getLastModified()));
-        } catch (ContainerNotFoundException ignored) {
+            return new ResourceHolderImpl(object, createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId,
+                object.getMetadata().getSize(),
+                object.getMetadata().getLastModified(), object.getMetadata().getETag(), metadataId, approved));
+        } catch (ContainerNotFoundException e) {
+            Log.warning(Geonet.RESOURCES, String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
             throw new ResourceNotFoundException(
-                    String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
+                String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
         }
     }
 
-    private String getKey(String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
+    private String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
         checkResourceId(resourceId);
-        final String metadataDir = getMetadataDir(metadataId);
-        return metadataDir + jCloudCredentials.getFolderDelimiter() + visibility.toString() + jCloudCredentials.getFolderDelimiter() + getFilename(metadataUuid, resourceId);
+        final String metadataDir = getMetadataDir(context, metadataId);
+        return metadataDir + jCloudConfiguration.getFolderDelimiter() + visibility.toString() + jCloudConfiguration.getFolderDelimiter() + getFilename(metadataUuid, resourceId);
     }
 
     @Override
@@ -139,22 +167,22 @@ public class JCloudStore extends AbstractStore {
             throws Exception {
         final SettingManager settingManager = context.getBean(SettingManager.class);
         final int metadataId = canEdit(context, metadataUuid, approved);
-        String key = getKey(metadataUuid, metadataId, visibility, filename);
+        String key = getKey(context, metadataUuid, metadataId, visibility, filename);
 
         // Todo - jcloud does not seem to allow setting the last modified date. May need to investigate to see if there are other options.
         //if (changeDate != null) {
         //    metadata.setLastModified(changeDate);
 
-        Blob blob = jCloudCredentials.getClient().getBlobStore().blobBuilder(key)
-                .payload(is)
-                .contentLength(is.available())
-                .build();
+        Blob blob = jCloudConfiguration.getClient().getBlobStore().blobBuilder(key)
+            .payload(is)
+            .contentLength(is.available())
+            .build();
         // Upload the Blob
-        jCloudCredentials.getClient().getBlobStore().putBlob(jCloudCredentials.getContainerName(), blob);
-        Blob blobResults = jCloudCredentials.getClient().getBlobStore().getBlob(jCloudCredentials.getContainerName(), key);
+        jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob);
+        Blob blobResults = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
 
-        return createResourceDescription(settingManager, metadataUuid, visibility, filename, blobResults.getMetadata().getSize(),
-                blobResults.getMetadata().getLastModified());
+        return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, blobResults.getMetadata().getSize(),
+            blobResults.getMetadata().getLastModified(), blobResults.getMetadata().getETag(), metadataId, approved);
 
     }
 
@@ -165,19 +193,19 @@ public class JCloudStore extends AbstractStore {
         int metadataId = canEdit(context, metadataUuid, approved);
 
         String sourceKey = null;
-        StorageMetadata metadata = null;
+        StorageMetadata storageMetadata = null;
         for (MetadataResourceVisibility sourceVisibility : MetadataResourceVisibility.values()) {
-            final String key = getKey(metadataUuid, metadataId, sourceVisibility, resourceId);
+            final String key = getKey(context, metadataUuid, metadataId, sourceVisibility, resourceId);
             try {
-                metadata = jCloudCredentials.getClient().getBlobStore().blobMetadata(jCloudCredentials.getContainerName(), key);
-                if (metadata != null) {
+                storageMetadata = jCloudConfiguration.getClient().getBlobStore().blobMetadata(jCloudConfiguration.getContainerName(), key);
+                if (storageMetadata != null) {
                     if (sourceVisibility != visibility) {
                         sourceKey = key;
                         break;
                     } else {
                         // already the good visibility
-                        return createResourceDescription(settingManager, metadataUuid, visibility, resourceId, metadata.getSize(),
-                                metadata.getLastModified());
+                        return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, storageMetadata.getSize(),
+                            storageMetadata.getLastModified(), storageMetadata.getETag(), metadataId, approved);
                     }
                 }
             } catch (ContainerNotFoundException ignored) {
@@ -185,18 +213,20 @@ public class JCloudStore extends AbstractStore {
             }
         }
         if (sourceKey != null) {
-            final String destKey = getKey(metadataUuid, metadataId, visibility, resourceId);
+            final String destKey = getKey(context, metadataUuid, metadataId, visibility, resourceId);
 
-            jCloudCredentials.getClient().getBlobStore().copyBlob(jCloudCredentials.getContainerName(), sourceKey, jCloudCredentials.getContainerName(), destKey, CopyOptions.NONE);
-            jCloudCredentials.getClient().getBlobStore().removeBlob(jCloudCredentials.getContainerName(), sourceKey);
+            jCloudConfiguration.getClient().getBlobStore().copyBlob(jCloudConfiguration.getContainerName(), sourceKey, jCloudConfiguration.getContainerName(), destKey, CopyOptions.NONE);
+            jCloudConfiguration.getClient().getBlobStore().removeBlob(jCloudConfiguration.getContainerName(), sourceKey);
 
-            Blob blobResults = jCloudCredentials.getClient().getBlobStore().getBlob(jCloudCredentials.getContainerName(), destKey);
+            Blob blobResults = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), destKey);
 
-            return createResourceDescription(settingManager, metadataUuid, visibility, resourceId, blobResults.getMetadata().getSize(),
-                    blobResults.getMetadata().getLastModified());
+            return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, blobResults.getMetadata().getSize(),
+                blobResults.getMetadata().getLastModified(), blobResults.getMetadata().getETag(), metadataId, approved);
         } else {
+            Log.warning(Geonet.RESOURCES,
+                String.format("Could not update permissions. Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
             throw new ResourceNotFoundException(
-                    String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
+                String.format("Could not update permissions. Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
         }
     }
 
@@ -205,8 +235,8 @@ public class JCloudStore extends AbstractStore {
         int metadataId = canEdit(context, metadataUuid, approved);
         try {
             ListContainerOptions opts = new ListContainerOptions();
-            opts.delimiter(jCloudCredentials.getFolderDelimiter());
-            opts.prefix(getMetadataDir(metadataId));
+            opts.delimiter(jCloudConfiguration.getFolderDelimiter());
+            opts.prefix(getMetadataDir(context, metadataId));
 
             // Page through the data
             String marker = null;
@@ -215,28 +245,29 @@ public class JCloudStore extends AbstractStore {
                     opts.afterMarker(marker);
                 }
 
-                PageSet<? extends StorageMetadata> page = jCloudCredentials.getClient().getBlobStore().list(jCloudCredentials.getContainerName(), opts);
+                PageSet<? extends StorageMetadata> page = jCloudConfiguration.getClient().getBlobStore().list(jCloudConfiguration.getContainerName(), opts);
 
                 for (StorageMetadata storageMetadata : page) {
-                    System.out.println("removing = " + jCloudCredentials.getContainerName() + ":" + storageMetadata.getName());
-// Todo uncomment and test
-//                    jCloudCredentials.getClient().getBlobStore().removeBlob(jCloudCredentials.getContainerName(), storageMetadata.getName());
+                    System.out.println("removing = " + jCloudConfiguration.getContainerName() + ":" + storageMetadata.getName());
+                    jCloudConfiguration.getClient().getBlobStore().removeBlob(jCloudConfiguration.getContainerName(), storageMetadata.getName());
                 }
                 marker = page.getNextMarker();
             } while (marker != null);
             return String.format("Metadata '%s' directory removed.", metadataId);
         } catch (ContainerNotFoundException e) {
-            return String.format("Unable to remove metadata '%s' directory.", metadataId);
+            Log.warning(Geonet.RESOURCES,
+                String.format("Unable to located metadata '%s' directory to be removed.", metadataId));
+            return String.format("Unable to located metadata '%s' directory to be removed.", metadataId);
         }
     }
 
     @Override
     public String delResource(final ServiceContext context, final String metadataUuid, final String resourceId, Boolean approved)
-            throws Exception {
+        throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
 
         for (MetadataResourceVisibility visibility : MetadataResourceVisibility.values()) {
-            if (tryDelResource(metadataUuid, metadataId, visibility, resourceId)) {
+            if (tryDelResource(context, metadataUuid, metadataId, visibility, resourceId)) {
                 return String.format("MetadataResource '%s' removed.", resourceId);
             }
         }
@@ -247,18 +278,18 @@ public class JCloudStore extends AbstractStore {
     public String delResource(final ServiceContext context, final String metadataUuid, final MetadataResourceVisibility visibility,
                               final String resourceId, Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
-        if (tryDelResource(metadataUuid, metadataId, visibility, resourceId)) {
+        if (tryDelResource(context, metadataUuid, metadataId, visibility, resourceId)) {
             return String.format("MetadataResource '%s' removed.", resourceId);
         }
         return String.format("Unable to remove resource '%s'.", resourceId);
     }
 
-    private boolean tryDelResource(final String metadataUuid, final int metadataId, final MetadataResourceVisibility visibility,
+    private boolean tryDelResource(final ServiceContext context, final String metadataUuid, final int metadataId, final MetadataResourceVisibility visibility,
                                    final String resourceId) throws Exception {
-        final String key = getKey(metadataUuid, metadataId, visibility, resourceId);
+        final String key = getKey(context, metadataUuid, metadataId, visibility, resourceId);
 
-        if (jCloudCredentials.getClient().getBlobStore().blobExists(jCloudCredentials.getContainerName(), key)) {
-            jCloudCredentials.getClient().getBlobStore().removeBlob(jCloudCredentials.getContainerName(), key);
+        if (jCloudConfiguration.getClient().getBlobStore().blobExists(jCloudConfiguration.getContainerName(), key)) {
+            jCloudConfiguration.getClient().getBlobStore().removeBlob(jCloudConfiguration.getContainerName(), key);
             return true;
         }
         return false;
@@ -268,33 +299,172 @@ public class JCloudStore extends AbstractStore {
     public MetadataResource getResourceDescription(final ServiceContext context, final String metadataUuid,
                                                    final MetadataResourceVisibility visibility, final String filename, Boolean approved) throws Exception {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
-        final String key = getKey(metadataUuid, metadataId, visibility, filename);
+        final String key = getKey(context, metadataUuid, metadataId, visibility, filename);
         SettingManager settingManager = context.getBean(SettingManager.class);
         try {
-            final Blob object = jCloudCredentials.getClient().getBlobStore().getBlob(jCloudCredentials.getContainerName(), key);
-            if (object==null) {
+            final Blob object = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
+            if (object == null) {
                 return null;
             } else {
                 final StorageMetadata metadata = object.getMetadata();
-                return createResourceDescription(settingManager, metadataUuid, visibility, filename, metadata.getSize(),
-                        metadata.getLastModified());
+                return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, metadata.getSize(),
+                    metadata.getLastModified(), metadata.getETag(), metadataId, approved);
             }
         } catch (ContainerNotFoundException e) {
             return null;
         }
     }
 
-    private String getMetadataDir(final int metadataId) {
-        return jCloudCredentials.getBaseFolder() + metadataId;
+    private String getMetadataDir(ServiceContext context, final int metadataId) {
+
+        Path metadataFullDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
+        Path baseMetadataDir = getBaseMetadataDir(context, metadataFullDir);
+        Path metadataDir;
+        if (baseMetadataDir.toString().equals(".")) {
+            metadataDir = Paths.get(jCloudConfiguration.getBaseFolder()).resolve(metadataFullDir);
+        } else {
+            metadataDir = Paths.get(jCloudConfiguration.getBaseFolder()).resolve(baseMetadataDir.relativize(metadataFullDir));
+        }
+
+        String key;
+        // For windows it may be "\" in which case we need to change it to folderDelimiter which is normally "/"
+        if (metadataDir.getFileSystem().getSeparator().equals(jCloudConfiguration.getFolderDelimiter())) {
+            key = metadataDir.toString();
+        } else {
+            key = metadataDir.toString().replace(metadataDir.getFileSystem().getSeparator(), jCloudConfiguration.getFolderDelimiter());
+        }
+
+        // For Windows, the pathString may start with // so remove one if this is the case.
+        if (key.startsWith("//")) {
+            key = key.substring(1);
+        }
+
+        // Make sure the key that is returns does not starts with "/" as it is already assumed to be relative to the container.
+        if (key.startsWith(jCloudConfiguration.getFolderDelimiter())) {
+            return key.substring(1);
+        } else {
+            return key;
+        }
+    }
+
+    private Path getBaseMetadataDir(ServiceContext context, Path metadataFullDir) {
+        //If we not already figured out the base metadata dir then lets figure it out.
+        if (baseMetadataDir == null) {
+            Path systemFullDir = getDataDirectory(context).getSystemDataDir();
+
+            // If the metadata full dir is relative from the system dir then use system dir as the base dir.
+            if (metadataFullDir.toString().startsWith(systemFullDir.toString())) {
+                baseMetadataDir = systemFullDir;
+            } else {
+                // If the metadata full dir is an absolute folder then use that as the base dir.
+                if (getDataDirectory(context).getMetadataDataDir().isAbsolute()) {
+                    baseMetadataDir = metadataFullDir.getRoot();
+                } else {
+                    // use it as a relative url.
+                    baseMetadataDir = Paths.get(".");
+                }
+            }
+        }
+        return baseMetadataDir;
+    }
+
+    private GeonetworkDataDirectory getDataDirectory(ServiceContext context) {
+        return context.getBean(GeonetworkDataDirectory.class);
+    }
+
+    /**
+     * get external resource management for the supplied resource.
+     * Replace the following
+     * {id}  resource id
+     * {uuid}  metadatauuid
+     * {metadataid}  metadataid
+     * {visibility}  visibility
+     * {filename}  filename
+     * {version}  version
+     * {lang}  ISO639-1 2 char language
+     * {iso3lang}  ISO 639-2/T language
+     * <p>
+     * Sample url for custom app
+     * http://localhost:8080/artifact?filename={filename}&version={version}&lang={lang}
+     */
+
+    private MetadataResource.ExternalResourceManagementProperties getExternalResourceManagementProperties(ServiceContext context,
+                                                    int metadataId,
+                                                    final String metadataUuid,
+                                                    final MetadataResourceVisibility visibility,
+                                                    final String resourceId,
+                                                    String filename,
+                                                    String version
+    ) {
+        String externalResourceManagementUrl = jCloudConfiguration.getExternalResourceManagementUrl();
+        if (!StringUtils.isEmpty(externalResourceManagementUrl)) {
+            // {id}  id
+            if (externalResourceManagementUrl.contains("{id}")) {
+                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{id\\})", resourceId);
+            }
+            // {uuid}  metadatauuid
+            if (externalResourceManagementUrl.contains("{uuid}")) {
+                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{uuid\\})", metadataUuid);
+            }
+            // {metadataid}  metadataid
+            if (externalResourceManagementUrl.contains("{metadataid}")) {
+                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{metadataid\\})", String.valueOf(metadataId));
+            }
+            //    {visibility}  visibility
+            if (externalResourceManagementUrl.contains("{visibility}")) {
+                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{visibility\\})", visibility.toString().toLowerCase());
+            }
+            //    {filename}  filename
+            if (externalResourceManagementUrl.contains("{filename}")) {
+                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{filename\\})", filename);
+            }
+            // {version}  version
+            if (externalResourceManagementUrl.contains("{version}")) {
+                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{version\\})", version);
+            }
+
+            if (externalResourceManagementUrl.contains("{lang}") || externalResourceManagementUrl.contains("{ISO3lang}")) {
+                final IsoLanguagesMapper mapper = context.getBean(IsoLanguagesMapper.class);
+                String contextLang = context.getLanguage() == null ? Geonet.DEFAULT_LANGUAGE : context.getLanguage();
+                String lang;
+                String iso3Lang;
+
+                if (contextLang.length() == 2) {
+                    lang = contextLang;
+                    iso3Lang = mapper.iso639_1_to_iso639_2(contextLang);
+                } else {
+                    lang = mapper.iso639_2_to_iso639_1(contextLang);
+                    iso3Lang = contextLang;
+                }
+                // {lang}  ISO639-1 2 char language
+                if (externalResourceManagementUrl.contains("{lang}")) {
+                    externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{lang\\})", lang);
+                }
+                // {iso3lang}  ISO 639-2/T language
+                if (externalResourceManagementUrl.contains("{iso3lang}")) {
+                    externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{iso3lang\\})", iso3Lang);
+                }
+            }
+        }
+
+        MetadataResource.ExternalResourceManagementProperties externalResourceManagementProperties
+                = new MetadataResource.ExternalResourceManagementProperties(externalResourceManagementUrl,
+            jCloudConfiguration.getExternalResourceManagementWindowParameters(), jCloudConfiguration.isExternalResourceManagementModal());
+
+        return externalResourceManagementProperties;
     }
 
     private static class ResourceHolderImpl implements ResourceHolder {
+        private Path tempFolderPath;
         private Path path;
-        private final MetadataResource metadata;
+        private final MetadataResource metadataResource;
 
-        public ResourceHolderImpl(final Blob object, MetadataResource metadata) throws IOException {
-            path = Files.createTempFile("", getFilename(object.getMetadata().getName()));
-            this.metadata = metadata;
+        public ResourceHolderImpl(final Blob object, MetadataResource metadataResource) throws IOException {
+            // Preserve filename by putting the files into a temporary folder and using the same filename.
+            tempFolderPath = Files.createTempDirectory("gn-meta-res-" + String.valueOf(metadataResource.getMetadataId() + "-"));
+            tempFolderPath.toFile().deleteOnExit();
+            path = tempFolderPath.resolve(getFilename(object.getMetadata().getName()));
+            this.metadataResource = metadataResource;
             try (InputStream in = object.getPayload().openStream()) {
                 Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
             }
@@ -307,15 +477,15 @@ public class JCloudStore extends AbstractStore {
 
         @Override
         public MetadataResource getMetadata() {
-            return metadata;
+            return metadataResource;
         }
 
         @Override
         public void close() throws IOException {
-            if (path != null) {
-                Files.delete(path);
-                path = null;
-            }
+            // Delete temporary file and folder.
+            IO.deleteFileOrDirectory(tempFolderPath, true);
+            path=null;
+            tempFolderPath = null;
         }
 
         @Override
