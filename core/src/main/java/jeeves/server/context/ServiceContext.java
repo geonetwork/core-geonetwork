@@ -69,7 +69,17 @@ import javax.persistence.EntityManager;
  */
 public class ServiceContext extends BasicContext {
 
-    public static enum ThreadLocalPolicy { DIRECT, TRACE, STRICT };
+    /**
+     * ServiceContext is managed as a thread locale using setAsThreadLocal, clearAsThreadLocal and clear methods.
+     * ThreadLocalPolicy defines the behaviour of these methods double checking that they are being used correctly.
+     */
+    public static enum ThreadLocalPolicy {
+        /** Direct management of thread local with no checking. */
+        DIRECT,
+        /** Check behavior and log any unexpected use. */
+        TRACE,
+        /** Raise any {@link IllegalStateException} for unexpected behaviour */
+        STRICT };
     /**
      * Use -Djeeves.server.context.service.policy to define policy:
      * <ul>
@@ -80,7 +90,7 @@ public class ServiceContext extends BasicContext {
      */
     private static final ThreadLocalPolicy POLICY;
     static {
-        String property = System.getProperty("jeeves.server.context.policy", "DIRECT");
+        String property = System.getProperty("jeeves.server.context.policy", "TRACE");
         ThreadLocalPolicy policy;
         try {
             policy = ThreadLocalPolicy.valueOf(property.toUpperCase());
@@ -132,6 +142,15 @@ public class ServiceContext extends BasicContext {
      * @see #_responseHeaders
      */
     private Integer _statusCode;
+
+    /**
+     * Context for service execution.
+     *
+     * @param service Service name
+     * @param jeevesApplicationContext Application context
+     * @param contexts Handler context
+     * @param entityManager
+     */
     public ServiceContext(final String service, final ConfigurableApplicationContext jeevesApplicationContext,
                           final Map<String, Object> contexts, final EntityManager entityManager) {
         super(jeevesApplicationContext, contexts, entityManager);
@@ -231,7 +250,7 @@ public class ServiceContext extends BasicContext {
     }
 
     /** Log or raise exception based on {@link POLICY} */
-    public void checkUnexpectedState( String unexpected ){
+    protected void checkUnexpectedState( String unexpected ){
         if( unexpected == null ){
             return; // nothing unexpected to report
         }
@@ -310,6 +329,18 @@ public class ServiceContext extends BasicContext {
 
     /**
      * Release any resources tied up by this service context.
+     * <p>
+     * In general code that creates a ServiceContext is responsible thread management and any cleanup:
+     * <pre>
+     * ServiceContext context = serviceMan.createServiceContext("AppHandler", appContext);
+     * try {
+     *     context.setAsThreadLocal();
+     * }
+     * finally {
+     *     context.clearAsThreadLocal();
+     *     context.clear();
+     * }
+     * </pre>
      */
     public void clear(){
         if( this._service != null) {

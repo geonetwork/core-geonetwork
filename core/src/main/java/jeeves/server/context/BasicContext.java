@@ -43,9 +43,8 @@ import javax.persistence.EntityManager;
 //=============================================================================
 
 /**
- * Contains a minimun context for a job execution (schedule, service etc...)
+ * Contains a minimum context for a job execution (schedule, service etc...)
  */
-
 public class BasicContext implements Logger {
 
     private final ConfigurableApplicationContext jeevesApplicationContext;
