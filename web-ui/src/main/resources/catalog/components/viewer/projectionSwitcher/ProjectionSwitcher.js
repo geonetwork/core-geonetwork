@@ -83,15 +83,18 @@
                             return;
                           }
               
-                          // Remove the layer from the map
-                          map.removeLayer(layer);
-              
                           // Reload the layer (with potentially updated extent, projection, matrixSet etc.)
+                          var promise = null;
                           if (layerType === 'wms') {
-                            gnMap.addWmsFromScratch(map, layerUrl, layerName);
+                            promise = gnMap.addWmsFromScratch(map, layerUrl, layerName);
                           } else {
-                            gnMap.addWmtsFromScratch(map, layerUrl, layerName, undefined, layer.get('md'));
+                            promise = gnMap.addWmtsFromScratch(map, layerUrl, layerName, undefined, layer.get('md'));
                           }
+
+                          promise.then(function(result) {
+                            // Remove the original layer from the map if it was re-added successfully
+                            map.removeLayer(layer);
+                          });
                         };
 
                         // Change the projection for all supported layers
