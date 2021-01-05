@@ -34,8 +34,6 @@
   var EPSG_WEB_MERCATOR = 'EPSG:3857';
   var EPSG_REGEX = new RegExp('^EPSG:\\d{4,6}$');
 
-  var _cachedDefs = {};
-
   module.provider('gnProjService', function() {
     this.$get = ['$http', '$q', '$translate', 'gnUrlUtils',
      function($http, $q, $translate, gnUrlUtils) {
@@ -55,39 +53,6 @@
       var isDefaultProjection = function(code) {
         return code === EPSG_LL_WGS84 || code === EPSG_WEB_MERCATOR;
       }
-
-      var getCachedDef = function(code) {
-        if (!(code in proj4.defs) || isDefaultProjection(code)) {
-          return;
-        }
-        return _cachedDefs[code];
-      }
-
-      var isSimilarProjection = function(base, compare) {
-        // This function can actually be used to compare 
-        // all kinds of objects, but we use it to check if
-        // Projection objects have overlapping equal properties.
-        for (var prop in base) {
-          // Compare own properties that exist on both objects
-          if (base.hasOwnProperty(prop) && compare.hasOwnProperty(prop)) {
-            var obj1 = base[prop];
-            var obj2 = compare[prop];
-            if (angular.isArray(obj1) || angular.isArray(obj2)) {
-              // Ignore arrays for now
-              continue;
-            }
-            if (angular.isObject(obj1) && angular.isObject(obj2)) {
-              // Compare child object properties
-              if (!isSimilarProjection(obj1, obj2)) {
-                return false;
-              }
-            } else if (obj1 !== obj2) {
-              return false;
-            }
-          }
-        }
-        return true;
-      };
 
       var parseProjDef = function(data) {
 
@@ -115,8 +80,6 @@
         if (def) {
           proj4.defs(code, firstResult.proj4);
           ol.proj.proj4.register(proj4);
-          // cache definition
-          _cachedDefs[code] = def;
         }
 
         // get bounding box and define defaults
@@ -142,35 +105,6 @@
         }
       };
 
-      var getProj4Def = function(code) {
-        var defer = $q.defer();
-
-        var cachedDef = getCachedDef(code);
-        if (cachedDef) {
-          // return cached Proj4 definition
-          defer.resolve(cachedDef);
-        } else {
-          var url = buildRestUrl(code);
-
-          // send EPSG.io request and decode result
-          if (true) {
-            $http.get(url, {
-              cache: true,
-              timeout: REQUEST_TIMEOUT
-            })
-            .success(function(data) {
-              try {
-                defer.resolve(parseProjDef(data).def);
-              } catch (e) {
-                console.error(e);
-              }
-            })
-          }
-        }
-
-        return defer.promise;
-      };
-
       return {
 
         helpers: {
@@ -185,10 +119,7 @@
 
           isValidEpsgCode: function(code) {
             return code.search(EPSG_REGEX) >= 0;
-          },
-
-          isSimilarProjection: isSimilarProjection
-
+          }
         },
 
         getProjectionSettings: function(searchTerm) {
@@ -216,17 +147,6 @@
                     {url: url, status: status}));
               });
             }
-          return defer.promise;
-        },
-
-        isCustomProj4Def: function(code) {
-          var defer = $q.defer();
-
-          getProj4Def(code).then(function (result) {
-            var parsedProj = proj4.Proj(result);
-            defer.resolve(!isSimilarProjection(parsedProj, proj4.defs[code])); 
-          });
-
           return defer.promise;
         }
       };

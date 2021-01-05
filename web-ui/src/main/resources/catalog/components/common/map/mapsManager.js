@@ -154,10 +154,6 @@
           var config = gnMap.getMapConfig()['map-' + type];
           
           var proj = gnMap.getMapConfig().projection;
-          if (type === this.VIEWER_MAP) {
-            gnMap.checkProj4Def(proj);
-          }
-
           var map = new ol.Map({
             layers: [],
             view: new ol.View({
