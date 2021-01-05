@@ -37,8 +37,6 @@
     'gn_projection_service'
   ]);
 
-  var isCustomProj4;
-
   /**
    * @ngdoc service
    * @kind function
@@ -569,33 +567,6 @@
           /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
-           * @name gnMap#checkProj4Def
-           * 
-           * @description
-           * Checks if the Proj4 definition string of the current map projection
-           * is a custom one, which means that it differs from what EPSG.io defined.
-           * This function should be called after map initialization and
-           * whenever the projection has been switched. It is relevant for WMS layers.
-           * 
-           * @param {string} code EPSG code
-           * 
-           * @return {Promise} Promise with a boolean result
-           */
-          checkProj4Def: function(code) {
-            var defer = $q.defer();
-
-            gnProjService.isCustomProj4Def(code)
-              .then(function (result) {
-                isCustomProj4 = result;
-                defer.resolve(result);
-              });
-            
-            return defer.promise;
-          },
-
-          /**
-           * @ngdoc method
-           * @methodOf gn_map.service:gnMap
            * @name gnMap#getLayersFromConfig
            * @deprecated When creating a new map, use createMap(<TYPE>) instead
            *
@@ -996,22 +967,14 @@
 
               layerParams.STYLES = requestedStyle ? requestedStyle.Name : '';
 
-              var bboxProps = gnOwsCapabilities.getWmsLayerExtentFromGetCap(map, getCapLayer, isCustomProj4);
               var mapProj = map.getView().getProjection();
-              var projCode = bboxProps.epsg;
-              if (bboxProps.extent && projCode === 'EPSG:4326') {
-                // If the GetCap CRS list does not include the current map CRS,
-                // and an extent is returned from GetCap, it must be a WGS84 extent.
-                // Explicitly set the BBOX layer parameter in this case.
-                layerParams.BBOX = bboxProps.extent;
-              } else if (!bboxProps.extent) {
+              var bboxProps = gnOwsCapabilities.getWmsLayerExtentFromGetCap(
+                mapProj, getCapLayer, this.patchOlProjection(mapProj));
+              var targetProj = bboxProps.projection;
+              if (!bboxProps.extent) {
                 // If no valid extent could be determined, the WMS does not support the projection
-                // or the WGS84 bounds do not make sense (when reprojecting into a custom projection)
-                var msg = $translate.instant('layerNotAvailableInMapProj',{proj:projCode});
-                if (isCustomProj4) {                           
-                  msg = $translate.instant('layerWmsInvalidExtent',{proj:projCode});
-                }
-                errors.push(msg);
+                var projCode = angular.isDefined(targetProj.getCode) ? targetProj.getCode() : targetProj;
+                errors.push($translate.instant('layerNotAvailableInMapProj',{proj:projCode}));
               }
 
               url = getCapLayer.url || url;
@@ -1023,15 +986,15 @@
                 label: getCapLayer.Title,
                 attribution: attribution,
                 attributionUrl: attributionUrl,
-                projection: projCode,
+                projection: targetProj,
                 legend: legend,
                 group: getCapLayer.group,
                 metadata: metadata,
                 extent: bboxProps.extent,
                 minResolution: this.getResolutionFromScale(
-                  mapProj, getCapLayer.MinScaleDenominator),
+                  targetProj, getCapLayer.MinScaleDenominator),
                 maxResolution: this.getResolutionFromScale(
-                  mapProj, getCapLayer.MaxScaleDenominator),
+                  targetProj, getCapLayer.MaxScaleDenominator),
                 useProxy: getCapLayer.useProxy
               });
 
