@@ -53,7 +53,6 @@
 
   <!-- Ignore all gn element -->
   <xsl:template mode="mode-iso19115-3.2018" match="gn:*|@gn:*|@*" priority="1000"/>
-  <xsl:template mode="mode-iso19115-3.2018" match="mdq:DQ_QuantitativeResult|mdq:value[gco:Record/gco:CodeListValue]" priority="1000"/>
 
 
   <!-- Template to display non existing element ie. geonet:child element
