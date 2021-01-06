@@ -575,7 +575,7 @@ public interface IMetadataUtils {
     void cloneFiles(AbstractMetadata original, AbstractMetadata dest);
 
     /**
-     * merge the files from the original metadata to the destination metadata.
+     * Merge the files from the original metadata to the destination metadata.
      * Used when merging creating a draft version to approved copy
      * In this case the files that no longer exists in the draft will be removed from the dest
      *

@@ -78,7 +78,7 @@ public abstract class StoreUtils {
     }
 
     /**
-     * Ues to to remove items from a metadataResource list
+     * Used to remove items from a metadataResource list
      *
      * @param l left list
      * @param r right list
@@ -109,7 +109,7 @@ public abstract class StoreUtils {
 
     /**
      * Replace the attachments of one source metadata to the other target metadata
-     * Ued for moving draft to approved metadata
+     * Used for moving draft metadata resources to approved metadata resources
      *
      *
      * @param context
