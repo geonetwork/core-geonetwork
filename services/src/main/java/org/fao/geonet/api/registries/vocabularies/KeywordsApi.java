@@ -30,18 +30,24 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import net.sf.json.JSONObject;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Constants;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.exception.WebApplicationException;
+import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
@@ -61,6 +67,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -80,7 +87,13 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
+
+import static org.fao.geonet.csw.common.Csw.NAMESPACE_DC;
+import static org.fao.geonet.csw.common.Csw.NAMESPACE_DCT;
+import static org.fao.geonet.kernel.rdf.Selectors.RDF_NAMESPACE;
+import static org.fao.geonet.kernel.rdf.Selectors.SKOS_NAMESPACE;
 
 /**
  * The Class KeywordsApi.
@@ -614,14 +627,6 @@ public class KeywordsApi {
 
     /**
      * Upload thesaurus.
-     *
-     * @param file       the file
-     * @param type       the type
-     * @param dir        the dir
-     * @param stylesheet the stylesheet
-     * @param request    the request
-     * @return the element
-     * @throws Exception the exception
      */
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Uploads a new thesaurus from a file",
@@ -635,7 +640,6 @@ public class KeywordsApi {
         @ApiResponse(responseCode = "201", description = "Thesaurus uploaded in SKOS format."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
     })
-
     @PreAuthorize("hasAuthority('Reviewer')")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -730,6 +734,226 @@ public class KeywordsApi {
                 FileUtils.deleteQuietly(tempDir);
             }
         }
+    }
+
+
+
+
+    /**
+     * Upload CSV file as a thesaurus.
+     */
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Uploads a CSV file and convert it to SKOS format",
+        description = "CSV file MUST contains columns at least for concept id and label. For multilingual thesaurus, consider using columns like label, label_fre, label_ita with languages parameter set to [en, fr, it]. Default language value is used if translations are empty. The thesaurus filename will be the filename of the CSV file (with .rdf extension). It is recommended to set the thesaurus title and namespace URL even if default values will be used based on the filename. Thesaurus dates are set to the date of import."
+    )
+    @RequestMapping(
+        value = "/import/csv",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_XML_VALUE
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Thesaurus converted and imported in SKOS format."),
+        @ApiResponse(responseCode = "200", description = "Thesaurus converted and returned in response in SKOS format."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+    })
+    @PreAuthorize("hasAuthority('Reviewer')")
+    @ResponseBody
+    public void importCsvAsThesaurus(
+        @Parameter(
+            description = "If set, do a file upload.")
+        @RequestParam(value = "file", required = false)
+            MultipartFile file,
+        @Parameter(
+            description = "Local or external (default).")
+        @RequestParam(value = "type", defaultValue = "external")
+            String type,
+        @Parameter(
+            description = "Type of thesaurus, usually one of the ISO thesaurus type codelist value. Default is theme.")
+        @RequestParam(value = "dir", defaultValue = "theme")
+            String dir,
+        @Parameter(
+            description = "Thesaurus namespace. Default is filename.")
+        @RequestParam(value = "thesaurusNs", defaultValue = "")
+            String thesaurusNs,
+        @Parameter(
+            description = "Thesaurus languages")
+        @RequestParam(value = "languages", defaultValue = "en")
+            String[] languages,
+        @Parameter(
+            description = "Thesaurus title. Default is filename.")
+        @RequestParam(value = "thesaurusTitle", defaultValue = "")
+            String thesaurusTitle,
+        @Parameter(
+            description = "Column name for concept id. Default is id.")
+        @RequestParam(value = "conceptIdColumn", defaultValue = "id")
+            String conceptIdColumn,
+        @Parameter(
+            description = "Column name for concept label. Default is label.")
+        @RequestParam(value = "conceptLabelColumn", defaultValue = "label")
+            String conceptLabelColumn,
+        @Parameter(
+            description = "Column name for concept description. Default is description.")
+        @RequestParam(value = "conceptDescriptionColumn", defaultValue = "description")
+            String conceptDescriptionColumn,
+        @Parameter(
+            description = "Column name for broader concept id. Default is broader.")
+        @RequestParam(value = "conceptBroaderIdColumn", defaultValue = "broader")
+            String conceptBroaderIdColumn,
+        @Parameter(
+            description = "Column name for narrower concept id. Default is narrower.")
+        @RequestParam(value = "conceptNarrowerIdColumn", defaultValue = "narrower")
+            String conceptNarrowerIdColumn,
+        @Parameter(
+            description = "Column name for related concept id. Default is related.")
+        @RequestParam(value = "conceptRelatedIdColumn", defaultValue = "related")
+            String conceptRelatedIdColumn,
+        @Parameter(
+            description = "Separator used when multiple broader/narrower/related ids are in the same column. Default is ','.")
+        @RequestParam(value = "conceptLinkSeparator", defaultValue = ",")
+            String conceptLinkSeparator,
+        @Parameter(
+            description = "Import CSV file as thesaurus if true (detault) or return it in  SKOS format.")
+        @RequestParam(value = "importAsThesaurus", defaultValue = "true")
+            boolean importAsThesaurus,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        String fname = file.getOriginalFilename();
+        Log.debug(Geonet.THESAURUS, "Uploading CSV file: " + fname);
+        File tempDir = Files.createTempDirectory("thesaurus").toFile();
+        Path tempFilePath = tempDir.toPath().resolve(file.getOriginalFilename());
+        File convFile = tempFilePath.toFile();
+        file.transferTo(convFile);
+        Path csvFile = convFile.toPath();
+
+        try {
+            if (StringUtils.isEmpty(fname)) {
+                throw new Exception("File missing.");
+            }
+
+            long fsize;
+            if (csvFile != null && Files.exists(csvFile)) {
+                fsize = Files.size(csvFile);
+            } else {
+                throw new MissingServletRequestParameterException("CSV file doesn't exist", "file");
+            }
+
+            if (fsize == 0) {
+                throw new MissingServletRequestParameterException("CSV file has zero size", "file");
+            }
+
+            String extension = FilenameUtils.getExtension(fname);
+            Element element = convertCsvToSkos(csvFile,
+                languages,
+                thesaurusNs,
+                thesaurusTitle,
+                conceptIdColumn,
+                conceptLabelColumn,
+                conceptDescriptionColumn,
+                conceptBroaderIdColumn,
+                conceptNarrowerIdColumn,
+                conceptRelatedIdColumn,
+                conceptLinkSeparator);
+
+            fname = fname.replace(extension, "rdf");
+
+            if(importAsThesaurus) {
+                Path rdfFile = tempDir.toPath().resolve(fname);
+                XMLOutputter xmlOutput = new XMLOutputter();
+                xmlOutput.setFormat(Format.getCompactFormat());
+                xmlOutput.output(element,
+                    new OutputStreamWriter(new FileOutputStream(rdfFile.toFile().getCanonicalPath()),
+                        StandardCharsets.UTF_8));
+                uploadThesaurus(rdfFile, "_none_", context, fname, type, dir);
+                response.setStatus(HttpServletResponse.SC_CREATED);
+            } else {
+                response.addHeader("Content-Disposition", "inline; filename=\"" + fname + "\"");
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.setCharacterEncoding(Constants.ENCODING);
+                response.setContentType(MediaType.APPLICATION_XML_VALUE);
+                response.getOutputStream().write(Xml.getString(element).getBytes());
+            }
+        } finally {
+            if (tempDir != null) {
+                FileUtils.deleteQuietly(tempDir);
+            }
+        }
+    }
+
+    public Element convertCsvToSkos(Path csvFile,
+                                    String[] languages,
+                                    String thesaurusNs,
+                                    String thesaurusTitle,
+                                    String conceptIdColumn,
+                                    String conceptLabelColumn,
+                                    String conceptDescriptionColumn,
+                                    String conceptBroaderIdColumn,
+                                    String conceptNarrowerIdColumn,
+                                    String conceptRelatedIdColumn,
+                                    String conceptLinkSeparator) throws IOException {
+       Log.debug(Geonet.THESAURUS, "Convert CSV file SKOS" + csvFile.getFileName());
+
+       String thesaurusNamespaceUrl = StringUtils.isEmpty(thesaurusNs) ?
+           csvFile.getFileName().toString() + "#" : thesaurusNs;
+       Element thesaurus = new Element("RDF", RDF_NAMESPACE);
+       thesaurus.addContent(buildConceptScheme(csvFile, thesaurusTitle, thesaurusNamespaceUrl));
+
+        try (
+            Reader reader = Files.newBufferedReader(csvFile);
+            CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
+                .withFirstRecordAsHeader()
+                .withIgnoreHeaderCase()
+                .withTrim());
+        ) {
+            for (CSVRecord csvRecord : csvParser) {
+                KeywordBean keyword = new KeywordBean(languagesMapper);
+                keyword.setNamespaceCode(thesaurusNamespaceUrl);
+                keyword.setKeywordUrl(thesaurusNamespaceUrl);
+                keyword.setUriCode(csvRecord.get(conceptIdColumn));
+                Arrays.stream(languages).forEach(l -> {
+                    // Try to get column matching each languages
+                    // If preflabel is in a column label,
+                    // check first if label_eng exist and use it, if not use default
+                    String column = conceptLabelColumn + "_" + l;
+                    Integer position = csvParser.getHeaderMap().get(column);
+                    if (position != null) {
+                        keyword.setValue(csvRecord.get(column), l);
+                    } else {
+                        keyword.setValue(csvRecord.get(conceptLabelColumn), l);
+                    }
+                    if (StringUtils.isNotEmpty(conceptDescriptionColumn)) {
+                        String desccolumn = conceptDescriptionColumn + "_" + l;
+                        Integer descColumnPosition = csvParser.getHeaderMap().get(desccolumn);
+                        if (descColumnPosition != null) {
+                            keyword.setDefinition(csvRecord.get(desccolumn), l);
+                        } else {
+                            keyword.setDefinition(csvRecord.get(conceptDescriptionColumn), l);
+                        }
+                    }
+                });
+                thesaurus.addContent(keyword.getSkos());
+            }
+        }
+        return thesaurus;
+    }
+
+    public Element buildConceptScheme(Path csvFile, String thesaurusTitle, String thesaurusNamespaceUrl) {
+        Element conceptScheme = new Element("ConceptScheme", SKOS_NAMESPACE);
+        conceptScheme.setAttribute("about", thesaurusNamespaceUrl, RDF_NAMESPACE);
+        Element conceptSchemeTitle = new Element("title", NAMESPACE_DC);
+        conceptSchemeTitle.setText(StringUtils.isEmpty(thesaurusTitle) ? csvFile.getFileName().toString() : thesaurusTitle);
+        conceptScheme.addContent(conceptSchemeTitle);
+
+        Element conceptSchemeDateIssued = new Element("issued", NAMESPACE_DCT);
+        Element conceptSchemeDateModified = new Element("issued", NAMESPACE_DCT);
+        String now = new ISODate().toString();
+        conceptSchemeDateIssued.setText(now);
+        conceptSchemeDateModified.setText(now);
+        conceptScheme.addContent(conceptSchemeDateIssued);
+        conceptScheme.addContent(conceptSchemeDateModified);
+        return conceptScheme;
     }
 
 
