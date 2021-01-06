@@ -58,7 +58,7 @@
     </div>
     <div class="btn-group">
       <button type="button"
-              class="btn btn-success navbar-btn"
+              class="btn btn-default navbar-btn"
               aria-label="{{'closeEditor' | translate}}"
               title="{{'closeEditor'|translate}}"
               gn-click-and-spin="close(false, false)"
@@ -67,7 +67,7 @@
         <span class="visible-lg" data-translate="">closeEditor</span>
       </button>
       <button type="button"
-              class="btn btn-success navbar-btn dropdown-toggle"
+              class="btn btn-default navbar-btn dropdown-toggle"
               data-ng-if="((user.isEditorForGroup(gnCurrentEdit.metadata.groupOwner) || user.isAdmin()) && gnCurrentEdit.metadata.mdStatus == 1 && isMdWorkflowEnable) ||
               ((user.isReviewerForGroup(gnCurrentEdit.metadata.groupOwner) || user.isAdmin()) && gnCurrentEdit.metadata.mdStatus == 4)"
               aria-label="{{'showOptions' | translate}}"
