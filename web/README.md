@@ -2,6 +2,9 @@
 
 The web module gathers the static resources and configuration files for building the final web application WAR.
 
+
+## Jetty
+
 1. Run embedded Jetty server:
    
    ```
@@ -10,7 +13,7 @@ The web module gathers the static resources and configuration files for building
    
    The `env-dev` profile above ensures geonetwork runs without a javascript cache allowing testing of changes to `web-ui`.
 
-2. After a moment, GeoNetwork should be accessible at:
+2. After startup, GeoNetwork is accessible at:
    
    * http://localhost:8080/geonetwork
 
@@ -22,11 +25,16 @@ The web module gathers the static resources and configuration files for building
      mvn process-resources
      ```
    
-   * For changes to schema plugins:
+   * For changes to schema plugins compile:
    
      ```
      cd ../schemas
      mvn install
+     ```
+     
+     And then load:
+     
+     ```
      cd ../web
      mvn process-resources
      ```
@@ -37,7 +45,26 @@ The web module gathers the static resources and configuration files for building
      mvn process-resources -DschemasCopy=true
      ```
 
-# Managing Schema Plugins
+## Clean
+
+The build generates, processes and compile files into:
+
+* ``src/main/webapp/WEB-INF/data/config/schema_plugin``
+* ``target/``
+
+Use ``mvn clean`` to remove these files.
+
+In addition running Jetty makes use of a database, data directory and cache:
+
+* ``gn.h2.db``
+* ``gn.trace.db``
+* ``images/``
+* ``jcs_caching/``
+* ``logs/``
+
+Use `mvn clean:clean@reset` to remove these files (or ``mvn clean:clean@js`` to clear the javascript cache).
+
+## Managing Schema Plugins
 
 The web application `src/main/webapp` contains `WEB-INF/data/config/schema_plugins` used
 by the application.
@@ -46,7 +73,6 @@ If your plugin is in the `schemas` folder:
 
 1. The `web/pom.xml` is setup to run jetty and automatically include any additional
    schema plugins in the `schemas` folder.
-   
 
 If your plugin is not in the `schemas` folder:
 
@@ -84,14 +110,14 @@ To include your schema plugin in `web/pom.xml`:
 
 1.  Add a profile to `web/pom.xml` unpacking your schema plugin.
 
-    Use the `iso19115-3.2018` as an example, at the time of writing:
+    Using `iso19115-xyz` as an example:
    
    ```xml
     <profile>
       <id>schema-iso19115-xyz</id>
       <activation>
         <property><name>schemasCopy</name><value>!true</value></property>
-        <file><exists>../schemas/iso19115-3.2018</exists></file>
+        <file><exists>../schemas/iso19115-xyz</exists></file>
       </activation>
       <dependencies>
         <dependency>
@@ -181,4 +207,8 @@ To add your schema plugin to the `schemas-copy` profile:
    * If your plugin is inheriting its version number from `schemas/pom.xml` you may use
      the property `gn.schemas.version`.
 
-6. The `add-schema.sh` script automates these changes.
+6. The `add-schema.sh` script automates these changes:
+
+   ```
+   ./add-schema.sh iso19139.ca.HNAP https://github.com/metadata101/iso19139.ca.HNAP 3.11.x"
+   ```

@@ -721,6 +721,54 @@
             </fileset>
           </filesets>
         </configuration>
+        <executions>
+          <execution>
+            <id>reset</id>
+            <goals><goal>clean</goal></goals>
+            <configuration>
+              <filesets>
+                <fileset> <!-- database -->
+                  <directory>.</directory>
+                  <includes>
+                    <include>gn*</include>
+                  </includes>
+                </fileset>
+                <fileset>
+                  <directory>jcs_caching</directory>
+                  <includes>
+                    <include>**</include>
+                  </includes>
+                </fileset>
+                <fileset>
+                  <directory>logs</directory>
+                  <includes>
+                    <include>**</include>
+                  </includes>
+                </fileset>
+                <fileset>
+                  <directory>images</directory>
+                  <includes>
+                    <include>**</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+          <execution>
+            <id>js</id>
+            <goals><goal>clean</goal></goals>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>jcs_caching</directory>
+                  <includes>
+                    <include>**</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
