@@ -19,6 +19,7 @@ jobs:
       with:
         # 500 commits, set to 0 to get all
         fetch-depth: 500
+        submodules: 'recursive'
     - name: Set up JDK
       uses: actions/setup-java@v1
       with:
@@ -50,6 +51,7 @@ jobs:
       with:
         # 500 commits, set to 0 to get all
         fetch-depth: 500
+        submodules: 'recursive'
     - name: Set up JDK
       uses: actions/setup-java@v1
       with:
