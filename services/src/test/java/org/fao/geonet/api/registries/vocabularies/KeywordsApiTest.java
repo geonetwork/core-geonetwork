@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.api.registries.vocabularies;
 
 import org.fao.geonet.constants.Geonet;
@@ -21,15 +44,15 @@ import static org.fao.geonet.kernel.rdf.Selectors.SKOS_NAMESPACE;
 import static org.junit.Assert.assertEquals;
 
 /**
- export CATALOG=http://localhost:8080/geonetwork
- export CATALOGUSER=admin
- export CATALOGPASS=admin
- rm -f /tmp/cookie;
- curl -s -c /tmp/cookie -o /dev/null -H "accept: application/json" "$CATALOG/srv/api/me";
- export TOKEN=`grep XSRF-TOKEN /tmp/cookie | cut -f 7`;
- curl -H "accept: application/json" -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie "$CATALOG/srv/api/me"
-
- curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -F 'file=@reftax_SIH_20201216.csv' "http://localhost:8080/geonetwork/srv/api/registries/vocabularies/import/csv?importAsThesaurus=true&thesaurusTitle=Taxons&thesaurusNs=https://registry.ifremer.fr/taxref/&languages=en&languages=fr&conceptIdColumn=ID&conceptLabelColumn=NAME&conceptBroaderColumn=PARENT_TAXON_NAME_FK&encoding=ISO-8859-1"
+ * export CATALOG=http://localhost:8080/geonetwork
+ * export CATALOGUSER=admin
+ * export CATALOGPASS=admin
+ * rm -f /tmp/cookie;
+ * curl -s -c /tmp/cookie -o /dev/null -H "accept: application/json" "$CATALOG/srv/api/me";
+ * export TOKEN=`grep XSRF-TOKEN /tmp/cookie | cut -f 7`;
+ * curl -H "accept: application/json" -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie "$CATALOG/srv/api/me"
+ * <p>
+ * curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -F 'file=@reftax_SIH_20201216.csv' "http://localhost:8080/geonetwork/srv/api/registries/vocabularies/import/csv?importAsThesaurus=true&thesaurusTitle=Taxons&thesaurusNs=https://registry.ifremer.fr/taxref/&languages=en&languages=fr&conceptIdColumn=ID&conceptLabelColumn=NAME&conceptBroaderColumn=PARENT_TAXON_NAME_FK&encoding=ISO-8859-1"
  */
 public class KeywordsApiTest extends AbstractServiceIntegrationTest {
 
