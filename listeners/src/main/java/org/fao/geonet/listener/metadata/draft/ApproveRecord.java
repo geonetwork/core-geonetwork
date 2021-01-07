@@ -156,12 +156,14 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 
         if (draft != null) {
             Log.trace(Geonet.DATA_MANAGER, "Approving record " + md.getId() + " which has a draft " + draft.getId());
+
+            XMLOutputter outp = new XMLOutputter();
+            String xmlBefore = outp.outputString(md.getXmlData(false));
+
             md = draftUtilities.replaceMetadataWithDraft(md, draft);
 
             // Throw RecordUpdatedEvent for the published version
             Element afterMetadata = draft.getXmlData(false);
-            XMLOutputter outp = new XMLOutputter();
-            String xmlBefore = outp.outputString(md.getXmlData(false));
             String xmlAfter = outp.outputString(afterMetadata);
             new RecordUpdatedEvent(md.getId(), event.getUser(), xmlBefore, xmlAfter).publish(ApplicationContextHolder.get());
         }
