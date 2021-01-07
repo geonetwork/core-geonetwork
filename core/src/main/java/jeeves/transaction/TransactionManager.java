@@ -203,6 +203,9 @@ public class TransactionManager {
         finally {
             try {
                 fireAfterCommit(context, transactionManager, status);
+                if(! status.isCompleted() ) {
+                    Log.warning( Log.JEEVES, "transactionManager.commit failed to complete");
+                }
             }
             catch( Throwable t) {
                 Log.warning(Log.JEEVES, "Commit transaction - after:", t);
@@ -212,8 +215,11 @@ public class TransactionManager {
 
     /**
      * Notify context AfterCommitTransactionListener instances of transaction status after commit.
-     *
-     * @param context context to obtains listeners from
+     * <p>
+     * Transaction commit listeners can check {@link TransactionStatus#isCompleted()} {@code true} if commit was successful,
+     * or {@code false} if the commmit failed and the code is in an inconsistent state.
+     * </p>
+     * @param context context used to obtain listeners
      * @param transactionManager manager responsible for execution
      * @param status transaction status
      * @throws Throwable
@@ -299,6 +305,10 @@ public class TransactionManager {
 
     /**
      * Notify context AfterRollbackTransactionListener instances of transaction status change.
+     * <p>
+     * Transaction rollback listeners can check {@link TransactionStatus#isCompleted()} {@code true} if rollback was successful,
+     * or {@code false} if the rollback failed and the code is in an inconsistent state.
+     * </p>
      *
      * @param context context used to obtain listeners
      * @param transactionManager manager responsible for execution
@@ -386,6 +396,9 @@ public class TransactionManager {
         finally {
             try {
                 fireAfterRollback(context, transactionManager, status);
+                if(! status.isCompleted() ) {
+                    Log.warning( Log.JEEVES, "transactionManager.rollback incomplete");
+                }
             }
             catch (Throwable t) {
                 Log.warning(Log.JEEVES, "Rolling back transaction - after:", t);
