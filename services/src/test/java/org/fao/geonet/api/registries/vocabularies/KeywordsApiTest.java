@@ -94,7 +94,7 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
         assertEquals(
             "Tax ref", scheme.getChildText("title", NAMESPACE_DC));
         assertEquals(
-            1, scheme.getChildren("hasTopConcept", SKOS_NAMESPACE));
+            1, scheme.getChildren("hasTopConcept", SKOS_NAMESPACE).size());
 
         List concepts = thesaurus.getChildren("Concept", SKOS_NAMESPACE);
         assertEquals(3, concepts.size());
@@ -102,8 +102,6 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
         assertEquals("en", firstConcept.getChild("prefLabel", SKOS_NAMESPACE).getAttributeValue("lang", Geonet.Namespaces.XML));
         assertEquals("Nectamia",
             firstConcept.getChildText("prefLabel", SKOS_NAMESPACE));
-        assertEquals("Nectamia desc",
-            firstConcept.getChildText("scopeNote", SKOS_NAMESPACE));
 
         List broaders = firstConcept.getChildren("broader", SKOS_NAMESPACE);
         assertEquals(2, broaders.size());
@@ -113,7 +111,7 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
 
 
     @Test
-    public void testConvertCsvToSkosMultilingual() throws Exception {
+    public void testConvertCsvToSkosMultilingualWithDescription() throws Exception {
         createServiceContext();
         User user = new User().setId(USER_ID);
         HttpSession session = loginAs(user);
@@ -129,6 +127,7 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
         request.setSession(session);
         request.setParameter("thesaurusNs", "https://registry.org/Taxref#");
         request.setParameter("thesaurusTitle", "Tax ref");
+        request.setParameter("conceptDescriptionColumn", "description");
         request.setParameter("languages", "en", "fr", "it");
         request.setParameter("importAsThesaurus", "false");
 
