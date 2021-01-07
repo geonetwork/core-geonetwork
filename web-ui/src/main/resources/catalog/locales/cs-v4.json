@@ -125,5 +125,13 @@
   "replaceByThoseCategories-help": "Odebrat kategorie záznamu a poté přidat (zaškrtnuto pomocí +) nebo odebrat (zaškrtávací políčko s -) vybrané kategorie.",
   "clearValidationStatus": "Vymazat stav ověření",
   "addThoseOperations-help": "Přidat (zaškrtnuto pomocí +) nebo odebrat (zaškrtávací políčko s -) vybranými oprávněními.",
-  "replaceByThoseOperations-help": "Odebrat oprávnění záznamu a poté přidat (zaškrtnuto pomocí +) nebo odebrat (zaškrtávací políčko s -) vybranými oprávněními."
+  "replaceByThoseOperations-help": "Odebrat oprávnění záznamu a poté přidat (zaškrtnuto pomocí +) nebo odebrat (zaškrtávací políčko s -) vybranými oprávněními.",
+  "ui-dateFormat": "Formát data",
+  "ui-dateFormat-help": "Formát data ve výchozím zobrazení záznamu.",
+  "ui-timezone": "Časové pásmo uživatelského rozhraní",
+  "ui-timezone-help": "Časové pásmo, které se má použít k vykreslení data ve výchozím zobrazení, a možnost, která se má přidat do výběru data editoru. Pokud v katalogu není potřeba zpracovávat více časových pásem, nastavte tuto hodnotu na časové pásmo serveru (viz admin > nastavení). „prohlížeč“ označuje použití časového pásma prohlížeče.",
+  "NoTimezone": "Žádné časové pásmo",
+  "YourTimezone": "Vaše časové pásmo",
+  "CatalogTimezone": "Časové pásmo serveru",
+  "CatalogUiTimezone": "Doporučené časové pásmo"
 }

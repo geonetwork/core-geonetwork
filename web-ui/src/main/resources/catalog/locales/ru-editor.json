@@ -37,6 +37,7 @@
     "chooseContactRole": "или выберите роль",
     "chooseEntry": "Каталог поиска",
     "clickToAddResource": "Нажмите, чтобы выбрать этот ресурс",
+    "externalResourceManagement": "Click to go to external resource manager",
     "beforeUnloadEditor": "Вы можете иметь несохраненные изменения с момента последнего сохранения {{timeAgo}}.",
     "fieldIsRemoved": "This field will be removed",
     "editRecords": "Edit selection",
