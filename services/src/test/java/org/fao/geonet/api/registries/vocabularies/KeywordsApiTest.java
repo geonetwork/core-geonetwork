@@ -21,8 +21,6 @@ import static org.fao.geonet.kernel.rdf.Selectors.SKOS_NAMESPACE;
 import static org.junit.Assert.assertEquals;
 
 /**
- curl -s -c /tmp/cookie -o /dev/null -X POST "$CATALOG/srv/eng/info?type=me";
-
  export CATALOG=http://localhost:8080/geonetwork
  export CATALOGUSER=admin
  export CATALOGPASS=admin
@@ -31,7 +29,7 @@ import static org.junit.Assert.assertEquals;
  export TOKEN=`grep XSRF-TOKEN /tmp/cookie | cut -f 7`;
  curl -H "accept: application/json" -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie "$CATALOG/srv/api/me"
 
- curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -F 'file=@reftax_SIH_20201216.csv' "http://localhost:8080/geonetwork/srv/api/registries/vocabularies/import/csv?importAsThesaurus=false&thesaurusTitle=Taxons&thesaurusNs=https://registry.ifremer.fr/taxref/&languages=en&conceptIdColumn=id&conceptLabelColumn=label"
+ curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -F 'file=@reftax_SIH_20201216.csv' "http://localhost:8080/geonetwork/srv/api/registries/vocabularies/import/csv?importAsThesaurus=true&thesaurusTitle=Taxons&thesaurusNs=https://registry.ifremer.fr/taxref/&languages=en&conceptIdColumn=id&conceptLabelColumn=label"
  */
 public class KeywordsApiTest extends AbstractServiceIntegrationTest {
 
@@ -58,6 +56,7 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
         request.setSession(session);
         request.setParameter("thesaurusNs", "https://registry.org/Taxref#");
         request.setParameter("thesaurusTitle", "Tax ref");
+        request.setParameter("conceptRelatedIdColumn", "CITATION_FK");
         request.setParameter("importAsThesaurus", "false");
 
 
@@ -67,7 +66,7 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
 
 
         Element thesaurus = Xml.loadString(response.getContentAsString(), false);
-
+System.out.println(Xml.getString(thesaurus));
         Element scheme = (Element) thesaurus.getChildren("ConceptScheme", SKOS_NAMESPACE).get(0);
         assertEquals(
             "https://registry.org/Taxref#", scheme.getAttributeValue("about", RDF_NAMESPACE));
@@ -78,8 +77,15 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
         assertEquals(3, concepts.size());
         Element firstConcept = (Element) concepts.get(0);
         assertEquals("en", firstConcept.getChild("prefLabel", SKOS_NAMESPACE).getAttributeValue("lang", Geonet.Namespaces.XML));
-        assertEquals("Nectamia", firstConcept.getChildText("prefLabel", SKOS_NAMESPACE));
-        assertEquals("Nectamia desc", firstConcept.getChildText("scopeNote", SKOS_NAMESPACE));
+        assertEquals("Nectamia",
+            firstConcept.getChildText("prefLabel", SKOS_NAMESPACE));
+        assertEquals("Nectamia desc",
+            firstConcept.getChildText("scopeNote", SKOS_NAMESPACE));
+
+        List broaders = firstConcept.getChildren("broader", SKOS_NAMESPACE);
+        assertEquals(2, broaders.size());
+        assertEquals("https://registry.org/Taxref#11746",
+            ((Element) broaders.get(0)).getAttributeValue("resource", RDF_NAMESPACE));
     }
 
 

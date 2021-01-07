@@ -89,6 +89,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_DC;
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_DCT;
@@ -808,8 +809,8 @@ public class KeywordsApi {
         @RequestParam(value = "conceptRelatedIdColumn", defaultValue = "related")
             String conceptRelatedIdColumn,
         @Parameter(
-            description = "Separator used when multiple broader/narrower/related ids are in the same column. Default is ','.")
-        @RequestParam(value = "conceptLinkSeparator", defaultValue = ",")
+            description = "Separator used when multiple broader/narrower/related ids are in the same column. Default is '|'.")
+        @RequestParam(value = "conceptLinkSeparator", defaultValue = "\\|")
             String conceptLinkSeparator,
         @Parameter(
             description = "Import CSV file as thesaurus if true (detault) or return it in  SKOS format.")
@@ -907,6 +908,12 @@ public class KeywordsApi {
                 .withIgnoreHeaderCase()
                 .withTrim());
         ) {
+
+            Map<String, KeywordBean> allConcepts = new LinkedHashMap<>();
+            Map<String, List<String>> broaderLinks = new HashMap<>();
+            Map<String, List<String>> narrowerLinks = new HashMap<>();
+            Map<String, List<String>> relatedLinks = new HashMap<>();
+
             for (CSVRecord csvRecord : csvParser) {
                 KeywordBean keyword = new KeywordBean(languagesMapper);
                 keyword.setNamespaceCode(thesaurusNamespaceUrl);
@@ -933,10 +940,55 @@ public class KeywordsApi {
                         }
                     }
                 });
-                thesaurus.addContent(keyword.getSkos());
+
+                String key = keyword.getKeywordUrl() + keyword.getUriCode();
+
+                extractRelated(key, thesaurusNamespaceUrl, csvParser, csvRecord,
+                                conceptLinkSeparator, conceptBroaderIdColumn,
+                                broaderLinks);
+                extractRelated(key, thesaurusNamespaceUrl, csvParser, csvRecord,
+                                conceptLinkSeparator, conceptNarrowerIdColumn,
+                                narrowerLinks);
+                extractRelated(key, thesaurusNamespaceUrl, csvParser, csvRecord,
+                                conceptLinkSeparator, conceptRelatedIdColumn,
+                                relatedLinks);
+
+                allConcepts.put(key, keyword);
             }
+
+            allConcepts.forEach((uri, keyword) -> {
+                Element keywordSkos = keyword.getSkos();
+                addRelated(uri, keywordSkos, "broader", broaderLinks);
+                addRelated(uri, keywordSkos, "narrower", narrowerLinks);
+                addRelated(uri, keywordSkos, "related", relatedLinks);
+                thesaurus.addContent(keywordSkos);
+            });
         }
         return thesaurus;
+    }
+
+    private void extractRelated(String key, String thesaurusNamespaceUrl, CSVParser csvParser, CSVRecord csvRecord, String conceptLinkSeparator, String column, Map<String, List<String>> list) {
+        if (csvParser.getHeaderMap().get(column) != null) {
+            list.put(
+                key,
+                Arrays.stream(csvRecord.get(column).split(conceptLinkSeparator))
+                    .map(c -> {
+                        return thesaurusNamespaceUrl + c;
+                    })
+                    .collect(Collectors.toList())
+            );
+        }
+    }
+
+    private void addRelated(String uri, Element keywordSkos, String type, Map<String, List<String>> broaderLinks) {
+        Optional.ofNullable(broaderLinks.get(uri))
+            .orElseGet(Collections::emptyList)
+            .stream()
+            .filter(Objects::nonNull).forEach(b -> {
+            Element broader = new Element(type, SKOS_NAMESPACE);
+            broader.setAttribute("resource", b, RDF_NAMESPACE);
+            keywordSkos.addContent(broader);
+        });
     }
 
     public Element buildConceptScheme(Path csvFile, String thesaurusTitle, String thesaurusNamespaceUrl) {
