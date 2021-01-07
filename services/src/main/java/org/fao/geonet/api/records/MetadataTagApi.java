@@ -316,7 +316,7 @@ public class MetadataTagApi {
                                 info.getCategories().add(category);
                                 listOfUpdatedRecords.add(String.valueOf(info.getId()));
                             } else {
-                                report.addMetadataInfos(info.getId(), String.format(
+                                report.addMetadataInfos(info, String.format(
                                     "Can't assign non existing category with id '%d' to record '%s'",
                                     c, info.getUuid()
                                 ));
@@ -330,7 +330,7 @@ public class MetadataTagApi {
                                 info.getCategories().remove(category);
                                 listOfUpdatedRecords.add(String.valueOf(info.getId()));
                             } else {
-                                report.addMetadataInfos(info.getId(), String.format(
+                                report.addMetadataInfos(info, String.format(
                                     "Can't remove non existing category with id '%d' to record '%s'",
                                     c, info.getUuid()
                                 ));

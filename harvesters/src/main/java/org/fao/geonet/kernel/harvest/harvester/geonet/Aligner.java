@@ -858,7 +858,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
     }
 
     private void removeOldFile(Store store, String metadataUuid, Element infoFiles, MetadataResourceVisibility visibility) throws Exception {
-        final List<MetadataResource> resources = store.getResources(context, metadataUuid, visibility, null);
+        final List<MetadataResource> resources = store.getResources(context, metadataUuid, visibility, null, true);
         for (MetadataResource resource: resources) {
             if (infoFiles != null && !existsFile(resource.getId(), infoFiles)) {
                 if (log.isDebugEnabled()) {

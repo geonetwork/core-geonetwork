@@ -415,7 +415,7 @@ public class MetadataSharingApi {
                                 // If building a report of the sharing, annotate the error and continue
                                 // processing the other group privileges, otherwise throw the exception
                                 if (report != null) {
-                                    report.addMetadataError(metadata.getId(), ex.getMessage());
+                                    report.addMetadataError(metadata, ex.getMessage());
                                     break;
                                 } else {
                                     throw ex;
@@ -826,7 +826,7 @@ public class MetadataSharingApi {
                     String.valueOf(metadata.getId()),
                     String.valueOf(groupIdentifier),
                     false);
-                report.addMetadataInfos(metadata.getId(), String.format(
+                report.addMetadataInfos(metadata, String.format(
                     "No privileges for user '%s' on metadata '%s', so setting default privileges",
                     sourceUsr, metadata.getUuid()
                 ));

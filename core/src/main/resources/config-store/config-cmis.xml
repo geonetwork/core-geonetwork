@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<beans
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.springframework.org/schema/beans"
+        xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    ">
+
+<!--   If you want data stored in cmis compliant application, use the following: -->
+<!-- Alfrsco sample -->
+<!--    <bean id="cmisconfiguration" class="org.fao.geonet.resources.CMISConfiguration">-->
+<!--      &lt;!&ndash;property name="repositoryId" value="-default-"/&ndash;&gt;-->
+<!--      <property name="baseRepositoryPath" value="geonetwork"/>-->
+<!--      <property name="servicesBaseUrl" value="http://localhost:8080/alfresco"/>-->
+<!--      <property name="bindingType" value="browser"/>-->
+<!--      <property name="browserUrl" value="/api/-default-/public/cmis/versions/1.1/browser"/>-->
+<!--      <property name="username" value="username"/>-->
+<!--      <property name="password" value="password"/>      -->
+<!--      &lt;!&ndash;property name="bindingType" value="atompub"/>-->
+<!--      <property name="atompubUrl" value="/api/-default-/public/cmis/versions/1.1/atom"/&ndash;&gt;-->
+<!--      &lt;!&ndash;property name="bindingType" value="webservices"/>-->
+<!--      <property name="externalResourceManagementUrl" value="http://localhost:8080/share/page/document-details?nodeRef=workspace://SpacesStore/{cmisobjectid}"/>-->
+<!--      <property name="externalResourceManagementWindowParameters" value="toolbar=0,width=600,height=600"/>-->
+<!--      <property name="externalResourceManagementModalEnabled" value="true"/>-->
+<!--    </bean>-->
+
+<!-- Open Text sample -->
+<!--<bean id="cmisconfiguration" class="org.fao.geonet.resources.CMISConfiguration">-->
+<!--    <property name="repositoryName" value="Enterprise"/>-->
+<!--    <property name="baseRepositoryPath" value="geonetwork"/>-->
+<!--    <property name="servicesBaseUrl" value="http://localhost:8080/xecm-cmis"/>-->
+<!--    <property name="bindingType" value="browser"/>-->
+<!--    <property name="browserUrl" value="/browser"/>-->
+<!--    <property name="username" value="username"/>-->
+<!--    <property name="password" value="password"/>-->
+<!--    &lt;!&ndash;property name="bindingType" value="atompub"/>-->
+<!--    <property name="atompubUrl" value="/api/-default-/public/cmis/versions/1.1/atom"/&ndash;&gt;-->
+<!--    &lt;!&ndash;property name="bindingType" value="webservices"/>-->
+<!--</bean>-->
+
+    <!-- Using default configuration which collect values from env variables.
+       CMIS_REPOSITORY_ID=-default-
+       CMIS_USERNAME=username
+       CMIS_PASSWORD=password
+       CMIS_SERVICES_BASE_URL=http://localhost:8080/alfresco
+       CMIS_BASE_REPOSITORY_PATH=geonetwork
+       CMIS_BINDING_TYPE=browser
+       CMIS_BROWSER_URL=/api/-default-/public/cmis/versions/1.1/browser
+       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_URL=http://localhost:8080/share/page/document-details?nodeRef=workspace://SpacesStore/{cmisobjectid}
+       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_WINDOW_PARAMETERS=toolbar=0,width=600,height=600
+       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_MODAL_ENABLED=true
+       CMIS_VERSIONING_ENABLED=true
+    -->
+    <bean id="cmisconfiguration" class="org.fao.geonet.resources.CMISConfiguration">
+    </bean>
+
+    <bean id="filesystemStore"
+          class="org.fao.geonet.api.records.attachments.CMISStore" />
+
+    <bean id="resourceStore"
+          class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">
+        <constructor-arg index="0" ref="filesystemStore"/>
+    </bean>
+
+    <bean id="resources" class="org.fao.geonet.resources.CMISResources"/>
+
+</beans>

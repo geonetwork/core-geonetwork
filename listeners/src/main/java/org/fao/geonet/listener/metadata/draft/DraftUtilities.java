@@ -1,6 +1,7 @@
 package org.fao.geonet.listener.metadata.draft;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.XmlSerializer;
@@ -13,6 +14,7 @@ import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,6 +54,10 @@ public class DraftUtilities {
 
     @Autowired
     IMetadataUtils metadataUtils;
+
+    @Autowired
+    @Qualifier("resourceStore")
+    private Store store;
 
     /**
      * Replace the contents of the record with the ones on the draft, if exists, and
@@ -115,7 +121,8 @@ public class DraftUtilities {
         }
 
         // Reassign file uploads
-        draftMetadataUtils.cloneFiles(draft, md);
+        draftMetadataUtils.replaceFiles(draft, md);
+
         metadataFileUploadRepository.deleteAll(MetadataFileUploadSpecs.hasMetadataId(md.getId()));
         List<MetadataFileUpload> fileUploads = metadataFileUploadRepository
             .findAll(MetadataFileUploadSpecs.hasMetadataId(draft.getId()));
@@ -129,6 +136,7 @@ public class DraftUtilities {
             Element xmlData = draft.getXmlData(false);
             String changeDate = draft.getDataInfo().getChangeDate().getDateAndTime();
 
+            store.delResources(context, draft.getUuid(), false);
             removeDraft((MetadataDraft) draft);
 
             // Copy contents
