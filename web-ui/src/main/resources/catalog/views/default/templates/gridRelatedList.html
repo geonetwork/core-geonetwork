@@ -19,12 +19,13 @@
       <!--<li class="gn-related-type">
         {{::relations[type].length}}&nbsp;{{type | translate}}
       </li>-->
-      <li ng-repeat="r in ::relations[type]" >
+      <li ng-repeat="r in ::relations[type]"
+          data-ng-init="mainType = config.getType(r, type);">
         <a ng-show="$index < max || displayState[type]"
-           href="{{location.origin}}{{location.pathname}}#/metadata/{{r.id}}"
+           data-ng-click="config.doAction(mainType, r, md)"
            title="{{('link-' + type) | translate}} > -{{r.title | gnLocalized: lang}}">
           <i class="fa fa-fw gn-icon-{{type}}"></i>
-          {{r.title | gnLocalized: lang | characters:80}}
+          {{r.title | gnLocalized: lang | characters:60}}
         </a>
       </li>
       <li ng-if="relations[type].length > max && !display">
