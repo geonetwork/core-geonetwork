@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
  export TOKEN=`grep XSRF-TOKEN /tmp/cookie | cut -f 7`;
  curl -H "accept: application/json" -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie "$CATALOG/srv/api/me"
 
- curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -F 'file=@reftax_SIH_20201216.csv' "http://localhost:8080/geonetwork/srv/api/registries/vocabularies/import/csv?importAsThesaurus=true&thesaurusTitle=Taxons&thesaurusNs=https://registry.ifremer.fr/taxref/&languages=en&conceptIdColumn=id&conceptLabelColumn=label"
+ curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -F 'file=@reftax_SIH_20201216.csv' "http://localhost:8080/geonetwork/srv/api/registries/vocabularies/import/csv?importAsThesaurus=true&thesaurusTitle=Taxons&thesaurusNs=https://registry.ifremer.fr/taxref/&languages=en&languages=fr&conceptIdColumn=ID&conceptLabelColumn=NAME&conceptBroaderColumn=PARENT_TAXON_NAME_FK&encoding=ISO-8859-1"
  */
 public class KeywordsApiTest extends AbstractServiceIntegrationTest {
 
@@ -64,14 +64,14 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
         invoker.invoke(request, response);
         assertEquals(200, response.getStatus());
 
-
         Element thesaurus = Xml.loadString(response.getContentAsString(), false);
-System.out.println(Xml.getString(thesaurus));
         Element scheme = (Element) thesaurus.getChildren("ConceptScheme", SKOS_NAMESPACE).get(0);
         assertEquals(
             "https://registry.org/Taxref#", scheme.getAttributeValue("about", RDF_NAMESPACE));
         assertEquals(
             "Tax ref", scheme.getChildText("title", NAMESPACE_DC));
+        assertEquals(
+            1, scheme.getChildren("hasTopConcept", SKOS_NAMESPACE));
 
         List concepts = thesaurus.getChildren("Concept", SKOS_NAMESPACE);
         assertEquals(3, concepts.size());
@@ -117,7 +117,6 @@ System.out.println(Xml.getString(thesaurus));
 
         Element thesaurus = Xml.loadString(response.getContentAsString(), false);
 
-        System.out.println(Xml.getString(thesaurus));
         Element scheme = (Element) thesaurus.getChildren("ConceptScheme", SKOS_NAMESPACE).get(0);
         assertEquals(
             "https://registry.org/Taxref#", scheme.getAttributeValue("about", RDF_NAMESPACE));

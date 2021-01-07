@@ -84,6 +84,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -773,6 +774,10 @@ public class KeywordsApi {
         @RequestParam(value = "dir", defaultValue = "theme")
             String dir,
         @Parameter(
+            description = "Encoding. Default is UTF-8.")
+        @RequestParam(value = "encoding", defaultValue = "UTF-8")
+            String encoding,
+        @Parameter(
             description = "Thesaurus namespace. Default is filename.")
         @RequestParam(value = "thesaurusNs", defaultValue = "")
             String thesaurusNs,
@@ -794,7 +799,7 @@ public class KeywordsApi {
             String conceptLabelColumn,
         @Parameter(
             description = "Column name for concept description. Default is description.")
-        @RequestParam(value = "conceptDescriptionColumn", defaultValue = "description")
+        @RequestParam(value = "conceptDescriptionColumn", defaultValue = "")
             String conceptDescriptionColumn,
         @Parameter(
             description = "Column name for broader concept id. Default is broader.")
@@ -848,6 +853,7 @@ public class KeywordsApi {
             String extension = FilenameUtils.getExtension(fname);
             Element element = convertCsvToSkos(csvFile,
                 languages,
+                encoding,
                 thesaurusNs,
                 thesaurusTitle,
                 conceptIdColumn,
@@ -885,6 +891,7 @@ public class KeywordsApi {
 
     public Element convertCsvToSkos(Path csvFile,
                                     String[] languages,
+                                    String encoding,
                                     String thesaurusNs,
                                     String thesaurusTitle,
                                     String conceptIdColumn,
@@ -898,11 +905,10 @@ public class KeywordsApi {
 
        String thesaurusNamespaceUrl = StringUtils.isEmpty(thesaurusNs) ?
            csvFile.getFileName().toString() + "#" : thesaurusNs;
-       Element thesaurus = new Element("RDF", RDF_NAMESPACE);
-       thesaurus.addContent(buildConceptScheme(csvFile, thesaurusTitle, thesaurusNamespaceUrl));
+        Element thesaurus = new Element("RDF", RDF_NAMESPACE);
 
         try (
-            Reader reader = Files.newBufferedReader(csvFile);
+            Reader reader = Files.newBufferedReader(csvFile, Charset.forName(encoding));
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
                 .withFirstRecordAsHeader()
                 .withIgnoreHeaderCase()
@@ -913,48 +919,70 @@ public class KeywordsApi {
             Map<String, List<String>> broaderLinks = new HashMap<>();
             Map<String, List<String>> narrowerLinks = new HashMap<>();
             Map<String, List<String>> relatedLinks = new HashMap<>();
+            List<String> topConcepts = new ArrayList<>();
 
             for (CSVRecord csvRecord : csvParser) {
-                KeywordBean keyword = new KeywordBean(languagesMapper);
-                keyword.setNamespaceCode(thesaurusNamespaceUrl);
-                keyword.setKeywordUrl(thesaurusNamespaceUrl);
-                keyword.setUriCode(csvRecord.get(conceptIdColumn));
-                Arrays.stream(languages).forEach(l -> {
-                    // Try to get column matching each languages
-                    // If preflabel is in a column label,
-                    // check first if label_eng exist and use it, if not use default
-                    String column = conceptLabelColumn + "_" + l;
-                    Integer position = csvParser.getHeaderMap().get(column);
-                    if (position != null) {
-                        keyword.setValue(csvRecord.get(column), l);
-                    } else {
-                        keyword.setValue(csvRecord.get(conceptLabelColumn), l);
-                    }
-                    if (StringUtils.isNotEmpty(conceptDescriptionColumn)) {
-                        String desccolumn = conceptDescriptionColumn + "_" + l;
-                        Integer descColumnPosition = csvParser.getHeaderMap().get(desccolumn);
-                        if (descColumnPosition != null) {
-                            keyword.setDefinition(csvRecord.get(desccolumn), l);
+                try {
+                    KeywordBean keyword = new KeywordBean(languagesMapper);
+                    keyword.setNamespaceCode(thesaurusNamespaceUrl);
+                    keyword.setKeywordUrl(thesaurusNamespaceUrl);
+                    keyword.setUriCode(csvRecord.get(conceptIdColumn));
+                    Arrays.stream(languages).forEach(l -> {
+                        // Try to get column matching each languages
+                        // If preflabel is in a column label,
+                        // check first if label_eng exist and use it, if not use default
+                        String column = conceptLabelColumn + "_" + l;
+                        Integer position = csvParser.getHeaderMap().get(column);
+                        if (position != null) {
+                            keyword.setValue(csvRecord.get(column), l);
                         } else {
-                            keyword.setDefinition(csvRecord.get(conceptDescriptionColumn), l);
+                            keyword.setValue(csvRecord.get(conceptLabelColumn), l);
                         }
+                        if (StringUtils.isNotEmpty(conceptDescriptionColumn)) {
+                            String desccolumn = conceptDescriptionColumn + "_" + l;
+                            Integer descColumnPosition = csvParser.getHeaderMap().get(desccolumn);
+                            if (descColumnPosition != null) {
+                                keyword.setDefinition(csvRecord.get(desccolumn), l);
+                            } else if (csvParser.getHeaderMap().get(conceptDescriptionColumn) != null) {
+                                keyword.setDefinition(csvRecord.get(conceptDescriptionColumn), l);
+                            }
+                        }
+                    });
+
+                    String key = keyword.getKeywordUrl() + keyword.getUriCode();
+
+                    extractRelated(key, thesaurusNamespaceUrl, csvParser, csvRecord,
+                        conceptLinkSeparator, conceptBroaderIdColumn,
+                        broaderLinks);
+                    if (broaderLinks.get(key) == null || broaderLinks.get(key).size() == 0) {
+                        topConcepts.add(key);
                     }
-                });
+                    extractRelated(key, thesaurusNamespaceUrl, csvParser, csvRecord,
+                        conceptLinkSeparator, conceptNarrowerIdColumn,
+                        narrowerLinks);
+                    extractRelated(key, thesaurusNamespaceUrl, csvParser, csvRecord,
+                        conceptLinkSeparator, conceptRelatedIdColumn,
+                        relatedLinks);
 
-                String key = keyword.getKeywordUrl() + keyword.getUriCode();
+                    allConcepts.put(key, keyword);
+                } catch (Exception ex) {
+                    Log.error(Geonet.THESAURUS, String.format(
+                        "Error reading CSV line '%s'. Error is %s",
+                        csvRecord.toString(),
+                        ex.getMessage()));
 
-                extractRelated(key, thesaurusNamespaceUrl, csvParser, csvRecord,
-                                conceptLinkSeparator, conceptBroaderIdColumn,
-                                broaderLinks);
-                extractRelated(key, thesaurusNamespaceUrl, csvParser, csvRecord,
-                                conceptLinkSeparator, conceptNarrowerIdColumn,
-                                narrowerLinks);
-                extractRelated(key, thesaurusNamespaceUrl, csvParser, csvRecord,
-                                conceptLinkSeparator, conceptRelatedIdColumn,
-                                relatedLinks);
-
-                allConcepts.put(key, keyword);
+                }
             }
+
+            Element scheme = buildConceptScheme(csvFile, thesaurusTitle, thesaurusNamespaceUrl);
+            if(broaderLinks.size() > 0 && topConcepts.size() > 0) {
+                topConcepts.forEach(t -> {
+                    Element topConcept = new Element("hasTopConcept", SKOS_NAMESPACE);
+                    topConcept.setAttribute("resource", t, RDF_NAMESPACE);
+                    scheme.addContent(topConcept);
+                });
+            }
+            thesaurus.addContent(scheme);
 
             allConcepts.forEach((uri, keyword) -> {
                 Element keywordSkos = keyword.getSkos();
@@ -972,6 +1000,7 @@ public class KeywordsApi {
             list.put(
                 key,
                 Arrays.stream(csvRecord.get(column).split(conceptLinkSeparator))
+                    .filter(StringUtils::isNotEmpty)
                     .map(c -> {
                         return thesaurusNamespaceUrl + c;
                     })
