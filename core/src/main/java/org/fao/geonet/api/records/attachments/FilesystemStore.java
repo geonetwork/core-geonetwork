@@ -148,7 +148,7 @@ public class FilesystemStore extends AbstractStore {
                                         final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility,
                                         Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
-        Path filePath = getPath(context, metadataId, visibility, filename);
+        Path filePath = getPath(context, metadataId, visibility, filename, approved);
         Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
         if (changeDate != null) {
             IO.touch(filePath, FileTime.from(changeDate.getTime(), TimeUnit.MILLISECONDS));
@@ -160,13 +160,14 @@ public class FilesystemStore extends AbstractStore {
     private Path getPath(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String fileName,
                          Boolean approved) throws Exception {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
-        return getPath(context, metadataId, visibility, fileName);
+        return getPath(context, metadataId, visibility, fileName, approved);
     }
 
-    private Path getPath(ServiceContext context, int metadataId, MetadataResourceVisibility visibility, String fileName) throws Exception {
+    private Path getPath(ServiceContext context, int metadataId, MetadataResourceVisibility visibility, String fileName,
+                         Boolean approved) throws Exception {
         final Path folderPath = ensureDirectory(context, metadataId, fileName, visibility);
         Path filePath = folderPath.resolve(fileName);
-        if (Files.exists(filePath)) {
+        if (Files.exists(filePath) && !approved) {
             throw new ResourceAlreadyExistException(
                     String.format("A resource with name '%s' and status '%s' already exists for metadata '%d'.", fileName, visibility,
                                   metadataId));
