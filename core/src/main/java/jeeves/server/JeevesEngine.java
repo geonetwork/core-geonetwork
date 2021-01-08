@@ -439,9 +439,8 @@ public class JeevesEngine {
             srvContext.setLanguage(_defaultLang);
             srvContext.setLogger(_appHandLogger);
             srvContext.setServlet(servlet);
-            srvContext.setAsThreadLocal();
-
             try {
+                srvContext.setAsThreadLocal();
                 info("--- Starting handler --------------------------------------");
 
                 Object context = h.start(handler, srvContext);
@@ -471,6 +470,10 @@ public class JeevesEngine {
                 if (!serviceMan.isStartupError()) {
                     serviceMan.setStartupErrors(errors);
                 }
+            }
+            finally {
+                srvContext.clearAsThreadLocal();
+                srvContext.clear();
             }
         }
     }

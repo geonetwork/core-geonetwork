@@ -106,6 +106,8 @@ public class AtomPredefinedFeed {
 
         ServiceContext context = createServiceContext(Geonet.DEFAULT_LANGUAGE, webRequest.getNativeRequest(HttpServletRequest.class));
 
+    try {
+
         SettingManager sm = context.getBean(SettingManager.class);
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
         if (!inspireEnable) {
@@ -115,6 +117,10 @@ public class AtomPredefinedFeed {
 
         Element feed = getServiceFeed(context, uuid, language);
         return writeOutResponse(Xml.getString(feed),"application", "atom+xml");
+
+      } finally {
+          context.clear(); // prevent further use
+      }
     }
 
     /**
@@ -139,6 +145,8 @@ public class AtomPredefinedFeed {
     {
         ServiceContext context = createServiceContext("eng", webRequest.getNativeRequest(HttpServletRequest.class));
 
+      try {
+
         SettingManager sm = context.getBean(SettingManager.class);
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
         if (!inspireEnable) {
@@ -152,6 +160,12 @@ public class AtomPredefinedFeed {
         }
         Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, params, language);
         return writeOutResponse(Xml.getString(feed), "application", "atom+xml");
+
+
+      } finally {
+          context.clear(); // prevent further use
+      }
+
     }
 
     private Element getServiceFeed(ServiceContext context, final String uuid, final String language) throws Exception {
@@ -242,7 +256,7 @@ public class AtomPredefinedFeed {
             NativeWebRequest webRequest) throws Exception
     {
         ServiceContext context = createServiceContext(Geonet.DEFAULT_LANGUAGE, webRequest.getNativeRequest(HttpServletRequest.class));
-
+      try {
         SettingManager sm = context.getBean(SettingManager.class);
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
         if (!inspireEnable) {
@@ -293,6 +307,10 @@ public class AtomPredefinedFeed {
             InspireAtomUtil.filterDatasetFeedByCrs(feed, crs);
             return writeOutResponse(Xml.getString(feed),"application", "atom+xml");
         }
+
+      } finally {
+          context.clear(); // prevent further use
+      }
     }
 
     private HttpEntity<byte[]> redirectResponse(String location) throws Exception {
@@ -338,7 +356,7 @@ public class AtomPredefinedFeed {
             NativeWebRequest webRequest) throws Exception {
 
         ServiceContext context = createServiceContext(Geonet.DEFAULT_LANGUAGE, webRequest.getNativeRequest(HttpServletRequest.class));
-
+     try {
         SettingManager sm = context.getBean(SettingManager.class);
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
         if (!inspireEnable) {
@@ -348,6 +366,12 @@ public class AtomPredefinedFeed {
 
         Element description = getOpenSearchDescription(context, uuid);
         return writeOutResponse(Xml.getString(description), "application", "opensearchdescription+xml");
+
+
+      } finally {
+          context.clear(); // prevent further use
+      }
+
     }
 
     private Element getOpenSearchDescription(ServiceContext context, final String uuid) throws Exception {

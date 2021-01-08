@@ -99,7 +99,7 @@ public class Set {
 
         ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
         ServiceContext context = serviceManager.createServiceContext("md.thumbnail.upload", lang, request);
-
+     try {
         Lib.resource.checkEditPrivilege(context, id);
 
         //-----------------------------------------------------------------------
@@ -149,6 +149,9 @@ public class Set {
         dataMan.indexMetadata(id, true, null);
 
         return new Response(id, dataMan.getNewVersion(id));
+      } finally {
+        context.clear(); // prevent further use
+      }
     }
 
     // FIXME : not elegant

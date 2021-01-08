@@ -424,6 +424,7 @@ public class Geonetwork implements ApplicationHandler {
                 final ServletContext servletContext = context.getServlet().getServletContext();
                 context.setAsThreadLocal();
                 ApplicationContextHolder.set(_applicationContext);
+              try {
                 GeonetWro4jFilter filter = (GeonetWro4jFilter) servletContext.getAttribute(GeonetWro4jFilter.GEONET_WRO4J_FILTER_KEY);
 
                 @SuppressWarnings("unchecked")
@@ -463,6 +464,9 @@ public class Geonetwork implements ApplicationHandler {
                         }
                     }
                 }
+              } finally {
+                context.clearAsThreadLocal();
+              }
             }
         });
         fillCaches.setDaemon(true);

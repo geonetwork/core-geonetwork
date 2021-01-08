@@ -78,25 +78,29 @@ public class BatchNewOwner {
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
 
         ServiceContext context = serviceManager.createServiceContext("metadata.batch.newowner", lang, request);
-        UserSession session = context.getUserSession();
+        try {
+            UserSession session = context.getUserSession();
 
-        context.info("Get selected metadata");
-        SelectionManager sm = SelectionManager.getManager(session);
-        Collection<String> selection = new ArrayList<>();
-        synchronized (sm.getSelection(SELECTION_METADATA)) {
-            selection.addAll(sm.getSelection(SELECTION_METADATA));
+            context.info("Get selected metadata");
+            SelectionManager sm = SelectionManager.getManager(session);
+            Collection<String> selection = new ArrayList<>();
+            synchronized (sm.getSelection(SELECTION_METADATA)) {
+                selection.addAll(sm.getSelection(SELECTION_METADATA));
+            }
+
+            Set<Integer> modified = new HashSet<Integer>();
+            NewOwnerResult result = setNewOwner(context, targetUsr, targetGrp, selection, modified);
+
+
+            // -- reindex metadata
+            context.info("Re-indexing metadata");
+            BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, modified);
+            r.process();
+
+            return result;
+        } finally {
+            context.clear();
         }
-
-        Set<Integer> modified = new HashSet<Integer>();
-        NewOwnerResult result = setNewOwner(context, targetUsr, targetGrp, selection, modified);
-
-
-        // -- reindex metadata
-        context.info("Re-indexing metadata");
-        BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, modified);
-        r.process();
-
-        return result;
     }
 
     private NewOwnerResult setNewOwner(ServiceContext context, String targetUsr, String targetGrp,
