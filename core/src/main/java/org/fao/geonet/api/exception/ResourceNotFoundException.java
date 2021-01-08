@@ -23,7 +23,9 @@
 
 package org.fao.geonet.api.exception;
 
-public class ResourceNotFoundException extends Exception {
+import org.fao.geonet.exceptions.LocalizedException;
+
+public class ResourceNotFoundException extends LocalizedException {
     public ResourceNotFoundException() {
         super();
     }
@@ -38,5 +40,9 @@ public class ResourceNotFoundException extends Exception {
 
     public ResourceNotFoundException(Throwable cause) {
         super(cause);
+    }
+
+    protected String getResourceBundleBeanQualifier() {
+        return "apiMessages";
     }
 }

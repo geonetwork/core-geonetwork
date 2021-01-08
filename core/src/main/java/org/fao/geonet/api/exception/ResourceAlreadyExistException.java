@@ -23,7 +23,10 @@
 
 package org.fao.geonet.api.exception;
 
-public class ResourceAlreadyExistException extends Exception {
+import org.fao.geonet.exceptions.LocalizedException;
+
+public class ResourceAlreadyExistException extends LocalizedException {
+
     public ResourceAlreadyExistException() {
         super();
     }
@@ -38,5 +41,9 @@ public class ResourceAlreadyExistException extends Exception {
 
     public ResourceAlreadyExistException(Throwable cause) {
         super(cause);
+    }
+
+    protected String getResourceBundleBeanQualifier() {
+        return "apiMessages";
     }
 }
