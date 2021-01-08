@@ -105,6 +105,8 @@
               layer.set('advancedMetadata', {
                 simpleWMS: true
               })
+              // removes LAYERS from params for simpleWMS
+              delete layer.getSource().getParams().LAYERS;
             }
           }.bind(this));
       };
@@ -321,6 +323,7 @@
 
         var p = parts.length > 1 ?
             gnUrlUtils.parseKeyValue(parts[1]) : {};
+
         angular.extend(p, params);
 
         var sP = gnUrlUtils.toKeyValue(p);
