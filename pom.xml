@@ -340,6 +340,13 @@
   <!-- =========================================================== -->
   <dependencyManagement>
     <dependencies>
+
+      <dependency>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr-runtime</artifactId>
+        <version>3.5.2</version>
+      </dependency>
+
       <!-- rewrite url servletfilter -->
       <dependency>
         <groupId>org.tuckey</groupId>
@@ -958,20 +965,13 @@
         <artifactId>mysql-connector-java</artifactId>
         <version>5.1.38</version>
       </dependency>
-      <!-- Not permitted under oracle licensing rules
-      <dependency>
-        <groupId>ojdbc</groupId>
-        <artifactId>ojdbc</artifactId>
-        <version>14</version>
-      </dependency>
-      -->
       <!-- Oracle changed policy, this is from maven central -->
       <!-- Oracle Free Use Terms and Conditions (FUTC) -->
       <dependency>
-         <groupId>com.oracle.database.jdbc</groupId>
-         <artifactId>ojdbc8</artifactId>
-         <version>19.6.0.0</version>
-       </dependency>
+        <groupId>com.oracle.database.jdbc</groupId>
+        <artifactId>ojdbc8</artifactId>
+        <version>${ojdbc.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.codehaus.izpack</groupId>
         <artifactId>izpack-standalone-compiler</artifactId>
@@ -1366,6 +1366,7 @@
         <module>schemas-test</module>
         <module>web-ui</module>
         <!--<module>web-ui-docs</module>-->
+        <module>migrate</module>
         <module>web</module>
       </modules>
     </profile>

@@ -77,7 +77,6 @@
     <dependency>
       <groupId>org.antlr</groupId>
       <artifactId>antlr-runtime</artifactId>
-      <version>3.5.2</version>
     </dependency>
     <dependency>
       <groupId>xalan</groupId>
@@ -260,36 +259,7 @@
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.postgis</groupId>
-      <artifactId>postgis-jdbc</artifactId>
-      <exclusions>
-        <!-- excluded because it redefines some classes provided by the JDBC postgresql driver,
-             polluting the classloader. -->
-        <exclusion>
-          <groupId>org.postgis</groupId>
-          <artifactId>postgis-stubs</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-    </dependency>
-    <!-- Not permitted under oracle licensing rules
-    <dependency>
-      <groupId>ojdbc</groupId>
-      <artifactId>ojdbc</artifactId>
-    </dependency>
-        -->
+
     <dependency>
       <groupId>eu.medsea.mimeutil</groupId>
       <artifactId>mime-util</artifactId>
@@ -306,7 +276,6 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
-
 
     <dependency>
       <groupId>org.tmatesoft.svnkit</groupId>
@@ -369,6 +338,12 @@
 
     <!-- ====================== -->
     <!-- Generated dependencies -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>migrate</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>cachingxslt</artifactId>
@@ -799,6 +774,32 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>unpack-migrate</id>
+                <phase>process-resources</phase>
+                <goals><goal>unpack</goal></goals>
+                <configuration>
+                  <encoding>UTF-8</encoding>
+                  <artifactItems>
+                    <!-- unpack built-in schema plugins into schema-plugins directory -->
+                    <artifactItem>
+                      <groupId>org.geonetwork-opensource.schemas</groupId>
+                      <artifactId>schema-iso19139</artifactId>
+                      <type>zip</type>
+                      <overWrite>false</overWrite>
+                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
