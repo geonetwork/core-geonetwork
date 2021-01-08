@@ -14,6 +14,8 @@ git*.properties
 */.*
 */target/
 .*/
+!.github/
+
 /geonetwork*
 camel-harvesters/wfsfeature-harvester/logs
 changes-*
