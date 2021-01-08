@@ -1512,8 +1512,16 @@
                 if (layerInfo.extent.spatialReference && layerInfo.extent.spatialReference.wkid) {
                   var srcProj = ol.proj.get(layerInfo.extent.spatialReference.wkid);
                   if (srcProj) {
-                    extent = gnMap.reprojExtent(extent,
-                         "EPSG:" + srcProj, map.getView().getProjection().getCode());
+                    try {
+                      extent = gnMap.reprojExtent(extent,
+                        "EPSG:" + srcProj, map.getView().getProjection().getCode());
+                    } catch (e) {
+                      console.warn("Error adding ESRI REST layer. " +
+                        "The problem is probably related to the layer projection. " +
+                        "Try to add the projection " + "EPSG:" + srcProj +
+                        " in UI configuration projection lists. " +
+                        "See admin > settings > user interface > map > projection list.")
+                    }
                   }
                 }
                 olLayer.set('label', layerInfo.title);
