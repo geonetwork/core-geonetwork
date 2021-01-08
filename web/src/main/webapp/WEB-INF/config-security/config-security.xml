@@ -34,9 +34,14 @@
   <import resource="config-security-core.xml"/>
   <import resource="config-security-mapping.xml"/>
 
+  <!-- Sextant CAS -->
   <import resource="config-security-ldap.xml"/>
   <import resource="config-security-cas.xml"/>
-<!--  <import resource="config-security-cas-simple.xml"/>-->
+  <import resource="config-security-cas-ldap.xml"/>
+
+  <!-- Marine ID CAS -->
+  <!--<import resource="config-security-cas.xml"/>
+  <import resource="config-security-cas-simple.xml"/>-->
   
   <!--<import resource="config-security-keycloak.xml"/> -->
   <!--<import resource="config-security-ldap.xml"/>-->
