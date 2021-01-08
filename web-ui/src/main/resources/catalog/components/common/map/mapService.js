@@ -1500,6 +1500,8 @@
               return gnEsriUtils.renderLegend(response.data, layer);
             })
 
+            var gnMap = this;
+
             // layer title and extent are set after the layer info promise resolves
             return $q.all([layerInfoPromise, legendPromise, feedMdPromise])
               .then(function (results) {
@@ -1507,6 +1509,13 @@
                 var legendUrl = results[1];
                 var extent =
                   [layerInfo.extent.xmin, layerInfo.extent.ymin, layerInfo.extent.xmax, layerInfo.extent.ymax];
+                if (layerInfo.extent.spatialReference && layerInfo.extent.spatialReference.wkid) {
+                  var srcProj = ol.proj.get(layerInfo.extent.spatialReference.wkid);
+                  if (srcProj) {
+                    extent = gnMap.reprojExtent(extent,
+                         "EPSG:" + srcProj, map.getView().getProjection().getCode());
+                  }
+                }
                 olLayer.set('label', layerInfo.title);
                 olLayer.set('legend', legendUrl);
                 olLayer.set('extent', extent);
