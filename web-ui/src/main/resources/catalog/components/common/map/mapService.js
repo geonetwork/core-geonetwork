@@ -1520,7 +1520,7 @@
                         "The problem is probably related to the layer projection. " +
                         "Try to add the projection " + "EPSG:" + srcProj +
                         " in UI configuration projection lists. " +
-                        "See admin > settings > user interface > map > projection list.")
+                        "See admin > settings > user interface > map > projection list.");
                     }
                   }
                 }
