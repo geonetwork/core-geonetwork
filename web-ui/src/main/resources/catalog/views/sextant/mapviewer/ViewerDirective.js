@@ -192,7 +192,9 @@
                   activeTab = tab;
                 }
               };
-
+              scope.isMenuVisible = function() {
+                return gnViewerSettings.menuVisible;
+              };
               scope.isContainerOpened = function() {
                 try {
                   return scope.activeTools.layers || scope.activeTools.import ||
