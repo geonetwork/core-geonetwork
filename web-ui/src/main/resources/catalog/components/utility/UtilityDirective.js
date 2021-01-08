@@ -1374,6 +1374,20 @@
         return href;
       }}
   ]);
+  /**
+   * Append size parameter to request a smaller thumbnail.
+   */
+  module.filter('thumbnailUrlSize', function() {
+      return function(href, size) {
+        if(href.indexOf('api/records/') !== -1) {
+          var suffix = 'size=' + (size || 140);
+          return href.indexOf('?') !== -1 ?
+            href + '&' + suffix :
+            href + '?' + suffix;
+        } else {
+          return href;
+        }
+      }});
   module.filter('newlines', function() {
     return function(value) {
       if (angular.isArray(value)) {
