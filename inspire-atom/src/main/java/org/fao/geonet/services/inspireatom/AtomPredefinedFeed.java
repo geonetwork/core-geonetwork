@@ -95,6 +95,8 @@ public class AtomPredefinedFeed {
 
         ServiceContext context = createServiceContext(uiLang, webRequest.getNativeRequest(HttpServletRequest.class));
 
+    try {
+
         SettingManager sm = context.getBean(SettingManager.class);
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
         if (!inspireEnable) {
@@ -104,6 +106,11 @@ public class AtomPredefinedFeed {
 
         Element feed = getServiceFeed(context, uuid);
         return writeOutResponse(Xml.getString(feed));
+
+      } finally {
+          context.clear(); // prevent further use
+      }
+
     }
 
     /**
@@ -126,6 +133,8 @@ public class AtomPredefinedFeed {
     {
         ServiceContext context = createServiceContext(uiLang, webRequest.getNativeRequest(HttpServletRequest.class));
 
+      try {
+
         SettingManager sm = context.getBean(SettingManager.class);
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
         if (!inspireEnable) {
@@ -135,6 +144,11 @@ public class AtomPredefinedFeed {
 
         Element feed = getDatasetFeed(context, spIdentifier);
         return writeOutResponse(Xml.getString(feed));
+
+      } finally {
+          context.clear(); // prevent further use
+      }
+
     }
 
     private Element getDatasetFeed(ServiceContext context, final String spIdentifier) throws Exception {

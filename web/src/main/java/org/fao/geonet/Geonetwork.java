@@ -227,8 +227,7 @@ public class Geonetwork implements ApplicationHandler {
 
 
         } catch (Exception e) {
-          logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + e.getMessage());
-          e.printStackTrace();
+          logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + Util.getStackTrace(e));
         }
 
         //------------------------------------------------------------------------
@@ -422,6 +421,7 @@ public class Geonetwork implements ApplicationHandler {
                 final ServletContext servletContext = context.getServlet().getServletContext();
                 context.setAsThreadLocal();
                 ApplicationContextHolder.set(_applicationContext);
+              try {
                 GeonetWro4jFilter filter = (GeonetWro4jFilter) servletContext.getAttribute(GeonetWro4jFilter.GEONET_WRO4J_FILTER_KEY);
 
                 @SuppressWarnings("unchecked")
@@ -461,6 +461,9 @@ public class Geonetwork implements ApplicationHandler {
                         }
                     }
                 }
+              } finally {
+                context.clearAsThreadLocal();
+              }
             }
         });
         fillCaches.setDaemon(true);
@@ -533,8 +536,7 @@ public class Geonetwork implements ApplicationHandler {
                     }
                 } catch (Throwable x) {
                     // any uncaught exception would cause the scheduled execution to silently stop
-                    logger.error("DBHeartBeat error: " + x.getMessage() + " This error is ignored.");
-                    x.printStackTrace();
+                    logger.error("DBHeartBeat error: " + x.getMessage() + " This error is ignored. Error details: " + Util.getStackTrace(x));
                 }
             }
 
@@ -559,13 +561,11 @@ public class Geonetwork implements ApplicationHandler {
      */
     private void createSiteLogo(String nodeUuid, ServiceContext context, Path appPath) {
         try {
-            Path logosDir = Resources.locateLogosDir(context);
+            final Resources resources = context.getBean(Resources.class);
+            Path logosDir = resources.locateLogosDir(context);
             Path logo = logosDir.resolve(nodeUuid + ".png");
             if (!Files.exists(logo)) {
-                final ServletContext servletContext = context.getServlet().getServletContext();
-                byte[] logoData = Resources.loadImage(servletContext, appPath,
-                    "images/harvesting/GN3.png", new byte[0]).one();
-                Files.write(logo, logoData);
+                resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + "GN3.png", nodeUuid);
             }
         } catch (Throwable e) {
             logger.error("      Error when setting the logo: " + e.getMessage());
