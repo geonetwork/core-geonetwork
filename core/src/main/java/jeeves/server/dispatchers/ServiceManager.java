@@ -62,6 +62,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.SOAPUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.persistence.EntityManager;
@@ -178,7 +179,8 @@ public class ServiceManager {
         String sheet = srv.getAttributeValue(ConfigFile.Service.Attr.SHEET);
         String cache = srv.getAttributeValue(ConfigFile.Service.Attr.CACHE);
 
-        ServiceInfo si = ApplicationContextHolder.get().getBean(ServiceInfo.class);
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        ServiceInfo si = applicationContext.getBean(ServiceInfo.class);
         si.setMatch(match);
         si.setSheet(sheet);
         si.setCache(cache);
@@ -343,6 +345,24 @@ public class ServiceManager {
         vErrorPipe.add(buildErrorPage(err));
     }
 
+    /**
+     * Used to create a ServiceContext.
+     *
+     * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup:
+     * <pre><code>
+     * try {
+     *    context = serviceMan.createServiceContext("AppHandler", appContext);
+     *    context.setAsThreadLocal();
+     *    ...
+     * } finally {
+     *    context.clearAsThreadLocal();
+     *    context.clear();
+     * }</code></pre>
+     *
+     * @param name context name
+     * @param appContext application context
+     * @return ServiceContext
+     */
     public ServiceContext createServiceContext(String name, ConfigurableApplicationContext appContext) {
         ServiceContext context = new ServiceContext(name, appContext, htContexts,
             entityManager);
@@ -357,6 +377,27 @@ public class ServiceManager {
         return context;
     }
 
+    /**
+     * Used to create a ServiceContext.
+     *
+     * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup:
+     * <pre><code>
+     * try {
+     *    context = serviceMan.createServiceContext("md.thumbnail.upload", lang, request);
+     *    context.setAsThreadLocal();
+     *    ...
+     * } finally {
+     *    context.clearAsThreadLocal();
+     *    context.clear();
+     * }</code></pre>
+     *
+     * The serviceContext is creating using the ApplicationContext from {@link ApplicationContextHolder}.
+     *
+     * @param name context name
+     * @param lang
+     * @param request servlet request
+     * @return ServiceContext
+     */
     public ServiceContext createServiceContext(String name, String lang, HttpServletRequest request) {
         ServiceContext context = new ServiceContext(name, ApplicationContextHolder.get(), htContexts, entityManager);
 
@@ -407,12 +448,17 @@ public class ServiceManager {
         context.setOutputMethod(req.getOutputMethod());
         context.setHeaders(req.getHeaders());
         context.setServlet(servlet);
-        if (startupError) context.setStartupErrors(startupErrors);
-
+        if (startupError) {
+            context.setStartupErrors(startupErrors);
+        }
+        ServiceContext priorContext = ServiceContext.get();
+        if( priorContext != null){
+            priorContext.debug("ServiceManger dispatch replacing current ServiceContext");
+            priorContext.clearAsThreadLocal();
+        }
         context.setAsThreadLocal();
 
         //--- invoke service and build result
-
         Element response = null;
         ServiceInfo srvInfo = null;
 
@@ -504,6 +550,20 @@ public class ServiceManager {
                 throw (NotAllowedEx) e;
             } else {
                 handleError(req, response, context, srvInfo, e);
+            }
+        }
+        finally {
+            ServiceContext checkContext = ServiceContext.get();
+            if( checkContext == context ) {
+                context.clearAsThreadLocal();
+            }
+            else {
+                context.debug("ServiceManager dispatch context was replaced before cleanup");
+            }
+            context.clear();
+            if( priorContext != null){
+                priorContext.debug("ServiceManger dispatch restoring ServiceContext");
+                priorContext.setAsThreadLocal();
             }
         }
     }
@@ -821,7 +881,13 @@ public class ServiceManager {
                                 } finally {
                                     timerContext.stop();
                                 }
-                                req.beginStream(outPage.getContentType(), cache);
+                                
+                                if (outPage.getContentType() != null
+                                    && outPage.getContentType().startsWith("text/plain")) {
+                                    req.beginStream(outPage.getContentType(), -1, "attachment;", cache);
+                                } else {
+                                    req.beginStream(outPage.getContentType(), cache);
+                                }
                                 req.getOutputStream().write(baos.toByteArray());
                                 req.endStream();
                             }
@@ -873,7 +939,7 @@ public class ServiceManager {
         // Dispatch HTTP status code
         req.setStatusCode(outPage.getStatusCode());
 
-        addPrefixes(guiElem, context.getLanguage(), req.getService(), context.getApplicationContext().getBean(NodeInfo.class).getId());
+        addPrefixes(guiElem, context.getLanguage(), req.getService(), context.getBean(NodeInfo.class).getId());
 
         Element rootElem = new Element(Jeeves.Elem.ROOT)
             .addContent(guiElem)
@@ -897,7 +963,7 @@ public class ServiceManager {
                 // ignore this.
                 // it happens because the stream closes by client.
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(Log.JEEVES, e.getMessage(), e);
             }
         }
 
