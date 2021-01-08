@@ -36,7 +36,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
     - name: Build with Maven
-      run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+      run: mvn -B -V install -DskipTests=true -Dmaven.javadoc.skip=true
     - name: Remove SNAPSHOT jars from repository
       run: |
         find ~/.m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}
@@ -68,7 +68,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
     - name: Test with maven
-      run: mvn install -B -V -fae
+      run: mvn -B -V -fae install
     - name: Remove SNAPSHOT jars from repository
       run: |
         find ~/.m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}
