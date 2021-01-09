@@ -49,20 +49,24 @@ The web module gathers the static resources and configuration files for building
 
 The build generates, processes and compile files into:
 
-* ``src/main/webapp/WEB-INF/data/config/schema_plugin``
+* ``src/main/webapp/WEB-INF/data/config/schema_plugins``
 * ``target/``
 
 Use ``mvn clean`` to remove these files.
 
-In addition running Jetty makes use of a database, data directory and cache:
+In addition running jetty makes use of a database, data directory and cache, notably: 
 
-* ``gn.h2.db``
-* ``gn.trace.db``
-* ``images/``
-* ``jcs_caching/``
-* ``logs/``
+* ``*.db``
+* ``images/`` ...
+* ``jcs_caching/`` ...
+* ``logs/`` ...
+* ``src/main/webapp/WEB-INF/data/config/schema_plugins/`` ...
+* ``src/main/webapp/WEB-INF/data/data/`` ...
+* ``src/main/webapp/WEB-INF/data/wro4j*.db``
+* ``src/main/webapp/WEB-INF/doc/en/`` ...
+* ``src/main/webapp/WEB-INF/doc/fn/`` ...
 
-Use `mvn clean:clean@reset` to remove these files (or ``mvn clean:clean@js`` to clear the javascript cache).
+Use `mvn clean:clean@reset` to remove these files.
 
 ## Managing Schema Plugins
 
