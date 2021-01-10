@@ -32,6 +32,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.UnAuthorizedException;
+import org.fao.geonet.inspireatom.model.DatasetFeedInfo;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -66,6 +67,7 @@ import java.util.Map;
  * @author Jose García
  */
 public class InspireAtomUtil {
+    private final static String EXTRACT_DATASETS_FROM_SERVICE_XSLT = "extract-datasetinfo-from-service-feed.xsl";
 
     /**
      * Xslt process to get the related datasets in service metadata.
@@ -224,6 +226,35 @@ public class InspireAtomUtil {
         return datasets;
     }
 
+    /**
+     * @param atomFeedDocument  Atom service feed document
+     * @param dataManager       DataManager.
+     * @return List of datasets referenced in the service feed.
+     * @throws Exception Exception.
+     */
+    public static List<DatasetFeedInfo> extractRelatedDatasetsInfoFromServiceFeed(final String atomFeedDocument, final DataManager dataManager)
+        throws Exception {
+        Element serviceFeed = Xml.loadString(atomFeedDocument, false);
+
+        java.nio.file.Path defaultStyleSheet = dataManager.getSchemaDir("iso19139").resolve(EXTRACT_DATASETS_FROM_SERVICE_XSLT);
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        Element atomIndexFields = Xml.transform(serviceFeed, defaultStyleSheet, params);
+
+        List<DatasetFeedInfo> datasetsInformation = new ArrayList<>();
+
+        for (Object field : atomIndexFields.getChildren()) {
+            Element f = (Element) field;
+
+            DatasetFeedInfo datasetFeedInfo = new DatasetFeedInfo(f.getChildText("identifier"),
+                f.getChildText("namespace"),
+                f.getChildText("feedUrl"));
+
+            datasetsInformation.add(datasetFeedInfo);
+        }
+
+        return datasetsInformation;
+    }
 
     public static Map<String, String> retrieveServiceMetadataWithAtomFeeds(final DataManager dataManager,
                                                                            final List<AbstractMetadata> iso19139Metadata,
@@ -313,9 +344,7 @@ public class InspireAtomUtil {
         request.addContent(new Element("fast").setText("true"));
 
         // perform the search and return the results read from the index
-        MetaSearcher searcher = null;
-        try {
-            searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
             searcher.search(context, request, new ServiceConfig());
 
             Map<Integer, AbstractMetadata> allMdInfo = ((LuceneSearcher) searcher).getAllMdInfo(context, searcher.getSize());
@@ -323,8 +352,6 @@ public class InspireAtomUtil {
         } catch (Exception ex) {
             Log.error(Geonet.ATOM, ex.getMessage(), ex);
             return new ArrayList<>();
-        } finally {
-            if (searcher != null) searcher.close();
         }
     }
 
@@ -332,12 +359,10 @@ public class InspireAtomUtil {
     public static String retrieveDatasetUuidFromIdentifier(ServiceContext context,
                                                            SearchManager searchMan,
                                                            String datasetIdCode) {
-
         String uuid = "";
 
         Element request = new Element(Jeeves.Elem.REQUEST);
         request.addContent(new Element("identifier").setText(datasetIdCode));
-        request.addContent(new Element("has_atom").setText("y"));
         request.addContent(new Element("fast").setText("true"));
 
         // perform the search and return the results read from the index

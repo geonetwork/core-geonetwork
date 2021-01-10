@@ -80,7 +80,7 @@ mvn clean install -Pes
 Run embedded Jetty server
 -------------------------
 
-Maven comes with built-in support for Jetty via a [plug-in](https://www.eclipse.org/jetty/documentation/current/jetty-maven-plugin.html)
+Maven comes with built-in support for Jetty via a [jetty-maven-plugin](https://www.eclipse.org/jetty/documentation/current/jetty-maven-plugin.html).
 
 To run GeoNetwork with the embedded Jetty server you have to change directory to the root of the **web** module,
 and then execute the following maven command:
@@ -97,3 +97,26 @@ For changes related to the user interface in the `web-ui` module or the metadata
 ```
 mvn process-resources
 ```
+
+Tool chain
+----------
+
+GeoNetwork requires Java 8 at this time. If you have multiple JDK environments installed
+our build can make use of an optional `~/.m2/toolchains.xml` file.
+
+```xml
+<?xml version="1.0" encoding="UTF8"?>
+<toolchains>
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <version>8</version>
+    </provides>
+    <configuration>
+    <jdkHome>/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home</jdkHome>
+    </configuration>
+  </toolchain>
+</toolchains>
+```
+
+If the `toolchains.xml` file is available a profile will be engaged to ensure a JDK `8` is used. For more information see [guide to using toolchains](https://maven.apache.org/guides/mini/guide-using-toolchains.html).

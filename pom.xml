@@ -230,6 +230,10 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.1</version>
+          <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
@@ -242,11 +246,16 @@
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.0.0-M3</version>
+          <version>3.0.0-M5</version>
         </plugin>
-
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-toolchains-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
       </plugins>
     </pluginManagement>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -254,6 +263,7 @@
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
+          <compilerVersion>1.8</compilerVersion>
           <debug>true</debug>   <!-- Whether to include debugging information.   -->
           <encoding>UTF-8</encoding> <!-- The -encoding argument for the Java compiler. -->
           <compilerArgument>-proc:none
@@ -265,12 +275,11 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.1.0</version>
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
-   
+
       <!-- run integration tests after unit tests -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -362,7 +371,7 @@
       <dependency>
         <groupId>org.locationtech.jts</groupId>
         <artifactId>jts-core</artifactId>
-        <version>1.16.1</version>
+        <version>1.17.1</version>
       </dependency>
       <dependency>
         <groupId>com.github.lookfirst</groupId>
@@ -1309,6 +1318,37 @@
 
   <profiles>
     <profile>
+      <!-- force use of java 8 if available in toolchains.xml -->
+      <id>toolchain</id>
+      <activation>
+        <file>
+          <exists>${user.home}/.m2/toolchains.xml</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-toolchains-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>toolchain</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <toolchains>
+                <jdk>
+                  <version>8</version>
+                </jdk>
+              </toolchains>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>with-doc</id>
       <modules>
         <module>docs</module>
@@ -1401,7 +1441,8 @@
     <application.name>geonetwork</application.name>
     <app.properties>WEB-INF/config.properties</app.properties>
     <!--<app.properties>file:/${geonetwork.dir}/config.properties</app.properties>-->
-
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
     <!-- Configure database config file to use. Could be
      h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi
      -->
@@ -1508,8 +1549,8 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>23.0</geotools.version>
-    <pg.version>42.2.5</pg.version>
+    <geotools.version>24.1</geotools.version>
+    <pg.version>42.2.18</pg.version>
 
     <lucene.version>4.9.0</lucene.version>
 

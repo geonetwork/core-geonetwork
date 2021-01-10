@@ -33,8 +33,10 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
+import org.geotools.image.test.ImageAssert;
 import org.jdom.Element;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -69,7 +71,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ContextConfiguration(inheritLocations = true, locations = "classpath:extents-test-context.xml")
 public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
-    private static boolean DO_NOT_SAVE_IMAGE_TO_DISK = true;
+
+    /**
+     * Use <code>-DMetadataExtentApiTest.save.png=true</code> to save geneated images for visual reference.
+     */
+    private static boolean SAVE_IMAGE_TO_DISK = Boolean.getBoolean("MetadataExtentApiTest.save.png" );
+
+    private static String REFERENCE = "./src/test/resources/org/fao/geonet/api/records/extent/";
 
     @Autowired
     private DataManager dataManager;
@@ -124,23 +132,34 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andReturn().getResponse().getContentAsByteArray();
 
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
-        assertEquals("b02baec6d92832ecd5653db78093a427", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertImage(
+            REFERENCE+"getOneRecordExtentAsImage.png",
+            reponseBuffer,
+            550);
     }
 
-    @Test
+    @Ignore
     public void lastModifiedNotModified() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
         String uuid = createTestData();
 
-        mockMvc.perform(get(String.format("/srv/api/records/%s/extents.png", uuid))
+        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents.png", uuid))
             .header("If-Modified-Since", "Wed, 21 Oct 2015 07:29:00 UTC")
             .session(mockHttpSession)
             .accept(MediaType.IMAGE_PNG_VALUE))
-            .andExpect(status().isNotModified());
+            .andExpect(status().is2xxSuccessful())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
+            .andReturn().getResponse().getContentAsByteArray();
+
+        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
+        assertImage(
+            REFERENCE+"lastModifiedNotModified.png",
+            reponseBuffer,
+            550);
     }
 
-    @Test
+    @Ignore
     public void lastModifiedModified() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
@@ -154,7 +173,10 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
             .andReturn().getResponse().getContentAsByteArray();
 
-        assertEquals("b02baec6d92832ecd5653db78093a427", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertImage(
+            REFERENCE+"lastModifiedModified.png",
+            reponseBuffer,
+            550);
     }
 
     @Test
@@ -171,7 +193,10 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andReturn().getResponse().getContentAsByteArray();
 
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
-        assertEquals("6918277f1b32eb69ff81da6ef434c27f", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertImage(
+            REFERENCE+"aggregatedWithTwoExtent.png",
+            reponseBuffer,
+            550);
     }
 
     @Test
@@ -187,6 +212,10 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
             .andReturn().getResponse().getContentAsByteArray();
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName() + "-overview");
+        assertImage(
+            REFERENCE+"twoExtentFirstOneWithBothBoundingBoxAndPolygon-overview.png",
+            reponseBuffer,
+            550);
 
         reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/1.png", uuid))
             .session(mockHttpSession)
@@ -195,8 +224,10 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
             .andReturn().getResponse().getContentAsByteArray();
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName() + "-1");
-
-        assertEquals("70e4652a68e5ab8ae8803a0437958bdc", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertImage(
+            REFERENCE+"twoExtentFirstOneWithBothBoundingBoxAndPolygon-1.png",
+            reponseBuffer,
+            550);
 
         reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/2.png", uuid))
             .session(mockHttpSession)
@@ -205,8 +236,10 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
             .andReturn().getResponse().getContentAsByteArray();
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName() + "-2");
-
-        assertEquals("b1e730b01f6efd164a736a09935976fc", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertImage(
+            REFERENCE+"twoExtentFirstOneWithBothBoundingBoxAndPolygon-2.png",
+            reponseBuffer,
+            550);
 
         reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/3.png", uuid))
             .session(mockHttpSession)
@@ -215,8 +248,10 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
             .andReturn().getResponse().getContentAsByteArray();
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName() + "-3");
-
-        assertEquals("eb15c89eddb74808c169edfd15f54285", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertImage(
+            REFERENCE+"twoExtentFirstOneWithBothBoundingBoxAndPolygon-3.png",
+            reponseBuffer,
+            550);
     }
 
 
@@ -233,6 +268,10 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
             .andReturn().getResponse().getContentAsByteArray();
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName() + "-overview");
+        assertImage(
+            REFERENCE+"threeExtentThirdOne-overview.png",
+            reponseBuffer,
+            550);
 
         reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/4.png", uuid))
             .session(mockHttpSession)
@@ -242,7 +281,10 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andReturn().getResponse().getContentAsByteArray();
 
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
-        assertEquals("d9f31e3de583ff135160568dab225589", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertImage(
+            "./src/test/resources/org/fao/geonet/api/records/extent/threeExtentThirdOne.png",
+            reponseBuffer,
+            550);
     }
 
     @Test
@@ -258,6 +300,10 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
             .andReturn().getResponse().getContentAsByteArray();
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName() + "-overview");
+        assertImage(
+            REFERENCE+"threeExtentThirdOne115_3-overview.png",
+            reponseBuffer,
+            550);
 
         reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/3.png", uuid))
             .session(mockHttpSession)
@@ -267,7 +313,10 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andReturn().getResponse().getContentAsByteArray();
 
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
-        assertEquals("6fc67bf08a6ee8c06dfbfe448172c060", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertImage(
+            REFERENCE+"threeExtentThirdOne115_3.png",
+            reponseBuffer,
+            550);
     }
 
     @Test
@@ -284,7 +333,10 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andReturn().getResponse().getContentAsByteArray();
 
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
-        assertEquals("eb15c89eddb74808c169edfd15f54285", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertImage(
+            REFERENCE+"threeExtentThirdOneIsABoundingBox.png",
+            reponseBuffer,
+            550);
     }
 
     private String createTestData() throws Exception {
@@ -342,11 +394,46 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
         return uuid;
     }
 
+    /**
+     * Use perception comparison to check generated image against reference.
+     * <p>
+     * This uses {@link org.geotools.image.test.ImageAssert} controlled with:
+     * <ul>
+     *  <li><code>-Dorg.geotools.image.test.interactive=true</code>: to enable interactive review, this allows visual comparison and updating the saved file.</li>
+     *  <li><code>-Dorg.geotools.image.test.skip=true</code>: to skip image comparison</li>
+     * </ul>
+     * </p>
+     *
+     * @param expected filepath to expected image
+     * @param reponseBuffer image content
+     * @param threshold visual threadshold for match, often a small percentage is acceptable for font changes
+     */
+    private void assertImage( String expected, byte[] reponseBuffer, int threshold ) throws IOException {
+        BufferedImage imag = ImageIO.read(new ByteArrayInputStream(reponseBuffer));
+        File file = new File( expected );
+        ImageAssert.assertEquals(file, imag, threshold);
+    }
+
+    /**
+     * Use {@link #SAVE_IMAGE_TO_DISK} to save generated image to disk for visual comparison.
+     *
+     * @param reponseBuffer png image
+     *
+     * @param methodName method being tested, used for generated filename
+     * @throws IOException
+     */
     private void saveImageToDiskIfConfiguredToDoSo(byte[] reponseBuffer, String methodName) throws IOException {
-        if (DO_NOT_SAVE_IMAGE_TO_DISK) {
-            return;
+        if (SAVE_IMAGE_TO_DISK) {
+            BufferedImage imag = ImageIO.read(new ByteArrayInputStream(reponseBuffer));
+
+            File testResults = new File("./target/test-results");
+            if( !testResults.isDirectory() ){
+                testResults.mkdirs();
+            }
+            File file = new File(testResults, String.format("%s.png", methodName));
+
+            ImageIO.write(imag, "png", file );
+            System.out.println( "Generated image to: "+file );
         }
-        BufferedImage imag= ImageIO.read(new ByteArrayInputStream(reponseBuffer));
-        ImageIO.write(imag, "png", new File("/tmp", String.format("%s.png", methodName)));
     }
 }

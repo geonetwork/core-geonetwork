@@ -1057,4 +1057,9 @@ public class BaseMetadataUtils implements IMetadataUtils {
     public void cloneFiles(AbstractMetadata original, AbstractMetadata dest) {
         // Empty implementation for non-draft mode as not used
     }
+
+    @Override
+    public void replaceFiles(AbstractMetadata original, AbstractMetadata dest) {
+        // Empty implementation for non-draft mode as not used
+    }
 }
