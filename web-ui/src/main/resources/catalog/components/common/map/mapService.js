@@ -1500,6 +1500,8 @@
               return gnEsriUtils.renderLegend(response.data, layer);
             })
 
+            var gnMap = this;
+
             // layer title and extent are set after the layer info promise resolves
             return $q.all([layerInfoPromise, legendPromise, feedMdPromise])
               .then(function (results) {
@@ -1507,6 +1509,21 @@
                 var legendUrl = results[1];
                 var extent =
                   [layerInfo.extent.xmin, layerInfo.extent.ymin, layerInfo.extent.xmax, layerInfo.extent.ymax];
+                if (layerInfo.extent.spatialReference && layerInfo.extent.spatialReference.wkid) {
+                  var srcProj = ol.proj.get(layerInfo.extent.spatialReference.wkid);
+                  if (srcProj) {
+                    try {
+                      extent = gnMap.reprojExtent(extent,
+                        "EPSG:" + srcProj, map.getView().getProjection().getCode());
+                    } catch (e) {
+                      console.warn("Error adding ESRI REST layer. " +
+                        "The problem is probably related to the layer projection. " +
+                        "Try to add the projection " + "EPSG:" + srcProj +
+                        " in UI configuration projection lists. " +
+                        "See admin > settings > user interface > map > projection list.");
+                    }
+                  }
+                }
                 olLayer.set('label', layerInfo.title);
                 olLayer.set('legend', legendUrl);
                 olLayer.set('extent', extent);
