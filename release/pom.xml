@@ -23,6 +23,16 @@
     </license>
   </licenses>
 
+  <!-- To force the war build before this module is processed -->
+  <dependencies>
+    <dependency>
+      <groupId>org.geonetwork-opensource</groupId>
+      <artifactId>web-app</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
