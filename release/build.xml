@@ -144,11 +144,11 @@
   <!-- Create ZIP distribution for GeoNetwork + Jetty + shell scripts -->
   <target name="zip">
     <property file="../web/src/main/webapp/WEB-INF/server.prop"/>
-    <mkdir dir="target"/>
+    <mkdir dir="target/${appName}-${release}"/>
 
     <echo message="Creating ZIP file for ${appName} ${release}..."/>
 
-    <zip destfile="target/${appName}-${release}-${subVersion}.zip">
+    <zip destfile="target/${appName}-${release}/${appName}-${release}-${subVersion}.zip">
       <zipfileset dir="./bin" excludes="**.sh" prefix="bin" />
       <zipfileset dir="./bin" includes="**.sh" prefix="bin" filemode="774"/>
       <zipfileset dir="${propsdir}" includes="readme.html, license.html" />
@@ -159,7 +159,7 @@
     </zip>
 
     <checksum
-      file="target/${appName}-${release}-${subVersion}.zip"
+      file="target/${appName}-${release}/${appName}-${release}-${subVersion}.zip"
       forceOverwrite="yes"/>
 
   </target>
@@ -168,9 +168,9 @@
   <target name="war" depends="zip">
 
     <copy file="../web/target/geonetwork.war"
-          tofile="../${appName}-${release}/${appName}-${release}-${subVersion}.war" />
+          tofile="target/${appName}-${release}/${appName}-${release}-${subVersion}.war" />
 
-    <checksum file="../${appName}-${release}/${appName}-${release}-${subVersion}.war"
+    <checksum file="target/${appName}-${release}/${appName}-${release}-${subVersion}.war"
               forceOverwrite="yes"/>
 
   </target>
