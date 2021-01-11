@@ -30,7 +30,7 @@
         <a class="btn btn-link"
            title="{{'openResource' | translate}}"
            target="_blank"
-           data-ng-href="{{r.url}}">
+           data-ng-href="{{onlinesrcService.getApprovedUrl(r.url)}}">
           <i class="fa fa-eye"></i>
         </a>
       </td>
