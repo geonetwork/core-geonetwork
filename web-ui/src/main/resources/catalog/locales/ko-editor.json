@@ -37,6 +37,7 @@
     "chooseContactRole": "또는 역할 선택",
     "chooseEntry": "디렉토리 검색",
     "clickToAddResource": "이 자원을 선택하기 위해 클릭",
+    "externalResourceManagement": "Click to go to external resource manager",
     "beforeUnloadEditor": "마지막 저장 {{timeAgo}} 이후로 변경 내용을 저장하지 않았습니다.",
     "fieldIsRemoved": "이 필드가 제거됩니다",
     "editRecords": "선택 편집",

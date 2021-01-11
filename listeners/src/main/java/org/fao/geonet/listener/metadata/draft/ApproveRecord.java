@@ -23,6 +23,7 @@
 
 package org.fao.geonet.listener.metadata.draft;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
@@ -30,12 +31,15 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.events.md.MetadataStatusChanged;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
+import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -152,7 +156,16 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 
         if (draft != null) {
             Log.trace(Geonet.DATA_MANAGER, "Approving record " + md.getId() + " which has a draft " + draft.getId());
+
+            XMLOutputter outp = new XMLOutputter();
+            String xmlBefore = outp.outputString(md.getXmlData(false));
+
             md = draftUtilities.replaceMetadataWithDraft(md, draft);
+
+            // Throw RecordUpdatedEvent for the published version
+            Element afterMetadata = draft.getXmlData(false);
+            String xmlAfter = outp.outputString(afterMetadata);
+            new RecordUpdatedEvent(md.getId(), event.getUser(), xmlBefore, xmlAfter).publish(ApplicationContextHolder.get());
         }
 
         return md;

@@ -1283,6 +1283,7 @@
     "styleVariable-gnMenubarBorderColor": "테두리 색상",
     "gnBottombarCss": "하단 바",
     "styleVariable-gnBottombarBackground": "배경",
+    "styleVariable-gnBottombarBackgroundHover": "Background color on hover",
     "styleVariable-gnBottombarColor": "색상",
     "styleVariable-gnBottombarColorHover": "마우스를 올려 놓았을 때 색상",
     "styleVariable-gnBottombarBorderColor": "테두리 색상",
@@ -1459,5 +1460,6 @@
     "ui-defaultSearchString-help": "This configuration lets you define a default filter for the search. The syntax is the one used in the angular facet query array.",
     "ui-autoFitOnLayer": "Always zoom on data",
     "ui-autoFitOnLayer-help": "If checked, the map will automatically zoom on data when adding a layer from a record. Otherwise, a message will be shown to let the user zoom on data manually.",
-    "styleVariable-gnHeaderHeight": "Height"
+    "styleVariable-gnHeaderHeight": "Height",
+    "styleVariable-gnSearchBackgroundColor": "Backgound color"
 }

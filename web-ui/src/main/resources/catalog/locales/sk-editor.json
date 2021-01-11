@@ -37,6 +37,7 @@
     "chooseContactRole": "alebo vyber úlohu",
     "chooseEntry": "Prehľadať adresár",
     "clickToAddResource": "kliknúť kvôli pridaniu tohto zdroja",
+    "externalResourceManagement": "Click to go to external resource manager",
     "beforeUnloadEditor": "Je možné, že po poslednom ukladaní neboli niektoré zmeny uložené {{timeAgo}}.",
     "fieldIsRemoved": "Toto pole bude zrušené",
     "editRecords": "Editovať výber",

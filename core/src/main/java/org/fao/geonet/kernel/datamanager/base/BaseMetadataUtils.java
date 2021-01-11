@@ -27,6 +27,7 @@ import com.google.common.base.Optional;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -34,20 +35,15 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRatingByIpRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SimpleMetadata;
-import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -615,6 +611,35 @@ public class BaseMetadataUtils implements IMetadataUtils {
         return !findAllIdsBy(hasMetadataUuid(uuid)).isEmpty();
     }
 
+    @Override
+    public boolean isMetadataPublished(int metadataId) throws Exception {
+        // For metadata records)
+        // It will be a draft if the record is not viewable by public
+        final Specification<OperationAllowed> isMdPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
+        final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(metadataId);
+        final java.util.Optional<OperationAllowed> one = ApplicationContextHolder.get()
+            .getBean(OperationAllowedRepository.class)
+            .findOne(Specification.where(hasMdId).and(isMdPublished));
+        return one.isPresent();
+    }
+
+    @Override
+    public boolean isMetadataApproved(int metadataId) throws Exception {
+        boolean isApproved = false;
+        MetadataStatus metadataStatus = ApplicationContextHolder.get().getBean(IMetadataStatus.class).getStatus(metadataId);
+        if (metadataStatus != null) {
+            String statusId = metadataStatus.getStatusValue().getId() + "";
+            isApproved = statusId.equals(StatusValue.Status.APPROVED);
+        }
+        return isApproved;
+    }
+
+    @Override
+    public boolean isMetadataDraft(int metadataId) throws Exception {
+        // It will be a draft if the record is not viewable by public and it is not approved record.
+        return !(isMetadataApproved(metadataId) || isMetadataPublished(metadataId));
+    }
+
     /**
      * Returns all the keywords in the system.
      */
@@ -923,6 +948,11 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Override
     public void cloneFiles(AbstractMetadata original, AbstractMetadata dest) {
+        // Empty implementation for non-draft mode as not used
+    }
+
+    @Override
+    public void replaceFiles(AbstractMetadata original, AbstractMetadata dest) {
         // Empty implementation for non-draft mode as not used
     }
 }

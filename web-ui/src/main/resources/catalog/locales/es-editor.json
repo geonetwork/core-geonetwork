@@ -37,6 +37,7 @@
     "chooseContactRole": "o elegir rol",
     "chooseEntry": "Directorio de búsqueda",
     "clickToAddResource": "Pulsa para seleccionar este recurso.",
+    "externalResourceManagement": "Click to go to external resource manager",
     "beforeUnloadEditor": "Puede que tengas cambios sin salvar desde la última vez que salvaste {{timeAgo}}",
     "fieldIsRemoved": "Se eliminará este campo",
     "editRecords": "Editar selección",

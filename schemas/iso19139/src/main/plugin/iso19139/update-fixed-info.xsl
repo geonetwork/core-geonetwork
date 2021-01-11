@@ -771,4 +771,14 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- Force element with DateTime_PropertyType to have gco:DateTime -->
+  <xsl:template match="gmd:dateTime|gmd:plannedAvailableDateTime|gmd:usageDateTime"
+                priority="200">
+    <xsl:variable name="value" select="gco:Date|gco:DateTime" />
+    <xsl:copy>
+      <gco:DateTime>
+        <xsl:value-of select="$value" /><xsl:if test="string-length($value) = 10">T00:00:00</xsl:if>
+      </gco:DateTime>
+    </xsl:copy>
+  </xsl:template>
 </xsl:stylesheet>

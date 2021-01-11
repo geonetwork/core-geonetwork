@@ -39,14 +39,17 @@
 
       <div class="btn-toolbar" role="toolbar">
 
+        <!-- back -->
         <div class="btn-group" role="group">
           <button class="btn btn-default"
                   data-ng-click="closeRecord(mdView.current.record)">
-            <i class="fa fa-fw fa-search"></i> <span><span>
-            {{'backTo' + (fromView || 'search') | translate}}</span></span>
+            <span class="fa fa-fw fa-search"></span>
+            {{'backTo' + (fromView || 'search') | translate}}
           </button>
         </div>
-       <div class="btn-group" role="group">
+
+        <!-- next/previous -->
+        <div class="btn-group" role="group">
           <a class="btn btn-default"
              title="{{mdView.records[mdView.current.index - 1].resourceTitle}}"
              gn-metadata-open="mdView.records[mdView.current.index - 1]"
@@ -54,8 +57,8 @@
              gn-formatter="formatter.defaultUrl"
              data-ng-class="{'disabled': mdView.records[mdView.current.index - 1] === undefined}"
              data-ng-show="mdView.records.length > 1">
-            <i class="fa fa-fw fa-angle-left"></i>
-            <span data-translate="">previous</span>
+            <span class="fa fa-fw fa-angle-left"></span>
+            <span data-translate="" class="hidden-sm hidden-sm">previous</span>
           </a>
           <a class="btn btn-default"
              data-ng-disabled="mdView.records[mdView.current.index + 1] === undefined"
@@ -65,17 +68,50 @@
              gn-formatter="formatter.defaultUrl"
              data-ng-class="{'disabled': mdView.records[mdView.current.index + 1] === undefined}"
              data-ng-show="mdView.records.length > 1">
-            <span data-translate="">next</span>
-            <i class="fa fa-fw fa-angle-right"></i>
+            <span data-translate="" class="hidden-sm hidden-sm">next</span>
+            <span class="fa fa-fw fa-angle-right"></span>
           </a>
         </div>
 
-      <div class="btn-group pull-right gn-view-menu-button">
+        <div class="pull-right">
+          <!-- edit -->
+          <div class="btn-group pull-left" role="group">
+            <a class="btn btn-default gn-md-edit-btn"
+               data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
+               data-ng-href="catalog.edit#/metadata/{{mdView.current.record.id}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.uuid}}"
+               title="{{'edit' | translate}}">
+              <span class="fa fa-fw fa-pencil"></span>
+              <span data-translate="" class="hidden-sm hidden-xs">edit</span>
+            </a>
+          </div>
+
+          <!-- delete -->
+          <div class="btn-group pull-right" role="group">
+          <a class="btn btn-default"
+             href
+             data-ng-show="user.canEditRecord(mdView.current.record)
+                          && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
+             data-gn-click-and-spin="deleteRecord(mdView.current.record)"
+             data-gn-confirm-click="{{(mdView.current.record.draft != 'y') ? 'deleteRecordConfirm' : 'deleteWorkingCopyRecordConfirm' | translate:mdView.current.record}}"
+            title="{{(mdView.current.record.draft != 'y') ? 'delete' : 'cancelWorkingCopy' | translate}}">
+            <span class="fa fa-fw fa-times"></span>
+            <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft == 'y'">cancelWorkingCopy</span>
+            <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft != 'y'">delete</span>
+          </a>
+        </div>
+
+        <!-- manage -->
+        <div class="gn-md-actions-btn pull-left"
+             data-gn-md-actions-menu="mdView.current.record"/>
+
+
+        <!-- display mode -->
+        <div class="btn-group gn-view-menu-button pull-left">
           <button type="button" class="btn btn-default dropdown-toggle"
                   data-toggle="dropdown"
                   aria-label="{{'chooseAView' | translate}}"
                   aria-expanded="false">
-            <i class="fa fa-fw fa-eye"></i>
+            <span class="fa fa-fw fa-eye"></span>
             <span data-translate="" class="hidden-sm hidden-xs">chooseAView</span>
             <span class="caret"></span>
           </button>
@@ -92,32 +128,7 @@
             </li>
           </ul>
         </div>
-
-        <div class="gn-md-actions-btn pull-right"
-            data-gn-md-actions-menu="mdView.current.record"/>
-
-        <div class="btn-group pull-right" role="group">
-          <a class="btn btn-default"
-            data-ng-show="user.canEditRecord(mdView.current.record)
-                          && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
-            data-gn-click-and-spin="deleteRecord(mdView.current.record)"
-            data-gn-confirm-click="{{(mdView.current.record.draft != 'y') ? 'deleteRecordConfirm' : 'deleteWorkingCopyRecordConfirm' | translate:mdView.current.record}}"
-            title="{{(mdView.current.record.draft != 'y') ? 'delete' : 'cancelWorkingCopy' | translate}}">
-            <i class="fa fa-fw fa-times"></i>
-            <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft == 'y'">cancelWorkingCopy</span>
-            <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft != 'y'">delete</span>
-          </a>
-        </div>
-
-        <div class="btn-group pull-right" role="group">
-          <a class="btn btn-default gn-md-edit-btn"
-            data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
-            data-ng-href="catalog.edit#/metadata/{{mdView.current.record.id}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.uuid}}"
-            title="{{'edit' | translate}}">
-            <i class="fa fa-fw fa-pencil"></i>
-            <span data-translate="" class="hidden-sm hidden-xs">edit</span>
-          </a>
-        </div>
+      </div>
       </div>
 
       <div data-ng-show="gnMdViewObj.usingFormatter"
@@ -653,29 +664,31 @@
               <i class="fa fa-fw fa-share-square-o"></i>
               <span data-translate="">shareOn</span>
             </h2>
-            <a data-ng-href="https://twitter.com/share?url={{socialMediaLink | encodeURIComponent}}"
-              title="{{'shareOnTwitter' | translate}}"
-              target="_blank"
-              class="btn btn-default"><i class="fa fa-fw fa-twitter"></i></a>
-           <a
-              data-ng-href="https://www.facebook.com/sharer.php?u={{socialMediaLink | encodeURIComponent}}"
-              title="{{'shareOnFacebook' | translate}}"
-              target="_blank"
-              class="btn btn-default"><i class="fa fa-fw fa-facebook"></i></a>
-            <a
-              data-ng-href="http://www.linkedin.com/shareArticle?mini=true&amp;summary={{mdView.current.record.resourceTitle}}&amp;url={{socialMediaLink | encodeURIComponent}}"
-              title="{{'shareOnLinkedIn' | translate}}"
-              target="_blank"
-              class="btn btn-default"><i class="fa fa-fw fa-linkedin"></i></a>
-            <a
-              data-ng-href="mailto:?subject={{mdView.current.record.resourceTitle}}&amp;body={{socialMediaLink | encodeURIComponent}}"
-              title="{{'shareByEmail' | translate}}"
-              target="_blank"
-              class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></a>
-            <a
-              data-ng-click="mdService.getPermalink(md)"
-              title="{{'permalink' | translate}}"
-              class="btn btn-default"><i class="fa fa-fw fa-link"></i></a>
+            <div class="btn-group">
+              <a data-ng-href="https://twitter.com/share?url={{socialMediaLink | encodeURIComponent}}"
+                title="{{'shareOnTwitter' | translate}}"
+                target="_blank"
+                class="btn btn-default"><i class="fa fa-fw fa-twitter"></i></a>
+             <a
+                data-ng-href="https://www.facebook.com/sharer.php?u={{socialMediaLink | encodeURIComponent}}"
+                title="{{'shareOnFacebook' | translate}}"
+                target="_blank"
+                class="btn btn-default"><i class="fa fa-fw fa-facebook"></i></a>
+              <a
+                data-ng-href="http://www.linkedin.com/shareArticle?mini=true&amp;summary={{mdView.current.record.resourceTitle}}&amp;url={{socialMediaLink | encodeURIComponent}}"
+                title="{{'shareOnLinkedIn' | translate}}"
+                target="_blank"
+                class="btn btn-default"><i class="fa fa-fw fa-linkedin"></i></a>
+              <a
+                data-ng-href="mailto:?subject={{mdView.current.record.resourceTitle}}&amp;body={{socialMediaLink | encodeURIComponent}}"
+                title="{{'shareByEmail' | translate}}"
+                target="_blank"
+                class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></a>
+              <a
+                data-ng-click="mdService.getPermalink(md)"
+                title="{{'permalink' | translate}}"
+                class="btn btn-default"><i class="fa fa-fw fa-link"></i></a>
+            </div>
           </section>
 
 

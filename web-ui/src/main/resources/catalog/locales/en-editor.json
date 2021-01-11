@@ -37,6 +37,7 @@
     "chooseContactRole": "or choose role",
     "chooseEntry": "Search directory",
     "clickToAddResource": "Click to select this resource",
+    "externalResourceManagement": "Click to go to external resource manager",
     "beforeUnloadEditor": "You may have unsaved changes since last save {{timeAgo}}.",
     "fieldIsRemoved": "This field will be removed",
     "editRecords": "Edit selection",

@@ -37,6 +37,7 @@
     "chooseContactRole": "nebo vyberte roli",
     "chooseEntry": "Prohledat adresář",
     "clickToAddResource": "Klepnutím vyberte tento zdroj",
+    "externalResourceManagement": "Kliknutím přejdete na externího správce prostředků",
     "beforeUnloadEditor": "Je možné, že po posledním ukládání nebyly některé změny uloženy {{timeAgo}}.",
     "fieldIsRemoved": "Toto pole bude odebráno",
     "editRecords": "Upravit výběr",
