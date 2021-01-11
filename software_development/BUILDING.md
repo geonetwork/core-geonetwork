@@ -82,21 +82,22 @@ Run embedded Jetty server
 
 Maven comes with built-in support for Jetty via a [jetty-maven-plugin](https://www.eclipse.org/jetty/documentation/current/jetty-maven-plugin.html).
 
-To run GeoNetwork with the embedded Jetty server you have to change directory to the root of the **web** module,
-and then execute the following maven command:
+To run GeoNetwork with the embedded Jetty server you have to change directory to the root of the **web** module, and then execute the following maven command:
 
 ```
 cd web
 mvn jetty:run -Penv-dev
 ```
 
-After a moment, GeoNetwork should be accessible at: http://localhost:8080/geonetwork
+After startup, GeoNetwork is accessible at: http://localhost:8080/geonetwork
 
 For changes related to the user interface in the `web-ui` module or the metadata schemas in the `schemas` module, can be deployed in jetty executing the following maven command in the **web** module:
 
 ```
 mvn process-resources
 ```
+
+For additional information see web [readme](../web/README.md).
 
 Tool chain
 ----------
