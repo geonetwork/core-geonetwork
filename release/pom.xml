@@ -23,14 +23,44 @@
     </license>
   </licenses>
 
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>reset</id>
+            <goals><goal>clean</goal></goals>
+            <!-- reset working files covered by .gitignore -->
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>.</directory>
+                  <includes>
+                    <include>jetty/**</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <profiles>
     <profile>
       <id>jetty-download</id>
       <activation>
+        <property>
+          <name>jetty-download</name>
+        </property>
+      </activation>
+      <!--activation>
         <file>
             <missing>jetty</missing>
         </file>
-      </activation>
+      </activation-->
       <build>
         <plugins>
           <plugin>

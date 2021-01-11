@@ -1,5 +1,5 @@
 #GeoNetwork opensource properties. These are also used by geonetwork at runtime
-#Mon, 11 Jan 2021 01:26:56 -0800
+#Mon, 11 Jan 2021 01:50:01 -0800
 
 version=3.11.0
 subVersion=SNAPSHOT
@@ -7,10 +7,10 @@ release=3.11.0
 javaVersion=1.8.0
 jre_url=http\://openjdk.java.net/
 ant.build.javac.target=1.8
-buildDate=2021-01-11T01\:26\:56-0800
-date=2126110126
+buildDate=2021-01-11T01\:50\:01-0800
+date=2150110150
 day=11-1-2021
 OS=Compiled on Mac OS X (macosx)
 debugOn=on
-git_revision=76bb9a799db529cde966030f13d200aac56f939d
+git_revision=85523a235d868de4a5e791d2a1bc635cbb9480f4
 git_url=git@github.com\:jodygarnett/core-geonetwork.git (push)

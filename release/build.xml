@@ -69,17 +69,17 @@
     <mkdir dir="${propsdir}"/>
 
     <!-- Extract Git properties -->
-    <exec executable="git" dir=".." output="git.properties">
+    <exec executable="git" dir=".." output="target/git.properties">
       <arg value="remote"/>
       <arg value="-v"/>
     </exec>
-    <property prefix="git" file="git.properties"/>
+    <property prefix="git" file="target/git.properties"/>
 
-    <exec executable="git" dir=".." output="git2.properties">
+    <exec executable="git" dir=".." output="target/git2.properties">
       <arg value="log"/>
       <arg value="--max-count=1"/>
     </exec>
-    <property prefix="git2" file="git2.properties"/>
+    <property prefix="git2" file="target/git2.properties"/>
 
     <!-- Update the properties file -->
     <propertyfile
