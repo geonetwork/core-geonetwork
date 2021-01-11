@@ -248,13 +248,11 @@
             src.lUrl = src.url[lang] ||
               src.url[mdLanguage] ||
               src.url[Object.keys(src.url)[0]];
-
           });
           angular.forEach(data.thumbnails, function(img) {
             img.lUrl = img.url[lang] ||
               img.url[mdLanguage] ||
               img.url[Object.keys(img.url)[0]];
-
           });
           if (data.siblings) {
             for (var i = 0; i < data.siblings.length; i++) {
@@ -393,6 +391,27 @@
             }
           }
           return defaultIcon;
+        },
+
+        /**
+         * @ngdoc method
+         * @name gnOnlinesrc#getIconByProtocol
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         *
+         * @description
+         * Get display icon depending of the protocol
+         * of the online resource.
+         * To display onlinesrc list
+         *
+         * @param {string} protocol name
+         * @return {string} icon class
+         */
+        getApprovedUrl: function(url) {
+          if(gnCurrentEdit.metadata.draft
+             && url.match(".*/api/records/(.*)/attachments/.*") != null) {
+             url += (url.indexOf("?") > 0)?"&":"?" + "approved=" + (gnCurrentEdit.metadata.draft != 'y');
+          }
+          return url
         },
 
         /**
