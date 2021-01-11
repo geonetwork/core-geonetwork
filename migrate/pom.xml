@@ -48,6 +48,19 @@
   </licenses>
 
   <dependencies>
+    <!-- generated dependencies -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>core</artifactId>
+      <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>javax.servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
     <!-- database dependencies -->
     <dependency>
       <groupId>com.h2database</groupId>
@@ -78,19 +91,6 @@
       <artifactId>ojdbc8</artifactId>
     </dependency>
 
-
-    <!-- generated dependencies -->
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>core</artifactId>
-      <version>${project.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.servlet</groupId>
-          <artifactId>javax.servlet-api</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
   </dependencies>
 
 </project>

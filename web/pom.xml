@@ -340,8 +340,14 @@
     <!-- Generated dependencies -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>migrate</artifactId>
+      <artifactId>core</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>javax.servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -358,18 +364,6 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>dummy-api</artifactId>
       <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>core</artifactId>
-      <version>${project.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.servlet</groupId>
-          <artifactId>javax.servlet-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -404,6 +398,12 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>listeners</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>migrate</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -727,6 +727,7 @@
                 <fileset>
                   <directory>src/main/webapp/WEB-INF/</directory>
                   <includes>
+                    <include>classes/setup/sql/migrate/**</include>
                     <include>data/0*</include>
                     <include>data/config/schema_plugins/**</include>
                     <include>data/config/schemaplugin-uri-catalog.xml</include>
@@ -755,7 +756,7 @@
         </executions>
       </plugin>
 
-      <plugin>
+      <!--plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <executions>
@@ -773,33 +774,34 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+      </plugin-->
 
       <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>unpack-migrate</id>
-                <phase>process-resources</phase>
-                <goals><goal>unpack</goal></goals>
-                <configuration>
-                  <encoding>UTF-8</encoding>
-                  <artifactItems>
-                    <!-- unpack built-in schema plugins into schema-plugins directory -->
-                    <artifactItem>
-                      <groupId>org.geonetwork-opensource.schemas</groupId>
-                      <artifactId>schema-iso19139</artifactId>
-                      <type>zip</type>
-                      <overWrite>false</overWrite>
-                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
-                    </artifactItem>
-                  </artifactItems>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack-migrate</id>
+            <phase>process-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <encoding>UTF-8</encoding>
+              <artifactItems>
+                <!-- unpack sql migrate scripts, classes provided as dependency -->
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>migrate</artifactId>
+                  <version>${project.version}</version>
+                  <type>jar</type>
+                  <overWrite>false</overWrite>
+                  <includes>**/*.sql</includes>
+                  <outputDirectory>${basedir}/src/main/webapp/WEB-INF/classes/setup/sql/migrate</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
