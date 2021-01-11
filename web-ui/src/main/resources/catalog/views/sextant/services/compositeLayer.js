@@ -478,6 +478,13 @@
                 color: 'rgba(255, 255, 255, 0.01)'
               })
             }),
+            fill: new ol.style.Fill({
+              color: 'rgba(255, 255, 255, 0.05)'
+            }),
+            stroke: new ol.style.Stroke({
+              color: 'rgba(255, 255, 255, 0.01)',
+              width: 1
+            }),
             zIndex: Infinity
           })
         },
@@ -493,6 +500,13 @@
                 color: 'white',
                 width: 3
               })
+            }),
+            stroke: new ol.style.Stroke({
+              color: 'white',
+              width: 3
+            }),
+            fill: new ol.style.Fill({
+              color: 'rgba(255, 255, 255, 0.01)'
             }),
             zIndex: Infinity
           })
