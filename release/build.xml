@@ -52,7 +52,7 @@
   <property name="javaVersion" value="1.8.0"/>
   <property name="jreUrl" value="http://openjdk.java.net/"/>
   <property name="OS" value="Compiled on ${os.name} (${osys})"/>
-  <property name="propsdir" value="../.props"/>
+  <property name="propsdir" value="target/props"/>
   <property name="ant.build.javac.target" value="1.8"/>
   <property name="debugOn" value="on"/>
 
@@ -69,17 +69,17 @@
     <mkdir dir="${propsdir}"/>
 
     <!-- Extract Git properties -->
-    <exec executable="git" dir=".." output="git.properties">
+    <exec executable="git" dir=".." output="target/git.properties">
       <arg value="remote"/>
       <arg value="-v"/>
     </exec>
-    <property prefix="git" file="git.properties"/>
+    <property prefix="git" file="target/git.properties"/>
 
-    <exec executable="git" dir=".." output="git2.properties">
+    <exec executable="git" dir=".." output="target/git2.properties">
       <arg value="log"/>
       <arg value="--max-count=1"/>
     </exec>
-    <property prefix="git2" file="git2.properties"/>
+    <property prefix="git2" file="target/git2.properties"/>
 
     <!-- Update the properties file -->
     <propertyfile
@@ -113,11 +113,11 @@
     <copy file="readme.html"
           tofile="${propsdir}/readme.html"
           filtering="on" overwrite="yes"/>
-    
+
     <!-- license file -->
     <copy file="license.html"
           tofile="${propsdir}/license.html"
-          filtering="on" overwrite="yes"/>    
+          filtering="on" overwrite="yes"/>
 
     <echo message="Replacing template variables in readme files..."/>
     <replace file="${propsdir}/readme.html"
@@ -132,7 +132,7 @@
     <replace file="${propsdir}/readme.html" token="@appName@" value="${appName}"/>
     <replace file="${propsdir}/readme.html" token="@displayName@" value="${displayName}"/>
     <replace file="${propsdir}/readme.html" token="@homepage@" value="${homepage}"/>
-    <replace file="${propsdir}/readme.html" token="@year@" value="${year}"/> 
+    <replace file="${propsdir}/readme.html" token="@year@" value="${year}"/>
     <echo message="Done"/>
   </target>
 
@@ -144,16 +144,14 @@
   <!-- Create ZIP distribution for GeoNetwork + Jetty + shell scripts -->
   <target name="zip">
     <property file="../web/src/main/webapp/WEB-INF/server.prop"/>
-
-    <delete dir="../${appName}-${release}"/>
-    <mkdir dir="../${appName}-${release}"/>
+    <mkdir dir="target/${appName}-${release}"/>
 
     <echo message="Creating ZIP file for ${appName} ${release}..."/>
 
-    <zip destfile="../${appName}-${release}/${appName}-${release}-${subVersion}.zip">
+    <zip destfile="target/${appName}-${release}/${appName}-${release}-${subVersion}.zip">
       <zipfileset dir="./bin" excludes="**.sh" prefix="bin" />
       <zipfileset dir="./bin" includes="**.sh" prefix="bin" filemode="774"/>
-      <zipfileset dir="../.props" includes="readme.html, license.html" />
+      <zipfileset dir="${propsdir}" includes="readme.html, license.html" />
       <zipfileset dir="./jetty" prefix="jetty" excludes="logs/*.log, logs/archive/*.log" />
       <zipfileset dir="../web/target/geonetwork" prefix="web/geonetwork" />
       <zipfileset dir="./data" prefix="web/geonetwork/data" />
@@ -161,7 +159,7 @@
     </zip>
 
     <checksum
-      file="../${appName}-${release}/${appName}-${release}-${subVersion}.zip"
+      file="target/${appName}-${release}/${appName}-${release}-${subVersion}.zip"
       forceOverwrite="yes"/>
 
   </target>
@@ -169,11 +167,11 @@
   <!-- Copy and rename WAR file and calculate checksum -->
   <target name="war" depends="zip">
 
-    <copy file="../web/target/geonetwork.war" 
-          tofile="../${appName}-${release}/${appName}-${release}-${subVersion}.war" />    
+    <copy file="../web/target/geonetwork.war"
+          tofile="target/${appName}-${release}/${appName}-${release}-${subVersion}.war" />
 
-    <checksum file="../${appName}-${release}/${appName}-${release}-${subVersion}.war"
-              forceOverwrite="yes"/> 
+    <checksum file="target/${appName}-${release}/${appName}-${release}-${subVersion}.war"
+              forceOverwrite="yes"/>
 
   </target>
 
