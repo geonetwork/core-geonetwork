@@ -350,6 +350,9 @@ goog.require('gn_alert');
                 'field': 'tag.default',
                 'include': '.*',
                 'size': 10
+              },
+              'meta': {
+                'caseInsensitiveInclude': true
               }
             },
             'th_regions_tree.default': {
@@ -406,7 +409,11 @@ goog.require('gn_alert');
             'OrgForResource': {
               'terms': {
                 'field': 'OrgForResource',
+                'include': '.*',
                 'size': 15
+              },
+              'meta': {
+                'caseInsensitiveInclude': true
               }
             },
             'cl_maintenanceAndUpdateFrequency.key': {
