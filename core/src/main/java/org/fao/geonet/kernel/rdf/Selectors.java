@@ -37,6 +37,7 @@ import org.jdom.Namespace;
 public class Selectors {
     public static final Namespace GML_NAMESPACE = Namespace.getNamespace("gml", "http://www.opengis.net/gml#");
     public static final Namespace SKOS_NAMESPACE = Namespace.getNamespace("skos", "http://www.w3.org/2004/02/skos/core#");
+    public static final Namespace RDF_NAMESPACE = Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
     public static final Selector ID = new Selector("id", "{id} rdf:type {skos:Concept}", SKOS_NAMESPACE);
     public static final Selector TOPCONCEPTS = new Selector("", "{id} rdf:type {skos:Concept}, {cs} rdf:type {skos:ConceptScheme}, {cs} skos:hasTopConcept {id}", SKOS_NAMESPACE);
     public static final Selector EMPTY = new Selector("", "", SKOS_NAMESPACE);
