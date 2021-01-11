@@ -142,13 +142,11 @@
             }
             hideHeatmapTooltip();
           }
-          function showFeatureTooltip(feature, sticky) {
-            // position overlay on feature
-            var center =
-              ol.extent.getCenter(feature.getGeometry().getExtent());
-            var topleft =
-              ol.extent.getTopLeft(feature.getGeometry().getExtent());
-            tooltipOverlay.setPosition([center[0], topleft[1]]);
+          function showFeatureTooltip(feature, sticky, coordinate) {
+            // position overlay on pointer
+            coordinate = coordinate || tooltipOverlay.get('_gn_overlay_position')
+            tooltipOverlay.set('_gn_overlay_position', coordinate)
+            tooltipOverlay.setPosition(coordinate);
 
             // read the feature's attributes & render them using the tooltip template
             var props = feature.getProperties();
@@ -188,7 +186,7 @@
           function hideFeatureTooltip() {
             tooltipOverlay.setPosition();
           }
-          function handleFeatureHover(feature) {
+          function handleFeatureHover(feature, coordinate) {
             if (hoveredFeature) {
               hoveredFeature.setStyle(null);
             }
@@ -196,7 +194,7 @@
               hoveredFeature = feature;
               hoveredFeature.setStyle(featureHoverStyle);
               if (!selectedFeature) {
-                showFeatureTooltip(hoveredFeature);
+                showFeatureTooltip(hoveredFeature, false, coordinate);
               }
             } else {
               hoveredFeature = null;
@@ -210,7 +208,7 @@
               hideFeatureTooltip();
             }
           }
-          function handleFeatureClick(feature) {
+          function handleFeatureClick(feature, coordinate) {
             if (selectedFeature) {
               selectedFeature.setStyle(null);
             }
@@ -220,7 +218,7 @@
             }
             selectedFeature = feature;
             selectedFeature.setStyle(featureSelectedStyle);
-            showFeatureTooltip(selectedFeature, true);
+            showFeatureTooltip(selectedFeature, true, coordinate);
           }
           function handleFeatureClickNoHit() {
             if (selectedFeature) {
@@ -256,7 +254,7 @@
                   handleHeatmapHover(feature);
                   heatmapHit = true;
                 } else {
-                  handleFeatureHover(feature);
+                  handleFeatureHover(feature, evt.coordinate);
                   featureHit = true;
                 }
                 return true;
@@ -278,7 +276,7 @@
           map.on('singleclick', function(evt) {
             var hit = map.forEachFeatureAtPixel(evt.pixel,
               function (feature) {
-                handleFeatureClick(feature);
+                handleFeatureClick(feature, evt.coordinate);
                 return true;
               },
               undefined,
