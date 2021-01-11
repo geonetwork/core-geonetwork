@@ -45,6 +45,7 @@
 
   <!-- Project build properties -->
   <property name="appName" value="GeoNetwork"/>
+  <property name="bundleName" value="geonetwork-bundle"/>
   <property name="displayName" value="GeoNetwork opensource"/>
   <property name="homepage" value="https://geonetwork-opensource.org"/>
   <property name="version" value="3.10.6"/>
@@ -148,7 +149,7 @@
 
     <echo message="Creating ZIP file for ${appName} ${release}..."/>
 
-    <zip destfile="target/${appName}-${release}/${appName}-${release}-${subVersion}.zip">
+    <zip destfile="target/${appName}-${release}/${bundleName}-${release}-${subVersion}.zip">
       <zipfileset dir="./bin" excludes="**.sh" prefix="bin" />
       <zipfileset dir="./bin" includes="**.sh" prefix="bin" filemode="774"/>
       <zipfileset dir="${propsdir}" includes="readme.html, license.html" />
@@ -159,7 +160,7 @@
     </zip>
 
     <checksum
-      file="target/${appName}-${release}/${appName}-${release}-${subVersion}.zip"
+      file="target/${appName}-${release}/${bundleName}-${release}-${subVersion}.zip"
       forceOverwrite="yes"/>
 
   </target>
