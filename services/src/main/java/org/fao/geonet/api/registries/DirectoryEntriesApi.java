@@ -214,13 +214,13 @@ public class DirectoryEntriesApi {
         }
         // Multilingual record: Remove all localizedString from the subtemplate for langs that are not in the metadata and set the gco:CharacterString
         // Monolingual record: Remove all localized strings and extract main gco:CharacterString
-        List<String> twoCharLangs = new ArrayList<String>();
+        List<String> templateLangs = new ArrayList<String>();
         for(String l : langs) {
-            twoCharLangs.add("#" + XslUtil.twoCharLangCode(l).toUpperCase());
+            templateLangs.add("#" + l);
         }
         MultilingualSchemaPlugin plugin = (MultilingualSchemaPlugin)schemaManager.getSchema(schema).getSchemaPlugin();
         if (plugin != null) {
-            plugin.removeTranslationFromElement(tpl, twoCharLangs);
+            plugin.removeTranslationFromElement(tpl, templateLangs);
         }
 
         if (transformation != null) {
