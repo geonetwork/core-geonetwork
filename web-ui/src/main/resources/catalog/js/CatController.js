@@ -373,12 +373,14 @@ goog.require('gn_alert');
             //   }
             // },
             "resolutionScaleDenominator": {
-              'collapsed': true,
               "histogram": {
                 "field": "resolutionScaleDenominator",
                 "interval": 10000,
                 "keyed" : true,
                 'min_doc_count': 1
+              },
+              'meta': {
+                'collapsed': true
               }
             },
             // "serviceType": {
@@ -389,12 +391,14 @@ goog.require('gn_alert');
             //   }
             // },
             "creationYearForResource": {
-              'collapsed': true,
               "histogram": {
                 "field": "creationYearForResource",
                 "interval": 5,
                 "keyed" : true,
                 'min_doc_count': 1
+              },
+              'meta': {
+                'collapsed': true
               }
             },
             // "creationYearForResource": {
@@ -417,10 +421,12 @@ goog.require('gn_alert');
               }
             },
             'cl_maintenanceAndUpdateFrequency.key': {
-              'collapsed': true,
               'terms': {
                 'field': 'cl_maintenanceAndUpdateFrequency.key',
                 'size': 10
+              },
+              "meta": {
+                "collapsed": true
               }
             },
             'cl_status.key': {
@@ -430,11 +436,13 @@ goog.require('gn_alert');
               }
             },
             'dateStamp' : {
-              'userHasRole': 'isReviewerOrMore',
-              // 'collapsed': true,
               'auto_date_histogram' : {
                 'field' : 'dateStamp',
                 'buckets': 50
+              },
+              "meta": {
+                'userHasRole': 'isReviewerOrMore',
+                'collapsed': true
               }
             }
           },

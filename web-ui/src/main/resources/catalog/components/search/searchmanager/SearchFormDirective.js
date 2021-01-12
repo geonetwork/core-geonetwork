@@ -483,8 +483,7 @@
       for (var i = 0; i < facet.path.length; i++) {
         if ((i + 1) % 2 === 0) continue;
         var key = facet.path[i];
-        facetConfigs[key] =
-          gnESFacet.removeInternalFacetConfig($scope.facetConfig[key]);
+        facetConfigs[key] = $scope.facetConfig[key];
       }
       var request = gnESService.generateEsRequest($scope.finalParams, $scope.searchObj.state,
         $scope.searchObj.configId, $scope.searchObj.filters);
@@ -502,8 +501,7 @@
       for (var i = 0; i < facet.path.length; i++) {
         if ((i + 1) % 2 === 0) continue;
         var key = facet.path[i];
-        facetConfigs[key] =
-          gnESFacet.removeInternalFacetConfig($scope.facetConfig[key]);
+        facetConfigs[key] = $scope.facetConfig[key];
       }
       var request = gnESService.generateEsRequest($scope.finalParams, $scope.searchObj.state,
         $scope.searchObj.configId, $scope.searchObj.filters)
