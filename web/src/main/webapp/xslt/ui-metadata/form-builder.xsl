@@ -616,7 +616,7 @@
                         </textarea>
                       </xsl:when>
                       <xsl:when test="$codelist != ''">
-                        <select class="form-control input-sm"
+                        <select class="form-control"
                                 data-gn-field-tooltip="{$schema}|{@tooltip}"
                                 id="{$id}_{@label}">
                           <xsl:if test="$readonly = 'true'">
