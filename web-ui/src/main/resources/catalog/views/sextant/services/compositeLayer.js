@@ -14,6 +14,12 @@
     '  </div>'+
     '</div>';
 
+  var defaultHoverTemplate =
+    '<div class="panel panel-default">' +
+    '  <div class="panel-body" style="max-width: 50em; max-height: 30em; font-size: 0.9em; overflow: auto;">'+
+    '    {ATTRIBUTES} '+
+    '  </div>'+
+    '</div>';
 
   /**
    * This regex is used to loop through all the attribute tokens
@@ -21,7 +27,7 @@
    * on the feature, or simply remove the token altogether.
    * Tokens are expected to be like so: {ATTR_NAME}
    */
-  var TOOLTIP_ATTR_REGEX = /{(.+)}/g;
+  var TOOLTIP_ATTR_REGEX = /{(\w*?)}/g;
 
   /**
    * This regex is used to insert a summary of all attributes value in the template.
@@ -46,7 +52,7 @@
       var GeoJSON = new ol.format.GeoJSON();
 
       return {
-        init: function (layer, map, featureType, heatmapMinCount, tooltipMaxCount, tooltipTemplate) {
+        init: function (layer, map, featureType, heatmapMinCount, tooltipMaxCount, tooltipTemplate, tooltipHoverTemplate) {
           var me = this;
 
           // create base group & copy properties
@@ -149,8 +155,14 @@
             tooltipOverlay.setPosition(coordinate);
 
             // read the feature's attributes & render them using the tooltip template
+            const clickMode = sticky
             var props = feature.getProperties();
-            var html = tooltipTemplate || defaultTemplate;
+            var html
+            if (!clickMode && tooltipHoverTemplate) {
+              html = defaultHoverTemplate.replace(TOOLTIP_ATTR_SUMMARY_REGEX, tooltipHoverTemplate)
+            } else {
+              html = tooltipTemplate || defaultTemplate
+            }
 
             // replace whole attributes summary
             var attributesSummaryHtml;
@@ -163,9 +175,10 @@
             }
 
             // replace individual attributes
-            while (!!(matches = TOOLTIP_ATTR_REGEX.exec(html))) {
-              token = matches[0];
-              var attrName = matches[1];
+            matches = html.matchAll(TOOLTIP_ATTR_REGEX)
+            for (var match of matches) {
+              token = match[0];
+              var attrName = match[1];
               html = html.replace(token, props[attrName] || '');
             }
             tooltipOverlay.getElement().innerHTML = html;
