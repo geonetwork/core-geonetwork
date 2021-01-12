@@ -1693,10 +1693,20 @@
                     scope.selection = [];
                   });
 
+                  // Clear the search params and input
+                  scope.clearSearch = function() {
+                    $('#siblingdd input').val('');
+                    scope.$broadcast('resetSearch');
+                  };
+
                   // Append * for like search
                   scope.updateParams = function() {
-                    scope.searchObj.params.any =
-                        '*' + scope.searchObj.any + '*';
+                    if (scope.searchObj.any == '') {
+                      scope.$broadcast('resetSearch');
+                    } else {
+                      scope.searchObj.params.any =
+                      '*' + scope.searchObj.any + '*';
+                    }
                   };
 
                   // Based on initiative type and association type
