@@ -99,7 +99,7 @@
               if(gnViewerSettings.mapConfig.switcherProjectionList.length < 2) {
                 scope.disabledTools.projectionSwitcher = true;
               }
-              
+
               /** wps process tabs */
               scope.wpsTabs = {
                 byUrl: true,
@@ -110,9 +110,10 @@
               scope.zoom = function(map, delta) {
                 gnMap.zoom(map, delta);
               };
+              
               scope.zoomToMaxExtent = function(map) {
-                map.getView().fit(map.getView().
-                    getProjection().getExtent(), map.getSize());
+                var extent = map.getView().getProjection().getExtent();
+                map.getView().fit(extent, map.getSize());
               };
               scope.ol3d = null;
 
@@ -192,7 +193,7 @@
                     if (layer) {
                       gnMap.feedLayerWithRelated(layer, config.group);
 
-                      var extent = layer.get('cextent') || layer.get('extent');
+                      var extent = layer.get('extent');
                       var autofit = gnViewerSettings.mapConfig.autoFitOnLayer;
                       var message = extent && !autofit ? 'layerAdded' : 'layerAddedNoExtent';
 
@@ -236,7 +237,7 @@
                     var layer = gnMap.getLayerInMap(scope.map,
                         config.name, config.url);
                     if (layer !== null) {
-                      var extent = layer.get('cextent') || layer.get('extent');
+                      var extent = layer.get('extent');
                       gnAlertService.addAlert({
                         msg: $translate.instant('layerIsAlreadyInMap', {
                           layer: config.name,

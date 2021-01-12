@@ -35,9 +35,9 @@
   var EPSG_REGEX = new RegExp('^EPSG:\\d{4,6}$');
 
   module.provider('gnProjService', function() {
-    this.$get = ['$http', '$q', '$translate', 'gnUrlUtils', 
+    this.$get = ['$http', '$q', '$translate', 'gnUrlUtils',
      function($http, $q, $translate, gnUrlUtils) {
-      
+
       var buildRestUrl = function(searchTerm) {
         // Add GET query parameters to serviceUrl
         if (searchTerm.toUpperCase().startsWith('EPSG:')) {
@@ -49,6 +49,10 @@
               format: 'json'
             }));
       };
+
+      var isDefaultProjection = function(code) {
+        return code === EPSG_LL_WGS84 || code === EPSG_WEB_MERCATOR;
+      }
 
       var parseProjDef = function(data) {
 
@@ -90,7 +94,7 @@
           }
           // transform world extent to projected extent
           extent = ol.proj.transformExtent(worldExtent, EPSG_LL_WGS84, code, 8);
-        } 
+        }
 
         return {
           label: firstResult.name,
@@ -108,12 +112,10 @@
             // Get API service name without http(s) prefix for display purposes
             return {
               value: SERVICE_REST_URL.substr(SERVICE_REST_URL.indexOf('://') + 3)
-            } 
+            }
           },
 
-          isDefaultProjection: function(code) {
-            return code === EPSG_LL_WGS84 || code === EPSG_WEB_MERCATOR;
-          },
+          isDefaultProjection: isDefaultProjection,
 
           isValidEpsgCode: function(code) {
             return code.search(EPSG_REGEX) >= 0;
@@ -121,7 +123,7 @@
         },
 
         getProjectionSettings: function(searchTerm) {
-          var defer = $q.defer();          
+          var defer = $q.defer();
           var url = buildRestUrl(searchTerm);
 
           // send request and decode result
@@ -140,11 +142,11 @@
               })
               .error(function(data, status) {
                 defer.reject(
-                $translate.instant(
-                  status === 401 ? 'checkProjectionUrlUnauthorized' : 'checkProjectionUrl',
-                {url: url, status: status}));
+                  $translate.instant(
+                    status === 401 ? 'checkProjectionUrlUnauthorized' : 'checkProjectionUrl',
+                    {url: url, status: status}));
               });
-          }
+            }
           return defer.promise;
         }
       };

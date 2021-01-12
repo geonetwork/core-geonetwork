@@ -27,12 +27,14 @@
   goog.require('gn_ows');
   goog.require('gn_wfs_service');
   goog.require('gn_esri_service');
+  goog.require('gn_projection_service');
 
 
   var module = angular.module('gn_map_service', [
     'gn_ows',
     'gn_wfs_service',
-    'gn_esri_service'
+    'gn_esri_service',
+    'gn_projection_service'
   ]);
 
   /**
@@ -66,11 +68,12 @@
       'gnAlertService',
       '$http',
       'gnEsriUtils',
+      'gnProjService',
       function(olDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
           gnGlobalSettings, gnViewerSettings, gnViewerService, gnAlertService,
-          $http, gnEsriUtils) {
+          $http, gnEsriUtils, gnProjService) {
 
         /**
          * @description
@@ -310,26 +313,6 @@
           /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
-           * @name gnMap#importProj4js
-           *
-           * @description
-           * Import the proj4js projection that are specified in DB config.
-           */
-          importProj4js: function() {
-            proj4.defs('EPSG:2154', '+proj=lcc +lat_1=49 +lat_2=44 +lat_0' +
-                '=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +' +
-                'towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
-            if (proj4 && angular.isArray(gnConfig['map.proj4js'])) {
-              angular.forEach(gnConfig['map.proj4js'], function(item) {
-                proj4.defs(item.code, item.value);
-              });
-            }
-            ol.proj.proj4.register(proj4);
-          },
-
-          /**
-           * @ngdoc method
-           * @methodOf gn_map.service:gnMap
            * @name gnMap#reprojExtent
            *
            * @description
@@ -349,6 +332,58 @@
             else {
               return ol.proj.transformExtent(extent, src, dest, 8);
             }
+          },
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#getCorrectAxisOrder
+           *
+           * @description
+           * Returns the correct axis orientation code if the given projection 
+           * has a missing or standard axis orientation "enu" (east/north/up), 
+           * even though it should have "neu" (north/east/up) instead, for example.
+           * This especially applies to transverse Mercator projections, 
+           * like all UTM-based projections (e.g. EPSG:3006).
+           * Returns null if the projection already has a correct orientation.
+           *
+           * @param {ol.proj.ProjectionLike} proj for which to check the axis order
+           * 
+           * @return {string} axis orientation code
+           */
+          getCorrectAxisOrder: function(proj) {
+            if (typeof proj.getCode === 'function') {
+              proj = proj.getCode();
+            }
+            var proj4Def = proj4.defs[proj];
+            if (proj4Def.projName === 'utm' && proj4Def.axis !== 'neu') {
+              // TODO: add more cases in the future (e.g. South-African projections)
+              return 'neu';
+            }
+          },
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#patchOlProjection
+           *
+           * @description
+           * Returns a "patched" copy of the given OL projection if the original
+           * has a bad or missing axis orientation.
+           * If the given projection is fine, the original will be returned.
+           *
+           * @param {ol.proj.Projection} proj for which to check the axis order
+           * 
+           * @return {ol.proj.Projection} OL Projection object
+           */
+          patchOlProjection: function(proj) {
+            var axisCode = this.getCorrectAxisOrder(proj);
+            if (axisCode) {
+              var patchedProj = angular.copy(proj);
+              patchedProj.axisOrientation_ = axisCode;
+              return patchedProj;
+            }
+            return proj;
           },
 
           /**
@@ -771,6 +806,17 @@
               });
             }
 
+            // Determine layer extent (for zoom purposes)
+            var mapProj = map.getView().getProjection();
+            var layerExtent = null;
+            if (options.extent) {
+              if (layerOptions.projection === 'EPSG:4326') {
+                layerExtent = ol.proj.transformExtent(options.extent, layerOptions.projection, mapProj.getCode(), 8);
+              } else {
+                layerExtent = options.extent;
+              }
+            }
+
             var layerOptions = {
               url: options.url,
               type: 'WMS',
@@ -785,7 +831,7 @@
               advanced: options.advanced,
               minResolution: options.minResolution,
               maxResolution: options.maxResolution,
-              cextent: options.extent,
+              extent: layerExtent,
               name: layerParams.LAYERS
             };
             if (gnViewerSettings.singleTileWMS) {
@@ -802,7 +848,7 @@
               if (!uuid) {
                 var res = new RegExp(/\#\/metadata\/(.*)/g).
                     exec(options.metadata);
-                if (angular.isArray(res) && res.length == 2) {
+                if (angular.isArray(res) && res.length === 2) {
                   uuid = res[1];
                 }
               }
@@ -816,13 +862,21 @@
             var unregisterEventKey = olLayer.getSource().on(
                 (gnViewerSettings.singleTileWMS) ?
                 'imageloaderror' : 'tileloaderror',
-                function(tileEvent, target) {
-                  var url = tileEvent.tile && tileEvent.tile.getKey ?
-                      tileEvent.tile.getKey() : '- no tile URL found-';
+                function(olEvent, target) {
+                  var url = '[no tile URL found]';
+                  if (olEvent.image) {
+                    if (olEvent.image.getUrl) {
+                      url = olEvent.image.getUrl();
+                    } else if (olEvent.image.src_) {
+                      url = olEvent.image.src_;
+                    }
+                  } else if (olEvent.tile && olEvent.tile.getKey) {
+                    url = olEvent.tile.getKey();
+                  }
 
-                  var layer = tileEvent.currentTarget &&
-                      tileEvent.currentTarget.getParams ?
-                      tileEvent.currentTarget.getParams().LAYERS :
+                  var layer = olEvent.currentTarget &&
+                      olEvent.currentTarget.getParams ?
+                      olEvent.currentTarget.getParams().LAYERS :
                       layerParams.LAYERS;
 
                   var msg = $translate.instant('layerTileLoadError', {
@@ -868,30 +922,6 @@
             var legend, attribution, attributionUrl, metadata, errors = [];
             if (getCapLayer) {
 
-              var isLayerAvailableInMapProjection = false;
-              // OL3 only parse CRS from WMS 1.3 (and not SRS in WMS 1.1.x)
-              // so a WMS 1.1.x will always failed on this
-              // https://github.com/openlayers/ol3/blob/master/src/
-              // ol/format/wmscapabilitiesformat.js
-              /*
-              if (layer.CRS) {
-                var mapProjection = map.getView().getProjection().getCode();
-                for (var i = 0; i < layer.CRS.length; i++) {
-                  if (layer.CRS[i] === mapProjection) {
-                    isLayerAvailableInMapProjection = true;
-                    break;
-                  }
-                }
-              } else {
-                errors.push($translate.instant('layerCRSNotFound'));
-                console.warn($translate.instant('layerCRSNotFound'));
-              }
-              if (!isLayerAvailableInMapProjection) {
-                errors.push($translate.instant('layerNotAvailableInMapProj'));
-                console.warn($translate.instant('layerNotAvailableInMapProj'));
-              }
-              */
-
               // TODO: parse better legend & attribution
               var requestedStyle = null;
               var legendUrl;
@@ -930,46 +960,41 @@
                 metadata = getCapLayer.MetadataURL[0].OnlineResource;
               }
 
-              var layerParam = {LAYERS: getCapLayer.Name};
+              var layerParams = {LAYERS: getCapLayer.Name};
               if (getCapLayer.version) {
-                layerParam.VERSION = getCapLayer.version;
+                layerParams.VERSION = getCapLayer.version;
               }
 
-              layerParam.STYLES = requestedStyle?requestedStyle.Name:'';
+              layerParams.STYLES = requestedStyle ? requestedStyle.Name : '';
 
-              var projCode = map.getView().getProjection().getCode();
-              if (getCapLayer.CRS) {
-                if (!getCapLayer.CRS.includes(projCode)) {
-                  if (projCode == 'EPSG:3857' &&
-                      getCapLayer.CRS.includes('EPSG:900913')) {
-                  }
-                  else if (getCapLayer.CRS.includes('EPSG:4326')) {
-                    projCode = 'EPSG:4326';
-                  }
-                }
+              var mapProj = map.getView().getProjection();
+              var bboxProps = gnOwsCapabilities.getWmsLayerExtentFromGetCap(
+                mapProj, getCapLayer, this.patchOlProjection(mapProj));
+              var targetProj = bboxProps.projection;
+              if (!bboxProps.extent) {
+                // If no valid extent could be determined, the WMS does not support the projection
+                var projCode = angular.isDefined(targetProj.getCode) ? targetProj.getCode() : targetProj;
+                errors.push($translate.instant('layerNotAvailableInMapProj',{proj:projCode}));
               }
 
               url = getCapLayer.url || url;
               if (url.slice(-1) === '?') {
                 url = url.substring(0, url.length-1);
               }
-              var layer = this.createOlWMS(map, layerParam, {
+              var layer = this.createOlWMS(map, layerParams, {
                 url: url,
                 label: getCapLayer.Title,
                 attribution: attribution,
                 attributionUrl: attributionUrl,
-                projection: projCode,
+                projection: targetProj,
                 legend: legend,
                 group: getCapLayer.group,
                 metadata: metadata,
-                extent: gnOwsCapabilities.getLayerExtentFromGetCap(map,
-                    getCapLayer),
+                extent: bboxProps.extent,
                 minResolution: this.getResolutionFromScale(
-                    map.getView().getProjection(),
-                    getCapLayer.MinScaleDenominator),
+                  targetProj, getCapLayer.MinScaleDenominator),
                 maxResolution: this.getResolutionFromScale(
-                    map.getView().getProjection(),
-                    getCapLayer.MaxScaleDenominator),
+                  targetProj, getCapLayer.MaxScaleDenominator),
                 useProxy: getCapLayer.useProxy
               });
 
@@ -1101,7 +1126,7 @@
               }
 
               if (!isLayerAvailableInMapProjection) {
-				gnAlertService.addAlert({
+                gnAlertService.addAlert({
                   msg: $translate.instant('layerNotAvailableInMapProj',{proj:mapProjection}),
                   delay: 5000,
                   type: 'warning'});
@@ -1732,7 +1757,6 @@
            */
           createOlWMTSFromCap: function(map, getCapLayer, capabilities) {
 
-            var legend, attribution, metadata;
             if (getCapLayer && capabilities) {
 
               //Asking WMTS service about capabilities
@@ -1748,12 +1772,19 @@
 
               var options;
 
+              // Patch projection before the call to OL's optionsFromCapabilities()
+              // if needed (if axis orientation is incorrect/missing).
+              var mapProj = this.patchOlProjection(map.getView().getProjection());
+
               try {
                 options = ol.source.WMTS.optionsFromCapabilities(cap, {
                   layer: getCapLayer.Identifier,
-                  matrixSet: map.getView().getProjection().getCode(),
-                  projection: map.getView().getProjection().getCode()
+                  projection: mapProj
                 });
+                if (!options || !options.matrixSet ||
+                  !proj4.defs.hasOwnProperty(options.projection.getCode())) {
+                  throw Error('No suitable matrixset found in GetCapabilities');
+                }
               } catch (e) {
                 gnAlertService.addAlert({
                   msg: $translate.instant('wmtsLayerNoUsableMatrixSet'),
@@ -1761,6 +1792,22 @@
                   type: 'danger'
                 });
                 return;
+              }
+
+              // Fix tileGrid origins for projections without reverse axis order (e.g. UTM):
+              // For some reason, OL *does* create a rotated tileGrid extent, but the origins
+              // remain inverted...
+              var tileExtent = options.tileGrid.extent_;
+              if (this.getCorrectAxisOrder(map.getView().getProjection()) === 'neu') {
+                var topLeft = ol.extent.getTopLeft(tileExtent);
+                if (options.tileGrid.origin_) {
+                  options.tileGrid.origin_ = topLeft;
+                }
+                if (angular.isArray(options.tileGrid.origins_)) {
+                  options.tileGrid.origins_.forEach(function (item, index, array) {
+                    array[index] = topLeft;
+                  });
+                }
               }
 
               //Configuring url for service
@@ -1771,7 +1818,7 @@
               var urlCapType = capabilities.operationsMetadata.GetCapabilities.
               DCP.HTTP.Get[0].Constraint[0].AllowedValues.Value[0].toLowerCase();
 
-              if (urlCapType == 'restful') {
+              if (urlCapType === 'restful') {
                 if (urlCap.indexOf('/1.0.0/WMTSCapabilities.xml') == -1) {
                   urlCap = urlCap + '/1.0.0/WMTSCapabilities.xml';
                 }
@@ -1785,17 +1832,15 @@
                       version: '1.0.0'}));
               }
 
-              //Create layer
+              // Create layer
               var olLayer = new ol.layer.Tile({
-                extent: map.getView().getProjection().getExtent(),
                 name: getCapLayer.Identifier,
                 title: getCapLayer.Title,
                 label: getCapLayer.Title,
                 source: new ol.source.WMTS(options),
                 url: url,
                 urlCap: urlCap,
-                cextent: gnOwsCapabilities.getLayerExtentFromGetCap(map,
-                    getCapLayer)
+                extent: tileExtent
               });
 
               //Add GN extras to layer
@@ -1813,7 +1858,7 @@
                 if (!uuid) {
                   var res = new RegExp(/\#\/metadata\/(.*)/g).
                   exec(metadata);
-                  if (angular.isArray(res) && res.length == 2) {
+                  if (angular.isArray(res) && res.length === 2) {
                     uuid = res[1];
                   }
                 }
@@ -1873,15 +1918,15 @@
            *
            * @description
            * Zoom map to the layer extent if defined. The layer extent
-           * is gotten from capabilities and store in cextent property
+           * is gotten from capabilities and store in the extent property
            * of the layer.
            *
            * @param {ol.Layer} layer for the extent
            * @param {ol.map} map obj
            */
           zoomLayerToExtent: function(layer, map) {
-            if (layer.get('cextent')) {
-              map.getView().fit(layer.get('cextent'), map.getSize());
+            if (layer.get('extent')) {
+              map.getView().fit(layer.get('extent'), map.getSize());
             }
           },
 

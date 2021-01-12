@@ -137,7 +137,6 @@
         }
 
         var extent = ll.concat(ur);
-        gnViewerSettings.initialExtent = extent;
 
         // save this extent for later use (for example if the map
         // is not currently visible)
