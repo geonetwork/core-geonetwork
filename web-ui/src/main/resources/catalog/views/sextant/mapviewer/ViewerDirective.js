@@ -193,7 +193,7 @@
                 }
               };
               scope.isMenuVisible = function() {
-                return gnViewerSettings.menuVisible;
+                return !gnViewerSettings.menuHidden;
               };
               scope.isContainerOpened = function() {
                 try {
