@@ -33,6 +33,7 @@
   <assert.M44.title>
     <div>Conformance report requires a title in the metadata language</div>
   </assert.M44.title>
+  <conformity>Conformity</conformity>
   <assert.M44.conformityActual>
     <div>Invalid Conformity Title:
       <br></br>
