@@ -300,9 +300,10 @@
        * layers parameters.
        *
        * @param {string} legendUrl
+       * @param {string} layerType
        * @return {string}
        */
-      this.updateLegendUrl = function(legendUrl, params) {
+      this.updateLegendUrl = function(legendUrl, layerType, params) {
         if(!legendUrl) return;
 
         var parts = legendUrl.split('?');
@@ -321,6 +322,10 @@
 
         var p = parts.length > 1 ?
             gnUrlUtils.parseKeyValue(parts[1]) : {};
+        // for normal WMS remove LAYERS from params if LAYER in defined in layer params
+        if (layerType == LAYERTYPE_WMS && 'LAYER' in p) {
+          delete params.LAYERS;
+        }
 
         angular.extend(p, params);
 
