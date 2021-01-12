@@ -105,8 +105,6 @@
               layer.set('advancedMetadata', {
                 simpleWMS: true
               })
-              // removes LAYERS from params for simpleWMS
-              delete layer.getSource().getParams().LAYERS;
             }
           }.bind(this));
       };

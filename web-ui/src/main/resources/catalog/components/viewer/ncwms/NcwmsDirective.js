@@ -347,6 +347,14 @@
                   PALETTE: scope.params.STYLES,
                   style: scope.params.STYLES
                 }, scope.params)));
+            if (!scope.isLayerNcwms() && !scope.isLayerOceanotron()) {
+              // we are in simple wms
+              var params =  scope.layer.getSource().getParams();
+              // remove layers in both LAYER and LAYERS are defined
+              if ('LAYERS' in params && 'LAYER' in params){
+                delete scope.layer.getSource().getParams().LAYERS;
+              }
+            }
           };
 
           scope.isLayerNcwms = function() {
