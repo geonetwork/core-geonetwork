@@ -95,18 +95,18 @@
           // add popover for feature info
           var heatmapOverlay = new ol.Overlay({
             element: $('<div class="heatmap-overlay"></div>')[0],
-            positioning: 'bottom-center',
+            positioning: 'top-left',
             stopEvent: false,
-            offset: [0, -2]
+            offset: [20, 20]
           });
           map.addOverlay(heatmapOverlay);
 
           // add popover for feature info
           var tooltipOverlay = new ol.Overlay({
             element: $('<div class="tooltip-overlay composite-popup"></div>')[0],
-            positioning: 'bottom-center',
+            positioning: 'top-left',
             stopEvent: true,
-            offset: [0, -2]
+            offset: [20, 20]
             // autoPan: true,
             // autoPanAnimation: {
             //   duration: 250
