@@ -94,7 +94,7 @@
                data-gn-click-and-spin="deleteRecord(mdView.current.record)"
                data-gn-confirm-click="{{(mdView.current.record.draft != 'y') ? 'deleteRecordConfirm' : 'deleteWorkingCopyRecordConfirm' | translate:mdView.current.record}}"
                title="{{(mdView.current.record.draft != 'y') ? 'delete' : 'cancelWorkingCopy' | translate}}">
-              <span class="fa fa-fw fa-times"></span>
+              <span class="fa fa-fw {{(mdView.current.record.draft != 'y') ? 'fa-trash' : 'fa-times'}}"></span>
               <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft == 'y'">cancelWorkingCopy</span>
               <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft != 'y'">delete</span>
             </a>

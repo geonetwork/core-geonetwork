@@ -125,7 +125,7 @@
            data-ng-if="user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.deleteMd(undefined, searchResults.selectionBucket)"
            data-gn-confirm-click="{{'deleteSelectedRecordConfirm' | translate:searchResults}}">
-          <i class="fa fa-fw fa-times"></i>&nbsp;<span translate>delete</span>
+          <i class="fa fa-fw fa-trash"></i>&nbsp;<span translate>delete</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('index')"
