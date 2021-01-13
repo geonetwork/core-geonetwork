@@ -48,4 +48,11 @@ public interface MetadataResource {
     Date getLastModification();
 
     String getFilename();
+
+    boolean isApproved();
+
+    int getMetadataId();
+
+    String getMetadataUuid();
+
 }

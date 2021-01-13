@@ -52,6 +52,7 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
@@ -114,6 +115,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     @Autowired
     private AccessManager am;
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     private ServiceContext context;
 
@@ -605,6 +608,27 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             throw new RuntimeIOException(ex);
         }
     }
+
+    @Override
+    public void replaceFiles(AbstractMetadata original, AbstractMetadata dest) {
+        try {
+            boolean oldApproved=true;
+            boolean newApproved=false;
+
+            // If destination is approved then this is a working copy so the original will not be approved.
+            if (metadataUtils.isMetadataApproved(dest.getId())) {
+                oldApproved=false;
+                newApproved=true;
+            }
+            StoreUtils.replaceDataDir(context, original.getUuid(), dest.getUuid(), oldApproved, newApproved);
+            cloneStoreFileUploadRequests(original, dest);
+
+        } catch (Exception ex) {
+            Log.error(Geonet.RESOURCES, "Failed copy of resources: " + ex.getMessage(), ex);
+            throw new RuntimeIOException(ex);
+        }
+    }
+
 
     @Override
     public void cancelEditingSession(ServiceContext context, String id) throws Exception {
