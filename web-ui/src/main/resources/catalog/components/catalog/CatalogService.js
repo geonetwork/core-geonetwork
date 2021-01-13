@@ -225,15 +225,17 @@
          * return a promise.
          * @param {string} uuid of the metadata
          * @param {string} isTemplate optional isTemplate value (s, t...)
+         * @param {string} isDraft optional isDraft value (y, n, e)
          * @return {HttpPromise} of the $http get
          */
-        getMdObjByUuid: function(uuid, isTemplate) {
+        getMdObjByUuid: function(uuid, isTemplate, isDraft) {
           return $http.get('qi?_uuid=' + uuid + '' +
-              '&fast=index&_content_type=json&buildSummary=false' +
-              (isTemplate !== undefined ? '&isTemplate=' + isTemplate : '')).
-              then(function(resp) {
-                return new Metadata(resp.data.metadata);
-              });
+            '&fast=index&_content_type=json&buildSummary=false' +
+            (isTemplate !== undefined ? '&isTemplate=' + isTemplate : '') +
+            (isDraft !== undefined ? '&_draft=' + isDraft : '')).
+          then(function(resp) {
+            return new Metadata(resp.data.metadata);
+          });
         },
 
         /**
@@ -269,12 +271,20 @@
          * @return {HttpPromise} of the $http get
          */
         updateMdObj: function(md) {
-          return this.getMdObjByUuid(md.getUuid()).then(
+          if (md.isWorkflowEnabled()) {
+            return this.getMdObjByUuid(md.getUuid(), undefined, md.draft).then(
+              function(md_) {
+                angular.extend(md, md_);
+                return md;
+              });
+          } else {
+            return this.getMdObjByUuid(md.getUuid()).then(
               function(md_) {
                 angular.extend(md, md_);
                 return md;
               }
-          );
+            );
+          }
         }
       };
     }
