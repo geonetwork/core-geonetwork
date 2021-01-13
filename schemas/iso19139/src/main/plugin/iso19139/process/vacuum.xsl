@@ -35,6 +35,7 @@
     <msg id="a" xml:lang="eng">Remove empty elements from this record.</msg>
     <msg id="a" xml:lang="fre">Supprimer les éléments vides de cette fiche.</msg>
     <msg id="a" xml:lang="dut">Verwijder lege elementen uit dit record.</msg>
+    <msg id="a" xml:lang="ita">Rimuovi gli elementi vuoti da questo record.</msg>
   </xsl:variable>
 
   <xsl:template name="list-vacuum">
