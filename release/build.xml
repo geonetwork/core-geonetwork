@@ -43,23 +43,19 @@
     <os family="unix"/>
   </condition>
 
-  <!-- Project build properties -->
-  <property name="appName" value="GeoNetwork"/>
+  <!-- Import global build properties -->
+  <property file="./build.properties"/>
+
+  <!-- Additional build properties -->
   <property name="bundleName" value="geonetwork-bundle"/>
-  <property name="displayName" value="GeoNetwork opensource"/>
-  <property name="homepage" value="https://geonetwork-opensource.org"/>
-  <property name="version" value="3.11.0"/>
-  <property name="subVersion" value="SNAPSHOT"/>
-  <property name="javaVersion" value="1.8.0"/>
-  <property name="jreUrl" value="http://openjdk.java.net/"/>
-  <property name="OS" value="Compiled on ${os.name} (${osys})"/>
   <property name="propsdir" value="target/props"/>
   <property name="ant.build.javac.target" value="1.8"/>
   <property name="debugOn" value="on"/>
 
-  <!-- Used for copyright year -->
+  <!-- Copyright year and build date properties -->
   <tstamp>
     <format property="year" pattern="yyyy"/>
+    <format property="buildDate" pattern="dd-M-yyyy" />
   </tstamp>
 
   <!-- =================================================================================== -->
@@ -96,17 +92,11 @@
 
     <echo message="Replacing template variables in readme files..."/>
 
-    <tstamp>
-      <format property="buildDate" pattern="dd-M-yyyy" />
-    </tstamp>
-
     <replace file="${propsdir}/readme.html" token="@version@" value="${version}"/>
-    <replace file="${propsdir}/readme.html" token="@subVersion@" value="${subVersion}"/>
     <replace file="${propsdir}/readme.html" token="@subVersion@" value="${subVersion}"/>
     <replace file="${propsdir}/readme.html" token="@day@" value="${buildDate}" />
     <replace file="${propsdir}/readme.html" token="@jreUrl@" value="${jreUrl}"/>
     <replace file="${propsdir}/readme.html" token="@javaVersion@" value="${javaVersion}"/>
-
     <replace file="${propsdir}/readme.html" token="@appName@" value="${appName}"/>
     <replace file="${propsdir}/readme.html" token="@displayName@" value="${displayName}"/>
     <replace file="${propsdir}/readme.html" token="@homepage@" value="${homepage}"/>
