@@ -273,7 +273,7 @@
                                select="normalize-space($thesaurusTitle/(gco:CharacterString|gcx:Anchor)/text()[. != ''])"/>
               </xsl:if>
               <xsl:if test="gcx:Anchor/@xlink:href">
-                <xsl:attribute name="valueUri"
+                <xsl:attribute name="valueURI"
                                select="gcx:Anchor/@xlink:href"/>
               </xsl:if>
             </datacite:subject>
