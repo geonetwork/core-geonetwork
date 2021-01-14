@@ -26,7 +26,7 @@ then
   exit
 fi
 
-if [[ $1 =~ ^[0-9]+.[0-9]+.[0-9x]+$ ]]; then
+if [[ $1 =~ ^[0-9]+.[0-9]+.[0-9]+$ ]]; then
     echo
 else
 	echo 'Update failed due to incorrect versionnumber format: ' $1
