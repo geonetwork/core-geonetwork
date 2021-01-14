@@ -93,7 +93,7 @@
           <div class="thumb-small"
                title="{{thumb.title | gnLocalized: lang}}"
                data-gn-img-modal="thumb"
-               style="background-image: url('{{thumb.lUrl || thumb.id}}')"/>
+               style="background-image: url('{{onlinesrcService.getApprovedUrl(thumb.lUrl || thumb.id)}}')"/>
 
           <a href=""
              class="onlinesrc-remove"
