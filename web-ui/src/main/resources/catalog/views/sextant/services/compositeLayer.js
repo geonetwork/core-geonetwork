@@ -14,6 +14,12 @@
     '  </div>'+
     '</div>';
 
+  var defaultHoverTemplate =
+    '<div class="panel panel-default">' +
+    '  <div class="panel-body" style="max-width: 50em; max-height: 30em; font-size: 0.9em; overflow: auto;">'+
+    '    {ATTRIBUTES} '+
+    '  </div>'+
+    '</div>';
 
   /**
    * This regex is used to loop through all the attribute tokens
@@ -21,7 +27,7 @@
    * on the feature, or simply remove the token altogether.
    * Tokens are expected to be like so: {ATTR_NAME}
    */
-  var TOOLTIP_ATTR_REGEX = /{(.+)}/g;
+  var TOOLTIP_ATTR_REGEX = /{(\w*?)}/g;
 
   /**
    * This regex is used to insert a summary of all attributes value in the template.
@@ -46,7 +52,7 @@
       var GeoJSON = new ol.format.GeoJSON();
 
       return {
-        init: function (layer, map, featureType, heatmapMinCount, tooltipMaxCount, tooltipTemplate) {
+        init: function (layer, map, featureType, heatmapMinCount, tooltipMaxCount, tooltipTemplate, tooltipHoverTemplate) {
           var me = this;
 
           // create base group & copy properties
@@ -89,18 +95,18 @@
           // add popover for feature info
           var heatmapOverlay = new ol.Overlay({
             element: $('<div class="heatmap-overlay"></div>')[0],
-            positioning: 'bottom-center',
+            positioning: 'top-left',
             stopEvent: false,
-            offset: [0, -2]
+            offset: [20, 20]
           });
           map.addOverlay(heatmapOverlay);
 
           // add popover for feature info
           var tooltipOverlay = new ol.Overlay({
             element: $('<div class="tooltip-overlay composite-popup"></div>')[0],
-            positioning: 'bottom-center',
+            positioning: 'top-left',
             stopEvent: true,
-            offset: [0, -2]
+            offset: [20, 20]
             // autoPan: true,
             // autoPanAnimation: {
             //   duration: 250
@@ -142,17 +148,21 @@
             }
             hideHeatmapTooltip();
           }
-          function showFeatureTooltip(feature, sticky) {
-            // position overlay on feature
-            var center =
-              ol.extent.getCenter(feature.getGeometry().getExtent());
-            var topleft =
-              ol.extent.getTopLeft(feature.getGeometry().getExtent());
-            tooltipOverlay.setPosition([center[0], topleft[1]]);
+          function showFeatureTooltip(feature, sticky, coordinate) {
+            // position overlay on pointer
+            coordinate = coordinate || tooltipOverlay.get('_gn_overlay_position')
+            tooltipOverlay.set('_gn_overlay_position', coordinate)
+            tooltipOverlay.setPosition(coordinate);
 
             // read the feature's attributes & render them using the tooltip template
+            const clickMode = sticky
             var props = feature.getProperties();
-            var html = tooltipTemplate || defaultTemplate;
+            var html
+            if (!clickMode && tooltipHoverTemplate) {
+              html = defaultHoverTemplate.replace(TOOLTIP_ATTR_SUMMARY_REGEX, tooltipHoverTemplate)
+            } else {
+              html = tooltipTemplate || defaultTemplate
+            }
 
             // replace whole attributes summary
             var attributesSummaryHtml;
@@ -165,9 +175,10 @@
             }
 
             // replace individual attributes
-            while (!!(matches = TOOLTIP_ATTR_REGEX.exec(html))) {
-              token = matches[0];
-              var attrName = matches[1];
+            matches = html.matchAll(TOOLTIP_ATTR_REGEX)
+            for (var match of matches) {
+              token = match[0];
+              var attrName = match[1];
               html = html.replace(token, props[attrName] || '');
             }
             tooltipOverlay.getElement().innerHTML = html;
@@ -188,7 +199,7 @@
           function hideFeatureTooltip() {
             tooltipOverlay.setPosition();
           }
-          function handleFeatureHover(feature) {
+          function handleFeatureHover(feature, coordinate) {
             if (hoveredFeature) {
               hoveredFeature.setStyle(null);
             }
@@ -196,7 +207,7 @@
               hoveredFeature = feature;
               hoveredFeature.setStyle(featureHoverStyle);
               if (!selectedFeature) {
-                showFeatureTooltip(hoveredFeature);
+                showFeatureTooltip(hoveredFeature, false, coordinate);
               }
             } else {
               hoveredFeature = null;
@@ -210,7 +221,7 @@
               hideFeatureTooltip();
             }
           }
-          function handleFeatureClick(feature) {
+          function handleFeatureClick(feature, coordinate) {
             if (selectedFeature) {
               selectedFeature.setStyle(null);
             }
@@ -220,7 +231,7 @@
             }
             selectedFeature = feature;
             selectedFeature.setStyle(featureSelectedStyle);
-            showFeatureTooltip(selectedFeature, true);
+            showFeatureTooltip(selectedFeature, true, coordinate);
           }
           function handleFeatureClickNoHit() {
             if (selectedFeature) {
@@ -256,7 +267,7 @@
                   handleHeatmapHover(feature);
                   heatmapHit = true;
                 } else {
-                  handleFeatureHover(feature);
+                  handleFeatureHover(feature, evt.coordinate);
                   featureHit = true;
                 }
                 return true;
@@ -278,7 +289,7 @@
           map.on('singleclick', function(evt) {
             var hit = map.forEachFeatureAtPixel(evt.pixel,
               function (feature) {
-                handleFeatureClick(feature);
+                handleFeatureClick(feature, evt.coordinate);
                 return true;
               },
               undefined,
@@ -355,6 +366,8 @@
           topLeft[1] = Math.min(Math.max(topLeft[1], -90), 90);
           bottomRight[0] = topLeft[0] + viewWidth;
           bottomRight[1] = Math.min(Math.max(bottomRight[1], -90), 90);
+          const queryExtent = [[topLeft[0], topLeft[1]], [bottomRight[0], bottomRight[1]]]
+
           return {
             query: {
               bool: {
@@ -370,10 +383,13 @@
                     }
                   }
                 }, {
-                  geo_bounding_box: {
-                    location: {
-                      top_left: topLeft,
-                      bottom_right: bottomRight
+                  'geo_shape': {
+                    'geom': {
+                      'shape': {
+                        'type': 'envelope',
+                        'coordinates': queryExtent
+                      },
+                      'relation': 'intersects'
                     }
                   }
                 }]
@@ -475,6 +491,13 @@
                 color: 'rgba(255, 255, 255, 0.01)'
               })
             }),
+            fill: new ol.style.Fill({
+              color: 'rgba(255, 255, 255, 0.05)'
+            }),
+            stroke: new ol.style.Stroke({
+              color: 'rgba(255, 255, 255, 0.01)',
+              width: 1
+            }),
             zIndex: Infinity
           })
         },
@@ -490,6 +513,13 @@
                 color: 'white',
                 width: 3
               })
+            }),
+            stroke: new ol.style.Stroke({
+              color: 'white',
+              width: 3
+            }),
+            fill: new ol.style.Fill({
+              color: 'rgba(255, 255, 255, 0.01)'
             }),
             zIndex: Infinity
           })

@@ -548,13 +548,14 @@
                       var minHeatmapCount = appProfile.compositeLayer.minHeatmapCount || 1000;
                       var maxTooltipCount = appProfile.compositeLayer.maxTooltipCount || 1000;
 
-                      var tooltipTemplateUrl = appProfile.tooltipTemplateUrl;
+                      var tooltipTemplateUrl = appProfile.compositeLayer.tooltipTemplateUrl;
+                      var tooltipHoverTemplate = appProfile.compositeLayer.tooltipHoverTemplate;
                       if (!tooltipTemplateUrl) {
-                        sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount, undefined);
+                        sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount, undefined, tooltipHoverTemplate);
                       } else {
                         $http.get(tooltipTemplateUrl).then(function (response) {
                           var tooltipTemplate = response.data;
-                          sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount, tooltipTemplate);
+                          sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount, tooltipTemplate, tooltipHoverTemplate);
                         }, function () {
                           console.warn('Le chargement du template de tooltip a échoué');
                         });
