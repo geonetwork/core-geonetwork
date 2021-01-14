@@ -26,8 +26,9 @@ then
   exit
 fi
 
-if [[ $1 != [0-9].[0-9].[0-9] ]]; then 
-	echo
+if [[ $1 =~ ^[0-9]+.[0-9]+.[0-9x]+$ ]]; then
+    echo
+else
 	echo 'Update failed due to incorrect versionnumber format: ' $1
 	echo 'The format should be three numbers separated by dots. e.g.: 2.7.0'
 	echo
@@ -51,8 +52,7 @@ echo
 version="$1"
 
 # Update version in sphinx doc files
-sed $sedopt "s/${version}-SNAPSHOT/${version}/g" docs/eng/users/source/conf.py 
-sed $sedopt "s/${version}-SNAPSHOT/${version}/g" docs/eng/developer/source/conf.py
+sed $sedopt "s/${version}-SNAPSHOT/${version}/g" docs/manuals/source/conf.py
 
 # Update release subversion
 sed $sedopt "s/subVersion=SNAPSHOT/subVersion=0/g" release/build.properties
