@@ -141,6 +141,12 @@
           </xsl:otherwise>
         </xsl:choose>
 
+
+        <script src="https://cdn.jsdelivr.net/npm/vega@5.17.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.17.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.12.2"></script>
+
+
         <script src="{$uiResourcesPath}lib/FileSaver/FileSaver.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/tableExport/tableExport.min.js?v={$buildNumber}"></script>
         <xsl:if test="$withD3">

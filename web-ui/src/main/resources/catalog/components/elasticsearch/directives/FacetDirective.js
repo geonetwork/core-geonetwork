@@ -104,9 +104,12 @@
   }
 
   FacetsController.prototype.onUpdateDateRange = function (facet, from, to) {
-    var query_string =  '+' + facet.key + ':[' + moment(from, 'DD-MM-YYYY').toISOString() + ' TO ' +
-      moment(to, 'DD-MM-YYYY').toISOString() + ']';
-    this.$scope.$digest();
+    var query_string =  (from === null && to === null)
+      ? '' :
+      '+' + facet.key + ':[' +
+      (moment(from, 'DD-MM-YYYY').toISOString() || '*') + ' TO ' +
+      (moment(to, 'DD-MM-YYYY').toISOString()  || '*') + ']';
+    // this.$scope.$digest();
     this.searchCtrl.updateState(facet.path, query_string, true);
   };
 
@@ -269,4 +272,207 @@
       }
     }])
 
+  module.directive('gnFacetTemporalrange', [
+    '$timeout',
+    function($timeout) {
+    return {
+      restrict: 'A',
+      replace: true,
+      templateUrl: function(elem, attrs) {
+        return '../../catalog/components/elasticsearch/directives/' +
+          'partials/facet-temporalrange.html';
+      },
+      scope: {
+        facet: '<gnFacetTemporalrange',
+        updateCallback: '&callback'
+      },
+      link: function(scope, element, attrs, controller) {
+        scope.range = {
+          from: null,
+          to: null
+        };
+        scope.signal = null;
+
+        scope.vl = null;
+        scope.dateFormat = 'dd-mm-YYYY'
+        scope.initialRange = angular.copy(scope.facet.items);
+
+
+        // Assign the specification to a local variable vlSpec.
+        var vlSpec = {
+          $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
+          datasets: {
+            facetValues: scope.facet.items,
+            initialValues: scope.facet.items
+          },
+          data: {
+            name: 'facetValues'
+          },
+          config: {
+            axis: {
+              domainColor: "#ddd",
+              tickColor: "#ddd"
+            }
+          },
+          vconcat: [{
+            mark: {
+              type: 'bar',
+              cornerRadiusEnd: 4
+            },
+            height: 100,
+            selection: {
+              pts: {type: "single"}
+            },
+            encoding: {
+              color: {
+                range: ['#3277B3'],
+                "condition": {
+                  "selection": "pts"
+                },
+                value: "grey"
+              },
+              x: {
+                field: 'key',
+                type: 'temporal',
+                timeunit: 'milliseconds',
+                bin: {
+                  maxbins: 30,
+                  extent: {
+                    selection: "brush"
+                  }
+                },
+                axis: {
+                  title: '',
+                  labelExpr: "[timeFormat(datum.value, '%d-%m-%Y')]"
+                }
+              },
+              y: {
+                field: 'doc_count',
+                type: 'quantitative',
+                axis: {
+                  title: 'Records'
+                }
+              }
+            }
+          }, {
+            mark: 'bar',
+            height: 20,
+            selection: {
+              brush: {
+                type: 'interval',
+                encodings: ['x']
+              }
+            },
+            encoding: {
+              color: {
+                range: ['#3277B3']
+              },
+              x: {
+                field: 'key',
+                type: 'temporal',
+                timeunit: 'milliseconds',
+                axis: {
+                  title: ''
+                }
+              },
+              y: {
+                field: 'doc_count',
+                type: 'quantitative',
+                axis: {
+                  title: ''
+                }
+              }
+            }
+          }]
+        };
+
+        vegaEmbed('#' + scope.facet.key, vlSpec, {
+          actions: false
+        }).then(function (result) {
+          scope.vl = result;
+
+          scope.vl.view.addSignalListener('pts', function(signal, id, item) {
+            // Not really clear how to get the data from the signal
+            // if (id._vgsid_) {
+            //   var vlId = id._vgsid_[0],
+            //       selected = scope.vl.view.data('facetValues')[vlId - 1],
+            //       next = scope.vl.view.data('facetValues')[vlId];
+            //   var from = selected.key ? moment(selected.key).format('DD-MM-YYYY') : '*',
+            //       to = next && next.key ? moment(next.key).format('DD-MM-YYYY') : '*';
+            //   $timeout(function() {
+            //     scope.range = {
+            //       from: from,
+            //       to: to
+            //     };
+            //   }, 10);
+            // }
+          });
+          scope.vl.view.addEventListener('click',
+            function(event, item) {
+            if (item.datum && item.datum.$$hashKey) { // Avoid brush click
+              var vlId = item.datum.$$hashKey,
+                rangeItems = scope.vl.view.data('facetValues').filter(
+                function(e, i, a) {
+                  return e.$$hashKey === vlId ||
+                    (a[i - 1] && a[i - 1].$$hashKey === vlId);
+                }, []),
+                selected = item.datum,
+                next = rangeItems[1];
+
+              var from = selected.key ? moment(selected.key).format('DD-MM-YYYY') : '*',
+                to = next && next.key ? moment(next.key).format('DD-MM-YYYY') : '*';
+              $timeout(function() {
+                scope.range = {
+                  from: from,
+                  to: to
+                };
+              }, 10);
+            }
+          });
+
+          scope.vl.view.addSignalListener('brush',
+            function(signal, range) {
+            if (scope.signal !== null) {
+              range.key = scope.signal.key;
+              scope.signal = null;
+              scope.vl.view.runAsync();
+              return;
+            } else {
+              var from = range.key ? moment(range.key[0]).format('DD-MM-YYYY') : '*';
+              var to = range.key ? moment(range.key[1]).format('DD-MM-YYYY') : '*';
+
+
+              if ((scope.range.from != from
+                || scope.range.to != to)) {
+                $timeout(function() {
+                  scope.range = {
+                    from: range.key ? from : null,
+                    to: range.key ? to : null
+                  };
+                }, 10);
+              }
+            }
+          });
+
+
+          scope.$watchCollection('facet.items', function(n, o) {
+            scope.vl.view.data('facetValues', scope.facet.items).run();
+          });
+        }).catch(console.error);
+
+        scope.filter = function() {
+          scope.updateCallback(
+            {facet: scope.facet, from: scope.range.from, to: scope.range.to});
+        }
+
+        scope.setRange = function() {
+          scope.signal = {key: [
+              moment(scope.range.from, scope.dateFormat).valueOf(),
+              moment(scope.range.to, scope.dateFormat).valueOf()
+            ], update: false};
+            scope.vl.view.signal('brush', scope.signal);
+        }
+      }
+    }
+  }])
 })()

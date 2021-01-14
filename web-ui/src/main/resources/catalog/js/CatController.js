@@ -390,6 +390,13 @@ goog.require('gn_alert');
             //     "size": 10
             //   }
             // },
+            // "resourceTemporalDateRange": {
+            //   "date_histogram": {
+            //     "field": "resourceTemporalDateRange",
+            //     "fixed_interval": "1900d",
+            //     "min_doc_count": 1
+            //   }
+            // },
             "creationYearForResource": {
               "histogram": {
                 "field": "creationYearForResource",
