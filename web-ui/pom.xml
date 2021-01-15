@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.10.6-0</version>
+    <version>3.10.7-SNAPSHOT</version>
   </parent>
 
   <groupId>org.geonetwork-opensource</groupId>
