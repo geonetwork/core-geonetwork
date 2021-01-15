@@ -55,6 +55,7 @@ web/images/
 web/jcs_caching/
 web/logs/
 web/src/main/webapp/META-INF/MANIFEST.MF
+web/src/main/webapp/WEB-INF/classes/setup/sql/migrate
 web/src/main/webapp/WEB-INF/data/0*
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/schematron/schematron*.xsl
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/csw-record
