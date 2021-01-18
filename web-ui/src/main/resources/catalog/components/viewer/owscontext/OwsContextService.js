@@ -113,7 +113,7 @@
         var context = unmarshaller.unmarshalString(text).value;
         // first remove any existing layer
         var layersToRemove = [];
-        map.getLayers().forEach(function(layer) {
+        map.getLayers().forEach(function (layer) {
           if (layer.displayInLayerManager) {
             if (!(layer.get('fromUrlParams') && firstLoad)) {
               layersToRemove.push(layer);
@@ -131,12 +131,12 @@
         var projection = bbox.crs;
 
         // -- check if projection is available in ol
-        if (!ol.proj.get(projection)){
-         console.warn('Projection '+ projection +' is not available, map will be projected in a spherical mercator projection');
-         projection='EPSG:3857';
-         ll=[-10026376,-15048966];
-         ur=[10026376,15048966];
-       }
+        if (!ol.proj.get(projection)) {
+          console.warn('Projection ' + projection + ' is not available, map will be projected in a spherical mercator projection');
+          projection = 'EPSG:3857';
+          ll = [-10026376, -15048966];
+          ur = [10026376, 15048966];
+        }
 
         if (projection == 'EPSG:4326') {
           ll.reverse();
@@ -160,11 +160,10 @@
 
         var loadPromise = map.get('sizePromise');
         if (loadPromise) {
-          loadPromise.then(function() {
-            map.getView().fit(extent, map.getSize(), { nearest: true });
+          loadPromise.then(function () {
+            map.getView().fit(extent, map.getSize(), {nearest: true});
           })
-        }
-        else {
+        } else {
           console.warn('Map must be created by mapsManager');
         }
 
@@ -209,12 +208,14 @@
 
             if (layer.extension) {
               var metadataUrlList = layer.extension['metadataUrlList'];
-              layer.metadataUrl =  metadataUrlList ? metadataUrlList['metadataUrl']: null;
+              layer.metadataUrl = metadataUrlList ? metadataUrlList['metadataUrl'] : null;
               if (layer.extension['QIList']) {
-                angular.forEach(layer.extension['QIList'], function(qil) {
+                angular.forEach(layer.extension['QIList'], function (qil) {
                   var qiDict = {};
-                  if (!qil.QI) {return}
-                  qil.QI.forEach(function(qi) {
+                  if (!qil.QI) {
+                    return
+                  }
+                  qil.QI.forEach(function (qi) {
                     qiDict[qi['Indicator']] = qi['value'];
                   })
                   qiList.push(qiDict);
@@ -240,11 +241,13 @@
                     var server = layer.server[0];
                     var res = server.onlineResource[0].href;
                   }
-                  opt = {name: lyr,
-                          url: res};
+                  opt = {
+                    name: lyr,
+                    url: res
+                  };
                 }
                 var olLayer =
-                    gnMap.createLayerForType(type, opt, layer.title, map);
+                  gnMap.createLayerForType(type, opt, layer.title, map);
                 if (olLayer) {
                   olLayer.displayInLayerManager = false;
                   olLayer.background = true;
@@ -260,8 +263,8 @@
 
                   // Specific sextant api
                   // Settings are not from XSL so bing key is not yet known
-                  (function(idx, loadingLayer, layer_, type_, opt_) {
-                    gnConfigService.loadPromise.then(function(config) {
+                  (function (idx, loadingLayer, layer_, type_, opt_) {
+                    gnConfigService.loadPromise.then(function (config) {
                       var olLayer =
                         gnMap.createLayerForType(type_, opt_, layer_.title);
                       if (olLayer) {
@@ -271,13 +274,13 @@
                         bgLayers[idx] = olLayer;
 
                         if (loadingLayer.get('bgLayer')) {
-                    map.getLayers().setAt(0, olLayer);
-                  }
-                }
+                          map.getLayers().setAt(0, olLayer);
+                        }
+                      }
                     });
                   })(layerIndex, loadingLayer, layer, type, opt);
+                }
               }
-
               // {type=wmts,name=Ocean_Basemap} or WMS or arcgis
               else {
 
@@ -297,8 +300,8 @@
                 var layerIndex = bgLayers.push(loadingLayer) - 1;
                 var p = self.createLayer(layer, map, 'do not add');
 
-                (function(idx, loadingLayer) {
-                  p.then(function(layer) {
+                (function (idx, loadingLayer) {
+                  p.then(function (layer) {
                     if (!layer) {
                       return;
                     }
@@ -336,7 +339,7 @@
                 // (will be used by the WfsFilterDirective
                 // when initializing)
                 var esObj =
-                    wfsFilterService.registerEsObject(url, layer.name);
+                  wfsFilterService.registerEsObject(url, layer.name);
                 esObj.initialFilters = extension.filters;
               }
 
@@ -365,7 +368,7 @@
                 if (extension.label) {
                   layer.title = extension.label;
                 }
-                if (extension.uuid)  {
+                if (extension.uuid) {
                   layer.metadataUuid = extension.uuid
                 }
 
@@ -373,12 +376,11 @@
                 var p = self.createLayer(layer, map, undefined, i, currentStyle);
                 loadingLayer.set('index', layerIndex);
 
-                (function(idx, loadingLayer) {
-                  p.then(function(layer) {
+                (function (idx, loadingLayer) {
+                  p.then(function (layer) {
                     if (layer) {
                       map.getLayers().setAt(idx, layer);
-                    }
-                    else {
+                    } else {
                       loadingLayer.set('errors', ['load failed']);
                     }
                   });
