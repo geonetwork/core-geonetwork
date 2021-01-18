@@ -125,7 +125,7 @@
       <xsl:variable name="tags">
         <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords/
                                           *[
-                                          gmd:type/*/@codeListValue = 'theme'
+                                          gmd:type/*/@codeListValue != 'place'
                                             and normalize-space(string-join(gmd:keyword//text(), '')) != ''
                                             and (not(gmd:thesaurusName/*/gmd:identifier/*/gmd:code)
                                             or gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/
