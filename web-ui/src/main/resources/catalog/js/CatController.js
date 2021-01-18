@@ -52,7 +52,7 @@ goog.require('gn_alert');
       'langDetector': {
         'fromHtmlTag': false,
         'regexp': '^(?:\/.+)?/.+\/([a-z]{2,3})\/.+',
-        'default': 'eng'
+        'default': 'fre'
       },
       'nodeDetector': {
         'regexp': '^(?:\/.+)?\/(.+)\/[a-z]{2,3}\/.+',
@@ -80,20 +80,7 @@ goog.require('gn_alert');
           'enabled': true,
           'languages': {
             'eng': 'en',
-            'dut': 'nl',
-            'fre': 'fr',
-            'ger': 'de',
-            'kor': 'ko',
-            'spa': 'es',
-            'cze': 'cs',
-            'cat': 'ca',
-            'fin': 'fi',
-            'ice': 'is',
-            'ita': 'it',
-            'por': 'pt',
-            'rus': 'ru',
-            'chi': 'zh',
-            'slo': 'sk'
+            'fre': 'fr'
           },
           'isLogoInHeader': false,
           'logoInHeaderPosition': 'left',
@@ -470,12 +457,12 @@ goog.require('gn_alert');
               }
             }
           },
-          'filters': null,
-          // 'filters': [{
-          //     "query_string": {
-          //       "query": "-resourceType:service"
-          //     }
-          //   }],
+          // 'filters': null,
+          'filters': [{
+              "query_string": {
+                "query": "+resourceType:(dataset OR series OR publication OR nonGeographicDataset OR map)"
+              }
+            }],
           'sortbyValues': [{
             'sortBy': 'relevance',
             'sortOrder': ''
