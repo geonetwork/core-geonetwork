@@ -34,6 +34,7 @@ import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundExcept
 import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
 import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.api.exception.NotAllowedException;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -60,6 +61,9 @@ import javax.servlet.ServletContext;
 public class CMISResources extends Resources {
     @Autowired
     CMISConfiguration CMISConfiguration;
+
+    @Autowired
+    CMISUtils cmisUtils;
 
     private Path resourceBaseDir = null;
 
@@ -165,8 +169,7 @@ public class CMISResources extends Resources {
                 CmisObject cmisObject = CMISConfiguration.getClient().getObjectByPath(key);
                 Folder folder = (Folder) cmisObject;
 
-                OperationContext operationContext = CMISConfiguration.getClient().createOperationContext();
-                ItemIterable<CmisObject> children = folder.getChildren(operationContext);
+                ItemIterable<CmisObject> children = folder.getChildren();
 
                 for (CmisObject object : children) {
                     if (object instanceof Document) {
@@ -292,11 +295,9 @@ public class CMISResources extends Resources {
                     final String suffixlessKeyFilename = FilenameUtils.getName(suffixless);
                     final String suffixlessKeyFolder = getKey(Paths.get(FilenameUtils.getFullPath(suffixless)));
 
-                    OperationContext oc = CMISConfiguration.getClient().createOperationContext();
-
                     try {
-                        Folder resourceFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(suffixlessKeyFolder, oc);
-                        Map<String, Document> documentMap = getCmisObjectMap(resourceFolder, null, suffixlessKeyFilename);
+                        Folder resourceFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(suffixlessKeyFolder);
+                        Map<String, Document> documentMap = cmisUtils.getCmisObjectMap(resourceFolder, null, suffixlessKeyFilename);
 
                         for (Map.Entry<String,Document> entry : documentMap.entrySet()) {
                             Document object = entry.getValue();
@@ -341,7 +342,7 @@ public class CMISResources extends Resources {
                             final HashSet<Path> result) {
 
         // Don't use caching for this process.
-        OperationContext oc = CMISConfiguration.getClient().createOperationContext();
+        OperationContext oc = cmisUtils.createOperationContext();
         oc.setCacheEnabled(false);
 
         String keyFolder = getKey(webappDir);
@@ -393,10 +394,18 @@ public class CMISResources extends Resources {
         private Path path = null;
         private Path tempFolderPath = null;
         private boolean writeOnClose = false;
+        private CmisObject cmisObject;
 
         private CMISResourceHolder(final String key, boolean writeOnClose) {
             this.key = key;
             this.writeOnClose = writeOnClose;
+            try {
+                this.cmisObject = CMISConfiguration.getClient().getObjectByPath(this.key);
+            } catch (CmisObjectNotFoundException e) {
+                this.cmisObject = null;
+                Log.error(Geonet.RESOURCES,
+                    String.format("Unable to locate resource '%s'.", this.key), e);
+            }
         }
 
         @Override
@@ -411,13 +420,12 @@ public class CMISResources extends Resources {
                 tempFolderPath.toFile().deleteOnExit();
                 path = tempFolderPath.resolve(splittedKey[splittedKey.length - 1]);
 
-                try {
-                    final CmisObject object = CMISConfiguration.getClient().getObjectByPath(key);
-                    try (InputStream in = ((Document) object).getContentStream().getStream()) {
+                if (this.cmisObject != null) {
+                    try (InputStream in = ((Document) this.cmisObject).getContentStream().getStream()) {
                         Files.copy(in, path,
                             StandardCopyOption.REPLACE_EXISTING);
                     }
-                } catch (CmisObjectNotFoundException e) {
+                } else {
                     // As there is no cmis file, we will also remove the path if it exists so that the current file does not get saved on close.
                     if (writeOnClose && Files.exists(path)) {
                         Files.delete(path);
@@ -439,12 +447,9 @@ public class CMISResources extends Resources {
 
         @Override
         public FileTime getLastModifiedTime() {
-            try {
-                final CmisObject object = CMISConfiguration.getClient().getObjectByPath(key);
-                return FileTime.from(object.getLastModificationDate().toInstant());
-            } catch (CmisObjectNotFoundException e) {
-                Log.error(Geonet.RESOURCES,
-                    String.format("Unable to locate resource '%s'.", key), e);
+            if (this.cmisObject != null) {
+                return FileTime.from(this.cmisObject.getLastModificationDate().toInstant());
+            } else {
                 return null;
             }
         }
@@ -462,13 +467,12 @@ public class CMISResources extends Resources {
             try {
                 if (writeOnClose && Files.isReadable(path)) {
                     // Don't use caching for this process.
-                    OperationContext oc = CMISConfiguration.getClient().createOperationContext();
+                    OperationContext oc = cmisUtils.createOperationContext();
                     oc.setCacheEnabled(false);
 
                     // Split the filename and parent folder from the key.
                     int lastFolderDelimiterKeyIndex = key.lastIndexOf(CMISConfiguration.getFolderDelimiter());
                     String filenameKey = key.substring(lastFolderDelimiterKeyIndex + 1);
-                    String parentKey = key.substring(0, lastFolderDelimiterKeyIndex);
 
                     Map<String, Object> properties = new HashMap<String, Object>();
                     properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
@@ -477,10 +481,18 @@ public class CMISResources extends Resources {
                     InputStream stream = Files.newInputStream(path);
                     ContentStream contentStream = CMISConfiguration.getClient().getObjectFactory().createContentStream(key, Files.size(path), Files.probeContentType(path), stream);
 
-                    if (CMISConfiguration.getClient().existsPath(key)) {
+                    // If we have a cmisObject then lets refresh it to make sure it still exists.
+                    if (this.cmisObject != null) {
+                        try {
+                            this.cmisObject.refresh();
+                        } catch (CmisObjectNotFoundException e) {
+                            this.cmisObject = null;
+                        }
+                    }
+                    if (this.cmisObject != null) {
                         try {
                             // If the document is found then we are updating the existing document.
-                            Document doc = (Document) CMISConfiguration.getClient().getObjectByPath(key, oc);
+                            Document doc = (Document) this.cmisObject;
                             doc.updateProperties(properties, true);
                             doc.setContentStream(contentStream, true, true);
 
@@ -494,15 +506,9 @@ public class CMISResources extends Resources {
                         }
                     } else {
                         // Get parent folder.
+                        String parentKey = key.substring(0, lastFolderDelimiterKeyIndex);
                         try {
-                            Folder parentFolder;
-                            try {
-                                parentFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(parentKey, oc);
-                            } catch (CmisObjectNotFoundException e) {
-                                // Create parent folder if it does not exists.
-                                ObjectId objectId = CMISConfiguration.getClient().createPath(parentKey, "cmis:folder");
-                                parentFolder = (Folder) CMISConfiguration.getClient().getObject(objectId, oc);
-                            }
+                            Folder parentFolder = cmisUtils.getFolderCache(parentKey);
 
                             Document doc = parentFolder.createDocument(properties, contentStream, VersioningState.MAJOR);
 
@@ -513,6 +519,8 @@ public class CMISResources extends Resources {
                                 "No permissions to add resource '%s'.", key));
                             throw new NotAllowedException(String.format(
                                 "No permissions to add resource '%s'.", key));
+                        } catch (ResourceNotFoundException e) {
+                            throw new IOException("Error getting resource from cache: " + parentKey, e);
                         }
                     }
                 }
@@ -523,23 +531,5 @@ public class CMISResources extends Resources {
                 tempFolderPath = null;
             }
         }
-    }
-
-    private Map<String, Document> getCmisObjectMap(Folder folder, String baseFolder, String suffixlessKeyFilename) {
-        if (baseFolder == null) {
-            baseFolder="";
-        }
-        Map<String, Document> documentMap = new HashMap<>();
-        for (CmisObject cmisObject : folder.getChildren()) {
-            if (cmisObject instanceof Folder) {
-                documentMap.putAll(getCmisObjectMap((Folder)cmisObject, baseFolder + CMISConfiguration.getFolderDelimiter() + cmisObject.getName(), suffixlessKeyFilename));
-                return documentMap;
-            } else {
-                if (cmisObject instanceof Document && cmisObject.getName().startsWith(suffixlessKeyFilename)) {
-                    documentMap.put(baseFolder + CMISConfiguration.getFolderDelimiter()  + cmisObject.getName(), (Document)cmisObject);
-                }
-            }
-        }
-        return documentMap;
     }
 }

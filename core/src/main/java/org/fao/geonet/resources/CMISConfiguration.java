@@ -29,6 +29,7 @@ import org.apache.chemistry.opencmis.client.api.SessionFactory;
 import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
 import org.apache.chemistry.opencmis.commons.SessionParameter;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
+import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
@@ -460,6 +461,38 @@ public class CMISConfiguration {
         Log.info(Geonet.RESOURCES, "Connected to CMIS using binding '" + client.getBinding().getBindingType().value() + "' with base url '" +
                 repositoryUrl + "' using product '" + client.getRepositoryInfo().getProductName() + "' version '" +
                 client.getRepositoryInfo().getProductVersion() + "'.");
+
+        // Setup default options
+        // Ensure caching is on.
+        if (!client.getDefaultContext().isCacheEnabled()) {
+            Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context cache to enabled.");
+            client.getDefaultContext().setCacheEnabled(true);
+        }
+        // Don't get allowable actions by default
+        if (client.getDefaultContext().isIncludeAllowableActions()) {
+            Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include allowable actions.");
+            client.getDefaultContext().setIncludeAllowableActions(false);
+        }
+        // Don't get ACLS by default
+        if (client.getDefaultContext().isIncludeAcls()) {
+            Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include acls.");
+            client.getDefaultContext().setIncludeAcls(false);
+        }
+        // Don't include path segments by default
+        if (client.getDefaultContext().isIncludePathSegments()) {
+            Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include path segments.");
+            client.getDefaultContext().setIncludePathSegments(false);
+        }
+        // Don't include policies by default
+        if (client.getDefaultContext().isIncludePolicies()) {
+            Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include policies.");
+            client.getDefaultContext().setIncludePolicies(false);
+        }
+        // IncludeRelationships should be NONE
+        if (client.getDefaultContext().getIncludeRelationships().equals(IncludeRelationships.NONE)) {
+            Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include relationships.");
+            client.getDefaultContext().setIncludeRelationships(IncludeRelationships.NONE);
+        }
     }
 
     @Nonnull
