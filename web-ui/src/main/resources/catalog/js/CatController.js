@@ -313,11 +313,13 @@ goog.require('gn_alert');
             //   }
             // },
             "th_httpinspireeceuropaeuthemetheme.key": {
-              'collapsed': true,
               "terms": {
                 "field": "th_httpinspireeceuropaeuthemetheme.key",
                 "size": 34,
                 "exclude": "http.*"
+              },
+              'meta': {
+                'collapsed': true
               }
             },
             // GEMET configuration for non multilingual catalog
@@ -425,10 +427,12 @@ goog.require('gn_alert');
               }
             },
             'cl_status.key': {
-              'collapsed': true,
               'terms': {
                 'field': 'cl_status.key',
                 'size': 10
+              },
+              'meta': {
+                'collapsed': true
               }
             },
             'dateStamp' : {

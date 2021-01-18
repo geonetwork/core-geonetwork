@@ -257,28 +257,28 @@
 
                   if (!layer.hidden && !isFirstBgLayer) {
                     isFirstBgLayer = true;
-                    loadingLayer.set('bgLayer', true);
+                    map.getLayers().setAt(0, olLayer);
                   }
-                  var layerIndex = bgLayers.push(loadingLayer) - 1;
-
-                  // Specific sextant api
-                  // Settings are not from XSL so bing key is not yet known
-                  (function (idx, loadingLayer, layer_, type_, opt_) {
-                    gnConfigService.loadPromise.then(function (config) {
-                      var olLayer =
-                        gnMap.createLayerForType(type_, opt_, layer_.title);
-                      if (olLayer) {
-                        olLayer.displayInLayerManager = false;
-                        olLayer.background = true;
-                        olLayer.set('group', layer_.group);
-                        bgLayers[idx] = olLayer;
-
-                        if (loadingLayer.get('bgLayer')) {
-                          map.getLayers().setAt(0, olLayer);
-                        }
-                      }
-                    });
-                  })(layerIndex, loadingLayer, layer, type, opt);
+                  // var layerIndex = bgLayers.push(loadingLayer) - 1;
+                  //
+                  // // Specific sextant api
+                  // // Settings are not from XSL so bing key is not yet known
+                  // (function (idx, loadingLayer, layer_, type_, opt_) {
+                  //   gnConfigService.loadPromise.then(function (config) {
+                  //     var olLayer =
+                  //       gnMap.createLayerForType(type_, opt_, layer_.title);
+                  //     if (olLayer) {
+                  //       olLayer.displayInLayerManager = false;
+                  //       olLayer.background = true;
+                  //       olLayer.set('group', layer_.group);
+                  //       bgLayers[idx] = olLayer;
+                  //
+                  //       if (loadingLayer.get('bgLayer')) {
+                  //         map.getLayers().setAt(0, olLayer);
+                  //       }
+                  //     }
+                  //   });
+                  // })(layerIndex, loadingLayer, layer, type, opt);
                 }
               }
               // {type=wmts,name=Ocean_Basemap} or WMS or arcgis
@@ -724,9 +724,11 @@
        * @param {numeric} index of the layer in the tree
        */
       this.createLayer = function(layer, map, bgIdx, index, style) {
-
-        var server = layer.server[0];
-        var res = server.onlineResource[0];
+        var res = {href: ''};
+        if (layer.server) {
+          var server = layer.server[0];
+          res = server.onlineResource[0];
+        }
         var createOnly = angular.isDefined(bgIdx) || angular.isDefined(index);
 
         if (layer.name && layer.name.match(reT)) {

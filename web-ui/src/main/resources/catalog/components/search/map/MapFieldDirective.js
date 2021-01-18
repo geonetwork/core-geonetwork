@@ -69,9 +69,21 @@
                   getProjection().getExtent(), scope.map.getSize());
               };
 
+              /**
+               * When the geomtry is updated, set this value in
+               * scope.currentExtent and remove relation param if
+               * geometry is null.
+               */
+              scope.$watch(scope.gnDrawBboxBtn, function (v) {
+                if (!v) {
+                  delete scope.searchObj.params.relation;
+                }
+                scope.currentExtent = scope.$eval(scope.gnDrawBboxBtn);
+              });
+
               // If given extent coords are given through attributes,
               // display the bbox on the map
-              var coords = scope.$eval(attrs['gnDrawBboxExtent']);
+              var coords = scope.$eval(iAttrs['gnDrawBboxExtent']);
               if (coords) {
                 updateField(new ol.geom.Polygon(coords));
               }
@@ -86,36 +98,28 @@
                   feature.setGeometry(g);
                 }
               });
-
-              scope.getButtonTitle = function() {
-                if (scope.interaction.active) {
-                  return $translate.instant('clickToRemoveSpatialFilter');
-                } else {
-                  return $translate.instant('drawAnExtentToFilter');
-                }
-              };
-              scope.interaction.on('boxend', function() {
-                scope.$apply(function() {
-                  updateField(scope.interaction.getGeometry());
-                  //scope.triggerSearch();
-                });
-              });
-
-              function resetSpatialFilter() {
-                feature.setGeometry(null);
-                bboxSet(parent, '');
-                scope.map.render();
-              }
-              // Remove the bbox when the interaction is not active
-              scope.$watch('interaction.active', function(v, o) {
-                if (!v && o) {
-                  resetSpatialFilter();
-                  if (!!scope.searchObj.params.geometry) {
-                    scope.triggerSearch();
-                  }
-                }
-                scope.currentExtent = scope.$eval(scope.gnDrawBboxBtn);
-              });
+              // scope.interaction.on('boxend', function() {
+              //   scope.$apply(function() {
+              //     updateField(scope.interaction.getGeometry());
+              //     //scope.triggerSearch();
+              //   });
+              // });
+              //
+              // function resetSpatialFilter() {
+              //   feature.setGeometry(null);
+              //   bboxSet(parent, '');
+              //   scope.map.render();
+              // }
+              // // Remove the bbox when the interaction is not active
+              // scope.$watch('interaction.active', function(v, o) {
+              //   if (!v && o) {
+              //     resetSpatialFilter();
+              //     if (!!scope.searchObj.params.geometry) {
+              //       scope.triggerSearch();
+              //     }
+              //   }
+              //   scope.currentExtent = scope.$eval(scope.gnDrawBboxBtn);
+              // });
 
               /**
                * Set active relation (intersect, within, etc..). Run search
