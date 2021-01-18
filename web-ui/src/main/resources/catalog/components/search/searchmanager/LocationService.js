@@ -220,6 +220,7 @@
             $rootScope.$broadcast('locationBackToSearchFromMdview');
           }
           $rootScope.$broadcast('locationBackToSearch');
+          that.restoreSearch();
         }
         if (that.isSearch(state.old.path) &&
             !that.isSearch(state.current.path)) {
