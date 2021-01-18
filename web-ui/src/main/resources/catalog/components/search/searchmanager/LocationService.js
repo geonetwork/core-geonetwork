@@ -212,12 +212,14 @@
           params: $location.search(),
           path: $location.path()
         };
+
         if (state.old.path != that.SEARCH &&
             state.current.path == that.SEARCH) {
           if (that.isMdView(state.old.path)) {
             $rootScope.$broadcast('locationBackToSearchFromMdview');
           }
           $rootScope.$broadcast('locationBackToSearch');
+          that.restoreSearch();
         }
         if (that.isSearch(state.old.path) &&
             !that.isSearch(state.current.path)) {
