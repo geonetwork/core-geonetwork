@@ -30,10 +30,12 @@ import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
+import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
@@ -162,8 +164,16 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         // So delete one by one even if slower
         metadataToDelete.forEach(md -> {
             try {
+                // Extract information for RecordDeletedEvent
+                LinkedHashMap<String, String> titles = metadataUtils.extractTitles(Integer.toString(md.getId()));
+                UserSession userSession = ServiceContext.get().getUserSession();
+                String xmlBefore = md.getData();
+
                 store.delResources(ServiceContext.get(), md.getUuid());
                 metadataManager.deleteMetadata(ServiceContext.get(), String.valueOf(md.getId()));
+
+                // Trigger RecordDeletedEvent
+                new RecordDeletedEvent(md.getId(), md.getUuid(), titles, userSession.getUserIdAsInt(), xmlBefore).publish(ApplicationContextHolder.get());
             } catch (Exception e) {
                 Log.warning(Geonet.DATA_MANAGER, String.format(
 

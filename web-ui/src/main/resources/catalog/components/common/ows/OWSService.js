@@ -498,6 +498,7 @@
                     for (var c = 0; c < layers[i].Identifier.length; c++) {
                       if (layers[i].Identifier[c] == uuid) {
                         needles.push(layers[i]);
+                        break capabilityLayers;
                       }
                     }
                   }
@@ -507,6 +508,7 @@
                       if (mdu && mdu.OnlineResource &&
                         mdu.OnlineResource.indexOf(uuid) > 0) {
                         needles.push(layers[i]);
+                        break capabilityLayers;
                       }
                     }
                   }
@@ -514,7 +516,6 @@
               }
             }
 
-            //FIXME: remove duplicates
             if (needles.length >= layerList.length) {
               if (capObj.version) {
                 needles[0].version = capObj.version;
@@ -523,8 +524,8 @@
               if (layerName.indexOf(',') !== -1) {
                 // Parameters 'styles' and 'layers' should have the same number of values.
                 // SEXTANT SPECIFIC: disable this as we don't need style switching
-                // needles[0].Name = layerName;
-                // needles[0].Title = needles.map(function(l) {return l.Title}).join(', ');
+                // needles[0].Name = _.uniq(needles.map(function(l) {return l.Name})).join(',');
+                // needles[0].Title = _.uniq(needles.map(function(l) {return l.Title})).join(', ');
                 // needles[0].Style = new Array(layerList.length).join(',');
               }
               return needles[0];

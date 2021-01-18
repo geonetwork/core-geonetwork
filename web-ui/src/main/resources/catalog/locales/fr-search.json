@@ -527,5 +527,6 @@
     "GUFname": "Nom",
     "GUFemail": "Email",
     "GUForganization": "Organisation",
-    "printUnsupportedLayerTypes": "Le format des couches suivantes n'est pas supporté par l'impression PDF :"
+    "printUnsupportedLayerTypes": "Le format des couches suivantes n'est pas supporté par l'impression PDF :",
+    "rssFeed": "RSS feed"
 }

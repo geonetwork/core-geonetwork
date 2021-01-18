@@ -539,5 +539,6 @@
   "coordinateFormat": "Projection & format",
   "displayMousePosition": "Display mouse position (Use 'c' shortcut to copy position to clipboard).",
   "copyMousePosition": "Copy mouse position to clipboard",
-  "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed"
+  "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed",
+  "rssFeed": "RSS feed"
 }

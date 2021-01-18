@@ -435,13 +435,23 @@
               aggregations.aggregations[key].terms.size = newSize;
             }
             if (angular.isDefined(include)){
-              var isARegex = include.match(/^\/.*\/$/) != null;
-              aggregations.aggregations[key].terms.include =
-                isARegex ?
-                  include.substr(1, include.length - 2) :
-                  '.*' + include + '.*';
+              var isARegex = include.match(/^\/.*\/$/) != null,
+                  filter = '';
+
               // Note that ES filter on terms can not be case insensitive
               // See https://discuss.elastic.co/t/terms-aggregation-with-include-filter/50976/10
+              // but we can still build a case insensitive regex.
+              if (facetConfig[key].meta && facetConfig[key].meta.caseInsensitiveInclude) {
+                filter = '.*' + include
+                  .split('')
+                  .map(function(l) {return '['+ l.toLowerCase() + l.toUpperCase() + ']'})
+                  .join('') + '.*';
+              } else {
+                filter = isARegex ?
+                          include.substr(1, include.length - 2) :
+                          '.*' + include + '.*'
+              }
+              aggregations.aggregations[key].terms.include = filter;
             }
             if (angular.isDefined(exclude)){
               aggregations.aggregations[key].terms.exclude = exclude;

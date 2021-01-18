@@ -25,6 +25,7 @@ package org.fao.geonet.kernel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.eclipse.jetty.util.URIUtil;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.exceptions.LabelNotFoundException;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -33,6 +34,9 @@ import org.jdom.Element;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+
+import static org.fao.geonet.kernel.rdf.Selectors.RDF_NAMESPACE;
+import static org.fao.geonet.kernel.rdf.Selectors.SKOS_NAMESPACE;
 
 /**
  * TODO javadoc.
@@ -547,6 +551,30 @@ public class KeywordBean {
         ele.addContent(thesaurusName);
 
         return ele;
+    }
+
+    @JsonIgnore
+    public Element getSkos() {
+        Element concept = new Element("Concept", SKOS_NAMESPACE);
+        if (getUriCode() != null && getUriCode().length() != 0) {
+            concept.setAttribute("about", keywordUrl + getUriCode(), RDF_NAMESPACE);
+        }
+
+        this.getValues().forEach((lang, value) -> {
+            Element label = new Element("prefLabel", SKOS_NAMESPACE);
+            label.setAttribute("lang", getIsoLanguageMapper().iso639_2_to_iso639_1(lang), Namespaces.XML);
+            label.setText(value);
+            concept.addContent(label);
+        });
+
+        this.getDefinitions().forEach((lang, value) -> {
+            Element label = new Element("scopeNote", SKOS_NAMESPACE);
+            label.setAttribute("lang", getIsoLanguageMapper().iso639_2_to_iso639_1(lang), Namespaces.XML);
+            label.setText(value);
+            concept.addContent(label);
+        });
+
+        return concept;
     }
 
     /**

@@ -525,5 +525,6 @@
     "GUFname": "Vaše jméno",
     "GUFemail": "Vaše e-mailová adresa",
     "GUForganization": "Vaše Organizace",
-    "printUnsupportedLayerTypes": "Následující typy vrstev jsou k dispozici, ale nelze je vytisknout"
+    "printUnsupportedLayerTypes": "Následující typy vrstev jsou k dispozici, ale nelze je vytisknout",
+    "rssFeed": "RSS kanál"
 }

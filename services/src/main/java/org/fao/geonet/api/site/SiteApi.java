@@ -209,21 +209,29 @@ public class SiteApi {
             Settings.SYSTEM_PLATFORM_VERSION,
             Settings.SYSTEM_PLATFORM_SUBVERSION
         }));
-        if (!NodeInfo.DEFAULT_NODE.equals(node.getId())) {
-            Source source = sourceRepository.findById(node.getId()).get();
-            if (source != null) {
-                String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
-                final List<Setting> settings = response.getSettings();
-                settings.add(
-                    new Setting().setName(Settings.NODE_DEFAULT)
-                        .setValue("false"));
-                settings.add(
-                    new Setting().setName(Settings.NODE)
-                        .setValue(source.getUuid()));
-                settings.add(
-                    new Setting().setName(Settings.NODE_NAME)
-                        .setValue(source != null ? source.getLabel(iso3langCode) : source.getName()));
-            }
+        Optional<Source> source;
+        String nodeDefault;
+        if (NodeInfo.DEFAULT_NODE.equals(node.getId())) {
+            source = sourceRepository.findById(settingManager.getSiteId());
+            nodeDefault = "true";
+        } else {
+            source = sourceRepository.findById(node.getId());
+            nodeDefault = "false";
+        }
+        if (source.isPresent()) {
+            final List<Setting> settings = response.getSettings();
+            String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
+
+            settings.add(
+                new Setting().setName(Settings.NODE_DEFAULT)
+                    .setValue(nodeDefault));
+            settings.add(
+                new Setting().setName(Settings.NODE)
+                    .setValue(source.get().getUuid()));
+            settings.add(
+                new Setting().setName(Settings.NODE_NAME)
+                    .setValue(StringUtils.isEmpty(source.get().getLabel(iso3langCode))
+                        ? source.get().getName() : source.get().getLabel(iso3langCode)));
         }
         return response;
     }

@@ -25,12 +25,12 @@
   </div>
 
   <div class="panel-body">
-    <div ng-if="!isTabMode"
-        ng-repeat="facet in ctrl.list track by facet.key"
-        ng-show="::ctrl.isVisibleForUser(facet) && (
+    <div ng-repeat="facet in ctrl.list track by facet.key"
+         ng-show="!isTabMode && ctrl.isVisibleForUser(facet) && (
                   facet.items.length > 0 ||
+                  facet.include.length > 0 ||
                   (facet.dates && facet.dates.length > 0))"
-        class="gn-facet">
+         class="gn-facet">
       <a href
         title="::{{facet.key | translate}}"
         class="gn-facet-header flex-row width-100"
@@ -43,11 +43,11 @@
       <div class="gn-facet-root-container"
           ng-class="{'collapse': ctrl.fLvlCollapse[facet.key]}">
 
-        <div>
+        <div ng-if="facet.type === 'terms' && facet.includeFilter
+                    && (facet.more || facet.include.length > 0)">
           <input title="{{'facetIncludeFilter' | translate}}"
-                ng-if="facet.type === 'terms' && facet.includeFilter"
                 ng-model="facet.include"
-                ng-model-options="{debounce: 200}"
+                ng-model-options="{debounce: 300}"
                 ng-change="ctrl.filterTerms(facet)"
                 autocomplete="nope"
                 class="form-control input-sm"

@@ -1283,6 +1283,7 @@
     "styleVariable-gnMenubarBorderColor": "Barva okraje",
     "gnBottombarCss": "Spodní lišta",
     "styleVariable-gnBottombarBackground": "Pozadí",
+    "styleVariable-gnBottombarBackgroundHover": "Barva pozadí při přejetí kurzorem",
     "styleVariable-gnBottombarColor": "Barva",
     "styleVariable-gnBottombarColorHover": "Barva při přejetí myší",
     "styleVariable-gnBottombarBorderColor": "Barva okraje",
@@ -1459,5 +1460,6 @@
     "ui-defaultSearchString-help": "Tato konfigurace umožňuje definovat výchozí filtr pro vyhledávání. Syntaxe je použitá v poli dotazu úhlové fasety.",
     "ui-autoFitOnLayer": "Vždy přibližit na data",
     "ui-autoFitOnLayer-help": "Pokud je zaškrtnuto, mapa se při přidání vrstvy ze záznamu automaticky přiblíží na data. Jinak se zobrazí zpráva, která uživateli umožní manuálně přiblížit data.",
-    "styleVariable-gnHeaderHeight": "Výška"
+    "styleVariable-gnHeaderHeight": "Výška",
+    "styleVariable-gnSearchBackgroundColor": "Barva pozadí"
 }

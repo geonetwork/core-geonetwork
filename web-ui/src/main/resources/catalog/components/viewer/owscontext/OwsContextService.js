@@ -271,118 +271,118 @@
                         bgLayers[idx] = olLayer;
 
                         if (loadingLayer.get('bgLayer')) {
-                          map.getLayers().setAt(0, olLayer);
-                        }
-                      }
+                    map.getLayers().setAt(0, olLayer);
+                  }
+                }
                     });
                   })(layerIndex, loadingLayer, layer, type, opt);
-                }
+              }
 
               // {type=wmts,name=Ocean_Basemap} or WMS or arcgis
               else {
 
-                  // to push in bgLayers not in the map
-                  var loadingLayer = new ol.layer.Image({
-                    loading: true,
-                    label: 'loading',
-                    url: '',
-                    visible: false
-                  });
+                // to push in bgLayers not in the map
+                var loadingLayer = new ol.layer.Image({
+                  loading: true,
+                  label: 'loading',
+                  url: '',
+                  visible: false
+                });
 
-                  if (!layer.hidden && !isFirstBgLayer) {
-                    isFirstBgLayer = true;
-                    loadingLayer.set('bgLayer', true);
-                  }
-
-                  var layerIndex = bgLayers.push(loadingLayer) - 1;
-                  var p = self.createLayer(layer, map, 'do not add');
-
-                  (function(idx, loadingLayer) {
-                    p.then(function(layer) {
-                      if (!layer) {
-                        return;
-                      }
-                      bgLayers[idx] = layer;
-
-                      layer.displayInLayerManager = false;
-                      layer.background = true;
-
-                      if (loadingLayer.get('bgLayer')) {
-                        map.getLayers().setAt(0, layer);
-                      }
-                    });
-                  })(layerIndex, loadingLayer);
+                if (!layer.hidden && !isFirstBgLayer) {
+                  isFirstBgLayer = true;
+                  loadingLayer.set('bgLayer', true);
                 }
+
+                var layerIndex = bgLayers.push(loadingLayer) - 1;
+                var p = self.createLayer(layer, map, 'do not add');
+
+                (function(idx, loadingLayer) {
+                  p.then(function(layer) {
+                    if (!layer) {
+                      return;
+                    }
+                    bgLayers[idx] = layer;
+
+                    layer.displayInLayerManager = false;
+                    layer.background = true;
+
+                    if (loadingLayer.get('bgLayer')) {
+                      map.getLayers().setAt(0, layer);
+                    }
+                  });
+                })(layerIndex, loadingLayer);
               }
-              // WMS layer not in background
-              else if (layer.server) {
-                var server = layer.server[0];
-                var currentStyle;
+            }
+            // WMS layer not in background
+            else if (layer.server) {
+              var server = layer.server[0];
+              var currentStyle;
 
-                // load extension content (JSON)
-                if (layer.extension && layer.extension.any) {
-                  var extension = JSON.parse(layer.extension.any);
-                  var loadingId = layer.name;
-                  if (extension.style) {
-                    currentStyle = {Name: extension.style};
-                    loadingId += ' ' + extension.style;
-                  }
+              // load extension content (JSON)
+              var extension = layer.extension && layer.extension.any ? JSON.parse(layer.extension.any) : {};
 
-                  // import saved filters if available
-                  if (extension.filters && extension.wfsUrl) {
-                    var url = extension.wfsUrl;
+              var loadingId = extension.label ? extension.label : layer.name;
+              if (extension.style) {
+                currentStyle = {Name: extension.style};
+                loadingId += ' ' + extension.style;
+              }
 
-                    // get ES object and save filters on it
-                    // (will be used by the WfsFilterDirective
-                    // when initializing)
-                    var esObj =
-                        wfsFilterService.registerEsObject(url, layer.name);
-                    esObj.initialFilters = extension.filters;
-                  }
+              // import saved filters if available
+              if (extension.filters && extension.wfsUrl) {
+                var url = extension.wfsUrl;
 
-                  // this object holds the WPS input values
-                  var defaultInputs = extension.processInputs || {};
+                // get ES object and save filters on it
+                // (will be used by the WfsFilterDirective
+                // when initializing)
+                var esObj =
+                    wfsFilterService.registerEsObject(url, layer.name);
+                esObj.initialFilters = extension.filters;
+              }
+
+              // this object holds the WPS input values
+              var defaultInputs = extension.processInputs || {};
+
+              // create WMS layer
+              if (server.service == 'urn:ogc:serviceType:WMS') {
+                var loadingLayer = new ol.layer.Image({
+                  loading: true,
+                  label: loadingId + '...',
+                  url: '',
+                  visible: false,
+                  group: layer.group,
+
+                  // Sextant specific
+                  owc_position: layer.position,
+                  owc_groupPosition: layer.groupPosition,
+                  metadataUrl: layer.metadataUrl,
+                  qiList: layer.qiList
+                  // end sextant specific
+                });
+
+                loadingLayer.displayInLayerManager = true;
+
+                if (extension.label) {
+                  layer.title = extension.label;
+                }
+                if (extension.uuid)  {
+                  layer.metadataUuid = extension.uuid
                 }
 
-                // create WMS layer
-                if (server.service == 'urn:ogc:serviceType:WMS') {
+                var layerIndex = map.getLayers().push(loadingLayer) - 1;
+                var p = self.createLayer(layer, map, undefined, i, currentStyle);
+                loadingLayer.set('index', layerIndex);
 
-                  // generate a unique id for the layer tree
-                  var id = layer.name + '-loading' + i;
-
-                  var loadingLayer = new ol.layer.Image({
-                    loading: true,
-                    label: loadingId || 'loading',
-                    name: id,
-                    url: '',
-                    visible: false,
-                    group: layer.group,
-
-                    // Sextant specific
-                    owc_position: layer.position,
-                    owc_groupPosition: layer.groupPosition,
-                    metadataUrl: layer.metadataUrl,
-                    qiList: layer.qiList
-
-                    // end sextant specific
+                (function(idx, loadingLayer) {
+                  p.then(function(layer) {
+                    if (layer) {
+                      map.getLayers().setAt(idx, layer);
+                    }
+                    else {
+                      loadingLayer.set('errors', ['load failed']);
+                    }
                   });
-                  loadingLayer.displayInLayerManager = true;
-
-                  var layerIndex = map.getLayers().push(loadingLayer) - 1;
-                  var p = self.createLayer(layer, map, undefined, i, currentStyle);
-                  loadingLayer.set('index', layerIndex);
-
-                  (function(idx, loadingLayer) {
-                    p.then(function(layer) {
-                      if (layer) {
-                        map.getLayers().setAt(idx, layer);
-                      }
-                      else {
-                        loadingLayer.set('errors', ['load failed']);
-                      }
-                    });
-                  })(layerIndex, loadingLayer);
-                }
+                })(layerIndex, loadingLayer);
               }
             }
             firstLoad = false;
@@ -444,13 +444,6 @@
       this.writeContext = function(map) {
 
         var extent = map.getView().calculateExtent(map.getSize());
-        var ll = [extent[0], extent[1]];
-        var ur = [extent[2], extent[3]];
-        var projection = map.getView().getProjection().getCode();
-        if (projection == 'EPSG:4326') {
-          ll.reverse();
-          ur.reverse();
-        }
 
         var general = {
           boundingBox: {
@@ -459,9 +452,9 @@
               'localPart': 'BoundingBox'
             },
             value: {
-              crs: projection,
-              lowerCorner: ll,
-              upperCorner: ur
+              crs: map.getView().getProjection().getCode(),
+              lowerCorner: [extent[0], extent[1]],
+              upperCorner: [extent[2], extent[3]]
             }
           }
         };
@@ -489,6 +482,8 @@
 
           if (source instanceof ol.source.OSM) {
             name = '{type=osm}';
+          } else if (source instanceof ol.source.BingMaps) {
+            name = '{type=bing_aerial}';
           } else if (source instanceof ol.source.Stamen) {
             name = '{type=stamen,name=' + layer.getSource().get('type') + '}';
           } else if (source instanceof ol.source.WMTS) {
@@ -559,6 +554,10 @@
           } else if (source instanceof ol.source.WMTS) {
             name = '{type=wmts,name=' + layer.get('name') + '}';
             url = gnGlobalSettings.getNonProxifiedUrl(layer.get('urlCap'));
+          } else if (source instanceof ol.source.ImageArcGISRest) {
+            var layerId = layer.getSource().getParams().LAYERS;
+            name = '{type=arcgis,name=' + (layerId || '') + '}';
+            url = layer.get('url');
           } else {
             return;
           }
@@ -613,8 +612,8 @@
                 metadataUrl: layer.get('metadata_url')
               },
               QIList: [{
-                  QI: formatQIList
-                }]
+                QI: formatQIList
+              }]
             },
             annotationsId: layer.get('annotationsUuid'),
             // end sextant specific
@@ -632,27 +631,30 @@
 
 
           // apply filters & processes inputs in extension if needed
-          if (layer.get('currentStyle') || filters || processInputs) {
-            var extension = {};
+          var extension = {};
 
-            if (layer.get('currentStyle')) {
-              extension.style = layer.get('currentStyle').Name;
-            }
-
-            if (esObj) {
-              var wfsUrl = esObj.config.params.wfsUrl;
-              if (wfsUrl) {
-                extension.filters = filters;
-                extension.wfsUrl = wfsUrl;
-              }
-            }
-            if (processInputs) { extension.processInputs = processInputs; }
-
-            layerParams.extension = {
-              name: 'Extension',
-              any: JSON.stringify(extension)
-            };
+          if (layer.get('md') && layer.get('md')._id) {
+            extension.uuid = layer.get('md')._id;
+            extension.label = layer.get('label');
           }
+
+          if (layer.get('currentStyle')) {
+            extension.style = layer.get('currentStyle').Name;
+          }
+
+          if (esObj) {
+            var wfsUrl = esObj.config.params.wfsUrl;
+            if (wfsUrl) {
+              extension.filters = filters;
+              extension.wfsUrl = wfsUrl;
+            }
+          }
+          if (processInputs) { extension.processInputs = processInputs; }
+
+          layerParams.extension = {
+            name: 'Extension',
+            any: JSON.stringify(extension)
+          };
 
           resourceList.layer.push(layerParams);
         });
@@ -730,8 +732,10 @@
           var name = reL.exec(layer.name)[1];
           var promise;
 
-          if (type == 'wmts') {
+          if (type === 'wmts') {
             promise = gnMap.addWmtsFromScratch(map, res.href, name, createOnly);
+          } else if (type === 'arcgis') {
+            promise = gnMap.addEsriRestFromScratch(map, res.href, name, createOnly);
           }
 
           // if it's not WMTS, let's assume it is wms
@@ -758,6 +762,7 @@
               olL.set('title', layer.title);
               olL.set('label', layer.title);
             }
+            olL.set('metadataUuid', layer.metadataUuid || '');
             if (bgIdx) {
               olL.set('bgIdx', bgIdx);
             } else if (index) {
@@ -771,7 +776,7 @@
           // even when loaded from a context.
           return gnMap.addWmsFromScratch(
               map, res.href, layer.name,
-              createOnly, null, server.version, style).
+              createOnly, layer.metadataUuid || null, server.version, style).
               then(function(olL) {
                 if (olL) {
                   try {
@@ -797,6 +802,7 @@
                   var title =  layer.title ? layer.title : olL.get('label');
                   olL.set('title', title || '');
                   olL.set('label', title || '');
+                  olL.set('metadataUuid', layer.metadataUuid || '');
                   $rootScope.$broadcast('layerAddedFromContext', olL);
                   return olL;
                 }

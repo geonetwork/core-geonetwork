@@ -63,7 +63,7 @@
       '$q',
       '$translate',
       'gnWmsQueue',
-      'gnSearchManagerService',
+      'gnMetadataManager',
       'Metadata',
       'gnWfsService',
       'gnGlobalSettings',
@@ -75,7 +75,7 @@
       'gnEsriUtils',
       function(olDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
-          gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
+          gnWmsQueue, gnMetadataManager, Metadata, gnWfsService,
           gnGlobalSettings, gnViewerSettings, gnViewerService, gnAlertService,
          wfsFilterService, $http, gnEsriUtils) {
 
@@ -1462,10 +1462,14 @@
                         });
                   };
 
-                  var feedMdPromise = md ?
+                  var feedMdPromise =
+                    typeof md === 'object' ?
                     $q.resolve(md).then(function(md) {
                       olL.set('md', md);
-                    }) : $this.feedLayerMd(olL);
+                    }) : (
+                      typeof md === 'string'
+                        ? $this.feedLayerMd(olL, md)
+                        : $this.feedLayerMd(olL));
 
                   feedMdPromise.then(finishCreation);
                 }
@@ -1557,6 +1561,8 @@
               return gnEsriUtils.renderLegend(response.data, layer);
             })
 
+            var gnMap = this;
+
             // layer title and extent are set after the layer info promise resolves
             return $q.all([layerInfoPromise, legendPromise, feedMdPromise])
               .then(function (results) {
@@ -1564,6 +1570,21 @@
                 var legendUrl = results[1];
                 var extent =
                   [layerInfo.extent.xmin, layerInfo.extent.ymin, layerInfo.extent.xmax, layerInfo.extent.ymax];
+                if (layerInfo.extent.spatialReference && layerInfo.extent.spatialReference.wkid) {
+                  var srcProj = ol.proj.get(layerInfo.extent.spatialReference.wkid);
+                  if (srcProj) {
+                    try {
+                      extent = gnMap.reprojExtent(extent,
+                        "EPSG:" + srcProj, map.getView().getProjection().getCode());
+                    } catch (e) {
+                      console.warn("Error adding ESRI REST layer. " +
+                        "The problem is probably related to the layer projection. " +
+                        "Try to add the projection " + "EPSG:" + srcProj +
+                        " in UI configuration projection lists. " +
+                        "See admin > settings > user interface > map > projection list.");
+                    }
+                  }
+                }
                 olLayer.set('label', layerInfo.title);
                 olLayer.set('legend', legendUrl);
                 olLayer.set('extent', extent);
@@ -2136,22 +2157,16 @@
            *
            * @param {ol.Layer} layer to feed
            */
-          feedLayerMd: function(layer) {
+          feedLayerMd: function(layer, uuid) {
             var defer = $q.defer();
             var $this = this;
 
             defer.resolve(layer);
 
-            if (layer.get('metadataUrl') && layer.get('metadataUuid')) {
-
-              return gnSearchManagerService.gnSearch({
-                uuid: layer.get('metadataUuid'),
-                fast: 'index',
-                draft: 'n or e',
-                _content_type: 'json'
-              }).then(function(data) {
-                if (data.metadata.length == 1) {
-                  var md = new Metadata(data.metadata[0]);
+            if (layer.get('metadataUuid') || uuid) {
+              return gnMetadataManager.getMdObjByUuid(layer.get('metadataUuid') || uuid)
+                .then(function(md) {
+                if (md) {
                   layer.set('md', md);
 
                   var mdLinks = md.getLinksByType('#OGC:WMTS',

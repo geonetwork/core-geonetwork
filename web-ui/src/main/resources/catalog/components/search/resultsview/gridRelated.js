@@ -62,9 +62,9 @@
     }]);
 
   module.directive('gnGridRelated', [
-    'gnGlobalSettings', 'gnRelatedService', 'gnGridRelatedList',
+    'gnGlobalSettings', 'gnRelatedResources', 'gnGridRelatedList',
     'gnConfigService', 'gnConfig',
-    function(gnGlobalSettings, gnRelatedService, gnGridRelatedList,
+    function(gnGlobalSettings, gnRelatedResources, gnGridRelatedList,
              gnConfigService, gnConfig) {
       return {
         restrict: 'A',
@@ -80,6 +80,7 @@
           scope.location = window.location;
           scope.max = attrs['max'] || 5;
           scope.displayState = {};
+          scope.config = gnRelatedResources;
 
           gnConfigService.load().then(function(c) {
             scope.indexingTimeRecordLink = gnConfig['system.index.indexingTimeRecordLink'];

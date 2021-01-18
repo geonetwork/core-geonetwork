@@ -161,7 +161,7 @@
                        data-translate="">overview</label>
                 <div class="col-sm-10">
                   <img id="gn-addonlinesrc-overview-image"
-                       ng-src="{{isFieldMultilingual('url') ? params.url[ctrl.urlCurLang] : params.url}}"
+                       ng-src="{{onlinesrcService.getApprovedUrl(isFieldMultilingual('url') ? params.url[ctrl.urlCurLang] : params.url)}}"
                        class="img-thumbnail">
                 </div>
               </div>

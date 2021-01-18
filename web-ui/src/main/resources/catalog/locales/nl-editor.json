@@ -37,6 +37,7 @@
     "chooseContactRole": "of kies een rol",
     "chooseEntry": "Zoek in xml fragmenten",
     "clickToAddResource": "Klik om deze bron te selecteren",
+    "externalResourceManagement": "Click to go to external resource manager",
     "beforeUnloadEditor": "U kunt opgeslagen wijzigingen hebben sinds vorig besparen {{timeago}} .",
     "fieldIsRemoved": "Dit veld wordt verwijderd",
     "editRecords": "Muteer selectie",

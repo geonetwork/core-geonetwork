@@ -1,0 +1,139 @@
+================================================================================
+===
+=== GeoNetwork 4.0.2: List of changes
+===
+================================================================================
+- Fixed another broken image related to #5299 (#5347)
+- Fixed broken site logo image on fresh installation. (#5342)
+- Fix working copy resource display (#5299)
+- Datacite / XSD validation / valueUri is valueURI.
+- Facet / Configuration / UI props in meta
+- Facet / Filter / Case insensitive
+- Map / ESRI & WMS layer search improvements (#5320)
+- API / Thesaurus / Import from CSV (#5315)
+- Merge pull request #5318 from geonetwork/402-merge-master-20210107
+- Thumbnail / Improve size filter.
+- Updates from transifex.
+- Merge remote-tracking branch 'origin/master' into 402-merge-master-20210107
+- Portal / Related record displayed in search results do not take record origin in account. Depending of the origin catalog/portal/remote the link has to be adapted to open the target link in current app or main portal or another window. Relates to https://github.com/geonetwork/core-geonetwork/pull/4608.
+- Map / Layer / Preserve link to metadata record.
+- Event handling improvements (#5194)
+- Update file copy so that it will overwrite any existing file which is required when approving a record that was previously published (#5309)
+- Update Remote INSPIRE Atom feeds to process dataset feeds from service feeds
+- Fix some working copy merge issues (#5279)
+- ISO19139 / ISO19115-3.2018 - Force gco:DateTime on elements that doesn't support gco:Date (#5300)
+- Hide workflow option in versioning page when the workflow is not enabled
+- ISO19115-3 / Fix mdq:DQ_QuantitativeResult not displayed (#5303)
+- java 8 only (#5112)
+- Harvester / From folder / Unable to reset XSLT once set (#5281)
+- Add translation for "sample" on search module. (#5297)
+- Fix typo in README.md (#5295)
+- [a11y] Accessibility improvements for the footer (#5073)
+- [#4865] Add option setting for changing the background color of the search block (#4870)
+- Add new feature for supporting CMIS as an external file store (#5118)
+- Make the subbar on the result view accessible (by keyboard): (#5067)
+- Updated validation api so that it supports working copy and fixed other validation bugs (#5231)
+- More like this / Fix for long titles
+- User feedback / Can't save feedback
+- User feedback / Fix placeholder
+- [a11y] Change language picker into dropdown (#5136)
+- Use the portal/source label as the name in the menu (#5245)
+- Add a security logger to geonetwork (#5268)
+- Do not show workflow related messages when workflow is not enabled (#5283)
+- ISO19115-3 / Editor / Online source link to record (#5278)
+- cas - fixing GN cas authentication
+- ISO19115-3 / Avoid error while parsing empty date
+- Merge pull request #5274 from fxprunayre/402-master-merge-20201218
+- Merge / Fix import.
+- Update from transifex.
+- Merge remote-tracking branch 'origin/master' into 4.0.x
+- Fixed issue where links to /accessDenied.jsp/eng/service-not-allowed?referer=UNKNOWN could cause endless redirects as accessDenied.jsp is not a recognized node
+- Translation improvement / French (#5269)
+- ISO19115-3 / Indexing / Distribution format may be stored in an Anchor.
+- Add timezone support (#5061)
+- Fix permission issue related to guest users. Guest users were not able to update their profile or change their password. Fixes issue #5252 (#5256)
+- Fixed some keycloak issues when calling API's  (#5207)
+- If no metadata records then it is OK to have 0 results from index. (#5265)
+- add dutch translations
+- Improvements to the UI of Privileges and Categories screens (#5261)
+- Align icons and labels
+- Remove unused icons for the static pages links (#5106)
+- Editor / Avoid NPE when saving invalid document for an element not existing in the model
+- Processing / XSL process may contains .
+- ISO19115-3 / Formatter / Space before unit
+- Map / WMS-T / Fix error due to dates leading space char
+- Indexing / Add keyword type field.
+- Metadata CSV export - Remove non letter/number characters in thesaurus identifier processing
+- ISO 19115-3 rules validation for 'Associated resources' never validates #4623
+- Map / Erdapp server support.
+- User search improvement.
+- Map / WPS / Set crs attribute of wps:BoundingBoxData. Fix issue on map context loading if layername is undefined.
+- [5234] Fix for overflowing CSW Harvester filter list (#5246)
+- Security / Allow basic auth to connect to dashboards
+- Fixed ES5 compatibility
+- Fix dimensions for geometry created by ol.format.GML
+- Draw bounds after map creation, apply 10% buffer to fit extent
+- Moved drawing of bbox after map was created (fixes #5153)
+- Use stops in extent transformations (more accurate)
+- Removed trailing comma, improved parsing of missing bbox or proj4 def
+- Added/updated translations for projection fields
+- Integrated ProjectionService into UiConfig
+- Added service to query EPSG.io for proj4 defs
+- Fix build.
+- INSPIRE Validation / Add support to validate using GetRecordById url (#5227)
+- Fix bug related to canceling working copy removes approved resource (#5214) (#5219)
+- Fixed issues with ResourceLoggerStore where it was not supporting working copy metadata records correctly Work creating a working copy it would create new MetadataFileUpload using the approved metadata id. This was causing duplicate active MetadataFileUpload which generating exceptions. (#5223)
+- Editor board / Fix icon when record is published to all
+- Map / Background / Add support for ESRI REST layers (and WMS multiple layers)
+- Selection / Category / Add support to remove categories on a selection.
+- Indexing / Codelist values can be considered keywords
+- Home page / Translate facet key.
+- Index is critical health check.
+- Fix null group bug if attempting to publish sample data.
+- Merge pull request #5182 from geonetwork/402-restoreoldrecord
+- Fix for WFS download dropdown in Record view
+- Small improvements to the MiniMap: (#5195)
+- Fixed missing setCurrentStatus and setPreviousStatus Fixed API permission issues Fixed issues related to @Converter(autoApply = true) (same as PR https://github.com/geonetwork/core-geonetwork/pull/5198)
+- Update en-v4.json
+- Indexing / Also allows _ to be part of field name.
+- Aggregation / Add examples for histogram
+- Update CatController.js
+- Multilingual support (#5193)
+- Fix bug where errors from the report should be added to the error and not the info (#5172)
+- Security enhancement - support for Keycloak (#4931)
+- Fixes #5186 - gmx:MimeFileType should be gcx:MimeFileType
+- WFS indexing / Add 3 modes for WFS url detection.
+- Don't remove geographic description for multilingual data since the widget does not support multilingual data.
+- Integration tests README.md improvements (#5184)
+- DB / Oracle support / Use sequence for MessageProducerEntity id (#5183)
+- Translation / French.
+- Merge remote-tracking branch 'origin/master' into 402-restoreoldrecord
+- [BP] Properties / Remove unused
+- User searches / Add portals with filter in the list.
+- Allow to restore a metadata record from deleted records (Part 3) (#4817)
+- Thesaurus / Import from Linked Data Registry (LDRegistry). (#5143)
+- Update date format in title to contain the time zone as GMT.  This will help eliminate confusion as to when the template/metadata was created.
+- User searches / Add portals with filter in the list.
+- Portal / Filter does not need to be escaped in configuration.
+- ISO19139 / Associated resources / Fix bidirectional navigation
+- Search / Set a default_field for query_string to avoid field expansion error on large catalogs.
+- Search / Aggs / Set a default_field for query_string to avoid field expansion error on large catalogs
+- Index / Short field name.
+- Indexing / allKeywords only use for displaying not for search.
+- Index / Add authentication for remote index
+- API / Region / Avoid similar property in model
+- Properties / Remove unused
+- Hide GeoNetwork name on smaller screens and show labels on other buttons
+- Fix for the 'empty' user icon on small screens.
+- Improve MetadataManager bean declaration (#5051) (#5054)
+- Harvested records / Editable depending on config.
+- Update version to 4.0.2-SNAPSHOT
+- Merge pull request #5142 from GeoSander/master
+- Moved transform functionality to GeometryService
+- Merge remote-tracking branch 'upstream/master' into master
+- Applied formatting
+- Moved geometry functions to new MapFieldService
+- Use datum line, fix longitudinal ordering
+- Properly set point of origin
+- Fix for polar extents (issue #4810)
+- Fix for polar extents (issue #4810)

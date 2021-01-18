@@ -37,6 +37,7 @@
     "chooseContactRole": "ou selecionar perfil",
     "chooseEntry": "Diretório de Pesquisa",
     "clickToAddResource": "Clique para selecionar este recurso",
+    "externalResourceManagement": "Click to go to external resource manager",
     "beforeUnloadEditor": "Você deve ter modificações não gravadas desde a última gravação {{timeAgo}}.",
     "fieldIsRemoved": "Este campo será removido",
     "editRecords": "Editar seleção",

@@ -37,6 +37,7 @@
     "chooseContactRole": "eða velja hlutverk",
     "chooseEntry": "Leitarskrá",
     "clickToAddResource": "Smelltu til að velja þessi gögn",
+    "externalResourceManagement": "Click to go to external resource manager",
     "beforeUnloadEditor": "Þú gætir haft óvistaðar breytingar síðan síðast var vistað  {{timeAgo}}.",
     "fieldIsRemoved": "Þessi dálkur verður fjarlægður",
     "editRecords": "Breyta vali",

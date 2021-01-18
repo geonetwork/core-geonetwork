@@ -1373,6 +1373,20 @@
         return href;
       }}
   ]);
+  /**
+   * Append size parameter to request a smaller thumbnail.
+   */
+  module.filter('thumbnailUrlSize', function() {
+      return function(href, size) {
+        if(href.indexOf('api/records/') !== -1) {
+          var suffix = 'size=' + (size || 140);
+          return href.indexOf('?') !== -1 ?
+            href + '&' + suffix :
+            href + '?' + suffix;
+        } else {
+          return href;
+        }
+      }});
   module.filter('newlines', function() {
     return function(value) {
       if (angular.isArray(value)) {
@@ -1482,15 +1496,15 @@
               label + '</div>' +
               '</div>';
             modalElt = angular.element('' +
-              '<div class="modal fade in"' +
-              '     id="gn-img-modal-"' + img.id + '>' +
-              '<div class="modal-dialog gn-img-modal in">' +
-              '  <button type=button class="btn btn-link gn-btn-modal-img">' +
-              '<i class="fa fa-times text-danger"/></button>' +
-              '  <img src="' + (img.url || img.id) + '"/>' +
-              (label != '' ? labelDiv : '') +
-              '</div>' +
-              '</div>');
+                '<div class="modal fade in"' +
+                '     id="gn-img-modal-' + (img.id || img.lUrl || img.url) + '">' +
+                '<div class="modal-dialog gn-img-modal in">' +
+                '  <button type=button class="btn btn-link gn-btn-modal-img">' +
+                '<i class="fa fa-times text-danger"/></button>' +
+                '  <img src="' + (img.lUrl || img.url || img.id) + '"/>' +
+                (label != '' ? labelDiv : '') +
+                '</div>' +
+                '</div>');
 
             $(document.body).append(modalElt);
             modalElt.modal();
