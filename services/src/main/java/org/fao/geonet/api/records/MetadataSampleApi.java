@@ -284,6 +284,10 @@ public class MetadataSampleApi {
                                 setSourceId(siteId).
                                 setOwner(owner).
                                 setGroupOwner(1);
+                            // Set the UUID explicitly, insertMetadata doesn't update the xml with the generated UUID for templates
+                            if (MetadataType.lookup(isTemplate) == MetadataType.TEMPLATE) {
+                                xml = dataManager.setUUID(schemaName, uuid, xml);
+                            }
                             dataManager.insertMetadata(context, metadata, xml, true, true, UpdateDatestamp.NO, false, true);
                             report.addMetadataInfos(metadata,
                             String.format(
