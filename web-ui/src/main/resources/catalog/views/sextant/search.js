@@ -541,11 +541,10 @@
 
   module.controller('gnsSextantSearch', [
     '$scope',
-    'gnOwsCapabilities',
-    'gnMap',
-    'sxtGlobals',
-    function($scope, gnOwsCapabilities, gnMap, sxtGlobals) {
+    'gnSearchSettings',
+    function($scope, gnSearchSettings) {
       $scope.ctrl = {};
+      $scope.facetConfig = gnSearchSettings.facetConfig;
     }]);
 
   module.controller('gnsSextantSearchForm', [
@@ -576,14 +575,35 @@
         relations: ['within']
       };
 
-      // Disable/enable reset button
-      var defaultSearchParams = [];
-      $scope.$watch('searchObj.params', function(v) {
-        for (var p in v) {
-          if(defaultSearchParams.indexOf(p) < 0) {
-            $scope.searchObj.canReset = true;
-            return;
+      $scope.$watch('searchObj.params',
+        function(newFilters, oldVal) {
+        var currentFilters = [], EXCLUDED_PARAMS = [
+          'bboxes',
+          'bucket',
+          'editable',
+          'fast',
+          'from',
+          'ownRecords',
+          'resultType',
+          'sortBy',
+          'sortOrder',
+          'to',
+          'isTemplate',
+          'owner'];
+        for (var filterKey in newFilters) {
+          // filter param is excluded from summary
+          if (EXCLUDED_PARAMS.indexOf(filterKey) > -1) {
+            continue;
           }
+
+          var value = newFilters[filterKey];
+
+          // value is empty/undefined
+          if (!value || typeof value !== 'string') {
+            continue;
+          }
+          $scope.searchObj.canReset = true;
+          return;
         }
         $scope.searchObj.canReset = false;
       });

@@ -1626,6 +1626,36 @@ ul.invalid {
     }
   }
 
+  .gn-facet-filter {
+    position: relative;
+    &:before {
+      font-family: FontAwesome;
+      content: "\f0b0";
+      float: right;
+      margin: 0.5em 0.4em 0 0;
+      font-size: 16px;
+      color: #d3d3d3;
+    }
+    .clear {
+      right: 2em;
+      position: absolute;
+      top: .75em;
+      color: #666;
+      &:hover {
+        cursor: pointer;
+        color: #222;
+      }
+    }
+
+    input {
+      border: none;
+      border-bottom: 1px solid @sxt-base-color;
+      border-radius: 0;
+      box-shadow: none;
+      width: 90%;
+    }
+  }
+
   .list-group {
     border-left: 1px dotted rgba(0, 0, 0, 0.2);
     margin-left: .5em;

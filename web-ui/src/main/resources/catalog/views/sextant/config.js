@@ -389,31 +389,6 @@
       // Define if the 'related' dropdown should show source/hassource relations
       searchSettings.hideSourceRelations = false;
 
-      // SEXTANT DEPRECATED
-      // TODO: Too many changes made in sextant
-      // compared to GeoNetwork facet config
-      // searchSettings.facetConfig = [{
-      //   key: 'publishedForGroup',
-      //   index: '_groupPublished',
-      //   filter: true
-      // }, {
-      //   key: 'sextantTheme',
-      //   tree: true
-      // }, {
-      //   langs: {
-      //     eng: 'inspireTheme_en',
-      //     fre: 'inspireTheme_fr'
-      //   }
-      // }, {
-      //   key: 'keyword'
-      // }, {
-      //   key: 'orgName'
-      // }, {
-      //   key: 'createDateYear'
-      // }, {
-      //   key: 'mdActions'
-      // }];
-
       if(typeof sxtSettings != 'undefined') {
         angular.extend(searchSettings, sxtSettings);
         angular.extend(gnPanierSettings, sxtSettings.panier);

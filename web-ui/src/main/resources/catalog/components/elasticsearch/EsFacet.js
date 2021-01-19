@@ -218,6 +218,7 @@
             && this.configs[configId].facets[fieldId]
             && this.configs[configId].facets[fieldId].meta
             && this.configs[configId].facets[fieldId].meta.collapsed,
+          meta: respAgg.meta,
           items: [],
           path: (path || []).concat([fieldId])
         };
@@ -243,7 +244,6 @@
                     itemPath = facetModel.path.concat([key + '']);
                 var facet = {
                   value: key,
-                  meta: bucket.meta,
                   count: bucket.doc_count,
                   path: itemPath
                 };

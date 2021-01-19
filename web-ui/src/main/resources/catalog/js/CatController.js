@@ -249,6 +249,10 @@ goog.require('gn_alert');
                 'size': 200,
                 "order" : { "_key" : "asc" },
                 'include': '.*'
+              },
+              'meta': {
+                'displayFilter': true,
+                'collapsed': true
               }
             },
             // (Experimental) A tree field which contains a URI
@@ -262,6 +266,7 @@ goog.require('gn_alert');
                 "order" : { "_key" : "asc" }
               },
               'meta': {
+                'collapsed': true,
                 'translateOnLoad': true,
                 'treeKeySeparator': '/'
               }
@@ -329,6 +334,9 @@ goog.require('gn_alert');
                 "order" : { "_key" : "asc" },
                 "include": "[^\^]+^?[^\^]+"
                 // Limit to 2 levels
+              },
+              'meta': {
+                'collapsed': true
               }
             },
             // 'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree.default': {
@@ -345,6 +353,7 @@ goog.require('gn_alert');
                 'size': 10
               },
               'meta': {
+                'collapsed': true,
                 'caseInsensitiveInclude': true
               }
             },
@@ -401,6 +410,7 @@ goog.require('gn_alert');
                 'size': 15
               },
               'meta': {
+                'collapsed': true,
                 'caseInsensitiveInclude': true
               }
             },
@@ -454,6 +464,9 @@ goog.require('gn_alert');
                     }
                   }
                 }
+              },
+              "meta": {
+                'collapsed': true
               }
             }
           },
