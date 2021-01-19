@@ -30,6 +30,7 @@ import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
 import org.apache.chemistry.opencmis.commons.SessionParameter;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
 import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
+import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
@@ -85,6 +86,8 @@ public class CMISConfiguration {
      * Enable option to add versioning in the link to the resource.
      */
     private Boolean versioningEnabled = BooleanUtils.toBooleanObject(System.getenv("CMIS_VERSIONING_ENABLED"));
+    private VersioningState versioningState = null;
+    private Boolean versioningMajorOnUpdate = BooleanUtils.toBooleanObject(System.getenv("CMIS_VERSIONING_MAJOR_ON_UPDATE"));
 
     private String webservicesRepositoryService = System.getenv("CMIS_WEBSERVICES_REPOSITORY_SERVICE");
     private String webservicesNavigationService = System.getenv("CMIS_WEBSERVICES_NAVIGATION_SERVICE");
@@ -206,6 +209,43 @@ public class CMISConfiguration {
 
     public void setExternalResourceManagementModalEnabled(String externalResourceManagementModalEnabled) {
         this.externalResourceManagementModalEnabled = BooleanUtils.toBooleanObject(externalResourceManagementModalEnabled);;
+    }
+
+    @Nonnull
+    public VersioningState getVersioningState() {
+        if (versioningState == null) {
+            return VersioningState.MAJOR;
+        } else {
+            return this.versioningState;
+        }
+    }
+
+    public void setVersioningState(VersioningState versioningState) {
+        if (versioningState.equals(VersioningState.CHECKEDOUT)) {
+            throw new IllegalArgumentException("Versioning state CHECKEDOUT is not supported in this context");
+        }
+        this.versioningState = versioningState;
+    }
+
+    public void setVersioningState(String versioningState) {
+        setVersioningState(StringUtils.isEmpty(versioningState)?null:VersioningState.valueOf(versioningState.toUpperCase()));
+    }
+
+    @Nonnull
+    public Boolean isVersioningMajorOnUpdate() {
+        if (versioningMajorOnUpdate == null) {
+            return false;
+        } else {
+            return versioningMajorOnUpdate;
+        }
+    }
+
+    public void setVersioningMajorOnUpdate(Boolean versioningMajorOnUpdate) {
+        this.versioningMajorOnUpdate = versioningMajorOnUpdate;
+    }
+
+    public void setVersioningMajorOnUpdate(String versioningMajorOnUpdate) {
+        this.versioningMajorOnUpdate = BooleanUtils.toBooleanObject(versioningMajorOnUpdate);;
     }
 
     @Nonnull
@@ -365,6 +405,10 @@ public class CMISConfiguration {
 
     @PostConstruct
     public void init() {
+        if (this.versioningState==null) {
+            setVersioningState(System.getenv("CMIS_VERSIONING_STATE"));
+        }
+
         // If we have a cmisMetadataUUIDPropertyName then call the set so that it also validates the value.
         if (cmisMetadataUUIDPropertyName != null) {
             setCmisMetadataUUIDPropertyName(cmisMetadataUUIDPropertyName);
