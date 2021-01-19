@@ -79,6 +79,9 @@
     <bean id="cmisconfiguration" class="org.fao.geonet.resources.CMISConfiguration">
     </bean>
 
+    <bean id="cmisutils" class="org.fao.geonet.resources.CMISUtils">
+    </bean>
+
     <bean id="filesystemStore"
           class="org.fao.geonet.api.records.attachments.CMISStore" />
 
