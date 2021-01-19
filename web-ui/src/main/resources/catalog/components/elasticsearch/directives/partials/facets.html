@@ -43,12 +43,20 @@
       <div class="gn-facet-root-container"
           ng-class="{'collapse': ctrl.fLvlCollapse[facet.key]}">
 
-        <div ng-if="facet.type === 'terms' && facet.includeFilter
-                    && (facet.more || facet.include.length > 0)">
+        <div class="gn-facet-filter"
+             ng-if="facet.type === 'terms' && facet.includeFilter
+                    && (facet.more
+                    || facet.include.length > 0
+                    || facet.meta && facet.meta.displayFilter)">
+          <span class="fa fa-times-circle clear"
+                data-ng-click="facet.include = '';ctrl.filterTerms(facet);"
+                ng-show="facet.include && facet.include !== ''"
+                title="{{'clear'|translate}}"></span>
           <input title="{{'facetIncludeFilter' | translate}}"
                 ng-model="facet.include"
                 ng-model-options="{debounce: 300}"
                 ng-change="ctrl.filterTerms(facet)"
+                placeholder="{{'filter' | translate}}"
                 autocomplete="nope"
                 class="form-control input-sm"
                 type="text"
