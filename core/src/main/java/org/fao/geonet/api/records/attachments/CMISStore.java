@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.CMISConfiguration;
+import org.fao.geonet.resources.CMISUtils;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,9 @@ public class CMISStore extends AbstractStore {
 
     @Autowired
     CMISConfiguration CMISConfiguration;
+
+    @Autowired
+    CMISUtils cmisUtils;
 
     @Override
     public List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid,
@@ -83,7 +87,7 @@ public class CMISStore extends AbstractStore {
         try {
             Folder parentFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(resourceTypeDir);
 
-            Map<String, Document> documentMap = getCmisObjectMap(parentFolder, null);
+            Map<String, Document> documentMap = cmisUtils.getCmisObjectMap(parentFolder, null);
             for (Map.Entry<String, Document> entry : documentMap.entrySet()) {
                 Document object = entry.getValue();
                 String cmisFilePath = entry.getKey();
@@ -93,7 +97,7 @@ public class CMISStore extends AbstractStore {
                     if (matcher.matches(keyPath)) {
                         final String filename = getFilename(cmisFilePath);
                         MetadataResource resource = createResourceDescription(context, settingManager, metadataUuid, visibility, filename, object.getContentStreamLength(),
-                                object.getLastModificationDate().getTime(), object.getVersionLabel(), metadataId, approved);
+                                object.getLastModificationDate().getTime(), object.getVersionLabel(), object.getId(), metadataId, approved);
                         resourceList.add(resource);
                     }
                 }
@@ -109,8 +113,8 @@ public class CMISStore extends AbstractStore {
     }
 
     private MetadataResource createResourceDescription(final ServiceContext context, final SettingManager settingManager, final String metadataUuid,
-                                                       final MetadataResourceVisibility visibility, final String resourceId, long size, Date lastModification, String version, int metadataId,
-                                                       boolean approved) {
+                                                       final MetadataResourceVisibility visibility, final String resourceId, long size, Date lastModification, String version,
+                                                       String cmisObjectId, int metadataId, boolean approved) {
         String filename = getFilename(metadataUuid, resourceId);
 
         String versionValue = null;
@@ -119,7 +123,7 @@ public class CMISStore extends AbstractStore {
         }
 
         MetadataResource.ExternalResourceManagementProperties externalResourceManagementProperties =
-            getExternalResourceManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, version);
+            getExternalResourceManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, version, cmisObjectId);
 
         return new FilesystemStoreResource(metadataUuid, metadataId, filename,
             settingManager.getNodeURL() + "api/records/", visibility, size, lastModification, versionValue, externalResourceManagementProperties, approved);
@@ -140,7 +144,7 @@ public class CMISStore extends AbstractStore {
             final SettingManager settingManager = context.getBean(SettingManager.class);
             return new ResourceHolderImpl(object, createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId,
                 ((Document) object).getContentStreamLength(),
-                object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), metadataId, approved));
+                object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), object.getId(), metadataId, approved));
         } catch (CmisObjectNotFoundException e) {
             Log.warning(Geonet.RESOURCES, String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
             throw new ResourceNotFoundException(
@@ -163,7 +167,7 @@ public class CMISStore extends AbstractStore {
         String key = getKey(context, metadataUuid, metadataId, visibility, filename);
 
         // Don't use caching for this process.
-        OperationContext oc = CMISConfiguration.getClient().createOperationContext();
+        OperationContext oc = cmisUtils.createOperationContext();
         oc.setCacheEnabled(false);
 
         // Split the filename and parent folder from the key.
@@ -226,20 +230,8 @@ public class CMISStore extends AbstractStore {
             // If the document is not found then we are adding a new document.
 
             // Get parent folder.
-            Folder parentFolder;
-            // synchronize folder creation.
-            // This will prevent cases where multiple files are uploaded on the interface
-            // In this case there will be a race condition to create the same folder.
-            // And if this is not synchronized then there will be a lot or CmisContentAlreadyExistsException errors.
-            synchronized (this) {
-                try {
-                    parentFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(parentKey, oc);
-                } catch (CmisObjectNotFoundException ex) {
-                    // Create parent folder if it does not exists.
-                    ObjectId objectId = CMISConfiguration.getClient().createPath(parentKey, "cmis:folder");
-                    parentFolder = (Folder) CMISConfiguration.getClient().getObject(objectId, oc);
-                }
-            }
+            Folder parentFolder = cmisUtils.getFolderCache(parentKey, true);
+
             try {
                 doc = parentFolder.createDocument(properties, contentStream, CMISConfiguration.getVersioningState());
                 // Avoid CMIS API call is info is not enabled.
@@ -271,7 +263,7 @@ public class CMISStore extends AbstractStore {
         }
 
         return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, isLength,
-                doc.getLastModificationDate().getTime(), doc.getVersionLabel(), metadataId, approved);
+                doc.getLastModificationDate().getTime(), doc.getVersionLabel(), doc.getId(), metadataId, approved);
     }
 
     private void setCmisMetadataUUIDPrimary(Map<String, Object> properties, String metadataUuid) {
@@ -311,21 +303,23 @@ public class CMISStore extends AbstractStore {
         int metadataId = canEdit(context, metadataUuid, approved);
 
         // Don't use caching for this process.
-        OperationContext oc = CMISConfiguration.getClient().createOperationContext();
+        OperationContext oc = cmisUtils.createOperationContext();
         oc.setCacheEnabled(false);
 
         String sourceKey = null;
+        CmisObject sourceObject =  null;
         for (MetadataResourceVisibility sourceVisibility : MetadataResourceVisibility.values()) {
             final String key = getKey(context, metadataUuid, metadataId, sourceVisibility, resourceId);
             try {
                 final CmisObject object = CMISConfiguration.getClient().getObjectByPath(key, oc);
                 if (sourceVisibility != visibility) {
                     sourceKey = key;
+                    sourceObject = object;
                     break;
                 } else {
                     // already the good visibility
                     return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, ((Document) object).getContentStreamLength(),
-                        object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), metadataId, approved);
+                        object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), object.getId(), metadataId, approved);
                 }
             } catch (CmisObjectNotFoundException ignored) {
                 // ignored
@@ -334,39 +328,24 @@ public class CMISStore extends AbstractStore {
         if (sourceKey != null) {
             final String destKey = getKey(context, metadataUuid, metadataId, visibility, resourceId);
 
-            final CmisObject sourceObject = CMISConfiguration.getClient().getObjectByPath(sourceKey, oc);
-
             // Get the parent folder object id.
             int lastFolderDelimiterSourceKeyIndex = sourceKey.lastIndexOf(CMISConfiguration.getFolderDelimiter());
             String parentSourceKey = sourceKey.substring(0, lastFolderDelimiterSourceKeyIndex);
 
-            // Get the parent source folder id.
-            Folder parentSourceFolder;
-            try {
-                parentSourceFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(parentSourceKey, oc);
-            } catch (CmisObjectNotFoundException e) {
-                // Create parent folder if it does not exists.
-                ObjectId objectId = CMISConfiguration.getClient().createPath(parentSourceKey, "cmis:folder");
-                parentSourceFolder = (Folder) CMISConfiguration.getClient().getObject(objectId, oc);
-            }
+            Folder parentSourceFolder = cmisUtils.getFolderCache(parentSourceKey);
 
             // Get the parent destination folder id.
             int lastFolderDelimiterDestKeyIndex = destKey.lastIndexOf(CMISConfiguration.getFolderDelimiter());
-            String parentDestKey = destKey.substring(0, lastFolderDelimiterDestKeyIndex);
+            String parentDestFolderKey = destKey.substring(0, lastFolderDelimiterDestKeyIndex);
 
-            // Get parent folder.
-            Folder parentDestFolder;
-            try {
-                parentDestFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(parentDestKey, oc);
-            } catch (CmisObjectNotFoundException e) {
-                // Create parent folder if it does not exists.
-                ObjectId objectId = CMISConfiguration.getClient().createPath(parentDestKey, "cmis:folder");
-                parentDestFolder = (Folder) CMISConfiguration.getClient().getObject(objectId, oc);
-            }
+            Folder parentDestFolder = cmisUtils.getFolderCache(parentDestFolderKey, true);
 
             // Move the object from source to destination
+            CmisObject object;
             try {
-                ((Document) sourceObject).move(parentSourceFolder, parentDestFolder);
+                object = ((Document) sourceObject).move(parentSourceFolder, parentDestFolder, oc);
+                Log.info(Geonet.RESOURCES,
+                    String.format("moved resource '%s' to '%s'.", parentSourceFolder.getPaths().get(0), parentDestFolder.getPaths().get(0)));
             } catch (CmisPermissionDeniedException e) {
                 Log.warning(Geonet.RESOURCES, String.format(
                         "No permissions to modify metadata resource '%s' for metadata '%s'.", resourceId, metadataUuid));
@@ -374,10 +353,8 @@ public class CMISStore extends AbstractStore {
                         "No permissions to modify metadata resource '%s' for metadata '%s'.", resourceId, metadataUuid));
             }
 
-            final CmisObject object = CMISConfiguration.getClient().getObjectByPath(destKey, oc);
-
             return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, ((Document) object).getContentStreamLength(),
-                    object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), metadataId, approved);
+                    object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), object.getId(), metadataId, approved);
         } else {
             Log.warning(Geonet.RESOURCES,
                     String.format("Could not update permissions. Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
@@ -393,25 +370,33 @@ public class CMISStore extends AbstractStore {
         oc.setCacheEnabled(false);
 
         int metadataId = canEdit(context, metadataUuid, approved);
+        String folderKey = null;
         try {
-            final CmisObject folderObject = CMISConfiguration.getClient().getObjectByPath(getMetadataDir(context, metadataId), oc);
+            folderKey = getMetadataDir(context, metadataId);
+            final Folder folder = (Folder) CMISConfiguration.getClient().getObjectByPath(folderKey, oc);
 
-            ((Folder) folderObject).deleteTree(true, UnfileObject.DELETE, true);
+            folder.deleteTree(true, UnfileObject.DELETE, true);
+            cmisUtils.invalidateFolderCache(folderKey);
+
             Log.info(Geonet.RESOURCES,
                     String.format("Metadata '%s' directory removed.", metadataId));
             return String.format("Metadata '%s' directory removed.", metadataId);
         } catch (CmisObjectNotFoundException e) {
             Log.warning(Geonet.RESOURCES,
-                    String.format("Unable to located metadata '%s' directory to be removed.", metadataId));
-            return String.format("Unable to located metadata '%s' directory to be removed.", metadataId);
+                    String.format("Unable to located metadata '%s' directory '%s' to be removed.", metadataId, folderKey));
+            return String.format("Unable to located metadata '%s' directory '%s' to be removed.", metadataId, folderKey);
+        } catch (ResourceNotFoundException e) {
+            Log.warning(Geonet.RESOURCES,
+                String.format("Unable to located metadata '%s' directory '%s' to be removed.", metadataId, folderKey));
+            return String.format("Unable to located metadata '%s' directory '%s' to be removed.", metadataId, folderKey);
         } catch (CmisPermissionDeniedException e) {
             Log.warning(Geonet.RESOURCES,
-                    String.format("Insufficient privileges, unable to remove metadata '%s' directory.", metadataId));
-            return String.format("Insufficient privileges, unable to remove metadata '%s' directory.", metadataId);
+                    String.format("Insufficient privileges, unable to remove directory '%s'.", metadataId, folderKey));
+            return String.format("Insufficient privileges, unable to remove directory '%s'.", metadataId, folderKey);
         } catch (CmisConstraintException e) {
             Log.warning(Geonet.RESOURCES,
-                    String.format("Unable to remove metadata '%s' directory due so constraint violation or locks.", metadataId));
-            return String.format("Unable to remove metadata '%s' directory due so constraint violation or locks.", metadataId);
+                    String.format("Unable to remove metadata '%s' directory '%s' due so constraint violation or locks.", metadataId, folderKey));
+            return String.format("Unable to remove metadata '%s' directory '%s' due so constraint violation or locks.", metadataId, folderKey);
         }
     }
 
@@ -451,12 +436,15 @@ public class CMISStore extends AbstractStore {
         final String key = getKey(context, metadataUuid, metadataId, visibility, resourceId);
 
         // Don't use caching for this process.
-        OperationContext oc = CMISConfiguration.getClient().createOperationContext();
+        OperationContext oc = cmisUtils.createOperationContext();
         oc.setCacheEnabled(false);
 
         try {
             final CmisObject object = CMISConfiguration.getClient().getObjectByPath(key, oc);
             object.delete();
+            if (object instanceof Folder) {
+                cmisUtils.invalidateFolderCacheItem(key);
+            }
             return true;
             //CmisObjectNotFoundException when file not found
             //CmisPermissionDeniedException when user does not have permissions.
@@ -475,11 +463,12 @@ public class CMISStore extends AbstractStore {
         try {
             final CmisObject object = CMISConfiguration.getClient().getObjectByPath(key);
             return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, ((Document) object).getContentStreamLength(),
-                object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), metadataId, approved);
+                object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), object.getId(), metadataId, approved);
         } catch (CmisObjectNotFoundException e) {
             return null;
         }
     }
+
 
     private String getMetadataDir(ServiceContext context, final int metadataId) {
 
@@ -550,7 +539,8 @@ public class CMISStore extends AbstractStore {
                                                     final MetadataResourceVisibility visibility,
                                                     final String resourceId,
                                                     String filename,
-                                                    String version
+                                                    String version,
+                                                    String cmisObjectId
     ) {
         String externalResourceManagementUrl = CMISConfiguration.getExternalResourceManagementUrl();
         if (!StringUtils.isEmpty(externalResourceManagementUrl)) {
@@ -580,8 +570,7 @@ public class CMISStore extends AbstractStore {
             }
             // {cmisobjectid}  cmis object id
             if (externalResourceManagementUrl.contains("{cmisobjectid}")) {
-                final CmisObject cmisObject = CMISConfiguration.getClient().getObjectByPath(getKey(context, metadataUuid, metadataId, visibility, resourceId));
-                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{cmisobjectid\\})", ((Document) cmisObject).getVersionSeriesId());
+                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{cmisobjectid\\})", cmisObjectId);
             }
 
             if (externalResourceManagementUrl.contains("{lang}") || externalResourceManagementUrl.contains("{ISO3lang}")) {
@@ -660,23 +649,5 @@ public class CMISStore extends AbstractStore {
             close();
             super.finalize();
         }
-    }
-
-    private Map<String, Document> getCmisObjectMap(Folder folder, String baseFolder) {
-        if (baseFolder == null) {
-            baseFolder = "";
-        }
-        Map<String, Document> documentMap = new HashMap<>();
-        for (CmisObject cmisObject : folder.getChildren()) {
-            if (cmisObject instanceof Folder) {
-                documentMap.putAll(getCmisObjectMap((Folder) cmisObject, baseFolder + CMISConfiguration.getFolderDelimiter() + cmisObject.getName()));
-                return documentMap;
-            } else {
-                if (cmisObject instanceof Document) {
-                    documentMap.put(baseFolder + CMISConfiguration.getFolderDelimiter() + cmisObject.getName(), (Document) cmisObject);
-                }
-            }
-        }
-        return documentMap;
     }
 }
