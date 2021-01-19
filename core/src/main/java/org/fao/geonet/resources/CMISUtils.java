@@ -63,7 +63,7 @@ public class CMISUtils {
     }
 
     public void invalidateFolderCacheItem(String folderKey) {
-                folderCache.invalidate(folderKey);
+        folderCache.invalidate(folderKey);
     }
 
     public Folder getFolderCache(String folderKey) throws ResourceNotFoundException, CmisPermissionDeniedException {
@@ -145,6 +145,7 @@ public class CMISUtils {
     public Map<String, Document> getCmisObjectMap(Folder folder, String baseFolder) {
         return getCmisObjectMap(folder, baseFolder, null);
     }
+    
     public Map<String, Document> getCmisObjectMap(Folder folder, String baseFolder, String suffixlessKeyFilename) {
         if (baseFolder == null) {
             baseFolder="";
