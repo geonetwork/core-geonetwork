@@ -481,8 +481,22 @@ public class CMISResources extends Resources {
                         try {
                             // If the document is found then we are updating the existing document.
                             Document doc = (Document) CMISConfiguration.getClient().getObjectByPath(key, oc);
-                            doc.updateProperties(properties, true);
-                            doc.setContentStream(contentStream, true, true);
+
+                            // If using major versioning then we have the option of making next version a minor or major.
+                            // The CMIS default it to create minor versions on updates.  If we are to create major versions on update then we need to update the document a little different.
+                            if (CMISConfiguration.getVersioningState().equals(VersioningState.MAJOR) && CMISConfiguration.isVersioningMajorOnUpdate() && doc.isVersionable() && doc.isMajorVersion()) {
+                                // If there is an existing checkout then cancel it.
+                                if (doc.isVersionSeriesCheckedOut()) {
+                                    doc.cancelCheckOut();
+                                }
+
+                                ObjectId objectID = doc.checkOut();
+                                CmisObject o = CMISConfiguration.getClient().getObject(objectID, oc);
+                                ((Document) o).checkIn(true, properties, contentStream, null);
+                            } else {
+                                doc.updateProperties(properties, true);
+                                doc.setContentStream(contentStream, true, true);
+                            }
 
                             Log.info(Geonet.RESOURCES,
                                 String.format("Updated resource '%s'. Current version '%s'.", key, doc.getVersionLabel()));
@@ -504,7 +518,7 @@ public class CMISResources extends Resources {
                                 parentFolder = (Folder) CMISConfiguration.getClient().getObject(objectId, oc);
                             }
 
-                            Document doc = parentFolder.createDocument(properties, contentStream, VersioningState.MAJOR);
+                            Document doc = parentFolder.createDocument(properties, contentStream, CMISConfiguration.getVersioningState());
 
                             Log.info(Geonet.RESOURCES,
                                 String.format("Added resource '%s'.", doc.getPaths().get(0)));
