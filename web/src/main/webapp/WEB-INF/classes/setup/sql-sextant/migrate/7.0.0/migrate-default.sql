@@ -1,6 +1,9 @@
 -- #############################################
 -- Before application starts
 -- #############################################
+CREATE TABLE metadatastatus_backup AS SELECT * FROM metadatastatus;
+DROP TABLE metadatastatus;
+
 
 ALTER TABLE groupsdes ALTER COLUMN label TYPE varchar(255);
 ALTER TABLE sourcesdes ALTER COLUMN label TYPE varchar(255);
@@ -114,6 +117,8 @@ SELECT setval('user_search_id_seq', (SELECT max(id) + 1 FROM usersearch));
 UPDATE messageproducerentity SET strategy = 'investigator';
 
 
-CREATE TABLE metadatastatus_backup AS SELECT * FROM metadatastatus;
-DROP TABLE metadatastatus;
--- TODO: Migrate data
+INSERT INTO metadatastatus (id, changedate, changemessage, closedate, currentstate, duedate, metadataid, owner, previousstate, titles, userid, uuid, relatedmetadatastatusid, statusid)
+SELECT nextval('metadatastatus_id_seq'), changedate, changemessage, closedate, currentstate, duedate, metadataid, COALESCE(owner, 0), previousstate, titles, userid, (SELECT uuid FROM metadata WHERE id = s.metadataid), relatedmetadatastatusid, statusid
+FROM metadatastatus_backup s;
+
+-- DROP TABLE metadatastatus_backup;
