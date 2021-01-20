@@ -28,13 +28,10 @@ package org.fao.geonet.api.records.attachments;
 import jeeves.server.context.ServiceContext;
 import org.apache.chemistry.opencmis.client.api.*;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
-import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.chemistry.opencmis.commons.enums.UnfileObject;
-import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisConstraintException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
-import org.apache.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -166,86 +163,17 @@ public class CMISStore extends AbstractStore {
         final int metadataId = canEdit(context, metadataUuid, approved);
         String key = getKey(context, metadataUuid, metadataId, visibility, filename);
 
-        // Don't use caching for this process.
-        OperationContext oc = cmisUtils.createOperationContext();
-        oc.setCacheEnabled(false);
-
-        // Split the filename and parent folder from the key.
-        int lastFolderDelimiterKeyIndex = key.lastIndexOf(CMISConfiguration.getFolderDelimiter());
-        String filenameKey = key.substring(lastFolderDelimiterKeyIndex + 1);
-        String parentKey = key.substring(0, lastFolderDelimiterKeyIndex);
-
         Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
         setCmisMetadataUUIDPrimary(properties, metadataUuid);
-        properties.put(PropertyIds.NAME, filenameKey);
-        if (changeDate != null) {
-            properties.put(PropertyIds.LAST_MODIFICATION_DATE, changeDate);
-        }
-        int isLength=is.available();
-        ContentStream contentStream = CMISConfiguration.getClient().getObjectFactory().createContentStream(key, isLength, Files.probeContentType(new File(key).toPath()), is);
-
-        Document doc;
+        int isLength = is.available();
+        CmisObject cmisObject;
         try {
-            // If the document is found then we are updating the existing document.
-            doc = (Document) CMISConfiguration.getClient().getObjectByPath(key, oc);
-
-            // If using major versioning then we have the option of making next version a minor or major.
-            // The CMIS default it to create minor versions on updates.  If we are to create major versions on update then we need to update the document a little different.
-            if (CMISConfiguration.getVersioningState().equals(VersioningState.MAJOR) && CMISConfiguration.isVersioningMajorOnUpdate() && doc.isVersionable() && doc.isMajorVersion()) {
-                // If there is an existing checkout then cancel it.
-                if (doc.isVersionSeriesCheckedOut()) {
-                    doc.cancelCheckOut();
-                }
-
-                ObjectId objectID = doc.checkOut();
-                CmisObject o = CMISConfiguration.getClient().getObject(objectID, oc);
-                ((Document) o).checkIn(true, properties, contentStream, null);
-            } else {
-
-                doc.updateProperties(properties, true);
-                doc.setContentStream(contentStream, true, true);
-            }
-            if (CMISConfiguration.existSecondaryProperty()) {
-                //need to reload document to avoid  "Document is not the latest version" when updating secondary types.
-                doc = (Document) CMISConfiguration.getClient().getObjectByPath(key, oc);
-            }
-            // Avoid CMIS API call is info is not enabled.
-            if (Logger.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
-                Log.info(Geonet.RESOURCES,
-                        String.format("Updated metadata resource '%s' for metadata '%s'. Current version '%s'.", key, metadataUuid, doc.getVersionLabel()));
-            }
-        } catch (CmisPermissionDeniedException ex) {
-            Log.warning(Geonet.RESOURCES, String.format(
-                    "No permissions to update metadata resource '%s' for metadata '%s' due to constraint violation or lock.", key, metadataUuid));
-            throw new NotAllowedException(String.format(
-                    "No permissions to update metadata resource '%s' for metadata '%s' due to constraint violation or lock.", key, metadataUuid));
-
-        } catch (CmisConstraintException e) {
-            Log.warning(Geonet.RESOURCES, String.format(
-                    "No allowed to modify existing metadata resource '%s' for metadata '%s' due to constraint violation or lock.", key, metadataUuid));
-            throw new NotAllowedException(String.format(
-                    "No allowed to modify existing metadata resource '%s' for metadata '%s' due to constraint violation or lock.", key, metadataUuid));
-        } catch (CmisObjectNotFoundException e) {
-            // If the document is not found then we are adding a new document.
-
-            // Get parent folder.
-            Folder parentFolder = cmisUtils.getFolderCache(parentKey, true);
-
-            try {
-                doc = parentFolder.createDocument(properties, contentStream, CMISConfiguration.getVersioningState());
-                // Avoid CMIS API call is info is not enabled.
-                if (Logger.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
-                    Log.info(Geonet.RESOURCES,
-                            String.format("Added resource metadata resource '%s' for metadata '%s'.", doc.getPaths().get(0), metadataUuid));
-                }
-            } catch (CmisPermissionDeniedException ex) {
-                Log.warning(Geonet.RESOURCES, String.format(
-                        "No permissions to add metadata resource '%s' for metadata '%s'.", key, metadataUuid));
-                throw new NotAllowedException(String.format(
-                        "No permissions to add metadata resource '%s' for metadata '%s'.", key, metadataUuid));
-            }
+            cmisObject = CMISConfiguration.getClient().getObjectByPath(key);
+        } catch (Exception e) {
+            cmisObject = null;
         }
+
+        Document doc = cmisUtils.saveDocument(key, cmisObject, properties, is, changeDate);
 
         // The optional metadata UUID is assigned to a user-defined property in the content management system.
         // In some content management systems, custom properties appear as CMIS Secondary properties.
@@ -263,7 +191,7 @@ public class CMISStore extends AbstractStore {
         }
 
         return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, isLength,
-                doc.getLastModificationDate().getTime(), doc.getVersionLabel(), doc.getId(), metadataId, approved);
+            doc.getLastModificationDate().getTime(), doc.getVersionLabel(), doc.getId(), metadataId, approved);
     }
 
     private void setCmisMetadataUUIDPrimary(Map<String, Object> properties, String metadataUuid) {
@@ -379,24 +307,24 @@ public class CMISStore extends AbstractStore {
             cmisUtils.invalidateFolderCache(folderKey);
 
             Log.info(Geonet.RESOURCES,
-                    String.format("Metadata '%s' directory removed.", metadataId));
-            return String.format("Metadata '%s' directory removed.", metadataId);
+                    String.format("Metadata '%s(%s)' directory '%s' removed.", metadataUuid, metadataId, folderKey));
+            return String.format("Metadata '%s(%s)' directory '%s' removed.", metadataUuid, metadataId, folderKey);
         } catch (CmisObjectNotFoundException e) {
             Log.warning(Geonet.RESOURCES,
-                    String.format("Unable to located metadata '%s' directory '%s' to be removed.", metadataId, folderKey));
-            return String.format("Unable to located metadata '%s' directory '%s' to be removed.", metadataId, folderKey);
+                    String.format("Unable to located metadata '%s(%s)' directory '%s' to be removed.", metadataUuid, metadataId, folderKey));
+            return String.format("Unable to located metadata '%s(%s)' directory '%s' to be removed.", metadataUuid, metadataId, folderKey);
         } catch (ResourceNotFoundException e) {
             Log.warning(Geonet.RESOURCES,
-                String.format("Unable to located metadata '%s' directory '%s' to be removed.", metadataId, folderKey));
-            return String.format("Unable to located metadata '%s' directory '%s' to be removed.", metadataId, folderKey);
+                String.format("Unable to located metadata '%s(%s)' directory '%s' to be removed.", metadataUuid, metadataId, folderKey));
+            return String.format("Unable to located metadata '%s(%s)' directory '%s' to be removed.", metadataUuid, metadataId, folderKey);
         } catch (CmisPermissionDeniedException e) {
             Log.warning(Geonet.RESOURCES,
-                    String.format("Insufficient privileges, unable to remove directory '%s'.", metadataId, folderKey));
-            return String.format("Insufficient privileges, unable to remove directory '%s'.", metadataId, folderKey);
+                    String.format("Insufficient privileges, unable to remove metadata '%s(%s)' directory '%s'.", metadataUuid, metadataId, folderKey));
+            return String.format("Insufficient privileges, unable to remove metadata '%s(%s)' directory '%s'.", metadataUuid, metadataId, folderKey);
         } catch (CmisConstraintException e) {
             Log.warning(Geonet.RESOURCES,
-                    String.format("Unable to remove metadata '%s' directory '%s' due so constraint violation or locks.", metadataId, folderKey));
-            return String.format("Unable to remove metadata '%s' directory '%s' due so constraint violation or locks.", metadataId, folderKey);
+                    String.format("Unable to remove metadata '%s(%s)' directory '%s' due so constraint violation or locks.", metadataUuid, metadataId, folderKey));
+            return String.format("Unable to remove metadata '%s(%s)' directory '%s' due so constraint violation or locks.", metadataUuid, metadataId, folderKey);
         }
     }
 
@@ -599,7 +527,7 @@ public class CMISStore extends AbstractStore {
 
         MetadataResource.ExternalResourceManagementProperties externalResourceManagementProperties
                 = new MetadataResource.ExternalResourceManagementProperties(externalResourceManagementUrl,
-                CMISConfiguration.getExternalResourceManagementWindowParameters(), CMISConfiguration.isExternalResourceManagementModal());
+                CMISConfiguration.getExternalResourceManagementWindowParameters(), CMISConfiguration.isExternalResourceManagementModalEnabled());
 
         return externalResourceManagementProperties;
     }

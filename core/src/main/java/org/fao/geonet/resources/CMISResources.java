@@ -27,14 +27,8 @@ import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 import org.apache.chemistry.opencmis.client.api.*;
 import org.apache.chemistry.opencmis.client.runtime.DocumentImpl;
-import org.apache.chemistry.opencmis.commons.PropertyIds;
-import org.apache.chemistry.opencmis.commons.data.ContentStream;
-import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
-import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
 import org.apache.commons.io.FilenameUtils;
-import org.fao.geonet.api.exception.NotAllowedException;
-import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -466,77 +460,8 @@ public class CMISResources extends Resources {
             }
             try {
                 if (writeOnClose && Files.isReadable(path)) {
-                    // Don't use caching for this process.
-                    OperationContext oc = cmisUtils.createOperationContext();
-                    oc.setCacheEnabled(false);
-
-                    // Split the filename and parent folder from the key.
-                    int lastFolderDelimiterKeyIndex = key.lastIndexOf(CMISConfiguration.getFolderDelimiter());
-                    String filenameKey = key.substring(lastFolderDelimiterKeyIndex + 1);
-
-                    Map<String, Object> properties = new HashMap<String, Object>();
-                    properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
-                    properties.put(PropertyIds.NAME, filenameKey);
-
-                    InputStream stream = Files.newInputStream(path);
-                    ContentStream contentStream = CMISConfiguration.getClient().getObjectFactory().createContentStream(key, Files.size(path), Files.probeContentType(path), stream);
-
-                    // If we have a cmisObject then lets refresh it to make sure it still exists.
-                    if (this.cmisObject != null) {
-                        try {
-                            this.cmisObject.refresh();
-                        } catch (CmisObjectNotFoundException e) {
-                            this.cmisObject = null;
-                        }
-                    }
-                    if (this.cmisObject != null) {
-                        try {
-                            // If the document is found then we are updating the existing document.
-                            Document doc = (Document) this.cmisObject;
-
-                            // If using major versioning then we have the option of making next version a minor or major.
-                            // The CMIS default it to create minor versions on updates.  If we are to create major versions on update then we need to update the document a little different.
-                            if (CMISConfiguration.getVersioningState().equals(VersioningState.MAJOR) && CMISConfiguration.isVersioningMajorOnUpdate() && doc.isVersionable() && doc.isMajorVersion()) {
-                                // If there is an existing checkout then cancel it.
-                                if (doc.isVersionSeriesCheckedOut()) {
-                                    doc.cancelCheckOut();
-                                }
-
-                                ObjectId objectID = doc.checkOut();
-                                CmisObject o = CMISConfiguration.getClient().getObject(objectID, oc);
-                                ((Document) o).checkIn(true, properties, contentStream, null);
-                            } else {
-                                doc.updateProperties(properties, true);
-                                doc.setContentStream(contentStream, true, true);
-                            }
-
-                            Log.info(Geonet.RESOURCES,
-                                String.format("Updated resource '%s'. Current version '%s'.", key, doc.getVersionLabel()));
-                        } catch (CmisPermissionDeniedException ex) {
-                            Log.warning(Geonet.RESOURCES, String.format(
-                                "No permissions to update resource '%s'.", key));
-                            throw new NotAllowedException(String.format(
-                                "No permissions to update resource '%s'.", key));
-                        }
-                    } else {
-                        // Get parent folder.
-                        String parentKey = key.substring(0, lastFolderDelimiterKeyIndex);
-                        try {
-                            Folder parentFolder = cmisUtils.getFolderCache(parentKey);
-
-                            Document doc = parentFolder.createDocument(properties, contentStream, CMISConfiguration.getVersioningState());
-
-                            Log.info(Geonet.RESOURCES,
-                                String.format("Added resource '%s'.", doc.getPaths().get(0)));
-                        } catch (CmisPermissionDeniedException ex) {
-                            Log.warning(Geonet.RESOURCES, String.format(
-                                "No permissions to add resource '%s'.", key));
-                            throw new NotAllowedException(String.format(
-                                "No permissions to add resource '%s'.", key));
-                        } catch (ResourceNotFoundException e) {
-                            throw new IOException("Error getting resource from cache: " + parentKey, e);
-                        }
-                    }
+                    Map<String, Object> properties = new HashMap<>();
+                    cmisUtils.saveDocument(this.key, this.cmisObject, properties, Files.newInputStream(path), null);
                 }
             } finally {
                 // Delete temporary file and folder.
