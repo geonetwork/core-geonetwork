@@ -68,14 +68,14 @@ public class CMISConfiguration {
     private final Boolean CMIS_DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_MODAL_ENABLED = true;
     private final Boolean CMIS_DEFAULT_VERSIONING_ENABLED = false;
 
-    private String servicesBaseUrl = System.getenv("CMIS_SERVICES_BASE_URL");
-    private String bindingType = System.getenv("CMIS_BINDING_TYPE");
-    private String baseRepositoryPath = System.getenv("CMIS_BASE_REPOSITORY_PATH");
-    private String username = System.getenv("CMIS_USERNAME");
-    private String password = System.getenv("CMIS_PASSWORD");
-    private String repositoryId = System.getenv("CMIS_REPOSITORY_ID");
-    private String repositoryName = System.getenv("CMIS_REPOSITORY_NAME");
-    private String cmisMetadataUUIDPropertyName = System.getenv("CMIS_METADATA_UUID_PROPERTY_NAME");
+    private String servicesBaseUrl;
+    private String bindingType;
+    private String baseRepositoryPath;
+    private String username;
+    private String password;
+    private String repositoryId;
+    private String repositoryName;
+    private String cmisMetadataUUIDPropertyName;
     /**
      * Url used for managing enhanced resource properties related to the metadata.
      */
@@ -85,25 +85,25 @@ public class CMISConfiguration {
     /*
      * Enable option to add versioning in the link to the resource.
      */
-    private Boolean versioningEnabled = BooleanUtils.toBooleanObject(System.getenv("CMIS_VERSIONING_ENABLED"));
-    private VersioningState versioningState = null;
-    private Boolean versioningMajorOnUpdate = BooleanUtils.toBooleanObject(System.getenv("CMIS_VERSIONING_MAJOR_ON_UPDATE"));
+    private Boolean versioningEnabled;
+    private VersioningState versioningState;
+    private Boolean versioningMajorOnUpdate;
 
-    private String webservicesRepositoryService = System.getenv("CMIS_WEBSERVICES_REPOSITORY_SERVICE");
-    private String webservicesNavigationService = System.getenv("CMIS_WEBSERVICES_NAVIGATION_SERVICE");
-    private String webservicesObjectService = System.getenv("CMIS_WEBSERVICES_OBJECT_SERVICE");
-    private String webservicesVersioningService = System.getenv("CMIS_WEBSERVICES_VERSIONING_SERVICE");
-    private String webservicesDiscoveryService = System.getenv("CMIS_WEBSERVICES_DISCOVERY_SERVICE");
-    private String webservicesRelationshipService = System.getenv("CMIS_WEBSERVICES_RELATIONSHIP_SERVICE");
-    private String webservicesMultifilingService = System.getenv("CMIS_WEBSERVICES_MULTIFILING_SERVICE");
-    private String webservicesPolicyService = System.getenv("CMIS_WEBSERVICES_POLICY_SERVICE");
-    private String webservicesAclService = System.getenv("CMIS_WEBSERVICES_ACL_SERVICE");
-    private String webservicesMemoryThreshold = System.getenv("CMIS_WEBSERVICES_MEMORY_THRESHOLD");
-    private String webservicesBaseUrl = System.getenv("CMIS_WEBSERVICES_BASE_URL");
+    private String webservicesRepositoryService;
+    private String webservicesNavigationService;
+    private String webservicesObjectService;
+    private String webservicesVersioningService;
+    private String webservicesDiscoveryService;
+    private String webservicesRelationshipService;
+    private String webservicesMultifilingService;
+    private String webservicesPolicyService;
+    private String webservicesAclService;
+    private String webservicesMemoryThreshold;
+    private String webservicesBaseUrl;
 
-    private String browserUrl = System.getenv("CMIS_BROWSER_URL");
+    private String browserUrl;
 
-    private String atompubUrl = System.getenv("CMIS_ATOMPUB_URL");
+    private String atompubUrl;
 
     private boolean secondaryPropertyExists=false;
 
@@ -195,7 +195,7 @@ public class CMISConfiguration {
     }
 
     @Nonnull
-    public Boolean isExternalResourceManagementModal() {
+    public Boolean isExternalResourceManagementModalEnabled() {
         if (externalResourceManagementModalEnabled == null) {
             return CMIS_DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_MODAL_ENABLED;
         } else {
@@ -203,7 +203,7 @@ public class CMISConfiguration {
         }
     }
 
-    public void setExternalResourceManagementModal(Boolean externalResourceManagementModalEnabled) {
+    public void setExternalResourceManagementModalEnabled(Boolean externalResourceManagementModalEnabled) {
         this.externalResourceManagementModalEnabled = externalResourceManagementModalEnabled;
     }
 
@@ -221,7 +221,7 @@ public class CMISConfiguration {
     }
 
     public void setVersioningState(VersioningState versioningState) {
-        if (versioningState.equals(VersioningState.CHECKEDOUT)) {
+        if (versioningState != null && versioningState.equals(VersioningState.CHECKEDOUT)) {
             throw new IllegalArgumentException("Versioning state CHECKEDOUT is not supported in this context");
         }
         this.versioningState = versioningState;
@@ -405,10 +405,6 @@ public class CMISConfiguration {
 
     @PostConstruct
     public void init() {
-        if (this.versioningState==null) {
-            setVersioningState(System.getenv("CMIS_VERSIONING_STATE"));
-        }
-
         // If we have a cmisMetadataUUIDPropertyName then call the set so that it also validates the value.
         if (cmisMetadataUUIDPropertyName != null) {
             setCmisMetadataUUIDPropertyName(cmisMetadataUUIDPropertyName);
