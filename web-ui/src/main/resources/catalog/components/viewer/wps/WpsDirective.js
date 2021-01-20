@@ -120,6 +120,12 @@
           // maximum number of processes id saved in local storage
           var maxHistoryCount = attrs['maxHistory'] || 6;
 
+          var source = new ol.source.Vector();
+          var wpsOutputLayer = new ol.layer.Vector({
+            source: source
+          });
+          scope.map.addLayer(wpsOutputLayer);
+
           // query a process description when a new wps link is given
           // note: a deep equality is required, since what we are actually
           // comparing are process id and url (and not object ref)
@@ -260,7 +266,8 @@
                           defaultValue = input.literalData.defaultValue;
 
                           // convert value if necessary
-                          if (input.literalData.dataType.value == 'float') {
+                          if (input.literalData.dataType
+                              && input.literalData.dataType.value == 'float') {
                             defaultValue = parseFloat(defaultValue);
                           }
                         }
@@ -281,10 +288,23 @@
                         input.feature = null;
 
                         // output format
-                        input.outputFormat = gnGeometryService
-                        .getFormatFromMimeType(
-                        input.complexData._default.format.mimeType
-                        ) || 'gml';
+                        var preferedOutputFormat = 'wkt';
+                        input.outputFormat = null;
+                        for (var i = 0; i < input.complexData.supported.format.length; i++) {
+                          var f = input.complexData.supported.format[i],
+                              found = gnGeometryService.getFormatFromMimeType(f.mimeType);
+                          if (found === preferedOutputFormat) {
+                            input.outputFormat = found;
+                            break;
+                          }
+                        }
+                        if (input.outputFormat === null
+                          && input.complexData._default.format) {
+                          input.outputFormat = gnGeometryService
+                            .getFormatFromMimeType(
+                              input.complexData._default.format.mimeType
+                            );
+                        }
 
                         // guess geometry type from schema url
                         var url = input.complexData._default.format.schema;
@@ -315,6 +335,12 @@
                           if (type === 'point') {
                             input.geometryType = 'Point';
                           }
+                        }
+
+                        var pointTypeIdentifier = ['location', 'position', 'point', 'center'];
+                        if (input.identifier.value
+                            && pointTypeIdentifier.indexOf(input.identifier.value.toLowerCase()) != -1) {
+                          input.geometryType = 'Point';
                         }
                       }
 
@@ -421,7 +447,9 @@
 
                     // use output as reference unless doing a profile graph
                     scope.wpsLink.output.asReference =
-                    scope.outputAsGraph ? false : true;
+                      scope.outputAsGraph ? false : true;
+
+                    scope.wpsLink.output.loadReferenceInMap = true;
 
                     scope.outputsVisible = true;
 
@@ -470,7 +498,12 @@
             scope.optionsVisible = !scope.optionsVisible;
           };
 
+          scope.clearGeometry = function() {
+            source.clear();
+          };
+
           scope.submit = function() {
+            source.clear()
             scope.validation_messages = [];
             scope.exception = undefined;
 
@@ -537,6 +570,13 @@
                       if (wmsOutput !== null) {
                         gnWpsService.extractWmsLayerFromResponse(
                           response, wmsOutput, scope.map, scope.wpsLink.layer);
+                      } else {
+                        gnWpsService.getGeometryOutput(response, scope.wpsLink.output.loadReferenceInMap).then(function (geomOutput) {
+                          if (geomOutput != null) {
+                            source.addFeatures(geomOutput.data);
+                            scope.map.getView().fit(source.getExtent(), scope.map.getSize());
+                          }
+                        });
                       }
                     }
                   }

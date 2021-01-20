@@ -84,6 +84,7 @@
              gnMap, $q, $translate) {
 
       this.WMS_MIMETYPE_REGEX = /.*ogc-wms/;
+      this.GEOM_MIMETYPE_REGEX = /application\/(xml|geo\+json|json|gml\+xml)/;
 
       /**
        * @ngdoc method
@@ -271,7 +272,7 @@
         // generate response document based on output info
         var responseDocument = {
           lineage: output.lineage || false,
-          storeExecuteResponse: output.storeExecuteResponse || true,
+          storeExecuteResponse: output.storeExecuteResponse === true,
           status: output.status || false,
           output: []
         };
@@ -385,6 +386,48 @@
           }
         }
         return null;
+      };
+      this.getGeometryOutput = function(response, loadReference) {
+        var defer = $q.defer(), outputs = response.processOutputs.output;
+        for (var i = 0; i < outputs.length; i++) {
+          if (outputs[i].data) {
+            try {
+              var mimeType = outputs[i].data.complexData.mimeType || 'application/json';
+              if (this.GEOM_MIMETYPE_REGEX.test(mimeType)) {
+                var complexData = outputs[i].data.complexData,
+                  content = '',
+                  geom = null;
+                if (complexData.encoding === 'base64') {
+                  content = atob(complexData.content);
+                } else {
+                  content = complexData.content;
+                }
+                if (mimeType.indexOf('json') != -1) {
+                  var format = new ol.format.GeoJSON();
+                  geom = format.readFeatures(content, {
+                    // dataProjection: 'EPSG:3035',
+                    // featureProjection: 'EPSG:3857'
+                  });
+                } else if (mimeType.indexOf('xml') != -1) {
+                  // GML ?
+                }
+                defer.resolve({data: geom});
+              }
+            } catch (e) {
+              console.warn("Error while trying to decode complexData content from WPS response.", complexData, e)
+            }
+          } else if (loadReference && outputs[i].reference) {
+            $http.get(outputs[i].reference.href).then(function(r) {
+              var format = new ol.format.GeoJSON();
+              geom = format.readFeatures(r.data, {
+                // dataProjection: 'EPSG:3035',
+                // featureProjection: 'EPSG:3857'
+              });
+              defer.resolve({data: geom});
+            });
+          }
+        }
+        return defer.promise;
       };
 
       /**
