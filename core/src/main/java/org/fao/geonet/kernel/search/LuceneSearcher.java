@@ -116,6 +116,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -1443,9 +1444,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 if (owner != null) {
                 	LOGGER.trace("Search using user \"" + owner + "\".");
                     request.addContent(new Element(SearchParameter.OWNER).addContent(owner));
-                    
+
                     //If the user is editor or more, fill the editorGroup
-                    Specification<UserGroup> hasUserIdAndProfile = 
+                    Specification<UserGroup> hasUserIdAndProfile =
                     		where(
                     				where(UserGroupSpecs.hasProfile(Profile.Reviewer))
                     					.or(UserGroupSpecs.hasProfile(Profile.Editor))
@@ -1536,7 +1537,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 LOGGER.debug("Lucene query: {}", _query);
 
                 _query = appendPortalFilter(_query, _luceneConfig);
-                
+
                 try (IndexAndTaxonomy indexReader = _sm.getIndexReader(_language.presentationLanguage, _versionToken)) {
                     // Rewrite the drilldown query to a query that can be used by the search logger
                     _loggerQuery = _query.rewrite(indexReader.indexReader);
@@ -1621,29 +1622,36 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
     public static Query appendPortalFilter(Query q, LuceneConfig luceneConfig) throws ParseException, QueryNodeException {
         // If the requested portal define a filter
         // Add it to the request.
-        NodeInfo node = ApplicationContextHolder.get().getBean(NodeInfo.class);
-        SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
-        if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
-            final Source portal = sourceRepository.findOne(node.getId());
-            if (portal == null) {
-                LOGGER.warn("Null portal " + node);
-            }
-            else if (StringUtils.isNotEmpty(portal.getFilter())) {
-                Query portalFilterQuery = null;
-                // Parse Lucene query
-                portalFilterQuery = parseLuceneQuery(portal.getFilter(), luceneConfig);
-                LOGGER.info("Portal filter is :\n" + portalFilterQuery);
+        NodeInfo node = null;
+        try {
+            node = ApplicationContextHolder.get().getBean(NodeInfo.class);
 
-                BooleanQuery query = new BooleanQuery();
-                BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-                query.add(q, occur);
-
-                if (portalFilterQuery != null) {
-                    query.add(portalFilterQuery, occur);
+            SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
+            if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
+                final Source portal = sourceRepository.findOne(node.getId());
+                if (portal == null) {
+                    LOGGER.warn("Null portal " + node);
                 }
-                q = query;
-                LOGGER.debug("Lucene query (with portal filter): {}", q);
+                else if (StringUtils.isNotEmpty(portal.getFilter())) {
+                    Query portalFilterQuery = null;
+                    // Parse Lucene query
+                    portalFilterQuery = parseLuceneQuery(portal.getFilter(), luceneConfig);
+                    LOGGER.info("Portal filter is :\n" + portalFilterQuery);
+
+                    BooleanQuery query = new BooleanQuery();
+                    BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+                    query.add(q, occur);
+
+                    if (portalFilterQuery != null) {
+                        query.add(portalFilterQuery, occur);
+                    }
+                    q = query;
+                    LOGGER.debug("Lucene query (with portal filter): {}", q);
+                }
             }
+        } catch (Exception e) {
+            // BaseMetadataManager.searcherForReferencingMetadata
+            // has no request scope so consider this as internal search
         }
         return q;
     }
@@ -1831,10 +1839,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             this.presentationLanguage = presentationLanguage;
         }
     }
-    
+
     /**
      * <p> Gets the Lucene version token. Can be used as ETag. </p>
-     */    
+     */
     public long getVersionToken() {
     	return _versionToken;
     };
