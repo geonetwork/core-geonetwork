@@ -177,14 +177,25 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
 
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
-        String xmlUuid = metadataUtils.extractUUID(schema, md);
+
+        MetadataType metadataType = MetadataType.lookup(params.recordType);
+
+        String xmlUuid = null;
+        if (metadataType == MetadataType.METADATA) {
+            xmlUuid = metadataUtils.extractUUID(schema, md);
+        } else if (metadataType == MetadataType.SUB_TEMPLATE) {
+            xmlUuid = md.getAttributeValue("uuid");
+        } else if (metadataType == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+            xmlUuid = md.getAttributeValue("uuid");
+        }
+
         if (!uuid.equals(xmlUuid)) {
             md = metadataUtils.setUUID(schema, uuid, md);
         }
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(xml.getQualifiedName()).
-            setType(MetadataType.lookup(params.recordType)).
+            setType(metadataType).
             setCreateDate(new ISODate(createDate)).
             setChangeDate(new ISODate(createDate));
         metadata.getSourceInfo().
