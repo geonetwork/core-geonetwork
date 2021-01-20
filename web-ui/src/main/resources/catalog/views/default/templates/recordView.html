@@ -618,9 +618,14 @@
               <i class="fa fa-fw fa-cog"></i>
               <span data-translate="">sourceCatalog</span>
             </h2>
-            <img ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.source}}.png"
-                aria-label="{{'sourceCatalog' | translate}}"
-                class="gn-source-logo"/>
+            <img data-ng-if="md.logo"
+                 data-ng-src="{{gnUrl}}..{{md.logo}}"
+                 alt="{{'siteLogo' | translate}}"
+                 class="gn-source-logo"/>
+            <img data-ng-if="!md.logo"
+                 ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.source}}.png"
+                 aria-label="{{'sourceCatalog' | translate}}"
+                 class="gn-source-logo"/>
           </section>
 
           <section class="gn-md-side-calendar">
