@@ -70,7 +70,7 @@ public class CMISUtils {
         List<String> cachedKeys = new ArrayList<String>(folderCache.asMap().keySet());
         for (String cachedKey : cachedKeys) {
             if (cachedKey.startsWith(folderKey)) {
-                folderCache.invalidate(folderKey);
+                folderCache.invalidate(cachedKey);
             }
         }
     }
@@ -239,7 +239,7 @@ public class CMISUtils {
                 }
             } catch (CmisConstraintException e) {
                 Log.warning(Geonet.RESOURCES, String.format(
-                    "	No allowed to modify existing resource '%s' due to constraint violation or lock.", key));
+                    "No allowed to modify existing resource '%s' due to constraint violation or lock.", key));
                 throw new NotAllowedException(String.format(
                     "No allowed to modify existing resource '%s' due to constraint violation or lock.", key));
             } catch (CmisPermissionDeniedException e) {

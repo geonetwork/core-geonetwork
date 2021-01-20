@@ -335,15 +335,11 @@ public class CMISResources extends Resources {
     protected void addFiles(final DirectoryStream.Filter<Path> iconFilter, final Path webappDir,
                             final HashSet<Path> result) {
 
-        // Don't use caching for this process.
-        OperationContext oc = cmisUtils.createOperationContext();
-        oc.setCacheEnabled(false);
-
         String keyFolder = getKey(webappDir);
-        CmisObject cmisObject = CMISConfiguration.getClient().getObjectByPath(keyFolder, oc);
+        CmisObject cmisObject = CMISConfiguration.getClient().getObjectByPath(keyFolder);
         Folder folder = (Folder) cmisObject;
 
-        ItemIterable<CmisObject> children = folder.getChildren(oc);
+        ItemIterable<CmisObject> children = folder.getChildren();
 
         for (CmisObject object : children) {
             if (object instanceof Document) {

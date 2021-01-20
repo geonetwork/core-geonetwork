@@ -210,7 +210,8 @@ public class CMISStore extends AbstractStore {
             List<Object> aspects = null;
             Property secondaryProperty = doc.getProperty(PropertyIds.SECONDARY_OBJECT_TYPE_IDS);
             if (secondaryProperty != null) {
-                aspects = secondaryProperty.getValues();
+                // It may return an unmodifiable list and we need to potentially modify the list so lets make a copy of the list.
+                aspects = new ArrayList<>(secondaryProperty.getValues());
             }
             if (aspects == null) {
                 aspects = new ArrayList<>();
