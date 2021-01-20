@@ -27,14 +27,8 @@ import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 import org.apache.chemistry.opencmis.client.api.*;
 import org.apache.chemistry.opencmis.client.runtime.DocumentImpl;
-import org.apache.chemistry.opencmis.commons.PropertyIds;
-import org.apache.chemistry.opencmis.commons.data.ContentStream;
-import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
-import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
 import org.apache.commons.io.FilenameUtils;
-import org.fao.geonet.api.exception.NotAllowedException;
-import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -60,7 +54,7 @@ import javax.servlet.ServletContext;
 
 public class CMISResources extends Resources {
     @Autowired
-    CMISConfiguration CMISConfiguration;
+    CMISConfiguration cmisConfiguration;
 
     @Autowired
     CMISUtils cmisUtils;
@@ -87,9 +81,9 @@ public class CMISResources extends Resources {
             }
 
             if (this.resourceBaseDir.toString().equals(".")) {
-                this.resourceBaseDir = Paths.get(CMISConfiguration.getBaseRepositoryPath()).resolve(resourceFullDir);
+                this.resourceBaseDir = Paths.get(cmisConfiguration.getBaseRepositoryPath()).resolve(resourceFullDir);
             } else {
-                this.resourceBaseDir = Paths.get(CMISConfiguration.getBaseRepositoryPath()).resolve(this.resourceBaseDir.relativize(resourceFullDir));
+                this.resourceBaseDir = Paths.get(cmisConfiguration.getBaseRepositoryPath()).resolve(this.resourceBaseDir.relativize(resourceFullDir));
             }
         }
         return this.resourceBaseDir;
@@ -112,10 +106,10 @@ public class CMISResources extends Resources {
 
         if (resourceBaseDir != null) {
             // If it starts with resource folder then it is missing the basePath so add it.
-            if (keyPath.startsWith(Paths.get(CMISConfiguration.getBaseRepositoryPath()).relativize(resourceBaseDir))) {
-                keyPath = Paths.get(CMISConfiguration.getBaseRepositoryPath()).resolve(keyPath);
+            if (keyPath.startsWith(Paths.get(cmisConfiguration.getBaseRepositoryPath()).relativize(resourceBaseDir))) {
+                keyPath = Paths.get(cmisConfiguration.getBaseRepositoryPath()).resolve(keyPath);
             } else {
-                Path resourceDir = Paths.get(CMISConfiguration.getBaseRepositoryPath()).resolve(resourceBaseDir);
+                Path resourceDir = Paths.get(cmisConfiguration.getBaseRepositoryPath()).resolve(resourceBaseDir);
                 // If it starts with the resource dir by not starting with a "/" then add the "/"
                 if (keyPath.startsWith(Paths.get("/").relativize(resourceDir))) {
                     keyPath = Paths.get("/").resolve(keyPath);
@@ -130,10 +124,10 @@ public class CMISResources extends Resources {
 
         String key;
         // For windows it may be "\" in which case we need to change it to folderDelimiter which is normally "/"
-        if (keyPath.getFileSystem().getSeparator().equals(CMISConfiguration.getFolderDelimiter())) {
+        if (keyPath.getFileSystem().getSeparator().equals(cmisConfiguration.getFolderDelimiter())) {
             key = keyPath.toString();
         } else {
-            key = keyPath.toString().replace(keyPath.getFileSystem().getSeparator(), CMISConfiguration.getFolderDelimiter());
+            key = keyPath.toString().replace(keyPath.getFileSystem().getSeparator(), cmisConfiguration.getFolderDelimiter());
         }
         // For Windows, the pathString may start with // so remove one if this is the case.
         if (key.startsWith("//")) {
@@ -141,16 +135,16 @@ public class CMISResources extends Resources {
         }
 
         // Make sure the key that is returns starts with "/"
-        if (key.startsWith(CMISConfiguration.getFolderDelimiter())) {
+        if (key.startsWith(cmisConfiguration.getFolderDelimiter())) {
             return key;
         } else {
-            return CMISConfiguration.getFolderDelimiter() + key;
+            return cmisConfiguration.getFolderDelimiter() + key;
         }
     }
 
     private Path getKeyPath(String key) {
         // Keypath should not reference the base path so it should be removed.
-        return Paths.get(key.substring(CMISConfiguration.getBaseRepositoryPath().length()));
+        return Paths.get(key.substring(cmisConfiguration.getBaseRepositoryPath().length()));
     }
 
     @Nullable
@@ -158,7 +152,7 @@ public class CMISResources extends Resources {
     protected Path findImagePath(final String imageName, final Path logosDir) {
         String key = getKey(logosDir, imageName);
         if (imageName.indexOf('.') > -1) {
-            if (CMISConfiguration.getClient().existsPath(key)) {
+            if (cmisConfiguration.getClient().existsPath(key)) {
                 return getKeyPath(key);
             } else {
                 Log.warning(Geonet.RESOURCES,
@@ -166,7 +160,7 @@ public class CMISResources extends Resources {
             }
         } else {
             try {
-                CmisObject cmisObject = CMISConfiguration.getClient().getObjectByPath(key);
+                CmisObject cmisObject = cmisConfiguration.getClient().getObjectByPath(key);
                 Folder folder = (Folder) cmisObject;
 
                 ItemIterable<CmisObject> children = folder.getChildren();
@@ -215,7 +209,7 @@ public class CMISResources extends Resources {
         final Path file = locateResource(resourcesDir, context, appPath, filename);
         final String key = getKey(file, filename);
         try {
-            final CmisObject object = CMISConfiguration.getClient().getObjectByPath(key);
+            final CmisObject object = cmisConfiguration.getClient().getObjectByPath(key);
             if (object != null) {
                 final long lastModified = object.getLastModificationDate().toInstant().toEpochMilli();
                 try (InputStream in = ((Document) object).getContentStream().getStream()) {
@@ -228,7 +222,7 @@ public class CMISResources extends Resources {
                     }
                 }
             } else {
-                Log.info(Log.RESOURCES, "Error loading resource " + CMISConfiguration.getRepositoryId() + ":" + key);
+                Log.info(Log.RESOURCES, "Error loading resource " + cmisConfiguration.getRepositoryId() + ":" + key);
             }
         } catch (CmisObjectNotFoundException e) {
             Log.warning(Geonet.RESOURCES,
@@ -249,13 +243,13 @@ public class CMISResources extends Resources {
         if (resourcesDir != null) {
             key = getKey(resourcesDir, filename);
         } else {
-            key = CMISConfiguration.getFolderDelimiter() +  filename;
+            key = cmisConfiguration.getFolderDelimiter() +  filename;
         }
 
         boolean keyExists=false;
         // Use getObjectByPath as it does caching while existsPath does not.
         try {
-            CMISConfiguration.getClient().getObjectByPath(key);
+            cmisConfiguration.getClient().getObjectByPath(key);
             keyExists = true;
         } catch (CmisObjectNotFoundException e) {
             keyExists=false;
@@ -296,7 +290,7 @@ public class CMISResources extends Resources {
                     final String suffixlessKeyFolder = getKey(Paths.get(FilenameUtils.getFullPath(suffixless)));
 
                     try {
-                        Folder resourceFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(suffixlessKeyFolder);
+                        Folder resourceFolder = (Folder) cmisConfiguration.getClient().getObjectByPath(suffixlessKeyFolder);
                         Map<String, Document> documentMap = cmisUtils.getCmisObjectMap(resourceFolder, null, suffixlessKeyFilename);
 
                         for (Map.Entry<String,Document> entry : documentMap.entrySet()) {
@@ -341,15 +335,11 @@ public class CMISResources extends Resources {
     protected void addFiles(final DirectoryStream.Filter<Path> iconFilter, final Path webappDir,
                             final HashSet<Path> result) {
 
-        // Don't use caching for this process.
-        OperationContext oc = cmisUtils.createOperationContext();
-        oc.setCacheEnabled(false);
-
         String keyFolder = getKey(webappDir);
-        CmisObject cmisObject = CMISConfiguration.getClient().getObjectByPath(keyFolder, oc);
+        CmisObject cmisObject = cmisConfiguration.getClient().getObjectByPath(keyFolder);
         Folder folder = (Folder) cmisObject;
 
-        ItemIterable<CmisObject> children = folder.getChildren(oc);
+        ItemIterable<CmisObject> children = folder.getChildren();
 
         for (CmisObject object : children) {
             if (object instanceof Document) {
@@ -372,7 +362,7 @@ public class CMISResources extends Resources {
         final Path file = locateResource(resourcesDir, context, appPath, filename);
         final String key = getKey(file);
         try {
-            final CmisObject object = CMISConfiguration.getClient().getObjectByPath(key);
+            final CmisObject object = cmisConfiguration.getClient().getObjectByPath(key);
             return FileTime.from(object.getLastModificationDate().toInstant());
         } catch (CmisObjectNotFoundException e) {
             // Ignore not found error.
@@ -385,7 +375,7 @@ public class CMISResources extends Resources {
     public void deleteImageIfExists(final String image, final Path dir) {
         Path icon = findImagePath(image, dir);
         if (icon != null) {
-            CMISConfiguration.getClient().deleteByPath(getKey(icon));
+            cmisConfiguration.getClient().deleteByPath(getKey(icon));
         }
     }
 
@@ -400,7 +390,7 @@ public class CMISResources extends Resources {
             this.key = key;
             this.writeOnClose = writeOnClose;
             try {
-                this.cmisObject = CMISConfiguration.getClient().getObjectByPath(this.key);
+                this.cmisObject = cmisConfiguration.getClient().getObjectByPath(this.key);
             } catch (CmisObjectNotFoundException e) {
                 this.cmisObject = null;
                 Log.error(Geonet.RESOURCES,
@@ -413,7 +403,7 @@ public class CMISResources extends Resources {
             if (path != null) {
                 return path;
             }
-            final String[] splittedKey = key.split(CMISConfiguration.getFolderDelimiter());
+            final String[] splittedKey = key.split(cmisConfiguration.getFolderDelimiter());
             try {
                 // Preserve filename by putting the files into a temporary folder and using the same filename.
                 tempFolderPath = Files.createTempDirectory("gn-res-" + splittedKey[splittedKey.length - 2] + "-");
@@ -466,77 +456,8 @@ public class CMISResources extends Resources {
             }
             try {
                 if (writeOnClose && Files.isReadable(path)) {
-                    // Don't use caching for this process.
-                    OperationContext oc = cmisUtils.createOperationContext();
-                    oc.setCacheEnabled(false);
-
-                    // Split the filename and parent folder from the key.
-                    int lastFolderDelimiterKeyIndex = key.lastIndexOf(CMISConfiguration.getFolderDelimiter());
-                    String filenameKey = key.substring(lastFolderDelimiterKeyIndex + 1);
-
-                    Map<String, Object> properties = new HashMap<String, Object>();
-                    properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
-                    properties.put(PropertyIds.NAME, filenameKey);
-
-                    InputStream stream = Files.newInputStream(path);
-                    ContentStream contentStream = CMISConfiguration.getClient().getObjectFactory().createContentStream(key, Files.size(path), Files.probeContentType(path), stream);
-
-                    // If we have a cmisObject then lets refresh it to make sure it still exists.
-                    if (this.cmisObject != null) {
-                        try {
-                            this.cmisObject.refresh();
-                        } catch (CmisObjectNotFoundException e) {
-                            this.cmisObject = null;
-                        }
-                    }
-                    if (this.cmisObject != null) {
-                        try {
-                            // If the document is found then we are updating the existing document.
-                            Document doc = (Document) this.cmisObject;
-
-                            // If using major versioning then we have the option of making next version a minor or major.
-                            // The CMIS default it to create minor versions on updates.  If we are to create major versions on update then we need to update the document a little different.
-                            if (CMISConfiguration.getVersioningState().equals(VersioningState.MAJOR) && CMISConfiguration.isVersioningMajorOnUpdate() && doc.isVersionable() && doc.isMajorVersion()) {
-                                // If there is an existing checkout then cancel it.
-                                if (doc.isVersionSeriesCheckedOut()) {
-                                    doc.cancelCheckOut();
-                                }
-
-                                ObjectId objectID = doc.checkOut();
-                                CmisObject o = CMISConfiguration.getClient().getObject(objectID, oc);
-                                ((Document) o).checkIn(true, properties, contentStream, null);
-                            } else {
-                                doc.updateProperties(properties, true);
-                                doc.setContentStream(contentStream, true, true);
-                            }
-
-                            Log.info(Geonet.RESOURCES,
-                                String.format("Updated resource '%s'. Current version '%s'.", key, doc.getVersionLabel()));
-                        } catch (CmisPermissionDeniedException ex) {
-                            Log.warning(Geonet.RESOURCES, String.format(
-                                "No permissions to update resource '%s'.", key));
-                            throw new NotAllowedException(String.format(
-                                "No permissions to update resource '%s'.", key));
-                        }
-                    } else {
-                        // Get parent folder.
-                        String parentKey = key.substring(0, lastFolderDelimiterKeyIndex);
-                        try {
-                            Folder parentFolder = cmisUtils.getFolderCache(parentKey);
-
-                            Document doc = parentFolder.createDocument(properties, contentStream, CMISConfiguration.getVersioningState());
-
-                            Log.info(Geonet.RESOURCES,
-                                String.format("Added resource '%s'.", doc.getPaths().get(0)));
-                        } catch (CmisPermissionDeniedException ex) {
-                            Log.warning(Geonet.RESOURCES, String.format(
-                                "No permissions to add resource '%s'.", key));
-                            throw new NotAllowedException(String.format(
-                                "No permissions to add resource '%s'.", key));
-                        } catch (ResourceNotFoundException e) {
-                            throw new IOException("Error getting resource from cache: " + parentKey, e);
-                        }
-                    }
+                    Map<String, Object> properties = new HashMap<>();
+                    cmisUtils.saveDocument(this.key, this.cmisObject, properties, Files.newInputStream(path), null);
                 }
             } finally {
                 // Delete temporary file and folder.
