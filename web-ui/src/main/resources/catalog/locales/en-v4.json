@@ -134,5 +134,12 @@
   "NoTimezone": "No timezone",
   "YourTimezone": "Your timezone",
   "CatalogTimezone": "Server timezone",
-  "CatalogUiTimezone": "Recommended timezone"
+  "CatalogUiTimezone": "Recommended timezone",
+  "wpsLineage": "Lineage",
+  "wpsStoreExecuteResponse": "Store execute response",
+  "wpsStatus": "Asynchronous",
+  "wpsOutputAsReference": "Get output as reference",
+  "wpsOutputAsReference-help": "Request response as a URL (which will be available for download on success).",
+  "wpsLoadReferenceInMap": "Load reference in map",
+  "wpsLoadReferenceInMap-help": "Try to download the reference URL with the response and load it on the map (needs to be GeoJSON response)."
 }

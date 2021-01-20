@@ -625,7 +625,7 @@
         }
       },
       isPublished: function() {
-        return this.isPublishedToAll === true;
+        return JSON.parse(this.isPublishedToAll) === true;
       },
       isValid: function() {
         return this.valid === '1';
@@ -647,7 +647,7 @@
       },
       publish: function() {
         this.isPublishedToAll = this.isPublished() ?
-            'false' : 'true';
+            false : true;
       },
       getFields: function(filter) {
         var values = {}, props = this, keys = Object.keys(this)

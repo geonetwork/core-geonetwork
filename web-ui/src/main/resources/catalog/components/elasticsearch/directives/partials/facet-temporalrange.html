@@ -1,0 +1,24 @@
+<div>
+  <div id="{{facet.key}}"></div>
+
+  <div class="input-daterange input-group input-group-sm"
+       gn-bootstrap-datepicker="range"
+       data-date-format="dd-mm-yyyy"
+       on-change-fn="setRange({from: range.from, to: range.to})"
+       date-only-highlight="true">
+    <input type="text" class="input-sm form-control"
+           name="start" value="{{::range.from}}"/>
+    <span class="input-group-addon">
+      <icon class="fa fa-fw fa-chevron-right"/>
+    </span>
+    <input type="text" class="input-sm form-control"
+           name="end" value="{{::range.to}}"/>
+    <span class="input-group-btn">
+      <button class="btn btn-default"
+              data-ng-click="filter()"
+              title="{{'apply' | translate}}">
+        <icon class="fa fa-fw fa-filter"/>
+      </button>
+    </span>
+  </div>
+</div>
