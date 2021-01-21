@@ -91,10 +91,7 @@ public class TransactionManager {
 
         } catch (Throwable e) {
             Log.error(Log.JEEVES, "Error occurred within a transaction", e);
-            if (exception == null) {
-                exception = e;
-            }
-
+            exception = e;
             isRolledBack = rollbackIfNotRolledBack(context, transactionManager, status, isRolledBack);
         } finally {
             try {
@@ -143,10 +140,9 @@ public class TransactionManager {
 
     private static Boolean rollbackIfNotRolledBack(ApplicationContext context, PlatformTransactionManager transactionManager, TransactionStatus status, Boolean isRolledBack) {
         if (!isRolledBack) {
-            isRolledBack = true;
             doRollback(context, transactionManager, status);
         }
-        return isRolledBack;
+        return true;
     }
 
     /**
