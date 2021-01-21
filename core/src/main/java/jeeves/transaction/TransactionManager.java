@@ -64,7 +64,6 @@ public class TransactionManager {
                                          boolean readOnly,
                                          final TransactionTask<V> action) {
         final PlatformTransactionManager transactionManager = context.getBean(PlatformTransactionManager.class);
-        Throwable exception = null;
         TransactionStatus status = null;
         boolean isNewTransaction = false;
         Boolean isRolledBack = false;
@@ -89,10 +88,16 @@ public class TransactionManager {
 
             result = action.doInTransaction(status);
 
-        } catch (Throwable e) {
-            Log.error(Log.JEEVES, "Error occurred within a transaction", e);
-            exception = e;
+        } catch (Throwable exception) {
+            Log.error(Log.JEEVES, "Error occurred within a transaction", exception);
             isRolledBack = rollbackIfNotRolledBack(context, transactionManager, status, isRolledBack);
+            if (exception instanceof RuntimeException) {
+                throw (RuntimeException) exception;
+            } else if (exception instanceof Error) {
+                throw (Error) exception;
+            } else {
+                throw new RuntimeException("Run in transaction '"+action+"': "+exception.getLocalizedMessage(), exception);
+            }
         } finally {
             try {
                 if (readOnly) {
@@ -124,15 +129,6 @@ public class TransactionManager {
             }
         }
 
-        if (exception != null) {
-            if (exception instanceof RuntimeException) {
-                throw (RuntimeException) exception;
-            } else if (exception instanceof Error) {
-                throw (Error) exception;
-            } else {
-                throw new RuntimeException("Run in transaction '"+action+"': "+exception.getLocalizedMessage(), exception);
-            }
-        }
         return result;
     }
 
