@@ -66,7 +66,7 @@ public class TransactionManager {
         final PlatformTransactionManager transactionManager = context.getBean(PlatformTransactionManager.class);
         TransactionStatus status = null;
         boolean isNewTransaction = false;
-        Boolean isRolledBack = false;
+        boolean isRolledBack = false;
         boolean isCommitted = false;
         V result = null;
         try {
