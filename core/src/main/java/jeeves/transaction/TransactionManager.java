@@ -97,8 +97,7 @@ public class TransactionManager {
             try {
                 if (readOnly) {
                     isRolledBack = rollbackIfNotRolledBack(context, transactionManager, status, isRolledBack);
-                }
-                if (!readOnly && !isRolledBack && (isNewTransaction || commitBehavior == CommitBehavior.ALWAYS_COMMIT)) {
+                } else if (!isRolledBack && (isNewTransaction || commitBehavior == CommitBehavior.ALWAYS_COMMIT)) {
                     isCommitted = true;
                     doCommit(context, transactionManager, status);
                 }
