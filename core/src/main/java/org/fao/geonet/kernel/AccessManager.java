@@ -125,7 +125,7 @@ public class AccessManager {
             }
 
             UserSession us = context.getUserSession();
-            if (us.isAuthenticated() && us.getProfile() == Profile.Editor && us.getProfile() == Profile.Reviewer) {
+            if ((us != null) && us.isAuthenticated() && us.getProfile() == Profile.Editor && us.getProfile() == Profile.Reviewer) {
                 results.add(operationRepository.findReservedOperation(ReservedOperation.view));
             }
         }
@@ -175,7 +175,7 @@ public class AccessManager {
             hs.add(ReservedGroup.intranet.getId());
 
         // get other groups
-        if (usrSess.isAuthenticated()) {
+        if ((usrSess != null) && usrSess.isAuthenticated()) {
             // add (-1) GUEST group
             hs.add(ReservedGroup.guest.getId());
 
@@ -216,7 +216,7 @@ public class AccessManager {
         Set<Integer> hs = new HashSet<Integer>();
 
         // get other groups
-        if (usrSess.isAuthenticated()) {
+        if ((usrSess != null) && usrSess.isAuthenticated()) {
             Specification<UserGroup> spec =
                 UserGroupSpecs.hasUserId(usrSess.getUserIdAsInt());
             spec = Specifications
