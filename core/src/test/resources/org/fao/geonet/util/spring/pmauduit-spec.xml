@@ -1,0 +1,13 @@
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+  <cas:authenticationSuccess>
+    <cas:user>pmauduit</cas:user>
+    <cas:attribute name="uid" value="pmauduit" />
+    <cas:attribute name="mail" value="pierre.mauduit@camptocamp.com" />
+    <cas:attribute name="sn" value="Mauduit" />
+    <cas:attribute name="c" value="FR" />
+    <cas:attribute name="cn" value="Pierre Mauduit" />
+    <cas:attribute name="o" value="Camptocamp France SAS" />
+    <cas:attribute name="givenName" value="Pierre" />
+    <cas:attribute name="businessCategory" value="com" />
+  </cas:authenticationSuccess>
+</cas:serviceResponse>
