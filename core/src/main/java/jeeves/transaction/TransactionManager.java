@@ -121,25 +121,18 @@ public class TransactionManager {
             } catch (TransactionSystemException e) {
                 if (!(e.getOriginalException() instanceof RollbackException)) {
                     Log.error(Log.JEEVES, "ERROR committing transaction, will try to rollback", e);
-                    if (!isRolledBack) {
-                        try {
-                            doRollback(context, transactionManager, status);
-                        }
-                        finally {
-                            isRolledBack = true;
-                        }
-                    }
                 } else {
                     Log.debug(Log.JEEVES, "ERROR committing transaction, will try to rollback", e);
-                    if (!isRolledBack) {
-                        try {
-                            doRollback(context, transactionManager, status);
-                        }
-                        finally {
-                            isRolledBack = true;
-                        }
+                }
+                if (!isRolledBack) {
+                    try {
+                        doRollback(context, transactionManager, status);
+                    }
+                    finally {
+                        isRolledBack = true;
                     }
                 }
+
             } catch (Throwable t) {
                 Log.error(Log.JEEVES, "ERROR committing transaction, will try to rollback", t);
                 if (!isRolledBack) {
