@@ -68,7 +68,6 @@ public class TransactionManager {
         boolean isNewTransaction = false;
         boolean isRolledBack = false;
         boolean isCommitted = false;
-        V result = null;
         try {
             DefaultTransactionDefinition definition = new DefaultTransactionDefinition(transactionRequirement.propagationId);
             definition.setName(name);
@@ -86,7 +85,7 @@ public class TransactionManager {
                 }
             }
 
-            result = action.doInTransaction(status);
+            return action.doInTransaction(status);
 
         } catch (Throwable exception) {
             Log.error(Log.JEEVES, "Error occurred within a transaction", exception);
@@ -129,7 +128,6 @@ public class TransactionManager {
             }
         }
 
-        return result;
     }
 
     private static Boolean rollbackIfNotRolledBack(ApplicationContext context, PlatformTransactionManager transactionManager, TransactionStatus status, Boolean isRolledBack) {
