@@ -67,7 +67,7 @@ public class TransactionManager {
         final Throwable[] exception = new Throwable[1];
         TransactionStatus status = null;
         boolean isNewTransaction = false;
-        boolean isRolledBack = false;
+        Boolean isRolledBack = false;
         boolean isCommitted = false;
         V result = null;
         try {
@@ -95,12 +95,7 @@ public class TransactionManager {
                 exception[0] = e;
             }
 
-            try {
-                doRollback(context, transactionManager, status);
-            }
-            finally {
-                isRolledBack = true;
-            }
+            isRolledBack = rollbackIfNotRolledBack(context, transactionManager, status, isRolledBack);
         } finally {
             try {
                 if (readOnly && !isRolledBack) {
@@ -124,25 +119,11 @@ public class TransactionManager {
                 } else {
                     Log.debug(Log.JEEVES, "ERROR committing transaction, will try to rollback", e);
                 }
-                if (!isRolledBack) {
-                    try {
-                        doRollback(context, transactionManager, status);
-                    }
-                    finally {
-                        isRolledBack = true;
-                    }
-                }
+                isRolledBack = rollbackIfNotRolledBack(context, transactionManager, status, isRolledBack);
 
             } catch (Throwable t) {
                 Log.error(Log.JEEVES, "ERROR committing transaction, will try to rollback", t);
-                if (!isRolledBack) {
-                    try {
-                        doRollback(context, transactionManager, status);
-                    }
-                    finally {
-                        isRolledBack = true;
-                    }
-                }
+                isRolledBack = rollbackIfNotRolledBack(context, transactionManager, status, isRolledBack);
             }
             Log.debug(
                 Log.JEEVES,
@@ -165,6 +146,17 @@ public class TransactionManager {
             }
         }
         return result;
+    }
+
+    private static Boolean rollbackIfNotRolledBack(ApplicationContext context, PlatformTransactionManager transactionManager, TransactionStatus status, Boolean isRolledBack) {
+        if (!isRolledBack) {
+            try {
+                doRollback(context, transactionManager, status);
+            } finally {
+                isRolledBack = true;
+            }
+        }
+        return isRolledBack;
     }
 
     /**
