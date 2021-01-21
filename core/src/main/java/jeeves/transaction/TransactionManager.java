@@ -99,19 +99,11 @@ public class TransactionManager {
         } finally {
             try {
                 if (readOnly && !isRolledBack) {
-                    try {
-                        doRollback(context, transactionManager, status);
-                    }
-                    finally {
-                        isRolledBack = true;
-                    }
+                    isRolledBack = true;
+                    doRollback(context, transactionManager, status);
                 } else if (!isRolledBack && (isNewTransaction || commitBehavior == CommitBehavior.ALWAYS_COMMIT)) {
-                    try {
-                        doCommit(context, transactionManager, status);
-                    }
-                    finally {
-                        isCommitted = true;
-                    }
+                    isCommitted = true;
+                    doCommit(context, transactionManager, status);
                 }
             } catch (TransactionSystemException e) {
                 if (!(e.getOriginalException() instanceof RollbackException)) {
@@ -150,11 +142,8 @@ public class TransactionManager {
 
     private static Boolean rollbackIfNotRolledBack(ApplicationContext context, PlatformTransactionManager transactionManager, TransactionStatus status, Boolean isRolledBack) {
         if (!isRolledBack) {
-            try {
-                doRollback(context, transactionManager, status);
-            } finally {
-                isRolledBack = true;
-            }
+            isRolledBack = true;
+            doRollback(context, transactionManager, status);
         }
         return isRolledBack;
     }
