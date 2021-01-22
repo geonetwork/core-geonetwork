@@ -38,23 +38,27 @@ then
 fi
 
 
-if [[ $1 =~ ^[0-9]+.[0-9]+.[0-9x]+(-SNAPSHOT|-RC[0-2]|-[0-9]+)?$ ]]; then
+if [[ $1 =~ ^[0-9]+.[0-9]+.[0-9x]$  || $1 =~ ^[0-9]+.[0-9]+(-SNAPSHOT|-RC[0-2]|-[0-9]+)$ ]]; then
     echo
 else
 	echo
 	echo 'Update failed due to incorrect versionnumber format: ' $1
-	echo 'The format should be three numbers separated by dots with optional -SNAPSHOT. e.g.: 2.7.0 or 2.7.0-SNAPSHOT or 2.7.x-SNAPSHOT'
+	echo 'The format should be three numbers separated by dots or 2 numbers separated by dot with -SNAPSHOT. e.g.: 3.10.0 or 3.10-SNAPSHOT'
 	echo
-	echo "Usage: ./`basename $0 $1` 2.7.0 2.7.0-RC0"
+	echo "Usage: ./`basename $0 $1` 3.10.0 3.10-SNAPSHOT"
 	echo
 	exit
 fi
 
-if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9x]+(-SNAPSHOT|-RC[0-2]|-[0-9]+)?$ ]]; then
+if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9x]$  || $2 =~ ^[0-9]+.[0-9]+(-SNAPSHOT|-RC[0-2]|-[0-9]+)$ ]]; then
     # Retrieve version and subversion
-    if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+-.*$ ]]; then
-        new_version_main=`echo $2 | cut -d- -f1`
+    if [[ $2 =~ ^[0-9]+.[0-9]+-.*$ ]]; then
+        patch=${version##*.}
+        patch=$(($patch + 1))
+
+        new_version_main=`echo $2 | cut -d- -f1`.${patch}
         sub_version=`echo $2 | cut -d- -f2`
+
     else
         new_version_main=$2
         sub_version="0"
@@ -63,9 +67,9 @@ if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9x]+(-SNAPSHOT|-RC[0-2]|-[0-9]+)?$ ]]; then
 else
 	echo
 	echo 'Update failed due to incorrect new versionnumber format (' $2 ')'
-	echo 'The format should be three numbers separated by dots with optional -SNAPSHOT. e.g.: 2.7.0 or 2.7.0-SNAPSHOT'
+  echo 'The format should be three numbers separated by dots or 2 numbers separated by dot with -SNAPSHOT. e.g.: 3.10.0 or 3.10-SNAPSHOT'
 	echo
-	echo "Usage: ./`basename $0 $1` 2.7.0 2.7.0-RC0"
+	echo "Usage: ./`basename $0 $1` 3.10.0 3.10-SNAPSHOT"
 	echo
 	exit
 fi
@@ -100,6 +104,7 @@ echo ' * updating docs/manuals/source/conf.py'
 sed $sedopt "s/${version}/${new_version_main}/g" docs/manuals/source/conf.py
 echo
 
+
 # Update release properties
 echo 'Release (ZIP bundle)'
 echo '  * updating release/build.properties'
@@ -112,8 +117,9 @@ echo 'SQL script'
 sed $sedopt "s/'system\/platform\/version', '.*', 0/'system\/platform\/version', '${new_version_main}', 0/g" web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql
 sed $sedopt "s/'system\/platform\/subVersion', '.*', 0/'system\/platform\/subVersion', '${sub_version}', 0/g" web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql
 
-find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='${version}' WHERE name='system\/platform\/version'/value='${new_version_main}' WHERE name='system\/platform\/version'/g" {} \;
-find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='.*' WHERE name='system\/platform\/subVersion'/value='${sub_version}' WHERE name='system\/platform\/subVersion'/g" {} \;
+find . -wholename *v${new_version_main_nopoint//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='${version}' WHERE name='system\/platform\/version'/value='${new_version_main}' WHERE name='system\/platform\/version'/g" {} \;
+find . -wholename *v${new_version_main_nopoint//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='.*' WHERE name='system\/platform\/subVersion'/value='${sub_version}' WHERE name='system\/platform\/subVersion'/g" {} \;
+
 
 # Update version pom files
 mvn versions:set-property -Dproperty=gn.project.version -DnewVersion=${new_version}
