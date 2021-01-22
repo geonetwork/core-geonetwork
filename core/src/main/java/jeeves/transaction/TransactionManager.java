@@ -102,19 +102,19 @@ public class TransactionManager {
                 if (readOnly) {
                     isRolledBack = rollbackIfNotRolledBack(context, transactionManager, status, isRolledBack);
                 } else if (!isRolledBack && (isNewTransaction || commitBehavior == CommitBehavior.ALWAYS_COMMIT)) {
-                    isCommitted = true;
                     doCommit(context, transactionManager, status);
+                    isCommitted = true;
                 }
             } catch (TransactionSystemException e) {
                 if (!(e.getOriginalException() instanceof RollbackException)) {
-                    Log.error(Log.JEEVES, "ERROR committing transaction, will try to rollback", e);
+                    Log.error(Log.JEEVES, "Exception completing transaction rollback, will try to rollback", e);
                 } else {
-                    Log.debug(Log.JEEVES, "ERROR committing transaction, will try to rollback", e);
+                    Log.debug(Log.JEEVES, "Exception completing transaction, will try to rollback", e);
                 }
                 isRolledBack = rollbackIfNotRolledBack(context, transactionManager, status, isRolledBack);
 
             } catch (Throwable t) {
-                Log.error(Log.JEEVES, "ERROR committing transaction, will try to rollback", t);
+                Log.error(Log.JEEVES, "Unexpected problem completing transaction, will try to rollback", t);
                 isRolledBack = rollbackIfNotRolledBack(context, transactionManager, status, isRolledBack);
             }
             Log.debug(
@@ -123,8 +123,11 @@ public class TransactionManager {
                     (isRolledBack?" rolled back":"") +
                     (isCommitted?" committed":"")
             );
-            if( isRolledBack == false && isCommitted == false ){
+            if( !isRolledBack && !isCommitted ){
                 Log.warning(  Log.JEEVES, "Run in transaction did not complete cleanly, transaction not committed or rolledback");
+            }
+            if( isRolledBack && isCommitted ){
+                Log.warning(  Log.JEEVES, "Run in transaction did not complete cleanly, transaction both committed and rolledback");
             }
         }
 
