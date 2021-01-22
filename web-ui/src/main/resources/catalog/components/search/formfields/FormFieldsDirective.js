@@ -325,6 +325,7 @@
                   if (setDefaultValue && (
                     angular.isUndefined(scope.ownerGroup) ||
                     scope.ownerGroup === '' ||
+                    scope.ownerGroup === 'undefined' ||
                     scope.ownerGroup === null) && data) {
                     // Requires to be converted to string, otherwise
                     // angularjs adds empty non valid option
