@@ -23,11 +23,9 @@
 
 package org.fao.geonet.kernel.search.spatial;
 
-import org.locationtech.jts.geom.Envelope;
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.MultiPolygon;
-import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.geom.*;
+import org.locationtech.jts.geom.util.GeometryTransformer;
+import org.locationtech.jts.geom.util.ShortCircuitedGeometryVisitor;
 import org.locationtech.jts.index.SpatialIndex;
 import org.locationtech.jts.index.strtree.STRtree;
 import org.apache.jcs.access.exception.CacheException;
@@ -200,9 +198,22 @@ public class SpatialIndexWriter implements FeatureListener {
         }
     }
 
+    /**
+     * Parse GML into a bounding multi-polygon, polygons represented as is, linestring and points bbox-buffered to civic scale.
+     *
+     * The resulting milti-polygon may be clipped or split to accomidate spatiral reference system bounds.
+     *
+     * @param parser
+     * @param gml
+     * @return bounding multi-polygon for gml geometry
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */
     public static MultiPolygon parseGml(Parser parser, String gml) throws IOException, SAXException,
         ParserConfigurationException {
         Object value = parser.parse(new StringReader(gml));
+
         if (value instanceof HashMap) {
             @SuppressWarnings("rawtypes")
             HashMap map = (HashMap) value;
@@ -218,7 +229,6 @@ public class SpatialIndexWriter implements FeatureListener {
             } else {
                 return toMultiPolygon(geoms.get(0));
             }
-
         } else if (value == null) {
             return null;
         } else {
@@ -226,6 +236,7 @@ public class SpatialIndexWriter implements FeatureListener {
         }
     }
 
+    /** Process entry and add to list */
     public static void addToList(List<MultiPolygon> geoms, Object entry) {
         if (entry instanceof Polygon) {
             geoms.add(toMultiPolygon((Polygon) entry));
@@ -507,17 +518,87 @@ public class SpatialIndexWriter implements FeatureListener {
     }
 
     public static MultiPolygon toMultiPolygon(Geometry geometry) {
-        if (geometry instanceof Polygon) {
-            Polygon polygon = (Polygon) geometry;
-
-            return geometry.getFactory().createMultiPolygon(
-                new Polygon[]{polygon});
-        } else if (geometry instanceof MultiPolygon) {
+        if (geometry == null) return null;
+        if (geometry instanceof MultiPolygon) {
             return (MultiPolygon) geometry;
         }
-        String message = geometry.getClass() + " cannot be converted to a polygon. Check metadata";
-        Log.error(Geonet.INDEX_ENGINE, message);
-        throw new IllegalArgumentException(message);
+        final double DISTANCE = 0.01;
+
+        GeometryTransformer transform = new GeometryTransformer() {
+
+            @Override
+            protected Geometry transformLinearRing(LinearRing linearRing, Geometry parent) {
+                if(parent instanceof Polygon) {
+                    return super.transformLinearRing(linearRing, parent);
+                }
+                else {
+                    return factory.createMultiPolygon(
+                        new Polygon[]{factory.createPolygon(linearRing)}
+                    );
+                }
+            }
+
+            @Override
+            protected Geometry transformLineString(LineString lineString, Geometry parent) {
+                Envelope bbox = lineString.getEnvelopeInternal();
+                bbox.expandBy(DISTANCE);
+                Geometry bounds = factory.toGeometry(bbox);
+                if( bounds instanceof Polygon) {
+                    return factory.createMultiPolygon(
+                        new Polygon[]{(Polygon) bounds}
+                    );
+                }
+                return null;
+            }
+
+            @Override
+            protected Geometry transformPolygon(Polygon polygon, Geometry parent) {
+                Polygon transformed = (Polygon) super.transformPolygon(polygon, parent);
+                if( parent != null ) {
+                    return transformed;
+                }
+                else {
+                    return factory.createMultiPolygon(
+                        new Polygon[]{transformed}
+                    );
+                }
+            }
+            protected Geometry transformPoint(Point point, Geometry parent) {
+                if (point.isEmpty()) return null; // skip
+
+                Envelope bbox = point.getEnvelopeInternal();
+                bbox.expandBy(DISTANCE);
+
+                Polygon geom = (Polygon) factory.toGeometry(bbox);
+                Geometry bounds = factory.toGeometry(bbox);
+                if( bounds instanceof Polygon) {
+                    if (parent != null) { // multi-point or geometry collection
+                        return geom;
+                    } else {
+                        return factory.createMultiPolygon(
+                            new Polygon[]{(Polygon)bounds}
+                        );
+                    }
+                }
+                return null;
+            }
+
+        };
+        Geometry transformed = transform.transform(geometry);
+        if( transformed == null ){
+            String message = geometry.getClass() + " cannot be converted to a polygon. Check metadata";
+            Log.error(Geonet.INDEX_ENGINE, message);
+            throw new IllegalArgumentException(message);
+        }
+        transformed.setSRID(geometry.getSRID());
+        transformed.setUserData(geometry.getUserData());
+
+        if( transformed instanceof  MultiPolygon) {
+            return (MultiPolygon) transformed;
+        }
+        else {
+            return null;
+        }
     }
 
     public void changed(FeatureEvent featureEvent) {
