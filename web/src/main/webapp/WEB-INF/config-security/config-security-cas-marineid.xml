@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<beans
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/util
+          http://www.springframework.org/schema/util/spring-util.xsd">
+
+  <bean class="org.fao.geonet.util.spring.MarineIdCasUserDetailAuthenticationProvider" id="casUserService">
+    <property name="casAttributesToUserMapping">
+      <util:map>
+        <!-- key: GN User attribute, value: CAS attribute name -->
+        <entry key="email" value="mail" />
+        <entry key="surname" value="sn" />
+        <entry key="organisation" value="o" />
+        <entry key="name" value="givenName" />
+        <entry key="kind" value="businessCategory" />
+      </util:map>
+    </property>
+  </bean>
+
+  <!-- override beans in config-security-core with the changes required for
+        cas -->
+  <alias name="casEntryPoint" alias="authenticationEntryPoint"/>
+  <bean id="filterChainFilters" class="java.util.ArrayList">
+    <constructor-arg>
+      <list>
+        <ref bean="securityContextPersistenceFilter"/>
+        <ref bean="requestSingleLogoutFilter"/>
+        <ref bean="logoutFilter"/>
+        <ref bean="singleLogoutFilter"/>
+        <ref bean="casFilter"/>
+        <ref bean="basicAuthenticationFilter"/>
+        <ref bean="requestCacheFilter"/>
+        <ref bean="anonymousFilter"/>
+        <ref bean="sessionMgmtFilter"/>
+        <ref bean="exceptionTranslationFilter"/>
+        <ref bean="filterSecurityInterceptor"/>
+      </list>
+    </constructor-arg>
+  </bean>
+  <!-- Adds the CasAuthenticationProvider to the AuthenticationManager -->
+  <bean id="casAuthenticationProviderPostProcessor"
+        class="jeeves.config.springutil.AddAuthenticationProviderPostProcessor">
+    <constructor-arg value="0"/>
+    <constructor-arg ref="casAuthenticationProvider"></constructor-arg>
+  </bean>
+  <!-- End overrides -->
+
+  <bean id="serviceProperties" class="org.springframework.security.cas.ServiceProperties">
+    <property name="service" value="${geonetwork.https.url}/login/cas"/>
+    <property name="sendRenew" value="false"/>
+    <property name="artifactParameter" value="ticket"/>
+    <property name="authenticateAllArtifacts" value="true"/>
+  </bean>
+
+  <bean id="casFilter"
+        class="org.springframework.security.cas.web.CasAuthenticationFilter">
+    <property name="authenticationManager" ref="authenticationManager"/>
+    <property name="proxyGrantingTicketStorage" ref="pgtStorage"/>
+    <property name="serviceProperties" ref="serviceProperties"/>
+    <property name="authenticationDetailsSource">
+      <bean
+        class="org.springframework.security.cas.web.authentication.ServiceAuthenticationDetailsSource">
+        <constructor-arg name="serviceProperties" ref="serviceProperties"/>
+      </bean>
+    </property>
+  </bean>
+
+  <bean id="casEntryPoint"
+        class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+    <property name="loginUrl" value="${cas.login.url}"/>
+    <property name="serviceProperties" ref="serviceProperties"/>
+  </bean>
+
+  <bean id="casAuthenticationProvider"
+        class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
+    <property name="authenticationUserDetailsService" ref="casUserService" />
+    <property name="serviceProperties" ref="serviceProperties"/>
+    <property name="ticketValidator" ref="casTicketValidator"/>
+    <property name="key" value="GeonetworkCasAuthenticatorProviderKey"/>
+    <property name="statelessTicketCache" ref="casStatelessTicketCache"/>
+  </bean>
+
+  <bean id="casTicketValidator" class="org.fao.geonet.util.spring.MarineIdCas20ProxyTicketValidator">
+    <!-- Geonetwork class in start method will update the baseurl with the one in the settings table -->
+    <!-- If baseurlTag is not set then the proxyCallbackURL will not be updated -->
+    <constructor-arg index="0" value="${cas.ticket.validator.url}"/>
+    <property name="proxyGrantingTicketStorage" ref="pgtStorage"/>
+    <property name="acceptAnyProxy" value="true"/>
+  </bean>
+  <!-- TODO implement custom storage, maybe that stores in database -->
+  <bean id="pgtStorage" class="org.jasig.cas.client.proxy.ProxyGrantingTicketStorageImpl"/>
+
+  <!-- This filter handles a Single Logout Request from the CAS Server -->
+  <bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter"/>
+  <!-- This filter redirects to the CAS Server to signal Single Logout should be performed -->
+  <bean id="requestSingleLogoutFilter"
+        class="org.springframework.security.web.authentication.logout.LogoutFilter">
+    <constructor-arg ref="logoutSuccessHandler"/>
+    <constructor-arg>
+      <array>
+        <bean class="jeeves.config.springutil.LogoutUserSessionHandler"/>
+        <bean
+          class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+      </array>
+    </constructor-arg>
+    <property name="filterProcessesUrl" value="/signout"/>
+  </bean>
+  <bean id="logoutSuccessHandler"
+        class="org.fao.geonet.web.RedirectLogoutSuccessHandler">
+    <property name="defaultTargetUrl" value="${cas.logout.url}"></property>
+  </bean>
+
+  <bean id="casStatelessTicketCache"
+        class="org.springframework.security.cas.authentication.SpringCacheBasedTicketCache">
+    <constructor-arg ref="springCasTicketCache" />
+  </bean>
+
+  <bean id="springCasTicketCache" class="org.springframework.cache.concurrent.ConcurrentMapCache">
+    <constructor-arg value="springCasTicketCache" />
+  </bean>
+</beans>
