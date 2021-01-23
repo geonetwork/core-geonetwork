@@ -517,6 +517,12 @@ public class SpatialIndexWriter implements FeatureListener {
         return null;
     }
 
+    /**
+     * Produces a multipolygon that covers the provided geometry.
+     *
+     * @param geometry
+     * @return covering multipolygon
+     */
     public static MultiPolygon toMultiPolygon(Geometry geometry) {
         if (geometry == null) return null;
         if (geometry instanceof MultiPolygon) {
@@ -526,15 +532,23 @@ public class SpatialIndexWriter implements FeatureListener {
 
         GeometryTransformer transform = new GeometryTransformer() {
 
+            protected Geometry checkChildPolygon( Polygon polygon, Geometry parent ){
+                if( parent instanceof GeometryCollection ){
+                    // MultiLineString, MultiPoint, MultiPolygon or GeometryCollection ..
+                    return polygon;
+                }
+                else {
+                    return factory.createMultiPolygon(new Polygon[]{polygon});
+                }
+            }
             @Override
             protected Geometry transformLinearRing(LinearRing linearRing, Geometry parent) {
                 if(parent instanceof Polygon) {
                     return super.transformLinearRing(linearRing, parent);
                 }
                 else {
-                    return factory.createMultiPolygon(
-                        new Polygon[]{factory.createPolygon(linearRing)}
-                    );
+                    Polygon polygon = factory.createPolygon(linearRing);
+                    return checkChildPolygon( polygon, parent );
                 }
             }
 
@@ -543,25 +557,15 @@ public class SpatialIndexWriter implements FeatureListener {
                 Envelope bbox = lineString.getEnvelopeInternal();
                 bbox.expandBy(DISTANCE);
                 Geometry bounds = factory.toGeometry(bbox);
-                if( bounds instanceof Polygon) {
-                    return factory.createMultiPolygon(
-                        new Polygon[]{(Polygon) bounds}
-                    );
+                if( bounds instanceof Polygon){
+                    return checkChildPolygon( (Polygon) bounds, parent );
                 }
                 return null;
             }
 
             @Override
             protected Geometry transformPolygon(Polygon polygon, Geometry parent) {
-                Polygon transformed = (Polygon) super.transformPolygon(polygon, parent);
-                if( parent != null ) {
-                    return transformed;
-                }
-                else {
-                    return factory.createMultiPolygon(
-                        new Polygon[]{transformed}
-                    );
-                }
+                return checkChildPolygon( (Polygon) polygon, parent );
             }
             protected Geometry transformPoint(Point point, Geometry parent) {
                 if (point.isEmpty()) return null; // skip
@@ -572,17 +576,32 @@ public class SpatialIndexWriter implements FeatureListener {
                 Polygon geom = (Polygon) factory.toGeometry(bbox);
                 Geometry bounds = factory.toGeometry(bbox);
                 if( bounds instanceof Polygon) {
-                    if (parent != null) { // multi-point or geometry collection
-                        return geom;
-                    } else {
-                        return factory.createMultiPolygon(
-                            new Polygon[]{(Polygon)bounds}
-                        );
-                    }
+                    return checkChildPolygon( (Polygon) bounds, parent );
                 }
                 return null;
             }
+            protected Geometry transformGeometryCollection(GeometryCollection geom, Geometry parent) {
+                List<Polygon> transGeomList = new ArrayList<>();
+                for (int i = 0; i < geom.getNumGeometries(); i++) {
+                    Geometry transformGeom = transform(geom.getGeometryN(i));
+                    if (transformGeom == null) continue;
+                    if (transformGeom.isEmpty()) continue;
 
+                    if( transformGeom instanceof MultiPolygon) {
+                        MultiPolygon transformedMultiPolygon = (MultiPolygon) transformGeom;
+                        for (int j = 0; j < transformedMultiPolygon.getNumGeometries(); j++) {
+                            Polygon polygon = (Polygon) transformedMultiPolygon.getGeometryN(j);
+                            if (polygon == null) continue;
+                            if (polygon.isEmpty()) continue;
+                            transGeomList.add(polygon);
+                        }
+                    }
+                    else if (transformGeom instanceof Polygon){
+                        transGeomList.add((Polygon)transformGeom);
+                    }
+                }
+                return factory.createMultiPolygon(GeometryFactory.toPolygonArray(transGeomList));
+            }
         };
         Geometry transformed = transform.transform(geometry);
         if( transformed == null ){
