@@ -25,7 +25,6 @@ package org.fao.geonet.kernel.search.spatial;
 
 import org.locationtech.jts.geom.*;
 import org.locationtech.jts.geom.util.GeometryTransformer;
-import org.locationtech.jts.geom.util.ShortCircuitedGeometryVisitor;
 import org.locationtech.jts.index.SpatialIndex;
 import org.locationtech.jts.index.strtree.STRtree;
 import org.apache.jcs.access.exception.CacheException;
@@ -199,9 +198,9 @@ public class SpatialIndexWriter implements FeatureListener {
     }
 
     /**
-     * Parse GML into a bounding multi-polygon, polygons represented as is, linestring and points bbox-buffered to civic scale.
+     * Parse GML into a bounding multi-polygon, polygons represented as is, linestring and points buffered to civic scale.
      *
-     * The resulting milti-polygon may be clipped or split to accomidate spatiral reference system bounds.
+     * Aside: The resulting multi-polygon may be clipped or split to accommodate spatial reference system bounds.
      *
      * @param parser
      * @param gml
@@ -214,7 +213,10 @@ public class SpatialIndexWriter implements FeatureListener {
         ParserConfigurationException {
         Object value = parser.parse(new StringReader(gml));
 
-        if (value instanceof HashMap) {
+        if( value == null ){
+            return null;
+        }
+        else if (value instanceof HashMap) {
             @SuppressWarnings("rawtypes")
             HashMap map = (HashMap) value;
             List<MultiPolygon> geoms = new ArrayList<MultiPolygon>();
@@ -229,10 +231,11 @@ public class SpatialIndexWriter implements FeatureListener {
             } else {
                 return toMultiPolygon(geoms.get(0));
             }
-        } else if (value == null) {
-            return null;
-        } else {
+        } else if (value instanceof Geometry ){
             return toMultiPolygon((Geometry) value);
+        }
+        else {
+            return null;
         }
     }
 
@@ -529,80 +532,8 @@ public class SpatialIndexWriter implements FeatureListener {
             return (MultiPolygon) geometry;
         }
         final double DISTANCE = 0.01;
+        GeometryTransformer transform = new CoveredByTransformer(DISTANCE);
 
-        GeometryTransformer transform = new GeometryTransformer() {
-
-            protected Geometry checkChildPolygon( Polygon polygon, Geometry parent ){
-                if( parent instanceof GeometryCollection ){
-                    // MultiLineString, MultiPoint, MultiPolygon or GeometryCollection ..
-                    return polygon;
-                }
-                else {
-                    return factory.createMultiPolygon(new Polygon[]{polygon});
-                }
-            }
-            @Override
-            protected Geometry transformLinearRing(LinearRing linearRing, Geometry parent) {
-                if(parent instanceof Polygon) {
-                    return super.transformLinearRing(linearRing, parent);
-                }
-                else {
-                    Polygon polygon = factory.createPolygon(linearRing);
-                    return checkChildPolygon( polygon, parent );
-                }
-            }
-
-            @Override
-            protected Geometry transformLineString(LineString lineString, Geometry parent) {
-                Envelope bbox = lineString.getEnvelopeInternal();
-                bbox.expandBy(DISTANCE);
-                Geometry bounds = factory.toGeometry(bbox);
-                if( bounds instanceof Polygon){
-                    return checkChildPolygon( (Polygon) bounds, parent );
-                }
-                return null;
-            }
-
-            @Override
-            protected Geometry transformPolygon(Polygon polygon, Geometry parent) {
-                return checkChildPolygon( (Polygon) polygon, parent );
-            }
-            protected Geometry transformPoint(Point point, Geometry parent) {
-                if (point.isEmpty()) return null; // skip
-
-                Envelope bbox = point.getEnvelopeInternal();
-                bbox.expandBy(DISTANCE);
-
-                Polygon geom = (Polygon) factory.toGeometry(bbox);
-                Geometry bounds = factory.toGeometry(bbox);
-                if( bounds instanceof Polygon) {
-                    return checkChildPolygon( (Polygon) bounds, parent );
-                }
-                return null;
-            }
-            protected Geometry transformGeometryCollection(GeometryCollection geom, Geometry parent) {
-                List<Polygon> transGeomList = new ArrayList<>();
-                for (int i = 0; i < geom.getNumGeometries(); i++) {
-                    Geometry transformGeom = transform(geom.getGeometryN(i));
-                    if (transformGeom == null) continue;
-                    if (transformGeom.isEmpty()) continue;
-
-                    if( transformGeom instanceof MultiPolygon) {
-                        MultiPolygon transformedMultiPolygon = (MultiPolygon) transformGeom;
-                        for (int j = 0; j < transformedMultiPolygon.getNumGeometries(); j++) {
-                            Polygon polygon = (Polygon) transformedMultiPolygon.getGeometryN(j);
-                            if (polygon == null) continue;
-                            if (polygon.isEmpty()) continue;
-                            transGeomList.add(polygon);
-                        }
-                    }
-                    else if (transformGeom instanceof Polygon){
-                        transGeomList.add((Polygon)transformGeom);
-                    }
-                }
-                return factory.createMultiPolygon(GeometryFactory.toPolygonArray(transGeomList));
-            }
-        };
         Geometry transformed = transform.transform(geometry);
         if( transformed == null ){
             String message = geometry.getClass() + " cannot be converted to a polygon. Check metadata";
@@ -672,9 +603,107 @@ public class SpatialIndexWriter implements FeatureListener {
         return data;
     }
 
+    /**
+     * GeometryTransformer using buffer and bbox to return a MultiPolygon
+     * covering the provided geometry.
+     *
+     * The generated geometry satisfies a {@link Geometry#coveredBy(Geometry)} relationship,
+     * and can acts as a "bounding polygon" to index the provided geometry.
+     */
+    private static class CoveredByTransformer extends GeometryTransformer {
+
+        private final double DISTANCE;
+
+        public CoveredByTransformer(double DISTANCE) {
+            this.DISTANCE = DISTANCE;
+        }
+
+        protected Geometry checkChildPolygon(Polygon polygon, Geometry parent ){
+            if( parent instanceof GeometryCollection){
+                // MultiLineString, MultiPoint, MultiPolygon or GeometryCollection ..
+                return polygon;
+            }
+            else {
+                return factory.createMultiPolygon(new Polygon[]{polygon});
+            }
+        }
+
+        @Override
+        protected Geometry transformLinearRing(LinearRing linearRing, Geometry parent) {
+            if(parent instanceof Polygon) {
+                // used as exterior or interior ring forming a polygon
+                return super.transformLinearRing(linearRing, parent);
+            }
+
+            Polygon polygon = factory.createPolygon(linearRing);
+            Geometry bounds = polygon.buffer(DISTANCE);
+
+            if( bounds instanceof Polygon) {
+                return checkChildPolygon((Polygon) polygon, parent);
+            }
+            return null;
+        }
+
+        @Override
+        protected Geometry transformLineString(LineString lineString, Geometry parent) {
+            Geometry bounds = lineString.buffer(DISTANCE);
+            if( bounds instanceof Polygon) {
+                return checkChildPolygon((Polygon) bounds, parent);
+            }
+            return null;
+        }
+
+        @Override
+        protected Geometry transformPolygon(Polygon polygon, Geometry parent) {
+            return checkChildPolygon( polygon, parent );
+        }
+
+        protected Geometry transformPoint(Point point, Geometry parent) {
+            if (point.isEmpty()){
+                return null; // skip
+            }
+            Geometry bounds = point.buffer(DISTANCE);
+
+            if( bounds instanceof Polygon) {
+                return checkChildPolygon( (Polygon) bounds, parent );
+            }
+            return null;
+        }
+
+        protected Geometry transformGeometryCollection(GeometryCollection geom, Geometry parent) {
+            List<Polygon> transGeomList = new ArrayList<>();
+            for (int i = 0; i < geom.getNumGeometries(); i++) {
+                Geometry transformGeom = transform(geom.getGeometryN(i));
+                if (transformGeom == null) continue;
+                if (transformGeom.isEmpty()) continue;
+
+                if( transformGeom instanceof MultiPolygon) {
+                    MultiPolygon transformedMultiPolygon = (MultiPolygon) transformGeom;
+                    for (int j = 0; j < transformedMultiPolygon.getNumGeometries(); j++) {
+                        Polygon polygon = (Polygon) transformedMultiPolygon.getGeometryN(j);
+                        if (polygon == null) continue;
+                        if (polygon.isEmpty()) continue;
+                        transGeomList.add(polygon);
+                    }
+                }
+                else if (transformGeom instanceof Polygon){
+                    transGeomList.add((Polygon)transformGeom);
+                }
+            }
+            return factory.createMultiPolygon(GeometryFactory.toPolygonArray(transGeomList));
+        }
+    }
+
+    /**
+     * Record stored in STRTree.
+     */
     public class Data {
+        /** FeatureID, can be used to select feature from data store */
         private FeatureId featureId;
+
+        /** Metadata record Id */
         private String metadataId;
+
         private Envelope env;
         private int numBrotherGeometries;
 

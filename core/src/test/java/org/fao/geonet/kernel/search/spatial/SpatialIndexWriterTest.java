@@ -39,15 +39,36 @@ public class SpatialIndexWriterTest {
     protected GeometryFactory factory = JTSFactoryFinder.getGeometryFactory(new Hints(Hints.JTS_SRID, 4326));
 
     @Test
-    public void testToMultiPolygon() throws Exception {
+    public void point() throws Exception {
         checkBounds("POINT(0 0)");
+    }
+    @Test
+    public void points() throws Exception {
+        checkBounds("MULTIPOINT(0 0,1 0,1 1,0 1,0 0)");
+    }
+    @Test
+    public void line() throws Exception {
         checkBounds("LINESTRING(0 0,1 1)");
+    }
+    @Test
+    public void ring() throws Exception {
         checkBounds("LINEARRING(0 0,1 0,1 1,0 1,0 0)");
+    }
+    @Test
+    public void lines() throws Exception {
+        checkBounds("MULTILINESTRING ((10 10, 20 20, 10 40),(40 40, 30 30, 40 20, 30 10))");
+    }
+    @Test
+    public void polygon() throws Exception {
         checkBounds("POLYGON((0 0,1 0,1 1,0 1,0 0))");
         checkBounds("POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10),(20 30, 35 35, 30 20, 20 30))");
-        checkBounds("MULTIPOINT(0 0,1 0,1 1,0 1,0 0)");
-        checkBounds("MULTILINESTRING ((10 10, 20 20, 10 40),(40 40, 30 30, 40 20, 30 10))");
+    }
+    @Test
+    public void polygons() throws Exception {
         checkBounds("MULTIPOLYGON (((30 20, 45 40, 10 40, 30 20)),((15 5, 40 10, 10 20, 5 10, 15 5)))");
+    }
+    @Test
+    public void collection() throws Exception {
         checkBounds( "GEOMETRYCOLLECTION (POINT (40 10),LINESTRING (10 10, 20 20, 10 40),POLYGON ((40 40, 20 45, 45 30, 40 40)))");
     }
 
