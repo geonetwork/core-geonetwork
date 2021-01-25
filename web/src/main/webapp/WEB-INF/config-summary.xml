@@ -243,7 +243,7 @@
       <item facet="createDateYear" sortOrder="asc" max="40"/>
     </summaryType>
     <summaryType name="suggestions">
-      <item facet="keyword"/>
+      <item facet="keyword" max="15"/>
       <item facet="title" sortOrder="desc" max="100"/>
       <item facet="inspireTheme" sortBy="value" sortOrder="asc"/>
       <item facet="denominator" sortBy="value" sortOrder="asc"/>
