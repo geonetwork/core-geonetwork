@@ -130,7 +130,8 @@
            return $http.put('../api/0.1/user/actions/register', $scope.userInfo)
            .success(function(data) {
              $rootScope.$broadcast('StatusUpdated', {
-               title: data
+               title: data,
+               timeout: 0
              });
            })
            .error(function(data) {
@@ -150,7 +151,8 @@
             .success(function(data) {
              $scope.sendPassword = false;
              $rootScope.$broadcast('StatusUpdated', {
-               title: data
+               title: data,
+               timeout: 0
              });
              $scope.usernameToRemind = null;
            })
@@ -172,7 +174,8 @@
            })
             .success(function(data) {
              $rootScope.$broadcast('StatusUpdated', {
-               title: data
+               title: data,
+               timeout: 0
              });
            })
             .error(function(data) {

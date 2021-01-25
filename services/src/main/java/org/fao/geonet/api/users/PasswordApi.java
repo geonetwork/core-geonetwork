@@ -27,6 +27,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.security.ldap.LDAPConstants;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -35,6 +36,7 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.PasswordUtil;
 import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -72,6 +74,7 @@ import jeeves.server.context.ServiceContext;
     tags = "users",
     description = "User operations")
 public class PasswordApi {
+    public static final String LOGGER = Geonet.GEONETWORK + ".api.user";
 
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     @Autowired
@@ -108,18 +111,25 @@ public class PasswordApi {
 
         User user = userRepository.findOneByUsername(username);
         if (user == null) {
+            Log.warning(LOGGER, String.format("User update password. Can't find user '%s'",
+                username));
+
+            // Return response not providing details about the issue, that should be logged.
             return new ResponseEntity<>(String.format(
-                messages.getString("user_not_found"),
+                messages.getString("user_password_notchanged"),
                 XslUtil.encodeForJavaScript(username)
             ), HttpStatus.PRECONDITION_FAILED);
         }
         if (LDAPConstants.LDAP_FLAG.equals(user.getSecurity().getAuthType())) {
+            Log.warning(LOGGER, String.format("User '%s' is authenticated using LDAP. Password can't be sent by email.",
+                username));
+
+            // Return response not providing details about the issue, that should be logged.
             return new ResponseEntity<>(String.format(
-                messages.getString("user_from_ldap_cant_get_password"),
+                messages.getString("user_password_notchanged"),
                 XslUtil.encodeForJavaScript(username)
             ), HttpStatus.PRECONDITION_FAILED);
         }
-
 
         // construct expected change key - only valid today
         String scrambledPassword = user.getPassword();
@@ -191,24 +201,37 @@ public class PasswordApi {
 
         final User user = userRepository.findOneByUsername(username);
         if (user == null) {
+            Log.warning(LOGGER, String.format("User reset password. Can't find user '%s'",
+                username));
+
+            // Return response not providing details about the issue, that should be logged.
             return new ResponseEntity<>(String.format(
-                messages.getString("user_not_found"),
+                messages.getString("user_password_sent"),
                 XslUtil.encodeForJavaScript(username)
-            ), HttpStatus.PRECONDITION_FAILED);
+            ), HttpStatus.CREATED);
         }
+
         if (LDAPConstants.LDAP_FLAG.equals(user.getSecurity().getAuthType())) {
+            Log.warning(LOGGER, String.format("User '%s' is authenticated using LDAP. Password can't be sent by email.",
+                username));
+
+            // Return response not providing details about the issue, that should be logged.
             return new ResponseEntity<>(String.format(
-                messages.getString("user_from_ldap_cant_get_password"),
+                messages.getString("user_password_sent"),
                 XslUtil.encodeForJavaScript(username)
-            ), HttpStatus.PRECONDITION_FAILED);
+            ), HttpStatus.CREATED);
         }
 
         String email = user.getEmail();
         if (StringUtils.isEmpty(email)) {
+            Log.warning(LOGGER, String.format("User reset password. User '%s' has no email",
+                username));
+
+            // Return response not providing details about the issue, that should be logged.
             return new ResponseEntity<>(String.format(
-                messages.getString("user_has_no_email"),
+                messages.getString("user_password_sent"),
                 XslUtil.encodeForJavaScript(username)
-            ), HttpStatus.PRECONDITION_FAILED);
+            ), HttpStatus.CREATED);
         }
 
         // get mail settings
@@ -245,7 +268,7 @@ public class PasswordApi {
         }
         return new ResponseEntity<>(String.format(
             messages.getString("user_password_sent"),
-            XslUtil.encodeForJavaScript(username), email
+            XslUtil.encodeForJavaScript(username)
         ), HttpStatus.CREATED);
     }
 }
