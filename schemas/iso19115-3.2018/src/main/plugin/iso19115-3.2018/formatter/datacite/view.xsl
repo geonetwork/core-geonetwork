@@ -230,7 +230,7 @@
 
 
   <xsl:template mode="toDatacite"
-                match="mdb:identificationInfo/*/mri:extent/*/gex:geographicElement/gex:EX_GeographicBoundingBox[1]">
+                match="mdb:identificationInfo/*/mri:extent[1]">
     <datacite:geoLocations>
       <xsl:for-each select="$metadata/mdb:identificationInfo//gex:EX_GeographicBoundingBox">
         <datacite:geoLocation>
