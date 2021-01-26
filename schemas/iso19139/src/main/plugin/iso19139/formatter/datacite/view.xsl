@@ -219,7 +219,7 @@
 
 
   <xsl:template mode="toDatacite"
-                match="gmd:EX_GeographicBoundingBox[1]">
+                match="gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent[1]">
     <datacite:geoLocations>
       <xsl:for-each select="$metadata//gmd:EX_GeographicBoundingBox">
         <datacite:geoLocation>
