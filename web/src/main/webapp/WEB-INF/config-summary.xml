@@ -137,19 +137,19 @@
 
   <summaryTypes>
     <summaryType name="details" format="DIMENSION">
-      <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
+      <item facet="type" sortBy="label" sortOrder="asc" translator="codelist:gmd:MD_ScopeCode"/>
       <item facet="mdActions"/>
-      <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
+      <item facet="topicCat" sortBy="label" sortOrder="asc" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
       <item facet="inspireThemeURI" sortBy="value" sortOrder="asc" max="35"
             translator="term:http://inspire.ec.europa.eu/theme"/>
       <!--<item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>-->
       <!--<item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>-->
-      <item facet="keyword" max="15"/>
-      <item facet="orgName" max="25"/>
+      <item facet="keyword" sortBy="label" sortOrder="asc" max="15"/>
+      <item facet="orgName" sortBy="label" sortOrder="asc" max="25"/>
       <item facet="sourceCatalog"
             translator="db:org.fao.geonet.repository.SourceRepository:findOneByUuid"/>
       <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
-      <item facet="format" max="15" sortBy="value" sortOrder="asc"/>
+      <item facet="format" max="15" sortBy="label" sortOrder="asc"/>
       <item facet="spatialRepresentationType"
             translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
       <item facet="maintenanceAndUpdateFrequency"
@@ -167,8 +167,8 @@
     </summaryType>
 
     <summaryType name="manager" format="DIMENSION">
-      <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
-      <item facet="category" max="99" sortBy="value"
+      <item facet="type" sortBy="label" sortOrder="asc" translator="codelist:gmd:MD_ScopeCode"/>
+      <item facet="category" max="99" sortBy="label" sortOrder="asc"
             translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
       <item facet="mdStatus" max="10" sortBy="value"
             translator="db:org.fao.geonet.repository.StatusValueRepository:findOne:int"/>
@@ -191,16 +191,16 @@
     flat facet. It's recommended to use format="DIMENSION" for facet.
     See above. -->
     <summaryType name="hits">
-      <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
-      <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
+      <item facet="type" sortBy="label" sortOrder="asc" translator="codelist:gmd:MD_ScopeCode"/>
+      <item facet="topicCat" sortBy="label" sortOrder="asc" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
       <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
       <item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>
       <item facet="inspireThemeURI" sortBy="value" sortOrder="asc" max="35"
             translator="term:http://inspire.ec.europa.eu/theme"/>
-      <item facet="keyword" max="15"/>
+      <item facet="keyword" sortBy="label" sortOrder="asc" max="15"/>
       <item facet="orgName" max="25"/>
       <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
-      <item facet="format" max="15" sortBy="value" sortOrder="asc"/>
+      <item facet="format" max="15" sortBy="label" sortOrder="asc"/>
       <item facet="spatialRepresentationType"
             translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
       <item facet="maintenanceAndUpdateFrequency"
