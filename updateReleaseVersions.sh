@@ -1,20 +1,20 @@
 #!/bin/bash
 
-# Usage to create 2.6.2 release version from 2.6.2-SNAPSHOT
-# In root folder of branch code: ./updateReleaseVersion.sh 2.6.2
+# Usage to create 3.10.2 release version from 3.10-SNAPSHOT
+# In root folder of branch code: ./updateReleaseVersion.sh 3.10.2
 
 function showUsage
 {
-  echo -e "\nThis script is used to update branch from a SNAPSHOT version to a release version. Should be used in branch before creating a new release (tag)." 
+  echo -e "\nThis script is used to update branch from a SNAPSHOT version to a release version. Should be used in branch before creating a new release (tag)."
   echo
   echo -e "Usage: `basename $0 $1` version"
   echo
-  echo -e "Example to update file versions from 2.7.0-SNAPSHOT to 2.7.0:"
-  echo -e "\t`basename $0 $1` 2.7.0"
+  echo -e "Example to update file versions from 2.7.0-SNAPSHOT to 3.10.2:"
+  echo -e "\t`basename $0 $1` 3.10.2"
   echo
 }
 
-if [ "$1" = "-h" ] 
+if [ "$1" = "-h" ]
 then
 	showUsage
 	exit
@@ -45,17 +45,23 @@ else
 fi
 
 echo
-echo 'Your Operating System is' $OSTYPE 
+echo 'Your Operating System is' $OSTYPE
 echo 'sed will use the following option: ' $sedopt
 echo
 
 version="$1"
+# Remove the patch version: 3.10.2 --> 3.10
+versionnopatchinfo="${version%.*}"
 
 # Update version in sphinx doc files
-sed $sedopt "s/${version}-SNAPSHOT/${version}/g" docs/manuals/source/conf.py
+sed $sedopt "s/${versionnopatchinfo}-SNAPSHOT/${version}/g" docs/manuals/source/conf.py
 
 # Update release subversion
+sed $sedopt "s/version=.*/version=${version}/g" release/build.properties
 sed $sedopt "s/subVersion=SNAPSHOT/subVersion=0/g" release/build.properties
 
 # Update version pom files
-find . -name pom.xml -exec sed $sedopt "s/${version}-SNAPSHOT/${version}/g" {} \;
+mvn versions:set-property -Dproperty=gn.project.version -DnewVersion=${version}
+echo 'Module'
+mvn versions:set -DnewVersion=${version} -DgenerateBackupPoms=false -Pwith-doc
+echo
