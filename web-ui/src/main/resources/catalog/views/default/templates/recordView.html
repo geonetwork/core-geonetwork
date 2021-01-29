@@ -23,11 +23,23 @@
   </div>
 
   <div class="container">
-    <div class="alert alert-warning"
-        data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
-        data-translate=""
-        data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}', url: '{{url | encodeURIComponent}}'}">
+    <div ng-if="!authenticated" class="alert alert-warning"
+         data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
+         data-translate=""
+         data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}', url: '{{url | encodeURIComponent}}'}">
       recordNotFound
+    </div>
+    <div ng-if="authenticated && user.profile != 'Administrator'" class="alert alert-warning"
+         data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
+         data-translate=""
+         data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}', url: '{{url | encodeURIComponent}}'}">
+      recordNotFoundAuthenticatedUser
+    </div>
+    <div ng-if="authenticated && user.profile === 'Administrator'" class="alert alert-warning"
+         data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
+         data-translate=""
+         data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}', url: '{{url | encodeURIComponent}}'}">
+      recordNotFoundAuthenticatedAdministrator
     </div>
     <div class="row"
         data-ng-show="!mdView.loadDetailsFinished">
