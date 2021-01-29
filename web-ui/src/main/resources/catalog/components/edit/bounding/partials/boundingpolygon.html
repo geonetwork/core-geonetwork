@@ -8,27 +8,26 @@
 <!-- draw tool & select boxes -->
 <div class="row">
   <div class="col-xs-12 col-sm-6 col-sm-push-6" ng-if="!ctrl.readOnly">
-    <label class="text-muted control-label" translate>drawOnMap</label>
-    <br />
-    <div gi-btn-group>
-      <div class="btn-group">
-        <div class="btn-group">
-          <button class="btn btn-default btn-warning"
-            gi-btn="active" ng-model="ctrl.drawInteraction.active">
-            <span class="fa fa-pencil"></span>&nbsp;
-            <span translate>Polygon</span>
-          </button>
-          <button class="btn btn-default btn-warning"
-            gi-btn="active" ng-model="ctrl.drawLineInteraction.active">
-            <span class="fa fa-pencil"></span>&nbsp;
-            <span translate>Line</span>
-          </button>
-        </div>
-      </div>
-      <button class="btn btn-default btn-warning"
-        gi-btn="active" ng-model="ctrl.modifyInteraction.active">
+    <div class="pull-right">
+      <label class="text-muted control-label" translate>drawOnMap</label>
+      <br />
+      <button class="btn btn-default btn-warning pull-left gn-margin-right"
+              ng-click="ctrl.setActiveDrawInteraction('MultiPolygon')"
+              ng-class="{'active': ctrl.activeDrawType === 'MultiPolygon'}">
         <span class="fa fa-pencil"></span>&nbsp;
-        <span translate>modifyGeometry</span>
+        <span translate>Polygon</span>
+      </button>
+      <button class="btn btn-default btn-warning pull-left gn-margin-right"
+              ng-click="ctrl.setActiveDrawInteraction('LineString')"
+              ng-class="{'active': ctrl.activeDrawType === 'LineString'}">
+        <span class="fa fa-pencil"></span>&nbsp;
+        <span translate>Line</span>
+      </button>
+      <button class="btn btn-default btn-warning pull-left"
+              ng-click="ctrl.setActiveDrawInteraction('Point')"
+              ng-class="{'active': ctrl.activeDrawType === 'Point'}">
+        <span class="fa fa-pencil"></span>&nbsp;
+        <span translate>Point</span>
       </button>
     </div>
   </div>
@@ -39,15 +38,15 @@
     <div class="flex-row width-100">
       <div class="flex-nogrow">
         <select ng-model="ctrl.currentFormat"
-          ng-options="format for format in ctrl.formats"
-          ng-change="ctrl.handleInputOptionsChange()">
+                ng-options="format for format in ctrl.formats"
+                ng-change="ctrl.handleInputOptionsChange()">
         </select>
       </div>
       <div class="flex-spacer"></div>
       <div class="flex-shrink">
         <select ng-model="ctrl.currentProjection"
-          ng-options="proj.code as proj.label for proj in ctrl.projections"
-          ng-change="ctrl.handleInputOptionsChange()">
+                ng-options="proj.code as proj.label for proj in ctrl.projections"
+                ng-change="ctrl.handleInputOptionsChange()">
         </select>
       </div>
     </div>
@@ -56,7 +55,7 @@
 
 <div class="spacer" />
 
-<div ng-if="ctrl.dataOlProjection == null" class="alert alert-danger"
+<div ng-if="ctrl.polygonXml && ctrl.dataOlProjection == null" class="alert alert-danger"
      data-translate=""
      data-translate-values="{srsName:'{{ctrl.dataProjection}}'}">
   badGmlProjectionCode
@@ -66,24 +65,24 @@
 <div class="row">
   <div class="col-md-12">
     <div class="has-feedback"
-      ng-class="{ 'has-success': ctrl.fromTextInput && !ctrl.parseError, 'has-error': ctrl.parseError }">
+         ng-class="{ 'has-success': ctrl.fromTextInput && !ctrl.parseError, 'has-error': ctrl.parseError }">
       <label class="text-muted control-label" translate>inputGeometryText</label>
       <textarea class="form-control" rows="4" ng-model="ctrl.inputGeometry"
-        ng-model-options="{ debounce: 300 }"
-        placeholder="{{'inputGeometryText' | translate}}"
-        ng-change="ctrl.handleInputChange()"
-        ng-readonly="ctrl.readOnly"/>
+                ng-model-options="{ debounce: 300 }"
+                placeholder="{{'inputGeometryText' | translate}}"
+                ng-change="ctrl.handleInputChange()"
+                ng-readonly="ctrl.readOnly"/>
       <small class="text-danger"
-        ng-show="ctrl.fromTextInput && ctrl.parseError">
+             ng-show="ctrl.fromTextInput && ctrl.parseError">
         {{ 'inputGeometryIsInvalid' | translate}} {{ctrl.parseError}}</small>
       <small class="text-success"
-        ng-show="ctrl.fromTextInput && !ctrl.parseError" translate>
+             ng-show="ctrl.fromTextInput && !ctrl.parseError" translate>
         inputGeometryIsValid</small>
       <small class="text-muted"
-        ng-show="!ctrl.fromTextInput && !ctrl.readOnly" translate>
+             ng-show="!ctrl.fromTextInput && !ctrl.readOnly" translate>
         inputGeometryHint</small>
       <small class="text-muted"
-        ng-show="ctrl.readOnly" translate>
+             ng-show="ctrl.readOnly" translate>
         inputGeometryReadOnlyHint</small>
     </div>
   </div>
@@ -91,4 +90,4 @@
 
 <!-- final output in GML -->
 <input name="{{ctrl.identifier}}"
-  type="hidden" value="{{ctrl.outputPolygonXml}}"/>
+       type="hidden" value="{{ctrl.outputPolygonXml}}"/>
