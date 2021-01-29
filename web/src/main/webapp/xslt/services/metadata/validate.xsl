@@ -127,7 +127,7 @@
     <xsl:variable name="errors" select="count(.//svrl:failed-assert)"/>
     <xsl:variable name="successes" select="count(.//svrl:successful-report)"/>
     <xsl:variable name="schematronVerificationError" select="./geonet:schematronVerificationError"/>
-    
+
     <report>
       <id>
         <xsl:value-of select="$rulename"/>
@@ -137,7 +137,7 @@
       </displayPriority>
       <label>
         <xsl:variable name="translatedTitle"
-                      select="/response/schematronTranslations/*[name() = $rulename]/strings/schematron.title"/>
+                      select="/root/schematronTranslations/*[name() = $rulename]/strings/schematron.title"/>
         <xsl:variable name="defaultTitle"
                       select="svrl:schematron-output/@title"/>
         <xsl:choose>
