@@ -37,6 +37,9 @@ import io.swagger.v3.oas.models.servers.ServerVariables;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -46,8 +49,14 @@ import java.util.List;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_PLATFORM_VERSION;
 
 @Configuration
+@EnableCaching
 @OpenAPIDefinition
 public class OpenApiConfig  {
+
+    @Bean(name = "cacheManager")
+    public CacheManager cacheManager() {
+        return new ConcurrentMapCacheManager("translations");
+    }
 
     @Bean
     @Autowired

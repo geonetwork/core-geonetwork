@@ -67,7 +67,7 @@ public class TranslationApiTest extends AbstractServiceIntegrationTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/srv/api/tools/i18n/db/translations/test")
+        this.mockMvc.perform(put("/srv/api/i18n/db/translations/test")
             .content("{\"eng\": \"Africa\", \"fre\": \"Afrique\"}")
             .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
@@ -80,13 +80,13 @@ public class TranslationApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(get("/srv/api/tools/i18n/db/translations")
+        this.mockMvc.perform(get("/srv/api/i18n/db/translations")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.test", is("Africa")));
 
 
-        this.mockMvc.perform(put("/srv/api/tools/i18n/db/translations/test")
+        this.mockMvc.perform(put("/srv/api/i18n/db/translations/test")
             .content("{\"eng\": \"West Africa\", \"fre\": \"Afrique\"}")
             .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
@@ -96,7 +96,7 @@ public class TranslationApiTest extends AbstractServiceIntegrationTest {
         Translations value = translationsRepository.findOneByLangIdAndFieldName("eng", "test");
         Assert.assertTrue(value.getValue().equals("West Africa"));
 
-        this.mockMvc.perform(delete("/srv/api/tools/i18n/db/translations/test")
+        this.mockMvc.perform(delete("/srv/api/i18n/db/translations/test")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk());
 
@@ -104,7 +104,7 @@ public class TranslationApiTest extends AbstractServiceIntegrationTest {
         Assert.assertTrue(t.size() == 0);
 
 
-        this.mockMvc.perform(delete("/srv/api/tools/i18n/db/translations/notExisting")
+        this.mockMvc.perform(delete("/srv/api/i18n/db/translations/notExisting")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404));
     }

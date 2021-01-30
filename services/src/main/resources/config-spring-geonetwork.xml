@@ -164,4 +164,36 @@
 
   <bean id="userFeedbackService" class="org.fao.geonet.api.userfeedback.service.UserFeedbackDatabaseService"/>
 
+  <util:map id="translationPacks">
+    <!-- TODO: Remove gn_schema_translations_loader client side loader
+     (which in default GN adds 5 client calls for empty files) and
+     add a loader here. -->
+    <entry key="login">
+      <util:list>
+        <value>json/core</value>
+      </util:list>
+    </entry>
+    <entry key="search">
+      <util:list>
+        <value>json/core+search+v4</value>
+        <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:DS_InitiativeTypeCode+gmd:MD_SpatialRepresentationTypeCode</value>
+        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode</value>
+        <value>db/MetadataCategory+Operation+Group+StatusValue+Source</value>
+      </util:list>
+    </entry>
+    <entry key="admin">
+      <util:list>
+        <value>json/core+search+admin+v4</value>
+        <value>db/MetadataCategory+Operation+Group+StatusValue+Source</value>
+      </util:list>
+    </entry>
+    <entry key="editor">
+      <util:list>
+        <value>json/core+search+edit+v4</value>
+        <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:DS_InitiativeTypeCode+gmd:MD_SpatialRepresentationTypeCode</value>
+        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode</value>
+        <value>db/MetadataCategory+Operation+Group+StatusValue+Source</value>
+      </util:list>
+    </entry>
+  </util:map>
 </beans>
