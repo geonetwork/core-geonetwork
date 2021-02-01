@@ -137,7 +137,8 @@ public class DoiApi {
         return new ResponseEntity<>(doiInfo, HttpStatus.CREATED);
     }
 
-    //    Do not provide support for DOI removal ?
+
+
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Remove a DOI (this is not recommended, DOI are supposed to be persistent once created. This is mainly here for testing).")
     @RequestMapping(value = "/{metadataUuid}/doi",
@@ -153,7 +154,9 @@ public class DoiApi {
         @ApiResponse(responseCode = "500", description = "Service unavailable."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
-    public ResponseEntity deleteDoi(
+    public
+    @ResponseBody
+    ResponseEntity unregisterDoi(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
             required = true)
@@ -170,7 +173,6 @@ public class DoiApi {
         doiManager.unregisterDoi(metadata, serviceContext);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 
 //    TODO: At some point we may add support for DOI States management
 //    https://support.datacite.org/docs/mds-api-guide#section-doi-states
