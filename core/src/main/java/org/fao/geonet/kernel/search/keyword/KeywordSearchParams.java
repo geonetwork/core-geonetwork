@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -179,10 +180,8 @@ public class KeywordSearchParams {
         MalformedQueryException, QueryEvaluationException, AccessDeniedException {
     	AtomicInteger id = new AtomicInteger();
     	LinkedHashSet<KeywordBean> results = new LinkedHashSet<>();
-        for (Thesaurus thesaurus : finder.getThesauriMap().values()) {
-            if (thesaurus.getKey().equals(ALL_THESAURUS_KEY)) {
-                continue;
-            }
+
+        for (Thesaurus thesaurus : getThesaurusListToSearchInto(finder)) {
             if (thesauriDomainName == null || thesauriDomainName.equals(thesaurus.getDname())) {
                 Query<KeywordBean> query = queryBuilder.limit(maxResults - results.size()).build();
                 id = executeQuery(id, results, thesaurus, query, maxResults);
@@ -209,10 +208,8 @@ public class KeywordSearchParams {
         AtomicInteger id = new AtomicInteger();
 
         TreeSet<KeywordBean> results = new TreeSet<>(this.comparator);
-        for (Thesaurus thesaurus : finder.getThesauriMap().values()) {
-            if (thesaurus.getKey().equals(ALL_THESAURUS_KEY)) {
-                continue;
-            }
+
+        for (Thesaurus thesaurus : getThesaurusListToSearchInto(finder)) {
             Query<KeywordBean> query = queryBuilder.build();
             if (thesauriDomainName == null || thesauriDomainName.equals(thesaurus.getDname())) {
                 id = executeQuery(id, results, thesaurus, query, -1);
@@ -220,6 +217,23 @@ public class KeywordSearchParams {
         }
 
         return setToList(results);
+    }
+
+    private Collection<Thesaurus> getThesaurusListToSearchInto(ThesaurusFinder finder) {
+        Map<String, Thesaurus> thesauri = finder.getThesauriMap();
+        AllThesaurus allThesaurus = (AllThesaurus) thesauri.get(ALL_THESAURUS_KEY);
+        Collection<Thesaurus> thesauriToSearchInto = new ArrayList<>();
+        List<String> exclude = allThesaurus == null
+            ? new ArrayList<>()
+            : allThesaurus.getAllThesaurusExclude();
+        thesauriToSearchInto = thesauri.values()
+            .stream()
+            .filter(t ->
+                !t.getKey().equals(ALL_THESAURUS_KEY)
+                    && exclude != null
+                    && !exclude.contains(t.getKey()))
+            .collect(Collectors.toList());
+        return thesauriToSearchInto;
     }
 
     private ArrayList<KeywordBean> setToList(Set<KeywordBean> results) {

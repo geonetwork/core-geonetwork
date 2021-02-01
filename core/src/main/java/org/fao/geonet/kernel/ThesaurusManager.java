@@ -76,6 +76,16 @@ public class ThesaurusManager implements ThesaurusFinder {
     private Path thesauriDirectory = null;
     private boolean initialized = false;
     private AllThesaurus allThesaurus;
+    private List<String> allThesaurusExclude = new ArrayList<>();
+
+    public void setAllThesaurusExclude(List<String> allThesaurusExclude) {
+        this.allThesaurusExclude = allThesaurusExclude;
+    }
+
+    public List<String> getAllThesaurusExclude() {
+        return allThesaurusExclude;
+    }
+
 
     /**
      * Initialize ThesaurusManager.
@@ -92,7 +102,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         this.settingManager = context.getBean(SettingManager.class);
 
         final String siteURL = this.settingManager.getSiteURL(context);
-        this.allThesaurus = new AllThesaurus(this, getIsoLanguagesMapper(context), siteURL);
+        this.allThesaurus = new AllThesaurus(this, getIsoLanguagesMapper(context), siteURL, allThesaurusExclude);
 
         // Get Sesame interface
         service = Sesame.getService();

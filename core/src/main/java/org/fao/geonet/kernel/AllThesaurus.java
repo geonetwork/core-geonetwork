@@ -51,6 +51,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -75,10 +76,13 @@ public class AllThesaurus extends Thesaurus {
     private final IsoLanguagesMapper isoLangMapper;
     private final String downloadUrl;
     private final String keywordUrl;
+    private List<String> allThesaurusExclude = new ArrayList<>();
 
-    public AllThesaurus(ThesaurusFinder thesaurusFinder, IsoLanguagesMapper isoLangMapper, String siteUrl) {
+
+    public AllThesaurus(ThesaurusFinder thesaurusFinder, IsoLanguagesMapper isoLangMapper, String siteUrl, List<String> allThesaurusExclude) {
         this.thesaurusFinder = thesaurusFinder;
         this.isoLangMapper = isoLangMapper;
+        this.allThesaurusExclude = allThesaurusExclude;
 
         this.downloadUrl = buildDownloadUrl(FNAME, TYPE, DNAME, siteUrl);
         this.keywordUrl = buildKeywordUrl(FNAME, TYPE, DNAME, siteUrl);
@@ -97,6 +101,14 @@ public class AllThesaurus extends Thesaurus {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<String> getAllThesaurusExclude() {
+        return allThesaurusExclude;
+    }
+
+    public void setAllThesaurusExclude(List<String> allThesaurusExclude) {
+        this.allThesaurusExclude = allThesaurusExclude;
     }
 
     @Override
@@ -329,7 +341,8 @@ public class AllThesaurus extends Thesaurus {
 
     private <R> R onThesauri(R defaultVal, Function<Thesaurus, R> function) {
         for (Thesaurus thesaurus : this.thesaurusFinder.getThesauriMap().values()) {
-            if (ALL_THESAURUS_KEY.equals(thesaurus.getKey())) {
+            if (ALL_THESAURUS_KEY.equals(thesaurus.getKey())
+                || allThesaurusExclude.contains(thesaurus.getKey())) {
                 continue;
             }
             final R result = function.apply(thesaurus);
