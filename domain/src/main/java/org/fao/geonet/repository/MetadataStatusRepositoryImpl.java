@@ -37,6 +37,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatus_;
@@ -104,6 +105,7 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
                                              List<Integer> ownerIds,
                                              List<Integer> authorIds,
                                              List<Integer> recordIds,
+                                             List<String> statusIds,
                                              String dateFrom, String dateTo,
                                              @Nullable Pageable pageable) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
@@ -124,6 +126,7 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
         Predicate authorPredicate = null;
         Predicate ownerPredicate = null;
         Predicate recordPredicate = null;
+        Predicate statusIdPredicate = null;
         if (ids != null) {
             final Path<Integer> idPath = metadataStatusRoot.get(MetadataStatus_.id);
             idPredicate = idPath.in(ids);
@@ -153,6 +156,10 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
             recordPredicate = recordIdPath.in(recordIds);
         }
 
+        if (CollectionUtils.isNotEmpty(statusIds)) {
+            statusIdPredicate = statusIdPath.in(statusIds);
+        }
+
         Predicate whereClause = cb.and(statusIdJoin);
         if (idPredicate != null) {
             whereClause.getExpressions().add(idPredicate);
@@ -171,6 +178,9 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
         }
         if (recordPredicate != null) {
             whereClause.getExpressions().add(recordPredicate);
+        }
+        if (statusIdPredicate != null) {
+            whereClause.getExpressions().add(statusIdPredicate);
         }
 
 

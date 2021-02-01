@@ -33,6 +33,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -390,6 +391,7 @@ public class MetadataWorkflowApi {
             @ApiParam(value = "End date", required = false) @RequestParam(required = false) String dateTo,
             @ApiParam(value = "From page", required = false) @RequestParam(required = false, defaultValue = "0") Integer from,
             @ApiParam(value = "Number of records to return", required = false) @RequestParam(required = false, defaultValue = "100") Integer size,
+            @ApiParam(value = "One or more status id. Default is all.", required = false) @RequestParam(required = false) List<String> statusIds,
             HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
@@ -402,14 +404,16 @@ public class MetadataWorkflowApi {
                 (type != null && type.length > 0) ||
                 (author != null && author.length > 0) ||
                 (owner != null && owner.length > 0) ||
-                (record != null && record.length > 0)) {
+                (record != null && record.length > 0)||
+                CollectionUtils.isNotEmpty(statusIds)) {
             metadataStatuses = metadataStatusRepository.searchStatus(
                     id != null && id.length > 0 ? Arrays.asList(id) : null,
                     uuid != null && uuid.length > 0 ? Arrays.asList(uuid) : null,
                     type != null && type.length > 0 ? Arrays.asList(type) : null,
                     author != null && author.length > 0 ? Arrays.asList(author) : null,
                     owner != null && owner.length > 0 ? Arrays.asList(owner) : null,
-                    record != null && record.length > 0 ? Arrays.asList(record) : null, dateFrom, dateTo, pageRequest);
+                    record != null && record.length > 0 ? Arrays.asList(record) : null,
+                    statusIds, dateFrom, dateTo, pageRequest);
         } else {
             metadataStatuses = metadataStatusRepository.findAll(pageRequest).getContent();
         }
