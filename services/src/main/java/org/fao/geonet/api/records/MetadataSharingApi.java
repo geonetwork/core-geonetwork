@@ -266,33 +266,29 @@ public class MetadataSharingApi {
     )
         throws Exception {
       try (ServiceContext context = ApiUtils.createServiceContext(request)) {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
-        ApplicationContext appContext = ApplicationContextHolder.get();
+          AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
+          ApplicationContext appContext = ApplicationContextHolder.get();
 
-        boolean skip = false;
+          boolean skipAllReservedGroup = false;
 
-        //--- in case of owner, privileges for groups 0,1 and GUEST are disabled
-        //--- and are not sent to the server. So we cannot remove them
-        UserSession us = ApiUtils.getUserSession(session);
-        boolean isAdmin = Profile.Administrator == us.getProfile();
-        if (!isAdmin && !accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
-            skip = true;
-        }
+          //--- in case of owner, privileges for groups 0,1 and GUEST are disabled
+          //--- and are not sent to the server. So we cannot remove them
+          UserSession us = ApiUtils.getUserSession(session);
+          boolean isAdmin = Profile.Administrator == us.getProfile();
+          if (!isAdmin && !accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
+              skipAllReservedGroup = true;
+          }
 
-        if (sharing.isClear()) {
-            dataManager.deleteMetadataOper(context, String.valueOf(metadata.getId()), skip);
-        }
+          List<Operation> operationList = operationRepository.findAll();
+          Map<String, Integer> operationMap = new HashMap<>(operationList.size());
+          for (Operation o : operationList) {
+              operationMap.put(o.getName(), o.getId());
+          }
 
-        List<Operation> operationList = operationRepository.findAll();
-        Map<String, Integer> operationMap = new HashMap<>(operationList.size());
-        for (Operation o : operationList) {
-            operationMap.put(o.getName(), o.getId());
-        }
-
-        List<GroupOperations> privileges = sharing.getPrivileges();
-        setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
-            ApiUtils.getUserSession(session).getUserIdAsInt(), null, request);
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+          List<GroupOperations> privileges = sharing.getPrivileges();
+          setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
+              ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, null, request);
+          dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
       }
     }
 
@@ -412,7 +408,10 @@ public class MetadataSharingApi {
         AbstractMetadata metadata,
         Map<String, Integer> operationMap,
         List<GroupOperations> privileges,
-        Integer userId, MetadataProcessingReport report, HttpServletRequest request) throws Exception {
+        Integer userId,
+        boolean skipAllReservedGroup,
+        MetadataProcessingReport report,
+        HttpServletRequest request) throws Exception {
         if (privileges != null) {
 
             Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
@@ -452,6 +451,10 @@ public class MetadataSharingApi {
 
             SharingResponse sharingBefore = getRecordSharingSettings(metadata.getUuid(), request.getSession(), request);
 
+            if (sharing.isClear()) {
+                dataManager.deleteMetadataOper(context, String.valueOf(metadata.getId()), skipAllReservedGroup);
+            }
+
             for (GroupOperations p : privileges) {
                 for (Map.Entry<String, Boolean> o : p.getOperations().entrySet()) {
                     Integer opId = operationMap.get(o.getKey());
@@ -490,8 +493,10 @@ public class MetadataSharingApi {
                 }
             }
 
-            if(sharingChanges) {
-                new RecordPrivilegesChangeEvent(metadata.getId(), userId, ObjectJSONUtils.convertObjectInJsonObject(sharingBefore.getPrivileges(), RecordPrivilegesChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(privileges, RecordPrivilegesChangeEvent.FIELD)).publish(appContext);
+            if (sharingChanges) {
+                new RecordPrivilegesChangeEvent(metadata.getId(), userId,
+                    ObjectJSONUtils.convertObjectInJsonObject(sharingBefore.getPrivileges(), RecordPrivilegesChangeEvent.FIELD),
+                    ObjectJSONUtils.convertObjectInJsonObject(privileges, RecordPrivilegesChangeEvent.FIELD)).publish(appContext);
             }
         }
     }
@@ -1090,8 +1095,8 @@ public class MetadataSharingApi {
 
         List<GroupOperations> privileges = sharing.getPrivileges();
         setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
-            ApiUtils.getUserSession(session).getUserIdAsInt(), null, request);
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+            ApiUtils.getUserSession(session).getUserIdAsInt(), true, null, request);
+          dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
       }
     }
 
@@ -1132,14 +1137,9 @@ public class MetadataSharingApi {
                 } else if (!accessMan.canEdit(context, String.valueOf(metadata.getId()))) {
                     report.addNotEditableMetadataId(metadata.getId());
                 } else {
-                    boolean skip = false;
+                    boolean skipAllReservedGroup = false;
                     if (!isAdmin && accessMan.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
-                        skip = true;
-                    }
-
-                    if (sharing.isClear()) {
-                        dataMan.deleteMetadataOper(context,
-                            String.valueOf(metadata.getId()), skip);
+                        skipAllReservedGroup = true;
                     }
 
                     OperationRepository operationRepository = appContext.getBean(OperationRepository.class);
@@ -1172,13 +1172,13 @@ public class MetadataSharingApi {
 
                             if (!allGroupPrivileges.isEmpty()) {
                                 setOperations(sharing, dataMan, context, appContext, md, operationMap, allGroupPrivileges,
-                                    ApiUtils.getUserSession(session).getUserIdAsInt(), report, request);
+                                    ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, report, request);
                             }
                         }
 
                         if (!privileges.isEmpty()) {
                             setOperations(sharing, dataMan, context, appContext, metadata, operationMap, privileges,
-                                ApiUtils.getUserSession(session).getUserIdAsInt(), report, request);
+                                ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, report, request);
                         }
 
                         report.incrementProcessedRecords();
@@ -1187,7 +1187,7 @@ public class MetadataSharingApi {
 
                     } else {
                         setOperations(sharing, dataMan, context, appContext, metadata, operationMap, privileges,
-                            ApiUtils.getUserSession(session).getUserIdAsInt(), report, request);
+                            ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, report, request);
 
                         report.incrementProcessedRecords();
                         listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
