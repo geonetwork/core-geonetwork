@@ -314,19 +314,21 @@
                     scope.groups = data;
                   }
 
-                  // Select by default the first group.
-                  if (setDefaultValue && (angular.isUndefined(scope.ownerGroup) ||
-                    scope.ownerGroup === '' ||
-                    scope.ownerGroup === null) && data) {
-                    // Requires to be converted to string, otherwise
-                    // angularjs adds empty non valid option
-                    scope.ownerGroup = scope.groups[0].id + "";
-                  }
                   if (optional) {
                     scope.groups.unshift({
                       id: 'undefined',
                       name: ''
                     });
+                  }
+
+                  // Select by default the first group.
+                  if (setDefaultValue && (
+                    angular.isUndefined(scope.ownerGroup) ||
+                    scope.ownerGroup === '' ||
+                    scope.ownerGroup === null) && data) {
+                    // Requires to be converted to string, otherwise
+                    // angularjs adds empty non valid option
+                    scope.ownerGroup = scope.groups[0].id + "";
                   }
                 });
           }
