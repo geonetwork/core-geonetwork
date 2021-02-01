@@ -135,7 +135,6 @@ public class TranslationApi implements ApplicationContextAware {
     ) throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         String language = languageUtils.locale2gnCode(locale.getISO3Language());
-
         List<Translations> translations = translationsRepository.findAllByFieldName(key);
         if(translations.size() == 0) {
             throw new ResourceNotFoundException(String.format(

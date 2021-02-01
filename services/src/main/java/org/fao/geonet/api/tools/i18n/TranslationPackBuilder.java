@@ -31,6 +31,7 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.*;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -283,13 +284,14 @@ public class TranslationPackBuilder {
         List<String> fileNameKeys) {
         HashMap<String, String> translations = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
+        String iso2letterLangCode = XslUtil.twoCharLangCode(language, "eng");
 
         fileNameKeys.forEach(key -> {
             if (key.equals("schemas")) {
                 schemaManager.getSchemas().forEach(s -> {
                     String filename = String.format(
                         "/META-INF/catalog/locales/%s-schema-%s.json",
-                        language.substring(0, 2), s);
+                        iso2letterLangCode, s);
                     ClassPathResource resource = new ClassPathResource(filename);
                     if(resource.exists()) {
                         try (InputStream stream = resource.getInputStream()){
@@ -302,7 +304,7 @@ public class TranslationPackBuilder {
                     }
                 });
             } else {
-                String filename = String.format("%s-%s.json", language.substring(0, 2), key);
+                String filename = String.format("%s-%s.json", iso2letterLangCode, key);
                 Path jsonFile = jsonLocaleDirectory.resolve(filename);
                 if (jsonFile.toFile().exists()) {
                     try {
