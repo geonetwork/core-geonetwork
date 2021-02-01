@@ -52,8 +52,8 @@
           -->
     <xsl:for-each select="gmd:polygon/(gml:*|gml320:*)[
                             local-name() != 'MultiCurve' and
-                            count(*) > 0 and
-                            .//(gml:posList|gml320:posList) != '']">
+                            count(*) > 0 and (
+                            .//(gml:posList|gml320:posList) != '' or .//(gml:pos|gml320:pos) != '')]">
       <xsl:copy-of copy-namespaces="no" select="."/>
     </xsl:for-each>
   </xsl:template>

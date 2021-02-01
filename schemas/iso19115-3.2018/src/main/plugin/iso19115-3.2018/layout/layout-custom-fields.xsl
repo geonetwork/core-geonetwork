@@ -276,7 +276,7 @@
       <xsl:with-param name="subTreeSnippet">
 
         <xsl:variable name="geometry">
-          <xsl:apply-templates select="gex:polygon/gml:MultiSurface|gex:polygon/gml:LineString"
+          <xsl:apply-templates select="gex:polygon/gml:MultiSurface|gex:polygon/gml:LineString|gex:polygon/gml:Point"
                                mode="gn-element-cleaner"/>
         </xsl:variable>
 
