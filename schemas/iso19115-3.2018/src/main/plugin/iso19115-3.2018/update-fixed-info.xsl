@@ -285,6 +285,7 @@
   <!-- Add required gml attributes if missing -->
   <xsl:template match="gml:Polygon[not(@gml:id) and not(@srsName)]|
                        gml:MultiSurface[not(@gml:id) and not(@srsName)]|
+                       gml:Point[not(@gml:id) and not(@srsName)]|
                        gml:LineString[not(@gml:id) and not(@srsName)]">
     <xsl:copy>
       <xsl:attribute name="gml:id">

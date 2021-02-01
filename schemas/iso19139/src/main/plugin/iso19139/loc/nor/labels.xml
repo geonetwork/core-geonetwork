@@ -263,7 +263,7 @@
     </description>
   </element>
   <element name="gmd:EX_BoundingPolygon" id="341.0">
-    <label>Bounding Polygon</label>
+    <label>Bounding geometry</label>
     <description>Boundary enclosing the dataset, expressed as the closed
       set of (x,y)
       coordinates of the polygon (last point replicates first point)
