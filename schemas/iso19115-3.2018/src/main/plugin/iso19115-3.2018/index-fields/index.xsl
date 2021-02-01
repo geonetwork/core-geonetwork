@@ -1137,7 +1137,7 @@
                     select="util:getSettingValue('system/index/indexingTimeRecordLink')" />
       <xsl:if test="$indexingTimeRecordLink = 'true'">
         <xsl:variable name="parentUuid"
-                      select=".//mri:associatedResource/*[mri:associationType/*/@codeListValue = parentAssociatedResourceType]/mri:metadataReference/@uuidref[. != '']"/>
+                      select=".//mri:associatedResource/*[mri:associationType/*/@codeListValue = $parentAssociatedResourceType]/mri:metadataReference/@uuidref[. != '']"/>
         <xsl:variable name="recordsLinks"
                       select="util:getTargetAssociatedResourcesAsNode(
                                         $identifier,
