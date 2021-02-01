@@ -35,10 +35,13 @@ import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -95,6 +98,17 @@ public class TranslationPackBuilder {
         this.packages = packages;
     }
 
+    @PostConstruct
+    public void init() {
+        jsonLocaleDirectory =
+            dataDirectory.getWebappDir().endsWith("src/main/webapp")
+                // Dev mode
+                ? dataDirectory.getWebappDir()
+                // web/src/main/webapp
+                .getParent().getParent().getParent().getParent()
+                .resolve("web-ui/src/main/resources/catalog/locales")
+                : dataDirectory.getWebappDir().resolve("catalog").resolve("locales");
+    }
 
     @Cacheable(
         value = "translations",
@@ -268,21 +282,39 @@ public class TranslationPackBuilder {
         String language,
         List<String> fileNameKeys) {
         HashMap<String, String> translations = new HashMap<>();
-        jsonLocaleDirectory = dataDirectory.getWebappDir().resolve("catalog").resolve("locales");
+        ObjectMapper mapper = new ObjectMapper();
+
         fileNameKeys.forEach(key -> {
-            String filename = String.format("%s-%s.json", language.substring(0, 2), key);
-            Path jsonFile = jsonLocaleDirectory.resolve(filename);
-            if (jsonFile.toFile().exists()) {
-                ObjectMapper mapper = new ObjectMapper();
-                try {
-                    translations.putAll(
-                        mapper.readValue(jsonFile.toFile(), Map.class)
-                    );
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
+            if (key.equals("schemas")) {
+                schemaManager.getSchemas().forEach(s -> {
+                    String filename = String.format(
+                        "/META-INF/catalog/locales/%s-schema-%s.json",
+                        language.substring(0, 2), s);
+                    ClassPathResource resource = new ClassPathResource(filename);
+                    if(resource.exists()) {
+                        try (InputStream stream = resource.getInputStream()){
+                            translations.putAll(
+                                mapper.readValue(stream, Map.class)
+                            );
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        }
+                    }
+                });
             } else {
-                // Not existing file in package.
+                String filename = String.format("%s-%s.json", language.substring(0, 2), key);
+                Path jsonFile = jsonLocaleDirectory.resolve(filename);
+                if (jsonFile.toFile().exists()) {
+                    try {
+                        translations.putAll(
+                            mapper.readValue(jsonFile.toFile(), Map.class)
+                        );
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                } else {
+                    // Not existing file in package.
+                }
             }
         });
         return translations;
