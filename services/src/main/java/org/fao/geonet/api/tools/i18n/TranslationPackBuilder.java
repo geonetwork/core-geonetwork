@@ -114,7 +114,7 @@ public class TranslationPackBuilder {
     @Cacheable(
         value = "translations",
         cacheManager = "cacheManager",
-        key = "{#schema, #key}")
+        key = "{#language, #key}")
     public Map<String, String> getPack(
         String language, String key,
         ServiceContext context) {
