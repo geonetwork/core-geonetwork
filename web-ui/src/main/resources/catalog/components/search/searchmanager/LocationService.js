@@ -214,6 +214,7 @@
         };
 
         if (state.old.path != that.SEARCH &&
+            state.old.path != that.HOME &&
             state.current.path == that.SEARCH) {
           if (that.isMdView(state.old.path)) {
             $rootScope.$broadcast('locationBackToSearchFromMdview');
