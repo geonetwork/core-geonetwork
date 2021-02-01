@@ -57,7 +57,7 @@ http://localhost:8080/geonetwork/dashboards
 If it does not start properly, check Kibana log files (eg. it may fail if Elasticsearch version
 is not compatible with Kibana version).
 
-Visit Kibana in a browser using one of the above links and go to 'Saved Objects'. Import export.json from https://github.com/geonetwork/core-geonetwork/blob/master/es/es-dashboards/data/export.json
+Visit Kibana in a browser using one of the above links and go to 'Saved Objects'. Import export.ndjson from https://github.com/geonetwork/core-geonetwork/blob/4.0.x/es/es-dashboards/data/export.ndjson
 
 ### Production Use
 
