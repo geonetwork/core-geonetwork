@@ -105,7 +105,9 @@ public abstract class AbstractStore implements Store {
             metadata = _appContext.getBean(IMetadataUtils.class).findOneByUuid(metadataUuid);
         }
         if (metadata == null) {
-            throw new ResourceNotFoundException(String.format("Metadata with UUID '%s' not found.", metadataUuid));
+            throw new ResourceNotFoundException(String.format("Metadata with UUID '%s' not found.", metadataUuid))
+                .withMessageKey("exception.resourceNotFound.metadata")
+                .withDescriptionKey("exception.resourceNotFound.metadata.description", new String[]{ metadataUuid });
         }
         return metadata.getId();
     }

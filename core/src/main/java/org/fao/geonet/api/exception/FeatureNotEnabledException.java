@@ -23,7 +23,10 @@
 
 package org.fao.geonet.api.exception;
 
-public class FeatureNotEnabledException extends Exception {
+import org.fao.geonet.exceptions.LocalizedException;
+
+public class FeatureNotEnabledException extends LocalizedException {
+
     public FeatureNotEnabledException() {
         super();
     }
@@ -38,5 +41,9 @@ public class FeatureNotEnabledException extends Exception {
 
     public FeatureNotEnabledException(Throwable cause) {
         super(cause);
+    }
+
+    protected String getResourceBundleBeanQualifier() {
+        return "apiMessages";
     }
 }
