@@ -36,4 +36,8 @@
     'gn_login_controller',
     'gn_cat_controller'
   ]);
+
+  module.config(['$LOCALES', function($LOCALES) {
+    $LOCALES.push('/../api/i18n/packages/login');
+  }]);
 })();

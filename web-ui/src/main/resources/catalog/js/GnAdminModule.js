@@ -41,9 +41,7 @@
     'gn_admin_controller'
   ]);
 
-
-  module.config(['$LOCALES',
-    function($LOCALES) {
-      $LOCALES.push('admin');
-    }]);
+  module.config(['$LOCALES', function($LOCALES) {
+    $LOCALES.push('/../api/i18n/packages/admin');
+  }]);
 })();
