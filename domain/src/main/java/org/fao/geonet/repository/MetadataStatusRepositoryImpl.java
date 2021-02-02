@@ -38,6 +38,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatus_;
@@ -127,31 +128,31 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
         Predicate ownerPredicate = null;
         Predicate recordPredicate = null;
         Predicate statusIdPredicate = null;
-        if (ids != null) {
+        if (CollectionUtils.isNotEmpty(ids)) {
             final Path<Integer> idPath = metadataStatusRoot.get(MetadataStatus_.id);
             idPredicate = idPath.in(ids);
         }
 
-        if (uuids != null) {
+        if (CollectionUtils.isNotEmpty(uuids)) {
             final Path<String> uuidPath = metadataStatusRoot.get(MetadataStatus_.uuid);
             uuidPredicate = uuidPath.in(uuids);
         }
 
-        if (types != null) {
+        if (CollectionUtils.isNotEmpty(types)) {
             Predicate typePredicate = statusTypePath.in(types);
             typeFilter = cb.and(statusIdJoin, typePredicate);
         }
 
-        if (authorIds != null) {
+        if (CollectionUtils.isNotEmpty(authorIds)) {
             final Path<Integer> authorIdPath = metadataStatusRoot.get(MetadataStatus_.userId);
             authorPredicate = authorIdPath.in(authorIds);
         }
-        if (ownerIds != null) {
+        if (CollectionUtils.isNotEmpty(ownerIds)) {
             final Path<Integer> ownerIdPath = metadataStatusRoot.get(MetadataStatus_.owner);
             ownerPredicate = ownerIdPath.in(ownerIds);
         }
 
-        if (recordIds != null) {
+        if (CollectionUtils.isNotEmpty(recordIds)) {
             final Path<Integer> recordIdPath = metadataStatusRoot.get(MetadataStatus_.metadataId);
             recordPredicate = recordIdPath.in(recordIds);
         }
@@ -184,10 +185,10 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
         }
 
 
-        if (dateFrom != null) {
+        if (StringUtils.isNotBlank(dateFrom)) {
             whereClause.getExpressions().add(cb.greaterThanOrEqualTo(statusIdDatePath, new ISODate(dateFrom)));
         }
-        if (dateTo != null) {
+        if (StringUtils.isNotBlank(dateTo)) {
             whereClause.getExpressions().add(cb.lessThanOrEqualTo(statusIdDatePath, new ISODate(dateTo)));
         }
 
