@@ -53,8 +53,20 @@ public class DateUtilTest {
         zdt = zdt.withZoneSameInstant(ZoneOffset.UTC);
         assertEquals("Testing 2020-11", DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS.format(zdt), datetimeInIsoFormat);
 
+        datetimeInIsoFormat = DateUtil.convertToISOZuluDateTime("2012-09-12Z");
+        ld = LocalDate.parse("2012-09-12");
+        zdt = ld.atStartOfDay(ZoneId.systemDefault());
+        zdt = zdt.withZoneSameInstant(ZoneOffset.UTC);
+        assertEquals(DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS.format(zdt), datetimeInIsoFormat);
 
+        datetimeInIsoFormat = DateUtil.convertToISOZuluDateTime("2015-10-18T19:59:30.2675269Z");
+        assertEquals("2015-10-18T19:59:30.2675269Z", datetimeInIsoFormat);
 
+        datetimeInIsoFormat = DateUtil.convertToISOZuluDateTime("20170322");
+        ld = LocalDate.parse("2017-03-22");
+        zdt = ld.atStartOfDay(ZoneId.systemDefault());
+        zdt = zdt.withZoneSameInstant(ZoneOffset.UTC);
+        assertEquals(DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS.format(zdt), datetimeInIsoFormat);
     }
 
     @Test

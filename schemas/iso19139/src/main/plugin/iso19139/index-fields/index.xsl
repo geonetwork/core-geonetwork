@@ -273,23 +273,28 @@
             <xsl:variable name="date"
                           select="string(gmd:date[1]/gco:Date|gmd:date[1]/gco:DateTime)"/>
 
+            <xsl:variable name="zuluDateTime" as="xs:string?">
+              <xsl:if test="gn-fn-index:is-isoDate(.)">
+                <xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($date))"/>
+              </xsl:if>
+            </xsl:variable>
+
             <xsl:choose>
-              <xsl:when test="gn-fn-index:is-isoDate(.)">
+              <xsl:when test="$zuluDateTime != ''">
                 <xsl:element name="{$dateType}DateForResource">
-                  <xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($date))"/>
+                  <xsl:value-of select="$zuluDateTime"/>
+                </xsl:element>
+                <xsl:element name="{$dateType}YearForResource">
+                  <xsl:value-of select="substring($zuluDateTime, 0, 5)"/>
+                </xsl:element>
+                <xsl:element name="{$dateType}MonthForResource">
+                  <xsl:value-of select="substring($zuluDateTime, 0, 8)"/>
                 </xsl:element>
               </xsl:when>
               <xsl:otherwise>
                 <indexingErrorMsg>Warning / Date <xsl:value-of select="$dateType"/> with value '<xsl:value-of select="$date"/>' was not a valid date format.</indexingErrorMsg>
               </xsl:otherwise>
             </xsl:choose>
-
-            <xsl:element name="{$dateType}YearForResource">
-              <xsl:value-of select="substring($date, 0, 5)"/>
-            </xsl:element>
-            <xsl:element name="{$dateType}MonthForResource">
-              <xsl:value-of select="substring($date, 0, 8)"/>
-            </xsl:element>
           </xsl:for-each>
 
 
@@ -300,18 +305,26 @@
             <xsl:variable name="date"
                           select="string(gmd:date[1]/gco:Date|gmd:date[1]/gco:DateTime)"/>
 
-            <resourceDate type="object">
-              {"type": "<xsl:value-of select="$dateType"/>", "date": "<xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($date))"/>"}
-            </resourceDate>
+            <xsl:variable name="zuluDate"
+                          select="date-util:convertToISOZuluDateTime($date)"/>
+            <xsl:if test="$zuluDate != ''">
+              <resourceDate type="object">
+                {"type": "<xsl:value-of select="$dateType"/>", "date": "<xsl:value-of select="$zuluDate"/>"}
+              </resourceDate>
+            </xsl:if>
           </xsl:for-each>
 
           <xsl:if test="$useDateAsTemporalExtent">
             <xsl:for-each-group select="gmd:date/gmd:CI_Date[gn-fn-index:is-isoDate(gmd:date/*/text())]/gmd:date/*/text()"
                                 group-by=".">
+              <xsl:variable name="zuluDate"
+                            select="date-util:convertToISOZuluDateTime(.)"/>
+              <xsl:if test="$zuluDate != ''">
                 <resourceTemporalDateRange type="object">{
-                  "gte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(.)"/>",
-                  "lte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(.)"/>"
+                  "gte": "<xsl:value-of select="$zuluDate"/>",
+                  "lte": "<xsl:value-of select="$zuluDate"/>"
                   }</resourceTemporalDateRange>
+              </xsl:if>
             </xsl:for-each-group>
           </xsl:if>
 
@@ -783,25 +796,31 @@
                           select="gml:beginPosition|gml:begin/gml:TimeInstant/gml:timePosition"/>
             <xsl:variable name="end"
                           select="gml:endPosition|gml:end/gml:TimeInstant/gml:timePosition"/>
-            <xsl:if test="gn-fn-index:is-isoDate($start)">
+
+            <xsl:variable name="zuluStartDate"
+                          select="date-util:convertToISOZuluDateTime($start)"/>
+            <xsl:variable name="zuluEndDate"
+                          select="date-util:convertToISOZuluDateTime($end)"/>
+
+            <xsl:if test="$zuluStartDate != '' and $zuluEndDate != ''">
               <resourceTemporalDateRange type="object">{
-                "gte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($start))"/>"
+                "gte": "<xsl:value-of select="$zuluStartDate"/>"
                 <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
-                  ,"lte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($end))"/>"
+                  ,"lte": "<xsl:value-of select="$zuluEndDate"/>"
                 </xsl:if>
                 }</resourceTemporalDateRange>
               <resourceTemporalExtentDateRange type="object">{
-                "gte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($start))"/>"
+                "gte": "<xsl:value-of select="$zuluStartDate"/>"
                 <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
-                  ,"lte": "<xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($end))"/>"
+                  ,"lte": "<xsl:value-of select="$zuluEndDate"/>"
                 </xsl:if>
                 }</resourceTemporalExtentDateRange>
-              <xsl:if test="$start &gt; $end">
-                <indexingErrorMsg>Warning / Field resourceTemporalDateRange /
-                  Lower range bound '<xsl:value-of select="."/>' can not be
-                  greater than upper bound '<xsl:value-of select="$end"/>'.
-                  Date range not indexed.</indexingErrorMsg>
-              </xsl:if>
+            </xsl:if>
+            <xsl:if test="$start &gt; $end">
+              <indexingErrorMsg>Warning / Field resourceTemporalDateRange /
+                Lower range bound '<xsl:value-of select="."/>' can not be
+                greater than upper bound '<xsl:value-of select="$end"/>'.
+                Date range not indexed.</indexingErrorMsg>
             </xsl:if>
           </xsl:for-each>
 
@@ -1151,7 +1170,7 @@
       <xsl:element name="Org{$fieldSuffix}">
         <xsl:value-of select="$organisationName"/>
       </xsl:element>
-      <xsl:element name="{$role}Org{$fieldSuffix}">
+      <xsl:element name="{replace($role, '[^a-zA-Z0-9-]', '')}Org{$fieldSuffix}">
         <xsl:value-of select="$organisationName"/>
       </xsl:element>
     </xsl:if>
@@ -1161,12 +1180,12 @@
       "organisation":"<xsl:value-of
         select="gn-fn-index:json-escape($organisationName)"/>",
       "role":"<xsl:value-of select="$role"/>",
-      "email":"<xsl:value-of select="$email"/>",
+      "email":"<xsl:value-of select="gn-fn-index:json-escape($email[1])"/>",
       "website":"<xsl:value-of select="$website"/>",
       "logo":"<xsl:value-of select="$logo"/>",
       "individual":"<xsl:value-of select="gn-fn-index:json-escape($individualName)"/>",
       "position":"<xsl:value-of select="gn-fn-index:json-escape($positionName)"/>",
-      "phone":"<xsl:value-of select="gn-fn-index:json-escape($phone)"/>",
+      "phone":"<xsl:value-of select="gn-fn-index:json-escape($phone[1])"/>",
       "address":"<xsl:value-of select="gn-fn-index:json-escape($address)"/>"
       }
     </xsl:element>
