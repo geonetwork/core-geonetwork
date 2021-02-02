@@ -391,7 +391,7 @@
         }).then(function (result) {
           scope.vl = result;
 
-          scope.vl.view.addSignalListener('pts', function(signal, id, item) {
+          // scope.vl.view.addSignalListener('pts', function(signal, id, item) {
             // Not really clear how to get the data from the signal
             // if (id._vgsid_) {
             //   var vlId = id._vgsid_[0],
@@ -406,7 +406,7 @@
             //     };
             //   }, 10);
             // }
-          });
+          // });
           scope.vl.view.addEventListener('click',
             function(event, item) {
             if (item.datum && item.datum.$$hashKey) { // Avoid brush click
@@ -466,7 +466,9 @@
         }
 
         scope.setRange = function() {
-          scope.signal = {key: [
+          scope.signal = scope.range.from === undefined && scope.range.to === undefined
+            ? {}
+            : { key: [
               moment(scope.range.from, scope.dateFormat).valueOf(),
               moment(scope.range.to, scope.dateFormat).valueOf()
             ], update: false};
