@@ -23,7 +23,10 @@
 package org.fao.geonet.api.exception;
 
 
-public class WebApplicationException extends RuntimeException {
+import org.fao.geonet.exceptions.LocalizedRuntimeException;
+
+public class WebApplicationException extends LocalizedRuntimeException {
+
     /**
      * Constructs a new WebApplicationException exception with {@code null} as its
      * detail message.  The cause is not initialized, and may subsequently be
@@ -93,5 +96,9 @@ public class WebApplicationException extends RuntimeException {
      */
     public WebApplicationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
+    }
+
+    protected String getResourceBundleBeanQualifier() {
+        return "apiMessages";
     }
 }

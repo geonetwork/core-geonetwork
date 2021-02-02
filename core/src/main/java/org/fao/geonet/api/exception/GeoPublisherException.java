@@ -23,7 +23,10 @@
 
 package org.fao.geonet.api.exception;
 
-public class GeoPublisherException extends Exception {
+import org.fao.geonet.exceptions.LocalizedException;
+
+public class GeoPublisherException extends LocalizedException {
+
     public GeoPublisherException() {
         super();
     }
@@ -38,5 +41,9 @@ public class GeoPublisherException extends Exception {
 
     public GeoPublisherException(Throwable cause) {
         super(cause);
+    }
+
+    protected String getResourceBundleBeanQualifier() {
+        return "apiMessages";
     }
 }

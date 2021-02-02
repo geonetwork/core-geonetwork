@@ -20,26 +20,28 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-
 package org.fao.geonet.api.exception;
 
-import org.fao.geonet.exceptions.LocalizedException;
 
-public class NoResultsFoundException extends LocalizedException {
+import java.util.Locale;
 
-    public NoResultsFoundException() {
+import org.fao.geonet.exceptions.LocalizedRuntimeException;
+
+public class ForbiddenException extends LocalizedRuntimeException {
+
+    public ForbiddenException() {
         super();
     }
 
-    public NoResultsFoundException(String message) {
+    public ForbiddenException(String message) {
         super(message);
     }
 
-    public NoResultsFoundException(String message, Throwable cause) {
+    public ForbiddenException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public NoResultsFoundException(Throwable cause) {
+    public ForbiddenException(Throwable cause) {
         super(cause);
     }
 
