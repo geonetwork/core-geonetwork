@@ -142,9 +142,9 @@
         </xsl:choose>
 
 
-        <script src="https://cdn.jsdelivr.net/npm/vega@5.17.0"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.17.0"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.12.2"></script>
+        <script src="{$uiResourcesPath}lib/vega/vega-5.17.0.js"></script>
+        <script src="{$uiResourcesPath}lib/vega/vega-lite-4.17.0.js"></script>
+        <script src="{$uiResourcesPath}lib/vega/vega-embed-6.12.2.js"></script>
 
 
         <script src="{$uiResourcesPath}lib/FileSaver/FileSaver.min.js?v={$buildNumber}"></script>
