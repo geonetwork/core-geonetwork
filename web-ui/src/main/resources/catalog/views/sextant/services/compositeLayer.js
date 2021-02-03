@@ -298,10 +298,10 @@
               function (feature) {
                 handleFeatureClick(feature, evt.coordinate);
                 return true;
-              },
-              undefined,
-              function (layer) {
-                return layer === tooltipLayer;
+              }, {
+                layerFilter: function (layer) {
+                  return layer === tooltipLayer;
+                }
               });
 
             if (!hit) {
