@@ -217,9 +217,43 @@
       var esFacet = this, aggs = typeof type === 'string' ?
         angular.copy(this.configs[type].facets, {}) :
         type;
-      esParams.aggregations = aggs;
+
+      esParams.aggregations = {};
+      angular.forEach(aggs, function(config, facet) {
+        if (config.hasOwnProperty('gnBuildFilterForRange')) {
+          esParams.aggregations[facet] =
+            esFacet.gnBuildFilterForRange(config);
+        } else {
+          esParams.aggregations[facet] = config;
+        }
+      });
     };
 
+    this.gnBuildFilterForRange = function(facet) {
+      var filters = {},
+        config = facet.gnBuildFilterForRange,
+        interval = (config.to - config.from) / config.buckets,
+        isDate = config.dateFormat;
+
+      for (var i = 0; i < config.buckets; i++) {
+        var lower = parseInt(config.from + (i * interval)),
+          upper = parseInt(config.from + ((i + 1) * interval)),
+          key = isDate
+            ? moment(lower, config.dateFormat).valueOf()
+            : lower + '-' + upper;
+        filters[key] = {
+          'query_string': {
+            'query': '+' + config.field + ':[' + lower + ' TO ' + upper + '}'
+          }
+        }
+      }
+      return {
+        'filters': {
+          'filters': filters
+        },
+        meta: facet.meta
+      }
+    }
 
     this.addSourceConfiguration = function(esParams, type) {
       if (type === undefined) {
@@ -314,11 +348,25 @@
 
           }
         } else if (reqAgg.hasOwnProperty('date_histogram')
-                   || reqAgg.hasOwnProperty('auto_date_histogram')) {
+                   || reqAgg.hasOwnProperty('auto_date_histogram')
+                   || (respAgg.meta && respAgg.meta.vega == 'timeline')) {
+          var isTimeline = respAgg.meta && respAgg.meta.vega == 'timeline';
+
           facetModel.type = 'dates';
           facetModel.dates = [];
           facetModel.datesCount = [];
-          facetModel.items = respAgg.buckets;
+          if (isTimeline) {
+            facetModel.items = [];
+            angular.forEach(respAgg.buckets, function(bucket, key) {
+              facetModel.items.push({
+                key_as_string: moment(parseInt(key)).toISOString(),
+                key: parseInt(key),
+                doc_count: bucket.doc_count
+              })
+            });
+          } else {
+            facetModel.items = respAgg.buckets;
+          }
           // var dateInterval;
           // var dayDuration = 1000 * 60 * 60 * 24;
           // var intervals = {

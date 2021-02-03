@@ -63,14 +63,20 @@
         </div>
 
         <div class="gn-facet-container"
-             ng-if="::facet.type !== 'dates'"
+             ng-if="::facet.type !== 'dates' && !(facet.meta && facet.meta.vega)"
              es-facet="::facet"
              es-facet-item="::item"
              ng-repeat="item in facet.items">
         </div>
 
         <div class=""
-             ng-if="::facet.type === 'dates'"
+             ng-if="::facet.meta && (facet.meta.vega === 'arc' || facet.meta.vega === 'bar')"
+             gn-facet-vega="facet"
+             callback="ctrl.filter(facet, item)">
+        </div>
+        <div class=""
+             ng-if="::facet.type === 'dates'
+                    || (facet.meta && facet.meta.vega === 'timeline')"
              gn-facet-temporalrange="facet"
              callback="ctrl.onUpdateDateRange(facet, from, to)">
         </div>

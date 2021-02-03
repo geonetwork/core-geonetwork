@@ -444,8 +444,24 @@ goog.require('gn_alert');
               'terms': {
                 'field': 'cl_status.key',
                 'size': 10
+              },
+              'meta': {
+                'vega': 'bar'
+                // 'vega': 'arc'
               }
             },
+            // 'resourceTemporalDateRange': {
+            //   'gnBuildFilterForRange': {
+            //     field: "resourceTemporalDateRange",
+            //     buckets: 2021 - 1970,
+            //     dateFormat: 'YYYY',
+            //     from: 1970,
+            //     to: 2021
+            //   },
+            //   'meta': {
+            //     'vega': 'timeline'
+            //   }
+            // },
             'dateStamp' : {
               'auto_date_histogram' : {
                 'field' : 'dateStamp',

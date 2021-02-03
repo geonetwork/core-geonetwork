@@ -70,6 +70,7 @@
   "facet-cl_maintenanceAndUpdateFrequency": "Update frequencies",
   "facet-cl_status": "Status",
   "facet-tag": "Keywords",
+  "facet-resourceTemporalDateRange": "Temporal extent",
   "facet-serviceType": "Service type",
   "facet-cl_topic": "Topic",
   "facet-valid": "Valid",
