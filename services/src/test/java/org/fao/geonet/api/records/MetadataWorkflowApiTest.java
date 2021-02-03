@@ -111,9 +111,6 @@ public class MetadataWorkflowApiTest  extends AbstractServiceIntegrationTest {
 
     @Test
     public void testGetStatusByType() throws Exception {
-        StatusActionsFactory statusActionFactory = Mockito.mock(StatusActionsFactory.class);
-        Mockito.when(wac.getBean(StatusActionsFactory.class)).thenReturn(statusActionFactory);
-
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
 
