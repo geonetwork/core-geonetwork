@@ -312,7 +312,7 @@
           function refresh() {
             me.requestCount(featureType, map, layer)
               .then(function (count) {
-                if (count > heatmapMinCount) {
+                if (heatmapMinCount !== undefined && count > heatmapMinCount) {
                   layer.setVisible(false);
                   gnHeatmapService.requestHeatmapData(
                     featureType,

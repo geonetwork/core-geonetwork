@@ -545,7 +545,7 @@
                     if (appProfile.compositeLayer && !scope.member.get('compositeInitialized')) {
                       scope.member.set('compositeInitialized', true);
                       var featureType = wfsLink.url + '#' + wfsLink.name;
-                      var minHeatmapCount = appProfile.compositeLayer.minHeatmapCount || 1000;
+                      var minHeatmapCount = appProfile.compositeLayer.minHeatmapCount;
                       var maxTooltipCount = appProfile.compositeLayer.maxTooltipCount || 1000;
 
                       var tooltipTemplateUrl = appProfile.compositeLayer.tooltipTemplateUrl;
