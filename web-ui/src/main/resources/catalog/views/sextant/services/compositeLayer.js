@@ -34,6 +34,12 @@
    */
   var TOOLTIP_ATTR_SUMMARY_REGEX = /{ATTRIBUTES}/g;
 
+  var formatHoverTemplate = function(tpl) {
+    tpl = tpl.replace(/\r\n|\r|\n/g, '<br>')
+    tpl = tpl.replace(/\*\*(.*?)\*\*/gm, '<strong>$1</strong>')
+    return tpl
+
+  }
   /**
    * @ngdoc service
    * @kind function
@@ -160,6 +166,7 @@
             var html
             if (!clickMode && tooltipHoverTemplate) {
               html = defaultHoverTemplate.replace(TOOLTIP_ATTR_SUMMARY_REGEX, tooltipHoverTemplate)
+              html = formatHoverTemplate(html)
             } else {
               html = tooltipTemplate || defaultTemplate
             }
@@ -291,10 +298,10 @@
               function (feature) {
                 handleFeatureClick(feature, evt.coordinate);
                 return true;
-              },
-              undefined,
-              function (layer) {
-                return layer === tooltipLayer;
+              }, {
+                layerFilter: function (layer) {
+                  return layer === tooltipLayer;
+                }
               });
 
             if (!hit) {
@@ -305,7 +312,7 @@
           function refresh() {
             me.requestCount(featureType, map, layer)
               .then(function (count) {
-                if (count > heatmapMinCount) {
+                if (heatmapMinCount !== undefined && count > heatmapMinCount) {
                   layer.setVisible(false);
                   gnHeatmapService.requestHeatmapData(
                     featureType,
