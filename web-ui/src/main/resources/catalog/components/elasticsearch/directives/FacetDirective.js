@@ -121,8 +121,8 @@
     var query_string =  (from === null && to === null)
       ? '' :
       '+' + facet.key + ':[' +
-      (moment(from, 'DD-MM-YYYY').toISOString() || '*') + ' TO ' +
-      (moment(to, 'DD-MM-YYYY').toISOString()  || '*') + ']';
+      (from || '*') + ' TO ' +
+      (to  || '*') + ']';
     // this.$scope.$digest();
     this.searchCtrl.updateState(facet.path, query_string, true);
   };
@@ -308,16 +308,26 @@
         scope.signal = null;
 
         scope.vl = null;
-        scope.dateFormat = 'dd-mm-YYYY'
+        scope.dateFormat = scope.facet.meta.dateFormat || 'DD-MM-YYYY'
+        scope.vegaDateFormat = scope.facet.meta.vegaDateFormat || '%d-%m-%Y'
         scope.initialRange = angular.copy(scope.facet.items);
 
-
+        function buildData() {
+          angular.forEach(scope.initialRange, function(d) {
+            d.type = 'all';
+            return d;
+          });
+          angular.forEach(scope.facet.items, function(d) {
+            d.type = 'current';
+            return d;
+          });
+          return [].concat(scope.initialRange, scope.facet.items);
+            }
         // Assign the specification to a local variable vlSpec.
         var vlSpec = {
           $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
           datasets: {
-            facetValues: scope.facet.items,
-            initialValues: scope.facet.items
+            facetValues: buildData()
           },
           data: {
             name: 'facetValues'
@@ -330,21 +340,14 @@
           },
           vconcat: [{
             mark: {
-              type: 'bar',
-              cornerRadiusEnd: 4
+              type: scope.facet.meta.mark || 'bar',
+              cornerRadiusEnd: 2
             },
             height: 100,
             selection: {
               pts: {type: "single"}
             },
             encoding: {
-              color: {
-                range: ['#3277B3'],
-                "condition": {
-                  "selection": "pts"
-                },
-                value: "grey"
-              },
               x: {
                 field: 'key',
                 type: 'temporal',
@@ -357,15 +360,29 @@
                 },
                 axis: {
                   title: '',
-                  labelExpr: "[timeFormat(datum.value, '%d-%m-%Y')]"
+                  labelExpr: "[timeFormat(datum.value, '" + scope.vegaDateFormat + "')]"
                 }
               },
               y: {
                 field: 'doc_count',
                 type: 'quantitative',
+                stack: null,
                 axis: {
                   title: ''
                 }
+              },
+              color: {
+                scale: {
+                  domain: ['all', 'current'],
+                  range: ['#ddd', '#3277B3'],
+                },
+                field: "type",
+                type: "nominal",
+                // condition: {
+                //   selection: "pts"
+                // },
+                // value: "grey",
+                legend: null
               }
             }
           }, {
@@ -379,7 +396,13 @@
             },
             encoding: {
               color: {
-                range: ['#3277B3']
+                scale: {
+                  domain: ['all', 'current'],
+                  range: ['#ddd', '#3277B3'],
+                },
+                field: "type",
+                type: "nominal",
+                legend: null
               },
               x: {
                 field: 'key',
@@ -392,6 +415,7 @@
               y: {
                 field: 'doc_count',
                 type: 'quantitative',
+                stack: null,
                 axis: {
                   title: ''
                 }
@@ -417,8 +441,8 @@
                 selected = item.datum,
                 next = rangeItems[1];
 
-              var from = selected.key ? moment(selected.key).format('DD-MM-YYYY') : '*',
-                to = next && next.key ? moment(next.key).format('DD-MM-YYYY') : '*';
+              var from = selected.key ? moment(selected.key).format(scope.dateFormat) : '*',
+                  to = next && next.key ? moment(next.key).format(scope.dateFormat) : '*';
               $timeout(function() {
                 scope.range = {
                   from: from,
@@ -436,9 +460,8 @@
               scope.vl.view.runAsync();
               return;
             } else {
-              var from = range.key ? moment(range.key[0]).format('DD-MM-YYYY') : '*';
-              var to = range.key ? moment(range.key[1]).format('DD-MM-YYYY') : '*';
-
+              var from = range.key ? moment(range.key[0]).format(scope.dateFormat) : '*',
+                  to = range.key ? moment(range.key[1]).format(scope.dateFormat) : '*';
 
               if ((scope.range.from != from
                 || scope.range.to != to)) {
@@ -454,13 +477,16 @@
 
 
           scope.$watchCollection('facet.items', function(n, o) {
-            scope.vl.view.data('facetValues', scope.facet.items).run();
+            scope.vl.view.data('facetValues', buildData()).run();
           });
         }).catch(console.error);
 
         scope.filter = function() {
-          scope.updateCallback(
-            {facet: scope.facet, from: scope.range.from, to: scope.range.to});
+          scope.updateCallback({
+              facet: scope.facet,
+              from: moment(scope.range.from, scope.dateFormat).toISOString(),
+              to: moment(scope.range.to, scope.dateFormat).toISOString()
+            });
         }
 
         scope.setRange = function() {
@@ -508,7 +534,10 @@
           var mark = {type: "arc", innerRadius: 50};
           var encoding = {
             theta: {field: "count", type: "quantitative"},
-            color: {field: "label", type: "nominal", legend: {title: ''}}
+            color: {field: "label", type: "nominal",
+              legend: {title: ''}
+              // scale: {scheme: 'category20b'}
+            }
           };
           if (scope.facet.meta.vega === 'bar') {
             mark = 'bar';

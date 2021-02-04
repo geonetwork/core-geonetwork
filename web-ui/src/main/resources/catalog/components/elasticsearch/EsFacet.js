@@ -247,11 +247,12 @@
           }
         }
       }
+
       return {
         'filters': {
           'filters': filters
         },
-        meta: facet.meta
+        meta: angular.extend(facet.meta, config)
       }
     }
 

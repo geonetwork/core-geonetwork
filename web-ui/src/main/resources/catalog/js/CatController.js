@@ -440,28 +440,30 @@ goog.require('gn_alert');
                 "collapsed": true
               }
             },
-            'cl_status.key': {
-              'terms': {
-                'field': 'cl_status.key',
-                'size': 10
-              },
-              'meta': {
-                'vega': 'bar'
-                // 'vega': 'arc'
-              }
-            },
-            // 'resourceTemporalDateRange': {
-            //   'gnBuildFilterForRange': {
-            //     field: "resourceTemporalDateRange",
-            //     buckets: 2021 - 1970,
-            //     dateFormat: 'YYYY',
-            //     from: 1970,
-            //     to: 2021
+            // 'cl_status.key': {
+            //   'terms': {
+            //     'field': 'cl_status.key',
+            //     'size': 10
             //   },
             //   'meta': {
-            //     'vega': 'timeline'
+            //     // 'vega': 'bar'
+            //     'vega': 'arc'
             //   }
             // },
+            'resourceTemporalDateRange': {
+              'gnBuildFilterForRange': {
+                field: "resourceTemporalDateRange",
+                buckets: 2021 - 1970,
+                dateFormat: 'YYYY',
+                vegaDateFormat: '%Y',
+                from: 1970,
+                to: 2021,
+                mark: 'area'
+              },
+              'meta': {
+                'vega': 'timeline'
+              }
+            },
             'dateStamp' : {
               'auto_date_histogram' : {
                 'field' : 'dateStamp',

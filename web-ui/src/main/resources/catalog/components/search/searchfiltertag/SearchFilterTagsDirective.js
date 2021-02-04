@@ -211,10 +211,11 @@
             scope.isSpecificParameter = function(filter) {
               // full text search and uuid on selection only
               // are not translated like facet.
-              // Range filter are also displayed as a range
-              return filter.key === 'any' || filter.key === 'uuid'
-                || (filter.value && filter.value.match
-                  && filter.value.match(/\+\w+:[\[{].* TO .*[\]}]/));
+              return filter.key === 'any' || filter.key === 'uuid';
+            }
+            scope.isRange = function(filter) {
+              return filter.value && filter.value.match
+                  && filter.value.match(/\+\w+:[\[{].* TO .*[\]}]/);
             }
 
             scope.isNegative = function(value) {
