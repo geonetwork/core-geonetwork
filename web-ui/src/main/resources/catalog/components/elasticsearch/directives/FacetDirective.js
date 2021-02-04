@@ -374,7 +374,7 @@
               color: {
                 scale: {
                   domain: ['all', 'current'],
-                  range: ['#ddd', '#3277B3'],
+                  range: ['#ddd', '#3277B3']
                 },
                 field: "type",
                 type: "nominal",
@@ -398,7 +398,7 @@
               color: {
                 scale: {
                   domain: ['all', 'current'],
-                  range: ['#ddd', '#3277B3'],
+                  range: ['#ddd', '#3277B3']
                 },
                 field: "type",
                 type: "nominal",
