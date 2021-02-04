@@ -408,7 +408,7 @@
 
             <inspire_com:MetadataDate>
               <xsl:value-of
-                select="substring-before(//mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date/*/text()|//gmd:dateStamp/*/text(), 'T')"/>
+                select="tokenize(//mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date/*/text()|//gmd:dateStamp/*/text(), 'T')[1]"/>
             </inspire_com:MetadataDate>
             <inspire_com:SpatialDataServiceType>discovery</inspire_com:SpatialDataServiceType>
 
