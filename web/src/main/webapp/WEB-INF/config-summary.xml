@@ -138,24 +138,24 @@
   <summaryTypes>
     <summaryType name="details" format="DIMENSION">
       <item facet="type" sortBy="label" sortOrder="asc" translator="codelist:gmd:MD_ScopeCode"/>
-      <item facet="mdActions"/>
+      <item facet="mdActions" sortBy="label" sortOrder="asc"/>
       <item facet="topicCat" sortBy="label" sortOrder="asc" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
-      <item facet="inspireThemeURI" sortBy="value" sortOrder="asc" max="35"
+      <item facet="inspireThemeURI" sortBy="label" sortOrder="asc" max="35"
             translator="term:http://inspire.ec.europa.eu/theme"/>
       <!--<item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>-->
       <!--<item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>-->
       <item facet="keyword" sortBy="label" sortOrder="asc" max="15"/>
       <item facet="orgName" sortBy="label" sortOrder="asc" max="25"/>
-      <item facet="sourceCatalog"
+      <item facet="sourceCatalog" sortBy="label" sortOrder="asc"
             translator="db:org.fao.geonet.repository.SourceRepository:findOneByUuid"/>
       <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
       <item facet="format" max="15" sortBy="label" sortOrder="asc"/>
-      <item facet="spatialRepresentationType"
+      <item facet="spatialRepresentationType" sortBy="label" sortOrder="asc"
             translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
-      <item facet="maintenanceAndUpdateFrequency"
+      <item facet="maintenanceAndUpdateFrequency" sortBy="label" sortOrder="asc"
             translator="codelist:gmd:MD_MaintenanceFrequencyCode"/>
-      <item facet="status" translator="codelist:gmd:MD_ProgressCode"/>
-      <item facet="serviceType"/>
+      <item facet="status" sortBy="label" sortOrder="asc" translator="codelist:gmd:MD_ProgressCode"/>
+      <item facet="serviceType" sortBy="label" sortOrder="asc"/>
       <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
       <item facet="resolution" sortBy="numValue" sortOrder="desc"/>
       <!--
@@ -170,20 +170,20 @@
       <item facet="type" sortBy="label" sortOrder="asc" translator="codelist:gmd:MD_ScopeCode"/>
       <item facet="category" max="99" sortBy="label" sortOrder="asc"
             translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
-      <item facet="mdStatus" max="10" sortBy="value"
+      <item facet="mdStatus" max="10" sortBy="label" sortOrder="asc"
             translator="db:org.fao.geonet.repository.StatusValueRepository:findOne:int"/>
-      <item facet="sourceCatalog"
+      <item facet="sourceCatalog" sortBy="label" sortOrder="asc"
             translator="db:org.fao.geonet.repository.SourceRepository:findOneByUuid"/>
-      <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
-      <item facet="isValidInspire" max="3" sortBy="value" translator="apploc:validStatus-"/>
-      <item facet="groupOwner" max="199" sortBy="value"
+      <item facet="isValid" max="3" sortBy="label" sortOrder="asc" translator="apploc:validStatus-"/>
+      <item facet="isValidInspire" max="3" sortBy="label" sortOrder="asc" translator="apploc:validStatus-"/>
+      <item facet="groupOwner" max="199" sortBy="label" sortOrder="asc"
             translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
-      <item facet="recordOwner" max="45" sortBy="value"/>
-      <item facet="publishedForGroup" max="199" sortBy="value"
+      <item facet="recordOwner" max="45" sortBy="label" sortOrder="asc"/>
+      <item facet="publishedForGroup" max="199" sortBy="label" sortOrder="asc"
             translator="db:org.fao.geonet.repository.GroupRepository:findByName"/>
-      <item facet="standard" max="15" sortBy="value"/>
+      <item facet="standard" max="15" sortBy="label" sortOrder="asc"/>
       <item facet="isHarvested" max="2" sortBy="value" translator="apploc:"/>
-      <item facet="metadataType" max="3" sortBy="value" translator="apploc:recordType-"/>
+      <item facet="metadataType" max="3" sortBy="label" sortOrder="asc" translator="apploc:recordType-"/>
 	    <item facet="isPublishedToAll" max="2" sortBy="value" translator="apploc:"/>
     </summaryType>
 
@@ -193,20 +193,20 @@
     <summaryType name="hits">
       <item facet="type" sortBy="label" sortOrder="asc" translator="codelist:gmd:MD_ScopeCode"/>
       <item facet="topicCat" sortBy="label" sortOrder="asc" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
-      <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
-      <item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>
-      <item facet="inspireThemeURI" sortBy="value" sortOrder="asc" max="35"
+      <item facet="inspireTheme" sortBy="label" sortOrder="asc" max="35"/>
+      <item facet="inspireThemeWithAc" sortBy="label" sortOrder="asc" max="35"/>
+      <item facet="inspireThemeURI" sortBy="label" sortOrder="asc" max="35"
             translator="term:http://inspire.ec.europa.eu/theme"/>
       <item facet="keyword" sortBy="label" sortOrder="asc" max="15"/>
-      <item facet="orgName" max="25"/>
+      <item facet="orgName" sortBy="label" sortOrder="asc" max="25"/>
       <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
       <item facet="format" max="15" sortBy="label" sortOrder="asc"/>
-      <item facet="spatialRepresentationType"
+      <item facet="spatialRepresentationType" sortBy="label" sortOrder="asc"
             translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
-      <item facet="maintenanceAndUpdateFrequency"
+      <item facet="maintenanceAndUpdateFrequency" sortBy="label" sortOrder="asc"
             translator="codelist:gmd:MD_MaintenanceFrequencyCode"/>
-      <item facet="status" translator="codelist:gmd:MD_ProgressCode"/>
-      <item facet="serviceType"/>
+      <item facet="status" sortBy="label" sortOrder="asc" translator="codelist:gmd:MD_ProgressCode"/>
+      <item facet="serviceType" sortBy="label" sortOrder="asc"/>
       <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
       <item facet="resolution" sortBy="numValue" sortOrder="desc"/>
       <!--<item facet="metadataPOC" max="15"/>-->
