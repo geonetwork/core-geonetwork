@@ -35,10 +35,17 @@
       var me = this;
       var CELL_SIZE = 12;     // pixels
       var BUFFER_RATIO = 1;
-      var CELL_LOW_COLOR = [255, 241, 92];
-      var CELL_HIGH_COLOR = [255, 81, 40];
-      var COLOR_STEP_COUNT = 6;
-      var CELLS_OPACITY = 0.7;
+      var COLOR_PALETTE = [
+        '#fefae5',
+        '#fef3bc',
+        '#fee391',
+        '#fec44f',
+        '#fe9a3d',
+        '#ec7239',
+        '#cc4f30',
+        '#993722',
+        '#662613',
+      ]
 
       var indexObject = gnIndexRequestManager.register('WfsFilter', 'heatmap');
 
@@ -65,8 +72,10 @@
 
         // data precision is deduced from current zoom view
         var geohashLength = 2;
-        if (zoom > 3.3) { geohashLength = 3; }
-        if (zoom > 5.6) { geohashLength = 4; }
+        if (zoom > 3.1) { geohashLength = 3; }
+        if (zoom > 5.5) { geohashLength = 4; }
+        if (zoom > 8) { geohashLength = 5; }
+        console.log(map.getView().getZoom())
 
         // viewbox filter
         var topLeft = ol.extent.getTopLeft(extent);
@@ -114,7 +123,8 @@
             cells: {
               geohash_grid: {
                 field: 'location',
-                precision: geohashLength
+                precision: geohashLength,
+                size: 20000
               }
             }
           }
@@ -194,21 +204,20 @@
 
       // this will generate styles with a color gradient
       var cellStyles = [];
-      for (var i = 0; i < COLOR_STEP_COUNT; i++) {
-        var ratio = i / (COLOR_STEP_COUNT - 1);
-        var c = CELL_LOW_COLOR.map(function(value, index) {
-          return Math.floor(value + ratio * (CELL_HIGH_COLOR[index] - value));
-        });
-        var cssFillColor =
-          'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + CELLS_OPACITY + ')';
+      for (var color of COLOR_PALETTE) {
         cellStyles.push(new ol.style.Style({
-          fill: new ol.style.Fill({ color: cssFillColor })
-        }));
+          fill: new ol.style.Fill({color: color}),
+          stroke: new ol.style.Stroke({
+            color: color,
+            width: 1
+          })
+        }))
       }
 
       // this is for hovered cells
       var hoveredCellStyle = new ol.style.Style({
-        fill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.2)' }),
+        zIndex: 10,
+        fill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.1)' }),
         stroke: new ol.style.Stroke({
           color: 'rgba(255, 255, 255, 0.6)',
           width: 3
@@ -221,7 +230,7 @@
       var getCellStyleFunction = function(hovered) {
         return function(feature) {
           var densityRatio = (feature.get('count') || 0) / me.maxCellCount;
-          var style = cellStyles[Math.floor(densityRatio * (COLOR_STEP_COUNT - 1))];
+          var style = cellStyles[Math.floor(densityRatio * (COLOR_PALETTE.length - 1))];
 
           // handle hovered case
           if (hovered) {
@@ -253,11 +262,5 @@
         return getCellStyleFunction(true);
       };
 
-      /**
-       * @return {number}
-       */
-      this.getCellOpacity = function() {
-        return CELLS_OPACITY;
-      };
     }]);
 })();

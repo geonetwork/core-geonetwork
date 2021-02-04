@@ -82,10 +82,12 @@
 
           // heatmap & tooltip layers
           var heatmapSource = new ol.source.Vector({
-            features: []
+            features: [],
+            wrapX: false
           });
           var heatmapLayer = new ol.layer.Vector({
             source: heatmapSource,
+            opacity: 0.8,
             style: gnHeatmapService.getCellStyle()
           });
           var tooltipSource = new ol.source.Vector({
