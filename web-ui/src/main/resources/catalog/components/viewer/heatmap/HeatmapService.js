@@ -72,8 +72,10 @@
 
         // data precision is deduced from current zoom view
         var geohashLength = 2;
-        if (zoom > 3.3) { geohashLength = 3; }
-        if (zoom > 5.6) { geohashLength = 4; }
+        if (zoom > 3.1) { geohashLength = 3; }
+        if (zoom > 5.5) { geohashLength = 4; }
+        if (zoom > 8) { geohashLength = 5; }
+        console.log(map.getView().getZoom())
 
         // viewbox filter
         var topLeft = ol.extent.getTopLeft(extent);
@@ -121,7 +123,8 @@
             cells: {
               geohash_grid: {
                 field: 'location',
-                precision: geohashLength
+                precision: geohashLength,
+                size: 20000
               }
             }
           }
@@ -214,7 +217,7 @@
       // this is for hovered cells
       var hoveredCellStyle = new ol.style.Style({
         zIndex: 10,
-        fill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.2)' }),
+        fill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.1)' }),
         stroke: new ol.style.Stroke({
           color: 'rgba(255, 255, 255, 0.6)',
           width: 3
