@@ -204,11 +204,16 @@
       for (var color of COLOR_PALETTE) {
         cellStyles.push(new ol.style.Style({
           fill: new ol.style.Fill({color: color}),
+          stroke: new ol.style.Stroke({
+            color: color,
+            width: 1
+          })
         }))
       }
 
       // this is for hovered cells
       var hoveredCellStyle = new ol.style.Style({
+        zIndex: 10,
         fill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.2)' }),
         stroke: new ol.style.Stroke({
           color: 'rgba(255, 255, 255, 0.6)',
