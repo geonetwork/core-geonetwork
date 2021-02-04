@@ -75,7 +75,6 @@
         if (zoom > 3.1) { geohashLength = 3; }
         if (zoom > 5.5) { geohashLength = 4; }
         if (zoom > 8) { geohashLength = 5; }
-        console.log(map.getView().getZoom())
 
         // viewbox filter
         var topLeft = ol.extent.getTopLeft(extent);
