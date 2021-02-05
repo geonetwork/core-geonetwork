@@ -194,11 +194,11 @@
                 <div ng-repeat="output in executeResponse.processOutputs.output">
 
                   <div ng-if="output.reference && output.reference.mimeType!='application/x-ogc-wms'"
-                        ng-class="{'gn-single-output': executeResponse.processOutputs.output.length==1}">
-                    <h4 class="col-sm-6" ng-if="executeResponse.processOutputs.output.length>1">
+                        ng-class="{'gn-single-output': checkOutput(executeResponse.processOutputs.output).length==1}">
+                    <h4 class="col-sm-6" ng-if="checkOutput(executeResponse.processOutputs.output).length>1">
                       {{::output.title.value}}
                     </h4>
-                    <div ng-class="{'col-sm-6': executeResponse.processOutputs.output.length>1}">
+                    <div ng-class="{'col-sm-6': checkOutput(executeResponse.processOutputs.output).length>1}">
                       <a role="button" class="btn btn-default" target="_blank" href="{{::output.reference.href}}">Download</a>
                     </div>
                   </div>
