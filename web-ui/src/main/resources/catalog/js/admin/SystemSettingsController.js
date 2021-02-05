@@ -50,7 +50,8 @@
   module.filter('hideGeoNetworkInternalSettings', function() {
     return function(input) {
       var filtered = [];
-      var internal = ['system/userFeedback/lastNotificationDate'];
+      var internal = ['system/userFeedback/lastNotificationDate',
+        'system/security/passwordEnforcement/pattern'];
       angular.forEach(input, function(el) {
         if (internal.indexOf(el.name) === -1) {
           filtered.push(el);

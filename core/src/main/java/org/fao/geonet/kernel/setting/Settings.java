@@ -127,6 +127,11 @@ public class Settings {
     public static final String NODE_DEFAULT = "node/default";
     public static final String NODE_NAME = "node/name";
 
+    public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_MINLENGH = "system/security/passwordEnforcement/minLength";
+    public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_MAXLENGH = "system/security/passwordEnforcement/maxLength";
+    public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_USEPATTERN = "system/security/passwordEnforcement/usePattern";
+    public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_PATTERN = "system/security/passwordEnforcement/pattern";
+
     public static class GNSetting {
         private String name;
         private boolean nullable;
