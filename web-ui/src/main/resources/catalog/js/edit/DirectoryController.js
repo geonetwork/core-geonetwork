@@ -101,7 +101,6 @@
         params: {
           sortBy: 'resourceTitleObject.default.keyword',
           isTemplate: ['s'],
-          resultType: $scope.facetsSummaryType,
           from: 1,
           to: 20
         },
@@ -267,6 +266,7 @@
        * Get all the templates for a given type.
        */
       $scope.getEntries = function(type) {
+        $scope.$broadcast('resetSearch', $scope.defaultSearchObj.params);
         if (type) {
           $scope.searchObj.params.root = type;
           $scope.defaultSearchObj.params.root = type;

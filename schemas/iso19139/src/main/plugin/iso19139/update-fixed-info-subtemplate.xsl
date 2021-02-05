@@ -44,7 +44,12 @@
                 select="count(/root/gmd:EX_Extent) = 1"/>
 
   <xsl:template match="/root">
-    <xsl:apply-templates select="gmd:*|*[@gco:isoType]"/>
+    <xsl:for-each select="gmd:*|*[@gco:isoType]">
+      <xsl:copy>
+        <xsl:attribute name="uuid" select="/root/env/uuid"/>
+        <xsl:apply-templates select="@*|*"/>
+      </xsl:copy>
+    </xsl:for-each>
   </xsl:template>
 
 
