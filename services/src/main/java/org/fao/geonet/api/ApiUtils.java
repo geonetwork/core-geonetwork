@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -38,6 +38,9 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -50,9 +53,7 @@ import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.Service;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -73,6 +74,8 @@ import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 /**
  * API utilities mainly to deal with parameters.
@@ -122,10 +125,10 @@ public class ApiUtils {
         IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
         String id = String.valueOf(metadataUtils.findOneByUuid(uuidOrInternalId).getId());
 
-        if(StringUtils.isEmpty(id)) {
+        if (StringUtils.isEmpty(id)) {
             //It wasn't a UUID
             id = String.valueOf(metadataUtils.findOne(uuidOrInternalId).getId());
-        } else if(approved) {
+        } else if (approved) {
             //It was a UUID, check if draft or approved version
             id = String.valueOf(ApplicationContextHolder.get().getBean(MetadataRepository.class)
                 .findOneByUuid(uuidOrInternalId).getId());
@@ -189,11 +192,14 @@ public class ApiUtils {
             Log.trace(Geonet.DATA_MANAGER, uuidOrInternalId + " not recognized as UUID. Trying ID.");
             metadata = metadataRepository.findOne(uuidOrInternalId);
             if (metadata != null) {
-                Log.trace(Geonet.DATA_MANAGER, "ApiUtils.getRecord(" + uuidOrInternalId + ") -> " + metadata);
+                if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
+                    Log.trace(Geonet.DATA_MANAGER, "ApiUtils.getRecord(" + uuidOrInternalId + ") -> " + metadata);
+                }
                 return metadata;
             }
+        } catch (NumberFormatException e) {
+        } catch (InvalidDataAccessApiUsageException e) {
         }
-        catch (InvalidDataAccessApiUsageException e) {}
 
         Log.trace(Geonet.DATA_MANAGER, "Record identified by " + uuidOrInternalId + " not found.");
         throw new ResourceNotFoundException(String.format("Record with UUID '%s' not found in this catalog", uuidOrInternalId));
@@ -523,6 +529,49 @@ public class ApiUtils {
 
         try (OutputStream out = Files.newOutputStream(outFile)) {
             ImageIO.write(bimg, type, out);
+        }
+    }
+
+    /**
+     * Process request validation, returning an string with the validation errors.
+     *
+     * @param bindingResult
+     * @param messages
+     */
+    public static String processRequestValidation(BindingResult bindingResult, ResourceBundle messages) {
+        if (bindingResult.hasErrors()) {
+            java.util.List<ObjectError> errorList = bindingResult.getAllErrors();
+
+            StringBuilder sb = new StringBuilder();
+            Iterator<ObjectError> it = errorList.iterator();
+            while (it.hasNext()) {
+                ObjectError err = it.next();
+                String msg = "";
+                for(int i = 0; i < err.getCodes().length; i++) {
+                    try {
+                        msg = messages.getString(err.getCodes()[i]);
+
+                        if (!StringUtils.isEmpty(msg)) {
+                            break;
+                        }
+                    } catch (MissingResourceException ex) {
+                        // Ignore
+                    }
+                }
+
+                if (StringUtils.isEmpty(msg)) {
+                    msg = err.getDefaultMessage();
+                }
+
+                sb.append(msg);
+                if (it.hasNext()) {
+                    sb.append(", ");
+                }
+            }
+
+            return sb.toString();
+        } else {
+            return "";
         }
     }
 }

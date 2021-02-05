@@ -75,6 +75,13 @@
           $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
           $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;
 
+         $scope.passwordMinLength =
+           Math.min(gnConfig['system.security.passwordEnforcement.minLength'], 6);
+         $scope.passwordMaxLength =
+           Math.max(gnConfig['system.security.passwordEnforcement.maxLength'], 6);
+         $scope.passwordPattern =
+           gnConfig['system.security.passwordEnforcement.pattern'];
+
           function initForm() {
            if ($window.location.pathname.indexOf('new.password') !== -1) {
              // Retrieve username from URL parameter

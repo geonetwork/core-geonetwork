@@ -29,3 +29,8 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'tur','Record res
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'vie','Record restored.');
 
 DELETE FROM Settings WHERE name = 'system/server/securePort';
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/minLength', '6', 1, 12000, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/maxLength', '20', 1, 12001, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/usePattern', 'true', 2, 12002, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal, editable) VALUES ('system/security/passwordEnforcement/pattern', '^((?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).*)$', 0, 12003, 'n', 'n');
