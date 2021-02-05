@@ -30,7 +30,21 @@
           </div>
           <div class="col-lg-8" data-translate="">rebuildIndexHelp</div>
         </div>
+
+
         <br/>
+        <div class="row">
+          <div class="col-lg-4">
+            <button type="button" class="btn btn-warning btn-lg btn-block" autofocus=""
+                    data-gn-click-and-spin="commitIndexChanges()"
+                    data-translate="">
+              indexCommit
+            </button>
+          </div>
+          <div class="col-lg-8" data-translate="">indexCommit-help</div>
+        </div>
+
+        <hr/>
         <div class="row">
           <div class="col-lg-4">
             <button type="button" class="btn btn-primary btn-lg btn-block"
@@ -45,16 +59,6 @@
         <div class="row">
           <div class="col-lg-4">
             <button type="button" class="btn btn-primary btn-lg btn-block"
-                    data-gn-click-and-spin="clearJsCache()" data-translate="">clearJsCache
-            </button>
-          </div>
-          <div class="col-lg-8" data-translate="">clearJsCacheHelp</div>
-        </div>
-
-        <br/>
-        <div class="row">
-          <div class="col-lg-4">
-            <button type="button" class="btn btn-primary btn-lg btn-block"
                     data-gn-click-and-spin="clearFormatterCache()" data-translate="">
               formatterClearCache
             </button>
@@ -62,15 +66,26 @@
           <div class="col-lg-8" data-translate="">formatterCacheHelp</div>
         </div>
 
+        <hr/>
         <div class="row">
           <div class="col-lg-4">
-            <button type="button" class="btn btn-warning btn-lg btn-block" autofocus=""
-                    data-gn-click-and-spin="commitIndexChanges()"
-                    data-translate="">
-              indexCommit
+            <button type="button" class="btn btn-default btn-lg btn-block"
+                    data-gn-click-and-spin="clearJsCache()" data-translate="">clearJsCache
             </button>
           </div>
-          <div class="col-lg-8" data-translate="">indexCommit-help</div>
+          <div class="col-lg-8" data-translate="">clearJsCacheHelp</div>
+        </div>
+
+        <br/>
+
+        <div class="row">
+          <div class="col-lg-4">
+            <button type="button" class="btn btn-default btn-lg btn-block"
+                    data-gn-click-and-spin="translationPackClearCache()" data-translate="">
+              translationPackClearCache
+            </button>
+          </div>
+          <div class="col-lg-8" data-translate="">translationPackClearCache-help</div>
         </div>
 
         <hr ng-if="::isBackupArchiveEnabled"/>
