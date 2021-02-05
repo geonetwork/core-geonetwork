@@ -23,9 +23,11 @@
 package org.fao.geonet.api.users;
 
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.api.users.model.PasswordResetDto;
 import org.fao.geonet.api.users.model.UserDto;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
@@ -93,7 +95,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/srv/api/users/222")
+        this.mockMvc.perform(get("/srv/api/users/2222")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
@@ -224,7 +226,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         user.setProfile(Profile.Editor.name());
         user.setGroupsEditor(Collections.singletonList("2"));
         user.setEmail(Collections.singletonList("mail@test.com"));
-        user.setPassword("password");
+        user.setPassword("Password7$");
         user.setEnabled(true);
 
         Gson gson = new Gson();
@@ -252,7 +254,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         user.setProfile(Profile.Editor.name());
         user.setGroupsEditor(Collections.singletonList("2"));
         user.setEmail(Collections.singletonList("mail@test.com"));
-        user.setPassword("password");
+        user.setPassword("Password1$");
         user.setEnabled(true);
 
         Gson gson = new Gson();
@@ -280,7 +282,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         user.setProfile(Profile.Editor.name());
         user.setGroupsEditor(Collections.singletonList("2"));
         user.setEmail(Collections.singletonList("mail@test.com"));
-        user.setPassword("password");
+        user.setPassword("Password1$");
         user.setEnabled(true);
 
         Gson gson = new Gson();
@@ -310,7 +312,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         user.setProfile(Profile.Editor.name());
         user.setGroupsEditor(Collections.singletonList("2"));
         user.setEmail(Collections.singletonList("mail@test.com"));
-        user.setPassword("password");
+        user.setPassword("Password1$");
         user.setEnabled(true);
 
         Gson gson = new Gson();
@@ -333,6 +335,47 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void createUserInvalidUsername() throws Exception {
+        List<String> invalidNames = Lists.newArrayList("--invalidusername", "--invalidName", "_invalidName",
+            "invalidName_", ".invalidName", "invalidName.", "@invalidName", "invalidName@", "invalid@@Name",
+            "invalid__Name", "invalid--Name", "invalidName-", "invalid..Name",
+            "?nvalidName", "invälidName");
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        for (String invalidName : invalidNames) {
+            UserDto user = new UserDto();
+            user.setUsername(invalidName);
+            user.setName("test");
+            user.setProfile(Profile.Editor.name());
+            user.setGroupsEditor(Collections.singletonList("2"));
+            user.setEmail(Collections.singletonList("mail@test.com"));
+            user.setPassword("1Password$");
+            user.setEnabled(true);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(user);
+
+            // Check 400 is returned and a message indicating that username is required
+            this.mockMvc.perform(put("/srv/api/users")
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andDo(result -> {
+                    if (result.getResponse().getStatus() != 400) {
+                        System.err.println(invalidName + " has been accepted as user name and it shouldn't");
+                    }
+                })
+                .andExpect(jsonPath("$.description", is("username may only contain alphanumeric "
+                    + "characters or single hyphens, single at signs or single dots. Cannot begin or end with a "
+                    + "hyphen, at sign or dot.")))
+                .andExpect(status().is(400));
+        }
+    }
+
+    @Test
     public void resetPassword() throws Exception {
         User user = _userRepo.findOneByUsername("testuser-editor");
         Assert.assertNotNull(user);
@@ -341,10 +384,16 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
+        Gson gson = new Gson();
+        PasswordResetDto passwordReset = new PasswordResetDto();
+        passwordReset.setPasswordOld("testuser-editor-password");
+        passwordReset.setPassword("NewPassword1$");
+        passwordReset.setPassword2("NewPassword1$");
+
+        String json = gson.toJson(passwordReset);
+
         this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
-            .param("passwordOld", "testuser-editor-password")
-            .param("password", "newpassword")
-            .param("password2", "newpassword")
+            .content(json)
             .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
@@ -363,11 +412,17 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         Assert.assertTrue(user.getProfile().equals(Profile.Editor));
         this.mockHttpSession = loginAs(user);
 
+        Gson gson = new Gson();
+        PasswordResetDto passwordReset = new PasswordResetDto();
+        passwordReset.setPasswordOld("testuser-editor-password");
+        passwordReset.setPassword("NewPassword1$");
+        passwordReset.setPassword2("NewPassword1$");
+
+        String json = gson.toJson(passwordReset);
+
         // Try to update the password of admin user from a user with Editor profile
         this.mockMvc.perform(post("/srv/api/users/" + admin.getId() + "/actions/forget-password")
-            .param("passwordOld", "testuser-editor-password")
-            .param("password", "newpassword")
-            .param("password2", "newpassword")
+            .content(json)
             .contentType(API_JSON_EXPECTED_ENCODING)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
@@ -384,12 +439,18 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
+        Gson gson = new Gson();
+        PasswordResetDto passwordReset = new PasswordResetDto();
+        passwordReset.setPasswordOld("testuser-editor-password");
+        passwordReset.setPassword("NewPassword1$");
+        passwordReset.setPassword2("NewPassword2%");
+
+        String json = gson.toJson(passwordReset);
+
         // Check 400 is returned and a message indicating that passwords should be equal
         this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
             .contentType(API_JSON_EXPECTED_ENCODING)
-            .param("passwordOld", "testuser-editor-password")
-            .param("password", "newpassword")
-            .param("password2", "newpassword2")
+            .content(json)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.description", is("Passwords should be equal")))
@@ -405,12 +466,18 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
+        Gson gson = new Gson();
+        PasswordResetDto passwordReset = new PasswordResetDto();
+        passwordReset.setPasswordOld("testuser-editor-password-wrong");
+        passwordReset.setPassword("NewPassword1$");
+        passwordReset.setPassword2("NewPassword1$");
+
+        String json = gson.toJson(passwordReset);
+
         // Check 400 is returned and a message indicating that passwords should be equal
         this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
             .contentType(API_JSON_EXPECTED_ENCODING)
-            .param("passwordOld", "testuser-editor-password-wrong")
-            .param("password", "newpassword")
-            .param("password2", "newpassword")
+            .content(json)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.description", is("The old password is not valid")))
@@ -425,12 +492,18 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
+        Gson gson = new Gson();
+        PasswordResetDto passwordReset = new PasswordResetDto();
+        passwordReset.setPasswordOld("oldpassword");
+        passwordReset.setPassword("NewPassword1$");
+        passwordReset.setPassword2("NewPassword1$");
+
+        String json = gson.toJson(passwordReset);
+
         // Check 404 is returned
         this.mockMvc.perform(post("/srv/api/users/" + userId + "/actions/forget-password")
             .contentType(API_JSON_EXPECTED_ENCODING)
-            .param("passwordOld", "oldpassword")
-            .param("password", "newpassword")
-            .param("password2", "newpassword")
+            .content(json)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.description", is("User not found")))
@@ -446,11 +519,17 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         Assert.assertTrue(user.getProfile().equals(Profile.Editor));
         this.mockHttpSession = loginAs(user);
 
+        Gson gson = new Gson();
+        PasswordResetDto passwordReset = new PasswordResetDto();
+        passwordReset.setPasswordOld("testuser-editor-password");
+        passwordReset.setPassword("NewPassword1$");
+        passwordReset.setPassword2("NewPassword1$");
+
+        String json = gson.toJson(passwordReset);
+
         this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
             .contentType(API_JSON_EXPECTED_ENCODING)
-            .param("passwordOld", "testuser-editor-password")
-            .param("password", "newpassword")
-            .param("password2", "newpassword")
+            .content(json)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -485,6 +564,50 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void updateUserInvalidUsername() throws Exception {
+        List<String> invalidNames = Lists.newArrayList("--invalidusername", "--invalidName", "_invalidName",
+            "invalidName_", ".invalidName", "invalidName.", "@invalidName", "invalidName@", "invalid@@Name",
+            "invalid__Name", "invalid--Name", "invalidName-", "invalid..Name",
+            "?nvalidName", "invälidName");
+
+        User userToUpdate = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull(userToUpdate);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        for (String invalidName : invalidNames) {
+
+            UserDto user = new UserDto();
+            user.setUsername(invalidName);
+            user.setName(userToUpdate.getName() + "-updated");
+            user.setProfile(userToUpdate.getProfile().toString());
+            user.setGroupsEditor(Collections.singletonList("2"));
+            user.setEmail(new ArrayList<>(userToUpdate.getEmailAddresses()));
+            user.setEnabled(true);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(user);
+
+
+
+            this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andDo(result -> {
+                    if (result.getResponse().getStatus() != 400) {
+                        System.err.println(invalidName + " has been accepted as user name and it shouldn't");
+                    }
+                })
+                .andExpect(status().is(400))
+                .andExpect(jsonPath("$.description", is("username may only contain alphanumeric "
+                    + "characters or single hyphens, single at signs or single dots. Cannot begin or end with a "
+                    + "hyphen, at sign or dot.")));
+        }
+    }
+
     public void updateUserByUserAdminAllowed() throws Exception {
         // User admin in Group test
         User loginUser = _userRepo.findOneByUsername("testuser-useradmin-testgroup");
