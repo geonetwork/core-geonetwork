@@ -161,6 +161,26 @@
         ]},
         track_total_hits: true
       },
+      directoryInEditor: {
+        facets: {
+          'groupPublished': {
+            'terms': {
+              'field': 'groupPublished',
+                'size': 10
+            }
+          }
+        },
+        source: {
+        includes: [
+          'id',
+          'uuid',
+          'creat*',
+          'group*',
+          'resource*',
+          'owner*'
+        ]},
+        track_total_hits: true
+      },
       simplelist: {
         facets: {},
         source: {
