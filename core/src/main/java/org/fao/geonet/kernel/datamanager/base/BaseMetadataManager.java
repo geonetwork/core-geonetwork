@@ -413,9 +413,13 @@ public class BaseMetadataManager implements IMetadataManager {
         Element xml = Xml.loadString(data, false);
 
         boolean isMetadata = templateMetadata.getDataInfo().getType() == MetadataType.METADATA;
+        MetadataType type = MetadataType.lookup(isTemplate);
         setMetadataTitle(schema, xml, context.getLanguage(), !isMetadata);
         if (isMetadata) {
             xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO, context);
+        } else if (type == MetadataType.SUB_TEMPLATE
+                   || type == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+            xml.setAttribute("uuid", uuid);
         }
 
         final Metadata newMetadata = new Metadata();
@@ -425,7 +429,7 @@ public class BaseMetadataManager implements IMetadataManager {
             .setCreateDate(new ISODate())
             .setSchemaId(schema)
             .setRoot(templateMetadata.getDataInfo().getRoot())
-            .setType(MetadataType.lookup(isTemplate))
+            .setType(type)
             .setRoot(xml.getQualifiedName());
         newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner)).setOwner(owner).setSourceId(source);
 
@@ -984,7 +988,10 @@ public class BaseMetadataManager implements IMetadataManager {
             result.addContent(env);
             // apply update-fixed-info.xsl
             Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(
-                metadata != null && metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE ?
+                metadata != null
+                    && (
+                        metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE
+                        || metadata.getDataInfo().getType() == MetadataType.TEMPLATE_OF_SUB_TEMPLATE)?
                     Geonet.File.UPDATE_FIXED_INFO_SUBTEMPLATE :
                     Geonet.File.UPDATE_FIXED_INFO);
             result = Xml.transform(result, styleSheet);

@@ -96,6 +96,7 @@
                   scope.searchObj = {
                     any: '',
                     internal: true,
+                    configId: 'directoryInEditor',
                     params: {
                       isTemplate: 's',
                       any: '',
@@ -343,6 +344,7 @@
                pre: function preLink(scope) {
                  scope.searchObj = {
                    internal: true,
+                   configId: 'directoryInEditor',
                    defaultParams: {
                      isTemplate: 's',
                      any: '',

@@ -30,11 +30,7 @@
   <div class="row middle-row">
     <div class="col-md-4 facet-col">
       <div data-ng-show="searchResults.records.length > 0"
-           data-gn-facet-dimension-list="searchResults.dimension"
-           data-params="searchObj.params"
-           data-facet-type="'contact'"
-           data-current-facets="currentFacets">
-      </div>
+           data-es-facets="searchResults.facets"></div>
     </div>
     <div class="col-md-8">
 

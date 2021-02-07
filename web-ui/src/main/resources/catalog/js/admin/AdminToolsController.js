@@ -511,6 +511,23 @@
             });
       };
 
+      $scope.translationPackClearCache = function() {
+        return $http.delete('../api/i18n/cache')
+            .success(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate.instant('translationPackCacheCleared'),
+                timeout: 2,
+                type: 'success'});
+            })
+            .error(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('translationPackCacheClearFailure'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
+      };
+
       gnConfigService.loadPromise.then(function(settings) {
         $scope.isBackupArchiveEnabled =
             settings['metadata.backuparchive.enable'];
