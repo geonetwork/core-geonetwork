@@ -94,7 +94,7 @@
           }
         };
         var allPromises = [];
-        
+
         angular.forEach(options.locales, function(value, index) {
           var langUrl = value.startsWith('../') ?
                           value :
