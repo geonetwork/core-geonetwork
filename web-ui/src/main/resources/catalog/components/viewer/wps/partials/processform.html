@@ -153,19 +153,12 @@
 
             <!-- ResponseDocument -->
             <div class="form-group gn-execute flex-row flex-align-center">
-              <button type="submit" class="btn btn-primary" ng-click="submit()"
-                ng-class="{disabled: running}" ng-show="!hideExecuteButton">
-                <i ng-if="!running" class="fa fa-play"></i>
-                <i ng-if="running" class="fa fa-spinner fa-spin"></i>
-                &nbsp;<span translate>wpsExecute</span>
-              </button>
-
               <div class="output-selection dropup" ng-if="processDescription.processOutputs.output.length > 0">
                 <button class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <span class="caret"></span>
                   &nbsp;<span translate>wpsSelectOutput</span>
                 </button>
-                <ul class="dropdown-menu pull-right">
+                <ul class="dropdown-menu">
                   <li ng-repeat-start="output in processDescription.processOutputs.output"
                     class="dropdown-header">
                     {{::output.title.value}}
@@ -186,8 +179,14 @@
                 </ul>
               </div>
 
-              <div class="flex-spacer flex-grow"></div>
-
+              <button type="submit" class="btn btn-primary" ng-click="submit()"
+                      ng-class="{disabled: running}" ng-show="!hideExecuteButton">
+                <i ng-if="!running" class="fa fa-play"></i>
+                <i ng-if="running" class="fa fa-spinner fa-spin"></i>
+                &nbsp;<span translate>wpsExecute</span>
+              </button>
+            </div>
+            <div class="flex-row">
               <!-- show output-related action if process has succeeded -->
               <div ng-if="executeState == 'finished' && executeResponse.status.processSucceeded && executeResponse.processOutputs.output" class="gn-outputs">
 
@@ -198,8 +197,18 @@
                     <h4 class="col-sm-6" ng-if="checkOutput(executeResponse.processOutputs.output).length>1">
                       {{::output.title.value}}
                     </h4>
-                    <div ng-class="{'col-sm-6': checkOutput(executeResponse.processOutputs.output).length>1}">
-                      <a role="button" class="btn btn-default" target="_blank" href="{{::output.reference.href}}">Download</a>
+                    <div ng-class="{'col-sm-6': executeResponse.processOutputs.output.length>1}">
+                      <a role="button" class="btn btn-default"
+                         target="_blank" href="{{::output.reference.href}}">
+                        <icon class="fa fa-fw fa-download"/>
+                        <span data-translate="">Download</span>
+                      </a>
+                      <a role="button" class="btn btn-default"
+                         data-ng-show="wpsLink.output.loadReferenceInMap"
+                         data-ng-click="clearGeometry()">
+                        <icon class="fa fa-fw fa-times"/>
+                        <span data-translate="">Clear</span>
+                      </a>
                     </div>
                   </div>
 
@@ -215,19 +224,35 @@
                   <div class="checkbox">
                     <label>
                       <input type="checkbox" id="lineage" ng-model="wpsLink.output.lineage">
-                      lineage
+                      <span data-translate="">wpsLineage</span>
                     </label>
                   </div>
                   <div class="checkbox">
                     <label>
                       <input type="checkbox" id="storeExecuteResponse" ng-model="wpsLink.output.storeExecuteResponse" ng-disabled="wpsLink.output.status">
-                      storeExecuteResponse
+                      <span data-translate="">wpsStoreExecuteResponse</span>
                     </label>
                   </div>
                   <div class="checkbox">
                     <label>
                       <input type="checkbox" id="status" ng-model="wpsLink.output.status" ng-change="responseDocumentStatusChanged()">
-                      status
+                      <span data-translate="">wpsStatus</span>
+                    </label>
+                  </div>
+                  <div class="checkbox"
+                       title="{{'wpsOutputAsReference-help' | translate}}">
+                    <label>
+                      <input type="checkbox" id="wpsOutputAsReference"
+                             ng-model="wpsLink.output.asReference">
+                      <span data-translate="">wpsOutputAsReference</span>
+                    </label>
+                  </div>
+                  <div class="checkbox"
+                       title="{{'wpsLoadReferenceInMap-help' | translate}}">
+                    <label>
+                      <input type="checkbox" id="wpsReferenceInMap"
+                             ng-model="wpsLink.output.loadReferenceInMap">
+                      <span data-translate="">wpsLoadReferenceInMap</span>
                     </label>
                   </div>
                 </div>

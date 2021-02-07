@@ -56,7 +56,7 @@
 
     return threeCharLang.substring(0, 2) || 'en';
   });
-  module.constant('$LOCALES', ['core']);
+  module.constant('$LOCALES', []);
 
   module.factory('inlineLoaderFactory', ['$q', function($q) {
     return function(options) {
@@ -94,11 +94,7 @@
           }
         };
         var allPromises = [];
-
-        // Not needed in Sextant options.locales.push('custom');
-        options.locales.push('v4');
-        options.locales.push('../api/tools/i18n/db/translations');
-
+        
         angular.forEach(options.locales, function(value, index) {
           var langUrl = value.startsWith('../') ?
                           value :

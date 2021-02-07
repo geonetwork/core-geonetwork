@@ -97,7 +97,12 @@
       <!--cvc-type.3.1.3: The value 'DUMMY_DENOMINATOR' of element 'gco:Integer' is not valid. (Element: gco:Integer with parent element: gmd:denominator)-->
       <rule errorType="type.3.1.3withparent">The value '(.*)' of element '(.*)' is not valid\. \(Element: ([a-z]{3}):(.*) with parent element: (.*)\)</rule>
       <rule errorType="type.3.1.3">The value '(.*)' of element '(.*)' is not valid\.</rule>
-      <rule errorType="enumeration-valid">Value '(.*)' is not facet-valid with respect to enumeration '\[(.*)\]'\. It must be a value from the enumeration\. \(Element: ([a-z]{3}):(.*) with parent element: (.*)\)</rule>
+      <rule errorType="enumeration-validwithparent">Value '(.*)' is not facet-valid with respect to enumeration '\[(.*)\]'\. It must be a value from the enumeration\. \(Element: ([a-z]{3}):(.*) with parent element: (.*)\)</rule>
+      <rule errorType="enumeration-valid">Value '(.*)' is not facet-valid with respect to enumeration '\[(.*)\]'\. It must be a value from the enumeration\.</rule>
+      <!--datatype-valid.1.2.3: '' is not a valid value of union type 'Date_Type'.-->
+      <rule errorType="datatype-valid.1.2.3withparent">'(.*)' is not a valid value of union type '(.*)'\. \(Element: ([a-z]{3}):(.*) with parent element:(.*)\)</rule>
+      <rule errorType="datatype-valid.1.2.3">'(.*)' is not a valid value of union type '(.*)'\.</rule>
+
     </xsl:variable>
 
     <xsl:variable name="errorWithParentName"
@@ -170,7 +175,7 @@
                     (<xsl:value-of select="regex-group(4)"/>).
                   </xsl:if>
                 </xsl:when>
-                <xsl:when test="$errorType = 'datatype-valid.1.2.1' or $errorType = 'type.3.1.3'">
+                <xsl:when test="$errorType = 'datatype-valid.1.2.1' or $errorType = 'type.3.1.3' or $errorType = 'datatype-valid.1.2.3'">
                   <xsl:value-of select="$strings/invalidValue"/> '<xsl:value-of
                   select="regex-group(1)"/>'
                   <xsl:value-of select="$strings/notValidFor"/>

@@ -93,8 +93,12 @@
       </harvestedDate>
 
 
-      <!-- For multilingual docs it is good to have a title in the default locale.  In this type of metadata we don't have one but in the general case we do so we need to add it to all -->
-      <resourceTitle><xsl:value-of select="string(dc:title)"/></resourceTitle>
+      <!-- For multilingual docs it is good to have a title in the default locale.
+       In this type of metadata we don't have one but in the general
+       case we do so we need to add it to all -->
+      <xsl:for-each select="dc:title[1]">
+        <resourceTitle><xsl:value-of select="string(.)"/></resourceTitle>
+      </xsl:for-each>
 
       <xsl:for-each select="dc:language">
         <mainLanguage><xsl:value-of select="string(.)"/></mainLanguage>

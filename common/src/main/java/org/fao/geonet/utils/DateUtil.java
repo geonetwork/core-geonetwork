@@ -54,23 +54,40 @@ public class DateUtil {
     public static final DateTimeFormatter ISO_OFFSET_DATE_TIME_NANOSECONDS;
     public static final DateTimeFormatter CATCH_ALL_DATE_TIME_FORMATTER;
     private static final String DEFAULT_DATE_TIME = "3000-01-01T00:00:00.000Z"; // JUNK
+
     // Pattern to check dates
     private static final Pattern gsYear = Pattern.compile("([0-9]{4})(-([0-2][0-9]):([0-5][0-9])([A-Z]))?");
     private static final Pattern gsYearMonth = Pattern.compile("([0-9]{4})-([0-1][0-9])(-([0-2][0-9]):([0-5][0-9])([A-Z]{0,1}))?");
+
+    // Some catalogs are using 2012-09-12Z
+    private static final Pattern gsYearMonthDayZ = Pattern.compile("([0-9]{4})-([0-1][0-9])-([0-2][0-9])Z");
+    private static final Pattern gsDayMonthYear = Pattern.compile("([0-2][0-9])/([0-1][0-9])/([0-9]{4})");
+
     // Fri Jan 01 2010 00:00:00 GMT+0100 (CET)
     private static final Pattern htmlFormat = Pattern
             .compile("([a-zA-Z]{3}) ([a-zA-Z]{3}) ([0-9]{2}) ([0-9]{4}) ([0-2][0-9]):([0-5][0-9]):([0-5][0-9]) (.+)");
 
     static {
-        ISO_OFFSET_DATE_TIME_NANOSECONDS = new DateTimeFormatterBuilder().parseCaseInsensitive().append(DateTimeFormatter.ISO_LOCAL_DATE)
-                .appendLiteral('T').appendValue(ChronoField.HOUR_OF_DAY, 2).appendLiteral(':').appendValue(MINUTE_OF_HOUR, 2)
-                .appendLiteral(':').appendValue(SECOND_OF_MINUTE, 2).appendFraction(NANO_OF_SECOND, 3, 9, true).appendOffsetId()
-                .toFormatter();
+        ISO_OFFSET_DATE_TIME_NANOSECONDS = new DateTimeFormatterBuilder().parseCaseInsensitive()
+            .append(DateTimeFormatter.ISO_LOCAL_DATE)
+            .appendLiteral('T')
+            .appendValue(ChronoField.HOUR_OF_DAY, 2)
+            .appendLiteral(':')
+            .appendValue(MINUTE_OF_HOUR, 2)
+            .appendLiteral(':')
+            .appendValue(SECOND_OF_MINUTE, 2)
+            .appendFraction(NANO_OF_SECOND, 3, 9, true)
+            .appendOffsetId()
+            .toFormatter();
 
         CATCH_ALL_DATE_TIME_FORMATTER = new DateTimeFormatterBuilder().parseCaseInsensitive()
-                .appendPattern("yyyy[-M][-d['T'H[:m[:s[.SSS][.SS][.S]][XXX]]]]").parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
-                .parseDefaulting(ChronoField.DAY_OF_MONTH, 1).parseDefaulting(HOUR_OF_DAY, 0).parseDefaulting(MINUTE_OF_HOUR, 0)
-                .parseDefaulting(SECOND_OF_MINUTE, 0).parseDefaulting(NANO_OF_SECOND, 0).toFormatter();
+            .appendPattern("yyyy[[-]M][[-]d['T'H[:m[:s[.SSSSSSSSS][.SSSSSSSS][.SSSSSSS][.SSSSSS][.SSSSS][.SSSS][.SSS][.SS][.S]][XXX]]]]")
+            .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
+            .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
+            .parseDefaulting(HOUR_OF_DAY, 0)
+            .parseDefaulting(MINUTE_OF_HOUR, 0)
+            .parseDefaulting(SECOND_OF_MINUTE, 0)
+            .parseDefaulting(NANO_OF_SECOND, 0).toFormatter();
     }
 
     /**
@@ -131,9 +148,10 @@ public class DateUtil {
 
             odt1 = idt.withZoneSameInstant(ZoneOffset.UTC);
             odt = idt.withZoneSameInstant(ZoneOffset.UTC).format(ISO_OFFSET_DATE_TIME_NANOSECONDS);
-
         } catch (Exception e) {
-            Log.error("geonetwork.domain", "Error parsing ISO DateTimes, error: " + e.getMessage(), e);
+            Log.error("geonetwork.domain",
+                String.format("Error parsing ISO DateTimes '%s'. Error is: %s",
+                    dateTimeString, e.getMessage()), e);
             return DEFAULT_DATE_TIME;
         }
 
@@ -190,11 +208,13 @@ public class DateUtil {
      *                      Also string in no ISO format (e.g. {@code yyyy[-MM][-dd][-hh:mm][Z]})
      * @return a {@link ZonedDateTime}.
      */
-    public static ZonedDateTime parseBasicOrFullDateTime(String stringToParse) {
+     public static ZonedDateTime parseBasicOrFullDateTime(String stringToParse) {
         ZonedDateTime result;
         Matcher matcher;
         if (stringToParse.length() == 8 && !stringToParse.startsWith("T")) {
-            result = ZonedDateTime.parse(stringToParse, DateTimeFormatter.BASIC_ISO_DATE);
+            result = LocalDate
+                .parse(stringToParse, DateTimeFormatter.BASIC_ISO_DATE)
+                .atStartOfDay(ZoneId.systemDefault());
         } else if (stringToParse.startsWith("T") && stringToParse.contains(":")) {
             result = parseTime(stringToParse);
         } else if (stringToParse.contains("T") && !stringToParse.contains(":") && !stringToParse.contains("-")) {
@@ -232,6 +252,24 @@ public class DateUtil {
                 }
             }
 
+            result = generateDate(year, month, day, seconds, minute, hour, timezone);
+        } else if ((matcher = gsYearMonthDayZ.matcher(stringToParse)).matches()) {
+            int year = Integer.parseInt(matcher.group(1));
+            int month = Integer.parseInt(matcher.group(2));
+            int day = Integer.parseInt(matcher.group(3));
+            int minute = 0;
+            int hour = 0;
+            int seconds = 0;
+            String timezone = ZoneId.systemDefault().getId();
+            result = generateDate(year, month, day, seconds, minute, hour, timezone);
+        } else if ((matcher = gsDayMonthYear.matcher(stringToParse)).matches()) {
+            int year = Integer.parseInt(matcher.group(3));
+            int month = Integer.parseInt(matcher.group(2));
+            int day = Integer.parseInt(matcher.group(1));
+            int minute = 0;
+            int hour = 0;
+            int seconds = 0;
+            String timezone = ZoneId.systemDefault().getId();
             result = generateDate(year, month, day, seconds, minute, hour, timezone);
         } else if ((matcher = htmlFormat.matcher(stringToParse)).matches()) {
             // Fri Jan 01 2010 00:00:00 GMT+0100 (CET)

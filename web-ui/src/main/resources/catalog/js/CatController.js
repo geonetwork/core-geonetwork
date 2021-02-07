@@ -411,6 +411,10 @@ goog.require('gn_alert');
               },
               'meta': {
                 'collapsed': true,
+                // Always display filter even no more elements
+                // This can be used when all facet values are loaded
+                // with a large size and you want to provide filtering.
+                // 'displayFilter': true,
                 'caseInsensitiveInclude': true
               }
             },

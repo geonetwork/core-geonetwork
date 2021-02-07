@@ -741,7 +741,17 @@ public class MetadataInsertDeleteApi {
         Element beforeMetadata = dataMan.getMetadata(serviceContext, String.valueOf(metadata.getId()), false, false, false);
         XMLOutputter outp = new XMLOutputter();
         String xmlBefore = outp.outputString(beforeMetadata);
-        LinkedHashMap<String, String> titles = metadataUtils.extractTitles(Integer.toString(metadata.getId()));
+        LinkedHashMap<String, String> titles = new LinkedHashMap<>();
+        try {
+           titles = metadataUtils.extractTitles(Integer.toString(metadata.getId()));
+        } catch (Exception e) {
+            Log.warning(Geonet.DATA_MANAGER,
+                String.format(
+                    "Error while extracting title for the metadata %d " +
+                        "while creating delete event. Error is %s. " +
+                        "It may happen on subtemplates.",
+                    metadata.getId(), e.getMessage()));
+        }
         return new RecordDeletedEvent(metadata.getId(), metadata.getUuid(), titles, userSession.getUserIdAsInt(), xmlBefore);
     }
 

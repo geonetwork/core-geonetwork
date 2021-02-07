@@ -50,6 +50,10 @@
                     && (facet.more
                     || facet.include.length > 0
                     || facet.meta && facet.meta.displayFilter)">
+          <span class="fa fa-times-circle clear"
+                data-ng-click="facet.include = '';ctrl.filterTerms(facet);"
+                ng-show="facet.include && facet.include !== ''"
+                title="{{'clear'|translate}}"></span>
           <input title="{{'facetIncludeFilter' | translate}}"
                 ng-model="facet.include"
                 ng-model-options="{debounce: 300}"

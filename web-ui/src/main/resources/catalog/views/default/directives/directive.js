@@ -358,7 +358,7 @@
                 // TODO: Add has DOI already
                 return md && md.isPublished()
                   && md.isTemplate === 'n'
-                  && JSON.parse(md.isHarvested) == 'true';
+                  && JSON.parse(md.isHarvested) === false;
               }
             }
           };

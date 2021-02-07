@@ -131,8 +131,7 @@
                   {
                     crs: ctrl.outputCrs,
                     format: ctrl.outputFormat,
-                    outputAsWFSFeaturesCollection:
-                    ctrl.outputAsFeatures
+                    outputAsWFSFeaturesCollection: ctrl.outputAsFeatures
                     // TODO: make sure this works everytime?
                   }
                   );

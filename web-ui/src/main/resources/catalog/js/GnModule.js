@@ -44,7 +44,6 @@
   goog.require('gn_search_sextant_commonconfig');
   goog.require('gn_utility');
   goog.require('gn_openlayers');
-  goog.require('gn_schema_translations_loader');
 
 
   /**
@@ -73,8 +72,7 @@
     'gn_cors_interceptor',
     'gn_openlayers',
     'gn_indexingtask',
-    'gn_batchtask',
-    'gn_schema_translations_loader'
+    'gn_batchtask'
   ]);
 
 })();

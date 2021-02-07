@@ -24,11 +24,11 @@
 package org.fao.geonet.api.tools.i18n;
 
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.SchemaManager;
@@ -41,10 +41,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -54,37 +54,20 @@ import static org.springframework.http.HttpStatus.OK;
  *
  */
 @RequestMapping(value = {
-    "/{portal}/api/tools/i18n"
+    "/{portal}/api/i18n"
 })
 @Tag(name = "tools")
 @RestController
 public class TranslationApi implements ApplicationContextAware {
-
-    private static final List<String> TRANSLATION_TABLES = Arrays.asList(new String[]{
-        "StatusValue", "MetadataCategory", "Group", "Operation",
-        "Source", "Schematron", "IsoLanguage", "Translations"
-    });
 
     @Autowired
     SchemaManager schemaManager;
     @Autowired
     LanguageUtils languageUtils;
     @Autowired
-    StatusValueRepository statusValueRepository;
-    @Autowired
-    MetadataCategoryRepository categoryRepository;
-    @Autowired
-    GroupRepository groupRepository;
-    @Autowired
-    OperationRepository operationRepository;
-    @Autowired
-    SourceRepository sourceRepository;
-    @Autowired
-    SchematronRepository schematronRepository;
-    @Autowired
-    IsoLanguageRepository isoLanguageRepository;
-    @Autowired
     TranslationsRepository translationsRepository;
+    @Autowired
+    TranslationPackBuilder translationPackBuilder;
 
     private ApplicationContext context;
 
@@ -152,7 +135,6 @@ public class TranslationApi implements ApplicationContextAware {
     ) throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         String language = languageUtils.locale2gnCode(locale.getISO3Language());
-
         List<Translations> translations = translationsRepository.findAllByFieldName(key);
         if(translations.size() == 0) {
             throw new ResourceNotFoundException(String.format(
@@ -174,25 +156,12 @@ public class TranslationApi implements ApplicationContextAware {
     public Map<String, String> getDbTranslations(
         ServletRequest request
     ) throws Exception {
-        Map<String, String> response = new LinkedHashMap<String, String>();
-
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         String language = languageUtils.locale2gnCode(locale.getISO3Language());
+        return translationPackBuilder.getAllDbTranslations(language);
 
-        getAllDbTranslations(response, language);
-
-        return response;
     }
 
-    private void getAllDbTranslations(Map<String, String> response, String language) {
-        List<Translations> translationsList = translationsRepository.findAllByLangId(language);
-        Iterator<Translations> translationsIterator = translationsList.iterator();
-        while (translationsIterator.hasNext()) {
-            Translations entity = translationsIterator.next();
-            response.put(entity.getFieldName(),
-                StringUtils.isNotEmpty(entity.getValue()) ? entity.getValue() : entity.getFieldName());
-        }
-    }
 
     /**
      * @param type The type of object to return.
@@ -209,114 +178,72 @@ public class TranslationApi implements ApplicationContextAware {
         @RequestParam(required = false) final List<String> type,
         ServletRequest request
     ) throws Exception {
-        Map<String, String> response = new LinkedHashMap<String, String>();
-        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-
-        validateParameters(type);
-
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        String language = LanguageUtils.locale2gnCode(locale.getISO3Language());
-
-        if (type == null || type.contains("StatusValue")) {
-            List<StatusValue> valueList = statusValueRepository.findAll();
-            Iterator<StatusValue> valueIterator = valueList.iterator();
-            while (valueIterator.hasNext()) {
-                StatusValue entity = valueIterator.next();
-                response.put("status-" + entity.getId() + "",
-                    getLabelOrKey(entity, language, entity.getId() + ""));
-            }
-        }
-
-        if (type == null || type.contains("MetadataCategory")) {
-            List<MetadataCategory> metadataCategoryList = categoryRepository.findAll();
-            Iterator<MetadataCategory> metadataCategoryIterator = metadataCategoryList.iterator();
-            while (metadataCategoryIterator.hasNext()) {
-                MetadataCategory entity = metadataCategoryIterator.next();
-                response.put("cat-" + entity.getName() + "",
-                    getLabelOrKey(entity, language, entity.getName()));
-            }
-        }
-
-        if (type == null || type.contains("Group")) {
-            List<Group> groupList = groupRepository.findAll();
-            Iterator<Group> groupIterator = groupList.iterator();
-            while (groupIterator.hasNext()) {
-                Group entity = groupIterator.next();
-                response.put("group-" + entity.getId() + "",
-                    getLabelOrKey(entity, language, entity.getName()));
-            }
-        }
-
-        if (type == null || type.contains("Operation")) {
-            List<Operation> operationList = operationRepository.findAll();
-            Iterator<Operation> operationIterator = operationList.iterator();
-            while (operationIterator.hasNext()) {
-                Operation entity = operationIterator.next();
-                response.put("op-" + entity.getId() + "",
-                    getLabelOrKey(entity, language, entity.getId() + ""));
-                response.put("op-" + entity.getName() + "",
-                    getLabelOrKey(entity, language, entity.getName()));
-            }
-        }
-
-        if (type == null || type.contains("Source")) {
-            List<Source> sourceList = sourceRepository.findAll();
-            Iterator<Source> sourceIterator = sourceList.iterator();
-            while (sourceIterator.hasNext()) {
-                Source entity = sourceIterator.next();
-                response.put("source-" + entity.getUuid() + "",
-                    getLabelOrKey(entity, language, entity.getUuid()));
-            }
-        }
-
-        if (type == null || type.contains("Schematron")) {
-            List<Schematron> schematronList = schematronRepository.findAll();
-            Iterator<Schematron> schematronIterator = schematronList.iterator();
-            while (schematronIterator.hasNext()) {
-                Schematron entity = schematronIterator.next();
-                response.put("sch-" + entity.getRuleName() + "",
-                    getLabelOrKey(entity, language, entity.getRuleName()));
-            }
-        }
-
-        if (type == null || type.contains("IsoLanguage")) {
-            List<IsoLanguage> isoLanguageList = isoLanguageRepository.findAll();
-            Iterator<IsoLanguage> isoLanguageIterator = isoLanguageList.iterator();
-            while (isoLanguageIterator.hasNext()) {
-                IsoLanguage entity = isoLanguageIterator.next();
-                response.put("lang-" + entity.getCode() + "",
-                    getLabelOrKey(entity, language, entity.getCode()));
-            }
-        }
-
-        if (type == null || type.contains("Translations")) {
-            getAllDbTranslations(response, language);
-        }
-        return response;
-    }
-
-    private String getLabelOrKey(Localized entity, String language, String defaultValue) {
-        String value = entity.getLabel(language);
-        return value != null ? value : defaultValue;
+        String language = languageUtils.locale2gnCode(locale.getISO3Language());
+        return translationPackBuilder.getDbTranslation(language, type);
     }
 
 
-    private void validateParameters(List<String> type) {
-        if (type != null) {
-            if (type.size() == 0) {
-                throw new IllegalArgumentException(
-                    String.format(
-                        "Empty type is not allowed. Remove the parameter or choose one or more types in %s",
-                        TRANSLATION_TABLES));
-            }
-            for (String value : type) {
-                if (!TRANSLATION_TABLES.contains(value)) {
-                    throw new IllegalArgumentException(
-                        String.format(
-                            "Type '%s' is not allowed. Choose one or more types in %s",
-                            value, TRANSLATION_TABLES));
-                }
-            }
-        }
+    /**
+     * Get list of packages.
+     */
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get list of translation packages."
+    )
+    @RequestMapping(value = "/packages",
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    @ResponseBody
+    public Map<String, List<String>> getTranslationsPackage(
+    ) throws Exception {
+        return translationPackBuilder.getPackages();
+    }
+
+
+    /**
+     * Get a translation package.
+     */
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get a translation package."
+    )
+    @RequestMapping(value = "/packages/{pack}",
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    @ResponseBody
+    public Map<String, String> getTranslationsPackage(
+        @PathVariable
+        final String pack,
+        ServletRequest request,
+        HttpServletRequest httpRequest
+    ) throws Exception {
+        final ServiceContext context = ApiUtils.createServiceContext(httpRequest);
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        String language = languageUtils.locale2gnCode(locale.getISO3Language());
+        return translationPackBuilder.getPack(language, pack, context);
+    }
+
+
+    /**
+     * Get a translation package.
+     */
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Clean translation packages cache."
+    )
+    @RequestMapping(value = "/cache",
+        method = RequestMethod.DELETE,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseStatus(OK)
+    @ResponseBody
+    public void cleanTranslationsPackagesCache(
+        ServletRequest request
+    ) throws Exception {
+        translationPackBuilder.clearCache();
     }
 }

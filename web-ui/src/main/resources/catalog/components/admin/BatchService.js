@@ -80,8 +80,9 @@
               .then(function() {
                 if (!skipSave) {
                   $http.post('../api/records/' + (params.id || params.uuid) +
-                    '/processes/' + params.process + '?' +
-                    gnUrlUtils.toKeyValue(params)
+                    '/processes/' + params.process,
+                    gnUrlUtils.toKeyValue(params),
+                    {headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}
                   ).then(function(data) {
                     $http.get('../api/records/' + gnCurrentEdit.id + '/editor' +
                       '?currTab=' + gnCurrentEdit.tab).then(function(data) {
@@ -94,8 +95,9 @@
                   });
                 } else {
                   $http.post('../api/records/' + (params.id || params.uuid) +
-                    '/processes/' + params.process + '?' +
-                    gnUrlUtils.toKeyValue(params)
+                    '/processes/' + params.process,
+                    gnUrlUtils.toKeyValue(params),
+                    {headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}
                   ).then(function(data) {
                     defer.resolve(data);
                   });

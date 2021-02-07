@@ -15,9 +15,17 @@
     <strong translate>wpsGetCapError</strong>{{ error }}
   </div>
 
+
+  <input class="form-control"
+         data-ng-show="processes.length > 5"
+         data-ng-model="processesFilter.$"
+         autofocus=""
+         placeholder="{{'filter' | translate}}"/>
+
   <ul class="list-group processes-list">
     <a href class="list-group-item list-group-item-action"
-       data-ng-repeat="p in processes" ng-click="ctrl.select(p)"
+       data-ng-repeat="p in processes | filter:processesFilter | orderBy:'title.value'"
+       ng-click="ctrl.select(p)"
        ng-class="{active: p.identifier.value == wpsLink.name && url == wpsLink.url}">
       <i class="fa fa-cog"/>&nbsp;{{ p.title.value }}<br />
       <small class="text-muted">{{ p.identifier.value }}</small>
