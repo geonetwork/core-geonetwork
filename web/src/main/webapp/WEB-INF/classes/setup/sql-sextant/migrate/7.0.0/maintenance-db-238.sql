@@ -7,6 +7,9 @@ WHERE iddes not in (SELECT distinct(source) FROM metadata);
 DELETE FROM sources
 WHERE uuid not in (SELECT distinct(source) FROM metadata);
 
+UPDATE Sources SET type = 'portal' WHERE type IS null AND uuid = (SELECT value FROM settings WHERE name = 'system/site/siteId');
+
+UPDATE Sources SET type = 'harvester' WHERE type IS null AND uuid != (SELECT value FROM settings WHERE name = 'system/site/siteId');
 
 
 -- Migrate virtual csw to portal
