@@ -110,9 +110,7 @@
 
   module.config(['$LOCALES', 'gnGlobalSettings',
     function($LOCALES, gnGlobalSettings) {
-      $LOCALES.push('v4');
-      $LOCALES.push('sextant');
-
+      $LOCALES.push('/../api/i18n/packages/search');
     }]);
 
   module.controller('gnsSextant', [
