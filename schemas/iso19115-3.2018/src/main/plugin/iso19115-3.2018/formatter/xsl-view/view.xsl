@@ -114,9 +114,7 @@
       </h2>
       <xsl:variable name="tags">
         <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:descriptiveKeywords/
-                                          *[
-                                          mri:type/*/@codeListValue != 'place'
-                                            and normalize-space(string-join(mri:keyword//text(), '')) != ''
+                                          *[normalize-space(string-join(mri:keyword//text(), '')) != ''
                                             and (not(mri:thesaurusName/*/cit:identifier/*/mcc:code)
                                             or mri:thesaurusName/*/cit:identifier/*/mcc:code/*/
                                                 text() != '')]">
