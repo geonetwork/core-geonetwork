@@ -163,7 +163,7 @@
             tooltipOverlay.setPosition(coordinate);
 
             // read the feature's attributes & render them using the tooltip template
-            const clickMode = sticky
+            var clickMode = sticky;
             var props = feature.getProperties();
             var html
             if (!clickMode && tooltipHoverTemplate) {
@@ -375,7 +375,7 @@
           topLeft[1] = Math.min(Math.max(topLeft[1], -90), 90);
           bottomRight[0] = topLeft[0] + viewWidth;
           bottomRight[1] = Math.min(Math.max(bottomRight[1], -90), 90);
-          const queryExtent = [[topLeft[0], topLeft[1]], [bottomRight[0], bottomRight[1]]]
+          var queryExtent = [[topLeft[0], topLeft[1]], [bottomRight[0], bottomRight[1]]];
 
           return {
             query: {

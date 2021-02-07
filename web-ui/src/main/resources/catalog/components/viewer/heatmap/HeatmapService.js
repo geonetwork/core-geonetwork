@@ -44,7 +44,7 @@
         '#ec7239',
         '#cc4f30',
         '#993722',
-        '#662613',
+        '#662613'
       ]
 
       var indexObject = gnIndexRequestManager.register('WfsFilter', 'heatmap');
@@ -87,7 +87,7 @@
         topLeft[1] = Math.min(Math.max(topLeft[1], -90), 90);
         bottomRight[0] = topLeft[0] + viewWidth;
         bottomRight[1] = Math.min(Math.max(bottomRight[1], -90), 90);
-        const queryExtent = [[topLeft[0], topLeft[1]], [bottomRight[0], bottomRight[1]]]
+        var queryExtent = [[topLeft[0], topLeft[1]], [bottomRight[0], bottomRight[1]]]
 
         // define base params (without filter)
         var reqParams = {
