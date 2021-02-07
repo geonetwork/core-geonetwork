@@ -35,11 +35,6 @@
     'gn_esri_service'
   ]);
 
-  var ARCGIS_SERVICES_MAP = {
-    imagery: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    hillshade: 'https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',
-    ocean: 'https://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}'
-  }
 
   /**
    * @ngdoc service
@@ -1494,6 +1489,11 @@
           },
 
           addEsriRestFromScratch: function(map, url, name, createOnly, md) {
+            if (url === '') {
+              var error = "Trying to add an ESRI layer with no service URL. Layer name is " + name + ". Check the metadata or the map.";
+              console.warn(error);
+              return $q.reject(error);
+            }
             var serviceUrl = url.replace(/(.*\/MapServer).*/, '$1');
             var layer = !!name && parseInt(name).toString() === name
               ? name
@@ -2089,15 +2089,6 @@
                       return layer;
                     });
                 break;
-              // SPECIFIC SEXTANT
-              case 'arcgis-disabled':
-                return new ol.layer.Tile({
-                  _bgId: type + '_' + opt.name,
-                  source: new ol.source.XYZ({
-                    url: ARCGIS_SERVICES_MAP[opt.name]
-                  }),
-                  title: title ||  'ArcGIS ' + opt.name
-                });
               case 'arcgis':
                 if (!opt.url) {
                   $log.warn('A required parameter (url) ' +

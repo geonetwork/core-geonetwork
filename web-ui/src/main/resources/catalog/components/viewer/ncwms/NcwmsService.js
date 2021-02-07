@@ -69,6 +69,8 @@
        * @returns {defer} promise
        */
       this.feedOlLayer = function(layer) {
+        if (layer === undefined) {return $q.reject('Undefined layer');}
+
         // advanced means the layer has advanced functionalities (time, style...)
         if (!layer.get('advanced')) {
           return $q.resolve();

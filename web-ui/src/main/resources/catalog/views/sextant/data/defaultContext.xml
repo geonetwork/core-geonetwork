@@ -36,27 +36,21 @@
             </ows-context:Server>
         </ows-context:Layer>
 
-        <ows-context:Layer name="{type=wmts,name=Ocean_World_Ocean_Base}" group="Background layers" hidden="true"
-                           opacity="1">
-            <ows:Title>World_Ocean_Base</ows:Title>
-            <ows-context:Server service="urn:ogc:serviceType:WMS">
-                <ows-context:OnlineResource
-                        xlink:href="https://server.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"/>
-            </ows-context:Server>
-        </ows-context:Layer>
-
-        <ows-context:Layer name="{type=arcgis,name=imagery}" group="Background layers" hidden="true" opacity="1">
-            <ows:Title>Arcgis imagery</ows:Title>
-        </ows-context:Layer>
-
-        <ows-context:Layer name="{type=arcgis,name=hillshade}" group="Background layers" hidden="true" opacity="1">
+        <ows-context:Layer name="{type=wmts,name=Elevation_World_Hillshade}" group="Background layers" hidden="true" opacity="1">
             <ows:Title>Arcgis hillshade</ows:Title>
+          <ows-context:Server service="urn:ogc:serviceType:WMS">
+            <ows-context:OnlineResource
+              xlink:href="https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"/>
+          </ows-context:Server>
         </ows-context:Layer>
 
-        <ows-context:Layer name="{type=arcgis,name=ocean}" group="Background layers" hidden="true" opacity="1">
+        <ows-context:Layer name="{type=wmts,name=Ocean_World_Ocean_Base}" group="Background layers" hidden="true" opacity="1">
             <ows:Title>Arcgis ocean</ows:Title>
+          <ows-context:Server service="urn:ogc:serviceType:WMS">
+            <ows-context:OnlineResource
+              xlink:href="https://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"/>
+          </ows-context:Server>
         </ows-context:Layer>
-
 
         <ows-context:Layer name="{type=osm}" group="Background layers" hidden="true" opacity="1">
             <ows:Title>OpenStreetMap</ows:Title>
