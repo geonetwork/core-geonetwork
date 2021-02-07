@@ -342,11 +342,12 @@
             scope.layer.getSource().updateParams(scope.params);
 
             scope.layer.set('legend',
-              gnNcWms.updateLegendUrl(scope.layer.get('legend'),
+              gnNcWms.updateLegendUrl(scope.layer.get('legend'), scope.layer.get('advancedType'),
                 angular.extend({
                   PALETTE: scope.params.STYLES,
                   style: scope.params.STYLES
                 }, scope.params)));
+
           };
 
           scope.isLayerNcwms = function() {

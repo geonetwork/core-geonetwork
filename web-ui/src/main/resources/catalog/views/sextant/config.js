@@ -380,6 +380,7 @@
       searchSettings.grid.related = ['parent', 'children', 'sources', 'hassources'];
 
       viewerSettings.menuCollapsed = false;
+      viewerSettings.menuHidden = false;
 
       // Define if children button must be displayed in search results.
       searchSettings.displayChildrenBtn = true;
@@ -404,6 +405,9 @@
         }
         if(sxtSettings.menuCollapsed)  {
           viewerSettings.menuCollapsed = sxtSettings.menuCollapsed;
+        }
+        if(sxtSettings.menuHidden)  {
+          viewerSettings.menuHidden = sxtSettings.menuHidden;
         }
         if(sxtSettings.displayChildrenBtn)  {
           searchSettings.displayChildrenBtn = sxtSettings.displayChildrenBtn;

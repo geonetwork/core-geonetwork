@@ -13,7 +13,7 @@
   <gn-profile map="map"></gn-profile>
 
   <!-- Left buttons - Tools-->
-  <div class="tools main-tools" ng-class="{'activeTool': isContainerOpened(), 'sxt-maximize-layer-tools': active.maximized }">
+  <div class="tools main-tools" ng-show="isMenuVisible()" ng-class="{'activeTool': isContainerOpened(), 'sxt-maximize-layer-tools': active.maximized}">
 
     <div gi-btn-group class="sxt-panel-button">
       <button class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#layers" gi-btn="active">

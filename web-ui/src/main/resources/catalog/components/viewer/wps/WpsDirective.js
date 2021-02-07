@@ -160,6 +160,9 @@
             scope.inputWfsOverride = {};
 
             scope.describeState = 'sent';
+            // reset executeState upon new selection
+            scope.executeState = '';
+            scope.executeResponse = null;
 
             // parse application profile as JSON (if not already an object)
             // application profile holds 2 arrays: inputs and outputs
@@ -209,6 +212,12 @@
               });
             };
             scope.sortKeyValue = '&#9660;';
+            // SPECIFIC SEXTANT
+            scope.checkOutput = function (outputs) {
+              return outputs.filter(function(o) {
+                return o.reference.mimeType !=='application/x-ogc-wms'});
+            };
+            // END SPECIFIC SEXTANT
             scope.reOrderLayerInputs = function(key){
               scope.removeAllInputValuesByName(scope.emodnetSortInputKey);
               var layersOrderedList = scope.filterAvailableLayers()
