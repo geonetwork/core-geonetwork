@@ -89,29 +89,6 @@ then
 SED_SCRIPT
 fi
 
-
-# Add schema resources in web/pom.xml
-line=$(grep -n "schemas/${schema}/src/main/plugin</directory>" web/pom.xml | cut -d: -f1)
-
-if [ ! $line ]
-then
-  line=$(grep -n 'schemas/iso19139/src/main/plugin</directory>' web/pom.xml | cut -d: -f1)
-  finalLine=$(($line + 3))
-
-  projectBaseDir='${project.basedir}'
-  baseDir='${basedir}'
-
-  echo "Adding schema ${schema} resources to web/pom.xml"
-
-  sed $sedopt -f /dev/stdin web/pom.xml << SED_SCRIPT
-  ${finalLine} a\\
-\                <resource>\\
-\                  <directory>${projectBaseDir}/../schemas/${schema}/src/main/plugin</directory>\\
-\                  <targetPath>${baseDir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>\\
-\                </resource>
-SED_SCRIPT
-fi
-
 # Add schema resources in service/pom.xml with test scope for unit tests
 line=$(grep -n "<artifactId>schema-${schema}</artifactId>" services/pom.xml | cut -d: -f1)
 
