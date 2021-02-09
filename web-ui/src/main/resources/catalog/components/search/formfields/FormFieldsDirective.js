@@ -646,7 +646,7 @@
                 });
               var init = function() {
                 var schema = attrs['schema'] ||
-                    gnCurrentEdit.schema || 'iso19139';
+                    gnCurrentEdit.schema || 'iso19115-3.2018';
                 var config = schema + '|' + attrs['gnSchemaInfo'] + '|||';
 
                 scope.type = attrs['schemaInfoCombo'];
