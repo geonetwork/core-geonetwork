@@ -38,7 +38,7 @@ fi
 # Add submodule
 if [ ! -d "schemas/${schema}" ]; then
   echo "Adding schema from ${gitRepository}, branch  ${gitBranch} to schemas/${schema}"
-  git submodule add -b ${gitBranch} ${gitRepository} schemas/${schema}
+  git submodule --force add -b ${gitBranch} ${gitRepository} schemas/${schema}
 fi
 
 

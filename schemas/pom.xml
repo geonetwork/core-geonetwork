@@ -53,6 +53,7 @@
     <module>iso19115-3.2018</module>
   </modules>
 
+  <!-- used by add-schema.sh -->
   <profiles>
   </profiles>
 
