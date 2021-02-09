@@ -475,14 +475,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         Validator validator;
         if (changeDate != null) {
             final long changeDateAsTime = changeDate.toDate().getTime();
-            long roundedChangeDate = changeDateAsTime / 1000 * 1000;
-            if (request.checkNotModified(roundedChangeDate) && context.getBean(CacheConfig.class).allowCaching(key)) {
-                if (!skipPopularityBool) {
-                    context.getBean(DataManager.class).increasePopularity(context, resolvedId);
-                }
-                return;
-            }
-
             validator = new ChangeDateValidator(changeDateAsTime);
         } else {
             validator = new NoCacheValidator();
