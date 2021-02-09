@@ -751,6 +751,35 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-schemas-ant</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+                <!-- Copy all the src/main/plugin folders in schemas to the webapp folder
+                in order to be loaded by the application when running mvn jetty:run.
+                -->
+              <target description="copy from schemas to schema_plugins folder">
+                <copy todir="src/main/webapp/WEB-INF/data/config/schema_plugins" preservelastmodified="true">
+                  <fileset dir="${basedir}/../schemas/">
+                    <include name="**/src/main/plugin/**"/>
+                  </fileset>
+                  <regexpmapper handledirsep="yes"
+                    from="^[-_\.a-zA-Z0-9]+/src/main/plugin/(.*)"
+                      to="\1" />
+                </copy>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
         <executions>
           <execution>
@@ -777,7 +806,7 @@
             </configuration>
           </execution>
           <execution>
-            <id>copy-schemas</id>
+            <id>copy-docs</id>
             <phase>process-resources</phase>
             <goals>
               <goal>copy-resources</goal>
@@ -787,34 +816,6 @@
               <overwrite>true</overwrite>
               <outputDirectory>${build.webapp.resources}</outputDirectory>
               <resources>
-                <!-- Copy the schema folder to the webapp folder source directory
-                in order to be loaded by the application when running mvn jetty:run.
-                -->
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19139/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
-                  </targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19110/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
-                  </targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/dublin-core/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
-                  </targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/csw-record/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
-                  </targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19115-3.2018/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
-                  </targetPath>
-                </resource>
                 <!-- Copy the documentation in the webapp. -->
                 <resource>
                   <directory>${project.basedir}/../docs/manuals/target/doc</directory>
