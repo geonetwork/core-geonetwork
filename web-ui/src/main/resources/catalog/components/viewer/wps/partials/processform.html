@@ -80,9 +80,18 @@
                 <!-- Inputs: loop on process description to display all inputs -->
               </label>
 
-
+              <!-- Date time -->
+              <div ng-if="isDateTime(input)">
+                <div ng-repeat="field in getInputsByName(input.identifier.value)"
+                     class="input-daterange input-group input-group-sm"
+                     gn-bootstrap-datepicker="pickerValues"
+                     data-date-format="dd-mm-yyyy">
+                  <input ng-model="field.value" type="text" ng-blur="onBlur($event)" class="input-sm form-control"/>
+                  <span class="input-group-addon" translate>date</span>
+                </div>
+              </div>
               <!-- Basic form field (combo box or text field) -->
-              <div ng-if="::input.literalData">
+              <div ng-if="::input.literalData && !isDateTime(input)">
                 <div class="input-group"
                   ng-repeat="field in getInputsByName(input.identifier.value)">
                   <select class="form-control input-sm"

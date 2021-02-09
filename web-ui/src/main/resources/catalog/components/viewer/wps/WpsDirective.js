@@ -212,12 +212,18 @@
               });
             };
             scope.sortKeyValue = '&#9660;';
+
             // SPECIFIC SEXTANT
+            scope.isDateTime = function(date) {
+              return date.title.value === 'datetime';
+            };
             scope.checkOutput = function (outputs) {
               return outputs.filter(function(o) {
-                return o.reference.mimeType !=='application/x-ogc-wms'});
+                return o.reference.mimeType !== 'application/x-ogc-wms';
+              });
             };
             // END SPECIFIC SEXTANT
+
             scope.reOrderLayerInputs = function(key){
               scope.removeAllInputValuesByName(scope.emodnetSortInputKey);
               var layersOrderedList = scope.filterAvailableLayers()
