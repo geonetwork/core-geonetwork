@@ -4,6 +4,7 @@
 *.iml
 *.launch
 *.old
+*.bak
 .DS_Store
 .project
 git*.properties
