@@ -155,6 +155,9 @@
 
             scope.describeState = 'sent';
 
+            // reset executeState upon new selection
+            scope.executeState = '';
+
             // parse application profile as JSON (if not already an object)
             // application profile holds 2 arrays: inputs and outputs
             scope.applicationProfile = scope.wpsLink.applicationProfile || null;
