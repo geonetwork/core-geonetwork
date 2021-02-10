@@ -166,6 +166,10 @@
               }
             }
 
+            scope.isDateTime = function(date) {
+              return date.title.value === 'datetime';
+            };
+
             // get values from wfs filters
             var wfsFilterValues = null;
             if (scope.wfsLink) {
