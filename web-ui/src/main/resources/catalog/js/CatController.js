@@ -255,6 +255,9 @@ goog.require('gn_alert');
           },
           // TODOES
           'facetTabField': '',
+          // Enable vega only if using vega facet type
+          // See https://github.com/geonetwork/core-geonetwork/pull/5349
+          'isVegaEnabled': false,
           'facetConfig': {
             'cl_hierarchyLevel.key': {
               'terms': {
@@ -439,7 +442,9 @@ goog.require('gn_alert');
               "meta": {
                 "collapsed": true
               }
-            },
+            // },
+            // Don't forget to enable Vega to use interactive graphic facets.
+            // See isVegaEnabled property.
             // 'cl_status.key': {
             //   'terms': {
             //     'field': 'cl_status.key',
@@ -450,29 +455,30 @@ goog.require('gn_alert');
             //     'vega': 'arc'
             //   }
             // },
-            'resourceTemporalDateRange': {
-              'gnBuildFilterForRange': {
-                field: "resourceTemporalDateRange",
-                buckets: 2021 - 1970,
-                dateFormat: 'YYYY',
-                vegaDateFormat: '%Y',
-                from: 1970,
-                to: 2021,
-                mark: 'area'
-              },
-              'meta': {
-                'vega': 'timeline'
-              }
-            },
-            'dateStamp' : {
-              'auto_date_histogram' : {
-                'field' : 'dateStamp',
-                'buckets': 50
-              },
-              "meta": {
-                'userHasRole': 'isReviewerOrMore',
-                'collapsed': true
-              }
+            //
+            // 'resourceTemporalDateRange': {
+            //   'gnBuildFilterForRange': {
+            //     field: "resourceTemporalDateRange",
+            //     buckets: 2021 - 1970,
+            //     dateFormat: 'YYYY',
+            //     vegaDateFormat: '%Y',
+            //     from: 1970,
+            //     to: 2021,
+            //     mark: 'area'
+            //   },
+            //   'meta': {
+            //     'vega': 'timeline'
+            //   }
+            // },
+            // 'dateStamp' : {
+            //   'auto_date_histogram' : {
+            //     'field' : 'dateStamp',
+            //     'buckets': 50
+            //   },
+            //   "meta": {
+            //     'userHasRole': 'isReviewerOrMore',
+            //     'collapsed': true
+            //   }
             }
           },
           'filters': null,

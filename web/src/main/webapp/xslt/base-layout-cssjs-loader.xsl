@@ -219,9 +219,10 @@
       </xsl:otherwise>
     </xsl:choose>
 
-    <script src="{$uiResourcesPath}lib/vega/vega-5.17.0.js"></script>
-    <script src="{$uiResourcesPath}lib/vega/vega-lite-4.17.0.js"></script>
-    <script src="{$uiResourcesPath}lib/vega/vega-embed-6.12.2.js"></script>
+    <xsl:if test="$isVegaEnabled">
+      <script src="{$uiResourcesPath}lib/vega/vega.js"></script>
+    </xsl:if>
+
     <script src="{$uiResourcesPath}lib/d3_timeseries/d3.min.js?v={$buildNumber}"></script>
     <script src="{$uiResourcesPath}lib/timeline/timeline-zoomable.js?v={$buildNumber}"></script>
     <link rel="stylesheet" href="{$uiResourcesPath}lib/timeline/timeline.css"/>
