@@ -1433,6 +1433,11 @@
           },
 
           addEsriRestFromScratch: function(map, url, name, createOnly, md) {
+            if (url === '') {
+              var error = "Trying to add an ESRI layer with no service URL. Layer name is " + name + ". Check the metadata or the map.";
+              console.warn(error);
+              return $q.reject(error);
+            }
             var serviceUrl = url.replace(/(.*\/MapServer).*/, '$1');
             var layer = !!name && parseInt(name).toString() === name
               ? name
