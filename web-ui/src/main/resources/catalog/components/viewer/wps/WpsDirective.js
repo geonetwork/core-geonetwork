@@ -179,7 +179,8 @@
             scope.checkOutput = function (outputs) {
               return outputs.filter(function(o) {
                 return o.reference.mimeType !== 'application/x-ogc-wms';
-            });
+              })
+            };
 
             // get values from wfs filters
             var wfsFilterValues = null;
