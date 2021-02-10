@@ -62,8 +62,19 @@
                   {{::'inputIsOverloaded' | translate}}</small>
               </label>
 
+              <!-- Date time -->
+              <div ng-if="isDateTime(input)">
+                <div ng-repeat="field in getInputsByName(input.identifier.value)"
+                     class="input-daterange input-group input-group-sm"
+                     gn-bootstrap-datepicker="pickerValues"
+                     data-date-format="dd-mm-yyyy">
+                  <input ng-model="field.value" type="text" ng-blur="onBlur($event)" class="input-sm form-control"/>
+                  <span class="input-group-addon" translate>date</span>
+                </div>
+              </div>
+
               <!-- Basic form field (combo box or text field) -->
-              <div ng-if="::input.literalData">
+              <div ng-if="::input.literalData && !isDateTime(input)">
                 <div class="input-group"
                   ng-repeat="field in getInputsByName(input.identifier.value)">
                   <select class="form-control input-sm"
@@ -174,8 +185,8 @@
                 <div ng-repeat="output in executeResponse.processOutputs.output">
 
                   <div ng-if="output.reference && output.reference.mimeType!='application/x-ogc-wms'"
-                        ng-class="{'gn-single-output': executeResponse.processOutputs.output.length==1}">
-                    <h4 class="col-sm-6" ng-if="executeResponse.processOutputs.output.length>1">
+                        ng-class="{'gn-single-output': executeResponse.processOutputs.output.length == 1}">
+                    <h4 class="col-sm-6" ng-if="executeResponse.processOutputs.output.length > 1">
                       {{::output.title.value}}
                     </h4>
                     <div ng-class="{'col-sm-6': executeResponse.processOutputs.output.length>1}">
