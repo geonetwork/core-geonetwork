@@ -1640,9 +1640,7 @@
                       any: '',
                       isTemplate: 'n',
                       from: 1,
-                      to: 50,
-                      sortBy: 'resourceTitleObject.default.keyword',
-                      sortOrder: ''
+                      to: 50
                     }
                   };
                   scope.searchObj.params = angular.extend({},
