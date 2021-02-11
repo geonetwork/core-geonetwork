@@ -152,6 +152,7 @@
     <facet name="SIH_Groupes_Especes" indexKey="thesaurus-external.theme.SIH_Groupes_Especes" label="SIH_Groupes_Especes"/>
     <facet name="SIH_Engins_valides" indexKey="thesaurus-external.theme.SIH_Engins_valides" label="SIH_Engins_valides"/>
     <facet name="SIH_Categories_Engins" indexKey="thesaurus-external.theme.SIH_Categories_Engins" label="SIH_Categories_Engins"/>
+    <facet name="SIH_Especes_scientifiques" indexKey="thesaurus-external.theme.SIH_Especes_scientifiques" label="SIH_Especes_scientifiques"/>
 
     <facet name="emodnet-checkpoint.environmental.matrix" indexKey="thesaurus-local.theme.emodnet-checkpoint.environmental.matrix" label="emodnet-checkpoint.environmental.matrix"/>
     <facet name="emodnet-checkpoint.challenges" indexKey="thesaurus-local.theme.emodnet-checkpoint.challenges" label="emodnet-checkpoint.challenges"/>
@@ -315,6 +316,7 @@
       <item facet="SIH_Groupes_Especes" max="300"/>
       <item facet="SIH_Engins_valides" max="300"/>
       <item facet="SIH_Categories_Engins" max="300"/>
+      <item facet="SIH_Especes_scientifiques" max="300"/>
       <item facet="emodnet-checkpoint.environmental.matrix" max="300"/>
       <item facet="emodnet-checkpoint.challenges" max="300"/>
       <item facet="emodnet-checkpoint.level.of.characteristics" max="300"/>
