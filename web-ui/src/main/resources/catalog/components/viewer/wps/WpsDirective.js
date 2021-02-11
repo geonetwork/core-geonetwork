@@ -380,27 +380,44 @@
                         input.complexData._default.format.mimeType
                         ) || 'gml';
 
+                        scope.getGeomType = function(geom) {
+                          if (!geom) {return;}
+                          var geom_type;
+                          geom = geom.toLowerCase();
+                          switch(geom) {
+                            case 'line':
+                              geom_type = 'LineString';
+                              break;
+
+                            case 'point':
+                              geom_type = 'Point';
+                              break;
+
+                            case 'polygon':
+                              geom_type = 'Polygon';
+                              break;
+
+                            // TODO: add other types?
+
+                            default:
+                              geom_type = null;
+                          }
+                          return geom_type;
+                        }
                         // guess geometry type from schema url
                         var url = input.complexData._default.format.schema;
                         var result = /\?.*GEOMETRYNAME=([^&\b]*)/gi.exec(url);
-                        switch (result && result[1] ?
-                        result[1].toLowerCase() : null) {
-                          case 'line':
-                            input.geometryType = 'LineString';
-                            break;
-
-                          case 'point':
-                            input.geometryType = 'Point';
-                            break;
-
-                          case 'polygon':
-                            input.geometryType = 'Polygon';
-                            break;
-
-                          // TODO: add other types?
-
-                          default:
-                            input.geometryType = null;
+                        var geom = result && result[1] ? result[1].toLowerCase() : null;
+                        input.geometryType = scope.getGeomType(geom, input.geometryType);
+                        // Deal with multi processing:geometryType
+                        if (!input.geometryType) {
+                          input.geometryType = scope.getGeomType(input.metadata
+                            .filter(function(i) {
+                              return i.hasOwnProperty('title') && i.title === "processing:geometryType";
+                            })
+                            .map(function(i) {
+                              return i.href;
+                            })[0]);
                         }
 
                         // try in ows:Metadata if not found
