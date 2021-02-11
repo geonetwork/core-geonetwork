@@ -69,7 +69,12 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 public class SearchController {
@@ -492,11 +497,9 @@ public class SearchController {
 
                 AbstractMetadata metadata = metadataUtils.findOne(mdId);
 
-                final String schema = metadata.getDataInfo().getSchemaId();
                 String displayLanguage = context.getLanguage();
-                Element resultMD = applyElementSetName(context, schemaManager, schema,
-                    metadata.getXmlData(false), outSchema, setName, resultType, Integer.toString(mdId), displayLanguage);
-                resultMD = applyElementNames(context, elemNames, typeName, schemaManager, schema, resultMD, resultType, null, strategy);
+                Element resultMD = retrieveMetadata(context, metadata.getId() + "",
+                    setName, outSchema, elemNames, typeName, resultType, strategy, displayLanguage);
 
                 if (resultMD != null) {
                     if (resultType == ResultType.RESULTS) {
@@ -568,6 +571,7 @@ public class SearchController {
             return result;
         }
     }
+
 
 
     private Filter parseFilter(Element xml, String filterVersion) {
