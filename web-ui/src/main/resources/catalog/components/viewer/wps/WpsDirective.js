@@ -173,7 +173,10 @@
             }
 
             scope.isDateTime = function(date) {
-              return date.title.value === 'datetime';
+              if (date.hasOwnProperty('metadata')) {
+                return date.metadata[0].href === 'datetime';
+              }
+              return false;
             };
 
             scope.checkOutput = function (outputs) {
