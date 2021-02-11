@@ -215,7 +215,7 @@
 
             // SPECIFIC SEXTANT
             scope.isDateTime = function(date) {
-              return date.title.value === 'datetime';
+              return date.metadata[0].href === 'datetime';
             };
             scope.checkOutput = function (outputs) {
               return outputs.filter(function(o) {
