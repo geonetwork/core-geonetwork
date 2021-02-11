@@ -103,10 +103,27 @@
     });
   }
 
+  FacetsController.prototype.filter = function (facet, item) {
+    var value = !item.inverted;
+    if (facet.type === 'terms') {
+      facet.include = '';
+    } else if (facet.type === 'filters' || facet.type === 'histogram') {
+      value = item.query_string.query_string.query;
+      if(item.inverted) {
+        value = '-('+value+')';
+      }
+    } else if (facet.type === 'tree') {
+    }
+    this.searchCtrl.updateState(item.path, value);
+  }
+
   FacetsController.prototype.onUpdateDateRange = function (facet, from, to) {
-    var query_string =  '+' + facet.key + ':[' + moment(from, 'DD-MM-YYYY').toISOString() + ' TO ' +
-      moment(to, 'DD-MM-YYYY').toISOString() + ']';
-    this.$scope.$digest();
+    var query_string =  (from === null && to === null)
+      ? '' :
+      '+' + facet.key + ':[' +
+      (from || '*') + ' TO ' +
+      (to  || '*') + ']';
+    // this.$scope.$digest();
     this.searchCtrl.updateState(facet.path, query_string, true);
   };
 
@@ -265,6 +282,314 @@
             'partials/facet.html'
         },
         link: function (scope, element, attrs) {
+        }
+      }
+    }])
+
+  module.directive('gnFacetTemporalrange', [
+    '$timeout',
+    function($timeout) {
+    return {
+      restrict: 'A',
+      replace: true,
+      templateUrl: function(elem, attrs) {
+        return '../../catalog/components/elasticsearch/directives/' +
+          'partials/facet-temporalrange.html';
+      },
+      scope: {
+        facet: '<gnFacetTemporalrange',
+        updateCallback: '&callback'
+      },
+      link: function(scope, element, attrs, controller) {
+        scope.range = {
+          from: null,
+          to: null
+        };
+        scope.signal = null;
+
+        scope.vl = null;
+        scope.dateFormat = scope.facet.meta.dateFormat || 'DD-MM-YYYY'
+        scope.vegaDateFormat = scope.facet.meta.vegaDateFormat || '%d-%m-%Y'
+        scope.initialRange = angular.copy(scope.facet.items);
+
+        function buildData() {
+          angular.forEach(scope.initialRange, function(d) {
+            d.type = 'all';
+            return d;
+          });
+          angular.forEach(scope.facet.items, function(d) {
+            d.type = 'current';
+            return d;
+          });
+          return [].concat(scope.initialRange, scope.facet.items);
+            }
+        // Assign the specification to a local variable vlSpec.
+        var vlSpec = {
+          $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
+          datasets: {
+            facetValues: buildData()
+          },
+          data: {
+            name: 'facetValues'
+          },
+          config: {
+            axis: {
+              domainColor: "#ddd",
+              tickColor: "#ddd"
+            }
+          },
+          vconcat: [{
+            mark: {
+              type: scope.facet.meta.mark || 'bar',
+              cornerRadiusEnd: 2
+            },
+            height: 100,
+            selection: {
+              pts: {type: "single"}
+            },
+            encoding: {
+              x: {
+                field: 'key',
+                type: 'temporal',
+                timeunit: 'milliseconds',
+                bin: {
+                  maxbins: 30,
+                  extent: {
+                    selection: "brush"
+                  }
+                },
+                axis: {
+                  title: '',
+                  labelExpr: "[timeFormat(datum.value, '" + scope.vegaDateFormat + "')]"
+                }
+              },
+              y: {
+                field: 'doc_count',
+                type: 'quantitative',
+                stack: null,
+                axis: {
+                  title: ''
+                }
+              },
+              color: {
+                scale: {
+                  domain: ['all', 'current'],
+                  range: ['#ddd', '#3277B3']
+                },
+                field: "type",
+                type: "nominal",
+                // condition: {
+                //   selection: "pts"
+                // },
+                // value: "grey",
+                legend: null
+              }
+            }
+          }, {
+            mark: 'bar',
+            height: 20,
+            selection: {
+              brush: {
+                type: 'interval',
+                encodings: ['x']
+              }
+            },
+            encoding: {
+              color: {
+                scale: {
+                  domain: ['all', 'current'],
+                  range: ['#ddd', '#3277B3']
+                },
+                field: "type",
+                type: "nominal",
+                legend: null
+              },
+              x: {
+                field: 'key',
+                type: 'temporal',
+                timeunit: 'milliseconds',
+                axis: {
+                  title: ''
+                }
+              },
+              y: {
+                field: 'doc_count',
+                type: 'quantitative',
+                stack: null,
+                axis: {
+                  title: ''
+                }
+              }
+            }
+          }]
+        };
+
+        vegaEmbed('#' + scope.facet.key, vlSpec, {
+          actions: false
+        }).then(function (result) {
+          scope.vl = result;
+
+          scope.vl.view.addEventListener('click',
+            function(event, item) {
+            if (item.datum && item.datum.$$hashKey) { // Avoid brush click
+              var vlId = item.datum.$$hashKey,
+                rangeItems = scope.vl.view.data('facetValues').filter(
+                function(e, i, a) {
+                  return e.$$hashKey === vlId ||
+                    (a[i - 1] && a[i - 1].$$hashKey === vlId);
+                }, []),
+                selected = item.datum,
+                next = rangeItems[1];
+
+              var from = selected.key ? moment(selected.key).format(scope.dateFormat) : '*',
+                  to = next && next.key ? moment(next.key).format(scope.dateFormat) : '*';
+              $timeout(function() {
+                scope.range = {
+                  from: from,
+                  to: to
+                };
+              }, 10);
+            }
+          });
+
+          scope.vl.view.addSignalListener('brush',
+            function(signal, range) {
+            if (scope.signal !== null) {
+              range.key = scope.signal.key;
+              scope.signal = null;
+              scope.vl.view.runAsync();
+              return;
+            } else {
+              var from = range.key ? moment(range.key[0]).format(scope.dateFormat) : '*',
+                  to = range.key ? moment(range.key[1]).format(scope.dateFormat) : '*';
+
+              if ((scope.range.from != from
+                || scope.range.to != to)) {
+                $timeout(function() {
+                  scope.range = {
+                    from: range.key ? from : null,
+                    to: range.key ? to : null
+                  };
+                }, 10);
+              }
+            }
+          });
+
+
+          scope.$watchCollection('facet.items', function(n, o) {
+            scope.vl.view.data('facetValues', buildData()).run();
+          });
+        }).catch(console.error);
+
+        scope.filter = function() {
+          scope.updateCallback({
+              facet: scope.facet,
+              from: moment(scope.range.from, scope.dateFormat).toISOString(),
+              to: moment(scope.range.to, scope.dateFormat).toISOString()
+            });
+        }
+
+        scope.setRange = function() {
+          scope.signal = scope.range.from === undefined && scope.range.to === undefined
+            ? {}
+            : { key: [
+              moment(scope.range.from, scope.dateFormat).valueOf(),
+              moment(scope.range.to, scope.dateFormat).valueOf()
+            ], update: false};
+            scope.vl.view.signal('brush', scope.signal);
+        }
+      }
+    }
+  }])
+
+
+
+  module.directive('gnFacetVega', [
+    '$timeout', '$filter',
+    function($timeout, $filter) {
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: function(elem, attrs) {
+          return '../../catalog/components/elasticsearch/directives/' +
+            'partials/facet-vega.html';
+        },
+        scope: {
+          facet: '<gnFacetVega',
+          updateCallback: '&callback'
+        },
+        link: function(scope, element, attrs, controller) {
+          scope.signal = null;
+          scope.vl = null;
+          scope.id = scope.facet.key.replace('.', '');
+
+          function buildLabel() {
+            scope.facet.items.map(function(f) {
+              f.label = $filter('facetTranslator')(f.value) + ' (' + f.count + ')';
+            });
+          }
+
+          buildLabel();
+
+          var mark = {type: "arc", innerRadius: 50};
+          var encoding = {
+            theta: {field: "count", type: "quantitative"},
+            color: {field: "label", type: "nominal",
+              legend: {title: ''}
+              // scale: {scheme: 'category20b'}
+            }
+          };
+          if (scope.facet.meta.vega === 'bar') {
+            mark = 'bar';
+            encoding = {
+              y: {
+                field: "label", type: "nominal",
+                axis: {labelAngle: 0, title: ''}},
+              x: {field: "count", type: "quantitative", axis: {title: ''}}
+            }
+          }
+
+          var vlSpec = {
+            $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
+            datasets: {
+              facetValues: scope.facet.items
+            },
+            data: {
+              name: 'facetValues'
+            },
+            selection: {
+              pts: {type: "single"}
+            },
+            config: {
+              axis: {
+                domainColor: "#ddd",
+                tickColor: "#ddd"
+              }
+            },
+            mark: mark,
+            encoding: encoding,
+            view: {"stroke": null}
+          };
+
+          vegaEmbed('#' + scope.id, vlSpec, {
+            actions: false
+          }).then(function (result) {
+            scope.vl = result;
+
+            scope.vl.view.addEventListener('click',
+              function (event, item) {
+                if (item.datum && item.datum.$$hashKey) {
+                  $timeout(function() {
+                    scope.updateCallback({facet: scope.facet, item: item.datum});
+                  }, 10);
+                }
+              });
+
+            scope.$watchCollection('facet.items', function (n, o) {
+              buildLabel();
+              scope.vl.view.data('facetValues', scope.facet.items).run();
+            });
+          }).catch(console.error);
         }
       }
     }])

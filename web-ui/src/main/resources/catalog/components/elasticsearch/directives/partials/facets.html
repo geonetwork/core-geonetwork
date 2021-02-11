@@ -21,7 +21,6 @@
         </button>
       </div>
     </div>
-
   </div>
 
   <div class="panel-body">
@@ -58,18 +57,31 @@
                 ng-change="ctrl.filterTerms(facet)"
                 placeholder="{{'filter' | translate}}"
                 autocomplete="nope"
-                class="form-control input-sm"
+                class="form-control input-sm gn-facet-filter"
                 type="text"
                 />
         </div>
 
         <div class="gn-facet-container"
-            es-facet="::facet"
-            es-facet-item="::item"
-            ng-repeat="item in facet.items">
+             ng-if="::facet.type !== 'dates' && !(facet.meta && facet.meta.vega)"
+             es-facet="::facet"
+             es-facet-item="::item"
+             ng-repeat="item in facet.items">
         </div>
 
-        <div class="gn-facet-date-histogram"
+        <div class=""
+             ng-if="::facet.meta && (facet.meta.vega === 'arc' || facet.meta.vega === 'bar')"
+             gn-facet-vega="facet"
+             callback="ctrl.filter(facet, item)">
+        </div>
+        <div class=""
+             ng-if="::facet.type === 'dates'
+                    || (facet.meta && facet.meta.vega === 'timeline')"
+             gn-facet-temporalrange="facet"
+             callback="ctrl.onUpdateDateRange(facet, from, to)">
+        </div>
+
+        <!--<div class="gn-facet-date-histogram"
             ng-if="::facet.type === 'dates'"
             gn-facet-daterange="facet"
             available-dates="facet.dates"
@@ -77,7 +89,7 @@
             graph-expanded="true"
             dates-count="facet.datesCount"
             callback="ctrl.onUpdateDateRange(facet, from, to)">
-        </div>
+        </div>-->
 
         <a href
           class="gn-facet-more"

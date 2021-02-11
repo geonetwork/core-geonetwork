@@ -70,6 +70,7 @@
   "facet-cl_maintenanceAndUpdateFrequency": "Update frequencies",
   "facet-cl_status": "Status",
   "facet-tag": "Keywords",
+  "facet-resourceTemporalDateRange": "Temporal extent",
   "facet-serviceType": "Service type",
   "facet-cl_topic": "Topic",
   "facet-valid": "Valid",
@@ -101,7 +102,7 @@
   "ui-autocompleteConfig": "Autocompletion configuration",
   "ui-autocompleteConfig-help": "Configuration must have a query.multi_match.query which will be set on autocompletion.",
   "ui-facetConfig": "Facets configuration",
-  "ui-facetConfig-help": "This configuration is used to display facets, using either terms aggregations or filters. See <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html\">the documentation</a> for more information.",
+  "ui-facetConfig-help": "This configuration is used to display facets, using either terms aggregations or filters. See <a href=\"https://geonetwork-opensource.org/manuals/4.0.x/en/customizing-application/configuring-faceted-search.html\">the documentation</a> for more information.",
   "resourceEvents": "Resource events",
   "resourceVerticalRange": "Vertical extent",
   "searchBadRequest": "Query returned an error. Check the console for details.",
@@ -146,5 +147,7 @@
   "translationPackClearCache": "Clear translation packs cache",
   "translationPackClearCache-help": "Required if you change JSON translation files of the Javascript application in catalog/locale, database translations or schema JSON translations.",
   "translationPackCacheCleared": "Translation packs cache cleared.",
-  "translationPackCacheClearFailure": "Error occurred while clearing translation packs cache!"
+  "translationPackCacheClearFailure": "Error occurred while clearing translation packs cache!",
+  "ui-isVegaEnabled": "Enable interactive graphics facets (using Vega)",
+  "ui-exactMatchToggle": "Display exact match toggle"
 }

@@ -255,6 +255,9 @@ goog.require('gn_alert');
           },
           // TODOES
           'facetTabField': '',
+          // Enable vega only if using vega facet type
+          // See https://github.com/geonetwork/core-geonetwork/pull/5349
+          'isVegaEnabled': false,
           'facetConfig': {
             'cl_hierarchyLevel.key': {
               'terms': {
@@ -390,6 +393,13 @@ goog.require('gn_alert');
             //     "size": 10
             //   }
             // },
+            // "resourceTemporalDateRange": {
+            //   "date_histogram": {
+            //     "field": "resourceTemporalDateRange",
+            //     "fixed_interval": "1900d",
+            //     "min_doc_count": 1
+            //   }
+            // },
             "creationYearForResource": {
               "histogram": {
                 "field": "creationYearForResource",
@@ -432,22 +442,43 @@ goog.require('gn_alert');
               "meta": {
                 "collapsed": true
               }
-            },
-            'cl_status.key': {
-              'terms': {
-                'field': 'cl_status.key',
-                'size': 10
-              }
-            },
-            'dateStamp' : {
-              'auto_date_histogram' : {
-                'field' : 'dateStamp',
-                'buckets': 50
-              },
-              "meta": {
-                'userHasRole': 'isReviewerOrMore',
-                'collapsed': true
-              }
+            // },
+            // Don't forget to enable Vega to use interactive graphic facets.
+            // See isVegaEnabled property.
+            // 'cl_status.key': {
+            //   'terms': {
+            //     'field': 'cl_status.key',
+            //     'size': 10
+            //   },
+            //   'meta': {
+            //     // 'vega': 'bar'
+            //     'vega': 'arc'
+            //   }
+            // },
+            //
+            // 'resourceTemporalDateRange': {
+            //   'gnBuildFilterForRange': {
+            //     field: "resourceTemporalDateRange",
+            //     buckets: 2021 - 1970,
+            //     dateFormat: 'YYYY',
+            //     vegaDateFormat: '%Y',
+            //     from: 1970,
+            //     to: 2021,
+            //     mark: 'area'
+            //   },
+            //   'meta': {
+            //     'vega': 'timeline'
+            //   }
+            // },
+            // 'dateStamp' : {
+            //   'auto_date_histogram' : {
+            //     'field' : 'dateStamp',
+            //     'buckets': 50
+            //   },
+            //   "meta": {
+            //     'userHasRole': 'isReviewerOrMore',
+            //     'collapsed': true
+            //   }
             }
           },
           'filters': null,
