@@ -187,6 +187,13 @@
     <facet name="myocean-reference-geographical-area" indexKey="thesaurus-local.reference-geographical-area.myocean.reference-geographical-area" label="myocean-reference-geographical-area"/>
     <facet name="theme-GCMDparameter" indexKey="thesaurus-external.theme.GCMDparameter" label="theme-GCMDparameter"/>
 
+    <facet name="ocean-hackaton_ville" indexKey="thesaurus-local.place.oh_ville" label="ocean-hackaton_ville"/>
+
+    <facet name="eolien_groupe" indexKey="thesaurus-local.theme.eolien_groupe" label="eolien_groupe"/>
+    <facet name="eolien_jeu_de_donnees" indexKey="thesaurus-local.theme.Eolien_jeu_de_donnees" label="eolien_jeu_de_donnees"/>
+    <facet name="eolien_stade" indexKey="thesaurus-local.theme.eolien_stade" label="eolien_stade"/>
+    <facet name="eolien_type" indexKey="thesaurus-local.theme.Eolien_type" label="eolien_type"/>
+
     <facet name="mdActions" indexKey="_mdActions" label="mdActions"/>
   </facets>
 
@@ -333,6 +340,11 @@
       <item facet="cersat-project" max="300"/>
       <item facet="myocean-reference-geographical-area" max="300"/>
       <item facet="theme-GCMDparameter" max="300"/>
+      <item facet="ocean-hackaton_ville" max="300"/>
+      <item facet="eolien_groupe" max="300"/>
+      <item facet="eolien_jeu_de_donnees" max="300"/>
+      <item facet="eolien_stade" max="300"/>
+      <item facet="eolien_type" max="300"/>
       <item facet="mdActions"/>
       <!--<item facet="metadataPOC" max="15"/>-->
     </summaryType>
