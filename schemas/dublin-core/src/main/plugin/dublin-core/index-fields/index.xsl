@@ -200,7 +200,7 @@
       <xsl:if test="count($tags) > 0">
         <tag type="object">[
           <xsl:for-each select="$tags">
-            {"default": <xsl:value-of select="concat($doubleQuote, current(), $doubleQuote)"/>}
+            {"default": <xsl:value-of select="concat($doubleQuote, replace(., '&quot;', '\\&quot;'), $doubleQuote)"/>}
             <xsl:if test="position() != last()">,</xsl:if>
           </xsl:for-each>
           ]</tag>
