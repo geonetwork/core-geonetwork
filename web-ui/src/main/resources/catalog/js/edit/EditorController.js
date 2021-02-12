@@ -538,13 +538,11 @@
         if ($location.search()['justcreated']) {
           // Remove newly created record
           var md = gnCurrentEdit.metadata;
-          var encodedTitle = encodeURI(md.title);
-          var encodedDefaultTitle = encodeURI(md.defaultTitle);
           gnMetadataActions.deleteMd(md).
               then(function(data) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: decodeURI($translate.instant('metadataRemoved',
-                  {title: encodedTitle || encodedDefaultTitle})),
+                  title: $translate.instant('metadataRemoved',
+                  {title: md.title || md.defaultTitle}),
                   timeout: 2
                 });
                 closeEditor();
