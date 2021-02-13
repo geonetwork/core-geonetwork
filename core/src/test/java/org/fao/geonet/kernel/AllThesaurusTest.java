@@ -105,8 +105,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
                 return thesauri;
             }
         };
-
-        this.allThesaurus = new AllThesaurus(thesaurusFinder, isoLangMapper, "http://test.com", new ArrayList<>());
+        allThesaurus = createAllThesaurus("http://test.com");
     }
 
     @Test
@@ -289,7 +288,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
         Mockito.when(thesaurusFinder.getThesaurusByName(regionsThesaurus.getKey())).thenReturn(regionsThesaurus);
         Mockito.when(thesaurusFinder.existsThesaurus(regionsThesaurus.getKey())).thenReturn(true);
 
-        this.allThesaurus = new AllThesaurus(thesaurusFinder, isoLangMapper, "http://blah.com", new ArrayList<>());
+        this.allThesaurus = createAllThesaurus("http://blah.com");
         thesauri.put(AllThesaurus.ALL_THESAURUS_KEY, this.allThesaurus);
 
         final KeywordBean country = regionsThesaurus.getKeyword("http://geonetwork-opensource.org/regions#country", "eng");
@@ -416,4 +415,13 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
         assertEquals(keywordBean.getUriCode(),
             this.allThesaurus.getKeyword(keywordBean.getUriCode(), "eng", "fre").getUriCode());
     }
+
+    private AllThesaurus createAllThesaurus(String siteUrl) {
+        AllThesaurus allThesaurus = new AllThesaurus();
+        allThesaurus.setThesaurusFinder(thesaurusFinder);
+        allThesaurus.setIsoLangMapper(isoLangMapper);
+        allThesaurus.init(siteUrl);
+        return allThesaurus;
+    }
+
 }

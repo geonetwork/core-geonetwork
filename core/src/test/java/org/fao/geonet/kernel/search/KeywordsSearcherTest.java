@@ -565,7 +565,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
 
     @Test
     public void testAllThesaurusSortedLimitedNumber() throws Exception {
-        thesaurusMap.put(AllThesaurus.ALL_THESAURUS_KEY, new AllThesaurus(thesaurusFinder, isoLangMapper, "http://siteurl.com", new ArrayList<>()));
+        thesaurusMap.put(AllThesaurus.ALL_THESAURUS_KEY, createAllThesaurus(Collections.emptyList()));
         KeywordsSearcher searcher = new KeywordsSearcher(isoLangMapper, thesaurusFinder);
         String searchTerm = "1";
         Element params = new Element("params").
@@ -608,10 +608,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
 
     @Test
     public void testAllThesaurusExclude() throws Exception {
-        thesaurusMap.put(AllThesaurus.ALL_THESAURUS_KEY,
-            new AllThesaurus(thesaurusFinder, isoLangMapper,
-                "http://siteurl.com",
-                new ArrayList<>()));
+        thesaurusMap.put(AllThesaurus.ALL_THESAURUS_KEY, createAllThesaurus(Collections.emptyList()));
         KeywordsSearcher searcher = new KeywordsSearcher(isoLangMapper, thesaurusFinder);
         Element params = new Element("params").
             addContent(new Element("pNewSearch").setText("true")).
@@ -628,10 +625,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
         searcher.search("eng", params);
         int excluded = searcher.getResults().size();
 
-        thesaurusMap.put(AllThesaurus.ALL_THESAURUS_KEY,
-            new AllThesaurus(thesaurusFinder, isoLangMapper,
-                "http://siteurl.com",
-                Arrays.asList(new String[]{"test.test.testThesaurus"})));
+        thesaurusMap.put(AllThesaurus.ALL_THESAURUS_KEY, createAllThesaurus(Collections.singletonList("test.test.testThesaurus")));
         searcher = new KeywordsSearcher(isoLangMapper, thesaurusFinder);
         params.getChild("pThesauri").setText(AllThesaurus.ALL_THESAURUS_KEY);
         searcher.search("eng", params);
@@ -646,4 +640,12 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
             .getDefaultValue().startsWith(prefix));
     }
 
+    private AllThesaurus createAllThesaurus(List<String> allThesaurusExclude) {
+        AllThesaurus allThesaurus = new AllThesaurus();
+        allThesaurus.setThesaurusFinder(thesaurusFinder);
+        allThesaurus.setIsoLangMapper(isoLangMapper);
+        allThesaurus.setAllThesaurusExclude(allThesaurusExclude);
+        allThesaurus.init("http://siteurl.com");
+        return allThesaurus;
+    }
 }

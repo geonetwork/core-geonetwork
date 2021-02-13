@@ -97,20 +97,13 @@ public class ThesaurusManager implements ThesaurusFinder {
     @Autowired
     private IMetadataSchemaUtils metadataSchemaUtils;
 
+    @Autowired
+    private AllThesaurus allThesaurus;
+
     private ConcurrentHashMap<String, Thesaurus> thesauriMap = new ConcurrentHashMap<String, Thesaurus>();
     private LocalService service = null;
     private Path thesauriDirectory = null;
     private boolean initialized = false;
-    private AllThesaurus allThesaurus;
-    private List<String> allThesaurusExclude = new ArrayList<>();
-
-    public void setAllThesaurusExclude(List<String> allThesaurusExclude) {
-        this.allThesaurusExclude = allThesaurusExclude;
-    }
-
-    public List<String> getAllThesaurusExclude() {
-        return allThesaurusExclude;
-    }
 
 
     /**
@@ -127,7 +120,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         this.initialized = true;
 
         final String siteURL = this.settingManager.getSiteURL(context);
-        this.allThesaurus = new AllThesaurus(this, isoLanguagesMapper, siteURL, allThesaurusExclude);
+        allThesaurus.init(siteURL);
 
         // Get Sesame interface
         service = Sesame.getService();

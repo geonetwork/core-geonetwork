@@ -44,6 +44,7 @@ import org.openrdf.sesame.query.MalformedQueryException;
 import org.openrdf.sesame.query.QueryEvaluationException;
 import org.openrdf.sesame.query.QueryResultsTable;
 import org.openrdf.sesame.repository.local.LocalRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -72,18 +73,18 @@ public class AllThesaurus extends Thesaurus {
     public static final String ALL_THESAURUS_KEY = TYPE + "." + DNAME + "." + FNAME;
     static final String TITLE = "All Keywords";
     private static final String URI_CODE_PREFIX = "http://org.fao.geonet.thesaurus.all/";
-    private final ThesaurusFinder thesaurusFinder;
-    private final IsoLanguagesMapper isoLangMapper;
-    private final String downloadUrl;
-    private final String keywordUrl;
+
+    @Autowired
+    private ThesaurusFinder thesaurusFinder;
+
+    @Autowired
+    private IsoLanguagesMapper isoLangMapper;
+
+    private String downloadUrl;
+    private String keywordUrl;
     private List<String> allThesaurusExclude = new ArrayList<>();
 
-
-    public AllThesaurus(ThesaurusFinder thesaurusFinder, IsoLanguagesMapper isoLangMapper, String siteUrl, List<String> allThesaurusExclude) {
-        this.thesaurusFinder = thesaurusFinder;
-        this.isoLangMapper = isoLangMapper;
-        this.allThesaurusExclude = allThesaurusExclude;
-
+    public void init(String siteUrl) {
         this.downloadUrl = buildDownloadUrl(FNAME, TYPE, DNAME, siteUrl);
         this.keywordUrl = buildKeywordUrl(FNAME, TYPE, DNAME, siteUrl);
     }
@@ -101,6 +102,14 @@ public class AllThesaurus extends Thesaurus {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void setThesaurusFinder(ThesaurusFinder thesaurusFinder) {
+        this.thesaurusFinder = thesaurusFinder;
+    }
+
+    public void setIsoLangMapper(IsoLanguagesMapper isoLangMapper) {
+        this.isoLangMapper = isoLangMapper;
     }
 
     public List<String> getAllThesaurusExclude() {
