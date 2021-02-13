@@ -34,6 +34,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
@@ -72,6 +73,9 @@ public class GeonetTestFixture {
     protected DataStore dataStore;
     @Autowired
     private ConfigurableApplicationContext _applicationContext;
+    @Autowired
+    private IsoLanguagesMapper isoLanguagesMapper;
+
     private FileSystemPool.CreatedFs currentFs;
 
 
@@ -87,8 +91,8 @@ public class GeonetTestFixture {
         TransformerFactoryFactory.init("de.fzi.dbs.xml.transform.CachingTransformerFactory");
 //        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
 
-        if (templateFs == null) {
-            synchronized (GeonetTestFixture.class) {
+        synchronized (GeonetTestFixture.class) {
+            if (templateFs == null) {
                 if (templateFs == null) {
                     templateFs = FILE_SYSTEM_POOL.getTemplate();
 
@@ -125,6 +129,7 @@ public class GeonetTestFixture {
                     Files.createDirectories(templateDataDirectory.resolve("data/resources/htmlcache"));
                 }
             }
+            isoLanguagesMapper.reinit();
         }
 
         final String fsName = test.getClass().getSimpleName().replaceAll("[^a-z0-9A-Z]", "") + UUID.randomUUID().toString();

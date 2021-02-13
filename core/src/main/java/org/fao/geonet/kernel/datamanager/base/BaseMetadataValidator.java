@@ -23,8 +23,14 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -40,17 +46,14 @@ import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.SchematronValidator;
 import org.fao.geonet.kernel.SchematronValidatorExternalMd;
-import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
-import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlErrorHandler;
 import org.jdom.Attribute;
-import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -62,15 +65,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.IMetadataValidator, BaseErrorHandlerAttachingErrorToElem.ElementDecorator {
     private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.DATA_MANAGER);
@@ -87,9 +83,6 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
     @Autowired
     private MetadataValidationRepository validationRepository;
-
-    @Autowired
-    private ThesaurusManager thesaurusManager;
 
     @Autowired
     @Lazy
