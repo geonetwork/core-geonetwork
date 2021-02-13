@@ -30,17 +30,6 @@
   <bean id="threadPool" class="org.fao.geonet.util.ThreadPool"/>
   <bean id="SchemaManager" class="org.fao.geonet.kernel.SchemaManager" lazy-init="true"/>
 
-
-  <util:list id="allThesaurusExclude">
-    <!--    <value>external.theme.access_use_conditions</value>-->
-  </util:list>
-
-  <bean id="allThesaurus" class="org.fao.geonet.kernel.AllThesaurus" lazy-init="true">
-    <property name="allThesaurusExclude" ref="allThesaurusExclude"/>
-  </bean>
-
-  <bean id="ThesaurusManager" class="org.fao.geonet.kernel.ThesaurusManager" lazy-init="true"/>
-
   <bean id="languageProfilesDir" class="java.lang.String">
     <constructor-arg index="0" value="resources/language-profiles"/>
   </bean>
