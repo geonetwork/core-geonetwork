@@ -70,21 +70,33 @@
   <xsl:template match="simpledc"
                 mode="index">
     <!-- Main variables for the document -->
+
+    <xsl:variable name="mainTitle" as="xs:string?"
+                  select="dc:title[1]"/>
+
+    <xsl:variable name="resourceTitleObject" as="xs:string"
+                  select="concat('{',$doubleQuote,'default',$doubleQuote,':',$doubleQuote, $mainTitle ,$doubleQuote,'}')"/>
+
     <xsl:variable name="identifier" as="xs:string?"
                   select="dc:identifier[1]"/>
 
+    <xsl:variable name="revisionDateType"
+                  select="'revision'"/>
+
+    <xsl:variable name="creationDateType"
+                  select="'creation'"/>
+
     <!-- Create a first document representing the main record. -->
     <doc>
-      <docType>metadata</docType>
-      <documentStandard>dublin-core</documentStandard>
+      <xsl:copy-of select="gn-fn-index:add-field('docType', 'metadata')"/>
+      <xsl:copy-of select="gn-fn-index:add-field('documentStandard', 'dublin-core')"/>
 
       <!-- Index the metadata document as XML -->
       <document>
         <!--<xsl:value-of select="saxon:serialize(., 'default-serialize-mode')"/>-->
       </document>
-      <metadataIdentifier>
-        <xsl:value-of select="$identifier"/>
-      </metadataIdentifier>
+      <xsl:copy-of select="gn-fn-index:add-field('metadataIdentifier', $identifier)"/>
+
 
       <!-- Since GN sets the timezone in system/server/timeZone setting as Java system default
         timezone we can rely on XSLT functions to get current date in the right timezone -->
@@ -97,23 +109,47 @@
        In this type of metadata we don't have one but in the general
        case we do so we need to add it to all -->
       <xsl:for-each select="dc:title[1]">
-        <resourceTitle><xsl:value-of select="string(.)"/></resourceTitle>
+        <xsl:copy-of select="gn-fn-index:add-object-field('resourceTitleObject', $resourceTitleObject)"/>
       </xsl:for-each>
 
-      <xsl:for-each select="dc:language">
-        <mainLanguage><xsl:value-of select="string(.)"/></mainLanguage>
+      <xsl:for-each select="dc:language[1]">
+        <xsl:copy-of select="gn-fn-index:add-field('resourceLanguage', current())"/>
       </xsl:for-each>
 
       <xsl:for-each select="dct:abstract|dc:description">
-        <resourceAbstract><xsl:value-of select="string(.)"/></resourceAbstract>
+        <xsl:copy-of select="gn-fn-index:add-field('resourceAbstract', current())"/>
       </xsl:for-each>
 
-      <xsl:for-each select="dc:date">
-        <creationDateForResource><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></creationDateForResource>
+      <xsl:for-each select="dct:created[. != '']">
+
+        <xsl:variable name="creationDate"
+                      select="date-util:convertToISOZuluDateTime(string(current()))"/>
+        <xsl:element name="{$creationDateType}DateForResource">
+          <xsl:value-of select="$creationDate"/>
+        </xsl:element>
+        <xsl:element name="{$creationDateType}YearForResource">
+          <xsl:value-of select="substring($creationDate, 0, 5)"/>
+        </xsl:element>
+        <xsl:element name="{$creationDateType}MonthForResource">
+          <xsl:value-of select="substring($creationDate, 0, 8)"/>
+        </xsl:element>
+        <!--creationDateForResource><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></creationDateForResource-->
       </xsl:for-each>
 
-      <xsl:for-each select="dct:modified">
-        <revisionDateForResource><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></revisionDateForResource>
+      <xsl:for-each select="dct:modified[. != '']">
+
+        <xsl:variable name="revisionDate"
+                      select="date-util:convertToISOZuluDateTime(string(current()))"/>
+        <xsl:element name="{$revisionDateType}DateForResource">
+          <xsl:value-of select="$revisionDate"/>
+        </xsl:element>
+        <xsl:element name="{$revisionDateType}YearForResource">
+          <xsl:value-of select="substring($revisionDate, 0, 5)"/>
+        </xsl:element>
+        <xsl:element name="{$revisionDateType}MonthForResource">
+          <xsl:value-of select="substring($revisionDate, 0, 8)"/>
+        </xsl:element>
+        <!--revisionDateForResource><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></revisionDateForResource-->
       </xsl:for-each>
 
       <xsl:for-each select="dc:format">
@@ -128,14 +164,17 @@
         <lineage><xsl:value-of select="string(.)"/></lineage>
       </xsl:for-each>
 
+      <!-- TODO Change mapping of dc:relation -->
       <xsl:for-each select="dc:relation">
         <related><xsl:value-of select="string(.)"/></related>
       </xsl:for-each>
 
+      <!-- TODO Change mapping of dct:accessRights -->
       <xsl:for-each select="dct:accessRights">
         <useLimitation><xsl:value-of select="string(.)"/></useLimitation>
       </xsl:for-each>
 
+      <!-- TODO Change mapping of dct:rights -->
       <xsl:for-each select="dct:rights">
         <useLimitation><xsl:value-of select="string(.)"/></useLimitation>
       </xsl:for-each>
@@ -153,6 +192,11 @@
 
       <xsl:variable name="tags"
                     select="dc:subject[. != '']"/>
+
+      <tagNumber>
+        <xsl:value-of select="count($tags)"/>
+      </tagNumber>
+
       <xsl:if test="count($tags) > 0">
         <tag type="object">[
           <xsl:for-each select="$tags">
@@ -175,11 +219,10 @@
           }</link>
       </xsl:for-each>
       <xsl:for-each select="(dct:references|dc:relation)[normalize-space(.) != ''
-                              and matches(., '.*(.gif|.png.|.jpeg|.jpg)$', 'i')]">
-        <xsl:variable name="thumbnailType"
-                      select="if (position() = 1) then 'thumbnail' else 'overview'"/>
-        <!-- First thumbnail is flagged as thumbnail and could be considered the main one -->
-        <overviewUrl><xsl:value-of select="concat($thumbnailType, '|', ., '|')"/></overviewUrl>
+                              and matches(., '.*(.gif|.png|.jpeg|.jpg)$', 'i')]">
+        <overview type="object">{
+          "url":"<xsl:value-of select="current()"/>"
+          }</overview>
       </xsl:for-each>
 
 
