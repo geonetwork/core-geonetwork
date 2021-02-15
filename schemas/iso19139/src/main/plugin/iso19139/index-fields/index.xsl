@@ -189,9 +189,10 @@
       </xsl:for-each>
 
 
-      <!-- # Characterset -->
-      <xsl:copy-of select="gn-fn-index:add-codelist-field(
-                                'cl_characterSet', gmd:characterSet/gmd:MD_CharacterSetCode, $allLanguages)"/>
+      <xsl:for-each select="gmd:characterSet/*[@codeListValue != '']">
+        <xsl:copy-of select="gn-fn-index:add-codelist-field(
+                                  'cl_characterSet', ., $allLanguages)"/>
+      </xsl:for-each>
 
       <!-- # Resource type -->
       <xsl:choose>
@@ -199,8 +200,7 @@
           <resourceType>dataset</resourceType>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:for-each select="gmd:hierarchyLevel/gmd:MD_ScopeCode/
-                              @codeListValue[normalize-space(.) != '']">
+          <xsl:for-each select="gmd:hierarchyLevel/*/@codeListValue[normalize-space(.) != '']">
             <resourceType>
               <xsl:value-of select="."/>
             </resourceType>
@@ -332,13 +332,18 @@
               <xsl:value-of select="."/>
             </resourceIdentifier>
           </xsl:for-each>
+
+          <xsl:for-each select="gmd:edition/*">
+            <xsl:copy-of select="gn-fn-index:add-field('resourceEdition', .)"/>
+          </xsl:for-each>
         </xsl:for-each>
 
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAbstract', gmd:abstract, $allLanguages)"/>
 
-        <!-- # Characterset -->
-        <xsl:copy-of select="gn-fn-index:add-codelist-field(
-                                'cl_resourceCharacterSet', gmd:characterSet/gmd:MD_CharacterSetCode, $allLanguages)"/>
+        <xsl:for-each select="gmd:characterSet/*[@codeListValue != '']">
+          <xsl:copy-of select="gn-fn-index:add-codelist-field(
+                                  'cl_resourceCharacterSet', ., $allLanguages)"/>
+        </xsl:for-each>
 
         <!-- Indexing resource contact -->
         <xsl:apply-templates mode="index-contact"

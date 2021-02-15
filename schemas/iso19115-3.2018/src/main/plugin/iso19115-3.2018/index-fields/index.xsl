@@ -187,6 +187,10 @@
       <xsl:for-each
         select="mdb:metadataStandard/cit:CI_Citation/cit:title">
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('standardName', ., $allLanguages)"/>
+
+        <xsl:for-each select="../cit:edition/*">
+          <xsl:copy-of select="gn-fn-index:add-multilingual-field('standardVersion', ., $allLanguages)"/>
+        </xsl:for-each>
       </xsl:for-each>
 
 
@@ -209,7 +213,6 @@
       </xsl:for-each>
 
 
-      <!-- # Languages -->
       <xsl:copy-of select="gn-fn-index:add-field('mainLanguage', $mainLanguage)"/>
 
       <xsl:for-each select="$otherLanguages">
@@ -217,19 +220,19 @@
         <xsl:copy-of select="gn-fn-index:add-field('otherLanguageId', ../../../@id)"/>
       </xsl:for-each>
 
-      <!-- # Characterset -->
-      <xsl:if test="mdb:defaultLocale/lan:PT_Locale/lan:characterEncoding/lan:MD_CharacterSetCode">
+
+      <xsl:for-each select="mdb:defaultLocale/*/lan:characterEncoding/*[@codeListValue != '']">
         <xsl:copy-of select="gn-fn-index:add-codelist-field(
-                                'cl_characterSet', mdb:defaultLocale/lan:PT_Locale/lan:characterEncoding/lan:MD_CharacterSetCode, $allLanguages)"/>
-      </xsl:if>
-      <!-- # Resource type -->
+                                'cl_characterSet', ., $allLanguages)"/>
+      </xsl:for-each>
+
+
       <xsl:choose>
         <xsl:when test="$isDataset">
           <resourceType>dataset</resourceType>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:for-each select="mdb:metadataScope/mdb:MD_MetadataScope/
-                                  mdb:resourceScope/mcc:MD_ScopeCode/@codeListValue[normalize-space(.) != '']">
+          <xsl:for-each select="mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue[. != '']">
             <resourceType>
               <xsl:value-of select="."/>
             </resourceType>
@@ -341,9 +344,15 @@
               <xsl:value-of select="."/>
             </presentationForm>
           </xsl:for-each>
+
+          <xsl:for-each select="cit:edition/*">
+            <xsl:copy-of select="gn-fn-index:add-field('resourceEdition', .)"/>
+          </xsl:for-each>
         </xsl:for-each>
 
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAbstract', mri:abstract, $allLanguages)"/>
+
+
 
         <!-- # Characterset -->
         <xsl:if test="mri:defaultLocale/lan:PT_Locale/lan:characterEncoding/lan:MD_CharacterSetCode">
