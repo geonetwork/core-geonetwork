@@ -185,8 +185,12 @@
       </xsl:if>-->
 
       <xsl:for-each
-        select="mdb:metadataStandard/cit:CI_Citation/cit:title/gco:CharacterString">
-        <xsl:copy-of select="gn-fn-index:add-field('standardName', normalize-space(.))"/>
+        select="mdb:metadataStandard/cit:CI_Citation/cit:title">
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('standardName', ., $allLanguages)"/>
+
+        <xsl:for-each select="../cit:edition/*">
+          <xsl:copy-of select="gn-fn-index:add-multilingual-field('standardVersion', ., $allLanguages)"/>
+        </xsl:for-each>
       </xsl:for-each>
 
 
@@ -209,7 +213,6 @@
       </xsl:for-each>
 
 
-      <!-- # Languages -->
       <xsl:copy-of select="gn-fn-index:add-field('mainLanguage', $mainLanguage)"/>
 
       <xsl:for-each select="$otherLanguages">
@@ -218,14 +221,18 @@
       </xsl:for-each>
 
 
-      <!-- # Resource type -->
+      <xsl:for-each select="mdb:defaultLocale/*/lan:characterEncoding/*[@codeListValue != '']">
+        <xsl:copy-of select="gn-fn-index:add-codelist-field(
+                                'cl_characterSet', ., $allLanguages)"/>
+      </xsl:for-each>
+
+
       <xsl:choose>
         <xsl:when test="$isDataset">
           <resourceType>dataset</resourceType>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:for-each select="mdb:metadataScope/mdb:MD_MetadataScope/
-                                  mdb:resourceScope/mcc:MD_ScopeCode/@codeListValue[normalize-space(.) != '']">
+          <xsl:for-each select="mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue[. != '']">
             <resourceType>
               <xsl:value-of select="."/>
             </resourceType>
@@ -253,6 +260,7 @@
       <xsl:for-each-group select=".//*[@codeListValue != '' and
                             name() != 'cit:CI_RoleCode' and
                             name() != 'cit:CI_DateTypeCode' and
+                            name() != 'lan:MD_CharacterSetCode' and
                             name() != 'lan:LanguageCode'
                             ]"
                           group-by="@codeListValue">
@@ -340,9 +348,12 @@
             </xsl:for-each-group>
           </xsl:if>
 
-          <!-- TODO: Add support for Anchor, can be a DOI -->
-          <xsl:for-each select="cit:identifier/*/mcc:code/(gco:CharacterString|gcx:Anchor)">
-            <resourceIdentifier>
+          <xsl:for-each select="cit:identifier/*">
+            <resourceIdentifier type="object">{
+              "code": "<xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>",
+              "codeSpace": "<xsl:value-of select="mcc:codeSpace/(gco:CharacterString|gcx:Anchor)"/>",
+              "link": "<xsl:value-of select="mcc:code/gcx:Anchor/@xlink:href"/>"
+              }
               <xsl:value-of select="."/>
             </resourceIdentifier>
           </xsl:for-each>
@@ -353,9 +364,21 @@
               <xsl:value-of select="."/>
             </presentationForm>
           </xsl:for-each>
+
+          <xsl:for-each select="cit:edition/*">
+            <xsl:copy-of select="gn-fn-index:add-field('resourceEdition', .)"/>
+          </xsl:for-each>
         </xsl:for-each>
 
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAbstract', mri:abstract, $allLanguages)"/>
+
+
+
+        <!-- # Characterset -->
+        <xsl:if test="mri:defaultLocale/lan:PT_Locale/lan:characterEncoding/lan:MD_CharacterSetCode">
+          <xsl:copy-of select="gn-fn-index:add-codelist-field(
+                                  'cl_resourceCharacterSet', mri:defaultLocale/lan:PT_Locale/lan:characterEncoding/lan:MD_CharacterSetCode, $allLanguages)"/>
+        </xsl:if>
 
         <!-- Indexing resource contact -->
         <xsl:apply-templates mode="index-contact"
@@ -709,6 +732,9 @@
           <xsl:copy-of select="gn-fn-index:add-multilingual-field(concat($fieldPrefix, 'UseLimitation'), mco:useLimitation, $allLanguages)"/>
         </xsl:for-each>
 
+        <xsl:for-each select="mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints">
+          <xsl:copy-of select="gn-fn-index:add-multilingual-field('license', ., $allLanguages)"/>
+        </xsl:for-each>
 
         <xsl:if test="*/gex:EX_Extent/*/gex:EX_BoundingPolygon">
           <hasBoundingPolygon>true</hasBoundingPolygon>
@@ -926,14 +952,22 @@
                           select="if ($inspireRegulationLaxCheck)
                                   then daobs:search-in-contains($eu9762009/*, $title)
                                   else daobs:search-in($eu9762009/*, $title)"/>
-            <xsl:if test="count($matchingEUText) = 1">
 
-              <xsl:variable name="pass"
-                            select="*/mdq:result/*/mdq:pass/gco:Boolean"/>
+            <xsl:variable name="pass"
+                          select="*/mdq:result/*/mdq:pass/gco:Boolean"/>
+
+            <xsl:if test="count($matchingEUText) = 1">
               <inspireConformResource>
                 <xsl:value-of select="$pass"/>
               </inspireConformResource>
             </xsl:if>
+
+            <specificationConformance type="object">{
+              "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
+              "date": "<xsl:value-of select="/mdq:result/*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date" />",
+              "pass": "<xsl:value-of select="$pass" />"
+              }
+            </specificationConformance>
           </xsl:for-each-group>
         </xsl:when>
         <xsl:otherwise>
@@ -948,14 +982,21 @@
                                   then daobs:search-in-contains($eu10892010/*, $title)
                                   else daobs:search-in($eu10892010/*, $title)"/>
 
-            <xsl:if test="count($matchingEUText) = 1">
+            <xsl:variable name="pass"
+                          select="*/mdq:result/*/mdq:pass/gco:Boolean"/>
 
-              <xsl:variable name="pass"
-                            select="*/mdq:result/*/mdq:pass/gco:Boolean"/>
+            <xsl:if test="count($matchingEUText) = 1">
               <inspireConformResource>
                 <xsl:value-of select="$pass"/>
               </inspireConformResource>
             </xsl:if>
+
+            <specificationConformance type="object">{
+              "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
+              "date": "<xsl:value-of select="/mdq:result/*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date" />",
+              "pass": "<xsl:value-of select="$pass" />"
+              }
+            </specificationConformance>
           </xsl:for-each-group>
         </xsl:otherwise>
       </xsl:choose>
@@ -1091,6 +1132,7 @@
             "url":"<xsl:value-of select="gn-fn-index:json-escape(cit:linkage/*/text())"/>",
             "name":"<xsl:value-of select="gn-fn-index:json-escape((cit:name/*/text())[1])"/>",
             "description":"<xsl:value-of select="gn-fn-index:json-escape((cit:description/*/text())[1])"/>",
+            "function":"<xsl:value-of select="cit:function/cit:CI_OnLineFunctionCode/@codeListValue"/>",
             "applicationProfile":"<xsl:value-of select="gn-fn-index:json-escape(cit:applicationProfile/gco:CharacterString/text())"/>",
             "group": <xsl:value-of select="$transferGroup"/>
             }

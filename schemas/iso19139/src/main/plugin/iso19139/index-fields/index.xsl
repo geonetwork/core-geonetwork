@@ -152,10 +152,13 @@
 
       <xsl:copy-of select="gn-fn-index:add-field('metadataIdentifier', $identifier)"/>
 
-      <xsl:for-each select="gmd:metadataStandardName/gco:CharacterString">
-        <xsl:copy-of select="gn-fn-index:add-field('standardName', normalize-space(.))"/>
+      <xsl:for-each select="gmd:metadataStandardName">
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('standardName', ., $allLanguages)"/>
       </xsl:for-each>
 
+      <xsl:for-each select="gmd:metadataStandardVersion">
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('standardVersion', ., $allLanguages)"/>
+      </xsl:for-each>
 
       <!-- Since GN sets the timezone in system/server/timeZone setting as Java system default
         timezone we can rely on XSLT functions to get current date in the right timezone -->
@@ -186,14 +189,18 @@
       </xsl:for-each>
 
 
+      <xsl:for-each select="gmd:characterSet/*[@codeListValue != '']">
+        <xsl:copy-of select="gn-fn-index:add-codelist-field(
+                                  'cl_characterSet', ., $allLanguages)"/>
+      </xsl:for-each>
+
       <!-- # Resource type -->
       <xsl:choose>
         <xsl:when test="$isDataset">
           <resourceType>dataset</resourceType>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:for-each select="gmd:hierarchyLevel/gmd:MD_ScopeCode/
-                              @codeListValue[normalize-space(.) != '']">
+          <xsl:for-each select="gmd:hierarchyLevel/*/@codeListValue[normalize-space(.) != '']">
             <resourceType>
               <xsl:value-of select="."/>
             </resourceType>
@@ -240,6 +247,7 @@
       <xsl:for-each-group select=".//*[@codeListValue != '' and
                             name() != 'gmd:CI_RoleCode' and
                             name() != 'gmd:CI_DateTypeCode' and
+                            name() != 'gmd:MD_CharacterSetCode' and
                             name() != 'gmd:LanguageCode'
                             ]"
                           group-by="@codeListValue">
@@ -328,16 +336,27 @@
             </xsl:for-each-group>
           </xsl:if>
 
-          <!-- TODO: Add support for Anchor, can be a DOI -->
-          <xsl:for-each select="gmd:identifier/*/gmd:code/(gco:CharacterString|gmx:Anchor)">
-            <resourceIdentifier>
+          <xsl:for-each select="gmd:identifier/*">
+            <resourceIdentifier type="object">{
+              "code": "<xsl:value-of select="gmd:code/(gco:CharacterString|gmx:Anchor)"/>",
+              "codeSpace": "<xsl:value-of select="gmd:codeSpace/(gco:CharacterString|gmx:Anchor)"/>",
+              "link": "<xsl:value-of select="gmd:code/gmx:Anchor/@xlink:href"/>"
+              }
               <xsl:value-of select="."/>
             </resourceIdentifier>
+          </xsl:for-each>
+
+          <xsl:for-each select="gmd:edition/*">
+            <xsl:copy-of select="gn-fn-index:add-field('resourceEdition', .)"/>
           </xsl:for-each>
         </xsl:for-each>
 
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAbstract', gmd:abstract, $allLanguages)"/>
 
+        <xsl:for-each select="gmd:characterSet/*[@codeListValue != '']">
+          <xsl:copy-of select="gn-fn-index:add-codelist-field(
+                                  'cl_resourceCharacterSet', ., $allLanguages)"/>
+        </xsl:for-each>
 
         <!-- Indexing resource contact -->
         <xsl:apply-templates mode="index-contact"
@@ -684,6 +703,9 @@
           </xsl:for-each>
         </xsl:for-each>
 
+        <xsl:for-each select="gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints">
+          <xsl:copy-of select="gn-fn-index:add-multilingual-field('license', ., $allLanguages)"/>
+        </xsl:for-each>
 
         <xsl:if test="*/gmd:EX_Extent/*/gmd:EX_BoundingPolygon/gmd:polygon">
           <hasBoundingPolygon>true</hasBoundingPolygon>
@@ -902,13 +924,22 @@
                           select="if ($inspireRegulationLaxCheck)
                                   then daobs:search-in-contains($eu9762009/*, $title)
                                   else daobs:search-in($eu9762009/*, $title)"/>
+
+            <xsl:variable name="pass"
+                          select="*/gmd:result/*/gmd:pass/gco:Boolean"/>
+
             <xsl:if test="count($matchingEUText) = 1">
-              <xsl:variable name="pass"
-                            select="*/gmd:result/*/gmd:pass/gco:Boolean"/>
               <inspireConformResource>
                 <xsl:value-of select="$pass"/>
               </inspireConformResource>
             </xsl:if>
+
+            <specificationConformance type="object">{
+              "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
+              "date": "<xsl:value-of select="*/gmd:result/*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date" />",
+              "pass": "<xsl:value-of select="$pass" />"
+              }
+            </specificationConformance>
           </xsl:for-each-group>
         </xsl:when>
         <xsl:otherwise>
@@ -923,13 +954,21 @@
                                   then daobs:search-in-contains($eu10892010/*, $title)
                                   else daobs:search-in($eu10892010/*, $title)"/>
 
+            <xsl:variable name="pass"
+                          select="*/gmd:result/*/gmd:pass/gco:Boolean"/>
+
             <xsl:if test="count($matchingEUText) = 1">
-              <xsl:variable name="pass"
-                            select="*/gmd:result/*/gmd:pass/gco:Boolean"/>
               <inspireConformResource>
                 <xsl:value-of select="$pass"/>
               </inspireConformResource>
             </xsl:if>
+
+            <specificationConformance type="object">{
+              "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
+              "date": "<xsl:value-of select="*/gmd:result/*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date" />",
+              "pass": "<xsl:value-of select="$pass" />"
+              }
+            </specificationConformance>
           </xsl:for-each-group>
         </xsl:otherwise>
       </xsl:choose>
@@ -1043,6 +1082,7 @@
             "url":"<xsl:value-of select="gn-fn-index:json-escape(gmd:linkage/gmd:URL)"/>",
             "name":"<xsl:value-of select="$linkName"/>",
             "description":"<xsl:value-of select="gn-fn-index:json-escape(gmd:description/gco:CharacterString/text())"/>",
+            "function":"<xsl:value-of select="gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue"/>",
             "applicationProfile":"<xsl:value-of select="gn-fn-index:json-escape(gmd:applicationProfile/gco:CharacterString/text())"/>",
             "group": <xsl:value-of select="$transferGroup"/>
             }
