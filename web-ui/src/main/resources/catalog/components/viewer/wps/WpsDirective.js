@@ -30,7 +30,7 @@
   ]);
 
   function isFieldNotEmpty (value) {
-    return value !== undefined && value !== '';
+    return value !== undefined && value !== '' && !!value;
   }
 
   /**
