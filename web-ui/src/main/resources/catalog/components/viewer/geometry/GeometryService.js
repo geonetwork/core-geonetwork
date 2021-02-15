@@ -102,6 +102,7 @@
 
         // layer & source
         var source = new ol.source.Vector({
+          wrapX: false,
           useSpatialIndex: true,
           features: new ol.Collection()
         });
