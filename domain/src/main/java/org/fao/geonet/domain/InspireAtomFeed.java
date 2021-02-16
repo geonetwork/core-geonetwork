@@ -23,8 +23,12 @@
 package org.fao.geonet.domain;
 
 
+import com.google.common.collect.Lists;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.utils.Xml;
 import org.hibernate.annotations.Type;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
 import javax.persistence.*;
@@ -83,13 +87,27 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
             inspireAtomFeed.setRights(atomDoc.getChildText("rights", ns));
         }
 
-        inspireAtomFeed.setLang(atomDoc.getAttributeValue("lang", ns, ""));
         Element authorEl = atomDoc.getChild("author", ns);
         if (authorEl != null) {
             inspireAtomFeed.setAuthorName(atomDoc.getChild("author", ns).getChildText("name", ns));
             inspireAtomFeed.setAuthorEmail(atomDoc.getChild("author", ns).getChildText("email", ns));
         }
-        inspireAtomFeed.setLang(atomDoc.getAttributeValue("lang", nsXml, ""));
+
+        try {
+            Element selfLinkEl = Xml.selectElement(atomDoc, "f:link[@rel='self']",
+                Lists.newArrayList(ns, nsXml));
+
+            if (selfLinkEl != null) {
+                inspireAtomFeed.setLang(selfLinkEl.getAttributeValue("hreflang",""));
+            }
+        } catch (JDOMException e) {
+            // Ignore
+        }
+
+        // If no language in the self link entry, use the language in the document header if defined
+        if (StringUtils.isEmpty(inspireAtomFeed.getLang())) {
+            inspireAtomFeed.setLang(atomDoc.getAttributeValue("lang", nsXml, ""));
+        }
 
         List<Element> entryList = atomDoc.getChildren("entry", ns);
         for (Element entry : entryList) {
