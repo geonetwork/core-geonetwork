@@ -124,6 +124,13 @@
       for (v in params) {
         if (params[v] == '') {
           delete params[v];
+        } else {
+          // Process parameters to remove template fields for opensearch if not filled:
+          if (((v === 'bbox') && (params[v] === "{geo:box?}")) ||
+            ((v === 'geometry') && (params[v] === "{geo:geometry?}")) ||
+            ((v === 'name') && (params[v] === "{geo:locationString?}"))) {
+            delete params[v];
+          }
         }
       }
     };
