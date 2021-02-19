@@ -128,6 +128,14 @@ public final class Xml {
     public static final Namespace xsiNS = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
     public static final NioPathAwareEntityResolver PATH_RESOLVER = new NioPathAwareEntityResolver();
 
+    // http://www.w3.org/TR/REC-xml/#charsets
+    public static final String XML10_ILLEGAL_CHAR_PATTERN = "[^"
+        + "\u0009\r\n"
+        + "\u0020-\uD7FF"
+        + "\uE000-\uFFFD"
+        + "\ud800\udc00-\udbff\udfff"
+        + "]";
+
     //--------------------------------------------------------------------------
 
     /**
