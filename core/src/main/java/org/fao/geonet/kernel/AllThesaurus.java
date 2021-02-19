@@ -44,6 +44,7 @@ import org.openrdf.sesame.query.MalformedQueryException;
 import org.openrdf.sesame.query.QueryEvaluationException;
 import org.openrdf.sesame.query.QueryResultsTable;
 import org.openrdf.sesame.repository.local.LocalRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -51,6 +52,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -71,15 +73,18 @@ public class AllThesaurus extends Thesaurus {
     public static final String ALL_THESAURUS_KEY = TYPE + "." + DNAME + "." + FNAME;
     static final String TITLE = "All Keywords";
     private static final String URI_CODE_PREFIX = "http://org.fao.geonet.thesaurus.all/";
-    private final ThesaurusFinder thesaurusFinder;
-    private final IsoLanguagesMapper isoLangMapper;
-    private final String downloadUrl;
-    private final String keywordUrl;
 
-    public AllThesaurus(ThesaurusFinder thesaurusFinder, IsoLanguagesMapper isoLangMapper, String siteUrl) {
-        this.thesaurusFinder = thesaurusFinder;
-        this.isoLangMapper = isoLangMapper;
+    @Autowired
+    private ThesaurusFinder thesaurusFinder;
 
+    @Autowired
+    private IsoLanguagesMapper isoLangMapper;
+
+    private String downloadUrl;
+    private String keywordUrl;
+    private List<String> allThesaurusExclude = new ArrayList<>();
+
+    public void init(String siteUrl) {
         this.downloadUrl = buildDownloadUrl(FNAME, TYPE, DNAME, siteUrl);
         this.keywordUrl = buildKeywordUrl(FNAME, TYPE, DNAME, siteUrl);
     }
@@ -97,6 +102,22 @@ public class AllThesaurus extends Thesaurus {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void setThesaurusFinder(ThesaurusFinder thesaurusFinder) {
+        this.thesaurusFinder = thesaurusFinder;
+    }
+
+    public void setIsoLangMapper(IsoLanguagesMapper isoLangMapper) {
+        this.isoLangMapper = isoLangMapper;
+    }
+
+    public List<String> getAllThesaurusExclude() {
+        return allThesaurusExclude;
+    }
+
+    public void setAllThesaurusExclude(List<String> allThesaurusExclude) {
+        this.allThesaurusExclude = allThesaurusExclude;
     }
 
     @Override
@@ -329,7 +350,8 @@ public class AllThesaurus extends Thesaurus {
 
     private <R> R onThesauri(R defaultVal, Function<Thesaurus, R> function) {
         for (Thesaurus thesaurus : this.thesaurusFinder.getThesauriMap().values()) {
-            if (ALL_THESAURUS_KEY.equals(thesaurus.getKey())) {
+            if (ALL_THESAURUS_KEY.equals(thesaurus.getKey())
+                || allThesaurusExclude.contains(thesaurus.getKey())) {
                 continue;
             }
             final R result = function.apply(thesaurus);

@@ -82,6 +82,12 @@ public class IsoLanguagesMapper {
         }
     }
 
+    public void reinit() {
+        _isoLanguagesMap639 = HashBiMap.create();
+        init();
+    }
+
+
     private String toLowerCase(String code) {
         if (code == null) {
             return null;

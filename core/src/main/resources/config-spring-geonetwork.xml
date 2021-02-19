@@ -53,6 +53,16 @@
   <bean id="GeonetworkDataDirectory" class="org.fao.geonet.kernel.GeonetworkDataDirectory"
         lazy-init="true"/>
 
+  <bean id="ThesaurusManager" class="org.fao.geonet.kernel.ThesaurusManager" lazy-init="true"/>
+
+  <util:list id="allThesaurusExclude">
+    <value>external.theme.access_use_conditions</value>
+  </util:list>
+
+  <bean id="allThesaurus" class="org.fao.geonet.kernel.AllThesaurus" lazy-init="true">
+    <property name="allThesaurusExclude" ref="allThesaurusExclude"/>
+  </bean>
+
   <bean id="translatorFactory" class="org.fao.geonet.kernel.search.TranslatorFactory"/>
 
   <bean id="urlAnalyzer" class="org.fao.geonet.kernel.url.UrlAnalyzer" lazy-init="true"/>

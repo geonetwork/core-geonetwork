@@ -30,19 +30,26 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.ThesaurusActivation;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -61,21 +68,43 @@ import org.openrdf.sesame.config.SailConfig;
 import org.openrdf.sesame.constants.RDFFormat;
 import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.repository.local.LocalService;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import com.google.common.collect.Maps;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 
-
 public class ThesaurusManager implements ThesaurusFinder {
 
+    @Autowired
     private SettingManager settingManager;
+
+    @Autowired
+    private GeonetworkDataDirectory geonetworkDataDirectory;
+
+    @Autowired
+    private IMetadataUtils iMetadataUtils;
+
+    @Autowired
+    private IMetadataManager metadataManager;
+
+    @Autowired
+    private IsoLanguagesMapper isoLanguagesMapper;
+
+    @Autowired
+    private ThesaurusActivationRepository thesaurusActivationRepository;
+
+    @Autowired
+    private IMetadataSchemaUtils metadataSchemaUtils;
+
+    @Autowired
+    private AllThesaurus allThesaurus;
+
     private ConcurrentHashMap<String, Thesaurus> thesauriMap = new ConcurrentHashMap<String, Thesaurus>();
     private LocalService service = null;
     private Path thesauriDirectory = null;
     private boolean initialized = false;
-    private AllThesaurus allThesaurus;
+
 
     /**
      * Initialize ThesaurusManager.
@@ -89,10 +118,9 @@ public class ThesaurusManager implements ThesaurusFinder {
             return;
         }
         this.initialized = true;
-        this.settingManager = context.getBean(SettingManager.class);
 
         final String siteURL = this.settingManager.getSiteURL(context);
-        this.allThesaurus = new AllThesaurus(this, getIsoLanguagesMapper(context), siteURL);
+        allThesaurus.init(siteURL);
 
         // Get Sesame interface
         service = Sesame.getService();
@@ -100,7 +128,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         Path thesauriDir = IO.toPath(thesauriRepository);
 
         if (!Files.exists(thesauriDir)) {
-            thesauriDir = context.getBean(GeonetworkDataDirectory.class).resolveWebResource(thesauriRepository);
+            thesauriDir = geonetworkDataDirectory.resolveWebResource(thesauriRepository);
         }
 
         thesauriDir = thesauriDir.toAbsolutePath();
@@ -164,7 +192,7 @@ public class ThesaurusManager implements ThesaurusFinder {
      */
     private void loadRepositories(Path thesauriDirectory, String root, ServiceContext context) throws IOException {
 
-        final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
+        final String siteURL = settingManager.getSiteURL(context);
 
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(thesauriDirectory, "*.rdf")) {
             for (Path aRdfDataFile : paths) {
@@ -188,10 +216,10 @@ public class ThesaurusManager implements ThesaurusFinder {
                         continue;
                     }
 
-                    gst = new Thesaurus(getIsoLanguagesMapper(context), rdfFileName, root, thesaurusDirName, outputRdf, siteURL);
+                    gst = new Thesaurus(isoLanguagesMapper, rdfFileName, root, thesaurusDirName, outputRdf, siteURL);
 
                 } else {
-                    gst = new Thesaurus(getIsoLanguagesMapper(context), rdfFileName, root, thesaurusDirName, thesauriDirectory.resolve(aRdfDataFile), siteURL);
+                    gst = new Thesaurus(isoLanguagesMapper, rdfFileName, root, thesaurusDirName, thesauriDirectory.resolve(aRdfDataFile), siteURL);
                 }
 
                 try {
@@ -211,12 +239,11 @@ public class ThesaurusManager implements ThesaurusFinder {
      * @param os   OutputStream to write rdf to from XSLT conversion
      */
     private void getRegisterMetadataAsRdf(String uuid, OutputStream os, ServiceContext context) throws Exception {
-        AbstractMetadata mdInfo = context.getBean(IMetadataUtils.class).findOneByUuid(uuid);
+        AbstractMetadata mdInfo = iMetadataUtils.findOneByUuid(uuid);
         Integer id = mdInfo.getId();
-        final DataManager dataManager = context.getBean(DataManager.class);
-        Element md = dataManager.getMetadata("" + id);
+        Element md = metadataManager.getMetadata("" + id);
         Processor.detachXLink(md, context);
-        final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
+        final String siteURL = settingManager.getSiteURL(context);
         Element env = Lib.prepareTransformEnv(
             mdInfo.getUuid(),
             mdInfo.getDataInfo().getChangeDate().getDateAndTime(),
@@ -227,7 +254,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         root.addContent(md);
         root.addContent(env);
 
-        Path styleSheet = dataManager.getSchemaDir("iso19135").resolve("convert").resolve(Geonet.File.EXTRACT_SKOS_FROM_ISO19135);
+        Path styleSheet = metadataSchemaUtils.getSchemaDir("iso19135").resolve("convert").resolve(Geonet.File.EXTRACT_SKOS_FROM_ISO19135);
         Xml.transform(root, styleSheet, os);
     }
 
@@ -364,8 +391,8 @@ public class ThesaurusManager implements ThesaurusFinder {
         // check whether we have created a thesaurus for this register already
         String aRdfDataFile = uuid + ".rdf";
         Path thesaurusFile = buildThesaurusFilePath(aRdfDataFile, root, type);
-        final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-        Thesaurus gst = new Thesaurus(getIsoLanguagesMapper(context), aRdfDataFile, root, type, thesaurusFile, siteURL);
+        final String siteURL = settingManager.getSiteURL(context);
+        Thesaurus gst = new Thesaurus(isoLanguagesMapper, aRdfDataFile, root, type, thesaurusFile, siteURL);
 
         try (OutputStream outputRdfStream = Files.newOutputStream(thesaurusFile)) {
             getRegisterMetadataAsRdf(uuid, outputRdfStream, context);
@@ -389,10 +416,6 @@ public class ThesaurusManager implements ThesaurusFinder {
         }
 
         return theKey;
-    }
-
-    private IsoLanguagesMapper getIsoLanguagesMapper(ServiceContext context) {
-        return context.getBean(IsoLanguagesMapper.class);
     }
 
     /**
@@ -490,8 +513,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 
             // By default thesaurus are enabled (if nothing defined in db)
             char activated = Constants.YN_TRUE;
-            final ThesaurusActivationRepository activationRepository = context.getBean(ThesaurusActivationRepository.class);
-            final Optional<ThesaurusActivation> activation = activationRepository.findById(currentTh.getKey());
+            final Optional<ThesaurusActivation> activation = thesaurusActivationRepository.findById(currentTh.getKey());
             if (activation.isPresent() && !activation.get().isActivated()) {
                 activated = Constants.YN_FALSE;
             }

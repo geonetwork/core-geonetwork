@@ -98,7 +98,7 @@ public class AllQueryResultsTable extends QueryResultsTable {
                 }
                 return value;
             } else {
-                current = allResult.getRowCount();
+                current = current + allResult.getRowCount();
             }
         }
         return null;
