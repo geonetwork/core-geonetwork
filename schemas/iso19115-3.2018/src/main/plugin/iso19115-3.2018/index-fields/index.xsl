@@ -939,79 +939,46 @@
 
 
       <!-- INSPIRE Conformity -->
+      <xsl:variable name="legalTextList"
+                    select="if ($isService) then $eu9762009 else $eu10892010"/>
 
-      <!-- Conformity for services -->
-      <xsl:choose>
-        <xsl:when test="$isService">
-          <xsl:for-each-group select="mdb:dataQualityInfo/*/mdq:report"
-                              group-by="*/mdq:result/*/mdq:specification/cit:CI_Citation/
-                                            cit:title/gco:CharacterString">
+      <xsl:for-each-group select="mdb:dataQualityInfo/*/mdq:report"
+                          group-by="*/mdq:result/*/mdq:specification/cit:CI_Citation/
+                                        cit:title/gco:CharacterString">
 
-            <xsl:variable name="title" select="current-grouping-key()"/>
-            <xsl:variable name="matchingEUText"
-                          select="if ($inspireRegulationLaxCheck)
-                                  then daobs:search-in-contains($eu9762009/*, $title)
-                                  else daobs:search-in($eu9762009/*, $title)"/>
-
-            <xsl:variable name="pass"
-                          select="*/mdq:result/*/mdq:pass/gco:Boolean"/>
-
-            <xsl:if test="count($matchingEUText) = 1">
-              <inspireConformResource>
-                <xsl:value-of select="$pass"/>
-              </inspireConformResource>
-            </xsl:if>
-
-            <specificationConformance type="object">{
-              "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
-              "date": "<xsl:value-of select="/mdq:result/*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date" />",
-              "pass": "<xsl:value-of select="$pass" />"
-              }
-            </specificationConformance>
-          </xsl:for-each-group>
-        </xsl:when>
-        <xsl:otherwise>
-          <!-- Conformity for dataset -->
-          <xsl:for-each-group select="mdb:dataQualityInfo/*/mdq:report"
-                              group-by="*/mdq:result/*/mdq:specification/cit:CI_Citation/
-                                            cit:title/gco:CharacterString">
-
-            <xsl:variable name="title" select="current-grouping-key()"/>
-            <xsl:variable name="matchingEUText"
-                          select="if ($inspireRegulationLaxCheck)
-                                  then daobs:search-in-contains($eu10892010/*, $title)
-                                  else daobs:search-in($eu10892010/*, $title)"/>
-
-            <xsl:variable name="pass"
-                          select="*/mdq:result/*/mdq:pass/gco:Boolean"/>
-
-            <xsl:if test="count($matchingEUText) = 1">
-              <inspireConformResource>
-                <xsl:value-of select="$pass"/>
-              </inspireConformResource>
-            </xsl:if>
-
-            <specificationConformance type="object">{
-              "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
-              "date": "<xsl:value-of select="/mdq:result/*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date" />",
-              "pass": "<xsl:value-of select="$pass" />"
-              }
-            </specificationConformance>
-          </xsl:for-each-group>
-        </xsl:otherwise>
-      </xsl:choose>
-
-      <xsl:for-each-group select="mdb:dataQualityInfo/*/mdb:report"
-                          group-by="*/mdb:result/*/mdb:specification/
-                                      */cit:title/gco:CharacterString">
         <xsl:variable name="title" select="current-grouping-key()"/>
-        <xsl:variable name="pass" select="*/mdb:result/*/mdb:pass/gco:Boolean"/>
-        <xsl:if test="$pass">
-          <xsl:element name="conformTo_{replace(normalize-space($title), '[^a-zA-Z0-9]', '')}">
+        <xsl:variable name="matchingEUText"
+                      select="if ($inspireRegulationLaxCheck)
+                              then daobs:search-in-contains($legalTextList/*, $title)
+                              else daobs:search-in($legalTextList/*, $title)"/>
+
+        <xsl:variable name="pass"
+                      select="*/mdq:result/*/mdq:pass/gco:Boolean"/>
+
+        <xsl:if test="count($matchingEUText) = 1">
+          <inspireConformResource>
             <xsl:value-of select="$pass"/>
-          </xsl:element>
+          </inspireConformResource>
         </xsl:if>
+
+        <specificationConformance type="object">{
+          "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
+          "date": "<xsl:value-of select="*/mdq:result/*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date" />",
+          <xsl:if test="*/mdq:result/*/mdq:specification/*/cit:title/@xlink:href">
+            "link": "<xsl:value-of select="*/mdq:result/*/mdq:specification/*/cit:title/@xlink:href"/>",
+          </xsl:if>
+          <xsl:if test="*/mdq:result/*/mdq:explanation/*/text() != ''">
+            "explanation": "<xsl:value-of select="gn-fn-index:json-escape(*/mdq:result/*/mdq:explanation/*/text())" />",
+          </xsl:if>
+          "pass": "<xsl:value-of select="$pass" />"
+          }
+        </specificationConformance>
+
+        <xsl:element name="conformTo_{replace(normalize-space($title), '[^a-zA-Z0-9]', '')}">
+          <xsl:value-of select="$pass"/>
+        </xsl:element>
       </xsl:for-each-group>
+
 
 
       <xsl:variable name="jsonFeatureTypes">[
@@ -1070,12 +1037,8 @@
 
 
       <xsl:for-each select="mdb:resourceLineage/*">
-        <xsl:for-each select="mrl:lineage/mrl:LI_Lineage/
-                                mrl:statement/gco:CharacterString[. != '']">
-          <lineage>
-            <xsl:value-of select="."/>
-          </lineage>
-        </xsl:for-each>
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('lineage', mrl:lineage/mrl:LI_Lineage/
+                                mrl:statement, $allLanguages)"/>
 
         <xsl:for-each select=".//mrl:source[@uuidref != '']">
           <xsl:variable name="xlink"
