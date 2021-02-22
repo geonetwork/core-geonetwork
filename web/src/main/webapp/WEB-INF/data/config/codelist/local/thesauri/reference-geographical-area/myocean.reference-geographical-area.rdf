@@ -40,7 +40,7 @@
     <skos:prefLabel xml:lang="en">iberian-biscay-irish-seas</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">iberian-biscay-irish-seas</skos:prefLabel>
     <skos:definition xml:lang="en">Iberian, Biscay and Irish seas</skos:definition>
-  </skos:Concept>2.	https://sextant-test.ifremer.fr/record-val/f4968943-ad6f-4563-a737-58fe3285fb3c.html
+  </skos:Concept>
   <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#black-sea">
     <skos:prefLabel xml:lang="en">black-sea</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">black-sea</skos:prefLabel>
