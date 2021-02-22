@@ -39,8 +39,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.stereotype.Component;
 
 /**
  * This class is responsible for listening for metadata index events and updating the cache's
@@ -50,6 +52,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  */
 
 @EnableAsync
+@Component
 public class FormatterCachePublishListener implements AsynchAfterCommitListener {
     @Autowired
     private FormatterCache formatterCache;
@@ -61,6 +64,7 @@ public class FormatterCachePublishListener implements AsynchAfterCommitListener 
 
     private static final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
 
+    @EventListener
     @Override
     public synchronized void onApplicationEvent(MetadataIndexCompleted event) {
         final int metadataId = event.getMd().getId();
