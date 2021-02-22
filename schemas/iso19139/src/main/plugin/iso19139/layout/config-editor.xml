@@ -3195,6 +3195,9 @@
                    fieldset="false"
                    maxtags="1"
                    transformations="to-iso19139-keyword-with-anchor"/>
+        <thesaurus key="local.theme.myocean.target-applications"
+                   fieldset="false"
+                   transformations="to-iso19139-keyword-with-anchor"/>
 
       </thesaurusList>
 
@@ -3385,6 +3388,7 @@
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='discipline']"
                  name="cm-missionType"/>
 
+
           <!--
           local.feature-type.myocean.feature-type
           to-iso19139.myocean-feature-type
@@ -3425,6 +3429,8 @@
           to-iso19139.myocean-keyword-with-anchor
           -->
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[contains(*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(), 'external.theme.myocean.model-assimilation')]"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[contains(*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(), 'local.theme.myocean.target-applications')]"/>
 
 
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:supplementalInformation"

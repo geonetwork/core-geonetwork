@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+>
+  <skos:ConceptScheme rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#">
+    <dc:title>Target applications</dc:title>
+    <dc:description>.</dc:description>
+    <dcterms:issued>2021-02-22</dcterms:issued>
+    <dcterms:modified>2021-02-22</dcterms:modified>
+  </skos:ConceptScheme>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/target-application#sea-ice-and-iceberg-services">
+    <skos:prefLabel xml:lang="en">Sea Ice and Iceberg services</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Sea Ice and Iceberg services</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/target-application#sea-ice-forcasting-application">
+    <skos:prefLabel xml:lang="en">Sea Ice Forecasting Application</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Sea Ice Forecasting Application</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/target-application#sea-ice-climate">
+    <skos:prefLabel xml:lang="en">Sea Ice Climate</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Sea Ice Climate</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/target-application#sea-ice-information">
+    <skos:prefLabel xml:lang="en">Sea Ice Information</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Sea Ice Information</skos:prefLabel>
+  </skos:Concept>
+</rdf:RDF>

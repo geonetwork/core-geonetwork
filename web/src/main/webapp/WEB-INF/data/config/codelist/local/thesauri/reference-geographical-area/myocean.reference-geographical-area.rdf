@@ -1,52 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-    xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:exslt="http://exslt.org/common"
-    xmlns:gemet="http://www.eionet.europa.eu/gemet/2004/06/gemet-schema.rdf#">
-    <skos:ConceptScheme rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#">
-        <dc:title>Reference Geographical Areas</dc:title>
-        <dc:description>.</dc:description>
-        <dcterms:issued>2009-09-09</dcterms:issued>
-        <dcterms:modified>2009-09-09</dcterms:modified>
-    </skos:ConceptScheme>
-    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#global-ocean">
-        <skos:prefLabel xml:lang="en">global-ocean</skos:prefLabel>
-        <skos:prefLabel xml:lang="fr">global-ocean</skos:prefLabel>
-        <skos:definition xml:lang="en">Global ocean</skos:definition>
-    </skos:Concept>
-    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#north-west-shelf-seas">
-        <skos:prefLabel xml:lang="en">north-west-shelf-seas</skos:prefLabel>
-        <skos:prefLabel xml:lang="fr">north-west-shelf-seas</skos:prefLabel>
-        <skos:definition xml:lang="en">Eurepean North-West shelf seas</skos:definition>
-    </skos:Concept>
- <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#mediterranean-sea">
-        <skos:prefLabel xml:lang="en">mediterranean-sea</skos:prefLabel>
-        <skos:prefLabel xml:lang="fr">mediterranean-sea</skos:prefLabel>
-        <skos:definition xml:lang="en">Mediterranean sea</skos:definition>
-    </skos:Concept>
- <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#arctic-ocean">
-        <skos:prefLabel xml:lang="en">arctic-ocean</skos:prefLabel>
-        <skos:prefLabel xml:lang="fr">arctic-ocean</skos:prefLabel>
-        <skos:definition xml:lang="en">Arctic ocean</skos:definition>
-    </skos:Concept>
- <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#baltic-sea">
-        <skos:prefLabel xml:lang="en">baltic-sea</skos:prefLabel>
-        <skos:prefLabel xml:lang="fr">baltic-sea</skos:prefLabel>
-        <skos:definition xml:lang="en">Baltic sea</skos:definition>
-    </skos:Concept>
- <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#iberian-biscay-irish-seas">
-        <skos:prefLabel xml:lang="en">iberian-biscay-irish-seas</skos:prefLabel>
-        <skos:prefLabel xml:lang="fr">iberian-biscay-irish-seas</skos:prefLabel>
-        <skos:definition xml:lang="en">Iberian, Biscay and Irish seas</skos:definition>
-    </skos:Concept>
- <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#black-sea">
-        <skos:prefLabel xml:lang="en">black-sea</skos:prefLabel>
-        <skos:prefLabel xml:lang="fr">black-sea</skos:prefLabel>
-        <skos:definition xml:lang="en">Black sea</skos:definition>
-    </skos:Concept>
-
-
-
-
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+>
+  <skos:ConceptScheme rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#">
+    <dc:title>Reference Geographical Areas</dc:title>
+    <dc:description>.</dc:description>
+    <dcterms:issued>2009-09-09</dcterms:issued>
+    <dcterms:modified>2009-09-09</dcterms:modified>
+  </skos:ConceptScheme>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#global-ocean">
+    <skos:prefLabel xml:lang="en">global-ocean</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">global-ocean</skos:prefLabel>
+    <skos:definition xml:lang="en">Global ocean</skos:definition>
+  </skos:Concept>
+  <skos:Concept
+    rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#north-west-shelf-seas">
+    <skos:prefLabel xml:lang="en">north-west-shelf-seas</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">north-west-shelf-seas</skos:prefLabel>
+    <skos:definition xml:lang="en">Eurepean North-West shelf seas</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#mediterranean-sea">
+    <skos:prefLabel xml:lang="en">mediterranean-sea</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">mediterranean-sea</skos:prefLabel>
+    <skos:definition xml:lang="en">Mediterranean sea</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#arctic-ocean">
+    <skos:prefLabel xml:lang="en">arctic-ocean</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">arctic-ocean</skos:prefLabel>
+    <skos:definition xml:lang="en">Arctic ocean</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#baltic-sea">
+    <skos:prefLabel xml:lang="en">baltic-sea</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">baltic-sea</skos:prefLabel>
+    <skos:definition xml:lang="en">Baltic sea</skos:definition>
+  </skos:Concept>
+  <skos:Concept
+    rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#iberian-biscay-irish-seas">
+    <skos:prefLabel xml:lang="en">iberian-biscay-irish-seas</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">iberian-biscay-irish-seas</skos:prefLabel>
+    <skos:definition xml:lang="en">Iberian, Biscay and Irish seas</skos:definition>
+  </skos:Concept>2.	https://sextant-test.ifremer.fr/record-val/f4968943-ad6f-4563-a737-58fe3285fb3c.html
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#black-sea">
+    <skos:prefLabel xml:lang="en">black-sea</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">black-sea</skos:prefLabel>
+    <skos:definition xml:lang="en">Black sea</skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#antarctic-ocean">
+    <skos:prefLabel xml:lang="en">antarctic-ocean</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">antarctic-ocean</skos:prefLabel>
+    <skos:definition xml:lang="en">Antarctic Ocean</skos:definition>
+  </skos:Concept>
 </rdf:RDF>
