@@ -251,6 +251,7 @@ goog.require('gn_alert');
                 'include': '.*'
               },
               'meta': {
+                'caseInsensitiveInclude': true,
                 'displayFilter': true,
                 'collapsed': true
               }
