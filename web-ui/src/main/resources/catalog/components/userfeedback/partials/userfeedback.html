@@ -1,9 +1,9 @@
 <section class="gn-userfeedback-sidebar">
-  <h2>
+  <strong>
     <i class="fa fa-comment-o"></i>
-    <!--<span data-ng-show="rating.ratingCount > 0 && loaded"
-            data-translate="">userFeedback</span>-->
-    <span data-ng-show="rating.ratingCount > 0 && loaded">
+    <span data-ng-show="rating.ratingCount > 0 && loaded"
+            data-translate="">userFeedback</span>
+    <!--<span data-ng-show="rating.ratingCount > 0 && loaded">
       <span data-translate="">GUFrate</span>
       <span>{{rating.ratingAverages['-1']}} / 5 <i class="fa fa-fw fa-star"></i></span>
       <span data-ng-show="rating.ratingAverages && loaded"
@@ -11,7 +11,7 @@
          data-translate-values="{ratingCount:'{{rating.ratingCount}}'}">GUFfromRatingCountRatings</span>
     </span>
     <span data-ng-show="rating.ratingCount === 0 && loaded"
-        data-translate="">GUFnoRatings</span>
+        data-translate="">GUFnoRatings</span>-->
 
     <div class="btn-toolbar pull-right">
       <div class="pull-right"
@@ -23,7 +23,7 @@
            data-ng-if="record.draft != 'y'">
       </div>
     </div>
-  </h2>
+  </strong>
 
   <ul class="gn-userfeedback-list"
       data-ng-show="loaded">
