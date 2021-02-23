@@ -27,6 +27,9 @@ package org.fao.geonet.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.domain.MetadataResourceContainer;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.MultiPolygon;
 import jeeves.component.ProfileManager;
@@ -83,6 +86,7 @@ import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.w3c.dom.Node;
@@ -390,6 +394,36 @@ public final class XslUtil {
         }
         // If we cannot find SecurityProviderConfiguration then default to empty string.
         return "";
+    }
+
+    /**
+     * get external manager url for resource.
+     *
+     * @param metadataUuid uuid of the record
+     * @param approved is metadata approved
+     * @return url to access the resource. Or null if not supported
+     */
+    public static MetadataResourceContainer getResourceContainerDescription(String metadataUuid, Boolean approved) throws Exception {
+        Store store = BeanFactoryAnnotationUtils.qualifiedBeanOfType(ApplicationContextHolder.get().getBeanFactory(), Store.class, "filesystemStore");
+
+        if (store != null && store.getResourceManagementExternalProperties() != null && store.getResourceManagementExternalProperties().isEnabled()) {
+            ServiceContext context = ServiceContext.get();
+            return store.getResourceContainerDescription(context, metadataUuid, approved);
+        }
+        return null;
+    }
+
+    /**
+     * get resource management external properties.
+     *
+     * @return the windows parameters to be used.
+     */
+    public static Store.ResourceManagementExternalProperties getResourceManagementExternalProperties() {
+        Store store = BeanFactoryAnnotationUtils.qualifiedBeanOfType(ApplicationContextHolder.get().getBeanFactory(), Store.class, "filesystemStore");
+        if (store != null) {
+            return store.getResourceManagementExternalProperties();
+        }
+        return null;
     }
 
     /**

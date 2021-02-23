@@ -32,6 +32,7 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataFileDownload;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceContainer;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataFileDownloadRepository;
@@ -148,6 +149,14 @@ public class ResourceLoggerStore extends AbstractStore {
             throws Exception {
         if (decoratedStore != null) {
             return decoratedStore.getResourceDescription(context, metadataUuid, visibility, filename, approved);
+        }
+        return null;
+    }
+
+    @Override
+    public MetadataResourceContainer getResourceContainerDescription(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
+        if (decoratedStore != null) {
+            return decoratedStore.getResourceContainerDescription(context, metadataUuid, approved);
         }
         return null;
     }

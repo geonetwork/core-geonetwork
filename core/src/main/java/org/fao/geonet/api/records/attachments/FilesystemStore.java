@@ -30,6 +30,7 @@ import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceContainer;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -143,6 +144,24 @@ public class FilesystemStore extends AbstractStore {
         }
         return new FilesystemStoreResource(metadataUuid, metadataId, filePath.getFileName().toString(), settingManager.getNodeURL() + "api/records/",
                                            visibility, fileSize, new Date(Files.getLastModifiedTime(filePath).toMillis()), approved);
+    }
+
+    @Override
+    public MetadataResourceContainer getResourceContainerDescription(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
+
+        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
+        if (!Files.exists(metadataDir)) {
+            try {
+                Files.createDirectories(metadataDir);
+            } catch (Exception e) {
+                throw new IOException(
+                    String.format("Can't create folder '%s' for metadata '%d'.", metadataDir, metadataId));
+            }
+        }
+
+        SettingManager settingManager = context.getBean(SettingManager.class);
+        return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid, settingManager.getNodeURL() + "api/records/", approved);
     }
 
     @Override
