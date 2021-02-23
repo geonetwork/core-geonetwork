@@ -223,7 +223,7 @@ public class UserFeedbackUtils {
             RatingCriteriaRepository criteriaRepository = ApplicationContextHolder.get().getBean(RatingCriteriaRepository.class);
             List<RatingCriteria> criteriaList = criteriaRepository.findAll();
             // Init map of averages
-            criteriaList.forEach(e -> ratingAverages.put(e.getId(), 0));
+            criteriaList.forEach(e -> ratingAverages.put(e.getId(), null));
 
             for (final UserFeedback userFeedback : list) {
 
@@ -236,8 +236,12 @@ public class UserFeedbackUtils {
                     for (final Rating rating : userFeedback.getDetailedRatingList()) {
                         Integer criteriaId = rating.getCategory().getId();
                         Integer value = rating.getRating();
-                        if (value != null && value > 0 && ratingAverages.get(criteriaId) != null) {
-                            ratingAverages.put(criteriaId, (ratingAverages.get(criteriaId) + value) / 2);
+                        if (value != null
+                            && value > 0) {
+                            ratingAverages.put(criteriaId,
+                                ratingAverages.get(criteriaId) == null
+                                    ? value
+                                    : (ratingAverages.get(criteriaId) + value) / 2);
                         }
                         if (criteriaId == AVERAGE_ID) {
                             ratingCount++;
