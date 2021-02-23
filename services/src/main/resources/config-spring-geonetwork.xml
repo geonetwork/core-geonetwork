@@ -165,6 +165,14 @@
   <bean id="userFeedbackService" class="org.fao.geonet.api.userfeedback.service.UserFeedbackDatabaseService"/>
 
   <util:map id="translationPacks">
+    <entry key="gnui">
+      <util:list>
+        <value>json/gnui</value>
+        <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:DS_InitiativeTypeCode+gmd:MD_SpatialRepresentationTypeCode</value>
+        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode</value>
+        <value>db/MetadataCategory+Operation+Group+StatusValue+Source</value>
+      </util:list>
+    </entry>
     <entry key="login">
       <util:list>
         <value>json/core</value>

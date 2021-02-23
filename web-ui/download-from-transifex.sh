@@ -13,6 +13,7 @@ tx pull -a -r 'core-geonetwork.admin'
 tx pull -a -r 'core-geonetwork.core'
 tx pull -a -r 'core-geonetwork.v4'
 tx pull -a -r 'core-geonetwork.search'
+tx pull -a -r 'core-geonetwork.gnui'
 cd ..
 
 TRANSLATION_DIR=transifex-src/translations/core-geonetwork.
@@ -39,7 +40,7 @@ for index in "${l[@]}" ; do
     KEY="${index%%::*}"
     VALUE="${index##*::}"
   echo "Language $VALUE"
-  for mod in admin core editor search v4
+  for mod in admin core editor search v4 gnui
   do
     cp $TRANSLATION_DIR$mod/$VALUE.json $SRC_DIR/$KEY-$mod.json
   done;
