@@ -36,8 +36,7 @@ sed -i 's/<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="\/VocabV2
 wget --output-document=NVS.P36.rdf http://vocab.nerc.ac.uk/collection/P36/current/
 sed -i 's/<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="\/VocabV2\/skosrdf2html\.xsl" type="text\/xsl" media="screen"?>//g' NVS.P36.rdf
 
-wget --output-document=NVS.P08.rdf http://vocab.nerc.ac.uk/collection/P08/current/
-sed -i 's/<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="\/VocabV2\/skosrdf2html\.xsl" type="text\/xsl" media="screen"?>//g' NVS.P08.rdf
+wget --output-document=NVS.P08.rdf "http://vocab.nerc.ac.uk/collection/P08/current/?_profile=nvs&_mediatype=application/rdf+xml"
 cd ../../../..
 
 
