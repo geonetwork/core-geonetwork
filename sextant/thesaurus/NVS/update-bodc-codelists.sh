@@ -37,6 +37,9 @@ wget --output-document=NVS.P36.rdf http://vocab.nerc.ac.uk/collection/P36/curren
 sed -i 's/<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="\/VocabV2\/skosrdf2html\.xsl" type="text\/xsl" media="screen"?>//g' NVS.P36.rdf
 cd ../../../..
 
+wget --output-document=NVS.P08.rdf http://vocab.nerc.ac.uk/collection/P08/current/
+sed -i 's/<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="\/VocabV2\/skosrdf2html\.xsl" type="text\/xsl" media="screen"?>//g' NVS.P08.rdf
+cd ../../../..
 
 cd codelist/external/thesauri/reference-geographical-area
 wget --output-document=NVS.C19.rdf http://vocab.nerc.ac.uk/collection/C19/current/
