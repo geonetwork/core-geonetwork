@@ -511,25 +511,6 @@
             </div>
           </section>
 
-          <div data-gn-userfeedback='mdView.current.record'
-              data-gn-user={{user.username}}
-              data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
-          </div>
-          <div class="gn-md-feedback-buttons clearfix">
-            <div class="pull-left"
-                    data-gn-userfeedbackfull='mdView.current.record'
-                    data-gn-user={{user.username}}
-                    data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
-            </div>
-            <div class="pull-left"
-                    data-gn-userfeedbacknew='mdView.current.record'
-                    data-gn-user={{user.username}}
-                    data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
-            </div>
-
-          </div>
-          <div data-gn-md-feedback="mdView.current.record"></div>
-
           <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geoBox || mdView.current.record.boundingPolygon">
             <h2>
               <i class="fa fa-fw fa-map-marker"></i>
@@ -650,6 +631,23 @@
                     data-from-now=""></span>
             </p>
           </section>
+
+          <section data-ng-show="isRatingEnabled" class="gn-md-side-rating">
+            <h2>
+              <i class="fa fa-fw"></i>
+              <span data-translate="">rate</span>
+            </h2>
+            <div data-gn-metadata-rate="mdView.current.record"/>
+          </section>
+
+
+            <div data-gn-userfeedback='mdView.current.record'
+                 data-gn-user={{user.username}}
+                 data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
+            </div>
+            <div data-gn-md-feedback="mdView.current.record"></div>
+          </section>
+
 
           <section class="gn-md-side-social" data-ng-show="isSocialbarEnabled">
             <h2>

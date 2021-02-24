@@ -1,15 +1,15 @@
 <div>
-
-  <button class="btn btn-default" data-toggle="modal"
-    data-target="#gn-userfeedback-addcomment" data-ng-click="initPopup()">
-    <i class="fa fa-comment"></i>&nbsp;
-    <span data-translate="">GUFplusAddRating</span>
+  <button class="btn btn-link btn-xs"
+          data-toggle="modal"
+          title="{{'GUFplusAddRating' | translate}}"
+          data-target="#gn-userfeedback-addcomment"
+          data-ng-click="initPopup()">
+    <i class="fa fa-plus"></i>&nbsp;
   </button>
-
   <!-- Add comment Modal -->
   <div class="modal gn-userfeedback-modal"
-       id="gn-userfeedback-addcomment" 
-       tabindex="-1" 
+       id="gn-userfeedback-addcomment"
+       tabindex="-1"
        role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -94,7 +94,7 @@
                   <div class="gn-userfeedback-loggedout" data-ng-hide="loggedIn">
                     <div id="GUFcredentials" class="anonymous">
                       <p data-translate="">GUFyouAreNotLoggedInPleaseFillIn</p>
-                      <input type="text" 
+                      <input type="text"
                         name="authorName"
                         class="form-control"
                         placeholder="{{'GUFname' | translate}}"
@@ -111,7 +111,7 @@
                       <p data-ng-show="authorEmailError" class="help-block">{{authorEmailError}}</p>
 
                       <input type="text" name="authorOrganization"
-                        class="form-control" 
+                        class="form-control"
                         placeholder="{{'GUForganization' | translate}}"
                         aria-label="{{'GUForganization' | translate}}"
                         data-ng-model="uf.authorOrganization" data-ng-maxlength="64">
