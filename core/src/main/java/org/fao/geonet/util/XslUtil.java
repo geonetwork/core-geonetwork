@@ -406,10 +406,11 @@ public final class XslUtil {
     public static MetadataResourceContainer getResourceContainerDescription(String metadataUuid, Boolean approved) throws Exception {
         Store store = BeanFactoryAnnotationUtils.qualifiedBeanOfType(ApplicationContextHolder.get().getBeanFactory(), Store.class, "filesystemStore");
 
-        if (store != null && store.getResourceManagementExternalProperties() != null && store.getResourceManagementExternalProperties().isEnabled()) {
+        if (store != null && store.getResourceManagementExternalProperties() != null) {
             ServiceContext context = ServiceContext.get();
             return store.getResourceContainerDescription(context, metadataUuid, approved);
         }
+        Log.error(Geonet.RESOURCES,"Could not locate a Store bean in getResourceContainerDescription");
         return null;
     }
 
@@ -423,6 +424,7 @@ public final class XslUtil {
         if (store != null) {
             return store.getResourceManagementExternalProperties();
         }
+        Log.error(Geonet.RESOURCES,"Could not locate a Store bean in getResourceManagementExternalProperties");
         return null;
     }
 
