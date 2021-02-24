@@ -46,4 +46,7 @@ for index in "${l[@]}" ; do
   done;
 done
 
+# Reference file for GeoNetwork-UI project served by the i18n API
+wget -O $SRC_DIR/en-gnui.json https://raw.githubusercontent.com/geonetwork/geonetwork-ui/master/apps/search/src/assets/i18n/en.json
+
 
