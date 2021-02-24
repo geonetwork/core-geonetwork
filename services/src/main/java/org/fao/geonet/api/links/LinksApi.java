@@ -27,6 +27,8 @@ import com.google.common.collect.Sets;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -125,13 +127,14 @@ public class LinksApi {
         description = "")
     @Parameters({
         @Parameter(name = "page",
-            //dataType = "integer", paramType = "query",
+            in = ParameterIn.QUERY, schema = @Schema(type = "integer", format = "int32"),
             description = "Results page you want to retrieve (0..N)"),
         @Parameter(name = "size",
-            //dataType = "integer", paramType = "query",
+            in = ParameterIn.QUERY, schema = @Schema(type = "integer", format = "int32"),
             description = "Number of records per page."),
         @Parameter(name = "sort",
-            //allowMultiple = false, dataType = "string", paramType = "query",
+            //allowMultiple = false
+            in = ParameterIn.QUERY, schema = @Schema(type = "string"),
             description = "Sorting criteria in the format: property(,asc|desc). " +
                 "Default sort order is ascending. ")
     })
@@ -208,13 +211,14 @@ public class LinksApi {
         description = "Get record links as CSV")
     @Parameters({
         @Parameter(name = "page",
-            //dataType = "integer", paramType = "query",
+            in = ParameterIn.QUERY, schema = @Schema(type = "integer", format = "int32"),
             description = "Results page you want to retrieve (0..N)"),
         @Parameter(name = "size",
-            //dataType = "integer", paramType = "query",
+            in = ParameterIn.QUERY, schema = @Schema(type = "integer", format = "int32"),
             description = "Number of records per page."),
         @Parameter(name = "sort",
-            //allowMultiple = false, dataType = "string", paramType = "query",
+            //allowMultiple = false
+            in = ParameterIn.QUERY, schema = @Schema(type = "string"),
             description = "Sorting criteria in the format: property(,asc|desc). " +
                 "Default sort order is ascending. ")
     })
