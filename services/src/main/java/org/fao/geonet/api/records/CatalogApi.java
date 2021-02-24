@@ -26,6 +26,8 @@ package org.fao.geonet.api.records;
 import com.google.common.collect.ImmutableSet;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -531,23 +533,23 @@ public class CatalogApi {
             "application/rdf+xml", "*"
         })
     @Parameters({
-        @Parameter(name = "from", description = "Indicates the start position in a sorted list of matches that the client wants to use as the beginning of a page result.", required = false),
-            //, defaultValue = "1", dataType = "int", paramType = "query"
-        @Parameter(name = "hitsPerPage", description = "Indicates the number of hits per page.", required = false),
-            //dataType = "int", paramType = "query"),
+        @Parameter(name = "from", description = "Indicates the start position in a sorted list of matches that the client wants to use as the beginning of a page result.", required = false,
+            in = ParameterIn.QUERY, schema = @Schema(type = "integer", format = "int32", defaultValue = "1")),
+        @Parameter(name = "hitsPerPage", description = "Indicates the number of hits per page.", required = false,
+            in = ParameterIn.QUERY, schema = @Schema(type = "integer", format = "int32")),
         //@Parameter(name="to", value = "Indicates the end position in a sorted list of matches that the client wants to use as the ending of a page result", required = false, defaultValue ="10", dataType = "int", paramType = "query"),
-        @Parameter(name = "any", description = "Search key", required = false),
-            //dataType = "string", paramType = "query"),
-        @Parameter(name = "title", description = "A search key for the title.", required = false),
-            //dataType = "string", paramType = "query"),
-        @Parameter(name = "facet.q", description = "A search facet in the Lucene index. Use the GeoNetwork GUI search to generate the suitable filter values. Example: standard/dcat-ap&createDateYear/2018&sourceCatalog/6d93613e-2b76-4e26-94af-4b4c420a1758 (filter by creation year and source catalog).", required = false),
-            //, dataType = "string", paramType = "query"),
-        @Parameter(name = "sortBy", description = "Lucene sortBy criteria. Relevant values: relevance, title, changeDate.", required = false), //, , dataType = "string", paramType = "query"),
-        @Parameter(name = "sortOrder", description = "Sort order. Possible values: reverse.", required = false),
-            //, dataType = "string", paramType = "query"),
-        @Parameter(name = "similarity", description = "Use the Lucene FuzzyQuery. Values range from 0.0 to 1.0 and defaults to 0.8.", required = false)
-            //, defaultValue = "0.8", dataType = "float", paramType = "query")
-
+        @Parameter(name = "any", description = "Search key", required = false,
+            in = ParameterIn.QUERY, schema = @Schema(type = "string")),
+        @Parameter(name = "title", description = "A search key for the title.", required = false,
+            in = ParameterIn.QUERY, schema = @Schema(type = "string")),
+        @Parameter(name = "facet.q", description = "A search facet in the Lucene index. Use the GeoNetwork GUI search to generate the suitable filter values. Example: standard/dcat-ap&createDateYear/2018&sourceCatalog/6d93613e-2b76-4e26-94af-4b4c420a1758 (filter by creation year and source catalog).", required = false,
+            in = ParameterIn.QUERY, schema = @Schema(type = "string")),
+        @Parameter(name = "sortBy", description = "Lucene sortBy criteria. Relevant values: relevance, title, changeDate.", required = false,
+            in = ParameterIn.QUERY, schema = @Schema(type = "string")),
+        @Parameter(name = "sortOrder", description = "Sort order. Possible values: reverse.", required = false,
+            in = ParameterIn.QUERY, schema = @Schema(type = "string")),
+        @Parameter(name = "similarity", description = "Use the Lucene FuzzyQuery. Values range from 0.0 to 1.0 and defaults to 0.8.", required = false,
+            in = ParameterIn.QUERY, schema = @Schema(type = "number", format = "float", defaultValue = "0.8"))
     })
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Return the catalog content as RDF."
