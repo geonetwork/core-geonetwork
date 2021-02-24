@@ -79,24 +79,50 @@
 
   <xsl:template name="addLineBreaksAndHyperlinksInternal">
     <xsl:param name="txt" select="string(.)" />
-    <xsl:analyze-string select="$txt"
-                        regex="[^\r\n]+">
+
+    <xsl:variable name="txtWithBr">
+      <xsl:analyze-string select="$txt"
+                          regex="[\r\n]{{2}}">
+        <!-- Code the breakline with the char ◿, to be matched later (regular expression with ^ seem doesn't match multiple chars)
+             so can't use string that is unlikely to happen like BRBRBR for this and replaced later by <br/>.
+
+             The use of the char ◿ is arbitrary, selected as a very unlikely char to happen in the metadata.
+        -->
+        <xsl:matching-substring>
+          ◿<xsl:value-of select="."/>
+        </xsl:matching-substring>
+        <xsl:non-matching-substring>
+          <xsl:value-of select="."/>
+        </xsl:non-matching-substring>
+      </xsl:analyze-string>
+    </xsl:variable>
+
+    <!-- See previous comment about the usage of the char ◿ -->
+    <xsl:analyze-string select="$txtWithBr"
+                        regex="[^\n\r◿]+">
       <!-- Surround text without breaklines inside a p element -->
       <xsl:matching-substring>
+        <xsl:if test="string(normalize-space(.))">
         <p>
           <xsl:call-template name="hyperlink">
             <xsl:with-param name="string" select="." />
           </xsl:call-template>
         </p>
+        </xsl:if>
       </xsl:matching-substring>
       <xsl:non-matching-substring>
-
+        <xsl:if test="string(normalize-space(.))">
+          <xsl:call-template name="hyperlink">
+            <xsl:with-param name="string" select="." />
+          </xsl:call-template>
+        </xsl:if>
       </xsl:non-matching-substring>
     </xsl:analyze-string>
   </xsl:template>
 
+
   <xsl:template name="hyperlink">
-    <xsl:param name="string" select="string(.)" />
+    <xsl:param name="string" select="." />
     <xsl:analyze-string select="$string"
                         regex="(http|https|ftp)://[^\s]+">
       <xsl:matching-substring>
@@ -113,7 +139,7 @@
   </xsl:template>
 
   <xsl:template name="hyperlink-mailaddress">
-    <xsl:param name="string" select="string(.)" />
+    <xsl:param name="string" select="." />
     <xsl:analyze-string select="$string"
                         regex="([\w\.]+)@([a-zA-Z_]+?\.[a-zA-Z]{{2,3}})">
       <xsl:matching-substring>
@@ -122,7 +148,18 @@
         </a>
       </xsl:matching-substring>
       <xsl:non-matching-substring>
-        <xsl:value-of select="." />
+
+        <!-- See previous comment about the usage of the char ◿ -->
+        <xsl:analyze-string select="$string"
+                            regex="◿">
+          <xsl:matching-substring>
+            <br/>
+            <xsl:value-of select="replace(., '◿', '')"/>
+          </xsl:matching-substring>
+          <xsl:non-matching-substring>
+            <xsl:value-of select="."/>
+          </xsl:non-matching-substring>
+        </xsl:analyze-string>
       </xsl:non-matching-substring>
     </xsl:analyze-string>
   </xsl:template>
