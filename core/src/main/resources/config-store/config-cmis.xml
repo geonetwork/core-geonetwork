@@ -78,6 +78,8 @@
        CMIS_EXTERNAL_RESOURCE_MANAGEMENT_URL=http://localhost:8080/share/page/{type:folder:document}-details?nodeRef=workspace://SpacesStore/{cmisobjectid}
        CMIS_EXTERNAL_RESOURCE_MANAGEMENT_WINDOW_PARAMETERS=toolbar=0,width=600,height=600
        CMIS_EXTERNAL_RESOURCE_MANAGEMENT_MODAL_ENABLED=true
+       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_FOLDER_ENABLED=true
+       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_FOLDER_ROOT=/public
        CMIS_VERSIONING_ENABLED=true
        CMIS_VERSIONING_STATE=MAJOR
        CMIS_VERSIONING_MAJOR_ON_UPDATE=false
@@ -95,7 +97,8 @@
         <property name="externalResourceManagementUrl" value="${cmis.external.resource.management.url}"/>
         <property name="externalResourceManagementWindowParameters" value="${cmis.external.resource.management.window.parameters}"/>
         <property name="externalResourceManagementModalEnabled" value="${cmis.external.resource.management.modal.enabled}"/>
-
+        <property name="externalResourceManagementFolderEnabled" value="${cmis.external.resource.management.folder.enabled}"/>
+        <property name="externalResourceManagementFolderRoot" value="${cmis.external.resource.management.folder.root}"/>
 
         <property name="versioningEnabled" value="${cmis.versioning.enabled}"/>
         <property name="versioningState" value="${cmis.versioning.state}"/>

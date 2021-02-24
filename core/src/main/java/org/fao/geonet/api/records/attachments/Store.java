@@ -352,5 +352,11 @@ public interface Store {
          * @return boolean to indicate is the external management window should be modal or not.
          */
         boolean isModal();
+
+        /**
+         * Get the folder settings for the resource management window.
+         * @return boolean to indicate is the external management window should be enabled or not for folders.
+         */
+        boolean isFolderEnabled();
     }
 }

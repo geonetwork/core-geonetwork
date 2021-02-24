@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.domain.MetadataResourceContainer;
 import org.locationtech.jts.geom.Envelope;
@@ -406,11 +407,16 @@ public final class XslUtil {
     public static MetadataResourceContainer getResourceContainerDescription(String metadataUuid, Boolean approved) throws Exception {
         Store store = BeanFactoryAnnotationUtils.qualifiedBeanOfType(ApplicationContextHolder.get().getBeanFactory(), Store.class, "filesystemStore");
 
-        if (store != null && store.getResourceManagementExternalProperties() != null) {
-            ServiceContext context = ServiceContext.get();
-            return store.getResourceContainerDescription(context, metadataUuid, approved);
+        if (store != null) {
+            if (store.getResourceManagementExternalProperties() != null && store.getResourceManagementExternalProperties().isFolderEnabled()) {
+                ServiceContext context = ServiceContext.get();
+                return store.getResourceContainerDescription(ServiceContext.get(), metadataUuid, approved);
+            } else {
+                // Return an empty object which should not be used because the folder is not enabled.
+                return new FilesystemStoreResourceContainer(metadataUuid, -1, null, null, null, approved);
+            }
         }
-        Log.error(Geonet.RESOURCES,"Could not locate a Store bean in getResourceContainerDescription");
+        Log.error(Geonet.RESOURCES, "Could not locate a Store bean in getResourceContainerDescription");
         return null;
     }
 

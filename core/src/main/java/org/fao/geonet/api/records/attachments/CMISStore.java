@@ -406,8 +406,11 @@ public class CMISStore extends AbstractStore {
 
         SettingManager settingManager = context.getBean(SettingManager.class);
         try {
-            Folder parentFolder = cmisUtils.getFolderCache(key);;
-
+            String folderRoot = cmisConfiguration.getExternalResourceManagementFolderRoot();
+            if (folderRoot == null) {
+                folderRoot = "";
+            }
+            Folder parentFolder = cmisUtils.getFolderCache(key + folderRoot);
             MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
                 getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, null, String.valueOf(metadataId), null, null, parentFolder.getId(), parentFolder.getType());
 
@@ -577,6 +580,11 @@ public class CMISStore extends AbstractStore {
             @Override
             public boolean isModal() {
                 return cmisConfiguration.isExternalResourceManagementModalEnabled();
+            }
+
+            @Override
+            public boolean isFolderEnabled() {
+                return isEnabled() && cmisConfiguration.isExternalResourceManagementFolderEnabled();
             }
 
             @Override

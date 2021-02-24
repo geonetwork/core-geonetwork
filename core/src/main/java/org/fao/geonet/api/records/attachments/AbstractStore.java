@@ -244,6 +244,11 @@ public abstract class AbstractStore implements Store {
             }
 
             @Override
+            public boolean isFolderEnabled() {
+                return false;
+            }
+
+            @Override
             public String toString() {
                 try {
                     return new ObjectMapper().writeValueAsString(this);
