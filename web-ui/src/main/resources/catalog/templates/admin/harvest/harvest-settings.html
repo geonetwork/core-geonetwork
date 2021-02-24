@@ -139,7 +139,7 @@
                   data-gn-click-and-spin="deleteHarvester(harvesterSelected['@id'])"
                   data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
                   title="{{'deleteHarvesterHelp' | translate}}">
-            <span class="fa fa-times"></span>&nbsp;
+            <span class="fa fa-trash"></span>&nbsp;
             <span data-translate="">deleteHarvester</span>
           </button>
         </div>
@@ -175,7 +175,7 @@
                   class="btn btn-primary pull-right btn-danger"
                   data-ng-hide="harvesterHistory.length === 0"
                   data-ng-click="deleteHarvesterHistory()">
-            <span class="fa fa-times"></span>
+            <span class="fa fa-trash"></span>
             <span data-translate="">deleteHarvesterHistory</span>
           </button>
         </div>
@@ -190,7 +190,7 @@
             <div class="timeline-badge"
                  data-ng-class="h.deleted == 'true' ? 'warning' : (h.info[0]['stack'] ? 'danger' : 'success')">
               <i class="fa"
-                 data-ng-class="h.deleted == 'true' ? 'fa-times' : 'fa-chevron-right'"></i>
+                 data-ng-class="h.deleted == 'true' ? 'fa-trash' : 'fa-chevron-right'"></i>
             </div>
             <div class="timeline-panel">
               <div class="timeline-heading" data-ng-if="h.info[0]['stack'] !== undefined">
