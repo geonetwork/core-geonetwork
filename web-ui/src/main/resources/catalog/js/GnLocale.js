@@ -142,8 +142,8 @@
       );
 
       $translateProvider.preferredLanguage(gnGlobalSettings.iso3lang);
-      // $translateProvider.useSanitizeValueStrategy('escape');
-      $translateProvider.useSanitizeValueStrategy('escape', 'sanitizeParameters');
+      $translateProvider.useSanitizeValueStrategy('escape');
+      // $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
 
       moment.locale(gnGlobalSettings.lang);
     }]);
