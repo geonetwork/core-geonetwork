@@ -424,6 +424,7 @@ public class Geonetwork implements ApplicationHandler {
                 final ServletContext servletContext = context.getServlet().getServletContext();
                 context.setAsThreadLocal();
                 ApplicationContextHolder.set(_applicationContext);
+              try {
                 GeonetWro4jFilter filter = (GeonetWro4jFilter) servletContext.getAttribute(GeonetWro4jFilter.GEONET_WRO4J_FILTER_KEY);
 
                 @SuppressWarnings("unchecked")
@@ -451,7 +452,7 @@ public class Geonetwork implements ApplicationHandler {
                     for (String formatterName : formattersToInitialize) {
                         Log.info(Geonet.GEONETWORK, "Initializing the Formatter with id: " + formatterName);
                         final MockHttpSession servletSession = new MockHttpSession(servletContext);
-                        servletSession.setAttribute(Jeeves.Elem.SESSION,  context.getUserSession());
+                        servletSession.setAttribute(Jeeves.Elem.SESSION, context.getUserSession());
                         final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
                         servletRequest.setSession(servletSession);
                         final MockHttpServletResponse response = new MockHttpServletResponse();
@@ -463,6 +464,9 @@ public class Geonetwork implements ApplicationHandler {
                         }
                     }
                 }
+              } finally {
+                context.clearAsThreadLocal();
+              }
             }
         });
         fillCaches.setDaemon(true);
