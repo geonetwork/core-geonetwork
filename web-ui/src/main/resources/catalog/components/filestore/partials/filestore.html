@@ -16,7 +16,7 @@
           {{r.id.split('/').splice(2).join('/') | decodeURIComponent}}
         </a>
       </td>
-      <td data-ng-if="r.version.length > 0">
+      <td class="text-nowrap" data-ng-if="r.version.length > 0">
           {{r.version}}
       </td>
       <td data-ng-if="r.externalResourceManagementProperties.url.length > 0">
