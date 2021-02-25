@@ -28,6 +28,7 @@ import static org.fao.geonet.kernel.AllThesaurus.ALL_THESAURUS_KEY;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -35,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -78,19 +80,7 @@ public class KeywordSearchParams {
         if (thesauriNames.isEmpty()) {
             return executeAll(queryBuilder, finder);
         } else if (thesauriNames.contains(ALL_THESAURUS_KEY) && finder.existsThesaurus(ALL_THESAURUS_KEY)) {
-            final Thesaurus allThesaurus = finder.getThesaurusByName(ALL_THESAURUS_KEY);
-            List<KeywordBean> resultsOriginalThesaurus = executeAll(queryBuilder, finder);
-            return Lists.transform(resultsOriginalThesaurus, new Function<KeywordBean, KeywordBean>() {
-                @Nullable
-                @Override
-                public KeywordBean apply(KeywordBean input) {
-                    if (input != null) {
-                        input.setUriCode(AllThesaurus.buildKeywordUri(input));
-                        input.setThesaurusInfo(allThesaurus);
-                    }
-                    return input;
-                }
-            });
+            return executeAll(queryBuilder, finder);
         } else if (thesauriNames.size() == 1) {
             if (comparator != null) {
                 return executeOneSorted(queryBuilder, finder);
@@ -179,10 +169,8 @@ public class KeywordSearchParams {
         MalformedQueryException, QueryEvaluationException, AccessDeniedException {
     	AtomicInteger id = new AtomicInteger();
     	LinkedHashSet<KeywordBean> results = new LinkedHashSet<>();
-        for (Thesaurus thesaurus : finder.getThesauriMap().values()) {
-            if (thesaurus.getKey().equals(ALL_THESAURUS_KEY)) {
-                continue;
-            }
+
+        for (Thesaurus thesaurus : getThesaurusListToSearchInto(finder)) {
             if (thesauriDomainName == null || thesauriDomainName.equals(thesaurus.getDname())) {
                 Query<KeywordBean> query = queryBuilder.limit(maxResults - results.size()).build();
                 id = executeQuery(id, results, thesaurus, query, maxResults);
@@ -209,10 +197,8 @@ public class KeywordSearchParams {
         AtomicInteger id = new AtomicInteger();
 
         TreeSet<KeywordBean> results = new TreeSet<>(this.comparator);
-        for (Thesaurus thesaurus : finder.getThesauriMap().values()) {
-            if (thesaurus.getKey().equals(ALL_THESAURUS_KEY)) {
-                continue;
-            }
+
+        for (Thesaurus thesaurus : getThesaurusListToSearchInto(finder)) {
             Query<KeywordBean> query = queryBuilder.build();
             if (thesauriDomainName == null || thesauriDomainName.equals(thesaurus.getDname())) {
                 id = executeQuery(id, results, thesaurus, query, -1);
@@ -220,6 +206,17 @@ public class KeywordSearchParams {
         }
 
         return setToList(results);
+    }
+
+    private Collection<Thesaurus> getThesaurusListToSearchInto(ThesaurusFinder finder) {
+        Map<String, Thesaurus> thesauri = finder.getThesauriMap();
+        if (!thesauri.containsKey(ALL_THESAURUS_KEY)) {
+            return thesauri.values();
+        }
+        if (thesauriNames.contains(ALL_THESAURUS_KEY)) {
+            return Collections.singletonList(thesauri.get(ALL_THESAURUS_KEY));
+        }
+        return thesauri.values().stream().filter(t -> !(t.getKey().equals(ALL_THESAURUS_KEY))).collect(Collectors.toList());
     }
 
     private ArrayList<KeywordBean> setToList(Set<KeywordBean> results) {

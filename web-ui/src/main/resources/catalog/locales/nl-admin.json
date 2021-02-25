@@ -1192,7 +1192,7 @@
     "ui-resultViewTpls": "Lijst van templates voor de zoek resultaten",
     "ui-resultTemplate": "Default template voor zoek resultaten",
     "ui-formatter": "Lijst van formatters voor record weergave",
-    "ui-downloadFormatter": "List of formatter for record export",
+    "ui-downloadFormatter": "Diverse formatters ten behoeve van record export",
     "ui-linkTypes": "Lijst van link types",
     "ui-mod-map": "Kaart applicatie",
     "ui-map": "Default kaart context",
@@ -1461,5 +1461,5 @@
     "ui-autoFitOnLayer": "Zoom naar de data",
     "ui-autoFitOnLayer-help": "If checked, the map will automatically zoom on data when adding a layer from a record. Otherwise, a message will be shown to let the user zoom on data manually.",
     "styleVariable-gnHeaderHeight": "Hoogte",
-    "styleVariable-gnSearchBackgroundColor": "Backgound color"
+    "styleVariable-gnSearchBackgroundColor": "Achtergrond kleur"
 }

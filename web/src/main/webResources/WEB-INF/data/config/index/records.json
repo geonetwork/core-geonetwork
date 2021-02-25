@@ -1461,8 +1461,19 @@
         "type": "keyword"
       },
       "resourceIdentifier": {
-        "type": "keyword",
-        "copy_to": "any"
+        "type": "nested",
+        "properties": {
+          "code": {
+            "type": "keyword",
+            "copy_to": "any"
+          },
+          "codeSpace": {
+            "type": "keyword"
+          },
+          "link": {
+            "type": "keyword"
+          }
+        }
       },
       "serviceType": {
         "type": "keyword"
@@ -1471,9 +1482,6 @@
         "type": "keyword"
       },
       "spatialRepresentationType": {
-        "type": "keyword"
-      },
-      "standardName": {
         "type": "keyword"
       },
       "schema": {

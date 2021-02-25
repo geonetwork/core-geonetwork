@@ -81,8 +81,9 @@
               </label>
 
 
+
               <!-- Basic form field (combo box or text field) -->
-              <div ng-if="::input.literalData">
+              <div ng-if="::input.literalData && !isDateTime(input)">
                 <div class="input-group"
                   ng-repeat="field in getInputsByName(input.identifier.value)">
                   <select class="form-control input-sm"
@@ -193,8 +194,13 @@
                 <div ng-repeat="output in executeResponse.processOutputs.output">
 
                   <div ng-if="output.reference && output.reference.mimeType!='application/x-ogc-wms'"
+<<<<<<< HEAD
                         ng-class="{'gn-single-output': checkOutput(executeResponse.processOutputs.output).length==1}">
                     <h4 class="col-sm-6" ng-if="checkOutput(executeResponse.processOutputs.output).length>1">
+=======
+                        ng-class="{'gn-single-output': executeResponse.processOutputs.output.length == 1}">
+                    <h4 class="col-sm-6" ng-if="executeResponse.processOutputs.output.length > 1">
+>>>>>>> origin/4.0.x
                       {{::output.title.value}}
                     </h4>
                     <div ng-class="{'col-sm-6': executeResponse.processOutputs.output.length>1}">

@@ -23,31 +23,18 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
-import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.MetadataValidation;
-import org.fao.geonet.domain.MetadataValidationId;
-import org.fao.geonet.domain.MetadataValidationStatus;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.SchematronRequirement;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.SchematronValidator;
 import org.fao.geonet.kernel.SchematronValidatorExternalMd;
-import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -67,6 +54,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION;
+
 public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.IMetadataValidator, BaseErrorHandlerAttachingErrorToElem.ElementDecorator {
     private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.DATA_MANAGER);
 
@@ -82,9 +77,6 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
     @Autowired
     private MetadataValidationRepository validationRepository;
-
-    @Autowired
-    private ThesaurusManager thesaurusManager;
 
     @Autowired
     @Lazy

@@ -167,7 +167,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
 
             if (!isFromRecord) {
-                setKeywords(capabilities, context);
+                // TODOES: setKeywords(capabilities, context);
             }
             setOperationsParameters(capabilities);
 

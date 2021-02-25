@@ -41,13 +41,7 @@ import org.junit.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -571,7 +565,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
 
     @Test
     public void testAllThesaurusSortedLimitedNumber() throws Exception {
-        thesaurusMap.put(AllThesaurus.ALL_THESAURUS_KEY, new AllThesaurus(thesaurusFinder, isoLangMapper, "http://siteurl.com"));
+        thesaurusMap.put(AllThesaurus.ALL_THESAURUS_KEY, createAllThesaurus(Collections.emptyList()));
         KeywordsSearcher searcher = new KeywordsSearcher(isoLangMapper, thesaurusFinder);
         String searchTerm = "1";
         Element params = new Element("params").
@@ -612,9 +606,46 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
         }
     }
 
+    @Test
+    public void testAllThesaurusExclude() throws Exception {
+        thesaurusMap.put(AllThesaurus.ALL_THESAURUS_KEY, createAllThesaurus(Collections.emptyList()));
+        KeywordsSearcher searcher = new KeywordsSearcher(isoLangMapper, thesaurusFinder);
+        Element params = new Element("params").
+            addContent(new Element("pNewSearch").setText("true")).
+            addContent(new Element("pTypeSearch").setText("" + KeywordSearchType.CONTAINS.ordinal())).
+            addContent(new Element("pThesauri").setText(AllThesaurus.ALL_THESAURUS_KEY)).
+            addContent(new Element("pMode").setText("searchBox")).
+            addContent(new Element("pLanguage").setText("eng"));
+        searcher.search("eng", params);
+        List<KeywordBean> results = searcher.getResults();
+        int allKeywords = results.size();
+
+        String excludeThesaurus = "test.test.testThesaurus";
+        params.getChild("pThesauri").setText(excludeThesaurus);
+        searcher.search("eng", params);
+        int excluded = searcher.getResults().size();
+
+        thesaurusMap.put(AllThesaurus.ALL_THESAURUS_KEY, createAllThesaurus(Collections.singletonList("test.test.testThesaurus")));
+        searcher = new KeywordsSearcher(isoLangMapper, thesaurusFinder);
+        params.getChild("pThesauri").setText(AllThesaurus.ALL_THESAURUS_KEY);
+        searcher.search("eng", params);
+        results = searcher.getResults();
+        int allKeywordsMinusExcluded = results.size();
+
+        assertTrue(allKeywordsMinusExcluded + excluded == allKeywords);
+    }
+
     private void assertStartsWith(List<KeywordBean> results, int i, String prefix) {
         assertTrue("Expected result at position " + i + " (" + results.get(i).getDefaultValue() + ") to start with 10_", results.get(i)
             .getDefaultValue().startsWith(prefix));
     }
 
+    private AllThesaurus createAllThesaurus(List<String> allThesaurusExclude) {
+        AllThesaurus allThesaurus = new AllThesaurus();
+        allThesaurus.setThesaurusFinder(thesaurusFinder);
+        allThesaurus.setIsoLangMapper(isoLangMapper);
+        allThesaurus.setAllThesaurusExclude(allThesaurusExclude);
+        allThesaurus.init("http://siteurl.com");
+        return allThesaurus;
+    }
 }

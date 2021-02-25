@@ -217,9 +217,44 @@
       var esFacet = this, aggs = typeof type === 'string' ?
         angular.copy(this.configs[type].facets, {}) :
         type;
-      esParams.aggregations = aggs;
+
+      esParams.aggregations = {};
+      angular.forEach(aggs, function(config, facet) {
+        if (config.hasOwnProperty('gnBuildFilterForRange')) {
+          esParams.aggregations[facet] =
+            esFacet.gnBuildFilterForRange(config);
+        } else {
+          esParams.aggregations[facet] = config;
+        }
+      });
     };
 
+    this.gnBuildFilterForRange = function(facet) {
+      var filters = {},
+        config = facet.gnBuildFilterForRange,
+        interval = (config.to - config.from) / config.buckets,
+        isDate = config.dateFormat;
+
+      for (var i = 0; i < config.buckets; i++) {
+        var lower = parseInt(config.from + (i * interval)),
+          upper = parseInt(config.from + ((i + 1) * interval)),
+          key = isDate
+            ? moment(lower, config.dateFormat).valueOf()
+            : lower + '-' + upper;
+        filters[key] = {
+          'query_string': {
+            'query': '+' + config.field + ':[' + lower + ' TO ' + upper + '}'
+          }
+        }
+      }
+
+      return {
+        'filters': {
+          'filters': filters
+        },
+        meta: angular.extend(facet.meta, config)
+      }
+    }
 
     this.addSourceConfiguration = function(esParams, type) {
       if (type === undefined) {
@@ -313,49 +348,64 @@
             });
 
           }
-        } else if (reqAgg.hasOwnProperty('date_histogram') || reqAgg.hasOwnProperty('auto_date_histogram')) {
+        } else if (reqAgg.hasOwnProperty('date_histogram')
+                   || reqAgg.hasOwnProperty('auto_date_histogram')
+                   || (respAgg.meta && respAgg.meta.vega == 'timeline')) {
+          var isTimeline = respAgg.meta && respAgg.meta.vega == 'timeline';
+
           facetModel.type = 'dates';
           facetModel.dates = [];
           facetModel.datesCount = [];
-
-          var dateInterval;
-          var dayDuration = 1000 * 60 * 60 * 24;
-          var intervals = {
-            year: dayDuration * 365,
-            month: dayDuration * 30,
-            week: dayDuration * 7,
-            day: dayDuration,
-            s: 1000,
-            m: 1000 * 60,
-            h: 1000 * 60 * 24,
-            d: dayDuration,
-            M: dayDuration * 30,
-            y: dayDuration * 365
-          };
-          if (reqAgg.hasOwnProperty('date_histogram')) {
-            dateInterval = intervals[reqAgg.date_histogram.calendar_interval];
-          } else {
-            var interval = respAgg.interval;
-            var unit = interval.substring(interval.length - 1, interval.length);
-            dateInterval = parseInt(interval.substring(0, interval.length - 1)) * intervals[unit];
-          }
-
-          for (var p in respAgg.buckets) {
-            if (!respAgg.buckets[p].key || !respAgg.buckets[p].doc_count) {
-              continue;
-            }
-            facetModel.dates.push(new Date(respAgg.buckets[p].key));
-            facetModel.datesCount.push({
-              begin: new Date(respAgg.buckets[p].key),
-              end: new Date(respAgg.buckets[p].key + dateInterval),
-              count: respAgg.buckets[p].doc_count
+          if (isTimeline) {
+            facetModel.items = [];
+            angular.forEach(respAgg.buckets, function(bucket, key) {
+              facetModel.items.push({
+                key_as_string: moment(parseInt(key)).toISOString(),
+                key: parseInt(key),
+                doc_count: bucket.doc_count
+              })
             });
+          } else {
+            facetModel.items = respAgg.buckets;
           }
-
-          if (respAgg.buckets.length > 1) {
-            facetModel.from = moment(respAgg.buckets[0].key).format('DD-MM-YYYY');
-            facetModel.to = moment(respAgg.buckets[respAgg.buckets.length - 1].key + dateInterval).format('DD-MM-YYYY');
-          }
+          // var dateInterval;
+          // var dayDuration = 1000 * 60 * 60 * 24;
+          // var intervals = {
+          //   year: dayDuration * 365,
+          //   month: dayDuration * 30,
+          //   week: dayDuration * 7,
+          //   day: dayDuration,
+          //   s: 1000,
+          //   m: 1000 * 60,
+          //   h: 1000 * 60 * 24,
+          //   d: dayDuration,
+          //   M: dayDuration * 30,
+          //   y: dayDuration * 365
+          // };
+          // if (reqAgg.hasOwnProperty('date_histogram')) {
+          //   dateInterval = intervals[reqAgg.date_histogram.calendar_interval];
+          // } else {
+          //   var interval = respAgg.interval;
+          //   var unit = interval.substring(interval.length - 1, interval.length);
+          //   dateInterval = parseInt(interval.substring(0, interval.length - 1)) * intervals[unit];
+          // }
+          //
+          // for (var p in respAgg.buckets) {
+          //   if (!respAgg.buckets[p].key || !respAgg.buckets[p].doc_count) {
+          //     continue;
+          //   }
+          //   facetModel.dates.push(new Date(respAgg.buckets[p].key));
+          //   facetModel.datesCount.push({
+          //     begin: new Date(respAgg.buckets[p].key),
+          //     end: new Date(respAgg.buckets[p].key + dateInterval),
+          //     count: respAgg.buckets[p].doc_count
+          //   });
+          // }
+          //
+          // if (respAgg.buckets.length > 1) {
+          //   facetModel.from = moment(respAgg.buckets[0].key).format('DD-MM-YYYY');
+          //   facetModel.to = moment(respAgg.buckets[respAgg.buckets.length - 1].key + dateInterval).format('DD-MM-YYYY');
+          // }
 
         } else if (reqAgg.hasOwnProperty('filters')) {
           facetModel.type = 'filters';

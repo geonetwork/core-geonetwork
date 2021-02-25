@@ -170,6 +170,9 @@
             scope.executeState = '';
             scope.executeResponse = null;
 
+            // reset executeState upon new selection
+            scope.executeState = '';
+
             // parse application profile as JSON (if not already an object)
             // application profile holds 2 arrays: inputs and outputs
             scope.applicationProfile = scope.wpsLink.applicationProfile || null;
@@ -245,6 +248,19 @@
             // call on layerChange
             scope.map.getLayers().on('onlayerchange', scope.applyMapLayersToInput)
             // END specific SEXTANT EMODNET
+
+            scope.isDateTime = function(date) {
+              if (date.hasOwnProperty('metadata')) {
+                return date.metadata[0].href === 'datetime';
+              }
+              return false;
+            };
+
+            scope.checkOutput = function (outputs) {
+              return outputs.filter(function(o) {
+                return o.reference.mimeType !== 'application/x-ogc-wms';
+              })
+            };
 
             // get values from wfs filters
             var wfsFilterValues = null;

@@ -24,14 +24,12 @@
 
 <beans
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://www.springframework.org/schema/beans"
-  xsi:schemaLocation="
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-    ">
+  xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
   <bean id="threadPool" class="org.fao.geonet.util.ThreadPool"/>
   <bean id="SchemaManager" class="org.fao.geonet.kernel.SchemaManager" lazy-init="true"/>
-  <bean id="ThesaurusManager" class="org.fao.geonet.kernel.ThesaurusManager" lazy-init="true"/>
+
   <bean id="languageProfilesDir" class="java.lang.String">
     <constructor-arg index="0" value="resources/language-profiles"/>
   </bean>
