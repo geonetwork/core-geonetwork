@@ -59,6 +59,11 @@
     <property name="defaultNode" value="true"/>
   </bean>
 
+  <bean name="statusActionFactory"
+        class="org.fao.geonet.kernel.metadata.StatusActionsFactory">
+    <constructor-arg name="className" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
+  </bean>
+
 
   <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="applicationContextSchedulerContextKey" value="applicationContext"/>

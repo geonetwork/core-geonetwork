@@ -47,11 +47,6 @@
     <constructor-arg index="1" ref="defaultLanguage"/>
   </bean>
 
-  <bean name="statusActionFactory"
-        class="org.fao.geonet.kernel.metadata.StatusActionsFactory">
-    <constructor-arg name="className" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
-  </bean>
-
   <!--
    Configure here what the publish/unpublish action does.
    By default, it set view, download and dynamic operation
