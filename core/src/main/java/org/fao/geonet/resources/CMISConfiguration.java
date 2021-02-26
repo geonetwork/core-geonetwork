@@ -66,6 +66,7 @@ public class CMISConfiguration {
 
     private final String CMIS_DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_WINDOW_PARAMETERS = "toolbar=0,width=600,height=600";
     private final Boolean CMIS_DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_MODAL_ENABLED = true;
+    private final Boolean CMIS_DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_FOLDER_ENABLED = true;
     private final Boolean CMIS_DEFAULT_VERSIONING_ENABLED = false;
 
     private String servicesBaseUrl;
@@ -79,9 +80,12 @@ public class CMISConfiguration {
     /**
      * Url used for managing enhanced resource properties related to the metadata.
      */
-    private String externalResourceManagementUrl = System.getenv("CMIS_EXTERNAL_RESOURCE_MANAGEMENT_URL");
-    private String externalResourceManagementWindowParameters = System.getenv("CMIS_EXTERNAL_RESOURCE_MANAGEMENT_WINDOW_PARAMETERS");
-    private Boolean externalResourceManagementModalEnabled = BooleanUtils.toBooleanObject(System.getenv("CMIS_EXTERNAL_RESOURCE_MANAGEMENT_MODAL_ENABLED"));
+    private String externalResourceManagementUrl;
+    private String externalResourceManagementWindowParameters;
+    private Boolean externalResourceManagementModalEnabled;
+    private Boolean externalResourceManagementFolderEnabled;
+    private String externalResourceManagementFolderRoot;
+
     /*
      * Enable option to add versioning in the link to the resource.
      */
@@ -209,6 +213,36 @@ public class CMISConfiguration {
 
     public void setExternalResourceManagementModalEnabled(String externalResourceManagementModalEnabled) {
         this.externalResourceManagementModalEnabled = BooleanUtils.toBooleanObject(externalResourceManagementModalEnabled);;
+    }
+
+    public Boolean isExternalResourceManagementFolderEnabled() {
+        if (externalResourceManagementFolderEnabled == null) {
+            return CMIS_DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_FOLDER_ENABLED;
+        } else {
+            return externalResourceManagementFolderEnabled;
+        }
+    }
+
+    public void setExternalResourceManagementFolderEnabled(Boolean externalResourceManagementFolderEnabled) {
+        this.externalResourceManagementFolderEnabled = externalResourceManagementFolderEnabled;
+    }
+
+    public String getExternalResourceManagementFolderRoot() {
+        return this.externalResourceManagementFolderRoot;
+    }
+
+    public void setExternalResourceManagementFolderRoot(String externalResourceManagementFolderRoot) {
+        String folderRoot = externalResourceManagementFolderRoot;
+        if (folderRoot != null) {
+            if (!folderRoot.startsWith(getFolderDelimiter())) {
+                folderRoot = getFolderDelimiter() + folderRoot;
+            }
+            if (folderRoot.endsWith(getFolderDelimiter())) {
+                folderRoot = folderRoot.substring(0, folderRoot.length() - 1);
+            }
+        }
+
+        this.externalResourceManagementFolderRoot=folderRoot;
     }
 
     @Nonnull
@@ -572,4 +606,5 @@ public class CMISConfiguration {
             return serviceUrl;
         }
     }
+
 }

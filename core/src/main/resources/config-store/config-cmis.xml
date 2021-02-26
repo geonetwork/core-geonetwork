@@ -48,7 +48,7 @@
 <!--      &lt;!&ndash;property name="bindingType" value="atompub"/>-->
 <!--      <property name="atompubUrl" value="/api/-default-/public/cmis/versions/1.1/atom"/&ndash;&gt;-->
 <!--      &lt;!&ndash;property name="bindingType" value="webservices"/>-->
-<!--      <property name="externalResourceManagementUrl" value="http://localhost:8080/share/page/document-details?nodeRef=workspace://SpacesStore/{cmisobjectid}"/>-->
+<!--      <property name="externalResourceManagementUrl" value="http://localhost:8080/share/page/{type:folder:document}-details?nodeRef=workspace://SpacesStore/{cmisobjectid}"/>-->
 <!--      <property name="externalResourceManagementWindowParameters" value="toolbar=0,width=600,height=600"/>-->
 <!--      <property name="externalResourceManagementModalEnabled" value="true"/>-->
 <!--    </bean>-->
@@ -75,9 +75,11 @@
        CMIS_BASE_REPOSITORY_PATH=geonetwork
        CMIS_BINDING_TYPE=browser
        CMIS_BROWSER_URL=/api/-default-/public/cmis/versions/1.1/browser
-       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_URL=http://localhost:8080/share/page/document-details?nodeRef=workspace://SpacesStore/{cmisobjectid}
+       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_URL=http://localhost:8080/share/page/{type:folder:document}-details?nodeRef=workspace://SpacesStore/{cmisobjectid}
        CMIS_EXTERNAL_RESOURCE_MANAGEMENT_WINDOW_PARAMETERS=toolbar=0,width=600,height=600
        CMIS_EXTERNAL_RESOURCE_MANAGEMENT_MODAL_ENABLED=true
+       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_FOLDER_ENABLED=true
+       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_FOLDER_ROOT=/public
        CMIS_VERSIONING_ENABLED=true
        CMIS_VERSIONING_STATE=MAJOR
        CMIS_VERSIONING_MAJOR_ON_UPDATE=false
@@ -95,7 +97,8 @@
         <property name="externalResourceManagementUrl" value="${cmis.external.resource.management.url}"/>
         <property name="externalResourceManagementWindowParameters" value="${cmis.external.resource.management.window.parameters}"/>
         <property name="externalResourceManagementModalEnabled" value="${cmis.external.resource.management.modal.enabled}"/>
-
+        <property name="externalResourceManagementFolderEnabled" value="${cmis.external.resource.management.folder.enabled}"/>
+        <property name="externalResourceManagementFolderRoot" value="${cmis.external.resource.management.folder.root}"/>
 
         <property name="versioningEnabled" value="${cmis.versioning.enabled}"/>
         <property name="versioningState" value="${cmis.versioning.state}"/>

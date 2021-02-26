@@ -25,37 +25,25 @@
 
 package org.fao.geonet.domain;
 
-import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- * Created by francois on 31/12/15.
- */
-@XmlRootElement(name = "resource")
+@XmlRootElement(name = "resourceContainer")
 @XmlAccessorType(XmlAccessType.FIELD)
-public interface MetadataResource {
+public interface MetadataResourceContainer {
 
     String getId();
 
     String getUrl();
 
-    MetadataResourceVisibility getVisibility();
-
-    long getSize();
-
-    Date getLastModification();
-
-    String getFilename();
+    String getContainterName();
 
     boolean isApproved();
 
     int getMetadataId();
 
     String getMetadataUuid();
-
-    String getVersion();
 
     MetadataResourceExternalManagementProperties getMetadataResourceExternalManagementProperties();
 }
