@@ -1,0 +1,56 @@
+================================================================================
+===
+=== GeoNetwork 4.0.3: List of changes
+===
+================================================================================
+- Update from transifex.
+- Fix annotation errors. #5431
+- User feedback improvements (#5443)
+- Translation pack / Add gnui bundle and transifex update / Add missing main language not retrieved by tx pull.
+- Translation pack / Add gnui bundle and transifex update.
+- Thesaurus / All / Add the possibility to exclude. (#5388)
+- Transifex update.
+- Avoid request check not modified as unsupported on chrome and edge (#5406)
+- Protect AccessManager code using user session
+- Import metadata samples and templates - set the same uuid in the xml and in the database for templates (#5290)
+- Indexing / Lineage is multilingual. Simplify conformance.
+- ISO19139/ISO19115-3 index updates to improve build of jsonld/dcat formats (#5379)
+- fix(WPS): use href metadata value instead of title
+- CSW / GetRecords / Apply postprocessing
+- Dublin core - Improve mapping indexation (#5425)
+- Editor / Associated resource / Make search sort order consistent
+- CSW / GetCapabilities / Avoid exception in log due to GetDomain
+- Facet / Interactive Graphics (#5349)
+- Search / Allow usage of * for wildcard search in queryString.
+- Editor / Director / Restore facet on selection.
+- Admin / Tools / Add clear translation packs cache.
+- Directory improvements
+- Admin / Tools / Add clear translation packs cache.
+- AngularJS / Remove old unused facet code.
+- AngularJS / Remove old unused facet code.
+- Map / ESRI layer / Warn user in case of invalid configuration
+- Map / WPS / Input improvements (#5413)
+- Translation packages / Fix editor json file key.
+- Indexing / More robust
+- Search / Do not restore search when coming from home
+- ISO19115-3 / Indexing / Fix record link for parent using associated resource
+- ISO19115-3 / Parent relationship may be encoded in a associated resource
+- Fix tabs for useradmin which were sometimes showing all options when reloading the page.
+- Don't allow empty group owner in harvesters. Fixes #4423
+- Fixed unhandled error and its xsl regular expression. Fixed root element in Schematron title translation. (#5220)
+- Improve the visibility of the server logs for the admin user (#5382)
+- API / Add translation package builder. (#5387)
+- API / DOI / DELETE operation was not displayed.
+- Doc / Fix link to demo dashboard
+- Import & new metadata / Consistent group list. (#5368)
+- Editor / Suggestions / Too large parameters (#5385)
+- WPS / Improvements
+- Formatter / Datacite / Fix multiple geoLocations.
+- Harvester / Local file system / Restore possibility to import subtemplates (#5363)
+- Reset password service: - Use generic messages for user reset password services to avoid revealing users registered. - Re-add new.password security configuration removed accidentaly in 4.0.x. - Fixes in alert display in the UI for info messages.
+- Events / Do not fails on subtemplate deletion (#5364)
+- Facet / Filter improvements.
+- Search / Restore last search when switching from map to search
+- Formatter / Display all keywords excluding those of type place. (#5355)
+- Improvements to Link to other resources - list of suggested datasets
+- Update version to 4.0.3-SNAPSHOT
