@@ -1028,6 +1028,12 @@
               // SEXTANT SPECIFIC
               layer.set('isLeaf', !getCapLayer.Layer);
 
+              // SEXTANT SPECIFIC: DIRECT DOWNLOADS (no md)
+              if (angular.isArray(getCapLayer.DataURL)) {
+                layer.set('directDownloadURL', getCapLayer.DataURL[0].OnlineResource);
+              }
+              // END SEXTANT SPECIFIC
+
               return layer;
             }
 
