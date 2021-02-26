@@ -377,7 +377,7 @@
 
           scope.isFacetSelected = function(fName, value) {
             try {
-              var iS = scope.output[fName].values[value];
+              var iS = value !== undefined && scope.output[fName].values[value];
               return iS;
             }
             catch (e) {
