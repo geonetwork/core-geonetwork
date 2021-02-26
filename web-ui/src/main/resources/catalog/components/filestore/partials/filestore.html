@@ -19,10 +19,10 @@
       <td class="text-nowrap" data-ng-if="r.version.length > 0">
           {{r.version}}
       </td>
-      <td data-ng-if="r.externalResourceManagementProperties.url.length > 0">
-        <a class="btn btn-link"
+      <td data-ng-if="gnCurrentEdit.resourceManagementExternalProperties.enabled && r.metadataResourceExternalManagementProperties.url.length > 0">
+      <a class="btn btn-link"
            title="{{'externalResourceManagement' | translate}}"
-           data-ng-click="openExternalResourceManagement(r)">
+           data-ng-click="onlinesrcService.openExternalResourceManagement(r)">
           <i class="fa fa-file-text"></i>
         </a>
       </td>

@@ -299,8 +299,14 @@
       <div id="gn-addonlinesrc-file-panel"
            class="panel panel-default"
            data-ng-show="params.linkType.sources.filestore">
-        <div class="panel-heading"
-             data-translate>fileStore
+        <div class="panel-heading">
+          <span data-translate>fileStore</span>
+          <a class="btn btn-link btn-xs pull-right"
+             title="{{'externalResourceManagement' | translate}}"
+             data-ng-click="onlinesrcService.openExternalResourceManagement(gnCurrentEdit.resourceContainerDescription)"
+             data-ng-if="gnCurrentEdit.resourceManagementExternalProperties.folderEnabled && gnCurrentEdit.resourceContainerDescription.url.length > 0">
+            <i class="fa fa-folder-open"></i>
+          </a>
         </div>
         <div class="panel-body">
           <div id="gn-addonlinesrc-file-input"
