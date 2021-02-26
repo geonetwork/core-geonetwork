@@ -308,7 +308,135 @@ public class KeywordsApi {
         return searcher.getResults();
     }
 
-
+    /**
+     * Search keywords.
+     *
+     * @param q the q
+     * @param lang the lang
+     * @param rows the rows
+     * @param start the start
+     * @param targetLangs the target langs
+     * @param thesaurus the thesaurus
+     * @param type the type
+     * @param uri the uri
+     * @param sort the sort
+     * @param request the request
+     * @param httpSession the http session
+     * @return the list
+     * @throws Exception the exception
+     */
+    @ApiOperation(
+        value = "Search keywords (XML)",
+        nickname = "searchKeywordsXml",
+        notes = "")
+    @RequestMapping(
+        path = "/search.xml",
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_XML_VALUE,
+        })
+    @ResponseStatus(
+        value = HttpStatus.OK)
+    @ResponseBody
+    public Element searchKeywordsXML(
+        @ApiParam(
+            value = "Query",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            String q,
+        @ApiParam(
+            value = "Query in that language",
+            required = false
+        )
+        @RequestParam(
+            value = "lang",
+            defaultValue = "eng"
+        )
+            String lang,
+        @ApiParam(
+            value = "Number of rows",
+            required = false
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = "1000"
+        )
+            int rows,
+        @ApiParam(
+            value = "Start from",
+            required = false
+        )
+        @RequestParam(
+            defaultValue = "0",
+            required = false
+        )
+            int start,
+        @ApiParam(
+            value = "Return keyword information in one or more languages",
+            required = false
+        )
+        @RequestParam(
+            value = XmlParams.pLang,
+            required = false
+        )
+            List<String> targetLangs,
+        @ApiParam(
+            value = "Thesaurus identifier",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            String[] thesaurus,
+        //        @ApiParam(
+        //            value = "?",
+        //            required = false
+        //        )
+        //        @RequestParam(
+        //            required = false
+        //        )
+        //            String thesauriDomainName,
+        @ApiParam(
+            value = "Type of search",
+            required = false
+        )
+        @RequestParam(
+            defaultValue = "CONTAINS"
+        )
+            KeywordSearchType type,
+        @ApiParam(
+            value = "URI query",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            String uri,
+        @ApiParam(
+            value = "Sort by",
+            required = false
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = "DESC"
+        )
+            String sort,
+        @ApiIgnore
+            HttpServletRequest request,
+        @ApiIgnore
+        @ApiParam(hidden = true)
+            HttpSession httpSession
+    ) throws Exception {
+        List<KeywordBean> keywords = searchKeywords(q, lang, rows, start, targetLangs, thesaurus, type, uri, sort, request, httpSession);
+        Element root = new Element("response");
+        for (KeywordBean kw : keywords) {
+            root.addContent(kw.toElement("eng")); // FIXME: Localize
+        }
+        return root;
+    }
 
     /** The mapper. */
     @Autowired
