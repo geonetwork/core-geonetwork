@@ -22,7 +22,6 @@
  */
 package org.fao.geonet.utils;
 
-import java.util.Comparator;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,15 +36,8 @@ import java.util.regex.Pattern;
  * @see <a href="https://octopus.com/blog/maven-versioning-explained">Maven versions explained</a>
  */
 public class Version implements Comparable<Version> {
-    private static final Pattern PATTERN = Pattern.compile("^(\\d*)?[\\.|-]?(\\d*)?[\\.|-]?(\\d*)?[\\.|-]??(\\d*)?[\\.|-]?(\\S*)?$");
-    /**
-     * Qualifier if present sorts higher than a null.
-     */
-    private static final Comparator<String> qualifierFirst = Comparator.nullsFirst(String::compareTo);
-    /**
-     * Qualifier placeholder of null sort higher than a default placeholder of 0.
-     */
-    private static final Comparator<Integer> snapshotFirst = Comparator.nullsFirst(Integer::compareTo);
+    private static final Pattern PATTERN = Pattern.compile("^(\\d*)?[\\.|-]?(\\d*)?[\\.|-]?(\\d*)?[\\.|-]?(\\d*)?[\\.|-]?(\\S*)?$");
+
     private final Integer major;
     private final Integer minor;
     private final Integer patch;
@@ -113,73 +105,64 @@ public class Version implements Comparable<Version> {
         return new Version(null, null, null, null, number);
     }
 
-    private int placeholder(Integer number, String qualifier) {
-        return number != null ? number : "SNAPSHOT".equals(qualifier) ? Integer.MAX_VALUE : 0;
+    private static final int order(Integer number, String qualifier){
+        return number != null ? number : order(qualifier);
+    }
+    private static final int order(String qualifier){
+        if(qualifier==null) return 0;
+        else if("SNAPSHOT".equalsIgnoreCase(qualifier)) return Integer.MAX_VALUE;
+        else if("RC".equalsIgnoreCase(qualifier)) return -1;
+        else if("0".equalsIgnoreCase(qualifier)) return 0;
+        else if("final".equalsIgnoreCase(qualifier)) return 0;
+        else return -2;
     }
 
     @Override
     public int compareTo(Version o) {
         // numbers sort with snapshot (MAX_VALUE), before numbers, before empty (which sorts to zero).
-        int majorCompare = snapshotFirst.compare(placeholder(major, qualifier), placeholder(o.major, o.qualifier));
-        int minorCompare = snapshotFirst.compare(placeholder(minor, qualifier), placeholder(o.minor, o.qualifier));
-        int patchCompare = snapshotFirst.compare(placeholder(patch, qualifier), placeholder(o.patch, o.qualifier));
-        int buildCompare = snapshotFirst.compare(placeholder(build, qualifier), placeholder(o.build, o.qualifier));
+        int majorCompare = Integer.compare(order(major,qualifier), order(o.major,o.qualifier));
+        int minorCompare = Integer.compare( order(minor,qualifier), order(o.minor,o.qualifier));
+        int patchCompare = Integer.compare( order(patch,qualifier), order(o.patch,o.qualifier));
+        int buildCompare = Integer.compare( order(build,qualifier), order(o.build,o.qualifier));
 
         // snapshot qualifier if provided sorts ahead of null
-        int qualifierCompare = qualifierFirst.compare(qualifier, o.qualifier);
+        int qualifierCompare = Integer.compare( order(qualifier), order(o.qualifier) );
 
-        if (major == null && o.major == null) {
-            return qualifierCompare;
-        } else if (majorCompare != 0) {
-            return majorCompare;
-        }
+        if( major == null && o.major == null)  return qualifierCompare;
+        else if ( majorCompare != 0 )  return majorCompare;
 
-        if (minor == null && o.minor == null) {
-            return qualifierCompare;
-        } else if (minorCompare != 0) {
-            return minorCompare;
-        }
+        if( minor == null && o.minor == null) return qualifierCompare;
+        else if ( minorCompare != 0 ) return minorCompare;
 
-        if (patch == null && o.patch == null) {
-            return qualifierCompare;
-        } else if (patchCompare != 0) {
-            return patchCompare;
-        }
+        if( patch == null && o.patch == null) return qualifierCompare;
+        else if ( patchCompare != 0 ) return patchCompare;
 
-        if (build == null && o.build == null) {
-            return qualifierCompare;
-        } else if (buildCompare != 0) {
-            return buildCompare;
-        }
+        if( build == null && o.build == null) return qualifierCompare;
+        else if ( buildCompare != 0 ) return buildCompare;
 
         return qualifierCompare;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
         Version version = (Version) o;
-
-        // numbers sort with snapshot (MAX_VALUE), before numbers, before empty (which sorts to zero).
-        int majorCompare = snapshotFirst.compare(placeholder(major, qualifier), placeholder(version.major, version.qualifier));
-        int minorCompare = snapshotFirst.compare(placeholder(minor, qualifier), placeholder(version.minor, version.qualifier));
-        int patchCompare = snapshotFirst.compare(placeholder(patch, qualifier), placeholder(version.patch, version.qualifier));
-        int buildCompare = snapshotFirst.compare(placeholder(build, qualifier), placeholder(version.build, version.qualifier));
-        int qualifierCompare = qualifierFirst.compare(qualifier, version.qualifier);
-
-        return majorCompare == 0 && minorCompare == 0 && patchCompare == 0 && buildCompare == 0 && qualifierCompare == 0;
+        return compareTo( version ) == 0;
     }
 
     @Override
     public int hashCode() {
-        // use of placeholder to match hashcode / equals contract
-        return Objects.hash(placeholder(major, qualifier), placeholder(minor, qualifier), placeholder(patch, qualifier),
-                placeholder(build, qualifier), qualifier);
+        int placeholder =  "SNAPSHOT".equals(qualifier) ? Integer.MAX_VALUE : 0;
+
+        // use of order to match hashcode / equals contract
+        return Objects.hash(
+            order(major,qualifier),
+            order(minor,qualifier),
+            order(patch,qualifier),
+            order(build,qualifier),
+            order(qualifier));
     }
 
     @Override

@@ -24,13 +24,21 @@ package org.fao.geonet.utils;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /** Double check the functionality of Version utility class */
 public class VersionTest {
 
+    final Version V3_10_SNAPSHOT = new Version("3","10", null, null, "SNAPSHOT");
+    final Version V3_10_5 = new Version("3","10", "5");
+    final Version V3_10_0 = new Version("3","10", null);
+
     final Version V1_SNAPSHOT = new Version("1", null, null, null, "SNAPSHOT");
+    final Version V1_1_1_SNAPSHOT = new Version("1","1","1",null,"SNAPSHOT");
+    final Version V1_1_1 = new Version("1","1","1");
     final Version V1_1 = new Version("1","1",null);
     final Version V1_1_0 = new Version("1","1","0");
     final Version V1 = new Version("1",null,null);
@@ -70,20 +78,80 @@ public class VersionTest {
 
     @Test
     public void compare() throws Exception {
-        assertEquals( "1 = 1", 0, V1.compareTo(V1));
-        assertEquals( "1 = 1.0", 0, V1.compareTo(V1_0));
-        assertEquals( "1 = 1.0.0", 0, V1.compareTo(V1_0_0));
-        assertEquals( "1.1 > 1.0", 1, V1_1.compareTo(V1_0));
+        assertEquals("1 = 1", 0, V1.compareTo(V1));
+        assertEquals("1 = 1.0", 0, V1.compareTo(V1_0));
+        assertEquals("1 = 1.0.0", 0, V1.compareTo(V1_0_0));
+        assertEquals("1.1 > 1.0", 1, V1_1.compareTo(V1_0));
 
-        assertEquals( "1-SNAPSHOT > 1", 1, V1_SNAPSHOT.compareTo(V1));
-        assertEquals( "1-SNAPSHOT > 1.0", 1, V1_SNAPSHOT.compareTo(V1_0));
-        assertEquals( "1-SNAPSHOT > 1.0.0", 1, V1_SNAPSHOT.compareTo(V1_0_0));
+        assertEquals("1-SNAPSHOT > 1", 1, V1_SNAPSHOT.compareTo(V1));
+        assertEquals("1-SNAPSHOT > 1.0", 1, V1_SNAPSHOT.compareTo(V1_0));
+        assertEquals("1-SNAPSHOT > 1.0.0", 1, V1_SNAPSHOT.compareTo(V1_0_0));
     }
+
+    @Test
+    public void compareMore() throws Exception {
+        assertCompareVersions( "3.10.0 < 3.10.5");
+        assertCompareVersions( "3.10.6 > 3.10.5");
+        assertCompareVersions( "3.10.6 = 3.10.6-0");
+        assertCompareVersions( "3.10.2 < 3.10-SNAPSHOT");
+        assertCompareVersions( "3.10-RC < 3.10");
+        assertCompareVersions( "3.10-RC < 3.10.0");
+        assertCompareVersions( "3.10 = 3.10.0-0");
+    }
+
+    private void assertCompareVersions(String comparison){
+        String split[] = comparison.split(" ");
+        Version a = Version.parseVersionNumber(split[0]);
+        Version b = Version.parseVersionNumber(split[2]);
+        char compare = split[1].charAt(0);
+        switch( a.compareTo(b)){
+            case -1:
+                assertTrue( comparison + " was <", '<' == compare );
+                break;
+
+            case 0:
+                assertTrue( comparison + " was =", '=' == compare );
+                break;
+
+            case 1:
+                assertTrue( comparison + " was >", '>' == compare );
+                break;
+        }
+    }
+
 
     @Test
     public void parse(){
         assertEquals(V1,Version.parseVersionNumber("1"));
         assertEquals(V1_0,Version.parseVersionNumber("1.0"));
         assertEquals(V1_0_SNAPSHOT,Version.parseVersionNumber("1.0-SNAPSHOT"));
+
+        assertEquals(V3_10_0,Version.parseVersionNumber("3.10.0"));
+        assertEquals(V3_10_0,Version.parseVersionNumber("3.10"));
+        assertEquals(V3_10_5,Version.parseVersionNumber("3.10.5"));
+        assertEquals(V3_10_SNAPSHOT,Version.parseVersionNumber("3.10-SNAPSHOT"));
+    }
+
+    @Test
+    public void equivilence(){
+        Version v1 = Version.parseVersionNumber("3.10.6");
+        Version v2 = Version.parseVersionNumber("3.10.6.0");
+        Version v3 = Version.parseVersionNumber("3.10.6-0");
+        Version v4 = Version.parseVersionNumber("3.10.6.0.0");
+        Version v5 = Version.parseVersionNumber("3.10.6.0-0");
+        Version v6 = Version.parseVersionNumber("3.10.6-FINAL");
+        List<Version> equivaList = Arrays.asList(v1,v2,v3,v4,v5,v6);
+
+        for( Version v : equivaList){
+            assertEquals( "equals "+v1, v1, v);
+            assertEquals( "equals "+v2, v2, v);
+            assertEquals( "equals "+v3, v3, v);
+            assertEquals( "equals "+v4, v4, v);
+            assertEquals( "equals "+v5, v5, v);
+            assertEquals( "equals "+v6, v6, v);
+
+            assertEquals( "hashcode "+v.hashCode(), v1.hashCode(), v.hashCode() );
+            assertEquals( "= "+v1, 0, v1.compareTo(v));
+        }
     }
 }
