@@ -26,13 +26,13 @@ package org.fao.geonet.api.records;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
-import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -62,7 +62,6 @@ import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
-import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -72,7 +71,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -379,37 +377,39 @@ public class MetadataWorkflowApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<MetadataStatusResponse> getStatusByType(
-            @ApiParam(value = "One or more types to retrieve (ie. worflow, event, task). Default is all.", required = false) @RequestParam(required = false) StatusValueType[] type,
-            @ApiParam(value = "All event details including XML changes. Responses are bigger. Default is false", required = false) @RequestParam(required = false) boolean details,
-            @ApiParam(value = "One or more event author. Default is all.", required = false) @RequestParam(required = false) Integer[] author,
-            @ApiParam(value = "One or more event owners. Default is all.", required = false) @RequestParam(required = false) Integer[] owner,
-            @ApiParam(value = "One or more record identifier. Default is all.", required = false) @RequestParam(required = false) Integer[] id,
-            @ApiParam(value = "One or more metadata record identifier. Default is all.", required = false) @RequestParam(required = false) Integer[] record,
-            @ApiParam(value = "One or more metadata uuid. Default is all.", required = false) @RequestParam(required = false) String[] uuid,
-            @ApiParam(value = "Start date", required = false) @RequestParam(required = false) String dateFrom,
-            @ApiParam(value = "End date", required = false) @RequestParam(required = false) String dateTo,
-            @ApiParam(value = "From page", required = false) @RequestParam(required = false, defaultValue = "0") Integer from,
-            @ApiParam(value = "Number of records to return", required = false) @RequestParam(required = false, defaultValue = "100") Integer size,
-            HttpServletRequest request) throws Exception {
+        @ApiParam(value = "One or more types to retrieve (ie. worflow, event, task). Default is all.", required = false) @RequestParam(required = false) List<StatusValueType> type,
+        @ApiParam(value = "All event details including XML changes. Responses are bigger. Default is false", required = false) @RequestParam(required = false) boolean details,
+        @ApiParam(value = "Sort Order (ie. DESC or ASC). Default is none.", required = false) @RequestParam(required = false) Sort.Direction sortOrder,
+        @ApiParam(value = "One or more event author. Default is all.", required = false) @RequestParam(required = false) List<Integer> author,
+        @ApiParam(value = "One or more event owners. Default is all.", required = false) @RequestParam(required = false) List<Integer> owner,
+        @ApiParam(value = "One or more record identifier. Default is all.", required = false) @RequestParam(required = false) List<Integer> id,
+        @ApiParam(value = "One or more metadata record identifier. Default is all.", required = false) @RequestParam(required = false) List<Integer> record,
+        @ApiParam(value = "One or more metadata uuid. Default is all.", required = false) @RequestParam(required = false) List<String> uuid,
+        @ApiParam(value = "One or more status id. Default is all.", required = false) @RequestParam(required = false) List<String> statusIds,
+        @ApiParam(value = "Start date", required = false) @RequestParam(required = false) String dateFrom,
+        @ApiParam(value = "End date", required = false) @RequestParam(required = false) String dateTo,
+        @ApiParam(value = "From page", required = false) @RequestParam(required = false, defaultValue = "0") Integer from,
+        @ApiParam(value = "Number of records to return", required = false) @RequestParam(required = false, defaultValue = "100") Integer size,
+        HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        Sort sortByStatusChangeDate = SortUtils.createSort(Sort.Direction.DESC, MetadataStatus_.changeDate).and(SortUtils.createSort(Sort.Direction.DESC, MetadataStatus_.id));
-        final PageRequest pageRequest = new PageRequest(from, size, sortByStatusChangeDate);
+        PageRequest pageRequest = null;
+        if (sortOrder !=null) {
+            Sort sortByStatusChangeDate = SortUtils.createSort(sortOrder, MetadataStatus_.changeDate).and(SortUtils.createSort(sortOrder, MetadataStatus_.id));
+            pageRequest = new PageRequest(from, size, sortByStatusChangeDate);
+        }
 
         List<MetadataStatus> metadataStatuses;
-        if ((id != null && id.length > 0) ||
-                (uuid != null && uuid.length > 0) ||
-                (type != null && type.length > 0) ||
-                (author != null && author.length > 0) ||
-                (owner != null && owner.length > 0) ||
-                (record != null && record.length > 0)) {
+        if (CollectionUtils.isNotEmpty(id) ||
+            CollectionUtils.isNotEmpty(uuid) ||
+            CollectionUtils.isNotEmpty(type) ||
+            CollectionUtils.isNotEmpty(author) ||
+            CollectionUtils.isNotEmpty(owner) ||
+            CollectionUtils.isNotEmpty(record) ||
+            CollectionUtils.isNotEmpty(statusIds)) {
             metadataStatuses = metadataStatusRepository.searchStatus(
-                    id != null && id.length > 0 ? Arrays.asList(id) : null,
-                    uuid != null && uuid.length > 0 ? Arrays.asList(uuid) : null,
-                    type != null && type.length > 0 ? Arrays.asList(type) : null,
-                    author != null && author.length > 0 ? Arrays.asList(author) : null,
-                    owner != null && owner.length > 0 ? Arrays.asList(owner) : null,
-                    record != null && record.length > 0 ? Arrays.asList(record) : null, dateFrom, dateTo, pageRequest);
+                id, uuid, type, author, owner, record, statusIds,
+                dateFrom, dateTo, pageRequest);
         } else {
             metadataStatuses = metadataStatusRepository.findAll(pageRequest).getContent();
         }
