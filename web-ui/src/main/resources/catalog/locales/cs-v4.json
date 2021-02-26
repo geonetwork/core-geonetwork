@@ -102,7 +102,7 @@
   "ui-autocompleteConfig": "Konfigurace automatického doplňování",
   "ui-autocompleteConfig-help": "Konfigurace musí mít query.multi_match.query, který bude nastaven na automatické doplňování.",
   "ui-facetConfig": "Konfigurace faset",
-  "ui-facetConfig-help": "This configuration is used to display facets, using either terms aggregations or filters. See <a href=\"https://geonetwork-opensource.org/manuals/4.0.x/en/customizing-application/configuring-faceted-search.html\">the documentation</a> for more information.",
+  "ui-facetConfig-help": "Tato konfigurace se používá k zobrazení fazet pomocí agregace termínů nebo filtrů. Další informace najdete <a href=\"https://geonetwork-opensource.org/manuals/4.0.x/en/customizing-application/configuring-faceted-search.html\">v dokumentaci</a> .",
   "resourceEvents": "Zdrojové události",
   "resourceVerticalRange": "Vertikální rozsah",
   "searchBadRequest": "Dotaz vrátil chybu. Podrobnosti najdete na konzole.",
@@ -147,6 +147,6 @@
   "translationPackClearCache-help": "Vyžadováno, pokud změníte překladové soubory JSON aplikace Javascript v katalogu / národním prostředí, překlady databáze nebo překlady schématu JSON.",
   "translationPackCacheCleared": "Mezipaměť překladových balíků vymazána.",
   "translationPackCacheClearFailure": "Při mazání mezipaměti překladových balíků došlo k chybě!",
-  "ui-isVegaEnabled": "Enable interactive graphics facets (using Vega)",
-  "ui-exactMatchToggle": "Display exact match toggle"
+  "ui-isVegaEnabled": "Povolit interaktivní grafické aspekty (pomocí Vega)",
+  "ui-exactMatchToggle": "Přepnout zobrazení přesné shody"
 }
