@@ -37,6 +37,8 @@ import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceContainer;
+import org.fao.geonet.domain.MetadataResourceExternalManagementProperties;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -54,6 +56,9 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CMISStore extends AbstractStore {
 
@@ -93,8 +98,7 @@ public class CMISStore extends AbstractStore {
                     Path keyPath = new File(cmisFilePath).toPath().getFileName();
                     if (matcher.matches(keyPath)) {
                         final String filename = getFilename(cmisFilePath);
-                        MetadataResource resource = createResourceDescription(context, settingManager, metadataUuid, visibility, filename, object.getContentStreamLength(),
-                                object.getLastModificationDate().getTime(), object.getVersionLabel(), object.getId(), metadataId, approved);
+                        MetadataResource resource = createResourceDescription(context, settingManager, metadataUuid, visibility, filename, object, metadataId, approved);
                         resourceList.add(resource);
                     }
                 }
@@ -110,20 +114,21 @@ public class CMISStore extends AbstractStore {
     }
 
     private MetadataResource createResourceDescription(final ServiceContext context, final SettingManager settingManager, final String metadataUuid,
-                                                       final MetadataResourceVisibility visibility, final String resourceId, long size, Date lastModification, String version,
-                                                       String cmisObjectId, int metadataId, boolean approved) {
+                                                       final MetadataResourceVisibility visibility, final String resourceId,
+                                                       Document document, int metadataId, boolean approved) {
+
         String filename = getFilename(metadataUuid, resourceId);
 
         String versionValue = null;
         if (cmisConfiguration.isVersioningEnabled()) {
-            versionValue = version;
+            versionValue = document.getVersionLabel();
         }
 
-        MetadataResource.ExternalResourceManagementProperties externalResourceManagementProperties =
-            getExternalResourceManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, version, cmisObjectId);
+        MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
+            getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, document.getVersionLabel(), document.getVersionSeriesId(), document.getType());
 
         return new FilesystemStoreResource(metadataUuid, metadataId, filename,
-            settingManager.getNodeURL() + "api/records/", visibility, size, lastModification, versionValue, externalResourceManagementProperties, approved);
+            settingManager.getNodeURL() + "api/records/", visibility, document.getContentStreamLength(), document.getLastModificationDate().getTime(), versionValue, metadataResourceExternalManagementProperties, approved);
     }
 
     private static String getFilename(final String key) {
@@ -140,8 +145,7 @@ public class CMISStore extends AbstractStore {
             final CmisObject object = cmisConfiguration.getClient().getObjectByPath(getKey(context, metadataUuid, metadataId, visibility, resourceId));
             final SettingManager settingManager = context.getBean(SettingManager.class);
             return new ResourceHolderImpl(object, createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId,
-                ((Document) object).getContentStreamLength(),
-                object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), object.getId(), metadataId, approved));
+                (Document) object, metadataId, approved));
         } catch (CmisObjectNotFoundException e) {
             Log.warning(Geonet.RESOURCES, String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
             throw new ResourceNotFoundException(
@@ -165,7 +169,6 @@ public class CMISStore extends AbstractStore {
 
         Map<String, Object> properties = new HashMap<String, Object>();
         setCmisMetadataUUIDPrimary(properties, metadataUuid);
-        int isLength = is.available();
         CmisObject cmisObject;
         try {
             cmisObject = cmisConfiguration.getClient().getObjectByPath(key);
@@ -190,8 +193,8 @@ public class CMISStore extends AbstractStore {
             }
         }
 
-        return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, isLength,
-            doc.getLastModificationDate().getTime(), doc.getVersionLabel(), doc.getId(), metadataId, approved);
+        return createResourceDescription(context, settingManager, metadataUuid, visibility, filename,
+             doc, metadataId, approved);
     }
 
     private void setCmisMetadataUUIDPrimary(Map<String, Object> properties, String metadataUuid) {
@@ -247,8 +250,7 @@ public class CMISStore extends AbstractStore {
                     break;
                 } else {
                     // already the good visibility
-                    return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, ((Document) object).getContentStreamLength(),
-                        object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), object.getId(), metadataId, approved);
+                    return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, (Document) object, metadataId, approved);
                 }
             } catch (CmisObjectNotFoundException ignored) {
                 // ignored
@@ -282,8 +284,7 @@ public class CMISStore extends AbstractStore {
                         "No permissions to modify metadata resource '%s' for metadata '%s'.", resourceId, metadataUuid));
             }
 
-            return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, ((Document) object).getContentStreamLength(),
-                    object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), object.getId(), metadataId, approved);
+            return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, (Document) object, metadataId, approved);
         } else {
             Log.warning(Geonet.RESOURCES,
                     String.format("Could not update permissions. Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
@@ -391,8 +392,31 @@ public class CMISStore extends AbstractStore {
         SettingManager settingManager = context.getBean(SettingManager.class);
         try {
             final CmisObject object = cmisConfiguration.getClient().getObjectByPath(key);
-            return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, ((Document) object).getContentStreamLength(),
-                object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), object.getId(), metadataId, approved);
+            return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, (Document)object, metadataId, approved);
+        } catch (CmisObjectNotFoundException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public MetadataResourceContainer getResourceContainerDescription(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception {
+        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+
+        final String key = getMetadataDir(context, metadataId);
+
+        SettingManager settingManager = context.getBean(SettingManager.class);
+        try {
+            String folderRoot = cmisConfiguration.getExternalResourceManagementFolderRoot();
+            if (folderRoot == null) {
+                folderRoot = "";
+            }
+            Folder parentFolder = cmisUtils.getFolderCache(key + folderRoot);
+            MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
+                getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, null, String.valueOf(metadataId), null, null, parentFolder.getId(), parentFolder.getType());
+
+            return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid,
+                settingManager.getNodeURL() + "api/records/", metadataResourceExternalManagementProperties, approved);
+
         } catch (CmisObjectNotFoundException e) {
             return null;
         }
@@ -447,6 +471,7 @@ public class CMISStore extends AbstractStore {
      * get external resource management for the supplied resource.
      * Replace the following
      * {id}  resource id
+     * {type:folder:document} // If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
      * {uuid}  metadatauuid
      * {metadataid}  metadataid
      * {visibility}  visibility
@@ -457,52 +482,59 @@ public class CMISStore extends AbstractStore {
      * {iso3lang}  ISO 639-2/T language
      * <p>
      * Sample Url Alfresco
-     * http://localhost:8080/share/page/document-details?nodeRef=workspace://SpacesStore/{cmisobjectid}
+     * http://localhost:8080/share/page/{type:folder:document}-details?nodeRef=workspace://SpacesStore/{cmisobjectid}
      * Sample Url Open Text
      * http://localhost:8080/livelink/cs?func=ll&objaction=overview&objid={cmisobjectid}&vernum={version}
      */
 
-    private MetadataResource.ExternalResourceManagementProperties getExternalResourceManagementProperties(ServiceContext context,
-                                                    int metadataId,
-                                                    final String metadataUuid,
-                                                    final MetadataResourceVisibility visibility,
-                                                    final String resourceId,
-                                                    String filename,
-                                                    String version,
-                                                    String cmisObjectId
+    private MetadataResourceExternalManagementProperties getMetadataResourceExternalManagementProperties(ServiceContext context,
+                                                                                                         int metadataId,
+                                                                                                         final String metadataUuid,
+                                                                                                         final MetadataResourceVisibility visibility,
+                                                                                                         final String resourceId,
+                                                                                                         String filename,
+                                                                                                         String version,
+                                                                                                         String cmisObjectId,
+                                                                                                         ObjectType type
     ) {
-        String externalResourceManagementUrl = cmisConfiguration.getExternalResourceManagementUrl();
-        if (!StringUtils.isEmpty(externalResourceManagementUrl)) {
+        String metadataResourceExternalManagementPropertiesUrl = cmisConfiguration.getExternalResourceManagementUrl();
+        if (!StringUtils.isEmpty(metadataResourceExternalManagementPropertiesUrl)) {
             // {id}  id
-            if (externalResourceManagementUrl.contains("{id}")) {
-                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{id\\})", resourceId);
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{id}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{id\\})", (resourceId==null?"":resourceId));
             }
-            // {uuid}  metadatauuid
-            if (externalResourceManagementUrl.contains("{uuid}")) {
-                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{uuid\\})", metadataUuid);
-            }
-            // {metadataid}  metadataid
-            if (externalResourceManagementUrl.contains("{metadataid}")) {
-                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{metadataid\\})", String.valueOf(metadataId));
-            }
-            //    {visibility}  visibility
-            if (externalResourceManagementUrl.contains("{visibility}")) {
-                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{visibility\\})", visibility.toString().toLowerCase());
-            }
-            //    {filename}  filename
-            if (externalResourceManagementUrl.contains("{filename}")) {
-                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{filename\\})", filename);
-            }
-            // {version}  version
-            if (externalResourceManagementUrl.contains("{version}")) {
-                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{version\\})", version);
-            }
-            // {cmisobjectid}  cmis object id
-            if (externalResourceManagementUrl.contains("{cmisobjectid}")) {
-                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{cmisobjectid\\})", cmisObjectId);
+            // {type:folder:document} // If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{type:")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("\\{type:([a-zA-Z0-9]*?):([a-zA-Z0-9]*?)\\}",
+                    (type==null?"":(type instanceof Folder?"$1":"$2")));
             }
 
-            if (externalResourceManagementUrl.contains("{lang}") || externalResourceManagementUrl.contains("{ISO3lang}")) {
+            // {uuid}  metadatauuid
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{uuid}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{uuid\\})", (metadataUuid==null?"":metadataUuid));
+            }
+            // {metadataid}  metadataid
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{metadataid}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{metadataid\\})", String.valueOf(metadataId));
+            }
+            //    {visibility}  visibility
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{visibility}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{visibility\\})", (visibility==null?"":visibility.toString().toLowerCase()));
+            }
+            //    {filename}  filename
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{filename}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{filename\\})", (filename==null?"":filename));
+            }
+            // {version}  version
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{version}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{version\\})", (version==null?"":version));
+            }
+            // {cmisobjectid}  cmis object id
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{cmisobjectid}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{cmisobjectid\\})",  (cmisObjectId==null?"":cmisObjectId));
+            }
+
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{lang}") || metadataResourceExternalManagementPropertiesUrl.contains("{ISO3lang}")) {
                 final IsoLanguagesMapper mapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
                 String contextLang = context.getLanguage() == null ? Geonet.DEFAULT_LANGUAGE : context.getLanguage();
                 String lang;
@@ -516,21 +548,54 @@ public class CMISStore extends AbstractStore {
                     iso3Lang = contextLang;
                 }
                 // {lang}  ISO639-1 2 char language
-                if (externalResourceManagementUrl.contains("{lang}")) {
-                    externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{lang\\})", lang);
+                if (metadataResourceExternalManagementPropertiesUrl.contains("{lang}")) {
+                    metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{lang\\})", lang);
                 }
                 // {iso3lang}  ISO 639-2/T language
-                if (externalResourceManagementUrl.contains("{iso3lang}")) {
-                    externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{iso3lang\\})", iso3Lang);
+                if (metadataResourceExternalManagementPropertiesUrl.contains("{iso3lang}")) {
+                    metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{iso3lang\\})", iso3Lang);
                 }
             }
         }
 
-        MetadataResource.ExternalResourceManagementProperties externalResourceManagementProperties
-                = new MetadataResource.ExternalResourceManagementProperties(externalResourceManagementUrl,
-                cmisConfiguration.getExternalResourceManagementWindowParameters(), cmisConfiguration.isExternalResourceManagementModalEnabled());
+        MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties
+                = new MetadataResourceExternalManagementProperties(cmisObjectId, metadataResourceExternalManagementPropertiesUrl);
 
-        return externalResourceManagementProperties;
+        return metadataResourceExternalManagementProperties;
+    }
+
+    public ResourceManagementExternalProperties getResourceManagementExternalProperties() {
+        return new ResourceManagementExternalProperties() {
+            @Override
+            public boolean isEnabled() {
+                // Return true if we have an external management url
+                return !StringUtils.isEmpty(cmisConfiguration.getExternalResourceManagementUrl());
+            }
+
+            @Override
+            public String getWindowParameters() {
+                return cmisConfiguration.getExternalResourceManagementWindowParameters();
+            }
+
+            @Override
+            public boolean isModal() {
+                return cmisConfiguration.isExternalResourceManagementModalEnabled();
+            }
+
+            @Override
+            public boolean isFolderEnabled() {
+                return isEnabled() && cmisConfiguration.isExternalResourceManagementFolderEnabled();
+            }
+
+            @Override
+            public String toString() {
+                try {
+                    return new ObjectMapper().writeValueAsString(this);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException("Error converting ResourceManagementExternalProperties to json", e);
+                }
+            }
+        };
     }
 
     private static class ResourceHolderImpl implements ResourceHolder {
