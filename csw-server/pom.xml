@@ -136,9 +136,10 @@
           <plugin>
             <groupId>com.github.alexcojocaru</groupId>
             <artifactId>elasticsearch-maven-plugin</artifactId>
-            <version>6.13</version>
+            <version>${es.maven.plugin.version}</version>
             <configuration>
               <version>${es.version}</version>
+              <downloadUrl>https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${es.version}-${es.platform}.${es.installer.extension}</downloadUrl>
               <clusterName>test</clusterName>
               <transportPort>9300</transportPort>
               <httpPort>9200</httpPort>

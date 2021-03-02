@@ -1444,6 +1444,7 @@
     <es.index.records.type>records</es.index.records.type>
     <es.index.searchlogs>gn-searchlogs</es.index.searchlogs>
     <es.index.searchlogs.type>searchlogs</es.index.searchlogs.type>
+    <es.maven.plugin.version>6.19</es.maven.plugin.version>
 
     <!-- Define the default analyzer for full text search. -->
     <es.index.analyzer.default>standard</es.index.analyzer.default>
