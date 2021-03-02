@@ -97,6 +97,7 @@
     <value>slo</value>
     <value>spa</value>
     <value>tur</value>
+    <value>swe</value>
   </util:set>
 
   <util:map id="jpaPropertyMap">

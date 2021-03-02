@@ -93,7 +93,8 @@ goog.require('gn_alert');
             'por': 'pt',
             'rus': 'ru',
             'chi': 'zh',
-            'slo': 'sk'
+            'slo': 'sk',
+            'swe': 'sv'
           },
           'isLogoInHeader': false,
           'logoInHeaderPosition': 'left',
@@ -994,7 +995,7 @@ goog.require('gn_alert');
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
         'spa': 'Español', 'por': 'Portuguesa', 'cat': 'Català', 'cze': 'Czech',
         'ita': 'Italiano', 'fin': 'Suomeksi', 'ice': 'Íslenska',
-        'rus': 'русский', 'chi': '中文', 'slo': 'Slovenčina'};
+        'rus': 'русский', 'chi': '中文', 'slo': 'Slovenčina', 'swe': 'Svenska'};
       $scope.url = '';
       $scope.gnUrl = gnGlobalSettings.gnUrl;
       $scope.gnCfg = gnGlobalSettings.gnCfg;
