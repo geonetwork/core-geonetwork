@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<strings>
+  <understandResource>Information about the dataset</understandResource>
+  <relatedResources>Related services and linked data</relatedResources>
+  <techInfo>Technical information</techInfo>
+  <contactInfo>Contact information</contactInfo>
+  <mdContactInfo>Metadata contact</mdContactInfo>
+  <refDate>Reference date</refDate>
+  <temporalRef>Temporal information</temporalRef>
+  <constraintInfo>Access constraint information</constraintInfo>
+  <xml_iso19139>Save this metadata as an ISO19139 XML file</xml_iso19139>
+  <xml_iso19139Tooai_dc>Save this metadata as an OAI Dublin Core XML file</xml_iso19139Tooai_dc>
+
+  <!-- New strings added for the AngularJS editor -->
+  <!-- View and tabs -->
+  <advanced>Full</advanced>
+  <default>Simple</default>
+  <simple>Simple</simple>
+  <inspire>INSPIRE</inspire>
+  <inspire_sds>SDS</inspire_sds>
+
+  <keywordFrom>Keywords - </keywordFrom>
+  <resource>Resource</resource>
+  <xml>XML</xml>
+  <metadata>Metadata</metadata>
+  <identificationInfo>Identification</identificationInfo>
+  <distributionInfo>Distribution</distributionInfo>
+  <dataQualityInfo>Quality</dataQualityInfo>
+  <spatialRepresentationInfo>Spatial rep.</spatialRepresentationInfo>
+  <referenceSystemInfo>Ref. system</referenceSystemInfo>
+  <contentInfo>Content</contentInfo>
+  <portrayalCatalogueInfo>Portrayal</portrayalCatalogueInfo>
+  <metadataConstraints>Md. constraints</metadataConstraints>
+  <metadataMaintenance>Md. maintenance</metadataMaintenance>
+  <applicationSchemaInfo>Schema info</applicationSchemaInfo>
+  <noThesaurusName>Keywords</noThesaurusName>
+  <bboxesSection>Geographic coverage</bboxesSection>
+  <overviews>Overviews</overviews>
+  <metadataInXML>XML</metadataInXML>
+  <providedBy>Provided by</providedBy>
+  <shareOnSocialSite>Share on social sites</shareOnSocialSite>
+  <viewMode>Views</viewMode>
+  <linkToPortal>Access to the portal</linkToPortal>
+  <linkToPortal-help>Read here the full details and access to the data.</linkToPortal-help>
+  <citationProposal>Citation proposal</citationProposal>
+  <citationProposal-help>This proposal was automatically generated, check if the metadata authors did not specified custom citation requirements.</citationProposal-help>
+  <associatedResources>Associated resources</associatedResources>
+
+  <!-- XSD error translation -->
+  <invalidElement>Invalid content found at element </invalidElement>
+  <onElementOf>One of the following elements </onElementOf>
+  <isExpected> is expected.</isExpected>
+  <isNotComplete> is not complete.</isNotComplete>
+  <elementLocated> Parent element is </elementLocated>
+  <missingElement>Missing element in </missingElement>
+  <invalidValue>Invalid or missing value.</invalidValue>
+  <notValidFor> is not a valid value for </notValidFor>
+  <xsdErrorIs>XSD error is: </xsdErrorIs>
+  <inElement> in element </inElement>
+  <enum1>Value </enum1>
+  <enum2> is not valid for the field </enum2>
+  <enum3>Potential values are: </enum3>
+
+  <!-- INSPIRE view labels and help -->
+  <url>Online resource</url>
+  <identifier>Resource identifier</identifier>
+  <rsIdentifier>Projection</rsIdentifier>
+  <referenceDate>Temporal information</referenceDate>
+  <creationDate>Creation date</creationDate>
+  <hierarchyLevel>Hierarchy level</hierarchyLevel>
+  <publicationDate>Publication date</publicationDate>
+  <revisionDate>Revision date</revisionDate>
+  <temporalRangeSection>Temporal extent</temporalRangeSection>
+  <beginPosition>Begin</beginPosition>
+  <endPosition>End</endPosition>
+  <conformity>Conformity</conformity>
+  <conformity_title>Title</conformity_title>
+  <conformity_date>Date</conformity_date>
+  <explanation>Explanation</explanation>
+  <pass>Conformity</pass>
+  <indeterminatePosition>Indeterminate position</indeterminatePosition>
+  <pointOfContact>Contact for the resource</pointOfContact>
+  <metadataPointOfContact>Contact for the metadata</metadataPointOfContact>
+  <organisationName>Organisation name</organisationName>
+  <electronicMailAddress>Email</electronicMailAddress>
+  <role>Role</role>
+  <encoding>Encoding</encoding>
+  <inspireTheme>INSPIRE themes</inspireTheme>
+  <inspireThemeURI>INSPIRE themes</inspireThemeURI>
+  <format>Format</format>
+  <format_version>Version</format_version>
+  <format_specification>Specification</format_specification>
+  <lineage>Lineage</lineage>
+  <spatialResolution>Spatial resolution (scale)</spatialResolution>
+  <spatialDistance>Spatial resolution (distance)</spatialDistance>
+  <accessConstraints>Access constraints</accessConstraints>
+  <useConstraints>Use constraints</useConstraints>
+  <useLimitation>Use limitation</useLimitation>
+  <add-resource-id>Compute resource identifier</add-resource-id>
+  <add-resource-idHelp>Compose the resource identifier using the catalog URL and the metadata
+    identifier (eg. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).
+  </add-resource-idHelp>
+  <add-extent-from-geokeywords>Compute extent from keyword</add-extent-from-geokeywords>
+  <add-extent-from-geokeywordsHelp>Analyze each keyword of type place and add matching extent.
+  </add-extent-from-geokeywordsHelp>
+  <classificationSection>Classification of data and services</classificationSection>
+  <temporalSection>Temporal reference</temporalSection>
+  <restrictionsSection>Restrictions on access and use</restrictionsSection>
+  <metadataSection>Metadata information</metadataSection>
+  <responsibleOrganisationSection>Responsible organization (s)</responsibleOrganisationSection>
+  <qualityAndValiditySection>Quality and validity</qualityAndValiditySection>
+  <spatialRepresentationType>Spatial representation type</spatialRepresentationType>
+  <topicCategory>Topic category code</topicCategory>
+  <metadataLanguage>Metadata language</metadataLanguage>
+  <inspireServiceTaxonomy>INSPIRE Service Taxonomy</inspireServiceTaxonomy>
+  <otherConstraints>Other constraints</otherConstraints>
+  <operatesOn>Coupled resource</operatesOn>
+  <extent>Geographic bounding box</extent>
+  <spatialExtent>Spatial extent</spatialExtent>
+
+  <freeTextKeywords>Other keywords</freeTextKeywords>
+  <resource_url>URL</resource_url>
+  <resource_protocol>Protocol</resource_protocol>
+
+  <addCrs>Projection</addCrs>
+  <addCrs4936>ETRS89-XYZ</addCrs4936>
+  <addCrs4937>ETRS89-GRS80h</addCrs4937>
+  <addCrs4258>ETRS89-GRS80</addCrs4258>
+  <addCrs3035>ETRS89-LAEA</addCrs3035>
+  <addCrs3034>ETRS89-LCC</addCrs3034>
+  <addCrs3038>ETRS89-TM26N</addCrs3038>
+  <addCrs3039>ETRS89-TM27N</addCrs3039>
+  <addCrs3040>ETRS89-TM28N</addCrs3040>
+  <addCrs3041>ETRS89-TM29N</addCrs3041>
+  <addCrs3042>ETRS89-TM30N</addCrs3042>
+  <addCrs3043>ETRS89-TM31N</addCrs3043>
+  <addCrs3044>ETRS89-TM32N</addCrs3044>
+  <addCrs3045>ETRS89-TM33N</addCrs3045>
+  <addCrs3046>ETRS89-TM34N</addCrs3046>
+  <addCrs3047>ETRS89-TM35N</addCrs3047>
+  <addCrs3048>ETRS89-TM36N</addCrs3048>
+  <addCrs3049>ETRS89-TM37N</addCrs3049>
+  <addCrs3050>ETRS89-TM38N</addCrs3050>
+  <addCrs3051>ETRS89-TM39N</addCrs3051>
+  <addCrs5730>EVRS</addCrs5730>
+  <addCrs7409>ETRS89-GRS80-EVRS</addCrs7409>
+
+  <!-- String for INSPIRE SDS tab -->
+
+  <inspire_sds_cc1>Conformance class 1: invocable</inspire_sds_cc1>
+  <inspire_sds_cc2>Conformance class 2: interoperable</inspire_sds_cc2>
+  <inspire_sds_cc3>Conformance class 3: harmonized</inspire_sds_cc3>
+
+  <sds-category>Category</sds-category>
+  <inspire_add_pass>Add pass element</inspire_add_pass>
+  <sds-add-dataquality>Add DataQuality element</sds-add-dataquality>
+  <sds-add-dataqualityHelp>TG4: For each spatial data service, there shall be one and only one set
+    of quality information (dataQualityInfo element) scoped to “service”.
+  </sds-add-dataqualityHelp>
+  <sds-add-tech-spec>Add a technical specification</sds-add-tech-spec>
+  <sds-add-tech-specHelp>TG8: The Specification metadata element shall at least refer to or contain
+    one technical specification to which the invocable spatial data service fully conforms,
+    providing all the necessary technical elements, to actually invoke the service and enable its
+    usage.
+  </sds-add-tech-specHelp>
+  <sds-tech-spec>Technical specification</sds-tech-spec>
+  <conformity_desc>Tech spec title</conformity_desc>
+  <conformity_linkage>Tech spec URL</conformity_linkage>
+
+
+  <sds-section-qos>Quality of Service</sds-section-qos>
+  <sds-add-qualityofservice>Add missing Quality of Service criteria</sds-add-qualityofservice>
+  <sds-add-qualityofserviceHelp>INSPIRE SDS requires three quality of service criteria to be
+    reported in the metadata: Availability, Performance and Capacity. This button will add the
+    missing criteria.
+  </sds-add-qualityofserviceHelp>
+  <qos_measure>Measure:</qos_measure>
+  <qos_uom>UOM</qos_uom>
+  <qos_description>Description</qos_description>
+  <qos_value>Value</qos_value>
+  <sds-section-crs>Coordinate reference system</sds-section-crs>
+
+  <sds-fix-category>Fix the Category element</sds-fix-category>
+  <sds-fix-categoryHelp>(Rec1) Replace gco:CharacterString with gmx:Anchor in the description
+    metadata element.
+  </sds-fix-categoryHelp>
+
+  <sds-accesspoint>Access Point URL</sds-accesspoint>
+  <sds-add-accesspoint>Add Access Point</sds-add-accesspoint>
+
+  <sds-endpoint>Endpoint URL</sds-endpoint>
+  <sds-add-endpoint>Add Endpoint</sds-add-endpoint>
+
+  <sds-addNoConstraints>No Limitation</sds-addNoConstraints>
+  <sds-addNoConstraintsHelp>Add an element that documents that there are no limitation for this
+    service.
+  </sds-addNoConstraintsHelp>
+  <sds-addUnknownConstraints>Unknown Limitation</sds-addUnknownConstraints>
+  <sds-addConstraints>Customizable constraints</sds-addConstraints>
+
+  <sds>
+    <noConditionsApply>No conditions apply</noConditionsApply>
+    <conditionsUnknown>Conditions unknown</conditionsUnknown>
+  </sds>
+
+  <sds-limitation>Limitation</sds-limitation>
+
+  <sds-section-custodian>Responsible custodian</sds-section-custodian>
+  <sds-addOperation>Add Operation</sds-addOperation>
+
+  <trueValue>Yes</trueValue>
+  <falseValue>No</falseValue>
+  <nilValue>Undefined</nilValue>
+  <logo>logo</logo>
+  <overview>overview</overview>
+  <thumbnail>thumbnail</thumbnail>
+  <north>north</north>
+  <east>east</east>
+  <south>south</south>
+  <west>west</west>
+</strings>
