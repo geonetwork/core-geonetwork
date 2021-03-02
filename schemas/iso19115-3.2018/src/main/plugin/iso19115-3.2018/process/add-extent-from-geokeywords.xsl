@@ -36,7 +36,7 @@
   <xsl:variable name="replaceMode"
                 select="geonet:parseBoolean($replace)"/>
   <xsl:variable name="serviceUrl"
-                select="concat(substring($gurl, 1, string-length($gurl)-4), '/api/0.1/registries/vocabularies/search.xml?q=')"/>
+                select="concat(substring($gurl, 1, string-length($gurl)-4), '/api/registries/vocabularies/search?_content_type=xml&amp;q=')"/>
 
 
 

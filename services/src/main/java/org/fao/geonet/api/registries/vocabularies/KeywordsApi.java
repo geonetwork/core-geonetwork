@@ -330,7 +330,7 @@ public class KeywordsApi {
         nickname = "searchKeywordsXml",
         notes = "")
     @RequestMapping(
-        path = {"/search", "/search.xml"},
+        path = "/search",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_XML_VALUE,
