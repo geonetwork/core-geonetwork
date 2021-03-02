@@ -2,6 +2,7 @@
   <option data-ng-repeat="p in infos"
           data-ng-selected="p.value === selectedInfo || p.code === selectedInfo"
           data-ng-hide="p.hideInEditMode == 'true'"
+          data-ng-disabled="p.disabled == true"
           value="{{p.value || p.code}}"
           title="{{p.description}}">{{p.label}}
   </option>

@@ -599,11 +599,13 @@
             scope: {
               selectedInfo: '=',
               lang: '=',
+              extraOptions: '=',
               allowBlank: '@',
               infos: '=?schemaInfoComboValues'
             },
             link: function(scope, element, attrs) {
               var initialized = false;
+              var baseList = null;
               var defaultValue;
               var allowBlank = attrs['allowBlank'] == true;
 
@@ -646,6 +648,22 @@
                     init();
                   }
                 });
+
+              scope.$watch('extraOptions',
+                function(n, o) {
+                  appendExtraOptions();
+                });
+
+              function appendExtraOptions() {
+                if(baseList && angular.isArray(scope.extraOptions)) {
+                  scope.extraOptions.unshift({
+                    value: '', label: 'recordFormats', disabled: true});
+                  scope.extraOptions.push({
+                    value: '', label: 'protocols', disabled: true})
+                  scope.infos = scope.extraOptions.concat(baseList);
+                }
+              }
+
               var init = function() {
                 var schema = attrs['schema'] ||
                     gnCurrentEdit.schema || 'iso19139';
@@ -656,6 +674,8 @@
                   gnSchemaManagerService.getCodelist(config, scope.codelistFilter).then(
                       function(data) {
                         scope.infos = angular.copy(data.entry);
+                        baseList = angular.copy(scope.infos);
+                        appendExtraOptions();
                         addBlankValueAndSetDefault();
                       });
                 }
@@ -663,6 +683,8 @@
                   gnSchemaManagerService.getElementInfo(config, scope.codelistFilter).then(
                       function(data) {
                         scope.infos = data.helper ? data.helper.option : null;
+                        baseList = angular.copy(scope.infos);
+                        appendExtraOptions();
                         addBlankValueAndSetDefault();
                       });
                 }

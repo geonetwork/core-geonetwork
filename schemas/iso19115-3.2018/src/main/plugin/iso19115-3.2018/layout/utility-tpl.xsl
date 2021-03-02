@@ -15,9 +15,11 @@
   xmlns:dqm="http://standards.iso.org/iso/19157/-2/dqm/1.0"
   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+  xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all">
 
+  <xsl:import href="common/index-utils.xsl"/>
   <xsl:include href="utility-tpl-multilingual.xsl"/>
 
   <xsl:template name="get-iso19115-3.2018-is-service">
@@ -28,6 +30,17 @@
   <xsl:template name="get-iso19115-3.2018-title">
     <xsl:value-of select="$metadata/mdb:identificationInfo/*/mri:citation/*/cit:title/gco:CharacterString"/>
   </xsl:template>
+
+  <xsl:template mode="get-formats-as-json" match="mdb:MD_Metadata">
+    [
+    <xsl:for-each select="mdb:distributionInfo/*/mrd:distributionFormat/*/mrd:formatSpecificationCitation/*/cit:title/*/text()">{
+      "value": "WWW:DOWNLOAD:<xsl:value-of select="gn-fn-index:json-escape(.)"/>",
+      "label": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"}
+      <xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>
+    ]
+  </xsl:template>
+
 
   <xsl:template name="get-iso19115-3.2018-extents-as-json">[
    <xsl:for-each select="//mdb:identificationInfo/*/mri:extent

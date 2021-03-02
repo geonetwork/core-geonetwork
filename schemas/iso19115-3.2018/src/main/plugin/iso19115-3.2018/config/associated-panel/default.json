@@ -305,6 +305,34 @@
       },
       {
         "group": "onlineDownload",
+        "extendWithDataFormats": true,
+        "label": "onlineDownload",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:DOWNLOAD:",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineDownload",
         "label": "onlineDownloadKML",
         "copyLabel": "name",
         "sources": {
