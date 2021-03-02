@@ -10,3 +10,11 @@
 [submodule "docs/manuals"]
 	path = docs/manuals
 	url = https://github.com/geonetwork/doc.git
+[submodule "web-ui/src/main/resources/catalog/views/minimal"]
+	path = web-ui/src/main/resources/catalog/views/minimal
+	url = https://eos.geocat.net/gitlab/enterprise/geonetwork-minimal-skin.git
+	branch = GN4
+[submodule "web-ui/src/main/resources/catalog/views/dutch"]
+	path = web-ui/src/main/resources/catalog/views/dutch
+	url = https://github.com/osgeonl/geonetwork-dutch-skin.git
+	branch = 4.0.x
