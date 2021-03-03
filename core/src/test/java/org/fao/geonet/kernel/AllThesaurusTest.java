@@ -30,6 +30,8 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.exceptions.TermNotFoundException;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.IO;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,6 +56,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class AllThesaurusTest extends AbstractThesaurusBasedTest {
     public static final int SECOND_THES_WORDS = 5;
@@ -69,6 +73,12 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
     public void setUp() throws Exception {
         final ConfigurableApplicationContext applicationContext = Mockito.mock(ConfigurableApplicationContext.class);
         ApplicationContextHolder.set(applicationContext);
+
+        SettingManager settingManager = mock(SettingManager.class);
+        when(settingManager.getNodeURL())
+            .thenReturn("http://localhost:8080/geonetwork/srv/");
+        Mockito.when(applicationContext.getBean(SettingManager.class)).thenReturn(settingManager);
+
 
         Path gcThesaurusFile = this.folder.getRoot().toPath().resolve("secondThesaurus.rdf");
         this.secondThesaurus = new Thesaurus(isoLangMapper, gcThesaurusFile.getFileName().toString(), null, null, "external",
@@ -229,7 +239,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
     @Test
     public void testIsFreeCode() throws Exception {
         final KeywordBean keywordBean = getExistingKeywordBean();
-        assertFalse(this.allThesaurus.isFreeCode(keywordBean.getNameSpaceCode(), keywordBean.getRelativeCode()));
+        assertFalse(this.allThesaurus.isFreeCode(null, keywordBean.getRelativeCode()));
 
         assertTrue(this.allThesaurus.isFreeCode("non existant", "non existant"));
     }
