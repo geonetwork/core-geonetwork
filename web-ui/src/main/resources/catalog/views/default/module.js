@@ -146,6 +146,9 @@
         $(searchMap.getTargetElement()).toggle();
         $('button.gn-minimap-toggle > i').toggleClass('fa-angle-double-left fa-angle-double-right');
       };
+      if (gnGlobalSettings.gnCfg.mods.search.mapFilterCollapsed) {
+        setTimeout(function() { $scope.toggleMap() });
+      }
       hotkeys.bindTo($scope)
         .add({
             combo: 'h',

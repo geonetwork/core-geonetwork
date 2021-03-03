@@ -1209,6 +1209,8 @@
     "ui-isFilterTagsDisplayedInSearch-help": "Si activé, affiche les filtres de recherche au dessus des résultats.",
     "map/isMapViewerEnabled": "Activer le visualisateur de carte",
     "map/isMapViewerEnabled-help": "Si non sélectionné, la carte sur l'application de recherche sera désactivée.",
+    "ui-mapFilterCollapsed": "Réduire le filtre géographique",
+    "ui-mapFilterCollapsed-help": "Si sélectionné, le filtre géographique est réduit au chargement.",
     "ui-isSaveMapInCatalogAllowed": "Autoriser la sauvegarde de carte sous forme de fiche",
     "ui-isSaveMapInCatalogAllowed-help": "A partir du visualiseur, l'utilisateur peut définir le titre et le résumé de la carte et sauvegarder ainsi le OWS context dans une fiche du catalogue.",
     "ui-advancedConfig": "Configuration JSON",
