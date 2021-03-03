@@ -400,7 +400,11 @@
           <overview type="object">{
             "url": "<xsl:value-of select="normalize-space(.)"/>"
             <xsl:if test="$isStoringOverviewInIndex">,
-              "data": "<xsl:value-of select="util:buildDataUrl(., 140)"/>"
+              <xsl:variable name="data"
+                            select="util:buildDataUrl(., 140)"/>
+              <xsl:if test="$data != ''">,
+                "data": "<xsl:value-of select="$data"/>"
+              </xsl:if>
             </xsl:if>
             <xsl:if test="count(../../mcc:fileDescription) > 0">,
               "text":
