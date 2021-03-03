@@ -34,8 +34,10 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
 import java.util.Set;
@@ -44,17 +46,19 @@ import java.util.Set;
  * Utility class to deal with data and removed directory. Also provide user privileges checking
  * method.
  */
+@Component
 public class ResourceLib {
+
     /**
      * Get metadata public or private data directory
      *
-     * @param access The type of data directory. {@link org.fao.geonet.constants.Params.Access#PUBLIC}
-     *               or {@link org.fao.geonet.constants.Params.Access#PRIVATE}
+     * @param access The type of data directory. {@link Params.Access#PUBLIC}
+     *               or {@link Params.Access#PRIVATE}
      * @param id     The metadata identifier
-     * @return The data directory
+     * @return The metadata directory
      */
-    public Path getDir(ServiceContext context, String access, int id) {
-        Path mdDir = getMetadataDir(context.getBean(GeonetworkDataDirectory.class), id);
+    public Path getDir(String access, int id) {
+        Path mdDir = getMetadataDir(ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class), id);
         String subDir = (access != null && access.equals(Params.Access.PUBLIC)) ? Params.Access.PUBLIC
             : Params.Access.PRIVATE;
         return mdDir.resolve(subDir);

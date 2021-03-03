@@ -40,7 +40,7 @@
              data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}">
           <img class="gn-img-thumbnail"
                alt="{{md.resourceTitle}}"
-               data-ng-src="{{md.overview[0].url | thumbnailUrlSize}}"
+               data-ng-src="{{md.overview[0].data || (md.overview[0].url | thumbnailUrlSize)}}"
                data-ng-if="md.overview[0]"/>
         </div>
 

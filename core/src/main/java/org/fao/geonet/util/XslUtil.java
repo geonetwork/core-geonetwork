@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.io.Files;
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -54,6 +55,8 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
+import org.fao.geonet.api.records.attachments.FilesystemStore;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.index.es.EsRestClient;
@@ -99,9 +102,12 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
+import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -987,6 +993,60 @@ public final class XslUtil {
         } else {
             return "eng";
         }
+    }
+
+    /**
+     * Build data URL like data:image/png;base64, iVBORw...
+     */
+    public static String buildDataUrl(String url, Integer size) {
+        StringBuilder sb = new StringBuilder("data:");
+        String supportedExtension = "jpg|jpeg|png|gif|tif|tiff";
+
+        String extension = Files.getFileExtension(url);
+        if (extension.matches(supportedExtension)) {
+
+            try {
+                Matcher m = Pattern.compile(".*/api/records/(.*)/attachments/(.*)$").matcher(url);
+                BufferedImage image;
+                if (m.find()) {
+                    Store store = ApplicationContextHolder.get().getBean(FilesystemStore.class);
+                    try (Store.ResourceHolder file = store.getResourceInternal(
+                        m.group(1),
+                        MetadataResourceVisibility.PUBLIC,
+                        m.group(2), true)) {
+                        image = ImageIO.read(file.getPath().toFile());
+                    }
+                } else {
+                    image = ImageIO.read(new URL(url));
+                }
+
+                if (image != null) {
+                    BufferedImage resized = ImageUtil.resize(image, size != null ? size : 140);
+                    ByteArrayOutputStream output = new ByteArrayOutputStream();
+                    ImageIO.write(resized, "png", output);
+                    output.flush();
+                    byte[] imagesB = output.toByteArray();
+                    output.close();
+
+                    sb.append("image/png;base64, ");
+                    sb.append(Base64.getEncoder().encodeToString(imagesB));
+                    return sb.toString();
+                } else {
+                    Log.info(Geonet.GEONETWORK, String.format(
+                        "Image '%s' is null and can't be converted to Data URL.",
+                        url));
+                }
+            } catch (Exception e) {
+                Log.info(Geonet.GEONETWORK, String.format(
+                    "Image '%s' is not accessible or can't be converted to Data URL. Error is: %s",
+                    url, e.getMessage()));
+            }
+        } else {
+            Log.info(Geonet.GEONETWORK, String.format(
+                "Image '%s' is not of one supported type %s and can't be encoded as a data URL.",
+                url, supportedExtension));
+        }
+        return "";
     }
 
     public static String encodeForJavaScript(String str) {

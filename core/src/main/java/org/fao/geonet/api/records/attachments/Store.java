@@ -137,6 +137,14 @@ public interface Store {
     ResourceHolder getResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception;
 
     /**
+     * Retrieve a metadata resource path (for internal use eg. indexing)
+     */
+    ResourceHolder getResourceInternal(String metadataUuid,
+                                       final MetadataResourceVisibility visibility,
+                                       String resourceId,
+                                       Boolean approved) throws Exception;
+
+    /**
      * Add a new resource from a file.
      *
      * @param context
