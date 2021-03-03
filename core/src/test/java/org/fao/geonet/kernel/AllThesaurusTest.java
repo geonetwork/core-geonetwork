@@ -25,6 +25,8 @@ package org.fao.geonet.kernel;
 
 import com.google.common.collect.Maps;
 
+import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.exceptions.TermNotFoundException;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
@@ -36,6 +38,8 @@ import org.openrdf.sesame.config.AccessDeniedException;
 import org.openrdf.sesame.query.MalformedQueryException;
 import org.openrdf.sesame.query.QueryEvaluationException;
 import org.openrdf.sesame.repository.local.LocalRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -63,6 +67,9 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
 
     @Before
     public void setUp() throws Exception {
+        final ConfigurableApplicationContext applicationContext = Mockito.mock(ConfigurableApplicationContext.class);
+        ApplicationContextHolder.set(applicationContext);
+
         Path gcThesaurusFile = this.folder.getRoot().toPath().resolve("secondThesaurus.rdf");
         this.secondThesaurus = new Thesaurus(isoLangMapper, gcThesaurusFile.getFileName().toString(), null, null, "external",
             "local", gcThesaurusFile, "http://org.fao.geonet", true);
