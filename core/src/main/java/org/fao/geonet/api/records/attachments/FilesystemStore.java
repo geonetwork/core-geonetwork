@@ -104,7 +104,7 @@ public class FilesystemStore extends AbstractStore {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         checkResourceId(resourceId);
 
-        final Path resourceFile = Lib.resource.getDir(context, visibility.toString(), metadataId).
+        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId).
                 resolve(getFilename(metadataUuid, resourceId));
 
         if (Files.exists(resourceFile)) {
@@ -112,6 +112,27 @@ public class FilesystemStore extends AbstractStore {
         } else {
             throw new ResourceNotFoundException(
                     String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
+        }
+    }
+
+
+    @Override
+    public ResourceHolder getResourceInternal(
+        final String metadataUuid,
+        final MetadataResourceVisibility visibility,
+        final String resourceId,
+        Boolean approved) throws Exception {
+        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        checkResourceId(resourceId);
+
+        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId).
+            resolve(getFilename(metadataUuid, resourceId));
+
+        if (Files.exists(resourceFile)) {
+            return new ResourceHolderImpl(resourceFile, null);
+        } else {
+            throw new ResourceNotFoundException(
+                String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
         }
     }
 

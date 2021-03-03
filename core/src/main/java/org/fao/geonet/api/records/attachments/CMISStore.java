@@ -55,6 +55,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import javax.annotation.Nullable;
+import javax.resource.NotSupportedException;
 
 public class CMISStore extends AbstractStore {
 
@@ -145,6 +146,11 @@ public class CMISStore extends AbstractStore {
             throw new ResourceNotFoundException(
                 String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
         }
+    }
+
+    @Override
+    public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
+        throw new NotSupportedException("CMISStore does not support getResourceInternal.");
     }
 
     private String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {

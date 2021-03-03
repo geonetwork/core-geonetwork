@@ -49,6 +49,9 @@
   <xsl:variable name="maxFieldLength" select="32000" as="xs:integer"/>
 
 
+  <xsl:variable name="isStoringOverviewInIndex" select="true()"/>
+
+
   <!-- A date, dateTime, Year or Year and Month
   Valid with regards to index date supported types:
   date_optional_time||yyyy-MM-dd||yyyy-MM||yyyy||epoch_millis

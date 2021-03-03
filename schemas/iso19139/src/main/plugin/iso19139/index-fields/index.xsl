@@ -377,6 +377,9 @@
           <!-- TODO can be multilingual desc and name -->
           <overview type="object">{
             "url": "<xsl:value-of select="normalize-space(.)"/>"
+            <xsl:if test="$isStoringOverviewInIndex">,
+              "data": "<xsl:value-of select="util:buildDataUrl(., 140)"/>"
+            </xsl:if>
             <xsl:if test="normalize-space(../../gmd:fileDescription) != ''">,
               "text": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
             </xsl:if>
