@@ -40,7 +40,7 @@
   .gn-facet-root-container {
     input.gn-facet-filter {
       margin-left: 18px;
-      width: calc(100% - 18px);
+      width: calc(~"100% - 18px");
       border-color: @panel-default-border;
     }
   }
@@ -439,7 +439,7 @@
     .text-muted();
     font-style: italic;
   }
-  .gn-md-links {
+  .gn-md-links, .gn-md-related {
     background: rgba(0,0,0,.02);
     line-height: 3em;
     font-size: 90%;
@@ -473,64 +473,17 @@
   .invisible {
     display: none;
   }
-  .gn-md-thumbnail {
-    float:left;
-    width: 140px;
-    height: auto;
-    margin-right: 15px;
-    border-radius: 4px;
-    overflow: hidden;
-    .gn-img-thumbnail {
-      border: 1px solid #ddd;
-      margin: 0;
-      min-height: 100%;
-    }
-  }
-  .gn-md-no-thumbnail {
-    width: 140px;
-    height: 140px;
-    &:after {
-      content: "\f03e";
-      font-family: FontAwesome;
-      font-style: normal;
-      font-weight: normal;
-      text-decoration: inherit;
-      position: relative;
-      font-size: 46px;
-      color: #eeeeee;
-      top: 50%;
-      left: 50%;
-      margin: -32px 0 0 -23px;
-      z-index: 1;
-    }
-  }
 }
 
 
 .gn-top-records {
-  .well();
-
   /* Make a wide div with an horizontal scroll */
   [data-gn-results-container] {
-    overflow-x: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
 
     .gn-resultview {
       display: flex;
-    }
-
-    /* to loop over results */
-    li.gn-grid {
-      width: 200px;
-      min-width: 200px;
-      height: 200px;
-      text-align: center;
-
-      .gn-md-thumbnail {
-        display: inline-block;
-        float: none;
-        margin-right: 0px;
-      }
     }
   }
 }
