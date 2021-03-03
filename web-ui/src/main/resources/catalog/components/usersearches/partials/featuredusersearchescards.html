@@ -1,24 +1,25 @@
-<ul class="row gn-info-list">
-  <li
-    data-ng-repeat="row in featuredSearches"
-    data-ng-click="search(row.url)"
-    data-ng-init="name = (row.names[lang] || row.names['eng'] || ('userSearchNameMissing' | translate))"
-    id="gn-info-list-mw-{row.id}}">
-    <section class="resultcard clearfix"
-             title="{{::name.indexOf('|') ? name.split('|')[1] : ''}}"
-             data-ng-class="row.url ? 'hasThumbnail' : 'noThumbnail'">
+<ul class="row list-group gn-info-list gn-info-list-featured">
+  <li class="list-group-item panel panel-default gn-card"
+      data-ng-repeat="row in featuredSearches"
+      data-ng-click="search(row.url)"
+      data-ng-init="name = (row.names[lang] || row.names['eng'] || ('userSearchNameMissing' | translate))"
+      title="{{::name.indexOf('|') ? name.split('|')[1] : ''}}"
+      data-ng-class="row.url ? 'hasThumbnail' : 'noThumbnail'">
 
-      <div class="title">
-        <a>
-          <h4>{{::name.indexOf('|') ? name.split('|')[0] : name}}</h4>
-        </a>
+    <div class="panel-heading gn-card-heading">
+      <div class="gn-md-title">
+        <h1>{{::name.indexOf('|') ? name.split('|')[0] : name}}</h1>
       </div>
-
-      <div class="gn-md-thumbnail">
-        <div class="gn-img-thumbnail"
-             style="background-image: url({{::row.logo}})">
+    </div>
+    <div class="panel-body gn-card-body">
+      <div class="gn-md-contents">
+        <div class="gn-md-thumbnail"
+             data-ng-class="{'gn-md-no-thumbnail': !row.logo}">
+          <div class="gn-img-thumbnail"
+               style="background-image: url({{::row.logo}})">
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   </li>
 </ul>
