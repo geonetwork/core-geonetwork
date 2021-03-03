@@ -1220,6 +1220,8 @@
     "ui-isFilterTagsDisplayedInSearch-help": "If enabled, display the list of filters applied in the search results page",
     "map/isMapViewerEnabled": "Enable Map Viewer",
     "map/isMapViewerEnabled-help": "If unselected, the map tab will be disabled and will not be used.",
+    "ui-mapFilterCollapsed": "Collapse geographic filter",
+    "ui-mapFilterCollapsed-help": "If selected, the geographic filter will be collapsed at launch",
     "ui-isSaveMapInCatalogAllowed": "Allow users to save maps as metadata record",
     "ui-isSaveMapInCatalogAllowed-help": "From the map viewer, user can set the map title and abstract and save the map directly with the OWS context in the catalog as a metadata record.",
     "ui-advancedConfig": "JSON configuration",

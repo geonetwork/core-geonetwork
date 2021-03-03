@@ -118,6 +118,7 @@ goog.require('gn_alert');
           'paginationInfo': {
             'hitsPerPage': 20
           },
+          'mapFilterCollapsed': false,
           'facetsSummaryType': 'details',
           'defaultSearchString': '',
           'facetTabField': '',
