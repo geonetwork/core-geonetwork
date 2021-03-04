@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2020 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -54,6 +54,7 @@ public class Version implements Comparable<Version> {
     /**
      * Build a version with major, minor and patch, for example 3.10.7.
      * If any of the parameters can't be parsed as an integer throws a {@link NumberFormatException}.
+     *
      * @param major major version number.
      * @param minor minor version number.
      * @param patch patch version number.
@@ -67,10 +68,10 @@ public class Version implements Comparable<Version> {
      * If any of the parameters except {@code qualifier} is not null and can't be parsed as
      * an integer throws a {@link NumberFormatException}.
      *
-     * @param major major version number.
-     * @param minor minor version number.
-     * @param patch patch version number.
-     * @param build build version number.
+     * @param major     major version number.
+     * @param minor     minor version number.
+     * @param patch     patch version number.
+     * @param build     build version number.
      * @param qualifier the qualifier (part after - character).
      */
     public Version(String major, String minor, String patch, String build, String qualifier) {
@@ -105,64 +106,82 @@ public class Version implements Comparable<Version> {
         return new Version(null, null, null, null, number);
     }
 
-    private static final int order(Integer number, String qualifier){
+    private static final int order(Integer number, String qualifier) {
         return number != null ? number : order(qualifier);
     }
-    private static final int order(String qualifier){
-        if(qualifier==null) return 0;
-        else if("SNAPSHOT".equalsIgnoreCase(qualifier)) return Integer.MAX_VALUE;
-        else if("RC".equalsIgnoreCase(qualifier)) return -1;
-        else if("0".equalsIgnoreCase(qualifier)) return 0;
-        else if("final".equalsIgnoreCase(qualifier)) return 0;
-        else return -2;
+
+    private static final int order(String qualifier) {
+        if (qualifier == null)
+            return 0;
+        else if ("SNAPSHOT".equalsIgnoreCase(qualifier))
+            return Integer.MAX_VALUE;
+        else if ("RC".equalsIgnoreCase(qualifier))
+            return -1;
+        else if ("0".equalsIgnoreCase(qualifier))
+            return 0;
+        else if ("final".equalsIgnoreCase(qualifier))
+            return 0;
+        else
+            return -2;
     }
 
     @Override
     public int compareTo(Version o) {
         // numbers sort with snapshot (MAX_VALUE), before numbers, before empty (which sorts to zero).
-        int majorCompare = Integer.compare(order(major,qualifier), order(o.major,o.qualifier));
-        int minorCompare = Integer.compare( order(minor,qualifier), order(o.minor,o.qualifier));
-        int patchCompare = Integer.compare( order(patch,qualifier), order(o.patch,o.qualifier));
-        int buildCompare = Integer.compare( order(build,qualifier), order(o.build,o.qualifier));
+        int majorCompare = Integer.compare(order(major, qualifier), order(o.major, o.qualifier));
+        int minorCompare = Integer.compare(order(minor, qualifier), order(o.minor, o.qualifier));
+        int patchCompare = Integer.compare(order(patch, qualifier), order(o.patch, o.qualifier));
+        int buildCompare = Integer.compare(order(build, qualifier), order(o.build, o.qualifier));
 
         // snapshot qualifier if provided sorts ahead of null
-        int qualifierCompare = Integer.compare( order(qualifier), order(o.qualifier) );
+        int qualifierCompare = Integer.compare(order(qualifier), order(o.qualifier));
 
-        if( major == null && o.major == null)  return qualifierCompare;
-        else if ( majorCompare != 0 )  return majorCompare;
+        if (major == null && o.major == null)
+            return qualifierCompare;
+        else if (majorCompare != 0)
+            return majorCompare;
 
-        if( minor == null && o.minor == null) return qualifierCompare;
-        else if ( minorCompare != 0 ) return minorCompare;
+        if (minor == null && o.minor == null)
+            return qualifierCompare;
+        else if (minorCompare != 0)
+            return minorCompare;
 
-        if( patch == null && o.patch == null) return qualifierCompare;
-        else if ( patchCompare != 0 ) return patchCompare;
+        if (patch == null && o.patch == null)
+            return qualifierCompare;
+        else if (patchCompare != 0)
+            return patchCompare;
 
-        if( build == null && o.build == null) return qualifierCompare;
-        else if ( buildCompare != 0 ) return buildCompare;
+        if (build == null && o.build == null)
+            return qualifierCompare;
+        else if (buildCompare != 0)
+            return buildCompare;
 
         return qualifierCompare;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         Version version = (Version) o;
-        return compareTo( version ) == 0;
+        return compareTo(version) == 0;
     }
 
     @Override
     public int hashCode() {
-        int placeholder =  "SNAPSHOT".equals(qualifier) ? Integer.MAX_VALUE : 0;
+        int placeholder = "SNAPSHOT".equals(qualifier) ? Integer.MAX_VALUE : 0;
 
         // use of order to match hashcode / equals contract
-        return Objects.hash(
-            order(major,qualifier),
-            order(minor,qualifier),
-            order(patch,qualifier),
-            order(build,qualifier),
-            order(qualifier));
+        return Objects
+                .hash(order(major, qualifier),
+                        order(minor, qualifier),
+                        order(patch, qualifier),
+                        order(build, qualifier),
+                        order(qualifier)
+                );
     }
 
     @Override
