@@ -287,8 +287,8 @@
     }])
 
   module.directive('gnFacetTemporalrange', [
-    '$timeout',
-    function($timeout) {
+    '$timeout', '$translate',
+    function($timeout, $translate) {
     return {
       restrict: 'A',
       replace: true,
@@ -363,7 +363,9 @@
                   }
                 },
                 axis: {
-                  title: '',
+                  title: $translate.instant('facets.temporalRange.seriesLegend'),
+                  titleFontWeight: 'normal',
+                  titleFontSize: '8',
                   labelExpr: "[timeFormat(datum.value, '" + scope.vegaDateFormat + "')]"
                 }
               },
