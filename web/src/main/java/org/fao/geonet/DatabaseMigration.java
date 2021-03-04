@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -111,7 +111,7 @@ public class DatabaseMigration implements BeanPostProcessor {
                     ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
 
                     path = pathFinder.getAppPath();
-                    DataSource ds = null;
+                    DataSource ds;
                     if (bean instanceof JpaTransactionManager) {
                         ds = ((JpaTransactionManager) bean).getDataSource();
                     } else {
@@ -124,7 +124,8 @@ public class DatabaseMigration implements BeanPostProcessor {
                 return bean;
             }
         } catch (ClassNotFoundException e) {
-            _logger.error(String.format("DB Migration / '%s' is an invalid value for initAfter. Class not found. Error is %s", initAfter, e.getMessage(), e));
+            _logger.error(String.format("DB Migration / '%s' is an invalid value for initAfter. Class not found. Error is %s", initAfter, e.getMessage()));
+            _logger.error(e);
         }
         return bean;
     }
@@ -178,13 +179,13 @@ public class DatabaseMigration implements BeanPostProcessor {
         Version from = new Version(), to = new Version();
 
         try {
-            from = parseVersionNumber(dbVersion);
+            from = Version.parseVersionNumber(dbVersion);
         } catch (Exception e) {
             _logger.warning("      Error parsing the GeoNetwork version (" + dbVersion + "." + dbSubVersion + ") from the database: " + e.getMessage());
             _logger.error(e);
         }
         try {
-            to = parseVersionNumber(webappVersion);
+            to = Version.parseVersionNumber(webappVersion);
         } catch (Exception e) {
             _logger.warning("      Error parsing GeoNetwork version (" + webappVersion + "." + subVersion + ") from the application code: " + e.getMessage());
             _logger.error(e);
@@ -206,7 +207,7 @@ public class DatabaseMigration implements BeanPostProcessor {
 
                 _logger.info("      Loading SQL migration step configuration from <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n ...");
                 for (Map.Entry<String, List<String>> migrationEntry : _migration.call().entrySet()) {
-                    Version versionNumber = parseVersionNumber(migrationEntry.getKey());
+                    Version versionNumber = Version.parseVersionNumber(migrationEntry.getKey());
                     if (versionNumber.compareTo(from) > 0 && versionNumber.compareTo(to) < 1) {
                         _logger.info("       - running tasks for " + versionNumber + "...");
                         for (String file : migrationEntry.getValue()) {
@@ -233,7 +234,7 @@ public class DatabaseMigration implements BeanPostProcessor {
                     }
                 }
                 if (anyMigrationAction && !anyMigrationError) {
-                    _logger.info("      Successfull migration.\n"
+                    _logger.info("      Successful migration.\n"
                         + "      Catalogue administrator still need to update the catalogue\n"
                         + "      logo and data directory in order to complete the migration process.\n"
                         + "      Lucene index rebuild is also recommended after migration."
@@ -360,52 +361,6 @@ public class DatabaseMigration implements BeanPostProcessor {
         }
     }
 
-    /**
-     * Parses a version number removing extra "-*" element and returning an integer.
-     * "2.7.0-SNAPSHOT" is returned as 270.
-     *
-     * @param number The version number to parse
-     * @return The version number as an integer
-     */
-    private Version parseVersionNumber(String number) throws Exception {
-        // Remove extra "-SNAPSHOT" info which may be in version number
-        int dashIdx = number.indexOf("-");
-        if (dashIdx != -1) {
-            number = number.substring(0, number.indexOf("-"));
-        }
-        switch (numDots(number)) {
-            case 0:
-                number += ".0.0";
-                break;
-            case 1:
-                number += ".0";
-                break;
-            default:
-                break;
-        }
-
-        final String[] parts = number.split("\\.");
-        String major = parts[0];
-        String minor = parts.length > 1 ? parts[1] : "0";
-        String micro = parts.length > 2 ? parts[2] : "0";
-        return new Version(major, minor, micro);
-    }
-
-    private int numDots(String number) {
-        int num = 0;
-
-        for (int i = 0; i < number.length(); i++) {
-            if (number.charAt(i) == '.') {
-                num++;
-            }
-        }
-
-        return num;
-    }
-
-    public Map<String, List<String>> getMigrationConfig() throws Exception {
-        return _migration.call();
-    }
 
     public boolean isFoundErrors() {
         return foundErrors;
