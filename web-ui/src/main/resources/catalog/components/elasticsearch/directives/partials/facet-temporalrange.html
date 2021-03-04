@@ -1,9 +1,10 @@
 <div>
-  <div id="{{facet.key}}"></div>
-
+  <div id="{{facet.key}}"
+       title="{{'facets.temporalRange.help' | translate}}"></div>
   <div class="input-daterange input-group input-group-sm"
        gn-bootstrap-datepicker="range"
        data-date-format="dd-mm-yyyy"
+       data-config="dateRangeConfig"
        on-change-fn="setRange({from: range.from, to: range.to})"
        date-only-highlight="true">
     <input type="text" class="input-sm form-control"
