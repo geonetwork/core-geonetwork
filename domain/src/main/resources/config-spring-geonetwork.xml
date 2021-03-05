@@ -38,6 +38,12 @@
   <bean id="userNodeIdSetter"
         class="org.fao.geonet.entitylistener.UserNodeIdSetter"/>
 
+  <bean id="settingValueSetter"
+        class="org.fao.geonet.entitylistener.SettingValueSetter"/>
+
+  <bean id="harvesterSettingValueSetter"
+        class="org.fao.geonet.entitylistener.HarvesterSettingValueSetter"/>
+
   <bean id="entityManagerFactory"
         class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
     <property name="dataSource" ref="jdbcDataSource"/>

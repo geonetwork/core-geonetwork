@@ -1119,6 +1119,16 @@
         <artifactId>pdfbox</artifactId>
         <version>2.0.19</version>
       </dependency>
+      <dependency>
+        <groupId>org.jasypt</groupId>
+        <artifactId>jasypt</artifactId>
+        <version>${jasypt.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jasypt</groupId>
+        <artifactId>jasypt-hibernate5</artifactId>
+        <version>${jasypt.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -1476,7 +1486,6 @@
      request the list of hosts (but JPA cache db queries). -->
     <cors.allowedHosts>*</cors.allowedHosts>
 
-
     <jetty.version>9.4.27.v20200227</jetty.version>
     <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
     <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
@@ -1511,6 +1520,7 @@
     <xbean.version>3.18</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.5.9</httpcomponents.version>
+    <jasypt.version>1.9.3</jasypt.version>
 
     <skipIT>true</skipIT> <!-- disable integration tests by default, use the "it" profile to run them which enables them -->
   </properties>

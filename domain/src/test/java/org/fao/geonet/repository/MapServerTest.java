@@ -25,6 +25,9 @@ package org.fao.geonet.repository;
 
 
 import org.fao.geonet.domain.MapServer;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.hibernate5.encryptor.HibernatePBEEncryptorRegistry;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +49,17 @@ public class MapServerTest extends AbstractSpringDataTest {
     EntityManager _entityManager;
 
     private AtomicInteger _nextId = new AtomicInteger();
+
+    @BeforeClass
+    public static void init() {
+        StandardPBEStringEncryptor strongEncryptor = new StandardPBEStringEncryptor();
+        strongEncryptor.setPassword("testpassword");
+
+        HibernatePBEEncryptorRegistry registry =
+            HibernatePBEEncryptorRegistry.getInstance();
+        registry.registerPBEStringEncryptor("STRING_ENCRYPTOR", strongEncryptor);
+    }
+
 
     public static MapServer newMapServer(AtomicInteger nextId) {
         int id = nextId.incrementAndGet();
