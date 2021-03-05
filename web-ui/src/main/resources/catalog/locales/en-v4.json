@@ -149,5 +149,7 @@
   "translationPackCacheCleared": "Translation packs cache cleared.",
   "translationPackCacheClearFailure": "Error occurred while clearing translation packs cache!",
   "ui-isVegaEnabled": "Enable interactive graphics facets (using Vega)",
-  "ui-exactMatchToggle": "Display exact match toggle"
+  "ui-exactMatchToggle": "Display exact match toggle",
+  "facets.temporalRange.help": "Drag out a brush to select a data range or click on a bar on the lower chart. Click out the selected range to unset. Click the filter button to search.\n\nBlue series: current search, Grey series: all records.",
+  "facets.temporalRange.seriesLegend": "Blue series: current search, Grey series: all records"
 }

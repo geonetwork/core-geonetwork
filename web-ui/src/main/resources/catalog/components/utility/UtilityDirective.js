@@ -942,6 +942,7 @@
         scope: {
           date: '=gnBootstrapDatepicker',
           dates: '=dateAvailable',
+          config: '=config',
           onChangeFn: '&?'
         },
         link: function(scope, element, attrs) {
@@ -998,7 +999,7 @@
               $(element).datepicker('destroy');
             }
 
-            var datepickConfig = {
+            var datepickConfig = angular.extend({
               container: typeof sxtSettings != 'undefined' ?
                   '.g' : 'body',
               autoclose: true,
@@ -1006,7 +1007,7 @@
               clearBtn: true,
               todayHighlight: false,
               language: gnLangs.getIso2Lang(gnLangs.getCurrent())
-            };
+            }, scope.config);
 
             if (angular.isDefined(scope.dates)) {
               angular.extend(datepickConfig, {
@@ -1088,6 +1089,9 @@
             });
           }
           else {
+            scope.$watch('config', function(n, o) {
+              init();
+            });
             scope.$watchCollection('date', function(newValue, oldValue) {
               if (!scope.date) {
                 scope.date = {};
