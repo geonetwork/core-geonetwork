@@ -415,7 +415,7 @@
                 axis: {
                   title: $translate.instant('facets.temporalRange.seriesLegend'),
                   titleFontWeight: 'normal',
-                  titleFontSize: '8',
+                  titleFontSize: '8'
                 }
               },
               y: {
