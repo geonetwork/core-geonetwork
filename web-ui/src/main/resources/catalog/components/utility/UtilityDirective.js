@@ -1383,7 +1383,7 @@
    */
   module.filter('thumbnailUrlSize', function() {
       return function(href, size) {
-        if(href.indexOf('api/records/') !== -1) {
+        if(href && href.indexOf('api/records/') !== -1) {
           var suffix = 'size=' + (size || 140);
           return href.indexOf('?') !== -1 ?
             href + '&' + suffix :
