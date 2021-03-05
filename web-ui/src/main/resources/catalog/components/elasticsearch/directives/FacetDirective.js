@@ -363,9 +363,7 @@
                   }
                 },
                 axis: {
-                  title: $translate.instant('facets.temporalRange.seriesLegend'),
-                  titleFontWeight: 'normal',
-                  titleFontSize: '8',
+                  title: '',
                   labelExpr: "[timeFormat(datum.value, '" + scope.vegaDateFormat + "')]"
                 }
               },
@@ -415,7 +413,9 @@
                 type: 'temporal',
                 timeunit: 'milliseconds',
                 axis: {
-                  title: ''
+                  title: $translate.instant('facets.temporalRange.seriesLegend'),
+                  titleFontWeight: 'normal',
+                  titleFontSize: '8',
                 }
               },
               y: {
