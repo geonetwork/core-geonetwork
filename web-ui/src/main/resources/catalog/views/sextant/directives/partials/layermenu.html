@@ -1,0 +1,20 @@
+<div>
+  <p>Layer menu for layer {{layer.get('title')}}</p>
+  <p><a href="" ng-click="handleClose($event)">Close menu</a></p>
+  <p ng-if="layer.get('md') || layer.get('metadataUrl')">
+    <a href="" ng-click="ctrl.showMetadata()">
+      <span translate>showMetadata</span>
+    </a>
+  </p>
+  <p ng-if="layer.get('cextent')">
+    <a href="" ng-click="ctrl.zoomToExtent()">
+      <span translate>layerExtentZoom</span>
+    </a>
+  </p>
+  <p ng-if="download">
+    <a href="" ng-click="ctrl.addToPanier()">
+      <span translate>download</span>
+    </a>
+  </p>
+  <p>Tabs</p>
+</div>

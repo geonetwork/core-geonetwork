@@ -80,7 +80,7 @@
 
       <!--Layer tree & background layers-->
       <div class="panel panel-default panel-tools" id="layers" gnv-layermanager-btn ng-show="activeTools.layers">
-        <div class="layers clearfix" ng-class="{'layers-tools-expanded': active.layersTools}">
+        <div class="layers clearfix" ng-class="{'layers-tools-expanded': active.layersTools || hasActiveLayer()}">
 
 
           <div class="sxt-layertree">
@@ -90,127 +90,22 @@
             <div sxt-layertree="map"></div>
           </div>
 
-          <hr class="sxt-layer-separator">
-          <div class="btn-group sxt-layer-tabs sxt-ncwms-tabs" ng-show="layerTabs.ncwms.active">
-            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('ncwms')" ng-class="{'active': layerTabs.ncwms.active}">
-              <span class="tools-bar-close-btn pull-right">&times;</span>
-              <span translate>ncwms</span>
+          <sxt-layer-menu ng-if="hasActiveLayer()"
+                          layer="activeLayer"
+                          map="map"
+                          user="user"
+                          on-close="clearActiveLayer()">
+          </sxt-layer-menu>
+
+          <div ng-if="!hasActiveLayer()">
+            <hr class="sxt-layer-separator">
+            <button class="btn btn-default btn-xs" sxt-layer-tools-toggle>
+              <i class="fa" ng-class="{ 'fa-plus': !active.maximized, 'fa-minus': active.maximized }"></i>
+            </button>
+            <button class="tools-bar-close-btn tools-bar-close-btn-single pull-right" ng-class="{'sxt-hidden': isSeparatedTool()}"
+                    ng-show="isLayerTabActive()" ng-click="closeLayerTab()"><span class="">&times;</span>
             </button>
           </div>
-          <div class="btn-group sxt-layer-tabs sxt-ncwms-tabs" ng-show="layerTabs.wps.active">
-            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('wps')" ng-class="{'active': layerTabs.wps.active}">
-              <span class="tools-bar-close-btn pull-right">&times;</span>
-              <span translate>process</span>
-            </button>
-          </div>
-          <div class="btn-group sxt-layer-tabs sxt-ncwms-tabs" ng-show="layerTabs.wfsfilter.active">
-            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('wfsfilter')" ng-class="{'active': layerTabs.wfsfilter.active}">
-              <span class="tools-bar-close-btn pull-right">&times</span>
-              <span translate>filter</span>
-            </button>
-          </div>
-          <div class="btn-group sxt-layer-tabs sxt-ncwms-tabs" ng-show="layerTabs.annotations.active">
-            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('annotations')" ng-class="{'active': layerTabs.annotations.active}">
-              <span class="tools-bar-close-btn pull-right">&times</span>
-              <span translate>annotations</span>
-            </button>
-          </div>
-          <button class="btn btn-default btn-xs" sxt-layer-tools-toggle>
-            <i class="fa" ng-class="{ 'fa-plus': !active.maximized, 'fa-minus': active.maximized }"></i>
-          </button>
-          <button class="tools-bar-close-btn tools-bar-close-btn-single pull-right" ng-class="{'sxt-hidden': isSeparatedTool()}"
-                  ng-show="isLayerTabActive()" ng-click="closeLayerTab()"><span class="">&times;</span>
-          </button>
-
-          <div class="btn-group sxt-layer-tabs" ng-class="{'sxt-hidden': isSeparatedTool()}">
-            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('legend')" ng-class="{'active': layerTabs.legend.active}">
-              <span translate>legend</span>
-            </button>
-            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('sort')" ng-class="{'active': layerTabs.sort.active}">
-              <span translate>sort</span>
-            </button>
-            <button class="btn btn-default btn-xs" ng-click="layerTabSelect('source')" ng-class="{'active': layerTabs.source.active}">
-              <span translate>layerSource</span>
-            </button>
-          </div>
-
-
-          <tabset class="sxt-layers-tabset">
-
-            <tab active="layerTabs.legend.active" select="handleTabParsing()">
-              <tab-heading>
-                <i class="fa fa-picture-o fa-fw"></i>
-                <span translate>legends</span>
-              </tab-heading>
-              <div class="panel-carousel" gn-legend-panel="map"></div>
-            </tab>
-
-            <tab active="layerTabs.sort.active">
-              <tab-heading>
-                <i class="fa fa-sort fa-fw"></i>
-                <span translate>sort</span>
-              </tab-heading>
-              <div class="panel-carousel" gn-layerorder-panel="map"></div>
-            </tab>
-
-            <tab active="layerTabs.source.active">
-              <tab-heading>
-                <i class="fa fa-info fa-fw"></i>
-                <span translate>sources</span>
-              </tab-heading>
-              <div class="panel-carousel" gn-layersources-panel="map"></div>
-            </tab>
-
-            <tab active="layerTabs.ncwms.active">
-              <tab-heading>
-                <i class="fa fa-anchor fa-fw"></i>
-                <span translate>ncwms</span>
-              </tab-heading>
-              <div class="panel panel-default panel-ncwms-container ncwms-root" ng-if="active.NCWMS">
-                <div class="panel-heading">{{active.NCWMS.get('label')}}</div>
-                <div gn-ncwms-transect map="map" layer="active.NCWMS"></div>
-              </div>
-            </tab>
-
-            <tab active="layerTabs.wps.active">
-              <tab-heading>
-                <i class="fa fa-cog"></i>
-                <span translate>process</span>
-              </tab-heading>
-              <div class="wps-container">
-                <div class="sxt-wps-panel">
-                  <gn-wps-process-form ng-if="layerTabs.wps.active" map="map"
-                    wps-link="wpsLink" wfs-link="wfsLink"/>
-                </div>
-              </div>
-            </tab>
-
-            <tab active="layerTabs.wfsfilter.active">
-              <tab-heading>
-                <i class="fa fa-cog"></i>
-                <span translate>filter</span>
-              </tab-heading>
-              <div class="wps-container"
-                advanced="{ updateOnImageLoad: false, autoScrollOnFocus: false }">
-                <div class="sxt-wfsfilter-panel"></div>
-              </div>
-            </tab>
-
-            <tab active="layerTabs.annotations.active">
-              <tab-heading>
-                <i class="fa fa-pencil"></i>
-                <span translate>annotations</span>
-              </tab-heading>
-              <div>
-                <sxt-annotations-editor map="map"
-                                        layer="active.ANNOTATIONS"
-                                        ng-if="layerTabs.annotations.active">
-                </sxt-annotations-editor>
-              </div>
-            </tab>
-
-          </tabset>
-
         </div>
       </div>
 
