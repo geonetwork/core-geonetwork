@@ -567,10 +567,10 @@
   <sxt-view-lineage>Lineage</sxt-view-lineage>
   <sxt-view-constraints>Constraints</sxt-view-constraints>
   <sxt-view-spatialRepresentationType>Data type</sxt-view-spatialRepresentationType>
-  <sxt-view-geoinfo>Informations géographiques</sxt-view-geoinfo>
-  <sxt-view-crs>Système de coordonnées</sxt-view-crs>
-  <sxt-view-scale>Échelle</sxt-view-scale>
-  <sxt-view-resolution>Résolution</sxt-view-resolution>
+  <sxt-view-geoinfo>Spatial informations</sxt-view-geoinfo>
+  <sxt-view-crs>Coordinage system</sxt-view-crs>
+  <sxt-view-scale>Scale</sxt-view-scale>
+  <sxt-view-resolution>Resolution</sxt-view-resolution>
   <sxt-view-description>Description</sxt-view-description>
   <sxt-view-temporal-from>From</sxt-view-temporal-from>
   <sxt-view-temporal-to>To</sxt-view-temporal-to>

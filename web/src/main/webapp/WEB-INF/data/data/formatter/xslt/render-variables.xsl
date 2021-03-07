@@ -92,6 +92,10 @@
 
   <xsl:variable name="schemaStrings"
                 select="/root/schemas/*[name() = $schema]/strings"/>
+  <xsl:variable name="schemaStrings-eng"
+                select="/root/schemas-eng/*[name() = $schema]/strings"/>
+  <xsl:variable name="schemaStrings-fre"
+                select="/root/schemas-fre/*[name() = $schema]/strings"/>
 
   <!-- Get params from requests parameters or use the first view configured -->
   <xsl:variable name="viewConfig" select="$configuration/editor/views/view[@name = $view]"/>

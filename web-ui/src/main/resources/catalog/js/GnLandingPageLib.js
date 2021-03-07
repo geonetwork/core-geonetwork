@@ -40,7 +40,7 @@
       });
 
 
-    document.querySelectorAll('div[xml\\:lang]').forEach(
+    document.querySelectorAll('div[xml\\:lang],span[xml\\:lang]').forEach(
       function (div) {
         if (displayAll) {
           div.classList.remove('hidden');
@@ -56,7 +56,7 @@
 
           if (isFirst) {
             var translationAvailable = false;
-            div.parentElement.querySelectorAll('div[xml\\:lang]').forEach(
+            div.parentElement.querySelectorAll('div[xml\\:lang],span[xml\\:lang]').forEach(
               function (child) {
                 // Last element is default lang.
                 var isLast = true;
