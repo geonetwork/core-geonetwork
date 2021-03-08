@@ -151,10 +151,23 @@
                 <a role="menuitem"
                    data-ng-href=""
                    data-ng-click="mdService.startWorkflow(md, getCatScope())">
-                  <i class="fa fa-fw fa-code-fork"></i>&nbsp;
+                  <i class="fa fa-fw fa-code-fork"></i>
                   <span data-translate="">enableWorkflow</span>
                 </a>
               </li>
+
+
+
+
+              <li data-ng-repeat="t in tasks"
+                  data-ng-show="taskConfiguration[t.name] && taskConfiguration[t.name].isVisible && taskConfiguration[t.name].isVisible(md)"
+                  data-ng-class="::{'disabled': !taskConfiguration[t.name].isApplicable(md)}">
+                <a data-ng-click="mdService.openUpdateStatusPanel(getScope(md), 'task', t)">
+                  <i class="fa fa-fw"></i>&nbsp;
+                  <span>{{t.label | gnLocalized}}</span>
+                </a>
+              </li>
+
             </ul>
           </div>
 
