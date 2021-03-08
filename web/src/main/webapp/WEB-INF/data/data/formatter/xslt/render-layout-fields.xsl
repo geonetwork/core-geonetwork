@@ -4,6 +4,19 @@
                 exclude-result-prefixes="#all"
                 version="2.0">
 
+  <xsl:template name="landingpage-label">
+    <xsl:param name="key" as="xs:string"/>
+
+    <xsl:choose>
+      <xsl:when test="$language = 'all'">
+        <span xml:lang="eng"><xsl:value-of select="$schemaStrings-eng/*[name() = $key]"/></span>
+        <span xml:lang="fre"><xsl:value-of select="$schemaStrings-fre/*[name() = $key]"/></span>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$schemaStrings/*[name() = $key]"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
   <!-- This template should be overriden in the
   schema plugin for other types of layouts. -->
