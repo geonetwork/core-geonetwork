@@ -235,9 +235,11 @@
 
             <xsl:if test="$portalLink != ''">
               <xsl:variable name="defaultUrl"
+                            select="concat('https://sextant.ifremer.fr/Donnees/Catalogue#/metadata/', $metadataUuid)"/>
+              <!--<xsl:variable name="defaultUrl"
                             select="concat($nodeUrl,
                                       if($language = 'all') then 'eng' else $language,
-                                      '/catalog.search#/metadata/', $metadataUuid)"/>
+                                      '/catalog.search#/metadata/', $metadataUuid)"/>-->
               <xsl:variable name="portalUrl">
                 <xsl:choose>
                   <xsl:when test="$portalLink = 'default'">
