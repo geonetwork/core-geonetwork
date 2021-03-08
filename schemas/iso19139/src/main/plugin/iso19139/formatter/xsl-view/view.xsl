@@ -115,7 +115,11 @@
     <xsl:param name="byThesaurus" select="false()"/>
 
     <section class="gn-md-side-social">
-      <h3><xsl:value-of select="$schemaStrings/sxt-keyword-section"/></h3>
+      <h3>
+        <xsl:call-template name="landingpage-label">
+          <xsl:with-param name="key" select="'sxt-keyword-section'"/>
+        </xsl:call-template>
+      </h3>
 
       <xsl:variable name="tags">
         <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords/
@@ -221,7 +225,9 @@
       <h2>
         <i class="fa fa-fw fa-image"><xsl:comment select="'image'"/></i>
         <span><xsl:comment select="name()"/>
-          <xsl:value-of select="$schemaStrings/overviews"/>
+          <xsl:call-template name="landingpage-label">
+            <xsl:with-param name="key" select="'overviews'"/>
+          </xsl:call-template>
         </span>
       </h2>
 
@@ -320,7 +326,9 @@
           </div>
           <div class="col-md-11">
             <h2 title="{$schemaStrings/citationProposal-help}"><xsl:comment select="name()"/>
-              <xsl:value-of select="$schemaStrings/citationProposal"/>
+              <xsl:call-template name="landingpage-label">
+                <xsl:with-param name="key" select="'citationProposal'"/>
+              </xsl:call-template>
               <i class="fa fa-info-circle"><xsl:comment select="'icon'"/></i>
             </h2>
             <br/>
@@ -396,7 +404,11 @@
               </xsl:variable>
               <xsl:if test="normalize-space($recordCitation) != ''">
                 <br/>
-                <em><xsl:value-of select="$schemaStrings/sxt-record-citation"/></em>
+                <em>
+                  <xsl:call-template name="landingpage-label">
+                    <xsl:with-param name="key" select="'sxt-record-citation'"/>
+                  </xsl:call-template>
+                </em>
                 <br/>
                 <br/>
                 <xsl:call-template name="addLineBreaksAndHyperlinks">
@@ -922,7 +934,9 @@
             <xsl:copy-of select="$thesaurusType"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="$schemaStrings/noThesaurusName"/>
+            <xsl:call-template name="landingpage-label">
+              <xsl:with-param name="key" select="'noThesaurusName'"/>
+            </xsl:call-template>
           </xsl:otherwise>
         </xsl:choose>
       </dt>

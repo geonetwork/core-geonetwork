@@ -261,8 +261,15 @@
                   <a class="btn btn-block btn-primary"
                      href="{replace($portalUrl, '\$\{uuid\}', $metadataUuid)}">
                     <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
-                    <xsl:value-of select="$schemaStrings/linkToPortal"/>
+
+                    <xsl:call-template name="landingpage-label">
+                      <xsl:with-param name="key" select="'linkToPortal'"/>
+                    </xsl:call-template>
                   </a>
+
+                  <xsl:call-template name="landingpage-label">
+                    <xsl:with-param name="key" select="'linkToPortal-help'"/>
+                  </xsl:call-template>
                   <!--<a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                      target="_blank" class="btn btn-default">
                     <i class="fa fa-fw fa-linkedin">&#160;</i>&#160;
@@ -317,7 +324,11 @@
                 <section class="gn-md-side-social">
                   <h3>
 <!--                    <i class="fa fa-fw fa-share-square-o"><xsl:comment select="'icon'"/></i>-->
-                    <span><xsl:value-of select="$schemaStrings/shareOnSocialSite"/></span>
+                    <span>
+                      <xsl:call-template name="landingpage-label">
+                        <xsl:with-param name="key" select="'shareOnSocialSite'"/>
+                      </xsl:call-template>
+                    </span>
                   </h3>
 
                   <!-- href="{$nodeUrl}api/records/{$metadataUuid}" -->
