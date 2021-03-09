@@ -112,7 +112,7 @@
                 thesaurus: thesaurus,
                 rows: max,
                 q: filter || '',
-                uri: ('*' + filter + '*') || '',
+                uri: filter || '',
                 lang: lang || 'eng'
               };
               if (outputLang) {
