@@ -1140,28 +1140,38 @@
           this.isRoot = $attrs['gnWfsFilterFacetsTreeItemNotroot'] ===
               undefined;
 
+          this.areAllChildrenSelected = function(node) {
+            if (!node.nodes) {
+              return this.treeCtrl.isSelected(node.key);
+            } else {
+              var selected = true;
+              var i = 0;
+              while (selected && i < node.nodes.length) {
+                selected = selected && this.areAllChildrenSelected(node.nodes[i])
+                i++;
+              }
+              return selected ;
+            }
+          }
+
+          this.toggleClickOnAllChildren = function(node, unselect) {
+            if (node.nodes) {
+              for (var i=0; i < node.nodes.length; i++) {
+                this.toggleClickOnAllChildren(node.nodes[i], unselect);
+              }
+            } else if (!!this.treeCtrl.isSelected(node.key) == unselect) {
+              this.treeCtrl.onCheckboxTreeClick(node.key);
+            }
+          }
+
           this.$onInit = function() {
             this.onCheckboxTreeClick = function() {
-              // when the parent is clicked and all children are selected, deselect the children
-              // and if the parent is unselected unselect all children
               if (this.node.nodes) {
-                var allChildrenSelected = true;
-                for (var i=0; i < this.node.nodes.length; i++) {
-                  if (!this.treeCtrl.isSelected(this.node.nodes[i].key)) {
-                    // at least one child is not selected
-                    allChildrenSelected = false;
-                    break
-                  }
-                }
-                for (var i=0; i < this.node.nodes.length; i++) {
-                  if (!this.treeCtrl.isSelected(this.node.nodes[i].key) || allChildrenSelected) {
-                    this.treeCtrl.onCheckboxTreeClick(this.node.nodes[i].key);
-                  }
-                }
-                return
+                var allNodesSelected = !!this.areAllChildrenSelected(this.node);
+                this.toggleClickOnAllChildren(this.node, allNodesSelected);
+              } else {
+                this.treeCtrl.onCheckboxTreeClick(this.node.key);
               }
-              // do the event
-              this.treeCtrl.onCheckboxTreeClick(this.node.key);
             };
 
             this.isSelected = function() {
