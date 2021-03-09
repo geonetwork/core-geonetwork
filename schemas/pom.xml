@@ -35,7 +35,6 @@
   <groupId>org.geonetwork-opensource.schemas</groupId>
   <artifactId>schemas</artifactId>
   <name>GeoNetwork schema plugins</name>
-  <version>${gn.project.version}</version>
   <packaging>pom</packaging>
 
   <dependencies>
@@ -60,7 +59,6 @@
 
   <properties>
     <rootProjectDir>../..</rootProjectDir>
-    <gn.project.version>3.11-SNAPSHOT</gn.project.version>
   </properties>
 
 </project>
