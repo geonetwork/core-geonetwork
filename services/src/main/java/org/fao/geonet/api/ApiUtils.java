@@ -206,6 +206,12 @@ public class ApiUtils {
     /**
      * If you really need a ServiceContext use this. Try to avoid in order to reduce dependency on
      * Jeeves.
+     *
+     * If you create a service context you are responsible for managing on the current thread and any cleanup.
+     * This method has a side effect of setting the created service context for the current thread.
+     *
+     * @param request
+     * @return new sevice context, assigned to the current thread
      */
     static public ServiceContext createServiceContext(HttpServletRequest request) {
         String iso3langCode = ApplicationContextHolder.get().getBean(LanguageUtils.class)
@@ -213,6 +219,26 @@ public class ApiUtils {
         return createServiceContext(request, iso3langCode);
     }
 
+    /**
+     * If you really need a ServiceContext use this. Try to avoid in order to reduce dependency on
+     * Jeeves.
+     * If you create a service context you are responsible for managing on the current thread and any cleanup.
+     * This method has a side effect of setting the created service context for the current thread:
+     *
+     * <pre><code>
+     * ServiceContext context = ApiUtils.createServiceContext(request, iso3langCode);
+     * try {
+     *     ...
+     * }
+     * finally {
+     *     serviceContext.clear();
+     * }
+     * </code></pre>
+     *
+     * @param request
+     * @param iso3langCode
+     * @return new sevice context, assigned to the current thread
+     */
     static public ServiceContext createServiceContext(HttpServletRequest request, String iso3langCode) {
         ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
         ServiceContext serviceContext = serviceManager.createServiceContext("Api", iso3langCode, request);

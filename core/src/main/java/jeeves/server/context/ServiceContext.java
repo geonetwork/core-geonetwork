@@ -38,6 +38,7 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.transaction.TransactionStatus;
 
@@ -52,10 +53,64 @@ import javax.persistence.EntityManager;
 
 /**
  * Contains the context for a service execution.
+ *
+ * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup:
+ * <pre><code>
+ * try {
+ *    context = serviceMan.createServiceContext("AppHandler", appContext);
+ *    context.setAsThreadLocal();
+ *    ...
+ * } finally {
+ *    context.clearAsThreadLocal();
+ *    context.clear();
+ * }</code></pre>
+ *
+ * @see ServiceManager
  */
 public class ServiceContext extends BasicContext {
 
+    /**
+     * ServiceContext is managed as a thread locale using setAsThreadLocal, clearAsThreadLocal and clear methods.
+     * ThreadLocalPolicy defines the behaviour of these methods double checking that they are being used correctly.
+     */
+    public static enum ThreadLocalPolicy {
+        /** Direct management of thread local with no checking. */
+        DIRECT,
+        /** Check behavior and log any unexpected use. */
+        TRACE,
+        /** Raise any {@link IllegalStateException} for unexpected behaviour */
+        STRICT };
+    /**
+     * Use -Djeeves.server.context.service.policy to define policy:
+     * <ul>
+     *     <li>direct: direct management of thread local with no checking</li>
+     *     <li>trace: check behavior and log unusal use</li>
+     *     <li>strict: raise illegal state exception for unusual behavior</li>
+     * </ul>
+     */
+    private static final ThreadLocalPolicy POLICY;
+    static {
+        String property = System.getProperty("jeeves.server.context.policy", "TRACE");
+        ThreadLocalPolicy policy;
+        try {
+            policy = ThreadLocalPolicy.valueOf(property.toUpperCase());
+        }
+        catch (IllegalArgumentException defaultToDirect) {
+            policy = ThreadLocalPolicy.DIRECT;
+        }
+        POLICY = policy;
+    }
+
+    /**
+     * Be careful with thread local to avoid leaking resources, set POLICY above to trace allocation.
+     */
     private static final InheritableThreadLocal<ServiceContext> THREAD_LOCAL_INSTANCE = new InheritableThreadLocal<ServiceContext>();
+
+    /**
+     * Trace allocation via {@link #setAsThreadLocal()}.
+     */
+    private Throwable allocation = null;
+
     private UserSession _userSession = new UserSession();
     private InputMethod _input;
     private OutputMethod _output;
@@ -87,6 +142,15 @@ public class ServiceContext extends BasicContext {
      * @see #_responseHeaders
      */
     private Integer _statusCode;
+
+    /**
+     * Context for service execution.
+     *
+     * @param service Service name
+     * @param jeevesApplicationContext Application context
+     * @param contexts Handler context
+     * @param entityManager
+     */
     public ServiceContext(final String service, final ConfigurableApplicationContext jeevesApplicationContext,
                           final Map<String, Object> contexts, final EntityManager entityManager) {
         super(jeevesApplicationContext, contexts, entityManager);
@@ -115,10 +179,180 @@ public class ServiceContext extends BasicContext {
 
     /**
      * Called to set the Service context for this thread and inherited threads.
+     *
+     * If you call this method you are responsible for thread context management and {@link #clearAsThreadLocal()}.
+     * <pre>
+     * try {
+     *     context.setAsThreadLocal();
+     * }
+     * finally {
+     *     context.clearAsThreadLocal();
+     * }
+     * </pre>
      */
     public void setAsThreadLocal() {
+        ServiceContext check = THREAD_LOCAL_INSTANCE.get();
+
+        if( POLICY == ThreadLocalPolicy.DIRECT || check == null){
+            // step one set thread local
+            THREAD_LOCAL_INSTANCE.set(this);
+            // step two ensure ApplicationContextHolder thread local kept in sync
+            ApplicationContextHolder.set(this.getApplicationContext());
+            // step three details on allocation
+            allocation = new Throwable("ServiceContext allocated to thread");
+
+            return;
+        }
+
+        if (this == check) {
+            String unexpected = "Service " + _service + " Context: already in use for this thread";
+            if( allocation != null ){
+                // details on prior allocation
+                unexpected += "\n\tContext '"+check._service+"' conflict: " + check.allocation.getStackTrace()[1];
+            }
+            // step one set thread local
+            // (already done)
+            // step two ensure ApplicationContextHolder thread local kept in sync
+            if( ApplicationContextHolder.get() != null ){
+                ApplicationContextHolder.clear();
+            }
+            ApplicationContextHolder.set(this.getApplicationContext());
+            // step three detail on re-allocation
+            allocation = new Throwable("ServiceContext allocated to thread");
+
+            unexpected += "\n\tService '"+_service+"' allocate: " + allocation.getStackTrace()[1];
+            checkUnexpectedState( unexpected );
+            return;
+        }
+
+        // thread being recycled or reused for new service context
+        //
+        THREAD_LOCAL_INSTANCE.remove();
+
+        String unexpected = "Service " + _service + " Context: Clearing prior service context " + check._service;
+        if( check.allocation != null ){
+            // details on prior allocation
+            unexpected += "\n\tContext '"+check._service+"' conflict: " + check.allocation.getStackTrace()[1];
+        }
+
+        // step one set thread local
         THREAD_LOCAL_INSTANCE.set(this);
+        // step two ensure ApplicationContextHolder thread local kept in sync
+        if( ApplicationContextHolder.get() != null ){
+            ApplicationContextHolder.clear();
+        }
         ApplicationContextHolder.set(this.getApplicationContext());
+        // step three detail on present re-allocation
+        allocation = new Throwable("ServiceContext allocated to thread");
+
+        unexpected += "\n\tService '"+_service+"' allocate: " + allocation.getStackTrace()[1];
+        checkUnexpectedState( unexpected );
+    }
+
+    /** Log or raise exception based on {@link POLICY} */
+    protected void checkUnexpectedState( String unexpected ){
+        if( unexpected == null ){
+            return; // nothing unexpected to report
+        }
+        switch( POLICY ){
+            case DIRECT:
+                break; // ignore
+            case TRACE:
+                debug(unexpected);
+                break;
+            case STRICT:
+                throw new IllegalStateException(unexpected);
+        }
+    }
+
+    /**
+     * Called to clear the Service context for this thread and inherited threads.
+     *
+     * In general code that creates ServiceContext is responsible thread management and any cleanup:
+     * <pre>
+     * try {
+     *     context.setAsThreadLocal();
+     * }
+     * finally {
+     *     context.clearAsThreadLocal();
+     * }
+     * </pre>
+     */
+    public void clearAsThreadLocal() {
+        ServiceContext check = THREAD_LOCAL_INSTANCE.get();
+
+        // clean up thread local
+        if( POLICY == ThreadLocalPolicy.DIRECT){
+            if( check != null ){
+                check.allocation = null;
+                check = null;
+            }
+            THREAD_LOCAL_INSTANCE.remove();
+            allocation = null;
+            // ApplicationContextHolder.clear();
+            return;
+        }
+        if( check == null ){
+            String unexpected = "ServiceContext "+_service+" clearAsThreadLocal: '"+_service+"' unexpected state, thread local already cleared";
+            if( allocation != null ){
+                unexpected += "\n\tContext '"+_service+"' allocation: " + allocation.getStackTrace()[1];
+            }
+            allocation = null;
+            // ApplicationContextHolder.clear();
+            checkUnexpectedState( unexpected );
+            return;
+        }
+        if (check == this){
+            THREAD_LOCAL_INSTANCE.remove();
+            allocation = null;
+            // ApplicationContextHolder.clear();
+            return;
+        }
+
+        String unexpected = "ServiceContext clearAsThreadLocal: \"+_service+\" unexpected state, thread local presently used by service context '"+check._service+"'";
+        if( check.allocation != null ){
+            unexpected += "\n\tContext '"+check._service+"' conflict: " + check.allocation.getStackTrace()[1];
+        }
+        if( allocation != null ){
+            unexpected += "\n\tContext '"+_service+"' allocation: " + allocation.getStackTrace()[1];
+        }
+        THREAD_LOCAL_INSTANCE.remove();
+        allocation = null;
+        // ApplicationContextHolder.clear();
+        if( ApplicationContextHolder.get() != null && ApplicationContextHolder.get() != getApplicationContext() ){
+            unexpected += "\n\tApplicationContext '"+ApplicationContextHolder.get().getApplicationName()+"' conflict detected";
+            unexpected += "\n\tApplicationContext '"+getApplicationContext().getApplicationName()+"' expected";
+            ApplicationContextHolder.clear();
+        }
+        checkUnexpectedState( unexpected );
+    }
+
+    /**
+     * Release any resources tied up by this service context.
+     * <p>
+     * In general code that creates a ServiceContext is responsible thread management and any cleanup:
+     * <pre>
+     * ServiceContext context = serviceMan.createServiceContext("AppHandler", appContext);
+     * try {
+     *     context.setAsThreadLocal();
+     * }
+     * finally {
+     *     context.clearAsThreadLocal();
+     *     context.clear();
+     * }
+     * </pre>
+     */
+    public void clear(){
+        if( this._service != null) {
+            this._service = null;
+            this._headers = null;
+            this._responseHeaders = null;
+            this._servlet = null;
+            this._userSession = null;
+        }
+        else {
+            debug("Service unexpectedly cleared twice");
+        }
     }
 
     //--------------------------------------------------------------------------

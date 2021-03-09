@@ -39,6 +39,9 @@
       org.springframework.web.context.request.RequestContextListener
     </listener-class>
   </listener>
+  <listener>
+    <listener-class>org.fao.geonet.GeonetworkHttpSessionListener</listener-class>
+  </listener>
 
   <!-- shut down java cache used for xlinks and spatial index -->
   <listener>

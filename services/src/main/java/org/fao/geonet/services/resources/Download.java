@@ -93,6 +93,7 @@ public class Download {
         final ServiceContext context = serviceManager.createServiceContext("resources.get", lang, httpServletRequest);
         boolean doNotify = false;
 
+      try {
         FilePathChecker.verify(fname);
 
 		if (access.equals(Params.Access.PRIVATE))
@@ -172,6 +173,9 @@ public class Download {
             IResourceDownloadHandler downloadHook = (IResourceDownloadHandler) context.getApplicationContext().getBean("resourceDownloadHandler");
             return downloadHook.onDownload(context, request, Integer.parseInt(id), fname, file);
         }
+      } finally {
+        context.clear();
+      }
     }
 }
 

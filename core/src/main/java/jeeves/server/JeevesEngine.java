@@ -472,6 +472,10 @@ public class JeevesEngine {
                     serviceMan.setStartupErrors(errors);
                 }
             }
+            finally {
+                srvContext.clearAsThreadLocal();
+                srvContext.clear();
+            }
         }
     }
 

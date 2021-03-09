@@ -55,9 +55,9 @@ import java.net.URL;
  * @author Jose García
  */
 public class XFrameOptionsFilter implements Filter {
-    private static String MODE_DENY = "DENY";
-    private static String MODE_SAMEORIGIN = "SAMEORIGIN";
-    private static String MODE_ALLOWFROM = "ALLOW-FROM";
+    private static final String MODE_DENY = "DENY";
+    private static final String MODE_SAMEORIGIN = "SAMEORIGIN";
+    private static final String MODE_ALLOWFROM = "ALLOW-FROM";
 
     private String mode;
     private String url;
@@ -112,8 +112,12 @@ public class XFrameOptionsFilter implements Filter {
 
 
     public void destroy() {
+        xFrameOptionsValueCache = null;
+        contentSecurityPolicyFramAncestorsValueCache = null;
     }
 
+
+    private String xFrameOptionsValueCache = null;
 
     /**
      * Calculates the X-Frame-Options header value.
@@ -122,13 +126,16 @@ public class XFrameOptionsFilter implements Filter {
      */
     private String getXFrameOptionsValue() {
         if (mode.equals(MODE_ALLOWFROM)) {
-            return mode + " " + url;
+            if( xFrameOptionsValueCache == null){
+                xFrameOptionsValueCache = mode + " " + url;
+            }
+            return xFrameOptionsValueCache;
         } else {
             return mode;
         }
     }
 
-
+    private String contentSecurityPolicyFramAncestorsValueCache = null;
     /**
      * Calculates the Content-Security-Policy header frame-ancestors value.
      *
@@ -138,7 +145,10 @@ public class XFrameOptionsFilter implements Filter {
         if (mode.equals(MODE_SAMEORIGIN)) {
             return "frame-ancestors 'self'";
         } else if (mode.equals(MODE_ALLOWFROM)) {
-            return "frame-ancestors " + domain;
+            if( contentSecurityPolicyFramAncestorsValueCache == null ){
+                contentSecurityPolicyFramAncestorsValueCache = "frame-ancestors " + domain;
+            }
+            return contentSecurityPolicyFramAncestorsValueCache;
         } else {
             return "frame-ancestors 'none'";
         }
