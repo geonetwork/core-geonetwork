@@ -335,9 +335,11 @@
            *
            * @param {string} fieldName index field name
            * @param {string} facetKey facet key for this field
+           * @param {true} skipSearch will not trigger the search and only
+           *  update the state (used in case of recursive check)
            * @param {string} type facet type
            */
-          scope.onCheckboxClick = function(field, facet) {
+          scope.onCheckboxClick = function(field, facet, skipSearch) {
 
             var fieldName = field.name;
             var facetKey = facet.value;
@@ -371,7 +373,9 @@
               };
               output[fieldName].values[facetKey] = true;
             }
-            scope.filterFacets();
+            if(!skipSearch) {
+              scope.filterFacets();
+            }
           };
           ctrl.onCheckboxClick = scope.onCheckboxClick;
 
@@ -1160,7 +1164,10 @@
                 this.toggleClickOnAllChildren(node.nodes[i], unselect);
               }
             } else if (!!this.treeCtrl.isSelected(node.key) == unselect) {
-              this.treeCtrl.onCheckboxTreeClick(node.key);
+              // update facet state but does not trigger the search
+              this.treeCtrl.wfsFilterCrl.onCheckboxClick(this.treeCtrl.field, {
+                value: node.key
+              }, true);
             }
           }
 
@@ -1169,6 +1176,10 @@
               if (this.node.nodes) {
                 var allNodesSelected = !!this.areAllChildrenSelected(this.node);
                 this.toggleClickOnAllChildren(this.node, allNodesSelected);
+                // trigger the search once after all state changes
+                this.treeCtrl.wfsFilterCrl.onCheckboxClick(this.treeCtrl.field, {
+                  value: undefined
+                });
               } else {
                 this.treeCtrl.onCheckboxTreeClick(this.node.key);
               }
