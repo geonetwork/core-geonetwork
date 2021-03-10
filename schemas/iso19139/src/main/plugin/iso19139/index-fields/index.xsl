@@ -947,7 +947,7 @@
             "link": "<xsl:value-of select="*/gmd:result/*/gmd:specification/*/gmd:title/@xlink:href"/>",
           </xsl:if>
           <xsl:if test="*/gmd:result/*/gmd:explanation/*/text() != ''">
-            "explanation": "<xsl:value-of select="gn-fn-index:json-escape(*/gmd:result/*/gmd:explanation/*/text())" />",
+            "explanation": "<xsl:value-of select="gn-fn-index:json-escape((*/gmd:result/*/gmd:explanation/*/text())[1])" />",
           </xsl:if>
           "pass": "<xsl:value-of select="$pass" />"
           }
