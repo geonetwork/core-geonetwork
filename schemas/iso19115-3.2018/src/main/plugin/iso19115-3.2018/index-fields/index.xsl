@@ -399,7 +399,7 @@
         <xsl:for-each select="$overviews">
           <overview type="object">{
             "url": "<xsl:value-of select="normalize-space(.)"/>"
-            <xsl:if test="$isStoringOverviewInIndex">,
+            <xsl:if test="$isStoringOverviewInIndex">
               <xsl:variable name="data"
                             select="util:buildDataUrl(., 140)"/>
               <xsl:if test="$data != ''">,
@@ -974,7 +974,7 @@
             "link": "<xsl:value-of select="*/mdq:result/*/mdq:specification/*/cit:title/@xlink:href"/>",
           </xsl:if>
           <xsl:if test="*/mdq:result/*/mdq:explanation/*/text() != ''">
-            "explanation": "<xsl:value-of select="gn-fn-index:json-escape(*/mdq:result/*/mdq:explanation/*/text())" />",
+            "explanation": "<xsl:value-of select="gn-fn-index:json-escape((*/mdq:result/*/mdq:explanation/*/text())[1])" />",
           </xsl:if>
           "pass": "<xsl:value-of select="$pass" />"
           }
