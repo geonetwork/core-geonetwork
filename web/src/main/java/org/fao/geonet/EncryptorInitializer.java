@@ -43,6 +43,8 @@ import java.util.Map;
 
 public class EncryptorInitializer {
     private final static String LOG_MODULE = Geonet.GEONETWORK + ".encryptor";
+    private final static String ALGORITHM_KEY = "encryptor.algorithm";
+    private final static String PASSWORD_KEY = "encryptor.password";
 
     @Autowired
     StandardPBEStringEncryptor encryptor;
@@ -55,17 +57,26 @@ public class EncryptorInitializer {
             .resolve("encryptor.properties").toString();
 
         PropertiesConfiguration conf = new PropertiesConfiguration(securityPropsPath);
-        String encryptorAlgorithm = (String) conf.getProperty("encryptor.algorithm");
-        String encryptorPassword = (String) conf.getProperty("encryptor.password");
+        String encryptorAlgorithm = (String) conf.getProperty(ALGORITHM_KEY);
+        String encryptorPassword = (String) conf.getProperty(PASSWORD_KEY);
 
         boolean updateDatabase = false;
 
         // Creates a random encryptor password if the password has the value 'default'
         if (StringUtils.isEmpty(encryptorPassword)) {
-            Log.info(LOG_MODULE, "Generating a random password for the database password encryptor");
-            encryptorPassword = RandomStringUtils.randomAlphanumeric(10);
+            // Check if provided in Java environment variable
+            encryptorPassword =  System.getProperty(PASSWORD_KEY);
+            if (StringUtils.isEmpty(encryptorPassword)) {
+                // System environment variable
+                encryptorPassword = System.getenv(PASSWORD_KEY.replace('.', '_'));
+            }
 
-            conf.setProperty("encryptor.password", encryptorPassword);
+            if (StringUtils.isEmpty(encryptorPassword)) {
+                Log.info(LOG_MODULE, "Generating a random password for the database password encryptor");
+                encryptorPassword = RandomStringUtils.randomAlphanumeric(10);
+            }
+
+            conf.setProperty(PASSWORD_KEY, encryptorPassword);
             conf.save();
 
             updateDatabase = true;
