@@ -335,9 +335,11 @@
            *
            * @param {string} fieldName index field name
            * @param {string} facetKey facet key for this field
+           * @param {true} skipSearch will not trigger the search and only
+           *  update the state (used in case of recursive check)
            * @param {string} type facet type
            */
-          scope.onCheckboxClick = function(field, facet) {
+          scope.onCheckboxClick = function(field, facet, skipSearch) {
 
             var fieldName = field.name;
             var facetKey = facet.value;
@@ -371,7 +373,9 @@
               };
               output[fieldName].values[facetKey] = true;
             }
-            scope.filterFacets();
+            if(!skipSearch) {
+              scope.filterFacets();
+            }
           };
           ctrl.onCheckboxClick = scope.onCheckboxClick;
 
@@ -1140,28 +1144,45 @@
           this.isRoot = $attrs['gnWfsFilterFacetsTreeItemNotroot'] ===
               undefined;
 
+          this.areAllChildrenSelected = function(node) {
+            if (!node.nodes) {
+              return this.treeCtrl.isSelected(node.key);
+            } else {
+              var selected = true;
+              var i = 0;
+              while (selected && i < node.nodes.length) {
+                selected = selected && this.areAllChildrenSelected(node.nodes[i])
+                i++;
+              }
+              return selected ;
+            }
+          }
+
+          this.toggleClickOnAllChildren = function(node, unselect) {
+            if (node.nodes) {
+              for (var i=0; i < node.nodes.length; i++) {
+                this.toggleClickOnAllChildren(node.nodes[i], unselect);
+              }
+            } else if (!!this.treeCtrl.isSelected(node.key) == unselect) {
+              // update facet state but does not trigger the search
+              this.treeCtrl.wfsFilterCrl.onCheckboxClick(this.treeCtrl.field, {
+                value: node.key
+              }, true);
+            }
+          }
+
           this.$onInit = function() {
             this.onCheckboxTreeClick = function() {
-              // when the parent is clicked and all children are selected, deselect the children
-              // and if the parent is unselected unselect all children
               if (this.node.nodes) {
-                var allChildrenSelected = true;
-                for (var i=0; i < this.node.nodes.length; i++) {
-                  if (!this.treeCtrl.isSelected(this.node.nodes[i].key)) {
-                    // at least one child is not selected
-                    allChildrenSelected = false;
-                    break
-                  }
-                }
-                for (var i=0; i < this.node.nodes.length; i++) {
-                  if (!this.treeCtrl.isSelected(this.node.nodes[i].key) || allChildrenSelected) {
-                    this.treeCtrl.onCheckboxTreeClick(this.node.nodes[i].key);
-                  }
-                }
-                return
+                var allNodesSelected = !!this.areAllChildrenSelected(this.node);
+                this.toggleClickOnAllChildren(this.node, allNodesSelected);
+                // trigger the search once after all state changes
+                this.treeCtrl.wfsFilterCrl.onCheckboxClick(this.treeCtrl.field, {
+                  value: undefined
+                });
+              } else {
+                this.treeCtrl.onCheckboxTreeClick(this.node.key);
               }
-              // do the event
-              this.treeCtrl.onCheckboxTreeClick(this.node.key);
             };
 
             this.isSelected = function() {
