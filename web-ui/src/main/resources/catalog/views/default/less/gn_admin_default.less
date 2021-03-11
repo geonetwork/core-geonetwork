@@ -52,6 +52,12 @@ ul.gn-resultview li.list-group-item {
     background-color: #fff;
     top: 0;
     z-index: 100;
+    padding-left: 0;
+    // navbar in admin always 100%
+    .container, .container-fluid {
+      width: auto;
+      padding: 0;
+    }
     .navbar-collapse {
       background: #fff;
     }
@@ -296,6 +302,9 @@ ul.gn-resultview li.list-group-item {
         }
         .navbar-right {
           margin-right: 0;
+          .btn {
+            float: none;
+          }
           @media (max-width: @screen-xs-max) {
             .form-control, .btn {
               margin: 10px 0;
@@ -345,11 +354,51 @@ ul.gn-resultview li.list-group-item {
       #gn-settings {
         margin-top: 15px;
       }
+      h1 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        margin-top: 0;
+      }
+      .panel-heading h1 {
+        font-size: 18px;
+        margin: 0;
+        display: inline-block;
+      }
+      h2 {
+        font-size: 17px;
+        margin: 0;
+        border: none;
+      }
+      h3 {
+        font-size: 16px;
+        text-decoration: underline;
+        font-weight: 400;
+      }
+      legend {
+        font-size: 16px;
+        h2 {
+          display: inline-block;
+        }
+        h3 {
+          font-size: 16px;
+          text-decoration: none;
+          margin: 0;
+          display: inline-block;
+        }
+        .btn {
+          margin: 0;
+        }
+      }
       fieldset, [data-ng-show="uiConfiguration"] {
-        h1 {
-          font-size: 24px;
-          margin-bottom: 15px;
-          margin-top: 0;
+        label {
+          padding-top: 7px;
+          font-weight: normal;
+          &.control-label {
+            font-weight: 500;
+          }
+        }
+        .ace_editor {
+          border: 1px solid @panel-default-border;
         }
         fieldset {
           padding: 10px;
@@ -366,6 +415,12 @@ ul.gn-resultview li.list-group-item {
             font-size: 14px;
             border-top-left-radius: @gn-border-radius;
             border-top-right-radius: @gn-border-radius;
+            h1, h2, h3 {
+              display: inline-block;
+            }
+            h2 {
+              font-weight: 400;
+            }
             label {
               padding-top: 0;
               font-size: 14px;
@@ -378,6 +433,11 @@ ul.gn-resultview li.list-group-item {
               margin-bottom: 5px;
             }
           }
+        }
+      }
+      .input-group {
+        .table {
+          margin-bottom: 0;
         }
       }
     }
