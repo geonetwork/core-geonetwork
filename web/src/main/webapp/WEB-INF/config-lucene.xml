@@ -175,6 +175,7 @@
       <field name="serviceType" tagName="serviceType"/>
       <field name="tempExtentBegin" tagName="tempExtentBegin"/>
       <field name="tempExtentEnd" tagName="tempExtentEnd"/>
+      <field name="tempExtentPeriod" tagName="tempExtentPeriod"/>
       <field name="geoBox" tagName="geoBox"/>
       <field name="boundingPolygon" tagName="boundingPolygon"/>
       <field name="extentDesc" tagName="geoDesc"/>

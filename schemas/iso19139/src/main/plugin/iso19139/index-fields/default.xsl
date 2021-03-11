@@ -291,6 +291,7 @@
           <Field name="geoDescCode" string="{string(.)}" store="true" index="true"/>
         </xsl:for-each>
 
+
         <xsl:for-each select="gmd:temporalElement/
                                   (gmd:EX_TemporalExtent|gmd:EX_SpatialTemporalExtent)/gmd:extent">
           <xsl:for-each select="gml:TimePeriod|gml320:TimePeriod">
@@ -309,6 +310,8 @@
             <Field name="tempExtentBegin" string="{lower-case(substring-before($times,'|'))}"
                    store="true" index="true"/>
             <Field name="tempExtentEnd" string="{lower-case(substring-after($times,'|'))}"
+                   store="true" index="true"/>
+            <Field name="tempExtentPeriod" string="{lower-case($times)}"
                    store="true" index="true"/>
           </xsl:for-each>
 
