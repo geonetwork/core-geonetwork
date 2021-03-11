@@ -22,10 +22,29 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 version="2.0"
                 exclude-result-prefixes="#all">
   <xsl:import href="../xsl-view/view.xsl"/>
 
-  <xsl:variable name="view" select="'sextant'"/>
-  <xsl:variable name="template" select="'sextant-summary-view'"/>
+  <xsl:variable name="standardName"
+                select="$metadata/gmd:metadataStandardName/*/text()"/>
+
+  <xsl:variable name="view">
+    <xsl:choose>
+      <xsl:when test="$standardName = 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY'">emodnetHydrography</xsl:when>
+      <xsl:otherwise>sextant</xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
+  <xsl:variable name="template">
+    <xsl:choose>
+      <xsl:when test="$standardName = 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY'"></xsl:when>
+      <xsl:otherwise>sextant-summary-view</xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
+  <xsl:variable name="tabs" select="false"/>
 </xsl:stylesheet>

@@ -13,7 +13,13 @@ body {
 .gn-nojs [role=main], .container {
   padding: 0px !important;
 }
-
+.row {
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+}
+.tab-pane {
+  height: auto !important;
+}
 div.gn-landing-page-header {
   height: 100px;
   line-height: 100px;

@@ -108,6 +108,9 @@
           <xsl:variable name="metadataOtherLanguages">
             <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
           </xsl:variable>
+          <xsl:variable name="metadataMainLanguages">
+            <saxon:call-template name="{concat('get-', $schema, '-language')}"/>
+          </xsl:variable>
 
           <xsl:for-each select="($metadataOtherLanguages/*[@default], $metadataOtherLanguages/*[not(@default)])">
             <li>
@@ -119,6 +122,18 @@
               </a>
             </li>
           </xsl:for-each>
+
+          <xsl:if test="count($metadataOtherLanguages/*) = 0 and $metadataMainLanguages">
+            <li class="active">
+              <a id="gn-default-lang-link"
+                 onclick="gnLandingPage.displayLanguage('{$metadataMainLanguages}', this);">
+                <xsl:variable name="label"
+                              select="utils:getIsoLanguageLabel($metadataMainLanguages, $metadataMainLanguages)"/>
+                <xsl:value-of select="if ($label != '') then $label else @code"/><xsl:text> </xsl:text>
+              </a>
+            </li>
+          </xsl:if>
+
           <xsl:if test="count($metadataOtherLanguages/*) > 1">
             <li class="active">
               <a onclick="gnLandingPage.displayLanguage('', this);">
