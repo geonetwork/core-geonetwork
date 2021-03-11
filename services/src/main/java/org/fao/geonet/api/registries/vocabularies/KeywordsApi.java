@@ -102,6 +102,8 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import net.sf.json.JSON;
 
+import static org.fao.geonet.constants.Params.CONTENT_TYPE;
+
 
 /**
  * The Class KeywordsApi.
@@ -167,12 +169,13 @@ public class KeywordsApi {
         path = "/search",
         method = RequestMethod.GET,
         produces = {
-            MediaType.APPLICATION_JSON_VALUE
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE
         })
     @ResponseStatus(
         value = HttpStatus.OK)
     @ResponseBody
-    public List<KeywordBean> searchKeywords(
+    public Object searchKeywords(
         @ApiParam(
             value = "Query",
             required = false
@@ -264,7 +267,9 @@ public class KeywordsApi {
             @ApiParam(hidden = true)
         HttpSession httpSession
     )
-        throws Exception {ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+        throws Exception {
+
+        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
         UserSession session = ApiUtils.getUserSession(httpSession);
 
@@ -303,139 +308,17 @@ public class KeywordsApi {
         session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
             searcher);
 
+        List<KeywordBean> keywords = searcher.getResults();
 
-        // get the results
-        return searcher.getResults();
-    }
-
-    /**
-     * Search keywords.
-     *
-     * @param q the q
-     * @param lang the lang
-     * @param rows the rows
-     * @param start the start
-     * @param targetLangs the target langs
-     * @param thesaurus the thesaurus
-     * @param type the type
-     * @param uri the uri
-     * @param sort the sort
-     * @param request the request
-     * @param httpSession the http session
-     * @return the list
-     * @throws Exception the exception
-     */
-    @ApiOperation(
-        value = "Search keywords (XML)",
-        nickname = "searchKeywordsXml",
-        notes = "")
-    @RequestMapping(
-        path = "/search",
-        method = RequestMethod.GET,
-        produces = {
-            MediaType.APPLICATION_XML_VALUE,
-        })
-    @ResponseStatus(
-        value = HttpStatus.OK)
-    @ResponseBody
-    public Element searchKeywordsXML(
-        @ApiParam(
-            value = "Query",
-            required = false
-        )
-        @RequestParam(
-            required = false
-        )
-            String q,
-        @ApiParam(
-            value = "Query in that language",
-            required = false
-        )
-        @RequestParam(
-            value = "lang",
-            defaultValue = "eng"
-        )
-            String lang,
-        @ApiParam(
-            value = "Number of rows",
-            required = false
-        )
-        @RequestParam(
-            required = false,
-            defaultValue = "1000"
-        )
-            int rows,
-        @ApiParam(
-            value = "Start from",
-            required = false
-        )
-        @RequestParam(
-            defaultValue = "0",
-            required = false
-        )
-            int start,
-        @ApiParam(
-            value = "Return keyword information in one or more languages",
-            required = false
-        )
-        @RequestParam(
-            value = XmlParams.pLang,
-            required = false
-        )
-            List<String> targetLangs,
-        @ApiParam(
-            value = "Thesaurus identifier",
-            required = false
-        )
-        @RequestParam(
-            required = false
-        )
-            String[] thesaurus,
-        //        @ApiParam(
-        //            value = "?",
-        //            required = false
-        //        )
-        //        @RequestParam(
-        //            required = false
-        //        )
-        //            String thesauriDomainName,
-        @ApiParam(
-            value = "Type of search",
-            required = false
-        )
-        @RequestParam(
-            defaultValue = "CONTAINS"
-        )
-            KeywordSearchType type,
-        @ApiParam(
-            value = "URI query",
-            required = false
-        )
-        @RequestParam(
-            required = false
-        )
-            String uri,
-        @ApiParam(
-            value = "Sort by",
-            required = false
-        )
-        @RequestParam(
-            required = false,
-            defaultValue = "DESC"
-        )
-            String sort,
-        @ApiIgnore
-            HttpServletRequest request,
-        @ApiIgnore
-        @ApiParam(hidden = true)
-            HttpSession httpSession
-    ) throws Exception {
-        List<KeywordBean> keywords = searchKeywords(q, lang, rows, start, targetLangs, thesaurus, type, uri, sort, request, httpSession);
-        Element root = new Element("response");
-        for (KeywordBean kw : keywords) {
-            root.addContent(kw.toElement("eng")); // FIXME: Localize
+        if ("xml".equals(request.getParameter(CONTENT_TYPE))) {
+            Element root = new Element("response");
+            for (KeywordBean kw : keywords) {
+                root.addContent(kw.toElement("eng")); // FIXME: Localize
+            }
+            return root;
+        } else {
+            return keywords;
         }
-        return root;
     }
 
     /** The mapper. */
