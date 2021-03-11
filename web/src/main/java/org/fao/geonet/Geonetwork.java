@@ -52,6 +52,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.DbLib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SettingRepository;
@@ -419,6 +420,8 @@ public class Geonetwork implements ApplicationHandler {
                 Log.error(Geonet.DB, "Error occurred while trying to execute SQL", t);
                 throw new RuntimeException(t);
             }
+
+            context.getBean(IsoLanguagesMapper.class).init();
         }
     }
 
