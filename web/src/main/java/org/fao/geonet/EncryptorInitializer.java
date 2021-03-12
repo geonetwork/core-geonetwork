@@ -58,50 +58,57 @@ public class EncryptorInitializer {
     DataSource dataSource;
 
     public void init(GeonetworkDataDirectory dataDirectory) throws Exception {
-        PropertiesConfiguration conf = getPropertiesFile(dataDirectory);
+        PropertiesConfiguration conf = getEncryptorPropertiesFile(dataDirectory);
 
-        String encryptorAlgorithm = (String) conf.getProperty(ALGORITHM_KEY);
-        String encryptorPassword = (String) conf.getProperty(PASSWORD_KEY);
+        // Values in the current properties file
+        String encryptorAlgorithmPropFile = (String) conf.getProperty(ALGORITHM_KEY);
+        String encryptorPasswordPropFile = (String) conf.getProperty(PASSWORD_KEY);
 
+        // Values to track changes (if values are provided in environment variables)
+        String encryptorAlgorithm;
+        String encryptorPassword;
+
+        // Has the configuration change?
         boolean updateConfiguration = false;
 
-        if (StringUtils.isEmpty(encryptorAlgorithm)) {
-            encryptorAlgorithm = getPropertyFromEnv(ALGORITHM_KEY, DEFAULT_ALGORITHM);
-            conf.setProperty(ALGORITHM_KEY, encryptorAlgorithm);
-
+        if (StringUtils.isEmpty(encryptorAlgorithmPropFile)) {
+            encryptorAlgorithmPropFile = getPropertyFromEnv(ALGORITHM_KEY, DEFAULT_ALGORITHM);
+            encryptorAlgorithm = encryptorAlgorithmPropFile;
+            // No algorithm configured yet
             updateConfiguration = true;
         } else {
             String encryptorAlgorithmFromEnv = getPropertyFromEnv(ALGORITHM_KEY, "");
-
-            if (StringUtils.isNotEmpty(encryptorAlgorithmFromEnv) &&
-                !encryptorAlgorithm.equals(encryptorAlgorithmFromEnv)) {
-                Log.warning(LOG_MODULE, String.format("The encryptor algorithm provided in the environment variable " +
-                    "is not the same as the one configured in %s. Ignoring the value provided in the " +
-                    "environment variable.", conf.getPath()));
+            if (StringUtils.isNotEmpty(encryptorAlgorithmFromEnv)) {
+                encryptorAlgorithm = encryptorAlgorithmFromEnv;
+            } else {
+                encryptorAlgorithm = encryptorAlgorithmPropFile;
             }
+
+            // Different algorithm provided in environment variables
+            updateConfiguration = !encryptorAlgorithm.equals(encryptorAlgorithmPropFile);
         }
 
-        // Creates a random encryptor password if the password has the value 'default'
-        if (StringUtils.isEmpty(encryptorPassword)) {
-            encryptorPassword = getPropertyFromEnv(PASSWORD_KEY, "");
 
-            if (StringUtils.isEmpty(encryptorPassword)) {
+        if (StringUtils.isEmpty(encryptorPasswordPropFile)) {
+            encryptorPasswordPropFile = getPropertyFromEnv(PASSWORD_KEY, "");
+            // Creates a random encryptor password if the password is empty
+            if (StringUtils.isEmpty(encryptorPasswordPropFile)) {
                 Log.info(LOG_MODULE, "Generating a random password for the database password encryptor");
-                encryptorPassword = RandomStringUtils.randomAlphanumeric(10);
+                encryptorPasswordPropFile = RandomStringUtils.randomAlphanumeric(10);
             }
-
-            conf.setProperty(PASSWORD_KEY, encryptorPassword);
-
+            encryptorPassword = encryptorPasswordPropFile;
+            // No password configured yet
             updateConfiguration = true;
         } else {
             String encryptorPasswordFromEnv = getPropertyFromEnv(PASSWORD_KEY, "");
-
-            if (StringUtils.isNotEmpty(encryptorPasswordFromEnv) &&
-                !encryptorPassword.equals(encryptorPasswordFromEnv)) {
-                Log.warning(LOG_MODULE, String.format("The encryptor password provided in the environment variable " +
-                    "is not the same as the one configured in %s. Ignoring the value provided in the " +
-                    "environment variable.", conf.getPath()));
+            if (StringUtils.isNotEmpty(encryptorPasswordFromEnv)) {
+                encryptorPassword = encryptorPasswordFromEnv;
+            } else {
+                encryptorPassword = encryptorPasswordPropFile;
             }
+
+            // Different password provided in environment variables
+            updateConfiguration = updateConfiguration || !encryptorPassword.equals(encryptorPasswordPropFile);
         }
 
         Log.info(LOG_MODULE, String.format("Password database encryptor initialized - Keep the file %s safe and make " +
@@ -137,11 +144,27 @@ public class EncryptorInitializer {
          * has been already updated in the previous upgrades.
          */
         if (updateConfiguration) {
+            conf.setProperty(ALGORITHM_KEY, encryptorAlgorithm);
+            conf.setProperty(PASSWORD_KEY, encryptorPassword);
+
             // Save the encryptor.properties file
             conf.save();
 
             Log.info(LOG_MODULE, "Password database encryptor - encrypting passwords stored in the database");
-            updateDb();
+
+            // Encryptor configuration change: should be unencrypted the passwords with the previous configuration
+            // and encrypted with the new one.
+            if (!encryptorPassword.equals(encryptorPasswordPropFile) ||
+                !encryptorAlgorithm.equals(encryptorAlgorithmPropFile)) {
+
+                StandardPBEStringEncryptor previousEncryptor = new StandardPBEStringEncryptor();
+                previousEncryptor.setAlgorithm(encryptorAlgorithmPropFile);
+                previousEncryptor.setPassword(encryptorPasswordPropFile);
+                previousEncryptor.initialize();
+                updateDb(previousEncryptor);
+            } else {
+                updateDb(null);
+            }
         }
 
         // Register encryptor in HibernatePBEEncryptorRegistry class
@@ -151,7 +174,7 @@ public class EncryptorInitializer {
 
     }
 
-    private void updateDb() throws SQLException {
+    private void updateDb(StandardPBEStringEncryptor previousEncryptor) throws SQLException {
 
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -166,6 +189,10 @@ public class EncryptorInitializer {
                     String name = settingsResultSet.getString(1);
                     String value = settingsResultSet.getString(2);
                     if (StringUtils.isNotEmpty(value)) {
+                        if (previousEncryptor != null) {
+                            value = previousEncryptor.decrypt(value);
+                        }
+
                         value = encryptor.encrypt(value);
                         updates.put(name, value);
                         numberOfSettings++;
@@ -191,6 +218,10 @@ public class EncryptorInitializer {
                     String name = harvesterSettingsResultSet.getString(1);
                     String value = harvesterSettingsResultSet.getString(2);
                     if (StringUtils.isNotEmpty(value)) {
+                        if (previousEncryptor != null) {
+                            value = previousEncryptor.decrypt(value);
+                        }
+
                         value = encryptor.encrypt(value);
                         updates.put(name, value);
 
@@ -219,6 +250,10 @@ public class EncryptorInitializer {
                     Integer id = mapServerResultSet.getInt(1);
                     String password = mapServerResultSet.getString(2);
                     if (StringUtils.isNotEmpty(password)) {
+                        if (previousEncryptor != null) {
+                            password = previousEncryptor.decrypt(password);
+                        }
+
                         password = encryptor.encrypt(password);
                         updatesMapServers.put(id, password);
                         numberOfMapServers++;
@@ -248,7 +283,8 @@ public class EncryptorInitializer {
      * @return
      * @throws Exception
      */
-    private PropertiesConfiguration getPropertiesFile( GeonetworkDataDirectory dataDirectory) throws Exception {
+    private PropertiesConfiguration getEncryptorPropertiesFile(GeonetworkDataDirectory dataDirectory)
+        throws Exception {
         Path securityPropsPath = dataDirectory.getConfigDir().resolve("encryptor")
             .resolve("encryptor.properties");
 
