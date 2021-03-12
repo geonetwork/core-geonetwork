@@ -25,11 +25,13 @@ package org.fao.geonet.kernel;
 
 import jeeves.server.context.ServiceContext;
 
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.utils.Log;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.transaction.TransactionStatus;
 
 import java.io.IOException;
@@ -45,28 +47,37 @@ import javax.annotation.Nullable;
  */
 public final class IndexMetadataTask implements Runnable {
 
-    private final ServiceContext _context;
+    private final String serviceName;
+    private final ServiceManager serviceManager;
     private final List<?> _metadataIds;
     private final TransactionStatus _transactionStatus;
     private final Set<IndexMetadataTask> _batchIndex;
     private final SearchManager searchManager;
     private final AtomicInteger indexed;
+    private final ConfigurableApplicationContext appContext;
     private User _user;
 
     /**
-     * Constructor.
+     * Setup index metadata task to be run.
      *
-     * @param context           context object
+     * The context is used to look up beans for setup and configuration only. The task will create its own serviceContext
+     * to be used during indexing.
+     *
+     * @param context           context object responsible for starting the activity
      * @param metadataIds       the metadata ids to index (either integers or strings)
+     * @param batchIndex        Set used to track outstanding tasks
      * @param transactionStatus if non-null, wait for the transaction to complete before indexing
+     * @param indexed           Used to track number of indexed records
      */
     public IndexMetadataTask(@Nonnull ServiceContext context, @Nonnull List<?> metadataIds, Set<IndexMetadataTask> batchIndex,
                       @Nullable TransactionStatus transactionStatus, @Nonnull AtomicInteger indexed) {
         this.indexed = indexed;
         this._transactionStatus = transactionStatus;
-        this._context = context;
+        this.serviceName = context.getService();
         this._metadataIds = metadataIds;
         this._batchIndex = batchIndex;
+        this.serviceManager = context.getBean(ServiceManager.class);
+        this.appContext = context.getApplicationContext();
         this.searchManager = context.getBean(SearchManager.class);
 
         batchIndex.add(this);
@@ -76,9 +87,17 @@ public final class IndexMetadataTask implements Runnable {
         }
     }
 
+    /**
+     * Perform index task in a seperate thread.
+     * <p>
+     * Task waits for transactionStatus (if available) to be completed, and for servlet to be initialized.
+     * </p>
+     */
+    @Override
     public void run() {
+        ServiceContext indexMedataContext = serviceManager.createServiceContext(serviceName+":IndexTask", appContext);
         try {
-            _context.setAsThreadLocal();
+            indexMedataContext.setAsThreadLocal();
             while (_transactionStatus != null && !_transactionStatus.isCompleted()) {
                 try {
                     Thread.sleep(100);
@@ -87,7 +106,7 @@ public final class IndexMetadataTask implements Runnable {
                 }
             }
             // poll context to see whether servlet is up yet
-            while (!_context.isServletInitialized()) {
+            while (!indexMedataContext.isServletInitialized()) {
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                     Log.debug(Geonet.DATA_MANAGER, "Waiting for servlet to finish initializing..");
                 }
@@ -98,7 +117,7 @@ public final class IndexMetadataTask implements Runnable {
                 }
             }
 
-            DataManager dataManager = _context.getBean(DataManager.class);
+            DataManager dataManager = indexMedataContext.getBean(DataManager.class);
             // servlet up so safe to index all metadata that needs indexing
             for (Object metadataId : _metadataIds) {
                 this.indexed.incrementAndGet();
@@ -117,15 +136,16 @@ public final class IndexMetadataTask implements Runnable {
                         + "\n" + Util.getStackTrace(e));
                 }
             }
-            if (_user != null && _context.getUserSession().getUserId() == null) {
-                _context.getUserSession().loginAs(_user);
+            if (_user != null && indexMedataContext.getUserSession().getUserId() == null) {
+                indexMedataContext.getUserSession().loginAs(_user);
             }
             searchManager.forceIndexChanges();
         } catch (IOException e) {
             Log.error(Geonet.INDEX_ENGINE, "Error occurred indexing metadata", e);
         } finally {
             _batchIndex.remove(this);
-            _context.clearAsThreadLocal();
+            indexMedataContext.clearAsThreadLocal();
+            indexMedataContext.clear();
         }
     }
 }
