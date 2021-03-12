@@ -1,3 +1,26 @@
+//=============================================================================
+//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.kernel.datamanager.base;
 
 import java.io.IOException;
@@ -120,6 +143,12 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 	@Autowired
 	private UserFeedbackRepository userFeedbackRepository;
 
+	@Autowired
+	@Qualifier("resourceStore")
+	private Store store;
+	@Autowired
+	private Resources resources;
+
 	// FIXME remove when get rid of Jeeves
 	private ServiceContext servContext;
 
@@ -129,21 +158,21 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 	}
 
 	public void init(ServiceContext context, Boolean force) throws Exception {
-		searchManager = context.getBean(SearchManager.class);
-		geonetworkDataDirectory = context.getBean(GeonetworkDataDirectory.class);
-		statusRepository = context.getBean(MetadataStatusRepository.class);
-		metadataUtils = context.getBean(IMetadataUtils.class);
-		metadataManager = context.getBean(IMetadataManager.class);
-		userRepository = context.getBean(UserRepository.class);
-		operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-		groupRepository = context.getBean(GroupRepository.class);
-		metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
-		schemaManager = context.getBean(SchemaManager.class);
-		svnManager = context.getBean(SvnManager.class);
-		inspireAtomFeedRepository = context.getBean(InspireAtomFeedRepository.class);
-		xmlSerializer = context.getBean(XmlSerializer.class);
-		settingManager = context.getBean(SettingManager.class);
-		userFeedbackRepository = context.getBean(UserFeedbackRepository.class);
+		// searchManager = context.getBean(SearchManager.class);
+		// geonetworkDataDirectory = context.getBean(GeonetworkDataDirectory.class);
+		// statusRepository = context.getBean(MetadataStatusRepository.class);
+		// metadataUtils = context.getBean(IMetadataUtils.class);
+		// metadataManager = context.getBean(IMetadataManager.class);
+		// userRepository = context.getBean(UserRepository.class);
+		// operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
+		// groupRepository = context.getBean(GroupRepository.class);
+		// metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
+		// schemaManager = context.getBean(SchemaManager.class);
+		// svnManager = context.getBean(SvnManager.class);
+		// inspireAtomFeedRepository = context.getBean(InspireAtomFeedRepository.class);
+		// xmlSerializer = context.getBean(XmlSerializer.class);
+		// settingManager = context.getBean(SettingManager.class);
+		// userFeedbackRepository = context.getBean(UserFeedbackRepository.class);
 
 		servContext = context;
 	}
@@ -309,6 +338,12 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 			Runnable worker = new IndexMetadataTask(context, subList, batchIndex, transactionStatus, numIndexedTracker);
 			executor.execute(worker);
 			index += count;
+		}
+
+		try {
+			executor.awaitTermination(1, TimeUnit.DAYS );
+		} catch (InterruptedException e) {
+			Log.warning( Geonet.INDEX_ENGINE, "Indexing took more than a day", e);
 		}
 
 		executor.shutdown();

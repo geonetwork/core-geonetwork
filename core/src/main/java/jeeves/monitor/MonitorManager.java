@@ -23,6 +23,7 @@
 
 package jeeves.monitor;
 
+import com.sun.corba.se.spi.activation.ServerManager;
 import com.yammer.metrics.core.*;
 import com.yammer.metrics.log4j.InstrumentedAppender;
 import com.yammer.metrics.reporting.JmxReporter;
@@ -30,6 +31,7 @@ import com.yammer.metrics.reporting.JmxReporter;
 import jeeves.constants.ConfigFile;
 import jeeves.server.context.ServiceContext;
 
+import jeeves.server.dispatchers.ServiceManager;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.fao.geonet.Util;
@@ -74,6 +76,7 @@ public class MonitorManager {
 
     private MetricsRegistry metricsRegistry;
     private JmxReporter jmxReporter;
+    private ServiceContext context;
 
     public void init(ServletContext context, String baseUrl) {
 
@@ -130,7 +133,10 @@ public class MonitorManager {
         return tmpHealthCheckRegistry;
     }
 
-    public void initMonitorsForApp(ServiceContext context) {
+    public void initMonitorsForApp(ServiceContext initContext) {
+        ServiceManager serviceManager = initContext.getBean(ServiceManager.class);
+        context = serviceManager.createServiceContext("monitor", initContext);
+
         createHealthCheck(context, criticalServiceContextHealthChecks, criticalHealthCheckRegistry, "critical health check");
         createHealthCheck(context, warningServiceContextHealthChecks, warningHealthCheckRegistry, "warning health check");
         createHealthCheck(context, expensiveServiceContextHealthChecks, expensiveHealthCheckRegistry, "expensive health check");
@@ -162,12 +168,30 @@ public class MonitorManager {
         }
     }
 
+    /**
+     * Create and register health checks
+     *
+     * @param context
+     * @param checks factories used to create health checks
+     * @param registry registry listing heath checks
+     * @param type
+     */
     private void createHealthCheck(ServiceContext context, List<HealthCheckFactory> checks, HealthCheckRegistry registry, String type) {
+        ServiceManager serviceManager = context.getBean(ServiceManager.class);
         for (HealthCheckFactory healthCheck : checks) {
-            Log.info(Log.ENGINE, "Registering " + type + ": " + healthCheck.getClass().getName());
-            HealthCheck check = healthCheck.create(context);
-            healthCheckRegistry.register(check);
-            registry.register(check);
+            String factoryName = healthCheck.getClass().getName();
+            ServiceContext checkServiceContext = serviceManager.createServiceContext(type+":"+factoryName, context);
+            try {
+                HealthCheck check = healthCheck.create(checkServiceContext);
+
+                Log.info(Log.ENGINE, "Registering " + type + ": " + factoryName);
+                healthCheckRegistry.register(check);
+                registry.register(check);
+            }
+            catch (Throwable t){
+                Log.info(Log.ENGINE, "Unable to register " + type + ": " + factoryName);
+                checkServiceContext.clear();
+            }
         }
     }
 
@@ -306,6 +330,9 @@ public class MonitorManager {
     @PreDestroy
     public void shutdown() {
         Log.info(Log.ENGINE, "MonitorManager#shutdown");
+        if (context != null){
+            context.clear();
+        }
         if (resourceTracker != null) {
             resourceTracker.clean();
         }

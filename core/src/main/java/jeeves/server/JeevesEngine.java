@@ -551,7 +551,12 @@ public class JeevesEngine {
 
     private void stopHandlers() throws Exception {
         for (ApplicationHandler h : _appHandlers) {
-            h.stop();
+            try {
+                h.stop();
+            } catch (Throwable unexpected){
+                _appHandLogger.error("Difficulty while stopping "+h.getContextName());
+                _appHandLogger.error(unexpected);
+            }
         }
     }
 

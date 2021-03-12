@@ -80,6 +80,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 //=============================================================================
+
+/**
+ * Handles operations on services.
+ */
 public class ServiceManager {
     private Map<String, ArrayList<ServiceInfo>> htServices = new HashMap<String, ArrayList<ServiceInfo>>(100);
     private Map<String, Object> htContexts = new HashMap<String, Object>();
@@ -159,6 +163,11 @@ public class ServiceManager {
     //---
     //---------------------------------------------------------------------------
 
+    /**
+     * Track context objects by name.
+     * @param name
+     * @param context
+     */
     public void registerContext(String name, Object context) {
         htContexts.put(name, context);
     }
@@ -345,6 +354,39 @@ public class ServiceManager {
         vErrorPipe.add(buildErrorPage(err));
     }
 
+    /**
+     * Used to create a serviceContext for later use, the object provided the new serviceContext is responsible
+     * for cleanup.
+     * <pre><code>
+     * final ServiceContext taskContext = serviceMan.createServiceContext( serviceContext, "task");
+     * return new Runnable(){
+     *     public abstract void run(){
+     *         try {
+     *            taskContext.setAsThreadLocal();
+     *
+     *         }
+     *         finally {
+     *             taskContext.clear();
+     *         }
+     *     }
+     * };
+     * </code></pre>
+     *
+     * @param name
+     * @param parent
+     * @return new service context
+     */
+    public ServiceContext createServiceContext(String name, ServiceContext parent ){
+        ServiceContext context = createServiceContext( name, parent.getApplicationContext());
+        context.setBaseUrl(parent.getBaseUrl());
+        context.setLanguage(parent.getLanguage());
+        context.setUserSession(null); // because this is intended for later use user session not included
+        context.setIpAddress(parent.getIpAddress());
+        context.setMaxUploadSize(parent.getMaxUploadSize());
+        context.setServlet(parent.getServlet());
+
+        return context;
+    }
     /**
      * Used to create a ServiceContext.
      *
