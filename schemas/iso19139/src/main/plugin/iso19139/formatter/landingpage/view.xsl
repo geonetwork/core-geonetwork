@@ -32,9 +32,15 @@
   <xsl:variable name="standardName"
                 select="$metadata/gmd:metadataStandardName/*/text()"/>
 
+  <!--
+  See client app config
+  https://gitlab.ifremer.fr/sextant/geonetwork/-/blob/sextant-6.7.x/web-ui/src/main/resources/catalog/views/sextant/config.js#L218-275
+  -->
   <xsl:variable name="view">
     <xsl:choose>
-      <xsl:when test="$standardName = 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY'">emodnetHydrography</xsl:when>
+      <xsl:when test="$standardName = 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY'
+                      or $standardName = 'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY'">emodnetHydrography</xsl:when>
+      <xsl:when test="$standardName = 'ISO 19115:2003/19139 - EMODNET - SDN'">sdn</xsl:when>
       <xsl:otherwise>sextant</xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
