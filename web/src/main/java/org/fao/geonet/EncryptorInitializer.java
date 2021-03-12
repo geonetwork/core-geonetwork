@@ -30,10 +30,14 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.exceptions.EncryptionInitializationException;
 import org.jasypt.hibernate5.encryptor.HibernatePBEEncryptorRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.sql.DataSource;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,6 +49,7 @@ public class EncryptorInitializer {
     private final static String LOG_MODULE = Geonet.GEONETWORK + ".encryptor";
     private final static String ALGORITHM_KEY = "encryptor.algorithm";
     private final static String PASSWORD_KEY = "encryptor.password";
+    private final static String DEFAULT_ALGORITHM = "PBEWithMD5AndDES";
 
     @Autowired
     StandardPBEStringEncryptor encryptor;
@@ -53,23 +58,32 @@ public class EncryptorInitializer {
     DataSource dataSource;
 
     public void init(GeonetworkDataDirectory dataDirectory) throws Exception {
-        String securityPropsPath = dataDirectory.getConfigDir().resolve("encryptor")
-            .resolve("encryptor.properties").toString();
+        PropertiesConfiguration conf = getPropertiesFile(dataDirectory);
 
-        PropertiesConfiguration conf = new PropertiesConfiguration(securityPropsPath);
         String encryptorAlgorithm = (String) conf.getProperty(ALGORITHM_KEY);
         String encryptorPassword = (String) conf.getProperty(PASSWORD_KEY);
 
-        boolean updateDatabase = false;
+        boolean updateConfiguration = false;
+
+        if (StringUtils.isEmpty(encryptorAlgorithm)) {
+            encryptorAlgorithm = getPropertyFromEnv(ALGORITHM_KEY, DEFAULT_ALGORITHM);
+            conf.setProperty(ALGORITHM_KEY, encryptorAlgorithm);
+
+            updateConfiguration = true;
+        } else {
+            String encryptorAlgorithmFromEnv = getPropertyFromEnv(ALGORITHM_KEY, "");
+
+            if (StringUtils.isNotEmpty(encryptorAlgorithmFromEnv) &&
+                !encryptorAlgorithm.equals(encryptorAlgorithmFromEnv)) {
+                Log.warning(LOG_MODULE, String.format("The encryptor algorithm provided in the environment variable " +
+                    "is not the same as the one configured in %s. Ignoring the value provided in the " +
+                    "environment variable.", conf.getPath()));
+            }
+        }
 
         // Creates a random encryptor password if the password has the value 'default'
         if (StringUtils.isEmpty(encryptorPassword)) {
-            // Check if provided in Java environment variable
-            encryptorPassword =  System.getProperty(PASSWORD_KEY);
-            if (StringUtils.isEmpty(encryptorPassword)) {
-                // System environment variable
-                encryptorPassword = System.getenv(PASSWORD_KEY.replace('.', '_'));
-            }
+            encryptorPassword = getPropertyFromEnv(PASSWORD_KEY, "");
 
             if (StringUtils.isEmpty(encryptorPassword)) {
                 Log.info(LOG_MODULE, "Generating a random password for the database password encryptor");
@@ -77,17 +91,39 @@ public class EncryptorInitializer {
             }
 
             conf.setProperty(PASSWORD_KEY, encryptorPassword);
-            conf.save();
 
-            updateDatabase = true;
+            updateConfiguration = true;
+        } else {
+            String encryptorPasswordFromEnv = getPropertyFromEnv(PASSWORD_KEY, "");
+
+            if (StringUtils.isNotEmpty(encryptorPasswordFromEnv) &&
+                !encryptorPassword.equals(encryptorPasswordFromEnv)) {
+                Log.warning(LOG_MODULE, String.format("The encryptor password provided in the environment variable " +
+                    "is not the same as the one configured in %s. Ignoring the value provided in the " +
+                    "environment variable.", conf.getPath()));
+            }
         }
 
-        Log.info(LOG_MODULE, "Password database encryptor initialized - Keep the file " + securityPropsPath +
-            " safe and make a backup. When upgrading to a newer version of GeoNetwork the file must be restored, " +
-            "otherwise GeoNetwork will not be able to decrypt passwords already stored in the database.");
+        Log.info(LOG_MODULE, String.format("Password database encryptor initialized - Keep the file %s safe and make " +
+            "a backup. When upgrading to a newer version of GeoNetwork the file must be restored, otherwise " +
+            "GeoNetwork will not be able to decrypt passwords already stored in the database.", conf.getPath()));
 
         encryptor.setAlgorithm(encryptorAlgorithm);
         encryptor.setPassword(encryptorPassword);
+
+        try {
+            encryptor.initialize();
+        } catch (EncryptionInitializationException ex) {
+            if (ex.getCause() instanceof NoSuchAlgorithmException) {
+                Log.error(LOG_MODULE, String.format("Encryptor algorithm %s is not supported", encryptorAlgorithm));
+            } else {
+                Log.error(LOG_MODULE, ex.getMessage(), ex);
+            }
+
+            throw new RuntimeException(String.format("Password encryptor could not be initialised, review the " +
+                "configuration in %s or the environment variables if provided.", conf.getPath()));
+        }
+
 
         /**
          * Updates the database rows with passwords. Uses SQL updates to avoid interfere with the Hibernate TypeDef
@@ -100,7 +136,10 @@ public class EncryptorInitializer {
          * Adding a migration upgrade that depends on this bean to be initialized doesn't work as the database version
          * has been already updated in the previous upgrades.
          */
-        if (updateDatabase) {
+        if (updateConfiguration) {
+            // Save the encryptor.properties file
+            conf.save();
+
             Log.info(LOG_MODULE, "Password database encryptor - encrypting passwords stored in the database");
             updateDb();
         }
@@ -199,5 +238,51 @@ public class EncryptorInitializer {
 
             connection.commit();
         }
+    }
+
+
+    /**
+     * Retrieves the encryptor properties file from the data directory. If the file doesn't exists, it's created.
+     *
+     * @param dataDirectory
+     * @return
+     * @throws Exception
+     */
+    private PropertiesConfiguration getPropertiesFile( GeonetworkDataDirectory dataDirectory) throws Exception {
+        Path securityPropsPath = dataDirectory.getConfigDir().resolve("encryptor")
+            .resolve("encryptor.properties");
+
+        // Create the file if doesn't exists
+        if (!Files.exists(securityPropsPath)) {
+            Files.createFile(securityPropsPath);
+        }
+
+        return new PropertiesConfiguration(securityPropsPath.toFile());
+    }
+
+    /**
+     * Retrieves an environment variable with this priority:
+     *  - Java environment variable.
+     *  - System environment variable.
+     *  - Default value provided as parameter.
+     *
+     * @param propertyName
+     * @param defaultValue
+     * @return
+     */
+    private String getPropertyFromEnv(String propertyName, String defaultValue) {
+        // Check if provided in Java environment variable
+        String propertyValue = System.getProperty(propertyName);
+
+        if (StringUtils.isEmpty(propertyValue)) {
+            // System environment variable
+            propertyValue = System.getenv(propertyName.replace('.', '_'));
+        }
+
+        if (StringUtils.isEmpty(propertyValue)) {
+            propertyValue = defaultValue;
+        }
+
+        return propertyValue;
     }
 }
