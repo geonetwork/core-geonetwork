@@ -127,7 +127,7 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
     }
 
     public java.util.List<KeywordBean> getRegionTopConcepts(final ServiceContext context) throws Exception {
-        return JeevesCacheManager.findInTenSecondCache(CATEGORY_ID_CACHE_KEY + context.getLanguage(),
+        return JeevesCacheManager.findInTenSecondCache(CATEGORY_ID_CACHE_KEY + context.getLanguage() + thesaurusName,
             new Callable<java.util.List<KeywordBean>>() {
 
                 @Override
