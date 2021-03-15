@@ -355,6 +355,32 @@ public class ServiceManager {
     }
 
     /**
+     * Used to create an appContext placeholder service context used for initialization, background tasks and activities.
+     *
+     * This ServiceContext is used during initialization and is independent of any user session.
+     * This instance is the responsibility of JeevesEngine and is protected against being cleared.
+     *
+     * @param parent
+     * @return new service context
+     */
+    public ServiceContext createAppHandlerServiceContext(ConfigurableApplicationContext appContext) {
+        ServiceContext context = new ServiceContext("AppHandler", appContext, htContexts, entityManager){
+            public void clear() {
+                debug("AppHandler context cannot be cleared");
+            }
+        };
+        context.setBaseUrl(baseUrl);
+        context.setLanguage("?");
+        context.setUserSession(null);
+        context.setIpAddress("?");
+        context.setMaxUploadSize(maxUploadSize);
+        context.setServlet(servlet);
+
+        return context;
+    }
+
+
+    /**
      * Used to create a serviceContext for later use, the object provided the new serviceContext is responsible
      * for cleanup.
      * <pre><code>
