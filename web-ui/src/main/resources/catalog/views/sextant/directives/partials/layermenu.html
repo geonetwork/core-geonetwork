@@ -1,20 +1,66 @@
 <div>
   <p>Layer menu for layer {{layer.get('title')}}</p>
+
+  <p>
+    <span translate>layerSource</span>
+    <span ng-if="!layer.get('attributionUrl')">{{layer.get('attribution')}}</span>
+    <span ng-if="layer.get('attributionUrl')">
+      <a href="{{layer.get('attributionUrl')}}" target="_blank">{{layer.get('attribution')}}</a>
+    </span>
+  </p>
+
+  <p>
+    <input type="range" min="0" max="1" step="0.05" ng-model="layer.opacity" />
+    <span translate>opacity</span>
+  </p>
+
   <p><a href="" ng-click="handleClose($event)">Close menu</a></p>
   <p ng-if="layer.get('md') || layer.get('metadataUrl')">
     <a href="" ng-click="ctrl.showMetadata()">
       <span translate>showMetadata</span>
     </a>
   </p>
+
   <p ng-if="layer.get('cextent')">
     <a href="" ng-click="ctrl.zoomToExtent()">
       <span translate>layerExtentZoom</span>
     </a>
   </p>
+
   <p ng-if="download">
     <a href="" ng-click="ctrl.addToPanier()">
       <span translate>download</span>
     </a>
   </p>
-  <p>Tabs</p>
+
+  <tabset>
+    <tab>
+      <tab-heading translate>mapLegend</tab-heading>
+      <div>
+        <img ng-src="{{layer.get('legend')}}"
+             alt="{{layer.get('label')}} {{'mapLegend' | translate}}"
+             aria-label="{{layer.get('label')}} {{'mapLegend' | translate}}"/>
+      </div>
+    </tab>
+
+    <tab>
+      <tab-heading translate>filter</tab-heading>
+      <div>(filtres WFS)</div>
+    </tab>
+
+    <tab>
+      <tab-heading translate>process</tab-heading>
+      <div>(process WPS)</div>
+    </tab>
+
+    <tab>
+      <tab-heading translate>ncwms</tab-heading>
+      <div>(Advanced params)</div>
+    </tab>
+
+    <tab>
+      <tab-heading translate>annotations</tab-heading>
+      <div>(Annotations)</div>
+    </tab>
+  </tabset>
 </div>
