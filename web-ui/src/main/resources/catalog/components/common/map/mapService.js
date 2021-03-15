@@ -2194,7 +2194,7 @@
           feedLayerWithRelated: function(layer, linkGroup) {
             var md = layer.get('md');
 
-            if (!linkGroup) {
+            if (linkGroup === undefined) {
               console.warn('The layer has not been found in any group: ' +
                   layer.getSource().getParams().LAYERS);
               return;

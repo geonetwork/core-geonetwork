@@ -16,26 +16,6 @@
           onClose: '&'
         },
         controller: ['$scope', function($scope) {
-          this.setWPS = function() {
-            // TODO
-            console.log('placeholder for setWPS');
-          };
-
-          this.setWFSFilter = function() {
-            // TODO
-            console.log('placeholder for setWFSFilter');
-          };
-
-          this.setNCWMS = function() {
-            // TODO
-            console.log('placeholder for setNCWMS');
-          };
-
-          this.setAnnotations = function() {
-            // TODO
-            console.log('placeholder for setAnnotations');
-          }
-
           this.addToPanier = function() {
             gnViewerSettings.resultviewFns.addMdLayerToPanier($scope.download, $scope.layer.get('md'));
           }
@@ -49,8 +29,13 @@
           }
 
           this.deleteLayer = function() {
-            // TODO
-            console.log('placeholder for deleteLayer');
+            var layers = $scope.map.getLayers().getArray();
+            for (var i = 0; i < layers.length; i++) {
+              if (layers[i].get('wpsParent') === $scope.layer) {
+                $scope.map.removeLayer(layers[i]);
+              }
+            }
+            $scope.map.removeLayer($scope.layer);
           }
         }],
         controllerAs: 'ctrl',
@@ -94,7 +79,7 @@
 
           scope.handleClose = function() {
             scope.onClose();
-          }
+          };
         }
       };
     }]);

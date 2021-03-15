@@ -2,19 +2,15 @@
   <p>Layer menu for layer {{layer.get('title')}}</p>
 
   <p>
-    <span translate>layerSource</span>
+    &copy;
     <span ng-if="!layer.get('attributionUrl')">{{layer.get('attribution')}}</span>
     <span ng-if="layer.get('attributionUrl')">
       <a href="{{layer.get('attributionUrl')}}" target="_blank">{{layer.get('attribution')}}</a>
     </span>
   </p>
 
-  <p>
-    <input type="range" min="0" max="1" step="0.05" ng-model="layer.opacity" />
-    <span translate>opacity</span>
-  </p>
+  <p><a href="" ng-click="handleClose()">Close menu</a></p>
 
-  <p><a href="" ng-click="handleClose($event)">Close menu</a></p>
   <p ng-if="layer.get('md') || layer.get('metadataUrl')">
     <a href="" ng-click="ctrl.showMetadata()">
       <span translate>showMetadata</span>
@@ -43,24 +39,48 @@
       </div>
     </tab>
 
-    <tab>
+    <tab ng-if="wfs || (wfsLink && user.canEditRecord(layer.get('md')))">
       <tab-heading translate>filter</tab-heading>
-      <div>(filtres WFS)</div>
+      <div>
+        <div gn-wfs-filter-facets
+             layer="layer" wfs-url="wfsLink.url"
+             feature-type-name="wfsLink.featureTypeName"
+             mode="group">
+        </div>
+      </div>
     </tab>
 
-    <tab>
+    <tab ng-if="process">
       <tab-heading translate>process</tab-heading>
-      <div>(process WPS)</div>
+      <div>
+        <gn-wps-process-form map="map"
+                             wps-link="process"
+                             wfs-link="wfsLink" />
+      </div>
     </tab>
 
     <tab>
-      <tab-heading translate>ncwms</tab-heading>
-      <div>(Advanced params)</div>
+      <tab-heading translate>settings</tab-heading>
+      <div>
+        <p>
+          <input type="range" min="0" max="1" step="0.05" ng-model="layer.opacity" />
+          <span translate>opacity</span>
+        </p>
+        <div ng-if="layer.get('advanced')"
+             gn-ncwms-transect
+             map="map"
+             layer="layer"
+        ></div>
+      </div>
     </tab>
 
-    <tab>
+    <tab ng-if="layer.get('annotationsUuid')">
       <tab-heading translate>annotations</tab-heading>
-      <div>(Annotations)</div>
+      <div>
+        <sxt-annotations-editor map="map" layer="layer" />
+      </div>
     </tab>
   </tabset>
+
+  <p><a href="" ng-click="handleClose(); ctrl.deleteLayer()" translate>remove</a></p>
 </div>
