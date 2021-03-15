@@ -225,6 +225,16 @@
                 return o.reference.mimeType !== 'application/x-ogc-wms';
               });
             };
+            scope.getDateBounds = function(input, isMin) {
+              if (!input ) {
+                return;
+              }
+              else if (isMin) {
+                return input.literalData.allowedValues.valueOrRange[0].minimumValue.value;
+              }
+              return input.literalData.allowedValues.valueOrRange[0].maximumValue.value;
+
+            }
             // END SPECIFIC SEXTANT
 
             scope.reOrderLayerInputs = function(key){
