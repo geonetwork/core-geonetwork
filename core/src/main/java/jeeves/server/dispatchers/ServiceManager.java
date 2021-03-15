@@ -492,7 +492,11 @@ public class ServiceManager {
     public void dispatch(ServiceRequest req, UserSession session) {
         ServiceContext context = new ServiceContext(req.getService(), ApplicationContextHolder.get(),
             htContexts, entityManager);
+      try {
         dispatch(req, session, context);
+      } finally {
+        context.clear();
+      }
     }
 
     //---------------------------------------------------------------------------
@@ -626,7 +630,7 @@ public class ServiceManager {
             else {
                 context.debug("ServiceManager dispatch context was replaced before cleanup");
             }
-            context.clear();
+            context.clearAsThreadLocal();
             if( priorContext != null){
                 priorContext.debug("ServiceManger dispatch restoring ServiceContext");
                 priorContext.setAsThreadLocal();
