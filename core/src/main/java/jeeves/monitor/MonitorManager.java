@@ -76,6 +76,11 @@ public class MonitorManager {
 
     private MetricsRegistry metricsRegistry;
     private JmxReporter jmxReporter;
+    /**
+     * Internal service context created during init, and cleaned up during shutdown.
+     *
+     * A distinct service context is required as health checks are performed in the background.
+     */
     private ServiceContext context;
 
     public void init(ServletContext context, String baseUrl) {
@@ -180,9 +185,8 @@ public class MonitorManager {
         ServiceManager serviceManager = context.getBean(ServiceManager.class);
         for (HealthCheckFactory healthCheck : checks) {
             String factoryName = healthCheck.getClass().getName();
-            ServiceContext checkServiceContext = serviceManager.createServiceContext(type+":"+factoryName, context);
             try {
-                HealthCheck check = healthCheck.create(checkServiceContext);
+                HealthCheck check = healthCheck.create(context);
 
                 Log.info(Log.ENGINE, "Registering " + type + ": " + factoryName);
                 healthCheckRegistry.register(check);
@@ -190,7 +194,6 @@ public class MonitorManager {
             }
             catch (Throwable t){
                 Log.info(Log.ENGINE, "Unable to register " + type + ": " + factoryName);
-                checkServiceContext.clear();
             }
         }
     }
