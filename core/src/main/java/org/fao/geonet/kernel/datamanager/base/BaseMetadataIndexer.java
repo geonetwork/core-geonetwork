@@ -339,12 +339,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             executor.execute(worker);
             index += count;
         }
-
-        try {
-            executor.awaitTermination(1, TimeUnit.DAYS );
-        } catch (InterruptedException e) {
-            Log.warning( Geonet.INDEX_ENGINE, "Indexing took more than a day", e);
-        }
+        // let the started threads finish in the background and then clean up executor
         executor.shutdown();
     }
 
