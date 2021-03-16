@@ -199,7 +199,7 @@
         </xsl:with-param>
       </xsl:call-template>
 
-      <xsl:for-each select="../cit:alternateTitle">
+      <xsl:for-each select="../cit:alternateTitle[*/text() != '']">
         <xsl:call-template name="toDataciteLocalized">
           <xsl:with-param name="template">
             <datacite:title titleType="AlternativeTitle"/>
@@ -496,7 +496,7 @@ eg.
   <xsl:template mode="toDatacite"
                 match="mrd:distributorFormat[1]">
     <datacite:formats>
-      <xsl:for-each select="../mrd:distributorFormat/*/mrd:formatSpecificationCitation/*/cit:title">
+      <xsl:for-each select="../mrd:distributorFormat/*/mrd:formatSpecificationCitation/*/cit:title[*/text() != '']">
         <datacite:format><xsl:value-of select="gco:CharacterString"/></datacite:format>
       </xsl:for-each>
     </datacite:formats>
@@ -508,7 +508,7 @@ eg.
       <datacite:version>4.1</datacite:version>
       -->
   <xsl:template mode="toDatacite"
-                match="cit:edition">
+                match="cit:edition[*/text() != '']">
     <datacite:version><xsl:value-of select="gco:CharacterString"/></datacite:version>
   </xsl:template>
 
@@ -527,7 +527,7 @@ eg.
   <xsl:template mode="toDatacite"
                 match="mco:useLimitation[1]">
     <datacite:rightsList>
-      <xsl:for-each select="$metadata//mco:useLimitation">
+      <xsl:for-each select="$metadata//mco:useLimitation[*/text() != '']">
         <xsl:apply-templates mode="toDataciteLocalized" select=".">
           <xsl:with-param name="template">
             <datacite:rights>
