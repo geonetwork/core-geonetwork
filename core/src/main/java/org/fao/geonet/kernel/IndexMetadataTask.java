@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel;
 
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 import jeeves.server.dispatchers.ServiceManager;
@@ -97,6 +98,7 @@ public final class IndexMetadataTask implements Runnable {
     public void run() {
         ServiceContext indexMedataContext = serviceManager.createServiceContext(serviceName+":IndexTask", appContext);
         try {
+            indexMedataContext.setUserSession(new UserSession());
             indexMedataContext.setAsThreadLocal();
             while (_transactionStatus != null && !_transactionStatus.isCompleted()) {
                 try {
