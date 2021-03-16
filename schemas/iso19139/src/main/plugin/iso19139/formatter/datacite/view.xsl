@@ -450,9 +450,9 @@ eg.
       TODO: Define who is the publisher ? Only one allowed.
   -->
   <xsl:template mode="toDatacite"
-                match="gmd:distributorContact[1]/*">
+                match="gmd:distributionInfo[1]">
     <datacite:publisher>
-      <xsl:value-of select="gmd:organisationName/gco:CharacterString"/>
+      <xsl:value-of select="($metadata//gmd:distributorContact)[1]/*/gmd:organisationName/gco:CharacterString"/>
     </datacite:publisher>
 
     <!--
@@ -478,23 +478,21 @@ eg.
         </datacite:publicationYear>
       </xsl:if>
     </xsl:for-each>
-  </xsl:template>
 
 
-  <!--
-  Technical format of the resource.
-      <datacite:formats>
-        <datacite:format>application/xml</datacite:format>
-      </datacite:formats>
-      -->
-  <xsl:template mode="toDatacite"
-                match="gmd:distributorFormat[1]">
+    <!--
+    Technical format of the resource.
+        <datacite:formats>
+          <datacite:format>application/xml</datacite:format>
+        </datacite:formats>
+        -->
     <datacite:formats>
-      <xsl:for-each select="../gmd:distributorFormat/*/gmd:name[*/text() != '']">
+      <xsl:for-each select="$metadata//gmd:distributionFormat/*/gmd:name[*/text() != '']">
         <datacite:format><xsl:value-of select="gco:CharacterString"/></datacite:format>
       </xsl:for-each>
     </datacite:formats>
   </xsl:template>
+
 
 
   <!--
