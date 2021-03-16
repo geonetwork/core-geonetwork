@@ -517,7 +517,7 @@ eg.
       </datacite:rightsList>
       -->
   <xsl:template mode="toDatacite"
-                match="gmd:useLimitation[1]">
+                match="gmd:resourceConstraints[1]">
     <datacite:rightsList>
       <xsl:for-each select="$metadata//gmd:useLimitation[*/text() != '']">
         <xsl:apply-templates mode="toDataciteLocalized" select=".">
