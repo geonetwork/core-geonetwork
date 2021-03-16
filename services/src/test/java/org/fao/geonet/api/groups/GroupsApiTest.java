@@ -279,6 +279,37 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         Assert.assertNotNull(groupAdded);
     }
 
+    @Test
+    public void addGroupInvalidName() throws Exception {
+        Group groupToAdd = _groupRepo.findByName("--invalidname");
+        Assert.assertNull(groupToAdd);
+
+        groupToAdd = new Group();
+        // TODO: Would be better that id is an Integer to use null for new records
+        groupToAdd.setId(-99);
+        groupToAdd.setName("--invalidname");
+        groupToAdd.setEmail("group@mail.com");
+        groupToAdd.setDescription("A test group");
+        groupToAdd.setWebsite("http://link");
+
+        Gson gson = new GsonBuilder()
+            .setFieldNamingStrategy(new JsonFieldNamingStrategy())
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations"))
+            .create();
+        String json = gson.toJson(groupToAdd);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+        this.mockMvc.perform(put("/srv/api/groups")
+            .content(json)
+            .contentType(API_JSON_EXPECTED_ENCODING)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(400))
+            .andExpect(jsonPath("$.description", is("Group name may only contain alphanumeric "
+                + "characters or single hyphens. Cannot begin or end with a hyphen.")));
+    }
 
     @Test
     public void addExistingGroup() throws Exception {

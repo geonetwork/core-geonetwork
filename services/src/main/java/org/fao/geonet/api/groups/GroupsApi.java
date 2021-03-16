@@ -45,6 +45,7 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.attachments.AttachmentsApi;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Group_;
 import org.fao.geonet.domain.Language;
@@ -115,6 +116,12 @@ import static org.springframework.data.jpa.domain.Specifications.where;
     description = "Groups operations")
 @Controller("groups")
 public class GroupsApi {
+    /**
+     * Group name pattern with allowed chars. Group name may only contain alphanumeric characters or single hyphens.
+     * Cannot begin or end with a hyphen.
+     */
+    private static final String GROUPNAME_PATTERN = "^[a-zA-Z0-9]+([-_.@]?[a-zA-Z0-9]+)*$";
+
     /**
      * API logo note.
      */
@@ -352,6 +359,12 @@ public class GroupsApi {
             ));
         }
 
+        if (!group.getName().matches(GROUPNAME_PATTERN)) {
+            throw new IllegalArgumentException("Group name may only contain alphanumeric characters "
+                + "or single hyphens. Cannot begin or end with a hyphen."
+            );
+        }
+
         // Populate languages if not already set
         java.util.List<Language> allLanguages = langRepository.findAll();
         Map<String, String> labelTranslations = group.getLabelTranslations();
@@ -479,6 +492,12 @@ public class GroupsApi {
                 MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
             ));
         } else {
+            if (!group.getName().matches(GROUPNAME_PATTERN)) {
+                throw new IllegalArgumentException("Group name may only contain alphanumeric characters "
+                    + "or single hyphens. Cannot begin or end with a hyphen."
+                );
+            }
+
             try {
                 groupRepository.saveAndFlush(group);
             } catch (Exception ex) {

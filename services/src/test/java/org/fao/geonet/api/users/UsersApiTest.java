@@ -334,6 +334,37 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void createUserInvalidUsername() throws Exception {
+        UserDto user = new UserDto();
+        user.setUsername("--invalidusername");
+        user.setName("test");
+        user.setProfile(Profile.Editor.name());
+        user.setGroupsEditor(Collections.singletonList("2"));
+        user.setEmail(Collections.singletonList("mail@test.com"));
+        user.setPassword("password");
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        // Check 400 is returned and a message indicating that username is required
+        this.mockMvc.perform(put("/srv/api/users")
+            .content(json)
+            .contentType(API_JSON_EXPECTED_ENCODING)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(jsonPath("$.description", is("username may only contain alphanumeric "
+                + "characters or single hyphens, single at signs or single dots. Cannot begin or end with a "
+                + "hyphen, at sign or dot.")))
+            .andExpect(status().is(400));
+    }
+
+
+    @Test
     public void resetPassword() throws Exception {
         User user = _userRepo.findOneByUsername("testuser-editor");
         Assert.assertNotNull(user);
