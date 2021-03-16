@@ -117,14 +117,14 @@ public class DataManager {
         this.metadataUtils.init(context, force);
 
         // FIXME this shouldn't login automatically ever!
-        if (context.getUserSession() == null) {
-            LOGGER_DATA_MANAGER.debug( "Automatically login in as Administrator. Who is this? Who is calling this?");
-            UserSession session = new UserSession();
-            context.setUserSession(session);
-            session.loginAs(new User().setUsername("admin").setId(-1).setProfile(Profile.Administrator));
-            LOGGER_DATA_MANAGER.debug( "Hopefully this is cron job or routinely background task. Who called us?",
-                        new Exception("Dummy Exception to know the stacktrace"));
-        }
+//        if (context.getUserSession() == null) {
+//            LOGGER_DATA_MANAGER.debug( "Automatically login in as Administrator. Who is this? Who is calling this?");
+//            UserSession session = new UserSession();
+//            context.setUserSession(session);
+//            session.loginAs(new User().setUsername("admin").setId(-1).setProfile(Profile.Administrator));
+//            LOGGER_DATA_MANAGER.debug( "Hopefully this is cron job or routinely background task. Who called us?",
+//                        new Exception("Dummy Exception to know the stacktrace"));
+//        }
     }
 
     @Deprecated
