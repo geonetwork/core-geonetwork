@@ -615,7 +615,7 @@
                       in="/mdb:MD_Metadata">
                 <template>
                   <!-- TODO: Update list -->
-                  <snippet label="addCrs4326">
+                  <snippet label="addCrs4326cersat">
                     <mdb:referenceSystemInfo>
                       <mrs:MD_ReferenceSystem>
                         <mrs:referenceSystemIdentifier>
@@ -631,7 +631,7 @@
                       </mrs:MD_ReferenceSystem>
                     </mdb:referenceSystemInfo>
                   </snippet>
-                  <snippet label="addCrs4258">
+                  <snippet label="addCrs4258cersat">
                     <mdb:referenceSystemInfo>
                       <mrs:MD_ReferenceSystem>
                         <mrs:referenceSystemIdentifier>
@@ -647,7 +647,7 @@
                       </mrs:MD_ReferenceSystem>
                     </mdb:referenceSystemInfo>
                   </snippet>
-                  <snippet label="addCrs3035">
+                  <snippet label="addCrs3035cersat">
                     <mdb:referenceSystemInfo>
                       <mrs:MD_ReferenceSystem>
                         <mrs:referenceSystemIdentifier>

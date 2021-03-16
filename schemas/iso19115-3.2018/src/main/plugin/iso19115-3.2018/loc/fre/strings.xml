@@ -132,6 +132,9 @@
   <addCrs4326>WGS 84</addCrs4326>
   <addCrs4258>ETRS89</addCrs4258>
   <addCrs3035>ETRS89 / LAEA Europe</addCrs3035>
+  <addCrs4326cersat>WGS 84 (EPSG:4326) - Equirectangular projection</addCrs4326cersat>
+  <addCrs4258cersat>ETRS89 (EPSG:4258) - Equirectangular projection</addCrs4258cersat>
+  <addCrs3035cersat>ETRS89 / LAEA Europe (EPSG:3035) - Lambert azimuthal equal-area projection</addCrs3035cersat>
 
   <sxt-view-networkLink>Chemin d'accès</sxt-view-networkLink>
   <noThesaurusName>Mots clés</noThesaurusName>
