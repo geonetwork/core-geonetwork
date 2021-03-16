@@ -24,7 +24,7 @@
 package org.fao.geonet.kernel.harvest;
 
 import jeeves.server.context.ServiceContext;
-
+import jeeves.server.dispatchers.ServiceManager;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.fao.geonet.GeonetContext;
@@ -45,6 +45,8 @@ import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarversterJobListener;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
@@ -63,6 +65,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 /**
  * TODO Javadoc.
@@ -85,8 +88,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     private ServiceContext context;
     private boolean readOnly;
     private ConfigurableApplicationContext applicationContext;
-    private Map<String, AbstractHarvester> hmHarvesters = new HashMap<String, AbstractHarvester>();
-    private Map<String, AbstractHarvester> hmHarvestLookup = new HashMap<String, AbstractHarvester>();
+    private Map<String, AbstractHarvester> hmHarvesters = new HashMap<>();
+    private Map<String, AbstractHarvester> hmHarvestLookup = new HashMap<>();
 
     public ConfigurableApplicationContext getApplicationContext() {
         return applicationContext;
@@ -106,7 +109,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
      */
     @Override
     public void init(ServiceContext context, boolean isReadOnly) throws Exception {
-        this.context = context;
+        //create a new (shared) context instead of using the Jeeves one
+        ServiceManager serviceManager = context.getBean(ServiceManager.class);
+        this.context =  serviceManager.createServiceContext("harvester", context);
+
         this.dataMan = context.getBean(DataManager.class);
         this.settingMan = context.getBean(HarvesterSettingsManager.class);
         applicationContext = context.getApplicationContext();
@@ -186,6 +192,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
             AbstractHarvester.shutdownScheduler();
         } catch (SchedulerException e) {
             Log.error(Geonet.HARVEST_MAN, "Error shutting down harvester scheduler");
+        }
+        //we created the context, so we have to clean it up
+        if (context != null){
+            context.clear();
         }
     }
 
