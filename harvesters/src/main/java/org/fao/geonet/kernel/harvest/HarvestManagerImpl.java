@@ -108,11 +108,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
      * @throws Exception hmm
      */
     @Override
-    public void init(ServiceContext context, boolean isReadOnly) throws Exception {
+    public void init(ServiceContext initContext, boolean isReadOnly) throws Exception {
         //create a new (shared) context instead of using the Jeeves one
         ServiceManager serviceManager = context.getBean(ServiceManager.class);
-        context = serviceManager.createServiceContext("harvester", context);
-        this.context =  context;
+        this.context = serviceManager.createServiceContext("harvester", initContext);
 
         this.dataMan = context.getBean(DataManager.class);
         this.settingMan = context.getBean(HarvesterSettingsManager.class);
