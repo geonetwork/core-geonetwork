@@ -149,7 +149,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Sorted harvester nodes.
      *
      * @param nodes     harvest nodes
      * @param sortField sort field
@@ -164,7 +164,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Transformed harvest node
      *
      * @param node harvest node
      * @return transformed harvest node
@@ -177,7 +177,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Clean up harvest manager.
      */
     @Override
     public void shutdown() {
@@ -206,7 +206,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     //---------------------------------------------------------------------------
 
     /**
-     * TODO javadoc.
+     * Harvest node, filtered to only include nodes visible to user session.
      *
      * @param id      harvester id
      * @param context servicecontext
@@ -293,7 +293,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO javadoc.
+     * Add harvester, returning the id new harvester.
      *
      * @param node    harvester config
      * @param ownerId the id of the user doing this
@@ -324,7 +324,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Add harvester, returning UUID.
+     * @return uuid of new harvester
      */
     @Override
     public String addHarvesterReturnUUID(Element node) throws JeevesException, SQLException {
@@ -345,9 +346,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO javadoc.
+     * Clone harvester.
      *
      * @param ownerId id of the user doing this
+     * @return id of the new harvester
      */
     @Override
     public synchronized String createClone(String id, String ownerId, ServiceContext context) throws Exception {
@@ -380,9 +382,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO javadoc.
+     * Update on harvester progress.
      *
      * @param ownerId id of the user doing this
+     * @return true of harvester updated
      */
     @Override
     public synchronized boolean update(Element node, String ownerId) throws BadInputEx, SQLException, SchedulerException {
@@ -444,7 +447,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
 
     /**
-     * TODO Javadoc.
+     * Start harvester
+     * @param id harvester id
      */
     @Override
     public OperResult start(String id) throws SQLException, SchedulerException {
@@ -460,7 +464,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Stop harvester with provided status, and unschedule any outstanding jobs.
+     * @param id harvester id
+     * @param status New status
+     * @return harvester progress
      */
     @Override
     public OperResult stop(String id, Common.Status status) throws SQLException, SchedulerException {
@@ -476,7 +483,9 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Start harvester run
+     * @parm id harvester to run
+     * return harvester progress
      */
     @Override
     public OperResult run(String id) throws SQLException, SchedulerException {
@@ -500,7 +509,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Run the harvester check if harvest correctly completed.
      */
     @Override
     public OperResult invoke(String id) {
@@ -524,7 +533,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Harvester details
+     * @param harvestUuid uuid to look up harvester info
+     * @param id
+     * @param uuid
      */
     public Element getHarvestInfo(String harvestUuid, String id, String uuid) {
         Element info = new Element(Edit.Info.Elem.HARVEST_INFO);
