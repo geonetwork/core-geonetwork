@@ -364,17 +364,29 @@ public class ServiceContext extends BasicContext {
     //---
     //--------------------------------------------------------------------------
 
+    /**
+     * Language code, or <code>"?"</code> if undefined.
+     * @return language code, or <code>"?"</code> if undefined.
+     */
     public String getLanguage() {
         if (_service == null ){
             //throw new NullPointerException("Service context cleared, language not available");
         }
         return _language;
     }
-
+    /**
+     * Language code, or <code>"?"</code> if undefined.
+     * @param lang language code, or <code>"?"</code> if undefined.
+     */
     public void setLanguage(final String lang) {
         _language = lang;
     }
 
+    /**
+     * Service name, or null if service context is no longer in use.
+     *
+     * @return service name, or null if service is no longer in use
+     */
     public String getService() {
         return _service;
     }
@@ -387,6 +399,11 @@ public class ServiceContext extends BasicContext {
         logger = Log.createLogger(Log.WEBAPP + "." + service);
     }
 
+    /**
+     * IP address of request, or <code>"?"</code> for local loopback request.
+     *
+     * @return ip address, or <code>"?"</code> for loopback request.
+     */
     public String getIpAddress() {
         if (_service == null ){
             throw new NullPointerException("Service context cleared, ip address not available");
@@ -394,6 +411,11 @@ public class ServiceContext extends BasicContext {
         return _ipAddress;
     }
 
+    /**
+     * IP address of request, or <code>"?"</code> for local loopback request.
+     *
+     * @param address ip, address or <code>"?"</code> for loopback request.
+     */
     public void setIpAddress(final String address) {
         _ipAddress = address;
     }
