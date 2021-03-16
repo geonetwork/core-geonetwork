@@ -334,20 +334,14 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 				Log.debug(Geonet.INDEX_ENGINE, subList.toString());
 			}
 
-			// create threads to process this chunk of ids
-			Runnable worker = new IndexMetadataTask(context, subList, batchIndex, transactionStatus, numIndexedTracker);
-			executor.execute(worker);
-			index += count;
-		}
-
-		try {
-			executor.awaitTermination(1, TimeUnit.DAYS );
-		} catch (InterruptedException e) {
-			Log.warning( Geonet.INDEX_ENGINE, "Indexing took more than a day", e);
-		}
-
-		executor.shutdown();
-	}
+            // create threads to process this chunk of ids
+            Runnable worker = new IndexMetadataTask(context, subList, batchIndex, transactionStatus, numIndexedTracker);
+            executor.execute(worker);
+            index += count;
+        }
+	// let the started threads finish in the background and then clean up executor
+        executor.shutdown();
+    }
 
 	@Override
 	public boolean isIndexing() {
