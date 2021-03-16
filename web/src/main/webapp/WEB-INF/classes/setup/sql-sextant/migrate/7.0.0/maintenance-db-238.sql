@@ -12,13 +12,21 @@ UPDATE Sources SET type = 'portal' WHERE type IS null AND uuid = (SELECT value F
 UPDATE Sources SET type = 'harvester' WHERE type IS null AND uuid != (SELECT value FROM settings WHERE name = 'system/site/siteId');
 
 
+
 -- Migrate virtual csw to portal
+-- WARNING : Parameters to add manually from the admin UI after migration
+SELECT * FROM services s, serviceparameters p
+ WHERE s.id = p.service AND p.name != '_groupPublished';
+-- Should return DCSMM2018 D5 & D1
+
+
 INSERT INTO sources (uuid, name, creationdate, filter, groupowner, logo, servicerecord, type, uiconfig)
 SELECT replace(s.name, 'csw-', ''), replace(s.name, 'csw-', ''),
         '20201022', '+' || p.name || ':' || p.value,
        null, null, null, 'subportal', null
  FROM services s LEFT JOIN serviceparameters p
- ON s.id = p.service;
+ ON s.id = p.service WHERE p.name = '_groupPublished';
+
 
 UPDATE sources SET filter = replace(filter, '_groupPublished', 'groupPublished') WHERE filter LIKE '%_groupPublished%';
 
