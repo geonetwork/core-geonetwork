@@ -451,6 +451,23 @@ public class ServiceContext extends BasicContext {
         _userSession = session;
     }
 
+    /**
+     * Safely look up user name, or <code>anonymous</code>.
+     *
+     * This is a quick null safe lookup of user name suitable for use in logging and error messages.
+     *
+     * @return username, or <code>anonymous</code> if unavailable.
+     */
+    public String userName(){
+        if (_userSession == null || _userSession.getUsername() == null ){
+            return "anonymous";
+        }
+        if( _userSession.getProfile() != null ){
+            return _userSession.getUsername() + "/" + _userSession.getProfile();
+        }
+        return _userSession.getUsername();
+    }
+
     public ProfileManager getProfileManager() {
         return getBean(ProfileManager.class);
     }
