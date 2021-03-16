@@ -44,7 +44,6 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.exception.WebApplicationException;
-import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -67,7 +66,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -88,14 +86,15 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.fao.geonet.constants.Params.CONTENT_TYPE;
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_DC;
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_DCT;
 import static org.fao.geonet.kernel.rdf.Selectors.RDF_NAMESPACE;
 import static org.fao.geonet.kernel.rdf.Selectors.SKOS_NAMESPACE;
+
 
 /**
  * The Class KeywordsApi.
@@ -169,12 +168,13 @@ public class KeywordsApi {
         path = "/search",
         method = RequestMethod.GET,
         produces = {
-            MediaType.APPLICATION_JSON_VALUE
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE
         })
     @ResponseStatus(
         value = HttpStatus.OK)
     @ResponseBody
-    public List<KeywordBean> searchKeywords(
+    public Object searchKeywords(
         @Parameter(
             description = "Query",
             required = false
@@ -305,9 +305,17 @@ public class KeywordsApi {
         session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
             searcher);
 
+        List<KeywordBean> keywords = searcher.getResults();
 
-        // get the results
-        return searcher.getResults();
+        if ("xml".equals(request.getParameter(CONTENT_TYPE))) {
+            Element root = new Element("response");
+            for (KeywordBean kw : keywords) {
+                root.addContent(kw.toElement("eng")); // FIXME: Localize
+            }
+            return root;
+        } else {
+            return keywords;
+        }
     }
 
     /**
