@@ -26,6 +26,8 @@ package org.fao.geonet.exceptions;
 import org.fao.geonet.Constants;
 import org.jdom.Element;
 
+import static org.fao.geonet.utils.Xml.XML10_ILLEGAL_CHAR_PATTERN;
+
 //=============================================================================
 
 @SuppressWarnings("serial")
@@ -74,7 +76,8 @@ public abstract class JeevesException extends RuntimeException {
         }
 
         Element error = new Element(Constants.ERROR)
-            .addContent(new Element("message").setText(msg))
+            .addContent(new Element("message").setText(
+                msg.replaceAll(XML10_ILLEGAL_CHAR_PATTERN, "")))
             .addContent(new Element("class").setText(cls))
             .addContent(getStackTrace(t, 10));
 

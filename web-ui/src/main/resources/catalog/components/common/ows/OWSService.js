@@ -99,7 +99,10 @@
             var parser = new ol.format.WMSCapabilities();
             cachedGetCapabilitiesUrls[getCapabilitiesUrl] = parser.read(data);
           }
-          var result = angular.copy(cachedGetCapabilitiesUrls[getCapabilitiesUrl], {});
+          
+           // do a deep copy of the capabilities obj
+          var result = JSON.parse(JSON.stringify(cachedGetCapabilitiesUrls[getCapabilitiesUrl]));
+
           var layers = [];
           var url = result.Capability.Request.GetMap.
               DCPType[0].HTTP.Get.OnlineResource;

@@ -22,6 +22,9 @@
  */
 package org.fao.geonet.api.records.editing;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+
 import com.google.common.collect.Sets;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -66,9 +69,9 @@ import java.util.Set;
 @RequestMapping(value = {
     "/{portal}/api/records"
 })
-@Tag(name = "records",
-    description = "Metadata record editing operations")
-@Controller("records/edit")
+@Tag(name = API_CLASS_RECORD_TAG,
+    description = API_CLASS_RECORD_OPS)
+@Controller("recordsBatchEdit")
 @ReadWriteController
 public class BatchEditsApi implements ApplicationContextAware {
     @Autowired

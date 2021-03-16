@@ -37,7 +37,7 @@
                   data-ng-if="!md.overview[0].url"></div>
             <img class="gn-img-thumbnail"
                   alt="{{md.title || md.defaultTitle}}"
-                  data-ng-src="{{md.overview[0].url}}?size=250"
+                  data-ng-src="{{md.overview[0].data || (md.overview[0].url | thumbnailUrlSize)}}"
                   data-ng-if="md.overview[0].url"/>
           </div>
         </div>

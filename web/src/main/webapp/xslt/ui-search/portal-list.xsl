@@ -64,10 +64,10 @@
       </div>
     </div>
     <div class="container gn-info-list-blocks">
-      <ul class="row gn-info-list">
+      <ul class="row list-group gn-info-list">
         <xsl:for-each select=".//sources/record[type = 'subportal']">
           <xsl:sort select="label/*[name() = $lang]"/>
-          <li>
+          <li class="list-group-item panel panel-default gn-card">
             <xsl:variable name="portalInfo"
                           select="if (label/*[name() = $lang] != '')
                                               then label/*[name() = $lang]
@@ -80,24 +80,34 @@
                           select="if (contains($portalInfo, $infoSeparator))
                                   then substring-after($portalInfo, $infoSeparator)
                                   else ''"/>
-            <a href="../../{uuid}"
-               title="{$portalInfo}">
-              <section class="resultcard clearfix hasThumbnail">
-                <div class="gn-md-thumbnail">
-                  <div class="gn-img-thumbnail"
-                        style="background-image: url(../../images/harvesting/{if (logo != '') then logo else 'blank.png'})">
-                  </div>
-                </div>
-                <div class="title">
+            <div class="panel-heading gn-card-heading">
+              <div class="gn-md-title">
+                <a href="../../{uuid}"
+                   title="{$portalInfo}">
                   <h1>
                     <xsl:value-of select="$portalTitle"/>
                   </h1>
-                  <p>
-                    <xsl:value-of select="$portalDescription"/>
-                  </p>
+                </a>
+              </div>
+            </div>
+            <div class="panel-body gn-card-body">
+              <div class="gn-md-contents">
+                <div class="gn-md-thumbnail">
+                  <div class="gn-img-thumbnail"
+                       style="background-image: url(../../images/harvesting/{if (logo != '') then logo else 'blank.png'})">
+                  </div>
                 </div>
-              </section>
-            </a>
+                <div class="gn-md-details">
+                  <div class="gn-md-abstract">
+                    <p>
+                      <xsl:value-of select="$portalDescription"/>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <!-- /.gn-md-contents -->
+            </div>
+            <!-- /.gn-card-body -->
           </li>
         </xsl:for-each>
       </ul>

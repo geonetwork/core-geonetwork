@@ -45,6 +45,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
+import javax.resource.NotSupportedException;
 
 /**
  * Decorate a store and record put/get/delete operations in database for reporting statistics.
@@ -85,6 +86,11 @@ public class ResourceLoggerStore extends AbstractStore {
             return holder;
         }
         return null;
+    }
+
+    @Override
+    public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
+        throw new NotSupportedException("ResourceLoggerStore does not support getResourceInternal.");
     }
 
     @Override

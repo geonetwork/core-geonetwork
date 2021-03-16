@@ -377,6 +377,13 @@
           <!-- TODO can be multilingual desc and name -->
           <overview type="object">{
             "url": "<xsl:value-of select="normalize-space(.)"/>"
+            <xsl:if test="$isStoringOverviewInIndex">
+              <xsl:variable name="data"
+                            select="util:buildDataUrl(., 140)"/>
+              <xsl:if test="$data != ''">,
+                "data": "<xsl:value-of select="$data"/>"
+              </xsl:if>
+            </xsl:if>
             <xsl:if test="normalize-space(../../gmd:fileDescription) != ''">,
               "text": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
             </xsl:if>
@@ -940,7 +947,7 @@
             "link": "<xsl:value-of select="*/gmd:result/*/gmd:specification/*/gmd:title/@xlink:href"/>",
           </xsl:if>
           <xsl:if test="*/gmd:result/*/gmd:explanation/*/text() != ''">
-            "explanation": "<xsl:value-of select="gn-fn-index:json-escape(*/gmd:result/*/gmd:explanation/*/text())" />",
+            "explanation": "<xsl:value-of select="gn-fn-index:json-escape((*/gmd:result/*/gmd:explanation/*/text())[1])" />",
           </xsl:if>
           "pass": "<xsl:value-of select="$pass" />"
           }

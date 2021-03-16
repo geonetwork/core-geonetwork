@@ -1,23 +1,31 @@
-<ul class="list-group gn-resultview gn-resultview-sumup">
-  <li class="list-group-item gn-grid gn-map-item flex-col flex-align-stretch"
+<ul class="row list-group gn-info-list gn-resultview-sumup">
+  <li class="list-group-item panel panel-default gn-card"
       data-ng-repeat="md in searchResults.records"
       data-gn-fix-mdlinks=""
       title="{{(md.resourceAbstract) | striptags}}"
       ng-click="loadMap(maps[0], md)">
 
-
-    <div class="gn-md-thumbnail flex-grow"
-         ng-style="{ 'background-image': md.overview[0].url && 'url(' + md.overview[0].url + ')' }">
+    <div class="panel-heading gn-card-heading">
+      <div class="gn-md-title">
+        <a ng-href="#/metadata/{{md.uuid}}"
+           title="{{md.resourceTitle}}">
+          <h1>{{md.resourceTitle}}</h1>
+        </a>
+      </div>
     </div>
 
-    <div class="gn-img-thumbnail-caption">
-      {{md.resourceTitle}}
+    <div class="panel-body gn-card-body">
+      <div class="gn-md-contents">
+        <div class="gn-md-thumbnail"
+             data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}">
+          <a ng-href="#/metadata/{{md.uuid}}"
+             title="{{'openRecord' | translate}}" translate>
+            <div class="gn-img-thumbnail"
+                 style="background-image: url('{{md.overview[0].data || (md.overview[0].url | thumbnailUrlSize)}}')">
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
-
-    <a class=""
-        ng-href="#/metadata/{{md.uuid}}"
-        title="{{'openRecord' | translate}}" translate>
-      openRecord
-    </a>
   </li>
 </ul>

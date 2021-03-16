@@ -51,7 +51,7 @@
             data-ng-if="isSaveMapInCatalogAllowed && user.isEditorOrMore()"
             data-toggle="collapse"
             data-target="#saveform"
-            aria-expanded="false" 
+            aria-expanded="false"
             aria-controls="saveform">
       <span data-translate="">Save</span>
     </button>
@@ -88,12 +88,12 @@
           data-ng-show="groups && groups.length > 1">
         <label data-translate="">group</label>
         <div data-groups-combo=""
-            data-optional="{{user.isAdministrator()}}"
-            data-owner-group="mapProps.group"
-            lang="lang"
-            data-groups="groups"
-            data-profile="Editor"
-            data-exclude-special-groups="true"/>
+             data-optional="false"
+             data-owner-group="mapProps.group"
+             lang="lang"
+             data-groups="groups"
+             data-profile="Editor"
+             data-exclude-special-groups="true"/>
       </div>
       <input type="hidden"
             name="publishedToAll"

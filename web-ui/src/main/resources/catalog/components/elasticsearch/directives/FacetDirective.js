@@ -287,8 +287,8 @@
     }])
 
   module.directive('gnFacetTemporalrange', [
-    '$timeout',
-    function($timeout) {
+    '$timeout', '$translate',
+    function($timeout, $translate) {
     return {
       restrict: 'A',
       replace: true,
@@ -308,8 +308,12 @@
         scope.signal = null;
 
         scope.vl = null;
-        scope.dateFormat = scope.facet.meta.dateFormat || 'DD-MM-YYYY'
-        scope.vegaDateFormat = scope.facet.meta.vegaDateFormat || '%d-%m-%Y'
+        scope.dateFormat = scope.facet.meta.dateFormat || 'DD-MM-YYYY';
+        scope.vegaDateFormat = scope.facet.meta.vegaDateFormat || '%d-%m-%Y';
+        scope.dateRangeConfig = {
+          maxViewMode: scope.facet.meta.dateSelectMode || 'days',
+          minViewMode: scope.facet.meta.dateSelectMode || 'days'
+        };
         scope.initialRange = angular.copy(scope.facet.items);
 
         function buildData() {
@@ -409,7 +413,9 @@
                 type: 'temporal',
                 timeunit: 'milliseconds',
                 axis: {
-                  title: ''
+                  title: $translate.instant('facets.temporalRange.seriesLegend'),
+                  titleFontWeight: 'normal',
+                  titleFontSize: '8'
                 }
               },
               y: {
