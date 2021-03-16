@@ -457,9 +457,9 @@ eg.
       TODO: Define who is the publisher ? Only one allowed.
   -->
   <xsl:template mode="toDatacite"
-                match="mrd:distributorContact[1]/*">
+                match="mdb:distributionInfo[1]">
     <datacite:publisher>
-      <xsl:value-of select="cit:party/*/cit:organisationName/gco:CharacterString"/>
+      <xsl:value-of select="($metadata//mrd:distributorContact)[1]/*/cit:party//cit:CI_Organisation/cit:name/gco:CharacterString"/>
     </datacite:publisher>
 
     <!--
@@ -484,19 +484,16 @@ eg.
         <xsl:value-of select="$publicationDate"/>
       </datacite:publicationYear>
     </xsl:if>
-  </xsl:template>
 
 
-  <!--
-  Technical format of the resource.
-      <datacite:formats>
-        <datacite:format>application/xml</datacite:format>
-      </datacite:formats>
-      -->
-  <xsl:template mode="toDatacite"
-                match="mrd:distributorFormat[1]">
+    <!--
+    Technical format of the resource.
+        <datacite:formats>
+          <datacite:format>application/xml</datacite:format>
+        </datacite:formats>
+        -->
     <datacite:formats>
-      <xsl:for-each select="../mrd:distributorFormat/*/mrd:formatSpecificationCitation/*/cit:title[*/text() != '']">
+      <xsl:for-each select="$metadata//mrd:distributorFormat/*/mrd:formatSpecificationCitation/*/cit:title[*/text() != '']">
         <datacite:format><xsl:value-of select="gco:CharacterString"/></datacite:format>
       </xsl:for-each>
     </datacite:formats>
@@ -525,7 +522,7 @@ eg.
       </datacite:rightsList>
       -->
   <xsl:template mode="toDatacite"
-                match="mco:useLimitation[1]">
+                match="mri:resourceConstraints[1]">
     <datacite:rightsList>
       <xsl:for-each select="$metadata//mco:useLimitation[*/text() != '']">
         <xsl:apply-templates mode="toDataciteLocalized" select=".">
