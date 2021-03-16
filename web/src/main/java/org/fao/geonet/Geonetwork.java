@@ -25,6 +25,7 @@ package org.fao.geonet;
 
 import java.util.Collections;
 import javax.persistence.EntityManager;
+import jeeves.server.UserSession;
 import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.api.ApiUtils;
 import org.locationtech.jts.geom.MultiPolygon;
@@ -425,6 +426,7 @@ public class Geonetwork implements ApplicationHandler {
             public void run() {
                 ServiceManager serviceManager = _applicationContext.getBean(ServiceManager.class);
                 ServiceContext fillCacheServiceContext = serviceManager.createServiceContext( "init.filleCaches",_applicationContext);
+                fillCacheServiceContext.setUserSession( new UserSession() );
                 FormatterApi formatService = fillCacheServiceContext.getBean(FormatterApi.class); // this will initialize the formatter
 
                 final ServletContext servletContext = fillCacheServiceContext.getServlet().getServletContext();
