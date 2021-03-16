@@ -32,7 +32,7 @@
             <!-- Thumbnail -->
             <div class="gn-md-thumbnail" ng-class="::{'gn-md-emptythumbnail': !md.thumbnail}">
               <img gn-img-modal="md" class="gn-img-thumbnail"
-                   data-ng-src="{{::md.overview[0].url | thumbnailUrlSize}}"
+                   data-ng-src="{{::md.overview[0].data || (md.overview[0].url | thumbnailUrlSize)}}"
                    data-ng-if="::md.overview[0]"/>
             </div>
 
