@@ -943,8 +943,6 @@
           date: '=gnBootstrapDatepicker',
           dates: '=dateAvailable',
           config: '=config',
-          dateMin: '=dateMin',
-          dateMax: '=dateMax',
           onChangeFn: '&?'
         },
         link: function(scope, element, attrs) {
@@ -959,10 +957,10 @@
           // });
 
           var init = function() {
-            if (scope.dateMin || scope.dateMax) {
+            if (scope.config.dateMin || scope.config.dateMax) {
               limits = {
-                min: new Date(scope.dateMin),
-                max: new Date(scope.dateMax)
+                min: new Date(scope.config.dateMin),
+                max: new Date(scope.config.dateMax)
               };
             }
             // if dates is specified it overrides the min/max params
@@ -1031,7 +1029,7 @@
               });
             }
             // only display available dates if either min or max is specified
-            if (angular.isDefined(scope.dateMin) || angular.isDefined(scope.dateMax)) {
+            if (angular.isDefined(scope.config.dateMin) || angular.isDefined(scope.config.dateMax)) {
               angular.extend(datepickConfig, {
                 startDate: limits.min,
                 endDate: limits.max
