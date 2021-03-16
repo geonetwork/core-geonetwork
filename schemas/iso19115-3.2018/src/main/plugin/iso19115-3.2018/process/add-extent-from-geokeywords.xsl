@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:exslt="http://exslt.org/common"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
@@ -36,7 +35,7 @@
   <xsl:variable name="replaceMode"
                 select="geonet:parseBoolean($replace)"/>
   <xsl:variable name="serviceUrl"
-                select="concat($gurl, '/keywords?pNewSearch=true&amp;pTypeSearch=2&amp;pKeyword=')"/>
+                select="concat(substring($gurl, 1, string-length($gurl)-4), 'api/registries/vocabularies/search?_content_type=xml&amp;q=')"/>
 
 
 
@@ -60,7 +59,6 @@
                       and (not(contains($extentDescription, gco:CharacterString))
                       or not(contains($extentDescription, gmx:Anchor)))
                       and ../mri:type/mri:MD_KeywordTypeCode/@codeListValue='place']"/>
-
     <xsl:if test="$geoKeywords">
       <suggestion process="add-extent-from-geokeywords" id="{generate-id()}" category="keyword" target="extent">
         <name><xsl:value-of select="geonet:i18n($add-extent-loc, 'a', $guiLang)"/><xsl:value-of select="string-join($geoKeywords/gco:CharacterString, ', ')"/>
@@ -90,7 +88,6 @@
   <xsl:template
           match="mdb:identificationInfo/*"
           priority="2">
-
     <xsl:variable name="srv"
                   select="local-name(.)='SV_ServiceIdentification'
             or contains(@gco:isoType, 'SV_ServiceIdentification')"/>
@@ -190,12 +187,11 @@
     <xsl:if test="normalize-space($word)!=''">
       <!-- Get keyword information -->
       <xsl:variable name="keyword" select="document(concat($serviceUrl, encode-for-uri($word)))"/>
-      <xsl:variable name="knode" select="exslt:node-set($keyword)"/>
 
       <!-- It should be one but if one keyword is found in more
           thant one thesaurus, then each will be processed.-->
-      <xsl:for-each select="$knode/response/descKeys/keyword">
-        <xsl:if test="geo">
+      <xsl:for-each select="$keyword/response/keyword">
+        <xsl:if test="geo and geo/west != '' and geo/south != '' and geo/east != '' and geo/north != ''">
           <mri:extent>
             <xsl:copy-of select="geonet:make-iso19115-3-extent(geo/west, geo/south, geo/east, geo/north, $word)"/>
           </mri:extent>
