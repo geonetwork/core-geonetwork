@@ -88,3 +88,8 @@ section.links,
   position: absolute;
   width: 100%;
 }
+
+.gn-md-view .entry {
+  border-left: 2px solid #ddd !important;
+  padding-left: 8px !important;
+}
