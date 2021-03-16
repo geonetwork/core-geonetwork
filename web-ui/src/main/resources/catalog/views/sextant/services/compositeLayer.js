@@ -184,10 +184,10 @@
             }
 
             // replace individual attributes
-            matches = html.matchAll(TOOLTIP_ATTR_REGEX)
-            for (var match of matches) {
-              token = match[0];
-              var attrName = match[1];
+            matches = Array.from(html.matchAll(TOOLTIP_ATTR_REGEX));
+            for (var i = 0; i < matches.length; i++) {
+              token = matches[i][0];
+              var attrName = matches[i][1];
               html = html.replace(token, props[attrName] || '');
             }
             tooltipOverlay.getElement().innerHTML = html;
