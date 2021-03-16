@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest;
 
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.fao.geonet.GeonetContext;
@@ -108,7 +109,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
      */
     @Override
     public void init(ServiceContext context, boolean isReadOnly) throws Exception {
-        this.context = context;
+        //create a new (shared) context instead of using the Jeeves one
+        ServiceManager serviceManager = context.getBean(ServiceManager.class);
+        this.context =  serviceManager.createServiceContext("harvester", context);
+
         this.dataMan = context.getBean(DataManager.class);
         this.settingMan = context.getBean(HarvesterSettingsManager.class);
         applicationContext = context.getApplicationContext();
@@ -188,6 +192,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
             AbstractHarvester.shutdownScheduler();
         } catch (SchedulerException e) {
             Log.error(Geonet.HARVEST_MAN, "Error shutting down harvester scheduler");
+        }
+        //we created the context, so we have to clean it up
+        if (context != null){
+            context.clear();
         }
     }
 
