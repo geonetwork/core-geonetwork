@@ -957,11 +957,15 @@
           // });
 
           var init = function() {
-            if (scope.config.dateMin || scope.config.dateMax) {
-              limits = {
-                min: new Date(scope.config.dateMin),
-                max: new Date(scope.config.dateMax)
-              };
+            var hasBounds = scope.config && (scope.config.dateMin || scope.config.dateMax);
+            if (hasBounds) {
+              limits = {};
+              if (scope.config.dateMin) {
+                limits.min = new Date(scope.config.dateMin);
+              }
+              if (scope.config.dateMax) {
+                limits.max = new Date(scope.config.dateMax);
+              }
             }
             // if dates is specified it overrides the min/max params
             if (scope.dates) {
@@ -1029,7 +1033,7 @@
               });
             }
             // only display available dates if either min or max is specified
-            if (angular.isDefined(scope.config.dateMin) || angular.isDefined(scope.config.dateMax)) {
+            if (hasBounds) {
               angular.extend(datepickConfig, {
                 startDate: limits.min,
                 endDate: limits.max
@@ -1087,7 +1091,7 @@
               });
             }
           };
-
+          
           init();
 
           // model -> view
