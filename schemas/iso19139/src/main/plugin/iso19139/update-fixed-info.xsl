@@ -935,6 +935,8 @@
                 priority="200">
     <xsl:copy>
       <gco:Integer><xsl:value-of select="count(../gmd:axisDimensionProperties)"/></gco:Integer>
+    </xsl:copy>
+  </xsl:template>
 
   <!-- Force element with DateTime_PropertyType to have gco:DateTime -->
   <xsl:template match="gmd:dateTime|gmd:plannedAvailableDateTime|gmd:usageDateTime"
