@@ -42,6 +42,7 @@
   </xsl:template>
 
 
+
   <xsl:template name="sextant-summary-view">
     <!--<xsl:for-each
       select="$metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords/*[gmd:thesaurusName/*/gmd:identifier/*/gmd:code/* = 'geonetwork.thesaurus.local.theme.sextant-theme']/gmd:keyword">
@@ -62,7 +63,9 @@
       <xsl:if test="count($networkLink) > 0">
         <tr class="md-network-link-description">
           <td>
-            <xsl:value-of select="$schemaStrings/sxt-view-networkLink"/>
+            <xsl:call-template name="landingpage-label">
+              <xsl:with-param name="key" select="'sxt-view-networkLink'"/>
+            </xsl:call-template>
           </td>
           <td>
             <xsl:for-each select="$networkLink">
@@ -75,7 +78,9 @@
 
       <tr>
         <td>
-          <xsl:value-of select="$schemaStrings/sxt-view-date"/>
+          <xsl:call-template name="landingpage-label">
+            <xsl:with-param name="key" select="'sxt-view-date'"/>
+          </xsl:call-template>
         </td>
         <td>
           <div class="row">
@@ -127,7 +132,9 @@
               <xsl:if test="$temporalCoverageContent != ''">
                 <dl>
                   <dt>
-                    <xsl:value-of select="$schemaStrings/sxt-view-temporal"/>
+                    <xsl:call-template name="landingpage-label">
+                      <xsl:with-param name="key" select="'sxt-view-temporal'"/>
+                    </xsl:call-template>
                   </dt>
                   <dd>
                     <xsl:copy-of select="$temporalCoverageContent"/>
@@ -143,7 +150,9 @@
       <xsl:if test="count($authors) > 0">
         <tr>
           <td>
-            <xsl:value-of select="$schemaStrings/sxt-view-author"/>
+            <xsl:call-template name="landingpage-label">
+              <xsl:with-param name="key" select="'sxt-view-author'"/>
+            </xsl:call-template>
           </td>
           <td>
             <xsl:for-each select="$authors">
@@ -163,7 +172,9 @@
       <xsl:if test="count($contacts) > 0">
         <tr>
           <td>
-            <xsl:value-of select="$schemaStrings/sxt-view-contact"/>
+            <xsl:call-template name="landingpage-label">
+              <xsl:with-param name="key" select="'sxt-view-contact'"/>
+            </xsl:call-template>
           </td>
           <td>
             <xsl:for-each select="$contacts">
@@ -202,7 +213,9 @@
       <xsl:if test="count($credits) > 0">
         <tr>
           <td>
-            <xsl:value-of select="$schemaStrings/sxt-view-source"/>
+            <xsl:call-template name="landingpage-label">
+              <xsl:with-param name="key" select="'sxt-view-source'"/>
+            </xsl:call-template>
           </td>
           <td>
             <xsl:for-each select="$credits">
@@ -218,7 +231,9 @@
       <xsl:if test="count($lineage) > 0">
         <tr>
           <td>
-            <xsl:value-of select="$schemaStrings/sxt-view-lineage"/>
+            <xsl:call-template name="landingpage-label">
+              <xsl:with-param name="key" select="'sxt-view-lineage'"/>
+            </xsl:call-template>
           </td>
           <td>
             <xsl:apply-templates mode="render-value"
@@ -228,7 +243,9 @@
       </xsl:if>
       <tr>
         <td>
-          <xsl:value-of select="$schemaStrings/sxt-view-constraints"/>
+          <xsl:call-template name="landingpage-label">
+            <xsl:with-param name="key" select="'sxt-view-constraints'"/>
+          </xsl:call-template>
         </td>
         <td class="gn-record-view_tablecell_aerate">
 
@@ -249,7 +266,9 @@
       </tr>
       <tr>
         <td>
-          <xsl:value-of select="$schemaStrings/sxt-view-geoinfo"/>
+          <xsl:call-template name="landingpage-label">
+            <xsl:with-param name="key" select="'sxt-view-geoinfo'"/>
+          </xsl:call-template>
         </td>
         <td>
           <div class="row">
@@ -257,7 +276,9 @@
               <xsl:if test="$metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType/*/@codeListValue != ''">
                 <dl>
                   <dt>
-                    <xsl:value-of select="$schemaStrings/sxt-view-spatialRepresentationType"/>
+                    <xsl:call-template name="landingpage-label">
+                      <xsl:with-param name="key" select="'sxt-view-spatialRepresentationType'"/>
+                    </xsl:call-template>
                   </dt>
                   <dd>
                     <xsl:apply-templates mode="render-value"
@@ -268,7 +289,9 @@
               <xsl:if test="$metadata/gmd:referenceSystemInfo">
                 <dl>
                   <dt>
-                    <xsl:value-of select="$schemaStrings/sxt-view-crs"/>
+                    <xsl:call-template name="landingpage-label">
+                      <xsl:with-param name="key" select="'sxt-view-crs'"/>
+                    </xsl:call-template>
                   </dt>
                   <dd>
                     <xsl:for-each select="$metadata/gmd:referenceSystemInfo/*/gmd:referenceSystemIdentifier/*/gmd:code">
@@ -285,7 +308,9 @@
               <xsl:if test="count($scales) > 0">
                 <dl>
                  <dt>
-                    <xsl:value-of select="$schemaStrings/sxt-view-scale"/>
+                   <xsl:call-template name="landingpage-label">
+                     <xsl:with-param name="key" select="'sxt-view-scale'"/>
+                   </xsl:call-template>
                   </dt>
                   <dd>
                     <xsl:for-each select="$scales">
@@ -300,7 +325,9 @@
               <xsl:if test="count($resolutions) > 0">
                 <dl>
                   <dt>
-                    <xsl:value-of select="$schemaStrings/sxt-view-resolution"/>
+                    <xsl:call-template name="landingpage-label">
+                      <xsl:with-param name="key" select="'sxt-view-resolution'"/>
+                    </xsl:call-template>
                   </dt>
                   <dd>
                     <xsl:for-each select="$resolutions">
@@ -317,7 +344,9 @@
       <xsl:if test="$portalLink = ''">
         <tr id="sextant-related">
           <td>
-            <xsl:value-of select="$schemaStrings/sxt-view-related"/>
+            <xsl:call-template name="landingpage-label">
+              <xsl:with-param name="key" select="'sxt-view-related'"/>
+            </xsl:call-template>
           </td>
           <td>
             <div gn-related="md"

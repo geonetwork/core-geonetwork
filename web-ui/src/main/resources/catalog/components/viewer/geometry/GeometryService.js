@@ -90,12 +90,14 @@
        * If non existent, the layer will be created
        *
        * @param {ol.Map} map open layers map
+       * @param {!string} name suffix (point, polygon, lines) optionnal
        * @return {ol.layer.Vector} vector layer
        */
-      this.getCommonLayer = function(map) {
+      this.getCommonLayer = function(map, name) {
+        name ? name = 'geometry-tool-layer' + '-' + name : name = 'geometry-tool-layer' ;
         var commonLayer = null;
         map.getLayers().getArray().forEach(function(layer) {
-          if (layer.get('name') === 'geometry-tool-layer') {
+          if (layer.get('name') === name) {
             commonLayer = layer;
           }
         });
@@ -106,12 +108,13 @@
 
         // layer & source
         var source = new ol.source.Vector({
+          wrapX: false,
           useSpatialIndex: true,
           features: new ol.Collection()
         });
         commonLayer = new ol.layer.Vector({
           source: source,
-          name: 'geometry-tool-layer',
+          name: name,
           style: [
             new ol.style.Style({  // this is the default editing style
               fill: new ol.style.Fill({

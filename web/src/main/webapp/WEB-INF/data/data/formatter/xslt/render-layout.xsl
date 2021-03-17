@@ -110,6 +110,9 @@
           <xsl:variable name="metadataOtherLanguages">
             <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
           </xsl:variable>
+          <xsl:variable name="metadataMainLanguages">
+            <saxon:call-template name="{concat('get-', $schema, '-language')}"/>
+          </xsl:variable>
 
           <xsl:variable name="defaultLanguage"
                         select="$metadataOtherLanguages/*[position() = last()]/@code"/>
@@ -124,6 +127,18 @@
               </a>
             </li>
           </xsl:for-each>
+
+          <xsl:if test="count($metadataOtherLanguages/*) = 0 and $metadataMainLanguages">
+            <li class="active">
+              <a id="gn-default-lang-link"
+                 onclick="gnLandingPage.displayLanguage('{$metadataMainLanguages}', this);">
+                <xsl:variable name="label"
+                              select="utils:getIsoLanguageLabel($metadataMainLanguages, $metadataMainLanguages)"/>
+                <xsl:value-of select="if ($label != '') then $label else @code"/><xsl:text> </xsl:text>
+              </a>
+            </li>
+          </xsl:if>
+
           <xsl:if test="count($metadataOtherLanguages/*) > 1">
             <li class="active">
               <a onclick="gnLandingPage.displayLanguage('', this);">
@@ -247,9 +262,11 @@
 
             <xsl:if test="$portalLink != ''">
               <xsl:variable name="defaultUrl"
+                            select="concat('https://sextant.ifremer.fr/Donnees/Catalogue#/metadata/', $metadataUuid)"/>
+              <!--<xsl:variable name="defaultUrl"
                             select="concat($nodeUrl,
                                       if($language = 'all') then 'eng' else $language,
-                                      '/catalog.search#/metadata/', $metadataUuid)"/>
+                                      '/catalog.search#/metadata/', $metadataUuid)"/>-->
               <xsl:variable name="portalUrl">
                 <xsl:choose>
                   <xsl:when test="$portalLink = 'default'">
@@ -273,8 +290,15 @@
                   <a class="btn btn-block btn-primary"
                      href="{replace($portalUrl, '\$\{uuid\}', $metadataUuid)}">
                     <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
-                    <xsl:value-of select="$schemaStrings/linkToPortal"/>
+
+                    <xsl:call-template name="landingpage-label">
+                      <xsl:with-param name="key" select="'linkToPortal'"/>
+                    </xsl:call-template>
                   </a>
+
+                  <xsl:call-template name="landingpage-label">
+                    <xsl:with-param name="key" select="'linkToPortal-help'"/>
+                  </xsl:call-template>
                   <!--<a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                      target="_blank" class="btn btn-default">
                     <i class="fa fa-fw fa-linkedin">&#160;</i>&#160;
@@ -331,7 +355,11 @@
                 <section class="gn-md-side-social">
                   <h3>
 <!--                    <i class="fa fa-fw fa-share-square-o"><xsl:comment select="'icon'"/></i>-->
-                    <span><xsl:value-of select="$schemaStrings/shareOnSocialSite"/></span>
+                    <span>
+                      <xsl:call-template name="landingpage-label">
+                        <xsl:with-param name="key" select="'shareOnSocialSite'"/>
+                      </xsl:call-template>
+                    </span>
                   </h3>
 
                   <!-- href="{$nodeUrl}api/records/{$metadataUuid}" -->

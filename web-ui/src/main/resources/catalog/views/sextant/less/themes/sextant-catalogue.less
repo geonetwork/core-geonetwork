@@ -20,3 +20,7 @@ body > div > article .c_content, #body.fullscreen .c_content, .c_showlocation.fu
   overflow-y: auto;
   overflow-x: hidden;
 }
+// https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/286
+.nav-pills, .c_showlocation ul:not(.pagination) {
+  overflow: unset;
+}

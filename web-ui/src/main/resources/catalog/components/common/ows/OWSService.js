@@ -99,14 +99,13 @@
             var parser = new ol.format.WMSCapabilities();
             cachedGetCapabilitiesUrls[getCapabilitiesUrl] = parser.read(data);
           }
-          
+
            // do a deep copy of the capabilities obj
           var result = JSON.parse(JSON.stringify(cachedGetCapabilitiesUrls[getCapabilitiesUrl]));
 
           var layers = [];
           var url = result.Capability.Request.GetMap.
               DCPType[0].HTTP.Get.OnlineResource;
-
 
           // Push all leaves into a flat array of Layers
           // Also adjust crs (by inheritance) and url

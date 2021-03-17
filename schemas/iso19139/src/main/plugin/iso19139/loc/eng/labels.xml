@@ -1012,6 +1012,7 @@
       <option value="temporal resolution: irregular">Irregular</option>
       <option value="temporal resolution: instantaneous">Instantaneous</option>
       <option value="temporal resolution: 15-minutes instantaneous">15-minutes instantaneous</option>
+      <option value="temporal resolution: 15-minutes mean">15-minutes mean</option>
       <option value="temporal resolution: hourly mean">Hourly mean</option>
       <option value="temporal resolution: hourly instantaneous">Hourly instantaneous</option>
       <option value="temporal resolution: 3 hourly mean">3 hourly mean</option>

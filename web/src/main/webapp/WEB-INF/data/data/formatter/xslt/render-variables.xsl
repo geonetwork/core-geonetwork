@@ -92,6 +92,10 @@
 
   <xsl:variable name="schemaStrings"
                 select="/root/schemas/*[name() = $schema]/strings"/>
+  <xsl:variable name="schemaStrings-eng"
+                select="/root/schemas-eng/*[name() = $schema]/strings"/>
+  <xsl:variable name="schemaStrings-fre"
+                select="/root/schemas-fre/*[name() = $schema]/strings"/>
 
   <xsl:variable name="schemaLabels"
                 select="/root/schemas/*[name() = $schema]/labels"/>

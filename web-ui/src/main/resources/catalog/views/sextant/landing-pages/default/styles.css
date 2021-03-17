@@ -53,10 +53,6 @@ div.gn-landing-page-header::after {
 
 }
 
-.gn-md-side-access .well::after {
-  content: "Lien vers les services d'accès aux données et à la fiche complète des métadonnées"
-}
-
 .gn-md-side-access .btn {
   background-color: #b7b8b9;
   color: white;

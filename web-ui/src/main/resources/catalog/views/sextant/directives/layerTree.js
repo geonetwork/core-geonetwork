@@ -571,6 +571,12 @@
               if(angular.isArray(p) && processable) {
                 scope.process = p;
               }
+            } else if (scope.member.get('directDownloadURL')) {
+              // direct download are always using the WWW:DOWNLOAD protocol
+              scope.download = {
+                url: scope.member.get('directDownloadURL'),
+                protocol: 'WWW:DOWNLOAD-1.0-http--download'
+              };
             }
           }
 

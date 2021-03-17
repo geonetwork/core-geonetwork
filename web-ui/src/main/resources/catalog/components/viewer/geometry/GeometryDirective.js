@@ -56,7 +56,8 @@
           input: '=',
           inputFormat: '@',
           inputCrs: '@',
-          inputErrorHandler: '='
+          inputErrorHandler: '=',
+          nameType: '@'
         },
         templateUrl: '../../catalog/components/viewer/geometry/' +
             'partials/geometrytool.html',
@@ -73,7 +74,7 @@
               olDecorateInteraction,
               gnGeometryService) {
             var ctrl = this;
-            var layer = gnGeometryService.getCommonLayer(ctrl.map);
+            var layer = gnGeometryService.getCommonLayer(ctrl.map, ctrl.nameType);
             var source = layer.getSource();
             ctrl.features = new ol.Collection();
 

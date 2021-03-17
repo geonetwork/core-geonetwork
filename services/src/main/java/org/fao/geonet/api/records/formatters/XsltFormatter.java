@@ -145,7 +145,22 @@ public class XsltFormatter implements FormatterImpl {
             for (Element e : elementList) {
                 schemas.addContent(e);
             }
+
+            // Add 2 languages for multilingual landing pages
+            List<String> languages = Arrays.asList(new String[]{"fre", "eng"});
+            languages.forEach(l -> {
+                Element s = new Element("schemas-" + l);
+                root.addContent(s);
+                try {
+                    List<Element> resources = getSchemaLocalization(
+                        schemasToLoad, schemasToLoadList, l);
+                    for (Element e : resources) {
+                        s.addContent(e);
+                    }
+                } catch (Exception e) {}
+            });
         }
+
         if (!"false".equalsIgnoreCase(fparams.param("debug", "false"))) {
             return Xml.getString(root);
         }

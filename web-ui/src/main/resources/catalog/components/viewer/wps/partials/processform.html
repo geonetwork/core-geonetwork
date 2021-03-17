@@ -80,7 +80,17 @@
                 <!-- Inputs: loop on process description to display all inputs -->
               </label>
 
-
+              <!-- Date time -->
+              <div ng-if="isDateTime(input)">
+                <div ng-repeat="field in getInputsByName(input.identifier.value)"
+                     class="input-daterange input-group input-group-sm"
+                     gn-bootstrap-datepicker="pickerValues"
+                     config="{dateMin: getDateBounds(input, true), dateMax: getDateBounds(input, false)}"
+                     data-date-format="dd-mm-yyyy">
+                  <input ng-model="field.value" type="text" ng-blur="onBlur($event)" class="input-sm form-control"/>
+                  <span class="input-group-addon" translate>date</span>
+                </div>
+              </div>
 
               <!-- Basic form field (combo box or text field) -->
               <div ng-if="::input.literalData && !isDateTime(input)">
@@ -133,8 +143,8 @@
                   allow-reset allow-modify output="field.value"
                   output-format="{{ input.outputFormat }}"
                   output-crs="{{ map.getView().getProjection().getCode() }}"
+                  name-type="{{ input.geometryType }}"
                   geometry-type="{{ input.geometryType }}"
-                  output-crs="{{ map.getView().getProjection().getCode() }}"
                   output-as-features="true" map="map"/>
               </div>
 
@@ -194,13 +204,8 @@
                 <div ng-repeat="output in executeResponse.processOutputs.output">
 
                   <div ng-if="output.reference && output.reference.mimeType!='application/x-ogc-wms'"
-<<<<<<< HEAD
                         ng-class="{'gn-single-output': checkOutput(executeResponse.processOutputs.output).length==1}">
                     <h4 class="col-sm-6" ng-if="checkOutput(executeResponse.processOutputs.output).length>1">
-=======
-                        ng-class="{'gn-single-output': executeResponse.processOutputs.output.length == 1}">
-                    <h4 class="col-sm-6" ng-if="executeResponse.processOutputs.output.length > 1">
->>>>>>> origin/4.0.x
                       {{::output.title.value}}
                     </h4>
                     <div ng-class="{'col-sm-6': executeResponse.processOutputs.output.length>1}">
