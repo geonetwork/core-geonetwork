@@ -358,6 +358,11 @@
                      string="{lower-case(gn-fn-iso19115-3.2018:formatDateTime(.))}"
                      store="true" index="true"/>
             </xsl:for-each>
+
+            <Field name="tempExtentPeriod"
+                   string="{concat(lower-case(gn-fn-iso19115-3.2018:formatDateTime(gml:beginPosition|gml:begin/gml:TimeInstant/gml:timePosition)), '|',
+                                   lower-case(gn-fn-iso19115-3.2018:formatDateTime(gml:endPosition|gml:end/gml:TimeInstant/gml:timePosition)))}"
+                   store="true" index="true"/>
           </xsl:for-each>
         </xsl:for-each>
       </xsl:for-each>
