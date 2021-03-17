@@ -628,7 +628,7 @@
             $scope.thesaurusSelected.defaultNamespace +
             ($scope.thesaurusSelected.defaultNamespace.indexOf('#') === -1 ?
             '#' : '') +
-            defaultLabel.trim().replace(/[^\\d\\w-\\.]/gi, '');
+            defaultLabel.trim().replace(/[^\d\w-\.]/gi, '');
       };
 
       /**
