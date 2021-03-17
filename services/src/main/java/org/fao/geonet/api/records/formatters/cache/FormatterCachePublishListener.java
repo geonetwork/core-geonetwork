@@ -23,10 +23,6 @@
 
 package org.fao.geonet.api.records.formatters.cache;
 
-import static org.springframework.data.jpa.domain.Specification.where;
-
-import java.io.IOException;
-import java.util.Optional;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowed;
@@ -39,10 +35,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
+
+import java.io.IOException;
+import java.util.Optional;
+
+import static org.springframework.data.jpa.domain.Specification.where;
 
 /**
  * This class is responsible for listening for metadata index events and updating the cache's
@@ -51,8 +56,8 @@ import org.springframework.stereotype.Component;
  * @author Jesse on 3/6/2015.
  */
 
-@EnableAsync
-@Component
+@Controller
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class FormatterCachePublishListener implements AsynchAfterCommitListener {
     @Autowired
     private FormatterCache formatterCache;
@@ -81,6 +86,7 @@ public class FormatterCachePublishListener implements AsynchAfterCommitListener 
     }
 
     @Override
+//    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
     public void handleAsync(MetadataIndexCompleted event) {
         final int metadataId = event.getMd().getId();
         if (event.getMd().getDataInfo().getType() == MetadataType.METADATA
@@ -91,5 +97,4 @@ public class FormatterCachePublishListener implements AsynchAfterCommitListener 
             formatterCache.buildLandingPage(metadataId);
         }
     }
-
 }

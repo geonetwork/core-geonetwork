@@ -12,6 +12,5 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public interface AsynchAfterCommitListener extends ApplicationListener<MetadataIndexCompleted> {
     @Async
     @EventListener
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
     void handleAsync(MetadataIndexCompleted event);
 }

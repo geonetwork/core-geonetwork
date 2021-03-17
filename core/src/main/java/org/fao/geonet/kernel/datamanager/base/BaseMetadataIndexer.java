@@ -548,6 +548,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         );
 
         searchManager.updateFields(uuid, buildFieldsForPrivileges(id), operationFields);
+
+        this.publisher.publishEvent(new MetadataIndexCompleted(
+            metadataUtils.findOneByUuid(uuid)
+        ));
     }
 
     private Multimap<String, Object> buildFieldsForPrivileges(int recordId) {
