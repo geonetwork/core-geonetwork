@@ -916,7 +916,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
     }
 
     /**
-     * Get Lucene index fields for matching records
+     * Get Lucene index fields for matching records (a single value for each field)
      *
      * @param priorityLang Preferred index language to use.
      * @param field        Field to search for (eg. _uuid)
@@ -926,6 +926,25 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      *                     true when searching on uuid field and only one record is expected.
      */
     public static Map<String, Map<String, String>> getAllMetadataFromIndexFor(String priorityLang, String field, String value, Set<String> returnFields, boolean checkAllHits) throws Exception {
+        return getAllMetadataFromIndexFor(priorityLang, field, value, returnFields, checkAllHits, false);
+    }
+
+    /**
+     * Get Lucene index fields for matching records (a single value for each field)
+     *
+     * @param priorityLang Preferred index language to use.
+     * @param field        Field to search for (eg. _uuid)
+     * @param value        Value to search for
+     * @param returnFields Fields to return
+     * @param checkAllHits If false, only the first match is analyzed for returned field. Set to
+     *                     true when searching on uuid field and only one record is expected.
+     * @param allValues    If false, only the field vaue is returned for each field. Set to
+     *                     true to return all the values as a comma separated list.
+     *
+     */
+    public static Map<String, Map<String, String>> getAllMetadataFromIndexFor(String priorityLang, String field,
+                                                                              String value, Set<String> returnFields,
+                                                                              boolean checkAllHits, boolean allValues) throws Exception {
         final IndexAndTaxonomy indexAndTaxonomy;
         final SearchManager searchmanager;
         ServiceContext context = ServiceContext.get();
@@ -965,7 +984,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 Document doc = docVisitor.getDocument();
 
                 for (String fieldname : returnFields) {
-                    values.put(fieldname, doc.get(fieldname));
+                    if (!allValues) {
+                        values.put(fieldname, doc.get(fieldname));
+                    } else {
+                        values.put(fieldname, String.join(",", doc.getValues(fieldname)));
+                    }
                 }
 
                 records.put(String.valueOf(counter), values);

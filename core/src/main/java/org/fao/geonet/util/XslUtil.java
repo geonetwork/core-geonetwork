@@ -101,6 +101,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -580,6 +581,31 @@ public final class XslUtil {
             return "";
         }
     }
+
+
+    /**
+     * Retrieves all the values as a comma separated list for Lucene field for the metadata
+     * with the provided uuid and language.
+     *
+     */
+    public static String getIndexFieldByIdAllValues(Object appName, Object id, Object field, Object lang) {
+        String fieldname = field.toString();
+        String language = (lang.toString().equals("") ? null : lang.toString());
+        try {
+            Map<String, Map<String, String>> fieldValues = LuceneSearcher.getAllMetadataFromIndexFor(language, "_uuid", id.toString(), Collections.singleton(fieldname), false, true);
+
+            if (fieldValues.isEmpty()) {
+                return "";
+            } else {
+                Map<String, String> values = fieldValues.values().iterator().next();
+                return values.get(fieldname);
+            }
+        } catch (Exception e) {
+            Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
+            return "";
+        }
+    }
+
 
     /**
      * Return a translation for a codelist or enumeration element.
