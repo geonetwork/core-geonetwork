@@ -6,8 +6,8 @@
 
 
   module.directive('sxtMdActionsMenu', ['gnMetadataActions', '$http',
-    '$location', 'Metadata', 'sxtService',
-    function(gnMetadataActions, $http, $location, Metadata, sxtService) {
+    '$location', 'Metadata', 'sxtService', 'gnConfig',
+    function(gnMetadataActions, $http, $location, Metadata, sxtService, gnConfig) {
       return {
         restrict: 'A',
         replace: true,
@@ -47,7 +47,7 @@
                 // TODO: Add has DOI already
                 return md && md.isPublished()
                   && md.isTemplate === 'n'
-                  && md.isHarvested === 'n';
+                  && JSON.parse(md.isHarvested) === false;
               }
             }
           };
