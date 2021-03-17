@@ -262,30 +262,31 @@
           <Field name="extentDesc" string="{string(.)}" store="true" index="true"/>
         </xsl:for-each>
 
-        <xsl:for-each select="gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent|
-          gmd:temporalElement/gmd:EX_SpatialTemporalExtent/gmd:extent">
-          <xsl:for-each select="gml:TimePeriod/gml:beginPosition|gml320:TimePeriod/gml320:beginPosition">
-            <Field name="tempExtentBegin" string="{string(.)}" store="true" index="true"/>
-          </xsl:for-each>
+        <xsl:for-each select="gmd:temporalElement/
+                                  (gmd:EX_TemporalExtent|gmd:EX_SpatialTemporalExtent)/gmd:extent">
+          <xsl:for-each select="gml:TimePeriod|gml320:TimePeriod">
 
-          <xsl:for-each select="gml:TimePeriod/gml:endPosition|gml320:TimePeriod/gml320:endPosition">
-            <Field name="tempExtentEnd" string="{string(.)}" store="true" index="true"/>
-          </xsl:for-each>
+            <xsl:variable name="times">
+              <xsl:call-template name="newGmlTime">
+                <xsl:with-param name="begin"
+                                select="gml:beginPosition|gml:begin/gml:TimeInstant/gml:timePosition|
+                                        gml320:beginPosition|gml320:begin/gml320:TimeInstant/gml320:timePosition"/>
+                <xsl:with-param name="end"
+                                select="gml:endPosition|gml:end/gml:TimeInstant/gml:timePosition|
+                                        gml320:endPosition|gml320:end/gml320:TimeInstant/gml320:timePosition"/>
+              </xsl:call-template>
+            </xsl:variable>
 
-          <xsl:for-each select="gml:TimePeriod/gml:begin/gml:TimeInstant/gml:timePosition|gml320:TimePeriod/gml320:begin/gml320:TimeInstant/gml320:timePosition">
-            <Field name="tempExtentBegin" string="{string(.)}" store="true" index="true"/>
-          </xsl:for-each>
-
-          <xsl:for-each select="gml:TimePeriod/gml:end/gml:TimeInstant/gml:timePosition|gml320:TimePeriod/gml320:end/gml320:TimeInstant/gml320:timePosition">
-            <Field name="tempExtentEnd" string="{string(.)}" store="true" index="true"/>
-          </xsl:for-each>
-
-          <xsl:for-each select="gml:TimeInstant/gml:timePosition|gml320:TimeInstant/gml320:timePosition">
-            <Field name="tempExtentBegin" string="{string(.)}" store="true" index="true"/>
-            <Field name="tempExtentEnd" string="{string(.)}" store="true" index="true"/>
+            <Field name="tempExtentBegin" string="{lower-case(substring-before($times,'|'))}"
+                   store="true" index="true"/>
+            <Field name="tempExtentEnd" string="{lower-case(substring-after($times,'|'))}"
+                   store="true" index="true"/>
+            <Field name="tempExtentPeriod" string="{lower-case($times)}"
+                   store="true" index="true"/>
           </xsl:for-each>
 
         </xsl:for-each>
+
       </xsl:for-each>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
