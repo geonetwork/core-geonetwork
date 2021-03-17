@@ -124,7 +124,7 @@ UPDATE messageproducerentity SET strategy = 'investigator';
 
 
 INSERT INTO metadatastatus (id, changedate, changemessage, closedate, currentstate, duedate, metadataid, owner, previousstate, titles, userid, uuid, relatedmetadatastatusid, statusid)
-SELECT nextval('metadatastatus_id_seq'), changedate, changemessage, closedate, currentstate, duedate, metadataid, COALESCE(owner, 0), previousstate, titles, userid, (SELECT uuid FROM metadata WHERE id = s.metadataid), relatedmetadatastatusid, statusid
+SELECT nextval('metadatastatus_id_seq'), changedate, changemessage, closedate, currentstate, duedate, metadataid, COALESCE(owner, 0), previousstate, null, userid, (SELECT uuid FROM metadata WHERE id = s.metadataid), relatedmetadatastatusid, statusid
 FROM metadatastatus_backup s;
 
 -- DROP TABLE metadatastatus_backup;
