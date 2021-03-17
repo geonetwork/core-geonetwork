@@ -243,14 +243,14 @@
     -->
     <xsl:for-each select="gmd:distributionInfo">
     ,"distribution": [
-      <xsl:for-each select=".//gmd:onLine/*[gmd:linkage/gmd:URL != '']">
+      <xsl:for-each select=".//gmd:onLine/*[starts-with(gmd:linkage/gmd:URL,'http') or starts-with(gmd:linkage/gmd:URL,'//')]">
         <xsl:variable name="p" select="normalize-space(gmd:protocol/*/text())"/>
         {
         "@type":"DataDownload",
-        "contentUrl":"<xsl:value-of select="gmd:linkage/gmd:URL/text()"/>",
-        "encodingFormat":"<xsl:value-of select="if ($p != '') then $p else gmd:protocol/*/@xlink:href"/>",
-        "name":"<xsl:value-of select="gmd:name/*/text()"/>",
-        "description":"<xsl:value-of select="gmd:description/*/text()"/>"
+        "contentUrl":"<xsl:value-of select="gn-fn-index:json-escape(gmd:linkage/gmd:URL/text())"/>",
+        "encodingFormat":"<xsl:value-of select="gn-fn-index:json-escape(if ($p != '') then $p else gmd:protocol/*/@xlink:href)"/>",
+        "name":"<xsl:value-of select="gn-fn-index:json-escape(gmd:name/*/text())"/>",
+        "description":"<xsl:value-of select="gn-fn-index:json-escape(gmd:description/*/text())"/>"
         }
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
@@ -320,7 +320,7 @@
           <xsl:otherwise>
             {
               "@type": "CreativeWork",
-              "description": <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
+              "name": <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
             }
           </xsl:otherwise>
         </xsl:choose>
