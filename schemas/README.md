@@ -2,10 +2,10 @@
 
 ## Plugin structure
 
-A schema plugin is composed off:
+A schema plugin is composed of:
 
 * A configuration folder containing XML file for configuration,
-the schema as XSDs and a set of transformation (See http://geonetwork-opensource.org/manuals/trunk/eng/developer/schemaPlugins/index.html).
+the schema as XSDs and a set of transformations (See http://geonetwork-opensource.org/manuals/trunk/eng/developer/schemaPlugins/index.html).
 
 * (optional) A SchemaPlugin bean
 
