@@ -25,9 +25,6 @@ package org.fao.geonet.exceptions;
 
 import org.fao.geonet.Constants;
 import org.jdom.Element;
-import org.jdom.IllegalDataException;
-
-import static org.fao.geonet.utils.Xml.XML11_ILLEGAL_CHAR_PATTERN;
 
 import static org.fao.geonet.utils.Xml.XML10_ILLEGAL_CHAR_PATTERN;
 
