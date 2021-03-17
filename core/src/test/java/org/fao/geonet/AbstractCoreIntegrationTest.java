@@ -189,6 +189,15 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
     /**
      * Create a Service context without a user session but otherwise ready to use.
+     *
+     * This method assigns the created service context to the current thread, you are responsible for managing cleanup.
+     * <pre><code>
+     * try {
+     *   context = createServiceContext();
+     * finally {
+     *     context.clearAsThreadLocal();
+     * }
+     * </code></pre>
      */
     protected ServiceContext createServiceContext() throws Exception {
         final HashMap<String, Object> contexts = new HashMap<String, Object>();

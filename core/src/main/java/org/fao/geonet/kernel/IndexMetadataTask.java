@@ -125,6 +125,7 @@ public final class IndexMetadataTask implements Runnable {
             Log.error(Geonet.INDEX_ENGINE, "Error occurred indexing metadata", e);
         } finally {
             _batchIndex.remove(this);
+            _context.clearAsThreadLocal();
         }
     }
 }

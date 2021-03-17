@@ -438,6 +438,7 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
 
         final UserSession userSession = new UserSession();
         final ServiceContext serviceContext = createServiceContext();
+      try {
         userSession.loginAs(updatingUser);
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.getSession();
@@ -450,6 +451,9 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
             Integer.toString(toUpdateUser.getId()), null, password, null,
             null, null, null, null, null, null, null, null, null, null, null);
 
+      } finally {
+        serviceContext.clearAsThreadLocal();
+      }
     }
 
     public void testUpdateUserByUserAdmin() throws Exception {

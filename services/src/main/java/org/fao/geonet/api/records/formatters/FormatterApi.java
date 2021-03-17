@@ -300,10 +300,12 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         Validator validator;
 
+        // context used as a parameter, not set as threadlocal
         final ServiceContext context = createServiceContext(
             language,
             formatType,
             request.getNativeRequest(HttpServletRequest.class));
+      try {
 
         if (changeDate != null) {
             final long changeDateAsTime = changeDate.toDate().getTime();
@@ -342,6 +344,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                 LanguageUtils.locale2gnCode(locale.getISO3Language()),
                 request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
+      } finally {
+        context.clear(); // prevent further use
+      }
     }
 
 
@@ -382,6 +387,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         FormatType formatType = FormatType.valueOf(type.toLowerCase());
         final ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
+        // context used as a parameter, not set as threadlocal
+
         if (metadata == null) {
             metadata = getXmlFromUrl(context, lang, url, request);
         }
@@ -402,6 +409,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
 
         writeOutResponse(context, "", lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
+
+        context.clear(); // prevent further use
     }
 
     /**
@@ -463,6 +472,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         String resolvedId = resolveId(id, uuid);
         ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
+        // context used as a parameter, not set as threadlocal
+
         Lib.resource.checkPrivilege(context, resolvedId, ReservedOperation.view);
 
         final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
@@ -501,6 +512,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
             writeOutResponse(context, resolvedId, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
+        context.clear();
     }
 
     private void writeOutResponse(ServiceContext context, String metadataUuid, String lang, HttpServletResponse response, FormatType formatType, byte[] formattedMetadata) throws Exception {
@@ -587,6 +599,17 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return createFormatterAndParams(key.lang, key.formatType, key.formatterId, key.width, request, context, metadata, metadataInfo);
     }
 
+    /**
+     * Service context for metadata.formatter.
+     *
+     * When creating a service context you are responsible for managing on the current thread and any cleanup.
+     *
+     * The serviceContext is creating using the ApplicationContext from {@link ApplicationContextHolder}.
+     * @param lang la
+     * @param type
+     * @param request
+     * @return service context for metadat.formatter
+     */
     private ServiceContext createServiceContext(String lang, FormatType type, HttpServletRequest request) {
         final ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
         return serviceManager.createServiceContext("metadata.formatter" + type, lang, request);
@@ -809,26 +832,30 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @Override
         public StoreInfoAndDataLoadResult call() throws Exception {
             serviceContext.setAsThreadLocal();
+            try {
+                Pair<FormatterImpl, FormatterParams> result =
+                    loadMetadataAndCreateFormatterAndParams(serviceContext, key, request);
+                FormatterImpl formatter = result.one();
+                FormatterParams fparams = result.two();
+                final String formattedMetadata = formatter.format(fparams);
+                byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
+                long changeDate = fparams.metadataInfo.getDataInfo().getChangeDate().toDate().getTime();
+                final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
+                final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(key.mdId);
+                final OperationAllowed one = serviceContext.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished));
+                final boolean isPublishedMd = one != null;
 
-            Pair<FormatterImpl, FormatterParams> result =
-                loadMetadataAndCreateFormatterAndParams(serviceContext, key, request);
-            FormatterImpl formatter = result.one();
-            FormatterParams fparams = result.two();
-            final String formattedMetadata = formatter.format(fparams);
-            byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
-            long changeDate = fparams.metadataInfo.getDataInfo().getChangeDate().toDate().getTime();
-            final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
-            final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(key.mdId);
-            final OperationAllowed one = serviceContext.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished));
-            final boolean isPublishedMd = one != null;
-
-            Key withheldKey = null;
-            FormatMetadata loadWithheld = null;
-            if (!key.hideWithheld && isPublishedMd) {
-                withheldKey = new Key(key.mdId, key.lang, key.formatType, key.formatterId, true, key.width);
-                loadWithheld = new FormatMetadata(serviceContext, withheldKey, request);
+                Key withheldKey = null;
+                FormatMetadata loadWithheld = null;
+                if (!key.hideWithheld && isPublishedMd) {
+                    withheldKey = new Key(key.mdId, key.lang, key.formatType, key.formatterId, true, key.width);
+                    loadWithheld = new FormatMetadata(serviceContext, withheldKey, request);
+                }
+                return new StoreInfoAndDataLoadResult(bytes, changeDate, isPublishedMd, withheldKey, loadWithheld);
             }
-            return new StoreInfoAndDataLoadResult(bytes, changeDate, isPublishedMd, withheldKey, loadWithheld);
+            finally {
+                serviceContext.clearAsThreadLocal();
+            }
         }
     }
 }
