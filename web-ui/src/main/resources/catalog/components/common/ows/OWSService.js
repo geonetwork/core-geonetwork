@@ -145,12 +145,17 @@
         };
 
         var parseWMTSCapabilities = function(data) {
-          var parser = new ol.format.WMTSCapabilities();
-          var result = parser.read(data);
 
-          //result.contents.Layer = result.contents.layers;
-          result.Contents.operationsMetadata = result.OperationsMetadata;
-          return result.Contents;
+          try {
+            var parser = new ol.format.WMTSCapabilities();
+            var result = parser.read(data);
+
+            result.Contents.operationsMetadata = result.OperationsMetadata;
+            return result.Contents;
+          } catch(e) {
+            return e.message;
+          }
+
         };
 
         var parseWCSCapabilities = function(data) {
@@ -306,15 +311,16 @@
                   timeout: timeout
                 })
                     .success(function(data, status, headers, config) {
-                      if (data) {
-                        defer.resolve(parseWMTSCapabilities(data));
-                      }
-                      else {
-                        defer.reject();
+                      var wmtsCap = parseWMTSCapabilities(data);               
+
+                      if (!wmtsCap.operationsMetadata) {
+                        defer.reject($translate.instant('wmtsFailedToParseCapabilities'));
+                      } else {
+                        defer.resolve(wmtsCap);
                       }
                     })
                     .error(function(data, status, headers, config) {
-                      defer.reject(status);
+                      defer.reject($translate.instant('wmtsFailedToParseCapabilities'));
                     });
               }
             }

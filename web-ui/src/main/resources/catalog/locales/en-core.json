@@ -528,5 +528,6 @@
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{title}}'?",
     "workingCopy": "Working copy",
     "metadataValidated": "Metadata validated.",
-    "wmtsLayerNoUsableMatrixSet": "The WMTS layer could not be added. This may be because none of the projections advertised in the service matches any of the known projections of the application."
+    "wmtsLayerNoUsableMatrixSet": "The WMTS layer could not be added. This may be because none of the projections advertised in the service matches any of the known projections of the application.",
+    "wmtsFailedToParseCapabilities": "Failed to parse GetCapabilities operation response."
 }
