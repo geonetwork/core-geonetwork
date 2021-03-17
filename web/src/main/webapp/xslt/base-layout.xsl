@@ -48,9 +48,13 @@
         <meta name="viewport" content="initial-scale=1.0"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
 
-        <meta name="description" content=""/>
-        <meta name="keywords" content=""/>
+        <xsl:if test="$env/system/csw/capabilityRecordUuid != '-1'">
+          <xsl:variable name="description" select="util:getIndexField(string(substring(/root/gui/url, 2)), string($env/system/csw/capabilityRecordUuid), 'abstract', string(/root/gui/language))" />
+          <xsl:variable name="keywords" select="util:getIndexFieldByIdAllValues(string(substring(/root/gui/url, 2)), string($env/system/csw/capabilityRecordUuid), 'keyword', string(/root/gui/language))" />
 
+          <meta name="description" content="{$description}"/>
+          <meta name="keywords" content="{$keywords}"/>
+        </xsl:if>
 
         <link rel="icon" sizes="16x16 32x32 48x48" type="image/png"
               href="../../images/logos/favicon.png"/>
