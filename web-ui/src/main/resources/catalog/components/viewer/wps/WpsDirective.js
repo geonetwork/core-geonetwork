@@ -182,7 +182,16 @@
             scope.checkOutput = function (outputs) {
               return outputs.filter(function(o) {
                 return o.reference.mimeType !== 'application/x-ogc-wms';
-              })
+              });
+            };
+            scope.getDateBounds = function(input, isMin) {
+              if (!input ) {
+                return;
+              }
+              else if (isMin) {
+                return input.literalData.allowedValues.valueOrRange[0].minimumValue.value;
+              }
+              return input.literalData.allowedValues.valueOrRange[0].maximumValue.value;
             };
 
             // get values from wfs filters

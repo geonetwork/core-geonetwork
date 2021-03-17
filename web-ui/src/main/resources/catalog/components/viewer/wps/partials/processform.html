@@ -67,6 +67,7 @@
                 <div ng-repeat="field in getInputsByName(input.identifier.value)"
                      class="input-daterange input-group input-group-sm"
                      gn-bootstrap-datepicker="pickerValues"
+                     config="{dateMin: getDateBounds(input, true), dateMax: getDateBounds(input, false)}"
                      data-date-format="dd-mm-yyyy">
                   <input ng-model="field.value" type="text" ng-blur="onBlur($event)" class="input-sm form-control"/>
                   <span class="input-group-addon" translate>date</span>

@@ -957,6 +957,13 @@
           // });
 
           var init = function() {
+            if (scope.config.dateMin || scope.config.dateMax) {
+              limits = {
+                min: new Date(scope.config.dateMin),
+                max: new Date(scope.config.dateMax)
+              };
+            }
+            // if dates is specified it overrides the min/max params
             if (scope.dates) {
               // Time epoch
               if (angular.isArray(scope.dates) &&
@@ -1009,6 +1016,7 @@
               language: gnLangs.getIso2Lang(gnLangs.getCurrent())
             }, scope.config);
 
+            // apply range and limits if defined
             if (angular.isDefined(scope.dates)) {
               angular.extend(datepickConfig, {
                 beforeShowDay: function(dt, a, b) {
@@ -1016,6 +1024,13 @@
                   return highlight ? (isEnable ? 'gn-date-hl' : undefined) :
                       isEnable;
                 },
+                startDate: limits.min,
+                endDate: limits.max
+              });
+            }
+            // only display available dates if either min or max is specified
+            if (angular.isDefined(scope.config.dateMin) || angular.isDefined(scope.config.dateMax)) {
+              angular.extend(datepickConfig, {
                 startDate: limits.min,
                 endDate: limits.max
               });
