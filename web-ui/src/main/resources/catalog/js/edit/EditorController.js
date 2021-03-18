@@ -191,7 +191,7 @@
               $scope.id = $routeParams.id;
 
               gnCurrentEdit.metadata = new Metadata(r.data.hits.hits[0]);
-              $scope.mdSchema = gnCurrentEdit.metadata.schema;
+              $scope.mdSchema = gnCurrentEdit.metadata.documentStandard;
               gnCurrentEdit.schema = $scope.mdSchema;
               $scope.mdCategories = {values: []};
               var categories = gnCurrentEdit.metadata.cat;
