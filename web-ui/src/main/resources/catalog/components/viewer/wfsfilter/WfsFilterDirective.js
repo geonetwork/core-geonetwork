@@ -117,11 +117,11 @@
     'gnSearchSettings',
     'gnFeaturesTableManager',
     'gnAlertService',
-    'gnFacetTree',
+    'gnTreeFromSlash',
     function($http, wfsFilterService, $q, $rootScope, $translate,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
              gnSearchSettings, gnFeaturesTableManager,
-             gnAlertService, gnFacetTree) {
+             gnAlertService, gnTreeFromSlash) {
       return {
         restrict: 'A',
         replace: true,
