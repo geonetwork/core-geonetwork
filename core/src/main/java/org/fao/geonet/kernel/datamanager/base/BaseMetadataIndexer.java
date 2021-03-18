@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
+import java.util.concurrent.TimeUnit;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
@@ -338,7 +339,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             executor.execute(worker);
             index += count;
         }
-
+        // let the started threads finish in the background and then clean up executor
         executor.shutdown();
     }
 
@@ -609,7 +610,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             addExtraFields(fullMd, moreFields);
 
             if (searchManager == null) {
-                searchManager = servContext.getBean(SearchManager.class);
+                searchManager = getServiceContext().getBean(SearchManager.class);
             }
 
             searchManager.index(schemaManager.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root,
@@ -683,9 +684,17 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         searchManager.disableOptimizer();
     }
 
+    /**
+     * Service context for the current therad if available, or the one provided during init.
+     *
+     * @return service context for current thread if available, or service context used during init.
+     */
     private ServiceContext getServiceContext() {
         ServiceContext context = ServiceContext.get();
-        return context == null ? servContext : context;
+        if( context != null ){
+            return context; // use ServiceContext from current ThreadLocal
+        }
+        return servContext; // backup ServiceContext provided during init
     }
 
     public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {

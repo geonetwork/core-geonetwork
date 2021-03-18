@@ -29,6 +29,9 @@ import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.util.ThreadPool;
 import org.springframework.context.ApplicationContext;
 
+/**
+ * GeoNetwork context managing application context and a shared thread pool.
+ */
 public class GeonetContext {
     private final ApplicationContext _springAppContext;
     private final ThreadPool _threadPool;

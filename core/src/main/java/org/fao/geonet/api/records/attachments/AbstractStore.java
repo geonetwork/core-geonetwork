@@ -125,10 +125,7 @@ public abstract class AbstractStore implements Store {
         boolean canEdit = getAccessManager(context).canEdit(context, String.valueOf(metadataId));
         if ((visibility == null && !canEdit) || (visibility == MetadataResourceVisibility.PRIVATE && !canEdit)) {
             throw new SecurityException(String.format("User '%s' does not have privileges to access '%s' resources for metadata '%s'.",
-                                                      context.getUserSession() != null ?
-                                                              context.getUserSession().getUsername() + "/" + context.getUserSession()
-                                                                      .getProfile() :
-                                                              "anonymous", visibility == null ? "any" : visibility, metadataUuid));
+                                                      context.userName(), visibility == null ? "any" : visibility, metadataUuid));
         }
         return metadataId;
     }
