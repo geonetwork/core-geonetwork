@@ -24,7 +24,7 @@
 package org.fao.geonet.kernel.harvest;
 
 import jeeves.server.context.ServiceContext;
-
+import jeeves.server.dispatchers.ServiceManager;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.fao.geonet.GeonetContext;
@@ -45,6 +45,8 @@ import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarversterJobListener;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
@@ -63,6 +65,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 /**
  * TODO Javadoc.
@@ -85,8 +88,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     private ServiceContext context;
     private boolean readOnly;
     private ConfigurableApplicationContext applicationContext;
-    private Map<String, AbstractHarvester> hmHarvesters = new HashMap<String, AbstractHarvester>();
-    private Map<String, AbstractHarvester> hmHarvestLookup = new HashMap<String, AbstractHarvester>();
+    private Map<String, AbstractHarvester> hmHarvesters = new HashMap<>();
+    private Map<String, AbstractHarvester> hmHarvestLookup = new HashMap<>();
 
     public ConfigurableApplicationContext getApplicationContext() {
         return applicationContext;
@@ -105,8 +108,11 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
      * @throws Exception hmm
      */
     @Override
-    public void init(ServiceContext context, boolean isReadOnly) throws Exception {
-        this.context = context;
+    public void init(ServiceContext initContext, boolean isReadOnly) throws Exception {
+        //create a new (shared) context instead of using the Jeeves one
+        ServiceManager serviceManager = initContext.getBean(ServiceManager.class);
+        this.context = serviceManager.createServiceContext("harvester", initContext);
+
         this.dataMan = context.getBean(DataManager.class);
         this.settingMan = context.getBean(HarvesterSettingsManager.class);
         applicationContext = context.getApplicationContext();
@@ -143,7 +149,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Sorted harvester nodes.
      *
      * @param nodes     harvest nodes
      * @param sortField sort field
@@ -158,7 +164,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Transformed harvest node
      *
      * @param node harvest node
      * @return transformed harvest node
@@ -171,7 +177,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Clean up harvest manager.
      */
     @Override
     public void shutdown() {
@@ -187,6 +193,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         } catch (SchedulerException e) {
             Log.error(Geonet.HARVEST_MAN, "Error shutting down harvester scheduler");
         }
+        //we created the context, so we have to clean it up
+        if (context != null){
+            context.clear();
+        }
     }
 
     //---------------------------------------------------------------------------
@@ -196,7 +206,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     //---------------------------------------------------------------------------
 
     /**
-     * TODO javadoc.
+     * Harvest node, filtered to only include nodes visible to user session.
      *
      * @param id      harvester id
      * @param context servicecontext
@@ -283,7 +293,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO javadoc.
+     * Add harvester, returning the id new harvester.
      *
      * @param node    harvester config
      * @param ownerId the id of the user doing this
@@ -314,7 +324,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Add harvester, returning UUID.
+     * @return uuid of new harvester
      */
     @Override
     public String addHarvesterReturnUUID(Element node) throws JeevesException, SQLException {
@@ -335,9 +346,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO javadoc.
+     * Clone harvester.
      *
      * @param ownerId id of the user doing this
+     * @return id of the new harvester
      */
     @Override
     public synchronized String createClone(String id, String ownerId, ServiceContext context) throws Exception {
@@ -370,9 +382,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO javadoc.
+     * Update on harvester progress.
      *
      * @param ownerId id of the user doing this
+     * @return true of harvester updated
      */
     @Override
     public synchronized boolean update(Element node, String ownerId) throws BadInputEx, SQLException, SchedulerException {
@@ -434,7 +447,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
 
     /**
-     * TODO Javadoc.
+     * Start harvester
+     * @param id harvester id
      */
     @Override
     public OperResult start(String id) throws SQLException, SchedulerException {
@@ -450,7 +464,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Stop harvester with provided status, and unschedule any outstanding jobs.
+     * @param id harvester id
+     * @param status New status
+     * @return harvester progress
      */
     @Override
     public OperResult stop(String id, Common.Status status) throws SQLException, SchedulerException {
@@ -466,7 +483,9 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Start harvester run
+     * @parm id harvester to run
+     * return harvester progress
      */
     @Override
     public OperResult run(String id) throws SQLException, SchedulerException {
@@ -490,7 +509,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Run the harvester check if harvest correctly completed.
      */
     @Override
     public OperResult invoke(String id) {
@@ -514,7 +533,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     }
 
     /**
-     * TODO Javadoc.
+     * Harvester details
+     * @param harvestUuid uuid to look up harvester info
+     * @param id
+     * @param uuid
      */
     public Element getHarvestInfo(String harvestUuid, String id, String uuid) {
         Element info = new Element(Edit.Info.Elem.HARVEST_INFO);
@@ -599,7 +621,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
         String harvesterUUID = ah.getParams().getUuid();
 
-        final Specification<Metadata> specification = MetadataSpecs.hasHarvesterUuid(harvesterUUID);
+        final Specification<Metadata> specification = (Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(harvesterUUID);
         int numberOfRecordsRemoved = dataMan.batchDeleteMetadataAndUpdateIndex(specification);
         ah.emptyResult();
         elapsedTime = (System.currentTimeMillis() - elapsedTime) / 1000;
@@ -627,5 +649,34 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
         historyRepository.save(history);
         return OperResult.OK;
+    }
+
+    @Override
+    public void rescheduleActiveHarvesters() {
+        String timeZoneSetting = applicationContext.getBean(SettingManager.class).getValue(Settings.SYSTEM_SERVER_TIMEZONE, true);
+        if (StringUtils.isBlank(timeZoneSetting)) {
+            timeZoneSetting = TimeZone.getDefault().getID();
+        }
+
+        for (Map.Entry<String, AbstractHarvester> pair : hmHarvesters.entrySet()) {
+           AbstractHarvester harvester = pair.getValue();
+           if ( Common.Status.ACTIVE.equals(harvester.getStatus())) {
+               try {
+                   TimeZone triggerTimeZone =  harvester.getTriggerTimezone();
+                   String triggerTimeZoneId = TimeZone.getDefault().getID();
+                   if (triggerTimeZone != null) {
+                       triggerTimeZoneId = triggerTimeZone.getID();
+                   }
+
+                   if (!StringUtils.equals(timeZoneSetting, triggerTimeZoneId)) {
+                       harvester.doReschedule();
+                   }
+               } catch (SchedulerException e) {
+                   Log.error(Geonet.HARVEST_MAN, String.format("Error rescheduling harvester %s - '%s'", harvester.getID(),
+                       harvester.getParams().getName()), e);
+               }
+           }
+        }
+
     }
 }

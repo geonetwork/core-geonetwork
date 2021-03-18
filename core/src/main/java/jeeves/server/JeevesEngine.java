@@ -102,6 +102,8 @@ public class JeevesEngine {
     private Path _appPath;
     private int _maxUploadSize;
 
+    /** AppHandler service context used during init, tasks and background activities */
+    private ServiceContext srvContext;
 
     //---------------------------------------------------------------------------
     //---
@@ -436,7 +438,7 @@ public class JeevesEngine {
 
             ApplicationHandler h = (ApplicationHandler) c.newInstance();
 
-            ServiceContext srvContext = serviceMan.createServiceContext("AppHandler", appContext);
+            srvContext = serviceMan.createAppHandlerServiceContext(appContext);
             srvContext.setLanguage(_defaultLang);
             srvContext.setLogger(_appHandLogger);
             srvContext.setServlet(servlet);
@@ -474,7 +476,6 @@ public class JeevesEngine {
             }
             finally {
                 srvContext.clearAsThreadLocal();
-                srvContext.clear();
             }
         }
     }
@@ -533,8 +534,10 @@ public class JeevesEngine {
 
             info("Stopping handlers...");
             stopHandlers();
+            srvContext.clear();
 
             info("=== System stopped ========================================");
+
         } catch (Exception e) {
             error("Raised exception during destroy");
             error("  Exception : " + e);
@@ -551,7 +554,12 @@ public class JeevesEngine {
 
     private void stopHandlers() throws Exception {
         for (ApplicationHandler h : _appHandlers) {
-            h.stop();
+            try {
+                h.stop();
+            } catch (Throwable unexpected){
+                _appHandLogger.error("Difficulty while stopping "+h.getContextName());
+                _appHandLogger.error(unexpected);
+            }
         }
     }
 

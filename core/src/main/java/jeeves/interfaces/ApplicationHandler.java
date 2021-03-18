@@ -29,11 +29,17 @@ import org.jdom.Element;
 
 //=============================================================================
 
+/**
+ * Used to maintain registry of handlers for {@link jeeves.server.dispatchers.ServiceManager}.
+ */
 public interface ApplicationHandler {
+    /** Context name for registry lookup */
     public String getContextName();
 
+    /** Start application handler, returning application context managed in registry */
     public Object start(Element config, ServiceContext s) throws Exception;
 
+    /** Stop handler */
     public void stop();
 }
 
