@@ -79,6 +79,10 @@ import java.util.*;
 import java.util.Map.Entry;
 
 //=============================================================================
+
+/**
+ * Handles operations on services.
+ */
 public class ServiceManager {
     private Map<String, ArrayList<ServiceInfo>> htServices = new HashMap<String, ArrayList<ServiceInfo>>(100);
     private Map<String, Object> htContexts = new HashMap<String, Object>();
@@ -158,6 +162,11 @@ public class ServiceManager {
     //---
     //---------------------------------------------------------------------------
 
+    /**
+     * Track context objects by name.
+     * @param name
+     * @param context
+     */
     public void registerContext(String name, Object context) {
         htContexts.put(name, context);
     }
@@ -345,7 +354,82 @@ public class ServiceManager {
     }
 
     /**
-     * Used to create a ServiceContext.
+     * Used to create an appContext placeholder service context used for initialization, background tasks and activities.
+     *
+     * This ServiceContext is used during initialization and is independent of any user session.
+     * This instance is the responsibility of JeevesEngine and is protected against being cleared.
+     *
+     * @param appContext GeoNetwork Application Context
+     * @return new service context
+     */
+    public ServiceContext createAppHandlerServiceContext(ConfigurableApplicationContext appContext) {
+        ServiceContext context = new ServiceContext("AppHandler", appContext, htContexts, entityManager){
+            @Override
+            public void setIpAddress(String address) {
+                if( address != null && !"?".equals(address)) {
+                    warning("AppHandler context should not be associated with an ip address");
+                }
+                super.setIpAddress(address);
+            }
+
+            @Override
+            public void setUserSession(UserSession session) {
+                if( session != null){
+                    warning("AppHandler context should not be configured with user session");
+                }
+                super.setUserSession(session); // should probably not support association with  a user
+            }
+
+            public void clear() {
+                debug("AppHandler context cannot be cleared");
+            }
+        };
+        context.setBaseUrl(baseUrl);
+        context.setLanguage("?");
+        context.setUserSession(null);
+        context.setIpAddress("?");
+        context.setMaxUploadSize(maxUploadSize);
+        context.setServlet(servlet);
+
+        return context;
+    }
+
+
+    /**
+     * Used to create a serviceContext for later use, the object provided the new serviceContext is responsible
+     * for cleanup.
+     * <pre><code>
+     * final ServiceContext taskContext = serviceMan.createServiceContext( serviceContext, "task");
+     * return new Runnable(){
+     *     public abstract void run(){
+     *         try {
+     *            taskContext.setAsThreadLocal();
+     *
+     *         }
+     *         finally {
+     *             taskContext.clear();
+     *         }
+     *     }
+     * };
+     * </code></pre>
+     *
+     * @param name
+     * @param parent
+     * @return new service context
+     */
+    public ServiceContext createServiceContext(String name, ServiceContext parent ){
+        ServiceContext context = createServiceContext( name, parent.getApplicationContext());
+        context.setBaseUrl(parent.getBaseUrl());
+        context.setLanguage(parent.getLanguage());
+        context.setUserSession(null); // because this is intended for later use user session not included
+        context.setIpAddress(parent.getIpAddress());
+        context.setMaxUploadSize(parent.getMaxUploadSize());
+        context.setServlet(parent.getServlet());
+
+        return context;
+    }
+    /**
+     * Create an internal service context, not associated with a user or ip address.
      *
      * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup:
      * <pre><code>
@@ -422,10 +506,20 @@ public class ServiceManager {
         return context;
     }
 
+    /**
+     * Dispatch service request, creating a service context with the provided user session.
+     *
+     * @param req service request
+     * @param session user session
+     */
     public void dispatch(ServiceRequest req, UserSession session) {
         ServiceContext context = new ServiceContext(req.getService(), ApplicationContextHolder.get(),
             htContexts, entityManager);
+      try {
         dispatch(req, session, context);
+      } finally {
+        context.clear();
+      }
     }
 
     //---------------------------------------------------------------------------
@@ -437,6 +531,14 @@ public class ServiceManager {
     //--- Dispatching methods
     //---
     //---------------------------------------------------------------------------
+
+    /**
+     * Dispatch service request, configuring context with the provided user session.
+     *
+     * @param req service request
+     * @param session user session
+     * @param context service context
+     */
     public void dispatch(ServiceRequest req, UserSession session, ServiceContext context) {
         context.setBaseUrl(baseUrl);
         context.setLanguage(req.getLanguage());
@@ -559,7 +661,7 @@ public class ServiceManager {
             else {
                 context.debug("ServiceManager dispatch context was replaced before cleanup");
             }
-            context.clear();
+            context.clearAsThreadLocal();
             if( priorContext != null){
                 priorContext.debug("ServiceManger dispatch restoring ServiceContext");
                 priorContext.setAsThreadLocal();

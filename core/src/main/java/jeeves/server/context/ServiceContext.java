@@ -23,6 +23,7 @@
 
 package jeeves.server.context;
 
+import javax.servlet.http.HttpServletRequest;
 import jeeves.component.ProfileManager;
 import jeeves.server.UserSession;
 import jeeves.server.dispatchers.ServiceManager;
@@ -132,10 +133,21 @@ public class ServiceContext extends BasicContext {
      * @see #_responseHeaders
      */
     private Integer _statusCode;
+
+    /**
+     * Context for service execution.
+     *
+     * See factory method {@link ServiceManager#createServiceContext(String, String, HttpServletRequest)} and
+     * {@link ServiceManager#createServiceContext(String, ConfigurableApplicationContext)}.
+     *
+     * @param service Service name
+     * @param jeevesApplicationContext Application context
+     * @param contexts Handler context
+     * @param entityManager
+     */
     public ServiceContext(final String service, final ConfigurableApplicationContext jeevesApplicationContext,
                           final Map<String, Object> contexts, final EntityManager entityManager) {
         super(jeevesApplicationContext, contexts, entityManager);
-
         setService(service);
 
         setResponseHeaders(new HashMap<String, String>());
@@ -313,14 +325,14 @@ public class ServiceContext extends BasicContext {
      */
     public void clear(){
         if( this._service != null) {
-            this._service = null;
+            this._service =  null;
             this._headers = null;
             this._responseHeaders = null;
             this._servlet = null;
             this._userSession = null;
         }
         else {
-            debug("Service unexpectedly cleared twice");
+            debug("Service context unexpectedly cleared twice");
         }
     }
 
@@ -330,27 +342,58 @@ public class ServiceContext extends BasicContext {
     //---
     //--------------------------------------------------------------------------
 
+    /**
+     * Language code, or <code>"?"</code> if undefined.
+     * @return language code, or <code>"?"</code> if undefined.
+     */
     public String getLanguage() {
+        if (_service == null ){
+            //throw new NullPointerException("Service context cleared, language not available");
+        }
         return _language;
     }
-
+    /**
+     * Language code, or <code>"?"</code> if undefined.
+     * @param lang language code, or <code>"?"</code> if undefined.
+     */
     public void setLanguage(final String lang) {
         _language = lang;
     }
 
+    /**
+     * Service name, or null if service context is no longer in use.
+     *
+     * @return service name, or null if service is no longer in use
+     */
     public String getService() {
         return _service;
     }
 
-    public void setService(final String service) {
+    public void setService(String service) {
+        if( service == null ){
+            service = "internal";
+        }
         this._service = service;
         logger = Log.createLogger(Log.WEBAPP + "." + service);
     }
 
+    /**
+     * IP address of request, or <code>"?"</code> for local loopback request.
+     *
+     * @return ip address, or <code>"?"</code> for loopback request.
+     */
     public String getIpAddress() {
+        if (_service == null ){
+            throw new NullPointerException("Service context cleared, ip address not available");
+        }
         return _ipAddress;
     }
 
+    /**
+     * IP address of request, or <code>"?"</code> for local loopback request.
+     *
+     * @param address ip, address or <code>"?"</code> for loopback request.
+     */
     public void setIpAddress(final String address) {
         _ipAddress = address;
     }
@@ -360,6 +403,9 @@ public class ServiceContext extends BasicContext {
     }
 
     public int getMaxUploadSize() {
+        if (_service == null ){
+            throw new NullPointerException("Service context cleared, max upload size not available");
+        }
         return _maxUploadSize;
     }
 
@@ -373,11 +419,31 @@ public class ServiceContext extends BasicContext {
      * @return the user session stored on httpsession
      */
     public UserSession getUserSession() {
+        if (_service == null ){
+            throw new NullPointerException("Service context cleared, user session not available");
+        }
         return _userSession;
     }
 
     public void setUserSession(final UserSession session) {
         _userSession = session;
+    }
+
+    /**
+     * Safely look up user name, or <code>anonymous</code>.
+     *
+     * This is a quick null safe lookup of user name suitable for use in logging and error messages.
+     *
+     * @return username, or <code>anonymous</code> if unavailable.
+     */
+    public String userName(){
+        if (_userSession == null || _userSession.getUsername() == null ){
+            return "anonymous";
+        }
+        if( _userSession.getProfile() != null ){
+            return _userSession.getUsername() + "/" + _userSession.getProfile();
+        }
+        return _userSession.getUsername();
     }
 
     public ProfileManager getProfileManager() {
@@ -387,6 +453,9 @@ public class ServiceContext extends BasicContext {
     //--------------------------------------------------------------------------
 
     public InputMethod getInputMethod() {
+        if (_service == null ){
+            throw new NullPointerException("Service context cleared, input method not available");
+        }
         return _input;
     }
 
@@ -395,6 +464,9 @@ public class ServiceContext extends BasicContext {
     }
 
     public OutputMethod getOutputMethod() {
+        if (_service == null ){
+            throw new NullPointerException("Service context cleared, input method not available");
+        }
         return _output;
     }
 
@@ -403,6 +475,9 @@ public class ServiceContext extends BasicContext {
     }
 
     public Map<String, String> getStartupErrors() {
+        if (_service == null ){
+            throw new NullPointerException("Service context cleared, output method not available");
+        }
         return _startupErrors;
     }
 
@@ -412,6 +487,9 @@ public class ServiceContext extends BasicContext {
     }
 
     public boolean isStartupError() {
+        if (_service == null ){
+            throw new NullPointerException("Service context cleared, startup error not available");
+        }
         return _startupError;
     }
 
@@ -437,6 +515,9 @@ public class ServiceContext extends BasicContext {
      * @return The map of headers from the request
      */
     public Map<String, String> getHeaders() {
+        if (_service == null ){
+            throw new NullPointerException("Service context cleared, headers not available");
+        }
         return _headers;
     }
 
@@ -452,6 +533,9 @@ public class ServiceContext extends BasicContext {
     }
 
     public JeevesServlet getServlet() {
+        if (_service == null ){
+            throw new NullPointerException("Service context cleared, servlet not available");
+        }
         return _servlet;
     }
 
@@ -472,20 +556,26 @@ public class ServiceContext extends BasicContext {
             new TransactionTask<Void>() {
                 @Override
                 public Void doInTransaction(TransactionStatus transaction) throws Throwable {
-                    final ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), htContexts, getEntityManager());
-                    UserSession session = ServiceContext.this._userSession;
-                    if (session == null) {
-                        session = new UserSession();
-                    }
+                    final ServiceManager serviceManager = getApplicationContext().getBean(ServiceManager.class);
+                    final ServiceContext localServiceContext = serviceManager.createServiceContext(request.getService(), getApplicationContext());
                     try {
-                        final ServiceManager serviceManager = context.getBean(ServiceManager.class);
-                        serviceManager.dispatch(request, session, context);
+                        UserSession session = ServiceContext.this._userSession;
+                        if (session == null) {
+                            session = new UserSession();
+                        }
+                        localServiceContext.setUserSession(session);
+
+                        serviceManager.dispatch(request, session, localServiceContext);
                     } catch (Exception e) {
                         Log.error(Log.XLINK_PROCESSOR, "Failed to parse result xml" + request.getService());
                         throw new ServiceExecutionFailedException(request.getService(), e);
                     } finally {
-                        // set old context back as thread local
-                        setAsThreadLocal();
+                        if( localServiceContext == ServiceContext.get()){
+                            // dispatch failed to clear cleanup localServiceContext
+                            // restoring  back as thread local
+                            ServiceContext.this.setAsThreadLocal();
+                        }
+                        localServiceContext.clear();
                     }
                     return null;
                 }

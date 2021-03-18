@@ -41,6 +41,7 @@ import java.util.concurrent.Executors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Constants;
@@ -69,6 +70,7 @@ import com.google.common.collect.Maps;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
+import org.springframework.context.ConfigurableApplicationContext;
 
 
 public class ThesaurusManager implements ThesaurusFinder {
@@ -538,15 +540,20 @@ public class ThesaurusManager implements ThesaurusFinder {
      */
     final class InitThesauriTableTask implements Runnable {
 
-        private final ServiceContext context;
+        //private final ServiceContext context;
         private final Path thesauriDir;
+        private final ServiceManager serviceManager;
+        private final ConfigurableApplicationContext appContext;
 
         InitThesauriTableTask(ServiceContext context, Path thesauriDir) {
-            this.context = context;
+            //this.context = context;
+            this.serviceManager = context.getBean(ServiceManager.class);
+            this.appContext = context.getApplicationContext();
             this.thesauriDir = thesauriDir;
         }
 
         public void run() {
+            ServiceContext context = serviceManager.createServiceContext(Geonet.THESAURUS_MAN, appContext);
             context.setAsThreadLocal();
             try {
                 // poll context to see whether servlet is up yet
@@ -566,6 +573,7 @@ public class ThesaurusManager implements ThesaurusFinder {
             }
             finally {
                 context.clearAsThreadLocal();
+                context.clear();
             }
         }
     }
