@@ -35,7 +35,6 @@ import java.util.Collections;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
-import static org.fao.geonet.kernel.schema.AbstractInspireTest.INSPIRE_VALID_ISO19139_XML;
 import static org.junit.Assert.assertEquals;
 
 /**
