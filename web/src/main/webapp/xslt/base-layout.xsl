@@ -92,7 +92,7 @@
               <div class="navbar navbar-default gn-top-bar"
                    role="navigation"
                    data-ng-hide="layout.hideTopToolBar"
-                   data-ng-include="'{$uiResourcesPath}templates/top-toolbar.html'"></div>
+                   data-ng-include="isMenubarAccessible ? '{$uiResourcesPath}templates/top-toolbar-accessible.html' : '{$uiResourcesPath}templates/top-toolbar.html'"></div>
             </xsl:if>
 
             <xsl:apply-templates mode="content" select="."/>
