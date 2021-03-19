@@ -286,9 +286,23 @@
       }
     }])
 
+  module.service('gnFacetVegaService', function() {
+    return {
+      check: function () {
+        try {
+          vegaEmbed
+        } catch (e) {
+          console.warn("Interactive graphic for facet not available. Vega is not available.", e);
+          return false;
+        }
+        return true;
+      }
+    };
+  });
+
   module.directive('gnFacetTemporalrange', [
-    '$timeout', '$translate',
-    function($timeout, $translate) {
+    '$timeout', '$translate', 'gnFacetVegaService',
+    function($timeout, $translate, gnFacetVegaService) {
     return {
       restrict: 'A',
       replace: true,
@@ -301,6 +315,10 @@
         updateCallback: '&callback'
       },
       link: function(scope, element, attrs, controller) {
+        if(!gnFacetVegaService.check()) {
+          return;
+        }
+
         scope.range = {
           from: null,
           to: null
@@ -511,8 +529,8 @@
 
 
   module.directive('gnFacetVega', [
-    '$timeout', '$filter',
-    function($timeout, $filter) {
+    '$timeout', '$filter', 'gnFacetVegaService',
+    function($timeout, $filter, gnFacetVegaService) {
       return {
         restrict: 'A',
         replace: true,
@@ -525,6 +543,10 @@
           updateCallback: '&callback'
         },
         link: function(scope, element, attrs, controller) {
+          if(!gnFacetVegaService.check()) {
+            return;
+          }
+
           scope.signal = null;
           scope.vl = null;
           scope.id = scope.facet.key.replace('.', '');

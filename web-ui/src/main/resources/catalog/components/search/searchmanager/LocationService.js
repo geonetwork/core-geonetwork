@@ -213,8 +213,15 @@
           path: $location.path()
         };
 
+        // When using a keyword or category filter,
+        // query string is set.
+        var isFilterFromRecordView =
+          state.old.path.indexOf(that.METADATA) === 0
+          && state.current.params.query_string;
+
         if (state.old.path != that.SEARCH &&
             state.old.path != that.HOME &&
+            !isFilterFromRecordView &&
             state.current.path == that.SEARCH) {
           if (that.isMdView(state.old.path)) {
             $rootScope.$broadcast('locationBackToSearchFromMdview');

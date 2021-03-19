@@ -86,7 +86,8 @@
         var params = {};
         params[field] = {};
         params[field][value] = true;
-        $location.search('query_string', angular.toJson(params));
+        gnSearchLocation.lastSearchUrl = null;
+        gnSearchLocation.setSearch({'query_string': angular.toJson(params)});
       };
 
       $scope.deleteRecord = function(md) {
