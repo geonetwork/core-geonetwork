@@ -59,9 +59,9 @@
     <!-- /.gn-card-body -->
 
     <div class="panel-footer gn-card-footer clearfix">
-      <div data-ng-if="md.cl_status_text.length > 0"
-           title="{{md.cl_status_text[0]}}"
-           class="gn-status gn-status-{{md.cl_status[0]}}">{{md.cl_status_text[0]}}
+      <div data-ng-if="md.cl_status.length > 0"
+           title="{{md.cl_status[0]}}"
+           class="gn-status gn-status-{{md.cl_status[0]}}">{{md.cl_status[0].key | translate}}
       </div>
       <div class="gn-toolbar">
         <gn-links-btn class="pull-right"></gn-links-btn>

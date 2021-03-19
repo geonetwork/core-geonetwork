@@ -151,16 +151,17 @@
 
 
         <div class="lead1 gn-margin-bottom"
-            data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"/>
+             data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></div>
 
           <!-- Display the first metadata status (apply to ISO19139 record) -->
-          <div data-ng-if="mdView.current.record.cl_status.length > 0"
-               data-ng-repeat="c in mdView.current.record.cl_status track by $index"
-               title="{{c.default}}"
-               class="gn-status gn-status-mdview gn-status-{{c.key}}">
-              {{c.default}}
+          <div class="row">
+            <div data-ng-if="mdView.current.record.cl_status.length > 0"
+                 data-ng-repeat="c in mdView.current.record.cl_status track by $index"
+                 title="{{c.key | translate}}"
+                 class="gn-status gn-status-mdview gn-status-{{c.key}}">
+                {{c.key | translate}}
+            </div>
           </div>
-
           <div data-gn-related-observer>
             <div data-gn-related="mdView.current.record"
                 data-user="user"
@@ -319,11 +320,10 @@
                 <th data-translate="">credit</th>
                 <td><p data-ng-repeat="c in mdView.current.record.resourceCredit">{{c}}</p></td>
               </tr>
-
-              <tr data-ng-if="mdView.current.record.cl_status > 0">
+              <tr data-ng-if="mdView.current.record.cl_status.length > 0">
                 <th data-translate="">resourceStatus</th>
                 <td>
-                  <p data-ng-repeat="c in mdView.current.record.cl_status">{{c.default}}</p>
+                  <p data-ng-repeat="c in mdView.current.record.cl_status">{{c.key | translate}}</p>
                 </td>
               </tr>
 
