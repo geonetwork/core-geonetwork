@@ -39,6 +39,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.XmlRequest;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
@@ -182,7 +183,7 @@ public class NetLib {
     /**
      * Setups proxy for java.net.URL.
      */
-    public URLConnection setupProxy(ServiceContext context, URL url) throws IOException {
+    public HttpURLConnection setupProxy(ServiceContext context, URL url) throws IOException {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
 
@@ -193,7 +194,7 @@ public class NetLib {
         String password = sm.getValue(Settings.SYSTEM_PROXY_PASSWORD);
         String ignoreHostList = sm.getValue(Settings.SYSTEM_PROXY_IGNOREHOSTLIST);
 
-        URLConnection conn = null;
+        HttpURLConnection conn = null;
         if (enabled) {
             if (!Lib.type.isInteger(port)) {
                 Log.error(Geonet.GEONETWORK, "Proxy port is not an integer : " + port);
@@ -202,7 +203,7 @@ public class NetLib {
 
                     InetSocketAddress sa = new InetSocketAddress(host, Integer.parseInt(port));
                     Proxy proxy = new Proxy(Proxy.Type.HTTP, sa);
-                    conn = url.openConnection(proxy);
+                    conn = (HttpURLConnection) url.openConnection(proxy);
 
                     if (username.trim().length() != 0) {
                         String encodedUserPwd = new Base64().encodeAsString((username + ":" + password).getBytes(Charset.forName("UTF-8")));
@@ -211,11 +212,11 @@ public class NetLib {
                     }
 
                 } else {
-                    conn = url.openConnection();
+                    conn = (HttpURLConnection) url.openConnection();
                 }
             }
         } else {
-            conn = url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
         }
 
         return conn;
