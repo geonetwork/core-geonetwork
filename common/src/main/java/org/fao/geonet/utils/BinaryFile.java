@@ -47,6 +47,7 @@ import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Scanner;
 
 //=============================================================================
 
@@ -276,6 +277,19 @@ public final class BinaryFile {
         }
     }
 
+    private String readInputMinimum(Path path) {
+
+        try {
+            FileInputStream inputStream = new FileInputStream(path.toFile());
+            Scanner sc = new Scanner(inputStream, Constants.CHARSET.toString());
+            String line = sc.nextLine();
+            return line;
+        } catch (IOException e) {
+            Log.error("geonetwork", "Error reading file: " + path);
+            return null;
+        }
+    }
+
     //---------------------------------------------------------------------------
 
     private String getRemoteProtocol(String header) {
@@ -294,15 +308,17 @@ public final class BinaryFile {
     //---------------------------------------------------------------------------
 
     private void checkForRemoteFile(Path path) {
-        String fileContents = readInput(path);
-        if ((fileContents != null) && (fileContents.toLowerCase().startsWith("#geonetworkremotescp") || fileContents.toLowerCase().startsWith("#geonetworkremoteftp"))) {
-            String[] tokens = fileContents.split("\n");
+        //Read one line only from the file to avoid large file memory issue.
+        String fileMinContents = readInputMinimum(path);
+        if ((fileMinContents != null) && (fileMinContents.toLowerCase().startsWith("#geonetworkremotescp") || fileMinContents.toLowerCase().startsWith("#geonetworkremoteftp"))) {
+            String fileFullContents = readInput(path);
+            String[] tokens = fileFullContents.split("\n");
             if (tokens.length == 5) {
                 remoteUser = tokens[1].trim();
                 remotePassword = tokens[2].trim();
                 remoteSite = tokens[3].trim();
                 remotePath = tokens[4].trim();
-                remoteProtocol = getRemoteProtocol(fileContents.toLowerCase());
+                remoteProtocol = getRemoteProtocol(fileFullContents.toLowerCase());
                 remoteFile = true;
                 if (Log.isDebugEnabled(Log.RESOURCES))
                     Log.debug(Log.RESOURCES, "REMOTE: " + remoteUser + ":********:" + remoteSite + ":" + remotePath + ":" + remoteProtocol);
