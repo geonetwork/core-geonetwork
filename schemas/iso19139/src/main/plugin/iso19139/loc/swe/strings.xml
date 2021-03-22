@@ -23,41 +23,43 @@
   -->
 
 <strings>
-  <understandResource>Information about the dataset</understandResource>
-  <relatedResources>Related services and linked data</relatedResources>
-  <techInfo>Technical information</techInfo>
-  <contactInfo>Contact information</contactInfo>
-  <mdContactInfo>Metadata contact</mdContactInfo>
-  <refDate>Reference date</refDate>
-  <temporalRef>Temporal information</temporalRef>
-  <constraintInfo>Access constraint information</constraintInfo>
-  <xml_iso19139>Save this metadata as an ISO19139 XML file</xml_iso19139>
-  <xml_iso19139Tooai_dc>Save this metadata as an OAI Dublin Core XML file</xml_iso19139Tooai_dc>
+  <understandResource>Information om data</understandResource>
+  <relatedResources>Relaterade tjänster och länkade data</relatedResources>
+  <techInfo>Teknisk information</techInfo>
+  <contactInfo>Kontaktinformation</contactInfo>
+  <mdContactInfo>Metadatakontakt</mdContactInfo>
+  <refDate>Referensdatum</refDate>
+  <temporalRef>Tidsmässig information</temporalRef>
+  <constraintInfo>Restriktioner</constraintInfo>
+  <xml_iso19139>Spara metadata till en ISO19139 XML file</xml_iso19139>
+  <xml_iso19139Tooai_dc>Spara metadata till en OAI Dublin Core XML fil</xml_iso19139Tooai_dc>
 
   <!-- New strings added for the AngularJS editor -->
   <!-- View and tabs -->
-  <advanced>Full</advanced>
-  <default>Simple</default>
-  <simple>Simple</simple>
+  <advanced>Utökad</advanced>
+  <default>Standard</default>
+  <simple>Enkel</simple>
   <inspire>INSPIRE</inspire>
-  <inspire_sds>SDS</inspire_sds>
+  <inspire_sds>SDS (Rumslig Data Tjänst)</inspire_sds>
 
   <keywordFrom>Keywords - </keywordFrom>
-  <resource>Resource</resource>
+  <resource>Resurs</resource>
   <xml>XML</xml>
   <metadata>Metadata</metadata>
-  <identificationInfo>Identification</identificationInfo>
+  <identificationInfo>Identifiering</identificationInfo>
   <distributionInfo>Distribution</distributionInfo>
-  <dataQualityInfo>Quality</dataQualityInfo>
+  <dataQualityInfo>Kvalitet</dataQualityInfo>
   <spatialRepresentationInfo>Spatial rep.</spatialRepresentationInfo>
   <referenceSystemInfo>Ref. system</referenceSystemInfo>
-  <contentInfo>Content</contentInfo>
-  <portrayalCatalogueInfo>Portrayal</portrayalCatalogueInfo>
-  <metadataConstraints>Md. constraints</metadataConstraints>
-  <metadataMaintenance>Md. maintenance</metadataMaintenance>
+  <contentInfo>Innehåll</contentInfo>
+  <portrayalCatalogueInfo>Presentation</portrayalCatalogueInfo>
+  <metadataConstraints>Md. Begräsningar</metadataConstraints>
+  <metadataMaintenance>Md. Underhpåll</metadataMaintenance>
   <applicationSchemaInfo>Schema info</applicationSchemaInfo>
-  <noThesaurusName>Keywords</noThesaurusName>
-  <bboxesSection>Geographic coverage</bboxesSection>
+  <noThesaurusName>Nyckelord</noThesaurusName>
+  <bboxesSection>Geographic täckning</bboxesSection>
+  <spatialRepresentationType>Spatial representationstyp</spatialRepresentationType>
+  <equivalentScale>equivalent Scale</equivalentScale>
   <overviews>Overviews</overviews>
   <metadataInXML>XML</metadataInXML>
   <providedBy>Provided by</providedBy>
@@ -85,50 +87,51 @@
   <enum3>Potential values are: </enum3>
 
   <!-- INSPIRE view labels and help -->
-  <url>Online resource</url>
-  <identifier>Resource identifier</identifier>
-  <rsIdentifier>Projection</rsIdentifier>
+  <url>Onlinelänk</url>
+  <identifier>Resursidentifierare</identifier>
+  <rsIdentifier>Projektion</rsIdentifier>
   <referenceDate>Temporal information</referenceDate>
-  <creationDate>Creation date</creationDate>
-  <hierarchyLevel>Hierarchy level</hierarchyLevel>
-  <publicationDate>Publication date</publicationDate>
-  <revisionDate>Revision date</revisionDate>
-  <temporalRangeSection>Temporal extent</temporalRangeSection>
-  <beginPosition>Begin</beginPosition>
-  <endPosition>End</endPosition>
-  <conformity>Conformity</conformity>
-  <conformity_title>Title</conformity_title>
-  <conformity_date>Date</conformity_date>
-  <explanation>Explanation</explanation>
-  <pass>Conformity</pass>
-  <indeterminatePosition>Indeterminate position</indeterminatePosition>
-  <pointOfContact>Contact for the resource</pointOfContact>
-  <metadataPointOfContact>Contact for the metadata</metadataPointOfContact>
-  <organisationName>Organisation name</organisationName>
-  <electronicMailAddress>Email</electronicMailAddress>
-  <role>Role</role>
-  <encoding>Encoding</encoding>
-  <inspireTheme>INSPIRE themes</inspireTheme>
-  <inspireThemeURI>INSPIRE themes</inspireThemeURI>
+  <creationDate>Produktionsdatum</creationDate>
+  <language>Språk i resurs</language>
+  <hierarchyLevel>Resurstyp</hierarchyLevel>
+  <publicationDate>Publiceringsdatum</publicationDate>
+  <revisionDate>Revideringsdatum</revisionDate>
+  <temporalRangeSection>Temporal utsträckning</temporalRangeSection>
+  <beginPosition>Startdatum</beginPosition>
+  <endPosition>Slutdatum</endPosition>
+  <conformity>Specifikationsuppfyllelse</conformity>
+  <conformity_title>Titel</conformity_title>
+  <conformity_date>Datum</conformity_date>
+  <explanation>Förklaring</explanation>
+  <pass>Överensstämmelse</pass>
+  <pass-detail-page>Uppfyller kraven</pass-detail-page>
+  <indeterminatePosition>Obestämbar position</indeterminatePosition>
+  <pointOfContact>Resurskontakt</pointOfContact>
+  <distributorContactView>Distributionskontakt</distributorContactView>
+  <LI_LineageView>Tillkomsthistorik</LI_LineageView>
+  <metadataContactView>Metadatakontakt</metadataContactView>
+  <metadataPointOfContact>Metadatakontakt</metadataPointOfContact>
+  <organisationName>Organisationsnamn</organisationName>
+  <electronicMailAddress>ePost</electronicMailAddress>
+  <role>Roll</role>
+  <encoding>Tecknuppsättning</encoding>
+  <inspireTheme>INSPIRE tema</inspireTheme>
+  <inspireThemeURI>INSPIRE tema</inspireThemeURI>
   <format>Format</format>
   <format_version>Version</format_version>
   <format_specification>Specification</format_specification>
-  <lineage>Lineage</lineage>
-  <spatialResolution>Spatial resolution (scale)</spatialResolution>
-  <spatialDistance>Spatial resolution (distance)</spatialDistance>
-  <accessConstraints>Access constraints</accessConstraints>
+  <lineage>Historik</lineage>
+  <spatialResolution>Rumslig upplösning (skala)</spatialResolution>
+  <spatialDistance>Rumslig upplösning (distans)</spatialDistance>
+  <accessConstraints>Åtkomstbegränsningar</accessConstraints>
+  <useLimitation>Användbarhetsbegränsningar</useLimitation>
   <useConstraints>Use constraints</useConstraints>
-  <useLimitation>Use limitation</useLimitation>
-  <add-resource-id>Compute resource identifier</add-resource-id>
-  <add-resource-idHelp>Compose the resource identifier using the catalog URL and the metadata
-    identifier (eg. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).
-  </add-resource-idHelp>
-  <add-extent-from-geokeywords>Compute extent from keyword</add-extent-from-geokeywords>
-  <add-extent-from-geokeywordsHelp>Analyze each keyword of type place and add matching extent.
-  </add-extent-from-geokeywordsHelp>
-  <classificationSection>Classification of data and services</classificationSection>
+  <add-resource-id>Skapa ny identifierare för resurs</add-resource-id>
+  <add-resource-idHelp>Skapa en identifierare baserat på katalogens adress (ex. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).</add-resource-idHelp>
+  <add-extent-from-geokeywords>Beräkna utsträckning från nyckelord</add-extent-from-geokeywords>
+  <add-extent-from-geokeywordsHelp>Analysera alla nyckelord och försök ta fram lämplig utsträckning.</add-extent-from-geokeywordsHelp>
   <temporalSection>Temporal reference</temporalSection>
-  <restrictionsSection>Restrictions on access and use</restrictionsSection>
+  <restrictionsSection>Restriktioner</restrictionsSection>
   <metadataSection>Metadata information</metadataSection>
   <responsibleOrganisationSection>Responsible organization (s)</responsibleOrganisationSection>
   <qualityAndValiditySection>Quality and validity</qualityAndValiditySection>
@@ -136,14 +139,14 @@
   <topicCategory>Topic category code</topicCategory>
   <metadataLanguage>Metadata language</metadataLanguage>
   <inspireServiceTaxonomy>INSPIRE Service Taxonomy</inspireServiceTaxonomy>
-  <otherConstraints>Other constraints</otherConstraints>
+  <otherConstraints>Andra restriktioner</otherConstraints>
   <operatesOn>Coupled resource</operatesOn>
-  <extent>Geographic bounding box</extent>
+  <extent>Geografisk, temporal och vertikal utsträckning</extent>
   <spatialExtent>Spatial extent</spatialExtent>
 
-  <freeTextKeywords>Other keywords</freeTextKeywords>
-  <resource_url>URL</resource_url>
-  <resource_protocol>Protocol</resource_protocol>
+  <resourceMaintanceSection>Ajourhållning</resourceMaintanceSection>
+  <maintenance_frequency>Underhållsfrekvens</maintenance_frequency>
+  <maintenance_note>Anmärkning</maintenance_note>
 
   <addCrs>Projection</addCrs>
   <addCrs4936>ETRS89-XYZ</addCrs4936>
@@ -169,67 +172,58 @@
   <addCrs7409>ETRS89-GRS80-EVRS</addCrs7409>
 
   <!-- String for INSPIRE SDS tab -->
+  <inspire_sds_cc1>Överensstämmelseklass 1 - Anropningsbar</inspire_sds_cc1>
+  <inspire_sds_cc2>Överensstämmelseklass 2 - Interoperabel</inspire_sds_cc2>
+  <inspire_sds_cc3> Överensstämmelseklass 3 - Harmoniserad</inspire_sds_cc3>
 
-  <inspire_sds_cc1>Conformance class 1: invocable</inspire_sds_cc1>
-  <inspire_sds_cc2>Conformance class 2: interoperable</inspire_sds_cc2>
-  <inspire_sds_cc3>Conformance class 3: harmonized</inspire_sds_cc3>
+  <sds-category>Tjänstekategori</sds-category>
+  <inspire_add_pass>Lägg till passelement</inspire_add_pass>
+  <sds-add-dataquality>Lägg till Datakvalitetelement</sds-add-dataquality>
+  <sds-add-dataqualityHelp>TG4: För varje rumsdatatjänst ska det finnas en enda uppsättning kvalitetsinformation (dataQualityInfo-element) scoped till "service".</sds-add-dataqualityHelp>
+  <sds-add-tech-spec>Lägg till en teknisk specifikation</sds-add-tech-spec>
+  <sds-add-tech-specHelp>TG8: Metadataelementet för specifikationen ska åtminstone hänvisa till eller innehålla en teknisk specifikation som den invocable geodatatjänsten fullständigt överensstämmer med, tillhandahåller alla nödvändiga tekniska element, att faktiskt åberopa tjänsten och möjliggöra användningen.</sds-add-tech-specHelp>
+  <sds-tech-spec>Teknisk specifikation</sds-tech-spec>
+  <conformity_desc>Teknisk specifikation titel</conformity_desc>
+  <conformity_linkage>Teknisk specifikation URL</conformity_linkage>
 
-  <sds-category>Category</sds-category>
-  <inspire_add_pass>Add pass element</inspire_add_pass>
-  <sds-add-dataquality>Add DataQuality element</sds-add-dataquality>
-  <sds-add-dataqualityHelp>TG4: For each spatial data service, there shall be one and only one set
-    of quality information (dataQualityInfo element) scoped to “service”.
-  </sds-add-dataqualityHelp>
-  <sds-add-tech-spec>Add a technical specification</sds-add-tech-spec>
-  <sds-add-tech-specHelp>TG8: The Specification metadata element shall at least refer to or contain
-    one technical specification to which the invocable spatial data service fully conforms,
-    providing all the necessary technical elements, to actually invoke the service and enable its
-    usage.
-  </sds-add-tech-specHelp>
-  <sds-tech-spec>Technical specification</sds-tech-spec>
-  <conformity_desc>Tech spec title</conformity_desc>
-  <conformity_linkage>Tech spec URL</conformity_linkage>
+  <sds-add-reg-spec>Lägg till Överensstämmelserapport</sds-add-reg-spec>
+  <sds-reg-spec>Överensstämmelserapport</sds-reg-spec>
+  <reg_conformity_desc>Överensstämmelserapport titel</reg_conformity_desc>
+  <reg_conformity_linkage>Överensstämmelserapport URL</reg_conformity_linkage>
 
 
-  <sds-section-qos>Quality of Service</sds-section-qos>
-  <sds-add-qualityofservice>Add missing Quality of Service criteria</sds-add-qualityofservice>
-  <sds-add-qualityofserviceHelp>INSPIRE SDS requires three quality of service criteria to be
-    reported in the metadata: Availability, Performance and Capacity. This button will add the
-    missing criteria.
-  </sds-add-qualityofserviceHelp>
-  <qos_measure>Measure:</qos_measure>
-  <qos_uom>UOM</qos_uom>
-  <qos_description>Description</qos_description>
-  <qos_value>Value</qos_value>
-  <sds-section-crs>Coordinate reference system</sds-section-crs>
+  <sds-section-qos>Tjänst kvalitet</sds-section-qos>
+  <sds-add-qualityofservice>Lägg till kvalitetskriterier</sds-add-qualityofservice>
+  <sds-add-qualityofserviceHelp>INSPIRE SDS kräver tre kvaliteter av tjänstekriterier som ska rapporteras i metadata: Tillgänglighet, Prestanda och Kapacitet. Den här knappen lägger till de saknade kriterierna.</sds-add-qualityofserviceHelp>
+  <qos_measure>Mäta</qos_measure>
+  <qos_uom>måttenhet (UOM)</qos_uom>
+  <qos_description>Beskrivning</qos_description>
+  <qos_value>Värde</qos_value>
+  <sds-section-crs>Koordinat referenssystem</sds-section-crs>
 
-  <sds-fix-category>Fix the Category element</sds-fix-category>
-  <sds-fix-categoryHelp>(Rec1) Replace gco:CharacterString with gmx:Anchor in the description
-    metadata element.
-  </sds-fix-categoryHelp>
+  <sds-fix-category>Fixa elementet Kategori</sds-fix-category>
+  <sds-fix-categoryHelp>(Rec1) Replace gco:CharacterString with gmx:Anchor in the description metadata element.</sds-fix-categoryHelp>
 
-  <sds-accesspoint>Access Point URL</sds-accesspoint>
-  <sds-add-accesspoint>Add Access Point</sds-add-accesspoint>
+  <sds-accesspoint>Åtkomstpunkt URL</sds-accesspoint>
+  <sds-add-accesspoint>Lägg till Åtkomstpunkt</sds-add-accesspoint>
 
-  <sds-endpoint>Endpoint URL</sds-endpoint>
-  <sds-add-endpoint>Add Endpoint</sds-add-endpoint>
+  <sds-endpoint>Slutpunkt URL</sds-endpoint>
+  <sds-add-endpoint>Lägg till Slutpunkt</sds-add-endpoint>
 
-  <sds-addNoConstraints>No Limitation</sds-addNoConstraints>
-  <sds-addNoConstraintsHelp>Add an element that documents that there are no limitation for this
-    service.
-  </sds-addNoConstraintsHelp>
-  <sds-addUnknownConstraints>Unknown Limitation</sds-addUnknownConstraints>
-  <sds-addConstraints>Customizable constraints</sds-addConstraints>
+  <sds-addNoConstraints>Ingen begränsning</sds-addNoConstraints>
+  <sds-addNoConstraintsHelp>Lägg till ett element som dokumenterar att det inte finns några begränsningar för den här tjänsten.</sds-addNoConstraintsHelp>
+  <sds-addUnknownConstraints>Okänd begränsning</sds-addUnknownConstraints>
+  <sds-addConstraints>Anpassningsbara begränsningar</sds-addConstraints>
 
   <sds>
-    <noConditionsApply>No conditions apply</noConditionsApply>
-    <conditionsUnknown>Conditions unknown</conditionsUnknown>
+    <noConditionsApply>Inga villkor gäller</noConditionsApply>
+    <conditionsUnknown>Villkor okänd</conditionsUnknown>
   </sds>
 
-  <sds-limitation>Limitation</sds-limitation>
+  <sds-limitation>Begränsning</sds-limitation>
 
-  <sds-section-custodian>Responsible custodian</sds-section-custodian>
-  <sds-addOperation>Add Operation</sds-addOperation>
+  <sds-section-custodian>Ansvarig förvaring</sds-section-custodian>
+  <sds-addOperation>Lägg till operation</sds-addOperation>
 
   <trueValue>Yes</trueValue>
   <falseValue>No</falseValue>
