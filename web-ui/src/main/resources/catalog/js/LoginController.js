@@ -42,11 +42,11 @@
       ['$scope', '$http', '$rootScope', '$translate',
        '$location', '$window', '$timeout',
        'gnUtilityService', 'gnConfig', 'gnGlobalSettings',
-       'vcRecaptchaService', '$q',
+       'vcRecaptchaService', 'gnUrlUtils', '$q',
        function($scope, $http, $rootScope, $translate,
            $location, $window, $timeout,
                gnUtilityService, gnConfig, gnGlobalSettings,
-               vcRecaptchaService, $q) {
+               vcRecaptchaService, gnUrlUtils, $q) {
           $scope.formAction = '../../signin#' +
          $location.path();
           $scope.registrationStatus = null;
@@ -62,7 +62,14 @@
          gnConfig['system.userSelfRegistration.recaptcha.publickey'];
           $scope.resolveRecaptcha = false;
 
-          $scope.redirectUrl = gnUtilityService.getUrlParameter('redirect');
+          var redirect = gnUtilityService.getUrlParameter('redirect');
+
+          if ((redirect) && gnUrlUtils.urlIsSameOrigin(redirect)) {
+            $scope.redirectUrl = redirect;
+          } else {
+            $scope.redirectUrl = "";
+          }
+
           $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
           $scope.gnConfig = gnConfig;
           $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
