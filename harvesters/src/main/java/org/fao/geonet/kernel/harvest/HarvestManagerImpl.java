@@ -651,32 +651,32 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         return OperResult.OK;
     }
 
-    @Override
-    public void rescheduleActiveHarvesters() {
-        String timeZoneSetting = applicationContext.getBean(SettingManager.class).getValue(Settings.SYSTEM_SERVER_TIMEZONE, true);
-        if (StringUtils.isBlank(timeZoneSetting)) {
-            timeZoneSetting = TimeZone.getDefault().getID();
-        }
+//    @Override
+//    public void rescheduleActiveHarvesters() {
+//        String timeZoneSetting = applicationContext.getBean(SettingManager.class).getValue(Settings.SYSTEM_SERVER_TIMEZONE, true);
+//        if (StringUtils.isBlank(timeZoneSetting)) {
+//            timeZoneSetting = TimeZone.getDefault().getID();
+//        }
+//
+//        for (Map.Entry<String, AbstractHarvester> pair : hmHarvesters.entrySet()) {
+//           AbstractHarvester harvester = pair.getValue();
+//           if ( Common.Status.ACTIVE.equals(harvester.getStatus())) {
+//               try {
+//                   TimeZone triggerTimeZone =  harvester.getTriggerTimezone();
+//                   String triggerTimeZoneId = TimeZone.getDefault().getID();
+//                   if (triggerTimeZone != null) {
+//                       triggerTimeZoneId = triggerTimeZone.getID();
+//                   }
+//
+//                   if (!StringUtils.equals(timeZoneSetting, triggerTimeZoneId)) {
+//                       harvester.doReschedule();
+//                   }
+//               } catch (SchedulerException e) {
+//                   Log.error(Geonet.HARVEST_MAN, String.format("Error rescheduling harvester %s - '%s'", harvester.getID(),
+//                       harvester.getParams().getName()), e);
+//               }
+//           }
+//        }
 
-        for (Map.Entry<String, AbstractHarvester> pair : hmHarvesters.entrySet()) {
-           AbstractHarvester harvester = pair.getValue();
-           if ( Common.Status.ACTIVE.equals(harvester.getStatus())) {
-               try {
-                   TimeZone triggerTimeZone =  harvester.getTriggerTimezone();
-                   String triggerTimeZoneId = TimeZone.getDefault().getID();
-                   if (triggerTimeZone != null) {
-                       triggerTimeZoneId = triggerTimeZone.getID();
-                   }
-
-                   if (!StringUtils.equals(timeZoneSetting, triggerTimeZoneId)) {
-                       harvester.doReschedule();
-                   }
-               } catch (SchedulerException e) {
-                   Log.error(Geonet.HARVEST_MAN, String.format("Error rescheduling harvester %s - '%s'", harvester.getID(),
-                       harvester.getParams().getName()), e);
-               }
-           }
-        }
-
-    }
+  //  }
 }
