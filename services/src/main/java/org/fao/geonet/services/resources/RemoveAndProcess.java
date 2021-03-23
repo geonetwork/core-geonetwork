@@ -79,6 +79,7 @@ public class RemoveAndProcess {
                                    @RequestParam(defaultValue = "") String uuid)
         throws Exception {
         ServiceContext context = serviceManager.createServiceContext("resource.del.and.detach", lang, request);
+      try {
         if (id.trim().isEmpty()) {
             id = dm.getMetadataId(uuid);
         }
@@ -130,5 +131,8 @@ public class RemoveAndProcess {
         }
 
         return new IdResponse(id);
+      } finally {
+        context.clear();
+      }
     }
 }

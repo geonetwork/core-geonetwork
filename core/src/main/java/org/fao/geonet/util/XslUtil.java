@@ -27,6 +27,10 @@ package org.fao.geonet.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+
+import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.domain.MetadataResourceContainer;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.MultiPolygon;
 import jeeves.component.ProfileManager;
@@ -83,6 +87,7 @@ import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.w3c.dom.Node;
@@ -92,10 +97,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -393,6 +399,43 @@ public final class XslUtil {
     }
 
     /**
+     * get external manager url for resource.
+     *
+     * @param metadataUuid uuid of the record
+     * @param approved is metadata approved
+     * @return url to access the resource. Or null if not supported
+     */
+    public static MetadataResourceContainer getResourceContainerDescription(String metadataUuid, Boolean approved) throws Exception {
+        Store store = BeanFactoryAnnotationUtils.qualifiedBeanOfType(ApplicationContextHolder.get().getBeanFactory(), Store.class, "filesystemStore");
+
+        if (store != null) {
+            if (store.getResourceManagementExternalProperties() != null && store.getResourceManagementExternalProperties().isFolderEnabled()) {
+                ServiceContext context = ServiceContext.get();
+                return store.getResourceContainerDescription(ServiceContext.get(), metadataUuid, approved);
+            } else {
+                // Return an empty object which should not be used because the folder is not enabled.
+                return new FilesystemStoreResourceContainer(metadataUuid, -1, null, null, null, approved);
+            }
+        }
+        Log.error(Geonet.RESOURCES, "Could not locate a Store bean in getResourceContainerDescription");
+        return null;
+    }
+
+    /**
+     * get resource management external properties.
+     *
+     * @return the windows parameters to be used.
+     */
+    public static Store.ResourceManagementExternalProperties getResourceManagementExternalProperties() {
+        Store store = BeanFactoryAnnotationUtils.qualifiedBeanOfType(ApplicationContextHolder.get().getBeanFactory(), Store.class, "filesystemStore");
+        if (store != null) {
+            return store.getResourceManagementExternalProperties();
+        }
+        Log.error(Geonet.RESOURCES,"Could not locate a Store bean in getResourceManagementExternalProperties");
+        return null;
+    }
+
+    /**
      * Optimistically check if user can access a given url.  If not possible to determine then the
      * methods will return true.  So only use to show url links, not check if a user has access for
      * certain.  Spring security should ensure that users cannot access restricted urls though.
@@ -538,6 +581,31 @@ public final class XslUtil {
             return "";
         }
     }
+
+
+    /**
+     * Retrieves all the values as a comma separated list for Lucene field for the metadata
+     * with the provided uuid and language.
+     *
+     */
+    public static String getIndexFieldByIdAllValues(Object appName, Object id, Object field, Object lang) {
+        String fieldname = field.toString();
+        String language = (lang.toString().equals("") ? null : lang.toString());
+        try {
+            Map<String, Map<String, String>> fieldValues = LuceneSearcher.getAllMetadataFromIndexFor(language, "_uuid", id.toString(), Collections.singleton(fieldname), false, true);
+
+            if (fieldValues.isEmpty()) {
+                return "";
+            } else {
+                Map<String, String> values = fieldValues.values().iterator().next();
+                return values.get(fieldname);
+            }
+        } catch (Exception e) {
+            Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
+            return "";
+        }
+    }
+
 
     /**
      * Return a translation for a codelist or enumeration element.
@@ -881,7 +949,19 @@ public final class XslUtil {
 
         try {
             URL url = new URL(surl);
-            URLConnection conn = Lib.net.setupProxy(context, url);
+            HttpURLConnection conn = Lib.net.setupProxy(context, url);
+
+            int status = conn.getResponseCode();
+
+            // Handle redirect
+            if (status != HttpURLConnection.HTTP_OK) {
+                if (status == HttpURLConnection.HTTP_MOVED_TEMP
+                    || status == HttpURLConnection.HTTP_MOVED_PERM
+                    || status == HttpURLConnection.HTTP_SEE_OTHER)
+                // Get the redirect url from "location" header field
+                url = new URL(conn.getHeaderField("Location"));
+                conn = (HttpURLConnection) url.openConnection();
+            }
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();

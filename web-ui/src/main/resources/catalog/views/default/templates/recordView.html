@@ -23,11 +23,23 @@
   </div>
 
   <div class="container">
-    <div class="alert alert-warning"
-        data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
-        data-translate=""
-        data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}', url: '{{url | encodeURIComponent}}'}">
+    <div ng-if="!authenticated" class="alert alert-warning"
+         data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
+         data-translate=""
+         data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}', url: '{{url | encodeURIComponent}}'}">
       recordNotFound
+    </div>
+    <div ng-if="authenticated && user.profile != 'Administrator'" class="alert alert-warning"
+         data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
+         data-translate=""
+         data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}', url: '{{url | encodeURIComponent}}'}">
+      recordNotFoundAuthenticatedUser
+    </div>
+    <div ng-if="authenticated && user.profile === 'Administrator'" class="alert alert-warning"
+         data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
+         data-translate=""
+         data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}', url: '{{url | encodeURIComponent}}'}">
+      recordNotFoundAuthenticatedAdministrator
     </div>
     <div class="row"
         data-ng-show="!mdView.loadDetailsFinished">
@@ -94,7 +106,7 @@
                data-gn-click-and-spin="deleteRecord(mdView.current.record)"
                data-gn-confirm-click="{{(mdView.current.record.draft != 'y') ? 'deleteRecordConfirm' : 'deleteWorkingCopyRecordConfirm' | translate:mdView.current.record}}"
                title="{{(mdView.current.record.draft != 'y') ? 'delete' : 'cancelWorkingCopy' | translate}}">
-              <span class="fa fa-fw fa-times"></span>
+              <span class="fa fa-fw {{(mdView.current.record.draft != 'y') ? 'fa-trash' : 'fa-times'}}"></span>
               <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft == 'y'">cancelWorkingCopy</span>
               <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft != 'y'">delete</span>
             </a>
@@ -117,7 +129,7 @@
             <ul class="dropdown-menu" role="menu">
               <li role="menuitem"
                   data-ng-repeat="f in formatter.list"
-                  data-ng-class="currentFormatter === f.url ? 'disabled' : ''">
+                  data-ng-class="currentFormatterWithoutDraftInfo() === f.url ? 'disabled' : ''">
                 <a href=""
                    gn-metadata-open="mdView.current.record"
                    gn-records="mdView.records"
@@ -542,8 +554,7 @@
                   data-ng-if="mdView.current.record.creationDate ||
                               mdView.current.record.publicationDate ||
                               mdView.current.record.revisionDate ||
-                              mdView.current.record.tempExtentBegin ||
-                              mdView.current.record.tempExtentEnd">
+                              mdView.current.record.tempExtentPeriod">
             <h2>
               <i class="fa fa-fw fa-clock-o"></i>
               <span data-translate="">tempExtent</span>
@@ -569,13 +580,14 @@
                   data-format="YYYY-MM-DD"/>
             </dl>
             <dl
-              data-ng-show="mdView.current.record.tempExtentBegin ||
-                                mdView.current.record.tempExtentEnd">
+              data-ng-show="mdView.current.record.tempExtentPeriod.length > 0">
               <dt data-translate>tempExtentBegin</dt>
-              <dd>
-                <span data-gn-humanize-time="{{mdView.current.record.tempExtentBegin}}"/>
+              <dd data-ng-repeat="period in mdView.current.record.tempExtentPeriod track by $index">
+                <span data-gn-humanize-time="{{period.split('|')[0]}}"
+                      data-format="YYYY-MM-DD"/>
                 &nbsp;<i class="fa fa-fw fa-forward"></i>
-                <span data-gn-humanize-time="{{mdView.current.record.tempExtentEnd}}"/>
+                <span data-gn-humanize-time="{{period.split('|')[1]}}"
+                      data-format="YYYY-MM-DD"/>
               </dd>
             </dl>
             </p>
@@ -618,9 +630,14 @@
               <i class="fa fa-fw fa-cog"></i>
               <span data-translate="">sourceCatalog</span>
             </h2>
-            <img ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.source}}.png"
-                aria-label="{{'sourceCatalog' | translate}}"
-                class="gn-source-logo"/>
+            <img data-ng-if="md.logo"
+                 data-ng-src="{{gnUrl}}..{{md.logo}}"
+                 alt="{{'siteLogo' | translate}}"
+                 class="gn-source-logo"/>
+            <img data-ng-if="!md.logo"
+                 ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.source}}.png"
+                 aria-label="{{'sourceCatalog' | translate}}"
+                 class="gn-source-logo"/>
           </section>
 
           <section class="gn-md-side-calendar">

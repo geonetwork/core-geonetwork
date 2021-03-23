@@ -23,11 +23,13 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
+import java.util.concurrent.TimeUnit;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -47,6 +49,7 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
+import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.IndexMetadataTask;
@@ -86,12 +89,12 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -100,7 +103,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
 
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
 
@@ -198,11 +200,19 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         // So delete one by one even if slower
         metadataToDelete.forEach(md -> {
             try {
+                // Extract information for RecordDeletedEvent
+                LinkedHashMap<String, String> titles = metadataUtils.extractTitles(Integer.toString(md.getId()));
+                UserSession userSession = ServiceContext.get().getUserSession();
+                String xmlBefore = md.getData();
+
                 store.delResources(ServiceContext.get(), md.getUuid());
                 metadataManager.deleteMetadata(ServiceContext.get(), String.valueOf(md.getId()));
+
+                // Trigger RecordDeletedEvent
+                new RecordDeletedEvent(md.getId(), md.getUuid(), titles, userSession.getUserIdAsInt(), xmlBefore).publish(ApplicationContextHolder.get());
             } catch (Exception e) {
                 Log.warning(Geonet.DATA_MANAGER, String.format(
-                    
+
                     "Error during removal of metadata %s part of batch delete operation. " +
                     "This error may create a ghost record (ie. not in the index " +
                     "but still present in the database). " +
@@ -329,7 +339,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             executor.execute(worker);
             index += count;
         }
-
+        // let the started threads finish in the background and then clean up executor
         executor.shutdown();
     }
 
@@ -600,7 +610,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             addExtraFields(fullMd, moreFields);
 
             if (searchManager == null) {
-                searchManager = servContext.getBean(SearchManager.class);
+                searchManager = getServiceContext().getBean(SearchManager.class);
             }
 
             searchManager.index(schemaManager.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root,
@@ -674,9 +684,17 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         searchManager.disableOptimizer();
     }
 
+    /**
+     * Service context for the current therad if available, or the one provided during init.
+     *
+     * @return service context for current thread if available, or service context used during init.
+     */
     private ServiceContext getServiceContext() {
         ServiceContext context = ServiceContext.get();
-        return context == null ? servContext : context;
+        if( context != null ){
+            return context; // use ServiceContext from current ThreadLocal
+        }
+        return servContext; // backup ServiceContext provided during init
     }
 
     public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {

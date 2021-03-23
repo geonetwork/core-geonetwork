@@ -43,22 +43,19 @@
     <os family="unix"/>
   </condition>
 
-  <!-- Project build properties -->
-  <property name="appName" value="GeoNetwork"/>
-  <property name="displayName" value="GeoNetwork opensource"/>
-  <property name="homepage" value="https://geonetwork-opensource.org"/>
-  <property name="version" value="3.11.0"/>
-  <property name="subVersion" value="SNAPSHOT"/>
-  <property name="javaVersion" value="1.8.0"/>
-  <property name="jreUrl" value="http://openjdk.java.net/"/>
-  <property name="OS" value="Compiled on ${os.name} (${osys})"/>
-  <property name="propsdir" value="../.props"/>
+  <!-- Import global build properties -->
+  <property file="./build.properties"/>
+
+  <!-- Additional build properties -->
+  <property name="bundleName" value="geonetwork-bundle"/>
+  <property name="propsdir" value="target/props"/>
   <property name="ant.build.javac.target" value="1.8"/>
   <property name="debugOn" value="on"/>
 
-  <!-- Used for copyright year -->
+  <!-- Copyright year and build date properties -->
   <tstamp>
     <format property="year" pattern="yyyy"/>
+    <format property="buildDate" pattern="dd-M-yyyy" />
   </tstamp>
 
   <!-- =================================================================================== -->
@@ -69,43 +66,17 @@
     <mkdir dir="${propsdir}"/>
 
     <!-- Extract Git properties -->
-    <exec executable="git" dir=".." output="git.properties">
+    <exec executable="git" dir=".." output="target/git.properties">
       <arg value="remote"/>
       <arg value="-v"/>
     </exec>
-    <property prefix="git" file="git.properties"/>
+    <property prefix="git" file="target/git.properties"/>
 
-    <exec executable="git" dir=".." output="git2.properties">
+    <exec executable="git" dir=".." output="target/git2.properties">
       <arg value="log"/>
       <arg value="--max-count=1"/>
     </exec>
-    <property prefix="git2" file="git2.properties"/>
-
-    <!-- Update the properties file -->
-    <propertyfile
-      file="../web/src/main/webapp/WEB-INF/server.prop"
-      comment="GeoNetwork opensource properties. These are also used by geonetwork at runtime">
-      <!-- These are used by geonetwork at runtime -->
-      <!-- DO NOT REMOVE!! -->
-      <entry key="version" value="${version}"/>
-      <entry key="subVersion" value="${subVersion}"/>
-      <entry key="release" value="${version}"/>
-
-      <entry key="javaVersion" value="${javaVersion}"/>
-      <entry key="jre_url" value="${jreUrl}"/>
-      <entry key="ant.build.javac.target" value="1.8"/>
-      <entry key="buildDate" type="date" value="now"
-             pattern="yyyy-MM-dd'T'HH:mm:ssZ"/>
-
-      <entry key="date" type="date" value="now" pattern="yymmddHHmm"/>
-      <entry key="day" type="date" value="now" pattern="dd-M-yyyy"/>
-      <entry key="OS" value="${OS}"/>
-      <entry key="debugOn" value="${debugOn}"/>
-
-      <entry key="git_revision" value="${git2.commit}"/>
-      <entry key="git_url" value="${git.origin}"/>
-
-    </propertyfile>
+    <property prefix="git2" file="target/git2.properties"/>
 
     <!-- Make sure all files that we need have their version numbers etc. updated -->
 
@@ -113,26 +84,23 @@
     <copy file="readme.html"
           tofile="${propsdir}/readme.html"
           filtering="on" overwrite="yes"/>
-    
+
     <!-- license file -->
     <copy file="license.html"
           tofile="${propsdir}/license.html"
-          filtering="on" overwrite="yes"/>    
+          filtering="on" overwrite="yes"/>
 
     <echo message="Replacing template variables in readme files..."/>
-    <replace file="${propsdir}/readme.html"
-             propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
-      <replacefilter token="@version@" property="version"/>
-      <replacefilter token="@subVersion@" property="subVersion"/>
-      <replacefilter token="@day@" property="day"/>
-      <replacefilter token="@jreUrl@" property="jre_url"/>
-      <replacefilter token="@javaVersion@" property="javaVersion"/>
-    </replace>
-    <!-- Replace variables in ReadMe file that are not in server.prop -->
+
+    <replace file="${propsdir}/readme.html" token="@version@" value="${version}"/>
+    <replace file="${propsdir}/readme.html" token="@subVersion@" value="${subVersion}"/>
+    <replace file="${propsdir}/readme.html" token="@day@" value="${buildDate}" />
+    <replace file="${propsdir}/readme.html" token="@jreUrl@" value="${jreUrl}"/>
+    <replace file="${propsdir}/readme.html" token="@javaVersion@" value="${javaVersion}"/>
     <replace file="${propsdir}/readme.html" token="@appName@" value="${appName}"/>
     <replace file="${propsdir}/readme.html" token="@displayName@" value="${displayName}"/>
     <replace file="${propsdir}/readme.html" token="@homepage@" value="${homepage}"/>
-    <replace file="${propsdir}/readme.html" token="@year@" value="${year}"/> 
+    <replace file="${propsdir}/readme.html" token="@year@" value="${year}"/>
     <echo message="Done"/>
   </target>
 
@@ -143,25 +111,23 @@
 
   <!-- Create ZIP distribution for GeoNetwork + Jetty + shell scripts -->
   <target name="zip">
-    <property file="../web/src/main/webapp/WEB-INF/server.prop"/>
+    <mkdir dir="target/${appName}-${version}"/>
 
-    <delete dir="../${appName}-${release}"/>
-    <mkdir dir="../${appName}-${release}"/>
+    <echo message="Creating ZIP file for ${appName} ${version}..."/>
 
-    <echo message="Creating ZIP file for ${appName} ${release}..."/>
-
-    <zip destfile="../${appName}-${release}/${appName}-${release}-${subVersion}.zip">
+    <zip destfile="target/${appName}-${version}/${bundleName}-${version}-${subVersion}.zip">
       <zipfileset dir="./bin" excludes="**.sh" prefix="bin" />
       <zipfileset dir="./bin" includes="**.sh" prefix="bin" filemode="774"/>
-      <zipfileset dir="../.props" includes="readme.html, license.html" />
+      <zipfileset dir="${propsdir}" includes="readme.html, license.html" />
       <zipfileset dir="./jetty" prefix="jetty" excludes="logs/*.log, logs/archive/*.log" />
-      <zipfileset dir="../web/target/geonetwork" prefix="web/geonetwork" />
+      <!-- Use war to include META-INF/MANIFEST.MF file -->
+      <zipfileset src="../web/target/geonetwork.war" prefix="web/geonetwork" />
       <zipfileset dir="./data" prefix="web/geonetwork/data" />
       <zipfileset dir="./schemaPlugins" prefix="web/geonetwork/WEB-INF/data/config/schema_plugins" />
     </zip>
 
     <checksum
-      file="../${appName}-${release}/${appName}-${release}-${subVersion}.zip"
+      file="target/${appName}-${version}/${bundleName}-${version}-${subVersion}.zip"
       forceOverwrite="yes"/>
 
   </target>
@@ -169,11 +135,11 @@
   <!-- Copy and rename WAR file and calculate checksum -->
   <target name="war" depends="zip">
 
-    <copy file="../web/target/geonetwork.war" 
-          tofile="../${appName}-${release}/${appName}-${release}-${subVersion}.war" />    
+    <copy file="../web/target/geonetwork.war"
+          tofile="target/${appName}-${version}/${appName}-${version}-${subVersion}.war" />
 
-    <checksum file="../${appName}-${release}/${appName}-${release}-${subVersion}.war"
-              forceOverwrite="yes"/> 
+    <checksum file="target/${appName}-${version}/${appName}-${version}-${subVersion}.war"
+              forceOverwrite="yes"/>
 
   </target>
 

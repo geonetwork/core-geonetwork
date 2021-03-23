@@ -62,16 +62,14 @@
           '$http',
           'gnMap',
           'gnMapsManager',
-          'olDecorateInteraction',
           'gnGeometryService',
           function BoundingPolygonController(
-              $scope,
-              $attrs,
-              $http,
-              gnMap,
-              gnMapsManager,
-              olDecorateInteraction,
-              gnGeometryService) {
+            $scope,
+            $attrs,
+            $http,
+            gnMap,
+            gnMapsManager,
+            gnGeometryService) {
             var ctrl = this;
 
             // set read only
@@ -83,21 +81,13 @@
               ctrl.initValue();
             });
 
-            // interactions with map
+            // Get interaction layer
             var layer = gnGeometryService.getCommonLayer(ctrl.map);
             var source = layer.getSource();
 
-            ctrl.drawInteraction = new ol.interaction.Draw({
-              type: 'MultiPolygon',
-              source: source
-            });
-            ctrl.drawLineInteraction = new ol.interaction.Draw({
-              type: 'LineString',
-              source: source
-            });
-            ctrl.modifyInteraction = new ol.interaction.Modify({
-              features: source.getFeaturesCollection()
-            });
+            // Draw interaction variables
+            var activeDrawInteraction;
+            ctrl.activeDrawType = null;
 
             // this is used to deactivate zoom on draw end
             ctrl.zoomInteraction = null;
@@ -107,26 +97,12 @@
               }
             });
 
-            // add our layer&interactions to the map
-            olDecorateInteraction(ctrl.drawInteraction);
-            olDecorateInteraction(ctrl.drawLineInteraction);
-            olDecorateInteraction(ctrl.modifyInteraction);
-            ctrl.drawInteraction.active = false;
-            ctrl.drawLineInteraction.active = false;
-            ctrl.modifyInteraction.active = false;
-
-            // add interactions to map
-            ctrl.map.addInteraction(ctrl.drawInteraction);
-            ctrl.map.addInteraction(ctrl.drawLineInteraction);
-            ctrl.map.addInteraction(ctrl.modifyInteraction);
-
-            // clear existing features on draw end & save feature
+            // Clear existing features on draw end & save feature
             function handleDrawEnd(event) {
+              clearActiveDrawInteraction();
               ctrl.fromTextInput = false;
               source.clear(event.feature);
               ctrl.updateOutput(event.feature);
-              ctrl.drawInteraction.active = false;
-              ctrl.drawLineInteraction.active = false;
               $scope.$digest();
 
               // prevent interference by zoom interaction
@@ -138,15 +114,45 @@
                 }, 251);
               }
             }
-            ctrl.drawInteraction.on('drawend', handleDrawEnd);
-            ctrl.drawLineInteraction.on('drawend', handleDrawEnd);
 
-            // update output on modify end
-            ctrl.modifyInteraction.on('modifyend', function(event) {
+            // Update text field when geometry has modified
+            function handleModifyEnd(event) {
               ctrl.fromTextInput = false;
               ctrl.updateOutput(event.features.item(0));
               $scope.$digest();
-            });
+            }
+
+            // Removes event handler from current draw interaction and
+            // removes interaction from map. Clears interaction variables.
+            function clearActiveDrawInteraction() {
+              if (!activeDrawInteraction) return;
+              activeDrawInteraction.un('drawend', handleDrawEnd);
+              ctrl.map.removeInteraction(activeDrawInteraction);
+              activeDrawInteraction = null;
+              ctrl.activeDrawType = null;
+            }
+
+            // Add new draw interaction based on given geometry type name.
+            // Also add event handler that fires when drawing ends.
+            ctrl.setActiveDrawInteraction = function(geometryType) {
+              clearActiveDrawInteraction();
+              activeDrawInteraction = new ol.interaction.Draw({
+                source: source,
+                type: geometryType
+              });
+              activeDrawInteraction.on('drawend', handleDrawEnd);
+              ctrl.map.addInteraction(activeDrawInteraction);
+              ctrl.activeDrawType = geometryType;
+            }
+
+            // Add modify interaction (always active when not readOnly)
+            if (!ctrl.readOnly) {
+              var modifyInteraction = new ol.interaction.Modify({
+                features: source.getFeaturesCollection()
+              });
+              modifyInteraction.on('modifyend', handleModifyEnd);
+              ctrl.map.addInteraction(modifyInteraction);
+            }
 
             // output for editor (equals input by default)
             ctrl.outputPolygonXml = surroundGmlWithGmdPolygon(ctrl.polygonXml);
@@ -157,8 +163,6 @@
             ctrl.dataProjection = 'EPSG:4326';
 
             // available input formats
-            // GML is not available as it cannot be parsed
-            // without namespace info
             ctrl.formats = ['WKT', 'GeoJSON', 'GML'];
             ctrl.currentFormat = ctrl.formats[0];
 
@@ -169,13 +173,37 @@
                 }
               }
               return false;
-            };
+            }
 
+            /**
+             * Calculates an enlarged extent for the given feature.
+             * For polygons and lines, the extent will be twice the size of its smallest dimension.
+             * For point features, the extent will be 1 square decimal degree, centered around the point.
+             * If needed, the LL point extent will be reprojected to fit the map projection.
+             *
+             * @param {ol.feature} feature  Input feature for which to return an enlarged extent
+             * @returns {Array.<number>}    Enlarged extent
+             */
             function getEnlargedExtent(feature) {
+
               var extent = feature.getGeometry().getExtent();
-              var buffer = Math.min.apply(ol.extent.getSize(extent)) * 0.1;
-              return ol.extent.buffer(extent, buffer);
-            };
+
+              // Get buffer distance of 50% of the smallest extent dimension (width or height)
+              var buffer = Math.min.apply(null, ol.extent.getSize(extent)) * 0.5;
+
+              if (buffer > 0) {
+                // Feature has a size: apply calculated buffer
+                return ol.extent.buffer(extent, buffer);
+              } else {
+                // Feature probably is a point, causing the extent to have 0 width and height:
+                // Get the extent center (= point), reproject to LL, buffer by 0.5 dd,
+                // reproject new extent back to map projection and return it
+                var mapProj = ctrl.map.getView().getProjection();
+                var center = ol.proj.toLonLat(ol.extent.getCenter(extent), mapProj);
+                extent = ol.extent.buffer(ol.extent.boundingExtent([center, center]), 0.5);
+                return ol.proj.transformExtent(extent, 'EPSG:4326', mapProj, 8);
+              }
+            }
 
             // parse initial input coordinates to display shape
             ctrl.initValue = function() {

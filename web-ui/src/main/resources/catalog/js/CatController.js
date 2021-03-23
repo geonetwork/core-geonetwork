@@ -91,13 +91,15 @@ goog.require('gn_alert');
             'por': 'pt',
             'rus': 'ru',
             'chi': 'zh',
-            'slo': 'sk'
+            'slo': 'sk',
+            'swe': 'sv'
           },
           'isLogoInHeader': false,
           'logoInHeaderPosition': 'left',
           'fluidHeaderLayout': true,
           'showGNName': true,
-          'isHeaderFixed': false
+          'isHeaderFixed': false,
+          'isMenubarAccessible': true
         },
         'cookieWarning': {
           'enabled': true,
@@ -489,6 +491,7 @@ goog.require('gn_alert');
       $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
       $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
       $scope.isHeaderFixed = gnGlobalSettings.gnCfg.mods.header.isHeaderFixed;
+      $scope.isMenubarAccessible = gnGlobalSettings.gnCfg.mods.header.isMenubarAccessible;
       $scope.isLogoInHeader = gnGlobalSettings.gnCfg.mods.header.isLogoInHeader;
 
       // If gnLangs current already set by config, do not use URL
@@ -553,7 +556,7 @@ goog.require('gn_alert');
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
         'spa': 'Español', 'por': 'Portuguesa', 'cat': 'Català', 'cze': 'Czech',
         'ita': 'Italiano', 'fin': 'Suomeksi', 'ice': 'Íslenska',
-        'rus': 'русский', 'chi': '中文', 'slo': 'Slovenčina'};
+        'rus': 'русский', 'chi': '中文', 'slo': 'Slovenčina', 'swe': 'Svenska'};
       $scope.url = '';
       $scope.gnUrl = gnGlobalSettings.gnUrl;
       $scope.gnCfg = gnGlobalSettings.gnCfg;

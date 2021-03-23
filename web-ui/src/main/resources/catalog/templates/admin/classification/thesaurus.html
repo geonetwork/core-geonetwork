@@ -11,7 +11,7 @@
                 data-ng-show="thesaurus.length > 1"
                 data-ng-model="thesaurusSearch.$"
                 placeholder="{{'filter' | translate}}"/>
-          <span class="fa fa-times gn-input-clear"
+          <span class="fa fa-trash gn-input-clear"
             ng-click="thesaurusSearch.$ = ''"
             ng-show="thesaurusSearch.$"></span>
         </div>
@@ -95,7 +95,7 @@
           <div class="flex-spacer flex-grow"></div>
           <button type="button" class="btn btn-danger"
                   data-ng-click="deleteThesaurus()">
-            <i class="fa fa-times"></i>&nbsp;<span data-translate="">deleteThesaurus</span>
+            <i class="fa fa-trash"></i>&nbsp;<span data-translate="">deleteThesaurus</span>
           </button>
         </div>
       </div>
@@ -125,7 +125,7 @@
               <div data-ng-disabled="!isNew()"
                   data-schema-info-combo="codelist"
                   data-selected-info="thesaurusSelected.dname"
-                  data-gn-schema-info="gmd:MD_KeywordTypeCode"
+                  data-gn-schema-info="mri:MD_KeywordTypeCode"
                   data-init-on-load="true"
                   lang="lang"></div>
             </div>
@@ -170,7 +170,7 @@
               ng-model="keywordFilter"
               ng-model-options="modelOptions"
               placeholder="{{'keywordFilter' | translate}}" autofocus=""/>
-            <span class="fa fa-times gn-input-clear"
+            <span class="fa fa-trash gn-input-clear"
               ng-click="keywordFilter = ''"
               ng-show="keywordFilter"></span>
           </div>
@@ -274,7 +274,7 @@
                 <div class="flex-spacer" ng-show="!isExternal()"></div>
                 <button class="btn btn-default btn-sm" ng-click="deleteKeyword(k)"
                   ng-show="!isExternal()" title="{{'delete' | translate}}">
-                  <i class="fa fa-times text-danger" />
+                  <i class="fa fa-trash text-danger" />
                 </button>
               </li>
             </div>
@@ -328,12 +328,12 @@
             <div
               data-schema-info-combo="codelist"
               data-selected-info="thesaurusImportType"
-              data-gn-schema-info="gmd:MD_KeywordTypeCode"
+              data-gn-schema-info="mri:MD_KeywordTypeCode"
               lang="lang"></div>
             <input type="text" class="hidden" name="dir" data-ng-model="thesaurusImportType"/>
             <ul>
               <li data-ng-repeat="file in queue">{{file.name}} ({{file.type}} / {{file.size}} KB) <i
-                class="fa fa-times" data-ng-click="clear(file)"/>
+                class="fa fa-trash" data-ng-click="clear(file)"/>
               </li>
             </ul>
 
@@ -372,7 +372,7 @@
               <div
                 data-schema-info-combo="codelist"
                 data-selected-info="thesaurusSelected.dname"
-                data-gn-schema-info="gmd:MD_KeywordTypeCode"
+                data-gn-schema-info="mri:MD_KeywordTypeCode"
                 lang="lang"></div>
             </div>
 

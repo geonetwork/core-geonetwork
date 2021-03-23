@@ -27,6 +27,7 @@ package org.fao.geonet.api.records.attachments;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceContainer;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,6 +38,9 @@ import java.nio.file.Path;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * A store allows user to upload resources (eg. files) to a metadata record and retrieve them.
@@ -315,8 +319,44 @@ public interface Store {
     MetadataResource getResourceDescription(final ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility,
                                             String filename, Boolean approved) throws Exception;
 
+    /**
+     * Get the resource container description.
+     * @param context
+     * @param metadataUuid The metadata UUID
+     * @return The container description or null if the metadata uuid does doesn't exist
+     */
+    MetadataResourceContainer getResourceContainerDescription(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception;
+
     interface ResourceHolder extends Closeable {
         Path getPath();
         MetadataResource getMetadata();
+    }
+
+    ResourceManagementExternalProperties getResourceManagementExternalProperties();
+
+    interface ResourceManagementExternalProperties {
+        /**
+         * Get the modal setting for the resource management window.
+         * @return boolean to indicate is the external management window should be modal or not.
+         */
+        boolean isEnabled();
+
+        /**
+         * Get the resource management windows parameters based on configuration for the store
+         * @return the javascript windows open parameters. i.e."toolbar=0,width=600,height=600"
+         */
+        String getWindowParameters();
+
+        /**
+         * Get the modal setting for the resource management window.
+         * @return boolean to indicate is the external management window should be modal or not.
+         */
+        boolean isModal();
+
+        /**
+         * Get the folder settings for the resource management window.
+         * @return boolean to indicate is the external management window should be enabled or not for folders.
+         */
+        boolean isFolderEnabled();
     }
 }

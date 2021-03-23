@@ -367,6 +367,8 @@
   "shareByEmail": "Share by email",
   "zoomto": "Zoom To",
   "recordNotFound": "The record with identifier <strong>{{uuid}}</strong> was not found or is not shared with you. Try to <a href=\"catalog.signin?redirect={{url}}\">sign in</a> if you've an account.",
+  "recordNotFoundAuthenticatedUser": "The record with identifier <strong>{{uuid}}</strong> was not found or is not shared with you.",
+  "recordNotFoundAuthenticatedAdministrator": "The record with identifier <strong>{{uuid}}</strong> was not found",
   "intersectWith": "Intersects with",
   "fullyOutsideOf": "Fully outside of",
   "encloses": "Enclosing",

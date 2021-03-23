@@ -66,8 +66,9 @@
                   data-ng-show="user.isUserAdminOrMore() && (userSelected.id && userSelected.id >= 0)"
                   data-gn-confirm-click="{{'userDeleteConfirm' | translate}}"
                   data-ng-click="deleteUser(userSelected.id)" id="gn-btn-user-delete">
-            <i class="fa fa-times"></i> <span data-translate=""
-          >deleteUser</span></button>
+            <i class="fa fa-trash"></i>&nbsp;
+            <span data-translate="">deleteUser</span>
+          </button>
         </div>
       </div>
       <div class="panel-body">

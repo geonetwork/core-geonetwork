@@ -175,11 +175,17 @@
           format: 'gml'
         }, options);
 
+        var outputValue = '';
+        var inputGeom = feature.getGeometry();
+        if (!inputGeom) {
+          return outputValue;
+        }
+
         // clone & transform geom
-        var outputGeom = feature.getGeometry().clone().transform(
-            map.getView().getProjection(),
-            options.crs || LONLAT_WGS84
-            );
+        var outputGeom = inputGeom.clone().transform(
+          map.getView().getProjection(),
+          options.crs || LONLAT_WGS84
+        );
         var outputFeature = new ol.Feature({
           geometry: outputGeom
         });
@@ -189,7 +195,6 @@
 
         var formatLabel = options.format.toLowerCase();
         var format;
-        var outputValue;
         switch (formatLabel) {
           case 'json':
           case 'geojson':
@@ -358,11 +363,14 @@
         // Get dimensions from GML
         var dim = gmlString.match(new RegExp('srsDimension=\"([^"]*)\"'));
         // If srsDimension > 2 OR geometry is already 2D, return unmodified geometry
-        if ((dim && dim.length === 2 && dim[1] >= 3) || 
-            (geom.layout === 'XY' && geom.stride === 2)) 
-              return geom;            
-        // Drop Z (and M)
-        geom.setCoordinates(geom.getCoordinates(), 'XY');
+        if ((dim && dim.length === 2 && dim[1] >= 3) ||
+          (geom.layout === 'XY' && geom.stride === 2))
+          return geom;
+        var coords = geom.getCoordinates();
+        // Drop Z (and M):
+        // For polygons and lines, the stride setting 'XY' takes care of dropping the Z and M.
+        // For point features, this does not work (OL bug?), so we slice the coordinate array explicitly!
+        geom.setCoordinates(geom.getType() === 'Point' ? coords.slice(0, 2) : coords, 'XY');
         return geom;
       }
 

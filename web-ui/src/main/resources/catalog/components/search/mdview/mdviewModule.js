@@ -47,11 +47,11 @@
     '$scope', '$http', '$compile', 'gnSearchSettings', 'gnSearchLocation',
     'gnMetadataActions', 'gnAlertService', '$translate', '$location',
     'gnMdView', 'gnMdViewObj', 'gnMdFormatter', 'gnConfig',
-    'gnGlobalSettings', 'gnConfigService', '$rootScope',
+    'gnGlobalSettings', 'gnConfigService', 'gnUrlUtils', '$rootScope',
     function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
              gnMetadataActions, gnAlertService, $translate, $location,
              gnMdView, gnMdViewObj, gnMdFormatter, gnConfig,
-             gnGlobalSettings, gnConfigService, $rootScope) {
+             gnGlobalSettings, gnConfigService, gnUrlUtils, $rootScope) {
 
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
@@ -122,16 +122,11 @@
       };
 
       $scope.loadFormatter = function(url) {
-        var showApproved = $scope.mdView.current.record == null ? 
-          true : $scope.mdView.current.record.draft != 'y';
         var gn_metadata_display = $('#gn-metadata-display');
 
         $http.get(url, {
           headers: {
             Accept: 'text/html'
-          },
-          params: {
-            approved : showApproved
           }
         }).then(
           function(response,status) {
@@ -168,17 +163,28 @@
 
       // Reset current formatter to open the next record
       // in default mode.
-      function loadFormatter() {
-        var f = gnSearchLocation.getFormatterPath();
-        $scope.currentFormatter = '';
-        if (f != undefined) {
-          $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, '$1');
-          $scope.loadFormatter(f);
+      function loadFormatter(event, url, oldUrl, state, oldState) {
+        // If call directly (event null) or there's a change in the url
+        if ((event == null) || (url != oldUrl)) {
+          var f = gnSearchLocation.getFormatterPath();
+          $scope.currentFormatter = '';
+          if (f != undefined) {
+            $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, '$1');
+            $scope.loadFormatter(f);
+          }
         }
       }
       // $scope.$watch('mdView.current.record', loadFormatter);
       $rootScope.$on('$locationChangeSuccess', loadFormatter)
       loadFormatter();
+
+      $scope.currentFormatterWithoutDraftInfo = function () {
+        if ($scope.currentFormatter) {
+          return gnUrlUtils.remove($scope.currentFormatter, ['approved'], true);
+        } else {
+          return $scope.currentFormatter;
+        }
+      }
 
       // Know from what path we come from
       $scope.gnMdViewObj = gnMdViewObj;

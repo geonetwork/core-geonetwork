@@ -93,7 +93,7 @@
           <div class="thumb-small"
                title="{{thumb.title | gnLocalized: lang}}"
                data-gn-img-modal="thumb"
-               style="background-image: url('{{thumb.lUrl || thumb.id}}')"/>
+               style="background-image: url('{{onlinesrcService.getApprovedUrl(thumb.lUrl || thumb.id)}}')"/>
 
           <a href=""
              class="onlinesrc-remove"
@@ -158,7 +158,7 @@
             </div>
             <div class="col-md-10">
               {{resource.protocol || ''}}<br/>
-              <a data-ng-href="{{resource.lUrl}}"
+              <a data-ng-href="{{onlinesrcService.getApprovedUrl(resource.lUrl)}}"
                  title="{{resource.lUrl}}"
                  data-ng-if="resource.lUrl.match('^http|ftp') !== null"
                  target="_blank">

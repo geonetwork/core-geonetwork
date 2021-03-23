@@ -86,8 +86,50 @@
   <xsl:variable name="isMultilingual"
                 select="count(/root/*/gmd:locale[*/gmd:languageCode/*/@codeListValue != $mainLanguage]) > 0"/>
 
-  <xsl:variable name="mainLanguageId"
-                select="upper-case(java:twoCharLangCode($mainLanguage))"/>
+  <xsl:variable name="mainLanguageId">
+    <!-- Potential options include 3 char or 2 char code in both upper and lower. -->
+
+    <xsl:variable name="localeList"
+                  select="/root/*/gmd:locale/gmd:PT_Locale"/>
+    <xsl:variable name="twoCharMainLangCode"
+                  select="java:twoCharLangCode($mainLanguage)"/>
+    <xsl:variable name="nextThreeCharLangCode"
+                  select="substring(concat($localeList[1]/@id, '   '), 1, 3)"/>
+    <xsl:variable name="nextTwoCharLangCode"
+                  select="java:twoCharLangCode($localeList[1]/@id)"/>
+
+    <xsl:choose>
+      <!-- If one of the locales is equal to the main language then that is the id that will be used. -->
+      <xsl:when test="$localeList[upper-case(@id) = upper-case($mainLanguage)]">
+        <xsl:value-of  select="$localeList[upper-case(@id) = upper-case($mainLanguage)]/@id"/>
+      </xsl:when>
+      <!-- If one of the locales is equal to the 2 Char main language then that is the id that will be used. -->
+      <xsl:when test="$localeList[upper-case(@id) = upper-case($twoCharMainLangCode)]">
+        <xsl:value-of  select="$localeList[upper-case(@id) = upper-case($twoCharMainLangCode)]/@id"/>
+      </xsl:when>
+
+      <!-- If one of the locales is equal to the upper case version then the codes are assumed to be in uppercase. -->
+      <xsl:when test="$localeList[@id = upper-case($nextThreeCharLangCode)]">
+        <xsl:value-of  select="upper-case($mainLanguage)"/>
+      </xsl:when>
+      <!-- If one of the locales is equal to the lower case version then the codes are assumed to be in lowercase. -->
+      <xsl:when test="$localeList[@id = lower-case($nextThreeCharLangCode)]">
+        <xsl:value-of  select="lower-case($mainLanguage)"/>
+      </xsl:when>
+
+      <!-- If one of the locales is equal to the 2 char upper case version then the codes are assumed to be in uppercase 2 char. -->
+      <xsl:when test="$localeList[@id = upper-case($nextTwoCharLangCode)]">
+        <xsl:value-of  select="upper-case($twoCharMainLangCode)"/>
+      </xsl:when>
+      <!-- If one of the locales is equal to the 2 char lower case version then the codes are assumed to be in lowercase 2 char. -->
+      <xsl:when test="$localeList[@id = lower-case($nextTwoCharLangCode)]">
+        <xsl:value-of  select="lower-case($twoCharMainLangCode)"/>
+      </xsl:when>
+
+      <!-- If we did not find an option then just use the main language as the code. -->
+      <xsl:otherwise><xsl:value-of select="$mainLanguage"/></xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
 
   <xsl:variable name="locales"
                 select="/root/*/gmd:locale/gmd:PT_Locale"/>
@@ -296,9 +338,11 @@
   <xsl:template match="gml:Polygon[not(@gml:id) or not(@srsName)]|
                        gml:MultiSurface[not(@gml:id) or not(@srsName)]|
                        gml:LineString[not(@gml:id) or not(@srsName)]|
+                       gml:Point[not(@gml:id) or not(@srsName)]|
                        gml320:Polygon[not(@gml320:id) or not(@srsName)]|
                        gml320:MultiSurface[not(@gml:id) or not(@srsName)]|
-                       gml320:LineString[not(@gml:id) or not(@srsName)]">
+                       gml320:LineString[not(@gml:id) or not(@srsName)]|
+                       gml320:Point[not(@gml320:id) or not(@srsName)]">
     <xsl:element name="gml:{local-name()}"
                  namespace="{if($isUsing2005Schema)
                              then 'http://www.opengis.net/gml'
@@ -613,13 +657,22 @@
     -->
   <xsl:template match="gmd:PT_Locale">
     <xsl:element name="gmd:{local-name()}">
-      <xsl:variable name="id"
-                    select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue, ''))"/>
+      <xsl:variable name="id">
+        <xsl:choose>
+          <xsl:when test="string-length($mainLanguageId) = 2">
+            <xsl:value-of select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue, ''))" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="substring(gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 3)" />
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
 
       <xsl:apply-templates select="@*"/>
-      <xsl:if test="normalize-space(@id)='' or normalize-space(@id)!=$id">
+      <!-- Assign the code only if missing: new language added -->
+      <xsl:if test="normalize-space(@id)=''">
         <xsl:attribute name="id">
-          <xsl:value-of select="$id"/>
+          <xsl:value-of select="normalize-space($id)"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:apply-templates select="node()"/>
@@ -770,4 +823,14 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- Force element with DateTime_PropertyType to have gco:DateTime -->
+  <xsl:template match="gmd:dateTime|gmd:plannedAvailableDateTime|gmd:usageDateTime"
+                priority="200">
+    <xsl:variable name="value" select="gco:Date|gco:DateTime" />
+    <xsl:copy>
+      <gco:DateTime>
+        <xsl:value-of select="$value" /><xsl:if test="string-length($value) = 10">T00:00:00</xsl:if>
+      </gco:DateTime>
+    </xsl:copy>
+  </xsl:template>
 </xsl:stylesheet>

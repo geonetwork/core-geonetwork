@@ -41,6 +41,8 @@
     </msg>
     <msg id="a" xml:lang="dut"> is niet bereikbaar of geeft een fout (</msg>
     <msg id="b" xml:lang="dut">). Functie verwijdert de link.</msg>
+    <msg id="a" xml:lang="ita"> ritorna un errore (</msg>
+    <msg id="b" xml:lang="ita">). Lancia questo processo per eliminarlo.</msg>
   </xsl:variable>
 
   <xsl:template name="list-linked-data-checker">

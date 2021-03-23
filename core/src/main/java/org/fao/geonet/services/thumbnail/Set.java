@@ -100,6 +100,8 @@ public class Set {
         ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
         ServiceContext context = serviceManager.createServiceContext("md.thumbnail.upload", lang, request);
 
+        // This is an example of a ServiceContext used as a parameter, and not being assigned to the current thread
+      try {
         Lib.resource.checkEditPrivilege(context, id);
 
         //-----------------------------------------------------------------------
@@ -149,6 +151,9 @@ public class Set {
         dataMan.indexMetadata(id, true, null);
 
         return new Response(id, dataMan.getNewVersion(id));
+      } finally {
+        context.clear(); // prevent further use
+      }
     }
 
     // FIXME : not elegant

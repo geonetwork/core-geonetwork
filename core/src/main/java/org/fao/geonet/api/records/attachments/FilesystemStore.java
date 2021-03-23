@@ -30,6 +30,7 @@ import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceContainer;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -42,6 +43,7 @@ import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -110,7 +112,9 @@ public class FilesystemStore extends AbstractStore {
             return new ResourceHolderImpl(resourceFile, getResourceDescription(context, metadataUuid, visibility, resourceFile, approved));
         } else {
             throw new ResourceNotFoundException(
-                    String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
+                String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                .withMessageKey("exception.resourceNotFound.resource", new String[]{ resourceId })
+                .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{ resourceId, metadataUuid });
         }
     }
 
@@ -143,12 +147,30 @@ public class FilesystemStore extends AbstractStore {
     }
 
     @Override
+    public MetadataResourceContainer getResourceContainerDescription(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
+
+        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
+        if (!Files.exists(metadataDir)) {
+            try {
+                Files.createDirectories(metadataDir);
+            } catch (Exception e) {
+                throw new IOException(
+                    String.format("Can't create folder '%s' for metadata '%d'.", metadataDir, metadataId));
+            }
+        }
+
+        SettingManager settingManager = context.getBean(SettingManager.class);
+        return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid, settingManager.getNodeURL() + "api/records/", approved);
+    }
+
+    @Override
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
                                         final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility,
                                         Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
-        Path filePath = getPath(context, metadataId, visibility, filename);
-        Files.copy(is, filePath);
+        Path filePath = getPath(context, metadataId, visibility, filename, approved);
+        Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
         if (changeDate != null) {
             IO.touch(filePath, FileTime.from(changeDate.getTime(), TimeUnit.MILLISECONDS));
         }
@@ -159,13 +181,14 @@ public class FilesystemStore extends AbstractStore {
     private Path getPath(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String fileName,
                          Boolean approved) throws Exception {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
-        return getPath(context, metadataId, visibility, fileName);
+        return getPath(context, metadataId, visibility, fileName, approved);
     }
 
-    private Path getPath(ServiceContext context, int metadataId, MetadataResourceVisibility visibility, String fileName) throws Exception {
+    private Path getPath(ServiceContext context, int metadataId, MetadataResourceVisibility visibility, String fileName,
+                         Boolean approved) throws Exception {
         final Path folderPath = ensureDirectory(context, metadataId, fileName, visibility);
         Path filePath = folderPath.resolve(fileName);
-        if (Files.exists(filePath)) {
+        if (Files.exists(filePath) && !approved) {
             throw new ResourceAlreadyExistException(
                     String.format("A resource with name '%s' and status '%s' already exists for metadata '%d'.", fileName, visibility,
                                   metadataId));

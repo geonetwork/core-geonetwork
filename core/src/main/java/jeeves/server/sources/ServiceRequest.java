@@ -196,21 +196,36 @@ public class ServiceRequest {
         return jsonOutput;
     }
 
+    /**
+     * Write provided response element, ending the stream.
+     *
+     * @param response
+     * @throws IOException
+     */
     public void write(Element response) throws IOException {
         Xml.writeResponse(new Document(response), outStream);
         endStream();
     }
 
     /**
-     * called when the system starts streaming data
+     * Called when the system starts streaming data
+     * @param contentType mime type
+     * @param cache true if content can be cached, false to disable caching for dynamic content
      */
-
     public void beginStream(String contentType, boolean cache) {
     }
 
     //---------------------------------------------------------------------------
 
-    public void beginStream(String contentType, int contentLength, String contentDisp,
+    /**
+     * Called when the system starts streaming data,  filling in appropriate header details supported by protocol.
+     *
+     * @param contentType mime type
+     * @param contentLength content length in bytes if known, -1 if unknown
+     * @param contentDisposition content disposition (inline|attachment|attachment;filename=&quot;filename.jpg&quot;)
+     * @param cache true if content can be cached, false to disable caching for dynamic content
+     */
+    public void beginStream(String contentType, int contentLength, String contentDisposition ,
                             boolean cache) {
     }
 
@@ -219,7 +234,6 @@ public class ServiceRequest {
     /**
      * called when the system ends streaming data
      */
-
     public void endStream() throws IOException {
     }
 

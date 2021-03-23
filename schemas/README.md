@@ -120,5 +120,9 @@ While schema plugins can be built independently, they can be conditionally inclu
    </profiles>
    ```
    
-3. The `add-schema.sh` script automates these changes.
+3. The `add-schema.sh` script automates these changes:
+
+   ```
+   ./add-schema.sh iso19139.ca.HNAP https://github.com/metadata101/iso19139.ca.HNAP 3.11.x"
+   ```
 

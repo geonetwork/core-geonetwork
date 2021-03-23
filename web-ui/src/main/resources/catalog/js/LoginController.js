@@ -42,11 +42,11 @@
       ['$scope', '$http', '$rootScope', '$translate',
        '$location', '$window', '$timeout',
        'gnUtilityService', 'gnConfig', 'gnGlobalSettings',
-       'vcRecaptchaService', '$q',
+       'vcRecaptchaService', 'gnUrlUtils', '$q',
        function($scope, $http, $rootScope, $translate,
            $location, $window, $timeout,
                gnUtilityService, gnConfig, gnGlobalSettings,
-               vcRecaptchaService, $q) {
+               vcRecaptchaService, gnUrlUtils, $q) {
           $scope.formAction = '../../signin#' +
          $location.path();
           $scope.registrationStatus = null;
@@ -62,7 +62,14 @@
          gnConfig['system.userSelfRegistration.recaptcha.publickey'];
           $scope.resolveRecaptcha = false;
 
-          $scope.redirectUrl = gnUtilityService.getUrlParameter('redirect');
+          var redirect = gnUtilityService.getUrlParameter('redirect');
+
+          if ((redirect) && gnUrlUtils.urlIsSameOrigin(redirect)) {
+            $scope.redirectUrl = redirect;
+          } else {
+            $scope.redirectUrl = "";
+          }
+
           $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
           $scope.gnConfig = gnConfig;
           $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
@@ -130,7 +137,8 @@
            return $http.put('../api/0.1/user/actions/register', $scope.userInfo)
            .success(function(data) {
              $rootScope.$broadcast('StatusUpdated', {
-               title: data
+               title: data,
+               timeout: 0
              });
            })
            .error(function(data) {
@@ -150,7 +158,8 @@
             .success(function(data) {
              $scope.sendPassword = false;
              $rootScope.$broadcast('StatusUpdated', {
-               title: data
+               title: data,
+               timeout: 0
              });
              $scope.usernameToRemind = null;
            })
@@ -172,7 +181,8 @@
            })
             .success(function(data) {
              $rootScope.$broadcast('StatusUpdated', {
-               title: data
+               title: data,
+               timeout: 0
              });
            })
             .error(function(data) {
