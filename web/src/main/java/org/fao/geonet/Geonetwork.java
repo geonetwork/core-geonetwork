@@ -414,7 +414,7 @@ public class Geonetwork implements ApplicationHandler {
 
         AbstractEntityListenerManager.setSystemRunning(true);
 
-        this._applicationContext.publishEvent(new ServerStartup(this._applicationContext));
+       // this._applicationContext.publishEvent(new ServerStartup(this._applicationContext));
 
         return gnContext;
     }
@@ -490,7 +490,7 @@ public class Geonetwork implements ApplicationHandler {
         if (count == 0) {
             try {
                 // import data from init files
-                List<Pair<String, String>> importData = context.getBean("initial-data", List.class);
+                List<Pair<String, String>> importData = context.getApplicationContext().getBean("initial-data", List.class);
                 final DbLib dbLib = new DbLib();
                 for (Pair<String, String> pair : importData) {
                     final ServletContext servletContext = context.getServlet().getServletContext();
