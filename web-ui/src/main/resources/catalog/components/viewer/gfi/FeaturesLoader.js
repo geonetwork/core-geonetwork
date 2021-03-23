@@ -441,7 +441,8 @@
           formatter: function(val, row, index) {
             var outputValue = val;
             if (this.urlUtils.isValid(val)) {
-              outputValue = this.formatUrlValues_(val + (field.suffix || ''));
+              url = this.urlUtils.append(val, field.suffix);
+              outputValue = this.formatUrlValues_(url);
             }
             return outputValue;
           }.bind(this)
