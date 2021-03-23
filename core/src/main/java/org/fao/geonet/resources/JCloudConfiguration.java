@@ -38,6 +38,7 @@ public class JCloudConfiguration {
     private String DEFAULT_CLOUD_FOLDER_SEPARATOR = "/"; // not sure if this is consistent for all clouds defaulting to "/" and make it a config
     private final String DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_WINDOW_PARAMETERS = "toolbar=0,width=600,height=600";
     private final Boolean DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_MODAL_ENABLED = true;
+    private final Boolean DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_FOLDER_ENABLED = true;
     private final Boolean DEFAULT_VERSIONING_ENABLED = false;
 
     private String provider;
@@ -53,7 +54,10 @@ public class JCloudConfiguration {
      */
     private String externalResourceManagementUrl;
     private String externalResourceManagementWindowParameters;
-    private Boolean externalResourceManagementModal;
+    private Boolean externalResourceManagementModalEnabled;
+    private Boolean externalResourceManagementFolderEnabled;
+    private String externalResourceManagementFolderRoot;
+
     /*
      * Enable option to add versioning in the link to the resource.
      */
@@ -125,17 +129,50 @@ public class JCloudConfiguration {
     }
 
     @Nonnull
-    public Boolean isExternalResourceManagementModal() {
-        if (externalResourceManagementModal == null) {
+    public Boolean isExternalResourceManagementModalEnabled() {
+        if (externalResourceManagementModalEnabled == null) {
             return DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_MODAL_ENABLED;
         } else {
-            return externalResourceManagementModal;
+            return externalResourceManagementModalEnabled;
         }
     }
 
-    public void setExternalResourceManagementModal(String externalResourceManagementModal) {
-        this.externalResourceManagementModal = BooleanUtils.toBooleanObject(externalResourceManagementModal);
-        ;
+    public void setExternalResourceManagementModalEnabled(Boolean externalResourceManagementModalEnabled) {
+        this.externalResourceManagementModalEnabled = externalResourceManagementModalEnabled;
+    }
+
+    public void setExternalResourceManagementModalEnabled(String externalResourceManagementModalEnabled) {
+        this.externalResourceManagementModalEnabled = BooleanUtils.toBooleanObject(externalResourceManagementModalEnabled);;
+    }
+
+    public Boolean isExternalResourceManagementFolderEnabled() {
+        if (externalResourceManagementFolderEnabled == null) {
+            return DEFAULT_EXTERNAL_RESOURCE_MANAGEMENT_FOLDER_ENABLED;
+        } else {
+            return externalResourceManagementFolderEnabled;
+        }
+    }
+
+    public void setExternalResourceManagementFolderEnabled(Boolean externalResourceManagementFolderEnabled) {
+        this.externalResourceManagementFolderEnabled = externalResourceManagementFolderEnabled;
+    }
+
+    public String getExternalResourceManagementFolderRoot() {
+        return this.externalResourceManagementFolderRoot;
+    }
+
+    public void setExternalResourceManagementFolderRoot(String externalResourceManagementFolderRoot) {
+        String folderRoot = externalResourceManagementFolderRoot;
+        if (folderRoot != null) {
+            if (!folderRoot.startsWith(getFolderDelimiter())) {
+                folderRoot = getFolderDelimiter() + folderRoot;
+            }
+            if (folderRoot.endsWith(getFolderDelimiter())) {
+                folderRoot = folderRoot.substring(0, folderRoot.length() - 1);
+            }
+        }
+
+        this.externalResourceManagementFolderRoot=folderRoot;
     }
 
     @Nonnull

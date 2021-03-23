@@ -23,22 +23,35 @@
   -->
 
 <beans
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+    ">
+
+    <context:property-placeholder location="classpath:config-store/config-jcloud-overrides.properties"
+                                  file-encoding="UTF-8"
+                                  ignore-unresolvable="true"
+                                  />
 
     <bean id="jCloudConfiguration" class="org.fao.geonet.resources.JCloudConfiguration">
-      <property name="provider" value="${JCLOUD_PROVIDER}"/>
-      <property name="folderDelimiter" value="${JCLOUD_FOLDER_DELIMITER:#{'/'}}"/>
-      <property name="containerName" value="${JCLOUD_CONTAINER_NAME:geonetwork}"/>
-      <property name="baseFolder" value="${JCLOUD_BASE_FOLDER:#{null}}"/>
-      <property name="storageAccountName" value="${JCLOUD_STORAGE_ACCOUNT_NAME}"/>
-      <property name="storageAccountKey" value="${JCLOUD_STORAGE_ACCOUNT_KEY}"/>
-      <property name="endpoint" value="${JCLOUD_ENDPOINT:#{null}}"/>
-      <property name="externalResourceManagementUrl" value="${JCLOUD_EXTERNAL_RESOURCE_MANAGEMENT_URL:#{null}}"/>
-      <property name="externalResourceManagementWindowParameters" value="${JCLOUD_EXTERNAL_RESOURCE_MANAGEMENT_WINDOW_PARAMETERS:#{null}}"/>
-      <property name="externalResourceManagementModal" value="${JCLOUD_EXTERNAL_RESOURCE_MANAGEMENT_MODAL_ENABLED:#{null}}"/>
-      <property name="versioningEnabled" value="${JCLOUD_VERSIONING_ENABLED:#{null}}"/>
+        <property name="provider" value="${jcloud.provider}"/>
+        <property name="folderDelimiter" value="${jcloud.folder.delimiter}"/>
+        <property name="containerName" value="${jcloud.container.name}"/>
+        <property name="baseFolder" value="${jcloud.base.folder}"/>
+        <property name="storageAccountName" value="${jcloud.storage.account.name}"/>
+        <property name="storageAccountKey" value="${jcloud.storage.account.key}"/>
+        <property name="endpoint" value="${jcloud.endpoint:#{null}}"/>
+
+        <property name="externalResourceManagementUrl" value="${jcloud.external.resource.management.url}"/>
+        <property name="externalResourceManagementWindowParameters" value="${jcloud.external.resource.management.window.parameters}"/>
+        <property name="externalResourceManagementModalEnabled" value="${jcloud.external.resource.management.modal.enabled}"/>
+        <property name="externalResourceManagementFolderEnabled" value="${jcloud.external.resource.management.folder.enabled}"/>
+        <property name="externalResourceManagementFolderRoot" value="${jcloud.external.resource.management.folder.root}"/>
+
+        <property name="versioningEnabled" value="${jcloud.versioning.enabled}"/>
     </bean>
     <bean id="filesystemStore" class="org.fao.geonet.api.records.attachments.JCloudStore" />
     <bean id="resourceStore"

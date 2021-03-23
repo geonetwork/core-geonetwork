@@ -33,6 +33,8 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceContainer;
+import org.fao.geonet.domain.MetadataResourceExternalManagementProperties;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -60,6 +62,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JCloudStore extends AbstractStore {
 
@@ -101,8 +106,7 @@ public class JCloudStore extends AbstractStore {
                 Path keyPath = new File(storageMetadata.getName()).toPath().getFileName();
                 if (storageMetadata.getType() == StorageType.BLOB && matcher.matches(keyPath)){
                     final String filename = getFilename(storageMetadata.getName());
-                    MetadataResource resource = createResourceDescription(context, settingManager, metadataUuid, visibility, filename, storageMetadata.getSize(),
-                        storageMetadata.getLastModified(), storageMetadata.getETag(), metadataId, approved);
+                    MetadataResource resource = createResourceDescription(context, settingManager, metadataUuid, visibility, filename, storageMetadata, metadataId, approved);
                     resourceList.add(resource);
                 }
             }
@@ -116,20 +120,20 @@ public class JCloudStore extends AbstractStore {
     }
 
     private MetadataResource createResourceDescription(final ServiceContext context, final SettingManager settingManager, final String metadataUuid,
-                                                       final MetadataResourceVisibility visibility, final String resourceId, long size, Date lastModification, String version, int metadataId,
-                                                       boolean approved) {
+                                                       final MetadataResourceVisibility visibility, final String resourceId,
+                                                       StorageMetadata storageMetadata, int metadataId, boolean approved) {
         String filename = getFilename(metadataUuid, resourceId);
 
         String versionValue = null;
         if (jCloudConfiguration.isVersioningEnabled()) {
-            versionValue = version;
+            versionValue = storageMetadata.getETag();
         }
 
-        MetadataResource.ExternalResourceManagementProperties externalResourceManagementProperties =
-            getExternalResourceManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, version);
+        MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
+            getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, storageMetadata.getETag(), storageMetadata.getType());
 
         return new FilesystemStoreResource(metadataUuid, metadataId, filename,
-            settingManager.getNodeURL() + "api/records/", visibility, size, lastModification, versionValue, externalResourceManagementProperties, approved);
+            settingManager.getNodeURL() + "api/records/", visibility, storageMetadata.getSize(), storageMetadata.getLastModified(), versionValue, metadataResourceExternalManagementProperties, approved);
     }
 
     private static String getFilename(final String key) {
@@ -147,8 +151,7 @@ public class JCloudStore extends AbstractStore {
                 jCloudConfiguration.getContainerName(), getKey(context, metadataUuid, metadataId, visibility, resourceId));
             final SettingManager settingManager = context.getBean(SettingManager.class);
             return new ResourceHolderImpl(object, createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId,
-                object.getMetadata().getSize(),
-                object.getMetadata().getLastModified(), object.getMetadata().getETag(), metadataId, approved));
+                object.getMetadata(), metadataId, approved));
         } catch (ContainerNotFoundException e) {
             Log.warning(Geonet.RESOURCES, String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
             throw new ResourceNotFoundException(
@@ -182,8 +185,7 @@ public class JCloudStore extends AbstractStore {
         jCloudConfiguration.getClient().getBlobStore().putBlob(jCloudConfiguration.getContainerName(), blob, multipart());
         Blob blobResults = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), key);
 
-        return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, blobResults.getMetadata().getSize(),
-            blobResults.getMetadata().getLastModified(), blobResults.getMetadata().getETag(), metadataId, approved);
+        return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, blobResults.getMetadata(), metadataId, approved);
 
     }
 
@@ -205,8 +207,7 @@ public class JCloudStore extends AbstractStore {
                         break;
                     } else {
                         // already the good visibility
-                        return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, storageMetadata.getSize(),
-                            storageMetadata.getLastModified(), storageMetadata.getETag(), metadataId, approved);
+                        return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, storageMetadata, metadataId, approved);
                     }
                 }
             } catch (ContainerNotFoundException ignored) {
@@ -221,8 +222,7 @@ public class JCloudStore extends AbstractStore {
 
             Blob blobResults = jCloudConfiguration.getClient().getBlobStore().getBlob(jCloudConfiguration.getContainerName(), destKey);
 
-            return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, blobResults.getMetadata().getSize(),
-                blobResults.getMetadata().getLastModified(), blobResults.getMetadata().getETag(), metadataId, approved);
+            return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, blobResults.getMetadata(), metadataId, approved);
         } else {
             Log.warning(Geonet.RESOURCES,
                 String.format("Could not update permissions. Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
@@ -308,12 +308,20 @@ public class JCloudStore extends AbstractStore {
                 return null;
             } else {
                 final StorageMetadata metadata = object.getMetadata();
-                return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, metadata.getSize(),
-                    metadata.getLastModified(), metadata.getETag(), metadataId, approved);
+                return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, metadata, metadataId, approved);
             }
         } catch (ContainerNotFoundException e) {
             return null;
         }
+    }
+
+    @Override
+    public MetadataResourceContainer getResourceContainerDescription(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
+
+        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+
+        SettingManager settingManager = context.getBean(SettingManager.class);
+        return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid, settingManager.getNodeURL() + "api/records/", approved);
     }
 
     private String getMetadataDir(ServiceContext context, final int metadataId) {
@@ -377,6 +385,7 @@ public class JCloudStore extends AbstractStore {
      * get external resource management for the supplied resource.
      * Replace the following
      * {id}  resource id
+     * {type:folder:document} // If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
      * {uuid}  metadatauuid
      * {metadataid}  metadataid
      * {visibility}  visibility
@@ -389,42 +398,49 @@ public class JCloudStore extends AbstractStore {
      * http://localhost:8080/artifact?filename={filename}&version={version}&lang={lang}
      */
 
-    private MetadataResource.ExternalResourceManagementProperties getExternalResourceManagementProperties(ServiceContext context,
+    private MetadataResourceExternalManagementProperties getMetadataResourceExternalManagementProperties(ServiceContext context,
                                                     int metadataId,
                                                     final String metadataUuid,
                                                     final MetadataResourceVisibility visibility,
                                                     final String resourceId,
                                                     String filename,
-                                                    String version
+                                                    String version,
+                                                    StorageType type
     ) {
-        String externalResourceManagementUrl = jCloudConfiguration.getExternalResourceManagementUrl();
-        if (!StringUtils.isEmpty(externalResourceManagementUrl)) {
+        String metadataResourceExternalManagementPropertiesUrl = jCloudConfiguration.getExternalResourceManagementUrl();
+        if (!StringUtils.isEmpty(metadataResourceExternalManagementPropertiesUrl)) {
             // {id}  id
-            if (externalResourceManagementUrl.contains("{id}")) {
-                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{id\\})", resourceId);
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{id}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{id\\})", resourceId);
             }
-            // {uuid}  metadatauuid
-            if (externalResourceManagementUrl.contains("{uuid}")) {
-                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{uuid\\})", metadataUuid);
-            }
-            // {metadataid}  metadataid
-            if (externalResourceManagementUrl.contains("{metadataid}")) {
-                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{metadataid\\})", String.valueOf(metadataId));
-            }
-            //    {visibility}  visibility
-            if (externalResourceManagementUrl.contains("{visibility}")) {
-                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{visibility\\})", visibility.toString().toLowerCase());
-            }
-            //    {filename}  filename
-            if (externalResourceManagementUrl.contains("{filename}")) {
-                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{filename\\})", filename);
-            }
-            // {version}  version
-            if (externalResourceManagementUrl.contains("{version}")) {
-                externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{version\\})", version);
+            // {type:folder:document} // If the type is folder then type "folder" will be displayed else if document then "document" will be displayed
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{type:")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("\\{type:([a-zA-Z0-9]*?):([a-zA-Z0-9]*?)\\}",
+                    (type==null?"":(StorageType.FOLDER.equals(type)?"$1":"$2")));
             }
 
-            if (externalResourceManagementUrl.contains("{lang}") || externalResourceManagementUrl.contains("{ISO3lang}")) {
+            // {uuid}  metadatauuid
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{uuid}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{uuid\\})", (metadataUuid==null?"":metadataUuid));
+            }
+            // {metadataid}  metadataid
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{metadataid}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{metadataid\\})", String.valueOf(metadataId));
+            }
+            //    {visibility}  visibility
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{visibility}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{visibility\\})", (visibility==null?"":visibility.toString().toLowerCase()));
+            }
+            //    {filename}  filename
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{filename}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{filename\\})", (filename==null?"":filename));
+            }
+            // {version}  version
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{version}")) {
+                metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{version\\})", (version==null?"":version));
+            }
+
+            if (metadataResourceExternalManagementPropertiesUrl.contains("{lang}") || metadataResourceExternalManagementPropertiesUrl.contains("{ISO3lang}")) {
                 final IsoLanguagesMapper mapper = context.getBean(IsoLanguagesMapper.class);
                 String contextLang = context.getLanguage() == null ? Geonet.DEFAULT_LANGUAGE : context.getLanguage();
                 String lang;
@@ -438,21 +454,54 @@ public class JCloudStore extends AbstractStore {
                     iso3Lang = contextLang;
                 }
                 // {lang}  ISO639-1 2 char language
-                if (externalResourceManagementUrl.contains("{lang}")) {
-                    externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{lang\\})", lang);
+                if (metadataResourceExternalManagementPropertiesUrl.contains("{lang}")) {
+                    metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{lang\\})", lang);
                 }
                 // {iso3lang}  ISO 639-2/T language
-                if (externalResourceManagementUrl.contains("{iso3lang}")) {
-                    externalResourceManagementUrl = externalResourceManagementUrl.replaceAll("(\\{iso3lang\\})", iso3Lang);
+                if (metadataResourceExternalManagementPropertiesUrl.contains("{iso3lang}")) {
+                    metadataResourceExternalManagementPropertiesUrl = metadataResourceExternalManagementPropertiesUrl.replaceAll("(\\{iso3lang\\})", iso3Lang);
                 }
             }
         }
 
-        MetadataResource.ExternalResourceManagementProperties externalResourceManagementProperties
-                = new MetadataResource.ExternalResourceManagementProperties(externalResourceManagementUrl,
-            jCloudConfiguration.getExternalResourceManagementWindowParameters(), jCloudConfiguration.isExternalResourceManagementModal());
+        MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties
+                = new MetadataResourceExternalManagementProperties(resourceId, metadataResourceExternalManagementPropertiesUrl);
 
-        return externalResourceManagementProperties;
+        return metadataResourceExternalManagementProperties;
+    }
+
+    public ResourceManagementExternalProperties getResourceManagementExternalProperties() {
+        return new ResourceManagementExternalProperties() {
+            @Override
+            public boolean isEnabled() {
+                // Return true if we have an external management url
+                return !StringUtils.isEmpty(jCloudConfiguration.getExternalResourceManagementUrl());
+            }
+
+            @Override
+            public String getWindowParameters() {
+                return jCloudConfiguration.getExternalResourceManagementWindowParameters();
+            }
+
+            @Override
+            public boolean isModal() {
+                return jCloudConfiguration.isExternalResourceManagementModalEnabled();
+            }
+
+            @Override
+            public boolean isFolderEnabled() {
+                return isEnabled() && jCloudConfiguration.isExternalResourceManagementFolderEnabled();
+            }
+
+            @Override
+            public String toString() {
+                try {
+                    return new ObjectMapper().writeValueAsString(this);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException("Error converting ResourceManagementExternalProperties to json", e);
+                }
+            }
+        };
     }
 
     private static class ResourceHolderImpl implements ResourceHolder {
