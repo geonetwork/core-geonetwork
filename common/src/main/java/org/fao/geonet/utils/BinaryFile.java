@@ -279,16 +279,21 @@ public final class BinaryFile {
 
     private String readInputMinimum(Path path) {
 
+        FileInputStream inputStream = null;
+        Scanner sc = null;
+
         try {
-            FileInputStream inputStream = new FileInputStream(path.toFile());
-            Scanner sc = new Scanner(inputStream, Constants.CHARSET.toString());
+            inputStream = new FileInputStream(path.toFile());
+            sc = new Scanner(inputStream, Constants.CHARSET.toString());
             String line = sc.nextLine();
-            sc.close();
-            inputStream.close();
+
             return line;
         } catch (IOException e) {
             Log.error("geonetwork", "Error reading file: " + path);
             return null;
+        } finally {
+            IOUtils.closeQuietly(sc);
+            IOUtils.closeQuietly(inputStream);
         }
     }
 
