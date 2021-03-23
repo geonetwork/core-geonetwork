@@ -389,6 +389,19 @@
             }
           };
 
+          scope.isFacetTreeSelected = function (fName, value, isParent) {
+            try {
+              var output = scope.output[fName]
+              var iS = value !== undefined && !isParent ? output.values[value] :
+                Object.keys(output.values).some(function (v) {
+                  return v.startsWith(value + '/')
+                })
+              return iS
+            } catch (e) {
+              return false
+            }
+          }
+
           // this returns a callback with the fieldname & type available
           // the callback is called when the date range is updated, with
           // 'from' and 'to' properties as arguments
@@ -1106,10 +1119,11 @@
                 value: value
               });
             };
-            this.isSelected = function(value) {
+            this.isSelected = function(value, isParent) {
               return this.isSelectedFn({
                 name: this.field.name,
-                value: value
+                value: value,
+                isParent: isParent
               });
             };
           };
@@ -1186,16 +1200,7 @@
             };
 
             this.isSelected = function() {
-              // if at least one child is selected then we check the parent
-              if (this.node.nodes) {
-                for (var i=0; i < this.node.nodes.length; i++) {
-                  if (this.treeCtrl.isSelected(this.node.nodes[i].key)) {
-                    return true
-                  }
-                }
-                return false
-              }
-              return this.treeCtrl.isSelected(this.node.key);
+              return this.treeCtrl.isSelected(this.node.key, !!this.node.nodes);
             };
 
 
