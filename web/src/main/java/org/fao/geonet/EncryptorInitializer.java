@@ -42,9 +42,17 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class initializes the encryptor used to encrypt/decrypt info stored in the database and performs a migration
+ * in case it detects that the info in the database is not encrypted yet.
+ * It should run after the datasource has been initialized.
+ */
 public class EncryptorInitializer {
     private final static String LOG_MODULE = Geonet.GEONETWORK + ".encryptor";
     private final static String ALGORITHM_KEY = "encryptor.algorithm";
@@ -69,7 +77,7 @@ public class EncryptorInitializer {
         String encryptorPassword;
 
         // Has the configuration change?
-        boolean updateConfiguration = false;
+        boolean updateConfiguration;
 
         if (StringUtils.isEmpty(encryptorAlgorithmPropFile)) {
             encryptorAlgorithmPropFile = getPropertyFromEnv(ALGORITHM_KEY, DEFAULT_ALGORITHM);
@@ -132,7 +140,7 @@ public class EncryptorInitializer {
         }
 
 
-        /**
+        /*
          * Updates the database rows with passwords. Uses SQL updates to avoid interfere with the Hibernate TypeDef
          * to encrypt database fields. For example in {@link org.fao.geonet.domain.MapServer}.
          *
@@ -146,6 +154,10 @@ public class EncryptorInitializer {
         if (updateConfiguration) {
             conf.setProperty(ALGORITHM_KEY, encryptorAlgorithm);
             conf.setProperty(PASSWORD_KEY, encryptorPassword);
+            String headerComment = "Generated at %s.";
+            String date = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            conf.setHeader(String.format(headerComment, date));
+
 
             // Save the encryptor.properties file
             conf.save();
@@ -180,99 +192,94 @@ public class EncryptorInitializer {
              Statement statement = connection.createStatement()) {
             final String encryptedSettings = "SELECT name, value FROM Settings WHERE encrypted = 'y'";
 
-            ResultSet settingsResultSet = statement.executeQuery(encryptedSettings);
-            int numberOfSettings = 0;
-            Map<String, String> updates = new HashMap<String, String>();
 
-            try {
-                while (settingsResultSet.next()) {
-                    String name = settingsResultSet.getString(1);
-                    String value = settingsResultSet.getString(2);
-                    if (StringUtils.isNotEmpty(value)) {
-                        if (previousEncryptor != null) {
-                            value = previousEncryptor.decrypt(value);
-                        }
+            Map<String, String> updates = new HashMap<>();
 
-                        value = encryptor.encrypt(value);
-                        updates.put(name, value);
-                        numberOfSettings++;
-                    }
-                }
+            try (ResultSet settingsResultSet = statement.executeQuery(encryptedSettings)) {
+                int numberOfSettings = encryptDatabaseValuesStringId(previousEncryptor, updates, settingsResultSet);
                 Log.debug(LOG_MODULE, "  Number of settings of type password to update: " + numberOfSettings);
             } catch (Exception ex) {
+                Log.error(LOG_MODULE, "Error getting the settings' passwords for encrypting them");
+                Log.error(LOG_MODULE, ex);
                 ex.printStackTrace();
-            } finally {
-                settingsResultSet.close();
             }
 
-            for(String key : updates.keySet()) {
+            for (String key : updates.keySet()) {
                 statement.execute("UPDATE Settings SET value='" + updates.get(key) + "' WHERE name='" + key + "'");
             }
 
             final String encryptedHarvesterSettings = "SELECT name, value FROM HarvesterSettings WHERE name = 'password'";
-            ResultSet harvesterSettingsResultSet = statement.executeQuery(encryptedHarvesterSettings);
-            int numberOfHarvesterSettings = 0;
-            updates = new HashMap<String, String>();
-            try {
-                while (harvesterSettingsResultSet.next()) {
-                    String name = harvesterSettingsResultSet.getString(1);
-                    String value = harvesterSettingsResultSet.getString(2);
-                    if (StringUtils.isNotEmpty(value)) {
-                        if (previousEncryptor != null) {
-                            value = previousEncryptor.decrypt(value);
-                        }
-
-                        value = encryptor.encrypt(value);
-                        updates.put(name, value);
-
-                        numberOfHarvesterSettings++;
-                    }
-                }
+            try (ResultSet harvesterSettingsResultSet = statement.executeQuery(encryptedHarvesterSettings)) {
+                updates = new HashMap<>();
+                int numberOfHarvesterSettings = encryptDatabaseValuesStringId(previousEncryptor, updates, harvesterSettingsResultSet);
 
                 Log.debug(LOG_MODULE, "  Number of harvester settings of type password to update: " + numberOfHarvesterSettings);
             } catch (Exception ex) {
+                Log.error(LOG_MODULE, "Error getting the harvesters' passwords for encrypting them");
+                Log.error(LOG_MODULE, ex);
                 ex.printStackTrace();
-            } finally {
-                harvesterSettingsResultSet.close();
             }
 
-            for(String key : updates.keySet()) {
+            for (String key : updates.keySet()) {
                 statement.execute("UPDATE HarvesterSettings SET value='" + updates.get(key) + "' WHERE name='" + key + "'");
             }
 
 
             final String encryptedMapServerPasswords = "SELECT id, password FROM Mapservers";
-            ResultSet mapServerResultSet = statement.executeQuery(encryptedMapServerPasswords);
-            int numberOfMapServers = 0;
-            Map<Integer, String> updatesMapServers = new HashMap<Integer, String>();
-            try {
-                while (mapServerResultSet.next()) {
-                    Integer id = mapServerResultSet.getInt(1);
-                    String password = mapServerResultSet.getString(2);
-                    if (StringUtils.isNotEmpty(password)) {
-                        if (previousEncryptor != null) {
-                            password = previousEncryptor.decrypt(password);
-                        }
-
-                        password = encryptor.encrypt(password);
-                        updatesMapServers.put(id, password);
-                        numberOfMapServers++;
-                    }
-                }
+            int numberOfMapServers;
+            Map<Integer, String> updatesMapServers = new HashMap<>();
+            try (ResultSet mapServerResultSet = statement.executeQuery(encryptedMapServerPasswords)) {
+                numberOfMapServers = encryptDatabaseValuesIntegerId(previousEncryptor, updatesMapServers, mapServerResultSet);
 
                 Log.debug(LOG_MODULE, "  Number of map server passwords to update: " + numberOfMapServers);
             } catch (Exception ex) {
+                Log.error(LOG_MODULE, "Error getting the map servers' passwords for encrypting them");
+                Log.error(LOG_MODULE, ex);
                 ex.printStackTrace();
-            } finally {
-                harvesterSettingsResultSet.close();
             }
 
-            for(Integer key : updatesMapServers.keySet()) {
+            for (Integer key : updatesMapServers.keySet()) {
                 statement.execute("UPDATE Mapservers SET password='" + updatesMapServers.get(key) + "' WHERE id='" + key + "'");
             }
 
             connection.commit();
         }
+    }
+
+    private int encryptDatabaseValuesIntegerId(StandardPBEStringEncryptor previousEncryptor, Map<Integer, String> updatedRows, ResultSet mapServerResultSet) throws SQLException {
+        int numberOfRowsUpdated = 0;
+        while (mapServerResultSet.next()) {
+            Integer id = mapServerResultSet.getInt(1);
+            String password = mapServerResultSet.getString(2);
+            if (StringUtils.isNotEmpty(password)) {
+                if (previousEncryptor != null) {
+                    password = previousEncryptor.decrypt(password);
+                }
+
+                password = encryptor.encrypt(password);
+                updatedRows.put(id, password);
+                numberOfRowsUpdated++;
+            }
+        }
+        return numberOfRowsUpdated;
+    }
+
+    private int encryptDatabaseValuesStringId(StandardPBEStringEncryptor previousEncryptor, Map<String, String> updates, ResultSet settingsResultSet) throws SQLException {
+        int numberOfRowsUpdated = 0;
+        while (settingsResultSet.next()) {
+            String name = settingsResultSet.getString(1);
+            String value = settingsResultSet.getString(2);
+            if (StringUtils.isNotEmpty(value)) {
+                if (previousEncryptor != null) {
+                    value = previousEncryptor.decrypt(value);
+                }
+
+                value = encryptor.encrypt(value);
+                updates.put(name, value);
+                numberOfRowsUpdated++;
+            }
+        }
+        return numberOfRowsUpdated;
     }
 
 
@@ -298,9 +305,9 @@ public class EncryptorInitializer {
 
     /**
      * Retrieves an environment variable with this priority:
-     *  - Java environment variable.
-     *  - System environment variable.
-     *  - Default value provided as parameter.
+     * - Java environment variable.
+     * - System environment variable.
+     * - Default value provided as parameter.
      *
      * @param propertyName
      * @param defaultValue

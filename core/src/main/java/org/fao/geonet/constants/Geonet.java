@@ -96,6 +96,7 @@ public final class Geonet {
         public static final String UPDATE_FIXED_INFO = "update-fixed-info.xsl";
         public static final String UPDATE_FIXED_INFO_SUBTEMPLATE = "update-fixed-info-subtemplate.xsl";
         public static final String UPDATE_CHILD_FROM_PARENT_INFO = "update-child-from-parent-info.xsl";
+        public static final String ENCRYPTOR_DIR = "encryptor";
         public static final String EXTRACT_UUID = "extract-uuid.xsl";
         public static final String EXTRACT_TITLES = "extract-titles.xsl";
         public static final String EXTRACT_DEFAULT_LANGUAGE = "extract-default-language.xsl";
