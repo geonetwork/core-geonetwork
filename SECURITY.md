@@ -11,12 +11,10 @@ Each GeoNetwork release is supported with bug fixes for a limited period, with p
 | Version     | Supported          | Comment                 |
 | ----------- | ------------------ |------------------------ |
 | 4.0         | :white_check_mark: | Current version         |
-| 3.12.x      | :x:                | Not released yet        |
 | 3.10.x      | :white_check_mark: | Supported up to 6 months after release of 3.12 |
-| < 3.10      | :x:                | Please update           |
 
 If your organisation is making use of a GeoNetwork version that is no longer in use by the community all is not lost.
-You can volunteer on the developer list to make additional releases, or engage with one of our [Commercial Support](https://www.osgeo.org/service-providers/) providers.
+You can volunteer on the developer list to make additional releases, or engage with one of our [Commercial Support](https://www.osgeo.org/service-providers/?p=geonetwork) providers.
 
 ## Reporting a Vulnerability
 
