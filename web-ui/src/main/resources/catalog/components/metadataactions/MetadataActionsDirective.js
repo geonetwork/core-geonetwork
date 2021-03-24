@@ -46,6 +46,9 @@
             translations = t;
           });
 
+          scope.changeMessage = '';
+          scope.directApproval = false;
+
           scope.approve = function() {
             scope.$broadcast('operationOnSelectionStart');
 
