@@ -78,6 +78,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     // FIXME Remove when get rid of Jeeves
     private ServiceContext servContext;
+
     @Autowired
     protected IMetadataSchemaUtils metadataSchemaUtils;
     @Autowired
@@ -108,7 +109,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
         this.metadataManager = metadataManager;
     }
 
-    public void init(ServiceContext context, Boolean force) throws Exception {
+    public void init(ServiceContext context) throws Exception {
         servContext = context;
         stylePath = dataDirectory.resolveWebResource(Geonet.Path.STYLESHEETS);
     }
@@ -155,6 +156,13 @@ public class BaseMetadataUtils implements IMetadataUtils {
         return metadata.getUuid();
     }
 
+    /**
+     * Gets the ServiceContext for the current request.
+     * If there isn't a current request, then this will return the Jeeves service context (app handler service context).
+     *    - the Jeeves service context does NOT have a user session.
+     *
+     * @return ServiceContext for the current request
+     */
     protected ServiceContext getServiceContext() {
         ServiceContext context = ServiceContext.get();
         return context == null ? servContext : context;

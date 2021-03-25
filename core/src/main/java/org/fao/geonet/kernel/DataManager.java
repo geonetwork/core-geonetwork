@@ -109,12 +109,12 @@ public class DataManager {
     /**
      * Init Data manager and refresh index if needed. Can also be called after GeoNetwork startup in order to rebuild the lucene index
      *
-     * @param force Force reindexing all from scratch
+     * @param context Service context used for setup
      **/
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        this.metadataIndexer.init(context, force);
-        this.metadataManager.init(context, force);
-        this.metadataUtils.init(context, force);
+    public void init(ServiceContext context) throws Exception {
+        this.metadataIndexer.init(context);
+        this.metadataManager.init(context);
+        this.metadataUtils.init(context);
 
         // FIXME this shouldn't login automatically ever!
 //        if (context.getUserSession() == null) {
@@ -125,6 +125,11 @@ public class DataManager {
 //            LOGGER_DATA_MANAGER.debug( "Hopefully this is cron job or routinely background task. Who called us?",
 //                        new Exception("Dummy Exception to know the stacktrace"));
 //        }
+    }
+
+    @Deprecated
+    public void refreshIndex(boolean forceReindex) throws Exception {
+        this.metadataManager.refreshIndex(forceReindex);
     }
 
     @Deprecated
@@ -157,7 +162,7 @@ public class DataManager {
 
     @Deprecated
     public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds) {
-        metadataIndexer.batchIndexInThreadPool(context, metadataIds);
+        metadataIndexer.batchIndexInThreadPool(metadataIds);
     }
 
     @Deprecated

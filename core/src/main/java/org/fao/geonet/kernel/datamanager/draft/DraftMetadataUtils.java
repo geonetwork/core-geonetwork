@@ -119,11 +119,9 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     @Autowired
     IMetadataUtils metadataUtils;
 
-    private ServiceContext context;
 
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        this.context = context;
-        super.init(context, force);
+    public void init(ServiceContext appHandlerContext) throws Exception {
+         super.init(appHandlerContext);
     }
 
     @Override
@@ -279,7 +277,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     public AbstractMetadata findOneByUuid(String uuid) {
         AbstractMetadata md = super.findOneByUuid(uuid);
         try {
-            if (md != null && am.canEdit(context, Integer.toString(md.getId()))) {
+            if (md != null && am.canEdit(getServiceContext(), Integer.toString(md.getId()))) {
                 AbstractMetadata tmp = metadataDraftRepository.findOneByUuid(uuid);
                 if (tmp != null) {
                     md = tmp;
@@ -614,7 +612,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     @Override
     public void cloneFiles(AbstractMetadata original, AbstractMetadata dest) {
         try {
-            StoreUtils.copyDataDir(context, original.getUuid(), dest.getUuid(), false);
+            StoreUtils.copyDataDir(getServiceContext(), original.getUuid(), dest.getUuid(), false);
             cloneStoreFileUploadRequests(original, dest);
 
         } catch (Exception ex) {
@@ -634,7 +632,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
                 oldApproved=false;
                 newApproved=true;
             }
-            StoreUtils.replaceDataDir(context, original.getUuid(), dest.getUuid(), oldApproved, newApproved);
+            StoreUtils.replaceDataDir(getServiceContext(), original.getUuid(), dest.getUuid(), oldApproved, newApproved);
             cloneStoreFileUploadRequests(original, dest);
 
         } catch (Exception ex) {
@@ -673,7 +671,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
      * Stores a file upload request in the MetadataFileUploads table.
      */
     private void cloneStoreFileUploadRequests(AbstractMetadata original, AbstractMetadata copy) {
-        MetadataFileUploadRepository repo = context.getBean(MetadataFileUploadRepository.class);
+        MetadataFileUploadRepository repo = getServiceContext().getBean(MetadataFileUploadRepository.class);
 
         repo.deleteAll(MetadataFileUploadSpecs.hasMetadataId(copy.getId()));
 

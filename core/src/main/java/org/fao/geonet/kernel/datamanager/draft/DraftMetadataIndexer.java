@@ -38,14 +38,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import jeeves.server.context.ServiceContext;
 
+/**
+ * MetadataIndexer for indexing draft content in a background executor (see super class for details).
+ */
 public class DraftMetadataIndexer extends BaseMetadataIndexer implements IMetadataIndexer {
 
     @Autowired
     private MetadataDraftRepository metadataDraftRepository;
 
     @Override
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        super.init(context, force);
+    public void init(ServiceContext context) throws Exception {
+        super.init(context);
         metadataDraftRepository = context.getBean(MetadataDraftRepository.class);
     }
 

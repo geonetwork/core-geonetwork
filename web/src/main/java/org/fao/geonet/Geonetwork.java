@@ -28,6 +28,7 @@ import javax.persistence.EntityManager;
 import jeeves.server.UserSession;
 import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.locationtech.jts.geom.MultiPolygon;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
@@ -341,7 +342,8 @@ public class Geonetwork implements ApplicationHandler {
         beanFactory.registerSingleton("oaipmhDisatcher", oaipmhDis);
 
 
-        _applicationContext.getBean(DataManager.class).init(context, false);
+        _applicationContext.getBean(DataManager.class).init(context);
+        _applicationContext.getBean(DataManager.class).refreshIndex(false);
         _applicationContext.getBean(HarvestManager.class).init(context, gnContext.isReadOnly());
 
         _applicationContext.getBean(ThumbnailMaker.class).init(context);

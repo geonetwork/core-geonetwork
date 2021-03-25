@@ -50,21 +50,19 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 /**
- * Utility interface for records
+ * Utility interface for working with records.
  *
  * @author delawen
- *
  */
 public interface IMetadataUtils {
 
     /**
      * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
      *
-     * @param context
-     * @param force
+     * @param context   this is the app handler context from jeeves initialization
      * @throws Exception
      */
-    public void init(ServiceContext context, Boolean force) throws Exception;
+    public void init(ServiceContext context) throws Exception;
 
     /**
      * Notify a metadata modification
