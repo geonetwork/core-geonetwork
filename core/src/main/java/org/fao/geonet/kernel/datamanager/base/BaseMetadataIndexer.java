@@ -42,6 +42,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import jeeves.server.dispatchers.ServiceManager;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.constants.Geonet;
@@ -107,6 +108,15 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 
+/**
+ * Metadata indexer responsible for updating index in a background executor.
+ *
+ * Helper method exist to schedule records for reindex by id. These methods make use of the service context
+ * of the current thread if needed to access user session.
+ *
+ * This class maintains its own service context for use in the background, and does not have access
+ * to a user session.
+ */
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
 
 	Lock waitLoopLock = new ReentrantLock();
@@ -146,15 +156,15 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 //	@Autowired
 //	private Resources resources;
 
-	// FIXME remove when get rid of Jeeves
-	private ServiceContext servContext;
+    // FIXME remove when get rid of Jeeves
+    private ServiceContext indexMetadataTaskContext;
 
-	private ApplicationEventPublisher publisher;
+    private ApplicationEventPublisher publisher;
 
-	public BaseMetadataIndexer() {
-	}
+    public BaseMetadataIndexer() {
+    }
 
-	public void init(ServiceContext context, Boolean force) throws Exception {
+	public void init(ServiceContext context) throws Exception {
 		// searchManager = context.getBean(SearchManager.class);
 		// geonetworkDataDirectory = context.getBean(GeonetworkDataDirectory.class);
 		// statusRepository = context.getBean(MetadataStatusRepository.class);
@@ -171,13 +181,25 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 		// settingManager = context.getBean(SettingManager.class);
 		// userFeedbackRepository = context.getBean(UserFeedbackRepository.class);
 
-		servContext = context;
+        ServiceManager serviceManager = context.getBean(ServiceManager.class);
+        if( indexMetadataTaskContext == null ) {
+            indexMetadataTaskContext = serviceManager.createServiceContext("_indexMetadataTask", context);
+        } else {
+            context.getLogger().debug("Metadata Indexer already initialized");
+        }
 	}
 
-	@Override
-	public void setMetadataUtils(IMetadataUtils metadataUtils) {
-		this.metadataUtils = metadataUtils;
-	}
+    public void destroy(){
+        if (indexMetadataTaskContext != null) {
+            indexMetadataTaskContext.clear();
+            indexMetadataTaskContext = null;
+        }
+    }
+
+    @Override
+    public void setMetadataUtils(IMetadataUtils metadataUtils) {
+        this.metadataUtils = metadataUtils;
+    }
 
 	@Override
 	public void setMetadataManager(IMetadataManager metadataManager) {
@@ -236,14 +258,14 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 			// clean XLink Cache so that cache and index remain in sync
 			Processor.clearCache();
 
-			ArrayList<String> stringIds = new ArrayList<String>();
-			for (Integer id : toIndex) {
-				stringIds.add(id.toString());
-			}
-			// execute indexing operation
-			batchIndexInThreadPool(context, stringIds);
-		}
-	}
+            ArrayList<String> stringIds = new ArrayList<String>();
+            for (Integer id : toIndex) {
+                stringIds.add(id.toString());
+            }
+            // execute indexing operation
+            batchIndexInThreadPool(stringIds);
+        }
+    }
 
 	/**
 	 * Reindex all records in current selection.
@@ -277,23 +299,21 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 				Processor.clearCache();
 			}
 
-			// execute indexing operation
-			batchIndexInThreadPool(context, listOfIdsToIndex);
-		}
-	}
+            // execute indexing operation
+            batchIndexInThreadPool(listOfIdsToIndex);
+        }
+    }
 
-	/**
-	 * Index multiple metadata in a separate thread. Wait until the current
-	 * transaction commits before starting threads (to make sure that all metadata
-	 * are committed).
-	 *
-	 * @param context
-	 *            context object
-	 * @param metadataIds
-	 *            the metadata ids to index
-	 */
-	@Override
-	public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds) {
+    /**
+     * Index multiple metadata in a separate thread. Wait until the current
+     * transaction commits before starting threads (to make sure that all metadata
+     * are committed).
+     *
+     * @param context     context object
+     * @param metadataIds the metadata ids to index
+     */
+    @Override
+    public void batchIndexInThreadPool(List<?> metadataIds) {
 
 		TransactionStatus transactionStatus = null;
 		try {
@@ -305,21 +325,21 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 		int threadCount = ThreadUtils.getNumberOfThreads();
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 
-		int perThread;
-		if (metadataIds.size() < threadCount)
-			perThread = metadataIds.size();
-		else
-			perThread = metadataIds.size() / threadCount;
-		int index = 0;
-		if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-			Log.debug(Geonet.INDEX_ENGINE, "Indexing " + metadataIds.size() + " records.");
-			Log.debug(Geonet.INDEX_ENGINE, metadataIds.toString());
-		}
-		AtomicInteger numIndexedTracker = new AtomicInteger();
-		while (index < metadataIds.size()) {
-			int start = index;
-			int count = Math.min(perThread, metadataIds.size() - start);
-			int nbRecords = start + count;
+        int perThread;
+        if (metadataIds.size() < threadCount)
+            perThread = metadataIds.size();
+        else
+            perThread = metadataIds.size() / threadCount;
+        int index = 0;
+        if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+            Log.debug(Geonet.INDEX_ENGINE, "Indexing " + metadataIds.size() + " records.");
+            Log.debug(Geonet.INDEX_ENGINE, metadataIds.toString());
+        }
+        AtomicInteger numIndexedTracker = new AtomicInteger();
+        while (index < metadataIds.size()) {
+            int start = index;
+            int count = Math.min(perThread, metadataIds.size() - start);
+            int nbRecords = start + count;
 
 			if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
 				Log.debug(Geonet.INDEX_ENGINE, "Indexing records from " + start + " to " + nbRecords);
@@ -332,7 +352,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 			}
 
             // create threads to process this chunk of ids
-            Runnable worker = new IndexMetadataTask(context, subList, batchIndex, transactionStatus, numIndexedTracker);
+            Runnable worker = new IndexMetadataTask(indexMetadataTaskContext, subList, batchIndex, transactionStatus, numIndexedTracker);
             executor.execute(worker);
             index += count;
         }
@@ -585,7 +605,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 			}
 
 			if (searchManager == null) {
-				searchManager = servContext.getBean(SearchManager.class);
+				searchManager = getServiceContext().getBean(SearchManager.class);
 			}
 
 			searchManager.index(schemaManager.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root,
@@ -646,10 +666,18 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 		searchManager.disableOptimizer();
 	}
 
-	private ServiceContext getServiceContext() {
-		ServiceContext context = ServiceContext.get();
-		return context == null ? servContext : context;
-	}
+    /**
+     * Service context for the current therad if available, or the one provided during init.
+     *
+     * @return service context for current thread if available, or service context used during init.
+     */
+    private ServiceContext getServiceContext() {
+        ServiceContext context = ServiceContext.get();
+        if( context != null ){
+            return context; // use ServiceContext from current ThreadLocal
+        }
+        return indexMetadataTaskContext; // backup ServiceContext provided during init
+    }
 
 	public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {
 		this.publisher = publisher;

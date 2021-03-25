@@ -279,7 +279,6 @@ public class Geonetwork implements ApplicationHandler {
         } catch (NumberFormatException nfe) {
             logger.error("Invalid config parameter: maximum number of writes to spatial index in a transaction (maxWritesInTransaction)"
                 + ", Using " + maxWritesInTransaction + " instead.");
-            nfe.printStackTrace();
         }
 
         SettingInfo settingInfo = context.getBean(SettingInfo.class);
@@ -341,7 +340,8 @@ public class Geonetwork implements ApplicationHandler {
         beanFactory.registerSingleton("oaipmhDisatcher", oaipmhDis);
 
 
-        _applicationContext.getBean(DataManager.class).init(context, false);
+        _applicationContext.getBean(DataManager.class).init(context);
+        _applicationContext.getBean(DataManager.class).refreshIndex(false);
         _applicationContext.getBean(HarvestManager.class).init(context, gnContext.isReadOnly());
 
         _applicationContext.getBean(ThumbnailMaker.class).init(context);
@@ -488,7 +488,7 @@ public class Geonetwork implements ApplicationHandler {
         if (count == 0) {
             try {
                 // import data from init files
-                List<Pair<String, String>> importData = context.getApplicationContext().getBean("initial-data", List.class);
+                List<Pair<String, String>> importData = context.getBean("initial-data", List.class);
                 final DbLib dbLib = new DbLib();
                 for (Pair<String, String> pair : importData) {
                     final ServletContext servletContext = context.getServlet().getServletContext();

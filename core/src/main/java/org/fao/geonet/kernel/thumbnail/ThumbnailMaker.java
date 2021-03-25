@@ -110,6 +110,11 @@ public class ThumbnailMaker {
         return result;
     }
 
+    /**
+     * Setup for use based on service context configuration.
+     *
+     * @param context AppService context used to look up configuration details
+     */
     public void init(ServiceContext context) {
         configFilePath = context.getAppPath() + File.separator + CONFIG_FILE;
         initMapPrinter();

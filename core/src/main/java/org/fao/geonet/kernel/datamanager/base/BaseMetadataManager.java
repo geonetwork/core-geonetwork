@@ -1,3 +1,26 @@
+//=============================================================================
+//===	Copyright (C) 2001-2020 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.kernel.datamanager.base;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -128,7 +151,7 @@ public class BaseMetadataManager implements IMetadataManager {
     private static final Logger LOGGER_DATA_MANAGER = LoggerFactory.getLogger(Geonet.DATA_MANAGER);
 
     @Autowired
-	private IMetadataUtils metadataUtils;
+	protected IMetadataUtils metadataUtils;
 	@Autowired
 	private IMetadataIndexer metadataIndexer;
 	@Autowired
@@ -169,7 +192,7 @@ public class BaseMetadataManager implements IMetadataManager {
 	@Autowired
 	private ThesaurusManager thesaurusManager;
 	@Autowired
-	private AccessManager accessManager;
+	protected AccessManager accessManager;
 	@Autowired
 	private UserSavedSelectionRepository userSavedSelectionRepository;
 
@@ -186,44 +209,57 @@ public class BaseMetadataManager implements IMetadataManager {
 		return editLib;
 	}
 
-	/**
-	 * To avoid cyclic references on autowired
-	 */
-	@PostConstruct
-	public void init() {
-		editLib = new EditLib(schemaManager);
-		metadataValidator.setMetadataManager(this);
-		metadataUtils.setMetadataManager(this);
-		metadataIndexer.setMetadataManager(this);
-	}
+    /**
+     * To avoid cyclic references on autowired
+     */
+    @PostConstruct
+    public void init() {
+        editLib = new EditLib(schemaManager);
+        metadataValidator.setMetadataManager(this);
+        metadataUtils.setMetadataManager(this);
+        metadataIndexer.setMetadataManager(this);
+    }
 
-	public void init(ServiceContext context, Boolean force) throws Exception {
-		metadataUtils = context.getBean(IMetadataUtils.class);
-		metadataIndexer = context.getBean(IMetadataIndexer.class);
-		metadataStatusRepository = context.getBean(MetadataStatusRepository.class);
-		metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
-		metadataRepository = context.getBean(MetadataRepository.class);
-		metadataValidator = context.getBean(IMetadataValidator.class);
-		metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
-		searchManager = context.getBean(SearchManager.class);
-		metadataRatingByIpRepository = context.getBean(MetadataRatingByIpRepository.class);
-		metadataFileUploadRepository = context.getBean(MetadataFileUploadRepository.class);
-		groupRepository = context.getBean(GroupRepository.class);
-		xmlSerializer = context.getBean(XmlSerializer.class);
-		settingManager = context.getBean(SettingManager.class);
-		metadataCategoryRepository = context.getBean(MetadataCategoryRepository.class);
+    /**
+     * Setup using app handler service appHandlerServiceContext.
+     *
+     * @param appHandlerServiceContext
+     * @throws Exception
+     */
+    public void init(ServiceContext appHandlerServiceContext) throws Exception {
+		metadataUtils = appHandlerServiceContext.getBean(IMetadataUtils.class);
+		metadataIndexer = appHandlerServiceContext.getBean(IMetadataIndexer.class);
+		metadataStatusRepository = appHandlerServiceContext.getBean(MetadataStatusRepository.class);
+		metadataValidationRepository = appHandlerServiceContext.getBean(MetadataValidationRepository.class);
+		metadataRepository = appHandlerServiceContext.getBean(MetadataRepository.class);
+		metadataValidator = appHandlerServiceContext.getBean(IMetadataValidator.class);
+		metadataSchemaUtils = appHandlerServiceContext.getBean(IMetadataSchemaUtils.class);
+		searchManager = appHandlerServiceContext.getBean(SearchManager.class);
+		metadataRatingByIpRepository = appHandlerServiceContext.getBean(MetadataRatingByIpRepository.class);
+		metadataFileUploadRepository = appHandlerServiceContext.getBean(MetadataFileUploadRepository.class);
+		groupRepository = appHandlerServiceContext.getBean(GroupRepository.class);
+		xmlSerializer = appHandlerServiceContext.getBean(XmlSerializer.class);
+		settingManager = appHandlerServiceContext.getBean(SettingManager.class);
+		metadataCategoryRepository = appHandlerServiceContext.getBean(MetadataCategoryRepository.class);
 		try {
-			harvestInfoProvider = context.getBean(HarvestInfoProvider.class);
+			harvestInfoProvider = appHandlerServiceContext.getBean(HarvestInfoProvider.class);
 		} catch (Exception e) {
 			// If it doesn't exist, that's fine
 		}
-		userRepository = context.getBean(UserRepository.class);
-		schemaManager = context.getBean(SchemaManager.class);
-		thesaurusManager = context.getBean(ThesaurusManager.class);
-		accessManager = context.getBean(AccessManager.class);
+		userRepository = appHandlerServiceContext.getBean(UserRepository.class);
+		schemaManager = appHandlerServiceContext.getBean(SchemaManager.class);
+		thesaurusManager = appHandlerServiceContext.getBean(ThesaurusManager.class);
+		accessManager = appHandlerServiceContext.getBean(AccessManager.class);
+       // refreshIndex(forceReindex );
+    }
 
-		// From DataManager:
-
+    /**
+     * Reindex content, refreshing the index for any content that has changed.
+     *
+     * @param forceReindex Force reindex of all content
+     * @throws Exception
+     */
+    public void refreshIndex(boolean forceReindex) throws Exception {
 		// get lastchangedate of all metadata in index
 		Map<String, String> docs = getSearchManager().getDocsChangeDate();
 
@@ -262,8 +298,8 @@ public class BaseMetadataManager implements IMetadataManager {
                     LOGGER_DATA_MANAGER.debug("- lastChange: {}", lastChange);
                     LOGGER_DATA_MANAGER.debug("- idxLastChange: {}", idxLastChange);
 
-					// date in index contains 't', date in DBMS contains 'T'
-					if (force || !idxLastChange.equalsIgnoreCase(lastChange)) {
+                    // date in index contains 't', date in DBMS contains 'T'
+                    if (forceReindex || !idxLastChange.equalsIgnoreCase(lastChange)) {
                         LOGGER_DATA_MANAGER.debug("-  will be indexed");
 						toIndex.add(id);
 					}
@@ -275,11 +311,11 @@ public class BaseMetadataManager implements IMetadataManager {
 					new PageRequest(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
 		}
 
-		// if anything to index then schedule it to be done after servlet is
-		// up so that any links to local fragments are resolvable
-		if (toIndex.size() > 0) {
-			metadataIndexer.batchIndexInThreadPool(context, toIndex);
-		}
+        // if anything to index then schedule it to be done after servlet is
+        // up so that any links to local fragments are resolvable
+        if (toIndex.size() > 0) {
+            metadataIndexer.batchIndexInThreadPool( toIndex);
+        }
 
 		if (docs.size() > 0) { // anything left?
             LOGGER_DATA_MANAGER.debug("INDEX HAS RECORDS THAT ARE NOT IN DB:");
@@ -527,7 +563,7 @@ public class BaseMetadataManager implements IMetadataManager {
 	 * applying automatic changes to it (update-fixed-info).
 	 *
 	 * @param context
-	 *            the context describing the user and service
+	 *            the appHandlerServiceContext describing the user and service
 	 * @param schema
 	 *            XSD this metadata conforms to
 	 * @param metadataXml
@@ -1054,7 +1090,7 @@ public class BaseMetadataManager implements IMetadataManager {
 	 * child is not updated.
 	 *
 	 * @param srvContext
-	 *            service context
+	 *            service appHandlerServiceContext
 	 * @param parentUuid
 	 *            parent uuid
 	 * @param children
@@ -1137,7 +1173,7 @@ public class BaseMetadataManager implements IMetadataManager {
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * Add privileges information about metadata record which depends on context and
+	 * Add privileges information about metadata record which depends on appHandlerServiceContext and
 	 * usually could not be stored in db or Lucene index because depending on the
 	 * current user or current client IP address.
 	 *

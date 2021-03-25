@@ -170,7 +170,8 @@ public class GeonetTestFixture {
 
         _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
         _applicationContext.getBean(SearchManager.class).initNonStaticData(100);
-        _applicationContext.getBean(DataManager.class).init(serviceContext, false);
+        _applicationContext.getBean(DataManager.class).init(serviceContext);
+        _applicationContext.getBean(DataManager.class).refreshIndex(true);
         _applicationContext.getBean(ThesaurusManager.class).init(true, serviceContext, "WEB-INF/data/config/codelist");
 
 

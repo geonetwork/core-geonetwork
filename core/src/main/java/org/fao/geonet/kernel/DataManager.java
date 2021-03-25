@@ -112,28 +112,12 @@ public class DataManager {
     /**
      * Init Data manager and refresh index if needed. Can also be called after GeoNetwork startup in order to rebuild the lucene index
      *
-     * @param force Force reindexing all from scratch
+     * @param context Service context used for setup
      **/
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        // FIXME remove all the inits when/if ever autowiring works fine
-        this.metadataManager = context.getBean(IMetadataManager.class);
-        this.metadataManager.init(context, force);
-        this.metadataUtils = context.getBean(IMetadataUtils.class);
-        this.metadataUtils.init(context, force);
-        this.metadataIndexer = context.getBean(IMetadataIndexer.class);
-        this.metadataIndexer.init(context, force);
-        this.metadataValidator = context.getBean(IMetadataValidator.class);
-        this.metadataValidator.init(context, force);
-        this.metadataOperations = context.getBean(IMetadataOperations.class);
-        this.metadataOperations.init(context, force);
-        this.metadataStatus = context.getBean(IMetadataStatus.class);
-        this.metadataStatus.init(context, force);
-        this.metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
-        this.metadataSchemaUtils.init(context, force);
-        this.metadataCategory = context.getBean(IMetadataCategory.class);
-        this.metadataCategory.init(context, force);
-        this.accessManager = context.getBean(AccessManager.class);
-        // remove all the inits when/if ever autowiring works fine
+    public void init(ServiceContext context) throws Exception {
+        this.metadataIndexer.init(context);
+        this.metadataManager.init(context);
+        this.metadataUtils.init(context);
 
         // FIXME this shouldn't login automatically ever!
 //        if (context.getUserSession() == null) {
@@ -144,6 +128,17 @@ public class DataManager {
 //            LOGGER_DATA_MANAGER.debug( "Hopefully this is cron job or routinely background task. Who called us?",
 //                        new Exception("Dummy Exception to know the stacktrace"));
 //        }
+    }
+
+    @Deprecated
+    public void refreshIndex(boolean forceReindex) throws Exception {
+        this.metadataManager.refreshIndex(forceReindex);
+    }
+
+    @Deprecated
+    public static void validateExternalMetadata(String schema, Element xml, ServiceContext context, Integer groupOwner) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        gc.getBean(IMetadataValidator.class).validateMetadata(schema, xml, context, " ");
     }
 
     @Deprecated
@@ -176,7 +171,7 @@ public class DataManager {
 
     @Deprecated
     public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds) {
-        metadataIndexer.batchIndexInThreadPool(context, metadataIds);
+        metadataIndexer.batchIndexInThreadPool(metadataIds);
     }
 
     @Deprecated
