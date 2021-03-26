@@ -248,8 +248,8 @@
    *      Resource provider : user3@mail.com
    */
   module.directive('gnMetadataContacts', [
-    '$http',
-    function($http) {
+    '$http', '$translate',
+    function($http, $translate) {
       return {
         templateUrl: '../../catalog/components/search/mdview/partials/' +
             'contact.html',
@@ -336,6 +336,28 @@
                     aggregateRoles(contactsByOrgAndMailOrName);
                 }
               }
+            }
+          };
+
+          /**
+           * Splits a comma separated list of role keys and
+           * returns a comma separated list of role translations.
+           *
+           * @param roles
+           * @returns {string|*}
+           */
+          scope.translateRoles = function(roles) {
+            if (roles) {
+              var rolesList = roles.split(',');
+              var roleTranslations = [];
+
+              for(var i = 0; i < rolesList.length; i++) {
+                roleTranslations.push($filter('translate')(rolesList[i]));
+              }
+
+              return roleTranslations.join(',');
+            } else {
+              return '';
             }
           };
 
