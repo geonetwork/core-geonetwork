@@ -278,7 +278,7 @@ public class ValidateApi {
             HttpServletRequest request
     ) throws Exception {
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-
+      try {
         MInspireEtfValidateProcess registredMAnalyseProcess = getRegistredMInspireEtfValidateProcess(serviceContext);
 
         registredMAnalyseProcess.deleteAll();
@@ -289,6 +289,10 @@ public class ValidateApi {
 
         registredMAnalyseProcess.processMetadata(records);
         return new ResponseEntity(HttpStatus.CREATED);
+      } finally {
+        serviceContext.clearAsThreadLocal();
+        serviceContext.clear();
+      }
     }
 
     private MInspireEtfValidateProcess getRegistredMInspireEtfValidateProcess(ServiceContext serviceContext) {

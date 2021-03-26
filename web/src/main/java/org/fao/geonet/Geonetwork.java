@@ -140,8 +140,12 @@ public class Geonetwork implements ApplicationHandler {
 
     /**
      * Inits the engine, loading all needed data.
+     *
+     * @param config Handler configuration
+     * @param context application handler servlet context
+     * @return GeonetContext for application
      */
-    public Object start(Element config, ServiceContext context) throws Exception {
+    public GeonetContext start(Element config, ServiceContext context) throws Exception {
         context.setAsThreadLocal();
         this._applicationContext = context.getApplicationContext();
         ApplicationContextHolder.set(this._applicationContext);
@@ -642,6 +646,14 @@ public class Geonetwork implements ApplicationHandler {
         // Beans registered using SingletonBeanRegistry#registerSingleton don't have their
         // @PreDestroy called. So do it manually.
         oaipmhDis.shutdown();
+
+        // shutdown data manager
+        try {
+            _applicationContext.getBean(DataManager.class).destroy();
+        } catch (Exception e) {
+            logger.error("Raised exception while stopping data manager");
+            logger.error(e);
+        }
     }
 
     //---------------------------------------------------------------------------

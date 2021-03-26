@@ -81,7 +81,7 @@ public class MonitorManager {
      *
      * A distinct service context is required as health checks are performed in the background.
      */
-    private ServiceContext context;
+    private ServiceContext monitorContext;
 
     public void init(ServletContext context, String baseUrl) {
 
@@ -140,35 +140,35 @@ public class MonitorManager {
 
     public void initMonitorsForApp(ServiceContext initContext) {
         ServiceManager serviceManager = initContext.getBean(ServiceManager.class);
-        context = serviceManager.createServiceContext("monitor", initContext);
+        monitorContext = serviceManager.createServiceContext("monitor", initContext);
 
-        createHealthCheck(context, criticalServiceContextHealthChecks, criticalHealthCheckRegistry, "critical health check");
-        createHealthCheck(context, warningServiceContextHealthChecks, warningHealthCheckRegistry, "warning health check");
-        createHealthCheck(context, expensiveServiceContextHealthChecks, expensiveHealthCheckRegistry, "expensive health check");
+        createHealthCheck(monitorContext, criticalServiceContextHealthChecks, criticalHealthCheckRegistry, "critical health check");
+        createHealthCheck(monitorContext, warningServiceContextHealthChecks, warningHealthCheckRegistry, "warning health check");
+        createHealthCheck(monitorContext, expensiveServiceContextHealthChecks, expensiveHealthCheckRegistry, "expensive health check");
 
         for (Class<MetricsFactory<Gauge<?>>> factoryClass : serviceContextGauges.keySet()) {
             Log.info(Log.ENGINE, "Instantiating : " + factoryClass.getName());
-            Gauge<?> instance = create(factoryClass, context, SERVICE_CONTEXT_GAUGE);
+            Gauge<?> instance = create(factoryClass, monitorContext, SERVICE_CONTEXT_GAUGE);
             serviceContextGauges.put(factoryClass, instance);
         }
         for (Class<MetricsFactory<Timer>> factoryClass : serviceContextTimers.keySet()) {
             Log.info(Log.ENGINE, "Instantiating : " + factoryClass.getName());
-            Timer instance = create(factoryClass, context, SERVICE_CONTEXT_TIMER);
+            Timer instance = create(factoryClass, monitorContext, SERVICE_CONTEXT_TIMER);
             serviceContextTimers.put(factoryClass, instance);
         }
         for (Class<MetricsFactory<Counter>> factoryClass : serviceContextCounters.keySet()) {
             Log.info(Log.ENGINE, "Instantiating : " + factoryClass.getName());
-            Counter instance = create(factoryClass, context, SERVICE_CONTEXT_COUNTER);
+            Counter instance = create(factoryClass, monitorContext, SERVICE_CONTEXT_COUNTER);
             serviceContextCounters.put(factoryClass, instance);
         }
         for (Class<MetricsFactory<Histogram>> factoryClass : serviceContextHistogram.keySet()) {
             Log.info(Log.ENGINE, "Instantiating : " + factoryClass.getName());
-            Histogram instance = create(factoryClass, context, SERVICE_CONTEXT_HISTOGRAM);
+            Histogram instance = create(factoryClass, monitorContext, SERVICE_CONTEXT_HISTOGRAM);
             serviceContextHistogram.put(factoryClass, instance);
         }
         for (Class<MetricsFactory<Meter>> factoryClass : serviceContextMeter.keySet()) {
             Log.info(Log.ENGINE, "Instantiating : " + factoryClass.getName());
-            Meter instance = create(factoryClass, context, SERVICE_CONTEXT_METER);
+            Meter instance = create(factoryClass, monitorContext, SERVICE_CONTEXT_METER);
             serviceContextMeter.put(factoryClass, instance);
         }
     }
@@ -333,8 +333,8 @@ public class MonitorManager {
     @PreDestroy
     public void shutdown() {
         Log.info(Log.ENGINE, "MonitorManager#shutdown");
-        if (context != null){
-            context.clear();
+        if (monitorContext != null){
+            monitorContext.clear();
         }
         if (resourceTracker != null) {
             resourceTracker.clean();

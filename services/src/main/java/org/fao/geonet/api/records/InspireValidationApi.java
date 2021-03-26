@@ -239,7 +239,13 @@ public class InspireValidationApi {
 
 
             md.detach();
+
+            // The following is unusual, we are creating a service context so it is our responsibility
+            // to ensure it is cleaned up.
+            //
+            // This is going to be accomplished by the scheduled InspireValidationRunnable
             ServiceContext context = ApiUtils.createServiceContext(request);
+          try {
             Attribute schemaLocAtt = schemaManager.getSchemaLocation(
                 "iso19139", context);
 
@@ -263,6 +269,10 @@ public class InspireValidationApi {
             threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));
 
             return testId;
+          } finally {
+            context.clearAsThreadLocal();
+            // context clear is handled scheduled InspireValidationRunnable above
+          }
         } catch (Exception e) {
             response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
             return "";

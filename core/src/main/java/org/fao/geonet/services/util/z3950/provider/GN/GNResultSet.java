@@ -52,7 +52,7 @@ import java.util.Observer;
 public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
 
     private GNXMLQuery query;
-    private ServiceContext srvxtx;
+    private ServiceContext appHandlerContext;
     private int status;
 
     private int fragmentcount;
@@ -64,12 +64,11 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
                        ServiceContext srvctx) throws Exception {
         super(observers);
         this.query = query;
-        this.srvxtx = srvctx;
+        this.appHandlerContext = srvctx;
 
         try {
 
-            GeonetContext gc = (GeonetContext) this.srvxtx
-                .getHandlerContext(Geonet.CONTEXT_NAME);
+            GeonetContext gc = (GeonetContext) this.appHandlerContext.getHandlerContext(Geonet.CONTEXT_NAME);
             SearchManager searchMan = gc.getBean(SearchManager.class);
 
             metasearcher = searchMan.newSearcher(SearcherType.LUCENE, SEARCH_Z3950_SERVER);
@@ -77,6 +76,16 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
         } catch (Exception e) {
             Log.error(Geonet.SRU, "error constructing GNresult set: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Access the current ServiceContext if available.
+     *
+     * @return current service context if available, or app handler context fallback.
+     */
+    protected ServiceContext getServiceContext(){
+        ServiceContext serviceContext = ServiceContext.get();
+        return serviceContext != null ? serviceContext : appHandlerContext;
     }
 
     public int evaluate(int timeout) {
@@ -96,11 +105,7 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
             ServiceConfig config = new ServiceConfig();
 
             // perform the search and save search results
-
-            metasearcher.search(this.srvxtx, request, config);
-
-            // System.out.println("summary:\n" + Xml.getString(s.getSummary()));
-            // // DEBUG
+            metasearcher.search(getServiceContext(), request, config);
 
             // Random number of records.. Set up the result set
             setFragmentCount(metasearcher.getSize());
@@ -137,8 +142,7 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
                 Log.debug(Geonet.SRU, "Search request:\n"
                     + Xml.getString(request));
             // get result set
-            Element result = this.metasearcher.present(this.srvxtx, request,
-                config);
+            Element result = this.metasearcher.present(getServiceContext(), request, config);
 
             if (Log.isDebugEnabled(Geonet.SRU))
                 Log.debug(Geonet.SRU, "Search result:\n"

@@ -23,6 +23,7 @@
 
 package jeeves.server.context;
 
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import jeeves.component.ProfileManager;
 import jeeves.server.UserSession;
@@ -106,6 +107,45 @@ public class ServiceContext extends BasicContext {
      * Be careful with thread local to avoid leaking resources, set POLICY above to trace allocation.
      */
     private static final InheritableThreadLocal<ServiceContext> THREAD_LOCAL_INSTANCE = new InheritableThreadLocal<ServiceContext>();
+
+    /**
+     * Simple data structure recording service details.
+     *
+     * Lightweight data structure used logging service details such as name.
+     */
+    public static class ServiceDetails {
+        private String ipAddress;
+        private String service;
+        private String language;
+        public ServiceDetails(ServiceContext context){
+            this.ipAddress = context.getIpAddress();
+        }
+
+        public String getIpAddress() {
+            return ipAddress;
+        }
+
+        public String getService() {
+            return service;
+        }
+
+        public String getLanguage() {
+            return language;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ServiceDetails that = (ServiceDetails) o;
+            return Objects.equals(ipAddress, that.ipAddress) && service.equals(that.service) && Objects.equals(language, that.language);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(ipAddress, service, language);
+        }
+    }
 
     /**
      * Trace allocation via {@link #setAsThreadLocal()}.

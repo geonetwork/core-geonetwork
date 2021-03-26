@@ -163,8 +163,8 @@ public class BaseMetadataManager implements IMetadataManager {
     private IMetadataSchemaUtils metadataSchemaUtils;
     @Autowired
     private GroupRepository groupRepository;
-    @Autowired
-    private MetadataStatusRepository metadataStatusRepository;
+//    @Autowired
+//    private MetadataStatusRepository metadataStatusRepository;
     @Autowired
     private MetadataValidationRepository metadataValidationRepository;
     @Autowired
@@ -232,7 +232,10 @@ public class BaseMetadataManager implements IMetadataManager {
         } catch (Exception e) {
             // If it doesn't exist, that's fine
         }
-       // refreshIndex(forceReindex );
+    }
+
+    @Override
+    public void destroy() throws Exception {
     }
 
     /**

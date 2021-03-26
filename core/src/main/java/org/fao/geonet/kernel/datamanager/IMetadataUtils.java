@@ -52,6 +52,9 @@ import jeeves.server.context.ServiceContext;
 /**
  * Utility interface for working with records.
  *
+ * Operates as a facade with utility methods orchestrating common operations using a constellation
+ * beans drawn from across the application.
+ *
  * @author delawen
  */
 public interface IMetadataUtils {
@@ -59,10 +62,16 @@ public interface IMetadataUtils {
     /**
      * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
      *
-     * @param context   this is the app handler context from jeeves initialization
+     * @param appHandlerContext   this is the app handler context from jeeves initialization
      * @throws Exception
      */
-    public void init(ServiceContext context) throws Exception;
+    public void init(ServiceContext appHandlerContext) throws Exception;
+
+    /**
+     * Clean up during application shutdown.
+     * @throws Exception
+     */
+    public void destroy() throws Exception;
 
     /**
      * Notify a metadata modification

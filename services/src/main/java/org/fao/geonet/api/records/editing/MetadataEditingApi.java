@@ -202,6 +202,7 @@ public class MetadataEditingApi {
         Log.trace(Geonet.DATA_MANAGER, "Saving metadata editing with UUID " + metadataUuid);
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
+      try {
         AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
         // ajaxEditUtils.preprocessUpdate(allRequestParams, context);
 
@@ -251,8 +252,8 @@ public class MetadataEditingApi {
         // --- change status as a result of this edit (use onEdit method)
         Log.trace(Geonet.DATA_MANAGER, " > Trigger status actions based on this edit");
         StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);
-        StatusActions sa = saf.createStatusActions(context);
-        sa.onEdit(iLocalId, minor);
+        StatusActions statusActions = saf.createStatusActions(context);
+        statusActions.onEdit(iLocalId, minor);
         Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
 
         if (StringUtils.isNotEmpty(data)) {
@@ -401,6 +402,9 @@ public class MetadataEditingApi {
             // After saving the form remove the information to remove the draft copy if the user cancels the editor
             context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);
         }
+      } finally {
+        context.clear();
+      }
     }
 
     @ApiOperation(value = "Cancel edits", notes = "Cancel current editing session.", nickname = "cancelEdits")

@@ -157,6 +157,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     private ApplicationEventPublisher publisher;
 
+    /** Private service context managed by service init / destroy for use by metadata indexing tasks. */
     private ServiceContext indexMetadataTaskContext;
 
     public BaseMetadataIndexer() {
@@ -708,11 +709,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     }
 
     /**
-     * Service context for the current therad if available, or the one provided during init.
+     * Service context for the current thread if available, or the one provided during init.
      *
      * @return service context for current thread if available, or service context used during init.
      */
-    private ServiceContext getServiceContext() {
+    protected ServiceContext getServiceContext() {
         ServiceContext context = ServiceContext.get();
         if( context != null ){
             return context; // use ServiceContext from current ThreadLocal

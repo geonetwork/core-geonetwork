@@ -49,6 +49,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
     @Autowired
     private SettingManager settingManager;
 
+    /** Service context for test */
     private ServiceContext context;
 
     @Before

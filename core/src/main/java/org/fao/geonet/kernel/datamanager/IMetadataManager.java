@@ -60,8 +60,18 @@ public interface IMetadataManager {
     public void init(ServiceContext context) throws Exception;
 
     /**
+     * Clean up metadata manager during application shutdown.
      *
-     * @param forceReindex
+     * @throws Exception
+     */
+    public void destroy() throws Exception;
+    /**
+     * Refresh index removing, updating or adding items as needed.
+     *
+     * Items are updated if the indexed date is different from the record date. Use forceReindex true
+     * to avoid this check and update all items.
+     *
+     * @param forceReindex Use true to always update, false to update based on date check.
      * @throws Exception
      */
     public void refreshIndex(boolean forceReindex) throws Exception;

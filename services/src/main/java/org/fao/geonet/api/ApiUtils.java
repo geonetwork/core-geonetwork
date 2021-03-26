@@ -222,6 +222,7 @@ public class ApiUtils {
     /**
      * If you really need a ServiceContext use this. Try to avoid in order to reduce dependency on
      * Jeeves.
+     *
      * If you create a service context you are responsible for managing on the current thread and any cleanup.
      * This method has a side effect of setting the created service context for the current thread:
      *

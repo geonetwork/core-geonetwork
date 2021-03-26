@@ -132,6 +132,11 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
      */
     protected volatile AtomicBoolean cancelMonitor = new AtomicBoolean(false);
 
+    /** Service context provided to harvester for use.
+     *
+     * Service context provided by {@link #setContext(ServiceContext)}, subject
+     * to externally managed lifecycle.
+     */
     protected ServiceContext context;
 
     protected HarvesterSettingsManager harvesterSettingsManager;
@@ -576,10 +581,6 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
      */
     public void addHarvestInfo(Element info, String id, String uuid) {
         info.addContent(new Element("type").setText(getType()));
-    }
-
-    public ServiceContext getServiceContext() {
-        return context;
     }
 
     public Status getStatus() {

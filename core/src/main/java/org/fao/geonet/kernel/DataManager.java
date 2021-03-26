@@ -107,7 +107,7 @@ public class DataManager {
     private AccessManager accessManager;
 
     /**
-     * Init Data manager and refresh index if needed. Can also be called after GeoNetwork startup in order to rebuild the lucene index
+     * Init data manager components.
      *
      * @param context Service context used for setup
      **/
@@ -127,6 +127,25 @@ public class DataManager {
 //        }
     }
 
+    /**
+     * Clean up data manager during application shutdown.
+     */
+    public void destroy() throws Exception {
+        this.metadataIndexer.destroy();
+        this.metadataManager.destroy();
+        this.metadataUtils.destroy();
+
+    }
+
+    /**
+     * Refresh index removing, updating or adding items as needed.
+     *
+     * Items are updated if the indexed date is different from the record date. Use forceReindex true
+     * to avoid this check and update all items.
+     *
+     * @param forceReindex Use true to always update, false to update based on date check.
+     * @throws Exception
+     */
     @Deprecated
     public void refreshIndex(boolean forceReindex) throws Exception {
         this.metadataManager.refreshIndex(forceReindex);

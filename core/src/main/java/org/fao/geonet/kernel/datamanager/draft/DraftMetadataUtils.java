@@ -581,8 +581,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
             // --- use StatusActionsFactory and StatusActions class to
             // --- change status and carry out behaviours for status changes
-            StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);
-            StatusActions sa = saf.createStatusActions(context);
+            StatusActionsFactory statusActionsFactory = context.getBean(StatusActionsFactory.class);
+            StatusActions statusActions = statusActionsFactory.createStatusActions(context);
 
             int author = context.getUserSession().getUserIdAsInt();
             Integer status = Integer.valueOf(StatusValue.Status.DRAFT);
@@ -600,7 +600,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
                 List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                 listOfStatusChange.add(metadataStatus);
-                sa.onStatusChange(listOfStatusChange);
+                statusActions.onStatusChange(listOfStatusChange);
             }
             return String.valueOf(finalId);
         } catch (Throwable t) {
