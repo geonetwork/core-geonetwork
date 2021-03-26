@@ -61,6 +61,7 @@ import jeeves.server.context.ServiceContext;
 public class Aligner extends BaseAligner<GeoPRESTParams> {
 
     private Logger log;
+    /** Shared service context managed by HarvetManager */
     private ServiceContext context;
     private XmlRequest request;
     private DataManager dataMan;
@@ -74,6 +75,9 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
         super(cancelMonitor);
         this.log = log;
         this.context = sc;
+        if(!(context instanceof ServiceContext.AppHandlerServiceContext)){
+            log.debug("Harvester expects to work with shared \"harvester\" service context, '"+context.getService()+"' provided.");
+        }
         this.params = params;
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

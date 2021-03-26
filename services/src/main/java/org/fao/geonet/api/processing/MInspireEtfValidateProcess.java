@@ -39,6 +39,7 @@ import static jeeves.transaction.TransactionManager.TransactionRequirement.CREAT
 public class MInspireEtfValidateProcess implements SelfNaming {
 
     private final ApplicationContext appContext;
+    /** Shared validation service context used as a fallback if thread local unavailable */
     private ServiceContext validationServiceContext;
     private String URL;
 

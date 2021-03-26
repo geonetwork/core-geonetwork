@@ -72,6 +72,7 @@ class Harvester implements IHarvester<HarvestResult> {
     private Logger log;
 
     private GeonetParams params;
+    /** Shared service context managed by HarvestManager */
     private ServiceContext context;
 
     /**
@@ -85,6 +86,9 @@ class Harvester implements IHarvester<HarvestResult> {
         this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.context = context;
+        if(!(context instanceof ServiceContext.AppHandlerServiceContext)){
+            log.debug("Harvester expects to work with shared \"harvester\" service context, '"+context.getService()+"' provided.");
+        }
         this.params = params;
     }
 

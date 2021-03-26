@@ -89,6 +89,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
     private HarvestResult result;
     private Logger log;
+    /** shared service context managed by HarvestManager */
     private ServiceContext context;
     private DataManager dataMan;
     private IMetadataManager metadataManager;
@@ -107,6 +108,9 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
         super(cancelMonitor);
         this.log = log;
         this.context = context;
+        if(!(context instanceof ServiceContext.AppHandlerServiceContext)){
+            log.debug("Harvester expects to work with shared \"harvester\" service context, '"+context.getService()+"' provided.");
+        }
         this.params = params;
 
         result = new HarvestResult();

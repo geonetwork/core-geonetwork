@@ -148,21 +148,77 @@ public class ServiceContext extends BasicContext {
     }
 
     /**
+     * Shared service context offering limited functionality.
+     *
+     * Use of service context has been assumed in many parts of the codebase. This shared "AppHandler" service context
+     * is used during Jeeves startup and has some protection from being  cleared. Additional managers such HarvestManager
+     * also use a shared service context to support background processes.
+     */
+    public static class AppHandlerServiceContext extends ServiceContext {
+
+        /**
+         * Shared AppHandler service context associated with application lifecycle.
+         *
+         * See factory method {@link ServiceManager#createAppHandlerServiceContext(ConfigurableApplicationContext, String)}  and
+         * {@link ServiceManager#createAppHandlerServiceContext(ConfigurableApplicationContext)}.
+         *
+         * @param service Service name
+         * @param jeevesApplicationContext Application context
+         * @param contexts Handler context
+         * @param entityManager
+         */
+        public AppHandlerServiceContext(final String service, final ConfigurableApplicationContext jeevesApplicationContext,
+                              final Map<String, Object> contexts, final EntityManager entityManager) {
+            super( service, jeevesApplicationContext, contexts, entityManager );
+            _language = "?";
+            _userSession = null;
+            _ipAddress = "?";
+        }
+
+        @Override
+        public void setUserSession(UserSession session) {
+            if (session != null) {
+                warning("Shared service context \"" + _service + "\"  context should not be configured with user session");
+            }
+            super.setUserSession(session);
+        }
+        @Override
+        public void setIpAddress(String address) {
+            if( address != null && !"?".equals(address)) {
+                warning("Shared service context \""+_service+"\" should not be associated with an ip address");
+            }
+            super.setIpAddress(address);
+        }
+
+        public void clear() {
+            warning("Shared service context \""+_service+"\"  context is shared, and should not be cleared");
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("AppHandlerServiceContext ");
+            sb.append("'").append(_service).append('\'');
+
+            return sb.toString();
+        }
+
+    };
+    /**
      * Trace allocation via {@link #setAsThreadLocal()}.
      */
-    private Throwable allocation = null;
+    protected Throwable allocation = null;
 
-    private UserSession _userSession = new UserSession();
-    private InputMethod _input;
-    private OutputMethod _output;
-    private Map<String, String> _headers;
-    private String _language;
-    private String _service;
-    private String _ipAddress;
-    private int _maxUploadSize;
-    private JeevesServlet _servlet;
-    private boolean _startupError = false;
-    private Map<String, String> _startupErrors;
+    protected UserSession _userSession = new UserSession();
+    protected InputMethod _input;
+    protected OutputMethod _output;
+    protected Map<String, String> _headers;
+    protected String _language;
+    protected String _service;
+    protected String _ipAddress;
+    protected int _maxUploadSize;
+    protected JeevesServlet _servlet;
+    protected boolean _startupError = false;
+    protected Map<String, String> _startupErrors;
     /**
      * Property to be able to add custom response headers depending on the code (and not the xml of
      * Jeeves)
@@ -172,7 +228,7 @@ public class ServiceContext extends BasicContext {
      *
      * @see #_statusCode
      */
-    private Map<String, String> _responseHeaders;
+    protected Map<String, String> _responseHeaders;
     /**
      * Property to be able to add custom http status code headers depending on the code (and not the
      * xml of Jeeves)
@@ -182,7 +238,7 @@ public class ServiceContext extends BasicContext {
      *
      * @see #_responseHeaders
      */
-    private Integer _statusCode;
+    protected Integer _statusCode;
 
     /**
      * Context for service execution.
@@ -675,6 +731,17 @@ public class ServiceContext extends BasicContext {
         this._statusCode = statusCode;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ServiceContext ");
+        sb.append("'").append(_service).append('\'');
+        sb.append(" ").append(_input).append(" --> ").append(_output);
+        sb.append(" { _language='").append(_language).append('\'');
+        sb.append(", _ipAddress='").append(_ipAddress).append('\'');
+        sb.append('}');
+
+        return sb.toString();
+    }
 }
 
 //=============================================================================

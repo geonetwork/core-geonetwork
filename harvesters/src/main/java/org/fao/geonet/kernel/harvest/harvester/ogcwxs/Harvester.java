@@ -161,6 +161,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
     private static final String GETMAP = "GetMap";
     private static final String IMAGE_FORMAT = "image/png";
     private Logger log;
+    /** Shared service context managed by HarvesterManager */
     private ServiceContext context;
     private DataManager dataMan;
     private IMetadataManager metadataManager;
@@ -191,6 +192,9 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         super(cancelMonitor);
         this.log = log;
         this.context = context;
+        if(!(context instanceof ServiceContext.AppHandlerServiceContext)){
+            log.debug("Harvester expects to work with shared \"harvester\" service context, '"+context.getService()+"' provided.");
+        }
         this.params = params;
 
         result = new HarvestResult();

@@ -45,6 +45,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 class WebDavRetriever implements RemoteRetriever {
 
     private Logger log;
+    /** Shared service context managed by HarvesterManager */
     private ServiceContext context;
     private WebDavParams params;
 
@@ -81,6 +82,9 @@ class WebDavRetriever implements RemoteRetriever {
         this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.context = context;
+        if(!(context instanceof ServiceContext.AppHandlerServiceContext)){
+            log.debug("Expects to work with shared \"harvester\" service context, '"+context.getService()+"' provided.");
+        }
         this.params = params;
     }
 

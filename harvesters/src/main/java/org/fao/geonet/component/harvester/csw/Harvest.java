@@ -813,6 +813,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
         Semaphore ready = new Semaphore(0);
         private Element harvester;
         private String responseHandler;
+        /** Shared service context managed by HarvestManager */
         private ServiceContext serviceContext;
 
         /**
@@ -831,6 +832,9 @@ public class Harvest extends AbstractOperation implements CatalogService {
             this.harvester = harvester;
             this.responseHandler = responseHandler;
             this.serviceContext = serviceContext;
+            if(!(serviceContext instanceof ServiceContext.AppHandlerServiceContext)){
+                serviceContext.warning("Harvest required to work with shared \"harvester\" service context, '"+serviceContext.getService()+"' provided.");
+            }
         }
 
         /**

@@ -87,7 +87,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     private Path xslPath;
 
     /** Harvester service context */
-    private ServiceContext harvesterContext;
+    private ServiceContext.AppHandlerServiceContext harvesterContext;
 
     private boolean readOnly;
     private ConfigurableApplicationContext applicationContext;
@@ -114,7 +114,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     public void init(ServiceContext initContext, boolean isReadOnly) throws Exception {
         //create a new (shared) context instead of using the Jeeves one
         ServiceManager serviceManager = initContext.getBean(ServiceManager.class);
-        this.harvesterContext = serviceManager.createServiceContext("harvester", initContext);
+        this.harvesterContext = serviceManager.createAppHandlerServiceContext("harvester", initContext);
 
         this.dataMan = harvesterContext.getBean(DataManager.class);
         this.settingMan = harvesterContext.getBean(HarvesterSettingsManager.class);
@@ -198,7 +198,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         }
         //we created the context, so we have to clean it up
         if (harvesterContext != null){
-            harvesterContext.clear();
+            // Call superclass cleanup to avoid AppHandlerServiceContext protections
+            ((ServiceContext)harvesterContext).clear();
         }
     }
 

@@ -91,6 +91,7 @@ import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
 
 public class Aligner extends BaseAligner<CswParams> {
 
+    /** Shared service context managed by HarvestManager */
     private ServiceContext context;
     private DataManager dataMan;
     private CategoryMapper localCateg;
@@ -110,6 +111,9 @@ public class Aligner extends BaseAligner<CswParams> {
     public Aligner(AtomicBoolean cancelMonitor, ServiceContext sc, CswServer server, CswParams params, Logger log) throws OperationAbortedEx {
         super(cancelMonitor);
         this.context = sc;
+        if(!(context instanceof ServiceContext.AppHandlerServiceContext)){
+            log.debug("Harvester expects to work with shared \"harvester\" service context, '"+context.getService()+"' provided.");
+        }
         this.params = params;
         this.log = log;
 

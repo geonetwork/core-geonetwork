@@ -356,43 +356,41 @@ public class ServiceManager {
      * Used to create an appContext placeholder service context used for initialization, background tasks and activities.
      *
      * This ServiceContext is used during initialization and is independent of any user session.
-     * This instance is the responsibility of JeevesEngine and is protected against being cleared.
+     * This instance is the responsibility of a specific manager and will produce a warning if an attempt is made
+     * to clear or assign a user session.
      *
      * @param appContext GeoNetwork Application Context
-     * @return new service context
+     * @return new service context with limited functionality
      */
-    public ServiceContext createAppHandlerServiceContext(ConfigurableApplicationContext appContext) {
-        ServiceContext context = new ServiceContext("AppHandler", appContext, htContexts, entityManager){
-            @Override
-            public void setIpAddress(String address) {
-                if( address != null && !"?".equals(address)) {
-                    warning("AppHandler context should not be associated with an ip address");
-                }
-                super.setIpAddress(address);
-            }
-
-            @Override
-            public void setUserSession(UserSession session) {
-                if( session != null){
-                    warning("AppHandler context should not be configured with user session");
-                }
-                super.setUserSession(session); // should probably not support association with  a user
-            }
-
-            public void clear() {
-                debug("AppHandler context cannot be cleared");
-            }
-        };
+    public ServiceContext.AppHandlerServiceContext createAppHandlerServiceContext(ConfigurableApplicationContext appContext) {
+        ServiceContext.AppHandlerServiceContext context = new ServiceContext.AppHandlerServiceContext("AppHandler", appContext, htContexts, entityManager);
         context.setBaseUrl(baseUrl);
-        context.setLanguage("?");
-        context.setUserSession(null);
-        context.setIpAddress("?");
         context.setMaxUploadSize(maxUploadSize);
         context.setServlet(servlet);
 
         return context;
     }
 
+    /**
+     * Used to create an appContext placeholder service context for a specific manager used for initialization, background tasks and activities.
+     *
+     * Previously a single AppHandler service context was shared managed by Jeeves.
+     *
+     * This instance is the responsibility of a specific manager and will produce a warning if an attempt is made
+     * to clear or assign a user session.
+     *
+     * @param appContext GeoNetwork Application Context
+     * @param manager Manager name such as AppContext or harvester
+     * @return new service context with limited functionality
+     */
+    public ServiceContext.AppHandlerServiceContext createAppHandlerServiceContext(String manager, ServiceContext parent) {
+        ServiceContext.AppHandlerServiceContext context = new ServiceContext.AppHandlerServiceContext(manager, parent.getApplicationContext(), htContexts, entityManager);
+        context.setBaseUrl(baseUrl);
+        context.setMaxUploadSize(maxUploadSize);
+        context.setServlet(servlet);
+
+        return context;
+    }
 
     /**
      * Used to create a serviceContext for later use, the object provided the new serviceContext is responsible

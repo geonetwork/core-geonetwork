@@ -68,6 +68,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
 
     private IMetadataManager metadataManager;
 
+    /** Shared service context managed by HarvestManager */
     private ServiceContext context;
 
     private CategoryMapper localCateg;
@@ -85,6 +86,9 @@ public class Aligner extends AbstractAligner<GeonetParams> {
         this.dataMan = dm;
         this.metadataManager = metadataManager;
         this.context = sc;
+        if(!(context instanceof ServiceContext.AppHandlerServiceContext)){
+            log.debug("Harvester expects to work with shared \"harvester\" service context, '"+context.getService()+"' provided.");
+        }
         this.localCateg = cm;
     }
 
