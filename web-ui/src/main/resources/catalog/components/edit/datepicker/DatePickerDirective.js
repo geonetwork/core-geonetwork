@@ -79,11 +79,16 @@
                scope.dateInput = dateTime.format(format);
              };
 
-             var getTimeZoneOffset = function(date) {
-               return moment.tz(date).format('ZZ')
+             var userTimezone =  moment.tz.guess();
+
+             var getTimeZoneOffset = function(timeZone) {
+               var actualTz = timeZone;
+               if (timeZone !== null && timeZone.trim().toLowerCase() === "browser") {
+                 actualTz = userTimezone;
+               }
+               return moment.tz(actualTz).format('ZZ')
                  .replace(/([+-]?[0-9]{2})([0-9]{2})/, '$1:$2')
              }
-             var userTimezone =  moment.tz.guess();
 
              scope.timezoneNames = [
                {name: $translate.instant('NoTimezone'), offset: ''},
