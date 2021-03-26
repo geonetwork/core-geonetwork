@@ -189,15 +189,15 @@
        <xsl:apply-templates mode="toJsonLDLocalized" select="."/><xsl:if test="position() != last()">,</xsl:if>
     </xsl:for-each>],
     "dateCreated": [
-    <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:date[cit:dateType/*/@codeListValue='creation']/*/cit:date/*/text()">
+    <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:date[*/cit:dateType/*/@codeListValue='creation']/*/cit:date/*/text()">
        "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
     </xsl:for-each>],
     "dateModified": [
-    <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:date[cit:dateType/*/@codeListValue='revision']/*/cit:date/*/text()">
+    <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:date[*/cit:dateType/*/@codeListValue='revision']/*/cit:date/*/text()">
     "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
     </xsl:for-each>],
     "datePublished": [
-    <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:date[cit:dateType/*/@codeListValue='publication']/*/cit:date/*/text()">
+    <xsl:for-each select="mdb:identificationInfo/*/mri:citation/*/cit:date[*/cit:dateType/*/@codeListValue='publication']/*/cit:date/*/text()">
       "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
     </xsl:for-each>],
     "thumbnailUrl": [
