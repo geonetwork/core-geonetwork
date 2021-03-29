@@ -353,9 +353,7 @@
               "code": "<xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>",
               "codeSpace": "<xsl:value-of select="mcc:codeSpace/(gco:CharacterString|gcx:Anchor)"/>",
               "link": "<xsl:value-of select="mcc:code/gcx:Anchor/@xlink:href"/>"
-              }
-              <xsl:value-of select="."/>
-            </resourceIdentifier>
+              }</resourceIdentifier>
           </xsl:for-each>
 
           <xsl:for-each
