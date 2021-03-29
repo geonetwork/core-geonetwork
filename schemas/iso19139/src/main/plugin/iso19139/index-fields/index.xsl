@@ -341,8 +341,7 @@
               "code": "<xsl:value-of select="gmd:code/(gco:CharacterString|gmx:Anchor)"/>",
               "codeSpace": "<xsl:value-of select="gmd:codeSpace/(gco:CharacterString|gmx:Anchor)"/>",
               "link": "<xsl:value-of select="gmd:code/gmx:Anchor/@xlink:href"/>"
-              }
-            </resourceIdentifier>
+              }</resourceIdentifier>
           </xsl:for-each>
 
           <xsl:for-each select="gmd:edition/*">
