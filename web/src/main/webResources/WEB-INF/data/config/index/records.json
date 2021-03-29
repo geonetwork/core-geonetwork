@@ -1461,7 +1461,7 @@
         "type": "keyword"
       },
       "resourceIdentifier": {
-        "type": "nested",
+        "type": "object",
         "properties": {
           "code": {
             "type": "keyword",
