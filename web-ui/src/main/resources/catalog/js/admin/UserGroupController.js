@@ -288,9 +288,11 @@
       };
 
 
+      $scope.resetPasswordOld = null;
       $scope.resetPassword1 = null;
       $scope.resetPassword2 = null;
       $scope.resetPassword = function() {
+        $scope.resetPasswordOld = null;
         $scope.resetPassword1 = null;
         $scope.resetPassword2 = null;
         $('#passwordResetModal').modal();
@@ -298,6 +300,7 @@
 
       $scope.saveNewPassword = function() {
         var params = {
+          passwordOld: $scope.resetPasswordOld,
           password: $scope.resetPassword1,
           password2: $scope.resetPassword2
         };
@@ -313,10 +316,29 @@
               $scope.resetPassword2 = null;
               $('#passwordResetModal').modal('hide');
             }).error(function(data) {
-              alert('Error occurred while resetting password: ' +
-                  data.error.message);
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('resetPasswordError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
             });
 
+      };
+
+      /**
+       * Hide reset password button for LDAP auth or if the user in the session
+       * is not the same as the user edited.
+       *
+       * @returns {boolean}
+       */
+      $scope.hideResetPassword = function() {
+        if ((!$scope.userSelected) ||
+            (!$scope.userSelected.security)) {
+          return false;
+        }
+
+        return (($scope.userSelected.security.authtype == 'LDAP') ||
+            ($scope.userSelected.username !== $scope.user.username));
       };
 
       /**
