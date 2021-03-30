@@ -68,6 +68,7 @@
                               data-ng-model-options="modelOptions"
                               placeholder="{{'anyPlaceHolder' | translate}}"
                               data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
+                              data-typeahead-template-url="../../catalog/templates/gn-typeahead-match.html"
                               data-typeahead-loading="anyLoading" class="form-control"
                               data-typeahead-min-length="1">
 

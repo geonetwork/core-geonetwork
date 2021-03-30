@@ -21,6 +21,7 @@
               aria-label="{{'anyPlaceHolder' | translate}}"
               data-ng-keyup="$event.keyCode == 13 && goToSearch(homeAnyField)"
               data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
+              data-typeahead-template-url="../../catalog/templates/gn-typeahead-match.html"
               data-typeahead-loading="anyLoading"
               data-typeahead-min-length="1"
               data-typeahead-focus-first="false"
