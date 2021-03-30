@@ -584,4 +584,10 @@
           });
       });
   }]);
+
+  module.filter('sanitizeHtmlFilter', ['$filter', '$sanitize', function($filter, $sanitize) {
+    return function(input) {
+      return $sanitize(input);
+    }
+  }]);
 })();
