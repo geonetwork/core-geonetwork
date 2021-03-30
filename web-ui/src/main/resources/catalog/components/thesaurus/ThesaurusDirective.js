@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -568,13 +568,33 @@
       return {
         restrict: 'A',
         scope: {
-             fauxMultilingual: '@fauxMultilingual' // we are doing our own multi-lingual support
+          fauxMultilingual: '@fauxMultilingual', // we are doing our own multi-lingual support
+          resetValue: "@?" //value to set when we receive the `resetValue` event.
         },
         link: function(scope, element, attrs) {
+          // customId is a property used to identify the input elements created by this instance of
+          // the ThesaurusDirective. We can use it later in the resetValue event handler to retrieve
+          // only these autocomplete inputs in case the DOM structure doesn't fit with what is expected.
+          scope.customId = Date.now();
+          element.attr('customId', scope.customId);
+
           scope.thesaurusKey = attrs.thesaurusKey || '';
           scope.orderById = attrs.orderById || 'false';
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
           scope.fauxMultilingual = scope.fauxMultilingual==="true"; //default false
+
+
+          // respond to a parent asking me to reset
+          scope.$on('resetValue', function (event, data) {
+
+            setTimeout(function () {
+              element.parent().parent().find('input.tt-input[customId="' + scope.customId + '"]').each(function (index, item) {
+                var itemJQ = $(item);
+                itemJQ.typeahead('val', angular.isDefined(scope.resetValue) ? scope.resetValue : '');
+                itemJQ.triggerHandler('input'); //tell angular about value change
+              });
+            });
+          });
 
 
 

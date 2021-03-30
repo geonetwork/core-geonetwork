@@ -433,6 +433,29 @@
     .gn-attribution();
   }
 }
+#gn-addonlinesrc-description-row {
+  .form-control {
+    background: #fff !important;
+  }
+  .tt-menu {
+    top: auto !important;
+    width: calc(~"100% - 30px");
+    margin-left: 15px;
+  }
+  .twitter-typeahead .tt-menu {
+    width: 100%;
+    margin-left: 0;
+  }
+  .tt-menu + .twitter-typeahead {
+    display: none !important;
+  }
+  .tt-suggestion {
+    &:hover {
+      cursor: pointer;
+      background-color: @dropdown-link-hover-bg;
+    }
+  }
+}
 
 // alternative style for the editor form
 // Class to put label above fields
