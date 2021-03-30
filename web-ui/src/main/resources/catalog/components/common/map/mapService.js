@@ -939,7 +939,7 @@
               }
               var layer = this.createOlWMS(map, layerParam, {
                 url: url,
-                label: getCapLayer.Title,
+                label: getCapLayer.Title || getCapLayer.Name,
                 attribution: attribution,
                 attributionUrl: attributionUrl,
                 projection: projCode,
