@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -60,7 +60,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Test class for UsersApi.
  *
- * @author Jose García
  */
 public class UsersApiTest extends AbstractServiceIntegrationTest {
     @Autowired
@@ -412,7 +411,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .contentType(API_JSON_EXPECTED_ENCODING)
             .param("passwordOld", "testuser-editor-password-wrong")
             .param("password", "newpassword")
-            .param("password2", "newpassword2")
+            .param("password2", "newpassword")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.description", is("The old password is not valid")))
@@ -430,6 +429,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         // Check 404 is returned
         this.mockMvc.perform(post("/srv/api/users/" + userId + "/actions/forget-password")
             .contentType(API_JSON_EXPECTED_ENCODING)
+            .param("passwordOld", "oldpassword")
             .param("password", "newpassword")
             .param("password2", "newpassword")
             .session(this.mockHttpSession)
@@ -449,6 +449,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
             .contentType(API_JSON_EXPECTED_ENCODING)
+            .param("passwordOld", "testuser-editor-password")
             .param("password", "newpassword")
             .param("password2", "newpassword")
             .session(this.mockHttpSession)
