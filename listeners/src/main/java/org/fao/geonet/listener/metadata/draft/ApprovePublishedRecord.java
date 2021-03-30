@@ -98,7 +98,10 @@ public class ApprovePublishedRecord implements ApplicationListener<MetadataPubli
                     changeToApproved(event.getMd(), previousStatus);
                 }
 
-                draftUtilities.replaceMetadataWithDraft(publishedMd);
+                // Don't replace the approved version with the draft copy, when publishing the approved version
+                if (!(event.getMd() instanceof Metadata)) {
+                    draftUtilities.replaceMetadataWithDraft(publishedMd);
+                }
             }
         } catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, "Error upgrading workflow of " + event.getMd(), e);
