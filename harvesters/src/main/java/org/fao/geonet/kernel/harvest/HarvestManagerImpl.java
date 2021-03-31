@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.harvest;
 
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.apache.commons.lang.StringUtils;
@@ -89,9 +90,13 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     /** Harvester service context */
     private ServiceContext.AppHandlerServiceContext harvesterContext;
 
+    /** Read only mode */
     private boolean readOnly;
     private ConfigurableApplicationContext applicationContext;
+
+    /** Harvester available by id */
     private Map<String, AbstractHarvester> hmHarvesters = new HashMap<>();
+    /** Harvester lookup by uuid */
     private Map<String, AbstractHarvester> hmHarvestLookup = new HashMap<>();
 
     public ConfigurableApplicationContext getApplicationContext() {
@@ -107,7 +112,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     /**
      * initialize the manager.
      *
-     * @param context service context
+     * @param initContext service context
      * @throws Exception hmm
      */
     @Override
@@ -138,7 +143,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
                     try {
                         AbstractHarvester ah = AbstractHarvester.create(type, harvesterContext);
-                        ah.init(node, harvesterContext);
+                        ah.init(node);
                         hmHarvesters.put(ah.getID(), ah);
                         hmHarvestLookup.put(ah.getParams().getUuid(), ah);
                     } catch (OperationAbortedEx oae) {
@@ -237,8 +242,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         // TODO use a parameter in mask to avoid call again in base
         // and use it for call harvesterSettingsManager.get
         // don't forget to clean parameter when update or delete
-
-        Profile profile = context.getUserSession().getProfile();
+        Profile profile = context.getUserSession() == null ? Profile.Administrator : context.getUserSession().getProfile();
         if (id != null && !id.equals("-1")) {
             // you're an Administrator
             if (profile == Profile.Administrator) {
@@ -612,6 +616,13 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         this.readOnly = readOnly;
     }
 
+    /**
+     * Removes all the metadata associated with one harvester.
+     *
+     * @param id of the harvester
+     * @return {@link OperResult#OK} indicating removal of associated metadata.
+     * @throws Exception
+     */
     public synchronized OperResult clearBatch(String id) throws Exception {
         if (Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, "Clearing harvesting with id : " + id);
@@ -632,11 +643,13 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         elapsedTime = (System.currentTimeMillis() - elapsedTime) / 1000;
 
         // clear last run info
-        if(harvesterContext.getUserSession() != null ) {
-            // This is unexpected has harvesterContext is shared between threads that may
-            // by running in parallel
-            removeInfo(id, harvesterContext.getUserSession().getUserId());
+        ServiceContext context = ah.getContext();
+        if (context.getUserSession() != null ){
+            String userId = context.getUserSession().getUserId();
+            removeInfo(id,userId);
             ah.emptyResult();
+        } else {
+            throw new IllegalStateException("Unable to determine userId for harvester");
         }
 
         Element historyEl = new Element("result");

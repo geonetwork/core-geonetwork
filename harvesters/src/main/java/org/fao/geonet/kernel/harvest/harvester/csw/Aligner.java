@@ -111,9 +111,6 @@ public class Aligner extends BaseAligner<CswParams> {
     public Aligner(AtomicBoolean cancelMonitor, ServiceContext sc, CswServer server, CswParams params, Logger log) throws OperationAbortedEx {
         super(cancelMonitor);
         this.context = sc;
-        if(!(context instanceof ServiceContext.AppHandlerServiceContext)){
-            log.debug("Harvester expects to work with shared \"harvester\" service context, '"+context.getService()+"' provided.");
-        }
         this.params = params;
         this.log = log;
 

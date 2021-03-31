@@ -635,7 +635,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
     }
 
     /**
-     * Runs the harvester. In synchronous mode, waits for it to finish.
+     * Runs CSW harvester in synchronous mode, waiting for it to finish.
      *
      * @param harvester - the harvester
      * @param context   - everywhere in GN !
