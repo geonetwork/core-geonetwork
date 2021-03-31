@@ -83,6 +83,12 @@
           <i class="fa fa-fw fa-lock"></i>&nbsp;<span translate>unpublish</span>
         </a>
       </li>
+      <li  data-ng-show="!excludePattern.test('approve')"
+           data-ng-if="user.isReviewerOrMore() && isMdWorkflowEnable">
+        <a href="" data-ng-click="mdService.approve(searchResults.selectionBucket, getCatScope())">
+          <i class="fa fa-fw fa-thumbs-o-up"></i>&nbsp;<span translate>approve</span>
+        </a>
+      </li>
       <li  data-ng-show="!excludePattern.test('transferOwnership')"
            data-ng-if="user.isUserAdminOrMore()">
         <a href=""
