@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -84,7 +84,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(5)))
+            .andExpect(jsonPath("$", hasSize(6)))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
@@ -460,6 +460,74 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .andExpect(status().is(204));
     }
 
+    @Test
+    public void updateUserByUserAdminAllowed() throws Exception {
+        // User admin in Group test
+        User loginUser = _userRepo.findOneByUsername("testuser-useradmin-testgroup");
+        Assert.assertNotNull(loginUser);
+        // User to update in Group test
+        User userToUpdate = _userRepo.findOneByUsername("testuser-reviewer");
+        Assert.assertNotNull(userToUpdate);
+
+        UserDto user = new UserDto();
+        user.setId(String.valueOf(userToUpdate.getId()));
+        user.setUsername(userToUpdate.getUsername());
+        user.setName(userToUpdate.getName() + "-updated");
+        user.setProfile(userToUpdate.getProfile().toString());
+        user.setGroupsEditor(Collections.singletonList("2"));
+        user.setEmail(new ArrayList(userToUpdate.getEmailAddresses()));
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(loginUser);
+
+        this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
+            .content(json)
+            .contentType(API_JSON_EXPECTED_ENCODING)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(204));
+    }
+
+
+    @Test
+    public void updateUserByUserAdminNotAllowed() throws Exception {
+        // User admin in Group test
+        User loginUser = _userRepo.findOneByUsername("testuser-useradmin-testgroup");
+        Assert.assertNotNull(loginUser);
+        // User to update in Group sample
+        User userToUpdate = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull(userToUpdate);
+
+        UserDto user = new UserDto();
+        user.setId(String.valueOf(userToUpdate.getId()));
+        user.setUsername(userToUpdate.getUsername());
+        user.setName(userToUpdate.getName() + "-updated");
+        user.setProfile(userToUpdate.getProfile().toString());
+        user.setGroupsEditor(Collections.singletonList("2"));
+        user.setEmail(new ArrayList(userToUpdate.getEmailAddresses()));
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(loginUser);
+
+        this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
+            .content(json)
+            .contentType(API_JSON_EXPECTED_ENCODING)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(jsonPath("$.description", is("You don't have rights to do this")))
+            .andExpect(status().is(400));
+    }
+
 
     @Test
     public void updateUserDuplicatedUsername() throws Exception {
@@ -630,6 +698,9 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         UserGroup userGroupReviewer = new UserGroup().setGroup(testGroup)
             .setProfile(Profile.Editor).setUser(testUserReviewer);
         _userGroupRepo.save(userGroupReviewer);
+        userGroupReviewer = new UserGroup().setGroup(testGroup)
+            .setProfile(Profile.Reviewer).setUser(testUserReviewer);
+        _userGroupRepo.save(userGroupReviewer);
 
         // UserAdmin - Group sample
         User testUserUserAdmin = new User();
@@ -640,8 +711,21 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         _userRepo.save(testUserUserAdmin);
 
         UserGroup userGroupUserAdmin = new UserGroup().setGroup(sampleGroup)
-            .setProfile(Profile.Editor).setUser(testUserUserAdmin);
+            .setProfile(Profile.UserAdmin).setUser(testUserUserAdmin);
         _userGroupRepo.save(userGroupUserAdmin);
+
+        // UserAdmin - Test group
+        User testUserUserAdminForTestGroup = new User();
+        testUserUserAdminForTestGroup.setUsername("testuser-useradmin-testgroup");
+        testUserUserAdminForTestGroup.setProfile(Profile.UserAdmin);
+        testUserUserAdminForTestGroup.setEnabled(true);
+        testUserUserAdminForTestGroup.getEmailAddresses().add("test@mail.com");
+        _userRepo.save(testUserUserAdminForTestGroup);
+
+        UserGroup userGroupUserAdminForTestGroup = new UserGroup().setGroup(testGroup)
+            .setProfile(Profile.UserAdmin).setUser(testUserUserAdminForTestGroup);
+        _userGroupRepo.save(userGroupUserAdminForTestGroup);
+
 
         // User with same name different letter case
         User testUserEditor2 = new User();
