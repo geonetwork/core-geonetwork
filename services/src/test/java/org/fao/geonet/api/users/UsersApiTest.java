@@ -153,7 +153,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void deleteNonExistingUser() throws Exception {
-        User userToDelete = _userRepo.findOne(222);
+        User userToDelete = _userRepo.findOne(333);
         Assert.assertNull(userToDelete);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -161,7 +161,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Check 404 is returned
-        this.mockMvc.perform(delete("/srv/api/users/222")
+        this.mockMvc.perform(delete("/srv/api/users/333")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
@@ -399,7 +399,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
     public void resetPasswordNotExistingUser() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        String userId = "222";
+        String userId = "2222";
 
         this.mockHttpSession = loginAsAdmin();
 
