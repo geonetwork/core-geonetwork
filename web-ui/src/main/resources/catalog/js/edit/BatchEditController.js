@@ -4,9 +4,10 @@
   goog.require('gn_mdactions_service');
   goog.require('gn_search');
   goog.require('gn_search_form_controller');
+  goog.require('gn_utility_service');
 
   var module = angular.module('gn_batchedit_controller',
-      ['gn_search', 'gn_search_form_controller', 'gn_mdactions_service']);
+      ['gn_search', 'gn_search_form_controller', 'gn_mdactions_service', 'gn_utility_service']);
 
 
   /**
