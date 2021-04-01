@@ -828,7 +828,7 @@
 
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output,
-              appProfile);
+              appProfile, scope.fields);
             var layer = scope.layer;
 
             indexObject.pushState();

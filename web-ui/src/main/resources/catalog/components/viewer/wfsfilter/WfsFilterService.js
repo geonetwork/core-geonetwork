@@ -88,12 +88,13 @@
        * @param {string} name of the facet field
        * @param {*} value of the active filter
        * @param {string} type of the facet field (range, field etc..)
-       * @param {Object} fieldInfo field info taken from the application profile
+       * @param {Object} appFieldObj field info taken from the application profile
        * @param {string} tokenSeparator separator for tokenized fields; if defined, the field
        * is considered tokenized & the output filter will be `like '*value*'` instead of `= 'value'`
+       * @param {Object} valueTree value tree for hierarchical facets
        * @return {Array} an array containing the filters
        */
-      var buildSldFilter = function(name, value, type, fieldInfo, tokenSeparator) {
+      var buildSldFilter = function(name, value, type, appFieldObj, tokenSeparator, valueTree) {
         var filterFields = [];
 
         // Transforms date format: dd-MM-YYYY > YYYY-MM-dd (ISO)
@@ -102,15 +103,15 @@
         }
 
         // date range
-        if (type == 'rangeDate' && fieldInfo.minField && fieldInfo.maxField) {
+        if (type == 'rangeDate' && appFieldObj.minField && appFieldObj.maxField) {
           filterFields.push({
-            field_name: fieldInfo.maxField,
+            field_name: appFieldObj.maxField,
             filter: [{
               filter_type: 'PropertyIsGreaterThanOrEqualTo',
               params: [transformDate(value.from)]
             }]
           }, {
-            field_name: fieldInfo.minField,
+            field_name: appFieldObj.minField,
             filter: [{
               filter_type: 'PropertyIsLessThanOrEqualTo',
               params: [transformDate(value.to)]
@@ -237,9 +238,10 @@
        * @param {object} facetState represents the choices from the facet ui
        * @param {object} appProfile optional, application profile holding field
        * data
+       * @param {object} fields facet fields
        * @return {object} the sld config object
        */
-      this.createSLDConfig = function(facetState, appProfile) {
+      this.createSLDConfig = function(facetState, appProfile, fields) {
         var sldConfig = {
           filters: []
         };
@@ -253,6 +255,9 @@
             appProfile.fields.filter(function(field) {
               return field.name === fieldName;
             })[0];
+          var fieldObj = fields && fields.filter(function(field) {
+            return field.name.indexOf(fieldName) === 3;
+          })[0];
           var tokenSeparator = appProfile && appProfile.tokenizedFields &&
             appProfile.tokenizedFields[fieldName];
 
@@ -260,7 +265,7 @@
             attrValue.values : attrValue.value;
 
           Array.prototype.push.apply(sldConfig.filters,
-            buildSldFilter(fieldName, values, type, appProfileField, tokenSeparator)
+            buildSldFilter(fieldName, values, type, appProfileField, tokenSeparator, fieldObj && fieldObj.tree)
           );
         });
 
