@@ -128,14 +128,14 @@
                       <li data-ng-repeat="c in categories"
                           data-ng-show="filter.name === '_cat'">
                         <a href="" data-ng-click="filter.value = c.name">
-                          <span data-translate="">{{c.label[lang]}}</span>
+                          <span>{{c.label[lang]}}</span>
                         </a>
                       </li>
 
                       <li data-ng-repeat="g in groupsFilter | orderBy:sortByLabel"
                           data-ng-show="filter.name === '_groupPublished'">
                         <a href="" data-ng-click="filter.value = g.name">
-                          <span data-translate="">{{g.label[lang]|empty:g.name}}</span>
+                          <span>{{g.label[lang]|empty:g.name}}</span>
                         </a>
                       </li>
                     </ul>
