@@ -153,39 +153,20 @@
           });
         }
 
-        // strings
+        // hierarchical facet values
+        else if (type == 'terms' && valueTree) {
+          filterFields.push({
+            field_name: name,
+            filter: buildHierarchicalFacetSldFilters(value, valueTree, tokenSeparator)
+          });
+        }
+
+        // flat facet values
         else if (type == 'terms') {
           var filters = [];
 
           angular.forEach(value, function(v, k) {
-            if (tokenSeparator !== undefined) {
-              // handle 3 cases for a tokenized field: value is first, last or between both
-              filters.push({
-                filter_type: 'PropertyIsLike',
-                params: [k + tokenSeparator + '*']
-              }, {
-                filter_type: 'PropertyIsLike',
-                params: ['*' + tokenSeparator + k]
-              }, {
-                filter_type: 'PropertyIsLike',
-                params: ['*' + tokenSeparator + k + tokenSeparator + '*']
-              }, {
-                // PropertyIsEqualTo ne fonctionne pas sur les CLOB, remplace par un PropertyIsLike
-                filter_type: 'PropertyIsLike',
-                params: [k]
-              }
-
-
-              );
-            }
-            else {
-                filters.push({
-                  filter_type: 'PropertyIsEqualTo',
-                  params: [k]
-                });
-            }
-
-
+            Array.prototype.push.apply(filters, generateValueFilter(k, tokenSeparator));
           });
 
           filterFields.push({
@@ -232,6 +213,89 @@
         return filterFields;
       };
 
+      /**
+       * Generates an array of SLD filters for the value
+       * @param {string} value
+       * @param {string} tokenSeparator
+       * @return {[]}
+       */
+      var generateValueFilter = function(value, tokenSeparator) {
+        var filters = [];
+        if (tokenSeparator !== undefined) {
+          // handle 3 cases for a tokenized field: value is first, last or between both
+          filters.push({
+              filter_type: 'PropertyIsLike',
+              params: ['*' + tokenSeparator + value]
+            }, {
+              // PropertyIsEqualTo ne fonctionne pas sur les CLOB, remplace par un PropertyIsLike
+              filter_type: 'PropertyIsLike',
+              params: [value]
+            }
+          );
+          if (value.substr(-1, 1) !== '*') {
+            filters.push({
+                filter_type: 'PropertyIsLike',
+                params: [value + tokenSeparator + '*']
+              }, {
+                filter_type: 'PropertyIsLike',
+                params: ['*' + tokenSeparator + value + tokenSeparator + '*']
+              }
+            );
+          }
+        }
+        else {
+          filters.push({
+            filter_type: 'PropertyIsEqualTo',
+            params: [value]
+          });
+        }
+        return filters;
+      };
+
+      /**
+       * generates an array of filters for a hierarchical facet
+       */
+      var buildHierarchicalFacetSldFilters = function(value, valueTree, tokenSeparator) {
+        var checkedValues = Object.keys(value);
+        var filters = [];
+
+        function someChildrenChecked(node) {
+          return checkedValues.some(function (v) { return v.indexOf(node.key) === 0; });
+        }
+
+        function allChildrenChecked(node) {
+          if (!Array.isArray(node.nodes)) {
+            return checkedValues.indexOf(node.key) > -1;
+          }
+          return node.nodes.every(allChildrenChecked);
+        }
+
+        function generateFiltersForNode(node) {
+          if (!node.nodes) {
+            return checkedValues.indexOf(node.key) > -1 ? generateValueFilter(node.key, tokenSeparator) : [];
+          }
+
+          if (!someChildrenChecked(node)) {
+            return [];
+          }
+
+          if (allChildrenChecked(node)) {
+            return generateValueFilter(node.key + '/*', tokenSeparator);
+          }
+
+          var result = [];
+          for (var i = 0; i < node.nodes.length; i++) {
+            Array.prototype.push.apply(result, generateFiltersForNode(node.nodes[i]));
+          }
+          return result;
+        }
+
+        for (var i = 0; i < valueTree.nodes.length; i++) {
+          Array.prototype.push.apply(filters, generateFiltersForNode(valueTree.nodes[i]));
+        }
+
+        return filters;
+      };
 
       /**
        * Create the generateSLD service config from the facet ui state.
