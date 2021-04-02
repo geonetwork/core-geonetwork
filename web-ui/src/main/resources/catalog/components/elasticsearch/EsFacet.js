@@ -188,7 +188,8 @@
             'id',
             'uuid',
             'overview.*',
-            'resource*'
+            'resource*',
+            'link'
           ]
         }
       },
