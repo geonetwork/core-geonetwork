@@ -403,6 +403,7 @@ public class MetadataEditingApi {
             context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);
         }
       } finally {
+        context.clearAsThreadLocal();
         context.clear();
       }
     }
