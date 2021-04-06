@@ -106,17 +106,20 @@
 
   <xsl:variable name="finalEmodnetUuid">
     <xsl:if test="$isEmodnet">
-      <xsl:variable name="custodian"
-                    select="substring-after((
-                              //gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact/*[
+      <xsl:variable name="custodianUrl"
+                    select="//gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact/*[
                                 gmd:role/gmd:CI_RoleCode/@codeListValue = 'custodian']/
-                                @uuid)[1], 'n_code=')"/>
-      <!--<xsl:message>Emodnet uuid</xsl:message>
-      <xsl:message>HierarchyLevel: <xsl:value-of select="gmd:hierarchyLevelName/gco:CharacterString"/></xsl:message>
-      <xsl:message>Id: <xsl:value-of select="normalize-space(gmd:identificationInfo/*/gmd:citation/
-          */gmd:identifier/*/gmd:code/gco:CharacterString)"/></xsl:message>
-      <xsl:message>Custodian: <xsl:value-of select="$custodian"/> </xsl:message>
-      -->
+                                @uuid"/>
+      <xsl:variable name="custodian">
+        <xsl:choose>
+          <xsl:when test="substring-after($custodianUrl, 'n_code=') != ''">
+            <xsl:value-of select="substring-after($custodianUrl, 'n_code=')"></xsl:value-of>
+          </xsl:when>
+          <xsl:when test="substring-after($custodianUrl, 'edmo.seadatanet.org/report/') != ''">
+            <xsl:value-of select="substring-after($custodianUrl, 'edmo.seadatanet.org/report/')"></xsl:value-of>
+          </xsl:when>
+        </xsl:choose>
+      </xsl:variable>
       <xsl:variable name="emodnetUuid">
         <xsl:if test="
                   //gmd:MD_Metadata/gmd:hierarchyLevelName/* and
@@ -134,6 +137,16 @@
                       gmd:identifier/*/gmd:code/gco:CharacterString)"/>
         </xsl:if>
       </xsl:variable>
+
+      <!--
+      <xsl:message>HierarchyLevel: <xsl:value-of select="gmd:hierarchyLevelName/gco:CharacterString"/></xsl:message>
+      <xsl:message>Id: <xsl:value-of select="normalize-space(gmd:identificationInfo/*/gmd:citation/
+          */gmd:identifier/*/gmd:code/gco:CharacterString)"/></xsl:message>
+      <xsl:message>Custodian Url: <xsl:value-of select="$custodianUrl"/> </xsl:message>
+      <xsl:message>Custodian: <xsl:value-of select="$custodian"/> </xsl:message>
+      <xsl:message>Emodnet uuid: <xsl:value-of select="$emodnetUuid"/> </xsl:message>
+      -->
+
       <xsl:value-of select="if (normalize-space($emodnetUuid) != '')
                           then $emodnetUuid else /root/env/uuid"/>
 
