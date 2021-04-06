@@ -248,8 +248,8 @@
    *      Resource provider : user3@mail.com
    */
   module.directive('gnMetadataContacts', [
-    '$http', '$translate',
-    function($http, $translate) {
+    '$http', '$filter',
+    function($http, $filter) {
       return {
         templateUrl: '../../catalog/components/search/mdview/partials/' +
             'contact.html',
