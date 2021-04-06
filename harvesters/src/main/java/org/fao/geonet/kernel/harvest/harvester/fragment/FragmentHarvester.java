@@ -105,9 +105,6 @@ public class FragmentHarvester extends BaseAligner {
         super(cancelMonitor);
         this.log = log;
         this.context = context;
-        if(!(context instanceof ServiceContext.AppHandlerServiceContext)){
-            log.debug("Harvester expects to work with shared \"harvester\" service context, '"+context.getService()+"' provided.");
-        }
         this.params = params;
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

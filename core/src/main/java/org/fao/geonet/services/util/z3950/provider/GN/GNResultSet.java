@@ -66,9 +66,6 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
         super(observers);
         this.query = query;
         this.appHandlerContext = srvctx;
-        if(!(appHandlerContext instanceof ServiceContext.AppHandlerServiceContext)){
-            appHandlerContext.debug("Expects to work with shared \"harvester\" service context, '"+appHandlerContext.getService()+"' provided.");
-        }
 
         try {
 

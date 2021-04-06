@@ -101,9 +101,6 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
         super(cancelMonitor);
         this.log = log;
         this.context = context;
-        if(!(context instanceof ServiceContext.AppHandlerServiceContext)){
-            log.debug("Expects to work with shared \"harvester\" service context, '"+context.getService()+"' provided.");
-        }
         this.params = params;
 
         result = new HarvestResult();
