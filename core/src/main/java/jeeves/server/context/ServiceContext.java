@@ -205,8 +205,11 @@ public class ServiceContext extends BasicContext {
     };
     /**
      * Trace allocation via {@link #setAsThreadLocal()}.
+     * allocation   - who/where was this ServiceContext created
+     * deAllocation - who/where was this ServiceContext cleared (@link #clear()}
      */
     protected Throwable allocation = null;
+    protected Throwable deAllocation = null;
 
     protected UserSession _userSession = new UserSession();
     protected InputMethod _input;
@@ -448,6 +451,7 @@ public class ServiceContext extends BasicContext {
             this._responseHeaders = null;
             this._servlet = null;
             this._userSession = null;
+            deAllocation  = new Throwable("this ServiceContext was clear() here!");
         }
         else {
             debug("Service context unexpectedly cleared twice");
