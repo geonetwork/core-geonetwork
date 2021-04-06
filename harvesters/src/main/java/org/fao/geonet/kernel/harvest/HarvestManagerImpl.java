@@ -394,7 +394,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
      * Update on harvester progress.
      *
      * @param ownerId id of the user doing this
-     * @return true of harvester updated
+     * @return true if harvester updated
      */
     @Override
     public synchronized boolean update(Element node, String ownerId) throws BadInputEx, SQLException, SchedulerException {
@@ -585,6 +585,9 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     /**
      * Remove harvester information. For example, when records are removed, clean the last status
      * information if any.
+     *
+     * @param id harvester id
+     * @param ownerId
      */
     public void removeInfo(String id, String ownerId) throws Exception {
         // get the specified harvester from the settings table
@@ -644,14 +647,17 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
         // clear last run info
         ServiceContext context = ah.getContext();
-        if (context.getUserSession() != null ){
+        if (context.getUserSession() != null ) {
+            // Use user session if logged in
             String userId = context.getUserSession().getUserId();
-            removeInfo(id,userId);
+            removeInfo(id, userId);
             ah.emptyResult();
         } else {
-            throw new IllegalStateException("Unable to determine userId for harvester");
+            // Identify owner if not logged in
+            String userId = ah.getParams().getOwnerId();
+            removeInfo(id, userId);
+            ah.emptyResult();
         }
-
         Element historyEl = new Element("result");
         historyEl.addContent(new Element("cleared").
             setAttribute("recordsRemoved", numberOfRecordsRemoved + ""));

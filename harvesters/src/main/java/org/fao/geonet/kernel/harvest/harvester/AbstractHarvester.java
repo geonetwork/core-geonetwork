@@ -870,6 +870,11 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         return types[0];
     }
 
+    /**
+     * Harvester configuration.
+     *
+     * @return configuration, strongly typed
+     */
     public P getParams() {
         return params;
     }
