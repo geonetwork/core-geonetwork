@@ -96,7 +96,7 @@
                         "aggs": {
                           "schema": {
                             "terms": {
-                              "field": "schema.keyword",
+                              "field": "documentStandard",
                               "size": 10
                             }
                           }

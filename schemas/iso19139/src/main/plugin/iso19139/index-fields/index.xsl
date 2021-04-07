@@ -143,7 +143,6 @@
     <doc>
 
       <xsl:copy-of select="gn-fn-index:add-field('docType', 'metadata')"/>
-      <xsl:copy-of select="gn-fn-index:add-field('documentStandard', 'iso19139')"/>
 
       <!-- Index the metadata document as XML -->
       <document>

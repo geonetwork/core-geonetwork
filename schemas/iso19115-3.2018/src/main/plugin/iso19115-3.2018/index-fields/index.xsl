@@ -168,7 +168,6 @@
     <!-- Create a first document representing the main record. -->
     <doc>
       <xsl:copy-of select="gn-fn-index:add-field('docType', 'metadata')"/>
-      <xsl:copy-of select="gn-fn-index:add-field('documentStandard', 'iso19115-3.2018')"/>
       <!-- Index the metadata document as XML -->
       <document>
         <!--<xsl:value-of select="saxon:serialize(., 'default-serialize-mode')"/>-->
