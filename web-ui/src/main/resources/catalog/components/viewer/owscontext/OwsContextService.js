@@ -145,7 +145,6 @@
 
         if (map.getView().getProjection().getCode() != projection) {
           var view = new ol.View({
-            extent: extent,
             projection: projection
           });
           map.setView(view);

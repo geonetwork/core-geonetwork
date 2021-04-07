@@ -85,6 +85,7 @@ import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.w3c.dom.Node;
 
 import javax.annotation.Nonnull;
@@ -915,29 +916,40 @@ public final class XslUtil {
         return max;
     }
 
-    private static final Cache<String, Boolean> URL_VALIDATION_CACHE;
+    private static final Cache<String, Integer> URL_VALIDATION_CACHE;
 
     static {
-        URL_VALIDATION_CACHE = CacheBuilder.<String, Boolean>newBuilder().
+        URL_VALIDATION_CACHE = CacheBuilder.<String, Integer>newBuilder().
             maximumSize(100000).
             expireAfterAccess(25, TimeUnit.HOURS).
             build();
     }
 
-    public static boolean validateURL(final String urlString) throws ExecutionException {
-        return URL_VALIDATION_CACHE.get(urlString, new Callable<Boolean>() {
+    public static Integer getURLStatus(final String urlString) throws ExecutionException {
+        return URL_VALIDATION_CACHE.get(urlString, new Callable<Integer>() {
             @Override
-            public Boolean call() throws Exception {
+            public Integer call() throws Exception {
                 try {
-                    return (Integer.parseInt(getUrlStatus(urlString)) / 100 == 2);
+                    return Integer.parseInt(getUrlStatus(urlString));
                 } catch (Exception e) {
                     Log.info(Geonet.GEONETWORK,"validateURL: exception - ",e);
-                    return false;
+                    return -1;
                 }
             }
         });
     }
 
+    public static String getURLStatusAsString(final String urlString) throws ExecutionException {
+        Integer status = getURLStatus(urlString);
+        return status == -1 ? "UNKNOWN" :
+            String.format("%s (%d)",
+                HttpStatus.valueOf(status).name(), status);
+    }
+
+    public static boolean validateURL(final String urlString) throws ExecutionException {
+        Integer status = getURLStatus(urlString);
+        return status == -1 ? false : status / 100 == 2;
+    }
 
     /**
      * Utility method to retrieve the thesaurus dir from xsl processes.

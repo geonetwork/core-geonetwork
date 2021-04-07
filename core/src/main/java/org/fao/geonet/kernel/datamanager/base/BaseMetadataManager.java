@@ -200,7 +200,6 @@ public class BaseMetadataManager implements IMetadataManager {
     private UserSavedSelectionRepository userSavedSelectionRepository;
 
     private static final int METADATA_BATCH_PAGE_SIZE = 50000;
-    private String baseURL;
 
     @Autowired
     private ApplicationContext _applicationContext;
@@ -941,7 +940,7 @@ public class BaseMetadataManager implements IMetadataManager {
         } else {
             port = ":" + port;
         }
-        addElement(info, Edit.Info.Elem.BASEURL, protocol + "://" + host + port + baseURL);
+        addElement(info, Edit.Info.Elem.BASEURL, protocol + "://" + host + port + context.getBaseUrl());
         addElement(info, Edit.Info.Elem.LOCSERV, "/srv/en");
         return info;
     }
@@ -1011,6 +1010,9 @@ public class BaseMetadataManager implements IMetadataManager {
 
             // add original metadata to result
             Element result = new Element("root");
+            // Remove the 'geonet' namespace to avoid adding it to the
+            // processed elements in updated-fixed-info
+            md.removeNamespaceDeclaration(Geonet.Namespaces.GEONET);
             result.addContent(md);
             // add 'environment' to result
             env.addContent(new Element("siteURL").setText(settingManager.getSiteURL(context)));

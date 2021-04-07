@@ -1828,8 +1828,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
         // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
         List<String> SECURITY_FIELDS = Arrays.asList(
-            LuceneIndexField.OWNER,
-            LuceneIndexField.GROUP_OWNER);
+            LuceneIndexField.OWNER);
 
         BooleanQuery bq;
         if (q instanceof BooleanQuery) {

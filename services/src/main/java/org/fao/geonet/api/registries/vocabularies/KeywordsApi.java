@@ -23,32 +23,20 @@
 
 package org.fao.geonet.api.registries.vocabularies;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
+import java.io.*;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.sf.json.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -111,6 +99,8 @@ import io.swagger.annotations.ApiResponses;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
+
+import net.sf.json.JSON;
 
 
 /**
@@ -387,6 +377,11 @@ public class KeywordsApi {
             required = false)
         @RequestParam (required = false)
             String transformation,
+        @ApiParam(
+            value = "langMap, that converts the values in the 'lang' parameter to how they will be actually represented in the record. {'fre':'fra'} or {'fre':'fr'}.  Missing/empty means to convert to iso 2 letter.",
+            required = false)
+        @RequestParam (name = "langMap", required = false)
+            String  langMapJson,
         @ApiIgnore
         @RequestParam
             Map<String,String> allRequestParams,
@@ -402,7 +397,7 @@ public class KeywordsApi {
         String[] iso3langCodes = Arrays.copyOf(langs, langs.length);
         for (int i = 0; i < langs.length; i++) {
             if (StringUtils.isNotEmpty(langs[i])) {
-                langs[i] = mapper.iso639_2_to_iso639_1(langs[i], langs[i].substring(2));
+                langs[i] = mapper.iso639_2_to_iso639_1(langs[i], langs[i].substring(0,2));  //default: fra -> fr
             }
         }
 
@@ -416,30 +411,50 @@ public class KeywordsApi {
             KeywordsSearcher searcher = new KeywordsSearcher(context, thesaurusManager);
 
             KeywordBean kb;
+            String[] url;
             if (!uri.contains(SEPARATOR)) {
-                kb = searcher.searchById(uri, sThesaurusName, langs);
+                url = new String[]{uri};
+            }
+            else {
+                url = uri.split(SEPARATOR);
+            }
+            List<KeywordBean> kbList = new ArrayList<>();
+            for (String currentUri : url) {
+                kb = searcher.searchById(currentUri, sThesaurusName, iso3langCodes);
                 if (kb == null) {
-                    descKeys = new Element("descKeys");
-                } else {
-                    descKeys = KeywordsSearcher.toRawElement(new Element("descKeys"), kb);
-                }
-            } else {
-                String[] url = uri.split(SEPARATOR);
-                List<KeywordBean> kbList = new ArrayList<>();
-                for (String currentUri : url) {
                     kb = searcher.searchById(currentUri, sThesaurusName, langs);
-                    if (kb == null)
-                        kb = searcher.searchById(fixUri(currentUri), sThesaurusName, langs);
-                    if (kb != null) {
-                        kbList.add(kb);
-                    }
                 }
-                descKeys = new Element("descKeys");
-                for (KeywordBean keywordBean : kbList) {
-                    KeywordsSearcher.toRawElement(descKeys, keywordBean);
+                if (kb == null) {
+                    kb = searcher.searchById(ApiUtils.fixURIFragment(currentUri), sThesaurusName, iso3langCodes);
+                }
+                if (kb == null) {
+                    kb = searcher.searchById(ApiUtils.fixURIFragment(currentUri), sThesaurusName, langs);
+                }
+                if (kb != null) {
+                    kbList.add(kb);
                 }
             }
+            descKeys = new Element("descKeys");
+            for (KeywordBean keywordBean : kbList) {
+                KeywordsSearcher.toRawElement(descKeys, keywordBean);
+            }
         }
+
+       Element langConversion = null;
+        if ( (langMapJson != null) && (!langMapJson.isEmpty()) ){
+            JSONObject obj = JSONObject.fromObject(langMapJson);
+            langConversion = new Element("languageConversions");
+            for(Object entry : obj.entrySet()) {
+                String key = ((Map.Entry) entry).getKey().toString();
+                String value = ((Map.Entry) entry).getValue().toString();
+                Element conv = new Element("conversion");
+                conv.setAttribute("from",key.toString());
+                conv.setAttribute("to",value.toString().replace("#",""));
+                langConversion.addContent(conv);
+            }
+
+        }
+
 
         Path convertXsl = dataDirectory.getWebappDir().resolve("xslt/services/thesaurus/convert.xsl");
 
@@ -461,6 +476,9 @@ public class KeywordsApi {
                 requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
             }
         }
+        if (langConversion != null) {
+            requestParams.addContent(langConversion);
+        }
 
         root.addContent(requestParams);
         root.addContent(descKeys);
@@ -472,14 +490,6 @@ public class KeywordsApi {
         return transform;
     }
 
-    // fixes common problems in uri
-    private String fixUri(String uri) throws URISyntaxException {
-        // We could be smarter about this.
-        // ie. by breaking string at "#" and then urlencode the left part.
-        //     However, the rdf files could be inconsistent with
-        //     other characters like ":" (i.e. should not be url encoded)
-        return uri.replace(" ","%20");
-    }
 
     /**
      * Gets the thesaurus.

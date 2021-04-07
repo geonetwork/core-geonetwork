@@ -194,7 +194,7 @@
             scope.currentUILang = gnCurrentEdit.allLanguages.iso2code[gnLangs.detectLang(
                           gnGlobalSettings.gnCfg.langDetector,
                           gnGlobalSettings
-                        )].substring(1);
+                        )].replace("#","");
             scope.root_id = scope.config.root_id;
             scope.refs = scope.config.refs;
             scope.element = element;

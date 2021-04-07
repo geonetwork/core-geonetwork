@@ -14,14 +14,16 @@
         <!-- Check specification names and status -->
         <sch:rule context="//gmd:linkage//gmd:URL[starts-with(text(), 'http')]">
 
+            <sch:let name="status" value="xslutil:getURLStatusAsString(text())" />
             <sch:let name="isValidUrl" value="xslutil:validateURL(text())" />
             <sch:assert test="$isValidUrl = true()">
                 <sch:value-of select="$loc/strings/alert.invalidURL/div" />
-                '<sch:value-of select="string(.)" />'
+                <sch:value-of select="$status"/> -
+                <sch:value-of select="string(.)"/>
             </sch:assert>
             <sch:report test="$isValidUrl = true()">
                 <sch:value-of select="$loc/strings/alert.validURL/div" />
-                '<sch:value-of select="string(.)" />'
+                '<sch:value-of select="string(.)"/>'
             </sch:report>
         </sch:rule>
     </sch:pattern>

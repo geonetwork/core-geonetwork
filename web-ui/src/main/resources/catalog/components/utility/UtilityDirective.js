@@ -751,8 +751,8 @@
    * the element to indicate the status
    * collapsed or expanded.
    */
-  module.directive('gnSlideToggle', [
-    function() {
+  module.directive('gnSlideToggle', ["$timeout",
+    function($timeout) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -779,7 +779,9 @@
             });
           });
           if (attrs['gnSlideToggle'] == 'true') {
-            element.click();
+            $timeout(function() {
+                 element.click();
+            },0); //this needs to be done after the DOM is updated
           }
         }
       };

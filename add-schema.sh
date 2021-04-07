@@ -103,3 +103,27 @@ then
 \                </resource>
 SED_SCRIPT
 fi
+
+# Add schema resources in service/pom.xml with test scope for unit tests
+line=$(grep -n "<artifactId>schema-${schema}</artifactId>" services/pom.xml | cut -d: -f1)
+
+if [ ! $line ]
+then
+  line=$(grep -n '</dependencies>' services/pom.xml | cut -d: -f1)
+  finalLine=$(($line - 1))
+
+  projectGroupId='${project.groupId}'
+  gnSchemasVersion='${gn.schemas.version}'
+
+  echo "Adding schema ${schema} resources to service/pom.xml"
+
+  sed $sedopt -f /dev/stdin services/pom.xml << SED_SCRIPT
+  ${finalLine} a\\
+\    <dependency>\\
+\      <groupId>${projectGroupId}</groupId>\\
+\      <artifactId>schema-${schema}</artifactId>\\
+\      <version>${gnSchemasVersion}</version>\\
+\      <scope>test</scope>\\
+\    </dependency>
+SED_SCRIPT
+fi
