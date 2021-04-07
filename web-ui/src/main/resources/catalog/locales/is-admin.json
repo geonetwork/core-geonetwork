@@ -908,7 +908,6 @@
     "system/server/host-help": "Hýsitölva og tengi vefþjónsins eru notuð til að búa til URL fyrir GeoNetwork þjóninn. Til dæmis eru þau notuð við breytingu lýsigagna til að búa til tilfangatengla og þegar það er horfið aftur til hlutgengi vefþjóns á meðan unnið er úr CS/W beiðni.",
     "system/server/port": "Gátt",
     "system/server/protocol": "Valdar Samskiptareglur",
-    "system/server/securePort": "Öruggt Port",
     "system/server/log": "Ferlistig",
     "system/server/timeZone": "Timezone",
     "system/server/timeZone-help": "<b>Currently used only in the harvesters</b>. Sets the timezone used to interpret the time in cron expression specified in the harvesters Frequency field. If not set the JVM default timezone will be used. GeoNetwork uses the timezone definitions available in the JVM. Time zones definitions can change frequently. Please keep updated your JVM to get the latest timezones definition or use the tzupdater tool available for download from the <a href='http://www.oracle.com/technetwork/java/javase/downloads/index.html' target='_blank'>Java SE Download Page</a>.",

@@ -844,7 +844,6 @@
     "system/server/host-help": "The server's host and port are used to create URLs to the GeoNetwork server. For example, they are used during metadata editing to create resource links and when returning the server's capabilities during a CS/W request.",
     "system/server/port": "端口",
     "system/server/protocol": "Preferred Protocol",
-    "system/server/securePort": "Secure Port",
     "system/server/log": "Log level",
     "system/site": "Catalog description",
     "system/site/name": "Catalog name",
