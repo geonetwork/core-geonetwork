@@ -199,20 +199,9 @@
             </li>
           </ul>
         </li>
-        <li class="open signin-dropdown"
-            data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && isShowLoginAsLink">
-          <a href="{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign | encodeURIComponent}}"
-             title="{{'signIn'|translate}}"
-             class="gn-menuheader-xs"
-             data-ng-keypress="$event"
-             id="signinLink">
-            <span class="fa fa-fw fa-sign-in hidden-sm"></span>
-            {{'signIn' | translate}}
-          </a>
-        </li>
         <!-- not logged in -->
         <li class="dropdown signin-dropdown"
-          data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !isShowLoginAsLink && !isDisableLoginForm">
+          data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && (!shibbolethEnabled || (shibbolethEnabled && !shibbolethHideLogin))">
           <a href="{{gnCfg.mods.authentication.signinUrl | signInLink}}"
              title="{{'signIn'|translate}}"
              class="dropdown-toggle gn-menuheader-xs"
@@ -282,13 +271,36 @@
               <a class="btn btn-default" href="new.account" data-translate="">createAnAccount</a>
             </li>
             <li role="separator" class="divider hidden-xs" data-ng-show="isHostDefined()"></li>
-            <li data-ng-show="isHostDefined()" class="gn-margin-bottom">
+            <li data-ng-show="isHostDefined()">
               <!-- forgot password -->
               <b data-translate="">forgetDetails</b>
+<!--                <span data-ng-show="sendPassword === false">-->
               <span>
                 <p data-translate="">forgetDetailsInfo</p>
-                <a class="btn btn-default btn-block" href="catalog.signin?showforgotpassword=true" data-translate="">recoverPassword</a>
+                <button type="submit" class="btn btn-default btn-block" data-ng-click="setSendPassword(true)">
+                  <span data-translate="">recoverPassword</span>
+                </button>
               </span>
+
+              <div data-ng-show="sendPassword === true">
+                <form class="form-horizontal" id="userinfo" name="gnUserinfo">
+                  <input type="hidden" name="_csrf" value="{{csrf}}"/>
+                  <div class="form-group">
+                    <label data-translate="">username</label>
+                    <input type="text" name="username" id="username"
+                           aria-label="{{'username' | translate}}"
+                           data-ng-model="usernameToRemind"
+                           data-ng-required="" class="form-control"/>
+                  </div>
+                  <button type="submit"
+                          class="btn btn-default btn-block"
+                          data-ng-disabled="usernameToRemind == ''"
+                          data-ng-click="remindMyPassword('#userinfo')">
+                    <i class="fa fa-question-sign"/>
+                    <span data-translate="">sendPasswordLinkToMyEmail</span>
+                  </button>
+                </form>
+              </div>
             </li>
           </ul>
         </li>
@@ -296,6 +308,7 @@
 
       <form class="navbar-form language-switcher pull-right">
         <span class="gn-menuheader-xs visible-xs"
+              data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && (!shibbolethEnabled || (shibbolethEnabled && !shibbolethHideLogin))"
               data-translate="">language</span>
         <div class="form-group"
             data-gn-language-switcher="lang"
