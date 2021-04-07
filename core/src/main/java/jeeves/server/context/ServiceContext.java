@@ -205,10 +205,16 @@ public class ServiceContext extends BasicContext {
     };
     /**
      * Trace allocation via {@link #setAsThreadLocal()}.
-     * allocation   - who/where was this ServiceContext created
-     * deAllocation - who/where was this ServiceContext cleared (@link #clear()}
+     *
+     * Recording where the service context was assigned to the thread local to aid in debugging.
      */
     protected Throwable allocation = null;
+
+    /**
+     * Trace deallocation via {@link #clear()} method.
+     *
+     * Recording where the service context clear() was called to aid in debugging.
+     */
     protected Throwable deAllocation = null;
 
     protected UserSession _userSession = new UserSession();
@@ -301,7 +307,7 @@ public class ServiceContext extends BasicContext {
             // step two ensure ApplicationContextHolder thread local kept in sync
             ApplicationContextHolder.set(this.getApplicationContext());
             // step three details on allocation
-            allocation = new Throwable("ServiceContext allocated to thread");
+            allocation = new Throwable("ServiceContext "+_service+" allocated to thread");
 
             return;
         }
@@ -320,7 +326,7 @@ public class ServiceContext extends BasicContext {
             }
             ApplicationContextHolder.set(this.getApplicationContext());
             // step three detail on re-allocation
-            allocation = new Throwable("ServiceContext allocated to thread");
+            allocation = new Throwable("ServiceContext "+_service+" allocated to thread");
 
             unexpected += "\n\tService '"+_service+"' allocate: " + allocation.getStackTrace()[1];
             checkUnexpectedState( unexpected );
@@ -345,10 +351,22 @@ public class ServiceContext extends BasicContext {
         }
         ApplicationContextHolder.set(this.getApplicationContext());
         // step three detail on present re-allocation
-        allocation = new Throwable("ServiceContext allocated to thread");
+        allocation = new Throwable("ServiceContext "+_service+" allocated to thread");
 
         unexpected += "\n\tService '"+_service+"' allocate: " + allocation.getStackTrace()[1];
         checkUnexpectedState( unexpected );
+    }
+
+    /**
+     * Check if _service name is available, or raise a NullPointerException if clear() has already been called.
+     *
+     * @param message message to use if clear() has already been called.
+     */
+    protected void checkCleared(String message){
+        if( _service == null){
+            String unavailable = message + " - service context no longer available\nCleared by " + deAllocation.getStackTrace()[1];
+            throw new NullPointerException(unavailable);
+        }
     }
 
     /** Log or raise exception based on {@link POLICY} */
@@ -446,15 +464,15 @@ public class ServiceContext extends BasicContext {
      */
     public void clear(){
         if( this._service != null) {
+            deAllocation  = new Throwable("ServiceContext "+_service+" cleared");
             this._service =  null;
             this._headers = null;
             this._responseHeaders = null;
             this._servlet = null;
             this._userSession = null;
-            deAllocation  = new Throwable("this ServiceContext was clear() here!");
         }
         else {
-            debug("Service context unexpectedly cleared twice");
+            debug("Service context unexpectedly cleared twice, previously cleared by "+deAllocation.getStackTrace()[1]);
         }
     }
 
@@ -469,9 +487,7 @@ public class ServiceContext extends BasicContext {
      * @return language code, or <code>"?"</code> if undefined.
      */
     public String getLanguage() {
-        if (_service == null ){
-            //throw new NullPointerException("Service context cleared, language not available");
-        }
+        // checkCleared("language not available");
         return _language;
     }
     /**
@@ -505,9 +521,7 @@ public class ServiceContext extends BasicContext {
      * @return ip address, or <code>"?"</code> for loopback request.
      */
     public String getIpAddress() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, ip address not available");
-        }
+        checkCleared("ip address not available");
         return _ipAddress;
     }
 
@@ -525,9 +539,7 @@ public class ServiceContext extends BasicContext {
     }
 
     public int getMaxUploadSize() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, max upload size not available");
-        }
+        checkCleared("max upload size not available");
         return _maxUploadSize;
     }
 
@@ -541,9 +553,7 @@ public class ServiceContext extends BasicContext {
      * @return the user session stored on httpsession
      */
     public UserSession getUserSession() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, user session not available");
-        }
+        checkCleared("user session not available");
         return _userSession;
     }
 
@@ -575,9 +585,7 @@ public class ServiceContext extends BasicContext {
     //--------------------------------------------------------------------------
 
     public InputMethod getInputMethod() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, input method not available");
-        }
+        checkCleared("input method not available");
         return _input;
     }
 
@@ -586,9 +594,7 @@ public class ServiceContext extends BasicContext {
     }
 
     public OutputMethod getOutputMethod() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, input method not available");
-        }
+        checkCleared("output method not available");
         return _output;
     }
 
@@ -597,9 +603,7 @@ public class ServiceContext extends BasicContext {
     }
 
     public Map<String, String> getStartupErrors() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, output method not available");
-        }
+        checkCleared("startup errors not available");
         return _startupErrors;
     }
 
@@ -609,9 +613,7 @@ public class ServiceContext extends BasicContext {
     }
 
     public boolean isStartupError() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, startup error not available");
-        }
+        checkCleared("is startup error not available");
         return _startupError;
     }
 
@@ -637,9 +639,7 @@ public class ServiceContext extends BasicContext {
      * @return The map of headers from the request
      */
     public Map<String, String> getHeaders() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, headers not available");
-        }
+        checkCleared("headers not available");
         return _headers;
     }
 
@@ -655,9 +655,7 @@ public class ServiceContext extends BasicContext {
     }
 
     public JeevesServlet getServlet() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, servlet not available");
-        }
+        checkCleared("servlet not available");
         return _servlet;
     }
 
