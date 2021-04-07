@@ -27,7 +27,7 @@
   <div id="navbar" class="navbar-accessible navbar-collapse collapse">
     <ul class="nav navbar-nav gn-menu-xs" role="menu">
       <li class="clearfix hidden-xs" data-ng-if="gnCfg.mods.home.enabled">
-        <a class="pull-left gn-logo-link" 
+        <a class="pull-left gn-logo-link"
            data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <img class="gn-logo"
                data-ng-hide="{{gnCfg.mods.header.isLogoInHeader}}"
@@ -148,7 +148,7 @@
 
     <div class="navbar-right">
       <ul data-ng-if="gnCfg.mods.signin.enabled"
-          class="nav navbar-nav username-dropdown">
+          class="nav navbar-nav username-dropdown accessible-dropdown">
         <!-- logged in -->
         <li class="dropdown" data-ng-show="authenticated">
           <a title="{{'userDetails' | translate}}"
@@ -214,11 +214,11 @@
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
-            <li role="menuitem">
-              <form name="gnSigninForm" class="navbar-form flex-row"
-                action="{{signInFormAction}}" method="post" role="form">
-                <input type="hidden" name="_csrf" value="{{csrf}}"/>
-                <div class="form-group form-group-sm">
+            <form name="gnSigninForm" class="navbar-form"
+                  action="{{signInFormAction}}" method="post" role="form">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+              <li role="menuitem">
+                <div class="form-group">
                   <div class="input-group">
                     <span class="input-group-addon">
                       <span class="fa fa-fw fa-user"></span>
@@ -234,8 +234,9 @@
                           required=""/>
                   </div>
                 </div>
-                <div class="flex-spacer hidden-xs"></div>
-                <div class="form-group form-group-sm">
+              </li>
+              <li role="menuitem">
+                <div class="form-group">
                   <div class="input-group">
                     <span class="input-group-addon">
                       <span class="fa fa-fw fa-lock"></span>
@@ -251,16 +252,55 @@
                           required=""/>
                   </div>
                 </div>
-                <div class="flex-spacer hidden-xs"></div>
-
-                <input type="hidden" name="redirectUrl" value="{{redirectUrlAfterSign}}"/>
-
-                <button type="submit" class="btn btn-primary btn-sm pull-right"
+              </li>
+              <input type="hidden" name="redirectUrl" value="{{redirectUrlAfterSign}}"/>
+              <li role="menuitem">
+                <button type="submit" class="btn btn-primary btn-block"
                         aria-label="{{'signIn' | translate}}"
                         data-ng-disabled="!gnSigninForm.$valid">
                   <span class="fa fa-sign-in"></span>
+                  <span translate="">signIn</span>
                 </button>
-              </form>
+              </li>
+            </form>
+            <!-- register -->
+            <li role="separator" class="divider hidden-xs" data-ng-show="isSelfRegisterPossible()"></li>
+            <li role="menuitem" data-ng-show="isSelfRegisterPossible()">
+              <b data-translate="">needAnAccount</b>
+              <p data-translate="">needAnAccountInfo</p>
+              <a class="btn btn-default" href="new.account" data-translate="">createAnAccount</a>
+            </li>
+            <li role="separator" class="divider hidden-xs" data-ng-show="isHostDefined()"></li>
+            <li data-ng-show="isHostDefined()">
+              <!-- forgot password -->
+              <b data-translate="">forgetDetails</b>
+<!--                <span data-ng-show="sendPassword === false">-->
+              <span>
+                <p data-translate="">forgetDetailsInfo</p>
+                <button type="submit" class="btn btn-default btn-block" data-ng-click="setSendPassword(true)">
+                  <span data-translate="">recoverPassword</span>
+                </button>
+              </span>
+
+              <div data-ng-show="sendPassword === true">
+                <form class="form-horizontal" id="userinfo" name="gnUserinfo">
+                  <input type="hidden" name="_csrf" value="{{csrf}}"/>
+                  <div class="form-group">
+                    <label data-translate="">username</label>
+                    <input type="text" name="username" id="username"
+                           aria-label="{{'username' | translate}}"
+                           data-ng-model="usernameToRemind"
+                           data-ng-required="" class="form-control"/>
+                  </div>
+                  <button type="submit"
+                          class="btn btn-default btn-block"
+                          data-ng-disabled="usernameToRemind == ''"
+                          data-ng-click="remindMyPassword('#userinfo')">
+                    <i class="fa fa-question-sign"/>
+                    <span data-translate="">sendPasswordLinkToMyEmail</span>
+                  </button>
+                </form>
+              </div>
             </li>
           </ul>
         </li>
