@@ -118,9 +118,11 @@ public class MetadataValidateApi {
             @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
             @ApiParam(value = "Validation status. Should be provided only in case of SUBTEMPLATE validation. If provided for another type, throw a BadParameter Exception", required = false) @RequestParam(required = false) Boolean isvalid,
             HttpServletRequest request, @ApiParam(hidden = true) @ApiIgnore HttpSession session) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
+      try {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
+        ApplicationContext appContext = ApplicationContextHolder.get();
+
         DataManager dataManager = appContext.getBean(DataManager.class);
 
         String id = String.valueOf(metadata.getId());
@@ -228,6 +230,10 @@ public class MetadataValidateApi {
                             .publish(appContext);
         }
         return response;
+      } finally {
+          context.clearAsThreadLocal();
+          context.clear();
+      }
     }
 
     public static final String EL_ACTIVE_PATTERN = "active-pattern";
@@ -239,7 +245,7 @@ public class MetadataValidateApi {
 
     /**
      * Schematron report has an odd structure:
-     * 
+     *
      * <pre>
      * <code>
      * &lt;svrl:active-pattern  ... />
@@ -250,7 +256,7 @@ public class MetadataValidateApi {
      * </pre>
      * <p/>
      * This method restructures the xml to be:
-     * 
+     *
      * <pre>
      * <code>
      * &lt;svrl:active-pattern  ... >

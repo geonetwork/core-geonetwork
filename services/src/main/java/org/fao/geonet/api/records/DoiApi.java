@@ -104,13 +104,17 @@ public class DoiApi {
         @ApiIgnore
             HttpServletRequest request
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+      try {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid,serviceContext);
 
         final Map<String, Boolean> reportStatus = doiManager.check(serviceContext, metadata, null);
         return new ResponseEntity<>(reportStatus, HttpStatus.OK);
+      } finally {
+        serviceContext.clearAsThreadLocal();
+        serviceContext.clear();
+      }
     }
-
 
     @ApiOperation(
         value = "Submit a record to the Datacite metadata store in order to create a DOI.",
@@ -143,11 +147,16 @@ public class DoiApi {
         @ApiIgnore
             HttpSession session
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+      try {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid,serviceContext);
 
         Map<String, String> doiInfo = doiManager.register(serviceContext, metadata);
         return new ResponseEntity<>(doiInfo, HttpStatus.CREATED);
+      } finally {
+        serviceContext.clearAsThreadLocal();
+        serviceContext.clear();
+      }
     }
 
 //    Do not provide support for DOI removal ?
@@ -181,11 +190,16 @@ public class DoiApi {
         @ApiIgnore
             HttpSession session
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+      try {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid,serviceContext);
 
         doiManager.unregisterDoi(metadata, serviceContext);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      } finally {
+          serviceContext.clearAsThreadLocal();
+          serviceContext.clear();
+      }
     }
 
 

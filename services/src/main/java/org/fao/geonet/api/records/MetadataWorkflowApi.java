@@ -220,10 +220,10 @@ public class MetadataWorkflowApi {
     public MetadataWorkflowStatusResponse getStatus(
             @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
             HttpServletRequest request) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ApplicationContext appContext = ApplicationContextHolder.get();
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
+      try {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
 
         // --- only allow the owner of the record to set its status
         if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
@@ -246,7 +246,10 @@ public class MetadataWorkflowApi {
         }
         return new MetadataWorkflowStatusResponse(recordStatus, listOfReviewers,
                 accessManager.hasEditPermission(context, metadata.getId() + ""), elStatus);
-
+      } finally {
+        context.clearAsThreadLocal();
+        context.clear();
+      }
     }
 
     @ApiOperation(value = "Set the record status", notes = "", nickname = "setStatus")
@@ -259,10 +262,10 @@ public class MetadataWorkflowApi {
     public void setStatus(@ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
             @ApiParam(value = "Metadata status", required = true) @RequestBody(required = true) MetadataStatusParameter status,
             HttpServletRequest request) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request,
                 languageUtils.getIso3langCode(request.getLocales()));
-
+      try {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
 
         if (!isMdWorkflowEnable) {
@@ -301,6 +304,10 @@ public class MetadataWorkflowApi {
 
         // --- reindex metadata
         metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, null);
+      } finally {
+        context.clearAsThreadLocal();
+        context.clear();
+      }
     }
 
     @ApiOperation(value = "Close a record task", notes = "", nickname = "closeTask")
@@ -542,20 +549,21 @@ public class MetadataWorkflowApi {
         // Try to get previous state text this will also check to ensure that user is allowed to access the data.
         String previousStateText = getValidatedStateText(metadataStatus, State.BEFORE, request, httpSession);
 
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
+      try {
+
         // For cases where the records was not deleted, we will attempt to get the metadata record.
         // If it remains as null then the record did not exists and this is a recovery.
         AbstractMetadata metadata;
         try {
-            metadata = ApiUtils.canEditRecord(metadataStatus.getUuid(), request);
+            metadata = ApiUtils.canEditRecord(metadataStatus.getUuid(), context);
         } catch (ResourceNotFoundException e) {
             // resource not found so lets set it to null;
             metadata = null;
         }
 
         // Begin the recovery
-        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
-
         // If not a recovery from delete then get the before state
         Element beforeMetadata = null;
         String xmlBefore = null;
@@ -604,6 +612,10 @@ public class MetadataWorkflowApi {
             String xmlAfter = outp.outputString(afterMetadata);
             new RecordRestoredEvent(recoveredMetadataId, metadataStatus.getUuid(), session.getUserIdAsInt(), xmlBefore, xmlAfter, metadataStatus).publish(applicationContext);
         }
+      } finally {
+        context.clearAsThreadLocal();
+        context.clear();
+      }
     }
 
     /**

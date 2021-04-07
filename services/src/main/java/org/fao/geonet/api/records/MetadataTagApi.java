@@ -34,6 +34,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -163,7 +164,9 @@ public class MetadataTagApi {
             boolean clear,
         HttpServletRequest request
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        ServiceContext context = ApiUtils.createServiceContext(request);
+      try {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         ApplicationContext appContext = ApplicationContextHolder.get();
         Set<MetadataCategory> before = metadata.getCategories();
 
@@ -176,7 +179,7 @@ public class MetadataTagApi {
             final MetadataCategory category = categoryRepository.findOne(c);
             if (category != null) {
                 dataManager.setCategory(
-                    ApiUtils.createServiceContext(request),
+                    context,
                     String.valueOf(metadata.getId()), String.valueOf(c));
             } else {
                 throw new ResourceNotFoundException(String.format(
@@ -187,10 +190,19 @@ public class MetadataTagApi {
 
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
 
-        metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        metadata = ApiUtils.canEditRecord(metadataUuid, context);
         Set<MetadataCategory> after = metadata.getCategories();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
-        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
+        new RecordCategoryChangeEvent(
+            metadata.getId(),
+            userSession.getUserIdAsInt(),
+            ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD),
+            ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)
+        ).publish(appContext);
+      } finally {
+          context.clearAsThreadLocal();
+          context.clear();
+      }
 
     }
 
@@ -222,7 +234,9 @@ public class MetadataTagApi {
             Integer[] id,
         HttpServletRequest request
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        ServiceContext context = ApiUtils.createServiceContext(request);
+      try {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         ApplicationContext appContext = ApplicationContextHolder.get();
         Set<MetadataCategory> before = metadata.getCategories();
 
@@ -234,18 +248,26 @@ public class MetadataTagApi {
         if (id != null) {
             for (int c : id) {
                 dataManager.unsetCategory(
-                    ApiUtils.createServiceContext(request),
+                    context,
                     String.valueOf(metadata.getId()), c);
             }
         }
 
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
 
-        metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        metadata = ApiUtils.canEditRecord(metadataUuid, context);
         Set<MetadataCategory> after = metadata.getCategories();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
-        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
-
+        new RecordCategoryChangeEvent(
+            metadata.getId(),
+            userSession.getUserIdAsInt(),
+            ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD),
+            ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)
+        ).publish(appContext);
+      } finally {
+          context.clearAsThreadLocal();
+          context.clear();
+      }
     }
 
 

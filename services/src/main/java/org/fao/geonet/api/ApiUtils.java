@@ -50,6 +50,7 @@ import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.Service;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
@@ -75,6 +76,9 @@ import jeeves.server.dispatchers.ServiceManager;
 
 /**
  * API utilities mainly to deal with parameters.
+ *
+ * Many of these methods assume a service context is available as a thread locale,
+ * see {@link #createServiceContext(HttpServletRequest)} methods for details.
  */
 public class ApiUtils {
 
@@ -210,6 +214,15 @@ public class ApiUtils {
      * If you create a service context you are responsible for managing on the current thread and any cleanup.
      * This method has a side effect of setting the created service context for the current thread.
      *
+     * <pre><code>
+     * ServiceContext context = ApiUtils.createServiceContext(request);
+     * try {
+     *     ...
+     * }
+     * finally {
+     *     serviceContext.clear();
+     * }
+     * </code></pre>
      * @param request
      * @return new sevice context, assigned to the current thread
      */
@@ -280,12 +293,42 @@ public class ApiUtils {
 
     /**
      * Check if the current user can edit this record.
+     *
+     * This method creates a temporary service context using the provided request to check record access,
+     * if you have a service context already please use {@link #canEditRecord(String, ServiceContext)}.
+     *
+     * @param metadataUuid Look up metadata record
+     * @param request Request to identify current user
+     * @return metadata record
+     * @throws SecurityException if user is not allowed to access
      */
     static public AbstractMetadata canEditRecord(String metadataUuid, HttpServletRequest request) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
+        ServiceContext previous = ServiceContext.get();
+
+        ServiceContext context = createServiceContext(request);
+        try {
+            return canEditRecord(metadataUuid, context);
+        } finally {
+            context.clearAsThreadLocal();
+            context.clear();
+
+            if( previous != null ){
+                previous.setAsThreadLocal();
+            }
+        }
+    }
+
+    /**
+     * Check if the current user can edit this record.
+     *
+     * @param metadataUuid Look up metadata record
+     * @return metadata record
+     * @throws SecurityException if user is not allowed to access
+     */
+    static public AbstractMetadata canEditRecord(String metadataUuid, ServiceContext context) throws Exception {
         AbstractMetadata metadata = getRecord(metadataUuid);
-        AccessManager accessManager = appContext.getBean(AccessManager.class);
-        if (!accessManager.canEdit(createServiceContext(request), String.valueOf(metadata.getId()))) {
+        AccessManager accessManager = context.getBean(AccessManager.class);
+        if (!accessManager.canEdit(context, String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
                 "You can't edit record with UUID %s", metadataUuid));
         }
@@ -296,15 +339,30 @@ public class ApiUtils {
      * Check if the current user can review this record.
      */
     static public AbstractMetadata canReviewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
+        ServiceContext context = createServiceContext(request);
+        try {
+            return canReviewRecord(metadataUuid);
+        } finally {
+            context.clearAsThreadLocal();
+            context.clear();
+        }
+    }
+
+    /**
+     * Check if the current user can review this record.
+     */
+    static public AbstractMetadata canReviewRecord(String metadataUuid) throws Exception {
         AbstractMetadata metadata = getRecord(metadataUuid);
-        AccessManager accessManager = appContext.getBean(AccessManager.class);
-        if (!accessManager.canReview(createServiceContext(request), String.valueOf(metadata.getId()))) {
+
+        ServiceContext context = ServiceContext.get();
+        AccessManager accessManager = context.getBean(AccessManager.class);
+        if (!accessManager.canReview(context, String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
                 "You can't review or edit record with UUID %s", metadataUuid));
         }
         return metadata;
     }
+
 
     /**
      * Check if the current user can change status of this record.
