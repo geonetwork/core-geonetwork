@@ -277,7 +277,7 @@ public abstract class AbstractParams implements Cloneable {
 
         getTrigger();
 
-        setImportXslt(Util.getParam(content, "importxslt", getImportXslt()));
+        setImportXslt(Util.getParam(content, "importxslt", "none"));
         setBatchEdits(Util.getParam(content, "batchEdits", getBatchEdits()));
         this.setValidate(readValidateFromParams(content));
 

@@ -123,6 +123,7 @@
         $(document.body).append(element);
         element.modal();
         element.on('hidden.bs.modal', function() {
+          $(document.body).removeClass('modal-open');
           element.modal('hide');
           $('body > .modal-backdrop').remove();
           element.remove();

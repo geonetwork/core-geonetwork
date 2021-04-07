@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:fcc="http://standards.iso.org/iso/19110/fcc/1.0" xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0" xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/1.0" xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0" xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0" xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0" xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0" xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/1.0" xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0" xmlns:mpc="http://standards.iso.org/iso/19115/-3/mpc/1.0" xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/1.0" xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0" xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/1.0" xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0" xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/1.0" xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mds/1.0" version="1.0">
+  <annotation>
+    <documentation>Namespace &lt;font color="#1f497d"&gt;that imports all necessary namespaces to implement a complete metadata record for a dataset or service, not including extended data types or user-defined extensions. &lt;/font&gt;Wrapper namespace to support Catalog Service implementations.</documentation>
+  </annotation>
+  <include schemaLocation="metadataDataServices.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19110/fcc/1.0" schemaLocation="../../../../19110/fcc/1.0/fcc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gex/1.0" schemaLocation="../../../../19115/-3/gex/1.0/gex.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mac/1.0" schemaLocation="../../../../19115/-3/mac/1.0/mac.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mas/1.0" schemaLocation="../../../../19115/-3/mas/1.0/mas.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mco/1.0" schemaLocation="../../../../19115/-3/mco/1.0/mco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mdb/1.0" schemaLocation="../../../../19115/-3/mdb/1.0/mdb.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19157/-2/mdq/1.0" schemaLocation="../../../../19157/-2/mdq/1.0/mdq.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mmi/1.0" schemaLocation="../../../../19115/-3/mmi/1.0/mmi.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mpc/1.0" schemaLocation="../../../../19115/-3/mpc/1.0/mpc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mrc/1.0" schemaLocation="../../../../19115/-3/mrc/1.0/mrc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mrd/1.0" schemaLocation="../../../../19115/-3/mrd/1.0/mrd.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mrl/1.0" schemaLocation="../../../../19115/-3/mrl/1.0/mrl.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mrs/1.0" schemaLocation="../../../../19115/-3/mrs/1.0/mrs.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/msr/1.0" schemaLocation="../../../../19115/-3/msr/1.0/msr.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/srv/2.0" schemaLocation="../../../../19115/-3/srv/2.0/srv.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

@@ -37,6 +37,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
+import org.fao.geonet.repository.MetadataRepository;
 
 /**
  * Checks to ensure that the database is accessible and readable
@@ -52,13 +53,15 @@ public class LuceneIndexHealthCheck implements HealthCheckFactory {
 
                 SearchManager searchMan = gc.getBean(SearchManager.class);
 
+                MetadataRepository metadataRepository = gc.getBean(MetadataRepository.class);
 
                 IndexAndTaxonomy indexAndTaxonomy = searchMan.getNewIndexReader(null);
                 GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
                 try {
                     Query query = new MatchAllDocsQuery();
                     TopDocs hits = new IndexSearcher(reader).search(query, 1);
-                    if (hits.totalHits > 1) {
+                    // On initial setup, the index will return 0 but there will also be 0 metadata records.  If this occurs then index is healthy.
+                    if (hits.totalHits > 1 || metadataRepository.count() == 0) {
                         return Result.healthy();
                     } else {
                         return Result.unhealthy("Lucene search for 1 record returned " + hits.totalHits + " hits.");

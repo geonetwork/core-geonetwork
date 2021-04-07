@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
+                xmlns:utils="java:org.fao.geonet.util.XslUtil"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
@@ -45,7 +46,10 @@
             <xsl:call-template name="render-record"/>
           </xsl:with-param>
           <xsl:with-param name="title">
-            <xsl:apply-templates mode="getMetadataTitle" select="$metadata"/>
+            <xsl:variable name="title">
+              <xsl:apply-templates mode="getMetadataTitle" select="$metadata"/>
+            </xsl:variable>
+            <xsl:copy-of select="if ($title/div) then $title/div[1] else $title"/>
           </xsl:with-param>
           <xsl:with-param name="description">
             <xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/>
@@ -56,14 +60,81 @@
           <xsl:with-param name="thumbnail">
             <xsl:apply-templates mode="getMetadataThumbnail" select="$metadata"/>
           </xsl:with-param>
+          <xsl:with-param name="meta">
+            <xsl:call-template name="render-language-meta"/>
+          </xsl:with-param>
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
+  <!--
+  https://support.google.com/webmasters/answer/189077
+  -->
+  <xsl:template name="render-language-meta">
+    <xsl:variable name="metadataOtherLanguages">
+      <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
+    </xsl:variable>
+
+    <xsl:variable name="defaultLanguage"
+                  select="$metadataOtherLanguages/*[position() = last()]/@code"/>
+
+    <xsl:for-each select="$metadataOtherLanguages/*">
+      <link rel="alternate"
+            hreflang="{utils:twoCharLangCode(@code)}"
+            href="{$nodeUrl}api/records/{$metadataUuid}?language={@code}" />
+    </xsl:for-each>
+    <xsl:if test="count($metadataOtherLanguages/*) > 1">
+      <link rel="alternate"
+            hreflang="x-default"
+            href="{$nodeUrl}api/records/{$metadataUuid}?language=all" />
+    </xsl:if>
+  </xsl:template>
+
+
+  <xsl:template name="render-language-switcher">
+    <xsl:if test="$language = 'all'">
+      <div class="gn-multilingual-field">
+        <ul class="nav nav-pills">
+          <script src="{$nodeUrl}../catalog/js/GnLandingPageLib.js?v={$buildNumber}">&amp;nbsp;</script>
+          <script type="text/javascript">
+            window.onload = function() {
+              document.getElementById('gn-default-lang-link').click();
+            };
+          </script>
+
+          <xsl:variable name="metadataOtherLanguages">
+            <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
+          </xsl:variable>
+
+          <xsl:variable name="defaultLanguage"
+                        select="$metadataOtherLanguages/*[position() = last()]/@code"/>
+
+          <xsl:for-each select="($metadataOtherLanguages/*[@default], $metadataOtherLanguages/*[not(@default)])">
+            <li class="">
+              <a id="{if (@default) then 'gn-default-lang-link' else ''}"
+                 onclick="gnLandingPage.displayLanguage('{@code}', this);">
+                <xsl:variable name="label"
+                              select="utils:getIsoLanguageLabel(@code, @code)"/>
+                <xsl:value-of select="if ($label != '') then $label else @code"/><xsl:text> </xsl:text>
+              </a>
+            </li>
+          </xsl:for-each>
+          <xsl:if test="count($metadataOtherLanguages/*) > 1">
+            <li class="active">
+              <a onclick="gnLandingPage.displayLanguage('', this);">
+                <xsl:value-of select="'All'"/>
+              </a>
+            </li>
+          </xsl:if>
+        </ul>
+      </div>
+    </xsl:if>
+  </xsl:template>
+
+
   <xsl:template name="render-record">
     <div class="container-fluid gn-metadata-view gn-schema-{$schema}">
-
       <xsl:variable name="type">
         <xsl:apply-templates mode="getMetadataHierarchyLevel" select="$metadata"/>
       </xsl:variable>
@@ -81,8 +152,10 @@
             <header>
               <h1>
                 <i class="fa gn-icon-{$type}"><xsl:comment select="'icon'"/></i>
-                <xsl:value-of select="$title"/>
+                <xsl:copy-of select="$title"/>
               </h1>
+
+              <xsl:call-template name="render-language-switcher"/>
 
               <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
 
@@ -334,8 +407,10 @@
       <div id="gn-section-{generate-id()}" class="gn-tab-content">
         <xsl:if test="@name">
           <xsl:variable name="title"
-                        select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
-
+                        select="
+                        if (contains( @name, ':'))
+                        then gn-fn-render:get-schema-labels($schemaLabels, @name)
+                        else gn-fn-render:get-schema-strings($schemaStrings, @name) "/>
           <xsl:element name="h{1 + count(ancestor-or-self::*[name(.) = 'section'])}">
             <xsl:value-of select="$title"/>
           </xsl:element>

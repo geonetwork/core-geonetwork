@@ -24,6 +24,7 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.domain.converter.UserSearchFeaturedTypeConverter;
 import org.fao.geonet.entitylistener.UserSearchEntityListenerManager;
+import org.hibernate.annotations.Type;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;
@@ -58,8 +59,8 @@ public class UserSearch extends Localized implements Serializable {
         return id;
     }
 
-
-    @Column
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
     public String getUrl() {
         return url;
     }

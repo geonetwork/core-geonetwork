@@ -589,7 +589,7 @@
         var contentType = req.getResponseHeader('Content-Type');
         var errorText = req.responseText;
         var errorCode = null;
-        if ('application/json' === contentType) {
+        if (contentType && (contentType.indexOf('application/json') == 0)) {
           var parsedError = JSON.parse(req.responseText);
         }
         $rootScope.$broadcast('StatusUpdated', {

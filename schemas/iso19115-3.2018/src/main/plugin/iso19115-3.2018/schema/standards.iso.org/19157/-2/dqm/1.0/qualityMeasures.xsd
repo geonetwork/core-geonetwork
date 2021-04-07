@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0" xmlns:dqm="http://standards.iso.org/iso/19157/-2/dqm/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:pre="http://standards.iso.org/iso/19135/-2/pre/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19157/-2/dqm/1.0" version="1.0">
+  <include schemaLocation="dqm.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/cat/1.0" schemaLocation="../../../../19115/-3/cat/1.0/cat.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19135/-2/pre/1.0" schemaLocation="../../../../19135/-2/pre/1.0/pre.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="DQM_BasicMeasure" substitutionGroup="gco:AbstractObject" type="dqm:DQM_BasicMeasure_Type">
+    <annotation>
+      <documentation>data quality basic measure</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQM_BasicMeasure_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>name of the data quality basic measure applied to the data</documentation>
+            </annotation>
+          </element>
+          <element name="definition" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>definition of the data quality basic measure</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="example" type="dqm:DQM_Description_PropertyType">
+            <annotation>
+              <documentation>illustration of the use of a data quality measure</documentation>
+            </annotation>
+          </element>
+          <element name="valueType" type="gco:TypeName_PropertyType">
+            <annotation>
+              <documentation>value type for the result of the basic measure (shall be one of the data types defined in ISO/TS 19103:2005)</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQM_BasicMeasure_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="dqm:DQM_BasicMeasure"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQM_Description" substitutionGroup="gco:AbstractObject" type="dqm:DQM_Description_Type">
+    <annotation>
+      <documentation>data quality measure description</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQM_Description_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="textDescription" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>text description</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="extendedDescription" type="mcc:MD_BrowseGraphic_PropertyType">
+            <annotation>
+              <documentation>illustration</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQM_Description_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="dqm:DQM_Description"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQM_Measure" substitutionGroup="gco:AbstractObject" type="dqm:DQM_Measure_Type">
+    <annotation>
+      <documentation>Data quality measure</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQM_Measure_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="measureIdentifier" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>value uniquely identifying the measure within a namespace</documentation>
+            </annotation>
+          </element>
+          <element name="name" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>name of the data quality measure applied to the data</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="alias" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>another recognized name, an abbreviation or a short name for the same data quality measure</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="elementName" type="gco:TypeName_PropertyType">
+            <annotation>
+              <documentation>name of the data quality element for which quality is reported</documentation>
+            </annotation>
+          </element>
+          <element name="definition" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>definition of the fundamental concept for the data quality measure</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="description" type="dqm:DQM_Description_PropertyType">
+            <annotation>
+              <documentation>description of the data quality measure, including all formulae and/or illustrations needed to establish the result of applying the measure</documentation>
+            </annotation>
+          </element>
+          <element name="valueType" type="gco:TypeName_PropertyType">
+            <annotation>
+              <documentation>value type for reporting a data quality result (shall be one of the data types defined in ISO/TS 19103:2005)</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="valueStructure" type="dqm:DQM_ValueStructure_PropertyType">
+            <annotation>
+              <documentation>structure for reporting a complex data quality result</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="example" type="dqm:DQM_Description_PropertyType">
+            <annotation>
+              <documentation>illustration of the use of a data quality measure</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="sourceReference" type="dqm:DQM_SourceReference_PropertyType"/>
+          <element minOccurs="0" name="basicMeasure" type="dqm:DQM_BasicMeasure_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="parameter" type="dqm:DQM_Parameter_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQM_Measure_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="dqm:DQM_Measure"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQM_MeasureCatalogue" substitutionGroup="cat:AbstractCT_Catalogue" type="dqm:DQM_MeasureCatalogue_Type"/>
+  <complexType name="DQM_MeasureCatalogue_Type">
+    <complexContent>
+      <extension base="cat:AbstractCT_Catalogue_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="definitionSource" type="dqm:DQM_SourceReference_PropertyType"/>
+          <element maxOccurs="unbounded" name="qualityMeasure" type="dqm:DQM_Measure_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="basicMeasure" type="dqm:DQM_BasicMeasure_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="parameter" type="dqm:DQM_Parameter_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQM_MeasureCatalogue_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="dqm:DQM_MeasureCatalogue"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQM_Parameter" substitutionGroup="gco:AbstractObject" type="dqm:DQM_Parameter_Type">
+    <annotation>
+      <documentation>data quality parameter</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQM_Parameter_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>name of the data quality parameter</documentation>
+            </annotation>
+          </element>
+          <element name="definition" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>definition of the data quality parameter</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="description" type="dqm:DQM_Description_PropertyType">
+            <annotation>
+              <documentation>description of the data quality parameter</documentation>
+            </annotation>
+          </element>
+          <element name="valueType" type="gco:TypeName_PropertyType">
+            <annotation>
+              <documentation>value type of the data quality parameter (shall be one of the data types defined in ISO/TS 19103:2005)</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="valueStructure" type="dqm:DQM_ValueStructure_PropertyType">
+            <annotation>
+              <documentation>structure of the data quality parameter</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQM_Parameter_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="dqm:DQM_Parameter"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQM_RegisteredDataQualityBasicMeasure" substitutionGroup="pre:Abstract_RegisterItem" type="dqm:DQM_RegisteredDataQualityBasicMeasure_Type"/>
+  <complexType name="DQM_RegisteredDataQualityBasicMeasure_Type">
+    <complexContent>
+      <extension base="pre:Abstract_RegisterItem_Type">
+        <sequence>
+          <element name="basicMeasure" type="dqm:DQM_BasicMeasure_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQM_RegisteredDataQualityBasicMeasure_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="dqm:DQM_RegisteredDataQualityBasicMeasure"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQM_RegisteredDataQualityMeasure" substitutionGroup="pre:Abstract_RegisterItem" type="dqm:DQM_RegisteredDataQualityMeasure_Type"/>
+  <complexType name="DQM_RegisteredDataQualityMeasure_Type">
+    <complexContent>
+      <extension base="pre:Abstract_RegisterItem_Type">
+        <sequence>
+          <element name="qualityMeasure" type="dqm:DQM_Measure_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQM_RegisteredDataQualityMeasure_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="dqm:DQM_RegisteredDataQualityMeasure"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQM_RegisteredDataQualityParameter" substitutionGroup="pre:Abstract_RegisterItem" type="dqm:DQM_RegisteredDataQualityParameter_Type"/>
+  <complexType name="DQM_RegisteredDataQualityParameter_Type">
+    <complexContent>
+      <extension base="pre:Abstract_RegisterItem_Type">
+        <sequence>
+          <element name="parameter" type="dqm:DQM_Parameter_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQM_RegisteredDataQualityParameter_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="dqm:DQM_RegisteredDataQualityParameter"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQM_SourceReference" substitutionGroup="gco:AbstractObject" type="dqm:DQM_SourceReference_Type">
+    <annotation>
+      <documentation>reference to the source of the data quality measure</documentation>
+    </annotation>
+  </element>
+  <complexType name="DQM_SourceReference_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="citation" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>reference to the source</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DQM_SourceReference_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="dqm:DQM_SourceReference"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="DQM_ValueStructure" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type"/>
+  <complexType name="DQM_ValueStructure_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="dqm:DQM_ValueStructure"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

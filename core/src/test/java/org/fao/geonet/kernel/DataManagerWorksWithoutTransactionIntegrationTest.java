@@ -63,7 +63,12 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
             (new TestTask() {
                 @Override
                 public void run() throws Exception {
+                    ServiceContext restore = ServiceContext.get();
+                    if( restore != null ){
+                        restore.clearAsThreadLocal();
+                    }
                     final ServiceContext serviceContext = createServiceContext();
+                  try {
                     loginAsAdmin(serviceContext);
 
                     final String metadataCategory = metadataCategoryRepository.findAll().get(0).getName();
@@ -84,6 +89,12 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
                     assertNotNull(updateMd);
                     final boolean hasNext = updateMd.getCategories().iterator().hasNext();
                     assertTrue(hasNext);
+                  } finally {
+                    serviceContext.clearAsThreadLocal();
+                    if( restore != null ){
+                        restore.setAsThreadLocal();
+                    }
+                  }
                 }
             });
 

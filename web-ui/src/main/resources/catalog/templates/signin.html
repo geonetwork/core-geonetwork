@@ -9,7 +9,7 @@
           <p data-translate="">loginText</p>
           <form class="form-horizontal" name="gnSigninForm" action="{{formAction}}"
                 method="post" role="form" data-ng-if="::user"
-                data-ng-show="!shibbolethEnabled || (shibbolethEnabled && !shibbolethHideLogin)">
+                data-ng-show="!isDisableLoginForm && !isShowLoginAsLink">
             <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
             <!-- username -->
@@ -116,13 +116,13 @@
                           data-ng-model="usernameToRemind"
                           data-ng-required="" class="form-control"/>
                   </div>
-                  <a type="submit"
+                  <button type="submit"
                      class="btn btn-default btn-block"
                      data-ng-disabled="usernameToRemind == ''"
                      data-ng-click="remindMyPassword('#userinfo')">
                     <i class="fa fa-question-sign"/>
                     <span data-translate="">sendPasswordLinkToMyEmail</span>
-                  </a>
+                  </button>
                   <div class="clearfix"></div>
                 </form>
               </div>

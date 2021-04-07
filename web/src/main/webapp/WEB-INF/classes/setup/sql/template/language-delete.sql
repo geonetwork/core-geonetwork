@@ -4,4 +4,5 @@ DELETE FROM GroupsDes WHERE langid = '%s';
 DELETE FROM IsoLanguagesDes WHERE langid = '%s';
 DELETE FROM OperationsDes WHERE langid = '%s';
 DELETE FROM StatusValuesDes WHERE langid = '%s';
+DELETE FROM SourcesDes WHERE langid = '%s';
 DELETE FROM Languages WHERE id = '%s';

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:gmi="http://standards.iso.org/iso/19115/-2/gmi/1.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://standards.iso.org/iso/19115/-2/gmi/1.0" elementFormDefault="qualified" version="0.1">
+	<!-- ================================= Annotation ================================ -->
+	<xs:annotation>
+		<xs:documentation>This file was created by Ted Habermann during May 2015 to correct omissions (gmx, MI_EnvironmentalRecord) in existing gmi schema ====== </xs:documentation>
+	</xs:annotation>
+	<!-- ================================== Imports ================================== -->
+	<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/gmd.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd"/>	
+	<xs:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://www.opengis.net/gml/3.2"/>
+	<xs:include schemaLocation="acquisitionInformation.xsd"/>
+	<!-- ########################################################################### -->
+	<!-- ########################################################################### -->
+	<!-- ================================== Classes ================================= -->
+	<xs:complexType name="MI_Georeferenceable_Type">
+		<xs:annotation>
+			<xs:documentation>Description: Description of information provided in metadata that allows the geographic or map location raster points to be located - FGDC: Georeferencing_Description - shortName: IGeoref</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gmd:MD_Georeferenceable_Type">
+				<xs:sequence>
+					<xs:element name="geolocationInformation" type="gmi:MI_GeolocationInformation_PropertyType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="MI_Georeferenceable" type="gmi:MI_Georeferenceable_Type" substitutionGroup="gmd:MD_Georeferenceable"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="MI_Georeferenceable_PropertyType">
+		<xs:sequence>
+			<xs:element ref="gmi:MI_Georeferenceable" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="MI_Georectified_Type">
+		<xs:annotation>
+			<xs:documentation>Description: extends georectified grid description to include associated checkpoints - shortName: IGeorect</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gmd:MD_Georectified_Type">
+				<xs:sequence>
+					<xs:element name="checkPoint" type="gmi:MI_GCP_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="MI_Georectified" type="gmi:MI_Georectified_Type" substitutionGroup="gmd:MD_Georectified"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="MI_Georectified_PropertyType">
+		<xs:sequence>
+			<xs:element ref="gmi:MI_Georectified" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="MI_GCP_Type">
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="geographicCoordinates" type="gmi:DirectPosition_PropertyType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="MI_GCP" type="gmi:MI_GCP_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="MI_GCP_PropertyType">
+		<xs:sequence>
+			<xs:element ref="gmi:MI_GCP" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="AbstractMI_GeolocationInformation_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractMI_GeolocationInformation" type="gmi:AbstractMI_GeolocationInformation_Type" abstract="true"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="MI_GeolocationInformation_PropertyType">
+		<xs:sequence>
+			<xs:element ref="gmi:AbstractMI_GeolocationInformation" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="MI_GCPCollection_Type">
+		<xs:complexContent>
+			<xs:extension base="gmi:AbstractMI_GeolocationInformation_Type">
+				<xs:sequence>
+					<xs:element name="collectionIdentification" type="gco:Integer_PropertyType"/>
+					<xs:element name="collectionName" type="gco:CharacterString_PropertyType"/>
+					<xs:element name="coordinateReferenceSystem" type="gmd:MD_ReferenceSystem_PropertyType"/>
+					<xs:element name="gcp" type="gmi:MI_GCP_PropertyType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="MI_GCPCollection" type="gmi:MI_GCPCollection_Type" substitutionGroup="gmi:AbstractMI_GeolocationInformation"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="MI_GCPCollection_PropertyType">
+		<xs:sequence>
+			<xs:element ref="gmi:MI_GCPCollection" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	
+	<!--==XCGE: gml:DirectPosition==-->
+	<!-- ........................................................................ -->
+	<xs:complexType name="DirectPosition_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gml:pos"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+</xs:schema>

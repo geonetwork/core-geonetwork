@@ -57,6 +57,7 @@ public class Settings {
     public static final String SYSTEM_INSPIRE_ATOM = "system/inspire/atom";
     public static final String SYSTEM_INSPIRE_ATOM_SCHEDULE = "system/inspire/atomSchedule";
     public static final String SYSTEM_PREFER_GROUP_LOGO = "system/metadata/prefergrouplogo";
+    public static final String SYSTEM_USERS_IDENTICON = "system/users/identicon";
     public static final String SYSTEM_REQUESTEDLANGUAGE_SORTED = "system/requestedLanguage/sorted";
     public static final String SYSTEM_INDEXOPTIMIZER_ENABLE = "system/indexoptimizer/enable";
     public static final String SYSTEM_INDEXOPTIMIZER_HOUR = "system/indexoptimizer/at/hour";

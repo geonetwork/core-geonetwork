@@ -23,7 +23,10 @@
 
 package org.fao.geonet.api.exception;
 
-public class NoResultsFoundException extends Exception {
+import org.fao.geonet.exceptions.LocalizedException;
+
+public class NoResultsFoundException extends LocalizedException {
+
     public NoResultsFoundException() {
         super();
     }
@@ -38,5 +41,9 @@ public class NoResultsFoundException extends Exception {
 
     public NoResultsFoundException(Throwable cause) {
         super(cause);
+    }
+
+    protected String getResourceBundleBeanQualifier() {
+        return "apiMessages";
     }
 }

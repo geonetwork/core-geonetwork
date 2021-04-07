@@ -84,12 +84,9 @@
              e.offset().top :
              e.position().top;
           }
-          $('body,html').animate({scrollTop: top},
-           duration, easing, function() {
-              if (e.length == 1) {
-                e.fadeOut('slow', function() {e.fadeIn()});
-              }
-            });
+
+          $('body,html').scrollTop(top);
+
           $location.search('scrollTo', elementId);
         };
 
@@ -586,5 +583,11 @@
             timeout = $timeout(later, wait, invokeApply);
           });
       });
+  }]);
+
+  module.filter('sanitizeHtmlFilter', ['$filter', '$sanitize', function($filter, $sanitize) {
+    return function(input) {
+      return $sanitize(input);
+    }
   }]);
 })();

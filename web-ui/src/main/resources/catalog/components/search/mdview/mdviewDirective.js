@@ -61,7 +61,7 @@
                 '/' + scope.md.getUuid() +
                 (scope.formatter === undefined || scope.formatter == '' ?
                   '' :
-                  formatter);
+                  formatter + ((formatter && scope.md.draft == 'y') ? '&approved=false' : '&approved=true'));
               element.attr('href', url);
             } else {
               element.on('click', function(e) {
@@ -125,7 +125,7 @@
 
         link: function(scope, element, attrs, controller) {
           scope.isRatingEnabled = false;
-          
+
           gnConfigService.load().then(function(c) {
             var statusSystemRating =
               gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];

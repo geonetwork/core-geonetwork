@@ -2,20 +2,19 @@ package org.fao.geonet.listener.metadata.draft;
 
 import java.util.List;
 
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
-import org.fao.geonet.domain.MetadataStatusId_;
 import org.fao.geonet.domain.MetadataStatus_;
 import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.MetadataValidationId;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
@@ -24,9 +23,11 @@ import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import jeeves.server.context.ServiceContext;
@@ -64,12 +65,18 @@ public class DraftUtilities {
     @Autowired
     private IMetadataUtils draftMetadataUtils;
 
+    @Autowired
+    IMetadataUtils metadataUtils;
+
+    @Autowired
+    @Qualifier("resourceStore")
+    private Store store;
+
     /**
      * Replace the contents of the record with the ones on the draft, if exists, and
      * remove the draft
      *
      * @param md
-     * @param draft
      * @return
      */
     public AbstractMetadata replaceMetadataWithDraft(AbstractMetadata md) {
@@ -95,14 +102,22 @@ public class DraftUtilities {
         Log.trace(Geonet.DATA_MANAGER, "Found draft with id " + draft.getId());
         // Reassign metadata validations
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(draft.getId());
-        for (MetadataValidation mv : validations) {
-            mv.getId().setMetadataId(md.getId());
-            metadataValidationRepository.save(mv);
+        metadataValidationRepository.deleteAll(MetadataValidationSpecs.hasMetadataId(md.getId()));
+        for (MetadataValidation draftValidation : validations) {
+            MetadataValidation metadataValidation = new MetadataValidation()
+                .setId(new MetadataValidationId(md.getId(), draftValidation.getId().getValidationType()))
+                .setStatus(draftValidation.getStatus()).setRequired(draftValidation.isRequired())
+                .setValid(draftValidation.isValid()).setValidationDate(draftValidation.getValidationDate())
+                .setNumTests(draftValidation.getNumTests()).setNumFailures(draftValidation.getNumFailures())
+                .setReportUrl(draftValidation.getReportUrl()).setReportContent(draftValidation.getReportContent());
+
+            metadataValidationRepository.save(metadataValidation);
+            metadataValidationRepository.delete(draftValidation);
         }
 
         // Reassign metadata workflow statuses
-        List<MetadataStatus> statuses = metadataStatusRepository.findAllById_MetadataId(draft.getId(),
-            SortUtils.createSort(MetadataStatus_.id, MetadataStatusId_.metadataId));
+        List<MetadataStatus> statuses = metadataStatusRepository.findAllByMetadataId(draft.getId(),
+            SortUtils.createSort(MetadataStatus_.metadataId));
         for (MetadataStatus old : statuses) {
             MetadataStatus st = new MetadataStatus();
             st.setChangeMessage(old.getChangeMessage());
@@ -111,18 +126,24 @@ public class DraftUtilities {
             st.setOwner(old.getOwner());
             st.setPreviousState(old.getPreviousState());
             st.setStatusValue(old.getStatusValue());
-            MetadataStatusId id = new MetadataStatusId();
-            id.setChangeDate(old.getId().getChangeDate());
-            id.setStatusId(old.getId().getStatusId());
-            id.setUserId(old.getId().getUserId());
-            id.setMetadataId(md.getId());
-            st.setId(id);
+            st.setChangeDate(old.getChangeDate());
+            st.setUserId(old.getUserId());
+            st.setMetadataId(md.getId());
+            st.setUuid(md.getUuid());
+            try {
+                st.setTitles(metadataUtils.extractTitles(Integer.toString(md.getId())));
+            } catch (Exception e) {
+                Log.error(Geonet.DATA_MANAGER, String.format(
+                        "Error locating titles for metadata id: %d", +md.getId()), e);
+            }
+
             metadataStatusRepository.save(st);
             metadataStatusRepository.delete(old);
         }
 
         // Reassign file uploads
-        draftMetadataUtils.cloneFiles(draft, md);
+        draftMetadataUtils.replaceFiles(draft, md);
+
         metadataFileUploadRepository.deleteAll(MetadataFileUploadSpecs.hasMetadataId(md.getId()));
         List<MetadataFileUpload> fileUploads = metadataFileUploadRepository
             .findAll(MetadataFileUploadSpecs.hasMetadataId(draft.getId()));
@@ -136,6 +157,7 @@ public class DraftUtilities {
             Element xmlData = draft.getXmlData(false);
             String changeDate = draft.getDataInfo().getChangeDate().getDateAndTime();
 
+            store.delResources(context, draft.getUuid(), false);
             removeDraft((MetadataDraft) draft);
 
             // Copy contents

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+  xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+  xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" elementFormDefault="qualified"
+  targetNamespace="http://standards.iso.org/iso/19115/-3/lan/1.0" version="1.0">
+  <include schemaLocation="lan.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0"
+    schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/cit/1.0"
+    schemaLocation="../../../../19115/-3/cit/1.0/cit.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <!-- hand-craft adjustments starting at line 29 and 71. ShapeChange does not have rules for 
+  implementing language localisation according to ISO19139  -->
+  <element name="CountryCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type"/>
+  <complexType name="CountryCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="lan:CountryCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="LanguageCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type"/>
+  <complexType name="LanguageCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="lan:LanguageCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  
+  <!-- hand craft, copy from gmd freeText.xsd, following ISO 19139 -->
+  <!-- =========================================================================== -->
+  <complexType name="LocalisedCharacterString_Type">
+    <simpleContent>
+      <extension base="string">
+        <attribute name="id" type="ID"/>
+        <attribute name="locale" type="anyURI"/>
+      </extension>
+    </simpleContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <element name="LocalisedCharacterString" type="lan:LocalisedCharacterString_Type" substitutionGroup="gco:CharacterString"/>
+  <!-- ........................................................................ -->
+<!--  <element name="LocalisedCharacterString" substitutionGroup="gco:AbstractObject" type="lan:LocalisedCharacterString_Type"/>
+  <complexType name="LocalisedCharacterString_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="locale" type="lan:PT_Locale_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>-->
+  <complexType name="LocalisedCharacterString_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="lan:LocalisedCharacterString"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  
+  <!-- ........................................................................ -->
+  
+  <element name="MD_CharacterSetCode" substitutionGroup="gco:CharacterString"
+    type="gco:CodeListValue_Type"/>
+  <complexType name="MD_CharacterSetCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="lan:MD_CharacterSetCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+
+  <!-- Hand crafted.  MAKE FIXES BASED ON gmd freeText.xsd  2014-08-21 SMR -->
+  <element name="PT_FreeText" substitutionGroup="gco:AbstractObject" type="lan:PT_FreeText_Type"/>
+  <complexType name="PT_FreeText_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element maxOccurs="unbounded" name="textGroup"
+            type="lan:LocalisedCharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="PT_FreeText_PropertyType">
+    <!-- PT_FreeText can't substitute for CharacterString because that is a simple type; have to extend the property type
+      so that instance docs will still have a CharacterString Element, and a textGroup with localisedCharacterStrings-->
+    <complexContent>
+      <extension base="gco:CharacterString_PropertyType">
+        <sequence minOccurs="0">
+          <element ref="lan:PT_FreeText"/>
+        </sequence>
+        <!--   <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>-->
+      </extension>
+    </complexContent>
+  </complexType>
+  <element name="PT_Locale" substitutionGroup="gco:AbstractObject" type="lan:PT_Locale_Type"/>
+  <complexType name="PT_Locale_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="language" type="lan:LanguageCode_PropertyType"/>
+          <element minOccurs="0" name="country" type="lan:CountryCode_PropertyType"/>
+          <element name="characterEncoding" type="lan:MD_CharacterSetCode_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="PT_Locale_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="lan:PT_Locale"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="PT_LocaleContainer" substitutionGroup="lan:PT_Locale"
+    type="lan:PT_LocaleContainer_Type"/>
+  <complexType name="PT_LocaleContainer_Type">
+    <complexContent>
+      <extension base="lan:PT_Locale_Type">
+        <sequence>
+          <element name="description" type="gco:CharacterString_PropertyType"/>
+          <element name="locale" type="lan:PT_Locale_PropertyType"/>
+          <element maxOccurs="unbounded" name="date" type="cit:CI_Date_PropertyType"/>
+          <element maxOccurs="unbounded" name="responsibleParty"
+            type="cit:CI_Responsibility_PropertyType"/>
+          <element maxOccurs="unbounded" name="localisedString"
+            type="lan:LocalisedCharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="PT_LocaleContainer_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="lan:PT_LocaleContainer"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

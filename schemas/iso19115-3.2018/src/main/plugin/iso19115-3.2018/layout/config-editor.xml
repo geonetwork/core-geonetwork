@@ -1,0 +1,703 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd"
+        xmlns:gn="http://www.fao.org/geonetwork"
+        xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+        xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/2.0"
+        xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+        xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+        xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
+        xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
+        xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
+        xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
+        xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
+        xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
+        xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
+        xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+        xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0"
+        xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+        xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+        xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
+        xmlns:dqm="http://standards.iso.org/iso/19157/-2/dqm/1.0"
+        xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
+        xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+        xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
+        xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
+        xmlns:gts="http://www.isotc211.org/2005/gts"
+        xmlns:gml="http://www.opengis.net/gml/3.2"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <!-- Form field type configuration. Default is text. -->
+  <fields>
+    <for name="cit:issueIdentification" use="textarea"/>
+    <for name="cit:description" use="textarea"/>
+    <for name="mcc:fileDescription" use="textarea"/>
+    <for name="gex:description" use="textarea"/>
+    <for name="mrc:description" use="textarea"/>
+    <for name="mrd:mediumNote" use="textarea"/>
+    <for name="lan:description" use="textarea"/>
+    <for name="mcc:description" use="textarea"/>
+    <for name="msr:transformationDimensionMapping" use="textarea"/>
+    <for name="msr:dimensionDescription" use="textarea"/>
+    <for name="msr:orientationParameterDescription" use="textarea"/>
+    <for name="cit:contactInstructions" use="textarea"/>
+    <for name="mco:userNote" use="textarea"/>
+    <for name="mco:handlingDescription" use="textarea"/>
+    <for name="mrl:description" use="textarea"/>
+    <for name="mri:abstract" use="textarea"/>
+    <for name="mri:credit" use="textarea"/>
+    <for name="mrd:description" use="textarea"/>
+    <for name="gmd:evaluationMethodDescription" use="textarea"/>
+    <for name="gmd:explanation" use="textarea"/>
+    <for name="gmd:handlingDescription" use="textarea"/>
+    <for name="mdq:measureDescription" use="textarea"/>
+    <for name="mri:purpose" use="textarea"/>
+    <for name="mrd:orderingInstructions" use="textarea"/>
+    <for name="mco:otherConstraints" use="textarea"/>
+    <for name="mri:statement" use="textarea"/>
+    <for name="mri:supplementalInformation" use="textarea"/>
+    <for name="gmd:specificUsage" use="textarea"/>
+    <for name="mco:useLimitation" use="textarea"/>
+    <for name="cit:otherCitationDetails" use="textarea"/>
+    <for name="mmi:maintenanceNote" use="textarea"/>
+    <for name="mco:statement" use="textarea"/>
+    <for name="gfc:definition" use="textarea"/>
+    <for name="mri:environmentDescription" use="textarea"/>
+    <for name="mdq:standaloneQualityReportDetails" use="textarea"/>
+    <for name="mdq:abstract" use="textarea"/>
+    <for name="mdq:statement" use="textarea"/>
+    <for name="mdq:evaluationMethodDescription" use="textarea"/>
+    <for name="mrl:statement" use="textarea"/>
+    <for name="mri:response" use="textarea"/>
+    <for name="mri:specificUsage" use="textarea"/>
+    <for name="mrd:orderOptions" use="textarea"/>
+    <for name="mrc:rangeElement" use="textarea"/>
+
+    <for name="gco:Distance" use="number"/>
+    <for name="gco:Decimal" use="number"/>
+    <for name="gco:Integer" use="number"/>
+    <for name="gco:Real" use="number"/>
+    <for name="gco:Angle" use="number"/>
+    <for name="gco:Boolean" use="checkbox"/>
+
+    <for name="gco:Date" use="data-gn-date-picker"/>
+    <for name="gco:DateTime" use="data-gn-date-picker"/>
+
+    <for name="gml:duration" use="data-gn-field-duration-div"/>
+    <for name="gco:TM_PeriodDuration" use="data-gn-field-duration-div"/>
+    <for name="gml:duration" use="data-gn-field-duration-div"/>
+
+    <for name="gmx:FileName/src" use="data-gn-logo-selector"/>
+
+    <for name="cit:electronicMailAddress" use="email"/>
+
+    <for name="lan:language" use="data-gn-language-picker"/>
+    <for name="lan:languageCode" use="data-gn-language-picker"/>
+
+    <for name="lan:country" use="data-gn-country-picker"/>
+    <for name="cit:country" use="data-gn-country-picker"/>
+
+    <for name="mrs:referenceSystemIdentifier" addDirective="data-gn-crs-selector"/>
+
+    <for name="mdb:contact" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+              data-template-add-action="true"
+              data-search-action="false"
+              data-popup-action="true"
+              data-template-type="contact"
+              data-filter='{"_root": "cit:CI_Responsibility"}'
+              data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
+    </for>
+    <for name="mri:pointOfContact" addDirective="data-gn-directory-entry-selector">
+      <!--<directiveAttributes
+              data-template-add-action="true"
+              data-template-type="contact"
+              data-filter='{"_root": "cit:CI_Responsibility"}'
+              data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>-->
+      <!-- To use an ISO19139 contact directory in an ISO19115-3 record
+      use the following configuration: -->
+      <directiveAttributes
+              data-template-add-action="true"
+              data-search-action="false"
+              data-popup-action="true"
+              data-template-type="contact"
+              data-filter='{"_root": "gmd:CI_ResponsibleParty"}'
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
+              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
+    </for>
+    <for name="mrd:distributor" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+              data-template-add-action="true"
+              data-search-action="false"
+              data-popup-action="true"
+              data-template-type="contact"
+              data-filter='{"_root": "gmd:CI_ResponsibleParty"}'
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
+              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
+    </for>
+    <for name="mrl:processor" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+              data-template-add-action="true"
+              data-search-action="false"
+              data-popup-action="true"
+              data-template-type="contact"
+              data-filter='{"_root": "gmd:CI_ResponsibleParty"}'
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
+              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
+    </for>
+    <for name="cit:citedResponsibleParty" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+              data-template-add-action="true"
+              data-search-action="false"
+              data-popup-action="true"
+              data-template-type="contact"
+              data-filter='{"_root": "gmd:CI_ResponsibleParty"}'
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
+              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
+    </for>
+
+
+    <for name="cit:logo" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+              data-template-add-action="true"
+              data-search-action="true"
+              data-popup-action="false"
+              data-template-type="logo"
+              data-filter='{"_root": "mcc:MD_BrowseGraphic"}'/>
+    </for>
+
+    <for name="mdq:report" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+              data-template-add-action="true"
+              data-search-action="true"
+              data-popup-action="false"
+              data-template-type="report"
+              data-filter='{"_root": "mdq:DQ_*"}'/>
+    </for>
+
+    <for name="mri:resourceConstraints" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+              data-template-add-action="true"
+              data-search-action="true"
+              data-popup-action="false"
+              data-template-type="resourceConstraints"
+              data-filter='{"_root": "mco:MD_*"}'/>
+    </for>
+
+    <for name="mri:descriptiveKeywords" addDirective="data-gn-thesaurus-selector">
+      <directiveAttributes
+              data-transformation="to-iso19115-3.2018-keyword"/>
+    </for>
+  </fields>
+
+
+  <fieldsWithFieldset>
+    <name>cit:citedResponsibleParty</name>
+    <name>cit:extent</name>
+    <name>cit:individual</name>
+    <name>cit:logo</name>
+    <name>cit:party</name>
+    <name>gex:EX_TemporalExtent</name>
+    <name>gex:geographicBox</name>
+    <name>gex:verticalElement</name>
+    <name>gfc:carrierOfCharacteristics</name>
+    <name>gfc:featureType</name>
+    <name>gfc:listedValue</name>
+    <name>mac:acquisitionInformation</name>
+    <name>mac:acquisitionRequirement</name>
+    <name>mac:environmentalConditions</name>
+    <name>mac:expectedObjective</name>
+    <name>mac:history</name>
+    <name>mac:MI_Instrument</name>
+    <name>mac:MI_Platform</name>
+    <name>mac:objective</name>
+    <name>mac:objectiveOccurence</name>
+    <name>mac:relatedEvent</name>
+    <name>mac:relatedPass</name>
+    <name>mac:relatedSensor</name>
+    <name>mac:requestedDate</name>
+    <name>mac:sensingInstrument</name>
+    <name>mcc:MD_Identifier</name>
+    <name>mdb:alternativeMetadataReference</name>
+    <name>mdb:contact</name>
+    <name>mdb:contentInfo</name>
+    <name>mdb:dataQualityInfo</name>
+    <name>mdb:dateInfo</name>
+    <name>mdb:distributionInfo</name>
+    <name>mdb:extent</name>
+    <name>mdb:identificationInfo</name>
+    <name>mdb:MD_Metadata</name>
+    <name>mdb:metadataConstraints</name>
+    <name>mdb:metadataLinkage</name>
+    <name>mdb:metadataScope</name>
+    <name>mdb:metadataStandard</name>
+    <name>mdb:portrayalCatalogueInfo</name>
+    <name>mdb:referenceSystemInfo</name>
+    <name>mdb:resourceLineage</name>
+    <name>mdb:spatialRepresentationInfo</name>
+    <name>mdq:report</name>
+    <name>mdq:result</name>
+    <name>mrd:distributionFormat</name>
+    <name>mrd:MD_Distributor</name>
+    <name>mrd:onLine</name>
+    <name>mri:associatedResource</name>
+    <name>mri:descriptiveKeywords</name>
+    <name>mri:resourceSpecificUsage</name>
+    <name>mri:identifiedIssues</name>
+    <name>mri:equivalentScale</name>
+    <name>mri:graphicOverview</name>
+    <name>mri:pointOfContact</name>
+    <name>mri:resourceConstraints</name>
+    <name>mri:resourceFormat</name>
+    <name>mri:spatialResolution</name>
+    <name>mri:thesaurusName</name>
+    <name>mrl:processStep</name>
+    <name>msr:projection</name>
+    <name>srv:containsOperations</name>
+    <name>srv:SV_CoupledResource</name>
+  </fieldsWithFieldset>
+
+  <multilingualFields>
+    <!-- In multilingual mode, define which mode
+    the widget should have. If expanded, then one
+    field per language is displayed. -->
+    <expanded>
+      <name>cit:title</name>
+      <name>cit:abstract</name>
+    </expanded>
+    <!-- All fields in ISO could be multilingual.
+    Define element to exclude.
+    TODO: it may be relevant to have parent defined
+    to restrict the list.
+    -->
+    <exclude>
+      <name>cit:administrativeArea</name>
+      <name>cit:city</name>
+      <name>cit:date</name>
+      <name>cit:edition</name>
+      <name>cit:electronicMailAddress</name>
+      <name>cit:hoursOfService</name>
+      <name>cit:ISBN</name>
+      <name>cit:ISSN</name>
+      <name>cit:linkage</name>
+      <name>cit:number</name>
+      <name>cit:page</name>
+      <name>cit:postalCode</name>
+      <name>cit:protocol</name>
+      <name>cit:protocolRequest</name>
+      <name>gco:aName</name>
+      <name>gco:Real</name>
+      <name>gex:extentTypeCode</name>
+      <name>gex:maximumValue</name>
+      <name>gex:minimumValue</name>
+      <name>gfc:code</name>
+      <name>gfc:isAbstract</name>
+      <name>gfc:typeName</name>
+      <name>gfc:uniqueInstance</name>
+      <name>gfc:valueType</name>
+      <name>mac:averageAirTemperature</name>
+      <name>mac:maxAltitude</name>
+      <name>mac:maxRelativeHumidity</name>
+      <name>mac:meterologicalConditions</name>
+      <name>mac:type</name>
+      <name>mas:constraintLanguage</name>
+      <name>mas:schemaLanguage</name>
+      <name>mcc:code</name>
+      <name>mcc:codeSpace</name>
+      <name>mcc:fileName</name>
+      <name>mcc:fileType</name>
+      <name>mcc:version</name>
+      <name>mdq:pass</name>
+      <name>mex:condition</name>
+      <name>mex:domainValue</name>
+      <name>mex:maximumOccurence</name>
+      <name>mrc:bitsPerValue</name>
+      <name>mrc:cameraCalibrationInformationAvailability</name>
+      <name>mrc:cloudCoverPercentage</name>
+      <name>mrc:complianceCode</name>
+      <name>mrc:compressionGenerationQuantity</name>
+      <name>mrc:featureInstanceCount</name>
+      <name>mrc:filmDistortionInformationAvailability</name>
+      <name>mrc:illuminationAzimuthAngle</name>
+      <name>mrc:illuminationElevationAngle</name>
+      <name>mrc:includedWithDataset</name>
+      <name>mrc:lensDistortionInformationAvailability</name>
+      <name>mrc:maxValue</name>
+      <name>mrc:meanValue</name>
+      <name>mrc:minValue</name>
+      <name>mrc:numberOfValues</name>
+      <name>mrc:offset</name>
+      <name>mrc:radiometricCalibrationDataAvailability</name>
+      <name>mrc:radiometricCalibrationDataAvailability</name>
+      <name>mrc:scaleFactor</name>
+      <name>mrc:standardDeviation</name>
+      <name>mrc:triangulationIndicator</name>
+      <name>mrd:amendmentNumber</name>
+      <name>mrd:density</name>
+      <name>mrd:densityUnits</name>
+      <name>mrd:fileDecompressionTechnique</name>
+      <name>mrd:transferSize</name>
+      <name>mrd:unitsOfDistribution</name>
+      <name>mrd:volumes</name>
+      <name>mri:angularDistance</name>
+      <name>mri:denominator</name>
+      <name>mri:distance</name>
+      <name>mri:levelOfDetail</name>
+      <name>mri:vertical</name>
+      <name>msr:checkPointAvailability</name>
+      <name>msr:controlPointAvailability</name>
+      <name>msr:dimensionSize</name>
+      <name>msr:geometricObjectCount</name>
+      <name>msr:numberOfDimensions</name>
+      <name>msr:orientationParameterAvailability</name>
+      <name>msr:resolution</name>
+      <name>msr:transformationParameterAvailability</name>
+      <name>srv:identifier</name>
+      <name>srv:invocationName</name>
+      <name>srv:name</name>
+      <name>srv:operationName</name>
+      <name>srv:serviceTypeVersion</name>
+    </exclude>
+  </multilingualFields>
+
+  <tableFields>
+    <!-- This is an example for organisation table layout.
+    19115-3 being more flexible with link between orgs and individual,
+    a table view force some constraints. -->
+    <table for="cit:CI_Responsibility">
+      <header>
+        <col label="cit:role"/>
+        <col label="cit:CI_Organisation"/>
+        <col label="cit:electronicMailAddress"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="cit:role"/>
+        <col xpath="cit:party/cit:CI_Organisation/cit:name"/>
+        <col xpath="cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress"/>
+        <col del=".."/>
+      </row>
+    </table>
+  </tableFields>
+
+
+  <!-- View configuration -->
+  <views>
+    <view name="default">
+
+      <sidePanel>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive gn-geo-publisher=""
+                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
+                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
+                   data-lang="lang"/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+
+      <tab id="default" default="true" mode="flat">
+        <section xpath="/mdb:MD_Metadata/mdb:identificationInfo"/>
+        <section xpath="/mdb:MD_Metadata/mdb:contentInfo"/>
+        <section xpath="/mdb:MD_Metadata/mdb:distributionInfo"/>
+        <section xpath="/mdb:MD_Metadata/mdb:dataQualityInfo"/>
+        <section xpath="/mdb:MD_Metadata/mdb:resourceLineage"/>
+        <section xpath="/mdb:MD_Metadata/mdb:spatialRepresentationInfo"/>
+        <section xpath="/mdb:MD_Metadata/mdb:referenceSystemInfo"/>
+        <section xpath="/mdb:MD_Metadata/mdb:acquisitionInformation"/>
+        <section xpath="/mdb:MD_Metadata/mdb:portrayalCatalogueInfo"/>
+        <section xpath="/mdb:MD_Metadata/mdb:metadataConstraints"/>
+        <section xpath="/mdb:MD_Metadata/mdb:metadataMaintenance"/>
+        <section xpath="/mdb:MD_Metadata/mdb:applicationSchemaInfo"/>
+        <section name="metadata">
+          <field xpath="/mdb:MD_Metadata/mdb:metadataIdentifier"/>
+          <field xpath="/mdb:MD_Metadata/mdb:defaultLocale" or="defaultLocale"
+                 in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:otherLocale" or="otherLocale"
+                 in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:contact" or="contact" in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:parentMetadata" or="parentMetadata"
+                 in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:metadataScope" or="metadataScope"
+                 in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:alternativeMetadataReference" or="alternativeMetadataReference"
+                 in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:metadataLinkage" or="metadataLinkage"
+                 in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:dateInfo"/>
+          <field xpath="/mdb:MD_Metadata/mdb:metadataStandard"/>
+          <field xpath="/mdb:MD_Metadata/mdb:metadataProfile"/>
+        </section>
+      </tab>
+
+      <!-- Elements that should not use the "flat" mode -->
+      <flatModeExceptions>
+        <for name="mri:descriptiveKeywords"/>
+        <for name="mri:pointOfContact"/>
+        <for name="mrd:distributor"/>
+        <for name="mdb:contact"/>
+        <for name="mcc:processor"/>
+        <for name="cit:party"/>
+        <for name="cit:CI_Individual"/>
+        <for name="cit:CI_Organisation"/>
+      </flatModeExceptions>
+      <thesaurusList>
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeufeatureconcept-featureconcept" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
+      </thesaurusList>
+    </view>
+
+
+    <view name="advanced">
+      <sidePanel>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive gn-geo-publisher=""
+                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
+                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
+                   data-lang="lang"/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+
+      <tab id="identificationInfo" default="true">
+        <section xpath="/mdb:MD_Metadata/mdb:identificationInfo" or="identificationInfo"
+                 in="/mdb:MD_Metadata"/>
+      </tab>
+      <tab id="contentInfo">
+        <section xpath="/mdb:MD_Metadata/mdb:contentInfo" or="contentInfo" in="/mdb:MD_Metadata"/>
+      </tab>
+      <tab id="distributionInfo">
+        <section xpath="/mdb:MD_Metadata/mdb:distributionInfo" or="distributionInfo"
+                 in="/mdb:MD_Metadata"/>
+      </tab>
+      <!--
+      mdb:distributionInfo/mrd:MD_Distribution/mrd:transferOptions/mrd:MD_DigitalTransferOptions
+      -->
+      <tab id="dataQualityInfo">
+        <section xpath="/mdb:MD_Metadata/mdb:dataQualityInfo" or="dataQualityInfo"
+                 in="/mdb:MD_Metadata"/>
+      </tab>
+      <!--
+      Example to display a table view of quality measures.
+      <tab id="qualityMeasures">
+        <section>
+          <xsl xpath="/mdb:MD_Metadata/mdb:dataQualityInfo"
+               or="report"
+               mode="iso19115-3.2018-qm"/>
+        </section>
+      </tab>-->
+      <tab id="resourceLineage">
+        <section xpath="/mdb:MD_Metadata/mdb:resourceLineage" or="resourceLineage"
+                 in="/mdb:MD_Metadata"/>
+      </tab>
+      <tab id="spatialRepresentationInfo">
+        <section xpath="/mdb:MD_Metadata/mdb:spatialRepresentationInfo"
+                 or="spatialRepresentationInfo" in="/mdb:MD_Metadata"/>
+      </tab>
+      <tab id="referenceSystemInfo">
+        <section xpath="/mdb:MD_Metadata/mdb:referenceSystemInfo" or="referenceSystemInfo"
+                 in="/mdb:MD_Metadata"/>
+      </tab>
+      <tab id="acquisitionInformation">
+        <section xpath="/mdb:MD_Metadata/mdb:acquisitionInformation" or="acquisitionInformation"
+                 in="/mdb:MD_Metadata"/>
+      </tab>
+      <tab id="metadata">
+        <section name="metadata">
+          <field xpath="/mdb:MD_Metadata/mdb:metadataIdentifier"/>
+          <field xpath="/mdb:MD_Metadata/mdb:defaultLocale" or="defaultLocale"
+                 in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:otherLocale" or="otherLocale"
+                 in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:contact" or="contact"
+                 in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:parentMetadata" or="parentMetadata"
+                 in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:metadataScope" or="metadataScope"
+                 in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:alternativeMetadataReference" or="alternativeMetadataReference"
+                 in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:metadataLinkage" or="metadataLinkage"
+                 in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:dateInfo" or="dateInfo"
+                 in="/mdb:MD_Metadata"/>
+          <field xpath="/mdb:MD_Metadata/mdb:metadataStandard"/>
+          <field xpath="/mdb:MD_Metadata/mdb:metadataProfile"/>
+        </section>
+      </tab>
+      <tab id="portrayalCatalogueInfo" toggle="true">
+        <section xpath="/mdb:MD_Metadata/mdb:portrayalCatalogueInfo" or="portrayalCatalogueInfo"
+                 in="/mdb:MD_Metadata"/>
+      </tab>
+      <tab id="metadataConstraints" toggle="true">
+        <section xpath="/mdb:MD_Metadata/mdb:metadataConstraints" or="metadataConstraints"
+                 in="/mdb:MD_Metadata"/>
+      </tab>
+      <tab id="metadataMaintenance" toggle="true">
+        <section xpath="/mdb:MD_Metadata/mdb:metadataMaintenance" or="metadataMaintenance"
+                 in="/mdb:MD_Metadata"/>
+      </tab>
+      <tab id="applicationSchemaInfo" toggle="true">
+        <section xpath="/mdb:MD_Metadata/mdb:applicationSchemaInfo" or="applicationSchemaInfo"
+                 in="/mdb:MD_Metadata"/>
+      </tab>
+      <thesaurusList>
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
+      </thesaurusList>
+    </view>
+    <view name="xml">
+      <sidePanel>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive gn-geo-publisher=""
+                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
+                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
+                   data-lang="lang"/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+
+      <tab id="xml" default="true"/>
+    </view>
+  </views>
+
+  <batchEditing>
+    <section name="identification">
+      <!-- Update existing title in metadata record -->
+      <field name="title"
+             xpath="mdb:identificationInfo/*/
+                      mri:citation/*/cit:title"
+             indexField="title">
+        <template><![CDATA[<gco:CharacterString xmlns:gco='http://standards.iso.org/iso/19115/-3/gco/1.0'>{{value}}</gco:CharacterString>]]></template>
+      </field>
+
+      <!-- Insert a new keyword in the first gmd:descriptiveKeywords found.
+      Warning: The section may contains a thesaurusName reference and
+      the keyword may not be part of it.
+      Warning: Duplicates may be inserted.
+      -->
+      <field name="keyword"
+             xpath="mdb:identificationInfo/*/
+                      mri:descriptiveKeywords/*/mri:keyword"
+             indexField="keyword"
+             insertMode="gn_create">
+        <template><![CDATA[<gco:CharacterString xmlns:gco='http://standards.iso.org/iso/19115/-3/gco/1.0'>{{value}}</gco:CharacterString>]]></template>
+      </field>
+
+      <!-- Insert a new topic category
+      Warning: Duplicates may be inserted.
+      -->
+      <field name="topicCats"
+             xpath="mri:identificationInfo/*/
+                      mri:topicCategory"
+             use="data-gn-codelist-picker"
+             codelist="mri:MD_TopicCategoryCode"
+             indexField="topicCat"
+             insertMode="gn_create">
+        <template><![CDATA[<mri:MD_TopicCategoryCode xmlns:mri='http://standards.iso.org/iso/19115/-3/mri/1.0'>{{value}}</mri:MD_TopicCategoryCode>]]></template>
+      </field>
+
+      <!-- Insert a new extent
+      Warning: Duplicates may be inserted.
+      -->
+      <field name="extent"
+             xpath="mri:identificationInfo/*/mri:extent"
+             use="data-gn-draw-bbox"
+             insertMode="gn_create"/>
+
+      <!-- Insert a new resource language
+      Warning: Duplicates may be inserted.
+      -->
+      <field name="language"
+             xpath="mri:identificationInfo/*/mri:defaultLocale/*/lan:language"
+             use="data-gn-language-picker"
+             insertMode="gn_replace"
+             removable="true">
+        <template><![CDATA[<lan:LanguageCode xmlns:lan='http://standards.iso.org/iso/19115/-3/lan/1.0' codeListValue='{{value}}'/>]]></template>
+      </field>
+
+
+      <field name="resourceStatus"
+             xpath="mri:identificationInfo/*/
+                      mri:status"
+             use="data-gn-codelist-picker"
+             codelist="mcc:MD_ProgressCode"
+             insertMode="gn_replace"
+             removable="true">
+        <template><![CDATA[<mcc:MD_ProgressCode xmlns:mcc='http://standards.iso.org/iso/19115/-3/mcc/1.0' codeListValue='{{value}}'/>]]></template>
+      </field>
+    </section>
+
+    <section name="resourceConstraints">
+      <!-- Insert a new access contraints
+            Warning: Duplicates may be inserted.
+      -->
+      <field name="legalConstraints"
+             xpath="mri:identificationInfo/*/
+                      mri:resourceConstraints/mco:MD_LegalConstraints/
+                        mco:accessConstraints"
+             use="data-gn-codelist-picker"
+             codelist="mco:MD_RestrictionCode"
+             insertMode="gn_create"
+             removable="true">
+        <template><![CDATA[<mco:MD_RestrictionCode xmlns:mco='http://standards.iso.org/iso/19115/-3/mco/1.0' codeListValue='{{value}}'/>]]></template>
+      </field>
+
+      <!-- Insert a new other contraints
+            Warning: Duplicates may be inserted.
+      -->
+      <field name="otherConstraints"
+             xpath="mri:identificationInfo/*/
+                      mco:resourceConstraints/mco:MD_LegalConstraints/
+                        mco:otherConstraints"
+             use="textarea"
+             insertMode="gn_create"
+             removable="true">
+        <template><![CDATA[<gco:CharacterString xmlns:gco='http://standards.iso.org/iso/19115/-3/gco/1.0'>{{value}}</gco:CharacterString>]]></template>
+      </field>
+    </section>
+
+
+    <!-- Replace current lineage or insert a new one.
+          Warning: Duplicates may be inserted.
+    -->
+    <section name="quality">
+      <field name="lineage"
+             xpath="mdb:resourceLineage/mrl:LI_Lineage/mrl:statement"
+             use="textarea"
+             insertMode="gn_replace"
+             removable="true">
+        <template><![CDATA[<gco:CharacterString xmlns:gco='http://standards.iso.org/iso/19115/-3/gco/1.0'>{{value}}</gco:CharacterString>]]></template>
+      </field>
+    </section>
+
+    <section name="contact">
+      <field name="resourceContact"
+             xpath="mdb:identificationInfo/*/mri:pointOfContact"
+             use="data-gn-directory-entry-selector"
+             insertMode="gn_create"/>
+      <field name="distributor"
+             xpath="mdb:distributionInfo/mrd:MD_Distribution/mrd:distributor/mrd:MD_Distributor/mrd:distributorContact"
+             use="data-gn-directory-entry-selector"
+             insertMode="gn_create"/>
+      <field name="mdContact"
+             xpath="mdb:contact"
+             use="data-gn-directory-entry-selector"
+             insertMode="gn_create"/>
+    </section>
+
+    <section name="metadata">
+      <field name="mdLanguage"
+             xpath="mdb:defaultLocale/lan:PT_Locale/lan:language"
+             use="data-gn-language-picker"
+             removable="true">
+        <template><![CDATA[<lan:LanguageCode xmlns:lan='http://standards.iso.org/iso/19115/-3/lan/1.0' codeListValue='{{value}}'/>]]></template>
+      </field>
+    </section>
+  </batchEditing>
+</editor>

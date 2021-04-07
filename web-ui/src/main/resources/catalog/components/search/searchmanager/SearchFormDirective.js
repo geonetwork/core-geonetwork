@@ -124,6 +124,11 @@
       for (v in params) {
         if (params[v] == '') {
           delete params[v];
+        } else {
+          // Process parameters to remove template fields for opensearch if not filled:
+          if (/^{.*\?}$/.test(params[v])) {
+            delete params[v];
+          }
         }
       }
     };

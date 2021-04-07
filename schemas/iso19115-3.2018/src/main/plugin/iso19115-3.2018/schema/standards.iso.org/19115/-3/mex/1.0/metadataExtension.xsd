@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mex="http://standards.iso.org/iso/19115/-3/mex/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mex/1.0" version="1.0">
+  <annotation>
+    <documentation>Method used to represent geographic information in the dataset</documentation>
+  </annotation>
+  <include schemaLocation="mex.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="MD_DatatypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>datatype of element or entity</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_DatatypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mex:MD_DatatypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_ExtendedElementInformation" substitutionGroup="gco:AbstractObject" type="mex:MD_ExtendedElementInformation_Type">
+    <annotation>
+      <documentation>new metadata element, not found in ISO 19115, which is required to describe geographic data</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_ExtendedElementInformation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>name of the extended metadata element</documentation>
+            </annotation>
+          </element>
+          <element name="definition" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>definition of the extended element</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="obligation" type="mex:MD_ObligationCode_PropertyType">
+            <annotation>
+              <documentation>obligation of the extended element</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="condition" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>condition under which the extended element is mandatory</documentation>
+            </annotation>
+          </element>
+          <element name="dataType" type="mex:MD_DatatypeCode_PropertyType">
+            <annotation>
+              <documentation>code which identifies the kind of value provided in the extended element</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="maximumOccurrence" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>maximum occurrence of the extended element</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="domainValue" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>valid values that can be assigned to the extended element</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="parentEntity" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>name of the metadata entity(s) under which this extended metadata element may appear. The name(s) may be standard metadata element(s) or other extended metadata element(s)</documentation>
+            </annotation>
+          </element>
+          <element name="rule" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>specifies how the extended element relates to other existing elements and entities</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="rationale" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>reason for creating the extended element</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="source" type="mcc:Abstract_Responsibility_PropertyType">
+            <annotation>
+              <documentation>name of the person or organisation creating the extended element</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="conceptName" type="gco:CharacterString_PropertyType"/>
+          <element minOccurs="0" name="code" type="gco:CharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_ExtendedElementInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mex:MD_ExtendedElementInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_MetadataExtensionInformation" substitutionGroup="mcc:Abstract_MetadataExtension" type="mex:MD_MetadataExtensionInformation_Type">
+    <annotation>
+      <documentation>information describing metadata extensions</documentation>
+    </annotation>
+  </element>
+  <complexType name="MD_MetadataExtensionInformation_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_MetadataExtension_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="extensionOnLineResource" type="mcc:Abstract_OnlineResource_PropertyType">
+            <annotation>
+              <documentation>information about on-line sources containing the community profile name and the extended metadata elements. Information for all new metadata elements</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="extendedElementInformation" type="mex:MD_ExtendedElementInformation_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MD_MetadataExtensionInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mex:MD_MetadataExtensionInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MD_ObligationCode" substitutionGroup="gco:CharacterString" type="mex:MD_ObligationCode_Type">
+    <annotation>
+      <documentation>obligation of the element or entity</documentation>
+    </annotation>
+  </element>
+  <simpleType name="MD_ObligationCode_Type">
+    <annotation>
+      <documentation>obligation of the element or entity</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="mandatory">
+        <annotation>
+          <documentation>element is always required</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="optional">
+        <annotation>
+          <documentation>element is not required</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="conditional">
+        <annotation>
+          <documentation>element is required when a specific condition is met</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <complexType name="MD_ObligationCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mex:MD_ObligationCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

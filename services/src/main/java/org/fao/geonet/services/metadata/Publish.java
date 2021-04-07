@@ -53,11 +53,8 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.util.WorkflowUtil;
-import org.jdom.Document;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -104,7 +101,11 @@ public class Publish {
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
         final ServiceContext serviceContext = serviceManager.createServiceContext("md.publish", lang, request);
 
+      try {
         return exec(commaSeparatedIds, true, skipIntranet, serviceContext);
+      } finally {
+        serviceContext.clear();
+      }
     }
 
 
@@ -120,7 +121,11 @@ public class Publish {
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
         final ServiceContext serviceContext = serviceManager.createServiceContext("md.publish", lang, request);
 
+      try {
         return exec(commaSeparatedIds, false, skipIntranet, serviceContext);
+      } finally {
+        serviceContext.clear();
+      }
     }
 
     /**
@@ -130,6 +135,7 @@ public class Publish {
      * @param commaSeparatedIds the ids of the metadata to publish/unpublish.
      * @param publish           if true the metadata will be published otherwise unpublished
      * @param skipIntranet      if true then metadata only the all group will be affected
+     * @param serviceContext    service context
      */
     private PublishReport exec(String commaSeparatedIds, boolean publish, boolean skipIntranet, ServiceContext serviceContext) throws
         Exception {
@@ -187,7 +193,7 @@ public class Publish {
                 if (!allowPublishNonApprovedMd) {
                     MetadataStatus metadataStatus = metadataStatusRepository.getStatus(metadata.getId());
 
-                    String statusId = metadataStatus.getId().getStatusId() + "";
+                    String statusId = metadataStatus.getStatusValue().getId() + "";
                     if (!statusId.equals(StatusValue.Status.APPROVED)) {
                         report.incNoApproved();
                         continue;

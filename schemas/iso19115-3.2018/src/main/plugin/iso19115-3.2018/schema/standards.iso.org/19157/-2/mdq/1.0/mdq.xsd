@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:dqc="http://standards.iso.org/iso/19157/-2/dqc/1.0" xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0" xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19157/-2/mdq/1.0" version="1.0">
+  <include schemaLocation="dataQualityElement.xsd"/>
+  <include schemaLocation="dataQualityEvaluation.xsd"/>
+  <include schemaLocation="dataQualityImagery.xsd"/>
+  <include schemaLocation="dataQualityResult.xsd"/>
+  <include schemaLocation="metaquality.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19157/-2/dqc/1.0" schemaLocation="../../../../19157/-2/dqc/1.0/dqc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gcx/1.0" schemaLocation="../../../../19115/-3/gcx/1.0/gcx.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

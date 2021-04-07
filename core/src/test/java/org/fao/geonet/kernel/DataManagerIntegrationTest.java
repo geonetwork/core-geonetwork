@@ -239,12 +239,12 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
 
         final MetadataStatus loadedStatus = _dataManager.getStatus(metadataId);
 
-        assertEquals(changeDate, loadedStatus.getId().getChangeDate());
+        assertEquals(changeDate, loadedStatus.getChangeDate());
         assertEquals(changeMessage, loadedStatus.getChangeMessage());
         assertEquals(0, loadedStatus.getStatusValue().getId());
-        assertEquals(metadataId, loadedStatus.getId().getMetadataId());
-        assertEquals(0, loadedStatus.getId().getStatusId());
-        assertEquals(serviceContext.getUserSession().getUserIdAsInt(), loadedStatus.getId().getUserId());
+        assertEquals(metadataId, loadedStatus.getMetadataId());
+        assertEquals(0, loadedStatus.getStatusValue().getId());
+        assertEquals(serviceContext.getUserSession().getUserIdAsInt(), loadedStatus.getUserId());
     }
 
     @Test
@@ -298,7 +298,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(uuid, Xml.selectString(updateMd, "gmd:fileIdentifier/gco:CharacterString", namespaces));
         assertEquals(parentUuid, Xml.selectString(updateMd, "gmd:parentIdentifier/gco:CharacterString", namespaces));
         assertEquals(0, Xml.selectNodes(updateMd, "*//node()[string-length(@locale) > 3]").size());
-        assertEquals(0, Xml.selectNodes(updateMd, "*//gmd:PT_Locale[string-length(@id) > 2]").size());
+        assertEquals(0, Xml.selectNodes(updateMd, "*//gmd:PT_Locale[string-length(@id) > 3]").size());
     }
 
     private int numDocs(SearchManager searchManager, String lang) throws IOException, InterruptedException {

@@ -45,6 +45,6 @@ public class RecordDeletedListener extends GenericMetadataEventListener implemen
 
     @Override
     public void onApplicationEvent(RecordDeletedEvent event) {
-        // Delete event is not supported
+        handleEvent(event);
     }
 }

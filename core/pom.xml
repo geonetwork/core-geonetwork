@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.11.0-SNAPSHOT</version>
+    <version>3.11-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -81,6 +81,13 @@
       <artifactId>spring-context-support</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.directory.server</groupId>
+      <artifactId>apacheds-all</artifactId>
+      <version>2.0.0-M24</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-orm</artifactId>
     </dependency>
@@ -107,6 +114,11 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-cas</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-spring-security-adapter</artifactId>
+      <version>4.8.3.Final</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.security</groupId>
@@ -334,6 +346,7 @@
       <artifactId>mockito-all</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>domain</artifactId>
@@ -345,6 +358,24 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>events</artifactId>
       <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.chemistry.opencmis</groupId>
+      <artifactId>chemistry-opencmis-client-api</artifactId>
+      <version>1.1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.chemistry.opencmis</groupId>
+      <artifactId>chemistry-opencmis-client-impl</artifactId>
+      <version>1.1.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>xml-resolver</groupId>
+          <artifactId>xml-resolver</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -401,6 +432,10 @@
           <groupId>org.apache.xmlgraphics</groupId>
           <artifactId>batik-transcoder</artifactId>
         </exclusion>
+        <exclusion>
+           <groupId>org.apache.pdfbox</groupId>
+           <artifactId>pdfbox</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
 
@@ -422,9 +457,9 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>schema-iso19139</artifactId>
-      <version>${gn.schemas.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency> <!-- dummy API for ARC SDE stuff -->
       <groupId>${project.groupId}</groupId>
@@ -483,11 +518,7 @@
       <artifactId>opendap</artifactId>
       <version>2.1</version>
     </dependency>
-    <dependency>
-      <groupId>org.jsoup</groupId>
-      <artifactId>jsoup</artifactId>
-      <version>0.2.2</version>
-    </dependency>
+
     <dependency>
       <groupId>org.owasp.esapi</groupId>
       <artifactId>esapi</artifactId>
@@ -562,6 +593,7 @@
   </build>
 
   <profiles>
+
     <profile>
       <id>run-static-analysis</id>
       <activation>
@@ -578,7 +610,9 @@
         </plugins>
       </build>
     </profile>
+
   </profiles>
+
   <properties>
     <rootProjectDir>${basedir}/..</rootProjectDir>
   </properties>

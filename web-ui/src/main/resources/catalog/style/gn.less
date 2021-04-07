@@ -229,8 +229,14 @@ a {
  * Logo in nav bar can't be big
  */
 .gn-logo {
-  max-height: 28px;
-  margin: -8px 0px;
+  max-height: 24px;
+  margin: -12px 0px 0px 0px;
+  @media (max-width: @screen-md-max) {
+    margin-top: -6px;
+  }
+  @media (max-width: @screen-xs-max) {  
+    margin-top: 0;
+  }
 }
 
 .gn-logo-lg {
@@ -875,7 +881,6 @@ input.ng-invalid {
     margin-top: 2px;
   }
   .label {
-    line-height: 2;
     font-size: 11px;
   }
   .no-data a {
@@ -1034,7 +1039,7 @@ gn-md-type-widget, gn-md-type-inspire-validation-widget {
     z-index: 20;
   }
   .coord-north {
-    top: -0.25em;
+    top: -1em;
     left: 50%;
     margin-left: -75px;
   }
@@ -1097,7 +1102,7 @@ gn-md-type-widget, gn-md-type-inspire-validation-widget {
   [data-gn-region-picker], [gn-region-picker] {
     .fa {
       position: absolute;
-      top: 11px;
+      top: 13px;
       z-index: 20;
       right: 10px;
       &.fa-spinner {
@@ -1201,4 +1206,9 @@ html {
 // Clickable elements
 .clickable {
   cursor: pointer;
+}
+
+.batch-report-metadata-info {
+  max-height: 300px;
+  overflow: scroll;
 }

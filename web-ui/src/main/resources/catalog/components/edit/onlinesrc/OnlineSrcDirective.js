@@ -73,6 +73,7 @@
             scope.lang = scope.$parent.lang;
             scope.readonly = false;
             scope.numberOfOverviews = parseInt(attrs['numberOfOverviews']) || Infinity;
+            scope.onlinesrcService = gnOnlinesrc;
 
             // Load thumbnail list.
             var loadRelations = function() {
@@ -342,6 +343,7 @@
                 scope.ctrl = {};
               },
               post: function(scope, element, attrs) {
+                scope.clearFormOnProtocolChange = !(attrs.clearFormOnProtocolChange == "false"); //default to true (old behavior)
                 scope.popupid = attrs['gnPopupid'];
 
                 scope.config = null;
@@ -724,18 +726,27 @@
                   scope.layers = [];
                   scope.OGCProtocol = false;
                   if (scope.params && !scope.isEditing) {
-                    scope.params.name = '';
-                    scope.params.desc = '';
-                    initMultilingualFields();
+                    if (scope.clearFormOnProtocolChange) {
+                      scope.params.name = '';
+                      scope.params.desc = '';
+                      initMultilingualFields();
+                    }
+                    else {
+                      initMultilingualFields(['name','desc']);
+                    }
                     scope.params.selectedLayers = [];
                     scope.params.layers = [];
                   }
                 };
 
-                var initMultilingualFields = function() {
+                //doNotmodifyFields - list of field names
+                //   this will NOT update fields in this list.
+                var initMultilingualFields = function(doNotModifyFields) {
                   scope.config.multilingualFields.forEach(function(f) {
-                    scope.params[f] = {};
-                    setParameterValue(f, '');
+                    if ( (!doNotModifyFields) || (!_.contains(doNotModifyFields,f)) ) {
+                      scope.params[f] = {};
+                      setParameterValue(f, '');
+                    }
                   });
                 };
 
@@ -908,7 +919,7 @@
                           });
                     }
                   } else if (url.indexOf('http') === 0) {
-                    return $http.get(url).then(function(response) {
+                    return $http.get(scope.onlinesrcService.getApprovedUrl(url)).then(function(response) {
                       scope.isUrlOk = response.status === 200;
                     },
                     function(response) {
@@ -947,7 +958,7 @@
                   if (!angular.isUndefined(scope.params.protocol) && o !== n) {
                     resetProtocol();
                     scope.OGCProtocol = checkIsOgc(scope.params.protocol);
-                    if (scope.OGCProtocol != null && !scope.isEditing) {
+                    if (scope.OGCProtocol != null && !scope.isEditing && scope.clearFormOnProtocolChange) {
                       // Reset parameter in case of multilingual metadata
                       // Those parameters are object.
                       scope.params.name = '';

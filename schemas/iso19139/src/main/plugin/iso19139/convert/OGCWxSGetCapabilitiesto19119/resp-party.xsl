@@ -37,8 +37,6 @@
                 version="2.0"
                 exclude-result-prefixes="#all">
 
-  <!-- ============================================================================= -->
-
   <xsl:template match="*" mode="RespParty">
 
     <xsl:for-each

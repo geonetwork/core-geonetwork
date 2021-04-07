@@ -200,10 +200,16 @@
                }
              };
 
-             // Init extent from md for map and form
-             reprojExtent('md', 'map');
-             reprojExtent('md', 'form');
-             setDcOutput();
+             var initExtents = function(map) {
+               // Redefine map projection once map has been created.
+               // We do this because the user might have set up an 
+               // alternative projection in the config-viewer.xml.
+               scope.projs.map = map.getView().getProjection().getCode();
+               // Init extent from md for map and form
+               reprojExtent('md', 'map');
+               reprojExtent('md', 'form');
+               setDcOutput();
+             }
 
              scope.$watch('projs.form', function(newValue, oldValue) {
                var extent = gnMap.reprojExtent(
@@ -252,15 +258,21 @@
              // if using a context file for the map, the layer is added
              // too soon and removed when loaded the context file.
              map.get('creationPromise').then(function() {
+               // Reproject extents once the map has been created.
+               // If the user has specified a custom projection in a
+               // config-viewer.xml, the projection has only been loaded now.
+               initExtents(map);
+
+               // Draw the bounding box based on the latest projection settings.
+               // after the map has been created. This should solve issue #5153.
+               drawBbox();
                map.addLayer(bboxLayer);
              });
 
              element.data('map', map);
 
-             // initialize extent & bbox on map load
+             // Fit extent on map load
              map.get('sizePromise').then(function() {
-               drawBbox();
-
                if (gnMap.isValidExtent(scope.extent.map)) {
                  map.getView().fit(scope.extent.map, map.getSize());
                }

@@ -302,35 +302,32 @@
   <codelist name="gmd:DS_AssociationTypeCode" alias="associationType">
     <entry>
       <code>crossReference</code>
-      <label>crossReference</label>
-      <description>reference from one dataset to another</description>
+      <label>Kruis verwijzing</label>
+      <description>Referentie van een dataset naar een andere</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>largerWorkCitation</code>
-      <label>largerWorkCitation</label>
-      <description>reference to a master dataset of which this one is a part</description>
+      <label>Citatie uit een groter werk</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>partOfSeamlessDatabase</code>
-      <label>partOfSeamlessDatabase</label>
-      <description>part of the same structured set of data held in a computer</description>
+      <label>Deel van een naadloze database</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>source</code>
-      <label>source</label>
-      <description>mapping and charting information from which the dataset content
-        originates
-      </description>
+      <label>Bron</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>stereoMate</code>
-      <label>stereoMate</label>
-      <description>part of a set of imagery that when used together, provides three-dimensional
-        images
+      <label>Stereo mate</label>
+      <description>Deel van een set afbeeldingen die samen een 3D beeld vormen
       </description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -339,92 +336,92 @@
   <codelist name="gmd:DS_InitiativeTypeCode" alias="initiativeType">
     <entry>
       <code>campaign</code>
-      <label>campaign</label>
-      <description>series of organized planned actions</description>
+      <label>Campagne</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>collection</code>
-      <label>collection</label>
+      <label>Collectie</label>
       <description>accumulation of datasets assembled for a specific purpose</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>exercise</code>
-      <label>exercise</label>
-      <description>specific performance of a function or group of functions</description>
+      <label>Opdracht</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>experiment</code>
-      <label>experiment</label>
-      <description>process designed to find if something is effective or valid</description>
+      <label>Experiment</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>investigation</code>
-      <label>investigation</label>
-      <description>search or systematic inquiry</description>
+      <label>Onderzoek</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>mission</code>
-      <label>mission</label>
-      <description>specific operation of a data collection system</description>
+      <label>Missie</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>sensor</code>
-      <label>sensor</label>
-      <description>device or piece of equipment which detects or records</description>
+      <label>Sensor</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>operation</code>
-      <label>operation</label>
-      <description>action that is part of a series of actions</description>
+      <label>Operatie</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>platform</code>
-      <label>platform</label>
-      <description>vehicle or other support base that holds a sensor</description>
+      <label>Platform</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>process</code>
-      <label>process</label>
-      <description>method of doing something involving a number of steps</description>
+      <label>Proces</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>program</code>
-      <label>program</label>
-      <description>specific planned activity</description>
+      <label>Programma</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>project</code>
-      <label>project</label>
-      <description>organized undertaking, research, or development</description>
+      <label>Project</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>study</code>
-      <label>study</label>
-      <description>examination or investigation</description>
+      <label>Studie</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>task</code>
-      <label>task</label>
-      <description>piece of work</description>
+      <label>Taak</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>trial</code>
-      <label>trial</label>
-      <description>process of testing to discover or demonstrate something</description>
+      <label>Experiment</label>
+      <description></description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
   </codelist>
@@ -1882,7 +1879,7 @@
   <codelist name="gmd:MD_TopologyLevelCode">
     <entry>
       <code>geometryOnly</code>
-      <label>geometryOnly</label>
+      <label>Alleen geometrie</label>
       <description>geometry objects without any additional structure which describes
         topology
       </description>
@@ -1890,7 +1887,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>topology1D</code>
-      <label>topology1D</label>
+      <label>1D topologie</label>
       <description>1-dimensional topological complex -- commonly called chain-node
         topology
       </description>
@@ -1898,7 +1895,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>planarGraph</code>
-      <label>planarGraph</label>
+      <label>Planar Graph</label>
       <description>1-dimensional topological complex that is planar. (A planar graph is a graph
         that can be drawn in a plane in such a way that no two edges intersect except at a
         vertex.)
@@ -1907,7 +1904,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>fullPlanarGraph</code>
-      <label>fullPlanarGraph</label>
+      <label>Full Planar Graph</label>
       <description>2-dimensional topological complex that is planar. (A 2-dimensional topological
         complex is commonly called full topology in a cartographic 2D
         environment.)
@@ -1916,7 +1913,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>surfaceGraph</code>
-      <label>surfaceGraph</label>
+      <label>Surface Graph</label>
       <description>1-dimensional topological complex that is isomorphic to a subset of a surface.
         (A geometric complex is isomorphic to a topological complex if their elements are in a
         one-to-one, dimensional-and boundry-preserving correspondence to one
@@ -1926,7 +1923,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>fullSurfaceGraph</code>
-      <label>fullSurfaceGraph</label>
+      <label>Full Surface Graph</label>
       <description>2-dimensional topological complex that is isomorphic to a subset of a
         surface
       </description>
@@ -1934,7 +1931,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>topology3D</code>
-      <label>topology3D</label>
+      <label>3D Topologie</label>
       <description>3-dimensional topological complex. (A topological complex is a collection of
         topological primitives that are closed under the boundary operations.)
       </description>
@@ -1942,7 +1939,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>fullTopology3D</code>
-      <label>fullTopology3D</label>
+      <label>Full 3D Topologie</label>
       <description>complete coverage of a 3D Euclidean coordinate space</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1957,85 +1954,85 @@
   <codelist name="gmd:MX_ScopeCode">
     <entry>
       <code>attribute</code>
-      <label>attribute</label>
+      <label>Attribute</label>
       <description>information applies to the attribute class</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>attributeType</code>
-      <label>attributeType</label>
+      <label>Attribute type</label>
       <description>information applies to the characteristic of a feature</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>collectionHardware</code>
-      <label>collectionHardware</label>
+      <label>Collection hardware</label>
       <description>information applies to the collection hardware class</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>collectionSession</code>
-      <label>collectionSession</label>
+      <label>Collection Session</label>
       <description>information applies to the collection session</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>dataset</code>
-      <label>dataset</label>
+      <label>Dataset</label>
       <description>information applies to the dataset</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>series</code>
-      <label>series</label>
+      <label>Series</label>
       <description>information applies to the series</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>nonGeographicDataset</code>
-      <label>nonGeographicDataset</label>
+      <label>Niet Geographische Dataset</label>
       <description>information applies to non-geographic data</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>dimensionGroup</code>
-      <label>dimensionGroup</label>
+      <label>Dimension Group</label>
       <description>information applies to a dimension group</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>feature</code>
-      <label>feature</label>
+      <label>Feature</label>
       <description>information applies to a feature</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>featureType</code>
-      <label>featureType</label>
+      <label>Feature Type</label>
       <description>information applies to a feature type</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>propertyType</code>
-      <label>propertyType</label>
+      <label>Property Type</label>
       <description>information applies to a property type</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>fieldSession</code>
-      <label>fieldSession</label>
+      <label>FieldSession</label>
       <description>information applies to a field session</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>software</code>
-      <label>software</label>
+      <label>Software</label>
       <description>information applies to a computer program or routine</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>service</code>
-      <label>service</label>
+      <label>Service</label>
       <description>information applies to a capability which a service provider entity makes
         available to a service user entity through a set of interfaces that define a behaviour,
         such as a use case
@@ -2044,7 +2041,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>model</code>
-      <label>model</label>
+      <label>Model</label>
       <description>information applies to a copy or imitation of an existing or hypothetical
         object
       </description>
@@ -2052,7 +2049,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>tile</code>
-      <label>tile</label>
+      <label>Tile</label>
       <description>information applies to a tile, a spatial subset of geographic
         data
       </description>
@@ -2060,7 +2057,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>initiative</code>
-      <label>initiative</label>
+      <label>Initiative</label>
       <description>The referencing entity applies to a transfer aggregate which was originally
         identified as an initiative (DS_Initiative)
       </description>
@@ -2068,7 +2065,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>stereomate</code>
-      <label>stereomate</label>
+      <label>Stereomate</label>
       <description>The referencing entity applies to a transfer aggregate which was originally
         identified as a stereo mate (DS_StereoMate)
       </description>
@@ -2076,7 +2073,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>sensor</code>
-      <label>sensor</label>
+      <label>Sensor</label>
       <description>The referencing entity applies to a transfer aggregate which was originally
         identified as a sensor (DS_Sensor)
       </description>
@@ -2084,7 +2081,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>platformSeries</code>
-      <label>platformSeries</label>
+      <label>Platform Series</label>
       <description>The referencing entity applies to a transfer aggregate which was originally
         identified as a platform series (DS_PlatformSeries)
       </description>
@@ -2092,7 +2089,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>sensorSeries</code>
-      <label>sensorSeries</label>
+      <label>Sensor Series</label>
       <description>The referencing entity applies to a transfer aggregate which was originally
         identified as a sensor series (DS_SensorSeries)
       </description>
@@ -2100,7 +2097,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>productionSeries</code>
-      <label>productionSeries</label>
+      <label>Production Series</label>
       <description>The referencing entity applies to a transfer aggregate which was originally
         identified as a production series (DS_ProductionSeries)
       </description>
@@ -2108,7 +2105,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>transferAggregate</code>
-      <label>transferAggregate</label>
+      <label>Transfer Aggregate</label>
       <description>The referencing entity applies to a transfer aggregate which has no existence
         outside of the transfer context
       </description>
@@ -2116,7 +2113,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>otherAggregate</code>
-      <label>otherAggregate</label>
+      <label>Other Aggregate</label>
       <description>The referencing entity applies to a transfer aggregate which has an existence
         outside of the transfer context, but which does not pertains to a specific aggregate
         type.
@@ -2286,6 +2283,47 @@
     <entry>
       <code>in/out</code>
       <label>Input/output</label>
+    </entry>
+  </codelist>
+  <codelist name="gco:nilReason">
+    <entry>
+      <code>missing</code>
+      <label>Missend</label>
+    </entry>
+    <entry>
+      <code>inapplicable</code>
+      <label>Niet van toepassing</label>
+    </entry>
+    <entry>
+      <code>template</code>
+      <label>Template</label>
+    </entry>
+    <entry>
+      <code>unknown</code>
+      <label>Onbekend</label>
+    </entry>
+    <entry>
+      <code>withheld</code>
+      <label>Achterhouden</label>
+    </entry>
+  </codelist>
+
+  <codelist name="indeterminatePosition">
+    <entry>
+      <code>after</code>
+      <label>Na</label>
+    </entry>
+    <entry>
+      <code>before</code>
+      <label>Eerder</label>
+    </entry>
+    <entry>
+      <code>now</code>
+      <label>Nu</label>
+    </entry>
+    <entry>
+      <code>unknown</code>
+      <label>Onbekend</label>
     </entry>
   </codelist>
 </codelists>

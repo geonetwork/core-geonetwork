@@ -122,13 +122,16 @@ public class SchemaLocalizations {
         ServletRequestAttributes attributes = (ServletRequestAttributes) obj;
         HttpServletRequest request = attributes.getRequest();
 
-
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final ServiceContext serviceContext = ServiceContext.get();
-
         final String lang3 = serviceContext != null ?
             serviceContext.getLanguage() :
             appContext.getBean(LanguageUtils.class).getIso3langCode(request.getLocales());
+        return create(schema, lang3);
+    }
+
+    public static SchemaLocalizations create(String schema, String lang3) throws IOException, JDOMException {
+        final ApplicationContext appContext = ApplicationContextHolder.get();
         final String lang2 = appContext.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(lang3);
         CurrentLanguageHolder languageHolder = new CurrentLanguageHolder() {
             @Override

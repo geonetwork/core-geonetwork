@@ -41,8 +41,9 @@ import org.fao.geonet.domain.MetadataRatingByIp;
 import org.fao.geonet.domain.MetadataRatingByIpId;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.MetadataValidationId;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -52,14 +53,18 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
+import org.fao.geonet.repository.MetadataRatingByIpRepository;
+import org.fao.geonet.repository.MetadataStatusRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SimpleMetadata;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.Updater;
@@ -77,8 +82,6 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.annotation.Nonnull;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -86,7 +89,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 
@@ -103,7 +105,19 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     @Autowired
     private StatusValueRepository statusValueRepository;
     @Autowired
+    private MetadataStatusRepository metadataStatusRepository;
+    @Autowired
+    private MetadataRatingByIpRepository metadataRatingByIpRepository;
+    @Autowired
+    private MetadataValidationRepository metadataValidationRepository;
+
+    @Autowired
+    private SearchManager searchManager;
+
+    @Autowired
     private AccessManager am;
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     private ServiceContext context;
 
@@ -537,15 +551,29 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             // Copy privileges from original metadata
             for (OperationAllowed op : metadataOperations.getAllOperations(templateMetadata.getId())) {
 
-                // Only interested in editing and reviewing privileges
+                // Only interested in editing and reviewing privileges and group owner privileges
                 // No one else should be able to see it
-                if (op.getId().getOperationId() == ReservedOperation.editing.getId()) {
+                if (op.getId().getOperationId() == ReservedOperation.editing.getId() ||
+                    ((groupOwner != null) && (op.getId().getGroupId() == Integer.parseInt(groupOwner)))) {
                     Log.trace(Geonet.DATA_MANAGER, "Assign operation: " + op);
                     metadataOperations.forceSetOperation(context, finalId, op.getId().getGroupId(),
                         op.getId().getOperationId());
                 } else {
                     Log.trace(Geonet.DATA_MANAGER, "Skipping operation: " + op);
                 }
+            }
+
+            // Copy validation status from original metadata
+            List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(templateMetadata.getId());
+            for (MetadataValidation mv : validations) {
+                MetadataValidation metadataValidation = new MetadataValidation()
+                    .setId(new MetadataValidationId(finalId, mv.getId().getValidationType()))
+                    .setStatus(mv.getStatus()).setRequired(mv.isRequired())
+                    .setValid(mv.isValid()).setValidationDate(mv.getValidationDate())
+                    .setNumTests(mv.getNumTests()).setNumFailures(mv.getNumFailures())
+                    .setReportUrl(mv.getReportUrl()).setReportContent(mv.getReportContent());
+
+                metadataValidationRepository.save(metadataValidation);
             }
 
             // Enable workflow on draft and make sure original record has also the workflow
@@ -564,13 +592,13 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
             for (Integer mdId : metadataIds) {
                 MetadataStatus metadataStatus = new MetadataStatus();
-
-                MetadataStatusId mdStatusId = new MetadataStatusId().setStatusId(status).setMetadataId(mdId)
-                    .setChangeDate(new ISODate()).setUserId(author);
-
-                metadataStatus.setId(mdStatusId);
+                metadataStatus.setMetadataId(mdId);
+                metadataStatus.setUuid(uuid);
+                metadataStatus.setChangeDate(new ISODate());
+                metadataStatus.setUserId(author);
                 metadataStatus.setStatusValue(statusValue);
                 metadataStatus.setChangeMessage("Editing instance created");
+                metadataStatus.setTitles(metadataUtils.extractTitles(newMetadata.getDataInfo().getSchemaId(), xml));
 
                 List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                 listOfStatusChange.add(metadataStatus);
@@ -586,12 +614,58 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     @Override
     public void cloneFiles(AbstractMetadata original, AbstractMetadata dest) {
         try {
-            StoreUtils.copyDataDir(context, original.getUuid(), dest.getUuid(), true);
+            StoreUtils.copyDataDir(context, original.getUuid(), dest.getUuid(), false);
             cloneStoreFileUploadRequests(original, dest);
 
         } catch (Exception ex) {
             Log.error(Geonet.RESOURCES, "Failed copy of resources: " + ex.getMessage(), ex);
             throw new RuntimeIOException(ex);
+        }
+    }
+
+    @Override
+    public void replaceFiles(AbstractMetadata original, AbstractMetadata dest) {
+        try {
+            boolean oldApproved=true;
+            boolean newApproved=false;
+
+            // If destination is approved then this is a working copy so the original will not be approved.
+            if (metadataUtils.isMetadataApproved(dest.getId())) {
+                oldApproved=false;
+                newApproved=true;
+            }
+            StoreUtils.replaceDataDir(context, original.getUuid(), dest.getUuid(), oldApproved, newApproved);
+            cloneStoreFileUploadRequests(original, dest);
+
+        } catch (Exception ex) {
+            Log.error(Geonet.RESOURCES, "Failed copy of resources: " + ex.getMessage(), ex);
+            throw new RuntimeIOException(ex);
+        }
+    }
+
+
+    @Override
+    public void cancelEditingSession(ServiceContext context, String id) throws Exception {
+        super.cancelEditingSession(context, id);
+
+        int intId = Integer.parseInt(id);
+
+        // Remove the draft copy if the metadata was edited and the user cancels the editor, without saving any change
+        if (metadataDraftRepository.exists(intId) &&
+            (context.getUserSession().getProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT) == Boolean.TRUE)) {
+            try {
+                // Remove related data
+                metadataOperations.deleteMetadataOper(id, false);
+                metadataRatingByIpRepository.deleteAllById_MetadataId(intId);
+                metadataValidationRepository.deleteAllById_MetadataId(intId);
+                metadataStatusRepository.deleteAllById_MetadataId(intId);
+
+                // --- remove metadata
+                xmlSerializer.delete(id, ServiceContext.get());
+                searchManager.delete(id);
+            } catch (Exception e) {
+                Log.error(Geonet.DATA_MANAGER, "Couldn't cleanup draft " + id, e);
+            }
         }
     }
 

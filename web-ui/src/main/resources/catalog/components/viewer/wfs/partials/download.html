@@ -23,13 +23,13 @@
             data-ng-model="downloadFormat"
             data-ng-change="downloadFormatChange(this)">
       <optgroup label="{{'downloadFeature'| translate}}">
-        <option data-ng-repeat="f in formats | orderBy:f"
+        <option data-ng-repeat="f in formats | orderBy:f track by $index"
                 value="{{f}}#false">
           {{f | lowercase}}
         </option>
       </optgroup>
       <optgroup label="{{'downloadInCurrentMapExtent'| translate}}">
-        <option data-ng-repeat="f in formats | orderBy:f"
+        <option data-ng-repeat="f in formats | orderBy:f track by $index"
                 value="{{f}}#true">
           {{f | lowercase}}
         </option>
@@ -49,7 +49,7 @@
         <li class="dropdown-header"
             data-translate="">downloadAllIn
         </li>
-        <li data-ng-repeat="f in formats | orderBy:f">
+        <li data-ng-repeat="f in formats | orderBy:f track by $index">
           <a data-gn-click-and-spin="download(f)">
             {{f | lowercase}}
           </a>
@@ -60,7 +60,7 @@
         data-ng-if="map"
         data-translate="">downloadInCurrentMapExtent</li>
         <li data-ng-if="map"
-            data-ng-repeat="f in formats | orderBy:f">
+            data-ng-repeat="f in formats | orderBy:f track by $index">
           <a data-gn-click-and-spin="download(f, true)">
             {{f | lowercase }}
           </a>

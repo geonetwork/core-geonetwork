@@ -296,7 +296,7 @@
   };
 
   geonetwork.GnFeaturesGFILoader.prototype.getFeatureFromRow = function(row) {
-    var geoms = ['the_geom', 'thegeom', 'boundedBy'];
+    var geoms = ['the_geom', 'thegeom', 'boundedBy', 'geometry'];
     for (var i = 0; i < geoms.length; i++) {
       var geom = row[geoms[i]];
       if (geoms[i] == 'boundedBy' && jQuery.isArray(geom)) {
@@ -496,6 +496,74 @@
   };
 
 
+  /**
+   * Features loader tailored for the ESRI ArcGis REST API
+   * @constructor
+   */
+  geonetwork.GnFeaturesESRILoader = function(config, $injector) {
+    geonetwork.GnFeaturesGFILoader.call(this, config, $injector);
+
+    this.coordinates = config.coordinates;
+  };
+
+  geonetwork.inherits(geonetwork.GnFeaturesESRILoader,
+    geonetwork.GnFeaturesGFILoader);
+
+  geonetwork.GnFeaturesESRILoader.prototype.loadAll = function() {
+    var layer = this.layer;
+    var map = this.map;
+    var coordinates = this.coordinates;
+
+    var uuid;
+    if(layer.get('md')) {
+      uuid = layer.get('md').getUuid();
+    } else if(layer.get('metadataUuid')) {
+      uuid = layer.get('metadataUuid');
+    }
+
+    this.loading = true;
+    var mapExtent = map.getView().calculateExtent();
+    var mapSize = map.getSize();
+    var layerId = layer.getSource().getParams().LAYERS;
+
+    var layerParam = 'top'; // only the top most features will be returned
+    if (!!layerId) {
+      layerParam = 'all:' + layerId; // look into the specified layer instead
+    }
+
+    // we use the identify operation on the image service, see:
+    // https://developers.arcgis.com/rest/services-reference/identify-map-service-.htm
+    var identifyUrl = layer.getSource().getUrl() +
+      '/identify?geometryType=esriGeometryPoint&geometry=' + coordinates[0] + ',' + coordinates[1] +
+      '&tolerance=4&mapExtent=' + mapExtent.join(',') + '&imageDisplay=' + mapSize.join(',') + ',96' +
+      '&f=json&layers=' + layerParam;
+
+    var format = new ol.format.EsriJSON();
+
+    this.promise = this.$http.get(identifyUrl).then(function (response) {
+      this.loading = false;
+      this.features = response.data.results.map(function (result) {
+        return format.readFeature(result, {
+          featureProjection: map.getView().getProjection()
+        });
+      });
+      return this.features;
+    }.bind(this));
+
+    this.dictionary = null;
+
+    if(uuid) {
+      this.dictionary = this.$http.get('../api/records/'+uuid+'/featureCatalog?_content_type=json')
+        .then(function(response) {
+          if(response.data['decodeMap']!=null) {
+            return response.data['decodeMap'];
+          }
+        }, function () {
+          return null;
+        });
+    }
+
+  };
 
   /**
    *

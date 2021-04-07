@@ -165,24 +165,32 @@
   <div class="panel-group" id="logActivityTop" role="tablist">
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="logActivityHeading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" data-ng-click="openLogActivity()" data-parent="#top"
-             aria-expanded="true" aria-controls="logActivity" translate>
-            logActivity
-          </a>&nbsp;
-          <i class="fa fa-spinner fa-spin" data-ng-show="logInfoLoading"></i>
-        </h4>
-        <div class="btn-toolbar">
-          <a href="" data-ng-click="downloadLog()" class="btn btn-default pull-right">
-            <i class="fa fa-file-zip-o"></i>&nbsp;<span translate>exportLogAsZIP</span>
-          </a>
-        </div>
-
+        <h4 class="panel-title" data-translate="">logActivity</h4>
       </div>
-      <div id="logActivity" class="panel-collapse collapse" role="tabpanel"
-           aria-labelledby="logActivityHeading">
-        <div class="panel-body">
-          <pre>{{logActivity}}</pre>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-6">
+            <a data-toggle="collapse" data-ng-click="openLogActivity()" data-parent="#top"
+               aria-expanded="true" aria-controls="logActivity" translate>
+              load
+            </a>&nbsp;
+            <span ng-class="{'fa fa-fw fa-caret-down': visibleLogView,
+                'fa fa-fw fa-caret-right': !visibleLogView}"></span>
+            <i class="fa fa-spinner fa-spin" data-ng-show="logInfoLoading"></i>
+          </div>
+          <div class="col-sm-6">
+            <div class="btn-toolbar">
+              <a href="" data-ng-click="downloadLog()" class="btn btn-default pull-right">
+                <i class="fa fa-file-zip-o"></i>&nbsp;<span translate>exportLogAsZIP</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div id="logActivity" class="panel-collapse collapse" role="tabpanel"
+             aria-labelledby="logActivityHeading">
+          <div class="panel-body">
+            <pre>{{logActivity}}</pre>
+          </div>
         </div>
       </div>
     </div>

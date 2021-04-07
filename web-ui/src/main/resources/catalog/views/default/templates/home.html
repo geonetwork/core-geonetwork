@@ -13,8 +13,11 @@
                 aria-label="{{'anyPlaceHolder' | translate}}"
                 data-ng-keyup="$event.keyCode == 13 && goToSearch(homeAnyField)"
                 data-typeahead="address for address in getAnySuggestions($viewValue)"
+                data-typeahead-template-url="../../catalog/templates/gn-typeahead-match.html"
                 data-typeahead-loading="anyLoading"
-                data-typeahead-min-length="1"/>
+                data-typeahead-min-length="1"
+                data-typeahead-focus-first="false"
+                data-typeahead-wait-ms="300"/>
           <span class="input-group-btn">
             <a class="btn btn-primary btn-lg"
               type="button"
@@ -157,7 +160,7 @@
     </div>
   </div>
   <!-- /.gn-row-topics -->
-  
+
   <div class="row gn-row-info"
        data-ng-show="searchInfo.count > 0"
        data-ng-class="{'gn-info-list-blocks': type === 'blocks' || type === undefined, 'gn-info-list-large': type === 'large', 'gn-info-list-small': type === 'small'}">

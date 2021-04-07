@@ -23,6 +23,11 @@
 
 package org.fao.geonet;
 
+import java.util.Collections;
+import javax.persistence.EntityManager;
+import jeeves.server.UserSession;
+import jeeves.server.dispatchers.ServiceManager;
+import org.fao.geonet.api.ApiUtils;
 import org.locationtech.jts.geom.MultiPolygon;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
@@ -406,7 +411,7 @@ public class Geonetwork implements ApplicationHandler {
             createDBHeartBeat(gnContext, dbHeartBeatInitialDelay, dbHeartBeatFixedDelay);
         }
 
-        fillCaches(context);
+        fillCaches();
 
         AbstractEntityListenerManager.setSystemRunning(true);
 
@@ -415,15 +420,19 @@ public class Geonetwork implements ApplicationHandler {
         return gnContext;
     }
 
-    private void fillCaches(final ServiceContext context) {
-        final FormatterApi formatService = context.getBean(FormatterApi.class); // this will initialize the formatter
-
+    private void fillCaches() {
         Thread fillCaches = new Thread(new Runnable() {
             @Override
             public void run() {
-                final ServletContext servletContext = context.getServlet().getServletContext();
-                context.setAsThreadLocal();
+                ServiceManager serviceManager = _applicationContext.getBean(ServiceManager.class);
+                ServiceContext fillCacheServiceContext = serviceManager.createServiceContext( "init.filleCaches",_applicationContext);
+                fillCacheServiceContext.setUserSession( new UserSession() );
+                FormatterApi formatService = fillCacheServiceContext.getBean(FormatterApi.class); // this will initialize the formatter
+
+                final ServletContext servletContext = fillCacheServiceContext.getServlet().getServletContext();
+                fillCacheServiceContext.setAsThreadLocal();
                 ApplicationContextHolder.set(_applicationContext);
+              try {
                 GeonetWro4jFilter filter = (GeonetWro4jFilter) servletContext.getAttribute(GeonetWro4jFilter.GEONET_WRO4J_FILTER_KEY);
 
                 @SuppressWarnings("unchecked")
@@ -444,14 +453,14 @@ public class Geonetwork implements ApplicationHandler {
                 final Page<Metadata> metadatas = _applicationContext.getBean(MetadataRepository.class).findAll(new PageRequest(0, 1));
                 if (metadatas.getNumberOfElements() > 0) {
                     Integer mdId = metadatas.getContent().get(0).getId();
-                    context.getUserSession().loginAs(new User().setName("admin").setProfile(Profile.Administrator).setUsername("admin"));
+                    fillCacheServiceContext.getUserSession().loginAs(new User().setName("admin").setProfile(Profile.Administrator).setUsername("admin"));
                     @SuppressWarnings("unchecked")
                     List<String> formattersToInitialize = _applicationContext.getBean("formattersToInitialize", List.class);
 
                     for (String formatterName : formattersToInitialize) {
                         Log.info(Geonet.GEONETWORK, "Initializing the Formatter with id: " + formatterName);
                         final MockHttpSession servletSession = new MockHttpSession(servletContext);
-                        servletSession.setAttribute(Jeeves.Elem.SESSION,  context.getUserSession());
+                        servletSession.setAttribute(Jeeves.Elem.SESSION, fillCacheServiceContext.getUserSession());
                         final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
                         servletRequest.setSession(servletSession);
                         final MockHttpServletResponse response = new MockHttpServletResponse();
@@ -463,6 +472,10 @@ public class Geonetwork implements ApplicationHandler {
                         }
                     }
                 }
+              } finally {
+                  fillCacheServiceContext.clearAsThreadLocal();
+                  fillCacheServiceContext.clear();
+              }
             }
         });
         fillCaches.setDaemon(true);

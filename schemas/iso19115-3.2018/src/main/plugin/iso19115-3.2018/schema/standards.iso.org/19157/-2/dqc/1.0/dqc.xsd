@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+  xmlns:dqc="http://standards.iso.org/iso/19157/-2/dqc/1.0"
+  xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/1.0"
+  xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0" elementFormDefault="qualified"
+  targetNamespace="http://standards.iso.org/iso/19157/-2/dqc/1.0" version="1.0">
+  <include schemaLocation="abstract.xsd"/>
+  <!--  <import namespace="http://standards.iso.org/iso/19115/-3/cit/1.0" schemaLocation="../../../../19115/-3/cit/1.0/cit.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mrc/1.0" schemaLocation="../../../../19115/-3/mrc/1.0/mrc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mrd/1.0" schemaLocation="../../../../19115/-3/mrd/1.0/mrd.xsd"/>-->
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

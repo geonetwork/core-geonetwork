@@ -17,7 +17,7 @@
              data-ng-class="u.id === userSelected.id ? 'active' : ''"
              data-ng-click="selectUser(u)">
             <img class="img-circle"
-                 ng-src="//gravatar.com/avatar/{{(u.emailAddresses[0] | md5) || ''}}?s=18&d=blank"/>
+                 ng-src="../api/users/{{(u.id)}}.png?size=18"/>
             <span class='badge' data-ng-show="u.enabled === false"
                   data-translate="">disabled</span> {{u.name}} {{u.surname}}
             ({{u.profile | translate}})
@@ -66,8 +66,9 @@
                   data-ng-show="user.isUserAdminOrMore() && (userSelected.id && userSelected.id >= 0)"
                   data-gn-confirm-click="{{'userDeleteConfirm' | translate}}"
                   data-ng-click="deleteUser(userSelected.id)" id="gn-btn-user-delete">
-            <i class="fa fa-times"></i> <span data-translate=""
-          >deleteUser</span></button>
+            <i class="fa fa-trash"></i>&nbsp;
+            <span data-translate="">deleteUser</span>
+          </button>
         </div>
       </div>
       <div class="panel-body">

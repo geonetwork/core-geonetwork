@@ -45,6 +45,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public abstract class AbstractStore implements Store {
     @Override
     public final List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid, final Sort sort,
@@ -105,7 +108,9 @@ public abstract class AbstractStore implements Store {
             metadata = _appContext.getBean(IMetadataUtils.class).findOneByUuid(metadataUuid);
         }
         if (metadata == null) {
-            throw new ResourceNotFoundException(String.format("Metadata with UUID '%s' not found.", metadataUuid));
+            throw new ResourceNotFoundException(String.format("Metadata with UUID '%s' not found.", metadataUuid))
+                .withMessageKey("exception.resourceNotFound.metadata")
+                .withDescriptionKey("exception.resourceNotFound.metadata.description", new String[]{ metadataUuid });
         }
         return metadata.getId();
     }
@@ -120,10 +125,7 @@ public abstract class AbstractStore implements Store {
         boolean canEdit = getAccessManager(context).canEdit(context, String.valueOf(metadataId));
         if ((visibility == null && !canEdit) || (visibility == MetadataResourceVisibility.PRIVATE && !canEdit)) {
             throw new SecurityException(String.format("User '%s' does not have privileges to access '%s' resources for metadata '%s'.",
-                                                      context.getUserSession() != null ?
-                                                              context.getUserSession().getUsername() + "/" + context.getUserSession()
-                                                                      .getProfile() :
-                                                              "anonymous", visibility == null ? "any" : visibility, metadataUuid));
+                                                      context.userName(), visibility == null ? "any" : visibility, metadataUuid));
         }
         return metadataId;
     }
@@ -205,7 +207,7 @@ public abstract class AbstractStore implements Store {
 
     protected String getFilename(final String metadataUuid, final String resourceId) {
         // It's not always clear when we get a resourceId or a filename
-        String prefix = metadataUuid + "/attachements/";
+        String prefix = metadataUuid + "/attachments/";
         if (resourceId.startsWith(prefix)) {
             // It was a resourceId
             return resourceId.substring(prefix.length());
@@ -219,5 +221,38 @@ public abstract class AbstractStore implements Store {
         if (resourceId.contains("..") || resourceId.startsWith("/") || resourceId.startsWith("file:/")) {
             throw new SecurityException(String.format("Invalid resource identifier '%s'.", resourceId));
         }
+    }
+
+    public ResourceManagementExternalProperties getResourceManagementExternalProperties() {
+        return new ResourceManagementExternalProperties() {
+            @Override
+            public boolean isEnabled() {
+                return false;
+            }
+
+            @Override
+            public String getWindowParameters() {
+                return null;
+            }
+
+            @Override
+            public boolean isModal() {
+                return false;
+            }
+
+            @Override
+            public boolean isFolderEnabled() {
+                return false;
+            }
+
+            @Override
+            public String toString() {
+                try {
+                    return new ObjectMapper().writeValueAsString(this);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException("Error converting ResourceManagementExternalProperties to json", e);
+                }
+            }
+        };
     }
 }

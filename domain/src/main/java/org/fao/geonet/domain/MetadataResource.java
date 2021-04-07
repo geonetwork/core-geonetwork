@@ -25,7 +25,6 @@
 
 package org.fao.geonet.domain;
 
-
 import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -37,6 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "resource")
 @XmlAccessorType(XmlAccessType.FIELD)
 public interface MetadataResource {
+
     String getId();
 
     String getUrl();
@@ -48,4 +48,14 @@ public interface MetadataResource {
     Date getLastModification();
 
     String getFilename();
+
+    boolean isApproved();
+
+    int getMetadataId();
+
+    String getMetadataUuid();
+
+    String getVersion();
+
+    MetadataResourceExternalManagementProperties getMetadataResourceExternalManagementProperties();
 }

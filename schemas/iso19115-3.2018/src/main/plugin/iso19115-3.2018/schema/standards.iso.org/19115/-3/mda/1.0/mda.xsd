@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:md2="http://standards.iso.org/iso/19115/-3/md2/1.0" xmlns:mda="http://standards.iso.org/iso/19115/-3/mda/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mda/1.0" version="1.0">
+  <annotation>
+    <documentation>Namespace for XML elements &lt;font color="#1f497d"&gt;for metadata applications describing aggregated resources with linked metadata records&lt;/font&gt;</documentation>
+  </annotation>
+  <include schemaLocation="metadataApplication.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/md2/1.0" schemaLocation="../../../../19115/-3/md2/1.0/md2.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

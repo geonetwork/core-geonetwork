@@ -141,64 +141,6 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
 
     }
 
-    @Test
-    public void testLastModified() throws Exception {
-        String stage = systemInfo.getStagingProfile();
-        systemInfo.setStagingProfile(SystemInfo.STAGE_PRODUCTION);
-        try {
-            metadataRepository.update(id, new Updater<Metadata>() {
-                @Override
-                public void apply(@Nonnull Metadata entity) {
-                    entity.getDataInfo().setChangeDate(new ISODate("2012-01-18T15:04:43"));
-                }
-            });
-            dataManager.indexMetadata(Lists.newArrayList("" + this.id));
-
-            final String formatterName = "full_view";
-
-            MockHttpServletRequest request = new MockHttpServletRequest();
-            request.getSession();
-            request.addParameter("h2IdentInfo", "true");
-            request.setMethod("GET");
-
-            MockHttpServletResponse response = new MockHttpServletResponse();
-            formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, _100, new ServletWebRequest(request, response));
-            final String lastModified = response.getHeader("Last-Modified");
-            assertEquals("no-cache", response.getHeader("Cache-Control"));
-            final String viewString = response.getContentAsString();
-            assertNotNull(viewString);
-
-            request = new MockHttpServletRequest();
-            request.getSession();
-            request.setMethod("GET");
-            response = new MockHttpServletResponse();
-
-            request.addHeader("If-Modified-Since", lastModified);
-            formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, _100, new ServletWebRequest(request, response));
-            assertEquals(HttpStatus.SC_NOT_MODIFIED, response.getStatus());
-            final ISODate newChangeDate = new ISODate();
-            metadataRepository.update(id, new Updater<Metadata>() {
-                @Override
-                public void apply(@Nonnull Metadata entity) {
-                    entity.getDataInfo().setChangeDate(newChangeDate);
-                }
-            });
-
-            dataManager.indexMetadata(Lists.newArrayList("" + this.id));
-
-            request = new MockHttpServletRequest();
-            request.getSession();
-            request.setMethod("GET");
-            response = new MockHttpServletResponse();
-
-            request.addHeader("If-Modified-Since", lastModified);
-            formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, _100, new ServletWebRequest(request, response));
-            assertEquals(HttpStatus.SC_OK, response.getStatus());
-        } finally {
-            systemInfo.setStagingProfile(stage);
-        }
-    }
-
     @Test(expected = AssertionError.class)
     public void testGroovyUseEnvDuringConfigStage() throws Exception {
         MockHttpServletRequest r = new MockHttpServletRequest();

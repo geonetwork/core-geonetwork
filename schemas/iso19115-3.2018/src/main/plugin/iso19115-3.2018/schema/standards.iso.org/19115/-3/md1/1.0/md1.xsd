@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0" xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0" xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:md1="http://standards.iso.org/iso/19115/-3/md1/1.0" xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/1.0" xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/md1/1.0" version="1.0">
+  <annotation>
+    <documentation>Namespace &lt;font color="#1f497d"&gt;that identifies conformance class that allows extended types (gcx) in metadata records&lt;/font&gt;</documentation>
+  </annotation>
+  <include schemaLocation="metadataWExtendedType.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gcx/1.0" schemaLocation="../../../../19115/-3/gcx/1.0/gcx.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mds/1.0" schemaLocation="../../../../19115/-3/mds/1.0/mds.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

@@ -91,13 +91,15 @@ goog.require('gn_alert');
             'por': 'pt',
             'rus': 'ru',
             'chi': 'zh',
-            'slo': 'sk'
+            'slo': 'sk',
+            'swe': 'sv'
           },
           'isLogoInHeader': false,
           'logoInHeaderPosition': 'left',
           'fluidHeaderLayout': true,
           'showGNName': true,
-          'isHeaderFixed': false
+          'isHeaderFixed': false,
+          'isMenubarAccessible': true
         },
         'cookieWarning': {
           'enabled': true,
@@ -282,6 +284,7 @@ goog.require('gn_alert');
           'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/catalog.edit',
           'isUserRecordsOnly': false,
+          'minUserProfileToCreateTemplate': '',
           'isFilterTagsDisplayed': false,
           'fluidEditorLayout': true,
           'createPageTpl':
@@ -323,8 +326,8 @@ goog.require('gn_alert');
         }
       },
       current: null,
-      shibbolethEnabled: false,
-      shibbolethHideLogin: true,
+      isDisableLoginForm: false,
+      isShowLoginAsLink: false,
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
         // start from the default config to make sure every field is present
         // and override with config arg if required
@@ -488,6 +491,7 @@ goog.require('gn_alert');
       $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
       $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
       $scope.isHeaderFixed = gnGlobalSettings.gnCfg.mods.header.isHeaderFixed;
+      $scope.isMenubarAccessible = gnGlobalSettings.gnCfg.mods.header.isMenubarAccessible;
       $scope.isLogoInHeader = gnGlobalSettings.gnCfg.mods.header.isLogoInHeader;
 
       // If gnLangs current already set by config, do not use URL
@@ -552,7 +556,7 @@ goog.require('gn_alert');
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
         'spa': 'Español', 'por': 'Portuguesa', 'cat': 'Català', 'cze': 'Czech',
         'ita': 'Italiano', 'fin': 'Suomeksi', 'ice': 'Íslenska',
-        'rus': 'русский', 'chi': '中文', 'slo': 'Slovenčina'};
+        'rus': 'русский', 'chi': '中文', 'slo': 'Slovenčina', 'swe': 'Svenska'};
       $scope.url = '';
       $scope.gnUrl = gnGlobalSettings.gnUrl;
       $scope.gnCfg = gnGlobalSettings.gnCfg;
@@ -560,8 +564,8 @@ goog.require('gn_alert');
       $scope.logoPath = gnGlobalSettings.gnUrl + '../images/harvesting/';
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
-      $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
-      $scope.shibbolethHideLogin = gnGlobalSettings.shibbolethHideLogin;
+      $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
+      $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
 
@@ -678,8 +682,6 @@ goog.require('gn_alert');
               });
         });
 
-
-
         // Utility functions for user
         var userFn = {
           isAnonymous: function() {
@@ -687,6 +689,14 @@ goog.require('gn_alert');
           },
           isConnected: function() {
             return !this.isAnonymous();
+          },
+          canCreateTemplate: function() {
+            var profile = gnGlobalSettings.gnCfg.mods.editor.minUserProfileToCreateTemplate
+              || '',
+              fnName = (profile !== '' ?
+                ('is' + profile[0].toUpperCase() + profile.substring(1) + 'OrMore') :
+                '');
+            return angular.isFunction(this[fnName]) ? this[fnName]() : this.isConnected();
           },
           canEditRecord: function(md) {
             if (!md || this.isAnonymous()) {

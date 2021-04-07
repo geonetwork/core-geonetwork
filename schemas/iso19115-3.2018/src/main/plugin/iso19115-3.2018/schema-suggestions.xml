@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fields>
+  <field name="gcx:Anchor">
+    <suggest name="xlink:href"/>
+  </field>
+    <field name="cit:CI_Date">
+    <suggest name="cit:date"/>
+  </field>
+  <!--
+    Add a gco:date element by default to a gmd:date element
+    even if gmd:date is a choice element having gco:Date
+    or gco:DateTime. The Angular editor is taking care of
+    adding the proper tag name based on the user input. -->
+  <field name="cit:date">
+    <suggest name="gco:Date"/>
+  </field>
+
+  <field name="mcc:code">
+    <suggest name="gco:CharacterString"/>
+    <suggest name="gcx:FileName"/>
+    <suggest name="gcx:Anchor"/>
+  </field>
+
+  <field name="mri:language">
+    <suggest name="gco:CharacterString"/>
+    <suggest name="mri:LanguageCode"/>
+  </field>
+  
+  <!-- Service -->
+  <field name="srv:coupledResource">
+    <suggest name="srv:SV_CoupledResource"/>
+  </field>
+  
+  <field name="srv:parameters">
+    <suggest name="srv:SV_Parameter"/>
+  </field>
+  
+  <field name="srv:direction">
+    <suggest name="srv:SV_ParameterDirection"/>
+  </field>
+  
+  <field name="cit:CI_OnlineResource">
+    <suggest name="cit:protocol"/>
+    <suggest name="cit:name"/>
+    <suggest name="cit:description"/>
+    <suggest name="cit:function"/>
+  </field>
+  
+  <!-- Add a distribution format / INSPIRE requirement
+  <field name="mds:distributionInfo">
+    <suggest name="mrd:MD_Distribution"/>
+  </field>
+  <field name="mrd:MD_Distribution">
+    <suggest name="mrd:distributionFormat"/>
+    <suggest name="mrd:transferOptions"/>
+  </field>
+  <field name="mrd:distributionFormat">
+    <suggest name="mrd:MD_Format"/>
+    </field> -->
+
+    <field name="mrd:transferOptions">
+        <suggest name="mrd:MD_DigitalTransferOptions"/>
+    </field>
+
+    <field name="mrd:MD_DigitalTransferOptions">
+        <suggest name="mrd:onLine"/>
+    </field>
+  
+  
+  <!-- Contact info: suggest all by default. -->
+  <field name="cit:CI_Individual">
+    <suggest name="cit:name"/>
+    <suggest name="cit:address"/>
+  </field>
+  
+  <field name="cit:CI_Organisation">
+    <suggest name="cit:name"/>
+    <suggest name="cit:contactInfo"/>
+  </field>
+
+  <field name="cit:CI_Contact">
+    <suggest name="cit:address"/>
+  </field>
+  
+  <field name="cit:CI_Telephone">
+    <suggest name="cit:number"/>
+    <suggest name="cit:numberType"/>
+  </field>
+  
+  <field name="cit:CI_Address">
+    <suggest name="cit:electronicMailAddress"/>
+    </field>
+  
+
+  
+  <!-- Expand optional element mri:type (mri:keyword is mandatory and will be expanded) -->
+  <field name="mri:MD_Keywords">
+    <suggest name="mri:type"/>
+  </field>
+  
+  <!-- Expand optional element mri:type and mri:thesaurusName. mri:thesaurusName will
+  be expanded including all its mandatory children and optional suggestion. In that
+  case, thesaurus title and date type will be expanded. Unfortunately, the date is a choice
+  between date and dateTime and will not be expanded. -->
+<!--  <field name="mri:MD_Keywords">
+    <suggest name="mri:type"/>
+    <suggest name="mri:thesaurusName"/>
+  </field>-->
+
+  <!-- Control substitute of gco:CharacterString -->
+  <!-- Only propose gco:CharacterString and expand it when gmd:keyword is created. For this,
+  set no suggestion. Adding :
+  <field name="mri:keyword">
+    <suggest name="gco:CharacterString"/>
+  </field>
+  will not change anything because gco:CharacterString is the default element.
+  -->
+  
+  <!-- Propose 2 substitutes. A selection list will be displayed to choose between the 2 elements -->
+  <!--<field name="mri:keyword">
+    <suggest name="gco:CharacterString"/>
+    <suggest name="gcx:Anchor"/>
+  </field>-->
+  
+  
+  
+  <field name="gex:EX_Extent">
+    <suggest name="gex:geographicElement"/>
+  </field>
+
+  <field name="gex:EX_TemporalExtent">
+    <suggest name="gex:extent"/>
+  </field>
+  
+  <field name="gex:polygon">
+    <suggest name="gml:Polygon"/>
+  </field>
+  
+  <field name="gex:extent">
+    <suggest name="gex:EX_Extent"/>
+  </field>
+  
+  <field name="gml:TimePeriod">
+    <suggest name="gml:beginPosition"/>
+    <suggest name="gml:endPosition"/>  
+  </field>
+  
+  <field name="gex:EX_GeographicBoundingBox">
+    <suggest name="gex:westBoundLongitude"/>
+    <suggest name="gex:eastBoundLongitude"/>  
+    <suggest name="gex:southBoundLatitude"/>
+    <suggest name="gex:northBoundLatitude"/>
+  </field>
+
+  <!-- MD_ScopeDescription stuff -->
+
+  <field name="mcc:attributes">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="mcc:features">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="mcc:featureInstances">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="mcc:attributeInstances">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="mrc:featureTypes">
+    <suggest name="uuidref"/>
+  </field>
+
+  <field name="srv:operatesOn">
+    <suggest name="uuidref"/>
+  </field>
+
+  <!--<field name="mrc:featureCatalogueCitation">-->
+    <!--<suggest name="uuidref"/>-->
+  <!--</field>-->
+
+  <field name="gml:Polygon">
+    <suggest name="srsName"/>
+  </field>
+
+  <field name="gml:descriptionReference">
+    <suggest name="xlink:href"/>
+  </field>
+
+
+  <field name="mco:MD_Constraints">
+    <suggest name="mco:useLimitation"/>
+  </field>
+  
+  <field name="mco:MD_LegalConstraints">
+    <suggest name="mco:useLimitation"/>
+    <suggest name="mco:accessConstraints"/>
+    <suggest name="mco:useConstraints"/>
+    <suggest name="mco:otherContraints"/>
+  </field>
+  
+  <field name="mco:MD_SecurityContraints">
+    <suggest name="mco:classification"/>
+    <suggest name="mco:useLimitation"/>
+  </field>
+
+
+  <field name="gfc:FC_FeatureType">
+    <suggest name="gfc:typeName"/>
+  </field>
+
+  <field name="gfc:listedValue">
+    <suggest name="gfc:FC_ListedValue"/>
+  </field>
+
+  <field name="gfc:FC_ListedValue">
+    <suggest name="gfc:code"/>
+  </field>
+
+  <field name="gfc:FC_AssociationRole">
+    <suggest name="gfc:definition"/>
+  </field>
+
+  <field name="gfc:constrainedBy">
+    <suggest name="gfc:FC_Constraint"/>
+  </field>
+
+  <field name="gfc:FC_FeatureAttribute">
+    <suggest name="gfc:memberName"/>
+    <suggest name="gfc:definition"/>
+    <suggest name="gfc:valueType"/>
+    <suggest name="gfc:featureType"/>
+  </field>
+
+  <field name="gfc:inheritsTo">
+    <suggest name="gfc:FC_InheritanceRelation"/>
+  </field>
+
+  <field name="gfc:inheritsFrom">
+    <suggest name="gfc:FC_InheritanceRelation"/>
+  </field>
+</fields>

@@ -197,7 +197,7 @@
                 if (target) {
                   $timeout(function () {
                     gnUtilityService.scrollTo(target);
-                  }, 300);
+                  }, 900);
                 }
               }
             }).error(function(data) {
@@ -479,7 +479,7 @@
        * Execute Atom feed harvester
        */
       $scope.executeAtomHarvester = function() {
-        $http.get('atomharvester?_content_type=json').success(function(data) {
+        return $http.get('atomharvester?_content_type=json').success(function(data) {
           $scope.loadTplReport = data;
 
           $('#atomHarvesterModal').modal();

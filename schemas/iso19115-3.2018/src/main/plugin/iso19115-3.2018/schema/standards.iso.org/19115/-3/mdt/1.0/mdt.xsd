@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0" 
+  xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0" xmlns:mda="http://standards.iso.org/iso/19115/-3/mda/1.0" 
+  xmlns:mdt="http://standards.iso.org/iso/19115/-3/mdt/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mdt/1.0" version="1.0">
+  <annotation>
+    <documentation>Namespace for XML elements &lt;font color="#1f497d"&gt;required to implement data transfer packages with bundled metadata, data files, and registries defining package content&lt;/font&gt;.</documentation>
+  </annotation>
+  <include schemaLocation="metadataTransfer.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/cat/1.0" schemaLocation="../../../../19115/-3/cat/1.0/cat.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gcx/1.0" schemaLocation="../../../../19115/-3/gcx/1.0/gcx.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mda/1.0" schemaLocation="../../../../19115/-3/mda/1.0/mda.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

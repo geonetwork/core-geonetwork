@@ -191,8 +191,21 @@
   <xsl:template name="defaultTitle">
     <xsl:param name="isoDocLangId"/>
 
-    <xsl:variable name="poundLangId"
-                  select="concat('#',upper-case(java:twoCharLangCode($isoDocLangId)))"/>
+    <xsl:variable name="poundLangId">
+      <xsl:variable name="langIdFromlocale"
+                    select="/*[name(.)='gmd:MD_Metadata' or
+              name() = 'gmi:MI_Metadata' or
+              @gco:isoType='gmd:MD_Metadata' or
+              @gco:isoType='gmd:MI_Metadata']/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue=$isoDocLangId]/@id"/>
+        <xsl:choose>
+          <xsl:when test="string-length($langIdFromlocale) != 0">
+            <xsl:value-of select="concat('#',$langIdFromlocale)"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="concat('#',upper-case(java:twoCharLangCode($isoDocLangId)))"/>
+          </xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
 
     <xsl:variable name="identification" select="/*[name(.)='gmd:MD_Metadata' or
             name() = 'gmi:MI_Metadata' or
@@ -221,8 +234,21 @@
   <xsl:template name="defaultAbstract">
     <xsl:param name="isoDocLangId"/>
 
-    <xsl:variable name="poundLangId"
-                  select="concat('#',upper-case(java:twoCharLangCode($isoDocLangId)))" />
+    <xsl:variable name="poundLangId">
+      <xsl:variable name="langIdFromlocale"
+                    select="/*[name(.)='gmd:MD_Metadata' or
+              name() = 'gmi:MI_Metadata' or
+              @gco:isoType='gmd:MD_Metadata' or
+              @gco:isoType='gmd:MI_Metadata']/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue=$isoDocLangId]/@id"/>
+        <xsl:choose>
+          <xsl:when test="string-length($langIdFromlocale) != 0">
+            <xsl:value-of select="concat('#',$langIdFromlocale)"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="concat('#',upper-case(java:twoCharLangCode($isoDocLangId)))"/>
+          </xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
 
     <xsl:variable name="identification"
                   select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification' or name(.)='srv:SV_ServiceIdentification' or @gco:isoType='srv:SV_ServiceIdentification']"></xsl:variable>

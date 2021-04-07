@@ -131,7 +131,7 @@
             "attributeTable" : [
             <xsl:for-each select="$attributes">
               {"name": "<xsl:value-of select="*/gfc:memberName/*/text()"/>",
-              "definition": "<xsl:value-of select="*/gfc:definition/*/text()"/>",
+              "definition": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:definition/*/text())"/>",
               "code": "<xsl:value-of select="*/gfc:code/*/text()"/>",
               "link": "<xsl:value-of select="*/gfc:code/*/@xlink:href"/>",
               "type": "<xsl:value-of select="*/gfc:valueType/gco:TypeName/gco:aName/*/text()"/>"
@@ -140,7 +140,7 @@
                 <xsl:for-each select="*/gfc:listedValue">{
                   "label": "<xsl:value-of select="*/gfc:label/*/text()"/>",
                   "code": "<xsl:value-of select="*/gfc:code/*/text()"/>",
-                  "definition": "<xsl:value-of select="*/gfc:definition/*/text()"/>"}
+                  "definition": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:definition/*/text())"/>"}
                   <xsl:if test="position() != last()">,</xsl:if>
                 </xsl:for-each>
                 ]

@@ -24,6 +24,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:saxon="http://saxon.sf.net/"
                 version="2.0" extension-element-prefixes="saxon"
 >
@@ -63,7 +64,7 @@
   <xsl:variable name="metadataOtherLanguagesAsJson">
     <saxon:call-template name="{concat('get-', $schema, '-other-languages-as-json')}"/>
   </xsl:variable>
-  <xsl:variable name="metadataIsMultilingual" select="count($metadataOtherLanguages/*) > 0"/>
+  <xsl:variable name="metadataIsMultilingual" select="count($metadataOtherLanguages/*[not(@default)]) > 0"/>
 
   <!-- The list of thesaurus -->
   <xsl:variable name="listOfThesaurus" select="/root/gui/thesaurus/thesauri"/>
@@ -116,6 +117,12 @@
   <xsl:variable name="isFlatMode"
                 select="if (/root/request/flat) then /root/request/flat = 'true'
     else $tabConfig/@mode = 'flat'"/>
+
+  <xsl:variable name="resourceContainerDescription"
+                select="util:getResourceContainerDescription($metadataInfo/uuid, ($metadataInfo/draft != 'y'))"/>
+
+  <xsl:variable name="resourceManagementExternalProperties"
+                select="util:getResourceManagementExternalProperties()"/>
 
   <xsl:variable name="isDisplayingAttributes"
                 select="if (/root/request/displayAttributes)

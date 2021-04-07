@@ -92,7 +92,7 @@ public class BackupArchiveApi {
         GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
 
-        Log.info(ArchiveAllMetadataJob.BACKUP_LOG, "User " + context.getUserSession().getUsername() + " from IP: " + context
+        Log.info(ArchiveAllMetadataJob.BACKUP_LOG, "User " + context.userName() + " from IP: " + context
                 .getIpAddress() + " has started to download backup archive");
 
         File backupDir = dataDirectory.getBackupDir().resolve(ArchiveAllMetadataJob.BACKUP_DIR).toFile();

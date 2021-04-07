@@ -27,8 +27,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>schemas</artifactId>
-    <groupId>org.geonetwork-opensource</groupId>
-    <version>3.7</version>
+    <groupId>org.geonetwork-opensource.schemas</groupId>
+    <version>3.11-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -37,18 +37,19 @@
 
   <dependencies>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>schema-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>schema-iso19139</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
 
   <build>
+
     <resources>
       <resource>
         <directory>src/main/config/translations</directory>
@@ -58,7 +59,9 @@
         <directory>src/main/resources</directory>
       </resource>
     </resources>
+
     <plugins>
+
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <executions>
@@ -70,6 +73,25 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>plugin-assembly</id>
+            <phase>package</phase>
+            <goals><goal>single</goal></goals>
+            <inherited>false</inherited>
+            <configuration>
+             <appendAssemblyId>false</appendAssemblyId>
+             <descriptors>
+              <descriptor>src/assembly/schema-plugin.xml</descriptor>
+             </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 

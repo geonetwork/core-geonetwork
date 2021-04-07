@@ -61,7 +61,7 @@
   Extent is already displayed in main view usually.
   Social and associated resources require JS.
   So hidden from side bar in PDF output. */
-  .gn-md-side-extent, .gn-md-side-social, .gn-md-side-associated {
+  .gn-md-side-extent, .gn-md-side-social, .gn-md-side-associated, .gn-md-side-access {
     display: none;
   }
   dl {
@@ -71,6 +71,7 @@
   dt, dd {
     line-height: 1.428571429;
     padding: 10px 0;
+    min-height: 24px;
   }
   dt {
     clear: left;
@@ -119,6 +120,11 @@
     padding-left: 1em;
     background: #eeeeee;
   }
+  .gn-contact {
+    border-top: 1px solid #999999;
+    padding: 10px 0;
+    line-height: 1.5em;
+  }
   table {
     width: 100%;
   }
@@ -141,24 +147,27 @@
     .coord{
       float: left;
       display: block;
-      border: 1px solid #ccc;
+      border: 2px solid #ccc;
       background: #fff;
       margin-right: 20px;
       margin-bottom: 20px;
+      pointer-events: none;
       input {
         text-align: left;
         border: 0;
-        padding: 6px;
-        width: 114px;
+        padding: 10px;
+        margin: 0;
+        // width: 100px;
         background: #fff;
       }
       span.input-group-addon {
         background-color: #eeeeee;
         border-left: 1px solid #ccc;
-        padding: 6px 10px 7px 10px;
+        padding: 15px;
         width: 15px;
         text-align: center;
         float: right;
+        font-weight: bold;
       }
     }
   }

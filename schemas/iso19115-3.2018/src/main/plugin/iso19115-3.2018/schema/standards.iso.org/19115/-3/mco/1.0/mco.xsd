@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mco/1.0" version="1.0">
+  <annotation>
+    <documentation>Namespace for XML elements &lt;font color="#1f497d"&gt;to specify constraints on access to or usage of a resource&lt;/font&gt;</documentation>
+  </annotation>
+  <include schemaLocation="constraints.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

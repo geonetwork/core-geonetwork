@@ -34,13 +34,14 @@
         'gnMap',
         'gnOwsContextService',
         'gnOnlinesrc',
+        'gnMapsManager',
         'gnGeoPublisher',
         'gnEditor',
         'gnCurrentEdit',
         '$timeout',
         '$translate',
         '$rootScope',
-        function(gnMap, gnOwsContextService, gnOnlinesrc,
+        function(gnMap, gnOwsContextService, gnOnlinesrc, gnMapsManager,
             gnGeoPublisher, gnEditor, gnCurrentEdit,
             $timeout, $translate, $rootScope) {
           return {
@@ -67,23 +68,7 @@
               });
 
               var init = function() {
-                map = new ol.Map({
-                  layers: [
-                    gnMap.getLayersFromConfig()
-                  ],
-                  renderer: 'canvas',
-                  view: new ol.View({
-                    center: [0, 0],
-                    projection: gnMap.getMapConfig().projection,
-                    zoom: 2
-                  })
-                });
-
-                //Uses configuration from database
-                if (gnMap.getMapConfig().context) {
-                  gnOwsContextService.
-                      loadContextFromUrl(gnMap.getMapConfig().context, map);
-                }
+                map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP);
 
                 // we need to wait the scope.hidden binding is done
                 // before rendering the map.

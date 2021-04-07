@@ -35,15 +35,17 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
+import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -78,6 +80,8 @@ public class UpdateStatus extends NotInReadOnlyModeService {
 
         DataManager dataMan = gc.getBean(DataManager.class);
         AccessManager am = gc.getBean(AccessManager.class);
+        StatusValueRepository statusValueRepository = gc.getBean(StatusValueRepository.class);;
+
         String id = Utils.getIdentifierFromParameters(params, context);
 
         //--- check access
@@ -100,15 +104,16 @@ public class UpdateStatus extends NotInReadOnlyModeService {
 
         StatusActions sa = saf.createStatusActions(context);
 
+        StatusValue statusValue = statusValueRepository.findOneById(Integer.parseInt(status));
+
         Set<Integer> metadataIds = new HashSet<Integer>();
         metadataIds.add(iLocalId);
         List<MetadataStatus> list = new ArrayList<>();
         MetadataStatus mdStatus = new MetadataStatus();
         mdStatus.setChangeMessage(changeMessage);
-        mdStatus.setId(new MetadataStatusId()
-            .setMetadataId(iLocalId)
-            .setStatusId(Integer.parseInt(status))
-            .setChangeDate(changeDate));
+        mdStatus.setMetadataId(iLocalId);
+        mdStatus.setStatusValue(statusValue);
+        mdStatus.setChangeDate(changeDate);
         list.add(mdStatus);
         sa.onStatusChange(list);
 
