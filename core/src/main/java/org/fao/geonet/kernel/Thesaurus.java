@@ -693,7 +693,7 @@ public class Thesaurus {
         String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
         String namespaceDC = "http://purl.org/dc/elements/1.1/";
 
-        URI mySubject = myFactory.createURI(this.getDefaultNamespace(), thesaurusTitle);
+        URI mySubject = myFactory.createURI(this.getDefaultNamespace());
         URI skosClass = myFactory.createURI(namespaceSkos, "ConceptScheme");
         URI titleURI = myFactory.createURI(namespaceDC, "title");
 

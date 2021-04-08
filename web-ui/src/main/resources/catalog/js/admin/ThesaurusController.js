@@ -251,7 +251,7 @@
        * and filename. eg. http://localhost:8080/thesaurus/theme/commune
        */
       $scope.computeThesaurusNs = function() {
-        $scope.thesaurusSuggestedNs =+
+        $scope.thesaurusSuggestedNs =
           location.href.split($scope.nodeId)[0] + $scope.nodeId
             + "/api/registries/vocabularies/local."
             + $scope.thesaurusSelected.dname.trim().replace(/[^\d\w-\.]/gi, '') + '.'

@@ -438,7 +438,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
     public void testHasConceptSchemeTrue() throws Exception {
         writableThesaurus.addTitleElement("testScheme");
 
-        boolean hasConceptScheme = writableThesaurus.hasConceptScheme("http://localhost:8080/srv/api/registries/vocabularies/local.ThesaurusTest_empyt.rdf.ThesaurusTest_empyttestScheme");
+        boolean hasConceptScheme = writableThesaurus.hasConceptScheme(writableThesaurus.getDefaultNamespace());
 
         assertTrue(hasConceptScheme);
     }
