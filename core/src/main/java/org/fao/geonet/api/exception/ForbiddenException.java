@@ -48,4 +48,34 @@ public class ForbiddenException extends LocalizedRuntimeException {
     protected String getResourceBundleBeanQualifier() {
         return "apiMessages";
     }
+
+    @Override
+    public ForbiddenException withMessageKey(String messageKey) {
+        super.withMessageKey(messageKey);
+        return this;
+    }
+
+    @Override
+    public ForbiddenException withMessageKey(String messageKey, Object[] messageKeyArgs) {
+        super.withMessageKey(messageKey, messageKeyArgs);
+        return this;
+    }
+
+    @Override
+    public ForbiddenException withDescriptionKey(String descriptionKey) {
+        super.withDescriptionKey(descriptionKey);
+        return this;
+    }
+
+    @Override
+    public ForbiddenException withDescriptionKey(String descriptionKey, Object[] descriptionKeyArgs) {
+        super.withDescriptionKey(descriptionKey, descriptionKeyArgs);
+        return this;
+    }
+
+    @Override
+    public ForbiddenException withLocale(Locale locale) {
+        super.withLocale(locale);
+        return this;
+    }
 }
