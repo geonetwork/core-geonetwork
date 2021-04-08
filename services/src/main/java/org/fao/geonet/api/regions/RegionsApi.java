@@ -107,7 +107,7 @@ public class RegionsApi {
         final HttpServletRequest nativeRequest =
             webRequest.getNativeRequest(HttpServletRequest.class);
 
-        ServiceContext context = ApiUtils.createServiceContext(nativeRequest);
+      try (ServiceContext context = ApiUtils.createServiceContext(nativeRequest)) {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         Collection<RegionsDAO> daos =
             applicationContext.getBeansOfType(RegionsDAO.class).values();
@@ -124,6 +124,7 @@ public class RegionsApi {
 
         nativeResponse.setHeader("Cache-Control", "no-cache");
         return new ListRegionsResponse(regions);
+      }
     }
 
     @ApiOperation(
@@ -144,8 +145,8 @@ public class RegionsApi {
     public List<Category> getRegionTypes(
         HttpServletRequest request) throws Exception {
 
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         String language = languageUtils.getIso3langCode(request.getLocales());
-        ServiceContext context = ApiUtils.createServiceContext(request);
         Collection<RegionsDAO> daos = ApplicationContextHolder.get().getBeansOfType(RegionsDAO.class).values();
         List<Category> response = new ArrayList<>();
         for (RegionsDAO dao : daos) {
@@ -175,6 +176,7 @@ public class RegionsApi {
             }
         }
         return response;
+      }
     }
 
     public static Request createRequest(String label, String categoryId,
@@ -222,7 +224,7 @@ public class RegionsApi {
             NativeWebRequest nativeWebRequest,
         @ApiIgnore
             HttpServletRequest request) throws Exception {
-        final ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         if (width != null && height != null) {
             throw new BadParameterEx(
                 WIDTH_PARAM,
@@ -251,7 +253,7 @@ public class RegionsApi {
 
         if (image == null) return null;
 
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             ImageIO.write(image, "png", out);
             MultiValueMap<String, String> headers = new HttpHeaders();
             headers.add("Content-Disposition", "inline; filename=\"" + outputFileName + "\"");
@@ -259,5 +261,6 @@ public class RegionsApi {
             headers.add("Content-Type", "image/png");
             return new HttpEntity<>(out.toByteArray(), headers);
         }
+      }
     }
 }

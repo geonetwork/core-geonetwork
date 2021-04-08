@@ -101,17 +101,13 @@ public class MetadataVersionningApi {
             String metadataUuid,
         HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-      try {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
 
         dataManager.versionMetadata(context,
             String.valueOf(metadata.getId()), metadata.getXmlData(false));
 
         return new ResponseEntity(HttpStatus.CREATED);
-      } finally {
-        context.clearAsThreadLocal();
-        context.clear();
       }
     }
 
@@ -149,7 +145,7 @@ public class MetadataVersionningApi {
     ) throws Exception {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        try {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
 
@@ -158,11 +154,10 @@ public class MetadataVersionningApi {
                     report.incrementNullRecords();
             	} else {
 	                for(AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
-		                if (!accessMan.canEdit(
-		                    ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
+		                if (!accessMan.canEdit(context, String.valueOf(metadata.getId()))) {
 		                    report.addNotEditableMetadataId(metadata.getId());
 		                } else {
-		                    dataManager.versionMetadata(ApiUtils.createServiceContext(request),
+		                    dataManager.versionMetadata(context,
 		                        String.valueOf(metadata.getId()), metadata.getXmlData(false));
 		                    report.incrementProcessedRecords();
 		                }

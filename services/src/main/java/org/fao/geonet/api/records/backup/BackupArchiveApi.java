@@ -87,7 +87,7 @@ public class BackupArchiveApi {
     @ResponseBody
     public ResponseEntity<FileSystemResource> exec(HttpServletRequest request) throws Exception {
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         ApplicationContext appContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
@@ -115,6 +115,7 @@ public class BackupArchiveApi {
         final ResponseEntity<FileSystemResource> response = new ResponseEntity<>(new FileSystemResource(files[0]), headers, HttpStatus.OK);
 
         return response;
+      }
     }
 
     @ApiOperation(value = "Trigger MEF backup archive",
@@ -131,11 +132,12 @@ public class BackupArchiveApi {
     })
     @ResponseBody
     public String trigger(HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         final Trigger trigger = newTrigger().forJob("archiveAllMetadata", "gnBackgroundTasks").startNow().build();
         context.getBean("gnBackgroundJobScheduler", Scheduler.class).scheduleJob(trigger);
 
         return "{\"success\":true}";
+      }
     }
 
 }

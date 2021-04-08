@@ -69,8 +69,9 @@ public class StatusApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<StatusValue> getStatus(HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         return statusValueRepository.findAll();
+      }
     }
 
 
@@ -81,8 +82,9 @@ public class StatusApi {
     public List<StatusValue> getStatusByType(
             @ApiParam(value = "Type", required = true) @PathVariable StatusValueType type, HttpServletRequest request)
             throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         return statusValueRepository.findAllByType(type);
+      }
     }
 
     @ApiOperation(value = "Delete all record history and status", notes = "", nickname = "deleteAllHistoryAndStatus")

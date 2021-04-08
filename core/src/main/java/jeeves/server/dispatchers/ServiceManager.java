@@ -428,7 +428,16 @@ public class ServiceManager {
     /**
      * Create an internal service context, not associated with a user or ip address.
      *
-     * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup:
+     * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup.
+     *
+     * Using auto closable:
+     * <pre><code>
+     * try(ServiceContext context = serviceMan.createServiceContext("AppHandler", appContext)){
+     *    ...
+     * }
+     * </code></pre>
+     *
+     * Or manually:
      * <pre><code>
      * try {
      *    context = serviceMan.createServiceContext("AppHandler", appContext);
@@ -460,10 +469,19 @@ public class ServiceManager {
     /**
      * Used to create a ServiceContext.
      *
-     * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup:
+     * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup.
+     *
+     * Using auto closable:
      * <pre><code>
+     * try(ServiceContext context = serviceMan.createServiceContext("md.thumbnail.upload", lang, request)){
+     *    ...
+     * }
+     * </code></pre>
+     * Or manually:
+     * <pre><code>
+     * ServiceContext context = serviceMan.createServiceContext("md.thumbnail.upload", lang, request);
      * try {
-     *    context = serviceMan.createServiceContext("md.thumbnail.upload", lang, request);
+     *
      *    context.setAsThreadLocal();
      *    ...
      * } finally {

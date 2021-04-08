@@ -180,7 +180,8 @@ public class MetadataExtentApi {
             String metadataUuid,
         @ApiIgnore
             HttpServletRequest request) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
 
         String schemaId = metadata.getDataInfo().getSchemaId();
         MetadataSchema schema = schemaManager.getSchema(schemaId);
@@ -221,6 +222,7 @@ public class MetadataExtentApi {
             }
         }
         return response;
+      }
     }
 
 
@@ -265,8 +267,8 @@ public class MetadataExtentApi {
     }
 
     private HttpEntity<byte[]> getExtent(String metadataUuid, String srs, Integer width, Integer height, String background, String fillColor, String strokeColor, Integer extentOrderOfAppearence, NativeWebRequest nativeWebRequest, HttpServletRequest request) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
 
         if (width != null && height != null) {
             throw new BadParameterEx(WIDTH_PARAM, WIDTH_AND_HEIGHT_BOTH_DEFINED_MESSAGE);
@@ -313,5 +315,6 @@ public class MetadataExtentApi {
             headers.add("Content-Type", "image/png");
             return new HttpEntity<>(out.toByteArray(), headers);
         }
+      }
     }
 }

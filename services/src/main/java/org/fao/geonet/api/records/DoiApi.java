@@ -104,15 +104,11 @@ public class DoiApi {
         @ApiIgnore
             HttpServletRequest request
     ) throws Exception {
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-      try {
+      try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid,serviceContext);
 
         final Map<String, Boolean> reportStatus = doiManager.check(serviceContext, metadata, null);
         return new ResponseEntity<>(reportStatus, HttpStatus.OK);
-      } finally {
-        serviceContext.clearAsThreadLocal();
-        serviceContext.clear();
       }
     }
 
@@ -147,15 +143,11 @@ public class DoiApi {
         @ApiIgnore
             HttpSession session
     ) throws Exception {
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-      try {
+      try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid,serviceContext);
 
         Map<String, String> doiInfo = doiManager.register(serviceContext, metadata);
         return new ResponseEntity<>(doiInfo, HttpStatus.CREATED);
-      } finally {
-        serviceContext.clearAsThreadLocal();
-        serviceContext.clear();
       }
     }
 
@@ -190,15 +182,12 @@ public class DoiApi {
         @ApiIgnore
             HttpSession session
     ) throws Exception {
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-      try {
+
+      try (ServiceContext serviceContext = ApiUtils.createServiceContext(request);) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid,serviceContext);
 
         doiManager.unregisterDoi(metadata, serviceContext);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      } finally {
-          serviceContext.clearAsThreadLocal();
-          serviceContext.clear();
       }
     }
 

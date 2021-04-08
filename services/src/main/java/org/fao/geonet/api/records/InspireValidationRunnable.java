@@ -87,6 +87,7 @@ public class InspireValidationRunnable implements Runnable {
                 }
             });
       } finally {
+          validationContext.clearAsThreadLocal();
           validationContext.clear();
       }
     }

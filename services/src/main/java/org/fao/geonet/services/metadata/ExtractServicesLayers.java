@@ -66,9 +66,8 @@ public class ExtractServicesLayers {
         final NativeWebRequest webRequest) throws Exception {
 
         final ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
-        ServiceContext context = serviceManager.createServiceContext("selection.layers", lang, webRequest.getNativeRequest(HttpServletRequest.class));
 
-      try {
+      try (ServiceContext context = serviceManager.createServiceContext("selection.layers", lang, webRequest.getNativeRequest(HttpServletRequest.class))) {
         DataManager dm = context.getBean(DataManager.class);
         UserSession us = context.getUserSession();
         SelectionManager sm = SelectionManager.getManager(us);
@@ -184,9 +183,6 @@ public class ExtractServicesLayers {
         ret.put("services", services);
 
         return ret;
-      } finally {
-        context.clear();;
       }
-
     }
 }

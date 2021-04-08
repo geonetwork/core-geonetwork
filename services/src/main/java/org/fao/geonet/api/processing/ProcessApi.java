@@ -24,6 +24,7 @@
 package org.fao.geonet.api.processing;
 
 import io.swagger.annotations.*;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -182,6 +183,7 @@ public class ProcessApi {
         @ApiIgnore
             HttpServletRequest request
     ) throws Exception {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         UserSession userSession = ApiUtils.getUserSession(session);
 
         MetadataReplacementProcessingReport report =
@@ -195,7 +197,7 @@ public class ProcessApi {
                 process,
                 isTesting, isCaseInsensitive, vacuumMode,
                 allParams,
-                ApiUtils.createServiceContext(request), records, report);
+                context, records, report);
             m.process();
         } catch (Exception e) {
             throw e;
@@ -203,5 +205,6 @@ public class ProcessApi {
             report.close();
         }
         return report;
+      }
     }
 }

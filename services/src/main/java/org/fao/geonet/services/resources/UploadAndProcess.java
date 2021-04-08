@@ -81,8 +81,7 @@ public class UploadAndProcess {
                            @RequestParam(defaultValue = "private", value = Params.ACCESS) String access,
                            @RequestParam(value = Params.OVERWRITE, defaultValue = "no") String overwrite)
         throws Exception {
-        ServiceContext context = serviceManager.createServiceContext("resource.upload.and.link", lang, request);
-      try {
+      try (ServiceContext context = serviceManager.createServiceContext("resource.upload.and.link", lang, request)) {
         if (id.trim().isEmpty()) {
             id = dm.getMetadataId(uuid);
         }
@@ -130,8 +129,6 @@ public class UploadAndProcess {
         // -- return the processed metadata id
 
         return new IdResponse(id);
-      } finally {
-        context.clear();
       }
     }
 }

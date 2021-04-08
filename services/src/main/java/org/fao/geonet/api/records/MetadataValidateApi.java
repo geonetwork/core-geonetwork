@@ -118,8 +118,7 @@ public class MetadataValidateApi {
             @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
             @ApiParam(value = "Validation status. Should be provided only in case of SUBTEMPLATE validation. If provided for another type, throw a BadParameter Exception", required = false) @RequestParam(required = false) Boolean isvalid,
             HttpServletRequest request, @ApiParam(hidden = true) @ApiIgnore HttpSession session) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-      try {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         ApplicationContext appContext = ApplicationContextHolder.get();
 
@@ -230,9 +229,6 @@ public class MetadataValidateApi {
                             .publish(appContext);
         }
         return response;
-      } finally {
-          context.clearAsThreadLocal();
-          context.clear();
       }
     }
 

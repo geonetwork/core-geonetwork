@@ -24,6 +24,7 @@
 package org.fao.geonet.api.records;
 
 import io.swagger.annotations.*;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -85,7 +86,8 @@ public class MetadataSavedQueryApi {
         @PathVariable final String metadataUuid,
         HttpServletRequest request
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
         String schemaIdentifier = metadata.getDataInfo().getSchemaId();
         SchemaPlugin schemaPlugin = schemaManager.getSchema(schemaIdentifier).getSchemaPlugin();
         if (schemaPlugin == null) {
@@ -97,6 +99,7 @@ public class MetadataSavedQueryApi {
         } catch (IllegalArgumentException e) {
             return new ArrayList<>();
         }
+      }
     }
 
 
@@ -132,8 +135,8 @@ public class MetadataSavedQueryApi {
         HttpServletRequest request,
         @ApiParam(value = "The query parameters")
         @RequestBody(required = false) final HashMap<String, String> parameters) throws Exception {
-
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
 
         String schemaIdentifier = metadata.getDataInfo().getSchemaId();
         SchemaPlugin schemaPlugin = schemaManager.getSchema(schemaIdentifier).getSchemaPlugin();
@@ -229,5 +232,6 @@ public class MetadataSavedQueryApi {
                 "Error in query: %s. Saved query parameters are '%s'.",
                 e.getMessage(), query.getParameters()));
         }
+      }
     }
 }

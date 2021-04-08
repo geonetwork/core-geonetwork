@@ -194,9 +194,13 @@ public class SourcesApi {
 
     private void copySourceLogo(Source source, HttpServletRequest request) {
         if (source.getLogo() != null) {
-            ServiceContext context = ApiUtils.createServiceContext(request);
-            context.getBean(Resources.class).copyLogo(context, "images" + File.separator + "harvesting" + File.separator + source.getLogo(),
-                                                      source.getUuid());
+            try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+                context.getBean(Resources.class).copyLogo(
+                    context,
+                    "images" + File.separator + "harvesting" + File.separator + source.getLogo(),
+                    source.getUuid()
+                );
+            }
         }
     }
 
@@ -269,7 +273,7 @@ public class SourcesApi {
         Source existingSource = sourceRepository.findOne(sourceIdentifier);
         if (existingSource != null) {
             if (existingSource.getLogo() != null) {
-                ServiceContext context = ApiUtils.createServiceContext(request);
+              try (ServiceContext context = ApiUtils.createServiceContext(request)) {
                 final Resources resources = context.getBean(Resources.class);
                 final Path logoDir = resources.locateLogosDir(context);
                 try {
@@ -278,6 +282,7 @@ public class SourcesApi {
                                                   logoDir);
                 } catch (IOException ignored) {
                 }
+              }
             }
             sourceRepository.delete(existingSource);
         } else {

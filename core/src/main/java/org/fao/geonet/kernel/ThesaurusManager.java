@@ -552,9 +552,8 @@ public class ThesaurusManager implements ThesaurusFinder {
         }
 
         public void run() {
-            ServiceContext context = serviceManager.createServiceContext(Geonet.THESAURUS_MAN, appContext);
-            context.setAsThreadLocal();
-            try {
+            try (ServiceContext context = serviceManager.createServiceContext(Geonet.THESAURUS_MAN, appContext)) {
+                context.setAsThreadLocal();
                 // poll context to see whether servlet is up yet
                 while (!context.isServletInitialized()) {
                     if (Log.isDebugEnabled(Geonet.THESAURUS_MAN)) {
@@ -569,10 +568,6 @@ public class ThesaurusManager implements ThesaurusFinder {
                 }
             } catch (Exception e) {
                 Log.debug(Geonet.THESAURUS_MAN, "Thesaurus table rebuilding thread threw exception", e);
-            }
-            finally {
-                context.clearAsThreadLocal();
-                context.clear();
             }
         }
     }

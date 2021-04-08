@@ -431,14 +431,14 @@ public class Geonetwork implements ApplicationHandler {
             @Override
             public void run() {
                 ServiceManager serviceManager = _applicationContext.getBean(ServiceManager.class);
-                ServiceContext fillCacheServiceContext = serviceManager.createServiceContext( "init.filleCaches",_applicationContext);
+              try (ServiceContext fillCacheServiceContext = serviceManager.createServiceContext( "init.filleCaches",_applicationContext)) {
                 fillCacheServiceContext.setUserSession( new UserSession() );
                 FormatterApi formatService = fillCacheServiceContext.getBean(FormatterApi.class); // this will initialize the formatter
 
                 final ServletContext servletContext = fillCacheServiceContext.getServlet().getServletContext();
                 fillCacheServiceContext.setAsThreadLocal();
                 ApplicationContextHolder.set(_applicationContext);
-              try {
+
                 GeonetWro4jFilter filter = (GeonetWro4jFilter) servletContext.getAttribute(GeonetWro4jFilter.GEONET_WRO4J_FILTER_KEY);
 
                 @SuppressWarnings("unchecked")
@@ -478,9 +478,6 @@ public class Geonetwork implements ApplicationHandler {
                         }
                     }
                 }
-              } finally {
-                  fillCacheServiceContext.clearAsThreadLocal();
-                  fillCacheServiceContext.clear();
               }
             }
         });

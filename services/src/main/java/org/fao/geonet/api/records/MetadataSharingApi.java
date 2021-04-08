@@ -277,8 +277,7 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-      try {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         ApplicationContext appContext = ApplicationContextHolder.get();
 
@@ -306,9 +305,6 @@ public class MetadataSharingApi {
         setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
             ApiUtils.getUserSession(session).getUserIdAsInt(), null, request);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
-      } finally {
-        context.clearAsThreadLocal();
-        context.clear();
       }
     }
 
@@ -511,10 +507,11 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         // TODO: Restrict to user group only in response depending on settings?
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
         ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+
         UserSession userSession = ApiUtils.getUserSession(session);
 
         SharingResponse sharingResponse = new SharingResponse();
@@ -579,8 +576,8 @@ public class MetadataSharingApi {
         }
         sharingResponse.setPrivileges(groupPrivileges);
         return sharingResponse;
+      }
     }
-
 
     @ApiOperation(
         value = "Set record group",
@@ -614,8 +611,7 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-      try {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         ApplicationContext appContext = ApplicationContextHolder.get();
 
@@ -642,10 +638,6 @@ public class MetadataSharingApi {
             ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD),
             ObjectJSONUtils.convertObjectInJsonObject(group, RecordGroupOwnerChangeEvent.FIELD)
         ).publish(appContext);
-
-      } finally {
-        context.clearAsThreadLocal();
-        context.clear();
       }
     }
 
@@ -675,8 +667,8 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
         UserSession userSession = ApiUtils.getUserSession(session);
 
         SharingResponse sharingResponse = new SharingResponse();
@@ -707,6 +699,7 @@ public class MetadataSharingApi {
         }
         sharingResponse.setPrivileges(groupPrivileges);
         return sharingResponse;
+      }
     }
 
 
@@ -764,13 +757,11 @@ public class MetadataSharingApi {
         throws Exception {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        try {
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
 
             final ApplicationContext context = ApplicationContextHolder.get();
-
-            ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
@@ -838,9 +829,9 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
-        try {
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
             AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, serviceContext);
             report.setTotalRecords(1);
 
@@ -858,8 +849,6 @@ public class MetadataSharingApi {
             report.addError(exception);
         } finally {
             report.close();
-            serviceContext.clearAsThreadLocal();
-            serviceContext.clear();
         }
         return report;
     }
@@ -1024,8 +1013,7 @@ public class MetadataSharingApi {
      */
     private void shareMetadataWithAllGroup(String metadataUuid, boolean publish,
                                    HttpSession session, HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-      try{
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         ApplicationContext appContext = ApplicationContextHolder.get();
 
@@ -1058,9 +1046,6 @@ public class MetadataSharingApi {
         setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
             ApiUtils.getUserSession(session).getUserIdAsInt(), null, request);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
-      } finally {
-        context.clearAsThreadLocal();
-        context.clear();
       }
     }
 
@@ -1081,7 +1066,7 @@ public class MetadataSharingApi {
 
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        try {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
 
@@ -1093,15 +1078,12 @@ public class MetadataSharingApi {
             UserSession us = ApiUtils.getUserSession(session);
             boolean isAdmin = Profile.Administrator == us.getProfile();
 
-            ServiceContext context = ApiUtils.createServiceContext(request);
-
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
                 AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
                 if (metadata == null) {
                     report.incrementNullRecords();
-                } else if (!accessMan.canEdit(
-                    ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
+                } else if (!accessMan.canEdit(context, String.valueOf(metadata.getId()))) {
                     report.addNotEditableMetadataId(metadata.getId());
                 } else {
                     boolean skip = false;

@@ -122,8 +122,10 @@ public class MetadataTagApi {
             String metadataUuid,
         HttpServletRequest request
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
         return metadata.getCategories();
+      }
     }
 
 
@@ -164,8 +166,7 @@ public class MetadataTagApi {
             boolean clear,
         HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-      try {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         ApplicationContext appContext = ApplicationContextHolder.get();
         Set<MetadataCategory> before = metadata.getCategories();
@@ -199,11 +200,7 @@ public class MetadataTagApi {
             ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD),
             ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)
         ).publish(appContext);
-      } finally {
-          context.clearAsThreadLocal();
-          context.clear();
       }
-
     }
 
     @ApiOperation(
@@ -234,8 +231,7 @@ public class MetadataTagApi {
             Integer[] id,
         HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-      try {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         ApplicationContext appContext = ApplicationContextHolder.get();
         Set<MetadataCategory> before = metadata.getCategories();
@@ -264,9 +260,6 @@ public class MetadataTagApi {
             ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD),
             ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)
         ).publish(appContext);
-      } finally {
-          context.clearAsThreadLocal();
-          context.clear();
       }
     }
 
@@ -321,7 +314,7 @@ public class MetadataTagApi {
     ) throws Exception {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        try {
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
 
@@ -336,8 +329,7 @@ public class MetadataTagApi {
                 Set<MetadataCategory> before = info.getCategories();
                 if (info == null) {
                     report.incrementNullRecords();
-                } else if (!accessMan.canEdit(
-                    ApiUtils.createServiceContext(request), String.valueOf(info.getId()))) {
+                } else if (!accessMan.canEdit(serviceContext, String.valueOf(info.getId()))) {
                     report.addNotEditableMetadataId(info.getId());
                 } else {
                     if (clear) {
@@ -419,7 +411,7 @@ public class MetadataTagApi {
     ) throws Exception {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        try {
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)){
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
 
@@ -435,7 +427,7 @@ public class MetadataTagApi {
                 if (info == null) {
                     report.incrementNullRecords();
                 } else if (!accessMan.canEdit(
-                    ApiUtils.createServiceContext(request), String.valueOf(info.getId()))) {
+                    serviceContext, String.valueOf(info.getId()))) {
                     report.addNotEditableMetadataId(info.getId());
                 } else {
                     info.getCategories().clear();

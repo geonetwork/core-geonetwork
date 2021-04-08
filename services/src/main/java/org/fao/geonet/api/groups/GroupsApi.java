@@ -195,7 +195,7 @@ public class GroupsApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
 
         ApplicationContext context = ApplicationContextHolder.get();
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request, locale.getISO3Country());
+      try (ServiceContext serviceContext = ApiUtils.createServiceContext(request, locale.getISO3Country())) {
         if (context == null) {
             throw new RuntimeException("ServiceContext not available");
         }
@@ -241,6 +241,7 @@ public class GroupsApi {
                 groupId));
             throw new RuntimeException(e);
         }
+      }
     }
 
     private static Resources.ResourceHolder getImage(Resources resources, ServiceContext serviceContext, Group group) throws IOException {

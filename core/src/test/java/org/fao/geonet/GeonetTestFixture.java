@@ -187,7 +187,6 @@ public class GeonetTestFixture {
 
       } finally {
         serviceContext.clearAsThreadLocal();
-        //ApplicationContextHolder.clear();
       }
     }
 

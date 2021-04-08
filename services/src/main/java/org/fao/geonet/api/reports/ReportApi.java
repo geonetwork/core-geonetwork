@@ -84,7 +84,7 @@ public class ReportApi {
         final HttpServletResponse response,
         final HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         ReportFilter filter = new ReportFilter(dateFrom, dateTo,
                 ReportUtils.groupsForFilter(context, groups));
@@ -93,6 +93,7 @@ public class ReportApi {
         response.setHeader("Content-Disposition",
                 "attachment; filename=\"downloads.csv\"");
         report.create(context, response.getWriter());
+      }
     }
 
 
@@ -138,7 +139,7 @@ public class ReportApi {
             final HttpServletResponse response,
             final HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         ReportFilter filter = new ReportFilter(dateFrom, dateTo,
                 ReportUtils.groupsForFilter(context, groups));
@@ -147,6 +148,7 @@ public class ReportApi {
         response.setHeader("Content-Disposition",
                 "attachment; filename=\"uploads.csv\"");
         report.create(context, response.getWriter());
+      }
     }
 
 
@@ -194,7 +196,7 @@ public class ReportApi {
             final HttpServletResponse response,
             final HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         ReportFilter filter = new ReportFilter(dateFrom, dateTo,
                 ReportUtils.groupsForFilter(context, groups));
@@ -203,6 +205,7 @@ public class ReportApi {
         response.setHeader("Content-Disposition",
                 "attachment; filename=\"users.csv\"");
         report.create(context, response.getWriter());
+      }
     }
 
 
@@ -249,7 +252,7 @@ public class ReportApi {
             final HttpServletResponse response,
             final HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         ReportFilter filter = new ReportFilter(dateFrom, dateTo,
                 ReportUtils.groupsForFilter(context, groups));
@@ -258,6 +261,7 @@ public class ReportApi {
         response.setHeader("Content-Disposition",
                 "attachment; filename=\"internalmetadata.csv\"");
         report.create(context, response.getWriter());
+      }
     }
 
 
@@ -304,7 +308,7 @@ public class ReportApi {
             final HttpServletResponse response,
             final HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         ReportFilter filter = new ReportFilter(dateFrom, dateTo,
                 ReportUtils.groupsForFilter(context, groups));
@@ -313,5 +317,6 @@ public class ReportApi {
         response.setHeader("Content-Disposition",
                 "attachment; filename=\"updatedmetadata.csv\"");
         report.create(context, response.getWriter());
+      }
     }
 }

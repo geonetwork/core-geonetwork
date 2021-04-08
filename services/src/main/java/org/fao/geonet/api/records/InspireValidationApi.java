@@ -218,8 +218,7 @@ public class InspireValidationApi {
 
             // Use formatter to convert the record
             if (!schema.equals("iso19139")) {
-                try {
-                    ServiceContext context = ApiUtils.createServiceContext(request);
+                try (ServiceContext context = ApiUtils.createServiceContext(request)) {
                     Key key = new Key(metadata.getId(), "eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
 
                     final FormatterApi.FormatMetadata formatMetadata =
@@ -328,9 +327,7 @@ public class InspireValidationApi {
     ) throws Exception {
 
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
-        try {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
             if (inspireValidatorUtils.isReady(context, URL, testId)) {
                 Map<String, String> values = new HashMap<>();
 

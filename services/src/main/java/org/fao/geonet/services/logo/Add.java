@@ -75,9 +75,9 @@ public class Add implements ApplicationContextAware {
     StatusResponse exec(@RequestParam("fname") MultipartFile fname, HttpServletRequest request)
         throws Exception {
 
-        try {
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
             Path logoDir;
-            final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+
             final Resources resources = context.getBean(Resources.class);
             synchronized (this) {
                 if (this.logoDirectory == null) {

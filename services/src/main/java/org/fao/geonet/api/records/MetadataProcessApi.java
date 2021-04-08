@@ -106,8 +106,7 @@ public class MetadataProcessApi {
     public @ResponseBody List<SuggestionType> getSuggestions(
             @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
             HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-      try{
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid,context);
 
         Map<String, Object> xslParameter = new HashMap<String, Object>();
@@ -142,9 +141,6 @@ public class MetadataProcessApi {
                     String.format("No %s files available in schema '%s'. No suggestion to provides.", XSL_SUGGEST_FILE,
                             metadata.getDataInfo().getSchemaId()));
         }
-      } finally {
-        context.clearAsThreadLocal();
-        context.clear();
       }
     }
 
@@ -160,8 +156,7 @@ public class MetadataProcessApi {
             @ApiParam(value = ApiParams.API_PARAM_PROCESS_ID) @PathVariable String process, HttpServletRequest request)
             throws Exception {
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
-      try {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         boolean save = request.getMethod().equals("POST");
 
@@ -171,9 +166,6 @@ public class MetadataProcessApi {
         Element processedMetadata = process(applicationContext, process, request, metadata, save, context, sm, report);
 
         return new ResponseEntity<>(processedMetadata, HttpStatus.OK);
-      } finally {
-          context.clearAsThreadLocal();
-          context.clear();
       }
     }
 
@@ -188,8 +180,7 @@ public class MetadataProcessApi {
             @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
             @ApiParam(value = ApiParams.API_PARAM_PROCESS_ID) @PathVariable String process, HttpServletRequest request)
             throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-      try {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         boolean save = true;
 
@@ -199,9 +190,6 @@ public class MetadataProcessApi {
 
         process(applicationContext, process, request, metadata, save, context, sm, report);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      } finally {
-        context.clearAsThreadLocal();
-        context.clear();
       }
     }
 

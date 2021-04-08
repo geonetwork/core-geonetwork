@@ -169,8 +169,8 @@ public class MetadataWorkflowApi {
             @RequestParam(required = false) boolean details,
             @ApiParam(value = "Sort direction", required = false) @RequestParam(defaultValue = "DESC") Sort.Direction sortOrder,
             HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
 
         String sortField = SortUtils.createPath(MetadataStatus_.changeDate);
 
@@ -182,6 +182,7 @@ public class MetadataWorkflowApi {
 
         // TODO: Add paging
         return response;
+      }
     }
 
     @ApiOperation(value = "Get record status history by type", notes = "", nickname = "getRecordStatusHistoryByType")
@@ -194,8 +195,8 @@ public class MetadataWorkflowApi {
             @RequestParam(required = false) boolean details,
             @ApiParam(value = "Sort direction", required = false) @RequestParam(defaultValue = "DESC") Sort.Direction sortOrder,
             HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
 
         String sortField = SortUtils.createPath(MetadataStatus_.changeDate);
 
@@ -207,6 +208,7 @@ public class MetadataWorkflowApi {
 
         // TODO: Add paging
         return response;
+      }
     }
 
     @ApiOperation(value = "Get last workflow status for a record", notes = "", nickname = "getStatus")
@@ -221,8 +223,7 @@ public class MetadataWorkflowApi {
             @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
             HttpServletRequest request) throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
-      try {
+      try (ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language())) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
 
         // --- only allow the owner of the record to set its status
@@ -246,9 +247,6 @@ public class MetadataWorkflowApi {
         }
         return new MetadataWorkflowStatusResponse(recordStatus, listOfReviewers,
                 accessManager.hasEditPermission(context, metadata.getId() + ""), elStatus);
-      } finally {
-        context.clearAsThreadLocal();
-        context.clear();
       }
     }
 
@@ -262,9 +260,7 @@ public class MetadataWorkflowApi {
     public void setStatus(@ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
             @ApiParam(value = "Metadata status", required = true) @RequestBody(required = true) MetadataStatusParameter status,
             HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request,
-                languageUtils.getIso3langCode(request.getLocales()));
-      try {
+      try (ServiceContext context = ApiUtils.createServiceContext(request, languageUtils.getIso3langCode(request.getLocales()))) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
 
@@ -304,9 +300,6 @@ public class MetadataWorkflowApi {
 
         // --- reindex metadata
         metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, null);
-      } finally {
-        context.clearAsThreadLocal();
-        context.clear();
       }
     }
 
@@ -398,7 +391,7 @@ public class MetadataWorkflowApi {
         @ApiParam(value = "From page", required = false) @RequestParam(required = false, defaultValue = "0") Integer from,
         @ApiParam(value = "Number of records to return", required = false) @RequestParam(required = false, defaultValue = "100") Integer size,
         HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         PageRequest pageRequest = null;
         if (sortOrder !=null) {
@@ -422,6 +415,7 @@ public class MetadataWorkflowApi {
         }
 
         return buildMetadataStatusResponses(metadataStatuses, details, context.getLanguage());
+      }
     }
 
     /**
@@ -550,8 +544,7 @@ public class MetadataWorkflowApi {
         String previousStateText = getValidatedStateText(metadataStatus, State.BEFORE, request, httpSession);
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
-      try {
+      try (ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language())) {
 
         // For cases where the records was not deleted, we will attempt to get the metadata record.
         // If it remains as null then the record did not exists and this is a recovery.
@@ -612,9 +605,6 @@ public class MetadataWorkflowApi {
             String xmlAfter = outp.outputString(afterMetadata);
             new RecordRestoredEvent(recoveredMetadataId, metadataStatus.getUuid(), session.getUserIdAsInt(), xmlBefore, xmlAfter, metadataStatus).publish(applicationContext);
         }
-      } finally {
-        context.clearAsThreadLocal();
-        context.clear();
       }
     }
 
@@ -805,7 +795,7 @@ public class MetadataWorkflowApi {
             }
         }
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         String schema = info.getChildText(Edit.Info.Elem.SCHEMA);
         if (schema == null) {
@@ -851,6 +841,7 @@ public class MetadataWorkflowApi {
         }
 
         return id;
+      }
     }
 
     private MetadataStatus getMetadataStatus(String uuidOrInternalId, int statusId, int userId, String changeDate) throws ResourceNotFoundException {

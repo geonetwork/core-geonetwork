@@ -23,6 +23,7 @@
 
 package jeeves.server.context;
 
+import java.io.Closeable;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import jeeves.component.ProfileManager;
@@ -69,7 +70,7 @@ import javax.persistence.EntityManager;
  *
  * @see ServiceManager
  */
-public class ServiceContext extends BasicContext {
+public class ServiceContext extends BasicContext implements AutoCloseable  {
 
     /**
      * ServiceContext is managed as a thread locale using setAsThreadLocal, clearAsThreadLocal and clear methods.
@@ -276,9 +277,47 @@ public class ServiceContext extends BasicContext {
      */
     @CheckForNull
     public static ServiceContext get() {
-        return THREAD_LOCAL_INSTANCE.get();
+        ServiceContext context = THREAD_LOCAL_INSTANCE.get();
+        if(context != null && context.isCleared()) {
+            context.checkCleared("Thread local access");
+        }
+        return context;
     }
 
+    /**
+     * Auto closable for try-with-resources support.
+     * <p>
+     * For use when creating service context for use as a parameter, will check and handle {@link #clear()} if needed:
+     * <pre>
+     * try (ServiceContext context = serviceMan.createServiceContext("AppHandler", appContext)){
+     *     ...
+     * }
+     * </pre>
+     * </p>
+     * Close will also check and handle {@link #clearAsThreadLocal()} if needed:
+     * <pre>
+     * try (ServiceContext context = serviceMan.createServiceContext("AppHandler", appContext)){
+     *     setAsThreadLocal();
+     *     ....
+     * }
+     * </pre>
+     * </p>
+     */
+    public void close() {
+        try {
+            ServiceContext check = THREAD_LOCAL_INSTANCE.get();
+            if( this == check){
+                clearAsThreadLocal();
+            }
+        }
+        finally {
+            if( !isCleared() ){
+                // reuse clear method, but provide useful deAllocation context
+                clear();
+                deAllocation  = new Throwable("ServiceContext "+_service+" closed");
+            }
+        }
+    }
     //--------------------------------------------------------------------------
     //---
     //--- Constructor
@@ -363,7 +402,7 @@ public class ServiceContext extends BasicContext {
      * @param message message to use if clear() has already been called.
      */
     protected void checkCleared(String message){
-        if( _service == null){
+        if(isCleared()){
             String unavailable = message + " - service context no longer available\nCleared by " + deAllocation.getStackTrace()[1];
             throw new NullPointerException(unavailable);
         }
@@ -496,6 +535,15 @@ public class ServiceContext extends BasicContext {
      */
     public void setLanguage(final String lang) {
         _language = lang;
+    }
+
+    /**
+     * True if {@link #clear()} has been called to reclaim resources.
+     *
+     * @return true if service context has been cleared
+     */
+    public boolean isCleared(){
+        return _service == null;
     }
 
     /**
