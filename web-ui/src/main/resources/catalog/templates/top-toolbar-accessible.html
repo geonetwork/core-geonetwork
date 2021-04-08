@@ -271,36 +271,13 @@
               <a class="btn btn-default" href="new.account" data-translate="">createAnAccount</a>
             </li>
             <li role="separator" class="divider hidden-xs" data-ng-show="isHostDefined()"></li>
-            <li data-ng-show="isHostDefined()">
+            <li data-ng-show="isHostDefined()" class="gn-margin-bottom">
               <!-- forgot password -->
               <b data-translate="">forgetDetails</b>
-<!--                <span data-ng-show="sendPassword === false">-->
               <span>
                 <p data-translate="">forgetDetailsInfo</p>
-                <button type="submit" class="btn btn-default btn-block" data-ng-click="setSendPassword(true)">
-                  <span data-translate="">recoverPassword</span>
-                </button>
+                <a class="btn btn-default btn-block" href="catalog.signin?showforgotpassword=true" data-translate="">recoverPassword</a>
               </span>
-
-              <div data-ng-show="sendPassword === true">
-                <form class="form-horizontal" id="userinfo" name="gnUserinfo">
-                  <input type="hidden" name="_csrf" value="{{csrf}}"/>
-                  <div class="form-group">
-                    <label data-translate="">username</label>
-                    <input type="text" name="username" id="username"
-                           aria-label="{{'username' | translate}}"
-                           data-ng-model="usernameToRemind"
-                           data-ng-required="" class="form-control"/>
-                  </div>
-                  <button type="submit"
-                          class="btn btn-default btn-block"
-                          data-ng-disabled="usernameToRemind == ''"
-                          data-ng-click="remindMyPassword('#userinfo')">
-                    <i class="fa fa-question-sign"/>
-                    <span data-translate="">sendPasswordLinkToMyEmail</span>
-                  </button>
-                </form>
-              </div>
             </li>
           </ul>
         </li>
