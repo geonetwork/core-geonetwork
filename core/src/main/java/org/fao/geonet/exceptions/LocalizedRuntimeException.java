@@ -57,6 +57,10 @@ public abstract class LocalizedRuntimeException extends RuntimeException impleme
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
+    // Note that the following could not be a generic abstract class using generic type -i.e<T extends LocalizedException>
+    // As generic class is not allowed to extend the Throwable class directly or indirectly.
+    // https://docs.oracle.com/javase/specs/jls/se6/html/classes.html#303584
+    // So each child class needs to have it's own version.
     public LocalizedRuntimeException withMessageKey(String messageKey) {
         return withMessageKey(messageKey, null);
     }
