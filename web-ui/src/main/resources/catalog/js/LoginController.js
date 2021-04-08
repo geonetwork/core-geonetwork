@@ -95,6 +95,13 @@
            $scope.sendPassword = value;
            $('#username').focus();
           };
+
+         var showForgotPassword = gnUtilityService.getUrlParameter('showforgotpassword');
+
+         if ((showForgotPassword) && (showForgotPassword === 'true')) {
+           $scope.setSendPassword(true);
+         }
+
          /**
           * Register user. An email will be sent to the new
           * user and another to the catalog admin if a profile
