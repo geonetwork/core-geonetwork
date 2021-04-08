@@ -5,27 +5,25 @@
   <div class=""
        data-ng-repeat="(type, items) in relations track by $index"
        data-ng-if="type && type !== 'thumbnails'">
-    <div data-ng-init="mainType = config.getType(r, type);"
+    <div data-ng-init="mainType = config.getType(r, type);
+                       badge = getBadgeLabel(mainType, r);
+                       icon = config.getClassIcon(mainType);"
          class="row list-group-item gn-related-item gn-related-{{type}} gn-relation-type-{{mainType}}"
          data-ng-repeat="r in items track by $index">
-      <div class="col-xs-1 col-sm-1">
-        <!-- OWS have their name overlaid over the globe icon -->
-        <strong data-ng-if="(mainType === 'WMS') || (mainType === 'WMSSERVICE') || (mainType === 'WMTS') ||
-                            (mainType === 'WMTSSERVICE') || (mainType === 'WFS') || (mainType === 'WCS')">
-          <span class="fa-stack fa-1x">
-            <i class="fa fa-globe fa-stack-2x" style="opacity: 0.55;"></i>
-            <span class="fa fa-stack-1x">
-              <strong style="font-size:10px;">{{mainType.replace('SERVICE', '')}}</strong>
-            </span>
-          </span>
-        </strong>
-        <strong data-ng-if="(mainType !== 'WMS') && (mainType !== 'WMSSERVICE') && (mainType !== 'WMTS') &&
-                            (mainType !== 'WMTSSERVICE') && (mainType !== 'WFS') && (mainType !== 'WCS')">
-          <i class="fa"
-             data-ng-class="config.getClassIcon(mainType)"/>&nbsp;
+      <div class="gn-related-icon-col col-xs-2 col-sm-2 text-center">
+        <strong>
+          <div class="clearfix">
+            <i class="fa"
+               data-ng-class="icon"/>
+          </div>
+          <span data-ng-if="badge != ''"
+                class="label label-default"
+                data-ng-class="{
+                  'label-primary': icon === 'fa-download' || icon === 'fa-file-pdf-o',
+                  'label-success': icon === 'fa-globe'}">{{badge}}</span>
         </strong>
       </div>
-      <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-8 col-sm-8'">
+      <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-7 col-sm-7'">
         <!-- Always display title if available -->
         <h3 data-ng-if="::(r.title | gnLocalized: lang).length">{{::(r.title | gnLocalized: lang)}}</h3>
         <!-- Display description if available -->

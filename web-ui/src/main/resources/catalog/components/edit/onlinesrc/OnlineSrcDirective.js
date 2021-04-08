@@ -842,12 +842,12 @@
                       for (var i = 0; i < r.config.types.length; i ++) {
                         var c = r.config.types[i];
                         if (c.extendWithDataFormats) {
-                          console.log(scope.gnCurrentEdit.dataFormats);
+                          var labelPrefix = $translate.instant('recordFormatDownload');
                           for (var j = 0; j < scope.gnCurrentEdit.dataFormats.length; j ++) {
                             var f = scope.gnCurrentEdit.dataFormats[j],
                               option = angular.copy(c);
 
-                            option.label = f.label;
+                            option.label = labelPrefix + f.label;
                             option.fields.protocol.value = f.value;
                             scope.config.types.push(option);
                           }
@@ -1140,6 +1140,11 @@
                       // Those parameters are object.
                       scope.params.name = '';
                       scope.params.desc = '';
+                    }
+                    if (scope.params.function === ''
+                      && scope.params.protocol
+                      && scope.params.protocol.indexOf('DOWNLOAD') !== -1) {
+                      scope.params.function = 'download';
                     }
                     scope.loadCurrentLink();
                   }

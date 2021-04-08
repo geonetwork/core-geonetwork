@@ -588,9 +588,9 @@
    * the gnCurrentEdit object or 'iso19139' if not defined.
    */
       .directive('schemaInfoCombo', ['$http', 'gnSchemaManagerService',
-        'gnCurrentEdit',
+        'gnCurrentEdit', '$translate',
         function($http, gnSchemaManagerService,
-                 gnCurrentEdit) {
+                 gnCurrentEdit, $translate) {
           return {
             restrict: 'A',
             replace: true,
@@ -657,9 +657,9 @@
               function appendExtraOptions() {
                 if(baseList && angular.isArray(scope.extraOptions)) {
                   scope.extraOptions.unshift({
-                    value: '', label: 'recordFormats', disabled: true});
+                    value: '', label: $translate.instant('recordFormats'), disabled: true});
                   scope.extraOptions.push({
-                    value: '', label: 'protocols', disabled: true})
+                    value: '', label: $translate.instant('commonProtocols'), disabled: true})
                   scope.infos = scope.extraOptions.concat(baseList);
                 }
               }
