@@ -403,8 +403,6 @@ public class KeywordsApi {
 
         Element descKeys;
 
-        uri = URLDecoder.decode(uri, "UTF-8");
-
         if (uri == null) {
             descKeys = new Element("descKeys");
         } else {
