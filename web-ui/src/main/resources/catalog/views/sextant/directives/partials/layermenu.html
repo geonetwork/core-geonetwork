@@ -1,0 +1,105 @@
+<div class="sxt-layer-menu flex-col flex-align-stretch">
+  <a href ng-click="handleClose()" class="close-btn">
+    <i class="fa fa-times"></i>
+  </a>
+
+  <div>
+    {{layer.get('title') || layer.get('name')}}
+    <span class="text-muted small" ng-if="layer.get('attribution')">
+      <br>
+      &copy;
+      <span ng-if="!layer.get('attributionUrl')">{{layer.get('attribution')}}</span>
+      <span ng-if="layer.get('attributionUrl')">
+        <a href="{{layer.get('attributionUrl')}}" target="_blank">{{layer.get('attribution')}}</a>
+      </span>
+    </span>
+  </div>
+
+  <div class="flex-row flex-align-stretch width-100 sxt-layer-menu-top-buttons">
+    <button type="button"
+            class="flex-grow btn btn-secondary btn-sm"
+            ng-disabled="!layer.get('md') || layer.get('metadataUrl')"
+            ng-click="ctrl.showMetadata()"
+            translate>
+      showMetadata
+    </button>
+
+    <button type="button"
+            class="flex-grow btn btn-secondary btn-sm"
+            ng-disabled="!layer.get('cextent')"
+            ng-click="ctrl.zoomToExtent()"
+            translate>
+      layerExtentZoom
+    </button>
+
+    <button type="button"
+            class="flex-grow btn btn-secondary btn-sm"
+            ng-disabled="!download"
+            ng-click="ctrl.addToPanier()"
+            translate>
+      download
+    </button>
+  </div>
+
+  <tabset class="flex-grow">
+    <tab>
+      <tab-heading translate>mapLegend</tab-heading>
+      <div>
+        <img ng-src="{{layer.get('legend')}}"
+             alt="{{layer.get('label')}} {{'mapLegend' | translate}}"
+             aria-label="{{layer.get('label')}} {{'mapLegend' | translate}}"/>
+      </div>
+    </tab>
+
+    <tab ng-if="wfs || (wfsLink && user.canEditRecord(layer.get('md')))">
+      <tab-heading translate>filter</tab-heading>
+      <div>
+        <div gn-wfs-filter-facets
+             layer="layer" wfs-url="wfsLink.url"
+             feature-type-name="wfsLink.featureTypeName"
+             mode="group">
+        </div>
+      </div>
+    </tab>
+
+    <tab ng-if="process">
+      <tab-heading translate>process</tab-heading>
+      <div>
+        <gn-wps-process-form map="map"
+                             wps-link="process"
+                             wfs-link="wfsLink" />
+      </div>
+    </tab>
+
+    <tab>
+      <tab-heading translate>settings</tab-heading>
+      <div>
+        <p>
+          <input type="range" min="0" max="1" step="0.05" ng-model="layer.opacity" />
+          <span translate>opacity</span>
+        </p>
+        <div ng-if="layer.get('advanced')"
+             gn-ncwms-transect
+             map="map"
+             layer="layer"
+        ></div>
+      </div>
+    </tab>
+
+    <tab ng-if="layer.get('annotationsUuid')">
+      <tab-heading translate>annotations</tab-heading>
+      <div>
+        <sxt-annotations-editor map="map" layer="layer" />
+      </div>
+    </tab>
+  </tabset>
+
+  <div class="flex-row flex-center width-100">
+    <button type="button"
+            class="btn btn-danger btn-sm"
+            ng-click="handleClose(); ctrl.deleteLayer()"
+            translate>
+      remove
+    </button>
+  </div>
+</div>

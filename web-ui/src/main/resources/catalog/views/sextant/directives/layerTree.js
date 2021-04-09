@@ -26,42 +26,10 @@
           var $this = this;
           this.user = $scope.user;
 
-          this.setWPS = function(wpsLink, layer, wfsLink) {
-            $scope.loadTool('wps', layer);
-
-            wpsLink.layer = layer;
-            wpsLink.label = wpsLink.desc;
-            $scope.wpsLink = wpsLink;
-            $scope.wfsLink = wfsLink;
+          this.setActiveLayer = function(layer) {
+            // uses ViewerDirective scope
+            $scope.setActiveLayer(layer);
           };
-
-          /**
-           * $compile the wfsFilter directive to build the facet form
-           */
-          this.setWFSFilter = function(layer, wfsLink) {
-            $scope.loadTool('wfsfilter', layer);
-
-            if (!layer.get('wfsfilter-el')) {
-              var scope = $scope.$new();
-              scope.layer = layer;
-              var url = wfsLink.url;
-              var featureTypeName = wfsLink.name;
-
-              var el = angular.element('<div ng-show="active.WFSFILTER == layer && layer.visible" data-gn-wfs-filter-facets="" data-layer="layer" data-wfs-url="'+url+'" data-feature-type-name="'+featureTypeName+'" data-mode="group"></div><!--<div data-gn-data-table="layer.get(\'solrQ\')" data-gn-data-table-solr-type="WfsFilter" data-gn-data-table-solr-name="facets" data-exclude-cols="excludeCols"></div>-->');
-              $compile(el)(scope);
-              var element = $('.sxt-wfsfilter-panel');
-              element.append(el);
-              layer.set('wfsfilter-el', el);
-            }
-          };
-
-          this.setNCWMS = function(layer) {
-            $scope.loadTool('ncwms', layer);
-          };
-
-          this.setAnnotations = function(layer) {
-            $scope.loadTool('annotations', layer);
-          }
 
           this.comboGroups = {};
           this.switchGroupCombo = function(groupcombo, layer) {
@@ -79,12 +47,8 @@
           $scope.setActiveComboGroup = function(l) {
             $this.comboGroups[l.get('groupcombo')] = l;
           };
-          this.addToPanier = function(md, link) {
-            $scope.resultviewFns.addMdLayerToPanier(link, md);
-          }
         }],
         link: function(scope, element, attrs) {
-
           scope.layers = scope.map.getLayers().getArray();
           scope.layerFilterFn = gnLayerFilters.selected;
 
@@ -239,11 +203,6 @@
 
             // do not fold layer tree for next rebuild
             scope.layersFromContext = false;
-
-            // Remove active popovers
-            $('[sxt-layertree] .dropdown-toggle').each(function(i, button) {
-              $(button).popover('hide');
-            });
 
             debounce++;
             $timeout(function() {
@@ -459,29 +418,9 @@
 
           }
 
-          scope.indexWFSFeatures = function(url, type) {
-            $http.get('wfs.harvest?' +
-                'uuid=' + '' +
-                '&url=' + encodeURIComponent(url) +
-                '&typename=' + encodeURIComponent(type))
-              .success(function(data) {
-                console.log(data);
-              }).error(function(response) {
-              console.log(response);
-            });
-          };
-          scope.mapService = gnMap;
-
-          scope.setNCWMS = controller.setNCWMS;
-
-          scope.remove = function() {
-            wpsLayers.forEach(function(l) {
-              if (l.get('wpsParent') == scope.member) {
-                scope.map.removeLayer(l);
-              }
-            });
-
-            scope.map.removeLayer(scope.member);
+          scope.setActiveLayer = function(layer) {
+            // uses sxtLayertree controller
+            controller.setActiveLayer(layer);
           };
 
           if(!scope.isParentNode()) {
@@ -507,69 +446,45 @@
             };
 
             if (scope.member.get('md')) {
-              var d =  scope.member.get('downloads');
               var downloadable =
                 scope.member.get('md').download == true;
-              if(angular.isArray(d) && downloadable) {
-                scope.download = d[0];
-              }
 
-              var wfsLink =  scope.member.get('wfs');
+              var wfsLink = scope.member.get('wfs');
               if(angular.isArray(wfsLink) && downloadable) {
                 wfsLink = wfsLink[0];
               }
               else {
                 wfsLink = undefined;
               }
-              scope.user = controller.user;
 
               if(wfsLink) {
-                scope.wfsLink = wfsLink;
-                var indexObject = wfsFilterService.registerEsObject(wfsLink.url, wfsLink.name);
-                indexObject.init({
-                  wfsUrl: wfsLink.url,
-                  featureTypeName: wfsLink.name
-                });
-                indexObject.searchWithFacets({}).then(function(data) {
-                  if(data.count > 0) {
-                    scope.wfs = wfsLink;
+                var appProfile;
+                try {
+                  appProfile = wfsLink.applicationProfile ? JSON.parse(wfsLink.applicationProfile) : {};
+                } catch (e) {
+                  appProfile = {};
+                  console.warn('Erreur lors de la lecture de l\'élément applicationProfile', e);
+                }
 
-                    var appProfile;
-                    try {
-                      appProfile = wfsLink.applicationProfile ? JSON.parse(wfsLink.applicationProfile) : {};
-                    } catch (e) {
-                      appProfile = {};
-                      console.warn('Erreur lors de la lecture de l\'élément applicationProfile', e);
-                    }
+                if (appProfile.compositeLayer && !scope.member.get('compositeInitialized')) {
+                  scope.member.set('compositeInitialized', true);
+                  var featureType = wfsLink.url + '#' + wfsLink.name;
+                  var minHeatmapCount = appProfile.compositeLayer.minHeatmapCount;
+                  var maxTooltipCount = appProfile.compositeLayer.maxTooltipCount || 1000;
 
-                    if (appProfile.compositeLayer && !scope.member.get('compositeInitialized')) {
-                      scope.member.set('compositeInitialized', true);
-                      var featureType = wfsLink.url + '#' + wfsLink.name;
-                      var minHeatmapCount = appProfile.compositeLayer.minHeatmapCount;
-                      var maxTooltipCount = appProfile.compositeLayer.maxTooltipCount || 1000;
-
-                      var tooltipTemplateUrl = appProfile.compositeLayer.tooltipTemplateUrl;
-                      var tooltipHoverTemplate = appProfile.compositeLayer.tooltipHoverTemplate;
-                      if (!tooltipTemplateUrl) {
-                        sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount, undefined, tooltipHoverTemplate);
-                      } else {
-                        $http.get(tooltipTemplateUrl).then(function (response) {
-                          var tooltipTemplate = response.data;
-                          sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount, tooltipTemplate, tooltipHoverTemplate);
-                        }, function () {
-                          console.warn('Le chargement du template de tooltip a échoué');
-                        });
-                      }
-                    }
+                  var tooltipTemplateUrl = appProfile.compositeLayer.tooltipTemplateUrl;
+                  var tooltipHoverTemplate = appProfile.compositeLayer.tooltipHoverTemplate;
+                  if (!tooltipTemplateUrl) {
+                    sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount, undefined, tooltipHoverTemplate);
+                  } else {
+                    $http.get(tooltipTemplateUrl).then(function (response) {
+                      var tooltipTemplate = response.data;
+                      sxtCompositeLayer.init(scope.member, scope.map, featureType, minHeatmapCount, maxTooltipCount, tooltipTemplate, tooltipHoverTemplate);
+                    }, function () {
+                      console.warn('Le chargement du template de tooltip a échoué');
+                    });
                   }
-                });
-              }
-
-              var processable =
-                scope.member.get('md').process == 'true';
-              var p = scope.member.get('processes');
-              if(angular.isArray(p) && processable) {
-                scope.process = p;
+                }
               }
             } else if (scope.member.get('directDownloadURL')) {
               // direct download are always using the WWW:DOWNLOAD protocol
@@ -579,29 +494,6 @@
               };
             }
           }
-
-          scope.addToPanier = function(download) {
-            controller.addToPanier(scope.member.get('md'), download);
-          };
-
-          scope.showMetadata = function() {
-            gnMdView.openMdFromLayer(scope.member);
-          };
-
-          scope.showWPS = function(process) {
-            controller.setWPS(process, scope.member, wfsLink);
-            $('[sxt-layertree] .dropdown-toggle').each(function(i, button) {
-              $(button).popover('hide');
-            });
-          };
-
-          scope.showWFSFilter = function() {
-            controller.setWFSFilter(scope.member, wfsLink);
-          };
-
-          scope.showAnnotations = function() {
-            controller.setAnnotations(scope.member);
-          };
 
           scope.isOutOfRange = function () {
             if (scope.isParentNode() ||

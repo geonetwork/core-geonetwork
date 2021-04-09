@@ -733,7 +733,6 @@
         }); });
         $rootScope.$on('owsContextReseted', function() {
           scope.active.maximized = false;
-          scope.active.layersTools = false;
         });
 
       }

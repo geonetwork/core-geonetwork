@@ -78,6 +78,18 @@
                 function() { setTimeout(map.updateSize.bind(map), 100) }
               );
 
+              // this holds the current active OL layer (to display options such as WFS filters, etc.)
+              scope.activeLayer = null;
+              scope.setActiveLayer = function(layer) {
+                scope.activeLayer = layer;
+              }
+              scope.clearActiveLayer = function() {
+                scope.activeLayer = null;
+              }
+              scope.hasActiveLayer = function() {
+                return !!scope.activeLayer;
+              }
+
               var firstRun = true;
               scope.handleTabParsing = function() {
                 if (!firstRun) { return; }
@@ -163,35 +175,12 @@
               });
               scope.map.addOverlay(overlay);
 
-              var separatedTools = ['ncwms', 'wps', 'wfsfilter', 'annotations'];
-
               scope.active = {
-                tool: false,
-                layersTools: false
+                tool: false
               };
-              separatedTools.forEach(function(tool) {
-                scope.active[tool.toUpperCase()] = null;
-              });
 
               scope.locService = gnSearchLocation;
 
-              var activeTab = null;
-              scope.layerTabSelect = function(tab) {
-                if (!scope.active.layersTools) {
-                  scope.active.layersTools = true;
-                  scope.layerTabs[tab].active = true;
-                  activeTab = tab;
-                } else if (tab == activeTab) {
-                  scope.active.layersTools = false;
-                  scope.active.maximized = false;
-                  scope.layerTabs[tab].active = false;
-                  activeTab = null;
-                  iElement.find('.main-tools').removeClass('sxt-maximize-layer-tools');
-                } else {
-                  scope.layerTabs[tab].active = true;
-                  activeTab = tab;
-                }
-              };
               scope.isMenuVisible = function() {
                 return !gnViewerSettings.menuHidden;
               };
@@ -206,47 +195,9 @@
                 return false;
               };
 
-              scope.loadTool = function(tab, layer) {
-                  scope.layerTabs[tab].active = true;
-                  scope.active.layersTools = true;
-                  scope.active[tab.toUpperCase()] = layer;
-                  activeTab = tab;
-              };
-
-
-              /**
-               * Tells if a separated tool (everything but legend/sources/sort)
-               * is opened in the tool panel.
-               * @returns {boolean}
-               */
-              scope.isSeparatedTool = function() {
-                return separatedTools.indexOf(activeTab) >= 0;
-              };
-
-              scope.map.getLayers().on('remove', function(e) {
-                separatedTools.forEach(function(tool) {
-
-                  var toolUpper = tool.toUpperCase();
-                  if(scope.active[toolUpper] &&
-                      scope.active[toolUpper] == e.element) {
-                    scope.active[toolUpper] = null;
-                    scope.active.layersTools = false;
-                    scope.layerTabs[tool].active = false;
-                    activeTab = null;
-                  }
-                });
-                if (e.element.get('wfsfilter-el')) {
-                  e.element.get('wfsfilter-el').remove();
-                }
-                if (e.element.get('wpsfilter-el')) {
-                  e.element.get('wpsfilter-el').remove();
-                }
-              });
-
               // create measure interaction
               scope.mInteraction = gnMeasure.create(map,
                 scope.measureObj, scope);
-
 
               // save processes from viewer settings
               scope.processes = gnViewerSettings.processes;

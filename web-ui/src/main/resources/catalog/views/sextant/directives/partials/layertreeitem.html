@@ -48,78 +48,9 @@
       </label>
       <div class="flex-spacer flex-grow"></div>
 
-      <!--Drop down button for layer actions-->
-      <div class="btn-group pull-right" sxt-popover-dropdown sxt-popover-dismiss=".sxt-layertree">
-        <a role="button" tabindex="0" class="sxt-layer-dropdown-btn dropdown-toggle pull-right btn btn-default btn-xs">
-          <span class="fa fa-cog"></span>
-        </a>
-        <ul style="display:none" class="list-group">
-
-          <!--Zoom To layer-->
-          <li class="list-group-item" ng-if="member.get('cextent')"><a href="" data-ng-click="mapService.zoomLayerToExtent(member, map); hidePopover()">
-            <!--<i class="fa fa-arrows-alt"></i>&nbsp;--><span translate="">layerExtentZoom</span>
-          </a></li>
-
-          <!--Open metadata-->
-          <li class="list-group-item" data-ng-if="member.get('md') || member.get('metadataUrl')"><a href="" data-ng-click="showMetadata(); hidePopover()">
-            <!--<i class="fa fa-file"></i>&nbsp;--><span translate="">showMetadata</span>
-          </a></li>
-
-          <!--downloads-->
-          <li class="list-group-item" data-ng-if="download">
-            <a href="" data-ng-click="addToPanier(download); hidePopover()">
-              <!--<i class="fa fa-download"></i>&nbsp;--><span translate="">download</span>
-            </a></li>
-
-          <!--opacity-->
-          <li class="list-group-item">
-            <input class="pull-right" type="range" min="0" max="1" step="0.05" ng-model="member.opacity" />
-            <a translate="">opacity</a>
-          </li>
-
-          <!--NCWMS-->
-          <li class="list-group-item" data-ng-if="member.get('advanced')"><a href="" data-ng-click="setNCWMS(member); hidePopover()">
-            <!--<i class="fa fa-anchor"></i>&nbsp;--><span translate="">ncwms</span>
-          </a></li>
-
-          <!--WPS-->
-          <li class="list-group-item" data-ng-if="process && process.length == 1"><a href="" data-ng-click="showWPS(process[0]); hidePopover()">
-            <!--<i class="fa fa-gear"></i>&nbsp;--><span translate="">process</span>
-          </a></li>
-          <li class="list-group-item btn-group" ng-if="process && process.length > 1 ">
-            <div class="btn-link dropdown-toggle" data-toggle="dropdown">
-              <span translate="">process</span>&nbsp;
-              <span class="caret"></span>
-            </div>
-            <ul class="dropdown-menu" role="menu">
-              <li ng-repeat="p in process"><a href="" data-ng-click="showWPS(p); hidePopover()">{{p.desc || p.name}}</a></li>
-            </ul>
-          </li>
-
-          <!--WFS Filter-->
-          <li class="list-group-item" data-ng-if="wfs || (wfsLink && user.canEditRecord(member.get('md')))"><a href="" data-ng-click="showWFSFilter(); hidePopover()">
-            <span translate="">filter</span>
-          </a></li>
-
-          <!--Annotations-->
-          <li class="list-group-item"
-              data-ng-if="member.get('annotationsUuid')">
-            <a href="" data-ng-click="showAnnotations(); hidePopover()">
-              <span translate>annotations</span>
-            </a>
-          </li>
-
-          <!--Remove layer-->
-          <li class="list-group-item"><a href="" data-ng-click="remove(); hidePopover()">
-            <!--<i class="fa fa-trash-o"></i>&nbsp;--><span translate="">remove</span>
-          </a></li>
-          <li ng-if="member.get('metadata_url')"><a target="_blank" href="{{::member.get('metadata_url')}}">
-            <span translate="">liencdicprd</span>
-          </a></li>
-        </ul>
-      </div>
-
-      <br/>
+      <a role="button" tabindex="0" class="btn btn-default btn-xs" ng-click="setActiveLayer(member)">
+        <span class="fa fa-cog"></span>
+      </a>
     </div>
     <div ng-if="member.get('loading')" class="flex-row">
       <i class="fa fa-spin fa-spinner"/>
