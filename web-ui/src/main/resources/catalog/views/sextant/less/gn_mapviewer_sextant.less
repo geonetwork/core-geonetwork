@@ -590,15 +590,6 @@
     }
   }
   .tools {
-    button[sxt-layer-tools-toggle] {
-      background-color: @sxt-base-color-dark;
-      color: #fff;
-      padding: 2px 0 1px;
-      float: left;
-      margin: 0 1em;
-      width: 1.7em;
-      visibility: hidden;
-    }
     .tools-bar-close-btn {
       background: white;
       color: @sxt-base-color;
@@ -614,9 +605,6 @@
       position: absolute;
       right: 1em;
     }
-    .layers-tools-expanded button[sxt-layer-tools-toggle] {
-      visibility: visible;
-    }
   }
 
   &.leftBarExpanded {
@@ -625,120 +613,20 @@
     }
   }
 
-  .sxt-layers-tabset {
-    height: 100%;
-    overflow: hidden;
-    display: none;
-    clear: both;
-    font-size: 12px;
-    & > .nav-tabs {
-      display: none;
-    }
-    .tab-content {
-      background: white;
-      padding-top: .6em;
-      height: ~"calc(100% - .2em)";
-      .tab-pane {
-        height: 100%;
-        .panel-carousel {
-          height: 100%;
-          overflow-y: auto;
-        }
-      }
-    }
-    .list-group, .list-group-item {
-      border: none;
-      border-radius: 0;
-      h5 {
-        font-size: @sxt-fontsize;
-      }
-      a {
-        &:hover, &:focus {
-          text-decoration: none;
-        }
-        &.disabled {
-          color: #999999;
-          cursor: not-allowed;
-        }
-      }
-    }
-    .gn-facet {
-      h5 {
-        margin-bottom: 10px;
-        margin-top: 10px;
-      }
-      .list-group {
-        border-left: 1px dotted rgba(0, 0, 0, 0.2);
-      }
-      .list-group-item {
-        padding: 0.15em;
-        min-height: 20px;
-        color: #444;
-        border: none;
-        display: block;
-      }
-      .checkbox {
-        margin-top: 0;
-        margin-bottom: 0;
-      }
-    }
-    [gn-layerorder-panel] {
-      /*.list-group-item:not(:first-child) {
-        border-top: 1px solid #d3d3d3;
-      }*/
-      .list-group-item {
-        display: table-row;
-        margin-bottom: .3em;
-      }
-      .gn-order-buttons {
-        display: table-cell;
-        width: 1.2em;
-        float: left;
-        padding: .3em 0;
-        a {
-          display: inline-block;
-        }
-      }
-      label {
-        padding: .3em 0;
-        display: table-cell;
-        vertical-align: middle;
-      }
-    }
-    [gn-layersources-panel] {
-      li div {
-        margin-left: 1em;
-        color: #808080;
-        font-size: @sxt-fontsize;
-      }
-    }
-  }
-  .layers-tools-expanded .sxt-layers-tabset {
-    display: block;
-  }
-
   [data-gnv-layer-indicator] {
     margin-left: 1em;
   }
 
   .layers .sxt-layertree {
-    height: 100%;
+    min-height: 50%;
     overflow-x: hidden;
     overflow-y: auto;
     ul {
       font-size: 12px;
     }
   }
-  .layers-tools-expanded .sxt-layertree {
-    height: 100%;
-  }
-  .sxt-maximize-layer-tools {
-    .sxt-layertree {
-      display: none;
-    }
-    .sxt-layers-tabset {
-      height: ~"calc(200% - 4em)";
-    }
+  .layers sxt-layer-menu {
+    height: 50%;
   }
   #importLayer {
     & > .panel-body {
@@ -1258,11 +1146,6 @@ gn-wps-process-form,
   overflow-y : hidden;
 }
 
-// do not display attribution in legend panel
-[sxt-main-viewer] .sxt-layers-tabset  h6  {
-  display: None;
-}
-
 sxt-annotations-editor {
   padding: 1.1em;
   display: block;
@@ -1292,6 +1175,7 @@ sxt-annotations-editor {
   border-top: 1px solid #ddd;
   padding-top: 8px;
   position: relative;
+  height: 100%;
   button {
     width: auto !important;
     height: auto !important;

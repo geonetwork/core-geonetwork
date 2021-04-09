@@ -13,7 +13,7 @@
   <gn-profile map="map"></gn-profile>
 
   <!-- Left buttons - Tools-->
-  <div class="tools main-tools" ng-show="isMenuVisible()" ng-class="{'activeTool': isContainerOpened(), 'sxt-maximize-layer-tools': active.maximized}">
+  <div class="tools main-tools" ng-show="isMenuVisible()" ng-class="{'activeTool': isContainerOpened()}">
 
     <div gi-btn-group class="sxt-panel-button">
       <button class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#layers" gi-btn="active">
@@ -80,10 +80,9 @@
 
       <!--Layer tree & background layers-->
       <div class="panel panel-default panel-tools" id="layers" gnv-layermanager-btn ng-show="activeTools.layers">
-        <div class="layers clearfix" ng-class="{'layers-tools-expanded': active.layersTools || hasActiveLayer()}">
+        <div class="layers flex-col flex-align-stretch">
 
-
-          <div class="sxt-layertree">
+          <div class="sxt-layertree flex-grow flex-shrink">
             <div gn-baselayerswitcher="" gn-baselayerswitcher-map="map"></div>
             <div gn-terrain-switcher="ol3d"
                  ng-show="is3dEnabled"></div>
@@ -91,21 +90,12 @@
           </div>
 
           <sxt-layer-menu ng-if="hasActiveLayer()"
+                          class="flex-no-shrink"
                           layer="activeLayer"
                           map="map"
                           user="user"
                           on-close="clearActiveLayer()">
           </sxt-layer-menu>
-
-          <div ng-if="!hasActiveLayer()">
-            <hr class="sxt-layer-separator">
-            <button class="btn btn-default btn-xs" sxt-layer-tools-toggle>
-              <i class="fa" ng-class="{ 'fa-plus': !active.maximized, 'fa-minus': active.maximized }"></i>
-            </button>
-            <button class="tools-bar-close-btn tools-bar-close-btn-single pull-right" ng-class="{'sxt-hidden': isSeparatedTool()}"
-                    ng-show="isLayerTabActive()" ng-click="closeLayerTab()"><span class="">&times;</span>
-            </button>
-          </div>
         </div>
       </div>
 
