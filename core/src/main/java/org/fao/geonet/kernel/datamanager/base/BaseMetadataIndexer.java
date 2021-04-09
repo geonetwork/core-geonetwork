@@ -418,9 +418,13 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         }
         AbstractMetadata fullMd;
 
+        if (searchManager == null) {
+            searchManager = getServiceContext().getBean(SearchManager.class);
+        }
+
         try {
             Vector<Element> moreFields = new Vector<Element>();
-            int id$ = Integer.parseInt(metadataId);
+            int id = Integer.parseInt(metadataId);
 
             // get metadata, extracting and indexing any xlinks
             Element md = getXmlSerializer().selectNoXLinkResolver(metadataId, true, false);
@@ -440,8 +444,12 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
             }
 
-            fullMd = metadataUtils.findOne(id$);
-
+            fullMd = metadataUtils.findOne(id);
+            if( fullMd == null){
+                // Metadata record has been subsequently deleted
+                searchManager.delete(metadataId);
+                return;
+            }
             final String schema = fullMd.getDataInfo().getSchemaId();
             final String createDate = fullMd.getDataInfo().getCreateDate().getDateAndTime();
             final String changeDate = fullMd.getDataInfo().getChangeDate().getDateAndTime();
@@ -488,7 +496,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.EXTRA, extra, false, true));
 
             // If the metadata has an atom document, index related information
-            InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id$);
+            InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id);
 
             if ((feed != null) && StringUtils.isNotEmpty(feed.getAtom())) {
                 moreFields.add(SearchManager.makeField("has_atom", "y", true, true));
@@ -550,7 +558,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             // get privileges
-            List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id$);
+            List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id);
 
             boolean isPublishedToAll = false;
 
@@ -585,7 +593,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
             // get status
             Sort statusSort = new Sort(Sort.Direction.DESC, MetadataStatus_.changeDate.getName());
-            List<MetadataStatus> statuses = statusRepository.findAllByMetadataIdAndByType(id$, StatusValueType.workflow, statusSort);
+            List<MetadataStatus> statuses = statusRepository.findAllByMetadataIdAndByType(id, StatusValueType.workflow, statusSort);
             if (!statuses.isEmpty()) {
                 MetadataStatus stat = statuses.get(0);
                 String status = String.valueOf(stat.getStatusValue().getId());
@@ -599,7 +607,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             // -1 : not evaluated
             // 0 : invalid
             // 1 : valid
-            List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id$);
+            List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id);
             if (validationInfo.isEmpty()) {
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, "-1", true, true));
             } else {
@@ -632,10 +640,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
             //To inject extra fields from BaseMetadataIndexer inherited beans
             addExtraFields(fullMd, moreFields);
-
-            if (searchManager == null) {
-                searchManager = getServiceContext().getBean(SearchManager.class);
-            }
 
             searchManager.index(schemaManager.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root,
                 forceRefreshReaders);
