@@ -1,35 +1,47 @@
-<div>
-  <p>Layer menu for layer {{layer.get('title')}}</p>
+<div class="sxt-layer-menu flex-col flex-align-stretch">
+  <a href ng-click="handleClose()" class="close-btn">
+    <i class="fa fa-times"></i>
+  </a>
 
-  <p>
-    &copy;
-    <span ng-if="!layer.get('attributionUrl')">{{layer.get('attribution')}}</span>
-    <span ng-if="layer.get('attributionUrl')">
-      <a href="{{layer.get('attributionUrl')}}" target="_blank">{{layer.get('attribution')}}</a>
+  <div>
+    {{layer.get('title') || layer.get('name')}}
+    <span class="text-muted small" ng-if="layer.get('attribution')">
+      <br>
+      &copy;
+      <span ng-if="!layer.get('attributionUrl')">{{layer.get('attribution')}}</span>
+      <span ng-if="layer.get('attributionUrl')">
+        <a href="{{layer.get('attributionUrl')}}" target="_blank">{{layer.get('attribution')}}</a>
+      </span>
     </span>
-  </p>
+  </div>
 
-  <p><a href="" ng-click="handleClose()">Close menu</a></p>
+  <div class="flex-row flex-align-stretch width-100 sxt-layer-menu-top-buttons">
+    <button type="button"
+            class="flex-grow btn btn-secondary btn-sm"
+            ng-disabled="!layer.get('md') || layer.get('metadataUrl')"
+            ng-click="ctrl.showMetadata()"
+            translate>
+      showMetadata
+    </button>
 
-  <p ng-if="layer.get('md') || layer.get('metadataUrl')">
-    <a href="" ng-click="ctrl.showMetadata()">
-      <span translate>showMetadata</span>
-    </a>
-  </p>
+    <button type="button"
+            class="flex-grow btn btn-secondary btn-sm"
+            ng-disabled="!layer.get('cextent')"
+            ng-click="ctrl.zoomToExtent()"
+            translate>
+      layerExtentZoom
+    </button>
 
-  <p ng-if="layer.get('cextent')">
-    <a href="" ng-click="ctrl.zoomToExtent()">
-      <span translate>layerExtentZoom</span>
-    </a>
-  </p>
+    <button type="button"
+            class="flex-grow btn btn-secondary btn-sm"
+            ng-disabled="!download"
+            ng-click="ctrl.addToPanier()"
+            translate>
+      download
+    </button>
+  </div>
 
-  <p ng-if="download">
-    <a href="" ng-click="ctrl.addToPanier()">
-      <span translate>download</span>
-    </a>
-  </p>
-
-  <tabset>
+  <tabset class="flex-grow">
     <tab>
       <tab-heading translate>mapLegend</tab-heading>
       <div>
@@ -82,5 +94,12 @@
     </tab>
   </tabset>
 
-  <p><a href="" ng-click="handleClose(); ctrl.deleteLayer()" translate>remove</a></p>
+  <div class="flex-row flex-center width-100">
+    <button type="button"
+            class="btn btn-danger btn-sm"
+            ng-click="handleClose(); ctrl.deleteLayer()"
+            translate>
+      remove
+    </button>
+  </div>
 </div>

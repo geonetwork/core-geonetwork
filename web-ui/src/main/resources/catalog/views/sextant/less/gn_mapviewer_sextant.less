@@ -1288,4 +1288,35 @@ sxt-annotations-editor {
   left:25%;
 }
 
+.sxt-layer-menu {
+  border-top: 1px solid #ddd;
+  padding-top: 8px;
+  position: relative;
+  button {
+    width: auto !important;
+    height: auto !important;
+  }
+  .close-btn {
+    position: absolute;
+    font-size: 14px;
+    top: 6px;
+    right: 4px;
+  }
+  & > * {
+    margin-bottom: 8px;
+  }
+  .sxt-layer-menu-top-buttons {
+    & > *:not(:last-child) {
+      margin-right: 8px;
+    }
+    button {
+      width: 20px !important;
+      white-space: normal;
+    }
+  }
+  .btn-danger {
+    background: @btn-danger-bg !important;
+  }
+}
+
 @import 'gn_popover.less';
