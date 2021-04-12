@@ -56,7 +56,7 @@ import java.util.LinkedHashMap;
     }
 )
 @EntityListeners(MetadataStatus.EntityListener.class)
-@SequenceGenerator(name = MetadataStatus.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = MetadataStatus.ID_SEQ_NAME, sequenceName = MetadataStatus.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 
 public class MetadataStatus extends GeonetEntity {
     public static final String ID_SEQ_NAME = "metadataStatus_id_seq";
