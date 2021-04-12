@@ -75,8 +75,7 @@ public class UpdateOperations implements ApplicationListener<MetadataShare> {
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void doAfterCommit(MetadataShare event) {
-
+    public void doBeforeCommit(MetadataShare event) {
         try {
 
             Log.trace(Geonet.DATA_MANAGER, "UpdateOperationsListener: " + event.getRecord() + " op: "

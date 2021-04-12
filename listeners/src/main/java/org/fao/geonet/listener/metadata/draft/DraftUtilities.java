@@ -32,6 +32,9 @@ import org.springframework.stereotype.Service;
 
 import jeeves.server.context.ServiceContext;
 
+/**
+ * Facade with utility methods responsible for workflow transitions.
+ */
 @Service
 public class DraftUtilities {
 
@@ -154,6 +157,9 @@ public class DraftUtilities {
 
         try {
             ServiceContext context = ServiceContext.get();
+            if( context == null ){
+                Log.trace(Geonet.DATA_MANAGER,"context unavailable");
+            }
             Element xmlData = draft.getXmlData(false);
             String changeDate = draft.getDataInfo().getChangeDate().getDateAndTime();
 

@@ -23,6 +23,9 @@
 
 package org.fao.geonet.listener.metadata.draft;
 
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -30,21 +33,30 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.Service;
 import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.events.md.MetadataStatusChanged;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
+import org.locationtech.jts.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+import thredds.inventory.bdb.MetadataManager;
 
 /**
  * When a record gets a status change, check if there is a draft associated to
@@ -71,12 +83,48 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
     @Autowired
     IMetadataUtils metadataUtils;
 
+    @Autowired ServiceManager serviceManager;
+
+    @Autowired
+    protected UserRepository userRepository;
+
     @Override
     public void onApplicationEvent(MetadataStatusChanged event) {
     }
 
+    /**
+     * Create a service context for the current thread, with admin access for processing events.
+     * <p>
+     * Code creating a service context is responsible for handling resources and cleanup.
+     * </p>
+     * @return service context for approval record event handling
+     */
+    protected ServiceContext createServiceContext(String name, int userId){
+        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+        ServiceManager serviceManager = applicationContext.getBean(ServiceManager.class);
+        ServiceContext context = serviceManager.createServiceContext(name, applicationContext);
+
+        login(context,userId);
+
+        context.setAsThreadLocal();
+
+        return context;
+    }
+
+    private void login(ServiceContext serviceContext, int userId) {
+        User user = userRepository.findOne( userId );
+
+        if( user != null ){
+            UserSession session = new UserSession();
+            session.loginAs(user);
+            serviceContext.setUserSession(session);
+        }
+    }
+
+
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void doAfterCommit(MetadataStatusChanged event) {
+    public void doBeforeCommit(MetadataStatusChanged event) {
+        //try (ServiceContext context = createServiceContext("approve_record", event.getUser())) {
         try {
             Log.trace(Geonet.DATA_MANAGER, "Status changed for metadata with id " + event.getMd().getId());
 
