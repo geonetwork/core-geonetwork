@@ -97,6 +97,8 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
      * <p>
      * Code creating a service context is responsible for handling resources and cleanup.
      * </p>
+     * @param name service context name for approval record handling
+     * @param userId user id used to define user session for approval record handling
      * @return service context for approval record event handling
      */
     protected ServiceContext createServiceContext(String name, int userId){
@@ -124,8 +126,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void doBeforeCommit(MetadataStatusChanged event) {
-        //try (ServiceContext context = createServiceContext("approve_record", event.getUser())) {
-        try {
+        try (ServiceContext context = createServiceContext("approve_record", event.getUser())) {
             Log.trace(Geonet.DATA_MANAGER, "Status changed for metadata with id " + event.getMd().getId());
 
             // Handle draft accordingly to the status change
