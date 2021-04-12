@@ -231,7 +231,7 @@ public class SettingManager {
         for (int i = 0; i < keys.length; i++) {
             String key = keys[i];
             Optional<Setting> se = repo.findById(key);
-            if (se.isPresent()) {
+            if (!se.isPresent()) {
                 Log.error(Geonet.SETTINGS, "  Requested setting with name: " + key + " not found. Add it to the settings table.");
             } else {
                 String value = se.get().getValue();
