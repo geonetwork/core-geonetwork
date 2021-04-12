@@ -760,8 +760,8 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>unionClass</code>
-      <label>Union class</label>
-      <description>Class describing a selection of one of the specified types</description>
+      <label>Union klass</label>
+      <description>Klass som beskriver ett urval av en av de specificerade typerna</description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
