@@ -128,3 +128,5 @@ SELECT nextval('metadatastatus_id_seq'), changedate, changemessage, closedate, c
 FROM metadatastatus_backup s;
 
 -- DROP TABLE metadatastatus_backup;
+
+UPDATE StatusValues SET notificationLevel = 'catalogueAdministrator' WHERE name = 'doiCreationTask';
