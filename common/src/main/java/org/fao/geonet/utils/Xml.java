@@ -1128,11 +1128,12 @@ public final class Xml {
         final String XML_PATTERN_STR = "<(\\S+?)(.*?)>(.*?)</\\1>";
 
         if (inXMLStr != null && inXMLStr.trim().length() > 0) {
-            if (inXMLStr.trim().startsWith("<")) {
+            String trimedString = inXMLStr.trim();
+            if (trimedString.startsWith("<")) {
                 pattern = Pattern.compile(XML_PATTERN_STR,
                     Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE);
 
-                matcher = pattern.matcher(inXMLStr);
+                matcher = pattern.matcher(trimedString);
                 retBool = matcher.matches();
             }
         }

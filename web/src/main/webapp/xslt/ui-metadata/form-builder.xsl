@@ -1479,7 +1479,7 @@
         <xsl:if test="$attributeName = 'xlink:href'">
           <i class="fa fa-link fa-fw"/>
         </xsl:if>
-        <xsl:value-of select="gn-fn-metadata:getLabel($schema, $attributeName, $labels)/label"/>
+        <xsl:value-of select="gn-fn-metadata:getLabel($schema, $attributeName, $labels, name(..), '', '')/label"/>
       </label>
       <div class="col-sm-7">
         <xsl:variable name="isDivLevelDirective"
