@@ -31,16 +31,16 @@
 
     var displayAll = lang === '';
 
-    document.querySelectorAll(
-      'section.gn-md-side-access > div > a.btn-primary').forEach(
-      function (btn) {
-      btn.setAttribute('href',
-        btn.getAttribute('href')
-          .replace(/(.*\/srv\/)([a-z]{3})/, '$1' + lang))
-      });
+    // document.querySelectorAll(
+    //   'section.gn-md-side-access > div > a.btn-primary').forEach(
+    //   function (btn) {
+    //   btn.setAttribute('href',
+    //     btn.getAttribute('href')
+    //       .replace(/(.*\/srv\/)([a-z]{3})/, '$1' + lang))
+    //   });
 
 
-    document.querySelectorAll('div[xml\\:lang],span[xml\\:lang]').forEach(
+    document.querySelectorAll('div[xml\\:lang],span[xml\\:lang],a[xml\\:lang]').forEach(
       function (div) {
         if (displayAll) {
           div.classList.remove('hidden');
@@ -56,7 +56,7 @@
 
           if (isFirst) {
             var translationAvailable = false;
-            div.parentElement.querySelectorAll('div[xml\\:lang],span[xml\\:lang]').forEach(
+            div.parentElement.querySelectorAll('div[xml\\:lang],span[xml\\:lang],a[xml\\:lang]').forEach(
               function (child) {
                 // Last element is default lang.
                 var isLast = true;
