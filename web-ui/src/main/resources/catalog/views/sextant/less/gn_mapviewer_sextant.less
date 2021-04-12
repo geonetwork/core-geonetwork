@@ -671,13 +671,6 @@
   [sxt-layertree], .sxtb-speciestree  {
     padding: 3px 15px 0 0;
     font-size: @sxt-fontsize;
-    .btn-cog {
-      float: right;
-      margin-right: -.6em;
-      margin-top: -.5em;
-      background: inherit;
-      padding: 6px 8px;
-    }
     label {
       font-weight: normal;
       padding: 0px;
@@ -737,6 +730,19 @@
     }
     .sublayer {
       margin-left: 15px;
+    }
+    .btn.layer-menu {
+      background: none;
+      color: @sxt-base-color;
+      border-radius: 1000px;
+      box-shadow: none;
+      width: 26px;
+      height: 18px;
+      padding: 0;
+      &.layer-active {
+        background-color: @sxt-button-color;
+        color: white;
+      }
     }
   }
 

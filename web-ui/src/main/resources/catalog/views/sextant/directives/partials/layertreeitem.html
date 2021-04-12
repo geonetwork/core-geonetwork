@@ -48,7 +48,11 @@
       </label>
       <div class="flex-spacer flex-grow"></div>
 
-      <a role="button" tabindex="0" class="btn btn-default btn-xs" ng-click="setActiveLayer(member)">
+      <a role="button"
+         tabindex="0"
+         class="btn btn-link btn-xs layer-menu"
+         ng-click="toggleActiveLayer()"
+         ng-class="{ 'layer-active': isActiveLayer() }">
         <span class="fa fa-cog"></span>
       </a>
     </div>

@@ -26,9 +26,13 @@
           var $this = this;
           this.user = $scope.user;
 
-          this.setActiveLayer = function(layer) {
+          this.toggleActiveLayer = function(layer) {
             // uses ViewerDirective scope
-            $scope.setActiveLayer(layer);
+            $scope.getActiveLayer() === layer ? $scope.clearActiveLayer() : $scope.setActiveLayer(layer);
+          };
+          this.isActiveLayer = function(layer) {
+            // uses ViewerDirective scope
+            return $scope.getActiveLayer() === layer;
           };
 
           this.comboGroups = {};
@@ -418,9 +422,13 @@
 
           }
 
-          scope.setActiveLayer = function(layer) {
+          scope.toggleActiveLayer = function() {
             // uses sxtLayertree controller
-            controller.setActiveLayer(layer);
+            controller.toggleActiveLayer(scope.member);
+          };
+          scope.isActiveLayer = function() {
+            // uses sxtLayertree controller
+            return controller.isActiveLayer(scope.member);
           };
 
           if(!scope.isParentNode()) {
