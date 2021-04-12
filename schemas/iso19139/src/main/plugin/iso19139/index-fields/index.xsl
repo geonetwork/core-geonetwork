@@ -82,7 +82,7 @@
     <xsl:apply-templates mode="index"/>
   </xsl:template>
 
-  <xsl:template match="gmi:MI_Metadata|gmd:MD_Metadata"
+  <xsl:template match="gmi:MI_Metadata|gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']"
                 mode="extract-uuid">
     <xsl:value-of select="gmd:fileIdentifier/gco:CharacterString"/>
   </xsl:template>
@@ -93,7 +93,7 @@
 
   <xsl:template mode="index-extra-documents" match="*"/>
 
-  <xsl:template match="gmi:MI_Metadata|gmd:MD_Metadata"
+  <xsl:template match="gmi:MI_Metadata|gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']"
                 mode="index">
     <!-- Main variables for the document
 
