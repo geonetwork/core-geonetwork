@@ -45,6 +45,8 @@ public class SettingToObjectSerializer extends JsonSerializer<Setting> {
         jsonGenerator.writeStringField("name", s.getName());
         jsonGenerator.writeStringField("dataType", s.getDataType() == null ? null : s.getDataType().name());
         jsonGenerator.writeNumberField("position", s.getPosition());
+        jsonGenerator.writeBooleanField("internal", s.isInternal());
+        jsonGenerator.writeBooleanField("editable", s.isEditable());
         jsonGenerator.writeFieldName("value");
         writeSettingValue(s, jsonGenerator);
         jsonGenerator.writeEndObject();
