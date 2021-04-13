@@ -662,6 +662,7 @@
 
               scope.$watch('extraOptions',
                 function(n, o) {
+                  isLabelSet = false;
                   appendExtraOptions();
                 });
               scope.$watch('selectedInfo',
