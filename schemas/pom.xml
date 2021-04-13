@@ -28,7 +28,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.11.0-SNAPSHOT</version>
+    <version>3.11-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -53,6 +53,7 @@
     <module>iso19115-3.2018</module>
   </modules>
 
+  <!-- used by add-schema.sh -->
   <profiles>
   </profiles>
 

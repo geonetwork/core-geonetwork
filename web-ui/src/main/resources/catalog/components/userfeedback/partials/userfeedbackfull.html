@@ -63,7 +63,7 @@
 
                       <div class="gn-userfeedback-user">
                         <img class="img-circle"
-                             data-ng-src="//gravatar.com/avatar/{{row.authorEmail}}?s=18"/>&nbsp;
+                             data-ng-src="../api/users/{{(row.authorUserId)}}.png?size=18"/>&nbsp;
 
                         <em>{{row.authorName}}</em>
                         -
@@ -82,7 +82,7 @@
                           </span>
                           <a class="btn btn-link btn-danger"
                              data-ng-click="deleteC(row.uuid)">
-                            <i class="fa fa-times"></i>&nbsp;
+                            <i class="fa fa-trash"></i>&nbsp;
                             <span data-translate="">GUFdeleteUserFeedback</span>
                           </a>
                         </div>

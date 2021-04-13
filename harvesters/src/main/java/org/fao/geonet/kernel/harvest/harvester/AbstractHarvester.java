@@ -26,8 +26,8 @@ package org.fao.geonet.kernel.harvest.harvester;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.DailyRollingFileAppender;
 import org.apache.log4j.EnhancedPatternLayout;
+import org.apache.log4j.FileAppender;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
@@ -202,7 +202,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
             directory = d.getParent() + File.separator;
         }
 
-        DailyRollingFileAppender fa = new DailyRollingFileAppender();
+        FileAppender fa = new FileAppender();
         fa.setName(harvesterName);
         String logfile = directory + "harvester_" + packageType + "_"
             + harvesterName + "_"

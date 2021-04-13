@@ -53,7 +53,6 @@
 
   <!-- Ignore all gn element -->
   <xsl:template mode="mode-iso19115-3.2018" match="gn:*|@gn:*|@*" priority="1000"/>
-  <xsl:template mode="mode-iso19115-3.2018" match="mdq:DQ_QuantitativeResult|mdq:value[gco:Record/gco:CodeListValue]" priority="1000"/>
 
 
   <!-- Template to display non existing element ie. geonet:child element
@@ -191,7 +190,7 @@
   <xsl:template mode="mode-iso19115-3.2018" priority="200"
                 match="*[gco:CharacterString|gcx:Anchor|gco:Integer|gco:Decimal|
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
-       gco:Scale|gco:RecordType|gmx:MimeFileType|gco:LocalName|gco:ScopedName|gco:RecordType|
+       gco:Scale|gco:RecordType|gcx:MimeFileType|gco:LocalName|gco:ScopedName|gco:RecordType|
        gco:Record|lan:PT_FreeText|mcc:URI|gco:TM_PeriodDuration]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
@@ -258,7 +257,7 @@
                   select="gco:CharacterString|gcx:Anchor|gco:Integer|gco:Decimal|
                           gco:Boolean|gco:Real|gco:Measure|gco:Length|
                           gco:Distance|gco:Angle|gmx:FileName|
-                          gco:Scale|gco:RecordType|gmx:MimeFileType|
+                          gco:Scale|gco:RecordType|gcx:MimeFileType|
                           gco:LocalName|gco:ScopedName|gco:RecordType|
                           gco:Record|mcc:URI|gco:TM_PeriodDuration"/>
     <xsl:variable name="theElement"
@@ -369,7 +368,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelCfg/*"/>
-      <xsl:with-param name="value" select="if ($isMultilingualElement) then $values else *"/>
+      <xsl:with-param name="value" select="if ($isMultilingualElement) then $values else *[namespace-uri(.) != $gnUri]"/>
       <xsl:with-param name="errors" select="$errors"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>

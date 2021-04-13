@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -206,21 +206,28 @@ public class SiteApi {
             Settings.SYSTEM_PLATFORM_VERSION,
             Settings.SYSTEM_PLATFORM_SUBVERSION
         }));
-        if (!NodeInfo.DEFAULT_NODE.equals(node.getId())) {
-            Source source = sourceRepository.findOne(node.getId());
-            if (source != null) {
-                String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
-                final List<Setting> settings = response.getSettings();
-                settings.add(
-                    new Setting().setName(Settings.NODE_DEFAULT)
-                        .setValue("false"));
-                settings.add(
-                    new Setting().setName(Settings.NODE)
-                        .setValue(source.getUuid()));
-                settings.add(
-                    new Setting().setName(Settings.NODE_NAME)
-                        .setValue(source != null ? source.getLabel(iso3langCode) : source.getName()));
-            }
+        Source source;
+        String nodeDefault;
+        if (NodeInfo.DEFAULT_NODE.equals(node.getId())) {
+            source = sourceRepository.findOne(settingManager.getSiteId());
+            nodeDefault = "true";
+        } else {
+            source = sourceRepository.findOne(node.getId());
+            nodeDefault = "false";
+        }
+        if (source != null) {
+            final List<Setting> settings = response.getSettings();
+            String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
+
+            settings.add(
+                new Setting().setName(Settings.NODE_DEFAULT)
+                    .setValue(nodeDefault));
+            settings.add(
+                new Setting().setName(Settings.NODE)
+                    .setValue(source.getUuid()));
+            settings.add(
+                new Setting().setName(Settings.NODE_NAME)
+                    .setValue(StringUtils.isEmpty(source.getLabel(iso3langCode)) ? source.getName() : source.getLabel(iso3langCode)));
         }
         return response;
     }
@@ -460,7 +467,7 @@ public class SiteApi {
 
         SettingInfo info = applicationContext.getBean(SettingInfo.class);
         ServiceContext context = ApiUtils.createServiceContext(request);
-        ServerBeanPropertyUpdater.updateURL(info.getSiteUrl(true) +
+        ServerBeanPropertyUpdater.updateURL(info.getSiteUrl() +
                 context.getBaseUrl(),
             applicationContext);
 

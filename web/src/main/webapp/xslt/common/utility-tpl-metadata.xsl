@@ -221,13 +221,11 @@
               <xsl:otherwise>
                 <li class="list-group-item text-danger">
                   <div class="row">
-                    <div class="col-xs-10">
+                    <div>
+                       <div class="pull-right label label-danger">
+                           <xsl:value-of select="@type"/>
+                       </div>
                       <xsl:value-of select="."/>
-                    </div>
-                    <div class="col-xs-2">
-                      <span class="pull-right label label-danger">
-                        <xsl:value-of select="@type"/>
-                      </span>
                     </div>
                   </div>
                 </li>

@@ -89,6 +89,7 @@ public class IndexingTask extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
         ServiceContext serviceContext = serviceManager.createServiceContext("indexing", applicationContext);
         serviceContext.setLanguage("eng");
+      try {
         serviceContext.setAsThreadLocal();
 
         if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
@@ -96,5 +97,9 @@ public class IndexingTask extends QuartzJobBean {
                 + new Date() + ". Checking if any records need to be indexed ...");
         }
         indexRecords();
+      } finally {
+        serviceContext.clearAsThreadLocal();
+        serviceContext.clear(); // prevents further use
+      }
     }
 }

@@ -93,7 +93,8 @@ public class LocalXLinksInMetadataIntegrationTest extends AbstractIntegrationTes
         final Element metadata = getSampleMetadataXml().setContent(content);
 
         ServiceContext context = createServiceContext();
-        context.setAsThreadLocal();
+      try {
+        // context.setAsThreadLocal();
         loginAsAdmin(context);
 
         _settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
@@ -144,5 +145,8 @@ public class LocalXLinksInMetadataIntegrationTest extends AbstractIntegrationTes
         final Element newLoad = _dataManager.getMetadata(context, id, false, true, true);
         assertEqualsText(keyword2, newLoad, xpath, GCO, GMD);
         verify(mockInvoker, times(5)).invoke(any(String.class));
+      } finally {
+        context.clear();
+      }
     }
 }

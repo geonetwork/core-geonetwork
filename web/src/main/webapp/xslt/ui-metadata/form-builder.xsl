@@ -156,8 +156,30 @@
             </xsl:choose>
 
             <xsl:attribute name="data-ref" select="concat('_', $editInfo/@ref)"/>
+            <xsl:attribute name="data-parent-ref" select="concat('_', $editInfo/@parent)"/>
             <xsl:attribute name="data-label" select="$label/label"/>
+            <xsl:attribute name="data-element-name" select="name()"/>
             <xsl:attribute name="data-required" select="$isRequired"/>
+
+            <xsl:if test="$directiveAttributes instance of node()+">
+              <xsl:variable name="node" select="." />
+
+              <xsl:for-each select="$directiveAttributes//attribute::*">
+                <xsl:choose>
+                  <xsl:when test="starts-with(., 'eval#')">
+                    <xsl:attribute name="{name()}">
+                      <saxon:call-template name="{concat('evaluate-', $schema)}">
+                        <xsl:with-param name="base" select="$node"/>
+                        <xsl:with-param name="in" select="concat('/', substring-after(., 'eval#'))"/>
+                      </saxon:call-template>
+                    </xsl:attribute>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:copy-of select="."/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:for-each>
+            </xsl:if>
           </span>
           <div class="col-sm-1 gn-control">
             <xsl:if test="not($isDisabled)">
@@ -274,7 +296,7 @@
               <xsl:with-param name="domeElementToMoveRef" select="$editInfo/@ref"/>
             </xsl:call-template>
 
-            <xsl:if test="$attributesSnippet">
+            <xsl:if test="$attributesSnippet and count($attributesSnippet/*) > 0">
               <xsl:variable name="cssDefaultClass" select="'well well-sm'"/>
               <div class="{$cssDefaultClass}
                 {if ($forceDisplayAttributes) then 'gn-attr-mandatory' else 'gn-attr'}
@@ -392,7 +414,7 @@
         </xsl:if>
       </legend>
 
-      <xsl:if test="count($attributesSnippet/*) > 0">
+      <xsl:if test="count($attributesSnippet/*) > 0 and name($attributesSnippet/*[1]) != 'null'">
         <div class="well well-sm gn-attr {if ($isDisplayingAttributes = true()) then '' else 'hidden'}">
           <xsl:copy-of select="$attributesSnippet"/>
         </div>
@@ -594,7 +616,7 @@
                         </textarea>
                       </xsl:when>
                       <xsl:when test="$codelist != ''">
-                        <select class="form-control input-sm"
+                        <select class="form-control"
                                 data-gn-field-tooltip="{$schema}|{@tooltip}"
                                 id="{$id}_{@label}">
                           <xsl:if test="$readonly = 'true'">

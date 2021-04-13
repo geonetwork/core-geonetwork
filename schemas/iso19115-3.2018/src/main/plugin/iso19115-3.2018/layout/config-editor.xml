@@ -359,7 +359,7 @@
       <name>srv:serviceTypeVersion</name>
     </exclude>
   </multilingualFields>
-  
+
   <tableFields>
     <!-- This is an example for organisation table layout.
     19115-3 being more flexible with link between orgs and individual,
@@ -409,7 +409,7 @@
         <section xpath="/mdb:MD_Metadata/mdb:metadataConstraints"/>
         <section xpath="/mdb:MD_Metadata/mdb:metadataMaintenance"/>
         <section xpath="/mdb:MD_Metadata/mdb:applicationSchemaInfo"/>
-        <section name="mdb:MD_Metadata">
+        <section name="metadata">
           <field xpath="/mdb:MD_Metadata/mdb:metadataIdentifier"/>
           <field xpath="/mdb:MD_Metadata/mdb:defaultLocale" or="defaultLocale"
                  in="/mdb:MD_Metadata"/>

@@ -50,15 +50,15 @@
   module.filter('hideGeoNetworkInternalSettings', function() {
     return function(input) {
       var filtered = [];
-      var internal = ['system/userFeedback/lastNotificationDate'];
       angular.forEach(input, function(el) {
-        if (internal.indexOf(el.name) === -1) {
+        if (el.editable === true) {
           filtered.push(el);
         }
       });
       return filtered;
     }
   });
+
 
   module.filter('orderObjectBy', function() {
     return function(input, attribute) {
@@ -479,7 +479,7 @@
        * Execute Atom feed harvester
        */
       $scope.executeAtomHarvester = function() {
-        $http.get('atomharvester?_content_type=json').success(function(data) {
+        return $http.get('atomharvester?_content_type=json').success(function(data) {
           $scope.loadTplReport = data;
 
           $('#atomHarvesterModal').modal();

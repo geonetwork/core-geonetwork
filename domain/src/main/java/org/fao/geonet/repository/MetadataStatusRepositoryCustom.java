@@ -48,15 +48,18 @@ public interface MetadataStatusRepositoryCustom {
      * @return all the MetadataStatus objects by the associated metadata id.
      */
     @Nonnull
-    List<MetadataStatus> findAllByIdAndByType(int metadataId, StatusValueType type, Sort sort);
+    List<MetadataStatus> findAllByMetadataIdAndByType(int metadataId, StatusValueType type, Sort sort);
 
     /**
      * Find all the MetadataStatus objects corresponding to a search
      */
     @Nonnull
-    List<MetadataStatus> searchStatus(List<StatusValueType> types,
+    List<MetadataStatus> searchStatus(List<Integer> ids,
+                                      List<String> uuids,
+                                      List<StatusValueType> types,
                                       List<Integer> authorIds, List<Integer> ownerIds,
                                       List<Integer> recordIds,
+                                      List<String> statusIds,
                                       String dateFrom, String dateTo,
                                       @Nullable Pageable pageable);
 }

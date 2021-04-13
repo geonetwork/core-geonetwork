@@ -39,6 +39,9 @@
       org.springframework.web.context.request.RequestContextListener
     </listener-class>
   </listener>
+  <listener>
+    <listener-class>org.fao.geonet.GeonetworkHttpSessionListener</listener-class>
+  </listener>
 
   <!-- shut down java cache used for xlinks and spatial index -->
   <listener>
@@ -62,6 +65,10 @@
     <listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
   </listener>
 
+  <!-- listeter used to send signout event. Used by keycloak-->
+  <listener>
+    <listener-class>org.fao.geonet.kernel.security.listener.HttpSessionEventPublisher</listener-class>
+  </listener>
   <!-- Spring security -->
   <!--     <filter>
           <filter-name>springSecurityFilterChain</filter-name>
@@ -368,7 +375,7 @@
     </init-param>
     <init-param>
       <param-name>log</param-name>
-      <param-value>true</param-value>
+      <param-value>false</param-value>
     </init-param>
     <init-param>
       <param-name>http.protocol.handle-redirects</param-name>
@@ -399,7 +406,7 @@
     </init-param>
     <init-param>
       <param-name>log</param-name>
-      <param-value>true</param-value>
+      <param-value>false</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
@@ -451,7 +458,7 @@
     </init-param>
     <init-param>
       <param-name>log</param-name>
-      <param-value>true</param-value>
+      <param-value>false</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>

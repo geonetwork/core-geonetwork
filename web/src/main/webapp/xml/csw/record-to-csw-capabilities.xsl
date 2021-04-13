@@ -16,6 +16,7 @@
                 xmlns:gco139="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="#all">
 
   <xsl:param name="outputLanguage" select="''"/>
@@ -357,6 +358,8 @@
               </inspire_com:TemporalReference>
             </xsl:for-each>
 
+            <xsl:variable name="iso2lang" select="util:twoCharLangCode($mainLanguage)" />
+
             <xsl:for-each select="//mdb:dataQualityInfo/*/mdq:report/*/mdq:result/*[contains(
                                     string-join(mdq:specification/*/cit:title/*/text(), ''), '1089/2010')]|
                                     //gmd:dataQualityInfo/*/gmd:report/*/gmd:result/*[contains(
@@ -369,10 +372,10 @@
                                          select="mdq:specification/*/cit:title|gmd:specification/*/gmd:title"/>
                   </inspire_com:Title>
                   <inspire_com:DateOfPublication>2010-12-08</inspire_com:DateOfPublication>
-                  <inspire_com:URI>OJ:L:2010:323:0011:0102:<xsl:value-of select="upper-case(substring($mainLanguage, 1, 2))"/>:PDF</inspire_com:URI>
+                  <inspire_com:URI>OJ:L:2010:323:0011:0102:<xsl:value-of select="upper-case($iso2lang)"/>:PDF</inspire_com:URI>
                   <inspire_com:ResourceLocator>
                     <inspire_com:URL>
-                      http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2010:323:0011:0102:<xsl:value-of select="upper-case(substring($mainLanguage, 1, 2))"/>:PDF
+                      http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2010:323:0011:0102:<xsl:value-of select="upper-case($iso2lang)"/>:PDF
                     </inspire_com:URL>
                     <inspire_com:MediaType>application/pdf</inspire_com:MediaType>
                   </inspire_com:ResourceLocator>
@@ -405,7 +408,7 @@
 
             <inspire_com:MetadataDate>
               <xsl:value-of
-                select="substring-before(//mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date/*/text()|//gmd:dateStamp, 'T')"/>
+                select="tokenize(//mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date/*/text()|//gmd:dateStamp/*/text(), 'T')[1]"/>
             </inspire_com:MetadataDate>
             <inspire_com:SpatialDataServiceType>discovery</inspire_com:SpatialDataServiceType>
 

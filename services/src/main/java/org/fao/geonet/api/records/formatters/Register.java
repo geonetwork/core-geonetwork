@@ -86,6 +86,7 @@ public class Register extends AbstractFormatService {
         ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
         ServiceContext context = serviceManager.createServiceContext("md.formatter.register", lang, request);
 
+      try {
         if (xslid == null) {
             xslid = file.getOriginalFilename();
             int extentionIdx = xslid.lastIndexOf('.');
@@ -146,6 +147,9 @@ public class Register extends AbstractFormatService {
         } finally {
             IO.deleteFile(uploadedFile, false, Geonet.FORMATTER);
         }
+      } finally {
+        context.clear();
+      }
     }
 
     private Path findViewXslContainerDir(Path dir) throws IOException {

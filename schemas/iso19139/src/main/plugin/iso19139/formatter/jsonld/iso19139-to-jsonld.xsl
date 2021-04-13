@@ -126,14 +126,14 @@
                 mode="getJsonLD" match="gmd:MD_Metadata">
 	{
 		"@context": "http://schema.org/",
-    <xsl:choose>
-      <xsl:when test="gmd:hierarchyLevel/*/@codeListValue != ''">
-		    "@type": "<xsl:value-of select="schema-org-fn:getType(gmd:hierarchyLevel/*/@codeListValue, 'schema:')"/>",
-      </xsl:when>
-      <xsl:otherwise>
-        "@type": "schema:Dataset",
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:variable name="hierarchyLevels"
+                  select="distinct-values(gmd:hierarchyLevel/*/@codeListValue[. != ''])"/>
+    <xsl:for-each select="$hierarchyLevels">
+      "@type": "<xsl:value-of select="schema-org-fn:getType(., 'schema:')"/>",
+    </xsl:for-each>
+    <xsl:if test="count($hierarchyLevels) = 0">
+      "@type": "schema:Dataset",
+    </xsl:if>
     <!-- TODO: Use the identifier property to attach any relevant Digital Object identifiers (DOIs). -->
 		"@id": "<xsl:value-of select="concat($baseUrl, 'api/records/', gmd:fileIdentifier/*/text())"/>",
 		"includedInDataCatalog":[{"url":"<xsl:value-of select="concat($baseUrl, 'search#', $catalogueName)"/>","name":"<xsl:value-of select="$catalogueName"/>"}],
@@ -149,13 +149,18 @@
                                                   select="."/>,
     </xsl:for-each>
 
+    "dateCreated": [
     <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:dateType/*/@codeListValue='creation']/*/gmd:date/*/text()">
-		  "dateCreated": "<xsl:value-of select="."/>",
-    </xsl:for-each>
+       "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
+    "dateModified": [
     <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:dateType/*/@codeListValue='revision']/*/gmd:date/*/text()">
-		"dateModified": "<xsl:value-of select="."/>",
-    </xsl:for-each>
-    
+    "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
+    "datePublished": [
+    <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:dateType/*/@codeListValue='publication']/*/gmd:date/*/text()">
+      "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
 		"thumbnailUrl": [
     <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*/gmd:fileName/*[. != '']">
     "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
@@ -171,7 +176,6 @@
       "version": "<xsl:value-of select="."/>",
     </xsl:for-each>
 
-
     <!-- Build a flat list of all keywords even if grouped in thesaurus. -->
     "keywords":[
       <xsl:for-each select="gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword">
@@ -185,29 +189,149 @@
 
 
     <!--
-    TODO: Dispatch in author, contributor, copyrightHolder, editor, funder,
+    Dispatch in creator, author, contributor, copyrightHolder, editor, funder,
     producer, provider, sponsor
-    TODO: sourceOrganization
-      <xsl:variable name="role" select="*/gmd:role/gmd:CI_RoleCode/@codeListValue" />
-      <xsl:choose>
-        <xsl:when test="$role='resourceProvider'">provider</xsl:when>
-        <xsl:when test="$role='custodian'">provider</xsl:when>
-        <xsl:when test="$role='owner'">copyrightHolder</xsl:when>
-        <xsl:when test="$role='user'">user</xsl:when>
-        <xsl:when test="$role='distributor'">publisher</xsl:when>
-        <xsl:when test="$role='originator'">sourceOrganization</xsl:when>
-        <xsl:when test="$role='pointOfContact'">provider</xsl:when>
-        <xsl:when test="$role='principalInvestigator'">producer</xsl:when>
-        <xsl:when test="$role='processor'">provider</xsl:when>
-        <xsl:when test="$role='publisher'">publisher</xsl:when>
-        <xsl:when test="$role='author'">author</xsl:when>
-        <xsl:otherwise>provider</xsl:otherwise>
-      </xsl:choose>
-
     -->
-    "publisher": [
-      <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/*">
+
+    "author": [<xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/*[gmd:role/gmd:CI_RoleCode/@codeListValue='author']">
+    <xsl:apply-templates mode="doContact" select="."/>
+    <xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
+    "contributor": [<xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/*[gmd:role/gmd:CI_RoleCode/@codeListValue='processor']">
+    <xsl:apply-templates mode="doContact" select="."/>
+    <xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
+    "creator": [<xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/*[gmd:role/gmd:CI_RoleCode/@codeListValue='pointOfContact' or gmd:role/gmd:CI_RoleCode/@codeListValue='originator']">
+    <xsl:apply-templates mode="doContact" select="."/>
+    <xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
+    "provider" : [<xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/*[gmd:role/gmd:CI_RoleCode/@codeListValue='resourceProvider' or gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']">
+    <xsl:apply-templates mode="doContact" select="."/>,
+    </xsl:for-each>
+    <!-- this adds all metadata-contacts as 'provider', goal is to persist the property-->
+    <xsl:for-each select="gmd:contact/*">
+    <xsl:apply-templates mode="doContact" select="."/>
+    <xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
+    "copyrightHolder": [<xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/*[gmd:role/gmd:CI_RoleCode/@codeListValue='owner']">
+    <xsl:apply-templates mode="doContact" select="."/>
+    <xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
+    "user": [<xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/*[gmd:role/gmd:CI_RoleCode/@codeListValue='user']">
+    <xsl:apply-templates mode="doContact" select="."/>
+    <xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
+    "sourceOrganization": [<xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/*[gmd:role/gmd:CI_RoleCode/@codeListValue='principalInvestigator']">
+    <xsl:apply-templates mode="doContact" select="."/>
+    <xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
+    "publisher": [<xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/*[gmd:role/gmd:CI_RoleCode/@codeListValue='publisher']">
+    <xsl:apply-templates mode="doContact" select="."/>
+    <xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>]
+
+
+    <!--
+    The overall rating, based on a collection of reviews or ratings, of the item.
+    "aggregateRating": TODO
+    -->
+
+    <!--
+    A downloadable form of this dataset, at a specific location, in a specific format.
+
+    See https://schema.org/DataDownload
+    -->
+    <xsl:for-each select="gmd:distributionInfo">
+    ,"distribution": [
+      <xsl:for-each select=".//gmd:onLine/*[starts-with(gmd:linkage/gmd:URL,'http') or starts-with(gmd:linkage/gmd:URL,'//') or starts-with(gmd:linkage/gmd:URL,'ftp')]">
+        <xsl:variable name="p" select="normalize-space(gmd:protocol/*/text())"/>
         {
+         "@type":"DataDownload",
+         "contentUrl": "<xsl:value-of select="gn-fn-index:json-escape(normalize-space(gmd:linkage))"/>",
+         "encodingFormat":"<xsl:value-of select="gn-fn-index:json-escape(normalize-space(if ($p != '') then $p else gmd:protocol/*/@xlink:href))"/>",
+         "name": <xsl:apply-templates mode="toJsonLDLocalized" select="gmd:name"/>,
+         "description": <xsl:apply-templates mode="toJsonLDLocalized" select="gmd:description"/>
+        }
+        <xsl:if test="position() != last()">,</xsl:if>
+      </xsl:for-each>
+    ]
+    </xsl:for-each>
+
+    <xsl:if test="count(gmd:distributionInfo/*/gmd:distributionFormat) > 0">
+      ,"encodingFormat": [
+      <xsl:for-each select="gmd:distributionInfo/*/gmd:distributionFormat/*/gmd:name[. != '']">
+        <xsl:apply-templates mode="toJsonLDLocalized"
+                             select="."/>
+        <xsl:if test="position() != last()">,</xsl:if>
+      </xsl:for-each>
+      ]
+    </xsl:if>
+
+
+    ,"spatialCoverage": [
+    <xsl:for-each select="gmd:identificationInfo/*/gmd:extent/*[gmd:geographicElement]">
+      {"@type":"Place",
+        "description": [
+        <xsl:for-each select="gmd:description[count(.//text() != '') > 0]">
+          <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
+          <xsl:if test="position() != last()">,</xsl:if></xsl:for-each>
+          ], 
+        "geo": [
+          <xsl:for-each select="gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+              {"@type":"GeoShape",
+              "box": "<xsl:value-of select="string-join((
+                                              gmd:southBoundLatitude/gco:Decimal|
+                                              gmd:westBoundLongitude/gco:Decimal|
+                                              gmd:northBoundLatitude/gco:Decimal|
+                                              gmd:eastBoundLongitude/gco:Decimal
+                                              ), ' ')"/>"
+              }<xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>
+        ]}<xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>]
+
+
+    <xsl:if test="count(gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent[normalize-space(.) != '']) > 0">
+      ,"temporalCoverage": [<xsl:for-each 
+        select="gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent">"<xsl:value-of 
+          select="concat(gml:TimePeriod/gml:beginPosition|gml320:TimePeriod/gml320:beginPosition,'/',
+            gml:TimePeriod/gml:endPosition|gml320:TimePeriod/gml320:endPosition
+      )"/>"<xsl:if test="position() != last()">,</xsl:if></xsl:for-each> ]
+    </xsl:if>
+
+      <!-- TODO: handle
+      "temporalCoverage" : "2013-12-19/.."
+      "temporalCoverage" : "2008"
+      -->
+    
+    <!-- array of licenses is allowed, not multiple licenses-->
+    <xsl:if test="count(gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints[normalize-space(.) != '']) > 0"> 
+      ,"license":  [<xsl:for-each 
+        select="gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints">
+        <xsl:choose>
+          <xsl:when test="starts-with(normalize-space(string-join(gco:CharacterString/text(),'')),'http') or starts-with(normalize-space(string-join(gco:CharacterString/text(),'')),'//')">
+            "<xsl:value-of select="normalize-space(string-join(gco:CharacterString/text(),''))"/>"
+          </xsl:when>
+          <xsl:when test="starts-with(string-join(gmx:Anchor/@xlink:href,''),'http') or starts-with(./@xlink:href,'//')">
+            "<xsl:value-of select="string-join(gmx:Anchor/@xlink:href,'')"/>"
+          </xsl:when>
+          <xsl:otherwise>
+            {
+              "@type": "CreativeWork",
+              "name": <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
+            }
+          </xsl:otherwise>
+        </xsl:choose>
+          <xsl:if test="position() != last()">,</xsl:if></xsl:for-each> ]
+    </xsl:if>
+    <!-- TODO: When a dataset derives from or aggregates several originals, use the isBasedOn property. -->
+    <!-- TODO: hasPart -->
+	}
+	</xsl:template>
+
+  <xsl:template name="doContact"
+                mode="doContact" match="*">
+   {
         <!-- TODO: Id could also be website if set -->
         <xsl:variable name="id"
                       select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/*/text()[1]"/>
@@ -221,7 +345,6 @@
           ,"email": <xsl:apply-templates mode="toJsonLDLocalized"
                                        select="."/>
         </xsl:for-each>
-
         <!-- TODO: only if children available -->
         ,"contactPoint": {
           "@type" : "PostalAddress"
@@ -243,101 +366,7 @@
           </xsl:for-each>
           }
         }
-        <xsl:if test="position() != last()">,</xsl:if>
-      </xsl:for-each>
-    ]
-
-    <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:dateType/*/@codeListValue='publication']/*/gmd:date/*/text()">
-      ,"datePublished": "<xsl:value-of select="."/>"
-    </xsl:for-each>
-
-
-    <!--
-    The overall rating, based on a collection of reviews or ratings, of the item.
-    "aggregateRating": TODO
-    -->
-
-    <!--
-    A downloadable form of this dataset, at a specific location, in a specific format.
-
-    See https://schema.org/DataDownload
-    -->
-    <xsl:for-each select="gmd:distributionInfo">
-    ,"distribution": [
-      <xsl:for-each select=".//gmd:onLine/*[gmd:linkage/gmd:URL != '']">
-        <xsl:variable name="p" select="normalize-space(gmd:protocol/*/text())"/>
-        {
-        "@type":"DataDownload",
-        "contentUrl":"<xsl:value-of select="gmd:linkage/gmd:URL/text()"/>",
-        "encodingFormat":"<xsl:value-of select="if ($p != '') then $p else gmd:protocol/*/@xlink:href"/>",
-        "name":"<xsl:value-of select="gmd:name/*/text()"/>",
-        "description":"<xsl:value-of select="gmd:description/*/text()"/>"
-        }
-        <xsl:if test="position() != last()">,</xsl:if>
-      </xsl:for-each>
-    ]
-    </xsl:for-each>
-
-    <xsl:if test="count(gmd:distributionInfo/*/gmd:distributionFormat) > 0">
-      ,"encodingFormat": [
-      <xsl:for-each select="gmd:distributionInfo/*/gmd:distributionFormat/*/gmd:name[. != '']">
-        <xsl:apply-templates mode="toJsonLDLocalized"
-                             select="."/>
-        <xsl:if test="position() != last()">,</xsl:if>
-      </xsl:for-each>
-      ]
-    </xsl:if>
-
-
-
-    <xsl:for-each select="gmd:identificationInfo/*/gmd:extent/*[gmd:geographicElement]">
-    ,"spatialCoverage": {
-      "@type":"Place"
-      <xsl:for-each select="gmd:description[count(.//text() != '') > 0]">
-      ,"description": <xsl:apply-templates mode="toJsonLDLocalized"
-                                           select="."/>
-      </xsl:for-each>
-
-
-      <xsl:for-each select="gmd:geographicElement/gmd:EX_GeographicBoundingBox">
-        ,"geo": {
-          "@type":"GeoShape",
-          "box": "<xsl:value-of select="string-join((
-                                          gmd:southBoundLatitude/gco:Decimal|
-                                          gmd:westBoundLongitude/gco:Decimal|
-                                          gmd:northBoundLatitude/gco:Decimal|
-                                          gmd:eastBoundLongitude/gco:Decimal
-                                          ), ' ')"/>"
-        }
-      </xsl:for-each>
-    }
-    </xsl:for-each>
-
-
-    <xsl:if test="count(gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent[normalize-space(.) != '']) > 0">
-      ,"temporalCoverage": [<xsl:for-each 
-        select="gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent">"<xsl:value-of 
-          select="concat(gml:TimePeriod/gml:beginPosition|gml320:TimePeriod/gml320:beginPosition,'/',
-            gml:TimePeriod/gml:endPosition|gml320:TimePeriod/gml320:endPosition
-      )"/>"<xsl:if test="position() != last()">,</xsl:if></xsl:for-each> ]
-    </xsl:if>
-
-      <!-- TODO: handle
-      "temporalCoverage" : "2013-12-19/.."
-      "temporalCoverage" : "2008"
-      -->
-    
-    <!-- array of licenses is allowed, not multiple licenses-->
-    <xsl:if test="count(gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints[normalize-space(.) != '']) > 0"> 
-      ,"license":  [<xsl:for-each 
-        select="gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints">
-          <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
-          <xsl:if test="position() != last()">,</xsl:if></xsl:for-each> ]
-    </xsl:if>
-    <!-- TODO: When a dataset derives from or aggregates several originals, use the isBasedOn property. -->
-    <!-- TODO: hasPart -->
-	}
-	</xsl:template>
+  </xsl:template>
 
   <xsl:template name="toJsonLDLocalized"
                 mode="toJsonLDLocalized" match="*">
@@ -380,14 +409,14 @@
         <xsl:variable name="requestedValue"
                       select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString[@id = $requestedLanguageId]/text()"/>
         <xsl:value-of select="concat('&quot;',
-                              gn-fn-index:json-escape(
-                                if ($requestedValue != '') then $requestedValue else (gco:CharacterString|gmx:Anchor)),
+                              gn-fn-index:json-escape(normalize-space(
+                                if ($requestedValue != '') then $requestedValue else (gco:CharacterString|gmx:Anchor))),
                               '&quot;')"/>
       </xsl:when>
       <xsl:otherwise>
         <!-- A simple property value -->
         <xsl:value-of select="concat('&quot;',
-                              gn-fn-index:json-escape(gco:CharacterString|gmx:Anchor),
+                              gn-fn-index:json-escape(normalize-space(gco:CharacterString|gmx:Anchor)),
                               '&quot;')"/>
       </xsl:otherwise>
     </xsl:choose>

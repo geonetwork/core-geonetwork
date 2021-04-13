@@ -1431,7 +1431,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
   </codelist>
   <!-- ==================================================== -->
-  <codelist name="gmd:MD_ScopeCode" editorMode="radio">
+  <codelist name="gmd:MD_ScopeCode">
     <entry>
       <code>attribute</code>
       <label>Attribut</label>

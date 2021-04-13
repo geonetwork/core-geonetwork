@@ -7,11 +7,13 @@
   xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
   xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
   xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
+  xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
   xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
   xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
   xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
   xmlns:dqm="http://standards.iso.org/iso/19157/-2/dqm/1.0"
+  xmlns:dqc="http://standards.iso.org/iso/19157/-2/dqc/1.0"
   xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
   xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -238,6 +240,18 @@
     </xsl:copy>
   </xsl:template>
 
+  <!-- Force element with DateTime_PropertyType to have gco:DateTime -->
+  <xsl:template match="mac:time|mac:expiryDate|mac:requestedDateOfCollection
+                      |mac:latestAcceptableDate|cit:editionDate
+                      |mrd:plannedAvailableDateTime|mdq:dateTime"
+                priority="200">
+    <xsl:variable name="value" select="gco:Date|gco:DateTime" />
+    <xsl:copy>
+      <gco:DateTime>
+        <xsl:value-of select="$value" /><xsl:if test="string-length($value) = 10">T00:00:00</xsl:if>
+      </gco:DateTime>
+    </xsl:copy>
+  </xsl:template>
 
   <xsl:template match="@gml:id">
     <xsl:choose>
@@ -271,6 +285,7 @@
   <!-- Add required gml attributes if missing -->
   <xsl:template match="gml:Polygon[not(@gml:id) and not(@srsName)]|
                        gml:MultiSurface[not(@gml:id) and not(@srsName)]|
+                       gml:Point[not(@gml:id) and not(@srsName)]|
                        gml:LineString[not(@gml:id) and not(@srsName)]">
     <xsl:copy>
       <xsl:attribute name="gml:id">
@@ -359,8 +374,6 @@
           <xsl:variable name="isInPTFreeText"
                         select="count(lan:PT_FreeText/*/lan:LocalisedCharacterString[
                                             @locale = concat('#', $mainLanguageId)]) = 1"/>
-
-
           <xsl:choose>
             <xsl:when test="$isInPTFreeText">
               <!-- Update gco:CharacterString to contains
@@ -381,7 +394,7 @@
             <xsl:otherwise>
               <!-- Populate PT_FreeText for default language if not existing and it is not null. -->
               <xsl:apply-templates select="gco:CharacterString|gcx:Anchor"/>
-              <xsl:if test="normalize-space(gco:CharacterString|gcx:Anchor) != ''">
+              <xsl:if test="normalize-space(gco:CharacterString|gcx:Anchor) != '' or lan:PT_FreeText">
                 <lan:PT_FreeText>
                   <lan:textGroup>
                     <lan:LocalisedCharacterString locale="#{$mainLanguageId}">

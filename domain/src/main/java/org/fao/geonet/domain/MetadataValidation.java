@@ -28,6 +28,7 @@ import org.hibernate.annotations.Type;
 
 import javax.annotation.Nonnull;
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * Entity representing metadata validation reports.
@@ -205,6 +206,22 @@ public class MetadataValidation extends GeonetEntity {
     public MetadataValidation setReportContent(String reportContent) {
         this.reportContent = reportContent;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MetadataValidation that = (MetadataValidation) o;
+        return numTests == that.numTests && numFailures == that.numFailures && id.equals(that.id) &&
+            status == that.status && validationDate.equals(that.validationDate) &&
+            required.equals(that.required) && reportUrl.equals(that.reportUrl) &&
+            reportContent.equals(that.reportContent);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, status, numTests, numFailures, validationDate, required, reportUrl, reportContent);
     }
 
     @Override

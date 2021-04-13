@@ -46,12 +46,16 @@
                select="concat(/root/gui/url,'/images/logos/favicon.png')"/>
     <xsl:param name="type"
                select="'dataset'"/>
+    <xsl:param name="meta" required="no" as="node()*"/>
 
 
     <html ng-app="{$angularModule}" lang="{$lang2chars}" id="ng-app">
       <head>
         <title><xsl:value-of select="$title"/></title>
         <meta charset="utf-8"/>
+
+        <xsl:copy-of select="$meta"/>
+
         <meta name="viewport" content="initial-scale=1.0"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
 

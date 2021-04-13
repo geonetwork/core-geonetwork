@@ -42,11 +42,11 @@
       ['$scope', '$http', '$rootScope', '$translate',
        '$location', '$window', '$timeout',
        'gnUtilityService', 'gnConfig', 'gnGlobalSettings',
-       'vcRecaptchaService', '$q',
+       'vcRecaptchaService', 'gnUrlUtils', '$q',
        function($scope, $http, $rootScope, $translate,
            $location, $window, $timeout,
                gnUtilityService, gnConfig, gnGlobalSettings,
-               vcRecaptchaService, $q) {
+               vcRecaptchaService, gnUrlUtils, $q) {
           $scope.formAction = '../../signin#' +
          $location.path();
           $scope.registrationStatus = null;
@@ -62,11 +62,18 @@
          gnConfig['system.userSelfRegistration.recaptcha.publickey'];
           $scope.resolveRecaptcha = false;
 
-          $scope.redirectUrl = gnUtilityService.getUrlParameter('redirect');
+          var redirect = gnUtilityService.getUrlParameter('redirect');
+
+          if ((redirect) && gnUrlUtils.urlIsSameOrigin(redirect)) {
+            $scope.redirectUrl = redirect;
+          } else {
+            $scope.redirectUrl = "";
+          }
+
           $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
           $scope.gnConfig = gnConfig;
-          $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
-          $scope.shibbolethHideLogin = gnGlobalSettings.shibbolethHideLogin;
+          $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
+          $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;
 
           function initForm() {
            if ($window.location.pathname.indexOf('new.password') !== -1) {
@@ -89,6 +96,13 @@
            $scope.sendPassword = value;
            $('#username').focus();
           };
+
+         var showForgotPassword = gnUtilityService.getUrlParameter('showforgotpassword');
+
+         if ((showForgotPassword) && (showForgotPassword === 'true')) {
+           $scope.setSendPassword(true);
+         }
+
          /**
           * Register user. An email will be sent to the new
           * user and another to the catalog admin if a profile
@@ -130,7 +144,8 @@
            return $http.put('../api/0.1/user/actions/register', $scope.userInfo)
            .success(function(data) {
              $rootScope.$broadcast('StatusUpdated', {
-               title: data
+               title: data,
+               timeout: 0
              });
            })
            .error(function(data) {
@@ -150,7 +165,8 @@
             .success(function(data) {
              $scope.sendPassword = false;
              $rootScope.$broadcast('StatusUpdated', {
-               title: data
+               title: data,
+               timeout: 0
              });
              $scope.usernameToRemind = null;
            })
@@ -172,7 +188,8 @@
            })
             .success(function(data) {
              $rootScope.$broadcast('StatusUpdated', {
-               title: data
+               title: data,
+               timeout: 0
              });
            })
             .error(function(data) {

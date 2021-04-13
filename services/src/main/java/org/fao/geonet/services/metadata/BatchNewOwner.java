@@ -78,6 +78,7 @@ public class BatchNewOwner {
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
 
         ServiceContext context = serviceManager.createServiceContext("metadata.batch.newowner", lang, request);
+      try {
         UserSession session = context.getUserSession();
 
         context.info("Get selected metadata");
@@ -97,6 +98,9 @@ public class BatchNewOwner {
         r.process();
 
         return result;
+      } finally {
+        context.clear();
+      }
     }
 
     private NewOwnerResult setNewOwner(ServiceContext context, String targetUsr, String targetGrp,

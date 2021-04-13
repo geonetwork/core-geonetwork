@@ -12,12 +12,12 @@
     </div>
   </div>
 </header>
-<div class="navbar navbar-default gn-top-bar"
+<nav class="navbar navbar-default gn-top-bar"
      role="navigation"
      data-ng-show="gnCfg.mods.header.enabled"
-     data-ng-include="'../../catalog/templates/top-toolbar.html'"
+     data-ng-include="isMenubarAccessible ? '../../catalog/templates/top-toolbar-accessible.html' : '../../catalog/templates/top-toolbar.html'"
      xmlns="http://www.w3.org/1999/html">
-</div>
+</nav>
 
 <div class="gn-search-page"
      role="main"
@@ -36,9 +36,9 @@
            data-ng-include="'../../catalog/views/default/templates/map.html'"
            data-ng-show="activeTab == '/map'"/>
       <div data-ng-include="'../../catalog/views/default/templates/recordView.html'"
-           data-ng-show="activeTab == '/metadata'" class="gn-view-approved"/>
+           data-ng-if="activeTab == '/metadata'" class="gn-view-approved"/>
       <div data-ng-include="'../../catalog/views/default/templates/recordView.html'"
-           data-ng-show="activeTab == '/metadraf'" class="gn-view-not-approved"/>
+           data-ng-if="activeTab == '/metadraf'" class="gn-view-not-approved"/>
       <div data-ng-include="'../../catalog/views/default/templates/page.html'"
            data-ng-if="activeTab == '/page'"/>
     </div>
@@ -46,7 +46,7 @@
 </div>
 
 
-<div class="navbar navbar-default gn-bottom-bar" role="navigation"
+<footer class="navbar navbar-default gn-bottom-bar" role="navigation"
      data-ng-show="gnCfg.mods.footer.enabled"
      data-ng-include="'../../catalog/views/default/templates/footer.html'">
-</div>
+</footer>

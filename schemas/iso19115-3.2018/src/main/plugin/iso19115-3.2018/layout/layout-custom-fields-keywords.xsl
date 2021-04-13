@@ -89,19 +89,20 @@
 
     <xsl:variable name="thesaurusIdentifier"
                   select="normalize-space(*/mri:thesaurusName/*/cit:identifier/*/mcc:code/*/text())"/>
-    
+
     <xsl:variable name="thesaurusConfig"
                   as="element()?"
                   select="if ($thesaurusList/thesaurus[@key=substring-after($thesaurusIdentifier, 'geonetwork.thesaurus.')])
                           then $thesaurusList/thesaurus[@key=substring-after($thesaurusIdentifier, 'geonetwork.thesaurus.')]
                           else $listOfThesaurus/thesaurus[title=$thesaurusTitle]"/>
 
-   
+
     <xsl:choose>
       <xsl:when test="($isFlatMode and not($thesaurusConfig/@fieldset)) or $thesaurusConfig/@fieldset = 'false'">
         <xsl:apply-templates mode="mode-iso19115-3.2018" select="*">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="labels" select="$labels"/>
+          <xsl:with-param name="overrideLabel" select="$overrideLabel"/>
         </xsl:apply-templates>
       </xsl:when>
       <xsl:otherwise>
@@ -118,6 +119,7 @@
             <xsl:apply-templates mode="mode-iso19115-3.2018" select="*">
               <xsl:with-param name="schema" select="$schema"/>
               <xsl:with-param name="labels" select="$labels"/>
+              <xsl:with-param name="overrideLabel" select="$overrideLabel"/>
             </xsl:apply-templates>
           </xsl:with-param>
         </xsl:call-template>
@@ -128,13 +130,15 @@
 
 
   <xsl:template mode="mode-iso19115-3.2018" match="mri:MD_Keywords" priority="2000">
-
+    <xsl:param name="overrideLabel" select="''" required="no"/>
 
     <xsl:variable name="thesaurusIdentifier"
                   select="normalize-space(mri:thesaurusName/*/cit:identifier/*/mcc:code/*/text())"/>
 
     <xsl:variable name="thesaurusTitle"
-                  select="mri:thesaurusName/*/cit:title/(gco:CharacterString|lan:PT_FreeText/lan:textGroup/lan:LocalisedCharacterString|gcx:Anchor)"/>
+                  select="if ($overrideLabel != '')
+                          then $overrideLabel
+                          else (mri:thesaurusName/*/cit:title/(gco:CharacterString|lan:PT_FreeText/lan:textGroup/lan:LocalisedCharacterString|gcx:Anchor))[1]"/>
 
 
     <xsl:variable name="thesaurusConfig"

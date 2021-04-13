@@ -276,8 +276,8 @@ public class MetadataSampleApi {
                         }
                         if (dataManager.existsMetadataUuid(uuid)) {
                             String upid = dataManager.getMetadataId(uuid);
-                            dataManager.updateMetadata(context, upid, xml, false, true, false, context.getLanguage(), null, true); 
-                            report.addMetadataInfos(Integer.parseInt(upid), 
+                            AbstractMetadata metadata = dataManager.updateMetadata(context, upid, xml, false, true, false, context.getLanguage(), null, true);
+                            report.addMetadataInfos(metadata,
                             String.format(
                             "Template for schema '%s' with UUID '%s' updated.",
                             schemaName, uuid));
@@ -295,8 +295,12 @@ public class MetadataSampleApi {
                                 setSourceId(siteId).
                                 setOwner(owner).
                                 setGroupOwner(1);
+                            // Set the UUID explicitly, insertMetadata doesn't update the xml with the generated UUID for templates
+                            if (MetadataType.lookup(isTemplate) == MetadataType.TEMPLATE) {
+                                xml = dataManager.setUUID(schemaName, uuid, xml);
+                            }
                             dataManager.insertMetadata(context, metadata, xml, true, true, true, UpdateDatestamp.NO, false, false);
-                            report.addMetadataInfos(metadata.getId(), 
+                            report.addMetadataInfos(metadata,
                             String.format(
                             "Template for schema '%s' with UUID '%s' added.",
                             schemaName, metadata.getUuid()));

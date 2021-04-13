@@ -317,6 +317,7 @@
                   // Select by default the first group.
                   if (setDefaultValue && (angular.isUndefined(scope.ownerGroup) ||
                     scope.ownerGroup === '' ||
+                    scope.ownerGroup === 'undefined' ||
                     scope.ownerGroup === null) && data) {
                     // Requires to be converted to string, otherwise
                     // angularjs adds empty non valid option
@@ -645,7 +646,7 @@
                 });
               var init = function() {
                 var schema = attrs['schema'] ||
-                    gnCurrentEdit.schema || 'iso19139';
+                    gnCurrentEdit.schema || 'iso19115-3.2018';
                 var config = schema + '|' + attrs['gnSchemaInfo'] + '|||';
 
                 scope.type = attrs['schemaInfoCombo'];

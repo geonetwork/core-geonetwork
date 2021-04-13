@@ -32,10 +32,12 @@
 
       .directive('gnFileStore', [
         'gnFileStoreService',
+        'gnOnlinesrc',
+        'gnCurrentEdit',
         '$translate',
         '$rootScope',
         '$parse',
-        function(gnfilestoreService, $translate, $rootScope, $parse) {
+        function(gnfilestoreService, gnOnlinesrc, gnCurrentEdit, $translate, $rootScope, $parse) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/filestore/' +
@@ -52,6 +54,8 @@
               var defaultStatus =
                   angular.isUndefined(attrs['defaultStatus']) ?
                   'public' : attrs['defaultStatus'];
+              scope.onlinesrcService = gnOnlinesrc;
+              scope.gnCurrentEdit = gnCurrentEdit;
 
               scope.setResource = function(r) {
                 scope.selectCallback({ selected: r });

@@ -142,8 +142,9 @@
       );
 
       $translateProvider.preferredLanguage(gnGlobalSettings.iso3lang);
-      // $translateProvider.useSanitizeValueStrategy('escape');
-      $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
+      //$translateProvider.useSanitizeValueStrategy('escape');
+      $translateProvider.useSanitizeValueStrategy('escapeParameters');
+      // $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
 
       moment.locale(gnGlobalSettings.lang);
     }]);

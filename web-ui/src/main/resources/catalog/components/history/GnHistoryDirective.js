@@ -33,8 +33,8 @@
   module
     .directive(
       'gnRecordHistory', [
-        '$http', 'gnRecordHistoryService',
-      function($http, gnRecordHistoryService) {
+        '$http', 'gnConfig', 'gnConfigService', 'gnRecordHistoryService',
+      function($http, gnConfig, gnConfigService, gnRecordHistoryService) {
         return {
           restrict: 'A',
           replace: true,
@@ -50,12 +50,23 @@
             scope.hasMoreRecords = false;
             var recordByPage = 5;
 
-            scope.filter = {
-              types: {'workflow': true, 'task': true, 'event': true},
-              recordFilter: null,
-              from: 0,
-              size: recordByPage
-            };
+            scope.filter = {};
+
+            gnConfigService.load().then(function(c) {
+              var types = {};
+              if (gnConfig['metadata.workflow.enable']) {
+                types.workflow = true;
+              }
+              types.task = true;
+              types.event = true;
+
+              scope.filter = {
+                types: types,
+                recordFilter: null,
+                from: 0,
+                size: recordByPage
+              };
+            });
 
             // Wait for metatada to be available
             scope.$watch('md', function(n, o) {
@@ -101,14 +112,16 @@
 
   module
     .directive(
-      'gnRecordHistoryStep', ['gnRecordTaskService', 'gnRecordHistoryService',
-        function(gnRecordTaskService, gnRecordHistoryService) {
+      'gnRecordHistoryStep', ['gnRecordTaskService', 'gnRecordHistoryService', '$translate', '$window',
+        function(gnRecordTaskService, gnRecordHistoryService, $translate, $window) {
           return {
             restrict: 'A',
             replace: true,
             scope: {
               h: '=gnRecordHistoryStep',
               noTitle: '@noTitle',
+              noSourceViewOption: '@noTitle',
+              noRecoverOption: '@noTitle',
               allowRemoval: '=allowRemoval'
             },
             templateUrl:
@@ -144,6 +157,36 @@
                 });
               };
 
+              scope.restoreHistoryElement = function(statusId) {
+                confirmMessage = $translate.instant('confirmRestore');
+                if($window.confirm(confirmMessage)) {
+                    return gnRecordHistoryService.restoreHistoryElement(statusId).then(function(r) {
+                          message = $translate.instant('recordRestored');
+                          scope.$emit('StatusUpdated', {
+                              msg: message,
+                              timeout: 0,
+                              type: 'info'});
+                          // Reload the page to load the new value
+                          $window.location.reload();
+                    }, function(response) {
+                          message = '';
+                          if(response.status === 403) {
+                              message = $translate.instant('notAllowedError');
+                          } else if(response.status === 404) {
+                              message = $translate.instant('notFoundError');
+                          } else if(response.status === 500) {
+                              message = $translate.instant('internalServerError');
+                          } else {
+                              message = $translate.instant('internalServerError');
+                          }
+                          scope.$emit('StatusUpdated', {
+                              msg: message,
+                              timeout: 0,
+                              type: 'danger'});
+                    });
+                }
+              };
+
               scope.closeTask = function(status) {
                 // Close the related task
                 gnRecordHistoryService.close(status).then(function() {
@@ -159,9 +202,9 @@
   module
     .directive(
       'gnHistory', [
-        '$http', '$filter', 'gnConfig', '$translate',
+        '$http', '$filter', 'gnConfig', 'gnConfigService', '$translate',
         'gnSearchManagerService', 'gnRecordHistoryService', 'gnRecordTaskService',
-        function($http, $filter, gnConfig, $translate,
+        function($http, $filter, gnConfig, gnConfigService, $translate,
                  gnSearchManagerService, gnRecordHistoryService, gnRecordTaskService) {
           return {
             restrict: 'A',
@@ -175,16 +218,28 @@
               scope.user = scope.$parent.user;
               var recordByPage = 20;
               scope.history = [];
-              scope.filter = {
-                types: {'workflow': true, 'task': true, 'event': true},
-                ownerFilter: null,
-                authorFilter: null,
-                recordFilter: null,
-                dateFromFilter: null,
-                dateToFilter: null,
-                from: 0,
-                size: recordByPage
-              };
+              scope.filter = {};
+
+              gnConfigService.load().then(function(c) {
+                var types = {};
+                if (gnConfig['metadata.workflow.enable']) {
+                  types.workflow = true;
+                }
+                types.task = true;
+                types.event = true;
+
+                scope.filter = {
+                  types: types,
+                  ownerFilter: null,
+                  authorFilter: null,
+                  recordFilter: null,
+                  dateFromFilter: null,
+                  dateToFilter: null,
+                  from: 0,
+                  size: recordByPage
+                };
+              });
+
               scope.hasMoreRecords = false;
 
               scope.getSuggestions = function(val) {

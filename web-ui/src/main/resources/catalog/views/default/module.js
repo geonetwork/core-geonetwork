@@ -142,9 +142,9 @@
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
       $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
       $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
+      $scope.mapFilterCollapsed = gnGlobalSettings.gnCfg.mods.search.mapFilterCollapsed;
       $scope.toggleMap = function () {
-        $(searchMap.getTargetElement()).toggle();
-        $('button.gn-minimap-toggle > i').toggleClass('fa-angle-double-left fa-angle-double-right');
+        $scope.mapFilterCollapsed = !$scope.mapFilterCollapsed;
       };
       hotkeys.bindTo($scope)
         .add({
@@ -343,7 +343,8 @@
         viewerMap: viewerMap,
         searchMap: searchMap,
         mapfieldOption: {
-          relations: ['within_bbox']
+          relations: ['within_bbox'],
+          autoTriggerSearch: true
         },
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         filters: gnSearchSettings.filters,

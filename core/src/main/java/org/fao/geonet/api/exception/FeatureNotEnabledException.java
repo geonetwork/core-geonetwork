@@ -23,7 +23,12 @@
 
 package org.fao.geonet.api.exception;
 
-public class FeatureNotEnabledException extends Exception {
+import java.util.Locale;
+
+import org.fao.geonet.exceptions.LocalizedException;
+
+public class FeatureNotEnabledException extends LocalizedException {
+
     public FeatureNotEnabledException() {
         super();
     }
@@ -38,5 +43,39 @@ public class FeatureNotEnabledException extends Exception {
 
     public FeatureNotEnabledException(Throwable cause) {
         super(cause);
+    }
+
+    protected String getResourceBundleBeanQualifier() {
+        return "apiMessages";
+    }
+
+    @Override
+    public FeatureNotEnabledException withMessageKey(String messageKey) {
+        super.withMessageKey(messageKey);
+        return this;
+    }
+
+    @Override
+    public FeatureNotEnabledException withMessageKey(String messageKey, Object[] messageKeyArgs) {
+        super.withMessageKey(messageKey, messageKeyArgs);
+        return this;
+    }
+
+    @Override
+    public FeatureNotEnabledException withDescriptionKey(String descriptionKey) {
+        super.withDescriptionKey(descriptionKey);
+        return this;
+    }
+
+    @Override
+    public FeatureNotEnabledException withDescriptionKey(String descriptionKey, Object[] descriptionKeyArgs) {
+        super.withDescriptionKey(descriptionKey, descriptionKeyArgs);
+        return this;
+    }
+
+    @Override
+    public FeatureNotEnabledException withLocale(Locale locale) {
+        super.withLocale(locale);
+        return this;
     }
 }

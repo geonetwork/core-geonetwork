@@ -29,9 +29,14 @@ import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public abstract class StoreUtils {
     /**
@@ -39,21 +44,16 @@ public abstract class StoreUtils {
      * @param context
      * @param oldMetadataId               The source metadata ID
      * @param newMetadataId               The destination metadata ID
+     * @param newApproved                 New approved flag to use on the destination.
+     *                                    Used when creating a working copy where the destination will have the approved flag to false.
      * @throws Exception
      */
-    public static void copyDataDir(ServiceContext context, int oldMetadataId, int newMetadataId, boolean approved) throws Exception {
-        final Store store = context.getBean("resourceStore", Store.class);
+    public static void copyDataDir(ServiceContext context, int oldMetadataId, int newMetadataId, boolean newApproved) throws Exception {
         final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
         final String oldUuid = metadataUtils.getMetadataUuid(String.valueOf(oldMetadataId));
         final String newUuid = metadataUtils.getMetadataUuid(String.valueOf(newMetadataId));
-        for (MetadataResourceVisibility visibility: MetadataResourceVisibility.values()) {
-            final List<MetadataResource> resources = store.getResources(context, oldUuid, visibility, null, approved);
-            for (MetadataResource resource: resources) {
-                try (Store.ResourceHolder holder = store.getResource(context, oldUuid, visibility, resource.getFilename(), approved)) {
-                    store.putResource(context, newUuid, holder.getPath(), visibility, approved);
-                }
-            }
-        }
+
+        copyDataDir(context, oldUuid, newUuid, newApproved);
     }
 
     /**
@@ -61,17 +61,98 @@ public abstract class StoreUtils {
      * @param context
      * @param oldUuid               The source metadata ID
      * @param newUuid               The destination metadata ID
+     * @param newApproved           New approved flag to use on the destination.
+     *                              Used when creating a working copy where the destination will have the approved flag to false.
      * @throws Exception
      */
-    public static void copyDataDir(ServiceContext context, String oldUuid, String newUuid, boolean approved) throws Exception {
+    public static void copyDataDir(ServiceContext context, String oldUuid, String newUuid, boolean newApproved) throws Exception {
         final Store store = context.getBean("resourceStore", Store.class);
         for (MetadataResourceVisibility visibility: MetadataResourceVisibility.values()) {
-            final List<MetadataResource> resources = store.getResources(context, oldUuid, visibility, null, approved);
+            final List<MetadataResource> resources = store.getResources(context, oldUuid, visibility, null, true);
             for (MetadataResource resource: resources) {
-                try (Store.ResourceHolder holder = store.getResource(context, oldUuid, visibility, resource.getFilename(), approved)) {
-                    store.putResource(context, newUuid, holder.getPath(), visibility, approved);
+                try (Store.ResourceHolder holder = store.getResource(context, oldUuid, visibility, resource.getFilename(), true)) {
+                    store.putResource(context, newUuid, holder.getPath(), visibility, newApproved);
                 }
             }
+        }
+    }
+
+    /**
+     * Used to remove items from a metadataResource list
+     *
+     * @param l left list
+     * @param r right list
+     * @return l except r
+     */
+    private static List<MetadataResource> exceptMetadataResource(List<MetadataResource> l, List<MetadataResource> r)  {
+        Map<String,MetadataResource> rMap = new HashMap<>();
+        for (MetadataResource mr : r) rMap.put(mr.getId(),mr);
+
+        // Start the results with a copy of the l list.
+        List<MetadataResource> results = new ArrayList<>(l);
+
+        Iterator<MetadataResource> itResults = results.iterator();
+        // remove all that exist in rMap
+        while (itResults.hasNext()) {
+            MetadataResource m = itResults.next();
+            if (rMap.containsKey(m.getId())) {
+                MetadataResource mCheck = rMap.get(m.getId());
+                if (mCheck.getFilename().equals(m.getFilename())
+                    && mCheck.getMetadataUuid().equals(m.getMetadataUuid())
+                    && mCheck.getVisibility().equals(m.getVisibility())) {
+                    itResults.remove();
+                }
+            }
+        }
+        return results;
+    }
+
+    /**
+     * Replace the attachments of one source metadata to the other target metadata
+     * Used for moving draft metadata resources to approved metadata resources
+     *
+     *
+     * @param context
+     * @param sourceUuid            The source metadata ID
+     * @param targetUuid            The destination metadata ID
+     * @param sourceApproved        Old approved flag to use on the destination.
+     *                              Used when creating a working copy where the source will have the approved flag to false.
+     * @param targetApproved        New approved flag to use on the destination.
+     *                              Used when creating a working copy where the destination will have the approved flag to false.
+     * @throws Exception
+     */
+
+    public static void replaceDataDir(ServiceContext context, String sourceUuid, String targetUuid, boolean sourceApproved, boolean targetApproved) throws Exception {
+        final Store store = context.getBean("resourceStore", Store.class);
+        for (MetadataResourceVisibility visibility: MetadataResourceVisibility.values()) {
+            final List<MetadataResource> sourceResources = store.getResources(context, sourceUuid, visibility, null, sourceApproved);
+            final List<MetadataResource> targetResources = store.getResources(context, targetUuid, visibility, null, targetApproved);
+
+            // In order to sync the 2 folders, we need to identify the records to be added, deleted and updated.
+            List<MetadataResource> targetDeleteResources  = exceptMetadataResource(targetResources, sourceResources);
+            List<MetadataResource> targetAddResources = exceptMetadataResource(sourceResources, targetResources);
+            List<MetadataResource> targetUpdateResources = exceptMetadataResource(targetResources, targetDeleteResources);
+
+            // Add new records
+            for (MetadataResource resource: targetAddResources) {
+                try (Store.ResourceHolder holder = store.getResource(context, sourceUuid, visibility, resource.getFilename(), sourceApproved)) {
+                    store.putResource(context, targetUuid, holder.getPath(), visibility, targetApproved);
+                }
+            }
+
+            // update new records
+
+            for (MetadataResource resource: targetUpdateResources) {
+                try (Store.ResourceHolder holder = store.getResource(context, sourceUuid, visibility, resource.getFilename(), sourceApproved)) {
+                    store.putResource(context, targetUuid, holder.getPath(), visibility, targetApproved);
+                }
+            }
+
+            // delete old records
+            for (MetadataResource resource: targetDeleteResources) {
+                store.delResource(context, targetUuid, visibility, resource.getFilename(), targetApproved);
+            }
+
         }
     }
 
@@ -88,9 +169,12 @@ public abstract class StoreUtils {
         final Store store = context.getBean("resourceStore", Store.class);
         Files.createDirectories(destinationDir);
         for (MetadataResource resource: resources) {
-            try (Store.ResourceHolder holder = store.getResource(context, metadataUuid, resource.getVisibility(), resource.getFilename(),
-                    approved)) {
-                Files.copy(Files.newInputStream(holder.getPath()), destinationDir.resolve(resource.getFilename()));
+            try (
+              Store.ResourceHolder holder = store.getResource(context, metadataUuid, resource.getVisibility(),
+                    resource.getFilename(), approved);
+              InputStream inputStream = Files.newInputStream(holder.getPath())
+            ) {
+                Files.copy(inputStream, destinationDir.resolve(resource.getFilename()));
             }
         }
     }

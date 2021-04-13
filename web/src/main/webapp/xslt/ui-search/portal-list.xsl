@@ -33,16 +33,7 @@
     <xsl:variable name="infoSeparator" select="'|'"/>
 
     <div class="row gn-portal"
-         id="{/root/gui/systemConfig/system/site/siteId}"
-         itemscope="itemscope"
-         itemtype="http://schema.org/DataCatalog">
-      <meta itemprop="name" content="{/root/gui/systemConfig/system/site/name}"></meta>
-      <span itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization">
-        <meta itemprop="name" content="{/root/gui/systemConfig/system/site/organization}"></meta>
-        <meta itemprop="email" content="{/root/gui/systemConfig/system/feedback/email}"></meta>
-      </span>
-      <meta itemprop="url" content="{$nodeUrl}search"></meta>
-
+         id="{/root/gui/systemConfig/system/site/siteId}">
       <div class="container-fluid gn-background">
         <div style="text-align:center;">
           <div class="gn-md-thumbnail">

@@ -28,6 +28,11 @@ import org.junit.Test;
 
 import java.util.Calendar;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import static java.util.Calendar.YEAR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -448,4 +453,34 @@ public class ISODateTest {
         org.junit.Assert.assertEquals(-60, isoDate2.timeDifferenceInSeconds(isoDate1));
     }
 
+
+    @Test
+    public void testZ() throws Exception {
+        ISODate isoDate = new ISODate("2019-06-01T00:00Z");
+        Instant instant = isoDate.toDate().toInstant().truncatedTo(ChronoUnit.SECONDS);
+
+        ZonedDateTime expectedDateTime =
+            ZonedDateTime.of(
+                2019, 6, 1, 0, 0, 0, 0, ZoneId.of("Z").normalized());
+        Instant expected = expectedDateTime.toInstant().truncatedTo(ChronoUnit.SECONDS);
+        assertEquals( "Z", expected, instant );
+
+        ISODate pstDate = new ISODate("2019-06-01T00:00-07:00");
+        instant = pstDate.toDate().toInstant().truncatedTo(ChronoUnit.SECONDS);
+
+        ZonedDateTime pstDateTime =
+            ZonedDateTime.of(
+                2019, 6, 1, 0, 0, 0, 0, ZoneId.of("UTC-07:00").normalized());
+        expected = pstDateTime.toInstant().truncatedTo(ChronoUnit.SECONDS);
+        assertEquals( "UTC-07:00", expected, instant );
+
+        ISODate estDate = new ISODate("2019-06-01T00:00-04:00");
+        instant = estDate.toDate().toInstant().truncatedTo(ChronoUnit.SECONDS);
+
+        ZonedDateTime estDateTime =
+            ZonedDateTime.of(
+                2019, 6, 1, 0, 0, 0, 0, ZoneId.of("UTC-04:00").normalized());
+        expected = estDateTime.toInstant().truncatedTo(ChronoUnit.SECONDS);
+        assertEquals( "UTC-04:00", expected, instant );
+    }
 }

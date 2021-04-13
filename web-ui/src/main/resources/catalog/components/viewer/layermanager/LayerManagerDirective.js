@@ -200,6 +200,11 @@
             }
           }
 
+          scope.hasDownload = true;
+          if (layer.getSource() instanceof ol.source.ImageArcGISRest) {
+            scope.hasDownload = false;
+          }
+
           scope.showWPS = function(process) {
             ctrl.setWPS(process, layer, element);
           };

@@ -168,7 +168,7 @@
                     that.feedMd(i, md, gnMdViewObj.records);
                   }
                 }
-              } 
+              }
 
               if (!foundMd){
                   // get a new search to pick the md
@@ -182,14 +182,14 @@
                   }).then(function(data) {
                     if (data.metadata.length > 0) {
                       //If trying to show a draft that is not a draft, correct url:
-                      if(data.metadata.length == 1 && 
+                      if(data.metadata.length == 1 &&
                           window.location.hash.indexOf("/metadraf/") > 0) {
-                        window.location.hash = 
+                        window.location.hash =
                           window.location.hash.replace("/metadraf/", "/metadata/");
                         //Now the location change event handles this
                         return;
                       }
-                      
+
                       //If returned more than one, maybe we are looking for the draft
                       var i = 0;
                       data.metadata.forEach(function (md, index) {
@@ -200,12 +200,12 @@
                           i = index;
                         }
                       });
-                      
+
                       data.metadata[i] = new Metadata(data.metadata[i]);
-                      
+
                       //Keep the search results (gnMdViewObj.records)
                       //and the trace of where in the search result we are
-                      that.feedMd(gnMdViewObj.current.index, 
+                      that.feedMd(gnMdViewObj.current.index,
                           data.metadata[i], gnMdViewObj.records);
                     } else {
                       gnMdViewObj.loadDetailsFinished = true;
@@ -214,7 +214,7 @@
                     gnMdViewObj.loadDetailsFinished = true;
                   });
               }
-              
+
             } else {
               gnMdViewObj.loadDetailsFinished = true;
             }
@@ -224,8 +224,8 @@
             gnMdViewObj.current.record = null;
           }
         };
-        
-        loadMdView(); 
+
+        loadMdView();
         // To manage uuid on page loading
         $rootScope.$on('$locationChangeSuccess', loadMdView);
       };

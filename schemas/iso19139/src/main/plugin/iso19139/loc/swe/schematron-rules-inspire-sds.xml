@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <schematron.title>INSPIRE SDS Rules</schematron.title>
+
+  <precondition>Preconditions</precondition>
+  <precondition.noservice>The current metadata is not about a service.</precondition.noservice>
+  <precondition.service>The current metadata documents a service.</precondition.service>
+
+  <tg4>TG4: Service QualityInfo</tg4>
+  <tg4.missing>QualityInfo missing. For each spatial data service, there shall be one and only one
+    set of quality information (dataQualityInfo element) scoped to "service".
+  </tg4.missing>
+  <tg4.toomany>Too many QualityInfo elements. For each spatial data service, there shall be one and
+    only one set of quality information (dataQualityInfo element) scoped to "service".
+  </tg4.toomany>
+  <tg4.ok>One QualityInfo element found.</tg4.ok>
+
+  <tg5.category>TG5: Service Category</tg5.category>
+  <tg5.category.noanchor>The gmx:Anchor describing the Category is missing</tg5.category.noanchor>
+  <tg5.category.anchorfound>Found the gmx:Anchor describing the Category</tg5.category.anchorfound>
+
+  <tg5.category.invalid>Unknown Category</tg5.category.invalid>
+  <tg5.category.valid>Valid category found</tg5.category.valid>
+
+  <tg6>TG6: QualityInfo pass</tg6>
+  <tg6.nopass>Pass element is missing</tg6.nopass>
+  <tg6.passfound>Pass element found</tg6.passfound>
+  <tg6.nobool>Pass/Boolean element is missing</tg6.nobool>
+  <tg6.boolfound>Pass/Boolean element found</tg6.boolfound>
+  <tg6.badbool>The value of the pass element shall be set to true.</tg6.badbool>
+  <tg6.passok>The value of the pass element is set to true.</tg6.passok>
+
+  <tg7.exists>TG7: Resource Locator</tg7.exists>
+  <tg7.exists.noanchor>No gmx:Anchor describing a Resource Locator could be found
+  </tg7.exists.noanchor>
+  <tg7.exists.anchorfound>Found a gmx:Anchor describing the Resource Locator
+  </tg7.exists.anchorfound>
+  <tg7.exists.noaccesspoint>No gmx:Anchor describing a Resource Locator access point
+  </tg7.exists.noaccesspoint>
+  <tg7.exists.accesspointfound>Found a gmx:Anchor describing a Resource Locator access point
+  </tg7.exists.accesspointfound>
+
+  <tg7.check>TG7: Resource Locator description</tg7.check>
+  <tg7.check.invalid>Invalid description found</tg7.check.invalid>
+  <tg7.check.valid>Valid description found</tg7.check.valid>
+
+  <tg8.exists>TG8: Technical Specification</tg8.exists>
+  <tg8.exists.noanchor>No gmx:Anchor describing a Technical Specification could be found
+  </tg8.exists.noanchor>
+  <tg8.exists.anchorfound>Found a gmx:Anchor describing a Technical Specification
+  </tg8.exists.anchorfound>
+
+  <tg10.exists>TG10: Coordinate Reference Systems Identifier</tg10.exists>
+  <tg10.exists.noanchor>No gmx:Anchor describing a CRS could be found</tg10.exists.noanchor>
+  <tg10.exists.anchorfound>Found a gmx:Anchor describing a CRS</tg10.exists.anchorfound>
+
+  <tg12>TG12: Quality of Service</tg12>
+  <tg12.noavail>No info about availability found</tg12.noavail>
+  <tg12.availfound>Found availability info</tg12.availfound>
+  <tg12.noperf>No info about performance found</tg12.noperf>
+  <tg12.perffound>Found performance info</tg12.perffound>
+  <tg12.nocapa>No info about capacity found</tg12.nocapa>
+  <tg12.capafound>Found capacity info</tg12.capafound>
+
+  <tg13.exists>TG13: Conditions applying to access and use</tg13.exists>
+  <tg13.exists.notfound>Constraints not found</tg13.exists.notfound>
+  <tg13.exists.found>Constraints found</tg13.exists.found>
+
+  <tg13>TG13: Conditions applying to access and use</tg13>
+  <tg13.othermissing>gmd:otherConstraints is missing</tg13.othermissing>
+  <tg13.both>The restriction element should define either an access or an use constraints
+  </tg13.both>
+  <tg13.badcodelist>The constraint type should be "otherRestrictions"</tg13.badcodelist>
+
+  <tg13.accessfound>Access restriction found</tg13.accessfound>
+  <tg13.usefound>Use restriction found</tg13.usefound>
+  <tg13.okaccess>Access restriction properly defined</tg13.okaccess>
+  <tg13.okuse>Use restriction properly defined</tg13.okuse>
+
+  <tg15>TG15: Responsibly party</tg15>
+  <tg15.nopoc>Point of contact not found</tg15.nopoc>
+  <tg15.nocustodian>The PoC role should be set to "custodian"</tg15.nocustodian>
+  <tg15.okcustodian>Metadata custodian PoC found</tg15.okcustodian>
+
+
+</strings>

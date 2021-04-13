@@ -368,6 +368,12 @@
             f(parameters, md, siteUrlPrefix);
           };
 
+          this.showMore = function(parameters, md) {
+            var siteUrlPrefix = this.gnConfigService.getServiceURL();
+
+            openMd(parameters, md, siteUrlPrefix);
+          };
+
           this.getType = function(resource, type) {
             resource.locTitle = $filter('gnLocalized')(resource.title);
             resource.locDescription = $filter('gnLocalized')(resource.description);

@@ -1,0 +1,125 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+         http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+         http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       ">
+
+
+  <!--  <ctx:property-placeholder location="classpath:org/fao/geonet/kernel/security/ldap/LDAP-test-properties.properties"/>-->
+
+  <bean id="ldapRoleConverterGroupNameParser"
+        class="org.fao.geonet.kernel.security.ldap.LDAPRoleConverterGroupNameParser">
+    <property name="ldapMembershipQueryParser" value="GCAT_(.*)_(.*)"/>
+    <property name="groupIndexInPattern" value="1"/>
+    <property name="profileIndexInPattern" value="2"/>
+    <property name="profileMapping">
+      <map>
+        <entry key="ADMIN" value="Administrator"/>
+        <entry key="EDITOR" value="Editor"/>
+      </map>
+    </property>
+  </bean>
+
+  <!-- Add ldap authentication to authentication manager -->
+  <bean id="ldapAuthenticationProviderPostProcessor"
+        class="jeeves.config.springutil.AddAuthenticationProviderPostProcessor">
+    <constructor-arg ref="ldapAuthProvider"/>
+  </bean>
+
+  <!-- LDAP configuration-->
+  <bean id="contextSource"
+        class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+    <constructor-arg value="ldap://localhost:3333/dc=example,dc=com"/>
+    <!-- For non anonymous binding -->
+    <property name="userDn" value="cn=admin,ou=GIS Department,ou=Corporate Users,dc=example,dc=com"/>
+    <property name="password" value="admin1"/>
+  </bean>
+
+  <bean id="ldapUserSearch" class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+    <constructor-arg name="searchBase" value=""/>
+    <constructor-arg name="searchFilter" value="(mail={0})"/>
+    <constructor-arg name="contextSource" ref="contextSource"/>
+
+    <property name="searchSubtree" value="true"/>
+  </bean>
+
+
+  <bean id="usernameMapper"
+        class="org.fao.geonet.kernel.security.ldap.SearchingLdapUsernameToDnMapper">
+    <property name="ldapContextSource" ref="contextSource"/>
+    <property name="ldapUserSearch" ref="ldapUserSearch"/>
+  </bean>
+
+  <bean id="ldapAuthProvider"
+        class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
+    <constructor-arg>
+      <bean class="org.springframework.security.ldap.authentication.BindAuthenticator">
+        <constructor-arg ref="contextSource"/>
+        <property name="userSearch" ref="ldapUserSearch"/>
+      </bean>
+    </constructor-arg>
+    <property name="userDetailsContextMapper" ref="ldapUserContextMapper"/>
+  </bean>
+
+  <bean id="ldapUserDetailsService"
+        class="org.fao.geonet.kernel.security.ldap.LdapUserDetailsManager">
+    <constructor-arg ref="contextSource"/>
+    <constructor-arg name="groupMemberAttributeName"
+                     value="cn"/>
+    <constructor-arg name="query"
+                     value="mail={1}"/>
+    <property name="groupSearchBase"
+              value=""/>
+    <property name="usernameMapper" ref="usernameMapper"/>
+    <property name="userDetailsMapper" ref="ldapUserContextMapper"/>
+  </bean>
+
+  <bean id="ldapUtils" class="org.fao.geonet.kernel.security.ldap.LDAPUtils"/>
+
+
+  <bean id="ldapUserContextMapper" class="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithProfileSearchEnhanced">
+    <property name="mapping">
+      <map>
+        <entry key="name" value="cn,"/>
+        <entry key="surname" value="sn,"/>
+        <entry key="mail" value="mail,"/>
+        <entry key="organisation" value=","/>
+        <entry key="address" value=","/>
+        <entry key="zip" value=","/>
+        <entry key="state" value=","/>
+        <entry key="city" value=","/>
+        <entry key="country" value=","/>
+
+        <entry key="profile" value=",RegisteredUser"/>
+        <entry key="privilege" value=",none"/>
+      </map>
+    </property>
+    <property name="profileMapping">
+      <map/>
+    </property>
+    <property name="ldapUtils" ref="ldapUtils"/>
+    <property name="importPrivilegesFromLdap" value="true"/>
+    <!-- typically, don't want GN to modify the LDAP server! -->
+    <property name="createNonExistingLdapGroup" value="false" />
+    <property name="createNonExistingLdapUser" value="false" />
+
+    <property name="ldapManager" ref="ldapUserDetailsService" />
+
+    <property name="membershipSearchStartObject" value=""/>
+    <property name="ldapMembershipQuery" value="(&amp;(objectClass=*)(member=cn={2})(cn=GCAT_*))"/>
+
+    <property name="ldapRoleConverters">
+      <util:list>
+        <ref bean="ldapRoleConverterGroupNameParser"/>
+      </util:list>
+    </property>
+
+
+    <property name="contextSource" ref="contextSource" />
+  </bean>
+
+</beans>

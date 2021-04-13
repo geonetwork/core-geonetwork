@@ -285,8 +285,8 @@
       <xsl:with-param name="subTreeSnippet">
 
         <xsl:variable name="geometry">
-          <xsl:apply-templates select="gmd:polygon/gml:MultiSurface|gmd:polygon/gml:LineString|
-                                       gmd:polygon/gml320:MultiSurface|gmd:polygon/gml320:LineString"
+          <xsl:apply-templates select="gmd:polygon/gml:MultiSurface|gmd:polygon/gml:LineString|gmd:polygon/gml:Point|
+                                       gmd:polygon/gml320:MultiSurface|gmd:polygon/gml320:LineString|gmd:polygon/gml320:Point"
                                mode="gn-element-cleaner"/>
         </xsl:variable>
 
@@ -306,7 +306,7 @@
   <!-- In flat mode do not display geographic identifier and description
   because it is part of the map widget - see previous template. -->
   <xsl:template mode="mode-iso19139"
-                match="gmd:extent/*/gmd:description[$isFlatMode]|
+                match="gmd:extent/*/gmd:description[$isFlatMode and not($metadataIsMultilingual)]|
                        gmd:geographicElement[
                           $isFlatMode and
                           preceding-sibling::gmd:geographicElement/gmd:EX_GeographicBoundingBox

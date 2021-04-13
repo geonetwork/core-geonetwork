@@ -1,0 +1,159 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+  <title>ReadMe | @displayName@</title>
+  <link rel="stylesheet" href="@homepage@/_static/blueprint/screen.css" type="text/css"
+    media="screen, projection" />
+  <link rel="stylesheet" href="@homepage@/_static/blueprint/print.css" type="text/css"
+    media="print" />
+  <!--[if IE]>
+  <link rel="stylesheet" href="@homepage@/_static/blueprint/ie.css" type="text/css" media="screen, projection" />
+  <![endif]-->
+  <link rel="stylesheet" href="@homepage@/_static/default.css" type="text/css" />
+  <link rel="stylesheet" href="@homepage@/_static/pygments.css" type="text/css" />
+  <style>
+    /* Use .index #acknowledgements for doc */
+    .doc #acknowledgements {
+      background-color: #efefef;
+    }
+
+    .important {
+      background: #efefef;
+      padding: 10px;
+      margin-top: 1.5em;
+      margin-bottom: 1.5em;
+    }
+  </style>
+
+</head>
+
+<body class="doc">
+  <div id="header" class="selfclear">
+    <div class="wrap selfclear">
+      <div id="logo"><a href="@homepage@">@appName@</a></div>
+
+      <ul id="top-nav">
+        <li>@displayName@ v@version@-@subVersion@ | install date: @day@ | <a href="license.html">license</a></li>
+      </ul>
+
+      <div id="osgeo"><a href="https://osgeo.org" target="_blank"><img
+            src="@homepage@/_static/OSGeo_project.svg"></a></div>
+    </div>
+  </div>
+
+  <div id="main">
+    <div class="wrap selfclear">
+      <div id="content">
+        <h1>Getting Started</h1>
+        <h2>Running the application</h2>
+        <p>
+          @displayName@ is a web based Spatial Data Catalog written in Java.
+          To use it, you first have to start the included servlet container (Jetty).
+          However, you can also download the @appName@ WAR file and run that on your own container. 
+        </p>
+        <p>
+          You can start the @appName@ webserver using the shell scripts located in the <code>bin</code> directory.     
+          These require administrative privileges and have been named:
+          <ul>
+            <li><code>startup.sh</code> (use <code>startup.bat</code> on Windows)</li>
+            <li><code>shutdown.sh</code> (use <code>shutdown.bat</code> on Windows)</li>
+          </ul>
+        </p>
+        <p>
+          By default, the @appName@ web interface should be available at <a href="http://localhost:8080/geonetwork">http://localhost:8080/geonetwork</a>. 
+          If you wish to run the application on a different port, please edit the startup shell script.
+          For example, if you are using the provided Jetty server and you wish to run @appName@ on port 1234, you can add the following Java configuration option:
+          <code>-Djetty.port=1234</code>
+        </p>
+        <div class="important">
+          <p><strong>IMPORTANT</strong></p>
+          <p>
+            After opening the @appName@ web interface, log on as Administrator.
+            By default, you should use the username <code>admin</code> and password <code>admin</code>.
+            Please modify the password for this account in the Administration section.
+          </p>
+        </div>
+        <h2>Notes</h2>
+        <ul>
+          <li>
+            When @appName@ runs for the first time, it could take a little longer to start. 
+            By default, @appName@ will use a local database (H2), which takes a while to set up if it doesn't exist yet. 
+          </li>
+          <li>
+            By default, H2 will create 3 <code>gn.*.db</code> files in the Jetty folder. 
+            You can change the location of the database by setting the <code>-Djdbc.database="path\to\gn"</code> 
+            Java option (do <b>not</b> include the <code>.db</code> extension) in the startup shell script.
+            Alternatively, you can also set up @appName@ to work with a remote database (e.g. Oracle).
+          </li>
+          <li>
+            If you plan to remove @appName@ but wish to keep the database, please backup the <code>gn.*.db</code> files. 
+            When you (re-)install @appName@ again and put the database files back at the original location, @appName@ should pick it up.
+           </li>
+        </ul>
+        <p><strong>Enjoy!</strong></p>
+        <div class="section" id="support">
+          <h1>Support</h1>
+          <h2>Documentation</h2>
+            <p>For more information and advanced setup instructions, please refer to the online <a href="@homepage@/docs.html">@appName@ documentation</a>.</p>
+          <div class="section" id="community-and-osgeo">
+            <h2>Community and OSGeo</h2>
+            <p>The @appName@ community has been expanding quickly over the last years.
+              The current release has been possible because of all those that contributed
+              to the project through code contributions, testing, bug reports and fixes as
+              well as many suggestions.</p>
+            <p>@appName@ is part of the <em>Open Source Geospatial Foundation</em>
+              (OSGeo, <a class="reference external" href="https://www.osgeo.org">https://www.osgeo.org</a>) software
+              stack, providing software you can trust to be free, open and sustainable. Voluntary support is provided through
+              <a class="reference internal" href="@homepage@/community.html">mailing lists, websites and online forums</a>.
+            </p>
+          </div>
+          <div class="section" id="professional-support">
+            <h2>Professional Support</h2>
+            <p>Several companies also provide commercial support to help organizations
+              to implement, integrate and maintain the software. You can find them
+              in the <a class="reference external" href="https://www.osgeo.org/search_profile">
+              Service Provider directory</a> on the OSGeo website.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="acknowledgements">
+    <div class="wrap selfclear">
+      <div id="ack-content" class="selfclear">
+        <h2>
+          <a href="@homepage@/acknowledgements/acknowledgements.html">Acknowledgements</a>
+        </h2>
+        <div class="section">
+          <a href="http://camptocamp.com" alt="Camptocamp - Innovative Solutions by Open Source Experts"
+            target="_blank">
+            <img src="@homepage@/_static/camptocamp.svg" height="60" />
+          </a>
+        </div>
+        <div class="section">
+          <a href="http://geocat.net" alt="GeoCat BV - Government Geographic Data Publishing" target="_blank">
+            <img src="@homepage@/_static/geocat-logo.png" height="60" />
+          </a>
+        </div>
+        <div class="section">
+          <a href="http://titellus.net" alt="titellus" target="_blank">
+            <img src="@homepage@/_static/titellus.png" height="80" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="bottombar">
+    <div class="wrap">
+      &copy; Copyright @year@, Open Source Geospatial Foundation.
+    </div>
+  </div>
+
+</body>
+</html>

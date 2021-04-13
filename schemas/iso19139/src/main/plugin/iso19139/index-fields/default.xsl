@@ -291,6 +291,7 @@
           <Field name="geoDescCode" string="{string(.)}" store="true" index="true"/>
         </xsl:for-each>
 
+
         <xsl:for-each select="gmd:temporalElement/
                                   (gmd:EX_TemporalExtent|gmd:EX_SpatialTemporalExtent)/gmd:extent">
           <xsl:for-each select="gml:TimePeriod|gml320:TimePeriod">
@@ -309,6 +310,8 @@
             <Field name="tempExtentBegin" string="{lower-case(substring-before($times,'|'))}"
                    store="true" index="true"/>
             <Field name="tempExtentEnd" string="{lower-case(substring-after($times,'|'))}"
+                   store="true" index="true"/>
+            <Field name="tempExtentPeriod" string="{lower-case($times)}"
                    store="true" index="true"/>
           </xsl:for-each>
 
@@ -711,7 +714,7 @@
           <xsl:variable name="title"
                         select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)"/>
           <xsl:variable name="desc" select="normalize-space(gmd:description/gco:CharacterString)"/>
-          <xsl:variable name="protocol" select="normalize-space(gmd:protocol/gco:CharacterString)"/>
+          <xsl:variable name="protocol" select="normalize-space(gmd:protocol/*/text())"/>
           <xsl:variable name="mimetype"
                         select="geonet:protocolMimeType($linkage, $protocol, gmd:name/gmx:MimeFileType/@type)"/>
 
@@ -1098,13 +1101,14 @@
 
 
   <xsl:template mode="index-operates-on" match="srv:SV_ServiceIdentification">
-    <xsl:for-each select="srv:operatesOn/@uuidref">
-      <Field name="operatesOn" string="{string(.)}" store="true" index="true"/>
-    </xsl:for-each>
 
     <xsl:choose>
       <!-- Default to index the @uuidref value for operatesOn: assumes a local metadata with that uuid -->
       <xsl:when test="not($processRemoteDocs)">
+        <xsl:for-each select="srv:operatesOn/@uuidref">
+          <Field name="operatesOn" string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+
         <xsl:for-each select="srv:operatesOn/@xlink:href">
           <Field name="operatesOn" string="{string(.)}" store="true" index="true"/>
         </xsl:for-each>
@@ -1155,13 +1159,13 @@
                       <Field name="operatesOn" string="{concat($datasetUuid, '|R|', normalize-space($datasetTitle), '|', normalize-space($datasetAbstract), '|', $xlinkHref)}" store="true"
                              index="true"/>
                     </xsl:when>
-                    <!-- Do we need this check? maybe in this case use operatesOn instead of operatesOnRemote to use local info? -->
+                    <!-- Use the local info - can happen that the local copy is not the most updated ... -->
                     <xsl:otherwise>
 
                       <xsl:variable name="datasetTitle" select="$remoteDoc//*[gmd:MD_DataIdentification or @gco:isoType='gmd:MD_DataIdentification']//gmd:citation//gmd:title/gco:CharacterString" />
                       <xsl:variable name="datasetAbstract" select="$remoteDoc//*[gmd:MD_DataIdentification or @gco:isoType='gmd:MD_DataIdentification']//gmd:abstract/gco:CharacterString" />
 
-                      <Field name="operatesOn" string="{concat($datasetUuid, '|R|', normalize-space($datasetTitle), '|', normalize-space($datasetAbstract), '|', $xlinkHref)}" store="true"
+                      <Field name="operatesOn" string="{concat($datasetUuid, '|L|', normalize-space($datasetTitle), '|', normalize-space($datasetAbstract), '|', $xlinkHref)}" store="true"
                              index="true"/>
                     </xsl:otherwise>
                   </xsl:choose>

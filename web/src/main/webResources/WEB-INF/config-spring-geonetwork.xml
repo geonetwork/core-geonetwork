@@ -162,7 +162,7 @@
 
   <util:map id="regionGetMapBackgroundLayers">
     <entry key="osm"
-           value="http://ows.terrestris.de/osm/service?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=OSM-WMS&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png"/>
+           value="\${map.bbox.background.service}"/>
   </util:map>
 
 
@@ -192,12 +192,16 @@
   </bean>
   -->
 
+    <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer"/>
+    <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager"/>
+    <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils"/>
 
-  <!-- Comment the following beans to get non-draft metadata and uncomment the beans below -->
-  <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer"/>
-  <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager"/>
-  <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils"/>
-  <!--<bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer"/>
-  <bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>
-  <bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>-->
+  <!-- In order to get non-draft metadata  uncomment the definitions below,
+    or make them available in an external override file -->
+<!--
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer"/>
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>
+-->
+
 </beans>

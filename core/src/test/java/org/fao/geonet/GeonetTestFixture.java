@@ -167,8 +167,9 @@ public class GeonetTestFixture {
 
         ServiceContext serviceContext = test.createServiceContext();
 
+      try {
         ApplicationContextHolder.set(_applicationContext);
-        serviceContext.setAsThreadLocal();
+        //serviceContext.setAsThreadLocal();
 
         _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
         _applicationContext.getBean(SearchManager.class).initNonStaticData(100);
@@ -183,6 +184,10 @@ public class GeonetTestFixture {
             ThreadUtils.init(conn.getMetaData().getURL(), _applicationContext.getBean(SettingManager.class));
         }
 
+      } finally {
+        serviceContext.clearAsThreadLocal();
+        //ApplicationContextHolder.clear();
+      }
     }
 
 

@@ -28,7 +28,7 @@
         <div class="gn-userfeedback-user">
           <em>
             <img class="img-circle"
-                 data-ng-src="//gravatar.com/avatar/{{row.authorEmail}}?s=18"/>&nbsp;
+                 data-ng-src="../api/users/{{(row.authorUserId)}}.png?size=18"/>&nbsp;
 
             {{row.authorName}}
             <span data-ng-show="row.authorOrganization">({{row.authorOrganization}})</span>,

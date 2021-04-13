@@ -16,11 +16,21 @@
           {{r.id.split('/').splice(2).join('/') | decodeURIComponent}}
         </a>
       </td>
+      <td class="text-nowrap" data-ng-if="r.version.length > 0">
+          {{r.version}}
+      </td>
+      <td data-ng-if="gnCurrentEdit.resourceManagementExternalProperties.enabled && r.metadataResourceExternalManagementProperties.url.length > 0">
+      <a class="btn btn-link"
+           title="{{'externalResourceManagement' | translate}}"
+           data-ng-click="onlinesrcService.openExternalResourceManagement(r)">
+          <i class="fa fa-file-text"></i>
+        </a>
+      </td>
       <td>
         <a class="btn btn-link"
            title="{{'openResource' | translate}}"
            target="_blank"
-           data-ng-href="{{r.url}}">
+           data-ng-href="{{onlinesrcService.getApprovedUrl(r.url)}}">
           <i class="fa fa-eye"></i>
         </a>
       </td>
@@ -38,7 +48,7 @@
            title="{{'deleteResource' | translate}}"
            data-gn-confirm-click="{{'removeFileFromStoreConfirm' | translate:{url: r.url} }}"
            data-ng-click="deleteResource(r)">
-          <i class="fa fa-times text-danger"></i>
+          <i class="fa fa-trash text-danger"></i>
         </a>
       </td>
     </tr>

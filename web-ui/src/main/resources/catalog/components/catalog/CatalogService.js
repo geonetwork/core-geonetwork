@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -225,15 +225,17 @@
          * return a promise.
          * @param {string} uuid of the metadata
          * @param {string} isTemplate optional isTemplate value (s, t...)
+         * @param {string} isDraft optional isDraft value (y, n, e)
          * @return {HttpPromise} of the $http get
          */
-        getMdObjByUuid: function(uuid, isTemplate) {
+        getMdObjByUuid: function(uuid, isTemplate, isDraft) {
           return $http.get('qi?_uuid=' + uuid + '' +
-              '&fast=index&_content_type=json&buildSummary=false' +
-              (isTemplate !== undefined ? '&isTemplate=' + isTemplate : '')).
-              then(function(resp) {
-                return new Metadata(resp.data.metadata);
-              });
+            '&fast=index&_content_type=json&buildSummary=false' +
+            (isTemplate !== undefined ? '&isTemplate=' + isTemplate : '') +
+            (isDraft !== undefined ? '&_draft=' + isDraft : '')).
+          then(function(resp) {
+            return new Metadata(resp.data.metadata);
+          });
         },
 
         /**
@@ -269,12 +271,20 @@
          * @return {HttpPromise} of the $http get
          */
         updateMdObj: function(md) {
-          return this.getMdObjByUuid(md.getUuid()).then(
+          if (md.isWorkflowEnabled()) {
+            return this.getMdObjByUuid(md.getUuid(), undefined, md.draft).then(
+              function(md_) {
+                angular.extend(md, md_);
+                return md;
+              });
+          } else {
+            return this.getMdObjByUuid(md.getUuid()).then(
               function(md_) {
                 angular.extend(md, md_);
                 return md;
               }
-          );
+            );
+          }
         }
       };
     }
@@ -519,11 +529,11 @@
             port = ':' + gnConfig['system.server.port'];
 
           } else if (gnConfig['system.server.protocol'] === 'https' &&
-             gnConfig['system.server.securePort'] &&
-             gnConfig['system.server.securePort'] != null &&
-             gnConfig['system.server.securePort'] != 443) {
+             gnConfig['system.server.port'] &&
+             gnConfig['system.server.port'] != null &&
+             gnConfig['system.server.port'] != 443) {
 
-            port = ':' + gnConfig['system.server.securePort'];
+            port = ':' + gnConfig['system.server.port'];
 
           }
 
@@ -557,8 +567,8 @@
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
         'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
-        'creationDate', 'publicationDate', 'revisionDate', 'spatialRepresentationType_text'];
-      var listOfJsonFields = ['keywordGroup', 'crsDetails'];
+        'creationDate', 'publicationDate', 'revisionDate', 'spatialRepresentationType_text', 'tempExtentPeriod'];
+      var listOfJsonFields = ['keywordGroup', 'crsDetails', 'featureTypes'];
       // See below; probably not necessary
       var record = this;
       this.linksCache = [];

@@ -85,7 +85,17 @@
                 <span data-translate="">protocol</span>
               </label>
               <div class="col-sm-9">
-                <div id="gn-addonlinesrc-protocol-list"
+                <input type="text" data-ng-if="(params.linkType.fields.protocol.thesaurus != undefined) && (params.linkType.fields.protocol.thesaurus != '')"
+                       data-ng-model="params.protocol" class="form-control"
+                       name="protocol"
+                       data-ng-required="params.linkType.fields.protocol.required"
+                       data-init-on-load="true"
+                       data-gn-keyword-picker=""
+                       data-thesaurus-key="{{params.linkType.fields.protocol.thesaurus}}"
+                       data-order-by-id="true"
+                       lang="lang" />
+
+                <div id="gn-addonlinesrc-protocol-list" data-ng-if="(params.linkType.fields.protocol.thesaurus == undefined) || (params.linkType.fields.protocol.thesaurus == '')"
                      data-schema-info-combo="element"
                      data-init-on-load="true"
                      name="protocol"
@@ -161,7 +171,7 @@
                        data-translate="">overview</label>
                 <div class="col-sm-10">
                   <img id="gn-addonlinesrc-overview-image"
-                       ng-src="{{isFieldMultilingual('url') ? params.url[ctrl.urlCurLang] : params.url}}"
+                       ng-src="{{onlinesrcService.getApprovedUrl(isFieldMultilingual('url') ? params.url[ctrl.urlCurLang] : params.url)}}"
                        class="img-thumbnail">
                 </div>
               </div>
@@ -299,8 +309,14 @@
       <div id="gn-addonlinesrc-file-panel"
            class="panel panel-default"
            data-ng-show="params.linkType.sources.filestore">
-        <div class="panel-heading"
-             data-translate>fileStore
+        <div class="panel-heading">
+          <span data-translate>fileStore</span>
+          <a class="btn btn-link btn-xs pull-right"
+             title="{{'externalResourceManagement' | translate}}"
+             data-ng-click="onlinesrcService.openExternalResourceManagement(gnCurrentEdit.resourceContainerDescription)"
+             data-ng-if="gnCurrentEdit.resourceManagementExternalProperties.folderEnabled && gnCurrentEdit.resourceContainerDescription.url.length > 0">
+            <i class="fa fa-folder-open"></i>
+          </a>
         </div>
         <div class="panel-body">
           <div id="gn-addonlinesrc-file-input"

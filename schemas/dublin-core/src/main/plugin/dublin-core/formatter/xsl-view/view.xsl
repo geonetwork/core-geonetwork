@@ -37,6 +37,7 @@
 
   <!-- Some utility -->
   <xsl:include href="../../layout/evaluate.xsl"/>
+  <xsl:include href="../../layout/utility-tpl.xsl"/>
 
   <!-- The core formatter XSL layout based on the editor configuration -->
   <xsl:include href="sharedFormatterDir/xslt/render-layout.xsl"/>
@@ -132,14 +133,18 @@
     </a>
   </xsl:template>
 
-  <!-- ... Dates -->
-  <xsl:template mode="render-value" match="*[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
-    <xsl:value-of select="format-date(., $dateFormats/date/for[@lang = $language]/text())"/>
+  <!-- ... Dates  -->
+  <xsl:template mode="render-value" match="*[matches(., '^[0-9]{4}-[0-9]{2}-[0-9]{2}$')]">
+    <span data-gn-humanize-time="{.}" data-format="DD MMM YYYY">
+      <xsl:value-of select="."/>
+    </span>
   </xsl:template>
 
   <xsl:template mode="render-value"
-                match="*[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}')]">
-    <xsl:value-of select="format-dateTime(., $dateFormats/dateTime/for[@lang = $language]/text())"/>
+                match="*[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$')]">
+    <span data-gn-humanize-time="{.}">
+      <xsl:value-of select="."/>
+    </span>
   </xsl:template>
 
 </xsl:stylesheet>

@@ -1,4 +1,0 @@
-installer
-=========
-
-Geonetwork installer project

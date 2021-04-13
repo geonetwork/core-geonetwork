@@ -151,7 +151,9 @@
             </div>
 
             <!--Type of record-->
-            <div id="gn-import-type-row" class="form-group">
+            <div id="gn-import-type-row"
+                 data-ng-show="user.canCreateTemplate()"
+                 class="form-group">
               <label id="gn-import-type-label"
                      for="gn-import-type-list"
                      class="col-sm-5 control-label"

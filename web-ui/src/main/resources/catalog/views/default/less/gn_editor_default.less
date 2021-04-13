@@ -72,11 +72,18 @@
     .gn-top-search {
       padding-top: 0;
       padding-bottom: 0;
+      background-color: #fff;
     }
   }
   .gn-search-facet {
     padding-top: 55px;
     padding-bottom: 15px;
+  }
+  .modal-dialog {
+    .modal-body {
+      max-height: 85vh;
+      overflow: auto;
+    }
   }
   // modal dialog (wider for for multilingual)
   @media (min-width: @screen-sm-min) {
@@ -254,6 +261,8 @@
       .tt-menu {
         margin-top: 1px;
         margin-left: 0;
+        left: 0 !important;
+        top: 32px !important;
         width: calc(100% + 0px);
         z-index: 110 !important;
       }
@@ -405,14 +414,22 @@
 // map for Editor and Batch Editor
 .gn-drawmap-panel {
   .gn-editor-map {
-    padding: 15px;
+    padding: 0 15px 15px 15px;
     position: relative;
-    margin-top: 30px;
+    margin-top: 0;
+    border-radius: 0;
     [ol-map] {
       .ol-attribution {
         .gn-attribution();
       }
     }
+  }
+  .gn-editor-map-toolbar {
+    margin: 30px 15px 0 15px;
+    padding: 10px;
+    border: 1px solid @panel-default-border;
+    background-color: @panel-default-heading-bg;
+    border-bottom: 0;
   }
 }
 // online resource panel
@@ -455,7 +472,7 @@ form.gn-editor.gn-label-above-input {
     width: 65%;
   }
   // Cancel offset used in action
-  .col-xs-offset-2 {
+  .col-xs-offset-2, .col-md-offset-2 {
     margin-left: 0px;
   }
   div.gn-extra-field > label {

@@ -27,6 +27,7 @@
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gfc="http://www.isotc211.org/2005/gfc"
                 xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-iso19110="http://geonetwork-opensource.org/xsl/functions/profiles/iso19110"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
@@ -34,6 +35,7 @@
                 exclude-result-prefixes="#all">
 
   <xsl:include href="utility-fn.xsl"/>
+  <xsl:include href="utility-tpl.xsl"/>
   <xsl:include href="layout-custom-fields.xsl"/>
 
   <!-- Ignore all gn element -->
@@ -53,8 +55,7 @@
     <xsl:variable name="flatModeException"
                   select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name,  name(..))"/>
 
-    <xsl:if test="$isEditing and (not($isFlatMode) or $flatModeException)">
-
+    <xsl:if test="(not($isFlatMode) or $flatModeException)">
       <xsl:variable name="label"
                     select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>
       <xsl:call-template name="render-element-to-add">
@@ -75,7 +76,7 @@
     <xsl:apply-templates mode="mode-iso19110" select="*|@*"/>
   </xsl:template>
 
-  <xsl:template mode="mode-iso19110" match="gmd:*|gmx:*">
+  <xsl:template mode="mode-iso19110" match="gmd:*|gmx:*|gco:*|xlink:*">
     <xsl:apply-templates mode="mode-iso19139" select="*|@*">
       <xsl:with-param name="schema" select="'iso19139'"/>
       <xsl:with-param name="labels" select="$iso19139labels"/>
@@ -167,7 +168,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelConfig"/>
-      <xsl:with-param name="value" select="*"/>
+      <xsl:with-param name="value" select="*[namespace-uri(.) != $gnUri]"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
       <xsl:with-param name="widgetParams"/>-->
@@ -235,7 +236,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelConfig"/>
-      <xsl:with-param name="value" select="*"/>
+      <xsl:with-param name="value" select="*[namespace-uri(.) != $gnUri]"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
       <xsl:with-param name="widgetParams"/>-->
@@ -299,23 +300,10 @@
 
   </xsl:template>
 
-
-  <!-- Get the main metadata languages - none for ISO19110 -->
-  <xsl:template name="get-iso19110-language"/>
-
-  <!-- Get the list of other languages -->
-  <xsl:template name="get-iso19110-other-languages"/>
-
-  <xsl:template name="get-iso19110-other-languages-as-json"/>
-
-  <xsl:template name="get-iso19110-online-source-config"/>
-
   <xsl:template name="get-iso19110-title">
     <xsl:value-of select="$metadata/gfc:FC_FeatureCatalogue/gmx:name/gco:CharacterString|
                           $metadata/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|
                           $metadata/gfc:FC_FeatureType/gfc:typeName/gco:LocalName"/>
   </xsl:template>
-
-  <xsl:template name="get-iso19110-extents-as-json">[]</xsl:template>
 
 </xsl:stylesheet>

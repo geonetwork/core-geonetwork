@@ -25,24 +25,42 @@ package org.fao.geonet.events.history;
 
 import org.springframework.context.ApplicationContext;
 
+import java.util.LinkedHashMap;
+
 public class RecordDeletedEvent extends AbstractHistoryEvent {
 
     private static final long serialVersionUID = 1110999025730522535L;
 
     private String xmlRecord;
+    private String uuid;
+    private LinkedHashMap<String, String> titles;
 
-    public RecordDeletedEvent(Integer mdId, Integer userId, String xmlRecord) {
+    public RecordDeletedEvent(Integer mdId, String uuid, LinkedHashMap<String, String> titles, Integer userId, String xmlRecord) {
         super(mdId, userId);
         this.xmlRecord = xmlRecord;
+        this.uuid=uuid;
+        this.titles=titles;
     }
 
-    public RecordDeletedEvent(Long mdId, Integer userId) {
+    public RecordDeletedEvent(Long mdId, String uuid, LinkedHashMap<String, String> titles, Integer userId) {
         super(mdId, userId);
+        this.uuid=uuid;
+        this.titles=titles;
     }
 
     @Override
     public String getPreviousState() {
         return xmlRecord;
+    }
+
+    @Override
+    public String getUuid() {
+        return uuid;
+    }
+
+    @Override
+    public LinkedHashMap<String, String> getTitles() {
+        return titles;
     }
 
     @Override

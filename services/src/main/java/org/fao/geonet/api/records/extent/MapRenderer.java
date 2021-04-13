@@ -55,6 +55,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collection;
@@ -199,7 +200,20 @@ public class MapRenderer {
             try {
                 URL imageUrl = new URL(background);
                 // Setup the proxy for the request if required
-                URLConnection conn = Lib.net.setupProxy(context, imageUrl);
+                HttpURLConnection conn = Lib.net.setupProxy(context, imageUrl);
+
+                int status = conn.getResponseCode();
+
+                // Handle redirect
+                if (status != HttpURLConnection.HTTP_OK) {
+                    if (status == HttpURLConnection.HTTP_MOVED_TEMP
+                        || status == HttpURLConnection.HTTP_MOVED_PERM
+                        || status == HttpURLConnection.HTTP_SEE_OTHER)
+                        // Get the redirect url from "location" header field
+                        imageUrl = new URL(conn.getHeaderField("Location"));
+                    conn = (HttpURLConnection) imageUrl.openConnection();
+                }
+
                 in = conn.getInputStream();
                 BufferedImage original = ImageIO.read(in);
                 image = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_INT_ARGB);
