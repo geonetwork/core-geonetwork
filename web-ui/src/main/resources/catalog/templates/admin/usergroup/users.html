@@ -52,7 +52,7 @@
         </span>
         <div class="btn-toolbar">
           <button type="button" class="btn btn-default pull-right"
-                  data-ng-hide="userSelected.security.authtype == 'LDAP'"
+                  data-ng-hide="hideResetPassword()"
                   data-ng-click="resetPassword(userSelected.id)">
             <i class="fa fa-lock fa-fw"></i> <span data-translate=""
           >resetPassword</span></button>
@@ -343,6 +343,16 @@
         <div class="modal-body">
           <form id="gn-password-reset" class="form-horizontal" name="gnPasswordReset">
               <input type="hidden" name="_csrf" value="{{csrf}}"/>
+            <div class="form-group"
+                 data-ng-class="gnPasswordReset.passwordOld.$error.required ? 'has-error' : ''">
+              <label class="control-label col-sm-3" data-translate="">passwordOld</label>
+              <div class="col-sm-9">
+                <input type="password" id="gn-user-password-old" name="passwordOld"
+                       class="form-control" autocomplete="off"
+                       data-ng-required="true"
+                       data-ng-model="resetPasswordOld"/>
+              </div>
+            </div>
             <div class="form-group"
                  data-ng-class="gnPasswordReset.password.$error.required || gnPasswordReset.password.$error.minlength ? 'has-error' : ''">
               <label class="control-label col-sm-3" data-translate="">password</label>

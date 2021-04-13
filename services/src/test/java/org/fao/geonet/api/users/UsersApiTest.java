@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -60,7 +60,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Test class for UsersApi.
  *
- * @author Jose García
  */
 public class UsersApiTest extends AbstractServiceIntegrationTest {
     @Autowired
@@ -344,6 +343,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
+            .param("passwordOld", "testuser-editor-password")
             .param("password", "newpassword")
             .param("password2", "newpassword")
             .contentType(API_JSON_EXPECTED_ENCODING)
@@ -366,6 +366,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Try to update the password of admin user from a user with Editor profile
         this.mockMvc.perform(post("/srv/api/users/" + admin.getId() + "/actions/forget-password")
+            .param("passwordOld", "testuser-editor-password")
             .param("password", "newpassword")
             .param("password2", "newpassword")
             .contentType(API_JSON_EXPECTED_ENCODING)
@@ -387,6 +388,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         // Check 400 is returned and a message indicating that passwords should be equal
         this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
             .contentType(API_JSON_EXPECTED_ENCODING)
+            .param("passwordOld", "testuser-editor-password")
             .param("password", "newpassword")
             .param("password2", "newpassword2")
             .session(this.mockHttpSession)
@@ -395,6 +397,26 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .andExpect(status().is(400));
     }
 
+    @Test
+    public void resetPasswordWrongOldPassword() throws Exception {
+        User user = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        // Check 400 is returned and a message indicating that passwords should be equal
+        this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
+            .contentType(API_JSON_EXPECTED_ENCODING)
+            .param("passwordOld", "testuser-editor-password-wrong")
+            .param("password", "newpassword")
+            .param("password2", "newpassword")
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(jsonPath("$.description", is("The old password is not valid")))
+            .andExpect(status().is(400));
+    }
 
     @Test
     public void resetPasswordNotExistingUser() throws Exception {
@@ -407,6 +429,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         // Check 404 is returned
         this.mockMvc.perform(post("/srv/api/users/" + userId + "/actions/forget-password")
             .contentType(API_JSON_EXPECTED_ENCODING)
+            .param("passwordOld", "oldpassword")
             .param("password", "newpassword")
             .param("password2", "newpassword")
             .session(this.mockHttpSession)
@@ -426,6 +449,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
             .contentType(API_JSON_EXPECTED_ENCODING)
+            .param("passwordOld", "testuser-editor-password")
             .param("password", "newpassword")
             .param("password2", "newpassword")
             .session(this.mockHttpSession)
@@ -610,6 +634,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         // Editor - Group sample
         User testUserEditor = new User();
         testUserEditor.setUsername("testuser-editor");
+        testUserEditor.getSecurity().setPassword("testuser-editor-password");
         testUserEditor.setProfile(Profile.Editor);
         testUserEditor.setEnabled(true);
         testUserEditor.getEmailAddresses().add("test@mail.com");
