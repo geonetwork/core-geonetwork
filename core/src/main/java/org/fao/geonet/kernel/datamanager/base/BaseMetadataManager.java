@@ -937,12 +937,9 @@ public class BaseMetadataManager implements IMetadataManager {
             if (updateDatestamp == UpdateDatestamp.YES) {
                 String changeDate = new ISODate().toString();
                 String createDate = "";
-                if (metadataId.isPresent()) {
-                    java.util.Optional<Metadata> record = metadataRepository.findById(metadataId.get());
-                    if (record.isPresent()) {
-                        changeDate = record.get().getDataInfo().getChangeDate().getDateAndTime();
-                        createDate = record.get().getDataInfo().getCreateDate().getDateAndTime();
-                    }
+                if (metadata != null) {
+                    changeDate = record.get().getDataInfo().getChangeDate().getDateAndTime();
+                    createDate = record.get().getDataInfo().getCreateDate().getDateAndTime();
                 }
                 env.addContent(new Element("changeDate").setText(changeDate));
                 env.addContent(new Element("createDate").setText(createDate));
