@@ -559,5 +559,7 @@
     "unselectChoiceNotAllowedTitle": "Unselect choices",
     "unselectChoiceNotAllowed": "Some choices can't be removed: {{notAllowedChoices}}",
     "searchOptions": "Search options",
-    "options": "Options"
+    "options": "Options",
+    "metadataInfoReport": "Metadata information",
+    "metadataErrorReport": "Metadata errors"
 }
