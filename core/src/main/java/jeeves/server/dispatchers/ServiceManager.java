@@ -49,12 +49,14 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NotAllowedEx;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
 import org.fao.geonet.exceptions.ServiceNotMatchedEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.BLOB;
 import org.fao.geonet.utils.BinaryFile;
@@ -77,6 +79,9 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 //=============================================================================
 
@@ -519,6 +524,65 @@ public class ServiceManager {
         }
 
         return context;
+    }
+
+    /**
+     * Create a transitory service context for use in a single try-with-resources block.
+     *
+     * Makes use of current http session if available (the usual case), or a temporary user session using the provided
+     * userId (when used from a background task or job).
+     * <p>
+     * Code creating a service context is responsible for handling resources and cleanup.
+     * </p>
+     * <pre>
+     * try( ServiceContext context = createServiceContext("approve_record", event.getUser()){
+     *    ... utility methods can now use ServiceContext.get() ...
+     * }
+     * </pre>
+     * @param name service context name for approval record handling
+     * @param defaultUserId If a user session is not available, this id is used to create a temporary user session
+     * @return service context for approval record event handling
+     */
+    public ServiceContext createServiceContext(String name, int defaultUserId){
+        // If this implementation is generally useful it should migrate to ServiceManager, rather than cut and paste
+        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+
+        ServiceContext context;
+
+        HttpServletRequest request = getCurrentHttpRequest();
+        if( request != null ) {
+            // reuse user session from http request
+            context = createServiceContext(name, "?", request);
+        }
+        else {
+            // Not in an http request, creating a temporary user session wiht provided userId
+            context = createServiceContext(name, applicationContext);
+
+            UserRepository userRepository = applicationContext.getBean(UserRepository.class);
+            User user = userRepository.findOne( defaultUserId );
+            if( user != null ){
+                UserSession session = new UserSession();
+                session.loginAs(user);
+                context.setUserSession(session);
+            }
+        }
+        context.setAsThreadLocal();
+
+        return context;
+    }
+
+    /**
+     * Look up current HttpServletRequest if running in a servlet dispatch.
+     *
+     * @return http request, or null if running in a background task
+     */
+    private static HttpServletRequest getCurrentHttpRequest(){
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (requestAttributes instanceof ServletRequestAttributes) {
+            HttpServletRequest request = ((ServletRequestAttributes)requestAttributes).getRequest();
+            return request;
+        }
+        return null; // not called during http request
     }
 
     /**

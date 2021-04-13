@@ -89,68 +89,12 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
     @Autowired
     IMetadataUtils metadataUtils;
 
-    @Autowired ServiceManager serviceManager;
+    @Autowired
+    ServiceManager serviceManager;
 
     @Override
     public void onApplicationEvent(MetadataStatusChanged event) {
     }
-
-    /**
-     * Create a service context for the current thread used to process record approval.
-     *
-     * Makes use of current http session if available (the usual case),
-     * or a temporary user session using the provided userId (when TransactionManager called from a background task
-     * or job).
-     * <p>
-     * Code creating a service context is responsible for handling resources and cleanup.
-     * </p>
-     * @param name service context name for approval record handling
-     * @param defaultUserId If a user session is not available, this id is used to create a temporary user session
-     * @return service context for approval record event handling
-     */
-    protected ServiceContext createServiceContext(String name, int defaultUserId){
-        // If this implementation is generally useful it should migrate to ServiceManager, rather than cut and paste
-        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceManager serviceManager = applicationContext.getBean(ServiceManager.class);
-
-        ServiceContext context;
-
-        HttpServletRequest request = getCurrentHttpRequest();
-        if( request != null ) {
-            // reuse user session from http request
-            context = serviceManager.createServiceContext(name, "?", request);
-        }
-        else {
-            // Not in an http request, creating a temporary user session wiht provided userId
-            context = serviceManager.createServiceContext(name, applicationContext);
-
-            UserRepository userRepository = applicationContext.getBean(UserRepository.class);
-            User user = userRepository.findOne( defaultUserId );
-            if( user != null ){
-                UserSession session = new UserSession();
-                session.loginAs(user);
-                context.setUserSession(session);
-            }
-        }
-        context.setAsThreadLocal();
-
-        return context;
-    }
-
-    /**
-     * Look up current HttpServletRequest if running in a servlet dispatch.
-     *
-     * @return http request, or null if running in a background task
-     */
-    private static HttpServletRequest getCurrentHttpRequest(){
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        if (requestAttributes instanceof ServletRequestAttributes) {
-            HttpServletRequest request = ((ServletRequestAttributes)requestAttributes).getRequest();
-            return request;
-        }
-        return null; // not called during http request
-    }
-
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void doBeforeCommit(MetadataStatusChanged event) {
@@ -164,7 +108,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
                 case StatusValue.Status.DRAFT:
                 case StatusValue.Status.SUBMITTED:
                     if (event.getMd() instanceof Metadata) {
-                        try (ServiceContext context = createServiceContext("approve_record", event.getUser())) {
+                        try (ServiceContext context = serviceManager.createServiceContext("approve_record", event.getUser())) {
                             Log.trace(Geonet.DATA_MANAGER,
                                 "Replacing contents of record (ID=" + event.getMd().getId() + ") with draft, if exists.");
                             draftUtilities.replaceMetadataWithDraft(event.getMd());
@@ -172,7 +116,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
                     }
                     break;
                 case StatusValue.Status.RETIRED:
-                    try (ServiceContext context = createServiceContext("approve_record", event.getUser())){
+                    try (ServiceContext context = serviceManager.createServiceContext("approve_record", event.getUser())){
                         Log.trace(Geonet.DATA_MANAGER,
                             "Removing draft from record (ID=" + event.getMd().getId() + "), if exists.");
                         removeDraft(event.getMd());
@@ -182,7 +126,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
                     }
                     break;
                 case StatusValue.Status.APPROVED:
-                    try (ServiceContext context = createServiceContext("approve_record", event.getUser())){
+                    try (ServiceContext context = serviceManager.createServiceContext("approve_record", event.getUser())){
                         Log.trace(Geonet.DATA_MANAGER, "Replacing contents of approved record (ID=" + event.getMd().getId()
                             + ") with draft, if exists.");
                         approveWithDraft(event);
