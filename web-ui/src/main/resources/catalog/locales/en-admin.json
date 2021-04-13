@@ -925,7 +925,6 @@
     "system/server/host-help": "The server's host and port are used to create URLs to the GeoNetwork server. For example, they are used during metadata editing to create resource links and when returning the server's capabilities during a CS/W request.",
     "system/server/port": "Port",
     "system/server/protocol": "Preferred Protocol",
-    "system/server/securePort": "Secure Port",
     "system/server/log": "Log level",
     "system/server/timeZone": "Timezone",
     "system/server/timeZone-help": "Sets the timezone used to store dates in the database and interpret the time in cron expression specified in the harvesters Frequency field. If not set the JVM default timezone will be used. GeoNetwork uses the timezone definitions available in the JVM. Time zones definitions can change frequently. Please keep updated your JVM to get the latest timezones definition or use the tzupdater tool available for download from the <a href='http://www.oracle.com/technetwork/java/javase/downloads/index.html' target='_blank'>Java SE Download Page</a>.",
