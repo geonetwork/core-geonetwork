@@ -50,6 +50,9 @@
           scope.withoutActionMenu =
               angular.isDefined(attrs.withoutActionMenu) ? true : false;
 
+
+
+
           scope.mdService = gnMetadataActions;
 
           scope.operationOnSelectionInProgress = false;
@@ -58,6 +61,8 @@
             scope.isInspireValidationEnabled =
               gnConfig[gnConfig.key.isInspireEnabled] &&
               angular.isString(gnConfig['system.inspire.remotevalidation.url']);
+
+            scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
           });
 
           scope.$on('operationOnSelectionStart', function() {

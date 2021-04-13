@@ -908,7 +908,6 @@
     "system/server/host-help": "Host i el port del servidor s'utilitzen per crear adreces URL al servidor GeoNetwork. Per exemple, s'utilitzen durant l'edició de metadades per crear enllaços de recursos i en tornar les capacitats del servidor durant una petició / W CS.",
     "system/server/port": "Port",
     "system/server/protocol": "Protocol preferit",
-    "system/server/securePort": "Secure Port",
     "system/server/log": "Nivell de registre",
     "system/server/timeZone": "Timezone",
     "system/server/timeZone-help": "<b>Currently used only in the harvesters</b>. Sets the timezone used to interpret the time in cron expression specified in the harvesters Frequency field. If not set the JVM default timezone will be used. GeoNetwork uses the timezone definitions available in the JVM. Time zones definitions can change frequently. Please keep updated your JVM to get the latest timezones definition or use the tzupdater tool available for download from the <a href='http://www.oracle.com/technetwork/java/javase/downloads/index.html' target='_blank'>Java SE Download Page</a>.",

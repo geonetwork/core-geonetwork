@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -529,11 +529,11 @@
             port = ':' + gnConfig['system.server.port'];
 
           } else if (gnConfig['system.server.protocol'] === 'https' &&
-             gnConfig['system.server.securePort'] &&
-             gnConfig['system.server.securePort'] != null &&
-             gnConfig['system.server.securePort'] != 443) {
+             gnConfig['system.server.port'] &&
+             gnConfig['system.server.port'] != null &&
+             gnConfig['system.server.port'] != 443) {
 
-            port = ':' + gnConfig['system.server.securePort'];
+            port = ':' + gnConfig['system.server.port'];
 
           }
 
@@ -567,7 +567,7 @@
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
         'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
-        'creationDate', 'publicationDate', 'revisionDate', 'spatialRepresentationType_text'];
+        'creationDate', 'publicationDate', 'revisionDate', 'spatialRepresentationType_text', 'tempExtentPeriod'];
       var listOfJsonFields = ['keywordGroup', 'crsDetails', 'featureTypes'];
       // See below; probably not necessary
       var record = this;

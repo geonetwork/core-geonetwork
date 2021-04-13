@@ -97,10 +97,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -581,6 +582,31 @@ public final class XslUtil {
         }
     }
 
+
+    /**
+     * Retrieves all the values as a comma separated list for Lucene field for the metadata
+     * with the provided uuid and language.
+     *
+     */
+    public static String getIndexFieldByIdAllValues(Object appName, Object id, Object field, Object lang) {
+        String fieldname = field.toString();
+        String language = (lang.toString().equals("") ? null : lang.toString());
+        try {
+            Map<String, Map<String, String>> fieldValues = LuceneSearcher.getAllMetadataFromIndexFor(language, "_uuid", id.toString(), Collections.singleton(fieldname), false, true);
+
+            if (fieldValues.isEmpty()) {
+                return "";
+            } else {
+                Map<String, String> values = fieldValues.values().iterator().next();
+                return values.get(fieldname);
+            }
+        } catch (Exception e) {
+            Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
+            return "";
+        }
+    }
+
+
     /**
      * Return a translation for a codelist or enumeration element.
      *
@@ -923,7 +949,19 @@ public final class XslUtil {
 
         try {
             URL url = new URL(surl);
-            URLConnection conn = Lib.net.setupProxy(context, url);
+            HttpURLConnection conn = Lib.net.setupProxy(context, url);
+
+            int status = conn.getResponseCode();
+
+            // Handle redirect
+            if (status != HttpURLConnection.HTTP_OK) {
+                if (status == HttpURLConnection.HTTP_MOVED_TEMP
+                    || status == HttpURLConnection.HTTP_MOVED_PERM
+                    || status == HttpURLConnection.HTTP_SEE_OTHER)
+                // Get the redirect url from "location" header field
+                url = new URL(conn.getHeaderField("Location"));
+                conn = (HttpURLConnection) url.openConnection();
+            }
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();

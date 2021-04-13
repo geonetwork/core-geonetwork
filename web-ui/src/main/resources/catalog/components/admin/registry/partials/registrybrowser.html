@@ -23,9 +23,9 @@
       registryChooseLanguages
     </label>
     <div class="row">
-      <div class="col-md-6">
-        <ul>
-          <li data-ng-repeat="l in languages">
+      <div class="col-md-6 gn-nopadding-left">
+        <ul class="list-group gn-nopadding-right">
+          <li data-ng-repeat="l in languages" class="list-group-item">
             <label><input type="checkbox"
                           name="registryLanguage"
                           data-ng-model="selectedLanguages[l.key]"

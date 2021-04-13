@@ -219,7 +219,7 @@
         $scope.thesaurusSelected = {
           title: '',
           filename: '',
-          defaultNamespace: 'http://www.mysite.org/thesaurus',
+          defaultNamespace: '',
           dname: 'theme',
           type: 'local'
         };
@@ -252,9 +252,10 @@
        */
       $scope.computeThesaurusNs = function() {
         $scope.thesaurusSuggestedNs =
-            location.origin +
-            '/thesaurus/' + $scope.thesaurusSelected.dname.trim().replace(/[^\d\w-\.]/gi, '') + '/' +
-            $scope.thesaurusSelected.filename.trim().replace(/[^\d\w-\.]/gi, '');
+          location.href.split($scope.nodeId)[0] + $scope.nodeId
+            + "/api/registries/vocabularies/local."
+            + $scope.thesaurusSelected.dname.trim().replace(/[^\d\w-\.]/gi, '') + '.'
+            + $scope.thesaurusSelected.filename.replace(/[^\d\w-\.]/gi, '');
       };
 
       /**
@@ -628,7 +629,7 @@
             $scope.thesaurusSelected.defaultNamespace +
             ($scope.thesaurusSelected.defaultNamespace.indexOf('#') === -1 ?
             '#' : '') +
-            defaultLabel.trim().replace(/[^\\d\\w-\\.]/gi, '');
+            defaultLabel.trim().replace(/[^\d\w-\.]/gi, '');
       };
 
       /**

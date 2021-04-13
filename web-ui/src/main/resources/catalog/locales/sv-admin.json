@@ -908,7 +908,6 @@
     "system/server/host-help": "Serverinställningarna används för att skapa URL:er till GeoNetworks server. De används exempelvis vid redigering av metadata för att skapa resurslänkar samt vid returnering av CSW-anropet GetCapabilities.",
     "system/server/port": "Port",
     "system/server/protocol": "Föredraget protokoll",
-    "system/server/securePort": "Säker port",
     "system/server/log": "Loggningsnivå",
     "system/server/timeZone": "Tidszon",
     "system/server/timeZone-help": "<b>Används för närvarande endast i skördarna</b> . Ställer in tidszonen som används för att tolka tiden i cron-uttryck som anges i skördarens frekvensfält. Om det inte anges kommer JVMs standardtidszon att användas. GeoNetwork använder JVM:s tidszondefinitioner. Definitioner av tidszoner kan ofta ändras. Se till att uppdatera din JVM för att få den senaste definitionen av tidszoner eller använd verktyget tzupdater som kan laddas ned  från <a href='http://www.oracle.com/technetwork/java/javase/downloads/index.html' target='_blank'>Java SE nedladdningssida</a> .",
