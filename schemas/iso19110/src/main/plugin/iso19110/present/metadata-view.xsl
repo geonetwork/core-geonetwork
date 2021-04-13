@@ -22,7 +22,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gfc="http://www.isotc211.org/2005/gfc"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
@@ -189,7 +191,12 @@
               </th>
               <td>
                 <xsl:value-of select="gfc:memberName/gco:LocalName"/>
-
+                <xsl:choose>
+                  <xsl:when test="starts-with(gfc:code/gmx:Anchor/@xlink:href,'http')">
+                    <a href="{gfc:code/gmx:Anchor/@xlink:href}"><xsl:value-of select="gfc:code/*/text()"/></a>
+                  </xsl:when> 
+                  <xsl:when test="string(gfc:code/*/text())">(<xsl:value-of select="gfc:code/*/text()"/>)</xsl:when>
+                </xsl:choose>
                 <xsl:if test="string(gfc:definition/gco:CharacterString)">
                   -
                   <xsl:value-of select="gfc:definition/gco:CharacterString"/>
@@ -276,7 +283,12 @@
 
                       <tr>
                         <td>
-                          <xsl:value-of select="gfc:code/gco:CharacterString"/>
+                          <xsl:choose>
+                            <xsl:when test="starts-with(gfc:code/gmx:Anchor/@xlink:href,'http')">
+                              <a href="{gfc:code/gmx:Anchor/@xlink:href}"><xsl:value-of select="gfc:code/*/text()"/></a>
+                            </xsl:when> 
+                            <xsl:when test="string(gfc:code/*/text())"><xsl:value-of select="gfc:code/*/text()"/></xsl:when>
+                          </xsl:choose>
                         </td>
                         <td>
                           <xsl:value-of select="gfc:label/gco:CharacterString"/>
