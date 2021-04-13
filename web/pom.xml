@@ -851,8 +851,7 @@
             catalog/lib/bootstrap-table/*.md,
             catalog/lib/bootstrap-table/docs/**
           </packagingExcludes>
-          <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
-          <webXml>${build.webapp.resources}/geonetwork/WEB-INF/web.xml</webXml>
+          <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
           <attachClasses>true</attachClasses>
           <warName>${application.name}</warName>
           <webappDirectory>${project.build.directory}/geonetwork</webappDirectory>
@@ -866,7 +865,7 @@
           <webAppSourceDirectory>${project.build.directory}/geonetwork</webAppSourceDirectory>
           <webApp>
             <contextPath>/${application.name}</contextPath>
-            <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
+            <descriptor>${project.build.directory}/geonetwork/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
               <resourcesAsCSV>
                 ${project.basedir}/src/main/webapp,
