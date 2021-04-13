@@ -49,6 +49,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -320,7 +321,7 @@ public class UsersApi {
         // this is the case
         if (dataManager.isUserMetadataOwner(userIdentifier)) {
             IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
-            final long numUserRecords =  metadataRepository.count(MetadataSpecs.isOwnedByUser(userIdentifier));
+            final long numUserRecords = metadataRepository.count(MetadataSpecs.isOwnedByUser(userIdentifier));
             throw new IllegalArgumentException(
                 String.format(
                     "Cannot delete a user that is also metadata owner of %d record(s) (can be records, templates, subtemplates). Change owner of those records or remove them first.",
@@ -591,6 +592,10 @@ public class UsersApi {
         @PathVariable
             Integer userIdentifier,
         @ApiParam(
+            value = "Password to change (old)."
+        )
+        @RequestParam(value = Params.PASSWORD + "Old") String passwordOld,
+        @ApiParam(
             value = "Password to change."
         )
         @RequestParam(value = Params.PASSWORD) String password,
@@ -619,6 +624,12 @@ public class UsersApi {
         User user = userRepository.findOne(userIdentifier);
         if (user == null) {
             throw new UserNotFoundEx(Integer.toString(userIdentifier));
+        }
+
+        PasswordEncoder encoder = PasswordUtil.encoder(ApplicationContextHolder.get());
+
+        if (!encoder.matches(passwordOld, user.getPassword())) {
+            throw new IllegalArgumentException("The old password is not valid");
         }
 
         String passwordHash = PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
