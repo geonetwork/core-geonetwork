@@ -23,6 +23,7 @@
 package org.fao.geonet.api.users;
 
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -47,14 +48,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for UsersApi.
@@ -334,6 +331,48 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void createUserInvalidUsername() throws Exception {
+        List<String> invalidNames = Lists.newArrayList("--invalidusername", "--invalidName", "_invalidName",
+            "invalidName_", ".invalidName", "invalidName.", "@invalidName", "invalidName@", "invalid@@Name",
+            "invalid__Name", "invalid--Name", "invalidName-", "invalid..Name",
+            "?nvalidName", "invälidName");
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        for (String invalidName : invalidNames) {
+            UserDto user = new UserDto();
+            user.setUsername(invalidName);
+            user.setName("test");
+            user.setProfile(Profile.Editor.name());
+            user.setGroupsEditor(Collections.singletonList("2"));
+            user.setEmail(Collections.singletonList("mail@test.com"));
+            user.setPassword("password");
+            user.setEnabled(true);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(user);
+
+            // Check 400 is returned and a message indicating that username is required
+            this.mockMvc.perform(put("/srv/api/users")
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andDo(result -> {
+                    if (result.getResponse().getStatus() != 400) {
+                        System.err.println(invalidName + " has been accepted as user name and it shouldn't");
+                    }
+                })
+                .andExpect(jsonPath("$.description", is("username may only contain alphanumeric "
+                    + "characters or single hyphens, single at signs or single dots. Cannot begin or end with a "
+                    + "hyphen, at sign or dot.")))
+                .andExpect(status().is(400));
+        }
+    }
+
+
+    @Test
     public void resetPassword() throws Exception {
         User user = _userRepo.findOneByUsername("testuser-editor");
         Assert.assertNotNull(user);
@@ -461,6 +500,50 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void updateUserInvalidUsername() throws Exception {
+        List<String> invalidNames = Lists.newArrayList("--invalidusername", "--invalidName", "_invalidName",
+            "invalidName_", ".invalidName", "invalidName.", "@invalidName", "invalidName@", "invalid@@Name",
+            "invalid__Name", "invalid--Name", "invalidName-", "invalid..Name",
+            "?nvalidName", "invälidName");
+
+        User userToUpdate = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull(userToUpdate);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        for (String invalidName : invalidNames) {
+
+            UserDto user = new UserDto();
+            user.setUsername(invalidName);
+            user.setName(userToUpdate.getName() + "-updated");
+            user.setProfile(userToUpdate.getProfile().toString());
+            user.setGroupsEditor(Collections.singletonList("2"));
+            user.setEmail(new ArrayList<>(userToUpdate.getEmailAddresses()));
+            user.setEnabled(true);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(user);
+
+
+
+            this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andDo(result -> {
+                    if (result.getResponse().getStatus() != 400) {
+                        System.err.println(invalidName + " has been accepted as user name and it shouldn't");
+                    }
+                })
+                .andExpect(status().is(400))
+                .andExpect(jsonPath("$.description", is("username may only contain alphanumeric "
+                    + "characters or single hyphens, single at signs or single dots. Cannot begin or end with a "
+                    + "hyphen, at sign or dot.")));
+        }
+    }
+
     public void updateUserByUserAdminAllowed() throws Exception {
         // User admin in Group test
         User loginUser = _userRepo.findOneByUsername("testuser-useradmin-testgroup");
