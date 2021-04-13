@@ -617,6 +617,8 @@
     "optimizeIndexHelp": "Optimize the lucene index.  This is ran automatically typically but can be forced if odd search results occur.",
     "os.arch": "System architecture",
     "os.name": "System name",
+    "patternGroupName": "Group name may only contain alphanumeric characters or single hyphens. Cannot begin or end with a hyphen.",
+    "patternUserName": "Username may only contain alphanumeric characters or single hyphens, single at signs or single dots. Cannot begin or end with a hyphen, at sign or dot.",
     "prefix": "Prefix",
     "process":"process",
     "processRecommendedOnHostChange": "Update metadata records",
