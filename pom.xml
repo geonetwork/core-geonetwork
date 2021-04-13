@@ -1186,6 +1186,18 @@
         <artifactId>jsoup</artifactId>
         <version>1.13.1</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.jasypt</groupId>
+        <artifactId>jasypt</artifactId>
+        <version>${jasypt.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jasypt</groupId>
+        <artifactId>jasypt-hibernate4</artifactId>
+        <version>${jasypt.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -1580,5 +1592,6 @@
     <xbean.version>3.18</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.5.9</httpcomponents.version>
+    <jasypt.version>1.9.3</jasypt.version>
   </properties>
 </project>

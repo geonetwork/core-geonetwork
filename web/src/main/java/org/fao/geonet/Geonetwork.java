@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -186,6 +186,8 @@ public class Geonetwork implements ApplicationHandler {
         final GeonetworkDataDirectory dataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
         dataDirectory.init(webappName, appPath, handlerConfig, context.getServlet());
 
+
+
         // Get config handler properties
         String systemDataDir = handlerConfig.getMandatoryValue(Geonet.Config.SYSTEM_DATA_DIR);
         String thesauriDir = handlerConfig.getMandatoryValue(Geonet.Config.CODELIST_DIR);
@@ -195,6 +197,11 @@ public class Geonetwork implements ApplicationHandler {
         logger.info("Data directory: " + systemDataDir);
 
         setProps(appPath, handlerConfig);
+
+        // Initialize password encryptor
+        logger.info("Initializing database password encryptor");
+        final EncryptorInitializer encryptorInitializer = _applicationContext.getBean(EncryptorInitializer.class);
+        encryptorInitializer.init(dataDirectory);
 
         importDatabaseData(context);
 

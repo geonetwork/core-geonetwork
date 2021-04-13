@@ -204,4 +204,10 @@
     <bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>
 -->
 
+  <bean id="strongEncryptor"
+        class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor" />
+
+  <bean id="encryptorInitialiser"
+        class="org.fao.geonet.EncryptorInitializer" />
+
 </beans>

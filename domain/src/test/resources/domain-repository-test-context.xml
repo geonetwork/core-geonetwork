@@ -80,4 +80,13 @@
     <entry key="hibernate.enable_lazy_load_no_trans" value="true"/>
   </util:map>
 
+  <bean id="strongEncryptor"
+        class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+    <property name="algorithm">
+      <value>PBEWithMD5AndDES</value>
+    </property>
+    <property name="password">
+      <value>jasypt</value>
+    </property>
+  </bean>
 </beans>
