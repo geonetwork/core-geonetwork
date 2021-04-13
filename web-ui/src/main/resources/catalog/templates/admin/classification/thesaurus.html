@@ -383,7 +383,7 @@
               <button class="btn btn-link"
                       data-ng-show="isNew() && thesaurusSuggestedNs != ''"
                       data-ng-click="useSuggestedNs()">
-                {{"use"|translate}} {{thesaurusSuggestedNs}} {{"asThesaurusIdentifier"|translate}}
+                {{"use"|translate}} {{thesaurusSuggestedNs | limitTo: 90}}{{thesaurusSuggestedNs.length > 90 ? '...' : ''}}
                 <i class="fa fa-double-angle-up"/>
               </button>
             </div>
