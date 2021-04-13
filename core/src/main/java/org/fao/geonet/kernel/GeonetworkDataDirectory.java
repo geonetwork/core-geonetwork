@@ -444,6 +444,27 @@ public class GeonetworkDataDirectory {
             }
         }
 
+        Path encryptorFolder = configDir.resolve(Geonet.File.ENCRYPTOR_DIR);
+        if (!Files.exists(encryptorFolder)) {
+            Log.info(Geonet.DATA_DIRECTORY, "     - Copying encryptor directory...");
+            try {
+                final Path srcEncryptorDir = getDefaultDataDir(webappDir).resolve("config").resolve(Geonet.File.ENCRYPTOR_DIR);
+                final Path destDir = this.configDir.resolve(Geonet.File.ENCRYPTOR_DIR);
+                // Copy encryptor dir if doesn't exist
+                if (!Files.exists(destDir)) {
+                    IO.copyDirectoryOrFile(srcEncryptorDir, destDir, true);
+                }
+
+            } catch (IOException e) {
+                Log.info(
+                    Geonet.DATA_DIRECTORY,
+                    "      - Error copying encryptor config directory: "
+                        + e.getMessage());
+                throw e;
+            }
+
+        }
+
         final Path locDir = webappDir.resolve("loc");
         if (!Files.exists(locDir)) {
             Files.createDirectories(locDir);

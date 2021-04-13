@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,9 +27,6 @@ import com.google.common.collect.Sets;
 
 import org.fao.geonet.entitylistener.HarvesterSettingEntityListenerManager;
 import org.hibernate.annotations.Type;
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -53,13 +50,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.fao.geonet.entitylistener.HarvesterSettingEntityListenerManager;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.Type;
-import org.hibernate.engine.internal.Cascade;
-
-import com.google.common.collect.Sets;
 
 /**
  * An entity representing a harvester configuration setting.
@@ -78,10 +70,18 @@ public class HarvesterSetting extends GeonetEntity {
     static final String ID_SEQ_NAME = "harvester_setting_id_seq";
     private static final HashSet<String> EXCLUDE_FROM_XML = Sets.newHashSet("valueAsBool", "valueAsInt");
 
-    private int _id;
-    private HarvesterSetting _parent;
-    private String _name;
-    private String _value;
+    private int id;
+    private HarvesterSetting parent;
+    private String name;
+    /**
+     * If the setting is not encrypted: value = storedValue, otherwise value contains the unencrypted value.
+     *
+     * Should be used the methods for value property. storedValue is managed in
+     * {@link org.fao.geonet.entitylistener.HarvesterSettingValueSetter}.
+     */
+    private String storedValue;
+    private String value;
+    private char encrypted = Constants.YN_FALSE;
 
     /**
      * Get the setting id. This is a generated value and as such new instances should not have this
@@ -93,7 +93,7 @@ public class HarvesterSetting extends GeonetEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(name = "id", nullable = false)
     public int getId() {
-        return _id;
+        return id;
     }
 
     /**
@@ -104,7 +104,7 @@ public class HarvesterSetting extends GeonetEntity {
      * @return this setting object
      */
     public HarvesterSetting setId(int id) {
-        this._id = id;
+        this.id = id;
         return this;
     }
 
@@ -117,7 +117,7 @@ public class HarvesterSetting extends GeonetEntity {
     public
     @Nullable
     HarvesterSetting getParent() {
-        return _parent;
+        return parent;
     }
 
     /**
@@ -129,7 +129,7 @@ public class HarvesterSetting extends GeonetEntity {
     public
     @Nonnull
     HarvesterSetting setParent(@Nullable HarvesterSetting parent) {
-        this._parent = parent;
+        this.parent = parent;
         return this;
     }
 
@@ -142,7 +142,7 @@ public class HarvesterSetting extends GeonetEntity {
     public
     @Nonnull
     String getName() {
-        return _name;
+        return name;
     }
 
     /**
@@ -154,7 +154,7 @@ public class HarvesterSetting extends GeonetEntity {
     public
     @Nonnull
     HarvesterSetting setName(@Nonnull String name) {
-        this._name = name;
+        this.name = name;
         return this;
     }
 
@@ -167,23 +167,33 @@ public class HarvesterSetting extends GeonetEntity {
     // this is a work around for postgres so postgres can correctly load clobs
     public
     @Nullable
-    String getValue() {
-        return _value;
+    String getStoredValue() {
+        return storedValue;
     }
 
     /**
-     * Set the value of setting with a boolean.
+     * Set the value of setting.
      *
      * @param value the new value
      * @return this setting object
      */
-    public HarvesterSetting setValue(boolean value) {
-        return setValue(String.valueOf(value));
+    public HarvesterSetting setStoredValue(@Nullable String value) {
+        this.storedValue = value;
+        return this;
     }
 
-    public HarvesterSetting setValue(@Nullable String value) {
-        this._value = value;
-        return this;
+    /**
+     * Get the values as a boolean. Returns false if the values is not a boolean.
+     *
+     * @return the values as a boolean
+     * @throws NullPointerException if the value is null.
+     */
+    @Transient
+    public boolean getValueAsBool() throws NullPointerException {
+        if (getValue() == null) {
+            throw new NullPointerException("Setting value of " + getName() + " is null");
+        }
+        return Boolean.parseBoolean(value);
     }
 
     /**
@@ -201,27 +211,56 @@ public class HarvesterSetting extends GeonetEntity {
     }
 
     /**
-     * Set the value of setting with an integer.
-     *
-     * @param value the new value
-     * @return this setting object
+     * For backwards compatibility we need the activated column to be either 'n' or 'y'.
+     * This is a workaround to allow this until future
+     * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
-    public HarvesterSetting setValue(int value) {
-        return setValue(String.valueOf(value));
+    @Column(name = "encrypted", nullable = false, length = 1, columnDefinition="char default 'n'")
+    protected char getEncrypted_JpaWorkaround() {
+        return encrypted;
     }
 
     /**
-     * Get the values as a boolean. Returns false if the values is not a boolean.
+     * Set the column value. Constants.YN_ENABLED for true Constants.YN_DISABLED for false.
      *
-     * @return the values as a boolean
-     * @throws NullPointerException if the value is null.
+     * @param encryptedValue the column value. Constants.YN_ENABLED for true Constants.YN_DISABLED for false.
+     * @return
+     */
+    protected void setEncrypted_JpaWorkaround(char encryptedValue) {
+        encrypted = encryptedValue;
+    }
+
+    /**
+     * Return true if the setting is public.
+     *
+     * @return true if the setting is public.
      */
     @Transient
-    public boolean getValueAsBool() throws NullPointerException {
-        if (getValue() == null) {
-            throw new NullPointerException("Setting value of " + getName() + " is null");
-        }
-        return Boolean.parseBoolean(_value);
+    public boolean isEncrypted() {
+        return Constants.toBoolean_fromYNChar(getEncrypted_JpaWorkaround());
+    }
+
+    /**
+     * Set true if the setting is private.
+     *
+     * @param encrypted true if the setting is private.
+     */
+    public HarvesterSetting setEncrypted(boolean encrypted) {
+        setEncrypted_JpaWorkaround(Constants.toYN_EnabledChar(encrypted));
+        return this;
+    }
+
+    @Transient
+    public String getValue() {
+        return value;
+    }
+
+    public HarvesterSetting setValue(@Nullable String value) {
+        this.value = value;
+        // Required to trigger PreUpdate event in  {@link org.fao.geonet.entitylistener.SettingEntityListenerManager},
+        // otherwise doesn't work with transient properties
+        this.setStoredValue(value);
+        return this;
     }
 
     @Override
@@ -231,6 +270,6 @@ public class HarvesterSetting extends GeonetEntity {
 
     @Override
     public String toString() {
-        return "Setting [id=" + _id + ", name=" + _name + ", value=" + _value + "]";
+        return "Setting [id=" + id + ", name=" + name + ", value=" + value + "]";
     }
 }

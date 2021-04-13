@@ -29,8 +29,11 @@ import org.fao.geonet.api.JsonFieldNamingStrategy;
 import org.fao.geonet.domain.MapServer;
 import org.fao.geonet.repository.MapServerRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.hibernate5.encryptor.HibernatePBEEncryptorRegistry;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -66,6 +69,16 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
     @Before
     public void setUp() {
         createTestData();
+    }
+
+    @BeforeClass
+    public static void init() {
+        StandardPBEStringEncryptor strongEncryptor = new StandardPBEStringEncryptor();
+        strongEncryptor.setPassword("testpassword");
+
+        HibernatePBEEncryptorRegistry registry =
+            HibernatePBEEncryptorRegistry.getInstance();
+        registry.registerPBEStringEncryptor("STRING_ENCRYPTOR", strongEncryptor);
     }
 
     @Test

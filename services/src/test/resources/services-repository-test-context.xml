@@ -62,4 +62,13 @@
         class="org.fao.geonet.api.records.formatters.cache.NoCachingStore">
   </bean>
 
+  <bean id="strongEncryptor"
+        class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+    <property name="algorithm">
+      <value>PBEWithMD5AndDES</value>
+    </property>
+    <property name="password">
+      <value>jasypt</value>
+    </property>
+  </bean>
 </beans>

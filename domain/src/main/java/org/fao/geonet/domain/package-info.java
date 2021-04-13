@@ -21,10 +21,28 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
+
 /**
  * Domain objects geonetwork.  These are JPA entities and are configured via javax.persistence
  * annotations.
  *
  * @author Jesse
  */
+@TypeDefs
+    ({
+        @TypeDef(
+            name="encryptedString",
+            typeClass= EncryptedStringType.class,
+            parameters={
+                @Parameter(name="encryptorRegisteredName",
+                    value="STRING_ENCRYPTOR")
+            }
+        )
+    })
+
 package org.fao.geonet.domain;
+
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.jasypt.hibernate5.type.EncryptedStringType;
