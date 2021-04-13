@@ -78,7 +78,7 @@ public abstract class JeevesException extends RuntimeException {
         Element error = new Element(Constants.ERROR)
             .addContent(new Element("message").setText(
                 msg == null ? 
-                    "" : msg.replaceAll(XML10_ILLEGAL_CHAR_PATTERN, "")))
+                    "" : msg.replaceAll(XML11_ILLEGAL_CHAR_PATTERN, "")))
             .addContent(new Element("class").setText(cls))
             .addContent(getStackTrace(t, 10));
 
