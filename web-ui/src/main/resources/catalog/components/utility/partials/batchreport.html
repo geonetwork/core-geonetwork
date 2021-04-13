@@ -65,7 +65,7 @@
             <ul>
               <li data-ng-repeat="value in errors">
                 <label>{{value.message}}</label>
-                <pre>{{value.stack}}</pre>
+                <pre data-ng-if="value.stack != ''">{{value.stack}}</pre>
               </li>
             </ul>
           </td>
