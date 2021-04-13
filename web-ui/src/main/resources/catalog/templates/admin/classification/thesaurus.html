@@ -359,14 +359,6 @@
                      id="gn-thesaurus-title" data-ng-model="thesaurusSelected.title"
                      data-ng-required="true" />
             </div>
-
-            <div class="form-group" data-ng-class="gnCreateThesaurus.filename.$error.required ? 'has-error' : ''">
-              <label class="control-label" data-translate="">thesaurusIdentifier</label>
-              <input type="text" name="filename" class="form-control" data-ng-disabled="!isNew()"
-                     data-ng-keyup="computeThesaurusNs()"
-                     data-ng-model="thesaurusSelected.filename"
-                     data-ng-required="true"/>
-            </div>
             <div class="form-group">
               <label class="control-label" data-translate="">thesaurusClass</label>
               <div
@@ -375,18 +367,25 @@
                 data-gn-schema-info="mri:MD_KeywordTypeCode"
                 lang="lang"></div>
             </div>
-
+            <div class="form-group" data-ng-class="gnCreateThesaurus.filename.$error.required ? 'has-error' : ''">
+              <label class="control-label" data-translate="">thesaurusIdentifier</label>
+              <input type="text" name="filename" class="form-control" data-ng-disabled="!isNew()"
+                     data-ng-keyup="computeThesaurusNs()"
+                     data-ng-model="thesaurusSelected.filename"
+                     data-ng-required="true"/>
+            </div>
             <div class="form-group" data-ng-class="gnCreateThesaurus.defaultNamespace.$error.required ? 'has-error' : ''">
               <label class="control-label" data-translate="">thesaurusNamespace</label>
               <input type="text" name="defaultNamespace" class="form-control"
                      data-ng-disabled="!isNew()"
                      data-ng-model="thesaurusSelected.defaultNamespace"
                      data-ng-required="true"/>
-              <p class="help-block" data-ng-show="isNew() && thesaurusSuggestedNs != ''"
-                data-ng-click="useSuggestedNs()">
-                {{"use"|translate}} {{thesaurusSuggestedNs}} {{"asThesaurusIdentifier"|translate}}
+              <button class="btn btn-link"
+                      data-ng-show="isNew() && thesaurusSuggestedNs != ''"
+                      data-ng-click="useSuggestedNs()">
+                {{"use"|translate}} {{thesaurusSuggestedNs | limitTo: 90}}{{thesaurusSuggestedNs.length > 90 ? '...' : ''}}
                 <i class="fa fa-double-angle-up"/>
-              </p>
+              </button>
             </div>
           </form>
         </div>

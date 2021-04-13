@@ -62,7 +62,7 @@ public class Add extends NotInReadOnlyModeService {
 
         String fname = Util.getParam(params, "fname");
         String tname = Util.getParam(params, "tname");
-        String tnamespace = Util.getParam(params, "tns");
+        String tnamespace = Util.getParam(params, "tns", "");
         String dname = Util.getParam(params, "dname");
         String type = Util.getParam(params, "type");
         String activated = Util.getParam(params, "activated", "y");

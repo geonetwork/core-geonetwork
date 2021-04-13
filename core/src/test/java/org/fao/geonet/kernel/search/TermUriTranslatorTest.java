@@ -23,18 +23,25 @@
 
 package org.fao.geonet.kernel.search;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.SingleThesaurusFinder;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusFinder;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.openrdf.sesame.config.ConfigurationException;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TermUriTranslatorTest {
 
@@ -44,6 +51,17 @@ public class TermUriTranslatorTest {
             _isoLanguagesMap639.put("de", "ger");
         }
     };
+
+    @Before
+    public void setup() {
+        final ConfigurableApplicationContext applicationContext = Mockito.mock(ConfigurableApplicationContext.class);
+        ApplicationContextHolder.set(applicationContext);
+
+        SettingManager settingManager = mock(SettingManager.class);
+        when(settingManager.getNodeURL())
+            .thenReturn("http://localhost:8080/geonetwork/srv/");
+        Mockito.when(applicationContext.getBean(SettingManager.class)).thenReturn(settingManager);
+    }
 
     @Test
     public void testTermWithPreferredLabelForLanguage() throws IOException, ConfigurationException {
