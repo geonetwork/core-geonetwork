@@ -276,6 +276,15 @@
               scope.getTitle = function(link) {
                 return link.title['#text'] || link.title;
               };
+              scope.getBadgeLabel = function(mainType, r) {
+                if (r.protocol && r.protocol.indexOf('WWW:DOWNLOAD:') >= 0) {
+                  return r.protocol.replace('WWW:DOWNLOAD:', '');
+                } else if (mainType.match(/W([MCF]|MT)S.*|ESRI:REST/)) {
+                  return mainType.replace('SERVICE', '');
+                } else {
+                  return '';
+                }
+              };
               scope.hasAction = function(mainType) {
                 var fn = gnRelatedResources.map[mainType].action;
                 // If function name ends with ToMap do not display the action

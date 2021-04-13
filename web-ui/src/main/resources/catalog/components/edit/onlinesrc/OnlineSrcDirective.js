@@ -508,6 +508,7 @@
                 scope.layers = null;
                 scope.mapId = 'gn-thumbnail-maker-map';
                 scope.map = null;
+                scope.dataFormats = null;
 
                 scope.searchObj = {
                   internal: true,
@@ -713,6 +714,8 @@
                       getTypeConfig(linkToEdit) :
                       getType(linkType);
 
+                    scope.dataFormats = gnCurrentEdit.dataFormats;
+
                     if (gnCurrentEdit.mdOtherLanguages) {
                        scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
                        scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
@@ -834,7 +837,25 @@
                     gnSchemaManagerService.getEditorAssociationPanelConfig(
                       gnCurrentEdit.schema,
                       gnCurrentEdit.associatedPanelConfigId).then(function (r) {
-                      scope.config = r.config;
+                      scope.config = angular.copy(r.config);
+                      scope.config.types = [];
+                      for (var i = 0; i < r.config.types.length; i ++) {
+                        var c = r.config.types[i];
+                        if (c.extendWithDataFormats) {
+                          var labelPrefix = $translate.instant('recordFormatDownload');
+                          for (var j = 0; j < scope.gnCurrentEdit.dataFormats.length; j ++) {
+                            var f = scope.gnCurrentEdit.dataFormats[j],
+                              option = angular.copy(c);
+
+                            option.label = labelPrefix + f.label;
+                            option.fields.protocol.value = f.value;
+                            scope.config.types.push(option);
+                          }
+                        } else {
+                          scope.config.types.push(c);
+                        }
+                      }
+
 
                       if (withInit) {
                         init();
@@ -1119,6 +1140,11 @@
                       // Those parameters are object.
                       scope.params.name = '';
                       scope.params.desc = '';
+                    }
+                    if (scope.params.function === ''
+                      && scope.params.protocol
+                      && scope.params.protocol.indexOf('DOWNLOAD') !== -1) {
+                      scope.params.function = 'download';
                     }
                     scope.loadCurrentLink();
                   }
