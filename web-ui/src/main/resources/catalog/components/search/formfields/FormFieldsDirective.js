@@ -610,17 +610,28 @@
               var allowBlank = attrs['allowBlank'] == true;
 
               var addBlankValueAndSetDefault = function() {
-                var blank = {label: '', code: ''};
+                var blank = {label: '', code: ''},
+                    isCurrentValueInList = false;
                 if (scope.infos != null && scope.infos.length &&
                     allowBlank) {
                   scope.infos.unshift(blank);
                 }
                 // Search default value
                 angular.forEach(scope.infos, function(h) {
+                  var id = h.code || h.value; // codelist or helper
                   if (h.isDefault === true) {
-                    defaultValue = h.code;
+                    defaultValue = id;
+                  }
+                  if (scope.selectedInfo != ''
+                    && id === scope.selectedInfo) {
+                    isCurrentValueInList = true;
                   }
                 });
+
+                // Add an option if the current value is not in the list
+                if(scope.infos && !isCurrentValueInList) {
+                  scope.infos.push({label: scope.selectedInfo, code: scope.selectedInfo});
+                }
 
                 // If no blank value allowed select default or first
                 // If no value defined, select default or blank one
@@ -653,13 +664,23 @@
                 function(n, o) {
                   appendExtraOptions();
                 });
+              scope.$watch('selectedInfo',
+                function(n, o) {
+                  scope.infos = angular.copy(baseList);
+                  appendExtraOptions();
+                  addBlankValueAndSetDefault();
+                });
 
+              var isLabelSet = false;
               function appendExtraOptions() {
                 if(baseList && angular.isArray(scope.extraOptions)) {
-                  scope.extraOptions.unshift({
-                    value: '', label: $translate.instant('recordFormats'), disabled: true});
-                  scope.extraOptions.push({
-                    value: '', label: $translate.instant('commonProtocols'), disabled: true})
+                  if (!isLabelSet) {
+                    scope.extraOptions.unshift({
+                      value: '', label: $translate.instant('recordFormats'), disabled: true});
+                    scope.extraOptions.push({
+                      value: '', label: $translate.instant('commonProtocols'), disabled: true});
+                    isLabelSet = true;
+                  }
                   scope.infos = scope.extraOptions.concat(baseList);
                 }
               }
