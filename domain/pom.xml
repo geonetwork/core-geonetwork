@@ -119,7 +119,14 @@
       <artifactId>h2</artifactId>
       <scope>test</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.jasypt</groupId>
+      <artifactId>jasypt</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jasypt</groupId>
+      <artifactId>jasypt-hibernate4</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

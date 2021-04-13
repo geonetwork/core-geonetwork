@@ -63,7 +63,7 @@ public interface HarvesterSettingRepository extends GeonetRepository<HarvesterSe
      * @param value the setting value.
      * @return All settings with the given name and value.
      */
-    List<HarvesterSetting> findAllByNameAndValue(@Nonnull String name, @Nonnull String value);
+    List<HarvesterSetting> findAllByNameAndStoredValue(@Nonnull String name, @Nonnull String value);
 
     /**
      * Find the settings with the given name and value. Null is returned if not found.
@@ -73,5 +73,5 @@ public interface HarvesterSettingRepository extends GeonetRepository<HarvesterSe
      * @return The setting with the given name and value.
      */
     @Nullable
-    HarvesterSetting findOneByNameAndValue(@Nonnull String name, @Nonnull String value);
+    HarvesterSetting findOneByNameAndStoredValue(@Nonnull String name, @Nonnull String value);
 }
