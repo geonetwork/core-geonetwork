@@ -16,7 +16,7 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'cat','Record res
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'chi','Record restored.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'dut','Record restored.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'eng','Record restored.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'fre','Fiche restaur�.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'fre','Fiche restaurée.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'fin','Record restored.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'ger','Record restored.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'ita','Record restored.');
