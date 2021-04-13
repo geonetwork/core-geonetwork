@@ -148,4 +148,7 @@
                 select="'^WWW:DOWNLOAD.*|^FILE:GEO|FILE:RASTER|^DB:POSTGIS'"/>
   <xsl:variable name="layerMatchingPattern"
                 select="'^OGC:WMS.*'"/>
+
+
+  <xsl:variable name="metadataUserFeedbackEnabled" select="$envSystem/localrating/enable = 'advanced'" />
 </xsl:stylesheet>

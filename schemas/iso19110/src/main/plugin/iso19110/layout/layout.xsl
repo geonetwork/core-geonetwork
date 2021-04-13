@@ -27,6 +27,7 @@
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gfc="http://www.isotc211.org/2005/gfc"
                 xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-iso19110="http://geonetwork-opensource.org/xsl/functions/profiles/iso19110"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
@@ -75,7 +76,7 @@
     <xsl:apply-templates mode="mode-iso19110" select="*|@*"/>
   </xsl:template>
 
-  <xsl:template mode="mode-iso19110" match="gmd:*|gmx:*">
+  <xsl:template mode="mode-iso19110" match="gmd:*|gmx:*|gco:*|xlink:*">
     <xsl:apply-templates mode="mode-iso19139" select="*|@*">
       <xsl:with-param name="schema" select="'iso19139'"/>
       <xsl:with-param name="labels" select="$iso19139labels"/>

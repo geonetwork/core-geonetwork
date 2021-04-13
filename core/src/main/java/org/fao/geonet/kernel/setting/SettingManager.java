@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2013 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -31,7 +31,6 @@ import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.SettingDataType;
 import org.fao.geonet.domain.Setting_;
-import org.fao.geonet.domain.Source;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SortUtils;
@@ -422,9 +421,9 @@ public class SettingManager {
     }
 
     static public boolean isPortRequired(String protocol, String port) {
-        if("http".equals(protocol) && "80".equals(port)) {
+        if(Geonet.HttpProtocol.HTTP.equals(protocol) && String.valueOf(Geonet.DefaultHttpPort.HTTP).equals(port)) {
             return false;
-        } else if("https".equals(protocol) && "443".equals(port)) {
+        } else if(Geonet.HttpProtocol.HTTPS.equals(protocol) && String.valueOf(Geonet.DefaultHttpPort.HTTPS).equals(port)) {
             return false;
         } else {
             return true;

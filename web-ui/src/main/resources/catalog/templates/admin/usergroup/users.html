@@ -94,9 +94,11 @@
                  class="form-group">
               <label class="control-label col-sm-3" data-translate="">username</label>
               <div class="col-sm-9">
+
                 <input type="text" id="username" name="username"
                        class="form-control"
                        data-ng-model="userSelected.username"
+                       data-ng-pattern="/^[a-zA-Z0-9]+([-_.@]?[a-zA-Z0-9]+)*$/"
                        data-ng-required="true"
                        required=""
                        data-ng-model-options="{debounce: 200}"
@@ -109,6 +111,10 @@
                 <p class="help-block"
                    ng-if="gnUserEdit.username.$error.gnDuplicateCheck"
                    data-translate="">duplicatedValueFoundUserName</p>
+                <p class="help-block"
+                   ng-if="gnUserEdit.username.$error.pattern"
+                   data-translate="">patternUserName</p>
+
               </div>
             </div>
             <!-- Password are disabled when updating user -->
