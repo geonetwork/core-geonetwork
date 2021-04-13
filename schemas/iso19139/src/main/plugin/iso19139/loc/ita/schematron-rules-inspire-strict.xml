@@ -28,23 +28,24 @@
     <div>Specification:</div>
   </report.M44.spec>
   <assert.M44.date>
-    <div>Conformance report requires date.</div>
+    <div>Il rapporto di Conformità richiede una data.</div>
   </assert.M44.date>
   <assert.M44.title>
-    <div>Conformance report requires a title in the metadata language</div>
+    <div>Il rapporto di Conformità richiede un titolo nella lingua del metadato</div>
   </assert.M44.title>
+  <conformity>Conformità</conformity>
   <assert.M44.conformityActual>
-    <div>Invalid Conformity Title:
+    <div>Titolo di Conformità errato:
       <br></br>
     </div>
   </assert.M44.conformityActual>
   <assert.M44.conformityExpected>
-    <div><br></br>Expected Conformity Title:
+    <div><br></br>Titolo di Conformità atteso:
       <br></br>
     </div>
   </assert.M44.conformityExpected>
   <report.M44.degree>
-    <div>Degree of conformity found:</div>
+    <div>Grado di Conformità trovato:</div>
   </report.M44.degree>
 
 </strings>

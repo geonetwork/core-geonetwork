@@ -49,7 +49,7 @@
     <sch:pattern>
         <sch:title>$loc/strings/conformity</sch:title>
         <!-- Check specification names and status -->
-        <sch:rule context="//gmd:dataQualityInfo/*[name() != 'geonet:element']">
+        <sch:rule context="//gmd:dataQualityInfo/*[namespace-uri() != 'http://www.fao.org/geonetwork']">
 
             <sch:let name="lang" value="normalize-space(/*/gmd:language/gco:CharacterString|/*/gmd:language/gmd:LanguageCode/@codeListValue)" />
             <sch:let name="langCodeMap">
