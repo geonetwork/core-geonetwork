@@ -5,7 +5,7 @@
       <input type="checkbox"
              id="{{m}}-checkbox"
              data-ng-model="mCfg.enabled"/>&nbsp;
-      <h2 for="{{m}}-checkbox">{{('ui-mod-' + m) | translate}}</h2>
+      <h2><label for="{{m}}-checkbox">{{('ui-mod-' + m) | translate}}</label></h2>
     </legend>
     <legend data-ng-if="mCfg.enabled === undefined">
       <h2>{{('ui-mod-' + m) | translate}}</h2>
@@ -653,7 +653,7 @@
             </label>
           </div>
         </div>
-        
+
       </div>
 
       <div data-ng-switch-when="defaultSearchString">
