@@ -43,11 +43,18 @@ public class SettingValueSetter implements GeonetworkEntityListener<Setting> {
 
     @Override
     public void handleEvent(final PersistentEventType type, final Setting entity) {
-        if ((type == PersistentEventType.PrePersist) || (type == PersistentEventType.PreUpdate)) {
+        if ((type == PersistentEventType.PrePersist)) {
             if (entity.isEncrypted() && StringUtils.isNotEmpty(entity.getValue())) {
                 entity.setStoredValue(this.encryptor.encrypt(entity.getValue()));
             } else {
                 entity.setStoredValue(entity.getValue());
+            }
+        } else if (type == PersistentEventType.PreUpdate) {
+            // PreUpdate should deal with storedValue, at least during the startup of the
+            // application, the transient value is cleared in PreUpdate and storedValue has the
+            // correct value.
+            if (entity.isEncrypted() && StringUtils.isNotEmpty(entity.getStoredValue())) {
+                entity.setStoredValue(this.encryptor.encrypt(entity.getStoredValue()));
             }
 
         } else if ((type == PersistentEventType.PostLoad) ||  (type == PersistentEventType.PostUpdate)) {
