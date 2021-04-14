@@ -908,7 +908,6 @@
     "system/server/host-help": "Hostitel a port serveru se používají k vytvoření URL pro server systému GeoNetwork. Používají se například při editování metadat k vytvoření zdrojových odkazů a při obnově funkcionalit serveru při požadavku CS/W.",
     "system/server/port": "Port",
     "system/server/protocol": "Preferovaný protokol",
-    "system/server/securePort": "Zabezpečit port",
     "system/server/log": "Úroveň protokolu",
     "system/server/timeZone": "Časové pásmo",
     "system/server/timeZone-help": "<b>V současné době se používá pouze ve sběračích dat</b>. Nastaví časové pásmo použité k interpretaci času v cronovém výrazu specifikovaném v poli Frekvence sběračů dat. Pokud není nastaveno, použije se výchozí časové pásmo JVM. GeoNetwork používá definice časového pásma dostupné v JVM. Definice časových pásem se mohou často měnit. Aktualizujte svůj JVM a získejte nejnovější definici časových pásem nebo použijte nástroj tzupdater, který je k dispozici ke stažení na stránce <a href='http://www.oracle.com/technetwork/java/javase/downloads/index.html' target='_blank'>Java SE Download Page</a>.",

@@ -21,24 +21,43 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.services;
+package org.fao.geonet.api.records.model;
 
-import org.fao.geonet.AbstractCoreIntegrationTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.web.WebAppConfiguration;
+public class MetadataBatchApproveParameter {
+    public String[] getUuids() {
+        return uuids;
+    }
 
-/**
- * Adds extra bean required for services tests.
- *
- * User: Jesse Date: 10/17/13 Time: 9:53 AM
- */
-@WebAppConfiguration()
-@ContextConfiguration(inheritLocations = true,
-    locations = {"classpath:services-repository-test-context.xml", "classpath:services-web-test-context.xml"})
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public abstract class AbstractServiceIntegrationTest extends AbstractCoreIntegrationTest {
-    public static final String API_JSON_EXPECTED_ENCODING = "application/json;charset=UTF-8";
-    public static final String API_XML_EXPECTED_ENCODING = "application/xml";
-    public static final String API_PNG_EXPECTED_ENCODING = "image/png";
+    public void setUuids(String[] uuids) {
+        this.uuids = uuids;
+    }
+
+    public String getBucket() {
+        return bucket;
+    }
+
+    public void setBucket(String bucket) {
+        this.bucket = bucket;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public boolean isDirectApproval() {
+        return directApproval;
+    }
+
+    public void setDirectApproval(boolean directApproval) {
+        this.directApproval = directApproval;
+    }
+
+    private  String[] uuids;
+    private String bucket;
+    private String message;
+    private boolean directApproval;
 }

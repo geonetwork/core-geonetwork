@@ -908,7 +908,6 @@
     "system/server/host-help": "Palvelimen isäntää ja porttia käytetään URLien luontiin. Esimerkiksi niitä käytetään metatietoeditoinnissa resurssilinkkien luontiin ja palautettaessa palvelimen tietoja CSW-pyynnössä.",
     "system/server/port": "Portti",
     "system/server/protocol": "Suosittava protokolla",
-    "system/server/securePort": "Secure-portti",
     "system/server/log": "Lokituksen taso",
     "system/server/timeZone": "Timezone",
     "system/server/timeZone-help": "<b>Currently used only in the harvesters</b>. Sets the timezone used to interpret the time in cron expression specified in the harvesters Frequency field. If not set the JVM default timezone will be used. GeoNetwork uses the timezone definitions available in the JVM. Time zones definitions can change frequently. Please keep updated your JVM to get the latest timezones definition or use the tzupdater tool available for download from the <a href='http://www.oracle.com/technetwork/java/javase/downloads/index.html' target='_blank'>Java SE Download Page</a>.",

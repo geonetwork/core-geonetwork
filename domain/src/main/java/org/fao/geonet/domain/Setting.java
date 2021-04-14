@@ -51,6 +51,7 @@ public class Setting extends GeonetEntity {
     private SettingDataType dataType = SettingDataType.STRING;
     private int position = 0;
     private char internal = Constants.YN_TRUE;
+    private char editable = Constants.YN_TRUE;
 
     @Id
     @Column(name = "name", nullable = false, length = 255/* mysql cannot accept it any bigger if it is to be the id */)
@@ -135,6 +136,47 @@ public class Setting extends GeonetEntity {
         setInternal_JpaWorkaround(Constants.toYN_EnabledChar(internal));
         return this;
     }
+
+    /**
+     * For backwards compatibility we need the activated column to be either 'n' or 'y'. This is a
+     * workaround to allow this until future versions of JPA that allow different ways of
+     * controlling how types are mapped to the database.
+     */
+    @Column(name = "editable", nullable = false, length = 1, columnDefinition = "char default 'y'")
+    protected char getEditable_JpaWorkaround() {
+        return editable;
+    }
+
+    /**
+     * Set the column value. Constants.YN_ENABLED for true Constants.YN_DISABLED for false.
+     *
+     * @param editableValue the column value. Constants.YN_ENABLED for true Constants.YN_DISABLED
+     *                      for false.
+     */
+    protected void setEditable_JpaWorkaround(char editableValue) {
+        editable = editableValue;
+    }
+
+    /**
+     * Return true if the setting is editable in the administration UI.
+     *
+     * @return true if the setting is editable.
+     */
+    @Transient
+    public boolean isEditable() {
+        return Constants.toBoolean_fromYNChar(getEditable_JpaWorkaround());
+    }
+
+    /**
+     * Set true if the setting is private.
+     *
+     * @param internal true if the setting is private.
+     */
+    public Setting setEditable(boolean editable) {
+        setInternal_JpaWorkaround(Constants.toYN_EnabledChar(editable));
+        return this;
+    }
+
 
     @Override
     public String toString() {

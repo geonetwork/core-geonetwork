@@ -149,13 +149,18 @@
                                                   select="."/>,
     </xsl:for-each>
 
+    "dateCreated": [
     <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:dateType/*/@codeListValue='creation']/*/gmd:date/*/text()">
-		  "dateCreated": "<xsl:value-of select="."/>",
-    </xsl:for-each>
+       "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
+    "dateModified": [
     <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:dateType/*/@codeListValue='revision']/*/gmd:date/*/text()">
-		"dateModified": "<xsl:value-of select="."/>",
-    </xsl:for-each>
-    
+    "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
+    "datePublished": [
+    <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:dateType/*/@codeListValue='publication']/*/gmd:date/*/text()">
+      "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>],
 		"thumbnailUrl": [
     <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*/gmd:fileName/*[. != '']">
     "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
@@ -170,7 +175,6 @@
     <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:edition/gco:CharacterString[. != '']">
       "version": "<xsl:value-of select="."/>",
     </xsl:for-each>
-
 
     <!-- Build a flat list of all keywords even if grouped in thesaurus. -->
     "keywords":[
@@ -226,10 +230,6 @@
     <xsl:if test="position() != last()">,</xsl:if>
     </xsl:for-each>]
 
-    <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:dateType/*/@codeListValue='publication']/*/gmd:date/*/text()">
-      ,"datePublished": "<xsl:value-of select="."/>"
-    </xsl:for-each>
-
 
     <!--
     The overall rating, based on a collection of reviews or ratings, of the item.
@@ -243,14 +243,14 @@
     -->
     <xsl:for-each select="gmd:distributionInfo">
     ,"distribution": [
-      <xsl:for-each select=".//gmd:onLine/*[gmd:linkage/gmd:URL != '']">
+      <xsl:for-each select=".//gmd:onLine/*[starts-with(gmd:linkage/gmd:URL,'http') or starts-with(gmd:linkage/gmd:URL,'//') or starts-with(gmd:linkage/gmd:URL,'ftp')]">
         <xsl:variable name="p" select="normalize-space(gmd:protocol/*/text())"/>
         {
-        "@type":"DataDownload",
-        "contentUrl":"<xsl:value-of select="gmd:linkage/gmd:URL/text()"/>",
-        "encodingFormat":"<xsl:value-of select="if ($p != '') then $p else gmd:protocol/*/@xlink:href"/>",
-        "name":"<xsl:value-of select="gmd:name/*/text()"/>",
-        "description":"<xsl:value-of select="gmd:description/*/text()"/>"
+         "@type":"DataDownload",
+         "contentUrl": "<xsl:value-of select="gn-fn-index:json-escape(normalize-space(gmd:linkage))"/>",
+         "encodingFormat":"<xsl:value-of select="gn-fn-index:json-escape(normalize-space(if ($p != '') then $p else gmd:protocol/*/@xlink:href))"/>",
+         "name": <xsl:apply-templates mode="toJsonLDLocalized" select="gmd:name"/>,
+         "description": <xsl:apply-templates mode="toJsonLDLocalized" select="gmd:description"/>
         }
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
@@ -268,29 +268,27 @@
     </xsl:if>
 
 
-
+    ,"spatialCoverage": [
     <xsl:for-each select="gmd:identificationInfo/*/gmd:extent/*[gmd:geographicElement]">
-    ,"spatialCoverage": {
-      "@type":"Place"
-      <xsl:for-each select="gmd:description[count(.//text() != '') > 0]">
-      ,"description": <xsl:apply-templates mode="toJsonLDLocalized"
-                                           select="."/>
-      </xsl:for-each>
-
-
-      <xsl:for-each select="gmd:geographicElement/gmd:EX_GeographicBoundingBox">
-        ,"geo": {
-          "@type":"GeoShape",
-          "box": "<xsl:value-of select="string-join((
-                                          gmd:southBoundLatitude/gco:Decimal|
-                                          gmd:westBoundLongitude/gco:Decimal|
-                                          gmd:northBoundLatitude/gco:Decimal|
-                                          gmd:eastBoundLongitude/gco:Decimal
-                                          ), ' ')"/>"
-        }
-      </xsl:for-each>
-    }
-    </xsl:for-each>
+      {"@type":"Place",
+        "description": [
+        <xsl:for-each select="gmd:description[count(.//text() != '') > 0]">
+          <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
+          <xsl:if test="position() != last()">,</xsl:if></xsl:for-each>
+          ], 
+        "geo": [
+          <xsl:for-each select="gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+              {"@type":"GeoShape",
+              "box": "<xsl:value-of select="string-join((
+                                              gmd:southBoundLatitude/gco:Decimal|
+                                              gmd:westBoundLongitude/gco:Decimal|
+                                              gmd:northBoundLatitude/gco:Decimal|
+                                              gmd:eastBoundLongitude/gco:Decimal
+                                              ), ' ')"/>"
+              }<xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>
+        ]}<xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>]
 
 
     <xsl:if test="count(gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent[normalize-space(.) != '']) > 0">
@@ -320,7 +318,7 @@
           <xsl:otherwise>
             {
               "@type": "CreativeWork",
-              "description": <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
+              "name": <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
             }
           </xsl:otherwise>
         </xsl:choose>
@@ -411,14 +409,14 @@
         <xsl:variable name="requestedValue"
                       select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString[@id = $requestedLanguageId]/text()"/>
         <xsl:value-of select="concat('&quot;',
-                              gn-fn-index:json-escape(
-                                if ($requestedValue != '') then $requestedValue else (gco:CharacterString|gmx:Anchor)),
+                              gn-fn-index:json-escape(normalize-space(
+                                if ($requestedValue != '') then $requestedValue else (gco:CharacterString|gmx:Anchor))),
                               '&quot;')"/>
       </xsl:when>
       <xsl:otherwise>
         <!-- A simple property value -->
         <xsl:value-of select="concat('&quot;',
-                              gn-fn-index:json-escape(gco:CharacterString|gmx:Anchor),
+                              gn-fn-index:json-escape(normalize-space(gco:CharacterString|gmx:Anchor)),
                               '&quot;')"/>
       </xsl:otherwise>
     </xsl:choose>

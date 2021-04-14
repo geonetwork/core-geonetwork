@@ -85,7 +85,17 @@
                 <span data-translate="">protocol</span>
               </label>
               <div class="col-sm-9">
-                <div id="gn-addonlinesrc-protocol-list"
+                <input type="text" data-ng-if="(params.linkType.fields.protocol.thesaurus != undefined) && (params.linkType.fields.protocol.thesaurus != '')"
+                       data-ng-model="params.protocol" class="form-control"
+                       name="protocol"
+                       data-ng-required="params.linkType.fields.protocol.required"
+                       data-init-on-load="true"
+                       data-gn-keyword-picker=""
+                       data-thesaurus-key="{{params.linkType.fields.protocol.thesaurus}}"
+                       data-order-by-id="true"
+                       lang="lang" />
+
+                <div id="gn-addonlinesrc-protocol-list" data-ng-if="(params.linkType.fields.protocol.thesaurus == undefined) || (params.linkType.fields.protocol.thesaurus == '')"
                      data-schema-info-combo="element"
                      data-init-on-load="true"
                      name="protocol"

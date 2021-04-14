@@ -118,6 +118,7 @@ goog.require('gn_alert');
           'paginationInfo': {
             'hitsPerPage': 20
           },
+          'mapFilterCollapsed': false,
           'facetsSummaryType': 'details',
           'defaultSearchString': '',
           'facetTabField': '',
@@ -569,6 +570,13 @@ goog.require('gn_alert');
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
 
+      $scope.isSelfRegisterPossible = function() {
+        return gnConfig['system.userSelfRegistration.enable'];
+      };
+
+      $scope.isHostDefined = function () {
+        return gnConfig['system.feedback.mailServer.hostIsDefined'];
+      };
 
       $scope.layout = {
         hideTopToolBar: false

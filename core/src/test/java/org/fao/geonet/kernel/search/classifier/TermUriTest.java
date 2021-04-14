@@ -24,13 +24,19 @@ package org.fao.geonet.kernel.search.classifier;
 
 import static org.fao.geonet.test.CategoryTestHelper.assertCategoryListEquals;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 
 import org.apache.lucene.facet.taxonomy.CategoryPath;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.context.ConfigurableApplicationContext;
 
 public class TermUriTest extends AbstractTermTest {
 
@@ -38,6 +44,14 @@ public class TermUriTest extends AbstractTermTest {
 
     @Before
     public void setup() throws Exception {
+        final ConfigurableApplicationContext applicationContext = Mockito.mock(ConfigurableApplicationContext.class);
+        ApplicationContextHolder.set(applicationContext);
+
+        SettingManager settingManager = mock(SettingManager.class);
+        when(settingManager.getNodeURL())
+            .thenReturn("http://localhost:8080/geonetwork/srv/");
+        Mockito.when(applicationContext.getBean(SettingManager.class)).thenReturn(settingManager);
+
         ThesaurusManager manager = mockThesaurusManagerWith("BroaderTerm.rdf");
         termUriClassifier = new TermUri(manager, "scheme");
     }

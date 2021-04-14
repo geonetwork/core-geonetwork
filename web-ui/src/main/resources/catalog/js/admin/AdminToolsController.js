@@ -27,9 +27,10 @@
 
   goog.require('gn_search');
   goog.require('gn_search_form_controller');
+  goog.require('gn_utility_service');
 
   var module = angular.module('gn_admintools_controller',
-      ['gn_search', 'gn_search_form_controller']);
+      ['gn_search', 'gn_search_form_controller', 'gn_utility_service']);
 
 
   module.controller('GnAdminToolsSearchController', [
