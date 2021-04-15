@@ -218,8 +218,7 @@ public class InspireValidationApi {
 
             // Use formatter to convert the record
             if (!schema.equals("iso19139")) {
-                try {
-                    ServiceContext context = ApiUtils.createServiceContext(request);
+                try (ServiceContext context = ApiUtils.createServiceContext(request)) {
                     Key key = new Key(metadata.getId(), "eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
 
                     final FormatterApi.FormatMetadata formatMetadata =
@@ -239,7 +238,13 @@ public class InspireValidationApi {
 
 
             md.detach();
+
+            // The following is unusual, we are creating a service context so it is our responsibility
+            // to ensure it is cleaned up.
+            //
+            // This is going to be accomplished by the scheduled InspireValidationRunnable
             ServiceContext context = ApiUtils.createServiceContext(request);
+          try {
             Attribute schemaLocAtt = schemaManager.getSchemaLocation(
                 "iso19139", context);
 
@@ -263,6 +268,10 @@ public class InspireValidationApi {
             threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));
 
             return testId;
+          } finally {
+            context.clearAsThreadLocal();
+            // context clear is handled scheduled InspireValidationRunnable above
+          }
         } catch (Exception e) {
             response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
             return "";
@@ -318,9 +327,7 @@ public class InspireValidationApi {
     ) throws Exception {
 
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
-        try {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
             if (inspireValidatorUtils.isReady(context, URL, testId)) {
                 Map<String, String> values = new HashMap<>();
 

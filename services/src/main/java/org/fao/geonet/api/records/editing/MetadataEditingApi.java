@@ -129,11 +129,12 @@ public class MetadataEditingApi {
             @ApiIgnore @ApiParam(hidden = true) HttpSession session,
             @ApiIgnore @ApiParam(hidden = true) @RequestParam Map<String, String> allRequestParams,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
 
         boolean showValidationErrors = false;
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
+
         ApplicationContext applicationContext = ApplicationContextHolder.get();
 
         // Start editing session
@@ -177,6 +178,7 @@ public class MetadataEditingApi {
                 showValidationErrors);
         buildEditorForm(currTab, session, allRequestParams, request, elMd, metadata.getDataInfo().getSchemaId(),
                 context, applicationContext, false, false, response);
+      }
     }
 
     @ApiOperation(value = "Save edits", notes = "Save the HTML form content.", nickname = "saveEdits")
@@ -200,8 +202,8 @@ public class MetadataEditingApi {
             @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession) throws Exception {
 
         Log.trace(Geonet.DATA_MANAGER, "Saving metadata editing with UUID " + metadataUuid);
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
         // ajaxEditUtils.preprocessUpdate(allRequestParams, context);
 
@@ -251,8 +253,8 @@ public class MetadataEditingApi {
         // --- change status as a result of this edit (use onEdit method)
         Log.trace(Geonet.DATA_MANAGER, " > Trigger status actions based on this edit");
         StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);
-        StatusActions sa = saf.createStatusActions(context);
-        sa.onEdit(iLocalId, minor);
+        StatusActions statusActions = saf.createStatusActions(context);
+        statusActions.onEdit(iLocalId, minor);
         Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
 
         if (StringUtils.isNotEmpty(data)) {
@@ -401,6 +403,7 @@ public class MetadataEditingApi {
             // After saving the form remove the information to remove the draft copy if the user cancels the editor
             context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);
         }
+      }
     }
 
     @ApiOperation(value = "Cancel edits", notes = "Cancel current editing session.", nickname = "cancelEdits")
@@ -414,12 +417,13 @@ public class MetadataEditingApi {
     public void cancelEdits(@ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
             @ApiIgnore @ApiParam(hidden = true) @RequestParam Map<String, String> allRequestParams,
             HttpServletRequest request, @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         DataManager dataMan = applicationContext.getBean(DataManager.class);
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
+
         dataMan.cancelEditingSession(context, String.valueOf(metadata.getId()));
+      }
     }
 
     @ApiOperation(value = "Add element", notes = "", nickname = "addElement")
@@ -437,10 +441,9 @@ public class MetadataEditingApi {
             @ApiIgnore @ApiParam(hidden = true) @RequestParam Map<String, String> allRequestParams,
             HttpServletRequest request, HttpServletResponse response,
             @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
 
         // -- build the element to be added
         // -- Here we do mark the element that is added
@@ -462,6 +465,7 @@ public class MetadataEditingApi {
 
         buildEditorForm(allRequestParams.get("currTab"), httpSession, allRequestParams, request, md,
                 metadata.getDataInfo().getSchemaId(), context, applicationContext, true, true, response);
+      }
     }
 
     @ApiOperation(value = "Reorder element", notes = "", nickname = "reorderElement")
@@ -478,11 +482,12 @@ public class MetadataEditingApi {
             @ApiParam(value = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
             @ApiIgnore @ApiParam(hidden = true) @RequestParam Map<String, String> allRequestParams,
             HttpServletRequest request, @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
 
         new AjaxEditUtils(context).swapElementEmbedded(ApiUtils.getUserSession(httpSession),
                 String.valueOf(metadata.getId()), ref, direction == Direction.down);
+      }
     }
 
     @ApiOperation(value = "Delete element", notes = "", nickname = "deleteElement")
@@ -499,14 +504,14 @@ public class MetadataEditingApi {
             @ApiParam(value = "Name of the parent.", required = true) @RequestParam String parent,
             @ApiParam(value = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
             HttpServletRequest request, @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         String id = String.valueOf(metadata.getId());
 
         for (int i = 0; i < ref.length; i++) {
             new AjaxEditUtils(context).deleteElementEmbedded(ApiUtils.getUserSession(httpSession), id, ref[i], parent);
         }
+      }
     }
 
     @ApiOperation(value = "Delete attribute", notes = "", nickname = "deleteAttribute")
@@ -522,11 +527,12 @@ public class MetadataEditingApi {
             @ApiParam(value = "Reference of the attribute to remove.", required = true) @RequestParam String ref,
             @ApiParam(value = "Should attributes be shown on the editor snippet?", required = false) @RequestParam(defaultValue = "false") boolean displayAttributes,
             HttpServletRequest request, @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
 
         new AjaxEditUtils(context).deleteAttributeEmbedded(ApiUtils.getUserSession(httpSession),
                 String.valueOf(metadata.getId()), ref);
+      }
     }
 
     private Element findRoot(Element element) {

@@ -92,8 +92,11 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
         }
     }
 
+    /** Import records for integration test */
     public static class ImportMetadata {
         private final AbstractCoreIntegrationTest testClass;
+
+        /** Integration test context */
         private ServiceContext context;
         private List<String> metadataIds = new ArrayList<>();
         private List<String> mefFilesToLoad = new ArrayList<>();

@@ -32,6 +32,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -100,12 +101,14 @@ public class MetadataVersionningApi {
             String metadataUuid,
         HttpServletRequest request
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
 
-        dataManager.versionMetadata(ApiUtils.createServiceContext(request),
+        dataManager.versionMetadata(context,
             String.valueOf(metadata.getId()), metadata.getXmlData(false));
 
         return new ResponseEntity(HttpStatus.CREATED);
+      }
     }
 
 
@@ -142,20 +145,19 @@ public class MetadataVersionningApi {
     ) throws Exception {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        try {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
 
             for (String uuid : records) {
             	if(!metadataRepository.existsMetadataUuid(uuid)) {
-                    report.incrementNullRecords();            		
+                    report.incrementNullRecords();
             	} else {
 	                for(AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
-		                if (!accessMan.canEdit(
-		                    ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
+		                if (!accessMan.canEdit(context, String.valueOf(metadata.getId()))) {
 		                    report.addNotEditableMetadataId(metadata.getId());
 		                } else {
-		                    dataManager.versionMetadata(ApiUtils.createServiceContext(request),
+		                    dataManager.versionMetadata(context,
 		                        String.valueOf(metadata.getId()), metadata.getXmlData(false));
 		                    report.incrementProcessedRecords();
 		                }

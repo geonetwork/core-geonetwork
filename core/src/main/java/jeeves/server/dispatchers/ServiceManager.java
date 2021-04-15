@@ -49,12 +49,14 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NotAllowedEx;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
 import org.fao.geonet.exceptions.ServiceNotMatchedEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.BLOB;
 import org.fao.geonet.utils.BinaryFile;
@@ -77,6 +79,9 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 //=============================================================================
 
@@ -356,43 +361,41 @@ public class ServiceManager {
      * Used to create an appContext placeholder service context used for initialization, background tasks and activities.
      *
      * This ServiceContext is used during initialization and is independent of any user session.
-     * This instance is the responsibility of JeevesEngine and is protected against being cleared.
+     * This instance is the responsibility of a specific manager and will produce a warning if an attempt is made
+     * to clear or assign a user session.
      *
      * @param appContext GeoNetwork Application Context
-     * @return new service context
+     * @return new service context with limited functionality
      */
-    public ServiceContext createAppHandlerServiceContext(ConfigurableApplicationContext appContext) {
-        ServiceContext context = new ServiceContext("AppHandler", appContext, htContexts, entityManager){
-            @Override
-            public void setIpAddress(String address) {
-                if( address != null && !"?".equals(address)) {
-                    warning("AppHandler context should not be associated with an ip address");
-                }
-                super.setIpAddress(address);
-            }
-
-            @Override
-            public void setUserSession(UserSession session) {
-                if( session != null){
-                    warning("AppHandler context should not be configured with user session");
-                }
-                super.setUserSession(session); // should probably not support association with  a user
-            }
-
-            public void clear() {
-                debug("AppHandler context cannot be cleared");
-            }
-        };
+    public ServiceContext.AppHandlerServiceContext createAppHandlerServiceContext(ConfigurableApplicationContext appContext) {
+        ServiceContext.AppHandlerServiceContext context = new ServiceContext.AppHandlerServiceContext("AppHandler", appContext, htContexts, entityManager);
         context.setBaseUrl(baseUrl);
-        context.setLanguage("?");
-        context.setUserSession(null);
-        context.setIpAddress("?");
         context.setMaxUploadSize(maxUploadSize);
         context.setServlet(servlet);
 
         return context;
     }
 
+    /**
+     * Used to create an appContext placeholder service context for a specific manager used for initialization, background tasks and activities.
+     *
+     * Previously a single AppHandler service context was shared managed by Jeeves.
+     *
+     * This instance is the responsibility of a specific manager and will produce a warning if an attempt is made
+     * to clear or assign a user session.
+     *
+     * @param appContext GeoNetwork Application Context
+     * @param manager Manager name such as AppContext or harvester
+     * @return new service context with limited functionality
+     */
+    public ServiceContext.AppHandlerServiceContext createAppHandlerServiceContext(String manager, ServiceContext parent) {
+        ServiceContext.AppHandlerServiceContext context = new ServiceContext.AppHandlerServiceContext(manager, parent.getApplicationContext(), htContexts, entityManager);
+        context.setBaseUrl(baseUrl);
+        context.setMaxUploadSize(maxUploadSize);
+        context.setServlet(servlet);
+
+        return context;
+    }
 
     /**
      * Used to create a serviceContext for later use, the object provided the new serviceContext is responsible
@@ -430,7 +433,16 @@ public class ServiceManager {
     /**
      * Create an internal service context, not associated with a user or ip address.
      *
-     * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup:
+     * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup.
+     *
+     * Using auto closable:
+     * <pre><code>
+     * try(ServiceContext context = serviceMan.createServiceContext("AppHandler", appContext)){
+     *    ...
+     * }
+     * </code></pre>
+     *
+     * Or manually:
      * <pre><code>
      * try {
      *    context = serviceMan.createServiceContext("AppHandler", appContext);
@@ -462,10 +474,19 @@ public class ServiceManager {
     /**
      * Used to create a ServiceContext.
      *
-     * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup:
+     * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup.
+     *
+     * Using auto closable:
      * <pre><code>
+     * try(ServiceContext context = serviceMan.createServiceContext("md.thumbnail.upload", lang, request)){
+     *    ...
+     * }
+     * </code></pre>
+     * Or manually:
+     * <pre><code>
+     * ServiceContext context = serviceMan.createServiceContext("md.thumbnail.upload", lang, request);
      * try {
-     *    context = serviceMan.createServiceContext("md.thumbnail.upload", lang, request);
+     *
      *    context.setAsThreadLocal();
      *    ...
      * } finally {
@@ -503,6 +524,65 @@ public class ServiceManager {
         }
 
         return context;
+    }
+
+    /**
+     * Create a transitory service context for use in a single try-with-resources block.
+     *
+     * Makes use of current http session if available (the usual case), or a temporary user session using the provided
+     * userId (when used from a background task or job).
+     * <p>
+     * Code creating a service context is responsible for handling resources and cleanup.
+     * </p>
+     * <pre>
+     * try( ServiceContext context = createServiceContext("approve_record", event.getUser()){
+     *    ... utility methods can now use ServiceContext.get() ...
+     * }
+     * </pre>
+     * @param name service context name for approval record handling
+     * @param defaultUserId If a user session is not available, this id is used to create a temporary user session
+     * @return service context for approval record event handling
+     */
+    public ServiceContext createServiceContext(String name, int defaultUserId){
+        // If this implementation is generally useful it should migrate to ServiceManager, rather than cut and paste
+        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+
+        ServiceContext context;
+
+        HttpServletRequest request = getCurrentHttpRequest();
+        if( request != null ) {
+            // reuse user session from http request
+            context = createServiceContext(name, "?", request);
+        }
+        else {
+            // Not in an http request, creating a temporary user session wiht provided userId
+            context = createServiceContext(name, applicationContext);
+
+            UserRepository userRepository = applicationContext.getBean(UserRepository.class);
+            User user = userRepository.findOne( defaultUserId );
+            if( user != null ){
+                UserSession session = new UserSession();
+                session.loginAs(user);
+                context.setUserSession(session);
+            }
+        }
+        context.setAsThreadLocal();
+
+        return context;
+    }
+
+    /**
+     * Look up current HttpServletRequest if running in a servlet dispatch.
+     *
+     * @return http request, or null if running in a background task
+     */
+    private static HttpServletRequest getCurrentHttpRequest(){
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (requestAttributes instanceof ServletRequestAttributes) {
+            HttpServletRequest request = ((ServletRequestAttributes)requestAttributes).getRequest();
+            return request;
+        }
+        return null; // not called during http request
     }
 
     /**

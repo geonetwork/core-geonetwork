@@ -288,9 +288,8 @@ public class LinksApi {
         @ApiIgnore
             HttpServletRequest request
     ) throws IOException, JDOMException {
+      try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
         MAnalyseProcess registredMAnalyseProcess = getRegistredMAnalyseProcess();
-
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         UserSession session = ApiUtils.getUserSession(httpSession);
 
         boolean isAdministrator = session.getProfile() == Profile.Administrator;
@@ -345,6 +344,7 @@ public class LinksApi {
 
         registredMAnalyseProcess.processMetadataAndTestLink(analyze, ids);
         return report;
+      }
     }
 
 

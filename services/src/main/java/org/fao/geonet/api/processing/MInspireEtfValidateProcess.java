@@ -39,7 +39,8 @@ import static jeeves.transaction.TransactionManager.TransactionRequirement.CREAT
 public class MInspireEtfValidateProcess implements SelfNaming {
 
     private final ApplicationContext appContext;
-    private ServiceContext serviceContext;
+    /** Shared validation service context used as a fallback if thread local unavailable */
+    private ServiceContext validationServiceContext;
     private String URL;
 
     private ObjectName probeName;
@@ -97,7 +98,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
     public MInspireEtfValidateProcess(String URL,
                                       ServiceContext serviceContext, ApplicationContext appContext) {
         this.URL = URL;
-        this.serviceContext = serviceContext;
+        this.validationServiceContext = serviceContext;
         this.appContext = appContext;
 
         try {
@@ -118,6 +119,18 @@ public class MInspireEtfValidateProcess implements SelfNaming {
         });
     }
 
+    /**
+     * Gets the ServiceContext for the current request.
+     *
+     * If there isn't a current request, then this will return the validationServiceContext.
+     *
+     * @return ServiceContext for the current request
+     */
+    protected ServiceContext getServiceContext(){
+        ServiceContext context = ServiceContext.get();
+        return context != null ? context : validationServiceContext;
+    }
+
     public void processMetadata(Set<String> uuids) throws Exception {
         IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
         MetadataValidationRepository metadataValidationRepository = appContext.getBean(MetadataValidationRepository.class);
@@ -130,7 +143,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
         metadataToAnalyseCount = uuids.size();
         analyseMdDate = System.currentTimeMillis();
 
-        ServiceContext context = serviceContext;
+        ServiceContext context = getServiceContext();
 
         for (String uuid : uuids) {
             if (!metadataRepository.existsMetadataUuid(uuid)) {
@@ -141,7 +154,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
 
             for (AbstractMetadata record : metadataRepository.findAllByUuid(uuid)) {
                 try {
-                    if (!accessManager.canEdit(serviceContext, String.valueOf(record.getId()))) {
+                    if (!accessManager.canEdit(context, String.valueOf(record.getId()))) {
                         metadataAnalysed++;
                         metadataNotAllowed++;
                     } else {
@@ -173,16 +186,16 @@ public class MInspireEtfValidateProcess implements SelfNaming {
                                             }
 
                                             if (applyCondition) {
-                                                String testId = inspireValidatorUtils.submitFile(serviceContext, URL,
+                                                String testId = inspireValidatorUtils.submitFile(context, URL,
                                                     new ByteArrayInputStream(mdToValidate.getBytes()), entry.getKey(), record.getUuid());
 
-                                                inspireValidatorUtils.waitUntilReady(serviceContext, URL, testId);
+                                                inspireValidatorUtils.waitUntilReady(context, URL, testId);
 
                                                 String reportUrl = inspireValidatorUtils.getReportUrl(URL, testId);
                                                 String reportXmlUrl = inspireValidatorUtils.getReportUrlXML(URL, testId);
-                                                String reportXml = inspireValidatorUtils.retrieveReport(serviceContext, reportXmlUrl);
+                                                String reportXml = inspireValidatorUtils.retrieveReport(context, reportXmlUrl);
 
-                                                String validationStatus = inspireValidatorUtils.isPassed(serviceContext, URL, testId);
+                                                String validationStatus = inspireValidatorUtils.isPassed(context, URL, testId);
 
                                                 MetadataValidationStatus metadataValidationStatus =
                                                     inspireValidatorUtils.calculateValidationStatus(validationStatus);

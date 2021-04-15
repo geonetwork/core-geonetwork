@@ -96,8 +96,7 @@ public final class IndexMetadataTask implements Runnable {
      */
     @Override
     public void run() {
-        ServiceContext indexMedataContext = serviceManager.createServiceContext(serviceName+":IndexTask", appContext);
-        try {
+        try (ServiceContext indexMedataContext = serviceManager.createServiceContext(serviceName+":IndexTask", appContext)) {
             indexMedataContext.setUserSession(new UserSession());
             indexMedataContext.setAsThreadLocal();
             while (_transactionStatus != null && !_transactionStatus.isCompleted()) {
@@ -146,8 +145,6 @@ public final class IndexMetadataTask implements Runnable {
             Log.error(Geonet.INDEX_ENGINE, "Error occurred indexing metadata", e);
         } finally {
             _batchIndex.remove(this);
-            indexMedataContext.clearAsThreadLocal();
-            indexMedataContext.clear();
         }
     }
 }

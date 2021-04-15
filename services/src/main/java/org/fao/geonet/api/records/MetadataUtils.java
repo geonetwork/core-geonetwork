@@ -438,9 +438,9 @@ public class MetadataUtils {
                                          Element query) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         SearchManager searchMan = applicationContext.getBean(SearchManager.class);
-        ServiceContext context = ApiUtils.createServiceContext(request);
         ServiceConfig _config = new ServiceConfig();
-        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+        try (ServiceContext context = ApiUtils.createServiceContext(request);
+             MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
 
             Set<String> uuids = new HashSet<>();
 

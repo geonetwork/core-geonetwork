@@ -76,8 +76,13 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Autowired
     private MetadataNotifierManager metadataNotifierManager;
 
-    // FIXME Remove when get rid of Jeeves
+    /**
+     * Shared application handler service context.
+     *
+     * Used by {@link #getServiceContext()} if current service context unavailable.
+     */
     private ServiceContext servContext;
+
     @Autowired
     protected IMetadataSchemaUtils metadataSchemaUtils;
     @Autowired
@@ -108,8 +113,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
         this.metadataManager = metadataManager;
     }
 
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        servContext = context;
+    public void init(ServiceContext appHandlerContext) throws Exception {
+        servContext = appHandlerContext;
         stylePath = dataDirectory.resolveWebResource(Geonet.Path.STYLESHEETS);
     }
 
@@ -119,6 +124,11 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @PostConstruct
     public void init() {
         this.metadataIndexer.setMetadataUtils(this);
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        servContext = null;
     }
 
     /**
@@ -155,6 +165,14 @@ public class BaseMetadataUtils implements IMetadataUtils {
         return metadata.getUuid();
     }
 
+    /**
+     * Gets the ServiceContext for the current request.
+     *
+     * If there isn't a current request, then this will return the shared Jeeves app handler service context
+     * (which does not have a user session).
+     *
+     * @return ServiceContext for the current request
+     */
     protected ServiceContext getServiceContext() {
         ServiceContext context = ServiceContext.get();
         return context == null ? servContext : context;

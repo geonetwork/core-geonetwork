@@ -22,6 +22,7 @@
  */
 package org.fao.geonet.api.selections;
 
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -121,6 +122,7 @@ public class SelectionsApi {
         HttpServletRequest request
     )
         throws Exception {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         UserSession session = ApiUtils.getUserSession(httpSession);
         int nbSelected = SelectionManager.updateSelection(bucket,
             session,
@@ -129,9 +131,10 @@ public class SelectionsApi {
                 SelectionManager.ADD_ALL_SELECTED,
             uuid != null ?
                 Arrays.asList(uuid) : null,
-            ApiUtils.createServiceContext(request));
+            context);
 
         return new ResponseEntity<>(nbSelected, HttpStatus.CREATED);
+      }
     }
 
 
@@ -162,7 +165,7 @@ public class SelectionsApi {
         HttpServletRequest request
     )
         throws Exception {
-
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         int nbSelected = SelectionManager.updateSelection(bucket,
             ApiUtils.getUserSession(httpSession),
             uuid != null ?
@@ -170,8 +173,9 @@ public class SelectionsApi {
                 SelectionManager.REMOVE_ALL_SELECTED,
             uuid != null ?
                 Arrays.asList(uuid) : null,
-            ApiUtils.createServiceContext(request));
+            context);
 
         return new ResponseEntity<>(nbSelected, HttpStatus.OK);
+      }
     }
 }

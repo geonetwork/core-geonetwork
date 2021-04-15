@@ -126,8 +126,8 @@ public class MetadataSampleApi {
         HttpServletRequest request
     )
         throws Exception {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
 
@@ -189,7 +189,9 @@ public class MetadataSampleApi {
                 schemaCount, schemaName));
         }
         report.close();
+
         return report;
+      }
     }
 
     @ApiOperation(
@@ -221,8 +223,7 @@ public class MetadataSampleApi {
         HttpServletRequest request
     )
         throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         String siteId = settingManager.getSiteId();
@@ -325,5 +326,6 @@ public class MetadataSampleApi {
         }
         report.close();
         return report;
+      }
     }
 }

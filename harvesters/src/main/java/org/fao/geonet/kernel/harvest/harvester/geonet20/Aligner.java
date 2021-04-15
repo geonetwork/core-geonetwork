@@ -68,6 +68,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
 
     private IMetadataManager metadataManager;
 
+    /** Shared service context managed by HarvestManager */
     private ServiceContext context;
 
     private CategoryMapper localCateg;

@@ -34,6 +34,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -121,8 +122,10 @@ public class MetadataTagApi {
             String metadataUuid,
         HttpServletRequest request
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
         return metadata.getCategories();
+      }
     }
 
 
@@ -163,7 +166,8 @@ public class MetadataTagApi {
             boolean clear,
         HttpServletRequest request
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         ApplicationContext appContext = ApplicationContextHolder.get();
         Set<MetadataCategory> before = metadata.getCategories();
 
@@ -176,7 +180,7 @@ public class MetadataTagApi {
             final MetadataCategory category = categoryRepository.findOne(c);
             if (category != null) {
                 dataManager.setCategory(
-                    ApiUtils.createServiceContext(request),
+                    context,
                     String.valueOf(metadata.getId()), String.valueOf(c));
             } else {
                 throw new ResourceNotFoundException(String.format(
@@ -187,11 +191,16 @@ public class MetadataTagApi {
 
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
 
-        metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        metadata = ApiUtils.canEditRecord(metadataUuid, context);
         Set<MetadataCategory> after = metadata.getCategories();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
-        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
-
+        new RecordCategoryChangeEvent(
+            metadata.getId(),
+            userSession.getUserIdAsInt(),
+            ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD),
+            ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)
+        ).publish(appContext);
+      }
     }
 
     @ApiOperation(
@@ -222,7 +231,8 @@ public class MetadataTagApi {
             Integer[] id,
         HttpServletRequest request
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         ApplicationContext appContext = ApplicationContextHolder.get();
         Set<MetadataCategory> before = metadata.getCategories();
 
@@ -234,18 +244,23 @@ public class MetadataTagApi {
         if (id != null) {
             for (int c : id) {
                 dataManager.unsetCategory(
-                    ApiUtils.createServiceContext(request),
+                    context,
                     String.valueOf(metadata.getId()), c);
             }
         }
 
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
 
-        metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        metadata = ApiUtils.canEditRecord(metadataUuid, context);
         Set<MetadataCategory> after = metadata.getCategories();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
-        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
-
+        new RecordCategoryChangeEvent(
+            metadata.getId(),
+            userSession.getUserIdAsInt(),
+            ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD),
+            ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)
+        ).publish(appContext);
+      }
     }
 
 
@@ -299,7 +314,7 @@ public class MetadataTagApi {
     ) throws Exception {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        try {
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
 
@@ -314,8 +329,7 @@ public class MetadataTagApi {
                 Set<MetadataCategory> before = info.getCategories();
                 if (info == null) {
                     report.incrementNullRecords();
-                } else if (!accessMan.canEdit(
-                    ApiUtils.createServiceContext(request), String.valueOf(info.getId()))) {
+                } else if (!accessMan.canEdit(serviceContext, String.valueOf(info.getId()))) {
                     report.addNotEditableMetadataId(info.getId());
                 } else {
                     if (clear) {
@@ -397,7 +411,7 @@ public class MetadataTagApi {
     ) throws Exception {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        try {
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)){
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
 
@@ -413,7 +427,7 @@ public class MetadataTagApi {
                 if (info == null) {
                     report.incrementNullRecords();
                 } else if (!accessMan.canEdit(
-                    ApiUtils.createServiceContext(request), String.valueOf(info.getId()))) {
+                    serviceContext, String.valueOf(info.getId()))) {
                     report.addNotEditableMetadataId(info.getId());
                 } else {
                     info.getCategories().clear();

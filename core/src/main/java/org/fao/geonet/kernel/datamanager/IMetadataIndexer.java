@@ -36,19 +36,29 @@ import jeeves.server.context.ServiceContext;
 
 /**
  * Interface to handle all indexing operations
- * 
+ *
  * @author delawen
  *
  */
 public interface IMetadataIndexer {
 
     /**
-     * This is a hopefully soon to be deprecated when no deps on context
-     * 
-     * @param context
+     * Setup metadata indexer using app service context.
+     *
+     * This is a hopefully soon to be deprecated when no deps on context.
+     *
+     * @param context App Service context used for initial setup
      * @throws Exception
      */
-    public void init(ServiceContext context, Boolean force) throws Exception;
+    void init(ServiceContext context) throws Exception;
+
+    /**
+     * Clean up when service is not in use.
+     *
+     * @throws Exception
+     */
+    void destroy() throws Exception;
+
 
     /**
      * Force the index to wait until all changes are processed and the next reader obtained will get the latest data.
@@ -57,7 +67,7 @@ public interface IMetadataIndexer {
 
     /**
      * Remove the records that matches the specification
-     * 
+     *
      * @param specification
      * @return
      * @throws Exception
@@ -81,18 +91,18 @@ public interface IMetadataIndexer {
      * @param context context object
      * @param metadataIds the metadata ids to index
      */
-    void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds);
+    void batchIndexInThreadPool( List<?> metadataIds);
 
     /**
      * Is the platform currently indexing?
-     * 
+     *
      * @return
      */
     boolean isIndexing();
 
     /**
      * Index the list of records passed as parameter in order.
-     * 
+     *
      * @param metadataIds
      * @throws Exception
      */
@@ -100,7 +110,7 @@ public interface IMetadataIndexer {
 
     /**
      * Index one record defined by metadataId
-     * 
+     *
      * @param metadataId
      * @param forceRefreshReaders
      * @param searchManager
@@ -110,7 +120,7 @@ public interface IMetadataIndexer {
 
     /**
      * Start record versioning
-     * 
+     *
      * @param context
      * @param id
      * @param md
@@ -120,7 +130,7 @@ public interface IMetadataIndexer {
 
     /**
      * Reschedule the Index Optimizer Manager (Lucene)
-     * 
+     *
      * @param beginAt
      * @param interval
      * @throws Exception
@@ -129,21 +139,21 @@ public interface IMetadataIndexer {
 
     /**
      * Disable the Index Optimizer (Lucene)
-     * 
+     *
      * @throws Exception
      */
     void disableOptimizer() throws Exception;
 
     /**
      * Helper function to avoid loop circular dependencies
-     * 
+     *
      * @param metadataUtils
      */
     void setMetadataUtils(IMetadataUtils metadataUtils);
 
     /**
      * Helper function to avoid loop circular dependencies
-     * 
+     *
      * @param metadataUtils
      */
     void setMetadataManager(IMetadataManager baseMetadataManager);

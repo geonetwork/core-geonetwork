@@ -145,7 +145,7 @@ public class BatchEditsApi implements ApplicationContextAware {
         }
 
 
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+      try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
         final Set<String> setOfUuidsToEdit;
         if (uuids == null) {
             SelectionManager selectionManager =
@@ -247,5 +247,6 @@ public class BatchEditsApi implements ApplicationContextAware {
         }
         report.close();
         return report;
+      }
     }
 }

@@ -77,7 +77,8 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
         customizeParams(params);
         final String harvesterUuid = _harvestManager.addHarvesterReturnUUID(params);
         AbstractHarvester _harvester = _harvestManager.getHarvester(harvesterUuid);
-        _harvester.init(params, context);
+        _harvester.initContext( context );
+        _harvester.init(params);
 
         _harvester.invoke();
         final Element result = _harvester.getResult();

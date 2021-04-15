@@ -160,9 +160,7 @@ public class GetRelated implements Service, RelatedMetadata {
         MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
 
         // context used as parameter, not set as threadlocale
-        final ServiceContext context = serviceManager.createServiceContext("xml.relation", lang, request);
-
-      try {
+      try (ServiceContext context = serviceManager.createServiceContext("xml.relation", lang, request)) {
         AbstractMetadata md;
         if (id != null) {
             md = metadataRepository.findOne(id);
@@ -211,8 +209,6 @@ public class GetRelated implements Service, RelatedMetadata {
         headers.add("Content-Type", contentType);
 
         return new HttpEntity<>(response, headers);
-      } finally {
-        context.clear();
       }
     }
 

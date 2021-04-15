@@ -27,17 +27,28 @@ public class InspireValidationRunnable implements Runnable {
     private String testId;
     private String endPoint;
     private int mdId;
-    private ServiceContext context;
+    /** Provided service context, cleaned up when task is complete */
+    private ServiceContext validationContext;
 
+    /**
+     * Schedule INSPIRE validation for later.
+     *
+     * @param context Validation context, it is the responsibility of this runnable to clean up
+     * @param endPoint
+     * @param testId
+     * @param mdId
+     */
     public InspireValidationRunnable(ServiceContext context,
                                      String endPoint, String testId, int mdId) {
-        this.context = context;
+        this.validationContext = context;
         this.testId = testId;
         this.mdId = mdId;
         this.endPoint = endPoint;
     }
 
     public void run() {
+        validationContext.setAsThreadLocal();
+      try {
         TransactionManager.runInTransaction("inspire-validation", ApplicationContextHolder.get(),
             CREATE_NEW,  ALWAYS_COMMIT, false, new TransactionTask<Object>() {
                 @Override
@@ -49,13 +60,13 @@ public class InspireValidationRunnable implements Runnable {
                         ApplicationContextHolder.get().getBean(MetadataValidationRepository.class);
 
                     // Waits until the validation result is available
-                    inspireValidatorUtils.waitUntilReady(context, endPoint, testId);
+                    inspireValidatorUtils.waitUntilReady(validationContext, endPoint, testId);
 
                     String reportUrl = inspireValidatorUtils.getReportUrl(endPoint, testId);
                     String reportXmlUrl = inspireValidatorUtils.getReportUrlXML(endPoint, testId);
-                    String reportXml = inspireValidatorUtils.retrieveReport(context, reportXmlUrl);
+                    String reportXml = inspireValidatorUtils.retrieveReport(validationContext, reportXmlUrl);
 
-                    String validationStatus = inspireValidatorUtils.isPassed(context, endPoint, testId);
+                    String validationStatus = inspireValidatorUtils.isPassed(validationContext, endPoint, testId);
 
                     MetadataValidationStatus metadataValidationStatus =
                         inspireValidatorUtils.calculateValidationStatus(validationStatus);
@@ -75,5 +86,9 @@ public class InspireValidationRunnable implements Runnable {
                     return null;
                 }
             });
+      } finally {
+          validationContext.clearAsThreadLocal();
+          validationContext.clear();
+      }
     }
 }

@@ -68,6 +68,7 @@ public class HierarchicalFacetsIntegrationTest extends AbstractCoreIntegrationTe
     @Autowired
     private SearchManager searchManager;
 
+    /** Service context for test */
     private ServiceContext serviceContext;
     private MetaSearcher luceneSearcher;
 

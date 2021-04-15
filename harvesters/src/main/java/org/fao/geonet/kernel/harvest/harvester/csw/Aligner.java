@@ -91,6 +91,7 @@ import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
 
 public class Aligner extends BaseAligner<CswParams> {
 
+    /** Shared service context managed by HarvestManager */
     private ServiceContext context;
     private DataManager dataMan;
     private CategoryMapper localCateg;

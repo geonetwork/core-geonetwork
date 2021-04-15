@@ -220,7 +220,7 @@ public class HarvestersApi {
         @RequestParam
             String exist,
         HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         final Element list = harvestManager.get(null, context, "site[1]/name[1]");
         if (list.getChildren().stream()
                 .filter(h -> h instanceof Element)
@@ -230,5 +230,6 @@ public class HarvestersApi {
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      }
     }
 }

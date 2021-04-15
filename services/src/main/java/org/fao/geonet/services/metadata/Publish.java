@@ -99,12 +99,9 @@ public class Publish {
         @RequestParam(value = "skipIntranet", defaultValue = "false") boolean skipIntranet) throws Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
-        final ServiceContext serviceContext = serviceManager.createServiceContext("md.publish", lang, request);
 
-      try {
+      try (ServiceContext serviceContext = serviceManager.createServiceContext("md.publish", lang, request)) {
         return exec(commaSeparatedIds, true, skipIntranet, serviceContext);
-      } finally {
-        serviceContext.clear();
       }
     }
 
@@ -119,12 +116,9 @@ public class Publish {
         @RequestParam(value = "skipIntranet", defaultValue = "false") boolean skipIntranet) throws Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
-        final ServiceContext serviceContext = serviceManager.createServiceContext("md.publish", lang, request);
 
-      try {
+      try (ServiceContext serviceContext = serviceManager.createServiceContext("md.publish", lang, request)) {
         return exec(commaSeparatedIds, false, skipIntranet, serviceContext);
-      } finally {
-        serviceContext.clear();
       }
     }
 

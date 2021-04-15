@@ -300,12 +300,11 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         Validator validator;
 
-        // context used as a parameter, not set as threadlocal
-        final ServiceContext context = createServiceContext(
+      try(ServiceContext context = createServiceContext(
             language,
             formatType,
-            request.getNativeRequest(HttpServletRequest.class));
-      try {
+            request.getNativeRequest(HttpServletRequest.class))){
+        // context used as a parameter, not set as threadlocal
 
         if (changeDate != null) {
             final long changeDateAsTime = changeDate.toDate().getTime();
@@ -344,8 +343,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                 LanguageUtils.locale2gnCode(locale.getISO3Language()),
                 request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
-      } finally {
-        context.clear(); // prevent further use
       }
     }
 
@@ -386,7 +383,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         }
 
         FormatType formatType = FormatType.valueOf(type.toLowerCase());
-        final ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
+      try (ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class))) {
         // context used as a parameter, not set as threadlocal
 
         if (metadata == null) {
@@ -409,8 +406,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
 
         writeOutResponse(context, "", lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
-
-        context.clear(); // prevent further use
+      }
     }
 
     /**
@@ -471,7 +467,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         final FormatType formatType = FormatType.valueOf(type.toLowerCase());
 
         String resolvedId = resolveId(id, uuid);
-        ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
+      try (ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class))) {
         // context used as a parameter, not set as threadlocal
 
         Lib.resource.checkPrivilege(context, resolvedId, ReservedOperation.view);
@@ -512,7 +508,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
             writeOutResponse(context, resolvedId, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
-        context.clear();
+      }
     }
 
     private void writeOutResponse(ServiceContext context, String metadataUuid, String lang, HttpServletResponse response, FormatType formatType, byte[] formattedMetadata) throws Exception {

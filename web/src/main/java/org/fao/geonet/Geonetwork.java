@@ -28,6 +28,7 @@ import javax.persistence.EntityManager;
 import jeeves.server.UserSession;
 import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.locationtech.jts.geom.MultiPolygon;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
@@ -139,8 +140,12 @@ public class Geonetwork implements ApplicationHandler {
 
     /**
      * Inits the engine, loading all needed data.
+     *
+     * @param config Handler configuration
+     * @param context application handler servlet context
+     * @return GeonetContext for application
      */
-    public Object start(Element config, ServiceContext context) throws Exception {
+    public GeonetContext start(Element config, ServiceContext context) throws Exception {
         context.setAsThreadLocal();
         this._applicationContext = context.getApplicationContext();
         ApplicationContextHolder.set(this._applicationContext);
@@ -341,7 +346,8 @@ public class Geonetwork implements ApplicationHandler {
         beanFactory.registerSingleton("oaipmhDisatcher", oaipmhDis);
 
 
-        _applicationContext.getBean(DataManager.class).init(context, false);
+        _applicationContext.getBean(DataManager.class).init(context);
+        _applicationContext.getBean(DataManager.class).refreshIndex(false);
         _applicationContext.getBean(HarvestManager.class).init(context, gnContext.isReadOnly());
 
         _applicationContext.getBean(ThumbnailMaker.class).init(context);
@@ -425,14 +431,14 @@ public class Geonetwork implements ApplicationHandler {
             @Override
             public void run() {
                 ServiceManager serviceManager = _applicationContext.getBean(ServiceManager.class);
-                ServiceContext fillCacheServiceContext = serviceManager.createServiceContext( "init.filleCaches",_applicationContext);
+              try (ServiceContext fillCacheServiceContext = serviceManager.createServiceContext( "init.filleCaches",_applicationContext)) {
                 fillCacheServiceContext.setUserSession( new UserSession() );
                 FormatterApi formatService = fillCacheServiceContext.getBean(FormatterApi.class); // this will initialize the formatter
 
                 final ServletContext servletContext = fillCacheServiceContext.getServlet().getServletContext();
                 fillCacheServiceContext.setAsThreadLocal();
                 ApplicationContextHolder.set(_applicationContext);
-              try {
+
                 GeonetWro4jFilter filter = (GeonetWro4jFilter) servletContext.getAttribute(GeonetWro4jFilter.GEONET_WRO4J_FILTER_KEY);
 
                 @SuppressWarnings("unchecked")
@@ -472,9 +478,6 @@ public class Geonetwork implements ApplicationHandler {
                         }
                     }
                 }
-              } finally {
-                  fillCacheServiceContext.clearAsThreadLocal();
-                  fillCacheServiceContext.clear();
               }
             }
         });
@@ -640,6 +643,14 @@ public class Geonetwork implements ApplicationHandler {
         // Beans registered using SingletonBeanRegistry#registerSingleton don't have their
         // @PreDestroy called. So do it manually.
         oaipmhDis.shutdown();
+
+        // shutdown data manager
+        try {
+            _applicationContext.getBean(DataManager.class).destroy();
+        } catch (Exception e) {
+            logger.error("Raised exception while stopping data manager");
+            logger.error(e);
+        }
     }
 
     //---------------------------------------------------------------------------

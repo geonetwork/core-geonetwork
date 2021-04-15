@@ -69,13 +69,14 @@ public class UrlAnalyzerTest extends AbstractCoreIntegrationTest {
 
     @Autowired
     protected MetadataLinkRepository metadataLinkRepository;
-    
+
     @Autowired
     private UrlChecker urlChecker;
 
     @PersistenceContext
     private EntityManager entityManager;
 
+    /** Service context for test */
     private ServiceContext context;
 
     @Before
