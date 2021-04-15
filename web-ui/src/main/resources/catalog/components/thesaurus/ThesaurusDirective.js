@@ -215,6 +215,7 @@
            scope: {
              elementRef: '@',
              elementXpath: '@',
+             wrapper: '@',
              thesaurusKey: '@',
              keywords: '@',
              transformations: '@',
@@ -544,7 +545,7 @@
                gnThesaurusService
                 .getXML(scope.thesaurusKey,
                getKeywordIds(), scope.currentTransformation, scope.langs,
-                   scope.textgroupOnly,scope.langConversion).then(
+                   scope.textgroupOnly, scope.langConversion, scope.wrapper).then(
                function(data) {
                  scope.snippet = data;
                });
