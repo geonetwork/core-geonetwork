@@ -36,6 +36,7 @@ import org.fao.geonet.api.records.extent.MapRenderer;
 import org.fao.geonet.api.regions.model.Category;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.LabelNotFoundException;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionsDAO;
@@ -166,9 +167,16 @@ public class RegionsApi {
                     ((ThesaurusBasedRegionsDAO) dao).getRegionTopConcepts(context);
                 if (keywords != null) {
                     for (KeywordBean k : keywords) {
+                        String label = "";
+                        try {
+                            label = k.getPreferredLabel(language);
+                        } catch (LabelNotFoundException ex) {
+                            label = k.getDefaultValue();
+                        }
+
                         Category c = new Category(
                             k.getUriCode(),
-                            k.getPreferredLabel(language)
+                            label
                         );
                         response.add(c);
                     }
