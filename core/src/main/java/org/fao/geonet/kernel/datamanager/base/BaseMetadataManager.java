@@ -939,7 +939,14 @@ public class BaseMetadataManager implements IMetadataManager {
             env.addContent(schemaLoc);
 
             if (updateDatestamp == UpdateDatestamp.YES) {
-                env.addContent(new Element("changeDate").setText(new ISODate().toString()));
+                String changeDate = new ISODate().toString();
+                String createDate = "";
+                if (metadata != null) {
+                    changeDate = metadata.getDataInfo().getChangeDate().getDateAndTime();
+                    createDate = metadata.getDataInfo().getCreateDate().getDateAndTime();
+                }
+                env.addContent(new Element("changeDate").setText(changeDate));
+                env.addContent(new Element("createDate").setText(createDate));
             }
             if (parentUuid != null) {
                 env.addContent(new Element("parentUuid").setText(parentUuid));

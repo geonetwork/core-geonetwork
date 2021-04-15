@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -24,25 +24,6 @@
 package org.fao.geonet.api;
 
 import com.google.common.collect.Sets;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Arrays;
-import java.util.Set;
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -67,7 +48,26 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.*;
 
 /**
  * API utilities mainly to deal with parameters.
@@ -328,6 +328,49 @@ public class ApiUtils {
 
         try (OutputStream out = Files.newOutputStream(outFile)) {
             ImageIO.write(bimg, type, out);
+        }
+    }
+
+    /**
+     * Process request validation, returning an string with the validation errors.
+     *
+     * @param bindingResult
+     * @param messages
+     */
+    public static String processRequestValidation(BindingResult bindingResult, ResourceBundle messages) {
+        if (bindingResult.hasErrors()) {
+            java.util.List<ObjectError> errorList = bindingResult.getAllErrors();
+
+            StringBuilder sb = new StringBuilder();
+            Iterator<ObjectError> it = errorList.iterator();
+            while (it.hasNext()) {
+                ObjectError err = it.next();
+                String msg = "";
+                for(int i = 0; i < err.getCodes().length; i++) {
+                    try {
+                        msg = messages.getString(err.getCodes()[i]);
+
+                        if (!StringUtils.isEmpty(msg)) {
+                            break;
+                        }
+                    } catch (MissingResourceException ex) {
+                        // Ignore
+                    }
+                }
+
+                if (StringUtils.isEmpty(msg)) {
+                    msg = err.getDefaultMessage();
+                }
+
+                sb.append(msg);
+                if (it.hasNext()) {
+                    sb.append(", ");
+                }
+            }
+
+            return sb.toString();
+        } else {
+            return "";
         }
     }
 }

@@ -89,10 +89,12 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.fao.geonet.constants.Params.CONTENT_TYPE;
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_DC;
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_DCT;
 import static org.fao.geonet.kernel.rdf.Selectors.RDF_NAMESPACE;
 import static org.fao.geonet.kernel.rdf.Selectors.SKOS_NAMESPACE;
+
 
 /**
  * The Class KeywordsApi.
@@ -166,12 +168,13 @@ public class KeywordsApi {
         path = "/search",
         method = RequestMethod.GET,
         produces = {
-            MediaType.APPLICATION_JSON_VALUE
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE
         })
     @ResponseStatus(
         value = HttpStatus.OK)
     @ResponseBody
-    public List<KeywordBean> searchKeywords(
+    public Object searchKeywords(
         @Parameter(
             description = "Query",
             required = false
@@ -302,9 +305,17 @@ public class KeywordsApi {
         session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
             searcher);
 
+        List<KeywordBean> keywords = searcher.getResults();
 
-        // get the results
-        return searcher.getResults();
+        if ("xml".equals(request.getParameter(CONTENT_TYPE))) {
+            Element root = new Element("response");
+            for (KeywordBean kw : keywords) {
+                root.addContent(kw.toElement("eng")); // FIXME: Localize
+            }
+            return root;
+        } else {
+            return keywords;
+        }
     }
 
     /**

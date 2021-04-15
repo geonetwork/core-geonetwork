@@ -96,6 +96,7 @@ public final class Geonet {
         public static final String UPDATE_FIXED_INFO = "update-fixed-info.xsl";
         public static final String UPDATE_FIXED_INFO_SUBTEMPLATE = "update-fixed-info-subtemplate.xsl";
         public static final String UPDATE_CHILD_FROM_PARENT_INFO = "update-child-from-parent-info.xsl";
+        public static final String ENCRYPTOR_DIR = "encryptor";
         public static final String EXTRACT_UUID = "extract-uuid.xsl";
         public static final String EXTRACT_TITLES = "extract-titles.xsl";
         public static final String EXTRACT_DEFAULT_LANGUAGE = "extract-default-language.xsl";
@@ -628,7 +629,7 @@ public final class Geonet {
         public static final String HASXLINKS = "_hasxlinks";
         public static final String XLINK = "_xlink";
         public static final String ROOT = "_root";
-        public static final String SCHEMA = "schema";
+        public static final String SCHEMA = "documentStandard";
         public static final String DATABASE_CREATE_DATE = "createDate";
         public static final String DATABASE_CHANGE_DATE = "changeDate";
         public static final String SOURCE = "_source";

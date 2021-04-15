@@ -46,7 +46,7 @@
     <h3>
       <i class="fa fa-envelope"></i>
       <span>
-      {{roles | translate}}
+      {{translateRoles(roles)}}
       </span>
     </h3>
     <div class="row" data-ng-repeat="(organisation, contact) in contactByRole | groupBy:'organisation'">
@@ -113,7 +113,7 @@
         </span>
         <ul>
           <li ng-repeat="(roles, contactGroupByRole) in contactGroupByAddress | groupBy:'roles'">
-            {{roles | translate}}:<br/>
+            {{translateRoles(roles)}}:<br/>
             <span data-ng-repeat="c in contactGroupByRole track by $index">
               <span data-ng-if="c.email != ''">
                 <i class="fa fa-fw fa-envelope"></i>

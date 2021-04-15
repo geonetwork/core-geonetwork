@@ -430,7 +430,7 @@ public class JeevesEngine {
 
                 info("--- Handler started ---------------------------------------");
             } catch (Exception e) {
-                Map<String, String> errors = new HashMap<String, String>();
+                Map<String, String> errors = new HashMap<>();
                 String eS = "Raised exception while starting the application. " +
                     "Fix the error and restart.";
                 error(eS);

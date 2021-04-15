@@ -54,6 +54,7 @@ import static org.fao.geonet.constants.Geonet.Namespaces.*;
  * Created by Jesse on 1/31/14.
  */
 public class AbstractSchematronTest {
+    protected static final String INSPIRE_VALID_ISO19139_XML = "inspire-valid-iso19139.xml";
 
     protected static final Namespace SVRL_NAMESPACE = Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
     protected static final Namespace SCH_NAMESPACE = Namespace.getNamespace("sch", "http://purl.oclc.org/dsdl/schematron");

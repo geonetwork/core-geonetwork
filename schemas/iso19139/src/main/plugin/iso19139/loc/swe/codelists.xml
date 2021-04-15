@@ -1,0 +1,2184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2021 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<!--
+
+ * Hide in edit mode : If some codelist needs to be hidden
+ in edit mode, the hideInEditMode attribute could be added
+ to any entries.
+
+ eg.
+	<entry hideInEditMode="true">
+
+ This will restrict the number of available entries for end
+ user editors and keep all records ISO compatible when using
+ codelist (eg. harvested records could use codelist hidden
+ in local node and needs to be displayed in view mode).
+
+ By default, this attribute is not used.
+
+ * editorMode attribute allows to configure the editor form field.
+
+ * - not set -: simple combo box
+ * radio : radio button in one line
+ * radio_linebreak : radio button with line break
+ * radio_withdesc : radion button with line break and codelist entry description
+ * select : select box with size set to the number of items if lower than 7 entries.
+
+-->
+<codelists xmlns:gmd="http://www.isotc211.org/2005/gmd">
+	<!-- ==================================================== -->
+	<codelist name="gmd:CI_DateTypeCode">
+		<entry>
+			<code>creation</code>
+			<label>Skapande</label>
+			<description>datum som anger när resursen ursprungligen skapades</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>publication</code>
+			<label>Publicering</label>
+			<description>datum som anger när resursen blev utgiven</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>revision</code>
+			<label>Revision</label>
+			<description>datum som anger när resursen blev granskad eller omgranskad och förbättrad eller rättad</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:CI_OnLineFunctionCode" alias="function">
+		<entry>
+			<code>download</code>
+			<label>Nedladdning</label>
+			<description>instruktioner för dataöverföring från ett lagringsystem till ett annat</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>information</code>
+			<label>Information</label>
+			<description>information om resursen</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>offlineAccess</code>
+			<label>Offlineåtkomst</label>
+			<description>instruktioner för att begära offlineåtkomst till resursen</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>order</code>
+			<label>Beställning</label>
+			<description>tjänst för beställning av resursen</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>search</code>
+			<label>Sökning</label>
+			<description>tjänst för att söka information om resursen</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:CI_PresentationFormCode">
+		<entry>
+			<code>documentDigital</code>
+			<label>Digitalt dokument</label>
+			<description>digital representation av ett i huvudsak textbaserat dokument,
+			som även kan innehålla illustrationer
+			ANM. Hit räknas även textbaserade dokument som har
+			skannats.</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>imageDigital</code>
+			<label>Digital bild</label>
+			<description>digital representation av bild</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>documentHardcopy</code>
+			<label>Icke-digitalt dokument</label>
+			<description>ett i huvudsak textbaserat dokument återgivet på papper,
+			fotografiskt material eller liknande</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>imageHardcopy</code>
+			<label>Icke-digital bild</label>
+			<description>bild återgiven på papper, fotografiskt material eller liknande</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>mapDigital</code>
+			<label>Digital karta</label>
+			<description>digitalt framställd karta som återges i raster eller vektor form</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>mapHardcopy</code>
+			<label>Icke-digital karta</label>
+			<description>karta återgiven på papper, fotografiskt material eller liknande</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>modelDigital</code>
+			<label>Digital modell</label>
+			<description>flerdimensionell, digital representation av en företeelse,
+			process eller liknande</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>modelHardcopy</code>
+			<label>Icke-digital modell</label>
+			<description>tredimensionell fysisk modell</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>profileDigital</code>
+			<label>Digital profil</label>
+			<description>digital representation av ett vertikalt tvärsnitt</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>profileHardcopy</code>
+			<label>Icke-digital profil</label>
+			<description>vertikalt tvärsnitt återgivet på papper, fotografiskt material eller
+			liknande</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>tableDigital</code>
+			<label>Digital tabell</label>
+			<description>digital representation av fakta eller siffror uppställda i en tabell</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>tableHardcopy</code>
+			<label>Icke-digital tabell</label>
+			<description>tabell, innehållande fakta eller siffror, återgiven på papper,
+			fotografiskt material eller liknande</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>videoDigital</code>
+			<label>Digital video</label>
+			<description>digital videoinspelning</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>videoHardcopy</code>
+			<label>Analog video</label>
+			<description>analog videoinspelning</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:CI_RoleCode" alias="roleCode">
+		<entry>
+			<code>resourceProvider</code>
+			<label>Leverantör</label>
+			<description>part som tillhandahåller resursen</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>custodian</code>
+			<label>Förvaltare</label>
+			<description>part som tar på sig ansvaret för data och som garanterar
+                lämplig/passande skötsel och underhåll av resursen</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>owner</code>
+			<label>Ägare</label>
+			<description>part som äger resursen</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>user</code>
+			<label>Användare</label>
+			<description>part som använder resursen</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>distributor</code>
+			<label>Distributör</label>
+			<description>part som distribuerar resursen</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>originator</code>
+			<label>Producent</label>
+			<description>part som skapat resursen</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>pointOfContact</code>
+			<label>Kontakt</label>
+			<description>part som kan kontaktas för att få mer information om eller
+                anskaffa resursen</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>principalInvestigator</code>
+			<label>Undersökningsledare</label>
+			<description>i akademiska sammanhang den som är ansvarig för att utföra
+                forskning och samla in information</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>processor</code>
+			<label>Vidareförädlare</label>
+			<description>part som har bearbetat data på ett sådant sätt att resursen
+                modifierats</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>publisher</code>
+			<label>Utgivare</label>
+			<description>part som har publicerat resursen</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>author</code>
+			<label>Upphovsman</label>
+            <description>part som har låtit skapa resursen</description>
+		</entry>
+		<!-- ISO PROFIL CHE ONLY
+		<entry>
+			<code>editor</code>
+			<label>Editor</label>
+			<description></description>
+		</entry>
+		<entry>
+			<code>partner</code>
+			<label>Partner</label>
+			<description></description>
+		</entry>-->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:DQ_EvaluationMethodTypeCode">
+		<entry>
+			<code>directInternal</code>
+			<label>Direkt intern</label>
+            <description>
+                metod som baseras på inspektion av förekomster i
+                datamängden, där alla data som behövs ingår i själva
+                datamängden som undersöks
+            </description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>directExternal</code>
+			<label>Direkt extern</label>
+            <description>
+                metod som baseras på inspektion av förekomster i
+                datamängden där externa referensdata till datamängden som
+                utvärderas behövs
+            </description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>indirect</code>
+			<label>Indirekt</label>
+            <description>metod som baseras på extern kunskap</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:DS_AssociationTypeCode" alias="associationType">
+		<entry>
+			<code>crossReference</code>
+			<label>Korsreferens</label>
+            <description>referens från en datamängd till en annan</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>largerWorkCitation</code>
+			<label>Del av mer omfattande arbete</label>
+            <description>
+                referens till en mer omfattande datamängd som denna
+                datamängd är en del av
+            </description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>partOfSeamlessDatabase</code>
+			<label>Del av sömlös databas</label>
+            <description>del av enhetligt strukturerad databas</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>source</code>
+			<label>Ursprung</label>
+            <description>
+                referens till den information som innehållet i den aktuella
+                datamängden ursprungligen härstammar från
+            </description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>stereoMate</code>
+			<label>Stereobildpar</label>
+            <description>
+                referens mellan två bilder som när de betraktas tillsammans
+                kan ge en tredimensionell upplevelse
+            </description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:DS_InitiativeTypeCode">
+		<entry>
+			<code>campaign</code>
+			<label>Kampanj</label>
+            <description>en serie av organiserade och planerade åtgärder</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>collection</code>
+			<label>Sammanställning</label>
+            <description>
+                insamling av datamängder som ska sammanställas för ett visst
+                syfte
+            </description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>exercise</code>
+			<label>Utförande</label>
+            <description>utförande av en eller flera funktioner</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>experiment</code>
+			<label>Experiment</label>
+            <description>process i syfte att utröna om något är giltigt eller användbart</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>investigation</code>
+			<label>Undersökning</label>
+            <description>undersökning</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>mission</code>
+			<label>Uppdrag</label>
+            <description>ett särskilt uppdrag inom ett datainsamlingssystem</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>sensor</code>
+			<label>Sensor</label>
+            <description>
+                enhet eller del av utrustning som avkänner eller registrerar
+                information
+            </description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>operation</code>
+			<label>Åtgärd</label>
+            <description>åtgärd som är en del i en serie av åtgärder</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>platform</code>
+			<label>Plattform</label>
+            <description>fordon eller annan bärare av sensor</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>process</code>
+			<label>Process</label>
+            <description>
+                metod att genomföra något som inbegriper ett antal
+                (definierade) steg
+            </description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>program</code>
+			<label>Program</label>
+            <description>särskilt planerad verksamhet</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>project</code>
+			<label>Projekt</label>
+            <description>
+                organiserat åtagande, forskning eller undersökning; oftast väl
+                avgräsnat vad gäller tid och resurser
+            </description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>study</code>
+			<label>Utredning</label>
+            <description>utredning</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>task</code>
+			<label>Arbetsuppgift</label>
+            <description>avgränsad arbetsuppgift</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>trial</code>
+			<label>Försök</label>
+            <description>förlopp för att testa, utforska eller demonstrera något</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_CellGeometryCode">
+		<entry>
+			<code>point</code>
+			<label>Punkt</label>
+            <description>varje cell representerar en punkt</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>area</code>
+			<label>Yta</label>
+            <description>varje cell representerar en yta</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_CharacterSetCode">
+        <entry>
+            <code>ucs2</code>
+            <label>ucs2</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>ucs4</code>
+            <label>ucs4</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>utf7</code>
+            <label>utf7</label>
+            <description>-- avsiktligt ej översatt -- 7-bit variable size UCS Transfer Format, based on</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>utf8</code>
+            <label>utf8</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>utf16</code>
+            <label>utf16</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>8859part1</code>
+            <label>8859part1</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>8859part2</code>
+            <label>8859part2</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>8859part3</code>
+            <label>8859part3</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>8859part4</code>
+            <label>8859part4</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>8859part5</code>
+            <label>8859part5</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>8859part6</code>
+            <label>8859part6</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>8859part7</code>
+            <label>8859part7</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>8859part8</code>
+            <label>8859part8</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>8859part9</code>
+            <label>8859part9</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>8859part10</code>
+            <label>8859part10</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>8859part11</code>
+            <label>8859part11</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>8859part13</code>
+            <label>8859part13</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>8859part14</code>
+            <label>8859part14</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>8859part15</code>
+            <label>8859part15</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>8859part16</code>
+            <label>8859part16</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>jis</code>
+            <label>jis</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>shiftJIS</code>
+            <label>shiftJIS</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>eucJP</code>
+            <label>eucJP</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>usAscii</code>
+            <label>usAscii</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>ebcdic</code>
+            <label>ebcdic</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>eucKR</code>
+            <label>eucKR</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>big5</code>
+            <label>big5</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>GB2312</code>
+            <label>GB2312</label>
+            <description>-- avsiktligt ej översatt --</description>
+        </entry>
+        <!-- === -->
+    </codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_ClassificationCode">
+        <entry>
+            <code>unclassified</code>
+            <label>Inget skyddsbehov</label>
+            <description>
+                tillgänglig för allmän åtkomst
+                ANM. Ingen eller obetydlig skada uppstår vid obehörig
+                tillgång till resursen.
+            </description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>restricted</code>
+            <label>
+                Begränsat
+                skyddsbehov
+            </label>
+            <description>
+                tillgänglig för behörig
+                ANM. Ingen eller obetydlig skada uppstår vid obehörig
+                tillgång till resursen.
+                Ex. En vidare krets betrodda, inom en organisation eller
+                samarbetspartners, har tillgång till resursen.
+            </description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>confidential</code>
+            <label>Måttligt skyddsbehov</label>
+            <description>
+                tillgänglig för behörig
+                ANM. Icke obetydlig skada uppstår vid obehörig tillgång till
+                resursen.
+                Ex. Begränsad krets av betrodda användare har tillgång till
+                resurs som är företagshemlig.
+            </description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>secret</code>
+            <label>Högt skyddsbehov</label>
+            <description>
+                tillgänglig för behörig
+                ANM. Betydande skada uppstår vid obehörig tillgång till
+                resursen.
+                Ex. Begränsad krets av betrodda användare har tillgång till
+                resurs som omfattas av sekretesslagen men ej rör rikets
+                säkerhet.
+            </description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>topSecret</code>
+            <label>
+                Mycket högt
+                skyddsbehov
+            </label>
+            <description>
+                tillgänglig för behörig
+                ANM. Synnerlig skada uppstår vid obehörig tillgång till
+                resursen.
+                Ex. Begränsad krets av betrodda användare har tillgång till
+                resurs som rör rikets säkerhet.
+            </description>
+        </entry>
+        <!-- === -->
+    </codelist>
+    <!-- ==================================================== -->
+    <codelist name="gmd:MD_CoverageContentTypeCode">
+        <entry>
+            <code>image</code>
+            <label>Bild</label>
+            <description>
+                meningsfull numerisk representation av en fysikalisk
+                parameter som inte är den fysikaliska parameterns egentliga
+                värde
+            </description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>thematicClassification</code>
+            <label>Klassificering</label>
+            <description>
+                kodade värden utan kvantitativt värde som används för att
+                representera en fysikalisk egenskap
+            </description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>physicalMeasurement</code>
+            <label>Mätvärde</label>
+            <description>resultat av mätning av fysikalisk storhet</description>
+        </entry>
+        <!-- === -->
+    </codelist>
+    <!-- ==================================================== -->
+    <codelist name="gmd:MD_DatatypeCode">
+        <entry>
+            <code>class</code>
+            <label>Klass</label>
+            <description>
+                klass som beskriver instanser som alla delar samma
+                uppsättning av attribut, operationer, metoder, relationer och
+                beteende
+            </description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>codelist</code>
+            <label>Kodlista</label>
+            <description>
+                lista som anger ett antal värden och deras innebörd, får
+                utvidgas
+            </description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>enumeration</code>
+            <label>Uppräkning</label>
+            <description>
+                lista som anger ett antal värden och deras innebörd, får inte
+                utvidgas
+            </description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>codelistElement</code>
+            <label>Listelement</label>
+            <description>
+                värde som ingår i en ändlig, diskret värdemängd (kodlista eller
+                uppräkning)
+                värde som ingår i en kodlista eller uppräkning
+            </description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>abstractClass</code>
+            <label>Abstrakt klass</label>
+            <description>klass som inte direkt kan instansieras</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>aggregateClass</code>
+            <label>Aggregerad klass</label>
+            <description>klass som är sammansatt av andra klasser</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>specifiedClass</code>
+            <label>Specified claSpecialiserad klassss</label>
+            <description>
+                klass som kan ersättas av en mer generell klass (dess
+                basklass)
+            </description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>datatypeClass</code>
+            <label>Datatypsklass</label>
+            <description>
+                klass som specificerar värdedomän och de operationer som är
+                tillåtna på värdena
+                ANM. Översatt från ISO 19103.
+            </description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>interfaceClass</code>
+            <label>Gränssnittsklass</label>
+            <description>klass som beskriver beteendet hos ett gränssnitt</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>unionClass</code>
+            <label>Unionsklass</label>
+            <description>
+                klass som beskriver ett möjligt val av en av de klasser den
+                omfattar
+            </description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>metaClass</code>
+            <label>Metaklass</label>
+            <description>klass vars instanser också är klasser</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>typeClass</code>
+            <label>Objekttypsklass</label>
+            <description>klass som specificerar en objekttyp</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>characterString</code>
+            <label>Textsträng</label>
+            <description>textfält</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>integer</code>
+            <label>Heltal</label>
+            <description>heltalsfält</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>association</code>
+            <label>Relation</label>
+            <description>
+                relation mellan två klasser som specificerar hur deras
+                instanser kan förhålla sig till varandra
+            </description>
+        </entry>
+        <!-- === -->
+    </codelist>
+    <!-- ==================================================== -->
+    <codelist name="gmd:MD_DimensionNameTypeCode">
+        <entry>
+            <code>row</code>
+            <label>Rad</label>
+            <description>y-axel (ordinata)</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>column</code>
+            <label>Kolumn</label>
+            <description>x-axel (abskissa)</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>vertical</code>
+            <label>Vertikal</label>
+            <description>z-axel (vertikal)</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>track</code>
+            <label>Spår</label>
+            <description>längs skanningsriktningen</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>crossTrack</code>
+            <label>Tvärspår</label>
+            <description>
+                rätvinklig i förhållande till rörelseriktningen under en
+                skanningoperation
+            </description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>line</code>
+            <label>Skanningslinje</label>
+            <description>avsökningslinje hos en sensor</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>sample</code>
+            <label>Stickprov</label>
+            <description>element längs en avsökningslinje</description>
+        </entry>
+        <!-- === -->
+        <entry>
+            <code>time</code>
+            <label>Varaktighet</label>
+            <description>varaktighet</description>
+        </entry>
+        <!-- === -->
+    </codelist>
+
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_GeometricObjectTypeCode">
+		<entry>
+			<code>complex</code>
+			<label>Geometrikomplex</label>
+			<description>en samling av geometriska objekt i ett gemensamt
+			koordinatsystem som inte överlappar sig själva eller andra
+			objekt i samma komplex</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>composite</code>
+			<label>Geometrikomposit</label>
+			<description>ett geometrikomplex som är geometriskt likformigt med ett
+			geometriskt grundelement
+			Ex. En linjekomposit är ett geometrikomplex endast
+			bestående av en sekvens av linjer där varje linje (utom den
+			första) startar i föregående linjes slutpunkt. Linjekompositen
+			har i sig alla egenskaper som en linje.</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>curve</code>
+			<label>Linje</label>
+			<description>endimensionellt geometriskt grundelement med begränsad
+			utsträckning</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>point</code>
+			<label>Punkt</label>
+			<description>nolldimensionellt geometriskt grundelement</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>solid</code>
+			<label>Kropp</label>
+			<description>tredimensionellt geometriskt grundelement som är
+				sammanhängande och har begränsad utsträckning</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>surface</code>
+			<label>Yta</label>
+			<description>tvådimensionellt geometriskt grundelement som är
+			sammanhängande och har begränsad utsträckning</description>
+		</entry>
+		<!-- === -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_ImagingConditionCode">
+		<entry>
+			<code>blurredImage</code>
+			<label>Oskarp</label>
+			<description>del av bilden är oskarp</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>cloud</code>
+			<label>Moln</label>
+			<description>del av bilden är delvis dold av moln</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>degradingObliquity</code>
+			<label>Avvikelse från lodlinje</label>
+			<description>avvikelse från lodrät fotograferingsvinkel (ej vertikalbild)</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>fog</code>
+			<label>Dimma</label>
+			<description>del av bilden är delvis skymd av dimma</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>heavySmokeOrDust</code>
+			<label>Rök eller damm</label>
+			<description>del av bilden är delvis skymd av rök eller damm</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>night</code>
+			<label>Natt</label>
+			<description>bilden togs nattetid</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>rain</code>
+			<label>Regn</label>
+			<description>bilden togs under regn</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>semiDarkness</code>
+			<label>Halvmörkt</label>
+			<description>bilden togs under halvmörka förhållanden som skymning eller
+			gryning</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>shadow</code>
+			<label>Skugga</label>
+			<description>del av bilden är täckt av skugga</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>snow</code>
+			<label>Snö</label>
+			<description>del av bilden är täckt av snö</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>terrainMasking</code>
+			<label>Terrängmaskering</label>
+			<description>ett eller flera objekt eller terrängområden saknas i bilden på
+			grund av att de skyms av annan terräng eller andra objekt</description>
+		</entry>
+		<!-- === -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_KeywordTypeCode">
+		<entry>
+			<code>discipline</code>
+			<label>Disciplin</label>
+			<description>nyckelord som identiferar ett kunskapsområde eller en
+			vetenskapsgren</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>place</code>
+			<label>Plats</label>
+			<description>nyckelord som identifierar en plats</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>stratum</code>
+			<label>Lager</label>
+			<description>nyckelord som identifierar lager i en avlagring</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>temporal</code>
+			<label>Tidsperiod</label>
+			<description>nyckelord som identifierar en tidsperiod relaterad till
+			datamängden</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>theme</code>
+			<label>Tema</label>
+			<description>nyckelord som identifierer ett specifict tema eller
+			ämnesområde</description>
+		</entry>
+		<!-- === -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_MaintenanceFrequencyCode">
+		<entry>
+			<code>continual</code>
+			<label>Kontinuerlig</label>
+			<description>data uppdateras ofta och kontinuerligt</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>daily</code>
+			<label>Dagligen</label>
+			<description>data uppdateras daglige</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>weekly</code>
+			<label>Veckovis</label>
+			<description>data uppdateras veckovis</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>fortnightly</code>
+			<label>Var 14:e dag</label>
+			<description>data uppdateras varannan vecka</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>monthly</code>
+			<label>Månadsvis</label>
+			<description>data uppdateras varje månad</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>quarterly</code>
+			<label>Kvartalsvis</label>
+			<description>data uppdateras kvartalsvis</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>biannually</code>
+			<label>Halvårsvis</label>
+			<description>data uppdateras halvårsvis</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>annually</code>
+			<label>Årligen</label>
+			<description>data uppdateras årligen</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>asNeeded</code>
+			<label>Vid behov</label>
+			<description>data uppdateras vid b</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>irregular</code>
+			<label>Oregelbundet</label>
+			<description>data uppdateras med oregelbundna intervall</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>notPlanned</code>
+			<label>Ej planerat</label>
+			<description>det saknas planerad uppdatering</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>unknown</code>
+			<label>Okänt</label>
+			<description>uppdateringsfrekvens är ej känd</description>
+		</entry>
+		<!-- ISO PROFIL CHE ONLY
+		<entry>
+			<code>userDefined</code>
+			<label>User defined</label>
+			<description></description>
+		</entry>
+		-->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_MediumFormatCode">
+		<entry>
+			<code>cpio</code>
+			<label>cpio</label>
+			<description>CoPy In / Out, ett kommando och filformat för dataöverföring i
+			UNIX</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>tar</code>
+			<label>tar</label>
+			<description>Tape Archive, ett kommando och filformat för sammanslagning
+			av filer</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>highSierra</code>
+			<label>highSierra</label>
+			<description>High sierra filsystem för CD-ROM</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>iso9660</code>
+			<label>iso9660</label>
+			<description>volyminformation och filstruktur för CDROM</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>iso9660RockRidge</code>
+			<label>iso9660RockRidge</label>
+			<description>Rock ridge överföringsformat (UNIX)</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>iso9660AppleHFS</code>
+			<label>iso9660AppleHFS</label>
+			<description>Macintosh hierarkiskt filssystem</description>
+		</entry>
+		<!-- === -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_MediumNameCode">
+		<entry>
+			<code>cdRom</code>
+			<label>CD-ROM</label>
+			<description>ej skrivbar optisk skiva</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>dvd</code>
+			<label>DVD</label>
+			<description>DVD = digital versatile disk</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>dvdRom</code>
+			<label>DVD-ROM</label>
+			<description>ej skrivbar DVD</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>3halfInchFloppy</code>
+			<label>3,5 tum diskett</label>
+			<description>3,5 tums magnetisk skiva</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>5quarterInchFloppy</code>
+			<label>5,25 tum diskett</label>
+			<description>5,25 tums magnetisk skiva</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>7trackTape</code>
+			<label>7-spår band</label>
+			<description>7-spårs magnetiskt band</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>9trackTape</code>
+			<label>9-spår band</label>
+			<description>9-spårs magnetiskt band</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>3480Cartridge</code>
+			<label>3480 bandkassett</label>
+			<description>3480 bandkassett</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>3490Cartridge</code>
+			<label>3490 bandkassett</label>
+			<description>3490 bandkassett</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>3580Cartridge</code>
+			<label>3580 bandkassett</label>
+			<description>3580 bandkassett</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>4mmCartridgeTape</code>
+			<label>4 mm bandkassett</label>
+			<description>4 mm bandkassett</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>8mmCartridgeTape</code>
+			<label>8 mm bandkassett</label>
+			<description>8 mm bandkassett</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>1quarterInchCartridgeTape</code>
+			<label>¼ tum bandkassett</label>
+			<description>¼ tum bandkassett</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>digitalLinearTap</code>
+			<label>½ tum DLT</label>
+			<description>½ tums Digital Linear Tape kassett</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>onLine</code>
+			<label>Online</label>
+			<description>direktåtkomst via dator</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>satellite</code>
+			<label>Satellit</label>
+			<description>uppkoppling via satellit</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>telephoneLink</code>
+			<label>Telefon</label>
+			<description>uppkoppling via telefon</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>hardcopy</code>
+			<label>Trycksak</label>
+			<description>information för mänsklig användning, t ex. i form av
+			pappersdokument</description>
+		</entry>
+		<!-- === -->
+		<!-- ISO PROFIL CHE ONLY
+		<entry>
+			<code>zip100</code>
+			<label>Zip100</label>
+			<description></description>
+		</entry>
+		<entry>
+			<code>zip250</code>
+			<label>Zip250</label>
+			<description></description>
+		</entry>      <entry>
+			<code>e-mail</code>
+			<label>E-mail</label>
+			<description></description>
+		</entry>      <entry>
+			<code>zip</code>
+			<label>Zip</label>
+			<description></description>
+		</entry>      <entry>
+			<code>jaz</code>
+			<label>Jaz</label>
+			<description></description>
+		</entry>      <entry>
+			<code>other</code>
+			<label>Other</label>
+			<description></description>
+		</entry>-->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_ObligationCode">
+		<entry>
+			<code>mandatory</code>
+			<label>Obligatorisk</label>
+			<description>ska alltid anges</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>optional</code>
+			<label>Frivillig</label>
+			<description>kan, men behöver inte, anges</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>conditional</code>
+			<label>Villkorad</label>
+			<description>ska anges då vissa förutsättningar gäller</description>
+		</entry>
+		<!-- === -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_PixelOrientationCode">
+		<entry>
+			<code>center</code>
+			<label>Centrum</label>
+			<description>punkt halvägs mellan nedre vänstra och övre högra hörnet i
+			pixeln</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>lowerLeft</code>
+			<label>Nedre vänstra</label>
+			<description>det hörn i pixeln närmast origo i det använda rumsliga
+			referenssystemet; om två hörn ligger lika nära origo är det den
+			med den minsta x-koordinaten (öst-väst-koordinaten)</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>lowerRight</code>
+			<label>Nedre högra</label>
+			<description>nästa hörn moturs från nedre vänstra hörnet</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>upperRight</code>
+			<label>Övre högra</label>
+			<description>nästa hörn moturs från nedre högra hörnet</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>upperLeft</code>
+			<label>Övre vänstra</label>
+			<description>nästa hörn moturs från övre högra hörnet</description>
+		</entry>
+		<!-- === -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_ProgressCode">
+		<entry>
+			<code>completed</code>
+			<label>Färdigställd</label>
+			<description>produktionen av data är slutförd</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>historicalArchive</code>
+			<label>Arkiverad</label>
+			<description>data lagras i en lagringsmiljö offline</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>obsolete</code>
+			<label>Inte längre i bruk</label>
+			<description>inte längre i bruk</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>onGoing</code>
+			<label>Pågående</label>
+			<description>data uppdateras kontinuerligt</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>planned</code>
+			<label>Planerad</label>
+			<description>ett fast datum finns angivet då data ska skapas eller
+			uppdateras</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>required</code>
+			<label>Erfordrad</label>
+			<description>data behöver genereras eller uppdateras</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>underDevelopment</code>
+			<label>Under utveckling</label>
+			<description>data är för närvarande under utveckling</description>
+		</entry>
+		<!-- === -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_RestrictionCode">
+		<entry>
+			<code>copyright</code>
+			<label>Upphovsrätt</label>
+			<description>rätt att framställa exemplar av ett verk och i vilken omfattning
+			verket får göras tillgänglig för allmänheten
+			ANM. Regleras i Sverige enligt lagen 1960:779 om
+			upphovsrätt till litterära och konstnärliga verk.</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>patent</code>
+			<label>Patent</label>
+			<description>ensamrätt att efter ansökan yrkesmässigt utnyttja uppfinningen
+			(under 20 år)
+			ANM. Regleras i Sverige enligt patentlagen (1967:837).</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>patentPending</code>
+			<label>Avvaktar patent</label>
+			<description>information som är under ansökan av patent</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>trademark</code>
+			<label>Varumärke</label>
+			<description>allt som kan individualisera något t ex ord, figurer,
+			förpackningsformer, slogan eller ljud i syfte att särskilja ett
+			företag och dess produkter från andra företag eller produkter
+			ANM. Genom registrering eller inarbetning kan ensamrätt
+			erhållas enligt varumärkeslagen (1960:644).</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>license</code>
+			<label>Licens</label>
+			<description>formaliserat tillstånd att använda en resurs</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>intellectualPropertyRights</code>
+			<label>Immaterialrätt</label>
+			<description>rättighet till finansiell nytta av och kontroll av distribution av
+			immateriell egendom som är resultat av en skapande process
+			ANM. Skyddet om fattar patent, varumärke, mönster,
+			upphovsrätt, m.fl.</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>restricted</code>
+			<label>Begränsad</label>
+			<description>begränsade spridningsrättigheter</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>otherRestrictions</code>
+			<label>Andra begränsningar</label>
+			<description>ospecificerade begränsningar</description>
+		</entry>
+		<!-- === -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_ScopeCode">
+		<!--<entry>
+			<code>attribute</code>
+			<label>Attributvärde</label>
+			<description>information om attributvärde</description>
+		</entry>
+
+		<entry>
+			<code>attributeType</code>
+			<label>Attributtyp</label>
+			<description>information om attributtyp</description>
+		</entry>
+
+		<entry>
+			<code>collectionHardware</code>
+			<label>Utrustning</label>
+			<description>information om använd insamlingsutrustning</description>
+		</entry>
+
+		<entry>
+			<code>collectionSession</code>
+			<label>Insamling</label>
+			<description>information om informationsinsamlingen</description>
+		</entry>
+		-->
+		<!--<entry>
+			<code>document</code>
+			<label>Dokument</label>
+			<description>Dokument</description>
+		</entry>-->
+		<entry>
+			<code>dataset</code>
+			<label>Datamängd</label>
+			<description>information om datamängd</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>series</code>
+			<label>Serie</label>
+			<description>information om en datamängdsserie eller ett aggregat</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>service</code>
+			<label>Tjänst</label>
+			<description>information om tjänst</description>
+		</entry>
+		<!-- === -->
+		<!--<entry>
+			<code>nonGeographicDataset</code>
+			<label>Ej lägesbunden data</label>
+			<description>information om icke-geografiska data</description>
+		</entry>
+
+		<entry>
+			<code>dimensionGroup</code>
+			<label>Grupp av dimensioner</label>
+			<description>information om en grupperad nivå av dimensioner</description>
+		</entry>
+
+		<entry>
+			<code>feature</code>
+			<label>Objekt</label>
+			<description>information om ett objekt</description>
+		</entry>
+
+		<entry>
+			<code>featureType</code>
+			<label>Objekttyp</label>
+			<description>information om en objekttyp</description>
+		</entry>
+
+		<entry>
+			<code>propertyType</code>
+			<label>Egenskapstyp</label>
+			<description>information om en egenskapstyp</description>
+		</entry>
+
+		<entry>
+			<code>fieldSession</code>
+			<label>Fältarbete</label>
+			<description>information om fältarbete</description>
+		</entry>-->
+
+		<entry>
+			<code>software</code>
+			<label>Programvara</label>
+			<description>information om en programvara eller enskild funktion</description>
+		</entry>
+
+		<!--<entry>
+			<code>publication</code>
+			<label>Publikation</label>
+			<description>Publicerat dokument</description>
+		</entry>
+
+		<entry>
+			<code>model</code>
+			<label>Modell</label>
+			<description>information om en modell</description>
+		</entry>
+
+		<entry>
+			<code>tile</code>
+			<label>Partition</label>
+			<description>del av datamängd som motsvarar ett begränsat område på
+			marken</description>
+		</entry>
+		-->
+		<!-- ISO PROFIL CHE ONLY
+		<entry>
+			<code>project</code>
+			<label>Project</label>
+			<description></description>
+		</entry>
+		<entry>
+			<code>stationSite</code>
+			<label>Station site</label>
+			<description></description>
+		</entry>
+		<entry>
+			<code>publication</code>
+			<label>Publication</label>
+			<description>Publication</description>
+		</entry>-->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_SpatialRepresentationTypeCode">
+		<entry>
+			<code>vector</code>
+			<label>Vektor</label>
+			<description>vektordata används för att representera rumslig information</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>grid</code>
+			<label>Raster</label>
+			<description>rasterdata används för att representera rumslig Information</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>textTable</code>
+			<label>Text eller tabell</label>
+			<description>data i form av text eller uppställda i tabell används för att
+				representera rumslig information</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>tin</code>
+			<label>TIN</label>
+			<description>logisk datastruktur utformad som ett nät av sammanhängande
+			oregelbundna trianglar där storheterna endast existerar i
+			trianglarnas hörn</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>stereoModel</code>
+			<label>Stereomodell</label>
+			<description>tredimensionell vy som skapas genom ett par överlappande
+			bilder, t.ex. flyg- eller satellitbi</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>video</code>
+			<label>Video</label>
+			<description>scen från en videoinspelning</description>
+		</entry>
+		<!-- ISO PROFIL CHE ONLY
+		<entry>
+			<code>paperMap</code>
+			<label>Paper map</label>
+			<description></description>
+		</entry>-->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_TopicCategoryCode" alias="topicCategory">
+		<entry>
+			<code>farming</code>
+			<label>Areella näringar</label>
+			<description>skötsel av djur eller odling av grödor
+			Ex. jordbruk, konstbevattning, akvakultur, planteringar,
+			skadedjur eller sjukdomar som påverkar skörd eller boskap.</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>biota</code>
+			<label>Biologi och ekologi</label>
+			<description>flora och fauna i naturlig miljö
+			Ex. vilda djur, vegetation, biologiska vetenskaper, ekologi,
+			vildmark, havsdjur, våtmark och habitat</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>boundaries</code>
+			<label>Administrativa gränser</label>
+			<description>offentligt bestämda avgränsningar av ett område
+			Ex. politiska och administrativa gränser som riksgränser eller
+			fastighetsgränser</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>climatologyMeteorologyAtmosphere</code>
+			<label>Atmosfär, klimatologi och meteorologi</label>
+			<description>processer och fenomen i atmosfären
+			Ex. molntäcke, väder, klimat, atmosfäriska förhållanden,
+			klimatförändringar, nederbörd.</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>economy</code>
+			<label>Ekonomi</label>
+			<description>ekonomiska aktiviteter, förhållanden och sysselsättning
+				Ex. produktion, arbete, omsättning, handel, industri, turism
+				och ekoturism, skogsbruk, fiske, prospektering och utvinning
+				av naturresurser</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>elevation</code>
+			<label>Höjddata</label>
+			<description>höjd över eller under havsytan
+			Ex. terränginformation som höjdvärden, batymetri, digtala
+			terrängmodeller, lutning och härledda produkter</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>environment</code>
+			<label>Miljö</label>
+			<description>miljöresurser, miljöskydd och bevarande
+			Ex. miljöförorening, avfallshantering, miljökonsekvensbeskrivningar,
+			miljörisker, naturreservat, landskap</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>geoscientificInformation</code>
+			<label>Geovetenskap</label>
+			<description>geovetenskap
+			Ex. geofysiska företeelser och processer, geologi, mineral,
+			berggrund, jordbävningar, skred, jordarter, grundvatten,
+			erosion, vattenkvalitet, hydrologi</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>health</code>
+			<label>Hälsa</label>
+			<description>hälsa, sjuk- och hälsovård, human ekologi och säkerhet
+			Ex. sjukdom, hälsofaktorer, hygien, missbruk, mental och
+			fysisk hälsa, hälsovård</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>imageryBaseMapsEarthCover</code>
+			<label>Arealtäckande bilder
+			och bakgrundskartor</label>
+			<description>arealtäckande bilder och bakgrundskartor
+				Ex. marktäcke, ortofoton, oklassificerade bilder, topografiska
+				kartor, karttext</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>intelligenceMilitary</code>
+			<label>Försvar</label>
+			<description>militär infrastruktur och aktiviteter
+				Ex. militärbaser, skjutfält, underrättelseverksamhet, militära
+				transporter</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>inlandWaters</code>
+			<label>Sjöar och vattendrag</label>
+			<description>insjövatten, dräneringssystem och deras egenskaper
+				Ex. vattendrag och glaciärer, dammar, översvämmning,
+				avrinningsområden, vattenkvalitet</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>location</code>
+			<label>Positionering</label>
+			<description>positionsbestämmande information och tjänster
+				Ex. adresser, geodetiska nät, stomnät, postnummerområden,
+				ortnamn</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>oceans</code>
+			<label>Kust och hav</label>
+			<description>havs- och kustområden och dess egenskaper
+			Ex. tidvatten, isförhållanden, temperatur, kustzoner</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>planningCadastre</code>
+			<label>Fastigheter och fysisk
+			planering</label>
+			<description>fastighetsinformation och planinformation för framtida
+				markanvändning
+				Ex. markanvändning, detaljplaner, områdesbestämmelser,
+				fastighetskartor</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>society</code>
+			<label>Samhälle och kultur</label>
+			<description>samhällsförhållanden och kultur
+			Ex. bosättningar, antropologi, arkeologi, utbildning,
+			demografi, kriminalitet och rättsväsen, folkräkning</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>structure</code>
+			<label>Byggnader och
+				byggnadsanläggningar</label>
+				<description>konstruktioner skapade av människohand
+				Ex. byggnader, monument</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>transportation</code>
+			<label>Transporter</label>
+			<description>infrastruktur och hjälpmedel för att transportera människor och
+			gods
+			Ex. vägar, järnvägar, flygplatser, farleder, tunnlar, sjökort,
+			fordonspositioner</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>utilitiesCommunication</code>
+			<label>Tekniska
+				försörjningssystem</label>
+			<description>energi-, vatten- och avloppsssystem, och infrastruktur och
+			tjänster för kommunikation
+			Ex. kraftverk, reningsverk, vattenledningar, avloppssystem,
+			elnät, datakommunikation, radio- och telekommunikation.</description>
+		</entry>
+		<!-- === -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MD_TopologyLevelCode">
+		<entry>
+			<code>geometryOnly</code>
+			<label>Endast geometri</label>
+			<description>geometriska objekt utan någon ytterligare struktur för att
+			beskriva topologi</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>topology1D</code>
+			<label>Nod-länk</label>
+			<description>1-dimensionellt topologiskt komplex – kallas normalt för nodlänk-
+				topologi</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>planarGraph</code>
+			<label>Plangraf</label>
+			<description>1-dimensionellt topologiskt komplex utan korsande länkar
+			ANM. För en plangraf gäller att länkarna inte får korsa i plan
+			ens om de skiljer i den tredje dimensionen (höjd).</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>fullPlanarGraph</code>
+			<label>Full planar graph</label>
+			<description>2-dimensionellt topologiskt komplex utan korsande länkar eller
+			kanter</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>surfaceGraph</code>
+			<label>Surface graph</label>
+			<description>1-dimensionellt topologiskt komplex som är likformigt med en
+			delmängd av en yta</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>fullSurfaceGraph</code>
+			<label>Full surface graph</label>
+			<description>2-dimensionellt topologiskt komplex som är likformigt med en
+				delmängd av en yta</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>topology3D</code>
+			<label>3D topology</label>
+			<description>3-dimensionellt topologiskt komplex</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>fullTopology3D</code>
+			<label>Full 3D topology</label>
+			<description>3-dimensionellt topologiskt komplex som täcker/innehåller en
+			hel 3-dimensionell euklidisk koordinatrymd</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>abstract</code>
+			<label>Abstract</label>
+			<description>topologiskt komplex utan specificerad geometrisk realisering.</description>
+		</entry>
+		<!-- === -->
+	</codelist>
+	<!-- ==================================================== -->
+	<codelist name="gmd:MX_ScopeCode">
+		<entry>
+			<code>attribute</code>
+			<label>Attribute</label>
+			<description>Information applies to the attribute class</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>attributeType</code>
+			<label>Attribute type</label>
+			<description>Information applies to the characteristic of a feature</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>collectionHardware</code>
+			<label>Collection hardware</label>
+			<description>Information applies to the collection hardware class</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>collectionSession</code>
+			<label>Collection session</label>
+			<description>Information applies to the collection session</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>dataset</code>
+			<label>Dataset</label>
+			<description>Information applies to the dataset</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>series</code>
+			<label>Series</label>
+			<description>Information applies to the series</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>nonGeographicDataset</code>
+			<label>Non geographic dataset</label>
+			<description>Information applies to non-geographic data</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>dimensionGroup</code>
+			<label>Dimension group</label>
+			<description>Information applies to a dimension group</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>feature</code>
+			<label>Feature</label>
+			<description>Information applies to a feature</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>featureType</code>
+			<label>Feature type</label>
+			<description>Information applies to a feature type</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>propertyType</code>
+			<label>Property type</label>
+			<description>Information applies to a property type</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>fieldSession</code>
+			<label>Field session</label>
+			<description>Information applies to a field session</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>software</code>
+			<label>Software</label>
+			<description>Information applies to a computer program or routine</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>service</code>
+			<label>Service</label>
+			<description>Information applies to a capability which a service provider entity makes
+				available to a service user entity through a set of interfaces that define a behaviour,
+				such as a use case</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>model</code>
+			<label>Model</label>
+			<description>Information applies to a copy or imitation of an existing or hypothetical
+				object</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>tile</code>
+			<label>Tile</label>
+			<description>Information applies to a tile, a spatial subset of geographic
+			data</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>initiative</code>
+			<label>Initiative</label>
+			<description>The referencing entity applies to a transfer aggregate which was originally
+				identified as an initiative (DS_Initiative)</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>stereomate</code>
+			<label>Stereo mate</label>
+			<description>The referencing entity applies to a transfer aggregate which was originally
+				identified as a stereo mate (DS_StereoMate)</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>sensor</code>
+			<label>Sensor</label>
+			<description>The referencing entity applies to a transfer aggregate which was originally
+				identified as a sensor (DS_Sensor)</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>platformSeries</code>
+			<label>Platform series</label>
+			<description>The referencing entity applies to a transfer aggregate which was originally
+				identified as a platform series (DS_PlatformSeries)</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>sensorSeries</code>
+			<label>Sensor series</label>
+			<description>The referencing entity applies to a transfer aggregate which was originally
+				identified as a sensor series (DS_SensorSeries)</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>productionSeries</code>
+			<label>Production series</label>
+			<description>The referencing entity applies to a transfer aggregate which was originally
+				identified as a production series (DS_ProductionSeries)</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>transferAggregate</code>
+			<label>Transfer aggregate</label>
+			<description>The referencing entity applies to a transfer aggregate which has no existence
+				outside of the transfer context</description>
+		</entry>
+		<!-- === -->
+		<entry>
+			<code>otherAggregate</code>
+			<label>Other aggregate</label>
+			<description>The referencing entity applies to a transfer aggregate which has an existence
+				outside of the transfer context, but which does not pertains to a specific aggregate
+				type.</description>
+		</entry>
+		<entry>
+			<code>document</code>
+			<label>Dokument</label>
+			<description>Skriven rapport.</description>
+		</entry>
+		<!-- === -->
+	</codelist>
+
+	<!-- ==================================================== -->
+	<codelist name="srv:DCPList">
+			<entry>
+					<description>DCP is XML</description>
+					<code>XML</code>
+					<label>XML</label>
+			</entry>
+			<entry>
+					<description>DCP is CORBA</description>
+					<code>CORBA</code>
+					<label>CORBA</label>
+			</entry>
+			<entry>
+					<description>DCP is JAVA</description>
+					<code>JAVA</code>
+					<label>JAVA</label>
+			</entry>
+			<entry>
+					<description>DCP is COM</description>
+					<code>COM</code>
+					<label>COM</label>
+			</entry>
+			<entry>
+					<description>DCP is SQL</description>
+					<code>SQL</code>
+					<label>SQL</label>
+			</entry>
+			<entry>
+					<description>DCP is WebServices</description>
+					<code>WebServices</code>
+					<label>Web services</label>
+			</entry>
+	</codelist>
+	<!-- === CouplingType from ISO19119 === -->
+	<codelist name="srv:SV_CouplingType">
+			<entry>
+					<code>tight</code>
+					<label>Fast</label>
+					<description>Fast kopplade datamängder</description>
+			</entry>
+			<entry>
+					<code>mixed</code>
+					<label>Mixad</label>
+					<description>Mixad koppling,: Fast kopplade datamängder finns, utöver detta kan externa data processas med tjänsten</description>
+			</entry>
+			<entry>
+					<code>loose</code>
+					<label>Löst</label>
+					<description>Löst kopplad, inga datamängder är kopplade til tjänsten</description>
+			</entry>
+	</codelist>
+	<codelist name="srv:SV_ParameterDirection">
+		<entry>
+			<code>in</code>
+			<label>Input</label>
+		</entry>
+		<entry>
+			<code>out</code>
+			<label>Output</label>
+		</entry>
+		<entry>
+			<code>in/out</code>
+			<label>Input/output</label>
+		</entry>
+	</codelist>
+
+  <!-- INSPIRE SDS  ================================================== -->
+
+  <codelist name="SDS_category">
+    <entry>
+      <code>http://inspire.ec.europa.eu/id/ats/metadata/2.0/sds-harmonised</code>
+      <label>Överenstämmelseklass 3 - Harmoniserad</label>
+      <description>Harmonised</description>
+    </entry>
+    <entry>
+      <code>http://inspire.ec.europa.eu/id/ats/metadata/2.0/sds-interoperable</code>
+      <label>Överenstämmelseklass 2 - Interoperabel</label>
+      <description>Interoperable</description>
+    </entry>
+    <entry>
+      <code>http://inspire.ec.europa.eu/id/ats/metadata/2.0/sds-invocable</code>
+      <label>Överenstämmelseklass 1 - Anropningsbar</label>
+      <description>Invocable</description>
+    </entry>
+  </codelist>
+
+  <codelist name="SDS_DCP">
+    <entry>
+      <code>xml</code>
+      <label>XML</label>
+      <description>XML</description>
+    </entry>
+    <entry>
+      <code>corba</code>
+      <label>CORBA</label>
+      <description>CORBA</description>
+    </entry>
+    <entry>
+      <code>java</code>
+      <label>JAVA</label>
+      <description>JAVA</description>
+    </entry>
+    <entry>
+      <code>com</code>
+      <label>COM</label>
+      <description>COM</description>
+    </entry>
+    <entry>
+      <code>sql</code>
+      <label>SQL</label>
+      <description>SQL</description>
+    </entry>
+    <entry>
+      <code>webServices</code>
+      <label>Web Services</label>
+      <description>Web Services</description>
+    </entry>
+  </codelist>
+</codelists>

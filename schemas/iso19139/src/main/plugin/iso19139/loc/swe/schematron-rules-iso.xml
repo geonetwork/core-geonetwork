@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<strings>
+  <schematron.title>ISO Rules</schematron.title>
+  <M6>CharacterString must have content or its parent must have a valid nilReason attribute.</M6>
+  <M7>CRS attributes constraints</M7>
+  <M8>A name is required for contact</M8>
+  <M9>OtherConstraints required if otherRestrictions</M9>
+  <M10>Units required for values</M10>
+  <M11>Description required if no sourceExtent</M11>
+  <M12>SourceExtent required if no description</M12>
+  <M13>Content mandatory for dataset or series</M13>
+  <M14>Lineage</M14>
+  <M15>Process step required if no statement or source</M15>
+  <M16>Dataset must have report or lineage</M16>
+  <M17>LevelDescription needed unless dataset or series</M17>
+  <M18>Units required for density values</M18>
+  <M19>Distribution format required</M19>
+  <M20>Extent element required</M20>
+  <M21>Dataset must have extent</M21>
+  <M22>Dataset or series must have a topic category</M22>
+  <M23>Either aggregateDataSetName or aggregateDataSetIdentifier
+    must be documented
+  </M23>
+  <M24>Language indication</M24>
+  <M25>Character set indication</M25>
+  <M26>Detail required unless simple term</M26>
+  <M27>Condition</M27>
+  <M28>DomainCode</M28>
+  <M29>ShortName</M29>
+  <M30>Check point description required if available</M30>
+  <M61>HierarchyLevelName must be documented if hierarchyLevel does
+    not contain "dataset"
+  </M61>
+
+
+  <alert.M6>
+    <div>Topic category is mandatory if MD_Metadata.hierarchyLevel equal 'dataset' or 'series' or
+      doesn't exist.
+    </div>
+  </alert.M6>
+  <report.M6>Topic category is:</report.M6>
+  <alert.M6.characterString>
+    <div>CharacterString must have content or parent's nilReason attribute must be legitimate.</div>
+  </alert.M6.characterString>
+  <alert.M6.directPosition>
+    <div>The presence of a dimension attribute implies the presence of the srsName attribute.</div>
+  </alert.M6.directPosition>
+  <alert.M7.axisAndSrs>
+    <div>The presence of an axisLabels attribute implies the presence of the srsName attribute.
+    </div>
+  </alert.M7.axisAndSrs>
+  <alert.M7.uomAndSrs>
+    <div>The presence of an uomLabels attribute implies the presence of the srsName attribute.</div>
+  </alert.M7.uomAndSrs>
+  <alert.M7.uomAndAxis>
+    <div>The presence of an uomLabels attribute implies the presence of the axisLabels attribute and
+      vice versa.
+    </div>
+  </alert.M7.uomAndAxis>
+  <alert.M8>
+    <div>You must specify one or more of individualName, organisationName or positionName.
+      <span class="validationReportSuggestion">Suggestions: Check contact information for metadata
+        contact or cited responsable party in identification section for example.
+      </span>
+    </div>
+  </alert.M8>
+  <report.M8>One or more of individualName, organisationName or positionName found in contact:
+  </report.M8>
+  <alert.M9.access>
+    <div>Other constraints should be defined if access constraints is set to "Other restrictions".
+      <br/>
+      otherConstraints: documented if accessConstraints = 'otherRestrictions'.
+      <br/>
+      <span class="validationReportSuggestion">Suggestions: Add an other constraints element and
+        explain the reason.
+      </span>
+    </div>
+  </alert.M9.access>
+  <report.M9>
+    <div>Other restrictions set to:</div>
+  </report.M9>
+  <alert.M9.use>
+    <div>Other constraints should be defined if use constraints is set to "Other restrictions".
+      <br/>
+      otherConstraints: documented if useConstraints = 'otherRestrictions'.
+      <br/>
+      <span class="validationReportSuggestion">Suggestions: Add an other constraints element and
+        explain the reason.
+      </span>
+    </div>
+  </alert.M9.use>
+  <alert.M9>
+    <div>'units' is mandatory if 'maxValue' or 'minValue' are provided.</div>
+  </alert.M9>
+  <report.M9.units>Units:</report.M9.units>
+  <report.M9.max>Max value:</report.M9.max>
+  <report.M9.min>Min value:</report.M9.min>
+  <alert.M11>
+    <div>'description' is mandatory if 'sourceExtent' is not documented.
+      <span class="validationReportSuggestion">Suggestions: Add a description or/and a source
+        extent.
+      </span>
+    </div>
+  </alert.M11>
+  <report.M11>
+    <div>Description and sourceExtent are documented for lineage.</div>
+  </report.M11>
+  <alert.M13>
+    <div>Statement is mandatory if no source or process step defined for dataset or a serie.
+      <br/>
+      If(count(source) + count(processStep) =0) and (DQ_DataQuality.scope.level = 'dataset' or
+      'series') then statement is mandatory.
+    </div>
+  </alert.M13>
+  <report.M13>
+    <div>Statement is documented.</div>
+  </report.M13>
+  <alert.M14>
+    <div>'source' role is mandatory if LI_Lineage.statement and 'processStep' role are not
+      documented.
+      <br/>
+      <span class="validationReportSuggestion">Suggestions: Define lineage statement or process step
+        role.
+      </span>
+    </div>
+  </alert.M14>
+  <report.M14>Source required if no statement or processStep.</report.M14>
+  <alert.M15>
+    <div>'processStep' role is mandatory if LI_Lineage.statement and 'source' role are not
+      documented.
+      <br/>
+      <span class="validationReportSuggestion">Suggestions: Define lineage statement or source
+        role.
+      </span>
+    </div>
+  </alert.M15>
+  <report.M15>Process step required if no statement or source.</report.M15>
+  <alert.M16>
+    <div>'report' or 'lineage' role is mandatory if scope.DQ_Scope.level = 'dataset'.</div>
+  </alert.M16>
+  <report.M16>
+    <div>Report or lineage is defined.</div>
+  </report.M16>
+  <alert.M17>
+    <div>'levelDescription' is mandatory if 'level' notEqual 'dataset' or 'series'.</div>
+  </alert.M17>
+  <report.M17>Level description set to:</report.M17>
+  <alert.M18>
+    <div>'densityUnits' is mandatory if 'density' is provided.</div>
+  </alert.M18>
+  <report.M18>Density is:</report.M18>
+  <alert.M19>
+    <div>One distributor format is needed.
+      <br/>
+      count (distributionFormat + distributor/MD_Distributor/distributorFormat) &gt; 0.
+    </div>
+  </alert.M19>
+  <report.M19>distributor format(s) found.</report.M19>
+  <alert.M20>
+    <div>In extent section, one of the following elements need to be defined : description,
+      geographicElement,
+      temporalElement, verticalElement.
+      <br/>
+      count(description + geographicElement + temporalElement + verticalElement) &gt; 0.
+    </div>
+  </alert.M20>
+  <report.M20>One description, geographicElement,
+    temporalElement, verticalElement found.
+  </report.M20>
+  <alert.M21>
+    <div>For a dataset, an extent has to be defined.
+      <br/>
+      MD_Metadata.hierarchyLevel = 'dataset' (i.e. the default value of this property on the parent)
+      implies count (extent.geographicElement.EX_GeographicBoundingBox) + count
+      (extent.geographicElement.EX_GeographicDescription) &gt;=1.
+    </div>
+  </alert.M21>
+  <report.M21>Extent defined for dataset.</report.M21>
+  <alert.M23>
+    <div>Either 'aggregateDataSetName' or 'aggregateDataSetIdentifier' must be documented.</div>
+  </alert.M23>
+  <report.M23>aggregateDataSetName or aggregateDataSetIdentifier documented.</report.M23>
+  <alert.M24>
+    <div>language not present.</div>
+  </alert.M24>
+  <alert.M26.obligation>
+    <div>if 'dataType' notEqual 'codelist', 'enumeration' or 'codelistElement' then 'obligation' is
+      mandatory.
+    </div>
+  </alert.M26.obligation>
+  <alert.M26.maximumOccurence>
+    <div>if 'dataType' notEqual 'codelist', 'enumeration' or 'codelistElement' then
+      'maximumOccurence' is mandatory.
+    </div>
+  </alert.M26.maximumOccurence>
+  <alert.M26.domainValue>
+    <div>if 'dataType' notEqual 'codelist', 'enumeration' or 'codelistElement' then 'domainValue' is
+      mandatory.
+    </div>
+  </alert.M26.domainValue>
+  <alert.M27>
+    <div>if 'obligation' = 'conditional' then 'condition' is mandatory.</div>
+  </alert.M27>
+  <report.M27>Condition defined for conditional element.</report.M27>
+  <alert.M28>
+    <div>if 'dataType' = 'codelistElement' then 'domainCode' is mandatory.</div>
+  </alert.M28>
+  <report.M28>Domain code documented for code list element.</report.M28>
+  <alert.M29>
+    <div>if 'dataType' not equal to 'codelistElement' then 'shortName' is mandatory.</div>
+  </alert.M29>
+  <report.M29>Short name documented for none code list element.</report.M29>
+  <alert.M30>
+    <div>'checkPointDescription' is mandatory if 'checkPointAvailability' = 1 or true.</div>
+  </alert.M30>
+  <report.M30>Check point description documented.</report.M30>
+  <alert.M61>
+    <div>hierarchyLevelName must be documented if hierarchyLevel does not contain 'dataset'</div>
+  </alert.M61>
+  <report.M61>Hierarchy level name is:</report.M61>
+
+  <alert.requiredAbstract>Data Identification Abstract is a required element
+  </alert.requiredAbstract>
+  <report.requiredAbstract>Data Identification Abstract found</report.requiredAbstract>
+  <alert.requiredTitle>Data Identification Citation Title is a required element
+  </alert.requiredTitle>
+  <report.requiredTitle>Data Identification Citation Title found</report.requiredTitle>
+  <alert.requiredDate>Data Identification Citation Date is a required element</alert.requiredDate>
+  <report.requiredDate>Data Identification Citation Date found</report.requiredDate>
+  <alert.requiredDateType>Data Identification Citation DateType is a required element
+  </alert.requiredDateType>
+  <report.requiredDateType>Data Identification Citation DateType is found</report.requiredDateType>
+  <alert.requiredContact>Contact is a required Element</alert.requiredContact>
+  <report.requiredContact>Contact found</report.requiredContact>
+  <alert.requiredLanguage>Language is a required element</alert.requiredLanguage>
+  <report.requiredLanguage>Language found</report.requiredLanguage>
+  <alert.requiredLanguage>Data Identification Language is a required element
+  </alert.requiredLanguage>
+  <report.requiredLanguage>Data Identification Language found</report.requiredLanguage>
+  <alert.requiredCitation>Data Identification Citation is a required element
+  </alert.requiredCitation>
+  <report.requiredCitation>Data Identification Citation found</report.requiredCitation>
+  <requiredElements>Required Elements</requiredElements>
+  <requireCitation>Citation</requireCitation>
+
+</strings>

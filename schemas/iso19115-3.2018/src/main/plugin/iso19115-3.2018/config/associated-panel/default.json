@@ -221,36 +221,6 @@
       },
       {
         "group": "onlineDiscover",
-        "label": "onlineDiscoverKML",
-        "copyLabel": "name",
-        "sources": {
-          "filestore": true
-        },
-        "icon": "fa gn-icon-onlinesrc",
-        "process": "onlinesrc-add",
-        "fields": {
-          "url": {},
-          "protocol": {
-            "value": "WWW:LINK",
-            "hidden": true,
-            "isMultilingual": false
-          },
-          "name": {},
-          "desc": {},
-          "function": {
-            "value": "browsing",
-            "hidden": true,
-            "isMultilingual": false
-          },
-          "applicationProfile": {
-            "value": "application/vnd.google-earth.kml+xml",
-            "hidden": true,
-            "isMultilingual": false
-          }
-        }
-      },
-      {
-        "group": "onlineDiscover",
         "label": "onlineDiscoverMap",
         "copyLabel": "name",
         "sources": {
@@ -278,7 +248,8 @@
       },
       {
         "group": "onlineDownload",
-        "label": "onlineDownloadFile",
+        "extendWithDataFormats": true,
+        "label": "onlineDownload",
         "copyLabel": "name",
         "sources": {
           "filestore": true
@@ -290,7 +261,7 @@
             "isMultilingual": false
           },
           "protocol": {
-            "value": "WWW:LINK",
+            "value": "WWW:DOWNLOAD:",
             "hidden": true,
             "isMultilingual": false
           },
@@ -298,38 +269,6 @@
           "desc": {},
           "function": {
             "value": "download",
-            "hidden": true,
-            "isMultilingual": false
-          }
-        }
-      },
-      {
-        "group": "onlineDownload",
-        "label": "onlineDownloadKML",
-        "copyLabel": "name",
-        "sources": {
-          "filestore": true
-        },
-        "icon": "fa gn-icon-onlinesrc",
-        "process": "onlinesrc-add",
-        "fields": {
-          "url": {
-            "isMultilingual": false
-          },
-          "protocol": {
-            "value": "WWW:LINK",
-            "hidden": true,
-            "isMultilingual": false
-          },
-          "name": {},
-          "desc": {},
-          "function": {
-            "value": "download",
-            "hidden": true,
-            "isMultilingual": false
-          },
-          "applicationProfile": {
-            "value": "application/vnd.google-earth.kml+xml",
             "hidden": true,
             "isMultilingual": false
           }

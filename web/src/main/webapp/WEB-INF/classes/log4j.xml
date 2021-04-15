@@ -36,6 +36,9 @@
   <logger name="geonetwork.search" additivity="true">
     <level value="WARN" />
   </logger>
+  <logger name="geonetwork.encryptor">
+    <level value="INFO"/>
+  </logger>
   <logger name="geonetwork.resources">
     <level value="ERROR"/>
   </logger>

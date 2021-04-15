@@ -52,7 +52,7 @@
         </span>
         <div class="btn-toolbar">
           <button type="button" class="btn btn-default pull-right"
-                  data-ng-hide="userSelected.security.authtype == 'LDAP'"
+                  data-ng-hide="hideResetPassword()"
                   data-ng-click="resetPassword(userSelected.id)">
             <i class="fa fa-lock fa-fw"></i> <span data-translate=""
           >resetPassword</span></button>
@@ -113,19 +113,28 @@
             <!-- Password are disabled when updating user -->
             <div ng-if="userOperation == 'newuser'">
               <div
-                data-ng-class="gnUserEdit.password.$error.required || gnUserEdit.password.$error.minlength ? 'has-error' : ''"
+                data-ng-class="gnUserEdit.password.$error.required || gnUserEdit.password.$error.minlength ||
+                               gnUserEdit.password.$error.maxlength ||  gnUserEdit.password.$error.pattern ? 'has-error' : ''"
                 class="form-group">
                 <label class="control-label col-sm-3" data-translate="">password</label>
                 <div class="col-sm-9">
                   <input type="password" id="gn-user-password" name="password"
                          class="form-control"
-                         data-ng-minlength="6"
+                         data-ng-minlength="{{passwordMinLength}}"
+                         data-ng-maxlength="{{passwordMaxLength}}"
                          data-ng-required="true"
+                         data-ng-pattern="passwordPattern"
                          data-ng-model="userSelected.password"
                          autocomplete="off"/>
                   <p class="help-block">
-                    <span class="error" data-ng-show="gnUserEdit.password.$error.minlength"
-                          data-translate="">passwordMinlength</span>
+                    <div class="error" data-ng-show="gnUserEdit.password.$error.minlength && !gnUserInfo.password.$pristine"
+                         data-translate="passwordMinlength" data-translate-value-length="{{passwordMinLength}}"></div>
+
+                    <div class="error" data-ng-show="gnUserEdit.password.$error.maxlength && !gnUserInfo.password.$pristine"
+                         data-translate="passwordMaxlength" data-translate-value-length="{{passwordMaxLength}}"></div>
+
+                    <div class="error" data-ng-show="gnUserEdit.password.$error.pattern && !gnUserInfo.password.$pristine"
+                         data-translate="">passwordPattern</div>
                   </p>
                 </div>
               </div>
@@ -344,16 +353,35 @@
           <form id="gn-password-reset" class="form-horizontal" name="gnPasswordReset">
               <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <div class="form-group"
+                 data-ng-class="gnPasswordReset.passwordOld.$error.required ? 'has-error' : ''">
+              <label class="control-label col-sm-3" data-translate="">passwordOld</label>
+              <div class="col-sm-9">
+                <input type="password" id="gn-user-password-old" name="passwordOld"
+                       class="form-control" autocomplete="off"
+                       data-ng-required="true"
+                       data-ng-model="resetPasswordOld"/>
+              </div>
+            </div>
+            <div class="form-group"
                  data-ng-class="gnPasswordReset.password.$error.required || gnPasswordReset.password.$error.minlength ? 'has-error' : ''">
               <label class="control-label col-sm-3" data-translate="">password</label>
               <div class="col-sm-9">
                 <input type="password" id="gn-user-password" name="password"
                        class="form-control" autocomplete="off"
-                       data-ng-minlength="6" data-ng-required="true"
-                       data-ng-model="resetPassword1"/>
+                       data-ng-minlength="{{passwordMinLength}}"
+                       data-ng-maxlength="{{passwordMaxLength}}"
+                       data-ng-required="true"
+                       data-ng-model="resetPassword1"
+                       data-ng-pattern="passwordPattern" />
                 <p class="help-block">
-                  <span class="error" data-ng-show="gnPasswordReset.password.$error.minlength"
-                        data-translate="">passwordMinlength</span>
+                  <div class="error" data-ng-show="gnPasswordReset.password.$error.minlength && !gnPasswordReset.password.$pristine"
+                       data-translate="passwordMinlength" data-translate-value-length="{{passwordMinLength}}"></div>
+
+                  <div class="error" data-ng-show="gnPasswordReset.password.$error.maxlength && !gnPasswordReset.password.$pristine"
+                       data-translate="passwordMaxlength" data-translate-value-length="{{passwordMaxLength}}"></div>
+
+                  <div class="error" data-ng-show="gnPasswordReset.password.$error.pattern && !gnPasswordReset.password.$pristine"
+                       data-translate="">passwordPattern</div>
                 </p>
               </div>
             </div>

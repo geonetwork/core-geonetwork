@@ -81,4 +81,14 @@
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
+
+  <bean id="strongEncryptor"
+        class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+    <property name="algorithm">
+      <value>PBEWithMD5AndDES</value>
+    </property>
+    <property name="password">
+      <value>jasypt</value>
+    </property>
+  </bean>
 </beans>

@@ -173,7 +173,6 @@
     <!-- Create a first document representing the main record. -->
     <doc>
       <xsl:copy-of select="gn-fn-index:add-field('docType', 'metadata')"/>
-      <xsl:copy-of select="gn-fn-index:add-field('documentStandard', 'iso19115-3.2018')"/>
       <!-- Index the metadata document as XML -->
       <document>
         <!--<xsl:value-of select="saxon:serialize(., 'default-serialize-mode')"/>-->
@@ -358,9 +357,7 @@
               "code": "<xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>",
               "codeSpace": "<xsl:value-of select="mcc:codeSpace/(gco:CharacterString|gcx:Anchor)"/>",
               "link": "<xsl:value-of select="mcc:code/gcx:Anchor/@xlink:href"/>"
-              }
-              <xsl:value-of select="."/>
-            </resourceIdentifier>
+              }</resourceIdentifier>
           </xsl:for-each>
 
           <xsl:for-each
@@ -972,18 +969,22 @@
           </inspireConformResource>
         </xsl:if>
 
-        <specificationConformance type="object">{
-          "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
-          "date": "<xsl:value-of select="*/mdq:result/*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date" />",
-          <xsl:if test="*/mdq:result/*/mdq:specification/*/cit:title/@xlink:href">
-            "link": "<xsl:value-of select="*/mdq:result/*/mdq:specification/*/cit:title/@xlink:href"/>",
-          </xsl:if>
-          <xsl:if test="*/mdq:result/*/mdq:explanation/*/text() != ''">
-            "explanation": "<xsl:value-of select="gn-fn-index:json-escape((*/mdq:result/*/mdq:explanation/*/text())[1])" />",
-          </xsl:if>
-          "pass": "<xsl:value-of select="$pass" />"
-          }
-        </specificationConformance>
+        <xsl:if test="string($title)">
+          <specificationConformance type="object">{
+            "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
+            <xsl:if test="string(*/mdq:result/*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)">
+            "date": "<xsl:value-of select="*/mdq:result/*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date" />",
+            </xsl:if>
+            <xsl:if test="*/mdq:result/*/mdq:specification/*/cit:title/@xlink:href">
+              "link": "<xsl:value-of select="*/mdq:result/*/mdq:specification/*/cit:title/@xlink:href"/>",
+            </xsl:if>
+            <xsl:if test="*/mdq:result/*/mdq:explanation/*/text() != ''">
+              "explanation": "<xsl:value-of select="gn-fn-index:json-escape((*/mdq:result/*/mdq:explanation/*/text())[1])" />",
+            </xsl:if>
+            "pass": "<xsl:value-of select="$pass" />"
+            }
+          </specificationConformance>
+        </xsl:if>
 
         <xsl:element name="conformTo_{replace(normalize-space($title), '[^a-zA-Z0-9]', '')}">
           <xsl:value-of select="$pass"/>
@@ -1010,17 +1011,18 @@
           <xsl:if test="count($attributes) > 0">
             ,"attributeTable" : [
             <xsl:for-each select="$attributes">
-              {"name": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:memberName/*/text())"/>",
-              "definition": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:definition/*/text())"/>",
+              <!-- TODO: Add multilingual support-->
+              {"name": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:memberName/gco:CharacterString/text())"/>",
+              "definition": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:definition/gco:CharacterString/text())"/>",
               "code": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:code/*/text())"/>",
               "link": "<xsl:value-of select="*/gfc:code/*/@xlink:href"/>",
               "type": "<xsl:value-of select="*/gfc:valueType/gco:TypeName/gco:aName/*/text()"/>"
               <xsl:if test="*/gfc:listedValue">
                 ,"values": [
                 <xsl:for-each select="*/gfc:listedValue">{
-                  "label": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:label/*/text())"/>",
+                  "label": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:label/gco:CharacterString/text())"/>",
                   "code": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:code/*/text())"/>",
-                  "definition": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:definition/*/text())"/>"}
+                  "definition": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:definition/gco:CharacterString/text())"/>"}
                   <xsl:if test="position() != last()">,</xsl:if>
                 </xsl:for-each>
                 ]

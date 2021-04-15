@@ -47,7 +47,7 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
 
     public static HarvesterSetting newSetting(AtomicInteger inc) {
         int id = inc.incrementAndGet();
-        return new HarvesterSetting().setName("name " + id).setValue("value " + id);
+        return new HarvesterSetting().setName("name " + id).setStoredValue("value " + id);
     }
 
     @Test

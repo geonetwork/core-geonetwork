@@ -4665,6 +4665,7 @@ période de temps couverte par le service.
       <option value="PNG">PNG</option>
       <option value="GIF">GIF</option>
       <option value="JPEG">JPEG</option>
+      <option value="PNG">PNG</option>
       <option value="EPS">EPS</option>
       <option value="PBM">PBM</option>
       <option value="PS">PS</option>

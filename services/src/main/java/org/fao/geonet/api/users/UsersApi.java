@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -33,7 +33,11 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.api.users.model.PasswordResetDto;
 import org.fao.geonet.api.users.model.UserDto;
+import org.fao.geonet.api.users.validation.PasswordResetDtoValidator;
+import org.fao.geonet.api.users.validation.UserDtoValidator;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.UserNotFoundEx;
@@ -51,7 +55,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
@@ -96,6 +102,9 @@ public class UsersApi {
 
     @Autowired
     DataManager dataManager;
+
+    @Autowired
+    LanguageUtils languageUtils;
 
     private BufferedImage pixel;
 
@@ -386,6 +395,8 @@ public class UsersApi {
         @RequestBody
             UserDto userDto,
         @Parameter(hidden = true)
+            BindingResult bindingResult,
+        @Parameter(hidden = true)
             ServletRequest request,
         @Parameter(hidden = true)
             HttpSession httpSession
@@ -393,6 +404,9 @@ public class UsersApi {
         Profile profile = Profile.findProfileIgnoreCase(userDto.getProfile());
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
+
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
         if (profile == Profile.Administrator) {
             checkIfAtLeastOneAdminIsEnabled(userDto, userRepository);
@@ -406,10 +420,12 @@ public class UsersApi {
                     + " max profile permitted is: " + myProfile);
         }
 
-        if (StringUtils.isEmpty(userDto.getUsername())) {
-            throw new IllegalArgumentException(Params.USERNAME
-                + " is a required parameter for "
-                + Params.Operation.NEWUSER + " " + "operation");
+        // Validate userDto data
+        UserDtoValidator userValidator = new UserDtoValidator();
+        userValidator.validate(userDto, bindingResult);
+        String errorMessage = ApiUtils.processRequestValidation(bindingResult, messages);
+        if (StringUtils.isNotEmpty(errorMessage)) {
+            throw new IllegalArgumentException(errorMessage);
         }
 
         List<User> existingUsers = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
@@ -553,22 +569,26 @@ public class UsersApi {
         )
         @PathVariable
             Integer userIdentifier,
-        @Parameter(
-            description = "Password to change."
-        )
-        @RequestParam(value = Params.PASSWORD) String password,
-        @Parameter(
-            description = "Password to change (repeat)."
-        )
-        @RequestParam(value = Params.PASSWORD + "2") String password2,
+        @RequestBody
+            PasswordResetDto passwordResetDto,
+        @Parameter(hidden = true)
+            BindingResult bindingResult,
         @Parameter(hidden = true)
             ServletRequest request,
         @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
 
-        if (!password.equals(password2)) {
-            throw new IllegalArgumentException("Passwords should be equal");
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
+
+        // Validate passwordResetDto data
+        PasswordResetDtoValidator passwordResetValidator = new PasswordResetDtoValidator();
+        passwordResetValidator.validate(passwordResetDto, bindingResult);
+        String errorMessage = ApiUtils.processRequestValidation(bindingResult, messages);
+        if (StringUtils.isNotEmpty(errorMessage)) {
+            throw new IllegalArgumentException(errorMessage);
         }
 
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -584,8 +604,14 @@ public class UsersApi {
             throw new UserNotFoundEx(Integer.toString(userIdentifier));
         }
 
+        PasswordEncoder encoder = PasswordUtil.encoder(ApplicationContextHolder.get());
+
+        if (!encoder.matches(passwordResetDto.getPasswordOld(), user.get().getPassword())) {
+            throw new IllegalArgumentException("The old password is not valid");
+        }
+
         String passwordHash = PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
-            password);
+            passwordResetDto.getPassword());
         user.get().getSecurity().setPassword(passwordHash);
         user.get().getSecurity().getSecurityNotifications().remove(UserSecurityNotification.UPDATE_HASH_REQUIRED);
         userRepository.save(user.get());

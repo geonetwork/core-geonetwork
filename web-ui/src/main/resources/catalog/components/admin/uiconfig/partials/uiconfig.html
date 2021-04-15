@@ -5,11 +5,10 @@
       <input type="checkbox"
              id="{{m}}-checkbox"
              data-ng-model="mCfg.enabled"/>&nbsp;
-      <label class="control-label"
-             for="{{m}}-checkbox">{{('ui-mod-' + m) | translate}}</label>
+      <h2><label for="{{m}}-checkbox">{{('ui-mod-' + m) | translate}}</label></h2>
     </legend>
     <legend data-ng-if="mCfg.enabled === undefined">
-      <label class="control-label">{{('ui-mod-' + m) | translate}}</label>
+      <h2>{{('ui-mod-' + m) | translate}}</h2>
     </legend>
 
     <p class="help-block"
@@ -33,8 +32,8 @@
 
       <!-- arrays -->
       <div data-ng-switch-when="hitsperpageValues">
-        <label class="col-sm-4 control-label">{{('ui-' + key) | translate}}</label>
-        <table class="table table-striped">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <table class="table table-striped table-bordered">
           <tr data-ng-repeat="v in mCfg[key] track by $index">
             <td>
               <input type="number"
@@ -52,10 +51,11 @@
           </tr>
           <tr>
             <td colspan="2">
-              <a class="btn btn-link"
+              <a class="btn btn-default"
                  title="{{'add' | translate}}"
                  data-ng-click="addItem(mCfg[key], mCfg[key][mCfg[key].length - 1] * 10)">
-                <i class="fa fa-plus"/>
+                <i class="fa fa-fw fa-plus"/>
+                <span translate="">add</span>
               </a>
             </td>
           </tr>
@@ -105,7 +105,7 @@
 
       <div data-ng-switch-when="languages">
         <label class="control-label">{{('ui-' + key) | translate}}</label>
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered">
           <tr data-ng-repeat="(iso3, iso2) in mCfg[key] track by $index">
             <td>
               <div class="input-group">
@@ -131,10 +131,11 @@
           </tr>
           <tr>
             <td colspan="2">
-              <a class="btn btn-link"
+              <a class="btn btn-default"
                  title="{{'add' | translate}}"
                  data-ng-click="addItem(mCfg[key], {'iso3code': 'iso2code'})">
-                <i class="fa fa-plus"/>
+                <i class="fa fa-fw fa-plus"/>
+                <span translate="">add</span>
               </a>
             </td>
           </tr>
@@ -147,7 +148,7 @@
 
       <div data-ng-switch-when="sortbyValues">
         <label class="control-label">{{('ui-' + key) | translate}}</label>
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered">
           <tr data-ng-repeat="opt in mCfg[key] track by $index">
             <td>
               <div class="input-group">
@@ -172,10 +173,11 @@
           </tr>
           <tr>
             <td colspan="2">
-              <a class="btn btn-link"
+              <a class="btn btn-default"
                  title="{{'add' | translate}}"
                  data-ng-click="addItem(mCfg[key], {'sortBy': 'fieldName', 'sortOrder': ''})">
-                <i class="fa fa-plus"/>
+                <i class="fa fa-fw fa-plus"/>
+                <span translate="">add</span>
               </a>
             </td>
           </tr>
@@ -199,7 +201,7 @@
 
       <div data-ng-switch-when="resultViewTpls">
         <label class="control-label">{{('ui-' + key) | translate}}</label>
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered">
           <tr data-ng-repeat="opt in mCfg[key] track by $index">
             <td>
               <div class="input-group">
@@ -230,10 +232,11 @@
           </tr>
           <tr>
             <td colspan="2">
-              <a class="btn btn-link"
+              <a class="btn btn-default"
                  title="{{'add' | translate}}"
                  data-ng-click="addItem(mCfg[key], {'icon': 'fa-fw', 'tplUrl': '', 'tooltip': ''})">
-                <i class="fa fa-plus"/>
+                <i class="fa fa-fw fa-plus"/>
+                <span translate="">add</span>
               </a>
             </td>
           </tr>
@@ -246,7 +249,7 @@
 
       <div data-ng-switch-when="formatter">
         <label class="control-label">{{('ui-' + key) | translate}}</label>
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered">
           <tr data-ng-repeat="opt in mCfg[key].list track by $index">
             <td>
               <div class="input-group">
@@ -272,10 +275,11 @@
           </tr>
           <tr>
             <td colspan="2">
-              <a class="btn btn-link"
+              <a class="btn btn-default"
                  title="{{'add' | translate}}"
                  data-ng-click="addItem(mCfg[key].list, {'label': '', 'url': ''})">
-                <i class="fa fa-plus"/>
+                <i class="fa fa-fw fa-plus"/>
+                <span translate="">add</span>
               </a>
             </td>
           </tr>
@@ -288,7 +292,7 @@
 
       <div data-ng-switch-when="downloadFormatter">
         <label class="control-label">{{('ui-' + key) | translate}}</label>
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered">
           <tr data-ng-repeat="opt in mCfg[key] track by $index">
             <td>
               <div class="input-group">
@@ -314,10 +318,11 @@
           </tr>
           <tr>
             <td colspan="2">
-              <a class="btn btn-link"
+              <a class="btn btn-default"
                  title="{{'add' | translate}}"
                  data-ng-click="addItem(mCfg[key], {'label': '', 'url': ''})">
-                <i class="fa fa-plus"/>
+                <i class="fa fa-fw fa-plus"/>
+                <span translate="">add</span>
               </a>
             </td>
           </tr>
@@ -331,7 +336,7 @@
         <h3>{{('ui-' + key) | translate}}</h3>
         <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
           <label class="control-label">{{type}}</label>
-          <table class="table table-striped">
+          <table class="table table-striped table-bordered">
             <tr data-ng-repeat="protocol in value track by $index">
               <td>
                 <input type="text"
@@ -349,10 +354,11 @@
             </tr>
             <tr>
               <td colspan="2">
-                <a class="btn btn-link"
+                <a class="btn btn-default"
                    title="{{'add' | translate}}"
                    data-ng-click="addItem(mCfg[key][type], 'protocol')">
-                  <i class="fa fa-plus"/>
+                  <i class="fa fa-fw fa-plus"/>
+                  <span translate="">add</span>
                 </a>
               </td>
             </tr>
@@ -372,8 +378,7 @@
           <input type="checkbox"
                  id="{{key + type}}-checkbox"
                  data-ng-model="mCfg[key][type]"/>&nbsp;
-          <label class="control-label"
-                 for="{{key + type}}-checkbox">{{('ui-' + type) | translate}}</label>
+          <label for="{{key + type}}-checkbox">{{('ui-' + type) | translate}}</label>
 
           <p class="help-block"
              data-ng-show="(('ui-' + key + type + '-help') | translate) != ('ui-' + key + type + '-help')">
@@ -404,7 +409,7 @@
         <h3>{{('ui-' + key) | translate}}</h3>
         <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
           <label class="control-label">{{type}}</label>
-          <table class="table table-striped">
+          <table class="table table-striped table-bordered">
             <tr data-ng-repeat="s in value track by $index">
               <td>
                 <div class="input-group">
@@ -430,10 +435,11 @@
             </tr>
             <tr>
               <td colspan="2">
-                <a class="btn btn-link"
+                <a class="btn btn-default"
                    title="{{'add' | translate}}"
                    data-ng-click="addItem(mCfg[key][type], {'name': 'Service label', 'url': 'http://'})">
-                  <i class="fa fa-plus"/>
+                  <i class="fa fa-fw fa-plus"/>
+                  <span translate="">add</span>
                 </a>
               </td>
             </tr>
@@ -448,7 +454,7 @@
 
       <div data-ng-switch-when="projectionList">
         <label class="control-label">{{('ui-' + key) | translate}}</label>
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered">
           <tr data-ng-repeat="opt in mCfg[key] track by $index">
             <td>
               <div class="input-group">
@@ -474,10 +480,11 @@
           </tr>
           <tr>
             <td colspan="2">
-              <a class="btn btn-link"
+              <a class="btn btn-default"
                  title="{{'add' | translate}}"
                  data-ng-click="addItem(mCfg[key], {'label': '', 'code': 'EPSG:'})">
-                <i class="fa fa-plus"/>
+                <i class="fa fa-fw fa-plus"/>
+                <span translate="">add</span>
               </a>
             </td>
           </tr>
@@ -631,22 +638,22 @@
       </div>
 
       <div data-ng-switch-when="disabledTools">
-        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <h3>{{('ui-' + key) | translate}}</h3>
+        <p class="help-block"
+          data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
         <div data-ng-repeat="(t, value) in mCfg[key]">
           <div>
             <input type="checkbox"
                  id="{{key}}-{{t}}-checkbox"
                  data-ng-model="mCfg[key][t]"
                  ng-true-value="false" ng-false-value="true"/>&nbsp;
-            <label class="control-label"
-                   for="{{key}}-{{t}}-checkbox">
+            <label for="{{key}}-{{t}}-checkbox">
               {{(t + 'Tool') | translate}}
             </label>
           </div>
         </div>
-        <p class="help-block"
-          data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
-          {{('ui-' + key + '-help') | translate}} </p>
+
       </div>
 
       <div data-ng-switch-when="defaultSearchString">
@@ -696,7 +703,7 @@
       <div data-ng-switch-when="grid">
         <h3>{{('ui-' + key) | translate}}</h3>
         <label class="control-label" translate>gridConfigRelatedTypes</label>
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered">
           <tr data-ng-repeat="relatedType in mCfg[key]['related'] track by $index">
             <td>
               <input type="text" class="form-control" ng-model="mCfg[key]['related'][$index]" />
@@ -709,8 +716,9 @@
           </tr>
           <tr>
             <td colspan="2">
-              <a class="btn btn-link" title="{{'add' | translate}}" data-ng-click="addItem(mCfg[key]['related'], '')">
-                <i class="fa fa-plus"/>
+              <a class="btn btn-default" title="{{'add' | translate}}" data-ng-click="addItem(mCfg[key]['related'], '')">
+                <i class="fa fa-fw fa-plus"/>
+                <span translate="">add</span>
               </a>
             </td>
           </tr>
@@ -1038,7 +1046,8 @@
   <!-- END SPECIFIC SEXTANT -->
 
   <br/>
-  <span data-translate="">ui-advancedConfig</span>
+
+  <h2 data-translate="" class="gn-margin-bottom">ui-advancedConfig</h2>
 
   <gn-json-edit model="jsonConfig"></gn-json-edit>
   <textarea name="{{id}}" id="uiconfig" class="hidden">{{jsonConfig}}</textarea>

@@ -387,6 +387,19 @@
                 } else {
                   return 'WMSSERVICE';
                 }
+              } else if (protocolOrType.match(/download/i)) {
+                var url = $filter('gnLocalized')(resource.url) || resource.url;
+                if (url.match(/zip/i)) {
+                  return 'LINKDOWNLOAD-ZIP';
+                } else if (url.match(/pdf/i)) {
+                  return 'LINKDOWNLOAD-PDF';
+                } else if (url.match(/xml/i)) {
+                  return 'LINKDOWNLOAD-XML';
+                } else if (url.match(/rdf/i)) {
+                  return 'LINKDOWNLOAD-RDF';
+                } else {
+                  return 'LINKDOWNLOAD';
+                }
               } else if (protocolOrType.match(/esri/i)) {
                 return 'ESRI:REST';
               } else if (protocolOrType.match(/wmts/i)) {
@@ -411,19 +424,6 @@
                 return 'KML';
               } else if (protocolOrType.match(/geojson/i)) {
                 return 'GEOJSON';
-              } else if (protocolOrType.match(/download/i)) {
-                var url = $filter('gnLocalized')(resource.url) || resource.url;
-                if (url.match(/zip/i)) {
-                  return 'LINKDOWNLOAD-ZIP';
-                } else if (url.match(/pdf/i)) {
-                  return 'LINKDOWNLOAD-PDF';
-                } else if (url.match(/xml/i)) {
-                  return 'LINKDOWNLOAD-XML';
-                } else if (url.match(/rdf/i)) {
-                  return 'LINKDOWNLOAD-RDF';
-                } else {
-                  return 'LINKDOWNLOAD';
-                }
               } else if (protocolOrType.match(/dataset/i)) {
                 return 'LINKDOWNLOAD';
               } else if (protocolOrType.match(/link/i)) {

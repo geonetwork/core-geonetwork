@@ -166,7 +166,6 @@
 
     <!-- Add online source from URL -->
     <xsl:if test="$url">
-
       <!-- If a name is provided loop on all languages -->
       <xsl:choose>
         <xsl:when test="contains($name, ',')">
@@ -174,7 +173,7 @@
             <mrd:onLine>
               <cit:CI_OnlineResource>
                 <cit:linkage>
-                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLang, $useOnlyPTFreeText)"/>
+                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, '◿', '◿', $mainLang, $useOnlyPTFreeText)"/>
                 </cit:linkage>
 
                 <xsl:if test="$protocol != ''">
@@ -220,7 +219,7 @@
           <mrd:onLine>
             <cit:CI_OnlineResource>
               <cit:linkage>
-                <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLang, $useOnlyPTFreeText)"/>
+                <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, '◿', '◿', $mainLang, $useOnlyPTFreeText)"/>
               </cit:linkage>
 
               <xsl:if test="$protocol != ''">

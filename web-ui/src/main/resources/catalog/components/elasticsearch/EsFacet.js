@@ -188,7 +188,8 @@
             'id',
             'uuid',
             'overview.*',
-            'resource*'
+            'resource*',
+            'link'
           ]
         }
       },
@@ -359,11 +360,13 @@
           if (isTimeline) {
             facetModel.items = [];
             angular.forEach(respAgg.buckets, function(bucket, key) {
-              facetModel.items.push({
-                key_as_string: moment(parseInt(key)).toISOString(),
-                key: parseInt(key),
-                doc_count: bucket.doc_count
-              })
+              if (bucket.doc_count !== 0) {
+                facetModel.items.push({
+                  key_as_string: moment(parseInt(key)).toISOString(),
+                  key: parseInt(key),
+                  doc_count: bucket.doc_count
+                })
+              }
             });
           } else {
             facetModel.items = respAgg.buckets;
