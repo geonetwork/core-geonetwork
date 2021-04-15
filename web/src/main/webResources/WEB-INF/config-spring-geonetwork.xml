@@ -185,17 +185,17 @@
   </bean>
 
 
-  <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer"/>
-  <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager"/>
-  <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils"/>
+<!--  <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer"/>-->
+<!--  <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager"/>-->
+<!--  <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils"/>-->
 
   <!-- In order to get non-draft metadata  uncomment the definitions below,
     or make them available in an external override file -->
-<!--
+
     <bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer"/>
     <bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>
     <bean primary="true" class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>
--->
+
 
   <bean id="strongEncryptor"
         class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor" />
