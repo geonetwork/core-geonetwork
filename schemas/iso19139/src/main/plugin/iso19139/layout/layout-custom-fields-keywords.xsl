@@ -179,7 +179,12 @@
 
     <xsl:choose>
       <xsl:when test="$thesaurusConfig">
+        <!-- If defined dc:title with xml:lang use it for thesaurus label in the editor -->
+        <xsl:variable name="uiLang2code" select="xslutil:twoCharLangCode($lang, 'en')" />
 
+        <xsl:variable name="thesaurusTitleTranslated" select="$listOfThesaurus/thesaurus[title=$thesaurusTitle]/multilingualTitles/multilingualTitle[lang=$uiLang2code]/title" />
+        <xsl:variable name="thesaurusTitleForEditor" select="if (string($thesaurusTitleTranslated)) then $thesaurusTitleTranslated else $thesaurusTitle" />
+        
         <!-- The thesaurus key may be contained in the MD_Identifier field or
           get it from the list of thesaurus based on its title.
           -->
@@ -261,7 +266,7 @@
         <div data-gn-keyword-selector="{$widgetMode}"
              data-metadata-id="{$metadataId}"
              data-element-ref="{concat('_X', ../gn:element/@ref, '_replace')}"
-             data-thesaurus-title="{if (($isFlatMode and not($thesaurusConfig/@fieldset)) or $thesaurusConfig/@fieldset = 'false') then $thesaurusTitle else ''}"
+             data-thesaurus-title="{if (($isFlatMode and not($thesaurusConfig/@fieldset)) or $thesaurusConfig/@fieldset = 'false') then $thesaurusTitleForEditor else ''}"
              data-thesaurus-key="{$thesaurusKey}"
              data-keywords="{$keywords}"
              data-transformations="{$transformations}"
