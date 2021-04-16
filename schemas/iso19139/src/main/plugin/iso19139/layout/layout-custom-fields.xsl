@@ -285,8 +285,8 @@
       <xsl:with-param name="subTreeSnippet">
 
         <xsl:variable name="geometry">
-          <xsl:apply-templates select="gmd:polygon/gml:MultiSurface|gmd:polygon/gml:LineString|
-                                       gmd:polygon/gml320:MultiSurface|gmd:polygon/gml320:LineString"
+          <xsl:apply-templates select="gmd:polygon/gml:MultiSurface|gmd:polygon/gml:LineString|gmd:polygon/gml:Point|
+                                       gmd:polygon/gml320:MultiSurface|gmd:polygon/gml320:LineString|gmd:polygon/gml320:Point"
                                mode="gn-element-cleaner"/>
         </xsl:variable>
 
