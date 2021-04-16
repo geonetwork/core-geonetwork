@@ -1,13 +1,13 @@
 package org.fao.geonet.proxy;
 
 import jeeves.server.UserSession;
+import org.apache.http.HttpRequest;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataLinkRepository;
 import org.fao.geonet.repository.specification.LinkSpecs;
@@ -30,6 +30,11 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
 
     private static final long serialVersionUID = 4847856943273604410L;
     private static final String P_SECURITY_MODE = "securityMode";
+    public static final String P_FORWARDEDHOST = "forwardHost";
+    public static final String P_FORWARDEDHOSTPREFIXPATH = "forwardHostPrefixPath";
+
+    protected boolean doForwardHost = false;
+    protected String doForwardHostPrefixPath = "";
 
     private enum SECURITY_MODE {
         NONE,
@@ -72,6 +77,13 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
 
     protected void initTarget() throws ServletException {
         securityMode = SECURITY_MODE.parse(getConfigParam(P_SECURITY_MODE));
+        String doForwadHostString = getConfigParam(P_FORWARDEDHOST);
+        if (doForwadHostString != null) {
+            String doForwadHostPrefixPathString = getConfigParam(P_FORWARDEDHOSTPREFIXPATH);
+            this.doForwardHost = Boolean.parseBoolean(doForwadHostString);
+            this.doForwardHostPrefixPath =
+                doForwadHostPrefixPathString != null ? doForwadHostPrefixPathString : "";
+        }
         super.initTarget();
     }
 
@@ -92,8 +104,24 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
             .build();
     }
 
+    @Override
+    protected void copyRequestHeaders(HttpServletRequest servletRequest, HttpRequest proxyRequest) {
+        super.copyRequestHeaders(servletRequest, proxyRequest);
+        if (doForwardHost) {
+            StringBuffer url = servletRequest.getRequestURL();
+            String uri = servletRequest.getRequestURI();
+            String host = url.substring(servletRequest.getScheme().length() + 3, url.indexOf(uri));
+
+            proxyRequest.setHeader("X-Forwarded-Host", host);
+            proxyRequest.setHeader("X-Forwarded-Proto", servletRequest.getScheme());
+            proxyRequest.setHeader("X-Forwarded-Prefix", servletRequest.getContextPath() + this.doForwardHostPrefixPath);
+        }
+
+    }
+
     protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
         throws ServletException, IOException {
+
         switch (securityMode) {
             case NONE:
                 super.service(servletRequest, servletResponse);
