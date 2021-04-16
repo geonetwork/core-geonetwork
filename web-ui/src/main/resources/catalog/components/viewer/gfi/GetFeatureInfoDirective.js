@@ -142,10 +142,11 @@
       }
       this.$scope.$apply(function() {
         var layers = map.getLayers().getArray().filter(function(layer) {
-          return (layer.getSource() instanceof ol.source.ImageWMS ||
+          return layer.background != true
+            && (layer.getSource() instanceof ol.source.ImageWMS ||
               layer.getSource() instanceof ol.source.TileWMS ||
-              layer.getSource() instanceof ol.source.ImageArcGISRest) &&
-              layer.getVisible();
+              layer.getSource() instanceof ol.source.ImageArcGISRest)
+            && layer.getVisible();
         }).reverse();
 
         coordinates = e.coordinate;
