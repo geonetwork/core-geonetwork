@@ -97,8 +97,6 @@
 
   <xsl:template name="render-language-switcher">
     <xsl:if test="$language = 'all'">
-
-
       <xsl:variable name="metadataOtherLanguages">
         <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
       </xsl:variable>
@@ -108,7 +106,6 @@
       <xsl:variable name="defaultLanguage"
                     select="$metadataOtherLanguages/*[position() = last()]/@code"/>
 
-
       <div class="gn-multilingual-field">
         <ul class="nav nav-pills">
           <script src="{$nodeUrl}../catalog/js/GnLandingPageLib.js?v={$buildNumber}">&amp;nbsp;</script>
@@ -117,7 +114,6 @@
               document.getElementById('gn-default-lang-link').click();
             };
           </script>
-
           <xsl:for-each select="($metadataOtherLanguages/*[@default], $metadataOtherLanguages/*[not(@default)])">
             <li class="">
               <a id="{if (@default) then 'gn-default-lang-link' else ''}"
@@ -327,7 +323,6 @@
             <xsl:call-template name="render-language-switcher"/>
 
             <xsl:if test="$language != all and $portalLink != ''">
-
               <xsl:variable name="defaultUrl"
                             select="concat('https://sextant.ifremer.fr/Donnees/Catalogue#/metadata/', $metadataUuid)"/>
               <!--<xsl:variable name="defaultUrl"
