@@ -261,7 +261,7 @@ public class DoiManager {
                 "Record '%s' converted to DataCite format is invalid. Error is: %s. " +
                     "Required fields in DataCite are: identifier, creators, titles, publisher, publicationYear, resourceType. Check the DataCite format output at " +
                     "%sapi/records/%s/formatters/datacite?output=xml and " +
-                    "adpat the record content to add missing information.",
+                    "adapt the record content to add missing information.",
                 metadata.getUuid(), e.getMessage(), sm.getNodeURL(), metadata.getUuid()));
         }
 
