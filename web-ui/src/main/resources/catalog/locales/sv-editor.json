@@ -220,7 +220,7 @@
     "onlineDownload": "Access the resource",
     "onlineDownloadKML": "Download as KML",
     "onlineDownloadKML-help": "KML or KMZ file to be used in Google apps to download data",
-    "onlineDownloadFile": "Download a copy",
+    "onlineDownloadFile": "Ladda ner en kopia",
     "onlineDownloadWWW": "Download from website",
     "onlineDownloadWFS": "Download service WFS",
     "onlineDownloadINSPIRE": "Download service INSPIRE",
@@ -371,7 +371,7 @@
     "directoryManagerSubtitle": "This screen allows you to edit directory entries such as contacts, formats, etc. including template management.",
     "directoryManagerSubtitleImport": "Enter here the full XML content of an entry to import it to the database.",
     "directoryManagerError": "Fel vid import av en full XML",
-    "directoryEntryTypes": "Entry Types",
+    "directoryEntryTypes": "Typ av XML-fragment",
     "directoryTemplates": "Templates",
     "addNewDirectoryEntry": "Add New Entry",
     "addNewDirectoryTemplate": "Create a template",
@@ -419,7 +419,7 @@
     "accessManagerChooseOperations": "Välj en eller flera operationstyper",
     "status-no-status": "Arbetsflödet är inte aktivt",
     "badGmlProjectionCode": "Den geometriprojektion <b>{{srsName}} som</b> definierats i XML är inte giltig. Redigera xml för att rätta srs-namnet eller ange en ny geometri.",
-    "draft": "Working copy",
+    "draft": "Arbetskopia",
     "link": "Länk",
     "link-text": "Länktext"
 }
