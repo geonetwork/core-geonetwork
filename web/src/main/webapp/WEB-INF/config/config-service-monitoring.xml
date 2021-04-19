@@ -36,6 +36,7 @@
     <warningHealthCheck class=".HarvestersHealthCheck"/>
     <warningHealthCheck class=".DashboardAppHealthCheck"/>
     <warningHealthCheck class=".NoIndexErrorsHealthCheck"/>
+    <warningHealthCheck class=".IndexReadOnlyHealthCheck"/>
     <warningHealthCheck class=".FreeConnectionsHealthCheck"/>
     <warningHealthCheck class="jeeves.monitor.healthcheck.FreeFileHandlesHealthCheck"/>
     <expensiveHealthCheck class=".CswGetRecordsHealthCheck"/>
