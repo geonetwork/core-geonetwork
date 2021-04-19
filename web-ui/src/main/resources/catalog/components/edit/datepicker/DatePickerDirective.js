@@ -70,7 +70,7 @@
 
              var getTimeZoneOffset = function(timeZone) {
                var actualTz = timeZone;
-               if (timeZone !== null && timeZone.trim().toLowerCase() === "browser") {
+               if (timeZone && timeZone !== null && timeZone.trim().toLowerCase() === "browser") {
                  actualTz = userTimezone;
                }
                return moment.tz(actualTz).format('ZZ')
