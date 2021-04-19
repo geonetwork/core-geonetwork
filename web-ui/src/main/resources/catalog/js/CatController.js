@@ -1227,10 +1227,14 @@ goog.require('gn_alert');
                 type: 'danger'
               });
             } else {
+              var query = {bool: {must: {query_string: {query: "+isTemplate:n"}}}};
+              if (gnGlobalSettings.gnCfg.mods.search.filters) {
+                query.bool.filter = gnGlobalSettings.gnCfg.mods.search.filters;
+              }
               return $http.post('../api/search/records/_search',
                 {size: 0,
                     track_total_hits: true,
-                    query: {query_string: {query: "+isTemplate:n"}},
+                    query: query,
                     aggs: gnGlobalSettings.gnCfg.mods.home.facetConfig}).
               then(function(r) {
                 $scope.searchInfo = r.data;
