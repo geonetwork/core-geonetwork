@@ -25,12 +25,7 @@ package org.fao.geonet.api.groups;
 
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Authorization;
+import io.swagger.annotations.*;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
@@ -45,22 +40,9 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.attachments.AttachmentsApi;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Group_;
-import org.fao.geonet.domain.Language;
-import org.fao.geonet.domain.OperationAllowedId_;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.domain.UserGroupId_;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.LanguageRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -77,13 +59,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -96,12 +72,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.springframework.data.jpa.domain.Specifications.where;
 
@@ -115,6 +86,12 @@ import static org.springframework.data.jpa.domain.Specifications.where;
     description = "Groups operations")
 @Controller("groups")
 public class GroupsApi {
+    /**
+     * Group name pattern with allowed chars. Group name may only contain alphanumeric characters or single hyphens.
+     * Cannot begin or end with a hyphen.
+     */
+    private static final String GROUPNAME_PATTERN = "^[a-zA-Z0-9]+([-_]?[a-zA-Z0-9]+)*$";
+
     /**
      * API logo note.
      */
@@ -195,7 +172,7 @@ public class GroupsApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
 
         ApplicationContext context = ApplicationContextHolder.get();
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request, locale.getISO3Country());
+      try (ServiceContext serviceContext = ApiUtils.createServiceContext(request, locale.getISO3Country())) {
         if (context == null) {
             throw new RuntimeException("ServiceContext not available");
         }
@@ -241,6 +218,7 @@ public class GroupsApi {
                 groupId));
             throw new RuntimeException(e);
         }
+      }
     }
 
     private static Resources.ResourceHolder getImage(Resources resources, ServiceContext serviceContext, Group group) throws IOException {
@@ -350,6 +328,12 @@ public class GroupsApi {
                 "A group with name '%s' already exist.",
                 group.getName()
             ));
+        }
+
+        if (!group.getName().matches(GROUPNAME_PATTERN)) {
+            throw new IllegalArgumentException("Group name may only contain alphanumeric characters "
+                + "or single hyphens. Cannot begin or end with a hyphen."
+            );
         }
 
         // Populate languages if not already set
@@ -479,6 +463,12 @@ public class GroupsApi {
                 MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
             ));
         } else {
+            if (!group.getName().matches(GROUPNAME_PATTERN)) {
+                throw new IllegalArgumentException("Group name may only contain alphanumeric characters "
+                    + "or single hyphens. Cannot begin or end with a hyphen."
+                );
+            }
+
             try {
                 groupRepository.saveAndFlush(group);
             } catch (Exception ex) {

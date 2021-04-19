@@ -58,9 +58,9 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
         super.init();
     }
 
-    public void init(ServiceContext context, Boolean force) throws Exception {
+    public void init(ServiceContext context) throws Exception {
         metadataDraftRepository = context.getBean(MetadataDraftRepository.class);
-        super.init(context, force);
+        super.init(context);
     }
 
 

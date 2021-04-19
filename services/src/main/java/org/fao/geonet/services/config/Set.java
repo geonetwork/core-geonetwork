@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -111,7 +111,7 @@ public class Set implements Service {
         }
 
         SettingInfo info = context.getBean(SettingInfo.class);
-        ServerBeanPropertyUpdater.updateURL(info.getSiteUrl(true) + context.getBaseUrl(), context.getApplicationContext());
+        ServerBeanPropertyUpdater.updateURL(info.getSiteUrl() + context.getBaseUrl(), context.getApplicationContext());
 
         // Reload services affected by updated settings
         if (reloadServices) {

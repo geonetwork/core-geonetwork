@@ -123,7 +123,7 @@ public class AttachmentsActionsApi {
         HttpServletRequest request
     )
         throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         String metadataId = dataMan.getMetadataId(metadataUuid);
         Lib.resource.checkEditPrivilege(context, metadataId);
@@ -133,5 +133,6 @@ public class AttachmentsActionsApi {
             rotationAngle);
 
         return store.putResource(context, metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC);
+      }
     }
 }

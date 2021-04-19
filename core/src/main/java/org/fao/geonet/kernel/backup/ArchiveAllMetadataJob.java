@@ -89,9 +89,8 @@ public class ArchiveAllMetadataJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
-        ServiceContext serviceContext = serviceManager.createServiceContext("backuparchive", context);
+      try (ServiceContext serviceContext = serviceManager.createServiceContext("backuparchive", context)) {
         serviceContext.setLanguage("eng");
-      try {
         serviceContext.setAsThreadLocal();
 
         // note: perhaps already done by setAsThreadLocal() above
@@ -107,9 +106,6 @@ public class ArchiveAllMetadataJob extends QuartzJobBean {
         } catch (Exception e) {
             Log.error(Geonet.GEONETWORK, "Error running " + ArchiveAllMetadataJob.class.getSimpleName(), e);
         }
-      } finally {
-        serviceContext.clearAsThreadLocal();
-        serviceContext.clear(); // prevents further use
       }
     }
 

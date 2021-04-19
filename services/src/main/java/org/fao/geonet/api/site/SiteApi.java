@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -466,13 +466,15 @@ public class SiteApi {
         }
 
         SettingInfo info = applicationContext.getBean(SettingInfo.class);
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        ServerBeanPropertyUpdater.updateURL(info.getSiteUrl(true) +
+
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        ServerBeanPropertyUpdater.updateURL(info.getSiteUrl() +
                 context.getBaseUrl(),
             applicationContext);
 
         // Reload services affected by updated settings
         reloadServices(context);
+      }
     }
 
     @ApiOperation(
@@ -490,9 +492,10 @@ public class SiteApi {
     @ResponseBody
     public SiteInformation getInformation(HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         return new SiteInformation(context, (GeonetContext) context
             .getHandlerContext(Geonet.CONTEXT_NAME));
+      }
     }
 
 
@@ -511,8 +514,9 @@ public class SiteApi {
     public boolean isCasEnabled(
         HttpServletRequest request
     ) throws Exception {
-        ApiUtils.createServiceContext(request);
+      try(ServiceContext context = ApiUtils.createServiceContext(request)) {
         return ProfileManager.isCasEnabled();
+      }
     }
 
     @Autowired
@@ -567,8 +571,9 @@ public class SiteApi {
     public boolean isIndexing(
         HttpServletRequest request
     ) throws Exception {
-        ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         return ApplicationContextHolder.get().getBean(DataManager.class).isIndexing();
+      }
     }
 
     @ApiOperation(
@@ -604,12 +609,13 @@ public class SiteApi {
         String bucket,
         HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         SearchManager searchMan = ApplicationContextHolder.get().getBean(SearchManager.class);
 
         searchMan.rebuildIndex(context, havingXlinkOnly, reset, bucket);
 
         return new HttpEntity<>(HttpStatus.CREATED);
+      }
     }
 
     @ApiOperation(
@@ -645,12 +651,13 @@ public class SiteApi {
             String bucket,
         HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
 
         searchMan.rebuildIndex(context, havingXlinkOnly, reset, bucket);
 
         return new HttpEntity<>(HttpStatus.CREATED);
+      }
     }
 
     @ApiOperation(
@@ -724,7 +731,7 @@ public class SiteApi {
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final Resources resources = appContext.getBean(Resources.class);
         final Path logoDirectory = resources.locateHarvesterLogosDirSMVC(appContext);
-        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+      try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
 
         checkFileName(file);
         FilePathChecker.verify(file);
@@ -778,6 +785,7 @@ public class SiteApi {
         } finally {
             holder.close();
         }
+      }
     }
 
 

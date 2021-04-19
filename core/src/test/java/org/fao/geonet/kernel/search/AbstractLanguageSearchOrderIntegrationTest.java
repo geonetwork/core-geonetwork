@@ -70,6 +70,7 @@ import static org.junit.Assert.assertTrue;
 public abstract class AbstractLanguageSearchOrderIntegrationTest extends AbstractCoreIntegrationTest {
     public static List<String> METADATA_TO_IMPORT = new ArrayList<String>(10);
     protected MetaSearcher _luceneSearcher;
+    /** Test service context */
     protected ServiceContext _serviceContext;
     protected String _abstractSearchTerm;
     @Autowired

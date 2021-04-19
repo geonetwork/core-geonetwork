@@ -23,6 +23,8 @@
 
 package org.fao.geonet.api.exception;
 
+import java.util.Locale;
+
 import org.fao.geonet.exceptions.LocalizedException;
 
 public class GeoPublisherException extends LocalizedException {
@@ -45,5 +47,35 @@ public class GeoPublisherException extends LocalizedException {
 
     protected String getResourceBundleBeanQualifier() {
         return "apiMessages";
+    }
+
+    @Override
+    public GeoPublisherException withMessageKey(String messageKey) {
+        super.withMessageKey(messageKey);
+        return this;
+    }
+
+    @Override
+    public GeoPublisherException withMessageKey(String messageKey, Object[] messageKeyArgs) {
+        super.withMessageKey(messageKey, messageKeyArgs);
+        return this;
+    }
+
+    @Override
+    public GeoPublisherException withDescriptionKey(String descriptionKey) {
+        super.withDescriptionKey(descriptionKey);
+        return this;
+    }
+
+    @Override
+    public GeoPublisherException withDescriptionKey(String descriptionKey, Object[] descriptionKeyArgs) {
+        super.withDescriptionKey(descriptionKey, descriptionKeyArgs);
+        return this;
+    }
+
+    @Override
+    public GeoPublisherException withLocale(Locale locale) {
+        super.withLocale(locale);
+        return this;
     }
 }

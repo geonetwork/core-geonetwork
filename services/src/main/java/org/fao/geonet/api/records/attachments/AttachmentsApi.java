@@ -162,9 +162,10 @@ public class AttachmentsApi {
             @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "true") Boolean approved,
             @RequestParam(required = false, defaultValue = FilesystemStore.DEFAULT_FILTER) String filter,
             @ApiIgnore HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         List<MetadataResource> list = store.getResources(context, metadataUuid, sort, filter, approved);
         return list;
+      }
     }
 
     @ApiOperation(
@@ -179,7 +180,7 @@ public class AttachmentsApi {
             @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
             @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
             @ApiIgnore HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         store.delResources(context, metadataUuid, approved);
 
         String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
@@ -188,6 +189,7 @@ public class AttachmentsApi {
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
             new AttachmentDeletedEvent(metadataId, userSession.getUserIdAsInt(), "All attachments").publish(ApplicationContextHolder.get());
         }
+      }
     }
 
     @ApiOperation(
@@ -205,7 +207,7 @@ public class AttachmentsApi {
             @ApiParam(value = "The file to upload") @RequestParam("file") MultipartFile file,
             @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
             @ApiIgnore HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         MetadataResource resource = store.putResource(context, metadataUuid, file, visibility, approved);
 
         String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
@@ -217,6 +219,7 @@ public class AttachmentsApi {
         }
 
         return resource;
+      }
     }
 
     @ApiOperation(
@@ -235,7 +238,7 @@ public class AttachmentsApi {
             @ApiParam(value = "The URL to load in the store") @RequestParam("url") URL url,
             @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
             @ApiIgnore HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         MetadataResource resource = store.putResource(context, metadataUuid, url, visibility, approved);
 
         String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
@@ -246,6 +249,7 @@ public class AttachmentsApi {
         }
 
         return resource;
+      }
     }
 
     @ApiOperation(
@@ -260,10 +264,10 @@ public class AttachmentsApi {
             @ApiParam(value = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
             @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "true") Boolean approved,
             @ApiIgnore HttpServletRequest request, @ApiIgnore HttpServletResponse response) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        try (Store.ResourceHolder file = store.getResource(context, metadataUuid, resourceId, approved)) {
+        try (ServiceContext context = ApiUtils.createServiceContext(request);
+            Store.ResourceHolder file = store.getResource(context, metadataUuid, resourceId, approved)) {
 
-            ApiUtils.canViewRecord(metadataUuid, request);
+            ApiUtils.canViewRecord(metadataUuid, context);
 
             response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getMetadata().getFilename() + "\"");
             response.addHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
@@ -290,8 +294,9 @@ public class AttachmentsApi {
             @ApiParam(value = "The visibility", required = true, example = "public") @RequestParam(required = true) MetadataResourceVisibility visibility,
             @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
             @ApiIgnore HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         return store.patchResourceStatus(context, metadataUuid, resourceId, visibility, approved);
+      }
     }
 
     @ApiOperation(
@@ -307,7 +312,7 @@ public class AttachmentsApi {
             @ApiParam(value = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
             @ApiParam(value = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
             @ApiIgnore HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         store.delResource(context, metadataUuid, resourceId, approved);
 
         String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
@@ -316,5 +321,6 @@ public class AttachmentsApi {
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
             new AttachmentDeletedEvent(metadataId, userSession.getUserIdAsInt(), resourceId).publish(ApplicationContextHolder.get());
         }
+      }
     }
 }

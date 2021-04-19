@@ -107,14 +107,14 @@ public class DataManager {
     private AccessManager accessManager;
 
     /**
-     * Init Data manager and refresh index if needed. Can also be called after GeoNetwork startup in order to rebuild the lucene index
+     * Init data manager components.
      *
-     * @param force Force reindexing all from scratch
+     * @param context Service context used for setup
      **/
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        this.metadataIndexer.init(context, force);
-        this.metadataManager.init(context, force);
-        this.metadataUtils.init(context, force);
+    public void init(ServiceContext context) throws Exception {
+        this.metadataIndexer.init(context);
+        this.metadataManager.init(context);
+        this.metadataUtils.init(context);
 
         // FIXME this shouldn't login automatically ever!
 //        if (context.getUserSession() == null) {
@@ -125,6 +125,30 @@ public class DataManager {
 //            LOGGER_DATA_MANAGER.debug( "Hopefully this is cron job or routinely background task. Who called us?",
 //                        new Exception("Dummy Exception to know the stacktrace"));
 //        }
+    }
+
+    /**
+     * Clean up data manager during application shutdown.
+     */
+    public void destroy() throws Exception {
+        this.metadataIndexer.destroy();
+        this.metadataManager.destroy();
+        this.metadataUtils.destroy();
+
+    }
+
+    /**
+     * Refresh index removing, updating or adding items as needed.
+     *
+     * Items are updated if the indexed date is different from the record date. Use forceReindex true
+     * to avoid this check and update all items.
+     *
+     * @param forceReindex Use true to always update, false to update based on date check.
+     * @throws Exception
+     */
+    @Deprecated
+    public void refreshIndex(boolean forceReindex) throws Exception {
+        this.metadataManager.refreshIndex(forceReindex);
     }
 
     @Deprecated
@@ -157,7 +181,7 @@ public class DataManager {
 
     @Deprecated
     public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds) {
-        metadataIndexer.batchIndexInThreadPool(context, metadataIds);
+        metadataIndexer.batchIndexInThreadPool(metadataIds);
     }
 
     @Deprecated

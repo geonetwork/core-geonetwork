@@ -60,10 +60,14 @@ import jeeves.server.context.ServiceContext;
 
 
 /**
- * Utilities.
+ * Utilities methods to assist with editing.
+ *
+ * This facade wraps around GeoNetwork beans obtained from serviceContext
+ * to perform common editing operations involving several components.
  */
 class EditUtils {
 
+    /** Transitory use of service context */
     protected ServiceContext context;
     protected DataManager dataManager;
     protected XmlSerializer xmlSerializer;

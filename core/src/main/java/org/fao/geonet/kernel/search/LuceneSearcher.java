@@ -191,6 +191,17 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
     // MetaSearcher API
     //
 
+    /**
+     * Async log of search details.
+     *
+     * @param srvContext
+     * @param config
+     * @param query
+     * @param numHits
+     * @param sort
+     * @param geomWKT
+     * @param sm
+     */
     public static void logSearch(ServiceContext srvContext, ServiceConfig config, Query query, int numHits, Sort sort, String geomWKT,
                                  SearchManager sm) {
         SettingInfo si = srvContext.getBean(SettingInfo.class);

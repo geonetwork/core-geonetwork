@@ -52,6 +52,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Service;
@@ -103,7 +104,7 @@ public class JeevesEngine {
     private int _maxUploadSize;
 
     /** AppHandler service context used during init, tasks and background activities */
-    private ServiceContext srvContext;
+    private ServiceContext appHandlerContext;
 
     //---------------------------------------------------------------------------
     //---
@@ -415,6 +416,13 @@ public class JeevesEngine {
     //---
     //---------------------------------------------------------------------------
 
+    /**
+     * Setup application hanlder using the provided handler definition.
+     *
+     * @param handler handler definition
+     * @param servlet jeeves servlet responsible for http distpatch
+     * @throws Exception
+     */
     private void initAppHandler(Element handler, JeevesServlet servlet) throws Exception {
         if (handler == null) {
             info("Handler not found");
@@ -437,20 +445,20 @@ public class JeevesEngine {
 
             ApplicationHandler h = (ApplicationHandler) c.newInstance();
 
-            srvContext = serviceMan.createAppHandlerServiceContext(appContext);
-            srvContext.setLanguage(_defaultLang);
-            srvContext.setLogger(_appHandLogger);
-            srvContext.setServlet(servlet);
-            srvContext.setAsThreadLocal();
+            appHandlerContext = serviceMan.createAppHandlerServiceContext(appContext);
+            appHandlerContext.setLanguage(_defaultLang);
+            appHandlerContext.setLogger(_appHandLogger);
+            appHandlerContext.setServlet(servlet);
+            appHandlerContext.setAsThreadLocal();
 
             try {
                 info("--- Starting handler --------------------------------------");
 
-                Object context = h.start(handler, srvContext);
+                Object context = h.start(handler, appHandlerContext);
 
                 _appHandlers.add(h);
                 serviceMan.registerContext(h.getContextName(), context);
-                monitorManager.initMonitorsForApp(srvContext);
+                monitorManager.initMonitorsForApp(appHandlerContext);
 
                 info("--- Handler started ---------------------------------------");
             } catch (Exception e) {
@@ -475,7 +483,7 @@ public class JeevesEngine {
                 }
             }
             finally {
-                srvContext.clearAsThreadLocal();
+                appHandlerContext.clearAsThreadLocal();
             }
         }
     }
@@ -534,7 +542,9 @@ public class JeevesEngine {
 
             info("Stopping handlers...");
             stopHandlers();
-            srvContext.clear();
+
+            info("Clearing application handler context...");
+            appHandlerContext.clear();
 
             info("=== System stopped ========================================");
 

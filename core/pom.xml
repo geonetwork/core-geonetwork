@@ -361,6 +361,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.jclouds</groupId>
+      <artifactId>jclouds-all</artifactId>
+      <version>2.2.1</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.chemistry.opencmis</groupId>
       <artifactId>chemistry-opencmis-client-api</artifactId>
       <version>1.1.0</version>

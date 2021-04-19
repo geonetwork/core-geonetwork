@@ -140,9 +140,10 @@ public class LanguagesApi {
                     }
                 }
                 if (data.size() > 0) {
-                    ServiceContext context = ApiUtils.createServiceContext(request);
+                  try (ServiceContext context = ApiUtils.createServiceContext(request)) {
                     Lib.db.runSQL(context, data);
                     return;
+                  }
                 }
             }
             throw new ResourceNotFoundException(String.format(
@@ -202,9 +203,10 @@ public class LanguagesApi {
                     }
                 }
                 if (data.size() > 0) {
-                    ServiceContext context = ApiUtils.createServiceContext(request);
+                  try (ServiceContext context = ApiUtils.createServiceContext(request)) {
                     Lib.db.runSQL(context, data);
                     return;
+                  }
                 }
             }
             throw new ResourceNotFoundException(String.format(

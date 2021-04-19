@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -44,16 +44,19 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.imageio.ImageIO;
@@ -66,7 +69,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USERS_IDENTICON;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
@@ -83,6 +94,11 @@ import static org.springframework.data.jpa.domain.Specifications.where;
     description = "User operations")
 @Controller("users")
 public class UsersApi {
+    /**
+     * Username pattern with allowed chars. Username may only contain alphanumeric characters or single hyphens,
+     * single at signs or single dots. Cannot begin or end with a hyphen, at sign or dot.
+     */
+    private static final String USERNAME_PATTERN = "^[a-zA-Z0-9]+([-_.@]?[a-zA-Z0-9]+)*$";
 
     @Autowired
     SettingManager settingManager;
@@ -422,6 +438,13 @@ public class UsersApi {
                 + Params.Operation.NEWUSER + " " + "operation");
         }
 
+       if (!userDto.getUsername().matches(USERNAME_PATTERN)) {
+           throw new IllegalArgumentException(Params.USERNAME
+               + " may only contain alphanumeric characters or single hyphens, single at signs or single dots. "
+               + "Cannot begin or end with a hyphen, at sign or dot."
+              );
+       }
+
         List<User> existingUsers = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
         if (!existingUsers.isEmpty()) {
             throw new IllegalArgumentException("Users with username "
@@ -508,6 +531,12 @@ public class UsersApi {
                 "Another user with username '%s' ignore case already exists", user.getUsername()));
         }
 
+        if (!userDto.getUsername().matches(USERNAME_PATTERN)) {
+            throw new IllegalArgumentException(Params.USERNAME
+                + " may only contain alphanumeric characters or single hyphens, single at signs or single dots. "
+                + "Cannot begin or end with a hyphen, at sign or dot."
+            );
+        }
 
         if (!myProfile.getAll().contains(profile)) {
             throw new IllegalArgumentException(
@@ -531,6 +560,20 @@ public class UsersApi {
             List<UserGroup> usergroups =
                 userGroupRepository.findAll(Specifications.where(
                     hasUserId(Integer.parseInt(userDto.getId()))));
+
+            List<Integer> userToUpdateGroupIds = usergroups.stream()
+                .map(ug -> ug.getId().getGroupId())
+                .collect(Collectors.toList());
+
+            Set<Integer> groupsInCommon = myUserAdminGroups.stream()
+                .distinct()
+                .filter(userToUpdateGroupIds::contains)
+                .collect(Collectors.toSet());
+
+            // UserAdmin can't update users that are not in the groups administered
+            if (groupsInCommon.isEmpty()) {
+                throw new IllegalArgumentException("You don't have rights to do this");
+            }
 
             //keep unknown groups as is
             for (UserGroup ug : usergroups) {

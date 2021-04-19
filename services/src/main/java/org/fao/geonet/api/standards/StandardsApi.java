@@ -218,8 +218,8 @@ public class StandardsApi implements ApplicationContextAware {
         @RequestParam(required = false) String isoType,
         HttpServletRequest request
     ) throws Exception {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         Map<String, String> response = new LinkedHashMap<String, String>();
-        final ServiceContext context = ApiUtils.createServiceContext(request);
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
         context.setLanguage(language.getISO3Language());
 
@@ -231,6 +231,7 @@ public class StandardsApi implements ApplicationContextAware {
             response.put(entry.getChildText("code"), entry.getChildText("label"));
         }
         return response;
+      }
     }
 
     @ApiOperation(value = "Get codelist details",
@@ -269,7 +270,7 @@ public class StandardsApi implements ApplicationContextAware {
         @RequestParam(required = false) String isoType,
         HttpServletRequest request
     ) throws Exception {
-        final ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
         context.setLanguage(language.getISO3Language());
 
@@ -277,6 +278,7 @@ public class StandardsApi implements ApplicationContextAware {
             schema, parent, xpath, isoType, context, displayIf);
 
         return (Codelists.Codelist) Xml.unmarshall(e, Codelists.Codelist.class);
+      }
     }
 
     @ApiOperation(value = "Get descriptor details",
@@ -304,7 +306,7 @@ public class StandardsApi implements ApplicationContextAware {
         @RequestParam(required = false) String isoType,
         HttpServletRequest request
     ) throws Exception {
-        final ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
         context.setLanguage(language.getISO3Language());
 
@@ -312,6 +314,7 @@ public class StandardsApi implements ApplicationContextAware {
             schema, parent, xpath, isoType, displayIf, context);
 
         return (org.fao.geonet.kernel.schema.labels.Element) Xml.unmarshall(e, org.fao.geonet.kernel.schema.labels.Element.class);
+      }
     }
 
 

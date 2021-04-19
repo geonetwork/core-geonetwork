@@ -152,10 +152,8 @@ public class GetMap {
                                    @RequestParam(value = OUTPUT_FILE_NAME, required = false) String outputFileName,
                                    NativeWebRequest request) throws Exception {
 
-        ServiceContext context = serviceManager.createServiceContext("region.getmap." + imageFormat, lang,
-            request.getNativeRequest(HttpServletRequest.class));
-
-      try {
+      try (ServiceContext context = serviceManager.createServiceContext("region.getmap." + imageFormat, lang,
+          request.getNativeRequest(HttpServletRequest.class))) {
         if (id == null && geomParam == null) {
             throw new BadParameterEx(Params.ID, "Either " + GEOM_PARAM + " or " + Params.ID + " is required");
         }
@@ -228,8 +226,6 @@ public class GetMap {
             headers.add("Content-Type", "image/" + imageFormat);
             return new HttpEntity<>(out.toByteArray(), headers);
         }
-      } finally {
-        context.clear();
       }
     }
 

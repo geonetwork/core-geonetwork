@@ -243,14 +243,14 @@
     -->
     <xsl:for-each select="gmd:distributionInfo">
     ,"distribution": [
-      <xsl:for-each select=".//gmd:onLine/*[starts-with(gmd:linkage/gmd:URL,'http') or starts-with(gmd:linkage/gmd:URL,'//')]">
+      <xsl:for-each select=".//gmd:onLine/*[starts-with(gmd:linkage/gmd:URL,'http') or starts-with(gmd:linkage/gmd:URL,'//') or starts-with(gmd:linkage/gmd:URL,'ftp')]">
         <xsl:variable name="p" select="normalize-space(gmd:protocol/*/text())"/>
         {
-        "@type":"DataDownload",
-        "contentUrl":"<xsl:value-of select="gn-fn-index:json-escape(gmd:linkage/gmd:URL/text())"/>",
-        "encodingFormat":"<xsl:value-of select="gn-fn-index:json-escape(if ($p != '') then $p else gmd:protocol/*/@xlink:href)"/>",
-        "name":"<xsl:value-of select="gn-fn-index:json-escape(gmd:name/*/text())"/>",
-        "description":"<xsl:value-of select="gn-fn-index:json-escape(gmd:description/*/text())"/>"
+         "@type":"DataDownload",
+         "contentUrl": "<xsl:value-of select="gn-fn-index:json-escape(normalize-space(gmd:linkage))"/>",
+         "encodingFormat":"<xsl:value-of select="gn-fn-index:json-escape(normalize-space(if ($p != '') then $p else gmd:protocol/*/@xlink:href))"/>",
+         "name": <xsl:apply-templates mode="toJsonLDLocalized" select="gmd:name"/>,
+         "description": <xsl:apply-templates mode="toJsonLDLocalized" select="gmd:description"/>
         }
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
@@ -409,14 +409,14 @@
         <xsl:variable name="requestedValue"
                       select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString[@id = $requestedLanguageId]/text()"/>
         <xsl:value-of select="concat('&quot;',
-                              gn-fn-index:json-escape(
-                                if ($requestedValue != '') then $requestedValue else (gco:CharacterString|gmx:Anchor)),
+                              gn-fn-index:json-escape(normalize-space(
+                                if ($requestedValue != '') then $requestedValue else (gco:CharacterString|gmx:Anchor))),
                               '&quot;')"/>
       </xsl:when>
       <xsl:otherwise>
         <!-- A simple property value -->
         <xsl:value-of select="concat('&quot;',
-                              gn-fn-index:json-escape(gco:CharacterString|gmx:Anchor),
+                              gn-fn-index:json-escape(normalize-space(gco:CharacterString|gmx:Anchor)),
                               '&quot;')"/>
       </xsl:otherwise>
     </xsl:choose>

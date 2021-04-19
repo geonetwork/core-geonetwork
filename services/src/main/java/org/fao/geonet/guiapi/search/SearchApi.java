@@ -132,7 +132,7 @@ public class SearchApi {
     private Element query(Map<String, String> queryFields, HttpServletRequest request){
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         SearchManager searchMan = applicationContext.getBean(SearchManager.class);
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         Element params = new Element("params");
         queryFields.forEach((k, v) -> params.addContent(new Element(k).setText(v)));
 
@@ -155,5 +155,6 @@ public class SearchApi {
 
         }
         return model;
+      }
     }
 }

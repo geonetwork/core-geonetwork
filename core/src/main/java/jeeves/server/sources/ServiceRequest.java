@@ -225,7 +225,7 @@ public class ServiceRequest {
      * @param contentDisposition content disposition (inline|attachment|attachment;filename=&quot;filename.jpg&quot;)
      * @param cache true if content can be cached, false to disable caching for dynamic content
      */
-    public void beginStream(String contentType, int contentLength, String contentDisposition ,
+    public void beginStream(String contentType, long contentLength, String contentDisposition ,
                             boolean cache) {
     }
 

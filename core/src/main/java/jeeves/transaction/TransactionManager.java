@@ -123,11 +123,14 @@ public class TransactionManager {
                     (isRolledBack?" rolled back":"") +
                     (isCommitted?" committed":"")
             );
-            if( !isRolledBack && !isCommitted ){
-                Log.warning(  Log.JEEVES, "Run in transaction did not complete cleanly, transaction not committed or rolledback");
-            }
-            if( isRolledBack && isCommitted ){
-                Log.warning(  Log.JEEVES, "Run in transaction did not complete cleanly, transaction both committed and rolledback");
+            if( isNewTransaction || commitBehavior == CommitBehavior.ALWAYS_COMMIT ) {
+                // this transaction was our responsibility, double checking with committed or rolledback successfully
+                if (!isRolledBack && !isCommitted) {
+                    Log.warning(Log.JEEVES, "Run in transaction did not complete cleanly, transaction not committed or rolledback");
+                }
+                if (isRolledBack && isCommitted) {
+                    Log.warning(Log.JEEVES, "Run in transaction did not complete cleanly, transaction both committed and rolledback");
+                }
             }
         }
 

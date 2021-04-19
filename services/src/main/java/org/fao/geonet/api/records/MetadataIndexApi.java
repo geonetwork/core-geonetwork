@@ -123,7 +123,7 @@ public class MetadataIndexApi {
     )
         throws Exception {
 
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+      try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
         UserSession session = ApiUtils.getUserSession(httpSession);
 
         SelectionManager selectionManager =
@@ -155,6 +155,7 @@ public class MetadataIndexApi {
         res.put("count", index);
 
         return res;
+      }
     }
 
 }

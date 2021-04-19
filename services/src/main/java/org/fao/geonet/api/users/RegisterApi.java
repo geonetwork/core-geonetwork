@@ -99,7 +99,7 @@ public class RegisterApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         SettingManager sm = context.getBean(SettingManager.class);
         boolean selfRegistrationEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_ENABLE);
@@ -205,6 +205,7 @@ public class RegisterApi {
             messages.getString("user_registered"),
             user.getUsername()
         ), HttpStatus.CREATED);
+      }
     }
 
     Group getGroup(ServiceContext context) throws SQLException {

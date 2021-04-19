@@ -92,8 +92,7 @@ public class XslProcessing {
         SettingManager settingsMan = appContext.getBean(SettingManager.class);
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
 
-        ServiceContext context = serviceManager.createServiceContext("md.processing", lang, request);
-      try {
+      try (ServiceContext context = serviceManager.createServiceContext("md.processing", lang, request)) {
         XsltMetadataProcessingReport report = new XsltMetadataProcessingReport(process);
 
         if (id.isEmpty()) {
@@ -117,8 +116,6 @@ public class XslProcessing {
 
         // and the processed metadata if not saved.
         return report;
-      } finally {
-        context.clear();
       }
     }
 }

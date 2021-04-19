@@ -23,6 +23,8 @@
 package org.fao.geonet.api.exception;
 
 
+import java.util.Locale;
+
 import org.fao.geonet.exceptions.LocalizedRuntimeException;
 
 public class WebApplicationException extends LocalizedRuntimeException {
@@ -100,5 +102,35 @@ public class WebApplicationException extends LocalizedRuntimeException {
 
     protected String getResourceBundleBeanQualifier() {
         return "apiMessages";
+    }
+
+    @Override
+    public WebApplicationException withMessageKey(String messageKey) {
+        super.withMessageKey(messageKey);
+        return this;
+    }
+
+    @Override
+    public WebApplicationException withMessageKey(String messageKey, Object[] messageKeyArgs) {
+        super.withMessageKey(messageKey, messageKeyArgs);
+        return this;
+    }
+
+    @Override
+    public WebApplicationException withDescriptionKey(String descriptionKey) {
+        super.withDescriptionKey(descriptionKey);
+        return this;
+    }
+
+    @Override
+    public WebApplicationException withDescriptionKey(String descriptionKey, Object[] descriptionKeyArgs) {
+        super.withDescriptionKey(descriptionKey, descriptionKeyArgs);
+        return this;
+    }
+
+    @Override
+    public WebApplicationException withLocale(Locale locale) {
+        super.withLocale(locale);
+        return this;
     }
 }

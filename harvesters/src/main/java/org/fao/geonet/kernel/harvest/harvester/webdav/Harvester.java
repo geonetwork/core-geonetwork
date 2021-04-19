@@ -85,6 +85,7 @@ interface RemoteFile {
 class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestResult> {
 
     private Logger log;
+    /** Shared service context managed by HarvesterManager */
     private ServiceContext context;
     private DataManager dataMan;
     private IMetadataManager metadataManager;

@@ -98,6 +98,14 @@ public class NetLib {
 
     //---------------------------------------------------------------------------
 
+    /**
+     * Setup proxy for http client
+     *
+     * @param context Service context used to lookup settings.
+     * @param client Http implementation
+     * @param requestHost
+     * @return
+     */
     public CredentialsProvider setupProxy(ServiceContext context, HttpClientBuilder client, String requestHost) {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
@@ -107,6 +115,9 @@ public class NetLib {
 
     /**
      * Setup proxy for http client
+     * @param sm settings
+     * @param client Http implementation
+     * @param requestHost
      */
     public CredentialsProvider setupProxy(SettingManager sm, HttpClientBuilder client, String requestHost) {
         boolean enabled = sm.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);

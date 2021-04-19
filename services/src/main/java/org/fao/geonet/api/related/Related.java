@@ -119,8 +119,8 @@ public class Related implements ApplicationContextAware {
             String[] uuids,
         HttpServletRequest request) throws Exception {
 
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
-        final ServiceContext context = ApiUtils.createServiceContext(request);
         Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
 
         AbstractMetadata md;
@@ -128,7 +128,7 @@ public class Related implements ApplicationContextAware {
 
         for(String uuid : uuids) {
             try{
-                md = ApiUtils.canViewRecord(uuid, request);
+                md = ApiUtils.canViewRecord(uuid, context);
                 Element raw = new Element("root").addContent(Arrays.asList(
                     new Element("gui").addContent(Arrays.asList(
                         new Element("language").setText(language.getISO3Language()),
@@ -146,5 +146,6 @@ public class Related implements ApplicationContextAware {
 
         }
         return res;
+      }
     }
 }

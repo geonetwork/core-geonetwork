@@ -57,8 +57,7 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
         TransactionlessTesting.get().run(new TestTask() {
             @Override
             public void run() throws Exception {
-                final ServiceContext serviceContext = createServiceContext();
-              try {
+              try (ServiceContext serviceContext = createServiceContext()) {
                 loginAsAdmin(serviceContext);
 
                 final Element sampleMetadataXml = getSampleMetadataXml();
@@ -75,8 +74,6 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
                 assertNotNull(updateMd);
                 final boolean hasNext = updateMd.getCategories().iterator().hasNext();
                 assertTrue(hasNext);
-              } finally {
-                serviceContext.clearAsThreadLocal();
               }
             }
         });

@@ -2,6 +2,8 @@
 UPDATE Settings SET value='3.11.0' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 
+UPDATE Settings SET editable = 'n' WHERE name = 'system/userFeedback/lastNotificationDate';
+
 -- Increase the length of Validation type (where the schematron file name is stored)
 ALTER TABLE Validation ALTER COLUMN valType TYPE varchar(128);
 
@@ -26,3 +28,4 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'spa','Record res
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'tur','Record restored.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'vie','Record restored.');
 
+DELETE FROM Settings WHERE name = 'system/server/securePort';

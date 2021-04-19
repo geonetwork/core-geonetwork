@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.datamanager.base;
 import java.util.concurrent.TimeUnit;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
@@ -104,6 +105,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Metadata indexer responsible for updating index in a background executor.
+ *
+ * Helper method exist to schedule records for reindex by id. These methods make use of the service context
+ * of the current thread if needed to access user session.
+ *
+ * This class maintains its own service context for use in the background, and does not have access
+ * to a user session.
+ */
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
 
     Lock waitLoopLock = new ReentrantLock();
@@ -145,16 +155,28 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Autowired
     private Resources resources;
 
-    // FIXME remove when get rid of Jeeves
-    private ServiceContext servContext;
-
     private ApplicationEventPublisher publisher;
+
+    /** Private service context managed by service init / destroy for use by metadata indexing tasks. */
+    private ServiceContext indexMetadataTaskContext;
 
     public BaseMetadataIndexer() {
     }
 
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        servContext = context;
+    public void init(ServiceContext context) throws Exception {
+        ServiceManager serviceManager = context.getBean(ServiceManager.class);
+        if( indexMetadataTaskContext == null ) {
+            indexMetadataTaskContext = serviceManager.createServiceContext("_indexMetadataTask", context);
+        } else {
+            context.getLogger().debug("Metadata Indexer already initialized");
+        }
+    }
+
+    public void destroy(){
+        if (indexMetadataTaskContext != null) {
+            indexMetadataTaskContext.clear();
+            indexMetadataTaskContext = null;
+        }
     }
 
     @Override
@@ -246,7 +268,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 stringIds.add(id.toString());
             }
             // execute indexing operation
-            batchIndexInThreadPool(context, stringIds);
+            batchIndexInThreadPool(stringIds);
         }
     }
 
@@ -283,7 +305,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             // execute indexing operation
-            batchIndexInThreadPool(context, listOfIdsToIndex);
+            batchIndexInThreadPool(listOfIdsToIndex);
         }
     }
 
@@ -292,11 +314,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
      * transaction commits before starting threads (to make sure that all metadata
      * are committed).
      *
-     * @param context     context object
      * @param metadataIds the metadata ids to index
      */
     @Override
-    public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds) {
+    public void batchIndexInThreadPool( List<?> metadataIds) {
 
         TransactionStatus transactionStatus = null;
         try {
@@ -319,6 +340,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             Log.debug(Geonet.INDEX_ENGINE, metadataIds.toString());
         }
         AtomicInteger numIndexedTracker = new AtomicInteger();
+
+
+
         while (index < metadataIds.size()) {
             int start = index;
             int count = Math.min(perThread, metadataIds.size() - start);
@@ -335,7 +359,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             // create threads to process this chunk of ids
-            Runnable worker = new IndexMetadataTask(context, subList, batchIndex, transactionStatus, numIndexedTracker);
+            Runnable worker = new IndexMetadataTask(indexMetadataTaskContext, subList, batchIndex, transactionStatus, numIndexedTracker);
             executor.execute(worker);
             index += count;
         }
@@ -394,9 +418,13 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         }
         AbstractMetadata fullMd;
 
+        if (searchManager == null) {
+            searchManager = getServiceContext().getBean(SearchManager.class);
+        }
+
         try {
             Vector<Element> moreFields = new Vector<Element>();
-            int id$ = Integer.parseInt(metadataId);
+            int id = Integer.parseInt(metadataId);
 
             // get metadata, extracting and indexing any xlinks
             Element md = getXmlSerializer().selectNoXLinkResolver(metadataId, true, false);
@@ -416,8 +444,12 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
             }
 
-            fullMd = metadataUtils.findOne(id$);
-
+            fullMd = metadataUtils.findOne(id);
+            if( fullMd == null){
+                // Metadata record has been subsequently deleted
+                searchManager.delete(metadataId);
+                return;
+            }
             final String schema = fullMd.getDataInfo().getSchemaId();
             final String createDate = fullMd.getDataInfo().getCreateDate().getDateAndTime();
             final String changeDate = fullMd.getDataInfo().getChangeDate().getDateAndTime();
@@ -464,7 +496,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.EXTRA, extra, false, true));
 
             // If the metadata has an atom document, index related information
-            InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id$);
+            InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id);
 
             if ((feed != null) && StringUtils.isNotEmpty(feed.getAtom())) {
                 moreFields.add(SearchManager.makeField("has_atom", "y", true, true));
@@ -526,7 +558,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             // get privileges
-            List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id$);
+            List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id);
 
             boolean isPublishedToAll = false;
 
@@ -561,7 +593,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
             // get status
             Sort statusSort = new Sort(Sort.Direction.DESC, MetadataStatus_.changeDate.getName());
-            List<MetadataStatus> statuses = statusRepository.findAllByMetadataIdAndByType(id$, StatusValueType.workflow, statusSort);
+            List<MetadataStatus> statuses = statusRepository.findAllByMetadataIdAndByType(id, StatusValueType.workflow, statusSort);
             if (!statuses.isEmpty()) {
                 MetadataStatus stat = statuses.get(0);
                 String status = String.valueOf(stat.getStatusValue().getId());
@@ -575,7 +607,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             // -1 : not evaluated
             // 0 : invalid
             // 1 : valid
-            List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id$);
+            List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id);
             if (validationInfo.isEmpty()) {
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, "-1", true, true));
             } else {
@@ -608,10 +640,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
             //To inject extra fields from BaseMetadataIndexer inherited beans
             addExtraFields(fullMd, moreFields);
-
-            if (searchManager == null) {
-                searchManager = getServiceContext().getBean(SearchManager.class);
-            }
 
             searchManager.index(schemaManager.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root,
                 forceRefreshReaders);
@@ -685,16 +713,16 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     }
 
     /**
-     * Service context for the current therad if available, or the one provided during init.
+     * Service context for the current thread if available, or the one provided during init.
      *
      * @return service context for current thread if available, or service context used during init.
      */
-    private ServiceContext getServiceContext() {
+    protected ServiceContext getServiceContext() {
         ServiceContext context = ServiceContext.get();
         if( context != null ){
             return context; // use ServiceContext from current ThreadLocal
         }
-        return servContext; // backup ServiceContext provided during init
+        return indexMetadataTaskContext; // backup ServiceContext provided during init
     }
 
     public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {

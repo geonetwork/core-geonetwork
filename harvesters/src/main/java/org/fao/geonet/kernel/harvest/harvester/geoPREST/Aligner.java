@@ -61,6 +61,7 @@ import jeeves.server.context.ServiceContext;
 public class Aligner extends BaseAligner<GeoPRESTParams> {
 
     private Logger log;
+    /** Shared service context managed by HarvetManager */
     private ServiceContext context;
     private XmlRequest request;
     private DataManager dataMan;

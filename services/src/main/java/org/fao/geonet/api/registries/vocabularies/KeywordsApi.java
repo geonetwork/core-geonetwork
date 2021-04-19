@@ -265,7 +265,7 @@ public class KeywordsApi {
         HttpSession httpSession
     )
         throws Exception {ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         UserSession session = ApiUtils.getUserSession(httpSession);
 
 //        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
@@ -306,6 +306,7 @@ public class KeywordsApi {
 
         // get the results
         return searcher.getResults();
+      }
     }
 
 
@@ -389,7 +390,7 @@ public class KeywordsApi {
 
     ) throws Exception {
         final String SEPARATOR = ",";
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         if(langs == null) {
             langs = context.getLanguage().split(",");
@@ -402,8 +403,6 @@ public class KeywordsApi {
         }
 
         Element descKeys;
-
-        uri = URLDecoder.decode(uri, "UTF-8");
 
         if (uri == null) {
             descKeys = new Element("descKeys");
@@ -488,6 +487,7 @@ public class KeywordsApi {
         final Element transform = Xml.transform(root, convertXsl);
 
         return transform;
+      }
     }
 
 
@@ -653,7 +653,7 @@ public class KeywordsApi {
             ) throws Exception {
 
         long start = System.currentTimeMillis();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         // Different options for upload
         boolean fileUpload = file!=null&&!file.isEmpty();
@@ -723,6 +723,7 @@ public class KeywordsApi {
                 FileUtils.deleteQuietly(tempDir);
             }
         }
+      }
     }
 
 
@@ -787,7 +788,7 @@ public class KeywordsApi {
     ) throws Exception {
 
         long start = System.currentTimeMillis();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         boolean urlUpload = !StringUtils.isEmpty(url);
         boolean registryUpload = !StringUtils.isEmpty(registryUrl);
@@ -866,6 +867,7 @@ public class KeywordsApi {
 
         return String.format("Thesaurus '%s' loaded in %d sec.",
             fname, duration);
+      }
     }
     /**
      * Extract SKOS from registry.

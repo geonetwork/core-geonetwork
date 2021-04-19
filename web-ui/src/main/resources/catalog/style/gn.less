@@ -234,7 +234,7 @@ a {
   @media (max-width: @screen-md-max) {
     margin-top: -6px;
   }
-  @media (max-width: @screen-xs-max) {  
+  @media (max-width: @screen-xs-max) {
     margin-top: 0;
   }
 }
@@ -1002,6 +1002,21 @@ gn-md-type-widget, gn-md-type-inspire-validation-widget {
       font-weight: 500;
     }
   }
+  &.accessible-dropdown {
+    .dropdown-menu {
+      li:not(.divider) {
+        padding: 3px 15px;
+        a:not(.btn) {
+          padding: 8px 15px !important;
+          margin-left: -15px;
+          margin-right: -15px;
+        }
+      }
+      .navbar-form {
+        padding: 0;
+      }
+    }
+  }
 }
 // styles for login popup in the navbar
 .signin-dropdown {
@@ -1016,7 +1031,19 @@ gn-md-type-widget, gn-md-type-inspire-validation-widget {
     }
   }
 }
-
+.accessible-dropdown {
+  .signin-dropdown {
+    .dropdown-menu {
+      .navbar-form {
+        .input-group {
+          .form-control {
+            min-width: 200px;
+          }
+        }
+      }
+    }
+  }
+}
 
 // map
 .gn-drawmap-panel {
@@ -1206,4 +1233,9 @@ html {
 // Clickable elements
 .clickable {
   cursor: pointer;
+}
+
+.batch-report-metadata-info {
+  max-height: 300px;
+  overflow: scroll;
 }

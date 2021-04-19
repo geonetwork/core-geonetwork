@@ -832,17 +832,26 @@
         <xsl:if test="count($attributes) > 0">
           "attributeTable" : [
           <xsl:for-each select="$attributes">
-            {"name": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:memberName/text())"/>",
-            "definition": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:definition/*/text())"/>",
+            {"name": "<xsl:apply-templates mode="localised" 
+                  select="*/gfc:memberName"><xsl:with-param name="langId" 
+                  select="concat('#', $langId)"/></xsl:apply-templates>",
+            "definition": "<xsl:apply-templates mode="localised" 
+                  select="*/gfc:definition"><xsl:with-param name="langId" 
+                  select="concat('#', $langId)"/></xsl:apply-templates>",
             "code": "<xsl:value-of select="*/gfc:code/*/text()"/>",
             "link": "<xsl:value-of select="*/gfc:code/*/@xlink:href"/>",
             "type": "<xsl:value-of select="*/gfc:valueType/gco:TypeName/gco:aName/*/text()"/>"
             <xsl:if test="*/gfc:listedValue">
               ,"values": [
               <xsl:for-each select="*/gfc:listedValue">{
-                "label": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:label/*/text())"/>",
+                "label": "<xsl:apply-templates mode="localised" 
+                  select="*/gfc:label"><xsl:with-param name="langId" 
+                  select="concat('#', $langId)"/></xsl:apply-templates>",
                 "code": "<xsl:value-of select="*/gfc:code/*/text()"/>",
-                "definition": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:definition/*/text())"/>"}
+                "definition": "<xsl:apply-templates mode="localised" 
+                  select="*/gfc:definition"><xsl:with-param name="langId" 
+                  select="concat('#', $langId)"/></xsl:apply-templates>"
+                }
                 <xsl:if test="position() != last()">,</xsl:if>
               </xsl:for-each>
               ]

@@ -169,8 +169,9 @@ public class MetadataApi {
         HttpServletRequest request
     )
         throws Exception {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         try {
-            ApiUtils.canViewRecord(metadataUuid, request);
+            ApiUtils.canViewRecord(metadataUuid, context);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
@@ -195,8 +196,8 @@ public class MetadataApi {
             //response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
             return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
         }
+      }
     }
-
 
     @ApiOperation(value = "Get a metadata record as XML or JSON",
         notes = "",
@@ -253,9 +254,10 @@ public class MetadataApi {
         HttpServletRequest request
     )
         throws Exception {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata metadata;
         try {
-            metadata = ApiUtils.canViewRecord(metadataUuid, request);
+            metadata = ApiUtils.canViewRecord(metadataUuid, context);
         } catch (ResourceNotFoundException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw e;
@@ -263,7 +265,6 @@ public class MetadataApi {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
-        ServiceContext context = ApiUtils.createServiceContext(request);
         try {
             Lib.resource.checkPrivilege(context,
                 String.valueOf(metadata.getId()),
@@ -322,6 +323,7 @@ public class MetadataApi {
             isJson ? "json" : "xml"
         ));
         return isJson ? Xml.getJSON(xml) : xml;
+      }
     }
 
     @ApiOperation(
@@ -397,16 +399,17 @@ public class MetadataApi {
         HttpServletRequest request
     )
         throws Exception {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata metadata;
         try {
-            metadata = ApiUtils.canViewRecord(metadataUuid, request);
+            metadata = ApiUtils.canViewRecord(metadataUuid, context);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
         Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.SCHEMAS);
         Path file = null;
-        ServiceContext context = ApiUtils.createServiceContext(request);
+
         MEFLib.Version version = MEFLib.Version.find(acceptHeader);
         if (version == MEFLib.Version.V1) {
             // This parameter is deprecated in v2.
@@ -473,8 +476,8 @@ public class MetadataApi {
         ));
         response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(file)));
         FileUtils.copyFile(file.toFile(), response.getOutputStream());
+      }
     }
-
 
     @ApiOperation(value = "Increase record popularity",
         notes = "Used when a view is based on the search results content and does not really access the record. Record is then added to the indexing queue and popularity will be updated soon.",
@@ -498,9 +501,10 @@ public class MetadataApi {
         HttpServletRequest request
     )
         throws Exception {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata metadata;
         try {
-            metadata = ApiUtils.canViewRecord(metadataUuid, request);
+            metadata = ApiUtils.canViewRecord(metadataUuid, context);
         } catch (ResourceNotFoundException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw e;
@@ -508,9 +512,10 @@ public class MetadataApi {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
-        ServiceContext context = ApiUtils.createServiceContext(request);
+
 
         dataManager.increasePopularity(context, metadata.getId() + "");
+      }
     }
 
 
@@ -552,10 +557,10 @@ public class MetadataApi {
         @RequestParam(defaultValue = "100")
             int rows,
         HttpServletRequest request) throws Exception {
-
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata md;
         try {
-            md = ApiUtils.canViewRecord(metadataUuid, request);
+            md = ApiUtils.canViewRecord(metadataUuid, context);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
@@ -565,7 +570,6 @@ public class MetadataApi {
 
         // TODO PERF: ByPass XSL processing and create response directly
         // At least for related metadata and keep XSL only for links
-        final ServiceContext context = ApiUtils.createServiceContext(request);
         Element raw = new Element("root").addContent(Arrays.asList(
             new Element("gui").addContent(Arrays.asList(
                 new Element("language").setText(language),
@@ -578,6 +582,7 @@ public class MetadataApi {
         final Element transform = Xml.transform(raw, relatedXsl);
         RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
         return response;
+      }
     }
 
     @ApiOperation(

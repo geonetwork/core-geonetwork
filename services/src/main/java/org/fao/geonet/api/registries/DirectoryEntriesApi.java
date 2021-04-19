@@ -170,7 +170,7 @@ public class DirectoryEntriesApi {
                 "The record found with UUID '%s' is not a subtemplate", uuid));
         }
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         if(langs == null) {
             langs = context.getLanguage().split(",");
         }
@@ -236,5 +236,6 @@ public class DirectoryEntriesApi {
         } else {
             return tpl;
         }
+      }
     }
 }

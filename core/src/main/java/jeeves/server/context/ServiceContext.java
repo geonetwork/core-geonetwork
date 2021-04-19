@@ -23,6 +23,8 @@
 
 package jeeves.server.context;
 
+import java.io.Closeable;
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import jeeves.component.ProfileManager;
 import jeeves.server.UserSession;
@@ -68,7 +70,7 @@ import javax.persistence.EntityManager;
  *
  * @see ServiceManager
  */
-public class ServiceContext extends BasicContext {
+public class ServiceContext extends BasicContext implements AutoCloseable  {
 
     /**
      * ServiceContext is managed as a thread locale using setAsThreadLocal, clearAsThreadLocal and clear methods.
@@ -108,21 +110,125 @@ public class ServiceContext extends BasicContext {
     private static final InheritableThreadLocal<ServiceContext> THREAD_LOCAL_INSTANCE = new InheritableThreadLocal<ServiceContext>();
 
     /**
-     * Trace allocation via {@link #setAsThreadLocal()}.
+     * Simple data structure recording service details.
+     *
+     * Lightweight data structure used logging service details such as name.
      */
-    private Throwable allocation = null;
+    public static class ServiceDetails {
+        private String ipAddress;
+        private String service;
+        private String language;
+        public ServiceDetails(ServiceContext context){
+            this.ipAddress = context.getIpAddress();
+        }
 
-    private UserSession _userSession = new UserSession();
-    private InputMethod _input;
-    private OutputMethod _output;
-    private Map<String, String> _headers;
-    private String _language;
-    private String _service;
-    private String _ipAddress;
-    private int _maxUploadSize;
-    private JeevesServlet _servlet;
-    private boolean _startupError = false;
-    private Map<String, String> _startupErrors;
+        public String getIpAddress() {
+            return ipAddress;
+        }
+
+        public String getService() {
+            return service;
+        }
+
+        public String getLanguage() {
+            return language;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ServiceDetails that = (ServiceDetails) o;
+            return Objects.equals(ipAddress, that.ipAddress) && service.equals(that.service) && Objects.equals(language, that.language);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(ipAddress, service, language);
+        }
+    }
+
+    /**
+     * Shared service context offering limited functionality.
+     *
+     * Use of service context has been assumed in many parts of the codebase. This shared "AppHandler" service context
+     * is used during Jeeves startup and has some protection from being  cleared. Additional managers such HarvestManager
+     * also use a shared service context to support background processes.
+     */
+    public static class AppHandlerServiceContext extends ServiceContext {
+
+        /**
+         * Shared AppHandler service context associated with application lifecycle.
+         *
+         * See factory method {@link ServiceManager#createAppHandlerServiceContext(ConfigurableApplicationContext, String)}  and
+         * {@link ServiceManager#createAppHandlerServiceContext(ConfigurableApplicationContext)}.
+         *
+         * @param service Service name
+         * @param jeevesApplicationContext Application context
+         * @param contexts Handler context
+         * @param entityManager
+         */
+        public AppHandlerServiceContext(final String service, final ConfigurableApplicationContext jeevesApplicationContext,
+                              final Map<String, Object> contexts, final EntityManager entityManager) {
+            super( service, jeevesApplicationContext, contexts, entityManager );
+            _language = "?";
+            _userSession = null;
+            _ipAddress = "?";
+        }
+
+        @Override
+        public void setUserSession(UserSession session) {
+            if (session != null) {
+                warning("Shared service context \"" + _service + "\"  context should not be configured with user session");
+            }
+            super.setUserSession(session);
+        }
+        @Override
+        public void setIpAddress(String address) {
+            if( address != null && !"?".equals(address)) {
+                warning("Shared service context \""+_service+"\" should not be associated with an ip address");
+            }
+            super.setIpAddress(address);
+        }
+
+        public void clear() {
+            warning("Shared service context \""+_service+"\"  context is shared, and should not be cleared");
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("AppHandlerServiceContext ");
+            sb.append("'").append(_service).append('\'');
+
+            return sb.toString();
+        }
+
+    };
+    /**
+     * Trace allocation via {@link #setAsThreadLocal()}.
+     *
+     * Recording where the service context was assigned to the thread local to aid in debugging.
+     */
+    protected Throwable allocation = null;
+
+    /**
+     * Trace deallocation via {@link #clear()} method.
+     *
+     * Recording where the service context clear() was called to aid in debugging.
+     */
+    protected Throwable deAllocation = null;
+
+    protected UserSession _userSession = new UserSession();
+    protected InputMethod _input;
+    protected OutputMethod _output;
+    protected Map<String, String> _headers;
+    protected String _language;
+    protected String _service;
+    protected String _ipAddress;
+    protected int _maxUploadSize;
+    protected JeevesServlet _servlet;
+    protected boolean _startupError = false;
+    protected Map<String, String> _startupErrors;
     /**
      * Property to be able to add custom response headers depending on the code (and not the xml of
      * Jeeves)
@@ -132,7 +238,7 @@ public class ServiceContext extends BasicContext {
      *
      * @see #_statusCode
      */
-    private Map<String, String> _responseHeaders;
+    protected Map<String, String> _responseHeaders;
     /**
      * Property to be able to add custom http status code headers depending on the code (and not the
      * xml of Jeeves)
@@ -142,7 +248,7 @@ public class ServiceContext extends BasicContext {
      *
      * @see #_responseHeaders
      */
-    private Integer _statusCode;
+    protected Integer _statusCode;
 
     /**
      * Context for service execution.
@@ -171,9 +277,47 @@ public class ServiceContext extends BasicContext {
      */
     @CheckForNull
     public static ServiceContext get() {
-        return THREAD_LOCAL_INSTANCE.get();
+        ServiceContext context = THREAD_LOCAL_INSTANCE.get();
+        if(context != null && context.isCleared()) {
+            context.checkCleared("Thread local access");
+        }
+        return context;
     }
 
+    /**
+     * Auto closable for try-with-resources support.
+     * <p>
+     * For use when creating service context for use as a parameter, will check and handle {@link #clear()} if needed:
+     * <pre>
+     * try (ServiceContext context = serviceMan.createServiceContext("AppHandler", appContext)){
+     *     ...
+     * }
+     * </pre>
+     * </p>
+     * Close will also check and handle {@link #clearAsThreadLocal()} if needed:
+     * <pre>
+     * try (ServiceContext context = serviceMan.createServiceContext("AppHandler", appContext)){
+     *     setAsThreadLocal();
+     *     ....
+     * }
+     * </pre>
+     * </p>
+     */
+    public void close() {
+        try {
+            ServiceContext check = THREAD_LOCAL_INSTANCE.get();
+            if( this == check){
+                clearAsThreadLocal();
+            }
+        }
+        finally {
+            if( !isCleared() ){
+                // reuse clear method, but provide useful deAllocation context
+                clear();
+                deAllocation  = new Throwable("ServiceContext "+_service+" closed");
+            }
+        }
+    }
     //--------------------------------------------------------------------------
     //---
     //--- Constructor
@@ -202,7 +346,7 @@ public class ServiceContext extends BasicContext {
             // step two ensure ApplicationContextHolder thread local kept in sync
             ApplicationContextHolder.set(this.getApplicationContext());
             // step three details on allocation
-            allocation = new Throwable("ServiceContext allocated to thread");
+            allocation = new Throwable("ServiceContext "+_service+" allocated to thread");
 
             return;
         }
@@ -221,7 +365,7 @@ public class ServiceContext extends BasicContext {
             }
             ApplicationContextHolder.set(this.getApplicationContext());
             // step three detail on re-allocation
-            allocation = new Throwable("ServiceContext allocated to thread");
+            allocation = new Throwable("ServiceContext "+_service+" allocated to thread");
 
             unexpected += "\n\tService '"+_service+"' allocate: " + allocation.getStackTrace()[1];
             checkUnexpectedState( unexpected );
@@ -246,10 +390,22 @@ public class ServiceContext extends BasicContext {
         }
         ApplicationContextHolder.set(this.getApplicationContext());
         // step three detail on present re-allocation
-        allocation = new Throwable("ServiceContext allocated to thread");
+        allocation = new Throwable("ServiceContext "+_service+" allocated to thread");
 
         unexpected += "\n\tService '"+_service+"' allocate: " + allocation.getStackTrace()[1];
         checkUnexpectedState( unexpected );
+    }
+
+    /**
+     * Check if _service name is available, or raise a NullPointerException if clear() has already been called.
+     *
+     * @param message message to use if clear() has already been called.
+     */
+    protected void checkCleared(String message){
+        if(isCleared()){
+            String unavailable = message + " - service context no longer available\nCleared by " + deAllocation.getStackTrace()[1];
+            throw new NullPointerException(unavailable);
+        }
     }
 
     /** Log or raise exception based on {@link POLICY} */
@@ -347,6 +503,7 @@ public class ServiceContext extends BasicContext {
      */
     public void clear(){
         if( this._service != null) {
+            deAllocation  = new Throwable("ServiceContext "+_service+" cleared");
             this._service =  null;
             this._headers = null;
             this._responseHeaders = null;
@@ -354,7 +511,7 @@ public class ServiceContext extends BasicContext {
             this._userSession = null;
         }
         else {
-            debug("Service context unexpectedly cleared twice");
+            debug("Service context unexpectedly cleared twice, previously cleared by "+deAllocation.getStackTrace()[1]);
         }
     }
 
@@ -369,9 +526,7 @@ public class ServiceContext extends BasicContext {
      * @return language code, or <code>"?"</code> if undefined.
      */
     public String getLanguage() {
-        if (_service == null ){
-            //throw new NullPointerException("Service context cleared, language not available");
-        }
+        // checkCleared("language not available");
         return _language;
     }
     /**
@@ -380,6 +535,15 @@ public class ServiceContext extends BasicContext {
      */
     public void setLanguage(final String lang) {
         _language = lang;
+    }
+
+    /**
+     * True if {@link #clear()} has been called to reclaim resources.
+     *
+     * @return true if service context has been cleared
+     */
+    public boolean isCleared(){
+        return _service == null;
     }
 
     /**
@@ -405,9 +569,7 @@ public class ServiceContext extends BasicContext {
      * @return ip address, or <code>"?"</code> for loopback request.
      */
     public String getIpAddress() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, ip address not available");
-        }
+        checkCleared("ip address not available");
         return _ipAddress;
     }
 
@@ -425,9 +587,7 @@ public class ServiceContext extends BasicContext {
     }
 
     public int getMaxUploadSize() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, max upload size not available");
-        }
+        checkCleared("max upload size not available");
         return _maxUploadSize;
     }
 
@@ -441,9 +601,7 @@ public class ServiceContext extends BasicContext {
      * @return the user session stored on httpsession
      */
     public UserSession getUserSession() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, user session not available");
-        }
+        checkCleared("user session not available");
         return _userSession;
     }
 
@@ -475,9 +633,7 @@ public class ServiceContext extends BasicContext {
     //--------------------------------------------------------------------------
 
     public InputMethod getInputMethod() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, input method not available");
-        }
+        checkCleared("input method not available");
         return _input;
     }
 
@@ -486,9 +642,7 @@ public class ServiceContext extends BasicContext {
     }
 
     public OutputMethod getOutputMethod() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, input method not available");
-        }
+        checkCleared("output method not available");
         return _output;
     }
 
@@ -497,9 +651,7 @@ public class ServiceContext extends BasicContext {
     }
 
     public Map<String, String> getStartupErrors() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, output method not available");
-        }
+        checkCleared("startup errors not available");
         return _startupErrors;
     }
 
@@ -509,9 +661,7 @@ public class ServiceContext extends BasicContext {
     }
 
     public boolean isStartupError() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, startup error not available");
-        }
+        checkCleared("is startup error not available");
         return _startupError;
     }
 
@@ -537,9 +687,7 @@ public class ServiceContext extends BasicContext {
      * @return The map of headers from the request
      */
     public Map<String, String> getHeaders() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, headers not available");
-        }
+        checkCleared("headers not available");
         return _headers;
     }
 
@@ -555,9 +703,7 @@ public class ServiceContext extends BasicContext {
     }
 
     public JeevesServlet getServlet() {
-        if (_service == null ){
-            throw new NullPointerException("Service context cleared, servlet not available");
-        }
+        checkCleared("servlet not available");
         return _servlet;
     }
 
@@ -635,6 +781,17 @@ public class ServiceContext extends BasicContext {
         this._statusCode = statusCode;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ServiceContext ");
+        sb.append("'").append(_service).append('\'');
+        sb.append(" ").append(_input).append(" --> ").append(_output);
+        sb.append(" { _language='").append(_language).append('\'');
+        sb.append(", _ipAddress='").append(_ipAddress).append('\'');
+        sb.append('}');
+
+        return sb.toString();
+    }
 }
 
 //=============================================================================

@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.EnhancedPatternLayout;
 import org.apache.log4j.FileAppender;
@@ -132,6 +133,12 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
      */
     protected volatile AtomicBoolean cancelMonitor = new AtomicBoolean(false);
 
+    /**
+     * Service context provided to harvester for use.
+     *
+     * Service context provided by {@link #initContext(ServiceContext)} and is the responsibility
+     * of this harvester to clean up in {@link #destroy()}.
+     */
     protected ServiceContext context;
 
     protected HarvesterSettingsManager harvesterSettingsManager;
@@ -159,21 +166,45 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
     private List<HarvestError> errors = Collections.synchronizedList(new LinkedList<>());
     private volatile boolean running = false;
 
-    public static AbstractHarvester<?, ?> create(String type, ServiceContext context) throws BadParameterEx, OperationAbortedEx {
+    /**
+     * Factory method for creating appropriate harvester.
+     *
+     * This method configures the harvester with its own service context and appropriate beans
+     * for operation. It is your responsibility to call {@link #destroy()} to clean up
+     * after this harvester when it is no longer used.
+     *
+     * @param type harvester type
+     * @param harvesterContext shared harvester service context used for bean lookup
+     * @return harvester instance
+     * @throws BadParameterEx
+     * @throws OperationAbortedEx
+     */
+    public static AbstractHarvester<?, ?> create(String type, ServiceContext harvesterContext) throws BadParameterEx, OperationAbortedEx {
         if (type == null) {
             throw new BadParameterEx("type", null);
         }
 
+        ServiceManager serviceManager = harvesterContext.getBean(ServiceManager.class);
         try {
-            AbstractHarvester<?, ?> ah = context.getBean(type, AbstractHarvester.class);
-            ah.setContext(context);
+            AbstractHarvester<?, ?> ah = harvesterContext.getBean(type, AbstractHarvester.class);
+
+            ServiceContext context = serviceManager.createServiceContext( "harvester."+type, harvesterContext );
+            ah.initContext( context );
             return ah;
         } catch (Exception e) {
             throw new OperationAbortedEx("Cannot instantiate harvester of type " + type, e);
         }
     }
 
-    protected void setContext(ServiceContext context) {
+    /**
+     * Service context provided for harvester for bean discovery and to manage user session.
+     *
+     * This method uses the provided context to look up data manager, metadata utils, harvester settings manager
+     * and other services for use during operation.
+     *
+     * @param context service context provided to this harvester to manage
+     */
+    public void initContext(ServiceContext context) {
         this.context = context;
         this.dataMan = context.getBean(DataManager.class);
         this.metadataUtils = context.getBean(IMetadataUtils.class);
@@ -236,15 +267,20 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         id = doAdd(node);
     }
 
-    public void init(Element node, ServiceContext context) throws BadInputEx, SchedulerException {
+    /**
+     * Setup harvester using provide configuration.
+     *
+     * @param node harevester configuration
+     * @throws BadInputEx
+     * @throws SchedulerException
+     */
+    public void init(Element node) throws BadInputEx, SchedulerException {
         id = node.getAttributeValue("id");
         status = Status.parse(node.getChild("options").getChildText("status"));
         error = null;
-        this.context = context;
 
         doInit(node);
-
-        initInfo(context);
+        initInfo();
 
         initializeLog();
         if (status == Status.ACTIVE) {
@@ -252,7 +288,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         }
     }
 
-    private void initInfo(ServiceContext context) {
+    private void initInfo() {
         final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
         Specification<HarvestHistory> spec = HarvestHistorySpecs.hasHarvesterUuid(getParams().getUuid());
         Pageable pageRequest = new PageRequest(0, 1, new Sort(Sort.Direction.DESC, SortUtils.createPath(HarvestHistory_.harvestDate)));
@@ -309,8 +345,12 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         return QuartzSchedulerUtils.getScheduler(SCHEDULER_ID, true);
     }
 
+    /** Called during application shutdown to remove scheduled job and clean up service context. */
     public void shutdown() throws SchedulerException {
         getScheduler().deleteJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
+
+        context.clear();
+        context = null;
     }
 
     public static void shutdownScheduler() throws SchedulerException {
@@ -578,12 +618,17 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         info.addContent(new Element("type").setText(getType()));
     }
 
-    public ServiceContext getServiceContext() {
-        return context;
-    }
-
     public Status getStatus() {
         return status;
+    }
+
+    /**
+     * Service context maintained by this harvester, may be used to access UserSession.
+     *
+     * @return service context maintained by harvester
+     */
+    public ServiceContext getContext() {
+        return this.context;
     }
 
     /**
@@ -825,10 +870,20 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         return types[0];
     }
 
+    /**
+     * Harvester configuration.
+     *
+     * @return configuration, strongly typed
+     */
     public P getParams() {
         return params;
     }
 
+    /**
+     * Setup harvester with the provided configuration
+     * @param node harevester configuration
+     * @throws BadInputEx
+     */
     private void doInit(Element node) throws BadInputEx {
         setParams(createParams());
         params.create(node);

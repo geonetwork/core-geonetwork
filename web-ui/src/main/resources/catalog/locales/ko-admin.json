@@ -908,7 +908,6 @@
     "system/server/host-help": "서버의 호스트와  포트는 GeoNetwork 서버에 대한 URL을 만드는 데 사용됩니다. CSW 요청시 서버의 기능을 반환 할 때 예를 들어, 그들은 리소스에 대한 링크를 작성하고 메타데이터를 편집 할 때 사용됩니다.",
     "system/server/port": "포트",
     "system/server/protocol": "선호하는 프로토콜",
-    "system/server/securePort": "안정된 포트",
     "system/server/log": "로그 수준",
     "system/server/timeZone": "Timezone",
     "system/server/timeZone-help": "<b>Currently used only in the harvesters</b>. Sets the timezone used to interpret the time in cron expression specified in the harvesters Frequency field. If not set the JVM default timezone will be used. GeoNetwork uses the timezone definitions available in the JVM. Time zones definitions can change frequently. Please keep updated your JVM to get the latest timezones definition or use the tzupdater tool available for download from the <a href='http://www.oracle.com/technetwork/java/javase/downloads/index.html' target='_blank'>Java SE Download Page</a>.",
