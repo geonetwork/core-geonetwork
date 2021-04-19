@@ -104,8 +104,8 @@
                 <ul id="gn-import-uploadfile-list" class="list-group gn-margin-top">
                   <li data-ng-repeat="file in queue" class="list-group-item clearfix">
                     <div class="preview" data-file-upload-preview="file"></div>
-                    <div class="text-ellipsis width-50 pull-left ">{{file.name}}</div> ({{file.type}} / {{file.size | formatFileSize}})
-                    <button data-ng-click="clear(file)" class="btn btn-default btn-xs pull-right">
+                    <div class="text-ellipsis width-50 pull-left" title="{{file.name}}">{{file.name}}</div><span title="{{file.name}}"> ({{file.type}} / {{file.size | formatFileSize}})</span>
+                    <button data-ng-click="clear(file)" class="btn btn-default btn-xs pull-right" title="{{'delete' | translate}}">
                       <i class="fa fa-times"/>
                     </button>
                   </li>
