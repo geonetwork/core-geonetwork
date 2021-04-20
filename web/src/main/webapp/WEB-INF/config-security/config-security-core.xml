@@ -41,6 +41,7 @@
         <sec:filter-chain pattern="/jolokia/**" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
         <sec:filter-chain pattern="/dashboards/**" filters="securityContextPersistenceFilter, basicAuthenticationFilter, authenticatedUserFilter"/>
         <sec:filter-chain pattern="/doc/**" filters=""/>
+        <sec:filter-chain pattern="/api/**" filters=""/>
         <!-- wroAPI is protected for admin only
         This is causing issue on node-change-warning page.
         <sec:filter-chain pattern="/static/wroAPI" filters=""/>-->

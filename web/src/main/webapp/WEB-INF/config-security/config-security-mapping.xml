@@ -36,9 +36,14 @@
     <property name="securityMetadataSource">
       <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex">
         <sec:intercept-url pattern="/metadata/.*" access="permitAll"/>
-        <!-- Secure proxy URL if needed eg. restrict to some host only. -->
-        <sec:intercept-url pattern="/proxy\?url=.*" access="permitAll"/>
+
+        <sec:intercept-url pattern="/api/.*" access="permitAll"/>
+
+        <!-- Secure proxy URL if needed using proxy.securityMode
+        or restrict to some host only. -->
         <!--<sec:intercept-url pattern="/proxy\?url=.*(www.brgm.fr|www.ifremer.fr).*" access="permitAll"/>-->
+        <sec:intercept-url pattern="/proxy\?url=.*" access="permitAll"/>
+
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/metadata/.*" access="permitAll"/>

@@ -1429,6 +1429,9 @@
      when watchlist notifier is triggered (Default 4AM) -->
     <savedselection.watchlist.frequency>0 0 4 * * ?</savedselection.watchlist.frequency>
 
+    <microservices.url></microservices.url>
+    <!--<microservices.url>http://localhost:9901</microservices.url>-->
+
     <!-- Proxy security configuration:
     * NONE: allow all.
     * DB_LINK_CHECK:

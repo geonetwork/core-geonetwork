@@ -372,6 +372,32 @@
   </servlet-mapping>
 
 
+  <servlet>
+    <servlet-name>MicroServicesProxy</servlet-name>
+    <servlet-class>org.fao.geonet.proxy.URITemplateProxyServlet</servlet-class>
+    <init-param>
+      <param-name>targetUri</param-name>
+      <param-value>${microservices.url}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>forwardHost</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>forwardHostPrefixPath</param-name>
+      <param-value>/api</param-value>
+    </init-param>
+    <init-param>
+      <param-name>log</param-name>
+      <param-value>false</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MicroServicesProxy</servlet-name>
+    <url-pattern>/api/*</url-pattern>
+  </servlet-mapping>
+
+
   <!--Direct proxy to ES server.
   One specific proxy for features
   which are requested by client apps. Redirect
