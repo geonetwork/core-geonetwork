@@ -1586,6 +1586,11 @@
               name()='gmd:MD_Metadata' and
               contains(gmd:metadataStandardName/gco:CharacterString, 'EMODNET')]">
     <entry>
+      <code>Creative Commons Attribution 4.0 International</code>
+      <label>Creative Commons Attribution 4.0 International</label>
+      <description></description>
+    </entry>
+    <entry>
       <code>SeaDataNet licence</code>
       <label>SeaDataNet licence</label>
       <description></description>
