@@ -44,7 +44,7 @@ public class NoIndexErrorsHealthCheck implements HealthCheckFactory {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
                 EsSearchManager searchMan = gc.getBean(EsSearchManager.class);
-                long numDocs = searchMan.getNumDocs("+" + IndexFields.INDEXING_ERROR_FIELD + ":1");
+                long numDocs = searchMan.getNumDocs("+" + IndexFields.INDEXING_ERROR_FIELD + ":true");
 
                 if (numDocs > 0) {
                     return Result.unhealthy("Found " + numDocs + " metadata that had errors during indexing");

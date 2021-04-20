@@ -67,6 +67,7 @@
               </td>
             </tr>
             <tr class="health-check"
+                data-ng-show="indexStatus"
                 title="{{(indexStatus['db.count'] === indexStatus['index.count']) ? '' : ('indexStatusSynchronized-error' | translate)}}"
                 data-ng-class="(indexStatus['db.count'] === indexStatus['index.count']) ? '' : 'alert-danger'">
               <td>
