@@ -6,8 +6,8 @@
 
 
   module.directive('sxtMdActionsMenu', ['gnMetadataActions', '$http',
-    '$location', 'Metadata', 'sxtService',
-    function(gnMetadataActions, $http, $location, Metadata, sxtService) {
+    '$location', 'Metadata', 'sxtService', 'gnConfig',
+    function(gnMetadataActions, $http, $location, Metadata, sxtService, gnConfig) {
       return {
         restrict: 'A',
         replace: true,

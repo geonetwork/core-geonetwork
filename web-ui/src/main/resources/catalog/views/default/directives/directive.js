@@ -285,8 +285,8 @@
   ]);
 
   module.directive('gnMdActionsMenu', ['gnMetadataActions',
-    '$http', 'gnConfig', 'gnConfigService', 'gnGlobalSettings',
-    function(gnMetadataActions, $http, gnConfig, gnConfigService, gnGlobalSettings) {
+    '$http', 'gnConfig', 'gnConfigService', 'gnGlobalSettings', 'gnConfig',
+    function(gnMetadataActions, $http, gnConfig, gnConfigService, gnGlobalSettings, gnConfig) {
       return {
         restrict: 'A',
         replace: true,
