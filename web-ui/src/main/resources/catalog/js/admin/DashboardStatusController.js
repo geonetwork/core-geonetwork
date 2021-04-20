@@ -54,6 +54,16 @@
       $scope.threadSortField = undefined;
       $scope.threadSortReverse = false;
       $scope.threadInfoLoading = false;
+
+      $scope.indexStatus = null;
+      function getIndexStatus() {
+        $http.get('../api/site/index/synchronized').
+        success(function(data) {
+          $scope.indexStatus = data;
+        });
+      }
+      getIndexStatus();
+
       $scope.setThreadSortField = function(field) {
         if (field === $scope.threadSortField) {
           $scope.threadSortReverse = !$scope.threadSortReverse;
