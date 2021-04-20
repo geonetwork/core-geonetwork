@@ -34,8 +34,8 @@ Generic Java header:
 ```
 /*
  * Copyright (C) 2021 Food and Agriculture Organization of the
- * United Nations (FAO-UN), United Nations World Food Programme (WFP)
- * and United Nations Environment Programme (UNEP), and others.
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP),
+ * United Nations Environment Programme (UNEP), and others.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,8 +60,8 @@ Generic XML header
 ```
 <!--
   ~ Copyright (C) 2021 Food and Agriculture Organization of the
-  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
-  ~ and United Nations Environment Programme (UNEP)
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP),
+  ~ United Nations Environment Programme (UNEP), and others.
   ~
   ~ This program is free software; you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -149,7 +149,6 @@ Each level of ``Jeeves`` is provided a context to interact with the rest of the 
 * ``Logger``
 * ``BasicContext`` application access and bean discouvery
 * ``ServiceContext`` complete application access, in addition details of the current request, and user session
-   
 * ``ServiceContext.AppHandlerServiceContext`` provided to core components allowing use utility methods expecting a service context to be avaialble. Designed to be shared no user session is available.
 
 ## Geonetwork
@@ -217,7 +216,7 @@ The vast majority of the GeoNetwork application is implemented as services, and 
 
 ``ServiceContext`` provides access to detail on the current request, and the user session.
 
-When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup.
+When creating a ServiceContext you are responsible for managing its use on the current thread and any cleanup.
 
 Using auto-closable:
 ```
@@ -244,7 +243,7 @@ Many utility classes and methods expect a service context to be provide as a par
 context = ServiceContext.get();
 ```
 
-ServiceContext is intended to be created using the current HTTPRequest:
+ServiceContext is intended to be created using the current `HTTPRequest`:
 
 ```
 try (ServiceContext context = serviceManager.createServiceContext("md.thumbnail.upload", lang, request)) {
@@ -262,7 +261,7 @@ try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 }
 ```
 
-When implementing event handlers, such as ``BeforeCommitTransactionListener`` there is no direct access to the current HTTPRequest. The ``createServiceContext( name, userId)`` method obtains the ``HTTPRequest`` from the ServletRequest holder if used during a request, or uses the provided  userId to look up user session when running in a background thread:
+When implementing event handlers, such as ``BeforeCommitTransactionListener`` there is no direct access to the current `HTTPRequest`. The ``createServiceContext( name, userId)`` method obtains the ``HTTPRequest`` from the ServletRequest holder if used during a request, or uses the provided  userId to look up user session when running in a background thread:
 
 ```
 try (ServiceContext context = serviceManager.createServiceContext("approve_record", userId)) {
@@ -270,7 +269,7 @@ try (ServiceContext context = serviceManager.createServiceContext("approve_recor
 }
 ```
 
-It can also be a challenge to provide a service context to a background job or activity. Use your exiesting service context to create a context for the background job or activity to use:
+It can also be a challenge to provide a service context to a background job or activity. Use your existing service context to create a context for the background job or activity to use:
 
 ```
 ServiceContext context = serviceManager.createServiceContext( "harvester."+type, serviceContext );
@@ -303,9 +302,9 @@ return new Runnable(){
 };
 ```
 
-Care is taken to call ``clearAsThreadLocal()`` to acocunt for runnables being used in a ThreadPool or similar where the same physical thread may be recycled for use with subsequent runnables.
+#### ServiceContext.AppHandlerServiceContext
 
-### AppHanlderServiceContext
+Originally an anonymous class `AppHandlerServiceContext` is an adapter allowing code, such as initialization and shutdown, to make use of functionality that assumes a real service context is available.
 
 Jeeves and other initialization code makes use of an AppHandlerServiceContext during initlization:
 
@@ -313,7 +312,7 @@ Jeeves and other initialization code makes use of an AppHandlerServiceContext du
 this.serviceContext = serviceManager.createAppHandlerServiceContext("manager", appContext);
 ```
 
-This implementation overrides ``setUserSession()`` and ``clear()`` to avoid inapprorpaite use by utility methods.
+This implementation overrides ``setUserSession()``, ``setIpAddress()`` and ``clear()`` to warn of inappropriate use by utility methods.
 
 This does require a cast during during shutdown:
 
@@ -323,3 +322,59 @@ if (harvesterContext != null){
     ((ServiceContext)harvesterContext).clear();
 }
 ```
+
+#### ServiceContext.ThreadLocalPolicy
+
+The use of `setAsThreadLocal()` assigns the instance to a thread locale, allowing discovery by any of the methods in the following try block. Because we assigned this thread local, we are responsible for carefully calling ``clearAsThreadLocal()`` in the finally block.
+
+Care is required as leaving objects in a thread locale is easy way to leak memory (which can be difficult to debug). As an example a `Runnable`  used in a `ThreadPool` may accidentally leave objects in a thread local, which would confuse the next `Runnable` to be scheduled on the same physical thread.
+
+* If you create the service context you are responsible for seeing that is cleared up, either directly as part of of your method execution, or later as part of an object init / cleanup lifecycle.
+
+* If you call `setAsThreadLocal()` be sure to call `clearAsThreadLocal()` to avoid leaking memory
+
+* Methods like `ApiUtils.createServiceContext` both create a service context AND call `setAsThreadLocal()` to the new service context to the current therad.
+  
+  These are designed to be for use with try-with-resource `AutoClosable`.
+
+* There is no naming convention to determine which create methods have the `setAsThreadLocal()` side effect, this is documented in the javadocs only (usually with a code example).
+
+* When in doubt call `close()` in a finally block, this is safe and takes care of both `setAsThreadLocal()` and `clear()` if needed (without any errors or warnings).
+
+* Calling `setAsThreadLocal()` when a thread locale is already provided for the thread ... is in appropriate and will result in a warning or exception depending on thread local policy described below.
+  
+  As a workaround consider backing up the current service context:
+  
+  ```
+  ServiceContext check = ServiceContext.get();
+  if( previous != null ) previous.clearAsThreadLocal();
+  try (ServiceContext context = serviceManger.createServiceContext("index",userId)){
+      ...
+  }
+  finally {
+    if( previous != null ) previous.setAsThreadLocale();
+  }
+  ```
+
+To aid with debugging ``ThreadLocalPolicy`` can be defined as:
+
+* `-Djeeves.server.context.service.policy=direct`
+  
+  Direct management of thread locale with no checking (matching 3.10.x functionality)
+  
+* `-Djeeves.server.context.service.policy=trace`
+   
+  Trace functionality produes some log messages if thread local used incorrectly.
+
+* `-Djeeves.server.context.service.policy=strict`
+  
+  Raise an illegal state exception when thread local used incorrectly.
+
+The log (or exception) note where `setAsThreadLocal()` was called from, and where `clearAsThreadLocal()` is being called from to aid in debugging. 
+
+#### ServiceContext.ServiceDetails
+
+Parameter object used to share ``ServiceContext`` details (service, language, ipAddress) to another thread.
+
+Primiarly used to log service details the data structure may be useful for your own work.
+
