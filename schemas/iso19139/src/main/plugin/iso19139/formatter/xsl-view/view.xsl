@@ -1163,15 +1163,11 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="normalize-space(.)"/>
-
-        <xsl:if test="@uom">
-          &#160;<xsl:value-of select="@uom"/>
-        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
 
-    <xsl:if test="@uom"><xsl:comment select="name()"/>
-      <xsl:value-of select="@uom"/>
+    <xsl:if test="@uom">
+      <xsl:comment select="'.'"/>&#160;<xsl:value-of select="@uom"/>
     </xsl:if>
   </xsl:template>
 
