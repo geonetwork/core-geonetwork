@@ -42,7 +42,7 @@
       <input type="text" class="form-control gn-timezone"
              readonly="readonly"
              data-ng-class="hideTime == 'true' ? 'hidden' : ''"
-             data-ng-hide="!hideTimezone"
+             data-ng-hide="mode !== '' || !hideTimezone"
              data-ng-model="timezone" />
 
       <div class="input-group-btn">
