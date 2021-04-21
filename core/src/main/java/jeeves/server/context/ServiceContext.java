@@ -60,7 +60,7 @@ import javax.persistence.EntityManager;
  * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup:
  * <pre><code>
  * try {
- *    context = serviceMan.createServiceContext("AppHandler", appContext);
+ *    context = serviceMan.createServiceContext("handler", appContext);
  *    context.setAsThreadLocal();
  *    ...
  * } finally {
@@ -83,6 +83,7 @@ public class ServiceContext extends BasicContext implements AutoCloseable  {
         TRACE,
         /** Raise any {@link IllegalStateException} for unexpected behaviour */
         STRICT };
+
     /**
      * Use -Djeeves.server.context.service.policy to define policy:
      * <ul>
@@ -112,24 +113,44 @@ public class ServiceContext extends BasicContext implements AutoCloseable  {
     /**
      * Simple data structure recording service details.
      *
-     * Lightweight data structure used logging service details such as name.
+     * Lightweight data structure used logging service details such as service name.
      */
     public static class ServiceDetails {
         private String ipAddress;
         private String service;
         private String language;
+        /**
+         * Record service context details.
+         * @param context service context
+         */
         public ServiceDetails(ServiceContext context){
             this.ipAddress = context.getIpAddress();
+            this.service = context.getService();
+            this.language = context.getLanguage();
         }
 
+        /**
+         * IP address of request, or <code>"?"</code> for local loopback request.
+         *
+         * @return ip address, or <code>"?"</code> for loopback request.
+         */
         public String getIpAddress() {
             return ipAddress;
         }
 
+        /**
+         * Service name, or null if service context was not in use.
+         *
+         * @return service name, or null if service context was not in use.
+         */
         public String getService() {
             return service;
         }
 
+        /**
+         * Language code, or <code>"?"</code> if undefined.
+         * @return language code, or <code>"?"</code> if undefined.
+         */
         public String getLanguage() {
             return language;
         }
@@ -149,11 +170,11 @@ public class ServiceContext extends BasicContext implements AutoCloseable  {
     }
 
     /**
-     * Shared service context offering limited functionality.
+     * Shared service context offering restricted functionality.
      *
      * Use of service context has been assumed in many parts of the codebase. This shared "AppHandler" service context
-     * is used during Jeeves startup and has some protection from being  cleared. Additional managers such HarvestManager
-     * also use a shared service context to support background processes.
+     * is used during Jeeves startup and has some protection from being cleared. Additional managers such HarvestManager
+     * also use a shared service context to support execution of background processes.
      */
     public static class AppHandlerServiceContext extends ServiceContext {
 
@@ -212,7 +233,7 @@ public class ServiceContext extends BasicContext implements AutoCloseable  {
     protected Throwable allocation = null;
 
     /**
-     * Trace deallocation via {@link #clear()} method.
+     * Trace service deallocation via {@link #clear()} method.
      *
      * Recording where the service context clear() was called to aid in debugging.
      */
@@ -356,14 +377,20 @@ public class ServiceContext extends BasicContext implements AutoCloseable  {
             if( allocation != null ){
                 // details on prior allocation
                 unexpected += "\n\tContext '"+check._service+"' conflict: " + check.allocation.getStackTrace()[1];
+                checkUnexpectedState( unexpected );
             }
             // step one set thread local
             // (already done)
             // step two ensure ApplicationContextHolder thread local kept in sync
-            if( ApplicationContextHolder.get() != null ){
-                ApplicationContextHolder.clear();
+            if (ApplicationContextHolder.get() != null) {
+                if (ApplicationContextHolder.get() != this.getApplicationContext()) {
+                    ApplicationContextHolder.clear();
+                    ApplicationContextHolder.set(this.getApplicationContext());
+                }
             }
-            ApplicationContextHolder.set(this.getApplicationContext());
+            else {
+                ApplicationContextHolder.set(this.getApplicationContext());
+            }
             // step three detail on re-allocation
             allocation = new Throwable("ServiceContext "+_service+" allocated to thread");
 
@@ -385,10 +412,15 @@ public class ServiceContext extends BasicContext implements AutoCloseable  {
         // step one set thread local
         THREAD_LOCAL_INSTANCE.set(this);
         // step two ensure ApplicationContextHolder thread local kept in sync
-        if( ApplicationContextHolder.get() != null ){
-            ApplicationContextHolder.clear();
+        if (ApplicationContextHolder.get() != null) {
+            if (ApplicationContextHolder.get() != this.getApplicationContext()) {
+                ApplicationContextHolder.clear();
+                ApplicationContextHolder.set(this.getApplicationContext());
+            }
         }
-        ApplicationContextHolder.set(this.getApplicationContext());
+        else {
+            ApplicationContextHolder.set(this.getApplicationContext());
+        }
         // step three detail on present re-allocation
         allocation = new Throwable("ServiceContext "+_service+" allocated to thread");
 
