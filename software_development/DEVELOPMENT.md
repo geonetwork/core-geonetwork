@@ -120,7 +120,7 @@ When updating a file no header change is required:
 
 As an open source project GeoNetwork requires headers out of an abudance of caution, primarily to communicate GPL license on a file by file basis.
 
-## Jeeves Framework vs Spring Framework 
+## Jeeves Framework
 
 The origional core-geonetwork engine is called ``Jeeves`` and is responsible for the core request/response dispatch system in the applicaiton.
 
@@ -140,16 +140,18 @@ Core components configured and managed by ``JeevesEngine``:
 * ``ServiceManager``, configured with serivces for ``Service`` dispatch
 * ``MonitorManager``, configured with ``Monitors`` to record statistics and monitor application services 
 
-At the same time the Jeeves Framework is somewhat integrated with the Spring Framework:
-
-* ``JeevesDispatcherServlet`` takes care of dispatching requests to the spring-framework, but within a ``TransactionTask`` allowing commit / rollback in the event of failure.
-
 Each level of ``Jeeves`` is provided a context to interact with the rest of the application:
 
 * ``Logger``
 * ``BasicContext`` application access and bean discouvery
 * ``ServiceContext`` complete application access, in addition details of the current request, and user session
-* ``ServiceContext.AppHandlerServiceContext`` provided to core components allowing use utility methods expecting a service context to be avaialble. Designed to be shared no user session is available.
+
+## Spring Framework
+
+While the Element based Jeeves Framework forms the core application, a bridge is provided to the popular Spring Framework structured around inversion of control:
+
+* ``JeevesDispatcherServlet`` takes care of dispatching requests to the spring-framework, from a ``TransactionTask`` allowing commit / rollback in the event of failure.
+* ``ApplicationContextHolder`` provides a thread local for the current spring `ApplicationContext` 
 
 ## Geonetwork
 
@@ -335,7 +337,7 @@ Care is required as leaving objects in a thread locale is easy way to leak memor
 
 * Methods like `ApiUtils.createServiceContext` both create a service context AND call `setAsThreadLocal()` to the new service context to the current therad.
   
-  These are designed to be for use with try-with-resource `AutoClosable`.
+  These methods are designed to be for use with try-with-resource `AutoClosable`.
 
 * There is no naming convention to determine which create methods have the `setAsThreadLocal()` side effect, this is documented in the javadocs only (usually with a code example).
 
@@ -355,6 +357,8 @@ Care is required as leaving objects in a thread locale is easy way to leak memor
     if( previous != null ) previous.setAsThreadLocale();
   }
   ```
+
+* The method ``setAsThreadLocal()`` will also double check that ``ApplicationContextHolder`` is configured correctly (with the spring application context provided for the service context).
 
 To aid with debugging ``ThreadLocalPolicy`` can be defined as:
 
