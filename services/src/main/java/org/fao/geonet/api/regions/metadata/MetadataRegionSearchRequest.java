@@ -163,7 +163,7 @@ public class MetadataRegionSearchRequest extends Request {
         Element metadata = findMetadata(id, false);
         if (metadata != null) {
             Path schemaDir = getSchemaDir(id);
-            MultiPolygon geom = GeomUtils.getSpatialExtent(schemaDir, metadata,
+            Geometry geom = GeomUtils.getSpatialExtent(schemaDir, metadata,
                 new SpatialExtentErrorHandler());
             MetadataRegion region = new MetadataRegion(id, null, geom);
             regions.add(region);
@@ -370,8 +370,8 @@ public class MetadataRegionSearchRequest extends Request {
         }
 
         @Override
-        public void handleBuildException(Exception e, List<Polygon> polygons) {
-            Log.error(Geonet.SPATIAL, "Failed to create a MultiPolygon from: " + polygons, e);
+        public void handleBuildException(Exception e, List<Geometry> geoms) {
+            Log.error(Geonet.SPATIAL, "Failed to create a geometry from: " + geoms, e);
         }
     }
 }

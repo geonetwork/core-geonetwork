@@ -26,8 +26,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
+/**
+ * Utility class to help with geometry and gml.
+ */
 public class GeomUtils {
-    public static MultiPolygon getSpatialExtent(Path schemaDir, Element metadata, ErrorHandler errorHandler) throws Exception {
+
+    public static Geometry getSpatialExtent(Path schemaDir, Element metadata, ErrorHandler errorHandler) throws Exception {
         org.geotools.util.logging.Logging.getLogger("org.geotools.xml")
             .setLevel(Level.SEVERE);
         Path sSheet = schemaDir.resolve("extract-gml.xsl").toAbsolutePath();
@@ -35,7 +39,7 @@ public class GeomUtils {
         if (transform.getChildren().size() == 0) {
             return null;
         }
-        List<Polygon> allPolygons = new ArrayList<Polygon>();
+        List<Geometry> allGeometry = new ArrayList<Geometry>();
         for (Element geom : (List<Element>) transform.getChildren()) {
             Parser parser = GMLParsers.create(geom);
             String srs = geom.getAttributeValue("srsName");
@@ -44,53 +48,97 @@ public class GeomUtils {
 
             try {
                 if (srs != null && !(srs.equals(""))) sourceCRS = CRS.decode(srs);
-                MultiPolygon jts = parseGml(parser, gml);
+                Geometry geometry = parseGml(parser, gml);
 
                 // if we have an srs and its not WGS84 then transform to WGS84
                 if (!CRS.equalsIgnoreMetadata(sourceCRS, DefaultGeographicCRS.WGS84)) {
                     MathTransform tform = CRS.findMathTransform(sourceCRS, DefaultGeographicCRS.WGS84);
-                    jts = (MultiPolygon) JTS.transform(jts, tform);
+                    geometry = JTS.transform(geometry, tform);
                 }
-
-                for (int i = 0; i < jts.getNumGeometries(); i++) {
-                    allPolygons.add((Polygon) jts.getGeometryN(i));
-                }
+                allGeometry.add(geometry);
             } catch (Exception e) {
                 errorHandler.handleParseException(e, gml);
                 // continue
             }
         }
 
-        if (allPolygons.isEmpty()) {
-            return null;
-        } else {
-            try {
-                Polygon[] array = new Polygon[allPolygons.size()];
-                GeometryFactory geometryFactory = allPolygons.get(0).getFactory();
-                return geometryFactory.createMultiPolygon(allPolygons.toArray(array));
-
-
-            } catch (Exception e) {
-                errorHandler.handleBuildException(e, allPolygons);
-                // continue
-                return null;
-            }
+        try {
+            return toGeometry(allGeometry);
+        } catch (Exception e) {
+            errorHandler.handleBuildException(e, allGeometry);
+            return null; // continue
         }
     }
 
     /**
-     * Parse GML into a bounding multi-polygon, polygons represented as is, linestring and points buffered to civic scale.
+     * Process list into a single geometry, choosing the most appropriate geometry collection.
      *
-     * Aside: The resulting multi-polygon may be clipped or split to accommodate spatial reference system bounds.
+     * <ul>
+     *     <li>f the list is empty geometry is {@code null}</li>
+     *     <li>If list contains a single geometry it is returned</li>
+     *     <li>If the list contains all Points, a MultiPoint will be created</li>
+     *     <li>If the list contains all LineStrings a MultiLineString will be created</li>
+     *     <li>If the list contains all Polygons a MultiPolygon is created</li>
+     *     <li>If the list contains mixed contents a GeometryCollection is created</li>
+     * </ul>
+     *
+     * @param geoms list of geometry to process
+     * @return geometry, or geometry collection as required, or null if list is empty
+     */
+    protected static Geometry toGeometry(List<Geometry> geoms){
+        if( geoms == null || geoms.isEmpty()){
+            return null;
+        }
+        if( geoms.size()==1 ){
+            return geoms.get(0);
+        }
+
+        GeometryFactory factory = geoms.get(0).getFactory();
+
+        // determine geometry collection to create
+        int dimension = -2; // mixed content geometry collection
+        for( Geometry geom : geoms){
+            if( geom instanceof GeometryCollection){
+                dimension = -1;
+                break; // mixed content geometry collection
+            }
+
+            if( dimension == -2 ) {
+                dimension = geom.getDimension();
+            }
+            else if (dimension != geom.getDimension()){
+                dimension = -1;
+                break; // mixed content geometry collection
+            }
+        }
+
+        // process list into geometry collection
+        switch (dimension){
+        case 0:
+            return factory.createMultiPoint( geoms.toArray(new Point[geoms.size()]));
+        case 1:
+            return factory.createMultiLineString( geoms.toArray(new LineString[geoms.size()]) );
+        case 2:
+            return factory.createMultiPolygon( geoms.toArray(new Polygon[geoms.size()]) );
+        default:
+            return factory.createGeometryCollection( geoms.toArray(new Geometry[geoms.size()]) );
+        }
+    }
+
+    /**
+     * Parse GML into a geometry: polygons, linestring, point or appropriate geometry collection as required.
+     *
+     * The resulting geometry may be clipped or split to accommodate spatial reference system bounds. Points are not buffered
+     * in any way (so the bounds of a point will have width and height zero).
      *
      * @param parser
      * @param gml
-     * @return bounding multi-polygon for gml geometry
+     * @return geometry, or null if not provided.
      * @throws IOException
      * @throws SAXException
      * @throws ParserConfigurationException
      */
-    public static MultiPolygon parseGml(Parser parser, String gml) throws IOException, SAXException,
+    public static Geometry parseGml(Parser parser, String gml) throws IOException, SAXException,
         ParserConfigurationException {
         Object value = parser.parse(new StringReader(gml));
 
@@ -100,20 +148,13 @@ public class GeomUtils {
         else if (value instanceof HashMap) {
             @SuppressWarnings("rawtypes")
             HashMap map = (HashMap) value;
-            List<MultiPolygon> geoms = new ArrayList<MultiPolygon>();
+            List<Geometry> geoms = new ArrayList<Geometry>();
             for (Object entry : map.values()) {
                 addToList(geoms, entry);
             }
-            if (geoms.isEmpty()) {
-                return null;
-            } else if (geoms.size() > 1) {
-                GeometryFactory factory = geoms.get(0).getFactory();
-                return factory.createMultiPolygon(geoms.toArray(new Polygon[0]));
-            } else {
-                return toMultiPolygon(geoms.get(0));
-            }
+            return toGeometry( geoms );
         } else if (value instanceof Geometry ){
-            return toMultiPolygon((Geometry) value);
+            return (Geometry) value;
         }
         else {
             return null;
@@ -151,17 +192,29 @@ public class GeomUtils {
         }
     }
 
-    /** Process entry and add to list */
-    protected static final void addToList(List<MultiPolygon> geoms, Object entry) {
-        if (entry instanceof Polygon) {
-            geoms.add(toMultiPolygon((Polygon) entry));
-        } else if (entry instanceof MultiPolygon) {
-            geoms.add((MultiPolygon) entry);
+    /**
+     * Process entry and add any geometries to list.
+     *
+     * The contents of any GeometryCollection (such as MultiPolygon) are added one-by-one
+     * by one to the list.
+     */
+    protected static final void addToList(List<Geometry> geoms, Object entry) {
+        if (entry instanceof Geometry) {
+            Geometry geom = (Geometry) entry;
+            if( geom instanceof GeometryCollection){
+                GeometryCollection collection = (GeometryCollection) geom;
+                for( int i=0; i<collection.getNumGeometries();i++){
+                    addToList( geoms, collection.getGeometryN(i));
+                }
+            }
+            else {
+                geoms.add(geom);
+            }
         } else if (entry instanceof Collection) {
             @SuppressWarnings("rawtypes")
             Collection collection = (Collection) entry;
             for (Object object : collection) {
-                geoms.add(toMultiPolygon((Polygon) object));
+                addToList(geoms,object);
             }
         }
     }
