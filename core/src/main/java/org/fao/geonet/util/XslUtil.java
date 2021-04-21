@@ -643,22 +643,19 @@ public final class XslUtil {
         return results.toString();
     }
 
-    public static String wktGeomToBbox(Object geometryAsXmlString) throws Exception {
+    public static String wktGeomToBbox(Object WKT) throws Exception {
         String ret = "";
         try {
-            Element geometryElement = Xml.loadString((String) geometryAsXmlString, false);
-            if (geometryElement != null) {
-                String wktString = (String) geometryElement.getValue();
-                if (wktString != null && wktString.length() > 0) {
-                    WKTReader reader = new WKTReader();
-                    Geometry geometry = reader.read(wktString);
-                    if (geometry != null) {
-                        final Envelope envelope = geometry.getEnvelopeInternal();
-                        return
-                            String.format("%f|%f|%f|%f",
-                                envelope.getMinX(), envelope.getMinY(),
-                                envelope.getMaxX(), envelope.getMaxY());
-                    }
+            String wktString = (String) WKT;
+            if (wktString != null && wktString.length() > 0) {
+                WKTReader reader = new WKTReader();
+                Geometry geometry = reader.read(wktString);
+                if (geometry != null) {
+                    final Envelope envelope = geometry.getEnvelopeInternal();
+                    return
+                        String.format("%f|%f|%f|%f",
+                            envelope.getMinX(), envelope.getMinY(),
+                            envelope.getMaxX(), envelope.getMaxY());
                 }
             }
         } catch (Throwable e) {
