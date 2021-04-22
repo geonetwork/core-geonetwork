@@ -3,13 +3,13 @@
 Thank you for contributing to GeoNetwork:
 
 * Free-software: GeoNetwork is free-software, using the [GNU GENERAL PUBLIC LICENSE](LICENSE.md). Contributions provided by you, or your employer, are required to be compatible with this free-software license.
-* Pull-request: GeoNetwork uses a pull-request workflow to review and accept changes. Pull-requests must be submitted against the *master* branch first, and may be back ported as required.
+* Pull-request: GeoNetwork uses a pull-request workflow to review and accept changes. Pull-requests must be submitted against the *main* branch first, and may be back ported as required.
 
 # Pull requests
 
 * Pull request is required, even if you have commit access, so the tests are run and other developer can check your code.
 
-* Pull requests must be applied to `master`, before being backported.
+* Pull requests must be applied to `main`, before being backported.
 
 * Good housekeeping: Anytime you commit, try and clean the code around it to latest style guide. If you improve a function without comments: add comments. If you modify functionality that does not have tests: write a test. If you fix functionality without documentation: add documentation.
   
