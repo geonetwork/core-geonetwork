@@ -1,6 +1,6 @@
 # Tools
 
-GeoNetwork is a Java Web Application, developed using Java 8, Maven.
+GeoNetwork is a Java Web Application, developed using Java 8, and Apache Maven.
 
 Documentation makes use of the python Sphinx build system.
 
@@ -17,7 +17,8 @@ Our source code is maintained on GitHub:
 
 * [github.com/metadata101](https://github.com/metadata101):
 
-  * [iso19115-3.2018](https://github.com/metadata101/iso19115-3.2018)
+  * [dcat2](https://github.com/metadata101/dcat2)
+  * [iso19139.ca.HNAP](https://github.com/metadata101/iso19139.ca.HNAP)
 
 ## Java 8
 
@@ -30,7 +31,7 @@ We do not support development on Java 11 at this time.
 
 ## Apache Maven
 
-We make use of the Apache Maven [Apache Maven](https://maven.apache.org/) build system.
+GeoNetwork build makes use of the Apache Maven [Apache Maven](https://maven.apache.org/) build system.
 
 Maven repository is available at repo.osgeo.org:
 
