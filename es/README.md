@@ -77,6 +77,94 @@ Configure ES to start on server startup. It is recommended to protect `gn-record
  * Note that for debian-based servers the current deb download (7.3.2) can be installed rather than installing manually and can be configured to run as a service using the instructions here: https://www.elastic.co/guide/en/elasticsearch/reference/current/starting-elasticsearch.html
 
 
+### Elasticsearch security
+
+As far as Elasticsearch port is not exposed to the web, Elasticsearch index is secured by the GeoNetwork proxy taking care of user privileges. Optionally user can enable Elasticsearch security layer (it may be required if Kibana needs to be exposed).
+
+Enable security in `config/elasticsearch.yml`:
+```
+xpack.ml.enabled: false
+xpack.security.enabled: true
+xpack.security.authc:
+  anonymous:
+    username: anonymous_user
+    roles: kibana_dashboard_only_user
+    authz_exception: true
+```
+
+Start Elasticsearch.
+Configure default password:
+```
+elasticsearch-setup-passwords interactive
+```
+
+Configure Kibana authentication chain:
+```
+xpack.security.authc:
+  providers:
+    basic.basic1:
+      order: 0
+      description: "Sign in"
+    anonymous.anonymous1:
+      order: 1
+      description: "Continue as guest"
+      icon: "globe"
+      credentials:
+        username: "anonymous"
+        password: "anonymous"
+```
+
+Create a role and user for the catalogue access:
+```bash
+# Role with full control on gn indices
+curl -XPOST -u elastic 'localhost:9200/_security/role/gn_admin' \
+   -H "Content-Type: application/json" \
+   -d '{
+  "indices": [
+    {
+      "names": [ "gn*" ],
+      "privileges": ["all"]
+    }
+  ]
+}'
+
+# User that GeoNetwork connect with
+curl -XPOST -u elastic 'localhost:9200/_security/user/gn_user' \
+   -H "Content-Type: application/json" \
+   -d '{
+  "password" : "changeme",
+  "full_name" : "Catalogue User",
+  "roles" : [ "kibana_admin", "kibana_system", "gn_admin"]
+}'
+
+# An extra user to allow anonymous access to Kibana
+curl -XPOST -u elastic 'localhost:9200/_security/user/anonymous' \
+   -H "Content-Type: application/json" \
+   -d '{
+  "password" : "anonymous",
+  "full_name" : "Anonymous User",
+  "roles" : [ "kibana_dashboard_only_user"]
+}'
+
+```
+
+
+Update GeoNetwork connection parameters in `config.properties` and restart the catalogue:
+```
+es.username=gn_user
+es.password=changeme
+```
+
+Update Kibana connection parameters in `config/kibana.yml` and restart Kibana:
+```
+elasticsearch.username: "kibana_system"
+elasticsearch.password: "changeme"
+```
+
+TODO: Kibana sign in user when authenticated in GeoNetwork ? 
+TODO: Kibana anonymous user can only access public alias
+
+
 ## Errors
 
 * Max number of fields: As we are using dynamic fields, when having a large number of records, the system may reach the maximum number of fields in Elasticsearch. In this situation, Elasticsearch is reporting: 
