@@ -1,6 +1,6 @@
 # Development
 
-As described in the [overview](OVERVIEW.md) GeoNetwork is written is a Java application written using the spring framework to tie together a wide range of technologies.
+As described in the [overview](OVERVIEW.md) GeoNetwork is a Java application written using the spring framework to tie together a wide range of technologies.
 
 This page looks at how these technologies are used in GeoNetwork. Where possible a code example is provided to cut-and-paste from, followed by a discussion.
 
@@ -84,9 +84,9 @@ Generic XML header
 
 The eclipse code template `code_quality/code_tempalte.xml` provided for Eclipse.
 
-When creatinga new file:
+When creating a new file:
 
-* Indicate copyright with current year (when you are creating the file)/
+* Indicate copyright with the current year (when you are creating the file)/
   
   ```
   * Copyright (C) 2021 Food and Agriculture Organization of the
@@ -104,7 +104,7 @@ When creatinga new file:
   * Copyright (C) 2021 Camptocamp, and others.
   ```
   
-  Keep in mind most file copy-and-paste from existing GeoNetwork code, making the provided heaer apprpraite.
+  Keep in mind most file copy-and-paste from existing GeoNetwork code, making the provided header appropriate.
 
 When updating a file no header change is required:
 
@@ -118,14 +118,14 @@ When updating a file no header change is required:
   Copyright (C) 2019-2021
   ```
 
-As an open source project GeoNetwork requires headers out of an abudance of caution, primarily to communicate GPL license on a file by file basis.
+As an open source project GeoNetwork requires headers out of an abundance of caution, primarily to communicate GPL license on a file by file basis.
 
 ## Jeeves Framework
 
-The origional core-geonetwork engine is called ``Jeeves`` and is responsible for the core request/response dispatch system in the applicaiton.
+The original core-geonetwork engine is called ``Jeeves`` and is responsible for the core request/response dispatch system in the application.
 
 * The approach is based around using XML ``Element`` parameters and return values
-* This approach can be lots of fun, but you are warned that is is not strictly structured and type checked.
+* This approach can be lots of fun, but you are warned that it is not strictly structured and type checked.
 * Use of ``XmlUtls.toString(element)`` can be used when debugging to check method parameters and return values.
 
 There is an explicit ``JeevesEngine`` class:
@@ -137,13 +137,13 @@ There is an explicit ``JeevesEngine`` class:
 Core components configured and managed by ``JeevesEngine``:
 
 * ``AppHandler``, for individual applications such as ``Geonetwork``
-* ``ServiceManager``, configured with serivces for ``Service`` dispatch
+* ``ServiceManager``, configured with services for ``Service`` dispatch
 * ``MonitorManager``, configured with ``Monitors`` to record statistics and monitor application services 
 
 Each level of ``Jeeves`` is provided a context to interact with the rest of the application:
 
 * ``Logger``
-* ``BasicContext`` application access and bean discouvery
+* ``BasicContext`` application access and bean discovery
 * ``ServiceContext`` complete application access, in addition details of the current request, and user session
 
 ## Spring Framework
@@ -153,28 +153,28 @@ While the Element based Jeeves Framework forms the core application, a bridge is
 * ``JeevesDispatcherServlet`` takes care of dispatching requests to the spring-framework, from a ``TransactionTask`` allowing commit / rollback in the event of failure.
 * ``ApplicationContextHolder`` provides a thread local for the current spring `ApplicationContext` 
 
-## Geonetwork
+## GeoNetwork
 
 The ``Geonetwork`` AppHandler:
 
 * Takes responsibility for setting up a wide range of low-level application components
 * A lot of the low-level GeoNetwork components (like ``SvnManager``) are configured here
 
-Jeeves provides a shared ``AppHandlerSerivceContext`` to ``GeoNetwork`` during initalization.
+Jeeves provides a shared ``AppHandlerSerivceContext`` to ``GeoNetwork`` during initialization.
 
 ## MonitorManager 
 
-MoniorManager uses the ``yammer`` (now ``DropWizard``) metrics library, health checks and timers are scheduled to keeping tabs on the running GeoNetwork applicaiton.
+MonitorManager uses the ``yammer`` (now ``DropWizard``) metrics library, health checks and timers are scheduled to keeping tabs on the running GeoNetwork application.
 
-During initalziation ``MonitorManager`` defines its own ``monitorContext`` AppHandlerSerivceContext, which is used by Monitor tasks needing to make use of a ``ServiceContext`` to access utility methods. This context is reclaimed during ``shutdown`` after all the monitors have been stopped.
+During initialization ``MonitorManager`` defines its own ``monitorContext`` AppHandlerSerivceContext, which is used by Monitor tasks needing to make use of a ``ServiceContext`` to access utility methods. This context is reclaimed during ``shutdown`` after all the monitors have been stopped.
 
 ## Transaction Manager
 
-``TransactionManager`` defines an execution mechaism for safely performing actions in the context of a long runnning transaction.
+``TransactionManager`` defines an execution mechanism for safely performing actions in the context of a long running transaction.
 
 * ``TransactionManager.runInTransaction(name, applicationContext, transactionRequirement, commitBehavior, transactionTask)``
   
-During the executation of the ``TransactionTasks`` event notifications are sent out for:
+During the execution of the ``TransactionTasks`` event notifications are sent out for:
 
 * ``NewTransactionListener``
 * ``BeforeCommitTransactionListener``
@@ -239,7 +239,7 @@ try {
 }
 ```
 
-Many utility classes and methods expect a service context to be provide as a parameter, or to be available for the current thread.
+Many utility classes and methods expect a service context to be provided as a parameter, or to be available for the current thread.
 
 ```
 context = ServiceContext.get();
@@ -308,7 +308,7 @@ return new Runnable(){
 
 Originally an anonymous class `AppHandlerServiceContext` is an adapter allowing code, such as initialization and shutdown, to make use of functionality that assumes a real service context is available.
 
-Jeeves and other initialization code makes use of an AppHandlerServiceContext during initlization:
+Jeeves and other initialization code makes use of an AppHandlerServiceContext during initialization:
 
 ```
 this.serviceContext = serviceManager.createAppHandlerServiceContext("manager", appContext);
@@ -316,7 +316,7 @@ this.serviceContext = serviceManager.createAppHandlerServiceContext("manager", a
 
 This implementation overrides ``setUserSession()``, ``setIpAddress()`` and ``clear()`` to warn of inappropriate use by utility methods.
 
-This does require a cast during during shutdown:
+This does require a cast during shutdown:
 
 ```
 if (harvesterContext != null){
@@ -329,19 +329,19 @@ if (harvesterContext != null){
 
 The use of `setAsThreadLocal()` assigns the instance to a thread locale, allowing discovery by any of the methods in the following try block. Because we assigned this thread local, we are responsible for carefully calling ``clearAsThreadLocal()`` in the finally block.
 
-Care is required as leaving objects in a thread locale is easy way to leak memory (which can be difficult to debug). As an example a `Runnable`  used in a `ThreadPool` may accidentally leave objects in a thread local, which would confuse the next `Runnable` to be scheduled on the same physical thread.
+Care is required as leaving objects in a thread locale is an easy way to leak memory (which can be difficult to debug). As an example a `Runnable`  used in a `ThreadPool` may accidentally leave objects in a thread local, which would confuse the next `Runnable` to be scheduled on the same physical thread.
 
-* If you create the service context you are responsible for seeing that is cleared up, either directly as part of of your method execution, or later as part of an object init / cleanup lifecycle.
+* If you create the service context you are responsible for seeing that is cleared up, either directly as part of your method execution, or later, as part of an object init / cleanup lifecycle.
 
 * If you call `setAsThreadLocal()` be sure to call `clearAsThreadLocal()` to avoid leaking memory
 
-* Methods like `ApiUtils.createServiceContext` both create a service context AND call `setAsThreadLocal()` to the new service context to the current therad.
+* Methods like `ApiUtils.createServiceContext` both create a service context AND call `setAsThreadLocal()` to the new service context to the current thread.
   
   These methods are designed to be for use with try-with-resource `AutoClosable`.
 
 * There is no naming convention to determine which create methods have the `setAsThreadLocal()` side effect, this is documented in the javadocs only (usually with a code example).
 
-* When in doubt call `close()` in a finally block, this is safe and takes care of both `setAsThreadLocal()` and `clear()` if needed (without any errors or warnings).
+* When in doubt call `close()` in a final block, this is safe and takes care of both `setAsThreadLocal()` and `clear()` if needed (without any errors or warnings).
 
 * Calling `setAsThreadLocal()` when a thread locale is already provided for the thread ... is in appropriate and will result in a warning or exception depending on thread local policy described below.
   
@@ -368,7 +368,7 @@ To aid with debugging ``ThreadLocalPolicy`` can be defined as:
   
 * `-Djeeves.server.context.service.policy=trace`
    
-  Trace functionality produes some log messages if thread local used incorrectly.
+  Trace functionality produces some log messages if thread local used incorrectly.
 
 * `-Djeeves.server.context.service.policy=strict`
   
@@ -380,5 +380,5 @@ The log (or exception) note where `setAsThreadLocal()` was called from, and wher
 
 Parameter object used to share ``ServiceContext`` details (service, language, ipAddress) to another thread.
 
-Primiarly used to log service details the data structure may be useful for your own work.
+Primarily used to log service details the data structure may be useful for your own work.
 
