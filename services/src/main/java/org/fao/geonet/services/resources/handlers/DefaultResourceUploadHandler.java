@@ -61,7 +61,7 @@ public class DefaultResourceUploadHandler implements IResourceUploadHandler {
             throw new Exception("File upload unsuccessful because "
                 + fileName + " already exists and overwrite was not permitted");
         }
-        store.putResource(context, uuid, fileName, is, null, visibility, true);
+        store.putResource(context, uuid, fileName, is, null, visibility, true, null);
     }
 
 

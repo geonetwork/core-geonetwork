@@ -563,7 +563,7 @@ public class Importer {
         final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
         final String metadataUuid = metadataUtils.getMetadataUuid(id);
         assert metadataUuid != null;
-        store.putResource(context, metadataUuid, file, is, new ISODate(changeDate).toDate(), access, true);
+        store.putResource(context, metadataUuid, file, is, new ISODate(changeDate).toDate(), access, true, null);
     }
 
     /**

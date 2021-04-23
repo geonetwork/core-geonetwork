@@ -669,7 +669,7 @@ public class MetadataInsertDeleteApi {
         // Save the context if no context-url provided
         if (StringUtils.isEmpty(url)) {
             store.putResource(context, metadataUuid, filename, IOUtils.toInputStream(Xml.getString(wmcDoc)), null,
-                MetadataResourceVisibility.PUBLIC, true);
+                MetadataResourceVisibility.PUBLIC, true, null);
 
             // Update the MD
             Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
@@ -687,7 +687,7 @@ public class MetadataInsertDeleteApi {
 
         if (StringUtils.isNotEmpty(overview) && StringUtils.isNotEmpty(overviewFilename)) {
             store.putResource(context, metadataUuid, overviewFilename, new ByteArrayInputStream(Base64.decodeBase64(overview)), null,
-                MetadataResourceVisibility.PUBLIC, true);
+                MetadataResourceVisibility.PUBLIC, true, null);
 
             // Update the MD
             Map<String, Object> onlineSrcParams = new HashMap<String, Object>();

@@ -44,6 +44,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nullable;
 import javax.resource.NotSupportedException;
 
@@ -96,10 +97,11 @@ public class ResourceLoggerStore extends AbstractStore {
     @Override
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
                                         final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility,
-                                        Boolean approved) throws Exception {
+                                        Boolean approved,
+                                        Map<String, Object> secondaryProperties) throws Exception {
         if (decoratedStore != null) {
             final MetadataResource resource = decoratedStore
-                    .putResource(context, metadataUuid, filename, is, changeDate, visibility, approved);
+                    .putResource(context, metadataUuid, filename, is, changeDate, visibility, approved, secondaryProperties);
             if (resource != null) {
                 storePutRequest(context, metadataUuid, resource.getId(), resource.getSize(), approved);
             }

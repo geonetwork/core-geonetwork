@@ -47,6 +47,7 @@ import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 
@@ -87,7 +88,7 @@ public class FilesystemStore extends AbstractStore {
                 MetadataResource resource = new FilesystemStoreResource(metadataUuid, metadataId, path.getFileName().toString(),
                                                                         settingManager.getNodeURL() + "api/records/", visibility,
                                                                         Files.size(path),
-                                                                        new Date(Files.getLastModifiedTime(path).toMillis()), approved);
+                                                                        new Date(Files.getLastModifiedTime(path).toMillis()), approved, null);
                 resourceList.add(resource);
             }
         } catch (IOException ignored) {
@@ -161,13 +162,13 @@ public class FilesystemStore extends AbstractStore {
             Log.error(Geonet.RESOURCES, e.getMessage(), e);
         }
         return new FilesystemStoreResource(metadataUuid, metadataId, filePath.getFileName().toString(), settingManager.getNodeURL() + "api/records/",
-                                           visibility, fileSize, new Date(Files.getLastModifiedTime(filePath).toMillis()), approved);
+                                           visibility, fileSize, new Date(Files.getLastModifiedTime(filePath).toMillis()), approved, null);
     }
 
     @Override
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
                                         final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility,
-                                        Boolean approved) throws Exception {
+                                        Boolean approved, Map<String, Object> secondaryProperties) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
         Path filePath = getPath(context, metadataId, visibility, filename, approved);
         Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);

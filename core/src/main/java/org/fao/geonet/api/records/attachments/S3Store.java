@@ -48,6 +48,7 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nullable;
 import javax.resource.NotSupportedException;
 
@@ -90,7 +91,7 @@ public class S3Store extends AbstractStore {
     private MetadataResource createResourceDescription(final SettingManager settingManager, final String metadataUuid,
             final MetadataResourceVisibility visibility, final String resourceId, long size, Date lastModification, int metadataId, boolean approved) {
         return new FilesystemStoreResource(metadataUuid, metadataId, getFilename(metadataUuid, resourceId),
-                                           settingManager.getNodeURL() + "api/records/", visibility, size, lastModification, approved);
+                                           settingManager.getNodeURL() + "api/records/", visibility, size, lastModification, approved, null);
     }
 
     private static String getFilename(final String key) {
@@ -129,7 +130,7 @@ public class S3Store extends AbstractStore {
 
     @Override
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
-            final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved)
+            final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved, Map<String, Object> secondaryProperties)
             throws Exception {
         final SettingManager settingManager = context.getBean(SettingManager.class);
         final int metadataId = canEdit(context, metadataUuid, approved);

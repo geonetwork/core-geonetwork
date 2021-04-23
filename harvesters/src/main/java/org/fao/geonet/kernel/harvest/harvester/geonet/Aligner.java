@@ -436,7 +436,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
                     final Store store = context.getBean("resourceStore", Store.class);
                     final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
                     final String metadataUuid = metadataUtils.getMetadataUuid(id[index]);
-                    store.putResource(context, metadataUuid, file, is, new ISODate(changeDate).toDate(), visibility, true);
+                    store.putResource(context, metadataUuid, file, is, new ISODate(changeDate).toDate(), visibility, true, null);
                 }
 
                 public void handleFeatureCat(Element md, int index)
@@ -902,7 +902,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 log.debug("  - Adding remote " + metadataUuid + "  file with name:" + file);
             }
 
-            store.putResource(context, metadataUuid, file, is, remIsoDate.toDate(), visibility, true);
+            store.putResource(context, metadataUuid, file, is, remIsoDate.toDate(), visibility, true, null);
         } else {
             if (log.isDebugEnabled()) {
                 log.debug("  - Nothing to do in dir " + metadataUuid + " for file with name:" + file);

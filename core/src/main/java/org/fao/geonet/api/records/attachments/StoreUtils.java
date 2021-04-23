@@ -25,6 +25,8 @@
 package org.fao.geonet.api.records.attachments;
 
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -71,7 +73,7 @@ public abstract class StoreUtils {
             final List<MetadataResource> resources = store.getResources(context, oldUuid, visibility, null, true);
             for (MetadataResource resource: resources) {
                 try (Store.ResourceHolder holder = store.getResource(context, oldUuid, visibility, resource.getFilename(), true)) {
-                    store.putResource(context, newUuid, holder.getPath(), visibility, newApproved);
+                    store.putResource(context, newUuid, holder.getPath(), visibility, newApproved, null);
                 }
             }
         }
@@ -128,6 +130,8 @@ public abstract class StoreUtils {
             final List<MetadataResource> sourceResources = store.getResources(context, sourceUuid, visibility, null, sourceApproved);
             final List<MetadataResource> targetResources = store.getResources(context, targetUuid, visibility, null, targetApproved);
 
+            replaceTargetSecondaryProp(sourceResources, targetResources);
+
             // In order to sync the 2 folders, we need to identify the records to be added, deleted and updated.
             List<MetadataResource> targetDeleteResources  = exceptMetadataResource(targetResources, sourceResources);
             List<MetadataResource> targetAddResources = exceptMetadataResource(sourceResources, targetResources);
@@ -136,7 +140,7 @@ public abstract class StoreUtils {
             // Add new records
             for (MetadataResource resource: targetAddResources) {
                 try (Store.ResourceHolder holder = store.getResource(context, sourceUuid, visibility, resource.getFilename(), sourceApproved)) {
-                    store.putResource(context, targetUuid, holder.getPath(), visibility, targetApproved);
+                    store.putResource(context, targetUuid, holder.getPath(), visibility, targetApproved, resource.getSecondaryProperties());
                 }
             }
 
@@ -144,13 +148,29 @@ public abstract class StoreUtils {
 
             for (MetadataResource resource: targetUpdateResources) {
                 try (Store.ResourceHolder holder = store.getResource(context, sourceUuid, visibility, resource.getFilename(), sourceApproved)) {
-                    store.putResource(context, targetUuid, holder.getPath(), visibility, targetApproved);
+                    store.putResource(context, targetUuid, holder.getPath(), visibility, targetApproved, resource.getSecondaryProperties());
                 }
             }
 
             // delete old records
             for (MetadataResource resource: targetDeleteResources) {
                 store.delResource(context, targetUuid, visibility, resource.getFilename(), targetApproved);
+            }
+
+        }
+    }
+
+    private static void replaceTargetSecondaryProp(List<MetadataResource> sourceResources, List<MetadataResource> targetResources) {
+        if (CollectionUtils.isNotEmpty(sourceResources) && CollectionUtils.isNotEmpty(targetResources)) {
+            for (MetadataResource sourceResource: sourceResources) {
+                for (MetadataResource targetResource : targetResources) {
+                    if (sourceResource.getId().equals(targetResource.getId())) {
+                        if (MapUtils.isNotEmpty(sourceResource.getSecondaryProperties()) && MapUtils.isNotEmpty(targetResource.getSecondaryProperties())) {
+                            targetResource.getSecondaryProperties().clear();
+                            targetResource.getSecondaryProperties().putAll(sourceResource.getSecondaryProperties());
+                        }
+                    }
+                }
             }
 
         }

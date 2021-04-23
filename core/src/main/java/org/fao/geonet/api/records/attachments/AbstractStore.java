@@ -44,6 +44,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractStore implements Store {
     @Override
@@ -153,26 +154,26 @@ public abstract class AbstractStore implements Store {
     @Override
     public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final MultipartFile file,
             final MetadataResourceVisibility visibility) throws Exception {
-        return putResource(context, metadataUuid, file.getOriginalFilename(), file.getInputStream(), null, visibility, true);
+        return putResource(context, metadataUuid, file.getOriginalFilename(), file.getInputStream(), null, visibility, true, null);
     }
 
     @Override
     public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final MultipartFile file,
             final MetadataResourceVisibility visibility, Boolean approved) throws Exception {
-        return putResource(context, metadataUuid, file.getOriginalFilename(), file.getInputStream(), null, visibility, approved);
+        return putResource(context, metadataUuid, file.getOriginalFilename(), file.getInputStream(), null, visibility, approved, null);
     }
 
     @Override
     public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final Path file,
             final MetadataResourceVisibility visibility) throws Exception {
-        return putResource(context, metadataUuid, file, visibility, true);
+        return putResource(context, metadataUuid, file, visibility, true, null);
     }
 
     @Override
     public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final Path file,
-            final MetadataResourceVisibility visibility, Boolean approved) throws Exception {
+            final MetadataResourceVisibility visibility, Boolean approved, Map<String, Object> secondaryProperties) throws Exception {
         final InputStream is = new BufferedInputStream(Files.newInputStream(file));
-        return putResource(context, metadataUuid, file.getFileName().toString(), is, null, visibility, approved);
+        return putResource(context, metadataUuid, file.getFileName().toString(), is, null, visibility, approved, secondaryProperties);
     }
 
     @Override
@@ -184,7 +185,7 @@ public abstract class AbstractStore implements Store {
     @Override
     public final MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl,
             MetadataResourceVisibility visibility, Boolean approved) throws Exception {
-        return putResource(context, metadataUuid, getFilenameFromUrl(fileUrl), fileUrl.openStream(), null, visibility, approved);
+        return putResource(context, metadataUuid, getFilenameFromUrl(fileUrl), fileUrl.openStream(), null, visibility, approved, null);
     }
 
     @Override

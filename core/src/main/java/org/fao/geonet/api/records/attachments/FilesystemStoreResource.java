@@ -31,6 +31,7 @@ import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Metadata resource stored in the file system.
@@ -48,6 +49,7 @@ public class FilesystemStoreResource implements MetadataResource {
     private final String version;
     private final ExternalResourceManagementProperties externalResourceManagementProperties;
     private final boolean approved;
+    private Map<String, Object> secondaryProperties;
 
     public FilesystemStoreResource(String metadataUuid,
                                    int metadataId,
@@ -58,7 +60,8 @@ public class FilesystemStoreResource implements MetadataResource {
                                    Date lastModification,
                                    String version,
                                    ExternalResourceManagementProperties externalResourceManagementProperties,
-                                   boolean approved) {
+                                   boolean approved,
+                                   Map<String, Object> secondaryProperties) {
         this.metadataUuid = metadataUuid;
         this.metadataId = metadataId;
         this.approved=approved;
@@ -69,6 +72,7 @@ public class FilesystemStoreResource implements MetadataResource {
         this.lastModification = lastModification;
         this.version=version;
         this.externalResourceManagementProperties = externalResourceManagementProperties;
+        this.secondaryProperties=secondaryProperties;
     }
 
     public FilesystemStoreResource(String metadataUuid,
@@ -78,8 +82,9 @@ public class FilesystemStoreResource implements MetadataResource {
                                    MetadataResourceVisibility metadataResourceVisibility,
                                    long size,
                                    Date lastModification,
-                                   boolean approved) {
-        this(metadataUuid, metadataId, filename, baseUrl, metadataResourceVisibility, size, lastModification, null, null, approved);
+                                   boolean approved,
+                                   Map<String, Object> secondaryProperties) {
+        this(metadataUuid, metadataId, filename, baseUrl, metadataResourceVisibility, size, lastModification, null, null, approved, secondaryProperties);
     }
 
     @Override
@@ -136,6 +141,11 @@ public class FilesystemStoreResource implements MetadataResource {
     @Override
     public ExternalResourceManagementProperties getExternalResourceManagementProperties() {
         return externalResourceManagementProperties;
+    }
+
+    @Override
+    public Map<String, Object> getSecondaryProperties() {
+        return secondaryProperties;
     }
 
 

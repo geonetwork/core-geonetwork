@@ -36,6 +36,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nullable;
 
 /**
@@ -180,11 +181,12 @@ public interface Store {
      * @param changeDate                 The optional change date
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
      * @param approved   Put the approved version or not
+     * @param secondaryProperties The secondary type properties as part of the resource
      * @return The resource description
      */
     MetadataResource putResource(ServiceContext context, String metadataUuid, String filename, InputStream is,
                                  @Nullable Date changeDate,
-                                 MetadataResourceVisibility metadataResourceVisibility, Boolean approved)
+                                 MetadataResourceVisibility metadataResourceVisibility, Boolean approved, Map<String, Object> secondaryProperties)
         throws Exception;
 
     /**
@@ -196,9 +198,10 @@ public interface Store {
      * @param filePath                   The resource local filepath
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
      * @param approved   Return the approved version or not
+     * @param secondaryProperties The secondary type properties as part of the resource (optional)
      * @return The resource description
      */
-    MetadataResource putResource(ServiceContext context, String metadataUuid, Path filePath, MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
+    MetadataResource putResource(ServiceContext context, String metadataUuid, Path filePath, MetadataResourceVisibility metadataResourceVisibility, Boolean approved, Map<String, Object> secondaryProperties) throws Exception;
 
     /**
      * Add a new resource from a local file path.

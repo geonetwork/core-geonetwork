@@ -34,6 +34,7 @@ import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisConstraintException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.NotAllowedException;
@@ -93,7 +94,7 @@ public class CMISStore extends AbstractStore {
                     if (matcher.matches(keyPath)) {
                         final String filename = getFilename(cmisFilePath);
                         MetadataResource resource = createResourceDescription(context, settingManager, metadataUuid, visibility, filename, object.getContentStreamLength(),
-                                object.getLastModificationDate().getTime(), object.getVersionLabel(), metadataId, approved);
+                                object.getLastModificationDate().getTime(), object.getVersionLabel(), metadataId, approved, getSecondaryProperties(object));
                         resourceList.add(resource);
                     }
                 }
@@ -108,9 +109,29 @@ public class CMISStore extends AbstractStore {
         return resourceList;
     }
 
+    private Map<String, Object> getSecondaryProperties(Document document) {
+        String secondaryPropertyId=null;
+        for (Property<?> property:document.getProperties()) {
+            if(property.getId().equals(PropertyIds.SECONDARY_OBJECT_TYPE_IDS)) {
+                secondaryPropertyId = property.getValueAsString();
+                break;
+            }
+        }
+
+        Map<String, Object> secondaryProperties = new HashMap<>();
+        for (Property<?> property:document.getProperties()) {
+            if (!StringUtils.isEmpty(secondaryPropertyId) && property.getId().contains(secondaryPropertyId) && property.getValue()!=null) {
+                secondaryProperties.put(property.getId(), property.getValue());
+            }
+        }
+
+        return secondaryProperties;
+    }
+
     private MetadataResource createResourceDescription(final ServiceContext context, final SettingManager settingManager, final String metadataUuid,
                                                        final MetadataResourceVisibility visibility, final String resourceId, long size, Date lastModification, String version, int metadataId,
-                                                       boolean approved) {
+                                                       boolean approved,
+                                                       Map<String, Object> secondaryProperties) {
         String filename = getFilename(metadataUuid, resourceId);
 
         String versionValue = null;
@@ -122,7 +143,7 @@ public class CMISStore extends AbstractStore {
             getExternalResourceManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, version);
 
         return new FilesystemStoreResource(metadataUuid, metadataId, filename,
-            settingManager.getNodeURL() + "api/records/", visibility, size, lastModification, versionValue, externalResourceManagementProperties, approved);
+            settingManager.getNodeURL() + "api/records/", visibility, size, lastModification, versionValue, externalResourceManagementProperties, approved, secondaryProperties);
     }
 
     private static String getFilename(final String key) {
@@ -140,7 +161,7 @@ public class CMISStore extends AbstractStore {
             final SettingManager settingManager = context.getBean(SettingManager.class);
             return new ResourceHolderImpl(object, createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId,
                 ((Document) object).getContentStreamLength(),
-                object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), metadataId, approved));
+                object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), metadataId, approved, getSecondaryProperties((Document) object)));
         } catch (CmisObjectNotFoundException e) {
             Log.warning(Geonet.RESOURCES, String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
             throw new ResourceNotFoundException(
@@ -161,7 +182,7 @@ public class CMISStore extends AbstractStore {
 
     @Override
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
-                                        final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved)
+                                        final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved, Map<String, Object> secondaryProperties)
             throws Exception {
         final SettingManager settingManager = context.getBean(SettingManager.class);
         final int metadataId = canEdit(context, metadataUuid, approved);
@@ -182,6 +203,10 @@ public class CMISStore extends AbstractStore {
         if (changeDate != null) {
             properties.put(PropertyIds.LAST_MODIFICATION_DATE, changeDate);
         }
+        if (MapUtils.isNotEmpty(secondaryProperties)) {
+            properties.putAll(secondaryProperties);
+        }
+
         int isLength=is.available();
         ContentStream contentStream = CMISConfiguration.getClient().getObjectFactory().createContentStream(key, isLength, Files.probeContentType(new File(key).toPath()), is);
 
@@ -242,7 +267,7 @@ public class CMISStore extends AbstractStore {
         }
 
         return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, isLength,
-                doc.getLastModificationDate().getTime(), doc.getVersionLabel(), metadataId, approved);
+                doc.getLastModificationDate().getTime(), doc.getVersionLabel(), metadataId, approved, secondaryProperties);
     }
 
     @Override
@@ -266,7 +291,7 @@ public class CMISStore extends AbstractStore {
                 } else {
                     // already the good visibility
                     return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, ((Document) object).getContentStreamLength(),
-                        object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), metadataId, approved);
+                        object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), metadataId, approved, null);
                 }
             } catch (CmisObjectNotFoundException ignored) {
                 // ignored
@@ -318,7 +343,7 @@ public class CMISStore extends AbstractStore {
             final CmisObject object = CMISConfiguration.getClient().getObjectByPath(destKey, oc);
 
             return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, ((Document) object).getContentStreamLength(),
-                    object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), metadataId, approved);
+                    object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), metadataId, approved, null);
         } else {
             Log.warning(Geonet.RESOURCES,
                     String.format("Could not update permissions. Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
@@ -416,7 +441,7 @@ public class CMISStore extends AbstractStore {
         try {
             final CmisObject object = CMISConfiguration.getClient().getObjectByPath(key);
             return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, ((Document) object).getContentStreamLength(),
-                object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), metadataId, approved);
+                object.getLastModificationDate().getTime(), ((Document) object).getVersionLabel(), metadataId, approved, null);
         } catch (CmisObjectNotFoundException e) {
             return null;
         }
