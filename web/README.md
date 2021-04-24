@@ -2,6 +2,8 @@
 
 The web module gathers the static resources and configuration files for building the final web application WAR.
 
+Before you start check out [software development building](../software_development/BUILDING.md) instructions on setting up Elasticsearch.
+
 1. Run embedded Jetty server:
    
    ```
