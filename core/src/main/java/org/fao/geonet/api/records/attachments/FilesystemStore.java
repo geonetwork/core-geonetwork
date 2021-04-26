@@ -234,6 +234,11 @@ public class FilesystemStore extends AbstractStore {
     }
 
     @Override
+    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility) throws Exception {
+        //TODO:
+    }
+
+    @Override
     public MetadataResource patchResourceStatus(ServiceContext context, String metadataUuid, String resourceId,
 
                                                 MetadataResourceVisibility visibility, Boolean approved) throws Exception {

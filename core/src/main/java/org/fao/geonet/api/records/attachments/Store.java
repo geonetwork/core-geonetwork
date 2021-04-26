@@ -313,6 +313,18 @@ public interface Store {
                        String resourceId, Boolean approved) throws Exception;
 
     /**
+     * Copy all resources from none approved (draft working copy) to approved folder.
+     *
+     *
+     * @param context
+     * @param sourceUuid               The metadata UUID
+     * @param targetUuid               The metadata UUID
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
+     *
+     */
+    void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
+
+    /**
      * Get the resource description.
      * @param context
      * @param metadataUuid The metadata UUID
