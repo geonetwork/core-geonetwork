@@ -1455,7 +1455,7 @@
        * allow all for authenticated user
        * allow only host registered in metadata link table
     -->
-    <proxy.securityMode>DB_LINK_CHECK</proxy.securityMode>
+    <proxy.securityMode>NONE</proxy.securityMode>
 
     <!-- Jetty plugin port configuration -->
     <jetty.port>8080</jetty.port>
