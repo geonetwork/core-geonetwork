@@ -422,6 +422,30 @@ public class CMISStore extends AbstractStore {
         }
     }
 
+    @Override
+    public void copyResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility) throws Exception {
+        final List<MetadataResource> resources = getResources(context, metadataUuid, metadataResourceVisibility, null, false);
+
+        final int sourceMetadataId = canDownload(context, metadataUuid, metadataResourceVisibility, false);
+        final int targetMetadataId = canDownload(context, metadataUuid, metadataResourceVisibility, true);
+
+        final String sourceResourceTypeDir = getMetadataDir(context, sourceMetadataId) + CMISConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
+        final String targetResourceTypeDir = getMetadataDir(context, targetMetadataId) + CMISConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
+
+
+        Folder sourceParentFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(sourceResourceTypeDir);
+        Folder targetParentFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(targetResourceTypeDir);
+
+        Map<String, Document> documentMap = getCmisObjectMap(sourceParentFolder, null);
+        for (Map.Entry<String, Document> entry : documentMap.entrySet()) {
+            Document document = entry.getValue();
+            if (document instanceof Document) {
+                document.copy(targetParentFolder);
+            }
+        }
+
+    }
+
     private String getMetadataDir(ServiceContext context, final int metadataId) {
 
         Path metadataFullDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
