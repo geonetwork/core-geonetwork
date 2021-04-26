@@ -67,7 +67,23 @@
              scope.dateTypeSupported = Modernizr.inputtypes.date;
              scope.isValidDate = true;
              scope.hideTime = scope.hideTime == 'true';
-             scope.hideTimezone = false;
+
+             var getTimeZoneOffset = function(timeZone) {
+               var actualTz = timeZone;
+               if (timeZone && timeZone !== null && timeZone.trim().toLowerCase() === "browser") {
+                 actualTz = userTimezone;
+               }
+               return moment.tz(actualTz).format('ZZ')
+                 .replace(/([+-]?[0-9]{2})([0-9]{2})/, '$1:$2')
+             }
+
+             scope.timezone =
+               getTimeZoneOffset(gnGlobalSettings.gnCfg.mods.global.timezone)
+               || gnConfig['system.server.timeZone']
+               || '';
+             scope.uiTimeZoneEqualToServer =
+               gnConfig['system.server.timeZone'] === gnGlobalSettings.gnCfg.mods.global.timezone;
+             scope.hideTimezone = scope.uiTimeZoneEqualToServer;
              var datePattern = new RegExp('^\\d{4}$|' +
              '^\\d{4}-\\d{2}$|' +
              '^\\d{4}-\\d{2}-\\d{2}$|' +
@@ -81,14 +97,6 @@
 
              var userTimezone =  moment.tz.guess();
 
-             var getTimeZoneOffset = function(timeZone) {
-               var actualTz = timeZone;
-               if (timeZone !== null && timeZone.trim().toLowerCase() === "browser") {
-                 actualTz = userTimezone;
-               }
-               return moment.tz(actualTz).format('ZZ')
-                 .replace(/([+-]?[0-9]{2})([0-9]{2})/, '$1:$2')
-             }
 
              scope.timezoneNames = [
                {name: $translate.instant('NoTimezone'), offset: ''},
@@ -119,10 +127,6 @@
 
              scope.mode = scope.year = scope.month =
                scope.time = scope.date = scope.dateDropDownInput = '';
-             scope.timezone =
-               getTimeZoneOffset(gnGlobalSettings.gnCfg.mods.global.timezone)
-               || gnConfig['system.server.timeZone']
-               || '';
              scope.withIndeterminatePosition =
              attrs.indeterminatePosition !== undefined;
 
@@ -149,20 +153,20 @@
 
                var time = tokens[1];
 
-               scope.hideTimezone = false;
-               // We could decide to hide timezone if server timezone = ui timezone
-               // scope.hideTimezone =
-               //   gnConfig['system.server.timeZone'] === gnGlobalSettings.gnCfg.mods.global.timezone
-               // && getTimeZoneOffset(gnGlobalSettings.gnCfg.mods.global.timezone) === scope.timezone;
+
+
                if (time != undefined) {
                  scope.time = isDateTime ?
                    moment(time, 'HH:mm:ss').toDate():
                    undefined;
 
                  scope.timezone = time.substr(8);
+                 scope.hideTimezone = scope.uiTimeZoneEqualToServer
+                   && getTimeZoneOffset(gnGlobalSettings.gnCfg.mods.global.timezone) === scope.timezone;
                } else {
                  scope.time = '';
                  scope.timezone = '';
+                 scope.hideTimezone = scope.uiTimeZoneEqualToServer;
                }
              }
              if (scope.dateTypeSupported !== true) {

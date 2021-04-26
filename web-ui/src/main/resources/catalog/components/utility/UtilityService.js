@@ -391,7 +391,8 @@
   module.factory('gnRegionService', [
     '$q',
     '$http',
-    function($q, $http) {
+    'gnGlobalSettings',
+    function($q, $http, gnGlobalSettings) {
 
       /**
       * Array of available region type
@@ -423,6 +424,8 @@
           }).success(function(response) {
             var data = response.region;
 
+            var defaultLang =  gnGlobalSettings.gnCfg.langDetector.default;
+
             // Compute default name and add a
             // tokens element which is used for filter
             angular.forEach(data, function(country) {
@@ -430,7 +433,7 @@
               angular.forEach(country.label, function(label) {
                 country.tokens.push(label);
               });
-              country.name = country.label[lang] || country.label[0];
+              country.name = country.label[lang] || country.label[defaultLang];
             });
             defer.resolve(data);
           });

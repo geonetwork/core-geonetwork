@@ -885,7 +885,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.12</version>
+        <version>4.13.1</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -1448,6 +1448,8 @@
 
     <baseUrl>https://sextant.ifremer.fr/geonetwork</baseUrl>
 <!--    <baseUrl>https://sextant-test.ifremer.fr/geonetwork</baseUrl>-->
+    <microservices.url></microservices.url>
+    <!--<microservices.url>http://localhost:9901</microservices.url>-->
 
     <!-- Proxy security configuration:
     * NONE: allow all.

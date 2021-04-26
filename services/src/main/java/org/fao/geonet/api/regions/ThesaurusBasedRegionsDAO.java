@@ -25,6 +25,7 @@ package org.fao.geonet.api.regions;
 
 import jeeves.JeevesCacheManager;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -134,7 +135,7 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
                 public java.util.List<KeywordBean> call() throws Exception {
                     Thesaurus thesaurus = getThesaurus(context);
                     if (thesaurus != null) {
-                        return thesaurus.getTopConcepts(context.getLanguage());
+                        return thesaurus.getTopConcepts(context.getLanguage(), Geonet.DEFAULT_LANGUAGE);
                     } else {
                         return null;
                     }

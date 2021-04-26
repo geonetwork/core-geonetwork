@@ -31,6 +31,7 @@
               <td><span class="badge"
                         data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-danger'"> {{info.status}} </span>
               </td>
+            </tr>
           </table>
         </div>
       </div>
@@ -64,6 +65,25 @@
               <td><span class="badge"
                         data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-warning'"> {{info.status}} </span>
               </td>
+            </tr>
+            <tr class="health-check"
+                data-ng-show="indexStatus"
+                title="{{(indexStatus['db.count'] === indexStatus['index.count']) ? '' : ('indexStatusSynchronized-error' | translate)}}"
+                data-ng-class="(indexStatus['db.count'] === indexStatus['index.count']) ? '' : 'alert-danger'">
+              <td>
+                <h4 class="list-group-item-heading"
+                    data-translate=""
+                    data-translate-values="{indexStatus: indexStatus}">
+                  indexStatusSynchronized
+                </h4>
+              </td>
+              <td>
+                <span class="badge"
+                      data-ng-class="(indexStatus['db.count'] === indexStatus['index.count']) ? 'badge-success' : 'badge-danger'">
+                  {{(indexStatus['db.count'] === indexStatus['index.count']) ? 'OK' : 'ERROR'}}
+                </span>
+              </td>
+            </tr>
           </table>
         </div>
       </div>
