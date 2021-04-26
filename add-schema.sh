@@ -145,7 +145,7 @@ then
   line=$(grep -n '</dependencies>' services/pom.xml | cut -d: -f1)
   finalLine=$(($line - 1))
 
-  projectGroupId='${project.groupId}'
+  projectGroupId='org.geonetwork-opensource.schemas'
   gnSchemasVersion='${project.version}'
 
   echo "Adding schema ${schema} resources to service/pom.xml"
