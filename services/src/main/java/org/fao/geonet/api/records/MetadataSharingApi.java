@@ -169,6 +169,7 @@ public class MetadataSharingApi {
     })
     @PreAuthorize("hasAuthority('Reviewer')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
     public void publish(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
@@ -195,6 +196,7 @@ public class MetadataSharingApi {
     })
     @PreAuthorize("hasAuthority('Reviewer')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
     public void unpublish(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
@@ -230,6 +232,7 @@ public class MetadataSharingApi {
     })
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
     public void share(
         @Parameter(
             description = API_PARAM_RECORD_UUID,

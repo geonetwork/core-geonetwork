@@ -154,6 +154,7 @@ public class SourcesApi {
         @ApiResponse(responseCode = "201", description = "Source created."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
+    @ResponseBody
     public ResponseEntity addSource(
         @Parameter(
             name = "source"
@@ -211,6 +212,7 @@ public class SourcesApi {
         @ApiResponse(responseCode = "404", description = "Source not found."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
+    @ResponseBody
     public ResponseEntity updateSource(
         @Parameter(
             description = "Source identifier",
@@ -252,6 +254,7 @@ public class SourcesApi {
         @ApiResponse(responseCode = "201", description = "Source deleted."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
+    @ResponseBody
     public ResponseEntity deleteSource(
         @Parameter(
             description = "Source identifier",
