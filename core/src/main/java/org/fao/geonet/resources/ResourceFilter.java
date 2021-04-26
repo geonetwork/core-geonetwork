@@ -34,6 +34,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.MediaType;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.servlet.*;
@@ -132,8 +133,11 @@ public class ResourceFilter implements Filter {
                     return;
                 }
 
-                // TODO : other type of resources html
-                httpServletResponse.setContentType("image/" + ext);
+                // Resources are images for logos, XML for map config or XSD
+                httpServletResponse.setContentType(
+                    "xml".equals(ext) || "xsd".equals(ext)
+                        ? MediaType.APPLICATION_XML_VALUE
+                        : "image/" + ext);
                 httpServletResponse.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
                 if (filename.equals("images/logos/" + siteId + ".ico")) {
                     favicon = resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/" + siteId + ".ico", favicon.one(),
