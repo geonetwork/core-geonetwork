@@ -124,7 +124,8 @@ public class DatabaseMigration implements BeanPostProcessor {
                 return bean;
             }
         } catch (ClassNotFoundException e) {
-            _logger.error(String.format("DB Migration / '%s' is an invalid value for initAfter. Class not found. Error is %s", initAfter, e.getMessage(), e));
+            _logger.error(String.format("DB Migration / '%s' is an invalid value for initAfter. Class not found. Error is %s", initAfter, e.getMessage()));
+            _logger.error(e);
         }
         return bean;
     }
@@ -145,7 +146,9 @@ public class DatabaseMigration implements BeanPostProcessor {
              Statement statement = conn.createStatement()) {
 
             this.foundErrors = doMigration(webappVersion, subVersion, servletContext, path, conn, statement);
-            conn.commit();
+            if (!conn.getAutoCommit()) {
+                conn.commit();
+            }
         } catch (Exception e) {
             _logger.warning("  - Migration: Exception running migration for version: " + webappVersion + " subversion: "
                 + subVersion + ". " + e.getMessage());
