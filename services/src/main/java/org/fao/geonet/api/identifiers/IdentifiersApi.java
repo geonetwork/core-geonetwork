@@ -203,6 +203,7 @@ public class IdentifiersApi {
         @ApiResponse(responseCode = "403", description = "Operation not allowed. Only Editor can access it.")
     })
     @PreAuthorize("hasAuthority('Editor') or hasRole('Reviewer') or hasRole('UserAdmin') or hasRole('Administrator')")
+    @ResponseBody
     public void deleteIdentifier(
         @Parameter(
             description = API_PARAM_IDENTIFIER,

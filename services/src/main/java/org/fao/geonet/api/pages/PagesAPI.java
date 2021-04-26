@@ -71,11 +71,16 @@ public class PagesAPI {
     private static final String PAGE_DELETED = "Page removed";
     private static final String ERROR_FILE = "File not valid";
     private static final String ERROR_CREATE = "Wrong parameters are provided";
+
     @Autowired
     private PageRepository pageRepository;
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Add a new Page object in DRAFT section in status HIDDEN", description = "<p>Is not possible to load a link and a file at the same time.</p> <a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(value = "/", method = RequestMethod.POST)
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Add a new Page object in DRAFT section in status HIDDEN",
+        description = "<p>Is not possible to load a link and a file at the same time.</p> <a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+    @RequestMapping(
+        value = "/",
+        method = RequestMethod.POST)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = PAGE_SAVED),
         @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
@@ -84,6 +89,7 @@ public class PagesAPI {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT),
         @ApiResponse(responseCode = "500", description = ERROR_FILE)})
     @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseBody
     public void addPage(
         @RequestParam(value = "language", required = true) final String language,
         @RequestParam(value = "pageId", required = true) final String pageId,
@@ -113,21 +119,29 @@ public class PagesAPI {
     }
 
     // Isn't done with PUT because the multipart support as used by Spring
-    // doesn't support other request method then POST
-    @io.swagger.v3.oas.annotations.Operation(summary = "Edit a Page content and format", description = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(value = "/{language}/{pageId}", method = RequestMethod.POST)
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_UPDATED),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
+    // doesn't support other request method than POST
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Edit a Page content and format",
+        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+    @RequestMapping(
+        value = "/{language}/{pageId}",
+        method = RequestMethod.POST
+    )
+    @ApiResponses(
+        value = {
+            @ApiResponse(responseCode = "200", description = PAGE_UPDATED),
+            @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+        })
     @PreAuthorize("hasAuthority('Administrator')")
-    public void editPage(
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity editPage(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
         @RequestParam(value = "data", required = false) final MultipartFile data,
         @RequestParam(value = "link", required = false) final String link,
-        @RequestParam(value = "format", required = true) final Page.PageFormat format,
-        @Parameter(hidden = true) final HttpServletResponse response) throws ResourceNotFoundException {
-
-
+        @RequestParam(value = "format", required = true) final Page.PageFormat format
+    ) throws ResourceNotFoundException {
         checkUniqueContent(data, link);
 
         checkCorrectFormat(data, link, format);
@@ -138,16 +152,22 @@ public class PagesAPI {
 
         page.setFormat(format);
         pageRepository.save(page);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 
     /* Local Utility and constants */
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Edit a Page name and language", description = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(value = "/{language}/{pageId}", method = RequestMethod.PUT)
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Edit a Page name and language",
+        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+    @RequestMapping(
+        value = "/{language}/{pageId}",
+        method = RequestMethod.PUT)
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_UPDATED),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseBody
     public void editPageName(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
@@ -184,12 +204,18 @@ public class PagesAPI {
         }
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Delete a Page object", description = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(value = "/{language}/{pageId}", method = RequestMethod.DELETE)
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_DELETED),
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Delete a Page object",
+        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+    @RequestMapping(
+        value = "/{language}/{pageId}",
+        method = RequestMethod.DELETE)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = PAGE_DELETED),
         @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseBody
     public void deletePage(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
@@ -201,9 +227,15 @@ public class PagesAPI {
         pageRepository.deleteById(new PageIdentity(language, pageId));
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Return the page object details except the content", description = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(value = "/{language}/{pageId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_OK),
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Return the page object details except the content",
+        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+    @RequestMapping(
+        value = "/{language}/{pageId}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = PAGE_OK),
         @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)})
     @ResponseBody
@@ -219,8 +251,13 @@ public class PagesAPI {
         return checkPermissionsOnSinglePageAndReturn(session, page);
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Return the static html content identified by pageId", description = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(value = "/{language}/{pageId}/content", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Return the static html content identified by pageId",
+        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+    @RequestMapping(
+        value = "/{language}/{pageId}/content",
+        method = RequestMethod.GET,
+        produces = "text/plain;charset=UTF-8")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_OK),
         @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)})
@@ -255,12 +292,17 @@ public class PagesAPI {
         }
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Adds the page to a section. This means that the link to the page will be shown in the list associated to that section.", description = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(value = "/{language}/{pageId}/{section}", method = RequestMethod.POST)
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Adds the page to a section. This means that the link to the page will be shown in the list associated to that section.",
+        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+    @RequestMapping(
+        value = "/{language}/{pageId}/{section}",
+        method = RequestMethod.POST)
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_UPDATED),
         @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseBody
     public void addPageToSection(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
@@ -285,12 +327,18 @@ public class PagesAPI {
         pageRepository.save(page);
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Removes the page from a section. This means that the link to the page will not be shown in the list associated to that section.", description = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(value = "/{language}/{pageId}/{section}", method = RequestMethod.DELETE)
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_UPDATED),
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Removes the page from a section. This means that the link to the page will not be shown in the list associated to that section.",
+        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+    @RequestMapping(
+        value = "/{language}/{pageId}/{section}",
+        method = RequestMethod.DELETE)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = PAGE_UPDATED),
         @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseBody
     public void removePageFromSection(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
@@ -313,12 +361,18 @@ public class PagesAPI {
         pageRepository.save(page);
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Changes the status of a page.", description = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(value = "/{language}/{pageId}/{status}", method = RequestMethod.PUT)
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_UPDATED),
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Changes the status of a page.",
+        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+    @RequestMapping(
+        value = "/{language}/{pageId}/{status}",
+        method = RequestMethod.PUT)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = PAGE_UPDATED),
         @ApiResponse(responseCode = "404", description = PAGE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseBody
     public void changePageStatus(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
@@ -336,9 +390,15 @@ public class PagesAPI {
         pageRepository.save(page);
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "List all pages according to the filters", description = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
-    @RequestMapping(value = "/list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiResponses(value = {@ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)})
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "List all pages according to the filters",
+        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+    @RequestMapping(
+        value = "/list",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)})
     @ResponseBody
     public ResponseEntity<List<PageJSONWrapper>> listPages(
         @RequestParam(value = "language", required = false) final String language,
@@ -522,5 +582,4 @@ public class PagesAPI {
             page.setLink(link);
         }
     }
-
 }
