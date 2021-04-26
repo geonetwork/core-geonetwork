@@ -83,13 +83,7 @@ As far as Elasticsearch port is not exposed to the web, Elasticsearch index is s
 
 Enable security in `config/elasticsearch.yml`:
 ```
-xpack.ml.enabled: false
 xpack.security.enabled: true
-xpack.security.authc:
-  anonymous:
-    username: anonymous_user
-    roles: kibana_dashboard_only_user
-    authz_exception: true
 ```
 
 Start Elasticsearch.
@@ -120,7 +114,7 @@ Create a role and user for the catalogue access:
 curl -XPOST -u elastic 'localhost:9200/_security/role/gn_admin' \
    -H "Content-Type: application/json" \
    -d '{
-  "indices": [
+  "indices": [ 
     {
       "names": [ "gn*" ],
       "privileges": ["all"]
@@ -145,7 +139,6 @@ curl -XPOST -u elastic 'localhost:9200/_security/user/anonymous' \
   "full_name" : "Anonymous User",
   "roles" : [ "kibana_dashboard_only_user"]
 }'
-
 ```
 
 
@@ -161,8 +154,9 @@ elasticsearch.username: "kibana_system"
 elasticsearch.password: "changeme"
 ```
 
-TODO: Kibana sign in user when authenticated in GeoNetwork ? 
-TODO: Kibana anonymous user can only access public alias
+Future work required:
+* Kibana sign in user when authenticated in GeoNetwork ? 
+* Kibana anonymous user can only access public alias
 
 
 ## Errors
