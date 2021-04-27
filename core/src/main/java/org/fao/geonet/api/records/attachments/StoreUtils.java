@@ -133,22 +133,8 @@ public abstract class StoreUtils {
             List<MetadataResource> targetAddResources = exceptMetadataResource(sourceResources, targetResources);
             List<MetadataResource> targetUpdateResources = exceptMetadataResource(targetResources, targetDeleteResources);
 
-            // Add new records
-//            for (MetadataResource resource: targetAddResources) {
-//                try (Store.ResourceHolder holder = store.getResource(context, sourceUuid, visibility, resource.getFilename(), sourceApproved)) {
-//                    store.putResource(context, targetUuid, holder.getPath(), visibility, targetApproved);
-//                }
-//            }
-
-            // update new records
-
-//            for (MetadataResource resource: targetUpdateResources) {
-//                try (Store.ResourceHolder holder = store.getResource(context, sourceUuid, visibility, resource.getFilename(), sourceApproved)) {
-//                    store.putResource(context, targetUuid, holder.getPath(), visibility, targetApproved);
-//                }
-//            }
-
-            store.copyResources(context, sourceUuid, visibility);
+            // copy all resources from source to target
+            store.copyResources(context, sourceUuid, targetUuid, visibility);
 
             // delete old records
             for (MetadataResource resource: targetDeleteResources) {

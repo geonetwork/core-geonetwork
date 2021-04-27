@@ -34,6 +34,7 @@ import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisConstraintException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.NotAllowedException;
@@ -163,6 +164,12 @@ public class CMISStore extends AbstractStore {
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
                                         final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved)
             throws Exception {
+        return putResource(context, metadataUuid, filename, is, changeDate, visibility, approved, null);
+    }
+
+    private MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
+                                        final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved, Map<String, Object> additionalProperties)
+        throws Exception {
         final SettingManager settingManager = context.getBean(SettingManager.class);
         final int metadataId = canEdit(context, metadataUuid, approved);
         String key = getKey(context, metadataUuid, metadataId, visibility, filename);
@@ -176,7 +183,7 @@ public class CMISStore extends AbstractStore {
         String filenameKey = key.substring(lastFolderDelimiterKeyIndex + 1);
         String parentKey = key.substring(0, lastFolderDelimiterKeyIndex);
 
-        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
         properties.put(PropertyIds.NAME, filenameKey);
         if (changeDate != null) {
@@ -190,24 +197,27 @@ public class CMISStore extends AbstractStore {
             // If the document is found then we are updating the existing document.
             doc = (Document) CMISConfiguration.getClient().getObjectByPath(key, oc);
             doc.updateProperties(properties, true);
+            if (MapUtils.isNotEmpty(additionalProperties)) {
+                doc.updateProperties(additionalProperties, true);
+            }
             doc.setContentStream(contentStream, true, true);
             //           }
             // Avoid CMIS API call is info is not enabled.
             if (Logger.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
                 Log.info(Geonet.RESOURCES,
-                        String.format("Updated metadata resource '%s' for metadata '%s'. Current version '%s'.", key, metadataUuid, doc.getVersionLabel()));
+                    String.format("Updated metadata resource '%s' for metadata '%s'. Current version '%s'.", key, metadataUuid, doc.getVersionLabel()));
             }
         } catch (CmisPermissionDeniedException ex) {
             Log.warning(Geonet.RESOURCES, String.format(
-                    "No permissions to update metadata resource '%s' for metadata '%s' due to constraint violation or lock.", key, metadataUuid));
+                "No permissions to update metadata resource '%s' for metadata '%s' due to constraint violation or lock.", key, metadataUuid));
             throw new NotAllowedException(String.format(
-                    "No permissions to update metadata resource '%s' for metadata '%s' due to constraint violation or lock.", key, metadataUuid));
+                "No permissions to update metadata resource '%s' for metadata '%s' due to constraint violation or lock.", key, metadataUuid));
 
         } catch (CmisConstraintException e) {
             Log.warning(Geonet.RESOURCES, String.format(
-                    "No allowed to modify existing metadata resource '%s' for metadata '%s' due to constraint violation or lock.", key, metadataUuid));
+                "No allowed to modify existing metadata resource '%s' for metadata '%s' due to constraint violation or lock.", key, metadataUuid));
             throw new NotAllowedException(String.format(
-                    "No allowed to modify existing metadata resource '%s' for metadata '%s' due to constraint violation or lock.", key, metadataUuid));
+                "No allowed to modify existing metadata resource '%s' for metadata '%s' due to constraint violation or lock.", key, metadataUuid));
         } catch (CmisObjectNotFoundException e) {
             // If the document is not found then we are adding a new document.
 
@@ -231,18 +241,18 @@ public class CMISStore extends AbstractStore {
                 // Avoid CMIS API call is info is not enabled.
                 if (Logger.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
                     Log.info(Geonet.RESOURCES,
-                            String.format("Added resource metadata resource '%s' for metadata '%s'.", doc.getPaths().get(0), metadataUuid));
+                        String.format("Added resource metadata resource '%s' for metadata '%s'.", doc.getPaths().get(0), metadataUuid));
                 }
             } catch (CmisPermissionDeniedException ex) {
                 Log.warning(Geonet.RESOURCES, String.format(
-                        "No permissions to add metadata resource '%s' for metadata '%s'.", key, metadataUuid));
+                    "No permissions to add metadata resource '%s' for metadata '%s'.", key, metadataUuid));
                 throw new NotAllowedException(String.format(
-                        "No permissions to add metadata resource '%s' for metadata '%s'.", key, metadataUuid));
+                    "No permissions to add metadata resource '%s' for metadata '%s'.", key, metadataUuid));
             }
         }
 
         return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, isLength,
-                doc.getLastModificationDate().getTime(), doc.getVersionLabel(), metadataId, approved);
+            doc.getLastModificationDate().getTime(), doc.getVersionLabel(), metadataId, approved);
     }
 
     @Override
@@ -387,6 +397,46 @@ public class CMISStore extends AbstractStore {
         return String.format("Unable to remove resource '%s'.", resourceId);
     }
 
+    @Override
+    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility) throws Exception {
+        final int sourceMetadataId = canDownload(context, sourceUuid, metadataResourceVisibility, false);
+        final String sourceResourceTypeDir = getMetadataDir(context, sourceMetadataId) + CMISConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
+        try {
+            Folder sourceParentFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(sourceResourceTypeDir);
+
+            Map<String, Document> sourceDocumentMap = getCmisObjectMap(sourceParentFolder, null);
+            for (Map.Entry<String, Document> sourceEntry : sourceDocumentMap.entrySet()) {
+                Document sourceDocument = sourceEntry.getValue();
+                if (sourceDocument instanceof Document) {
+                    Map<String, Object> sourceProperties = getSecondaryProperties(sourceDocument);
+                    putResource(context, targetUuid, sourceDocument.getName(), sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, true, sourceProperties);
+                }
+            }
+        } catch (CmisObjectNotFoundException  e) {
+            Log.warning("Cannot find folder object from CMIS ... Abort copping resources from "+sourceResourceTypeDir, e);
+        }
+    }
+
+    private Map<String, Object> getSecondaryProperties(Document document) {
+        String secondaryPropertyId=null;
+        for (Property<?> property:document.getProperties()) {
+            if(property.getId().equals(PropertyIds.SECONDARY_OBJECT_TYPE_IDS)) {
+                secondaryPropertyId = property.getValueAsString();
+                break;
+            }
+        }
+        Map<String, Object> properties = null;
+        if (!StringUtils.isEmpty(secondaryPropertyId)) {
+            properties = new HashMap<>();
+            for (Property<?> property:document.getProperties()) {
+                if (property.getId().contains(secondaryPropertyId) && property.getValue()!=null) {
+                    properties.put(property.getId(), property.getValue());
+                }
+            }
+        }
+        return properties;
+    }
+
     private boolean tryDelResource(final ServiceContext context, final String metadataUuid, final int metadataId, final MetadataResourceVisibility visibility,
                                    final String resourceId) throws Exception {
         final String key = getKey(context, metadataUuid, metadataId, visibility, resourceId);
@@ -420,30 +470,6 @@ public class CMISStore extends AbstractStore {
         } catch (CmisObjectNotFoundException e) {
             return null;
         }
-    }
-
-    @Override
-    public void copyResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility) throws Exception {
-        final List<MetadataResource> resources = getResources(context, metadataUuid, metadataResourceVisibility, null, false);
-
-        final int sourceMetadataId = canDownload(context, metadataUuid, metadataResourceVisibility, false);
-        final int targetMetadataId = canDownload(context, metadataUuid, metadataResourceVisibility, true);
-
-        final String sourceResourceTypeDir = getMetadataDir(context, sourceMetadataId) + CMISConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
-        final String targetResourceTypeDir = getMetadataDir(context, targetMetadataId) + CMISConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
-
-
-        Folder sourceParentFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(sourceResourceTypeDir);
-        Folder targetParentFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(targetResourceTypeDir);
-
-        Map<String, Document> documentMap = getCmisObjectMap(sourceParentFolder, null);
-        for (Map.Entry<String, Document> entry : documentMap.entrySet()) {
-            Document document = entry.getValue();
-            if (document instanceof Document) {
-                document.copy(targetParentFolder);
-            }
-        }
-
     }
 
     private String getMetadataDir(ServiceContext context, final int metadataId) {
