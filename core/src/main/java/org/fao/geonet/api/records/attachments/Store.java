@@ -317,12 +317,11 @@ public interface Store {
      *
      *
      * @param context
-     * @param sourceUuid               The metadata UUID
-     * @param targetUuid               The metadata UUID
+     * @param metadataUuid               The metadata UUID
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
      *
      */
-    void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
+    void copyResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
 
     /**
      * Get the resource description.

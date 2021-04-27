@@ -203,6 +203,11 @@ public abstract class AbstractStore implements Store {
         return patchResourceStatus(context, metadataUuid, resourceId, metadataResourceVisibility, true);
     }
 
+    @Override
+    public void copyResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility) throws Exception {
+
+    }
+
     protected String getFilename(final String metadataUuid, final String resourceId) {
         // It's not always clear when we get a resourceId or a filename
         String prefix = metadataUuid + "/attachments/";
