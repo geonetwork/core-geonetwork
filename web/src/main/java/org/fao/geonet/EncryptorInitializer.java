@@ -292,8 +292,7 @@ public class EncryptorInitializer {
      */
     private PropertiesConfiguration getEncryptorPropertiesFile(GeonetworkDataDirectory dataDirectory)
         throws Exception {
-        Path securityPropsPath = dataDirectory.getConfigDir().resolve("encryptor")
-            .resolve("encryptor.properties");
+        Path securityPropsPath = dataDirectory.getConfigDir().resolve(Geonet.File.ENCRYPTOR_CONFIGURATION);
 
         // Create the file if doesn't exists
         if (!Files.exists(securityPropsPath)) {
