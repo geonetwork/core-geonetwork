@@ -219,7 +219,8 @@
           state.old.path.indexOf(that.METADATA) === 0
           && state.current.params.query_string;
 
-        if (state.old.path != that.SEARCH &&
+        if (state.old.path != '' &&
+            state.old.path != that.SEARCH &&
             state.old.path != that.HOME &&
             !isFilterFromRecordView &&
             state.current.path == that.SEARCH) {
