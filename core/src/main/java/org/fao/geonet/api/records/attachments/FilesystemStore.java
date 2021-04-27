@@ -235,7 +235,14 @@ public class FilesystemStore extends AbstractStore {
 
     @Override
     public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility) throws Exception {
-        //TODO:
+        for (MetadataResourceVisibility visibility: MetadataResourceVisibility.values()) {
+            final List<MetadataResource> resources = getResources(context, sourceUuid, visibility, null, false);
+            for (MetadataResource resource: resources) {
+                try (Store.ResourceHolder holder = getResource(context, targetUuid, visibility, resource.getFilename(), true)) {
+                    putResource(context, targetUuid, holder.getPath(), visibility, true);
+                }
+            }
+        }
     }
 
     @Override
