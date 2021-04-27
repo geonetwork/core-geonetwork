@@ -96,7 +96,6 @@ public final class Geonet {
         public static final String UPDATE_FIXED_INFO = "update-fixed-info.xsl";
         public static final String UPDATE_FIXED_INFO_SUBTEMPLATE = "update-fixed-info-subtemplate.xsl";
         public static final String UPDATE_CHILD_FROM_PARENT_INFO = "update-child-from-parent-info.xsl";
-        public static final String ENCRYPTOR_DIR = "encryptor";
         public static final String EXTRACT_UUID = "extract-uuid.xsl";
         public static final String EXTRACT_TITLES = "extract-titles.xsl";
         public static final String EXTRACT_DEFAULT_LANGUAGE = "extract-default-language.xsl";
@@ -119,7 +118,9 @@ public final class Geonet {
         public static final String METADATA_BRIEF = "metadata-brief.xsl";
         public static final String METADATA_BASEBLANK = "blanks/metadata-schema00";
         public static final String METADATA_BLANK = "blanks/metadata-schema";
+        public static final String ENCRYPTOR_CONFIGURATION = "encryptor.properties";
         public static final int METADATA_MAX_BLANKS = 20;
+
     }
 
     public static final class SchemaPath {

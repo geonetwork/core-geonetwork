@@ -797,6 +797,28 @@
               <overwrite>true</overwrite>
             </configuration>
           </execution>
+          <execution>
+            <id>copy-encryptor-config-to-source</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <escapeString>\</escapeString>
+              <includeEmptyDirs>false</includeEmptyDirs>
+              <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/src/main/webResources/WEB-INF/data/config</directory>
+                  <filtering>true</filtering>
+                  <includes>
+                    <include>encryptor.properties</include>
+                  </includes>
+                </resource>
+              </resources>
+              <overwrite>false</overwrite>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
