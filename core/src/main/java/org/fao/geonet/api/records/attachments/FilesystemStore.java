@@ -234,12 +234,12 @@ public class FilesystemStore extends AbstractStore {
     }
 
     @Override
-    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility) throws Exception {
+    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
         for (MetadataResourceVisibility visibility: MetadataResourceVisibility.values()) {
-            final List<MetadataResource> resources = getResources(context, sourceUuid, visibility, null, false);
+            final List<MetadataResource> resources = getResources(context, sourceUuid, visibility, null, sourceApproved);
             for (MetadataResource resource: resources) {
-                try (Store.ResourceHolder holder = getResource(context, targetUuid, visibility, resource.getFilename(), true)) {
-                    putResource(context, targetUuid, holder.getPath(), visibility, true);
+                try (Store.ResourceHolder holder = getResource(context, targetUuid, visibility, resource.getFilename(), targetApproved)) {
+                    putResource(context, targetUuid, holder.getPath(), visibility, targetApproved);
                 }
             }
         }

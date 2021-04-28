@@ -68,12 +68,8 @@ public abstract class StoreUtils {
     public static void copyDataDir(ServiceContext context, String oldUuid, String newUuid, boolean newApproved) throws Exception {
         final Store store = context.getBean("resourceStore", Store.class);
         for (MetadataResourceVisibility visibility: MetadataResourceVisibility.values()) {
-            final List<MetadataResource> resources = store.getResources(context, oldUuid, visibility, null, true);
-            for (MetadataResource resource: resources) {
-                try (Store.ResourceHolder holder = store.getResource(context, oldUuid, visibility, resource.getFilename(), true)) {
-                    store.putResource(context, newUuid, holder.getPath(), visibility, newApproved);
-                }
-            }
+            boolean oldApproved = true;
+            store.copyResources(context, oldUuid, newUuid, visibility, oldApproved, newApproved);
         }
     }
 
@@ -130,11 +126,9 @@ public abstract class StoreUtils {
 
             // In order to sync the 2 folders, we need to identify the records to be added, deleted and updated.
             List<MetadataResource> targetDeleteResources  = exceptMetadataResource(targetResources, sourceResources);
-            List<MetadataResource> targetAddResources = exceptMetadataResource(sourceResources, targetResources);
-            List<MetadataResource> targetUpdateResources = exceptMetadataResource(targetResources, targetDeleteResources);
 
             // copy all resources from source to target
-            store.copyResources(context, sourceUuid, targetUuid, visibility);
+            store.copyResources(context, sourceUuid, targetUuid, visibility, sourceApproved, targetApproved);
 
             // delete old records
             for (MetadataResource resource: targetDeleteResources) {

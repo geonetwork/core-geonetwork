@@ -238,6 +238,9 @@ public class CMISStore extends AbstractStore {
             }
             try {
                 doc = parentFolder.createDocument(properties, contentStream, VersioningState.MAJOR);
+                if (MapUtils.isNotEmpty(additionalProperties)) {
+                    doc.updateProperties(additionalProperties, true);
+                }
                 // Avoid CMIS API call is info is not enabled.
                 if (Logger.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
                     Log.info(Geonet.RESOURCES,
@@ -398,8 +401,8 @@ public class CMISStore extends AbstractStore {
     }
 
     @Override
-    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility) throws Exception {
-        final int sourceMetadataId = canDownload(context, sourceUuid, metadataResourceVisibility, false);
+    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
+        final int sourceMetadataId = canEdit(context, sourceUuid, metadataResourceVisibility, sourceApproved);
         final String sourceResourceTypeDir = getMetadataDir(context, sourceMetadataId) + CMISConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
         try {
             Folder sourceParentFolder = (Folder) CMISConfiguration.getClient().getObjectByPath(sourceResourceTypeDir);
@@ -409,7 +412,7 @@ public class CMISStore extends AbstractStore {
                 Document sourceDocument = sourceEntry.getValue();
                 if (sourceDocument instanceof Document) {
                     Map<String, Object> sourceProperties = getSecondaryProperties(sourceDocument);
-                    putResource(context, targetUuid, sourceDocument.getName(), sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, true, sourceProperties);
+                    putResource(context, targetUuid, sourceDocument.getName(), sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, targetApproved, sourceProperties);
                 }
             }
         } catch (CmisObjectNotFoundException  e) {

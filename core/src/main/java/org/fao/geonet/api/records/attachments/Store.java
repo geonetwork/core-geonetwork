@@ -319,10 +319,12 @@ public interface Store {
      * @param context
      * @param sourceUuid               The source metadata UUID
      * @param targetUuid               The target metadata UUID
+     * @param sourceApproved           The source approved flag
+     * @param targetApproved           The target approved flag
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
      *
      */
-    void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
+    void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception;
 
     /**
      * Get the resource description.
