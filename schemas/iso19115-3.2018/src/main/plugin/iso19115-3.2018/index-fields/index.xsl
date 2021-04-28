@@ -1045,7 +1045,7 @@
 
 
       <xsl:for-each select="mdb:resourceLineage/*">
-        <xsl:copy-of select="gn-fn-index:add-multilingual-field('lineage', mrl:lineage/mrl:LI_Lineage/
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('lineage', 
                                 mrl:statement, $allLanguages)"/>
 
         <xsl:for-each select=".//mrl:source[@uuidref != '']">
