@@ -57,10 +57,15 @@ ul.gn-resultview li.list-group-item {
     .container, .container-fluid {
       width: auto;
       padding: 0;
+      &> .navbar-header {
+        margin-right: 0;
+        margin-left: 0;
+      }
     }
     .navbar-collapse {
       background: #fff;
     }
+
     .navbar-nav > li > a, .navbar-nav > .open > a, .navbar-nav > .active > a {
       color: @navbar-default-link-color;
       &:hover, &:focus {
@@ -208,6 +213,7 @@ ul.gn-resultview li.list-group-item {
       padding: 25px 10px 50px 10px;
       @media (max-width: @screen-xs-max) {
         margin-left: 0;
+        padding: 25px 0 50px 0;
       }
       // dashboard
       .gn-row-admin-buttons {
@@ -346,6 +352,9 @@ ul.gn-resultview li.list-group-item {
         .gn-harvester-name {
           display: inline-block;
           width: 80%;
+          @media (max-width: 360px) {
+            width: 75%;
+          }
         }
       }
     }
