@@ -1262,6 +1262,30 @@ public final class XslUtil {
         return res;
     }
 
+    public static String getKeywordValueByUri(String uri, String thesaurusId, String langCode) {
+        if (StringUtils.isEmpty(thesaurusId)) {
+            return "";
+        }
+
+        try {
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
+            ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+
+            thesaurusId = thesaurusId.replaceAll("geonetwork.thesaurus.", "");
+            Thesaurus thesaurus = thesaurusManager.getThesaurusByName(thesaurusId);
+
+            if (thesaurus != null) {
+                KeywordBean keywordBean = thesaurus.getKeyword(uri, langCode);
+                if (keywordBean != null) {
+                    return keywordBean.getPreferredLabel(langCode);
+                }
+            }
+            return "";
+        } catch (Exception ex) {
+        }
+        return "";
+    }
+
 
     public static String getKeywordUri(String keyword, String thesaurusId, String langCode) {
         if (StringUtils.isEmpty(thesaurusId)) {
