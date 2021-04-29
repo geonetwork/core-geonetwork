@@ -1091,7 +1091,7 @@
               });
             }
           };
-          
+
           init();
 
           // model -> view
@@ -1332,6 +1332,7 @@
 
           // Replace lang in link
           link = link.replace('{{lang}}', gnLangs.getCurrent());
+          link = link.replace('{{isoLang}}', gnLangs.getIso2Lang(gnLangs.getCurrent()));
           link = link.replace('{{node}}', gnConfig.env.node);
 
           // Insert debug mode between service and route
