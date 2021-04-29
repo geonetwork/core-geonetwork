@@ -659,7 +659,7 @@ public class EditLib {
                             LOGGER_ADD_ELEMENT.error(String.format(
                                 " > adding fragment from XPath in element %s which has no parent. This usually means that the element is not allowed in the XSD. Check this element in the metadata record.",
                                 propEl.getName()
-                                ));
+                            ));
                         } else {
                             int index = parent.indexOf(propEl);
                             parent.addContent(index, child);
@@ -674,9 +674,11 @@ public class EditLib {
                         }
                     }
                 } else if (o instanceof Text) {
-                    propEl.addContent((Content)(new Text(((Text) o).getText())));
+                    propEl.addContent((Content) (new Text(((Text) o).getText())));
                 }
             }
+        } else if (newValue.getName().equals(SpecialUpdateTags.DELETE)) {
+            // Ignore the node
         } else if (newValue.getName().equals(propEl.getName()) &&
             newValue.getNamespace().equals(propEl.getNamespace())) {
             // If the target element has the same name as the element to add
@@ -814,6 +816,7 @@ public class EditLib {
             // when adding the fragment child nodes or suggestion may also be added.
             // In this case, the snippet only has to be inserted
             currentNode.removeContent();
+
             doAddFragmentFromXpath(metadataSchema, value.getNodeValue(), currentNode);
         } else {
             if (isAttribute) {
