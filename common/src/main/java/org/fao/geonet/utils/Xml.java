@@ -1124,8 +1124,9 @@ public final class Xml {
         Pattern pattern;
         Matcher matcher;
 
-        // Regular expression to see if it starts and ends with the same element
-        final String XML_PATTERN_STR = "<(\\S+?)(.*?)>(.*?)</\\1>";
+        // Regular expression to see if it starts and ends with the same element or
+        // it's a self-closing element.
+        final String XML_PATTERN_STR = "<(\\S+?)(.*?)>(.*?)</\\1>|<(\\S+?)(.*?)/>";
 
         if (inXMLStr != null && inXMLStr.trim().length() > 0) {
             String trimedString = inXMLStr.trim();
