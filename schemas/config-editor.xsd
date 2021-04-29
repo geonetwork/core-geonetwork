@@ -755,6 +755,7 @@ For overview, a simple manager can be used or the general one:
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="text"/>
         <xs:element ref="directive"/>
+        <xs:element ref="section"/>
       </xs:choice>
     </xs:complexType>
   </xs:element>
