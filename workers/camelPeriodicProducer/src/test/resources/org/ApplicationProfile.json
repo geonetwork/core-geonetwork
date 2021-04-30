@@ -68,10 +68,10 @@
     {
       "name": "GRAPHES",
       "hidden": true,
-      "suffix": "&from=${filtre_range_Date.from}&to=${filtre_range_Date.to}&typeParam=${filtre_PARAMETRES}&support=${filtre_SUPPORTS_NIVEAUX_PRELEVEMENT}"
+      "suffix": "&from=${filtre_range_Date.from}&to=${filtre_range_Date.to}&typeParam=${filtre_PARAMETRE}&support=${filtre_SUPPORTS_NIVEAUX_PRELEVEMENT}"
     }
   ],
   "treeFields": [
-    "PARAMETRES"
+    "PARAMETRE"
   ]
 }
