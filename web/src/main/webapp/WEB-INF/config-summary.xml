@@ -196,12 +196,13 @@
     <facet name="eolien_stade" indexKey="thesaurus-local.theme.eolien_stade" label="eolien_stade"/>
     <facet name="eolien_type" indexKey="thesaurus-local.theme.Eolien_type" label="eolien_type"/>
 
-    <facet name="mission-atlantic-ressource" indexKey="thesaurus-local.theme.mission-atlantic-ressource" label="mission-atlantic-ressource"/>
-    <facet name="mission-atlantic-area" indexKey="thesaurus-local.theme.mission-atlantic-area" label="mission-atlantic-area"/>
-    <facet name="mission-atlanic-data-type" indexKey="thesaurus-local.theme.mission-atlanic-data-type" label="mission-atlanic-data-type"/>
-    <facet name="odemm-ecological-components" indexKey="thesaurus-local.theme.odemm-ecological-components" label="odemm-ecological-components"/>
-    <facet name="odemm-pressures" indexKey="thesaurus-local.theme.odemm-pressures" label="odemm-pressures"/>
-    <facet name="odemm-sectors" indexKey="thesaurus-local.theme.odemm-sectors" label="odemm-sectors"/>
+    <facet name="mission-atlantic-resources" indexKey="thesaurus-local.theme.mission-atlantic-resources" label="mission-atlantic-resources"/>
+    <facet name="mission-atlantic-case-studies" indexKey="thesaurus-local.theme.mission-atlantic-case-studies" label="mission-atlantic-case-studies"/>
+    <facet name="mission-atlantic-odemm" indexKey="thesaurus-local.theme.mission-atlantic-odemm" label="mission-atlantic-odemm"/>
+    <facet name="mission-atlantic-bodc-parameters" indexKey="thesaurus-local.theme.mission-atlantic-bodc-parameters" label="mission-atlantic-bodc-parameters"/>
+    <facet name="mission-atlantic-data-type" indexKey="thesaurus-local.theme.mission-atlantic-data-type" label="mission-atlantic-data-type"/>
+    <facet name="mission-atlantic-goos-observing-platforms" indexKey="thesaurus-local.theme.mission-atlantic-goos-observing-platforms" label="mission-atlantic-goos-observing-platforms"/>
+    <facet name="mission-atlantic-format" indexKey="thesaurus-local.theme.mission-atlantic-format" label="mission-atlantic-format"/>
 
     <facet name="mdActions" indexKey="_mdActions" label="mdActions"/>
   </facets>
@@ -355,12 +356,13 @@
       <item facet="eolien_jeu_de_donnees" max="300"/>
       <item facet="eolien_stade" max="300"/>
       <item facet="eolien_type" max="300"/>
-      <item facet="mission-atlantic-ressource" max="300"/>
-      <item facet="mission-atlantic-area" max="300"/>
-      <item facet="mission-atlanic-data-type" max="300"/>
-      <item facet="odemm-ecological-components" max="300"/>
-      <item facet="odemm-pressures" max="300"/>
-      <item facet="odemm-sectors" max="300"/>      
+      <item facet="mission-atlantic-resources" max="300"/>
+      <item facet="mission-atlantic-case-studies" max="300"/>
+      <item facet="mission-atlantic-odemm" max="300"/>
+      <item facet="mission-atlantic-bodc-parameters" max="300"/>
+      <item facet="mission-atlantic-data-type" max="300"/>
+      <item facet="mission-atlantic-goos-observing-platforms" max="300"/>      
+      <item facet="mission-atlantic-format" max="300"/>   
       <item facet="mdActions"/>
       <!--<item facet="metadataPOC" max="15"/>-->
     </summaryType>
