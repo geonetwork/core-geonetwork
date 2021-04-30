@@ -989,9 +989,11 @@
                       <xsl:choose>
                         <xsl:when test="starts-with(., 'xpath::')">
                           <xsl:variable name="xpath" select="substring-after(., 'xpath::')"/>
+
+
                           <xsl:attribute name="{name(.)}">
                             <saxon:call-template name="{concat('evaluate-', $schema)}">
-                              <xsl:with-param name="base" select="$metadata"/>
+                              <xsl:with-param name="base" select="$metadata//*[gn:element/@ref = $parentEditInfo/@ref]"/>
                               <xsl:with-param name="in"
                                               select="concat('/../', $xpath)"/>
                             </saxon:call-template>
