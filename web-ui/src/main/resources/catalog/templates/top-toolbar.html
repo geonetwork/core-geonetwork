@@ -6,6 +6,7 @@
            data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
     </a>
     <a class="hidden-sm hidden-md hidden-lg btn btn-link pull-left"
+       data-ng-if="gnCfg.mods.header.showGNName"
        data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
       <span class="gn-name"
             data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
@@ -27,7 +28,7 @@
   <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav gn-menu-xs" role="menu">
       <li class="clearfix hidden-xs" data-ng-if="gnCfg.mods.home.enabled">
-        <a class="pull-left gn-logo-link" 
+        <a class="pull-left gn-logo-link"
            data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <img class="gn-logo"
                data-ng-hide="{{gnCfg.mods.header.isLogoInHeader}}"
