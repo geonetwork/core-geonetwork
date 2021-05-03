@@ -24,7 +24,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if not os.path.exists(args.input):
-        print("{} does not exists. Exiting....".format(args.input))
+        print("{} does not exists. Exiting".format(args.input))
         exit()
 
     if not os.path.exists(args.output):
