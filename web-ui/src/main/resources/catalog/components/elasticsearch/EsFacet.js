@@ -200,6 +200,11 @@
               "field": "indexingErrorMsg.keyword",
               "size": 10
             }
+          },
+          "isHarvested": {
+            "terms": {
+              "field": "isHarvested"
+            }
           }
         },
         source: {
