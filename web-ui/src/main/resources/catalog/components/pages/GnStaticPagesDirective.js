@@ -24,11 +24,11 @@
 (function() {
   goog.provide('gn_static_pages_directive');
 
-  var module = angular.module('gn_static_pages_directive', []);
+  var module = angular.module('gn_static_pages_directive', ['ngSanitize']);
 
   module.directive(
-      'gnStaticPagesViewer', ['$http', '$location',
-        function($http, $location) {
+      'gnStaticPagesViewer', ['$http', '$location', '$sce',
+        function($http, $location, $sce) {
         return {
           restrict: 'AEC',
           replace: true,
@@ -44,7 +44,7 @@
                 method: 'GET',
                 url: '../api/pages/' + $scope.language + '/' + page + '/content'
               }).then(function mySuccess(response) {
-                $scope.content = response.data;
+                $scope.content = $sce.trustAsHtml(response.data);
               }, function myError(response) {
                 $scope.content = 'Page not available';
                 console.log(response.statusText);
