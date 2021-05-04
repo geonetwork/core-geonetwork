@@ -1,10 +1,12 @@
 <div>
   <div class="clearfix">
     <div data-ng-show="searchResults.count > 0">
-      <ng-pluralize count="searchResults.count"
-                    when="{'0 ': ('noRecordFound' | translate),
-              'one': '1 ' +  ('record' | translate),
-              'other': '{} ' +  ('records' | translate)}"/>
+      <strong>
+        <ng-pluralize count="searchResults.count"
+                      when="{'0 ': ('noRecordFound' | translate),
+                'one': '1 ' +  ('record' | translate),
+                'other': '{} ' +  ('records' | translate)}"/>
+      </strong>
     </div>
     <div data-ng-show="options.selection.mode.indexOf('local') === -1">
       <div class="btn-group pull-right"
