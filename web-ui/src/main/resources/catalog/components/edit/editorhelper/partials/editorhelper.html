@@ -51,7 +51,7 @@
     <div class="col-xs-4">
       <select class="form-control"
               data-ng-model="config.selected"
-              data-ng-options="o as o['#text'] for o in config.option">
+              data-ng-options="o as o['#text'] disable when o.disabled for o in config.option">
         <option value="" disabled="" data-translate="">recommendedValues</option>
       </select>
     </div>
