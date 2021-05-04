@@ -109,6 +109,9 @@
             </div>
           </div>
           <div class="panel-body">
+            <div data-ng-show="searchResults.records.length > 0"
+                 data-es-facets="searchResults.facets"></div>
+
             <table class="table table-striped">
               <tr data-ng-repeat="md in searchResults.records">
                 <td>
@@ -158,14 +161,6 @@
               </tr>
             </table>
             <div data-gn-pagination="paginationInfo"/>
-
-            <div data-translate=""
-                 data-ng-if="searchResults.facets[0].items.length > 0">top10IndexingErrors</div>
-            <ul>
-              <li data-ng-repeat="e in searchResults.facets[0].items">
-                {{::e.value}} ({{::e.count}})
-              </li>
-            </ul>
           </div>
         </div>
       </form>
