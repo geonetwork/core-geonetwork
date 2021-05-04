@@ -99,8 +99,7 @@ public class PagesAPI {
 
         checkCorrectFormat(data, link, format);
 
-        if (pageRepository.findById(new PageIdentity(language, pageId)).get() == null) {
-
+        if (!pageRepository.findById(new PageIdentity(language, pageId)).isPresent()) {
             Page page = getEmptyHiddenDraftPage(language, pageId, format);
 
             fillContent(data, link, page);
