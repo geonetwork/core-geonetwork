@@ -94,8 +94,9 @@
    * in labels.xml for each schema.
    *
    */
-  module.directive('gnEditorHelper', ['$timeout', '$translate',
-    function($timeout, $translate) {
+  module.directive('gnEditorHelper', [
+    '$timeout', '$translate', 'gnCurrentEdit',
+    function($timeout, $translate, gnCurrentEdit) {
 
       return {
         restrict: 'A',
@@ -130,7 +131,6 @@
             }
           };
 
-
           // Load the config from the textarea containing the helpers
           scope.config =
               angular.fromJson($('#' + scope.ref + '_config')[0].value);
@@ -141,6 +141,20 @@
           }
           if (angular.isArray(scope.config)) {
             scope.config.option = scope.config;
+          }
+
+          // Add record formats if any
+          scope.isProtocol = attrs.tooltip.indexOf && attrs.tooltip.indexOf('protocol|') !== -1;
+          if (scope.isProtocol && gnCurrentEdit.dataFormats.length > 0) {
+            var labelPrefix = $translate.instant('recordFormatDownload');
+            var formats = [{'#text': $translate.instant('recordFormats'), disabled: true}];
+            for (var j = 0; j < gnCurrentEdit.dataFormats.length; j ++) {
+              var f = gnCurrentEdit.dataFormats[j];
+              var f = {'@value': f.value, '#text': labelPrefix + f.label};
+              formats.push(f);
+            }
+            formats.push({'#text': $translate.instant('commonProtocols'), disabled: true});
+            scope.config.option = formats.concat(scope.config.option);
           }
 
           // Check if current value is one of the suggestion
