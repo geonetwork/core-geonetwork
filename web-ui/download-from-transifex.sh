@@ -33,7 +33,8 @@ l=(
     'is::is'
     'ru::ru'
     'zh::zh',
-    'sk::sk_SK'
+    'sk::sk_SK',
+    'sv::sv_SE'
 )
 
 for index in "${l[@]}" ; do
