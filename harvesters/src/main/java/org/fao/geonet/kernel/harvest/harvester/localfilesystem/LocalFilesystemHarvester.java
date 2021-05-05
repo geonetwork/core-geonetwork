@@ -231,19 +231,23 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
     }
 
     private void runBeforeScript() throws IOException, InterruptedException {
-		if (StringUtils.isEmpty(params.beforeScript)) {
+        if (StringUtils.isEmpty(params.beforeScript)) {
 			return;
 		}
-		log.info("Running the before script: " + params.beforeScript);
-        List<String> args = new ArrayList<String>(Arrays.asList(params.beforeScript.split(" ")));
-        Process process = new ProcessBuilder(args).
-				redirectError(ProcessBuilder.Redirect.INHERIT).
-				redirectOutput(ProcessBuilder.Redirect.INHERIT).
-				start();
-		int result = process.waitFor();
-		if ( result != 0 ) {
-			log.warning("The beforeScript failed with exit value=" + Integer.toString(result));
-			throw new RuntimeException("The beforeScript returned an error: " + Integer.toString(result));
-		}
+
+        throw new InterruptedException("Script option is currently disabled.");
+        // TODO: Script MUST be limited to well known ones added by a
+        // catalog admin in the data directory. To be improved
+        //		log.info("Running the before script: " + params.beforeScript);
+        //        List<String> args = new ArrayList<String>(Arrays.asList(params.beforeScript.split(" ")));
+        //        Process process = new ProcessBuilder(args).
+        //				redirectError(ProcessBuilder.Redirect.INHERIT).
+        //				redirectOutput(ProcessBuilder.Redirect.INHERIT).
+        //				start();
+        //		int result = process.waitFor();
+        //		if ( result != 0 ) {
+        //			log.warning("The beforeScript failed with exit value=" + Integer.toString(result));
+        //			throw new RuntimeException("The beforeScript returned an error: " + Integer.toString(result));
+        //		}
 	}
 }
