@@ -618,15 +618,18 @@
             //   }
             // },
             if(meta && meta.treeKeySeparator) {
-              name = t.replaceAll(meta.treeKeySeparator, '^');
+              name = t.replaceAll(meta.treeKeySeparator, separator);
             }
 
             if (name.indexOf(separator) === 0) {
               name = name.slice(1);
             }
           }
+        } else {
+          if(meta && meta.treeKeySeparator) {
+            name = name.replaceAll(meta.treeKeySeparator, separator);
+          }
         }
-
 
         var g = name.split(separator);
         createNode(tree, fieldId, g, 0, e);
