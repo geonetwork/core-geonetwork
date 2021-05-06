@@ -346,7 +346,11 @@ public class Importer {
                     // In GeoNetwork 3.x, links to resources changed:
                     // * thumbnails contains full URL instead of file name only
                     // * API mode change old URL structure.
-                    MetadataResourceDatabaseMigration.updateMetadataResourcesLink(metadata, null, sm);
+                    try {
+                        MetadataResourceDatabaseMigration.updateMetadataResourcesLink(metadata, null, sm);
+                    } catch (UnsupportedOperationException ex) {
+                        // Ignore, this is triggered when importing templates with empty gmd:fileIdentifier, should not fail.
+                    }
                 }
 
                 if (validate) {
