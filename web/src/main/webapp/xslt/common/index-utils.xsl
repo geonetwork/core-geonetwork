@@ -416,7 +416,25 @@
       <xsl:element name="{$thesaurusField}">
         <xsl:attribute name="type" select="'object'"/>
         [<xsl:for-each select="$keywords">
-        <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', ., $allLanguages)/text()"/>
+        <xsl:variable name="uri"
+                      select="util:getKeywordUri((*/text())[1], $thesaurusId, $mainLanguage)"/>
+
+        <xsl:variable name="k">
+          <xsl:choose>
+            <xsl:when test="$uri != ''">
+              <!-- Add an anchor -->
+              <xsl:copy>
+                <gmx:Anchor xlink:href="{$uri}"></gmx:Anchor>
+                <xsl:copy-of select="*"/>
+              </xsl:copy>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:copy-of select="."/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+        <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', $k, $allLanguages)/text()"/>
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>]
       </xsl:element>
@@ -436,7 +454,6 @@
                 </xsl:if>
               </xsl:if>
             </xsl:variable>
-
             <xsl:for-each select="$nodes">
               <xsl:variable name="keywordTree" as="node()*">
                 <xsl:call-template name="get-keyword-tree-values">
