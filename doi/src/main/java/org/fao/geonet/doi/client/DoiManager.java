@@ -58,7 +58,6 @@ public class DoiManager {
     private static final String DOI_REMOVE_XSL_PROCESS = "process/doi-remove.xsl";
     public static final String DATACITE_XSL_CONVERSION_FILE = "formatter/datacite/view.xsl";
     public static final String DOI_PREFIX_PARAMETER = "doiPrefix";
-    public static final String HTTPS_DOI_ORG = "https://doi.org/";
 
     private DoiClient client;
     private String doiPrefix;
@@ -209,14 +208,14 @@ public class DoiManager {
             String currentDoi = schema.queryString(DOI_GET_SAVED_QUERY, xml);
             if (StringUtils.isNotEmpty(currentDoi)) {
                 // Current doi does not match the one going to be inserted. This is odd
-                if (!currentDoi.equals(HTTPS_DOI_ORG + doi)) {
+                if (!currentDoi.equals(client.createUrl("") + doi)) {
                     throw new DoiClientException(String.format(
                         "Record '%s' already contains a DOI '%s' which is not equal " +
                             "to the DOI about to be created (ie. '%s'). " +
                             "Maybe current DOI does not correspond to that record? " +
                             "This may happen when creating a copy of a record having " +
                             "an existing DOI.",
-                        metadata.getUuid(), currentDoi, HTTPS_DOI_ORG + doi));
+                        metadata.getUuid(), currentDoi, client.createUrl("") + doi));
                 }
 
                 throw new DoiClientException(String.format(
@@ -259,9 +258,9 @@ public class DoiManager {
         } catch (Exception e) {
             throw new DoiClientException(String.format(
                 "Record '%s' converted to DataCite format is invalid. Error is: %s. " +
-                    "Required fields in DataCite are: identifier, creators, titles, publisher, publicationYear, resourceType. Check the DataCite format output at " +
-                    "%sapi/records/%s/formatters/datacite?output=xml and " +
-                    "adpat the record content to add missing information.",
+                    "Required fields in DataCite are: identifier, creators, titles, publisher, publicationYear, resourceType. " +
+                    "<a href='%sapi/records/%s/formatters/datacite?output=xml'>Check the DataCite format output</a> and " +
+                    "adapt the record content to add missing information.",
                 metadata.getUuid(), e.getMessage(), sm.getNodeURL(), metadata.getUuid()));
         }
 
@@ -271,9 +270,11 @@ public class DoiManager {
         final String doiResponse = client.retrieveDoi(doi);
         if (doiResponse != null) {
             throw new DoiClientException(String.format(
-                "Record '%s' looks to be already published on DataCite on DOI '%s'. Check DataCite DOI: %s. " +
+                "Record '%s' looks to be already published on DataCite with DOI <a href='%s'>'%s'</a>. DOI on Datacite point to: <a href='%s'>%s</a>. " +
                     "If the DOI is not correct, remove it from the record and ask for a new one.",
-                metadata.getUuid(), doi, doiResponse));
+                metadata.getUuid(),
+                client.createUrl("doi") + "/" + doi,
+                doi, doi, doiResponse));
         }
         // TODO: Could be relevant at some point to return states (draft/findable)
 
@@ -305,20 +306,19 @@ public class DoiManager {
         String landingPage = landingPageTemplate.replace(
                         "{{uuid}}", metadata.getUuid());
         doiInfo.put("doiLandingPage", landingPage);
+        doiInfo.put("doiUrl",
+            client.createUrl("doi") + "/" + doiInfo.get("doi"));
         client.createDoi(doiInfo.get("doi"), landingPage);
 
 
         // Add the DOI in the record
-        Element recordWithDoi = setDOIValue(doiInfo.get("doi"), metadata.getDataInfo().getSchemaId(), metadata.getXmlData(false));
+        Element recordWithDoi = setDOIValue(doiInfo.get("doiUrl"), metadata.getDataInfo().getSchemaId(), metadata.getXmlData(false));
         // Update the published copy
         //--- needed to detach md from the document
 //        md.detach();
 
         dm.updateMetadata(context, metadata.getId() + "", recordWithDoi, false, true, true,
             context.getLanguage(), new ISODate().toString(), true);
-
-        doiInfo.put("doiUrl", HTTPS_DOI_ORG + doiInfo.get("doi"));
-
     }
 
 
@@ -377,7 +377,7 @@ public class DoiManager {
         }
 
         Map<String, Object> params = new HashMap<>(1);
-        params.put("doi", HTTPS_DOI_ORG + doi);
+        params.put("doi", doi);
         return Xml.transform(md, styleSheet, params);
     }
 
