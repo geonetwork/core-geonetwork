@@ -113,12 +113,12 @@
            data-gn-click-and-spin="closeTask(h)">closeTask</a>
 
         <div data-ng-if="response.doiCreationTask.check"
-             data-ng-class="{'text-danger': response.doiCreationTask.check.status === 400}">
-        {{response.doiCreationTask.check.data.description}}
+             data-ng-class="{'text-danger': response.doiCreationTask.check.status === 400}"
+             data-ng-bind-html="response.doiCreationTask.check.data.description">
         </div>
         <div data-ng-if="response.doiCreationTask.create"
-             data-ng-class="{'text-danger': response.doiCreationTask.create.status === 400}">
-          {{response.doiCreationTask.create.data.description}}
+             data-ng-class="{'text-danger': response.doiCreationTask.create.status === 400}"
+             data-ng-bind-html="response.doiCreationTask.create.data.description">
         </div>
       </div>
     </div>
