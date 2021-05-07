@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -349,6 +349,9 @@
               post: function(scope, element, attrs) {
                 scope.clearFormOnProtocolChange = !(attrs.clearFormOnProtocolChange == "false"); //default to true (old behavior)
                 scope.popupid = attrs['gnPopupid'];
+                $(scope.popupid).on('hidden.bs.modal', function(){
+                  scope.$broadcast('onlineSrcDialogHidden', {"popupid": scope.popupid});
+                });
 
                 scope.config = null;
                 scope.linkType = null;
@@ -680,6 +683,7 @@
                       scope.params.desc= '';
                       initMultilingualFields();
                     }
+                    scope.$broadcast('onlineSrcDialogInited', {"popupid": scope.popupid});
                   };
                   function loadConfigAndInit(withInit) {
                     gnSchemaManagerService.getEditorAssociationPanelConfig(
