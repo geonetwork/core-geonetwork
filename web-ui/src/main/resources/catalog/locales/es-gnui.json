@@ -19,9 +19,9 @@
   "results.records.hits.found": "{hits, plural, =0{No documents match the specified search.} one{} other{{hits} records found.}}",
   "results.records.hits.found=0.help": "Suggestions: <ul class='list-disc list-inside'><li>Try other words</li><li>Specify fewer words</li></ul>",
   "results.sortBy.dateStamp": "Last updates",
-  "results.sortBy.popularity": "Popularity",
+  "results.sortBy.popularity": "Popularidad",
   "results.sortBy.relevancy": "Relevancy",
   "search.field.any.placeholder": "Search datasets, services and maps ...",
-  "search.field.sortBy": "Sort by",
+  "search.field.sortBy": "Ordenar por",
   "search.loading": "Loading ..."
 }

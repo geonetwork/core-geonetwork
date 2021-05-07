@@ -367,6 +367,8 @@
     "shareByEmail": "Sdílet e-mailem",
     "zoomto": "Najet na",
     "recordNotFound": "Záznam s identifikátorem <strong>{{uuid}}</strong> nebyl nalezen nebo nebyl s vámi sdílen. Zkuste se <a href=\"catalog.signin?redirect={{url}}\">přihlásit</a>, pokud máte účet.",
+    "recordNotFoundAuthenticatedUser": "Záznam s identifikátorem <strong>{{uuid}}</strong> nebyl nalezen nebo s vámi není sdílen.",
+    "recordNotFoundAuthenticatedAdministrator": "Záznam s identifikátorem <strong>{{uuid}}</strong> nebyl nalezen",
     "intersectWith": "Protíná se s",
     "fullyOutsideOf": "Zcela mimo",
     "encloses": "Zahrnující",
@@ -526,5 +528,6 @@
     "GUFemail": "Vaše e-mailová adresa",
     "GUForganization": "Vaše Organizace",
     "printUnsupportedLayerTypes": "Následující typy vrstev jsou k dispozici, ale nelze je vytisknout",
-    "rssFeed": "RSS kanál"
+    "rssFeed": "RSS kanál",
+    "approve": "Schválit"
 }

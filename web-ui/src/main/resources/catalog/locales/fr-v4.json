@@ -89,6 +89,7 @@
   "isPublishedToAll-false": "Non",
   "indexRecordsWithErrors": "Fiches avec des erreurs d'indexation",
   "top10IndexingErrors": "Les principales erreurs d'indexation",
+  "facet-indexingErrorMsg": "Erreurs d'indexation",
   "rebuildIndex": "Réindexer les fiches",
   "dropIndexAndRebuild": "Supprimer l'index et réindexer",
   "rebuildIndexHelp": "Lors de la reconstruction de l'index, la recherche peut retourner des résultats incomplets et l'opération GetRecords du CSW peut être désactivée (selon votre configuration). Utiliser cette fonction lorsque que le traffic au niveau du catalogue est faible. Il est recommandé de reconstruire l'index après avoir effectuer des changements directement dans la base de données. Si vous modifier le schéma de l'index (cf. <a href='https://github.com/geonetwork/core-geonetwork/blob/es/web/src/main/webResources/WEB-INF/data/config/index/records.json'>records.json</a>), alors vous devez supprimer et recréer l'index.",
@@ -148,5 +149,13 @@
   "translationPackCacheCleared": "Cache vidé.",
   "translationPackCacheClearFailure": "Erreur lors du vidage du cache de traductions !",
   "ui-isVegaEnabled": "Activer les facettes interactives (utilisant Vega)",
-  "ui-exactMatchToggle": "Afficher l'option de recherche exacte"
+  "ui-exactMatchToggle": "Afficher l'option de recherche exacte",
+  "facets.temporalRange.help": "Dessiner une zone pour sélectionner une plage de temps ou cliquer sur le graphique du bas. Cliquer en dehors de la zone pour déselectionner. Cliquer sur le bouton filtrer pour rechercher.",
+  "facets.temporalRange.seriesLegend": "En bleu, recherche en cours, En gris, toutes les fiches",
+  "recordFormats": "Formats de distribution :",
+  "recordFormatDownload": "Télécharger au format ",
+  "commonProtocols": "Protocoles :",
+  "indexStatusSynchronized": "Fiches dans l'index/db = <strong>{{indexStatus['index.count']}}/{{indexStatus['db.count']}}</strong>",
+  "indexStatusSynchronized-error": "Quand le nombre de fiches dans l'index n'est pas le même que dans la base de données, vérifier tout d'abord que le catalogue pointe vers le bon index. Si oui, essayer de réindexer le catalogue. S'il y a encore des différences, vérifier les logs lors de l'indexation et corriger les problèmes en vue XML.",
+  "IndexReadOnlyHealthCheck": "L'index est en lecture seule"
 }

@@ -89,6 +89,7 @@
   "isPublishedToAll-false": "Restricted records",
   "indexRecordsWithErrors": "Index records with errors",
   "top10IndexingErrors": "Top 10 indexing errors:",
+  "facet-indexingErrorMsg": "Indexing errors",
   "rebuildIndex": "Reindex records",
   "dropIndexAndRebuild": "Delete index and reindex",
   "rebuildIndexHelp": "While rebuilding index, search may return incomplete results and the CSW GetRecords operation can be disabled (if you selected the option in the settings). Use this function, when catalog traffic is low. It's recommended to rebuild index manually from here when making changes directly in the database. If you change index mapping (cf. <a href='https://github.com/geonetwork/core-geonetwork/blob/es/web/src/main/webResources/WEB-INF/data/config/index/records.json'>records.json</a>), then you have to click on 'Delete index and reindex'.",
@@ -148,5 +149,13 @@
   "translationPackCacheCleared": "Translation packs cache cleared.",
   "translationPackCacheClearFailure": "Error occurred while clearing translation packs cache!",
   "ui-isVegaEnabled": "Enable interactive graphics facets (using Vega)",
-  "ui-exactMatchToggle": "Display exact match toggle"
+  "ui-exactMatchToggle": "Display exact match toggle",
+  "facets.temporalRange.help": "Drag out a brush to select a data range or click on a bar on the lower chart. Click out the selected range to unset. Click the filter button to search.\n\nBlue series: current search, Grey series: all records.",
+  "facets.temporalRange.seriesLegend": "Blue series: current search, Grey series: all records",
+  "recordFormats": "Distribution formats:",
+  "recordFormatDownload": "Download as ",
+  "commonProtocols": "General protocols:",
+  "indexStatusSynchronized": "Records in index/db = <strong>{{indexStatus['index.count']}}/{{indexStatus['db.count']}}</strong>",
+  "indexStatusSynchronized-error": "When number of records is not equal in the database and in the index, check first that the catalogue point to the correct index. If yes, try to reindex the catalogue from admin > tools. If there is still a difference, check for indexing errors in the log file and fix the metadata record using the XML view.",
+  "IndexReadOnlyHealthCheck": "Index is in readonly mode"
 }

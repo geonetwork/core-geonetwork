@@ -367,6 +367,8 @@
     "shareByEmail": "Per E-Mail teilen",
     "zoomto": "Zoom auf",
     "recordNotFound": "Der Datensatz mit der UUID <strong>{{uuid}}</strong> wurde nicht gefunden oder ist nicht mit Ihnen geteilt. Versuchen Sie sich <a href=\"catalog.signin?redirect={{url}}\">anzumelden</a> falls Sie ein Benutzerkonto haben.",
+    "recordNotFoundAuthenticatedUser": "Der Datensatz mit der Kennung <strong>{{uuid}}</strong> wurde nicht gefunden oder wird nicht mit Ihnen geteilt.",
+    "recordNotFoundAuthenticatedAdministrator": "Der Datensatz mit der Kennung <strong>{{uuid}}</strong> wurde nicht gefunden",
     "intersectWith": "Überschneidet sich mit",
     "fullyOutsideOf": "komplett außerhalb",
     "encloses": "umfasst mindestens",
@@ -526,5 +528,6 @@
     "GUFemail": "Ihre Email-Adresse",
     "GUForganization": "Ihre Organisation",
     "printUnsupportedLayerTypes": "Die folgenden Layertypen sind vorhanden, können jedoch nicht gedruckt werden",
-    "rssFeed": "RSS feed"
+    "rssFeed": "RSS-Feed",
+    "approve": "Genehmigen"
 }

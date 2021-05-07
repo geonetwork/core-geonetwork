@@ -367,6 +367,8 @@
     "shareByEmail": "Deel per mail",
     "zoomto": "Zoom naar",
     "recordNotFound": "Het record met identificatie <strong>{{uuid}}</strong> is nog niet gevonden of is niet met u gedeeld. Probeer <a href=\"catalog.signin?redirect={{url}}\">in te loggen</a> indien u een account heeft.",
+    "recordNotFoundAuthenticatedUser": "Het record met identifier <strong>{{uuid}}</strong> is niet gevonden.",
+    "recordNotFoundAuthenticatedAdministrator": "Het record met identifier <strong>{{uuid}}</strong> is niet gevonden",
     "intersectWith": "Snijdt met",
     "fullyOutsideOf": "Volledig buiten",
     "encloses": "Omvat",
@@ -526,5 +528,6 @@
     "GUFemail": "Uw email adres",
     "GUForganization": "Uw organisatie",
     "printUnsupportedLayerTypes": "De volgende laag typen zijn aanwezig, echter deze kunnen niet geprint worden",
-    "rssFeed": "RSS feed"
+    "rssFeed": "RSS-feed",
+    "approve": "Goedkeuren"
 }
