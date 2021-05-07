@@ -118,6 +118,9 @@
 
   <util:list id="keycloakFilterChanFiltersExclusive">
     <ref bean="securityContextPersistenceFilter" />
+    <!-- To disable csrf security (not recommended) comment the following line -->
+		<ref bean="csrfFilter" />
+		<!-- To disable csrf security (not recommended) comment the upper line -->
     <ref bean="logoutFilter" />
     <ref bean="keycloakPreAuthActionsLoginFilter" />
     <ref bean="keycloakAuthenticationProcessingFilter" />
@@ -130,6 +133,9 @@
 
   <util:list id="keycloakFilterChanFiltersLink">
     <ref bean="securityContextPersistenceFilter" />
+    <!-- To disable csrf security (not recommended) comment the following line -->
+		<ref bean="csrfFilter" />
+		<!-- To disable csrf security (not recommended) comment the upper line -->
     <ref bean="logoutFilter" />
     <ref bean="keycloakPreAuthActionsFilter" />
     <ref bean="keycloakAuthenticationProcessingFilter" />
