@@ -1091,7 +1091,7 @@
               });
             }
           };
-          
+
           init();
 
           // model -> view
@@ -1330,8 +1330,10 @@
           var link = attrs.gnActiveTbItem, href,
               isCurrentService = false;
 
-          // Replace lang in link
+          // Replace lang in link (three character language code i.e. eng, fre)
           link = link.replace('{{lang}}', gnLangs.getCurrent());
+          // Replace standard ISO lang in link (two character language code i.e. en, fr)
+          link = link.replace('{{isoLang}}', gnLangs.getIso2Lang(gnLangs.getCurrent()));
           link = link.replace('{{node}}', gnConfig.env.node);
 
           // Insert debug mode between service and route
