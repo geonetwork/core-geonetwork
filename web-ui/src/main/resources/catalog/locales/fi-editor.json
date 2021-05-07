@@ -37,6 +37,7 @@
     "chooseContactRole": "tai valitse rooli",
     "chooseEntry": "Hakuhakemisto",
     "clickToAddResource": "Paina valitaksesi resurssin",
+    "externalResourceManagement": "Click to go to external resource manager",
     "beforeUnloadEditor": "Viimeisin tallennus {{timeAgo}}",
     "fieldIsRemoved": "Tämä kenttä poistetaan",
     "editRecords": "Muokkaa valintaa",

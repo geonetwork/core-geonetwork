@@ -367,6 +367,8 @@
     "shareByEmail": "Partager via email",
     "zoomto": "Zoom vers",
     "recordNotFound": "La fiche avec l'identifiant {{uuid}} n'a pas été trouvée ou n'est pas partagée avec vous. Essayer <a href=\"catalog.signin?redirect={{url}}\">de vous connecter </a> si vous avec un compte.",
+    "recordNotFoundAuthenticatedUser": "La fiche avec l'identifiant <strong>{{uuid}}</strong> n'a pas été trouvée ou n'est pas accessible pour vous.",
+    "recordNotFoundAuthenticatedAdministrator": "La fiche <strong>{{uuid}}</strong> n'a pas été trouvée.",
     "intersectWith": "Intersection avec",
     "fullyOutsideOf": "Entièrement à l'extérieur de",
     "encloses": "Comprends au moins",
@@ -525,5 +527,7 @@
     "GUFname": "Nom",
     "GUFemail": "Email",
     "GUForganization": "Organisation",
-    "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed"
+    "printUnsupportedLayerTypes": "Le format des couches suivantes n'est pas supporté par l'impression PDF :",
+    "rssFeed": "Flux RSS",
+    "approve": "Approuver"
 }
