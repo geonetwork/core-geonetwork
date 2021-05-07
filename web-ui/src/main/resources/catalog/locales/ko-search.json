@@ -367,6 +367,8 @@
     "shareByEmail": "이메일로 공유",
     "zoomto": "확대",
     "recordNotFound": "식별자가 <strong>{{uuid}}</strong> 인 레코드가 없거나 공유되지 않았습니다. 계정이 있다면 <a href=\"catalog.signin?redirect={{url}}\">로그인</a> 해보십시오.",
+    "recordNotFoundAuthenticatedUser": "The record with identifier <strong>{{uuid}}</strong> was not found or is not shared with you.",
+    "recordNotFoundAuthenticatedAdministrator": "The record with identifier <strong>{{uuid}}</strong> was not found",
     "intersectWith": "Intersects with",
     "fullyOutsideOf": "Fully outside of",
     "encloses": "Enclosing",
@@ -526,5 +528,6 @@
     "GUFemail": "Your Email address",
     "GUForganization": "Your Organization",
     "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed",
-    "rssFeed": "RSS feed"
+    "rssFeed": "RSS feed",
+    "approve": "Approve"
 }

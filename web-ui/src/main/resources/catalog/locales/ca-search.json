@@ -367,6 +367,8 @@
     "shareByEmail": "Comparteix per correu electrònic",
     "zoomto": "Apropar a",
     "recordNotFound": "The record with identifier <strong>{{uuid}}</strong> was not found or is not shared with you. Try to <a href=\"catalog.signin?redirect={{url}}\">sign in</a> if you've an account.",
+    "recordNotFoundAuthenticatedUser": "The record with identifier <strong>{{uuid}}</strong> was not found or is not shared with you.",
+    "recordNotFoundAuthenticatedAdministrator": "The record with identifier <strong>{{uuid}}</strong> was not found",
     "intersectWith": "Intersecta amb",
     "fullyOutsideOf": "Completament fora de",
     "encloses": "Encerclant",
@@ -526,5 +528,6 @@
     "GUFemail": "Your Email address",
     "GUForganization": "Your Organization",
     "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed",
-    "rssFeed": "RSS feed"
+    "rssFeed": "RSS feed",
+    "approve": "Approve"
 }

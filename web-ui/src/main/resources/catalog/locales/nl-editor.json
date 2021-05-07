@@ -185,7 +185,7 @@
     "noLayersForThumbnail": "Geen laag gedefinieerd in recordtijd naar miniatuur genereren uit",
     "noTemplatesAvailable": "Waarschuwing ! Er zijn geen templates beschikbaar in de catalogus . U dient deze toe te voegen of te <a href='admin.console#/metadata'> importeren </a>.",
     "none": "geen",
-    "notFoundInThesaurus": "<strong> Waarschuwing! Trefwoorden {{trefwoorden}} niet gevonden in thesaurus . </strong> Dit kan gebeuren wanneer het trefwoorden zijn in een taal die niet de huidige gebruikers interface taal is. Meertalige trefwoorden bewerking wordt niet ondersteund. <strong> Deze trefwoorden zullen niet worden gewijzigd in deze mutatie sessie < /strong> , tenzij u dit gedeelte van de thesaurus verwijdert.",
+    "notFoundInThesaurus": "<strong> Waarschuwing! Trefwoorden {{trefwoorden}} niet gevonden in thesaurus . </strong> Dit kan gebeuren wanneer het trefwoorden zijn in een taal die niet de huidige gebruikers interface taal is. Meertalige trefwoorden bewerking wordt niet ondersteund. <strong> Deze trefwoorden zullen niet worden gewijzigd in deze mutatie sessie </strong> , tenzij u dit gedeelte van de thesaurus verwijdert.",
     "ocean": "oceaan",
     "isPublishedToAll": "publiek",
     "oneLanguage": "een",

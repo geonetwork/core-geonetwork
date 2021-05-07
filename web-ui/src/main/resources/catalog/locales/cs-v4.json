@@ -89,6 +89,7 @@
   "isPublishedToAll-false": "Omezené záznamy",
   "indexRecordsWithErrors": "Indexujte záznamy s chybami",
   "top10IndexingErrors": "Top 10 chyb indexování:",
+  "facet-indexingErrorMsg": "Indexing errors",
   "rebuildIndex": "Znovu indexovat záznamy",
   "dropIndexAndRebuild": "Smazat index a reindexovat",
   "rebuildIndexHelp": "Při obnovování indexu může vyhledávání vracet neúplné výsledky a operace CSR GetRecords může být deaktivována (pokud jste v nastavení vybrali tuto možnost). Tuto funkci použijte, pokud je provoz katalogu nízký. Při provádění změn v databázi se doporučuje odtud znovu vytvořit index ručně. Pokud změníte mapování indexů (srov. <a href='https://github.com/geonetwork/core-geonetwork/blob/es/web/src/main/webResources/WEB-INF/data/config/index/records.json'>records.json</a>), musíte kliknout na 'Smazat index a reindexovat'.",
@@ -148,5 +149,13 @@
   "translationPackCacheCleared": "Mezipaměť překladových balíků vymazána.",
   "translationPackCacheClearFailure": "Při mazání mezipaměti překladových balíků došlo k chybě!",
   "ui-isVegaEnabled": "Povolit interaktivní grafické aspekty (pomocí Vega)",
-  "ui-exactMatchToggle": "Přepnout zobrazení přesné shody"
+  "ui-exactMatchToggle": "Přepnout zobrazení přesné shody",
+  "facets.temporalRange.help": "Přetažením štětce vyberte rozsah dat nebo klikněte na lištu ve spodním grafu. Kliknutím na vybraný rozsah nastavení zrušíte. Kliknutím na tlačítko filtru vyhledejte. Modrá řada: aktuální vyhledávání, šedá řada: všechny záznamy.",
+  "facets.temporalRange.seriesLegend": "Modrá řada: aktuální vyhledávání, šedá řada: všechny záznamy",
+  "recordFormats": "Distribuční formáty:",
+  "recordFormatDownload": "Stáhnout jako",
+  "commonProtocols": "Obecné protokoly:",
+  "indexStatusSynchronized": "Záznamy v index/db = <strong>{{indexStatus['index.count']}}/{{indexStatus['db.count']}}</strong>",
+  "indexStatusSynchronized-error": "Pokud se počet záznamů v databázi a v indexu nerovná, nejprve zkontrolujte, zda katalog ukazuje na správný index. Pokud ano, zkuste znovu indexovat katalog z admin > nástroje. Pokud stále existuje rozdíl, zkontrolujte chyby indexování v souboru protokolu a opravte záznam metadat pomocí zobrazení XML.",
+  "IndexReadOnlyHealthCheck": "Index je v režimu pouze pro čtení"
 }
