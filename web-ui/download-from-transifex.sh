@@ -32,8 +32,8 @@ l=(
     'fi::fi'
     'is::is'
     'ru::ru'
-    'zh::zh',
-    'sk::sk_SK',
+    'zh::zh'
+    'sk::sk_SK'
     'sv::sv_SE'
 )
 
