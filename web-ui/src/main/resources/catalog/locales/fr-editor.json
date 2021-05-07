@@ -1,5 +1,5 @@
 {
-    "featureCatReplace": "Replace existing feature catalog?",
+    "featureCatReplace": "Remplacer le catalogue d'attributs ?",
     "add-extent-from-geokeywords": "Calculer l'étendue à partir des mots clés",
     "add-extent-from-geokeywords-help": "Rechercher tous les mots clés de type 'place' dans les thésaurus et ajouter les étendues correspondantes.",
     "addCRS-help": "Ajouter un nouveau CRS",
@@ -37,6 +37,7 @@
     "chooseContactRole": "ou choisir un rôle",
     "chooseEntry": "Rechercher",
     "clickToAddResource": "Cliquer pour sélectionner la ressource",
+    "externalResourceManagement": "Cliquer ici pour aller dans le gestionnaire de ressources externes.",
     "beforeUnloadEditor": "Vous pourriez avoir des modifications non sauvées depuis la dernière sauvegarde {{timeAgo}}.",
     "fieldIsRemoved": "Ce champ sera supprimé",
     "editRecords": "Éditer la sélection",
@@ -369,7 +370,7 @@
     "linkToXmlTab": "Certaines erreurs peuvent être corrigées en utilisant <a href=\"#/metadata/{{metadataId}}?tab=xml\">la vue XML </a>.",
     "directoryManagerSubtitle": "Ce menu vous permet de gérer des éléments réutilisables tel que des contacts, formats, etc. Ces éléments peuvent être construits à partir de gabarits.",
     "directoryManagerSubtitleImport": "Entrez ici le contenu complet en XML d'un élément réutilisable afin de l'importer dans la base de donnée.",
-    "directoryManagerError": "Error when importing the full XML",
+    "directoryManagerError": "Erreur lors de l'import du document XML",
     "directoryEntryTypes": "Types d'éléments",
     "directoryTemplates": "Gabarits",
     "addNewDirectoryEntry": "Ajouter un élément",
@@ -417,8 +418,8 @@
     "accessManagerChooseGroups": "Sélectionner un ou plusieurs groupes",
     "accessManagerChooseOperations": "Sélectionner un ou plusieurs types d'opération",
     "status-no-status": "Cycle de vie désactivé",
-    "badGmlProjectionCode": "The geometry projection <b>{{srsName}}</b> defined in the XML is not valid. Please edit the xml to fix the srs name or enter a new geometry.",
+    "badGmlProjectionCode": "La projection de la géométrie <b>{{srsName}}</b> définie dans le XML n'est pas valide. Corriger la projection dans le XML ou modifier la géométrie.",
     "draft": "Brouillon",
     "link": "Lien",
-    "link-text": "Link text"
+    "link-text": "Libellé du lien"
 }
