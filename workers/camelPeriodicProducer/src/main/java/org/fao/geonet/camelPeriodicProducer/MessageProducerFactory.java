@@ -27,10 +27,15 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.quartz2.QuartzComponent;
 import org.apache.camel.component.quartz2.QuartzEndpoint;
 import org.apache.camel.model.RouteDefinition;
+import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.TriggerBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.EnableMBeanExport;
+import org.springframework.jmx.support.RegistrationPolicy;
 
 import javax.annotation.PostConstruct;
 
@@ -42,9 +47,15 @@ public class MessageProducerFactory {
     @Autowired
     protected QuartzComponent quartzComponent;
 
+    private static Logger LOGGER = LoggerFactory.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
+
     @PostConstruct
     public void init() throws Exception {
-        quartzComponent.start();
+        try {
+            quartzComponent.start();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
     }
 
     public void registerAndStart(MessageProducer messageProducer) throws Exception {
