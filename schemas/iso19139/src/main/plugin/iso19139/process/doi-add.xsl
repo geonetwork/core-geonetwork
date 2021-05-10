@@ -18,7 +18,7 @@
              select="'(DOI|WWW:LINK-1.0-http--metadata-URL)'"/>
 
   <xsl:variable name="doiProtocol"
-                select="'DOI'"/>
+                select="'WWW:LINK-1.0-http--metadata-URL'"/>
   <xsl:variable name="doiName"
                 select="'Digital Object Identifier (DOI)'"/>
 
