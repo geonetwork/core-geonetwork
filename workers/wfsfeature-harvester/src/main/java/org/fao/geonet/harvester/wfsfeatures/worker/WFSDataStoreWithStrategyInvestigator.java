@@ -47,6 +47,7 @@ public class WFSDataStoreWithStrategyInvestigator extends WFSDataStoreFactory {
 
     private static Logger LOGGER =  LoggerFactory.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
     private String describeFeatureTypeUrl;
+    private String strategy;
 
     public void init (String url, String typeName) throws Exception {
         this.describeFeatureTypeUrl = new OwsUtils().getDescribeFeatureTypeUrl(url, typeName, "1.1.0");

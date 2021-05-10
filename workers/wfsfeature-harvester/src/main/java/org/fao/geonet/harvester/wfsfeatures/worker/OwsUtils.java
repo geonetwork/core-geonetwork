@@ -56,41 +56,47 @@ public class OwsUtils {
 
     public static String getTypeFromFeatureType(final AttributeDescriptor descriptor) {
         String type;
-        if (descriptor.getType().getBinding().isAssignableFrom(String.class)) {
-            type = "string";
-        } else if (descriptor.getType().getBinding().isAssignableFrom(
+        try {
+            if (descriptor.getType().getBinding().isAssignableFrom(String.class)) {
+                type = "string";
+            } else if (descriptor.getType().getBinding().isAssignableFrom(
                 Double.class)) {
-            type = "double";
-        } else if (descriptor.getType().getBinding().isAssignableFrom(
+                type = "double";
+            } else if (descriptor.getType().getBinding().isAssignableFrom(
                 Integer.class)) {
-            type = "integer";
-        } else if (descriptor.getType().getBinding().isAssignableFrom(
+                type = "integer";
+            } else if (descriptor.getType().getBinding().isAssignableFrom(
                 Float.class)) {
-            type = "double";
-        } else if (descriptor.getType().getBinding().isAssignableFrom(
+                type = "double";
+            } else if (descriptor.getType().getBinding().isAssignableFrom(
                 java.util.Date.class) ||
-                   descriptor.getType().getBinding().isAssignableFrom(
-                java.sql.Timestamp.class) ||
-                   descriptor.getType().getBinding().isAssignableFrom(
-                java.sql.Date.class)) {
-            type = "date";
-        } else if (descriptor.getType().getBinding().isAssignableFrom(
+                descriptor.getType().getBinding().isAssignableFrom(
+                    java.sql.Timestamp.class) ||
+                descriptor.getType().getBinding().isAssignableFrom(
+                    java.sql.Date.class)) {
+                type = "date";
+            } else if (descriptor.getType().getBinding().isAssignableFrom(
                 Long.class)) {
-            type = "integer";
-        } else if (descriptor.getType().getBinding().isAssignableFrom(
+                type = "integer";
+            } else if (descriptor.getType().getBinding().isAssignableFrom(
                 Short.class)) {
-            type = "integer";
-        } else if (descriptor.getType().getBinding().getSuperclass().isAssignableFrom(
-                        org.locationtech.jts.geom.Geometry.class)
+                type = "integer";
+            } else if ((descriptor.getType().getBinding().getSuperclass() != null
+                && (descriptor.getType().getBinding().getSuperclass().isAssignableFrom(
+                org.locationtech.jts.geom.Geometry.class)
                 || descriptor.getType().getBinding().getSuperclass().isAssignableFrom(
-                        org.locationtech.jts.geom.GeometryCollection.class)
+                org.locationtech.jts.geom.GeometryCollection.class)))
+                ||
+                (descriptor.getType().getBinding().isAssignableFrom(
+                org.locationtech.jts.geom.Geometry.class)
                 || descriptor.getType().getBinding().isAssignableFrom(
-                        org.locationtech.jts.geom.Geometry.class)
-                || descriptor.getType().getBinding().isAssignableFrom(
-                        org.locationtech.jts.geom.GeometryCollection.class)) {
-            type = "geometry";
-        } else {
-            type = "string";
+                org.locationtech.jts.geom.GeometryCollection.class))) {
+                type = "geometry";
+            } else {
+                type = "string";
+            }
+        } catch (Exception e) {
+            return "string";
         }
         return type;
     }

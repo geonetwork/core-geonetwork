@@ -26,8 +26,10 @@ package org.fao.geonet.harvester.wfsfeatures.worker;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
+import org.geotools.data.DataStoreFinder;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.data.wfs.WFSDataStoreFactory;
+import org.geotools.data.wfs.internal.v1_x.MapServerWFSStrategy;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 
@@ -136,6 +138,16 @@ public class WFSHarvesterExchangeState implements Serializable {
             }
 
             wfsDatastore = factory.createDataStore(m);
+
+            // Default to GeoTools auto mode for MapServer. https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/313
+            if(factory instanceof WFSDataStoreWithStrategyInvestigator) {
+                WFSClientWithStrategyInvestigator wfsClientWithStrategyInvestigator = (WFSClientWithStrategyInvestigator) wfsDatastore.getWfsClient();
+                if ("mapserver".equals(wfsClientWithStrategyInvestigator.getStrategyId())) {
+                    Map connectionParameters = new HashMap();
+                    connectionParameters.put("WFSDataStoreFactory:GET_CAPABILITIES_URL", parameters.getUrl());
+                    wfsDatastore = (WFSDataStore) DataStoreFinder.getDataStore(connectionParameters);
+                }
+            }
 
             logger.info(String.format(
                     "Reading feature type '%s' schema structure.",

@@ -44,6 +44,7 @@ import java.net.URL;
  */
 public class WFSClientWithStrategyInvestigator extends WFSClient {
     private String describeFeatureTypeUrl;
+    private String strategyId;
     private transient Logger logger = Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
 
     public WFSClientWithStrategyInvestigator(URL capabilitiesURL, HTTPClient httpClient, WFSConfig config, String describeFeatureTypeUrl) throws IOException, ServiceException {
@@ -82,12 +83,18 @@ public class WFSClientWithStrategyInvestigator extends WFSClient {
             String responsePayload = out.toString("UTF-8");
             if (responsePayload.contains("targetNamespace=\"http://www.qgis.org/gml\"")) {
                 strategy = new QgisStrategy();
+                strategyId = "qgis";
             } else if (responsePayload.contains("targetNamespace=\"http://mapserver.gis.umn.edu/mapserver\"")) {
                 strategy = new MapServerWFSStrategy(capabilities.getRawDocument());
+                strategyId = "mapserver";
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return strategy;
+    }
+
+    public String getStrategyId() {
+        return strategyId;
     }
 }
