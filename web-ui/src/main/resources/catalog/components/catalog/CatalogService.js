@@ -758,12 +758,28 @@
               s[1] += "?approved=" + (this.draft != 'y');
             }
 
-
-            images.list[insertFn]({url: s[1], label: s[2]});
+            var found = false;
+            var checkForUnique = images.list.filter(function (item) {
+              if (item.url === s[1]) {
+                found = true
+              }
+            });
+            if (!found) {
+              images.list[insertFn]({url: s[1], label: s[2]});
+            }
           }
         } else if (angular.isDefined(this.image)){
           var s = this.image.split('|');
-          images.list.push({url: s[1], label: s[2]});
+
+          var foundImg = false;
+          var checkForUniqueImg = images.list.filter(function (item) {
+            if (item.url === s[1]) {
+              found = true
+            }
+          });
+          if (!found) {
+            images.list.push({url: s[1], label: s[2]});
+          }
         }
         return images;
       },
