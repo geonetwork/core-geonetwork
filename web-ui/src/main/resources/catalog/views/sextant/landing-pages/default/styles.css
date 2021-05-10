@@ -14,14 +14,30 @@ body {
   padding: 0px !important;
 }
 
-div.gn-landing-page-header {
+div.gn-landing-page-header-default h1 {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0px;
+}
+
+div.gn-landing-page-header-default div.subtitle {
+  font-size: 1em;
+  color: white;
+  margin: 0px;
+}
+
+div.gn-landing-page-header-default .col-md-1 {
+  padding: 5px;
+}
+
+div.gn-landing-page-header-default {
   height: 120px;
   line-height: 100px;
   text-align: left;
   padding-left: 20px;
   vertical-align: middle;
-  background: #002d64 url("header.png") no-repeat;
-  background-size: 100%;
+  background-color: #093564;
 }
 
 

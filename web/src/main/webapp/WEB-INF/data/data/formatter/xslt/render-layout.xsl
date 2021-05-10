@@ -215,6 +215,30 @@
 
 
   <xsl:template name="render-record">
+
+    <xsl:if test="$portalLink != ''">
+      <link rel="stylesheet" type="text/css"
+            href="{$nodeUrl}../catalog/views/sextant/landing-pages/default/styles.css"/>
+      <link rel="stylesheet" type="text/css"
+            href="{$nodeUrl}../catalog/views/sextant/landing-pages/{$groupOwner}/styles.css"/>
+      <!-- Default head -->
+      <div class="gn-landing-page-header gn-landing-page-header-default">
+        <div class="col-md-1">
+          <img src="{$nodeUrl}../catalog/views/sextant/landing-pages/default/Logo-Sextant.png"/>
+        </div>
+        <div class="col-md-10">
+          <h1>Sextant</h1>
+          <div class="subtitle" xml:lang="fre">Infrastructure de données géographiques marines et littorales</div>
+          <div class="subtitle" xml:lang="eng">Coastal and marine spatial data infrastructure</div>
+        </div>
+        <div class="col-md-1">
+          <img src="{$nodeUrl}../catalog/views/sextant/landing-pages/default/logo.png"/>
+        </div>
+      </div>
+
+      <div class="gn-landing-page-header">&#160;</div>
+    </xsl:if>
+
     <div class="container gn-metadata-view gn-view-{$view} gn-schema-{$schema}">
 
       <xsl:choose>
@@ -223,14 +247,6 @@
           <link rel="stylesheet" type="text/css" href="{$nodeUrl}../static/api-{$css}.css"/>
         </xsl:when>
       </xsl:choose>
-
-      <xsl:if test="$portalLink != ''">
-        <link rel="stylesheet" type="text/css"
-              href="{$nodeUrl}../catalog/views/sextant/landing-pages/default/styles.css"/>
-        <link rel="stylesheet" type="text/css"
-              href="{$nodeUrl}../catalog/views/sextant/landing-pages/{$groupOwner}/styles.css"/>
-        <div class="gn-landing-page-header">&#160;</div>
-      </xsl:if>
 
       <xsl:variable name="type">
         <xsl:apply-templates mode="getMetadataHierarchyLevel" select="$metadata"/>

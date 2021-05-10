@@ -10,6 +10,10 @@ body {
   color: #333333;
 }
 
+div.gn-landing-page-header-default {
+  display: none;
+}
+
 .gn-nojs [role=main], .container {
   padding: 0px !important;
 }
