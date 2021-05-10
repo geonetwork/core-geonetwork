@@ -15,7 +15,7 @@
       <div data-gn-need-help="user-guide/workflow/life-cycle.html"
           data-icon-only="true"
           class="pull-left"></div>
-      <div class="btn-toolbar pull-right">    
+      <div class="btn-toolbar pull-right">
         <button class="btn btn-default"
                 data-gn-click-and-spin="updateStatus()">
           {{"mdStatusButton-" + statusToSelect | translate}}
@@ -29,11 +29,12 @@
 
   <!-- Task form -->
   <div class="row" data-ng-if="statusType === 'task'">
-    <div class="col-md-4">
+    <div class="col-md-12">
       <h2>{{taskName}}</h2>
 
 
-      <div class="form-group">
+      <div class="form-group"
+           data-ng-hide="task.notificationLevel === 'catalogueAdministrator'">
         <label for="gn-task-owner"
                data-translate="">taskOwner</label>
         <input class="form-control"

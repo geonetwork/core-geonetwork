@@ -288,7 +288,7 @@ goog.require('gn_share');
         scope.task = t;
         scope.statusToSelect = statusToBe;
         gnUtilityService.openModal({
-          title: 'mdStatusTitle-' + label,
+          title: label ? 'mdStatusTitle-' + label : "status-" + t.id,
           content: '<div data-gn-metadata-status-updater="md" ' +
                         'data-status-to-select="' + statusToBe +
                         '" data-status-type="' + statusType + '" task="t"></div>'
