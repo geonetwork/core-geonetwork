@@ -1,5 +1,5 @@
 body {
-  background: url(bg_page.gif);
+  background: url("Fond-marin-La-Reunion-reduit.jpg");
   height: 100%;
   margin: 0;
   padding: 0;
@@ -15,30 +15,15 @@ body {
 }
 
 div.gn-landing-page-header {
-  height: 100px;
+  height: 120px;
   line-height: 100px;
   text-align: left;
   padding-left: 20px;
   vertical-align: middle;
-  background: url(bandeaulogo.jpg);
-  background-size: 100% 100px;
+  background: #002d64 url("header.png") no-repeat;
+  background-size: 100%;
 }
 
-div.gn-landing-page-header::before {
-  color: #fff;
-  font-size: 3.5rem;
-  font-weight: normal;
-  /*font-family: 'open_sanslight';*/
-  content: "SEXTANT";
-}
-
-div.gn-landing-page-header::after {
-  color: #fff;
-  font-size: 2.5rem;
-  font-weight: normal;
-  /*font-family: 'open_sanslight';*/
-  content: "Infrastructure de données géographiques marines et littorales";
-}
 
 .gn-md-side-access {
   background-color: #ebecec;
