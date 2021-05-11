@@ -145,7 +145,7 @@ public final class ReportUtils {
             Map<String, Object> mdIndexFields = searchManager.getDocument(metadataUuid);
             if ("title".equals(fieldName)) {
                 Object titleObjectField = mdIndexFields.get(IndexFields.RESOURCE_TITLE + "Object");
-                Object titleField = mdIndexFields.get(IndexFields.RESOURCE_TITLE + "Object");
+                Object titleField = mdIndexFields.get(IndexFields.RESOURCE_TITLE);
                 if (titleObjectField instanceof HashMap) {
                     return (String) ((HashMap<?, ?>) titleObjectField).get("default");
                 } else if (titleField instanceof String) {
