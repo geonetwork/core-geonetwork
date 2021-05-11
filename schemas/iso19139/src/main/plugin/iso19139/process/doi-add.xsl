@@ -76,7 +76,7 @@
   so it should always exist).
 
   Adding a new transfer option block. 
-  <xsl:template match="gmd:distributionInfo[not($isDoiAlreadSet) and position() = 1]"
+  <xsl:template match="gmd:distributionInfo[not($isDoiAlreadySet) and position() = 1]"
                 priority="2">
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
