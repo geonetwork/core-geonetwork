@@ -1,5 +1,7 @@
 <span data-ng-search-form="">
-  <div class="input-group width-100">
+  <!-- Form input mode -->
+  <div class="input-group width-100"
+       data-ng-hide="insertAsTags">
     <div class="input-group-btn">
       <span data-ng-show="templateAddAction"
             data-ng-transclude=""></span>
@@ -46,12 +48,12 @@
 
                     <div class="btn btn-default btn-sm pull-right"
                          data-ng-if="insertAsXlink && !hasDynamicVariable"
-                         data-ng-click="addEntry(r, undefined, true)">
+                         data-ng-click="addEntry(r, undefined, true, true)">
             <i class="fa fa-link"></i>
           </div>
           <div class="btn btn-default btn-sm pull-right"
                data-ng-if="insertAsText && !hasDynamicVariable"
-               data-ng-click="addEntry(r)">
+               data-ng-click="addEntry(r, undefined, false, true)">
             <i class="fa fa-plus"></i>
           </div>
 
@@ -66,7 +68,7 @@
             <div gn-popover-content>
               <ul>
                 <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
-                  <a href="" data-ng-click="addEntry(r, role.code, true)" title="{{role.description}}">
+                  <a href="" data-ng-click="addEntry(r, role.code, true, true)" title="{{role.description}}">
                     {{role.label}}
                   </a>
                 </li>
@@ -87,7 +89,7 @@
               <ul>
                 <li data-ng-repeat="role in roles"
                     data-ng-hide="role['@hideInEditMode']">
-                  <a href="" data-ng-click="addEntry(r, role.code)"
+                  <a href="" data-ng-click="addEntry(r, role.code, false, true)"
                       title="{{role.description}}">
                     {{role.label}}
                   </a>
@@ -108,10 +110,24 @@
       </button>
     </div>
 
-      <!-- The contact to insert once received -->
-    <div data-ng-if="snippet">
+      <!-- The contact to insert once received.
+       When using tagsinput mode, empty snippet means remove element. -->
+    <div data-ng-if="snippet && !insertAsTags">
       <input name="{{snippetRef}}" type="hidden" value="{{snippet}}"/>
     </div>
   </div>
 
+  <!-- Keyword like input mode -->
+  <div data-ng-show="insertAsTags"
+       data-ng-class="maxTags && selected.length == maxTags ? 'gn-maxtags' : ''">
+    <input type="text"
+           id="tagsinput_{{elementRef}}{{elementName.replace(':', '')}}"
+           class="form-control"></input>
+
+    <div data-ng-if="insertAsTags">
+      <input name="{{snippetRef}}_xml"
+             type="hidden" value="<gn_replace_all>{{snippet}}</gn_replace_all>"/>
+      <input name="{{snippetRef}}" type="hidden" value="{{elementXpath}}"/>
+    </div>
+  </div>
 </span>

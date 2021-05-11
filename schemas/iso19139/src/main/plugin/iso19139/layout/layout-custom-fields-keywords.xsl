@@ -60,7 +60,7 @@
     <!--Add all Thesaurus as first block of keywords-->
     <xsl:if test="name(preceding-sibling::*[1]) != name()">
       <xsl:call-template name="addAllThesaurus">
-        <xsl:with-param name="ref" select="../gn:element/@ref"/>
+        <xsl:with-param name="ref" select="concat('_X', ../gn:element/@ref, '_', replace(name(), ':', 'COLON'))"/>
       </xsl:call-template>
     </xsl:if>
 
@@ -295,9 +295,11 @@
 
   <xsl:template name="addAllThesaurus">
     <xsl:param name="ref"/>
+    <xsl:param name="xpath" select="''" required="no"/>
+    <xsl:param name="keywordList" select="''" required="no"/>
+    <xsl:param name="transformation" select="'to-iso19139-keyword'" required="no"/>
+
     <xsl:if test="java:getSettingValue('system/metadata/allThesaurus') = 'true'">
-
-
       <xsl:variable name="thesaurusConfig"
                     as="element()?"
                     select="$thesaurusList/thesaurus[@key='external.none.allThesaurus']"/>
@@ -312,13 +314,15 @@
       <div
               data-gn-keyword-selector="tagsinput"
               data-metadata-id=""
-              data-element-ref="_X{$ref}_gmdCOLONdescriptiveKeywords"
+              data-element-ref="{$ref}"
+              data-element-xpath="{$xpath}"
               data-thesaurus-title="{{{{'selectKeyword' | translate}}}}"
               data-thesaurus-key="external.none.allThesaurus"
-              data-keywords=""
+              data-keywords="{$keywordList}"
               data-transformations="{$transformations}"
-              data-current-transformation="to-iso19139-keyword"
-              data-max-tags="" data-lang="{$metadataOtherLanguagesAsJson}"
+              data-current-transformation="{$transformation}"
+              data-max-tags=""
+              data-lang="{$metadataOtherLanguagesAsJson}"
               data-textgroup-only="false"
               class="">
       </div>

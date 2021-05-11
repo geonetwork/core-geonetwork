@@ -663,8 +663,8 @@
            /**
            * Build a field name for an XML field
            */
-           buildXMLFieldName: function(elementRef, elementName) {
-             var t = ['_X', elementRef,
+           buildXMLFieldName: function(elementRef, elementName, prefix) {
+             var t = [(prefix || '_X'), elementRef,
                '_', elementName.replace(':', 'COLON')];
              return t.join('');
            }

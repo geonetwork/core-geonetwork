@@ -187,6 +187,10 @@
     <for name="mri:descriptiveKeywords" addDirective="data-gn-thesaurus-selector">
       <directiveAttributes
               data-transformation="to-iso19115-3.2018-keyword"/>
+      <directiveAttributes data-include="xpath::string-join(*
+                                          //mri:thesaurusName//cit:identifier/*/
+                                            mcc:code/gcx:Anchor/
+                                              concat('-', substring-after(text()[. != ''], 'geonetwork.thesaurus.')), ',')"/>
     </for>
   </fields>
 

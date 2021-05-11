@@ -214,6 +214,8 @@
            transclude: true,
            scope: {
              elementRef: '@',
+             elementXpath: '@',
+             wrapper: '@',
              thesaurusKey: '@',
              keywords: '@',
              transformations: '@',
@@ -238,6 +240,16 @@
              scope.results = null;
              scope.snippet = null;
              scope.isInitialized = false;
+
+             var id = '#tagsinput_' + scope.elementRef;
+
+             // If XPath mode, then 2 parameters are sent
+             // _Pref_elementName for the path
+             // _Pref_elementName_xml for the snippet
+             if (scope.elementXpath != '') {
+               scope.elementRefXpath = scope.elementRef;
+             }
+
              scope.elementRefBackup = scope.elementRef;
              scope.invalidKeywordMatch = false;
              scope.selected = [];
@@ -375,7 +387,6 @@
 
              // Init typeahead and tag input
              var initTagsInput = function() {
-               var id = '#tagsinput_' + scope.elementRef;
                $timeout(function() {
                  try {
                    $(id).tagsinput({
@@ -534,7 +545,7 @@
                gnThesaurusService
                 .getXML(scope.thesaurusKey,
                getKeywordIds(), scope.currentTransformation, scope.langs,
-                   scope.textgroupOnly,scope.langConversion).then(
+                   scope.textgroupOnly, scope.langConversion, scope.wrapper).then(
                function(data) {
                  scope.snippet = data;
                });

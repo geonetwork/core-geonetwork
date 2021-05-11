@@ -74,7 +74,7 @@
 
     <xsl:if test="$name = 'gmd:descriptiveKeywords' and count(../gmd:descriptiveKeywords) = 0">
       <xsl:call-template name="addAllThesaurus">
-        <xsl:with-param name="ref" select="../gn:element/@ref"/>
+        <xsl:with-param name="ref" select="concat('_X', ../gn:element/@ref, '_', replace('gmd:descriptiveKeywords', ':', 'COLON'))"/>
       </xsl:call-template>
     </xsl:if>
 
