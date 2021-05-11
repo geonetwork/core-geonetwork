@@ -49,7 +49,8 @@ import java.util.Observer;
 public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
 
     private GNXMLQuery query;
-    private ServiceContext srvxtx;
+    /** Service context assumed to be shared */
+    private ServiceContext appHandlerContext;
     private int status;
 
     private int fragmentcount;
@@ -61,11 +62,11 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
                        ServiceContext srvctx) throws Exception {
         super(observers);
         this.query = query;
-        this.srvxtx = srvctx;
+        this.appHandlerContext = srvctx;
         throw new NotImplementedException("Z39.50 not implemented in ES");
 //        try {
 //
-//            GeonetContext gc = (GeonetContext) this.srvxtx
+//            GeonetContext gc = (GeonetContext) this.appHandlerContext
 //                .getHandlerContext(Geonet.CONTEXT_NAME);
 //            SearchManager searchMan = gc.getBean(SearchManager.class);
 //
@@ -76,6 +77,16 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
 //                Log.debug(Geonet.SRU, "error constructing GNresult set: " + e);
 //            e.printStackTrace();
 //        }
+    }
+
+    /**
+     * Access the current ServiceContext if available.
+     *
+     * @return current service context if available, or app handler context fallback.
+     */
+    protected ServiceContext getServiceContext(){
+        ServiceContext serviceContext = ServiceContext.get();
+        return serviceContext != null ? serviceContext : appHandlerContext;
     }
 
     public int evaluate(int timeout) {
@@ -95,8 +106,7 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
             ServiceConfig config = new ServiceConfig();
 
             // perform the search and save search results
-
-            metasearcher.search(this.srvxtx, request, config);
+            metasearcher.search(getServiceContext(), request, config);
 
             // System.out.println("summary:\n" + Xml.getString(s.getSummary()));
             // // DEBUG
@@ -136,8 +146,7 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
                 Log.debug(Geonet.SRU, "Search request:\n"
                     + Xml.getString(request));
             // get result set
-            Element result = this.metasearcher.present(this.srvxtx, request,
-                config);
+            Element result = this.metasearcher.present(getServiceContext(), request, config);
 
             if (Log.isDebugEnabled(Geonet.SRU))
                 Log.debug(Geonet.SRU, "Search result:\n"

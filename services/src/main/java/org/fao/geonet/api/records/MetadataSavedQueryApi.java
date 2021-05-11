@@ -27,8 +27,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NoResultsFoundException;
@@ -87,17 +87,19 @@ public class MetadataSavedQueryApi {
         @PathVariable final String metadataUuid,
         HttpServletRequest request
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
-        String schemaIdentifier = metadata.getDataInfo().getSchemaId();
-        SchemaPlugin schemaPlugin = schemaManager.getSchema(schemaIdentifier).getSchemaPlugin();
-        if (schemaPlugin == null) {
-            return new ArrayList<>();
-        }
-        try {
-            MetadataSchema schema = schemaManager.getSchema(schemaIdentifier);
-            return schema.getSchemaPlugin().getSavedQueries();
-        } catch (IllegalArgumentException e) {
-            return new ArrayList<>();
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
+            String schemaIdentifier = metadata.getDataInfo().getSchemaId();
+            SchemaPlugin schemaPlugin = schemaManager.getSchema(schemaIdentifier).getSchemaPlugin();
+            if (schemaPlugin == null) {
+                return new ArrayList<>();
+            }
+            try {
+                MetadataSchema schema = schemaManager.getSchema(schemaIdentifier);
+                return schema.getSchemaPlugin().getSavedQueries();
+            } catch (IllegalArgumentException e) {
+                return new ArrayList<>();
+            }
         }
     }
 
@@ -133,10 +135,11 @@ public class MetadataSavedQueryApi {
         HttpServletRequest request,
         @Parameter(description = "The query parameters")
         @RequestBody(required = false) final HashMap<String, String> parameters) throws Exception {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
 
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
-
-        return query(metadata, savedQuery, parameters);
+            return query(metadata, savedQuery, parameters);
+        }
     }
 
     public Map<String, String> query(AbstractMetadata metadata, String savedQuery, HashMap<String, String> parameters) throws ResourceNotFoundException, IOException, NoResultsFoundException {

@@ -149,71 +149,72 @@ public class DirectoryEntriesApi {
                 "The record found with UUID '%s' is not a subtemplate", uuid));
         }
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        if (langs == null) {
-            langs = context.getLanguage().split(",");
-        }
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            if (langs == null) {
+                langs = context.getLanguage().split(",");
+            }
 
-        Element tpl = metadata.getXmlData(false);
+            Element tpl = metadata.getXmlData(false);
 
-        // Processing parameters process=xpath~value.
-        // xpath must point to an Element or an Attribute.
-        if (process != null) {
-            String[] replaceList = process;
-            for (String parameters : replaceList) {
-                int endIndex = parameters.indexOf(SEPARATOR);
-                if (endIndex == -1) {
-                    continue;
-                }
-                String xpath = parameters.substring(0, endIndex);
-                String value = parameters.substring(endIndex + 1);
+            // Processing parameters process=xpath~value.
+            // xpath must point to an Element or an Attribute.
+            if (process != null) {
+                String[] replaceList = process;
+                for (String parameters : replaceList) {
+                    int endIndex = parameters.indexOf(SEPARATOR);
+                    if (endIndex == -1) {
+                        continue;
+                    }
+                    String xpath = parameters.substring(0, endIndex);
+                    String value = parameters.substring(endIndex + 1);
 
-                Set<Namespace> allNamespaces = Sets.newHashSet();
-                final Iterator descendants = tpl.getDescendants();
-                while (descendants.hasNext()) {
-                    Object next = descendants.next();
-                    if (next instanceof Element) {
-                        Element element = (Element) next;
-                        allNamespaces.add(element.getNamespace());
-                        for (Object o : tpl.getAdditionalNamespaces()) {
-                            if (o instanceof Namespace) {
-                                Namespace namespace = (Namespace) o;
-                                allNamespaces.add(namespace);
+                    Set<Namespace> allNamespaces = Sets.newHashSet();
+                    final Iterator descendants = tpl.getDescendants();
+                    while (descendants.hasNext()) {
+                        Object next = descendants.next();
+                        if (next instanceof Element) {
+                            Element element = (Element) next;
+                            allNamespaces.add(element.getNamespace());
+                            for (Object o : tpl.getAdditionalNamespaces()) {
+                                if (o instanceof Namespace) {
+                                    Namespace namespace = (Namespace) o;
+                                    allNamespaces.add(namespace);
+                                }
                             }
                         }
                     }
-                }
-                Object o = Xml.selectSingle(tpl, xpath, Lists.newArrayList(allNamespaces));
-                if (o instanceof Element) {
-                    ((Element) o).setText(value);
-                } else if (o instanceof Attribute) {
-                    ((Attribute) o).setValue(value);
+                    Object o = Xml.selectSingle(tpl, xpath, Lists.newArrayList(allNamespaces));
+                    if (o instanceof Element) {
+                        ((Element) o).setText(value);
+                    } else if (o instanceof Attribute) {
+                        ((Attribute) o).setValue(value);
+                    }
                 }
             }
-        }
-        // Multilingual record: Remove all localizedString from the subtemplate for langs that are not in the metadata and set the gco:CharacterString
-        // Monolingual record: Remove all localized strings and extract main gco:CharacterString
-        List<String> twoCharLangs = new ArrayList<String>();
-        for (String l : langs) {
-            twoCharLangs.add("#" + XslUtil.twoCharLangCode(l).toUpperCase());
-        }
-        MultilingualSchemaPlugin plugin = (MultilingualSchemaPlugin) schemaManager.getSchema(schema).getSchemaPlugin();
-        if (plugin != null) {
-            plugin.removeTranslationFromElement(tpl, twoCharLangs);
-        }
+            // Multilingual record: Remove all localizedString from the subtemplate for langs that are not in the metadata and set the gco:CharacterString
+            // Monolingual record: Remove all localized strings and extract main gco:CharacterString
+            List<String> templateLangs = new ArrayList<String>();
+            for(String l : langs) {
+                templateLangs.add("#" + l);
+            }
+            MultilingualSchemaPlugin plugin = (MultilingualSchemaPlugin) schemaManager.getSchema(schema).getSchemaPlugin();
+            if (plugin != null) {
+            plugin.removeTranslationFromElement(tpl, templateLangs);
+            }
 
-        if (transformation != null) {
-            Element root = new Element("root");
-            Element requestElt = new Element("request");
-            requestElt.addContent(new Element("transformation").setText(transformation));
-            root.addContent(requestElt);
-            root.addContent(tpl);
+            if (transformation != null) {
+                Element root = new Element("root");
+                Element requestElt = new Element("request");
+                requestElt.addContent(new Element("transformation").setText(transformation));
+                root.addContent(requestElt);
+                root.addContent(tpl);
 
-            Path xslt = dataDirectory.getWebappDir()
-                .resolve("xslt/services/subtemplate/convert.xsl");
-            return Xml.transform(root, xslt);
-        } else {
-            return tpl;
+                Path xslt = dataDirectory.getWebappDir()
+                    .resolve("xslt/services/subtemplate/convert.xsl");
+                return Xml.transform(root, xslt);
+            } else {
+                return tpl;
+            }
         }
     }
 }

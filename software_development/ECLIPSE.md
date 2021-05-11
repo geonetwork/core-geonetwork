@@ -89,54 +89,83 @@ Tomcat Plugin for controlling a Tomcat Service.
 * [How do I configure Tomcat to support remote debugging?](http://wiki.apache.org/tomcat/FAQ/Developing#Q1)
 * [How do I remotely debug Tomcat using Eclipse?](http://wiki.apache.org/tomcat/FAQ/Developing#Q2)
 
+## Eclipse Settings / Preferences
+
+1. Open preferences **Window > Preferences** (Windows and Linux), or *Eclipse | Preferences** (macOS)
+
+2. Select **Java > Code Style > Formatter**
+
+   * Click **Import** and import **code_quality/formatter.xml**
+
+3. Select *Java > Code Style > Code Templates*
+
+   *  Select both Comments and Code elements
+   *  Click **Import** and import `code_quality/codetemplates.xml`
+   
+4. Select **Java > Code Style > Clean Up**
+
+   * Click **Import** and import `code_quality/cleanup.xml`
+
 ## Code Quality Tools in Eclipse
 
-In order to see the same code quality warnings in Eclipse as Maven will detect, Find Bugs and Checkstyle
-need to be installed in your Eclipse install and configured as follows::
+In order to see the same code quality warnings in Eclipse as Maven will detect, Spotbugs and Checkstyle need to be installed in your Eclipse install and configured as follows::
 
-* Start Eclipse
-* Go to **Help > Eclipse Marketplace**
- * Install **findbugs**
-  * Don't Restart
- * Install **checkstyle**
-  * Now Restart
-* Open preferences **Window > Preferences**
- *  Select *Java > Code Style > Code Templates*
-  *  Select both Comments and Code elements
-  *  Click **Import** and import **code_quality/codetemplates.xml**
- *  Select **Java > Code Style > Formatter**
-  *  Click **Import** and import **code_quality/formatter.xml**
- *  Select **Java > Code Style > Clean Up**
-  *  Click **Import** and import **code_quality/cleanup.xml**
- *  Select **Checkstyle**
-  * Click **New**
-  * Select **External Configuration**
-  * Enter any name (IE GeoNetwork)
-  * For **location** choose **code_quality/checkstyle_checks.xml**
-  * Press *OK*
-  * Select New configuration
-  * Press *Set as Default*
- * Select **Java > FindBugs**
-  * Set **analysis effort** to **Maximum**
-  * Set **Minimum rank to report** to **2**
-  * Set **Minimum confidence to report** to **Medium**
-  * Check(enable) all bug categories
-  * Set all **Mark bugs with ... rank as** to **Warning**
-  * Change to _Filter files_ tab
-   * Add **code_quality/findbugs-excludes.xml** file to the **Exclude filter files**
- * Close Preferences
- * Right click on project in **Projects View** select **Checkstyle > Activate Checkstyle**
- * Rebuild full project ( **Project > Clean...** )
-  * Checkstyle violations will show up as warnings
- * Right click on project in **Projects View** select **Find Bugs > Find Bugs**
-   * FindBugs violations will show up as warnings
+1. Start Eclipse
+2. Go to **Help > Eclipse Marketplace**
+3. Install **spotbugs**
+
+   Don't Restart
+     
+4. Install **checkstyle**
+     
+   Now Restart
+     
+5. Open preferences **Window > Preferences**
+   
+7. Select **Checkstyle**
+
+8. Click **New**
+
+   * Select **External Configuration**
+   * Enter name `GeoNetwork`
+   * For **location** choose `code_quality/checkstyle_checks.xml`
+   * Press *OK*
+   * Select the new `GeoNetwork` configuration, and press *Set as Default*
+   
+9. Select **Java > SpotBugs**
+   
+   Reporter configuration tab:
+   
+   * Set **analysis effort** to `Maximum`
+   * Set **Minimum rank to report** to `2`
+   * Set **Minimum confidence to report** to `Medium`
+   * Check (enable) all **Reported (visible) bug categories**
+   * Set all **Mark bugs with ... rank as** to **Warning**
+   
+   Filter files tab:
+   
+   
+   * Add `code_quality/findbugs-excludes.xml` file to the **Exclude filter files**
+   
+10. Use **Apply and Close** to close preferences.
+
+11. Right click on project in **Projects View** select **Checkstyle > Activate Checkstyle**
+12. Rebuild full project ( **Project > Clean...** )
+
+    Checkstyle violations will show up as warnings
+    
+13. Right click on project in **Projects View** select **Spot Bugs > Spot Bugs**
+
+   SpotBugs violations will show up as warnings
 
 ## Code Quality Tools and Maven
 
-During the build process FindBugs and Checkstyle are executed. If a violation is found then the build will fail. Usually the easiest way of resolving violations are to use Eclipse and run Checkstyle or FindBugs on the class or project with the failure. 
+During the build process SpotBugs and Checkstyle are executed. If a violation is found then the build will fail. Usually the easiest way of resolving violations are to use Eclipse and run Checkstyle or SpotBugs on the class or project with the failure. 
+
 Usually a detailed report will be provided in Eclipse along with suggested fixes. If the violation is determined to be an intentional violation the **code_quality/findbugs-excludes.xml** or **code_quality/checkstyle_suppressions.xml** should be updated to suppress the reporting of the violation. (See FindBugs and Checkstyle sections for more details.)
 
-Since the FindBugs and Checkstyle processes can be quite time consuming, adding -DskipTests to the maven commandline will skip those processes as well as tests.
+Since the SpotBugs and Checkstyle processes can be quite time consuming, adding `-DskipTests` to the maven commandline will skip those processes as well as tests.
+
 For example:
 
 ```bash
@@ -151,21 +180,23 @@ mvn install -P-run-static-analysis
 
 That disables the profile that executes the static analysis tasks.
 
-### FindBugs
+### SpotBugs
 
-FindBugs is a tool that statically analyzes Java class files and searches for potential bugs. It excels at finding issues like unclosed reasources, inconsistent locking of resources, refering null known null-values. It also checks for bad practices like using default platform charset instead of an explicit charset.
+SpotBugs (formally FindBugs) is a tool that statically analyzes Java class files and searches for potential bugs. It excels at finding issues like unclosed reasources, inconsistent locking of resources, refering null known null-values. It also checks for bad practices like using default platform charset instead of an explicit charset.
 
-Because bad practices are checked for, sometimes FindBugs detects issues that are intentional. In order to account for these intentional violations FindBugs has exclude filter files which contain rules for violations that should be ignored.
-In GeoNetwork the excludes filter file can be found at **<root>/code_quality/findbugs-excludes.xml**.
+Because bad practices are checked for, sometimes SpotBugs detects issues that are intentional. In order to account for these intentional violations SpotBugs has exclude filter files which contain rules for violations that should be ignored.
 
-For complete details of how to specify matches in the excludes file see http://findbugs.sourceforge.net/manual/filter.html and look at the existing examples in the file.
+In GeoNetwork the excludes filter file can be found at `/code_quality/findbugs-excludes.xml`.
+
+For complete details of how to specify matches in the excludes file see https://spotbugs.readthedocs.io/en/stable/filter.html and look at the existing examples in the file.
 
 The Maven build will fail if any violations are detected so it is important to run FindBugs on each project and fix or exclude each violation that is reported.
 
-## FindBugs Annotations (JSR 305)
+### FindBugs Annotations (JSR 305)
 
-In order to get the maximum benefit from the FindBugs (and Eclipse) analysis the javax.annotation annotations can be used to add metadata to methods, fields and parameters. The most commonly used annotations are @CheckForNull and @Nonnull. These
-can be used on a parameter or return value to indicate that the parameter or return value must not be null or may be null. The FindBugs process will enforce these conditions and statically check that null is only ever correctly returned (in the case of return values) or passed to a method (in the case of parameters).
+In order to get the maximum benefit from the FindBugs (and Eclipse) analysis the javax.annotation annotations can be used to add metadata to methods, fields and parameters. The most commonly used annotations are @CheckForNull and @Nonnull.
+
+These can be used on a parameter or return value to indicate that the parameter or return value must not be null or may be null. The FindBugs process will enforce these conditions and statically check that null is only ever correctly returned (in the case of return values) or passed to a method (in the case of parameters).
 
 Some resources for these annotations are:
 

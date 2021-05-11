@@ -179,6 +179,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
     static private final Namespace xs = Namespace.getNamespace("xs","http://www.w3.org/2001/XMLSchema");
 
     private Logger log;
+    /** Shared service context managed by HarvestManager */
     private ServiceContext context;
     private SchemaManager schemaMan;
     private CategoryMapper localCateg;

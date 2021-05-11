@@ -193,9 +193,13 @@ public class SourcesApi {
 
     private void copySourceLogo(Source source, HttpServletRequest request) {
         if (source.getLogo() != null) {
-            ServiceContext context = ApiUtils.createServiceContext(request);
-            context.getBean(Resources.class).copyLogo(context, "images" + File.separator + "harvesting" + File.separator + source.getLogo(),
-                source.getUuid());
+            try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+                context.getBean(Resources.class).copyLogo(
+                    context,
+                    "images" + File.separator + "harvesting" + File.separator + source.getLogo(),
+                    source.getUuid()
+                );
+            }
         }
     }
 
@@ -268,14 +272,15 @@ public class SourcesApi {
         Optional<Source> existingSource = sourceRepository.findById(sourceIdentifier);
         if (existingSource.isPresent()) {
             if (existingSource.get().getLogo() != null) {
-                ServiceContext context = ApiUtils.createServiceContext(request);
-                final Resources resources = context.getBean(Resources.class);
-                final Path logoDir = resources.locateLogosDir(context);
-                try {
-                    resources.deleteImageIfExists(existingSource.get().getUuid() + "." +
-                            FilenameUtils.getExtension(existingSource.get().getLogo()),
-                        logoDir);
-                } catch (IOException ignored) {
+                try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+                    final Resources resources = context.getBean(Resources.class);
+                    final Path logoDir = resources.locateLogosDir(context);
+                    try {
+                        resources.deleteImageIfExists(existingSource.get().getUuid() + "." +
+                                FilenameUtils.getExtension(existingSource.get().getLogo()),
+                            logoDir);
+                    } catch (IOException ignored) {
+                    }
                 }
             }
             sourceRepository.delete(existingSource.get());

@@ -54,6 +54,9 @@ public class ThesaurusRequest extends Request {
     private static final CoordinateReferenceSystem WGS84 = Region.WGS84;
 
     private final WeakHashMap<String, Map<String, String>> categoryTranslations;
+    /**
+     * Service context for the request, used for bean lookup.
+     */
     private final ServiceContext serviceContext;
     private final KeywordSearchParamsBuilder searchBuilder;
     private final Thesaurus thesaurus;

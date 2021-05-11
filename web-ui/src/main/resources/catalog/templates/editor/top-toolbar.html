@@ -52,7 +52,7 @@
               gn-click-and-spin="cancel()"
               id="gn-editor-btn-cancel"
               data-ng-mouseover="getCancelStatus()" title="{{cancelStatus}}">
-        <i class="fa fa-fw fa-undo"/>
+        <i class="fa fa-fw fa-times"/>
         <span class="visible-lg" data-translate="">cancel</span>
       </button>
     </div>
@@ -98,13 +98,13 @@
               data-gn-click-and-spin="save(true, false)"
               id="gn-editor-btn-save"
               aria-label="{{(isTemplate() ? 'saveTemplate' : (gnCurrentEdit.metadata.draft === 'y' ? 'saveDraft' : 'saveMetadata')) | translate}}"
-              class="btn btn-success navbar-btn">
+              class="btn btn-default navbar-btn">
         <i class="fa fa-fw fa-save"/>
         <span class="visible-lg">{{(isTemplate() ? 'saveTemplate' : (gnCurrentEdit.metadata.draft === 'y' ? 'saveDraft' : 'saveMetadata')) | translate}}</span>
       </button>
       <button type="button"
               data-ng-disabled="gnCurrentEdit.metadata.draft === 'y'"
-              class="btn btn-success navbar-btn dropdown-toggle"
+              class="btn btn-default navbar-btn dropdown-toggle"
               aria-label="{{'showOptions' | translate}}"
               title="{{(gnCurrentEdit.metadata.draft === 'y' ? 'draftCanNoBeATemplateOrMinorEdit' : 'showOptions') | translate}}"
               data-toggle="dropdown"

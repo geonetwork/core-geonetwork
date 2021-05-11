@@ -47,7 +47,8 @@ import static jeeves.transaction.TransactionManager.TransactionRequirement.CREAT
 public class MInspireEtfValidateProcess implements SelfNaming {
 
     private final ApplicationContext appContext;
-    private final ServiceContext serviceContext;
+    /** Shared validation service context used as a fallback if thread local unavailable */
+    private ServiceContext validationServiceContext;
     private final String URL;
 
     private ObjectName probeName;
@@ -58,20 +59,6 @@ public class MInspireEtfValidateProcess implements SelfNaming {
     private int metadataAnalysedInError = 0;
     private long deleteAllDate = Long.MAX_VALUE;
     private long analyseMdDate = Long.MAX_VALUE;
-
-
-    public MInspireEtfValidateProcess(String URL,
-                                      ServiceContext serviceContext, ApplicationContext appContext) {
-        this.URL = URL;
-        this.serviceContext = serviceContext;
-        this.appContext = appContext;
-
-        try {
-            this.probeName = new ObjectName(String.format("geonetwork:name=batch-etf-inspire,idx=%s", this.hashCode()));
-        } catch (MalformedObjectNameException e) {
-            e.printStackTrace();
-        }
-    }
 
     @ManagedAttribute
     public int getMetadataToAnalyseCount() {
@@ -113,6 +100,19 @@ public class MInspireEtfValidateProcess implements SelfNaming {
         return this.probeName;
     }
 
+    public MInspireEtfValidateProcess(String URL,
+                                      ServiceContext serviceContext, ApplicationContext appContext) {
+        this.URL = URL;
+        this.validationServiceContext = serviceContext;
+        this.appContext = appContext;
+
+        try {
+            this.probeName = new ObjectName(String.format("geonetwork:name=batch-etf-inspire,idx=%s", this.hashCode()));
+        } catch (MalformedObjectNameException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void deleteAll() {
         runInNewTransaction("minspireetfvalidate-deleteall", new TransactionTask<Object>() {
             @Override
@@ -122,6 +122,18 @@ public class MInspireEtfValidateProcess implements SelfNaming {
                 return null;
             }
         });
+    }
+
+    /**
+     * Gets the ServiceContext for the current request.
+     *
+     * If there isn't a current request, then this will return the validationServiceContext.
+     *
+     * @return ServiceContext for the current request
+     */
+    protected ServiceContext getServiceContext(){
+        ServiceContext context = ServiceContext.get();
+        return context != null ? context : validationServiceContext;
     }
 
     public void processMetadata(Set<String> uuids, String mode) throws Exception {
@@ -136,7 +148,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
         metadataToAnalyseCount = uuids.size();
         analyseMdDate = System.currentTimeMillis();
 
-        ServiceContext context = serviceContext;
+        ServiceContext context = getServiceContext();
 
         for (String uuid : uuids) {
             if (!metadataRepository.existsMetadataUuid(uuid)) {
@@ -147,7 +159,7 @@ public class MInspireEtfValidateProcess implements SelfNaming {
 
             for (AbstractMetadata record : metadataRepository.findAllByUuid(uuid)) {
                 try {
-                    if (!accessManager.canEdit(serviceContext, String.valueOf(record.getId()))) {
+                    if (!accessManager.canEdit(context, String.valueOf(record.getId()))) {
                         metadataAnalysed++;
                         metadataNotAllowed++;
                     } else {
@@ -179,11 +191,10 @@ public class MInspireEtfValidateProcess implements SelfNaming {
                                             }
 
                                             if (applyCondition) {
-
                                                 String testId = null;
                                                 String getRecordByIdUrl = null;
                                                 if (StringUtils.isEmpty(mode)) {
-                                                    testId = inspireValidatorUtils.submitFile(serviceContext, URL,
+                                                    testId = inspireValidatorUtils.submitFile(context, URL,
                                                         new ByteArrayInputStream(mdToValidate.getBytes()), entry.getKey(), record.getUuid());
                                                 } else {
                                                     String portal = null;
@@ -208,18 +219,18 @@ public class MInspireEtfValidateProcess implements SelfNaming {
                                                             portal,
                                                             ISO19139Namespaces.GMD.getURI(),
                                                             record.getUuid());
-                                                        testId = inspireValidatorUtils.submitUrl(serviceContext, URL, getRecordByIdUrl, entry.getKey(), record.getUuid());
+                                                        testId = inspireValidatorUtils.submitUrl(context, URL, getRecordByIdUrl, entry.getKey(), record.getUuid());
                                                     }
                                                 }
                                                 if (testId != null) {
 
-                                                    inspireValidatorUtils.waitUntilReady(serviceContext, URL, testId);
+                                                inspireValidatorUtils.waitUntilReady(context, URL, testId);
 
-                                                    String reportUrl = inspireValidatorUtils.getReportUrl(URL, testId);
-                                                    String reportXmlUrl = InspireValidatorUtils.getReportUrlXML(URL, testId);
-                                                    String reportXml = inspireValidatorUtils.retrieveReport(serviceContext, reportXmlUrl);
+                                                String reportUrl = inspireValidatorUtils.getReportUrl(URL, testId);
+                                                String reportXmlUrl = inspireValidatorUtils.getReportUrlXML(URL, testId);
+                                                String reportXml = inspireValidatorUtils.retrieveReport(context, reportXmlUrl);
 
-                                                    String validationStatus = inspireValidatorUtils.isPassed(serviceContext, URL, testId);
+                                                String validationStatus = inspireValidatorUtils.isPassed(context, URL, testId);
 
                                                     MetadataValidationStatus metadataValidationStatus =
                                                         inspireValidatorUtils.calculateValidationStatus(validationStatus);
@@ -295,9 +306,9 @@ public class MInspireEtfValidateProcess implements SelfNaming {
 
     /**
      * Returns the metadata to validate in INSPIRE validator:
-     * - For iso19139 schema returns the iso19139 xml.
-     * - For other schemas uses the iso19139 formatter to convert it,
-     * otherwise if not available an iso19139 formatter returns null.
+     *  - For iso19139 schema returns the iso19139 xml.
+     *  - For other schemas uses the iso19139 formatter to convert it,
+     *    otherwise if not available an iso19139 formatter returns null.
      *
      * @param context
      * @param record

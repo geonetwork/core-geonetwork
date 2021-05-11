@@ -104,8 +104,8 @@ public class GetKeywords {
         NativeWebRequest webRequest)
         throws Exception {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceContext context = applicationContext.getBean(ServiceManager.class).createServiceContext("keywords", uiLang,
-            webRequest.getNativeRequest(HttpServletRequest.class));
+      try (ServiceContext context = applicationContext.getBean(ServiceManager.class).createServiceContext("keywords", uiLang,
+          webRequest.getNativeRequest(HttpServletRequest.class))) {
         Element responseXml = new Element(Jeeves.Elem.RESPONSE);
         UserSession session = context.getUserSession();
 
@@ -180,6 +180,7 @@ public class GetKeywords {
         headers.add("Cache-Control", "no-cache");
 
         return new HttpEntity<>(response, headers);
+      }
     }
 
     private boolean checkModified(NativeWebRequest webRequest, ThesaurusManager thesaurusMan, KeywordSearchParamsBuilder builder) {

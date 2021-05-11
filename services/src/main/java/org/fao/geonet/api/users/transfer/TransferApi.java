@@ -180,7 +180,7 @@ public class TransferApi {
         HttpServletRequest request
     ) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         //--- transfer privileges (if case)
 
@@ -252,6 +252,7 @@ public class TransferApi {
         }
         dataManager.indexMetadata(list);
         return new ResponseEntity(HttpStatus.CREATED);
+      }
     }
 
     private Set<String> retrievePrivileges(ServiceContext context, Integer userId, int groupId) throws SQLException {

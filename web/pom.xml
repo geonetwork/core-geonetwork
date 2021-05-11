@@ -463,11 +463,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.jsoup</groupId>
-      <artifactId>jsoup</artifactId>
-      <version>0.2.2</version>
-    </dependency>
-    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>gn-web-ui</artifactId>
       <version>${project.version}</version>
@@ -706,10 +701,67 @@
               <includes>
                 <include>**/*</include>
               </includes>
-              <followSymlinks>false</followSymlinks>
             </fileset>
           </filesets>
         </configuration>
+        <executions>
+          <execution>
+            <id>reset</id>
+            <goals><goal>clean</goal></goals>
+            <!-- reset working files covered by .gitignore -->
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>.</directory>
+                  <includes>
+                    <include>*.db</include>
+                    <include>*.db.old</include>
+                    <include>images/**</include>
+                    <include>jcs_caching/**</include>
+                    <include>logs/**</include>
+                  </includes>
+                </fileset>
+                <fileset>
+                  <directory>src/main/webapp/</directory>
+                  <includes>
+                    <include>META-INF/MANIFEST.MF</include>
+                    <include>data/**</include>
+                    <include>doc/en/**</include>
+                    <include>doc/fr/**</include>
+                    <include>images/logos/*</include>
+                    <include>images/logos/statTmp</include>
+                    <include>scripts/lib/**</include>
+                  </includes>
+                </fileset>
+                <fileset>
+                  <directory>src/main/webapp/WEB-INF/</directory>
+                  <includes>
+                    <include>data/0*</include>
+                    <include>data/config/schema_plugins/**</include>
+                    <include>data/config/schemaplugin-uri-catalog.xml</include>
+                    <include>data/data/backup/**</include>
+                    <include>data/data/metadata_data/**</include>
+                    <include>data/data/metadata_subversion/**</include>
+                    <include>data/data/resources/htmlcache/**</include>
+                    <include>data/data/resources/images/**</include>
+                    <include>data/data/schema_plugins/**</include>
+                    <include>data/data/resources/xml/**</include>
+                    <include>data/data/upload/**</include>
+                    <include>data/harvester_*</include>
+                    <include>data/index/**</include>
+                    <include>data/node_less_files/**</include>
+                    <include>data/removed/**</include>
+                    <include>data/wro4j*.db</include>
+                    <include>data/wro4j-cache*</include>
+                    <include>data/data_*</include>
+                    <include>data/lucene/**</include>
+                    <include>metadata_subversion/</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
@@ -882,7 +934,6 @@
             catalog/lib/bootstrap-table/*.md,
             catalog/lib/bootstrap-table/docs/**
           </packagingExcludes>
-          <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
           <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
           <attachClasses>true</attachClasses>
           <warName>${application.name}</warName>
@@ -897,7 +948,7 @@
           <webAppSourceDirectory>${project.build.directory}/geonetwork</webAppSourceDirectory>
           <webApp>
             <contextPath>/${application.name}</contextPath>
-            <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
+            <descriptor>${project.build.directory}/geonetwork/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
               <resourcesAsCSV>
                 ${project.basedir}/src/main/webapp,

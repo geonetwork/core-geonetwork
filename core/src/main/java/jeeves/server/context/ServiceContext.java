@@ -23,6 +23,9 @@
 
 package jeeves.server.context;
 
+import java.io.Closeable;
+import java.util.Objects;
+import javax.servlet.http.HttpServletRequest;
 import jeeves.component.ProfileManager;
 import jeeves.server.UserSession;
 import jeeves.server.dispatchers.ServiceManager;
@@ -38,6 +41,7 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.transaction.TransactionStatus;
 
@@ -52,21 +56,200 @@ import javax.persistence.EntityManager;
 
 /**
  * Contains the context for a service execution.
+ *
+ * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup:
+ * <pre><code>
+ * try {
+ *    context = serviceMan.createServiceContext("handler", appContext);
+ *    context.setAsThreadLocal();
+ *    ...
+ * } finally {
+ *    context.clearAsThreadLocal();
+ *    context.clear();
+ * }</code></pre>
+ *
+ * @see ServiceManager
  */
-public class ServiceContext extends BasicContext {
+public class ServiceContext extends BasicContext implements AutoCloseable  {
 
+    /**
+     * ServiceContext is managed as a thread locale using setAsThreadLocal, clearAsThreadLocal and clear methods.
+     * ThreadLocalPolicy defines the behaviour of these methods double checking that they are being used correctly.
+     */
+    public static enum ThreadLocalPolicy {
+        /** Direct management of thread local with no checking. */
+        DIRECT,
+        /** Check behavior and log any unexpected use. */
+        TRACE,
+        /** Raise any {@link IllegalStateException} for unexpected behaviour */
+        STRICT };
+
+    /**
+     * Use -Djeeves.server.context.service.policy to define policy:
+     * <ul>
+     *     <li>direct: direct management of thread local with no checking</li>
+     *     <li>trace: check behavior and log unusal use</li>
+     *     <li>strict: raise illegal state exception for unusual behavior</li>
+     * </ul>
+     */
+    private static final ThreadLocalPolicy POLICY;
+    static {
+        String property = System.getProperty("jeeves.server.context.policy", "TRACE");
+        ThreadLocalPolicy policy;
+        try {
+            policy = ThreadLocalPolicy.valueOf(property.toUpperCase());
+        }
+        catch (IllegalArgumentException defaultToDirect) {
+            policy = ThreadLocalPolicy.DIRECT;
+        }
+        POLICY = policy;
+    }
+
+    /**
+     * Be careful with thread local to avoid leaking resources, set POLICY above to trace allocation.
+     */
     private static final InheritableThreadLocal<ServiceContext> THREAD_LOCAL_INSTANCE = new InheritableThreadLocal<ServiceContext>();
-    private UserSession _userSession = new UserSession();
-    private InputMethod _input;
-    private OutputMethod _output;
-    private Map<String, String> _headers;
-    private String _language;
-    private String _service;
-    private String _ipAddress;
-    private int _maxUploadSize;
-    private JeevesServlet _servlet;
-    private boolean _startupError = false;
-    private Map<String, String> _startupErrors;
+
+    /**
+     * Simple data structure recording service details.
+     *
+     * Lightweight data structure used logging service details such as service name.
+     */
+    public static class ServiceDetails {
+        private String ipAddress;
+        private String service;
+        private String language;
+        /**
+         * Record service context details.
+         * @param context service context
+         */
+        public ServiceDetails(ServiceContext context){
+            this.ipAddress = context.getIpAddress();
+            this.service = context.getService();
+            this.language = context.getLanguage();
+        }
+
+        /**
+         * IP address of request, or <code>"?"</code> for local loopback request.
+         *
+         * @return ip address, or <code>"?"</code> for loopback request.
+         */
+        public String getIpAddress() {
+            return ipAddress;
+        }
+
+        /**
+         * Service name, or null if service context was not in use.
+         *
+         * @return service name, or null if service context was not in use.
+         */
+        public String getService() {
+            return service;
+        }
+
+        /**
+         * Language code, or <code>"?"</code> if undefined.
+         * @return language code, or <code>"?"</code> if undefined.
+         */
+        public String getLanguage() {
+            return language;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ServiceDetails that = (ServiceDetails) o;
+            return Objects.equals(ipAddress, that.ipAddress) && service.equals(that.service) && Objects.equals(language, that.language);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(ipAddress, service, language);
+        }
+    }
+
+    /**
+     * Shared service context offering restricted functionality.
+     *
+     * Use of service context has been assumed in many parts of the codebase. This shared "AppHandler" service context
+     * is used during Jeeves startup and has some protection from being cleared. Additional managers such HarvestManager
+     * also use a shared service context to support execution of background processes.
+     */
+    public static class AppHandlerServiceContext extends ServiceContext {
+
+        /**
+         * Shared AppHandler service context associated with application lifecycle.
+         *
+         * See factory method {@link ServiceManager#createAppHandlerServiceContext(ConfigurableApplicationContext, String)}  and
+         * {@link ServiceManager#createAppHandlerServiceContext(ConfigurableApplicationContext)}.
+         *
+         * @param service Service name
+         * @param jeevesApplicationContext Application context
+         * @param contexts Handler context
+         * @param entityManager
+         */
+        public AppHandlerServiceContext(final String service, final ConfigurableApplicationContext jeevesApplicationContext,
+                              final Map<String, Object> contexts, final EntityManager entityManager) {
+            super( service, jeevesApplicationContext, contexts, entityManager );
+            _language = "?";
+            _userSession = null;
+            _ipAddress = "?";
+        }
+
+        @Override
+        public void setUserSession(UserSession session) {
+            if (session != null) {
+                warning("Shared service context \"" + _service + "\"  context should not be configured with user session");
+            }
+            super.setUserSession(session);
+        }
+        @Override
+        public void setIpAddress(String address) {
+            if( address != null && !"?".equals(address)) {
+                warning("Shared service context \""+_service+"\" should not be associated with an ip address");
+            }
+            super.setIpAddress(address);
+        }
+
+        public void clear() {
+            warning("Shared service context \""+_service+"\"  context is shared, and should not be cleared");
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("AppHandlerServiceContext ");
+            sb.append("'").append(_service).append('\'');
+
+            return sb.toString();
+        }
+
+    };
+    /**
+     * Trace allocation via {@link #setAsThreadLocal()}.
+     *
+     * Recording where the service context was assigned to the thread local to aid in debugging.
+     */
+    protected Throwable allocation = null;
+
+    /**
+     * Trace service deallocation via {@link #clear()} method.
+     *
+     * Recording where the service context clear() was called to aid in debugging.
+     */
+    protected Throwable deAllocation = null;
+
+    protected UserSession _userSession = new UserSession();
+    protected InputMethod _input;
+    protected OutputMethod _output;
+    protected Map<String, String> _headers;
+    protected String _language;
+    protected String _service;
+    protected String _ipAddress;
+    protected int _maxUploadSize;
+    protected JeevesServlet _servlet;
+    protected boolean _startupError = false;
+    protected Map<String, String> _startupErrors;
     /**
      * Property to be able to add custom response headers depending on the code (and not the xml of
      * Jeeves)
@@ -76,7 +259,7 @@ public class ServiceContext extends BasicContext {
      *
      * @see #_statusCode
      */
-    private Map<String, String> _responseHeaders;
+    protected Map<String, String> _responseHeaders;
     /**
      * Property to be able to add custom http status code headers depending on the code (and not the
      * xml of Jeeves)
@@ -86,11 +269,22 @@ public class ServiceContext extends BasicContext {
      *
      * @see #_responseHeaders
      */
-    private Integer _statusCode;
+    protected Integer _statusCode;
+
+    /**
+     * Context for service execution.
+     *
+     * See factory method {@link ServiceManager#createServiceContext(String, String, HttpServletRequest)} and
+     * {@link ServiceManager#createServiceContext(String, ConfigurableApplicationContext)}.
+     *
+     * @param service Service name
+     * @param jeevesApplicationContext Application context
+     * @param contexts Handler context
+     * @param entityManager
+     */
     public ServiceContext(final String service, final ConfigurableApplicationContext jeevesApplicationContext,
                           final Map<String, Object> contexts, final EntityManager entityManager) {
         super(jeevesApplicationContext, contexts, entityManager);
-
         setService(service);
 
         setResponseHeaders(new HashMap<String, String>());
@@ -104,9 +298,47 @@ public class ServiceContext extends BasicContext {
      */
     @CheckForNull
     public static ServiceContext get() {
-        return THREAD_LOCAL_INSTANCE.get();
+        ServiceContext context = THREAD_LOCAL_INSTANCE.get();
+        if(context != null && context.isCleared()) {
+            context.checkCleared("Thread local access");
+        }
+        return context;
     }
 
+    /**
+     * Auto closable for try-with-resources support.
+     * <p>
+     * For use when creating service context for use as a parameter, will check and handle {@link #clear()} if needed:
+     * <pre>
+     * try (ServiceContext context = serviceMan.createServiceContext("AppHandler", appContext)){
+     *     ...
+     * }
+     * </pre>
+     * </p>
+     * Close will also check and handle {@link #clearAsThreadLocal()} if needed:
+     * <pre>
+     * try (ServiceContext context = serviceMan.createServiceContext("AppHandler", appContext)){
+     *     setAsThreadLocal();
+     *     ....
+     * }
+     * </pre>
+     * </p>
+     */
+    public void close() {
+        try {
+            ServiceContext check = THREAD_LOCAL_INSTANCE.get();
+            if( this == check){
+                clearAsThreadLocal();
+            }
+        }
+        finally {
+            if( !isCleared() ){
+                // reuse clear method, but provide useful deAllocation context
+                clear();
+                deAllocation  = new Throwable("ServiceContext "+_service+" closed");
+            }
+        }
+    }
     //--------------------------------------------------------------------------
     //---
     //--- Constructor
@@ -115,10 +347,204 @@ public class ServiceContext extends BasicContext {
 
     /**
      * Called to set the Service context for this thread and inherited threads.
+     *
+     * If you call this method you are responsible for thread context management and {@link #clearAsThreadLocal()}.
+     * <pre>
+     * try {
+     *     context.setAsThreadLocal();
+     * }
+     * finally {
+     *     context.clearAsThreadLocal();
+     * }
+     * </pre>
      */
     public void setAsThreadLocal() {
+        ServiceContext check = THREAD_LOCAL_INSTANCE.get();
+
+        if( POLICY == ThreadLocalPolicy.DIRECT || check == null){
+            // step one set thread local
+            THREAD_LOCAL_INSTANCE.set(this);
+            // step two ensure ApplicationContextHolder thread local kept in sync
+            ApplicationContextHolder.set(this.getApplicationContext());
+            // step three details on allocation
+            allocation = new Throwable("ServiceContext "+_service+" allocated to thread");
+
+            return;
+        }
+
+        if (this == check) {
+            String unexpected = "Service " + _service + " Context: already in use for this thread";
+            if( allocation != null ){
+                // details on prior allocation
+                unexpected += "\n\tContext '"+check._service+"' conflict: " + check.allocation.getStackTrace()[1];
+                checkUnexpectedState( unexpected );
+            }
+            // step one set thread local
+            // (already done)
+            // step two ensure ApplicationContextHolder thread local kept in sync
+            if (ApplicationContextHolder.get() != null) {
+                if (ApplicationContextHolder.get() != this.getApplicationContext()) {
+                    ApplicationContextHolder.clear();
+                    ApplicationContextHolder.set(this.getApplicationContext());
+                }
+            }
+            else {
+                ApplicationContextHolder.set(this.getApplicationContext());
+            }
+            // step three detail on re-allocation
+            allocation = new Throwable("ServiceContext "+_service+" allocated to thread");
+
+            unexpected += "\n\tService '"+_service+"' allocate: " + allocation.getStackTrace()[1];
+            checkUnexpectedState( unexpected );
+            return;
+        }
+
+        // thread being recycled or reused for new service context
+        //
+        THREAD_LOCAL_INSTANCE.remove();
+
+        String unexpected = "Service " + _service + " Context: Clearing prior service context " + check._service;
+        if( check.allocation != null ){
+            // details on prior allocation
+            unexpected += "\n\tContext '"+check._service+"' conflict: " + check.allocation.getStackTrace()[1];
+        }
+
+        // step one set thread local
         THREAD_LOCAL_INSTANCE.set(this);
-        ApplicationContextHolder.set(this.getApplicationContext());
+        // step two ensure ApplicationContextHolder thread local kept in sync
+        if (ApplicationContextHolder.get() != null) {
+            if (ApplicationContextHolder.get() != this.getApplicationContext()) {
+                ApplicationContextHolder.clear();
+                ApplicationContextHolder.set(this.getApplicationContext());
+            }
+        }
+        else {
+            ApplicationContextHolder.set(this.getApplicationContext());
+        }
+        // step three detail on present re-allocation
+        allocation = new Throwable("ServiceContext "+_service+" allocated to thread");
+
+        unexpected += "\n\tService '"+_service+"' allocate: " + allocation.getStackTrace()[1];
+        checkUnexpectedState( unexpected );
+    }
+
+    /**
+     * Check if _service name is available, or raise a NullPointerException if clear() has already been called.
+     *
+     * @param message message to use if clear() has already been called.
+     */
+    protected void checkCleared(String message){
+        if(isCleared()){
+            String unavailable = message + " - service context no longer available\nCleared by " + deAllocation.getStackTrace()[1];
+            throw new NullPointerException(unavailable);
+        }
+    }
+
+    /** Log or raise exception based on {@link POLICY} */
+    protected void checkUnexpectedState( String unexpected ){
+        if( unexpected == null ){
+            return; // nothing unexpected to report
+        }
+        switch( POLICY ){
+            case DIRECT:
+                break; // ignore
+            case TRACE:
+                debug(unexpected);
+                break;
+            case STRICT:
+                throw new IllegalStateException(unexpected);
+        }
+    }
+
+    /**
+     * Called to clear the Service context for this thread and inherited threads.
+     *
+     * In general code that creates ServiceContext is responsible thread management and any cleanup:
+     * <pre>
+     * try {
+     *     context.setAsThreadLocal();
+     * }
+     * finally {
+     *     context.clearAsThreadLocal();
+     * }
+     * </pre>
+     */
+    public void clearAsThreadLocal() {
+        ServiceContext check = THREAD_LOCAL_INSTANCE.get();
+
+        // clean up thread local
+        if( POLICY == ThreadLocalPolicy.DIRECT){
+            if( check != null ){
+                check.allocation = null;
+                check = null;
+            }
+            THREAD_LOCAL_INSTANCE.remove();
+            allocation = null;
+            // ApplicationContextHolder.clear();
+            return;
+        }
+        if( check == null ){
+            String unexpected = "ServiceContext "+_service+" clearAsThreadLocal: '"+_service+"' unexpected state, thread local already cleared";
+            if( allocation != null ){
+                unexpected += "\n\tContext '"+_service+"' allocation: " + allocation.getStackTrace()[1];
+            }
+            allocation = null;
+            // ApplicationContextHolder.clear();
+            checkUnexpectedState( unexpected );
+            return;
+        }
+        if (check == this){
+            THREAD_LOCAL_INSTANCE.remove();
+            allocation = null;
+            // ApplicationContextHolder.clear();
+            return;
+        }
+
+        String unexpected = "ServiceContext clearAsThreadLocal: \"+_service+\" unexpected state, thread local presently used by service context '"+check._service+"'";
+        if( check.allocation != null ){
+            unexpected += "\n\tContext '"+check._service+"' conflict: " + check.allocation.getStackTrace()[1];
+        }
+        if( allocation != null ){
+            unexpected += "\n\tContext '"+_service+"' allocation: " + allocation.getStackTrace()[1];
+        }
+        THREAD_LOCAL_INSTANCE.remove();
+        allocation = null;
+        // ApplicationContextHolder.clear();
+        if( ApplicationContextHolder.get() != null && ApplicationContextHolder.get() != getApplicationContext() ){
+            unexpected += "\n\tApplicationContext '"+ApplicationContextHolder.get().getApplicationName()+"' conflict detected";
+            unexpected += "\n\tApplicationContext '"+getApplicationContext().getApplicationName()+"' expected";
+            ApplicationContextHolder.clear();
+        }
+        checkUnexpectedState( unexpected );
+    }
+
+    /**
+     * Release any resources tied up by this service context.
+     * <p>
+     * In general code that creates a ServiceContext is responsible thread management and any cleanup:
+     * <pre>
+     * ServiceContext context = serviceMan.createServiceContext("AppHandler", appContext);
+     * try {
+     *     context.setAsThreadLocal();
+     * }
+     * finally {
+     *     context.clearAsThreadLocal();
+     *     context.clear();
+     * }
+     * </pre>
+     */
+    public void clear(){
+        if( this._service != null) {
+            deAllocation  = new Throwable("ServiceContext "+_service+" cleared");
+            this._service =  null;
+            this._headers = null;
+            this._responseHeaders = null;
+            this._servlet = null;
+            this._userSession = null;
+        }
+        else {
+            debug("Service context unexpectedly cleared twice, previously cleared by "+deAllocation.getStackTrace()[1]);
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -127,27 +553,63 @@ public class ServiceContext extends BasicContext {
     //---
     //--------------------------------------------------------------------------
 
+    /**
+     * Language code, or <code>"?"</code> if undefined.
+     * @return language code, or <code>"?"</code> if undefined.
+     */
     public String getLanguage() {
+        // checkCleared("language not available");
         return _language;
     }
-
+    /**
+     * Language code, or <code>"?"</code> if undefined.
+     * @param lang language code, or <code>"?"</code> if undefined.
+     */
     public void setLanguage(final String lang) {
         _language = lang;
     }
 
+    /**
+     * True if {@link #clear()} has been called to reclaim resources.
+     *
+     * @return true if service context has been cleared
+     */
+    public boolean isCleared(){
+        return _service == null;
+    }
+
+    /**
+     * Service name, or null if service context is no longer in use.
+     *
+     * @return service name, or null if service is no longer in use
+     */
     public String getService() {
         return _service;
     }
 
-    public void setService(final String service) {
+    public void setService(String service) {
+        if( service == null ){
+            service = "internal";
+        }
         this._service = service;
         logger = Log.createLogger(Log.WEBAPP + "." + service);
     }
 
+    /**
+     * IP address of request, or <code>"?"</code> for local loopback request.
+     *
+     * @return ip address, or <code>"?"</code> for loopback request.
+     */
     public String getIpAddress() {
+        checkCleared("ip address not available");
         return _ipAddress;
     }
 
+    /**
+     * IP address of request, or <code>"?"</code> for local loopback request.
+     *
+     * @param address ip, address or <code>"?"</code> for loopback request.
+     */
     public void setIpAddress(final String address) {
         _ipAddress = address;
     }
@@ -157,6 +619,7 @@ public class ServiceContext extends BasicContext {
     }
 
     public int getMaxUploadSize() {
+        checkCleared("max upload size not available");
         return _maxUploadSize;
     }
 
@@ -170,11 +633,29 @@ public class ServiceContext extends BasicContext {
      * @return the user session stored on httpsession
      */
     public UserSession getUserSession() {
+        checkCleared("user session not available");
         return _userSession;
     }
 
     public void setUserSession(final UserSession session) {
         _userSession = session;
+    }
+
+    /**
+     * Safely look up user name, or <code>anonymous</code>.
+     *
+     * This is a quick null safe lookup of user name suitable for use in logging and error messages.
+     *
+     * @return username, or <code>anonymous</code> if unavailable.
+     */
+    public String userName(){
+        if (_userSession == null || _userSession.getUsername() == null ){
+            return "anonymous";
+        }
+        if( _userSession.getProfile() != null ){
+            return _userSession.getUsername() + "/" + _userSession.getProfile();
+        }
+        return _userSession.getUsername();
     }
 
     public ProfileManager getProfileManager() {
@@ -184,6 +665,7 @@ public class ServiceContext extends BasicContext {
     //--------------------------------------------------------------------------
 
     public InputMethod getInputMethod() {
+        checkCleared("input method not available");
         return _input;
     }
 
@@ -192,6 +674,7 @@ public class ServiceContext extends BasicContext {
     }
 
     public OutputMethod getOutputMethod() {
+        checkCleared("output method not available");
         return _output;
     }
 
@@ -200,6 +683,7 @@ public class ServiceContext extends BasicContext {
     }
 
     public Map<String, String> getStartupErrors() {
+        checkCleared("startup errors not available");
         return _startupErrors;
     }
 
@@ -209,6 +693,7 @@ public class ServiceContext extends BasicContext {
     }
 
     public boolean isStartupError() {
+        checkCleared("is startup error not available");
         return _startupError;
     }
 
@@ -234,6 +719,7 @@ public class ServiceContext extends BasicContext {
      * @return The map of headers from the request
      */
     public Map<String, String> getHeaders() {
+        checkCleared("headers not available");
         return _headers;
     }
 
@@ -249,6 +735,7 @@ public class ServiceContext extends BasicContext {
     }
 
     public JeevesServlet getServlet() {
+        checkCleared("servlet not available");
         return _servlet;
     }
 
@@ -269,20 +756,26 @@ public class ServiceContext extends BasicContext {
             new TransactionTask<Void>() {
                 @Override
                 public Void doInTransaction(TransactionStatus transaction) throws Throwable {
-                    final ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), htContexts, getEntityManager());
-                    UserSession session = ServiceContext.this._userSession;
-                    if (session == null) {
-                        session = new UserSession();
-                    }
+                    final ServiceManager serviceManager = getApplicationContext().getBean(ServiceManager.class);
+                    final ServiceContext localServiceContext = serviceManager.createServiceContext(request.getService(), getApplicationContext());
                     try {
-                        final ServiceManager serviceManager = context.getBean(ServiceManager.class);
-                        serviceManager.dispatch(request, session, context);
+                        UserSession session = ServiceContext.this._userSession;
+                        if (session == null) {
+                            session = new UserSession();
+                        }
+                        localServiceContext.setUserSession(session);
+
+                        serviceManager.dispatch(request, session, localServiceContext);
                     } catch (Exception e) {
                         Log.error(Log.XLINK_PROCESSOR, "Failed to parse result xml" + request.getService());
                         throw new ServiceExecutionFailedException(request.getService(), e);
                     } finally {
-                        // set old context back as thread local
-                        setAsThreadLocal();
+                        if( localServiceContext == ServiceContext.get()){
+                            // dispatch failed to clear cleanup localServiceContext
+                            // restoring  back as thread local
+                            ServiceContext.this.setAsThreadLocal();
+                        }
+                        localServiceContext.clear();
                     }
                     return null;
                 }
@@ -320,6 +813,17 @@ public class ServiceContext extends BasicContext {
         this._statusCode = statusCode;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ServiceContext ");
+        sb.append("'").append(_service).append('\'');
+        sb.append(" ").append(_input).append(" --> ").append(_output);
+        sb.append(" { _language='").append(_language).append('\'');
+        sb.append(", _ipAddress='").append(_ipAddress).append('\'');
+        sb.append('}');
+
+        return sb.toString();
+    }
 }
 
 //=============================================================================

@@ -85,13 +85,16 @@ public class BackupArchiveApi {
     @ResponseBody
     public ResponseEntity<FileSystemResource> downloadBackup(HttpServletRequest request) throws Exception {
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         ApplicationContext appContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
         ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
 
         Log.info(ArchiveAllMetadataJob.BACKUP_LOG, "User " + context.getUserSession().getUsername() + " from IP: " + context
             .getIpAddress() + " has started to download backup archive");
+        // TODO: Review
+        Log.info(ArchiveAllMetadataJob.BACKUP_LOG, "User " + context.userName() + " from IP: " + context
+                .getIpAddress() + " has started to download backup archive");
 
         File backupDir = dataDirectory.getBackupDir().resolve(ArchiveAllMetadataJob.BACKUP_DIR).toFile();
         if (!backupDir.exists()) {
@@ -113,6 +116,7 @@ public class BackupArchiveApi {
         final ResponseEntity<FileSystemResource> response = new ResponseEntity<>(new FileSystemResource(files[0]), headers, HttpStatus.OK);
 
         return response;
+      }
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Trigger MEF backup archive",
@@ -128,11 +132,12 @@ public class BackupArchiveApi {
     })
     @ResponseBody
     public String trigger(HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         final Trigger trigger = newTrigger().forJob("archiveAllMetadata", "gnBackgroundTasks").startNow().build();
         context.getBean("gnBackgroundJobScheduler", Scheduler.class).scheduleJob(trigger);
 
         return "{\"success\":true}";
+      }
     }
 
 }

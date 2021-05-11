@@ -28,6 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -170,26 +171,28 @@ public class ProcessApi {
         @Parameter(hidden = true)
             HttpServletRequest request
     ) throws Exception {
-        UserSession userSession = ApiUtils.getUserSession(session);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+          UserSession userSession = ApiUtils.getUserSession(session);
 
-        MetadataReplacementProcessingReport report =
-            new MetadataReplacementProcessingReport("massive-content-update");
-        try {
-            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
+          MetadataReplacementProcessingReport report =
+              new MetadataReplacementProcessingReport("massive-content-update");
+          try {
+              Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
 
-            report.setTotalRecords(records.size());
-            MetadataSearchAndReplace m = new MetadataSearchAndReplace(
-                dataMan,
-                process,
-                isTesting, isCaseInsensitive, vacuumMode,
-                allParams,
-                ApiUtils.createServiceContext(request), records, report);
-            m.process();
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            report.close();
-        }
-        return report;
+              report.setTotalRecords(records.size());
+              MetadataSearchAndReplace m = new MetadataSearchAndReplace(
+                  dataMan,
+                  process,
+                  isTesting, isCaseInsensitive, vacuumMode,
+                  allParams,
+                  context, records, report);
+              m.process();
+          } catch (Exception e) {
+              throw e;
+          } finally {
+              report.close();
+          }
+          return report;
+      }
     }
 }

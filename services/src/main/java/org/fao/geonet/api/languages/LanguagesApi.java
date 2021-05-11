@@ -126,9 +126,10 @@ public class LanguagesApi {
                     }
                 }
                 if (data.size() > 0) {
-                    ServiceContext context = ApiUtils.createServiceContext(request);
-                    DbLib.runSQL(context, data);
-                    return;
+                    try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+                        DbLib.runSQL(context, data);
+                        return;
+                    }
                 }
             }
             throw new ResourceNotFoundException(String.format(
@@ -188,9 +189,10 @@ public class LanguagesApi {
                     }
                 }
                 if (data.size() > 0) {
-                    ServiceContext context = ApiUtils.createServiceContext(request);
-                    DbLib.runSQL(context, data);
-                    return;
+                    try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+                        DbLib.runSQL(context, data);
+                        return;
+                    }
                 }
             }
             throw new ResourceNotFoundException(String.format(

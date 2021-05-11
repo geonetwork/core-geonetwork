@@ -263,48 +263,50 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         Validator validator;
 
-        final ServiceContext context = createServiceContext(
+      try(ServiceContext context = createServiceContext(
             language,
             formatType,
-            request.getNativeRequest(HttpServletRequest.class));
+            request.getNativeRequest(HttpServletRequest.class))) {
+        // context used as a parameter, not set as threadlocal
 
-        if (changeDate != null) {
-            final long changeDateAsTime = changeDate.toDate().getTime();
-            long roundedChangeDate = changeDateAsTime / 1000 * 1000;
-            if (request.checkNotModified(language, roundedChangeDate) &&
-                context.getBean(CacheConfig.class).allowCaching(key)) {
-                if (!skipPopularityBool) {
-                    context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
-                }
-                return;
-            }
-            validator = new ChangeDateValidator(changeDateAsTime);
-        } else {
-            validator = new NoCacheValidator();
-        }
-        final FormatMetadata formatMetadata = new FormatMetadata(context, key, request);
+          if (changeDate != null) {
+              final long changeDateAsTime = changeDate.toDate().getTime();
+              long roundedChangeDate = changeDateAsTime / 1000 * 1000;
+              if (request.checkNotModified(language, roundedChangeDate) &&
+                  context.getBean(CacheConfig.class).allowCaching(key)) {
+                  if (!skipPopularityBool) {
+                      context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
+                  }
+                  return;
+              }
+              validator = new ChangeDateValidator(changeDateAsTime);
+          } else {
+              validator = new NoCacheValidator();
+          }
+          final FormatMetadata formatMetadata = new FormatMetadata(context, key, request);
 
-        byte[] bytes;
-        if (hasNonStandardParameters(request)) {
-            // the http headers can cause a formatter to output custom output due to the parameters.
-            // because it is not known how the parameters may affect the output then we have two choices
-            // 1. make a unique cache for each configuration of parameters
-            // 2. don't cache anything that has extra parameters beyond the standard parameters used to
-            //    create the key
-            // #1 has a major flaw because an attacker could simply make new requests always changing the parameters
-            // and completely swamp the cache.  So we go with #2.  The formatters are pretty fast so it is a fine solution
-            bytes = formatMetadata.call().data;
-        } else {
-            bytes = context.getBean(FormatterCache.class).get(key, validator, formatMetadata, false);
-        }
-        if (bytes != null) {
-            if (!skipPopularityBool) {
-                context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
-            }
-            writeOutResponse(context, metadataUuid,
-                LanguageUtils.locale2gnCode(locale.getISO3Language()),
-                request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
-        }
+          byte[] bytes;
+          if (hasNonStandardParameters(request)) {
+              // the http headers can cause a formatter to output custom output due to the parameters.
+              // because it is not known how the parameters may affect the output then we have two choices
+              // 1. make a unique cache for each configuration of parameters
+              // 2. don't cache anything that has extra parameters beyond the standard parameters used to
+              //    create the key
+              // #1 has a major flaw because an attacker could simply make new requests always changing the parameters
+              // and completely swamp the cache.  So we go with #2.  The formatters are pretty fast so it is a fine solution
+              bytes = formatMetadata.call().data;
+          } else {
+              bytes = context.getBean(FormatterCache.class).get(key, validator, formatMetadata, false);
+          }
+          if (bytes != null) {
+              if (!skipPopularityBool) {
+                  context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
+              }
+              writeOutResponse(context, metadataUuid,
+                  LanguageUtils.locale2gnCode(locale.getISO3Language()),
+                  request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
+          }
+      }
     }
 
 
@@ -345,27 +347,30 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         }
 
         FormatType formatType = FormatType.valueOf(type.toLowerCase());
-        final ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
-        if (metadata == null) {
-            metadata = getXmlFromUrl(context, lang, url, request);
+        try (ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class))) {
+            // context used as a parameter, not set as threadlocal
+
+            if (metadata == null) {
+                metadata = getXmlFromUrl(context, lang, url, request);
+            }
+            Element metadataEl = Xml.loadString(metadata, false);
+
+            if (mdPath != null) {
+                final List<Namespace> namespaces = context.getBean(SchemaManager.class).getSchema(schema).getNamespaces();
+                metadataEl = Xml.selectElement(metadataEl, mdPath, namespaces);
+                metadataEl.detach();
+            }
+            Metadata metadataInfo = new Metadata();
+            metadataInfo.setData(metadata).setId(1).setUuid("uuid");
+            metadataInfo.getDataInfo().setType(MetadataType.METADATA).setRoot(metadataEl.getQualifiedName()).setSchemaId(schema);
+
+            Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(lang, formatType, xslid, width,
+                request, context, metadataEl, metadataInfo);
+            final String formattedMetadata = result.one().format(result.two());
+            byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
+
+            writeOutResponse(context, "", lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
-        Element metadataEl = Xml.loadString(metadata, false);
-
-        if (mdPath != null) {
-            final List<Namespace> namespaces = context.getBean(SchemaManager.class).getSchema(schema).getNamespaces();
-            metadataEl = Xml.selectElement(metadataEl, mdPath, namespaces);
-            metadataEl.detach();
-        }
-        Metadata metadataInfo = new Metadata();
-        metadataInfo.setData(metadata).setId(1).setUuid("uuid");
-        metadataInfo.getDataInfo().setType(MetadataType.METADATA).setRoot(metadataEl.getQualifiedName()).setSchemaId(schema);
-
-        Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(lang, formatType, xslid, width,
-            request, context, metadataEl, metadataInfo);
-        final String formattedMetadata = result.one().format(result.two());
-        byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
-
-        writeOutResponse(context, "", lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
     }
 
     /**
@@ -427,44 +432,47 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         final FormatType formatType = FormatType.valueOf(type.toLowerCase());
 
         String resolvedId = resolveId(id, uuid);
-        ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
-        Lib.resource.checkPrivilege(context, resolvedId, ReservedOperation.view);
+        try (ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class))) {
+            // context used as a parameter, not set as threadlocal
 
-        final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
-            !context.getBean(AccessManager.class).canEdit(context, resolvedId);
-        Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, hideWithheld, width);
-        final boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
+            Lib.resource.checkPrivilege(context, resolvedId, ReservedOperation.view);
+
+            final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
+                !context.getBean(AccessManager.class).canEdit(context, resolvedId);
+            Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, hideWithheld, width);
+            final boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
 
         ISODate changeDate = context.getBean(EsSearchManager.class).getDocChangeDate(resolvedId);
 
-        Validator validator;
-        if (changeDate != null) {
-            final long changeDateAsTime = changeDate.toDate().getTime();
-            validator = new ChangeDateValidator(changeDateAsTime);
-        } else {
-            validator = new NoCacheValidator();
-        }
-        final FormatMetadata formatMetadata = new FormatMetadata(context, key, request);
-
-        byte[] bytes;
-        if (hasNonStandardParameters(request)) {
-            // the http headers can cause a formatter to output custom output due to the parameters.
-            // because it is not known how the parameters may affect the output then we have two choices
-            // 1. make a unique cache for each configuration of parameters
-            // 2. don't cache anything that has extra parameters beyond the standard parameters used to
-            //    create the key
-            // #1 has a major flaw because an attacker could simply make new requests always changing the parameters
-            // and completely swamp the cache.  So we go with #2.  The formatters are pretty fast so it is a fine solution
-            bytes = formatMetadata.call().data;
-        } else {
-            bytes = context.getBean(FormatterCache.class).get(key, validator, formatMetadata, false);
-        }
-        if (bytes != null) {
-            if (!skipPopularityBool) {
-                context.getBean(DataManager.class).increasePopularity(context, resolvedId);
+            Validator validator;
+            if (changeDate != null) {
+                final long changeDateAsTime = changeDate.toDate().getTime();
+                validator = new ChangeDateValidator(changeDateAsTime);
+            } else {
+                validator = new NoCacheValidator();
             }
+            final FormatMetadata formatMetadata = new FormatMetadata(context, key, request);
 
-            writeOutResponse(context, resolvedId, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
+            byte[] bytes;
+            if (hasNonStandardParameters(request)) {
+                // the http headers can cause a formatter to output custom output due to the parameters.
+                // because it is not known how the parameters may affect the output then we have two choices
+                // 1. make a unique cache for each configuration of parameters
+                // 2. don't cache anything that has extra parameters beyond the standard parameters used to
+                //    create the key
+                // #1 has a major flaw because an attacker could simply make new requests always changing the parameters
+                // and completely swamp the cache.  So we go with #2.  The formatters are pretty fast so it is a fine solution
+                bytes = formatMetadata.call().data;
+            } else {
+                bytes = context.getBean(FormatterCache.class).get(key, validator, formatMetadata, false);
+            }
+            if (bytes != null) {
+                if (!skipPopularityBool) {
+                    context.getBean(DataManager.class).increasePopularity(context, resolvedId);
+                }
+
+                writeOutResponse(context, resolvedId, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
+            }
         }
     }
 
@@ -552,6 +560,17 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return createFormatterAndParams(key.lang, key.formatType, key.formatterId, key.width, request, context, metadata, metadataInfo);
     }
 
+    /**
+     * Service context for metadata.formatter.
+     *
+     * When creating a service context you are responsible for managing on the current thread and any cleanup.
+     *
+     * The serviceContext is creating using the ApplicationContext from {@link ApplicationContextHolder}.
+     * @param lang la
+     * @param type
+     * @param request
+     * @return service context for metadat.formatter
+     */
     private ServiceContext createServiceContext(String lang, FormatType type, HttpServletRequest request) {
         final ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
         return serviceManager.createServiceContext("metadata.formatter" + type, lang, request);
@@ -774,26 +793,30 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @Override
         public StoreInfoAndDataLoadResult call() throws Exception {
             serviceContext.setAsThreadLocal();
+            try {
+                Pair<FormatterImpl, FormatterParams> result =
+                    loadMetadataAndCreateFormatterAndParams(serviceContext, key, request);
+                FormatterImpl formatter = result.one();
+                FormatterParams fparams = result.two();
+                final String formattedMetadata = formatter.format(fparams);
+                byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
+                long changeDate = fparams.metadataInfo.getDataInfo().getChangeDate().toDate().getTime();
+                final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
+                final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(key.mdId);
+                final Optional<OperationAllowed> one = serviceContext.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished));
+                final boolean isPublishedMd = one.isPresent();
 
-            Pair<FormatterImpl, FormatterParams> result =
-                loadMetadataAndCreateFormatterAndParams(serviceContext, key, request);
-            FormatterImpl formatter = result.one();
-            FormatterParams fparams = result.two();
-            final String formattedMetadata = formatter.format(fparams);
-            byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
-            long changeDate = fparams.metadataInfo.getDataInfo().getChangeDate().toDate().getTime();
-            final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
-            final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(key.mdId);
-            final Optional<OperationAllowed> one = serviceContext.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished));
-            final boolean isPublishedMd = one.isPresent();
-
-            Key withheldKey = null;
-            FormatMetadata loadWithheld = null;
-            if (!key.hideWithheld && isPublishedMd) {
-                withheldKey = new Key(key.mdId, key.lang, key.formatType, key.formatterId, true, key.width);
-                loadWithheld = new FormatMetadata(serviceContext, withheldKey, request);
+                Key withheldKey = null;
+                FormatMetadata loadWithheld = null;
+                if (!key.hideWithheld && isPublishedMd) {
+                    withheldKey = new Key(key.mdId, key.lang, key.formatType, key.formatterId, true, key.width);
+                    loadWithheld = new FormatMetadata(serviceContext, withheldKey, request);
+                }
+                return new StoreInfoAndDataLoadResult(bytes, changeDate, isPublishedMd, withheldKey, loadWithheld);
             }
-            return new StoreInfoAndDataLoadResult(bytes, changeDate, isPublishedMd, withheldKey, loadWithheld);
+            finally {
+                serviceContext.clearAsThreadLocal();
+            }
         }
     }
 }

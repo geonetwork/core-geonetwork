@@ -267,54 +267,56 @@ public class KeywordsApi {
     )
         throws Exception {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        UserSession session = ApiUtils.getUserSession(httpSession);
+
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            UserSession session = ApiUtils.getUserSession(httpSession);
 
 //        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
 //        lang = locale.getISO3Language();
 
-        KeywordsSearcher searcher;
-        // perform the search and save search result into session
-        if (Log.isDebugEnabled("KeywordsManager")) {
-            Log.debug("KeywordsManager", "Creating new keywords searcher");
-        }
-        searcher = new KeywordsSearcher(context, thesaurusMan);
+            KeywordsSearcher searcher;
+            // perform the search and save search result into session
+            if (Log.isDebugEnabled("KeywordsManager")) {
+                Log.debug("KeywordsManager", "Creating new keywords searcher");
+            }
+            searcher = new KeywordsSearcher(context, thesaurusMan);
 
-        String thesauriDomainName = null;
+            String thesauriDomainName = null;
 
-        List<String> thesauri=null;
-        if (thesaurus!=null)
-            thesauri=Arrays.asList(thesaurus);
+            List<String> thesauri = null;
+            if (thesaurus != null)
+                thesauri = Arrays.asList(thesaurus);
 
-        KeywordSearchParamsBuilder builder = parseBuilder(
-            lang, q, rows, start,
-            targetLangs, thesauri,
-            thesauriDomainName, type, uri, languagesMapper);
+            KeywordSearchParamsBuilder builder = parseBuilder(
+                lang, q, rows, start,
+                targetLangs, thesauri,
+                thesauriDomainName, type, uri, languagesMapper);
 
 //            if (checkModified(webRequest, thesaurusMan, builder)) {
 //                return null;
 //            }
 
-        if (q == null || q.trim().isEmpty()) {
-            builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.parse(sort)));
-        } else {
-            builder.setComparator(KeywordSort.searchResultsSorter(q, SortDirection.parse(sort)));
-        }
-
-        searcher.search(builder.build());
-        session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
-            searcher);
-
-        List<KeywordBean> keywords = searcher.getResults();
-
-        if ("xml".equals(request.getParameter(CONTENT_TYPE))) {
-            Element root = new Element("response");
-            for (KeywordBean kw : keywords) {
-                root.addContent(kw.toElement("eng")); // FIXME: Localize
+            if (q == null || q.trim().isEmpty()) {
+                builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.parse(sort)));
+            } else {
+                builder.setComparator(KeywordSort.searchResultsSorter(q, SortDirection.parse(sort)));
             }
-            return root;
-        } else {
-            return keywords;
+
+            searcher.search(builder.build());
+            session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
+                searcher);
+
+            List<KeywordBean> keywords = searcher.getResults();
+
+            if ("xml".equals(request.getParameter(CONTENT_TYPE))) {
+                Element root = new Element("response");
+                for (KeywordBean kw : keywords) {
+                    root.addContent(kw.toElement("eng")); // FIXME: Localize
+                }
+                return root;
+            } else {
+                return keywords;
+            }
         }
     }
 
@@ -394,132 +396,130 @@ public class KeywordsApi {
         HttpServletRequest request
         ) throws Exception {
         final String SEPARATOR = ",";
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        boolean isJson = MediaType.APPLICATION_JSON_VALUE.equals(accept);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            boolean isJson = MediaType.APPLICATION_JSON_VALUE.equals(accept);
 
-        // Search thesaurus by name (as facet key only contains the name of the thesaurus)
-        Thesaurus thesaurus = thesaurusManager.getThesaurusByName(sThesaurusName);
-        if (thesaurus == null) {
-            String finalSThesaurusName = sThesaurusName;
-            Optional<Thesaurus> thesaurusEntry = thesaurusManager.getThesauriMap().values().stream().filter(t -> t.getKey().endsWith(finalSThesaurusName)).findFirst();
-            if (!thesaurusEntry.isPresent()) {
-                throw new IllegalArgumentException(String.format(
-                    "Thesaurus '%s' not found.", sThesaurusName));
+            // Search thesaurus by name (as facet key only contains the name of the thesaurus)
+            Thesaurus thesaurus = thesaurusManager.getThesaurusByName(sThesaurusName);
+            if (thesaurus == null) {
+                String finalSThesaurusName = sThesaurusName;
+                Optional<Thesaurus> thesaurusEntry = thesaurusManager.getThesauriMap().values().stream().filter(t -> t.getKey().endsWith(finalSThesaurusName)).findFirst();
+                if (!thesaurusEntry.isPresent()) {
+                    throw new IllegalArgumentException(String.format(
+                        "Thesaurus '%s' not found.", sThesaurusName));
+                } else {
+                    thesaurus = thesaurusEntry.get();
+                    sThesaurusName = thesaurusEntry.get().getKey();
+                }
+            }
+
+
+            if (langs == null) {
+                langs = context.getLanguage().split(",");
+            }
+            String[] iso3langCodes = Arrays.copyOf(langs, langs.length);
+            for (int i = 0; i < langs.length; i++) {
+                if (StringUtils.isNotEmpty(langs[i])) {
+                    langs[i] = mapper.iso639_2_to_iso639_1(langs[i], langs[i].substring(0, 2));  //default: fra -> fr
+                }
+            }
+
+            Element descKeys;
+            Map<String, String> jsonResponse = new HashMap<>();
+
+            if (uri == null) {
+                descKeys = new Element("descKeys");
             } else {
-                thesaurus = thesaurusEntry.get();
-                sThesaurusName = thesaurusEntry.get().getKey();
-            }
-        }
+                KeywordsSearcher searcher = new KeywordsSearcher(context, thesaurusManager);
 
-
-        if (langs == null) {
-            langs = context.getLanguage().split(",");
-        }
-        String[] iso3langCodes = Arrays.copyOf(langs, langs.length);
-        for (int i = 0; i < langs.length; i++) {
-            if (StringUtils.isNotEmpty(langs[i])) {
-                langs[i] = mapper.iso639_2_to_iso639_1(langs[i], langs[i].substring(0,2));  //default: fra -> fr
-            }
-        }
-
-        Element descKeys;
-        Map<String, String> jsonResponse = new HashMap<>();
-
-        uri = URLDecoder.decode(uri, "UTF-8");
-
-        if (uri == null) {
-            descKeys = new Element("descKeys");
-        } else {
-            KeywordsSearcher searcher = new KeywordsSearcher(context, thesaurusManager);
-
-            KeywordBean kb;
-            String[] url;
-            if (!uri.contains(SEPARATOR)) {
-                url = new String[]{uri};
-            }
-            else {
-                url = uri.split(SEPARATOR);
-            }
-            List<KeywordBean> kbList = new ArrayList<>();
-            for (String currentUri : url) {
-                kb = searcher.searchById(currentUri, sThesaurusName, iso3langCodes);
-                if (kb == null) {
-                    kb = searcher.searchById(currentUri, sThesaurusName, langs);
-                }
-                if (kb == null) {
-                    kb = searcher.searchById(ApiUtils.fixURIFragment(currentUri), sThesaurusName, iso3langCodes);
-                }
-                if (kb == null) {
-                    kb = searcher.searchById(ApiUtils.fixURIFragment(currentUri), sThesaurusName, langs);
-                }
-                if (kb != null) {
-                    kbList.add(kb);
-                }
-            }
-            descKeys = new Element("descKeys");
-            for (KeywordBean keywordBean : kbList) {
-                if (isJson) {
-                    jsonResponse.put(
-                        keywordBean.getUriCode(),
-                        // Requested lang or the first non empty value
-                        keywordBean.getDefaultValue()
-                    );
+                KeywordBean kb;
+                String[] url;
+                if (!uri.contains(SEPARATOR)) {
+                    url = new String[]{uri};
                 } else {
-                    KeywordsSearcher.toRawElement(descKeys, keywordBean);
+                    url = uri.split(SEPARATOR);
+                }
+                List<KeywordBean> kbList = new ArrayList<>();
+                for (String currentUri : url) {
+                    kb = searcher.searchById(currentUri, sThesaurusName, iso3langCodes);
+                    if (kb == null) {
+                        kb = searcher.searchById(currentUri, sThesaurusName, langs);
+                    }
+                    if (kb == null) {
+                        kb = searcher.searchById(ApiUtils.fixURIFragment(currentUri), sThesaurusName, iso3langCodes);
+                    }
+                    if (kb == null) {
+                        kb = searcher.searchById(ApiUtils.fixURIFragment(currentUri), sThesaurusName, langs);
+                    }
+                    if (kb != null) {
+                        kbList.add(kb);
+                    }
+                }
+                descKeys = new Element("descKeys");
+                for (KeywordBean keywordBean : kbList) {
+                    if (isJson) {
+                        jsonResponse.put(
+                            keywordBean.getUriCode(),
+                            // Requested lang or the first non empty value
+                            keywordBean.getDefaultValue()
+                        );
+                    } else {
+                        KeywordsSearcher.toRawElement(descKeys, keywordBean);
+                    }
                 }
             }
-        }
 
-       Element langConversion = null;
-        if ( (langMapJson != null) && (!langMapJson.isEmpty()) ){
-            JSONObject obj = JSONObject.fromObject(langMapJson);
-            langConversion = new Element("languageConversions");
-            for(Object entry : obj.entrySet()) {
-                String key = ((Map.Entry) entry).getKey().toString();
-                String value = ((Map.Entry) entry).getValue().toString();
-                Element conv = new Element("conversion");
-                conv.setAttribute("from",key.toString());
-                conv.setAttribute("to",value.toString().replace("#",""));
-                langConversion.addContent(conv);
-            }
-
-        }
-
-        if (isJson) {
-            return jsonResponse;
-        } else {
-            Path convertXsl = dataDirectory.getWebappDir().resolve("xslt/services/thesaurus/convert.xsl");
-
-            Element gui = new Element("gui");
-            Element nodeUrl = new Element("nodeUrl").setText(settingManager.getNodeURL());
-            Element nodeId = new Element("nodeId").setText(context.getNodeId());
-            Element thesaurusEl = new Element("thesaurus");
-            final Element root = new Element("root");
-
-            gui.addContent(thesaurusEl);
-            thesaurusEl.addContent(thesaurusManager.buildResultfromThTable(context));
-
-            Element requestParams = new Element("request");
-            for (Map.Entry<String, String> e : allRequestParams.entrySet()) {
-                if (e.getKey().equals("lang")) {
-                    requestParams.addContent(new Element(e.getKey())
-                        .setText(String.join(",", iso3langCodes)));
-                } else {
-                    requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
+            Element langConversion = null;
+            if ((langMapJson != null) && (!langMapJson.isEmpty())) {
+                JSONObject obj = JSONObject.fromObject(langMapJson);
+                langConversion = new Element("languageConversions");
+                for (Object entry : obj.entrySet()) {
+                    String key = ((Map.Entry) entry).getKey().toString();
+                    String value = ((Map.Entry) entry).getValue().toString();
+                    Element conv = new Element("conversion");
+                    conv.setAttribute("from", key.toString());
+                    conv.setAttribute("to", value.toString().replace("#", ""));
+                    langConversion.addContent(conv);
                 }
-            }
-            if (langConversion != null) {
-                requestParams.addContent(langConversion);
+
             }
 
-            root.addContent(requestParams);
-            root.addContent(descKeys);
-            root.addContent(gui);
-            root.addContent(nodeUrl);
-            root.addContent(nodeId);
-            final Element transform = Xml.transform(root, convertXsl);
+            if (isJson) {
+                return jsonResponse;
+            } else {
+                Path convertXsl = dataDirectory.getWebappDir().resolve("xslt/services/thesaurus/convert.xsl");
 
-            return transform;
+                Element gui = new Element("gui");
+                Element nodeUrl = new Element("nodeUrl").setText(settingManager.getNodeURL());
+                Element nodeId = new Element("nodeId").setText(context.getNodeId());
+                Element thesaurusEl = new Element("thesaurus");
+                final Element root = new Element("root");
+
+                gui.addContent(thesaurusEl);
+                thesaurusEl.addContent(thesaurusManager.buildResultfromThTable(context));
+
+                Element requestParams = new Element("request");
+                for (Map.Entry<String, String> e : allRequestParams.entrySet()) {
+                    if (e.getKey().equals("lang")) {
+                        requestParams.addContent(new Element(e.getKey())
+                            .setText(String.join(",", iso3langCodes)));
+                    } else {
+                        requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
+                    }
+                }
+                if (langConversion != null) {
+                    requestParams.addContent(langConversion);
+                }
+
+                root.addContent(requestParams);
+                root.addContent(descKeys);
+                root.addContent(gui);
+                root.addContent(nodeUrl);
+                root.addContent(nodeId);
+                final Element transform = Xml.transform(root, convertXsl);
+
+                return transform;
+            }
         }
     }
 
@@ -674,7 +674,7 @@ public class KeywordsApi {
     ) throws Exception {
 
         long start = System.currentTimeMillis();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         // Different options for upload
         boolean fileUpload = file != null && !file.isEmpty();
@@ -744,6 +744,7 @@ public class KeywordsApi {
                 FileUtils.deleteQuietly(tempDir);
             }
         }
+      }
     }
 
 
@@ -832,67 +833,68 @@ public class KeywordsApi {
         HttpServletRequest request,
         HttpServletResponse response
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
-        String fname = file.getOriginalFilename();
-        Log.debug(Geonet.THESAURUS, "Uploading CSV file: " + fname);
-        File tempDir = Files.createTempDirectory("thesaurus").toFile();
-        Path tempFilePath = tempDir.toPath().resolve(file.getOriginalFilename());
-        File convFile = tempFilePath.toFile();
-        file.transferTo(convFile);
-        Path csvFile = convFile.toPath();
+            String fname = file.getOriginalFilename();
+            Log.debug(Geonet.THESAURUS, "Uploading CSV file: " + fname);
+            File tempDir = Files.createTempDirectory("thesaurus").toFile();
+            Path tempFilePath = tempDir.toPath().resolve(file.getOriginalFilename());
+            File convFile = tempFilePath.toFile();
+            file.transferTo(convFile);
+            Path csvFile = convFile.toPath();
 
-        try {
-            if (StringUtils.isEmpty(fname)) {
-                throw new Exception("File missing.");
-            }
+            try {
+                if (StringUtils.isEmpty(fname)) {
+                    throw new Exception("File missing.");
+                }
 
-            long fsize;
-            if (csvFile != null && Files.exists(csvFile)) {
-                fsize = Files.size(csvFile);
-            } else {
-                throw new MissingServletRequestParameterException("CSV file doesn't exist", "file");
-            }
+                long fsize;
+                if (csvFile != null && Files.exists(csvFile)) {
+                    fsize = Files.size(csvFile);
+                } else {
+                    throw new MissingServletRequestParameterException("CSV file doesn't exist", "file");
+                }
 
-            if (fsize == 0) {
-                throw new MissingServletRequestParameterException("CSV file has zero size", "file");
-            }
+                if (fsize == 0) {
+                    throw new MissingServletRequestParameterException("CSV file has zero size", "file");
+                }
 
-            String extension = FilenameUtils.getExtension(fname);
-            Element element = convertCsvToSkos(csvFile,
-                languages,
-                encoding,
-                thesaurusNs,
-                thesaurusTitle,
-                conceptIdColumn,
-                conceptLabelColumn,
-                conceptDescriptionColumn,
-                conceptBroaderIdColumn,
-                conceptNarrowerIdColumn,
-                conceptRelatedIdColumn,
-                conceptLinkSeparator);
+                String extension = FilenameUtils.getExtension(fname);
+                Element element = convertCsvToSkos(csvFile,
+                    languages,
+                    encoding,
+                    thesaurusNs,
+                    thesaurusTitle,
+                    conceptIdColumn,
+                    conceptLabelColumn,
+                    conceptDescriptionColumn,
+                    conceptBroaderIdColumn,
+                    conceptNarrowerIdColumn,
+                    conceptRelatedIdColumn,
+                    conceptLinkSeparator);
 
-            fname = fname.replace(extension, "rdf");
+                fname = fname.replace(extension, "rdf");
 
-            if(importAsThesaurus) {
-                Path rdfFile = tempDir.toPath().resolve(fname);
-                XMLOutputter xmlOutput = new XMLOutputter();
-                xmlOutput.setFormat(Format.getCompactFormat());
-                xmlOutput.output(element,
-                    new OutputStreamWriter(new FileOutputStream(rdfFile.toFile().getCanonicalPath()),
-                        StandardCharsets.UTF_8));
-                uploadThesaurus(rdfFile, "_none_", context, fname, type, dir);
-                response.setStatus(HttpServletResponse.SC_CREATED);
-            } else {
-                response.addHeader("Content-Disposition", "inline; filename=\"" + fname + "\"");
-                response.setStatus(HttpServletResponse.SC_OK);
-                response.setCharacterEncoding(Constants.ENCODING);
-                response.setContentType(MediaType.APPLICATION_XML_VALUE);
-                response.getOutputStream().write(Xml.getString(element).getBytes());
-            }
-        } finally {
-            if (tempDir != null) {
-                FileUtils.deleteQuietly(tempDir);
+                if (importAsThesaurus) {
+                    Path rdfFile = tempDir.toPath().resolve(fname);
+                    XMLOutputter xmlOutput = new XMLOutputter();
+                    xmlOutput.setFormat(Format.getCompactFormat());
+                    xmlOutput.output(element,
+                        new OutputStreamWriter(new FileOutputStream(rdfFile.toFile().getCanonicalPath()),
+                            StandardCharsets.UTF_8));
+                    uploadThesaurus(rdfFile, "_none_", context, fname, type, dir);
+                    response.setStatus(HttpServletResponse.SC_CREATED);
+                } else {
+                    response.addHeader("Content-Disposition", "inline; filename=\"" + fname + "\"");
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.setCharacterEncoding(Constants.ENCODING);
+                    response.setContentType(MediaType.APPLICATION_XML_VALUE);
+                    response.getOutputStream().write(Xml.getString(element).getBytes());
+                }
+            } finally {
+                if (tempDir != null) {
+                    FileUtils.deleteQuietly(tempDir);
+                }
             }
         }
     }
@@ -1113,85 +1115,86 @@ public class KeywordsApi {
     ) throws Exception {
 
         long start = System.currentTimeMillis();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
-        boolean urlUpload = !StringUtils.isEmpty(url);
-        boolean registryUpload = !StringUtils.isEmpty(registryUrl);
+            boolean urlUpload = !StringUtils.isEmpty(url);
+            boolean registryUpload = !StringUtils.isEmpty(registryUrl);
 
-        // Upload RDF file
-        Path rdfFile = null;
-        String fname = null;
+            // Upload RDF file
+            Path rdfFile = null;
+            String fname = null;
 
-        // Specific upload steps
-        if (urlUpload) {
+            // Specific upload steps
+            if (urlUpload) {
 
-            Log.debug(Geonet.THESAURUS, "Uploading thesaurus from URL: " + url);
+                Log.debug(Geonet.THESAURUS, "Uploading thesaurus from URL: " + url);
 
-            rdfFile = getXMLContentFromUrl(url, context);
-            fname = url.substring(url.lastIndexOf("/") + 1).replaceAll("\\s+", "");
+                rdfFile = getXMLContentFromUrl(url, context);
+                fname = url.substring(url.lastIndexOf("/") + 1).replaceAll("\\s+", "");
 
-            // File with no extension in URL
-            if (fname.lastIndexOf('.') == -1) {
-                fname += ".rdf";
+                // File with no extension in URL
+                if (fname.lastIndexOf('.') == -1) {
+                    fname += ".rdf";
+                }
+
+
+            } else if (registryUpload) {
+                if (ArrayUtils.isEmpty(registryLanguage)) {
+                    throw new MissingServletRequestParameterException("Select at least one language.", "language");
+                }
+
+                Log.debug(Geonet.THESAURUS, "Uploading thesaurus from registry : " + registryUrl);
+
+                String itemName = registryUrl.substring((registryUrl.lastIndexOf("/") + 1));
+
+                rdfFile = extractSKOSFromRegistry(registryUrl, registryType, itemName, registryLanguage, context);
+                fname = registryUrl.replaceAll("[^A-Za-z]+", "") +
+                    "-" +
+                    itemName + ".rdf";
+
+            } else {
+
+                Log.debug(Geonet.THESAURUS, "No URL or file name provided for thesaurus upload.");
+                throw new MissingServletRequestParameterException("Thesaurus source not provided", "url");
+
             }
 
-
-        } else if (registryUpload) {
-            if (ArrayUtils.isEmpty(registryLanguage)) {
-                throw new MissingServletRequestParameterException("Select at least one language.", "language");
+            if (StringUtils.isEmpty(fname)) {
+                throw new ResourceNotFoundException("File upload from URL or file return null");
             }
 
-            Log.debug(Geonet.THESAURUS, "Uploading thesaurus from registry : " + registryUrl);
+            long fsize;
+            if (rdfFile != null && Files.exists(rdfFile)) {
+                fsize = Files.size(rdfFile);
+            } else {
+                throw new ResourceNotFoundException("Thesaurus file doesn't exist");
+            }
 
-            String itemName = registryUrl.substring((registryUrl.lastIndexOf("/") + 1));
+            // -- check that the archive actually has something in it
+            if (fsize == 0) {
+                throw new ResourceNotFoundException("Thesaurus file has zero size");
+            }
 
-            rdfFile = extractSKOSFromRegistry(registryUrl, registryType, itemName, registryLanguage, context);
-            fname = registryUrl.replaceAll("[^A-Za-z]+", "") +
-                "-" +
-                itemName + ".rdf";
+            String extension = FilenameUtils.getExtension(fname);
 
-        } else {
+            if (extension.equalsIgnoreCase("rdf") ||
+                extension.equalsIgnoreCase("xml")) {
+                Log.debug(Geonet.THESAURUS, "Uploading thesaurus: " + fname);
 
-            Log.debug(Geonet.THESAURUS, "No URL or file name provided for thesaurus upload.");
-            throw new MissingServletRequestParameterException("Thesaurus source not provided", "url");
+                // Rename .xml to .rdf for all thesaurus
+                fname = fname.replace(extension, "rdf");
+                uploadThesaurus(rdfFile, stylesheet, context, fname, type, dir);
+            } else {
+                Log.debug(Geonet.THESAURUS, "Incorrect extension for thesaurus named: " + fname);
+                throw new MissingServletRequestParameterException("Incorrect extension for thesaurus", fname);
+            }
 
+            long end = System.currentTimeMillis();
+            long duration = (end - start) / 1000;
+
+            return String.format("Thesaurus '%s' loaded in %d sec.",
+                fname, duration);
         }
-
-        if (StringUtils.isEmpty(fname)) {
-            throw new ResourceNotFoundException("File upload from URL or file return null");
-        }
-
-        long fsize;
-        if (rdfFile != null && Files.exists(rdfFile)) {
-            fsize = Files.size(rdfFile);
-        } else {
-            throw new ResourceNotFoundException("Thesaurus file doesn't exist");
-        }
-
-        // -- check that the archive actually has something in it
-        if (fsize == 0) {
-            throw new ResourceNotFoundException("Thesaurus file has zero size");
-        }
-
-        String extension = FilenameUtils.getExtension(fname);
-
-        if (extension.equalsIgnoreCase("rdf") ||
-            extension.equalsIgnoreCase("xml")) {
-            Log.debug(Geonet.THESAURUS, "Uploading thesaurus: " + fname);
-
-            // Rename .xml to .rdf for all thesaurus
-            fname = fname.replace(extension, "rdf");
-            uploadThesaurus(rdfFile, stylesheet, context, fname, type, dir);
-        } else {
-            Log.debug(Geonet.THESAURUS, "Incorrect extension for thesaurus named: " + fname);
-            throw new MissingServletRequestParameterException("Incorrect extension for thesaurus", fname);
-        }
-
-        long end = System.currentTimeMillis();
-        long duration = (end - start) / 1000;
-
-        return String.format("Thesaurus '%s' loaded in %d sec.",
-            fname, duration);
     }
 
     /**

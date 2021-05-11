@@ -62,6 +62,7 @@ import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.sail.StatementIterator;
 import org.springframework.context.ApplicationContext;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -76,7 +77,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 public class Thesaurus {
-    private static final String DEFAULT_THESAURUS_NAMESPACE = "http://custom.shared.obj.ch/concept#";
+    private static final String DEFAULT_THESAURUS_NAMESPACE = "https://registry.geonetwork-opensource.org/concept#";
 
     private String fname;
 
@@ -100,12 +101,12 @@ public class Thesaurus {
 
     private IsoLanguagesMapper isoLanguageMapper;
 
-    private Map<String, String> multilingualTitles = new Hashtable<String,String>();
+    private Map<String, String> multilingualTitles = new Hashtable<String, String>();
 
     // map of lang -> dictionary of values
     //                 key is a dublinCore element (i.e. https://guides.library.ucsc.edu/c.php?g=618773&p=4306386)
     // see #retrieveDublinCore() for example
-    private Map<String, Map<String,String>> dublinCoreMultilingual =   new Hashtable<String,Map<String,String>>();
+    private Map<String, Map<String, String>> dublinCoreMultilingual = new Hashtable<String, Map<String, String>>();
 
 /*    @SuppressWarnings("unused")
     private String version;
@@ -153,7 +154,9 @@ public class Thesaurus {
         this.downloadUrl = buildDownloadUrl(fname, type, dname, siteUrl);
         this.keywordUrl = buildKeywordUrl(fname, type, dname, siteUrl);
 
-        this.defaultNamespace = (tnamespace == null ? DEFAULT_THESAURUS_NAMESPACE : tnamespace);
+        this.defaultNamespace = this.defaultNamespace =
+            org.apache.commons.lang.StringUtils.isEmpty(tnamespace) ?
+                buildThesaurusNamespace() : tnamespace;
 
         if (tname != null) {
             this.title = tname;
@@ -163,7 +166,6 @@ public class Thesaurus {
     }
 
     /**
-     *
      * @param fname
      * @param type
      * @param dname
@@ -181,7 +183,7 @@ public class Thesaurus {
         return Collections.unmodifiableMap(this.multilingualTitles);
     }
 
-    public Map<String,Map<String, String>> getDublinCoreMultilingual() {
+    public Map<String, Map<String, String>> getDublinCoreMultilingual() {
         return Collections.unmodifiableMap(this.dublinCoreMultilingual);
     }
 
@@ -247,17 +249,30 @@ public class Thesaurus {
         retrieveThesaurusTitle(thesaurusFile, dname + "." + fname, false);
     }
 
+    private String buildApiPath(String path, String key) {
+        org.fao.geonet.kernel.setting.SettingManager settingManager =
+            org.fao.geonet.ApplicationContextHolder.get()
+                .getBean(org.fao.geonet.kernel.setting.SettingManager.class);
+        return String.format(path,
+            settingManager.getNodeURL(), key);
+    }
+
+    private String buildThesaurusNamespace() {
+        return buildApiPath("%sapi/registries/vocabularies/%s", getKey());
+    }
+
     protected String buildDownloadUrl(String fname, String type, String dname, String siteUrl) {
-        if (type.equals(Geonet.CodeList.REGISTER)) {
-            return siteUrl + "?uuid=" + fname.substring(0, fname.indexOf(".rdf"));
-        } else {
-            return siteUrl.substring(0, siteUrl.length() - 4) + "api/registries/vocabularies/" + Thesaurus.buildThesaurusKey(fname, type, dname);
-        }
+        return buildApiPath("%sapi/registries/vocabularies/%s",
+            (type.equals(Geonet.CodeList.REGISTER) ?
+                fname.substring(0, fname.indexOf(".rdf")) :
+                Thesaurus.buildThesaurusKey(fname, type, dname)));
+
     }
 
     protected String buildKeywordUrl(String fname, String type, String dname, String siteUrl) {
-        return siteUrl + "xml.keyword.get?thesaurus=" + Thesaurus.buildThesaurusKey(fname, type, dname) + "&amp;id=";
-        // needs to have term/concept id tacked onto the end
+        return buildApiPath("%sapi/registries/vocabularies/keyword?thesaurus=%s&amp;id=",
+            Thesaurus.buildThesaurusKey(fname, type, dname));
+
     }
 
     public synchronized LocalRepository getRepository() {
@@ -333,7 +348,6 @@ public class Thesaurus {
     }
 
     /**
-     *
      * @param resultsTable
      */
     @SuppressWarnings("unused")
@@ -646,7 +660,7 @@ public class Thesaurus {
     /**
      * Update concept code using its URI. This is recommended when concept identifier may not be
      * based on thesaurus namespace and does not contains #.
-     *
+     * <p>
      * eg. http://vocab.nerc.ac.uk/collection/P07/current/CFV13N44/
      */
     public synchronized Thesaurus updateCodeByURI(String olduri, String newuri) throws AccessDeniedException, IOException {
@@ -690,7 +704,7 @@ public class Thesaurus {
         String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
         String namespaceDC = "http://purl.org/dc/elements/1.1/";
 
-        URI mySubject = myFactory.createURI("http://geonetwork-opensource.org/", thesaurusTitle);
+        URI mySubject = myFactory.createURI(this.getDefaultNamespace());
         URI skosClass = myFactory.createURI(namespaceSkos, "ConceptScheme");
         URI titleURI = myFactory.createURI(namespaceDC, "title");
 
@@ -703,6 +717,7 @@ public class Thesaurus {
 
         repository.addGraph(myGraph);
     }
+
     //   <skos:ConceptScheme rdf:about="http://www.thesaurus.gc.ca/#CoreSubjectThesaurus">
     //      <dc:title>main title</dc:title>
     //      <dc:title xml:lang="en">title en</dc:title>
@@ -734,24 +749,24 @@ public class Thesaurus {
         theNSs.add(Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/"));
         theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
 
-        Namespace xmlNS = Namespace.getNamespace("xml","http://www.w3.org/XML/1998/namespace");
+        Namespace xmlNS = Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
         try {
             List<Element> multiLingualTitles = (List<Element>) Xml.selectNodes(thesaurusEl,
                 "skos:ConceptScheme/dc:*[@xml:lang]|skos:ConceptScheme/dcterms:*[@xml:lang]", theNSs);
             dublinCoreMultilingual.clear();
-            for (Element el: multiLingualTitles) {
+            for (Element el : multiLingualTitles) {
                 String lang = isoLanguageMapper.iso639_2_to_iso639_1(el.getAttribute("lang", xmlNS).getValue());
                 String value = el.getTextTrim();
                 String name = el.getName();
                 if (!dublinCoreMultilingual.containsKey(lang)) {
-                    dublinCoreMultilingual.put(lang,new HashMap<String,String>());
+                    dublinCoreMultilingual.put(lang, new HashMap<String, String>());
                 }
-                dublinCoreMultilingual.get(lang).put(name,value);
+                dublinCoreMultilingual.get(lang).put(name, value);
 
-                int t=0;
+                int t = 0;
             }
         } catch (Exception e) {
-            Log.warning(Geonet.THESAURUS,"error extracting multilingual dublin core items from thesaurus",e);
+            Log.warning(Geonet.THESAURUS, "error extracting multilingual dublin core items from thesaurus", e);
         }
     }
 
@@ -775,25 +790,25 @@ public class Thesaurus {
         theNSs.add(Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/"));
         theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
 
-        Namespace xmlNS = Namespace.getNamespace("xml","http://www.w3.org/XML/1998/namespace");
+        Namespace xmlNS = Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
 
         try {
             List<Element> multiLingualTitles = (List<Element>) Xml.selectNodes(thesaurusEl,
                 "skos:ConceptScheme/dc:title[@xml:lang]|skos:ConceptScheme/dcterms:title[@xml:lang]", theNSs);
             multilingualTitles.clear();
-            for (Element el: multiLingualTitles) {
-                     String lang = isoLanguageMapper.iso639_2_to_iso639_1(el.getAttribute("lang", xmlNS).getValue());
-                     String title = el.getTextTrim();
-                     multilingualTitles.put(lang,title);
+            for (Element el : multiLingualTitles) {
+                String lang = isoLanguageMapper.iso639_2_to_iso639_1(el.getAttribute("lang", xmlNS).getValue());
+                String title = el.getTextTrim();
+                multilingualTitles.put(lang, title);
             }
         } catch (Exception e) {
-            Log.warning(Geonet.THESAURUS,"error extracting multilingual titles from thesaurus",e);
+            Log.warning(Geonet.THESAURUS, "error extracting multilingual titles from thesaurus", e);
         }
     }
 
     /**
      * Retrieves the thesaurus title from rdf file.
-     *
+     * <p>
      * Used to set the thesaurusName and thesaurusDate for keywords.
      */
     private void retrieveThesaurusTitle(Path thesaurusFile, String defaultTitle, boolean ignoreMissingError) {

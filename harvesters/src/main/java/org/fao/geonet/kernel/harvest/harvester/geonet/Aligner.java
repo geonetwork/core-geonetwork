@@ -88,6 +88,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
     private Logger log;
 
+    /** Shared service context managed by HarvestManager */
     private ServiceContext context;
     private XmlRequest request;
     private DataManager dataMan;

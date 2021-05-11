@@ -63,9 +63,9 @@ public class SearcherLogger {
     }
 
     /**
-     * TODO javadoc.
+     * Record search queries performed.
      */
-    public void logSearch(ServiceContext srvContext, Object query, int numHits, Object sort, String geomFilterWKT, String guiService) {
+    public void logSearch(ServiceContext.ServiceDetails serviceDetails, Object query, int numHits, Object sort, String geomFilterWKT, String guiService) {
 
         // TODOES: Send ES queries to the ES index dedicated to search statistics
         throw new NotImplementedException("SearcherLogger not implemented in ES");

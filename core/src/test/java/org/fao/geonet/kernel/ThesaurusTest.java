@@ -438,7 +438,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
     public void testHasConceptSchemeTrue() throws Exception {
         writableThesaurus.addTitleElement("testScheme");
 
-        boolean hasConceptScheme = writableThesaurus.hasConceptScheme("http://geonetwork-opensource.org/testScheme");
+        boolean hasConceptScheme = writableThesaurus.hasConceptScheme(writableThesaurus.getDefaultNamespace());
 
         assertTrue(hasConceptScheme);
     }

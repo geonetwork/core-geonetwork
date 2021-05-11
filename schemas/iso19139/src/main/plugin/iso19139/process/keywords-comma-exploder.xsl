@@ -41,6 +41,9 @@
     <msg id="a" xml:lang="dut">Keyword veld bevat "," (ie.</msg>
     <msg id="b" xml:lang="dut">). Voer deze taak uit om die zoekwoorden op te splitsen.</msg>
     <msg id="c" xml:lang="dut">en</msg>
+    <msg id="a" xml:lang="ita">Un campo di parola chiave contiene "," (es.</msg>
+    <msg id="b" xml:lang="ita">). Lancia questo processo per scindere queste parole chiavi </msg>
+    <msg id="c" xml:lang="ita">e</msg>
   </xsl:variable>
 
   <xsl:template name="list-keywords-comma-exploder">

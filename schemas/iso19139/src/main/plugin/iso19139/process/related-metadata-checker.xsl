@@ -43,6 +43,8 @@
     </msg>
     <msg id="a" xml:lang="dut"> is niet gevonden (</msg>
     <msg id="b" xml:lang="dut">). Functie verwijdert de link.</msg>
+    <msg id="a" xml:lang="ita">non trovato (</msg>
+    <msg id="b" xml:lang="ita">). Lancia questo processo per eliminarlo.</msg>
   </xsl:variable>
 
   <xsl:template name="list-related-metadata-checker">

@@ -25,6 +25,7 @@ package org.fao.geonet.api.selections;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -107,17 +108,19 @@ public class SelectionsApi {
             HttpServletRequest request
     )
         throws Exception {
-        UserSession session = ApiUtils.getUserSession(httpSession);
-        int nbSelected = SelectionManager.updateSelection(bucket,
-            session,
-            uuid != null ?
-                SelectionManager.ADD_SELECTED :
-                SelectionManager.ADD_ALL_SELECTED,
-            uuid != null ?
-                Arrays.asList(uuid) : null,
-            ApiUtils.createServiceContext(request));
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+          UserSession session = ApiUtils.getUserSession(httpSession);
+          int nbSelected = SelectionManager.updateSelection(bucket,
+              session,
+              uuid != null ?
+                  SelectionManager.ADD_SELECTED :
+                  SelectionManager.ADD_ALL_SELECTED,
+              uuid != null ?
+                  Arrays.asList(uuid) : null,
+              context);
 
-        return new ResponseEntity<>(nbSelected, HttpStatus.CREATED);
+          return new ResponseEntity<>(nbSelected, HttpStatus.CREATED);
+      }
     }
 
 
@@ -147,16 +150,17 @@ public class SelectionsApi {
             HttpServletRequest request
     )
         throws Exception {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+          int nbSelected = SelectionManager.updateSelection(bucket,
+              ApiUtils.getUserSession(httpSession),
+              uuid != null ?
+                  SelectionManager.REMOVE_SELECTED :
+                  SelectionManager.REMOVE_ALL_SELECTED,
+              uuid != null ?
+                  Arrays.asList(uuid) : null,
+              context);
 
-        int nbSelected = SelectionManager.updateSelection(bucket,
-            ApiUtils.getUserSession(httpSession),
-            uuid != null ?
-                SelectionManager.REMOVE_SELECTED :
-                SelectionManager.REMOVE_ALL_SELECTED,
-            uuid != null ?
-                Arrays.asList(uuid) : null,
-            ApiUtils.createServiceContext(request));
-
-        return new ResponseEntity<>(nbSelected, HttpStatus.OK);
+          return new ResponseEntity<>(nbSelected, HttpStatus.OK);
+      }
     }
 }

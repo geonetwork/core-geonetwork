@@ -163,115 +163,117 @@ public class MetadataValidateApi {
         @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
         @Parameter(description = "Validation status. Should be provided only in case of SUBTEMPLATE validation. If provided for another type, throw a BadParameter Exception", required = false) @RequestParam(required = false) Boolean isvalid,
         HttpServletRequest request,  @Parameter(hidden = true) HttpSession session) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        DataManager dataManager = appContext.getBean(DataManager.class);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
+            ApplicationContext appContext = ApplicationContextHolder.get();
 
-        String id = String.valueOf(metadata.getId());
-        String schemaName = dataManager.getMetadataSchema(id);
+            DataManager dataManager = appContext.getBean(DataManager.class);
 
-        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+            String id = String.valueOf(metadata.getId());
+            String schemaName = dataManager.getMetadataSchema(id);
 
-        boolean isSubtemplate = metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE;
-        boolean validSet = (isvalid != null);
-        if (!isSubtemplate && validSet) {
-            throw new BadParameterEx(
-                "Parameter isvalid can't be set if it is not a Subtemplate. You cannot force validation of a metadata or a template.");
-        }
-        if (isSubtemplate && !validSet) {
-            throw new BadParameterEx("Parameter isvalid MUST be set for subtemplate.");
-        }
-        if (isSubtemplate) {
-            MetadataValidation metadataValidation = new MetadataValidation()
-                .setId(new MetadataValidationId(metadata.getId(), "subtemplate"))
-                .setStatus(isvalid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID)
-                .setRequired(true).setNumTests(0).setNumFailures(0);
-            this.metadataValidationRepository.save(metadataValidation);
-            dataManager.indexMetadata(("" + metadata.getId()), true);
-            new RecordValidationTriggeredEvent(metadata.getId(),
-                ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
-                metadataValidation.getStatus().getCode()).publish(appContext);
-            return new Reports();
-        }
+            Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
 
-        // --- validate metadata from session
-        Element errorReport;
-        try {
-            errorReport = new AjaxEditUtils(context).validateMetadataEmbedded(ApiUtils.getUserSession(session), id,
+            boolean isSubtemplate = metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE;
+            boolean validSet = (isvalid != null);
+            if (!isSubtemplate && validSet) {
+                throw new BadParameterEx(
+                    "Parameter isvalid can't be set if it is not a Subtemplate. You cannot force validation of a metadata or a template.");
+            }
+            if (isSubtemplate && !validSet) {
+                throw new BadParameterEx("Parameter isvalid MUST be set for subtemplate.");
+            }
+            if (isSubtemplate) {
+                MetadataValidation metadataValidation = new MetadataValidation()
+                    .setId(new MetadataValidationId(metadata.getId(), "subtemplate"))
+                    .setStatus(isvalid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID)
+                    .setRequired(true).setNumTests(0).setNumFailures(0);
+                this.metadataValidationRepository.save(metadataValidation);
+                dataManager.indexMetadata(("" + metadata.getId()), true);
+                new RecordValidationTriggeredEvent(metadata.getId(),
+                    ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
+                    metadataValidation.getStatus().getCode()).publish(appContext);
+                return new Reports();
+            }
+
+            // --- validate metadata from session
+            Element errorReport;
+            try {
+                errorReport = new AjaxEditUtils(context).validateMetadataEmbedded(ApiUtils.getUserSession(session), id,
+                    locale.getISO3Language());
+            } catch (NullPointerException e) {
+                // TODO: Improve NPE catching exception
+                throw new BadParameterEx(String.format("To validate a record, the record MUST be in edition."),
+                    metadataUuid);
+            }
+
+            restructureReportToHavePatternRuleHierarchy(errorReport);
+
+            // --- update element and return status
+            Element elResp = new Element("root");
+            elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
+            elResp.addContent(new Element("language").setText(locale.getISO3Language()));
+            elResp.addContent(new Element("schema").setText(dataManager.getMetadataSchema(id)));
+            elResp.addContent(errorReport);
+            Element schematronTranslations = new Element("schematronTranslations");
+
+            final SchematronRepository schematronRepository = context.getBean(SchematronRepository.class);
+            // --- add translations for schematrons
+            final List<Schematron> schematrons = schematronRepository.findAllBySchemaName(schemaName);
+
+            MetadataSchema metadataSchema = dataManager.getSchema(schemaName);
+            Path schemaDir = metadataSchema.getSchemaDir();
+            SAXBuilder builder = new SAXBuilder();
+
+            for (Schematron schematron : schematrons) {
+                // it contains absolute path to the xsl file
+                String rule = schematron.getRuleName();
+
+                Path file = schemaDir.resolve("loc").resolve(locale.getISO3Language()).resolve(rule + ".xml");
+
+                Document document;
+                if (Files.isRegularFile(file)) {
+                    try (InputStream in = IO.newInputStream(file)) {
+                        document = builder.build(in);
+                    }
+                    Element element = document.getRootElement();
+
+                    Element s = new Element(rule);
+                    element.detach();
+                    s.addContent(element);
+                    schematronTranslations.addContent(s);
+                }
+            }
+            elResp.addContent(schematronTranslations);
+
+            // TODO: Avoid XSL
+            GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
+            Path validateXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/validate.xsl");
+            Map<String, Object> params = new HashMap<>();
+            params.put("rootTag", "reports");
+            List<Element> elementList = getSchemaLocalization(metadata.getDataInfo().getSchemaId(),
                 locale.getISO3Language());
-        } catch (NullPointerException e) {
-            // TODO: Improve NPE catching exception
-            throw new BadParameterEx(String.format("To validate a record, the record MUST be in edition."),
-                metadataUuid);
-        }
-
-        restructureReportToHavePatternRuleHierarchy(errorReport);
-
-        // --- update element and return status
-        Element elResp = new Element("root");
-        elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-        elResp.addContent(new Element("language").setText(locale.getISO3Language()));
-        elResp.addContent(new Element("schema").setText(dataManager.getMetadataSchema(id)));
-        elResp.addContent(errorReport);
-        Element schematronTranslations = new Element("schematronTranslations");
-
-        final SchematronRepository schematronRepository = context.getBean(SchematronRepository.class);
-        // --- add translations for schematrons
-        final List<Schematron> schematrons = schematronRepository.findAllBySchemaName(schemaName);
-
-        MetadataSchema metadataSchema = dataManager.getSchema(schemaName);
-        Path schemaDir = metadataSchema.getSchemaDir();
-        SAXBuilder builder = new SAXBuilder();
-
-        for (Schematron schematron : schematrons) {
-            // it contains absolute path to the xsl file
-            String rule = schematron.getRuleName();
-
-            Path file = schemaDir.resolve("loc").resolve(locale.getISO3Language()).resolve(rule + ".xml");
-
-            Document document;
-            if (Files.isRegularFile(file)) {
-                try (InputStream in = IO.newInputStream(file)) {
-                    document = builder.build(in);
-                }
-                Element element = document.getRootElement();
-
-                Element s = new Element(rule);
-                element.detach();
-                s.addContent(element);
-                schematronTranslations.addContent(s);
+            for (Element e : elementList) {
+                elResp.addContent(e);
             }
-        }
-        elResp.addContent(schematronTranslations);
+            final Element transform = Xml.transform(elResp, validateXsl, params);
 
-        // TODO: Avoid XSL
-        GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
-        Path validateXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/validate.xsl");
-        Map<String, Object> params = new HashMap<>();
-        params.put("rootTag", "reports");
-        List<Element> elementList = getSchemaLocalization(metadata.getDataInfo().getSchemaId(),
-            locale.getISO3Language());
-        for (Element e : elementList) {
-            elResp.addContent(e);
-        }
-        final Element transform = Xml.transform(elResp, validateXsl, params);
+            Reports response = (Reports) Xml.unmarshall(transform, Reports.class);
 
-        Reports response = (Reports) Xml.unmarshall(transform, Reports.class);
+            List<Report> reports = response.getReport();
 
-        List<Report> reports = response.getReport();
-
-        if (reports != null) {
-            int value = 1;
-            for (Report report : reports) {
-                if (!report.getSuccess().equals(report.getTotal())) {
-                    value = 0;
+            if (reports != null) {
+                int value = 1;
+                for (Report report : reports) {
+                    if (!report.getSuccess().equals(report.getTotal())) {
+                        value = 0;
+                    }
                 }
+                new RecordValidationTriggeredEvent(metadata.getId(),
+                    ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), Integer.toString(value))
+                    .publish(appContext);
             }
-            new RecordValidationTriggeredEvent(metadata.getId(),
-                ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), Integer.toString(value))
-                .publish(appContext);
+            return response;
         }
-        return response;
     }
 }

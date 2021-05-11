@@ -28,7 +28,7 @@ git submodule init
 git submodule update
 ```
 
-Submodules are used to keep track of externals dependencies. It is necessary to init and update them after a branch change:
+Submodules are used to keep track of externals dependencies. It is necessary to init and update submodules after a branch change:
 
 
 ```

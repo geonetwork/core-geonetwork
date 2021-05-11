@@ -94,11 +94,12 @@ public class DoiApi {
         @Parameter(hidden = true)
             HttpServletRequest request
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
-        final Map<String, Boolean> reportStatus = doiManager.check(serviceContext, metadata, null);
-        return new ResponseEntity<>(reportStatus, HttpStatus.OK);
+            final Map<String, Boolean> reportStatus = doiManager.check(serviceContext, metadata, null);
+            return new ResponseEntity<>(reportStatus, HttpStatus.OK);
+        }
     }
 
 
@@ -130,11 +131,12 @@ public class DoiApi {
         @Parameter(hidden = true)
             HttpSession session
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
-        Map<String, String> doiInfo = doiManager.register(serviceContext, metadata);
-        return new ResponseEntity<>(doiInfo, HttpStatus.CREATED);
+            Map<String, String> doiInfo = doiManager.register(serviceContext, metadata);
+            return new ResponseEntity<>(doiInfo, HttpStatus.CREATED);
+        }
     }
 
 
@@ -167,11 +169,13 @@ public class DoiApi {
         @Parameter(hidden = true)
             HttpSession session
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+
+      try (ServiceContext serviceContext = ApiUtils.createServiceContext(request);) {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid,serviceContext);
 
         doiManager.unregisterDoi(metadata, serviceContext);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
     }
 
 //    TODO: At some point we may add support for DOI States management

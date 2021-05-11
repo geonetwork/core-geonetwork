@@ -1,9 +1,10 @@
 # Extensions
 *.factorypath
 *.iml
-*.bak
+*.iml
 *.launch
 *.old
+*.bak
 .DS_Store
 .project
 git*.properties
@@ -15,6 +16,8 @@ git*.properties
 */target/
 .*/
 GeoNetwork*
+!.github/
+
 /geonetwork*
 camel-harvesters/wfsfeature-harvester/logs
 changes-*

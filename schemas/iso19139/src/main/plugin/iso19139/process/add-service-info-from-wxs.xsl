@@ -53,6 +53,9 @@
     </msg>
     <msg id="a" xml:lang="dut">Er is een verwijzing gevonden naar de WMS of WFS service </msg>
     <msg id="b" xml:lang="dut">. Voer deze functie uit om operationele informatie toe te voegen of bij te werken. </msg>
+    <msg id="a" xml:lang="ita">Un servizio OGC WMS o WFS</msg>
+    <msg id="b" xml:lang="ita">è descritto nella sezione delle risorse online. 
+        Lancia questo processo per aggiungere le informazioni sulle operazioni disponibili.</msg>
   </xsl:variable>
 
   <!-- Process parameters and variables-->

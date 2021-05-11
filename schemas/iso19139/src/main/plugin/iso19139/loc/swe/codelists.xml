@@ -2181,4 +2181,46 @@
       <description>Web Services</description>
     </entry>
   </codelist>
+
+  <codelist name="gco:nilReason">
+    <entry>
+      <code>missing</code>
+      <label>Missing</label>
+    </entry>
+    <entry>
+      <code>inapplicable</code>
+      <label>Inapplicable</label>
+    </entry>
+    <entry>
+      <code>template</code>
+      <label>Template</label>
+    </entry>
+    <entry>
+      <code>unknown</code>
+      <label>Unknown</label>
+    </entry>
+    <entry>
+      <code>withheld</code>
+      <label>Withheld</label>
+    </entry>
+  </codelist>
+
+  <codelist name="indeterminatePosition">
+    <entry>
+      <code>after</code>
+      <label>After</label>
+    </entry>
+    <entry>
+      <code>before</code>
+      <label>Before</label>
+    </entry>
+    <entry>
+      <code>now</code>
+      <label>Now</label>
+    </entry>
+    <entry>
+      <code>unknown</code>
+      <label>Unknown</label>
+    </entry>
+  </codelist>
 </codelists>

@@ -159,15 +159,25 @@ public class BaseMetadataManager implements IMetadataManager {
         metadataIndexer.setMetadataManager(this);
     }
 
-    public void init(ServiceContext context, Boolean force) throws Exception {
+    /**
+     * Setup using app handler service context.
+     *
+     * @param appHandlerServiceContext
+     * @throws Exception
+     */
+    public void init(ServiceContext appHandlerServiceContext) throws Exception {
         try {
-            harvestInfoProvider = context.getBean(HarvestInfoProvider.class);
+            harvestInfoProvider = appHandlerServiceContext.getBean(HarvestInfoProvider.class);
         } catch (Exception e) {
             // If it doesn't exist, that's fine
         }
 
         // From DataManager:
         searchManager.init(false, java.util.Optional.empty());
+    }
+
+    @Override
+    public void destroy() throws Exception {
     }
 
     /**
@@ -240,7 +250,7 @@ public class BaseMetadataManager implements IMetadataManager {
                     context.getBean(DataManager.class),
                     integerList).process(false);
             } else {
-                metadataIndexer.batchIndexInThreadPool(context, toIndex);
+                metadataIndexer.batchIndexInThreadPool(toIndex);
             }
         }
 

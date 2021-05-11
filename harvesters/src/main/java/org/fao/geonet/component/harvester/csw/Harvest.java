@@ -635,7 +635,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
     }
 
     /**
-     * Runs the harvester. In synchronous mode, waits for it to finish.
+     * Runs CSW harvester in synchronous mode, waiting for it to finish.
      *
      * @param harvester - the harvester
      * @param context   - everywhere in GN !
@@ -813,6 +813,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
         Semaphore ready = new Semaphore(0);
         private Element harvester;
         private String responseHandler;
+        /** Shared service context managed by HarvestManager */
         private ServiceContext serviceContext;
 
         /**

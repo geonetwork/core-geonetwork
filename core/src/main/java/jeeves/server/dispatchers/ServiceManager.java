@@ -49,12 +49,14 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NotAllowedEx;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
 import org.fao.geonet.exceptions.ServiceNotMatchedEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.BLOB;
 import org.fao.geonet.utils.BinaryFile;
@@ -63,6 +65,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.SOAPUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.persistence.EntityManager;
@@ -76,8 +79,15 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 //=============================================================================
+
+/**
+ * Handles operations on services.
+ */
 public class ServiceManager {
     private Map<String, ArrayList<ServiceInfo>> htServices = new HashMap<String, ArrayList<ServiceInfo>>(100);
     private Map<String, Object> htContexts = new HashMap<String, Object>();
@@ -157,6 +167,11 @@ public class ServiceManager {
     //---
     //---------------------------------------------------------------------------
 
+    /**
+     * Track context objects by name.
+     * @param name
+     * @param context
+     */
     public void registerContext(String name, Object context) {
         htContexts.put(name, context);
     }
@@ -342,6 +357,106 @@ public class ServiceManager {
         vErrorPipe.add(buildErrorPage(err));
     }
 
+    /**
+     * Used to create an appContext placeholder service context used for initialization, background tasks and activities.
+     *
+     * This ServiceContext is used during initialization and is independent of any user session.
+     * This instance is the responsibility of a specific manager and will produce a warning if an attempt is made
+     * to clear or assign a user session.
+     *
+     * @param appContext GeoNetwork Application Context
+     * @return new service context with limited functionality
+     */
+    public ServiceContext.AppHandlerServiceContext createAppHandlerServiceContext(ConfigurableApplicationContext appContext) {
+        ServiceContext.AppHandlerServiceContext context = new ServiceContext.AppHandlerServiceContext("AppHandler", appContext, htContexts, entityManager);
+        context.setBaseUrl(baseUrl);
+        context.setMaxUploadSize(maxUploadSize);
+        context.setServlet(servlet);
+
+        return context;
+    }
+
+    /**
+     * Used to create an appContext placeholder service context for a specific manager used for initialization, background tasks and activities.
+     *
+     * Previously a single AppHandler service context was shared managed by Jeeves.
+     *
+     * This instance is the responsibility of a specific manager and will produce a warning if an attempt is made
+     * to clear or assign a user session.
+     *
+     * @param appContext GeoNetwork Application Context
+     * @param manager Manager name such as AppContext or harvester
+     * @return new service context with limited functionality
+     */
+    public ServiceContext.AppHandlerServiceContext createAppHandlerServiceContext(String manager, ServiceContext parent) {
+        ServiceContext.AppHandlerServiceContext context = new ServiceContext.AppHandlerServiceContext(manager, parent.getApplicationContext(), htContexts, entityManager);
+        context.setBaseUrl(baseUrl);
+        context.setMaxUploadSize(maxUploadSize);
+        context.setServlet(servlet);
+
+        return context;
+    }
+
+    /**
+     * Used to create a serviceContext for later use, the object provided the new serviceContext is responsible
+     * for cleanup.
+     * <pre><code>
+     * final ServiceContext taskContext = serviceMan.createServiceContext( serviceContext, "task");
+     * return new Runnable(){
+     *     public abstract void run(){
+     *         try {
+     *            taskContext.setAsThreadLocal();
+     *
+     *         }
+     *         finally {
+     *             taskContext.clear();
+     *         }
+     *     }
+     * };
+     * </code></pre>
+     *
+     * @param name
+     * @param parent
+     * @return new service context
+     */
+    public ServiceContext createServiceContext(String name, ServiceContext parent ){
+        ServiceContext context = createServiceContext( name, parent.getApplicationContext());
+        context.setBaseUrl(parent.getBaseUrl());
+        context.setLanguage(parent.getLanguage());
+        context.setUserSession(null); // because this is intended for later use user session not included
+        context.setIpAddress(parent.getIpAddress());
+        context.setMaxUploadSize(parent.getMaxUploadSize());
+        context.setServlet(parent.getServlet());
+
+        return context;
+    }
+    /**
+     * Create an internal service context, not associated with a user or ip address.
+     *
+     * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup.
+     *
+     * Using auto closable:
+     * <pre><code>
+     * try(ServiceContext context = serviceMan.createServiceContext("AppHandler", appContext)){
+     *    ...
+     * }
+     * </code></pre>
+     *
+     * Or manually:
+     * <pre><code>
+     * try {
+     *    context = serviceMan.createServiceContext("AppHandler", appContext);
+     *    context.setAsThreadLocal();
+     *    ...
+     * } finally {
+     *    context.clearAsThreadLocal();
+     *    context.clear();
+     * }</code></pre>
+     *
+     * @param name context name
+     * @param appContext application context
+     * @return ServiceContext
+     */
     public ServiceContext createServiceContext(String name, ConfigurableApplicationContext appContext) {
         ServiceContext context = new ServiceContext(name, appContext, htContexts,
             entityManager);
@@ -356,6 +471,36 @@ public class ServiceManager {
         return context;
     }
 
+    /**
+     * Used to create a ServiceContext.
+     *
+     * When creating a ServiceContext you are responsible for manging its use on the current thread and any cleanup.
+     *
+     * Using auto closable:
+     * <pre><code>
+     * try(ServiceContext context = serviceMan.createServiceContext("md.thumbnail.upload", lang, request)){
+     *    ...
+     * }
+     * </code></pre>
+     * Or manually:
+     * <pre><code>
+     * ServiceContext context = serviceMan.createServiceContext("md.thumbnail.upload", lang, request);
+     * try {
+     *
+     *    context.setAsThreadLocal();
+     *    ...
+     * } finally {
+     *    context.clearAsThreadLocal();
+     *    context.clear();
+     * }</code></pre>
+     *
+     * The serviceContext is creating using the ApplicationContext from {@link ApplicationContextHolder}.
+     *
+     * @param name context name
+     * @param lang
+     * @param request servlet request
+     * @return ServiceContext
+     */
     public ServiceContext createServiceContext(String name, String lang, HttpServletRequest request) {
         ServiceContext context = new ServiceContext(name, ApplicationContextHolder.get(), htContexts, entityManager);
 
@@ -381,10 +526,79 @@ public class ServiceManager {
         return context;
     }
 
+    /**
+     * Create a transitory service context for use in a single try-with-resources block.
+     *
+     * Makes use of current http session if available (the usual case), or a temporary user session using the provided
+     * userId (when used from a background task or job).
+     * <p>
+     * Code creating a service context is responsible for handling resources and cleanup.
+     * </p>
+     * <pre>
+     * try( ServiceContext context = createServiceContext("approve_record", event.getUser()){
+     *    ... utility methods can now use ServiceContext.get() ...
+     * }
+     * </pre>
+     * @param name service context name for approval record handling
+     * @param defaultUserId If a user session is not available, this id is used to create a temporary user session
+     * @return service context for approval record event handling
+     */
+    public ServiceContext createServiceContext(String name, int defaultUserId){
+        // If this implementation is generally useful it should migrate to ServiceManager, rather than cut and paste
+        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+
+        ServiceContext context;
+
+        HttpServletRequest request = getCurrentHttpRequest();
+        if( request != null ) {
+            // reuse user session from http request
+            context = createServiceContext(name, "?", request);
+        }
+        else {
+            // Not in an http request, creating a temporary user session wiht provided userId
+            context = createServiceContext(name, applicationContext);
+
+            UserRepository userRepository = applicationContext.getBean(UserRepository.class);
+            Optional<User> user = userRepository.findById( defaultUserId );
+            if (user.isPresent()) {
+                UserSession session = new UserSession();
+                session.loginAs(user.get());
+                context.setUserSession(session);
+            }
+        }
+        context.setAsThreadLocal();
+
+        return context;
+    }
+
+    /**
+     * Look up current HttpServletRequest if running in a servlet dispatch.
+     *
+     * @return http request, or null if running in a background task
+     */
+    private static HttpServletRequest getCurrentHttpRequest(){
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (requestAttributes instanceof ServletRequestAttributes) {
+            HttpServletRequest request = ((ServletRequestAttributes)requestAttributes).getRequest();
+            return request;
+        }
+        return null; // not called during http request
+    }
+
+    /**
+     * Dispatch service request, creating a service context with the provided user session.
+     *
+     * @param req service request
+     * @param session user session
+     */
     public void dispatch(ServiceRequest req, UserSession session) {
         ServiceContext context = new ServiceContext(req.getService(), ApplicationContextHolder.get(),
             htContexts, entityManager);
+      try {
         dispatch(req, session, context);
+      } finally {
+        context.clear();
+      }
     }
 
     //---------------------------------------------------------------------------
@@ -396,6 +610,14 @@ public class ServiceManager {
     //--- Dispatching methods
     //---
     //---------------------------------------------------------------------------
+
+    /**
+     * Dispatch service request, configuring context with the provided user session.
+     *
+     * @param req service request
+     * @param session user session
+     * @param context service context
+     */
     public void dispatch(ServiceRequest req, UserSession session, ServiceContext context) {
         context.setBaseUrl(baseUrl);
         context.setLanguage(req.getLanguage());
@@ -408,6 +630,11 @@ public class ServiceManager {
         context.setServlet(servlet);
         if (startupError) context.setStartupErrors(startupErrors);
 
+        ServiceContext priorContext = ServiceContext.get();
+        if( priorContext != null){
+            priorContext.debug("ServiceManger dispatch replacing current ServiceContext");
+            priorContext.clearAsThreadLocal();
+        }
         context.setAsThreadLocal();
 
         //--- invoke service and build result
@@ -503,6 +730,20 @@ public class ServiceManager {
                 throw (NotAllowedEx) e;
             } else {
                 handleError(req, response, context, srvInfo, e);
+            }
+        }
+        finally {
+            ServiceContext checkContext = ServiceContext.get();
+            if( checkContext == context ) {
+                context.clearAsThreadLocal();
+            }
+            else {
+                context.debug("ServiceManager dispatch context was replaced before cleanup");
+            }
+            context.clearAsThreadLocal();
+            if( priorContext != null){
+                priorContext.debug("ServiceManger dispatch restoring ServiceContext");
+                priorContext.setAsThreadLocal();
             }
         }
     }
@@ -749,7 +990,7 @@ public class ServiceManager {
                 String contentDisposition = binaryFile.getContentDisposition();
                 String contentLength = binaryFile.getContentLength();
 
-                int cl = (contentLength == null) ? -1 : Integer.parseInt(contentLength);
+                long cl = (contentLength == null) ? -1 : Long.parseLong(contentLength);
 
                 // Did we set up a status code for the response?
                 if (context.getStatusCode() != null) {
@@ -772,7 +1013,7 @@ public class ServiceManager {
                 String contentDisposition = BLOB.getContentDisposition(response);
                 String contentLength = BLOB.getContentLength(response);
 
-                int cl = (contentLength == null) ? -1 : Integer.parseInt(contentLength);
+                long cl = (contentLength == null) ? -1 : Long.parseLong(contentLength);
 
                 req.beginStream(contentType, cl, contentDisposition, cache);
                 BLOB.write(response, req.getOutputStream());
@@ -844,7 +1085,7 @@ public class ServiceManager {
                                 } finally {
                                     timerContext.stop();
                                 }
-                                
+
                                 if (outPage.getContentType() != null
                                     && outPage.getContentType().startsWith("text/plain")) {
                                     req.beginStream(outPage.getContentType(), -1, "attachment;", cache);

@@ -106,34 +106,34 @@ public class Related implements ApplicationContextAware {
             String[] uuids,
         HttpServletRequest request) throws Exception {
 
-        Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
-        final ServiceContext context = ApiUtils.createServiceContext(request);
-        Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
+            Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
 
-        AbstractMetadata md;
-        Map<String, RelatedResponse> res = new HashMap<String, RelatedResponse>();
+            AbstractMetadata md;
+            Map<String, RelatedResponse> res = new HashMap<String, RelatedResponse>();
 
-        for (String uuid : uuids) {
-            try {
-                md = ApiUtils.canViewRecord(uuid, request);
-                Element raw = new Element("root").addContent(Arrays.asList(
-                    new Element("gui").addContent(Arrays.asList(
-                        new Element("language").setText(language.getISO3Language()),
-                        new Element("url").setText(context.getBaseUrl())
-                    )),
+            for (String uuid : uuids) {
+                try {
+                    md = ApiUtils.canViewRecord(uuid, request);
+                    Element raw = new Element("root").addContent(Arrays.asList(
+                        new Element("gui").addContent(Arrays.asList(
+                            new Element("language").setText(language.getISO3Language()),
+                            new Element("url").setText(context.getBaseUrl())
+                        )),
                     MetadataUtils.getRelated(context, md.getId(), md.getUuid(), types, 0, 100, true)
-                ));
-                final Element transform = Xml.transform(raw, relatedXsl);
-                RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
-                res.put(uuid, response);
-            } catch (SecurityException e) {
-                Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-                throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
-            } catch (Exception exception) {
-                Log.debug(API.LOG_MODULE_NAME, exception.getMessage(), exception);
+                    ));
+                    final Element transform = Xml.transform(raw, relatedXsl);
+                    RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
+                    res.put(uuid, response);
+                } catch (SecurityException e) {
+                    Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                    throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+                } catch (Exception exception) {
+                    Log.debug(API.LOG_MODULE_NAME, exception.getMessage(), exception);
+                }
             }
-
+            return res;
         }
-        return res;
     }
 }

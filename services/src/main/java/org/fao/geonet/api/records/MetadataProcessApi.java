@@ -94,41 +94,41 @@ public class MetadataProcessApi {
     List<SuggestionType> getSuggestions(
         @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
         HttpServletRequest request) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
+            Map<String, Object> xslParameter = new HashMap<String, Object>();
+            xslParameter.put("guiLang", request.getLocale().getISO3Language());
+            xslParameter.put("siteUrl", sm.getSiteURL(context));
+            xslParameter.put("nodeUrl", sm.getNodeURL());
+            xslParameter.put("baseUrl", context.getBaseUrl());
+            xslParameter.put("action", "analyze");
 
-        Map<String, Object> xslParameter = new HashMap<String, Object>();
-        xslParameter.put("guiLang", request.getLocale().getISO3Language());
-        xslParameter.put("siteUrl", sm.getSiteURL(context));
-        xslParameter.put("nodeUrl", sm.getNodeURL());
-        xslParameter.put("baseUrl", context.getBaseUrl());
-        xslParameter.put("action", "analyze");
+            // List or analyze all suggestions process registered for this schema
+            MetadataSchema metadataSchema = dm.getSchema(metadata.getDataInfo().getSchemaId());
+            Path xslProcessing = metadataSchema.getSchemaDir().resolve(XSL_SUGGEST_FILE);
+            if (Files.exists(xslProcessing)) {
+                // -- here we send parameters set by user from
+                // URL if needed.
+                boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+                Element md = dm.getMetadata(context, String.valueOf(metadata.getId()), forEditing, withValidationErrors,
+                    keepXlinkAttributes);
 
-        // List or analyze all suggestions process registered for this schema
-        MetadataSchema metadataSchema = dm.getSchema(metadata.getDataInfo().getSchemaId());
-        Path xslProcessing = metadataSchema.getSchemaDir().resolve(XSL_SUGGEST_FILE);
-        if (Files.exists(xslProcessing)) {
-            // -- here we send parameters set by user from
-            // URL if needed.
-            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-            Element md = dm.getMetadata(context, String.valueOf(metadata.getId()), forEditing, withValidationErrors,
-                keepXlinkAttributes);
+                Element xmlSuggestions;
+                try {
+                    xmlSuggestions = Xml.transform(md, xslProcessing, xslParameter);
+                } catch (TransformerConfigurationException e) {
+                    throw new WebApplicationException(String.format("Error while retrieving suggestion for record '%s'. "
+                        + "Check your suggest.xsl process (and all its imports).", metadataUuid, xslProcessing), e);
+                }
+                SuggestionsType suggestions = (SuggestionsType) Xml.unmarshall(xmlSuggestions, SuggestionsType.class);
 
-            Element xmlSuggestions;
-            try {
-                xmlSuggestions = Xml.transform(md, xslProcessing, xslParameter);
-            } catch (TransformerConfigurationException e) {
-                throw new WebApplicationException(String.format("Error while retrieving suggestion for record '%s'. "
-                    + "Check your suggest.xsl process (and all its imports).", metadataUuid, xslProcessing), e);
+                return suggestions.getSuggestion();
+            } else {
+                throw new ResourceNotFoundException(
+                    String.format("No %s files available in schema '%s'. No suggestion to provides.", XSL_SUGGEST_FILE,
+                        metadata.getDataInfo().getSchemaId()));
             }
-            SuggestionsType suggestions = (SuggestionsType) Xml.unmarshall(xmlSuggestions, SuggestionsType.class);
-
-            return suggestions.getSuggestion();
-        } else {
-            throw new ResourceNotFoundException(
-                String.format("No %s files available in schema '%s'. No suggestion to provides.", XSL_SUGGEST_FILE,
-                    metadata.getDataInfo().getSchemaId()));
         }
     }
 
@@ -144,17 +144,18 @@ public class MetadataProcessApi {
         @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
         @Parameter(description = ApiParams.API_PARAM_PROCESS_ID) @PathVariable String process, HttpServletRequest request)
         throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        boolean save = request.getMethod().equals("POST");
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+            boolean save = request.getMethod().equals("POST");
 
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
 
-        XsltMetadataProcessingReport report = new XsltMetadataProcessingReport(process);
+            XsltMetadataProcessingReport report = new XsltMetadataProcessingReport(process);
 
-        Element processedMetadata = process(applicationContext, process, request, metadata, save, context, sm, report);
+            Element processedMetadata = process(applicationContext, process, request, metadata, save, context, sm, report);
 
-        return new ResponseEntity<>(processedMetadata, HttpStatus.OK);
+            return new ResponseEntity<>(processedMetadata, HttpStatus.OK);
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Apply a process", description =API_OP_NOTE_PROCESS)
@@ -169,16 +170,17 @@ public class MetadataProcessApi {
         @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
         @Parameter(description = ApiParams.API_PARAM_PROCESS_ID) @PathVariable String process, HttpServletRequest request)
         throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        boolean save = true;
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+            boolean save = true;
 
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
 
-        XsltMetadataProcessingReport report = new XsltMetadataProcessingReport(process);
+            XsltMetadataProcessingReport report = new XsltMetadataProcessingReport(process);
 
-        process(applicationContext, process, request, metadata, save, context, sm, report);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            process(applicationContext, process, request, metadata, save, context, sm, report);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
     private Element process(ApplicationContext applicationContext, String process, HttpServletRequest request,

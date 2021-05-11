@@ -23,6 +23,7 @@
 package org.fao.geonet.api.users;
 
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -85,7 +86,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(5)))
+            .andExpect(jsonPath("$", hasSize(6)))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
@@ -95,7 +96,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/srv/api/users/222")
+        this.mockMvc.perform(get("/srv/api/users/2222")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
@@ -154,7 +155,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void deleteNonExistingUser() throws Exception {
-        Optional<User> userToDelete = _userRepo.findById(222);
+        Optional<User> userToDelete = _userRepo.findById(333);
         Assert.assertFalse(userToDelete.isPresent());
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -162,7 +163,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Check 404 is returned
-        this.mockMvc.perform(delete("/srv/api/users/222")
+        this.mockMvc.perform(delete("/srv/api/users/333")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
@@ -335,6 +336,48 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void createUserInvalidUsername() throws Exception {
+        List<String> invalidNames = Lists.newArrayList("--invalidusername", "--invalidName", "_invalidName",
+            "invalidName_", ".invalidName", "invalidName.", "@invalidName", "invalidName@", "invalid@@Name",
+            "invalid__Name", "invalid--Name", "invalidName-", "invalid..Name",
+            "?nvalidName", "invälidName");
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        for (String invalidName : invalidNames) {
+            UserDto user = new UserDto();
+            user.setUsername(invalidName);
+            user.setName("test");
+            user.setProfile(Profile.Editor.name());
+            user.setGroupsEditor(Collections.singletonList("2"));
+            user.setEmail(Collections.singletonList("mail@test.com"));
+            user.setPassword("1Password$");
+            user.setEnabled(true);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(user);
+
+            // Check 400 is returned and a message indicating that username is required
+            this.mockMvc.perform(put("/srv/api/users")
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andDo(result -> {
+                    if (result.getResponse().getStatus() != 400) {
+                        System.err.println(invalidName + " has been accepted as user name and it shouldn't");
+                    }
+                })
+                .andExpect(jsonPath("$.description", is("username may only contain alphanumeric "
+                    + "characters or single hyphens, single at signs or single dots. Cannot begin or end with a "
+                    + "hyphen, at sign or dot.")))
+                .andExpect(status().is(400));
+        }
+    }
+
+
+    @Test
     public void resetPassword() throws Exception {
         User user = _userRepo.findOneByUsername("testuser-editor");
         Assert.assertNotNull(user);
@@ -447,7 +490,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
     public void resetPasswordNotExistingUser() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        String userId = "222";
+        String userId = "2222";
 
         this.mockHttpSession = loginAsAdmin();
 
@@ -462,7 +505,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         // Check 404 is returned
         this.mockMvc.perform(post("/srv/api/users/" + userId + "/actions/forget-password")
             .contentType(API_JSON_EXPECTED_ENCODING)
-            .content(json)
+            .param("password", "newpassword")
+            .param("password2", "newpassword")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.description", is("User not found")))
@@ -520,6 +564,118 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
+    }
+
+    @Test
+    public void updateUserInvalidUsername() throws Exception {
+        List<String> invalidNames = Lists.newArrayList("--invalidusername", "--invalidName", "_invalidName",
+            "invalidName_", ".invalidName", "invalidName.", "@invalidName", "invalidName@", "invalid@@Name",
+            "invalid__Name", "invalid--Name", "invalidName-", "invalid..Name",
+            "?nvalidName", "invälidName");
+
+        User userToUpdate = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull(userToUpdate);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        for (String invalidName : invalidNames) {
+
+            UserDto user = new UserDto();
+            user.setUsername(invalidName);
+            user.setName(userToUpdate.getName() + "-updated");
+            user.setProfile(userToUpdate.getProfile().toString());
+            user.setGroupsEditor(Collections.singletonList("2"));
+            user.setEmail(new ArrayList<>(userToUpdate.getEmailAddresses()));
+            user.setEnabled(true);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(user);
+
+
+
+            this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andDo(result -> {
+                    if (result.getResponse().getStatus() != 400) {
+                        System.err.println(invalidName + " has been accepted as user name and it shouldn't");
+                    }
+                })
+                .andExpect(status().is(400))
+                .andExpect(jsonPath("$.description", is("username may only contain alphanumeric "
+                    + "characters or single hyphens, single at signs or single dots. Cannot begin or end with a "
+                    + "hyphen, at sign or dot.")));
+        }
+    }
+
+    public void updateUserByUserAdminAllowed() throws Exception {
+        // User admin in Group test
+        User loginUser = _userRepo.findOneByUsername("testuser-useradmin-testgroup");
+        Assert.assertNotNull(loginUser);
+        // User to update in Group test
+        User userToUpdate = _userRepo.findOneByUsername("testuser-reviewer");
+        Assert.assertNotNull(userToUpdate);
+
+        UserDto user = new UserDto();
+        user.setId(String.valueOf(userToUpdate.getId()));
+        user.setUsername(userToUpdate.getUsername());
+        user.setName(userToUpdate.getName() + "-updated");
+        user.setProfile(userToUpdate.getProfile().toString());
+        user.setGroupsEditor(Collections.singletonList("2"));
+        user.setEmail(new ArrayList(userToUpdate.getEmailAddresses()));
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(loginUser);
+
+        this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
+            .content(json)
+            .contentType(API_JSON_EXPECTED_ENCODING)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(204));
+    }
+
+
+    @Test
+    public void updateUserByUserAdminNotAllowed() throws Exception {
+        // User admin in Group test
+        User loginUser = _userRepo.findOneByUsername("testuser-useradmin-testgroup");
+        Assert.assertNotNull(loginUser);
+        // User to update in Group sample
+        User userToUpdate = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull(userToUpdate);
+
+        UserDto user = new UserDto();
+        user.setId(String.valueOf(userToUpdate.getId()));
+        user.setUsername(userToUpdate.getUsername());
+        user.setName(userToUpdate.getName() + "-updated");
+        user.setProfile(userToUpdate.getProfile().toString());
+        user.setGroupsEditor(Collections.singletonList("2"));
+        user.setEmail(new ArrayList(userToUpdate.getEmailAddresses()));
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(loginUser);
+
+        this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
+            .content(json)
+            .contentType(API_JSON_EXPECTED_ENCODING)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(jsonPath("$.description", is("You don't have rights to do this")))
+            .andExpect(status().is(400));
     }
 
 
@@ -693,6 +849,9 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         UserGroup userGroupReviewer = new UserGroup().setGroup(testGroup)
             .setProfile(Profile.Editor).setUser(testUserReviewer);
         _userGroupRepo.save(userGroupReviewer);
+        userGroupReviewer = new UserGroup().setGroup(testGroup)
+            .setProfile(Profile.Reviewer).setUser(testUserReviewer);
+        _userGroupRepo.save(userGroupReviewer);
 
         // UserAdmin - Group sample
         User testUserUserAdmin = new User();
@@ -703,8 +862,21 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         _userRepo.save(testUserUserAdmin);
 
         UserGroup userGroupUserAdmin = new UserGroup().setGroup(sampleGroup)
-            .setProfile(Profile.Editor).setUser(testUserUserAdmin);
+            .setProfile(Profile.UserAdmin).setUser(testUserUserAdmin);
         _userGroupRepo.save(userGroupUserAdmin);
+
+        // UserAdmin - Test group
+        User testUserUserAdminForTestGroup = new User();
+        testUserUserAdminForTestGroup.setUsername("testuser-useradmin-testgroup");
+        testUserUserAdminForTestGroup.setProfile(Profile.UserAdmin);
+        testUserUserAdminForTestGroup.setEnabled(true);
+        testUserUserAdminForTestGroup.getEmailAddresses().add("test@mail.com");
+        _userRepo.save(testUserUserAdminForTestGroup);
+
+        UserGroup userGroupUserAdminForTestGroup = new UserGroup().setGroup(testGroup)
+            .setProfile(Profile.UserAdmin).setUser(testUserUserAdminForTestGroup);
+        _userGroupRepo.save(userGroupUserAdminForTestGroup);
+
 
         // User with same name different letter case
         User testUserEditor2 = new User();

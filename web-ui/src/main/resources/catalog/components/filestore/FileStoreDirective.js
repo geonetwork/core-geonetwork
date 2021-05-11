@@ -33,10 +33,11 @@
       .directive('gnFileStore', [
         'gnFileStoreService',
         'gnOnlinesrc',
+        'gnCurrentEdit',
         '$translate',
         '$rootScope',
         '$parse',
-        function(gnfilestoreService, gnOnlinesrc, $translate, $rootScope, $parse) {
+        function(gnfilestoreService, gnOnlinesrc, gnCurrentEdit, $translate, $rootScope, $parse) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/filestore/' +
@@ -54,6 +55,7 @@
                   angular.isUndefined(attrs['defaultStatus']) ?
                   'public' : attrs['defaultStatus'];
               scope.onlinesrcService = gnOnlinesrc;
+              scope.gnCurrentEdit = gnCurrentEdit;
 
               scope.openExternalResourceManagement = function(r, $window) {
                 var win = window.open(r.externalResourceManagementProperties.url, "_blank", r.externalResourceManagementProperties.windowParameters)
