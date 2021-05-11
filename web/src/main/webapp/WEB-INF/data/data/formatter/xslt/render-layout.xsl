@@ -229,7 +229,7 @@
         <div class="col-md-10">
           <h1>Sextant</h1>
           <div class="subtitle" xml:lang="fre">Infrastructure de données géographiques marines et littorales</div>
-          <div class="subtitle" xml:lang="eng">Coastal and marine spatial data infrastructure</div>
+          <div class="subtitle" xml:lang="eng">Spatial Data Infrastructure for Marine Environments</div>
         </div>
         <div class="col-md-1">
           <img src="{$nodeUrl}../catalog/views/sextant/landing-pages/default/logo.png"/>
