@@ -565,7 +565,8 @@
 
         var hidePopover = function() {
           button.popover('hide');
-          if (button.data('bs.popover').inState) {
+
+          if (button.data('bs.popover') && button.data('bs.popover').inState) {
             button.data('bs.popover').inState.click = false;
           }
         };
