@@ -252,6 +252,8 @@
 
              scope.elementRefBackup = scope.elementRef;
              scope.invalidKeywordMatch = false;
+             scope.invalidKeywords = [];
+             scope.foundKeywords = [];
              scope.selected = [];
              scope.initialKeywords = [];
              if (scope.keywords) {
@@ -309,7 +311,20 @@
                scope.selected = [];
                scope.elementRef = scope.elementRefBackup;
                scope.invalidKeywordMatch = false;
+               scope.invalidKeywords = [];
+               scope.foundKeywords = [];
                checkState();
+             };
+             scope.resetInvalidKeywords = function() {
+               for (i = 0; i < scope.invalidKeywords.length; i++) {
+                 var index = scope.initialKeywords.indexOf(scope.invalidKeywords[i]);
+                 if (index !== -1) {
+                   scope.initialKeywords.splice(index, 1);
+                 }
+               }
+               scope.isInitialized = false;
+               scope.resetKeywords();
+               init();
              };
 
 
@@ -340,8 +355,13 @@
                    .then(function(listOfKeywords) {
                      counter++;
 
-                     listOfKeywords[0] &&
-                     scope.selected.push(listOfKeywords[0]);
+                     if (listOfKeywords[0]) {
+                       scope.selected.push(listOfKeywords[0]);
+                       scope.foundKeywords.push(keyword);
+                     } else {
+                       scope.invalidKeywords.push(keyword);
+                     }
+
                      // Init done when all keywords are selected
                      if (counter === scope.initialKeywords.length) {
                        scope.isInitialized = true;
