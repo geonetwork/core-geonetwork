@@ -581,7 +581,6 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/host', 'localhost', 0, 210, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/protocol', 'http', 0, 220, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/port', '8080', 1, 230, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/securePort', '8443', 1, 240, 'n');
 INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system/server/log','log4j.xml', 0, 250, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/timeZone', '', 0, 260, 'n');
 
@@ -610,7 +609,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/transactionUpdateCreateXPath', 'true', 2, 1320, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/enable', 'false', 2, 1910, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userFeedback/enable', 'false', 2, 1911, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userFeedback/lastNotificationDate', '', 0, 1912, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal, editable) VALUES ('system/userFeedback/lastNotificationDate', '', 0, 1912, 'y', 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/clickablehyperlinks/enable', 'true', 2, 2010, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/localrating/enable', 'advanced', 0, 2110, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/downloadservice/leave', 'false', 0, 2210, 'y');

@@ -28,7 +28,13 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasO
 import static org.springframework.data.jpa.domain.Specification.where;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -49,7 +55,6 @@ import org.fao.geonet.domain.User_;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.GroupRepositoryCustom;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.SettingRepository;
@@ -62,7 +67,6 @@ import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specification;
 
 import jeeves.server.UserSession;
@@ -99,13 +103,27 @@ public class AccessManager {
      * perform on that metadata (an set of OPER_XXX as keys). If the user is authenticated the
      * permissions are taken from the groups the user belong. If the user is not authenticated, a
      * dynamic group is assigned depending on user location (0 for internal and 1 for external).
+     *
+     * @param context service context
+     * @param mdId metadata record to check
+     * @param ip IP Address used to determine base operations
+     * @return set of base operations along with any additional reserved operations available to user
      */
     public Set<Operation> getOperations(ServiceContext context, String mdId, String ip) throws Exception {
         return getOperations(context, mdId, ip, null);
     }
 
     /**
-     * TODO javadoc.
+     * Given a user(session) a list of groups and a metadata returns all operations that user can
+     * perform on that metadata (an set of OPER_XXX as keys). If the user is authenticated the
+     * permissions are taken from the groups the user belong. If the user is not authenticated, a
+     * dynamic group is assigned depending on user location (0 for internal and 1 for external).
+     *
+     * @param context service context
+     * @param mdId metadata record to check
+     * @param ip IP Address used to determine base operations (if not provided)
+     * @param operations base operations
+     * @return set of base operations along with any additional reserved operations available to user
      */
     public Set<Operation> getOperations(ServiceContext context, String mdId, String ip, Collection<Operation> operations) throws Exception {
         Set<Operation> results;
@@ -120,8 +138,9 @@ public class AccessManager {
             }
 
             UserSession us = context.getUserSession();
-            if ((us != null) && us.isAuthenticated() && us.getProfile() == Profile.Editor && us.getProfile() == Profile.Reviewer) {
-                results.add(operationRepository.findReservedOperation(ReservedOperation.view));
+            if ((us != null) && us.isAuthenticated() &&
+                (us.getProfile() == Profile.Editor || us.getProfile() == Profile.Reviewer)) {
+                 results.add(operationRepository.findReservedOperation(ReservedOperation.view));
             }
         }
 

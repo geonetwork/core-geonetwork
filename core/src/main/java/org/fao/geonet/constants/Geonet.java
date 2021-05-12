@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -681,4 +681,15 @@ public final class Geonet {
     public static class SearchConfig {
         public static final String SEARCH_IGNORE_PORTAL_FILTER_OPTION = "ignorePortalFilter";
     }
+
+    public static final class HttpProtocol {
+        public static final String HTTP = "http";
+        public static final String HTTPS = "https";
+    }
+
+    public static final class DefaultHttpPort {
+        public static final int HTTP = 80;
+        public static final int HTTPS = 443;
+    }
+
 }

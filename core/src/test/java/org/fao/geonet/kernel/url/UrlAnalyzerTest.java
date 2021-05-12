@@ -76,6 +76,7 @@ public class UrlAnalyzerTest extends AbstractCoreIntegrationTest {
     @PersistenceContext
     private EntityManager entityManager;
 
+    /** Service context for test */
     private ServiceContext context;
 
     @Before

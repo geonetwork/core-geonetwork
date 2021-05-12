@@ -33,9 +33,9 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceContainer;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.resources.S3Credentials;
@@ -49,7 +49,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
-import javax.resource.NotSupportedException;
 
 public class S3Store extends AbstractStore {
     @Autowired
@@ -114,11 +113,6 @@ public class S3Store extends AbstractStore {
             throw new ResourceNotFoundException(
                     String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
         }
-    }
-
-    @Override
-    public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
-        throw new NotSupportedException("S3Store does not support getResourceInternal.");
     }
 
     private String getKey(String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) throws Exception {
@@ -241,6 +235,15 @@ public class S3Store extends AbstractStore {
         } catch (AmazonServiceException e) {
             return null;
         }
+    }
+
+    @Override
+    public MetadataResourceContainer getResourceContainerDescription(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
+
+        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+
+        SettingManager settingManager = context.getBean(SettingManager.class);
+        return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid, settingManager.getNodeURL() + "api/records/", approved);
     }
 
     private String getMetadataDir(final int metadataId) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -33,7 +33,6 @@ public class Settings {
     public static final String SYSTEM_SITE_LABEL_PREFIX = "system/site/labels/";
     public static final String SYSTEM_SERVER_HOST = "system/server/host";
     public static final String SYSTEM_SERVER_PORT = "system/server/port";
-    public static final String SYSTEM_SERVER_SECURE_PORT = "system/server/securePort";
     public static final String SYSTEM_SERVER_PROTOCOL = "system/server/protocol";
     public static final String SYSTEM_PLATFORM_VERSION = "system/platform/version";
     public static final String SYSTEM_PLATFORM_SUBVERSION = "system/platform/subVersion";

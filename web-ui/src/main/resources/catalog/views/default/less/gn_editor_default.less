@@ -82,10 +82,10 @@
   .gn-search-facet {
     padding-bottom: 15px;
   }
-  // modal dialog (wider for for multilingual)
-  @media (min-width: @screen-sm-min) {
-    .modal-dialog {
-      width: 760px;
+  .modal-dialog {
+    .modal-body {
+      max-height: 85vh;
+      overflow: auto;
     }
   }
   form.gn-editor {
@@ -432,6 +432,29 @@
   // attribution on the 'make thumbnail' map
   .ol-attribution {
     .gn-attribution();
+  }
+}
+#gn-addonlinesrc-description-row {
+  .form-control {
+    background: #fff !important;
+  }
+  .tt-menu {
+    top: auto !important;
+    width: calc(~"100% - 30px");
+    margin-left: 15px;
+  }
+  .twitter-typeahead .tt-menu {
+    width: 100%;
+    margin-left: 0;
+  }
+  .tt-menu + .twitter-typeahead {
+    display: none !important;
+  }
+  .tt-suggestion {
+    &:hover {
+      cursor: pointer;
+      background-color: @dropdown-link-hover-bg;
+    }
   }
 }
 

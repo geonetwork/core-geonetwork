@@ -48,6 +48,9 @@
     <msg id="a" xml:lang="dut">
 INSPIRE-thema (s) gevonden. Voer deze taak uit om een topologische consistentie sectie item toe te voegen.
     </msg>
+    <msg id="a" xml:lang="ita">Trovato un tema INSPIRE. 
+        Lancia questo processo per aggiungere l'elemento di consistenza topologica.
+    </msg>
   </xsl:variable>
 
   <xsl:variable name="inspire-thesaurus-dq-topo"

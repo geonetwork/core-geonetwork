@@ -1,0 +1,30 @@
+<form id="gn-batch-approval">
+  <div>
+    <p data-translate="">batchApproveInfo</p>
+
+    <div class="form-group">
+      <label for="gn-change-message"
+             data-translate="">statusLogMessage</label>
+      <textarea class="form-control"
+                id="gn-change-message"
+                rows="4"
+                data-ng-model="changeMessage"></textarea>
+    </div>
+
+    <div class="form-group">
+      <input type="checkbox" id="batch-approval-direct" data-ng-model="directApproval">
+      <label for="batch-approval-direct" data-translate="">batchApproveDirect</label></input>
+    </div>
+
+    <div class="modal-footer-inline clearfix">
+      <div class="btn-toolbar pull-right">
+        <button class="btn btn-default"
+                data-gn-click-and-spin="approve()" data-translate="">approve</button>
+        <button class="btn btn-default" type="button" data-dismiss="modal">
+          <span data-translate="">cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</form>

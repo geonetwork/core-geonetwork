@@ -25,13 +25,14 @@
                   <span class="fa fa-pencil"></span>&nbsp;
                   <span translate>Line</span>
                 </button>
+                <button class="btn btn-default btn-warning pull-left"
+                        ng-click="ctrl.setActiveDrawInteraction('Point')"
+                        ng-class="{'active': ctrl.activeDrawType === 'Point'}">
+                  <span class="fa fa-pencil"></span>&nbsp;
+                  <span translate>Point</span>
+                </button>
               </div>
             </div>
-            <button class="btn btn-default"
-              gi-btn="active" ng-model="ctrl.modifyInteraction.active">
-              <span class="fa fa-pencil"></span>&nbsp;
-              <span translate>modifyGeometry</span>
-            </button>
           </div>
         </div>
       </div>
@@ -59,7 +60,7 @@
 
     <div class="spacer" />
 
-    <div ng-if="ctrl.dataOlProjection == null" class="alert alert-danger"
+    <div ng-if="ctrl.polygonXml && ctrl.dataOlProjection == null" class="alert alert-danger"
          data-translate=""
          data-translate-values="{srsName:'{{ctrl.dataProjection}}'}">
       badGmlProjectionCode
@@ -95,5 +96,5 @@
     <!-- final output in GML -->
     <input name="{{ctrl.identifier}}"
       type="hidden" value="{{ctrl.outputPolygonXml}}"/>
-</div>
+  </div>
 </div>

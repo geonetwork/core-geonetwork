@@ -37,6 +37,8 @@
     <for name="gfc:functionalLanguage" use="data-gn-language-picker"/>
     <for name="gmd:languageCode" use="data-gn-language-picker"/>
 
+    <!--<for name="gfc:code" use="data-gn-anchor-switcher"/>-->
+
     <for name="gfc:producer" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
@@ -50,13 +52,18 @@
 
   <fieldsWithFieldset>
     <name>gfc:producer</name>
-    <name>gfc:featureType</name>
-    <name>gfc:carrierOfCharacteristics</name>
+    <name>gfc:FC_FeatureType</name>
+    <!--<name>gfc:carrierOfCharacteristics</name>-->
     <name>gfc:listedValue</name>
     <name>gfc:constrainedBy</name>
     <name>gfc:inheritsFrom</name>
     <name>gfc:inheritsTo</name>
     <name>gco:range</name>
+    <name>gfc:FC_FeatureAttribute</name>
+    <name>gfc:FC_FeatureAssociation</name>
+    <name>gmx:subCatalogue</name>
+    <name>gfc:FC_AssociationRole</name>
+    <name>gfc:FC_FeatureOperation</name>
   </fieldsWithFieldset>
 
   <fieldsWithAnchorOption>
@@ -97,8 +104,11 @@
         </section>
       </tab>
       <flatModeExceptions>
-        <for name="gfc:code"/>
-        <for name="gfc:listedValue"/>
+        <for name="gfc:definition" />
+        <for name="gfc:code" />
+        <for name="gfc:featureType" />
+        <for name="gfc:listedValue" />
+        <for name="gfc:carrierOfCharacteristics" />
       </flatModeExceptions>
     </view>
     <view name="advanced">

@@ -45,6 +45,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 class WebDavRetriever implements RemoteRetriever {
 
     private Logger log;
+    /** Shared service context managed by HarvesterManager */
     private ServiceContext context;
     private WebDavParams params;
 

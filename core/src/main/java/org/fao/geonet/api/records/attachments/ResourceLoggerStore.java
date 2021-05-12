@@ -32,8 +32,8 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataFileDownload;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceContainer;
 import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataFileDownloadRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.util.ThreadPool;
@@ -45,7 +45,6 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
-import javax.resource.NotSupportedException;
 
 /**
  * Decorate a store and record put/get/delete operations in database for reporting statistics.
@@ -88,10 +87,6 @@ public class ResourceLoggerStore extends AbstractStore {
         return null;
     }
 
-    @Override
-    public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
-        throw new NotSupportedException("ResourceLoggerStore does not support getResourceInternal.");
-    }
 
     @Override
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
@@ -154,6 +149,14 @@ public class ResourceLoggerStore extends AbstractStore {
             throws Exception {
         if (decoratedStore != null) {
             return decoratedStore.getResourceDescription(context, metadataUuid, visibility, filename, approved);
+        }
+        return null;
+    }
+
+    @Override
+    public MetadataResourceContainer getResourceContainerDescription(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
+        if (decoratedStore != null) {
+            return decoratedStore.getResourceContainerDescription(context, metadataUuid, approved);
         }
         return null;
     }

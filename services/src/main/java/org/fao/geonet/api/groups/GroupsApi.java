@@ -86,6 +86,12 @@ import static org.springframework.data.jpa.domain.Specification.where;
 @Controller("groups")
 public class GroupsApi {
     /**
+     * Group name pattern with allowed chars. Group name may only contain alphanumeric characters or single hyphens.
+     * Cannot begin or end with a hyphen.
+     */
+    private static final String GROUPNAME_PATTERN = "^[a-zA-Z0-9]+([-_]?[a-zA-Z0-9]+)*$";
+
+    /**
      * Logger name.
      */
     public static final String LOGGER = Geonet.GEONETWORK + ".api.groups";
@@ -113,6 +119,7 @@ public class GroupsApi {
      * Transparent 1x1 px PNG.
      */
     private static final byte[] TRANSPARENT_1_X_1_PNG = org.apache.commons.codec.binary.Base64.decodeBase64(TRANSPARENT_1_X_1_PNG_BASE64);
+
     /**
      * Message source.
      */
@@ -180,7 +187,7 @@ public class GroupsApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
 
         ApplicationContext context = ApplicationContextHolder.get();
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request, locale.getISO3Country());
+      try (ServiceContext serviceContext = ApiUtils.createServiceContext(request, locale.getISO3Country())) {
         if (context == null) {
             throw new RuntimeException("ServiceContext not available");
         }
@@ -226,6 +233,7 @@ public class GroupsApi {
                 groupId));
             throw new RuntimeException(e);
         }
+      }
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -317,6 +325,12 @@ public class GroupsApi {
                 "A group with name '%s' already exist.",
                 group.getName()
             ));
+        }
+
+        if (!group.getName().matches(GROUPNAME_PATTERN)) {
+            throw new IllegalArgumentException("Group name may only contain alphanumeric characters "
+                + "or single hyphens. Cannot begin or end with a hyphen."
+            );
         }
 
         // Populate languages if not already set
@@ -442,6 +456,12 @@ public class GroupsApi {
                 MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
             ));
         } else {
+            if (!group.getName().matches(GROUPNAME_PATTERN)) {
+                throw new IllegalArgumentException("Group name may only contain alphanumeric characters "
+                    + "or single hyphens. Cannot begin or end with a hyphen."
+                );
+            }
+
             try {
                 groupRepository.saveAndFlush(group);
             } catch (Exception ex) {

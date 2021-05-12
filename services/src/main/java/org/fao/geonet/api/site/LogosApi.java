@@ -105,9 +105,9 @@ public class LogosApi {
     public Set<String> getLogos(
         HttpServletRequest request
     ) {
-        ApplicationContext context = ApplicationContextHolder.get();
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         Set<Path> icons = context.getBean(Resources.class).listFiles(
-            ApiUtils.createServiceContext(request),
+            context,
             "harvesting",
             iconFilter);
         Set<String> iconsList = new HashSet<>(icons.size());
@@ -115,6 +115,7 @@ public class LogosApi {
             iconsList.add(i.getFileName().toString());
         }
         return iconsList;
+      }
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -149,9 +150,9 @@ public class LogosApi {
             boolean overwrite,
         HttpServletRequest request
     ) throws Exception {
+      try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
         final ApplicationContext appContext = ApplicationContextHolder.get();
-        final Resources resources = appContext.getBean(Resources.class);
-        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        final Resources resources = serviceContext.getBean(Resources.class);
         final Path directoryPath = resources.locateHarvesterLogosDirSMVC(appContext);
 
         for (MultipartFile f : file) {
@@ -168,6 +169,7 @@ public class LogosApi {
             }
         }
         return new ResponseEntity(HttpStatus.CREATED);
+      }
     }
 
     private void checkFileName(String fileName) throws Exception {
@@ -206,9 +208,9 @@ public class LogosApi {
         checkFileName(file);
         FilePathChecker.verify(file);
 
+      try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final Resources resources = appContext.getBean(Resources.class);
-        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         final Path nodeLogoDirectory = resources.locateHarvesterLogosDirSMVC(appContext);
 
         try (Resources.ResourceHolder image = resources.getImage(serviceContext, file, nodeLogoDirectory)) {
@@ -228,5 +230,6 @@ public class LogosApi {
                     "No logo found with filename '%s'.", file));
             }
         }
+      }
     }
 }

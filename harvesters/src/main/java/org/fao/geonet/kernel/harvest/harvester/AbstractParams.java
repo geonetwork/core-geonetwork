@@ -116,7 +116,9 @@ public abstract class AbstractParams implements Cloneable {
     }
 
     /**
-     * @param node
+     * Setup parameters with the provided configuration.
+     *
+     * @param node harvester configuration
      * @throws BadInputEx
      */
     public void create(Element node) throws BadInputEx {

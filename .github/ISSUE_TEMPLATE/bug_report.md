@@ -25,8 +25,8 @@ If applicable, add the server log file to help trace your problem.
 
 **Desktop (please complete the following information):**
  - Browser [e.g. chrome, safari]
- - GeoNetwork Version [e.g. 22]
- - Server Application [e.g. Tomcat 7 with Java 8]
+ - GeoNetwork Version [e.g. 3.10]
+ - Server Application [e.g. Tomcat 9 with Java 8]
 
 **Additional context**
 Add any other context about the problem here.

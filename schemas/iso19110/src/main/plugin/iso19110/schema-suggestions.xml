@@ -66,6 +66,7 @@
 
   <field name="gfc:FC_ListedValue">
     <suggest name="gfc:code"/>
+    <suggest name="gfc:definition"/>
   </field>
 
   <field name="gfc:FC_AssociationRole">
@@ -79,10 +80,13 @@
   <field name="gfc:FC_FeatureAttribute">
     <suggest name="gfc:code"/>
     <suggest name="gfc:memberName"/>
-    <suggest name="gfc:code"/>
     <suggest name="gfc:definition"/>
     <suggest name="gfc:valueType"/>
     <suggest name="gfc:featureType"/>
+  </field>
+  
+  <field name="gfc:definition">
+    <suggest name="gco:CharacterString"/>
   </field>
 
   <field name="gfc:code">

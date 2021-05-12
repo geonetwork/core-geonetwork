@@ -43,6 +43,7 @@ import java.util.concurrent.Executors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -73,6 +74,7 @@ import com.google.common.collect.Maps;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
+import org.springframework.context.ConfigurableApplicationContext;
 
 public class ThesaurusManager implements ThesaurusFinder {
 
@@ -149,7 +151,17 @@ public class ThesaurusManager implements ThesaurusFinder {
         try {
             Runnable worker = new InitThesauriTableTask(context, thesauriDir);
             if (synchRun) {
+                ServiceContext restore = ServiceContext.get();
+              try {
+                if( restore != null){
+                    restore.clearAsThreadLocal();
+                }
                 worker.run();
+              } finally {
+                if( restore != null){
+                    restore.setAsThreadLocal();
+                }
+              }
             } else {
                 executor = Executors.newFixedThreadPool(1);
                 executor.execute(worker);
@@ -546,17 +558,21 @@ public class ThesaurusManager implements ThesaurusFinder {
      */
     final class InitThesauriTableTask implements Runnable {
 
-        private final ServiceContext context;
+        //private final ServiceContext context;
         private final Path thesauriDir;
+        private final ServiceManager serviceManager;
+        private final ConfigurableApplicationContext appContext;
 
         InitThesauriTableTask(ServiceContext context, Path thesauriDir) {
-            this.context = context;
+            //this.context = context;
+            this.serviceManager = context.getBean(ServiceManager.class);
+            this.appContext = context.getApplicationContext();
             this.thesauriDir = thesauriDir;
         }
 
         public void run() {
-            context.setAsThreadLocal();
-            try {
+            try (ServiceContext context = serviceManager.createServiceContext(Geonet.THESAURUS_MAN, appContext)) {
+                context.setAsThreadLocal();
                 // poll context to see whether servlet is up yet
                 while (!context.isServletInitialized()) {
                     if (Log.isDebugEnabled(Geonet.THESAURUS_MAN)) {

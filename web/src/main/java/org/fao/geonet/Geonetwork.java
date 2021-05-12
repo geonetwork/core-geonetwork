@@ -28,7 +28,9 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.server.JeevesProxyInfo;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
@@ -108,8 +110,12 @@ public class Geonetwork implements ApplicationHandler {
 
     /**
      * Inits the engine, loading all needed data.
+     *
+     * @param config Handler configuration
+     * @param context application handler servlet context
+     * @return GeonetContext for application
      */
-    public Object start(Element config, ServiceContext context) throws Exception {
+    public GeonetContext start(Element config, ServiceContext context) throws Exception {
         context.setAsThreadLocal();
         this._applicationContext = context.getApplicationContext();
         ApplicationContextHolder.set(this._applicationContext);
@@ -235,7 +241,7 @@ public class Geonetwork implements ApplicationHandler {
 
         // if the validator exists the proxyCallbackURL needs to have the external host and
         // servlet name added so that the cas knows where to send the validation notice
-        ServerBeanPropertyUpdater.updateURL(settingInfo.getSiteUrl(true) + baseURL, _applicationContext);
+        ServerBeanPropertyUpdater.updateURL(settingInfo.getSiteUrl() + baseURL, _applicationContext);
 
         //------------------------------------------------------------------------
         //--- extract intranet ip/mask and initialize AccessManager
@@ -275,7 +281,7 @@ public class Geonetwork implements ApplicationHandler {
         beanFactory.registerSingleton("oaipmhDisatcher", oaipmhDis);
 
 
-        _applicationContext.getBean(DataManager.class).init(context, false);
+        _applicationContext.getBean(DataManager.class).init(context);
         _applicationContext.getBean(HarvestManager.class).init(context, gnContext.isReadOnly());
 
         _applicationContext.getBean(ThumbnailMaker.class).init(context);
@@ -338,7 +344,7 @@ public class Geonetwork implements ApplicationHandler {
             createDBHeartBeat(gnContext, dbHeartBeatInitialDelay, dbHeartBeatFixedDelay);
         }
 
-        fillCaches(context);
+        fillCaches();
 
         AbstractEntityListenerManager.setSystemRunning(true);
 
@@ -347,51 +353,56 @@ public class Geonetwork implements ApplicationHandler {
         return gnContext;
     }
 
-    private void fillCaches(final ServiceContext context) {
-        final FormatterApi formatService = context.getBean(FormatterApi.class); // this will initialize the formatter
-
+    private void fillCaches() {
         Thread fillCaches = new Thread(new Runnable() {
             @Override
             public void run() {
-                final ServletContext servletContext = context.getServlet().getServletContext();
-                context.setAsThreadLocal();
-                ApplicationContextHolder.set(_applicationContext);
-                GeonetWro4jFilter filter = (GeonetWro4jFilter) servletContext.getAttribute(GeonetWro4jFilter.GEONET_WRO4J_FILTER_KEY);
+                ServiceManager serviceManager = _applicationContext.getBean(ServiceManager.class);
+                try (ServiceContext fillCacheServiceContext = serviceManager.createServiceContext( "init.filleCaches",_applicationContext)) {
+                    fillCacheServiceContext.setUserSession(new UserSession());
+                    FormatterApi formatService = fillCacheServiceContext.getBean(FormatterApi.class); // this will initialize the formatter
 
-                @SuppressWarnings("unchecked")
-                List<String> wro4jUrls = _applicationContext.getBean("wro4jUrlsToInitialize", List.class);
+                    final ServletContext servletContext = fillCacheServiceContext.getServlet().getServletContext();
+                    fillCacheServiceContext.setAsThreadLocal();
+                    ApplicationContextHolder.set(_applicationContext);
 
-                for (String wro4jUrl : wro4jUrls) {
-                    Log.info(Geonet.GEONETWORK, "Initializing the WRO4J group: " + wro4jUrl + " cache");
-                    final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext, "GET", "/static/" + wro4jUrl);
-                    final MockHttpServletResponse response = new MockHttpServletResponse();
-                    try {
-                        filter.doFilter(servletRequest, response, new MockFilterChain());
-                    } catch (Throwable t) {
-                        Log.info(Geonet.GEONETWORK, "Error while initializing the WRO4J group: " + wro4jUrl + " cache", t);
-                    }
-                }
+                    GeonetWro4jFilter filter = (GeonetWro4jFilter) servletContext.getAttribute(GeonetWro4jFilter.GEONET_WRO4J_FILTER_KEY);
 
-
-                final Page<Metadata> metadatas = _applicationContext.getBean(MetadataRepository.class).findAll(PageRequest.of(0, 1));
-                if (metadatas.getNumberOfElements() > 0) {
-                    Integer mdId = metadatas.getContent().get(0).getId();
-                    context.getUserSession().loginAs(new User().setName("admin").setProfile(Profile.Administrator).setUsername("admin"));
                     @SuppressWarnings("unchecked")
-                    List<String> formattersToInitialize = _applicationContext.getBean("formattersToInitialize", List.class);
+                    List<String> wro4jUrls = _applicationContext.getBean("wro4jUrlsToInitialize", List.class);
 
-                    for (String formatterName : formattersToInitialize) {
-                        Log.info(Geonet.GEONETWORK, "Initializing the Formatter with id: " + formatterName);
-                        final MockHttpSession servletSession = new MockHttpSession(servletContext);
-                        servletSession.setAttribute(Jeeves.Elem.SESSION,  context.getUserSession());
-                        final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
-                        servletRequest.setSession(servletSession);
+                    for (String wro4jUrl : wro4jUrls) {
+                        Log.info(Geonet.GEONETWORK, "Initializing the WRO4J group: " + wro4jUrl + " cache");
+                        final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext, "GET", "/static/" + wro4jUrl);
                         final MockHttpServletResponse response = new MockHttpServletResponse();
                         try {
-                            formatService.exec("eng", FormatType.html.toString(), mdId.toString(), null, formatterName,
-                                Boolean.TRUE.toString(), false, FormatterWidth._100, new ServletWebRequest(servletRequest, response));
+                            filter.doFilter(servletRequest, response, new MockFilterChain());
                         } catch (Throwable t) {
-                            Log.info(Geonet.GEONETWORK, "Error while initializing the Formatter with id: " + formatterName, t);
+                            Log.info(Geonet.GEONETWORK, "Error while initializing the WRO4J group: " + wro4jUrl + " cache", t);
+                        }
+                    }
+
+
+                    final Page<Metadata> metadatas = _applicationContext.getBean(MetadataRepository.class).findAll(PageRequest.of(0, 1));
+                    if (metadatas.getNumberOfElements() > 0) {
+                        Integer mdId = metadatas.getContent().get(0).getId();
+                        fillCacheServiceContext.getUserSession().loginAs(new User().setName("admin").setProfile(Profile.Administrator).setUsername("admin"));
+                        @SuppressWarnings("unchecked")
+                        List<String> formattersToInitialize = _applicationContext.getBean("formattersToInitialize", List.class);
+
+                        for (String formatterName : formattersToInitialize) {
+                            Log.info(Geonet.GEONETWORK, "Initializing the Formatter with id: " + formatterName);
+                            final MockHttpSession servletSession = new MockHttpSession(servletContext);
+                            servletSession.setAttribute(Jeeves.Elem.SESSION, fillCacheServiceContext.getUserSession());
+                            final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
+                            servletRequest.setSession(servletSession);
+                            final MockHttpServletResponse response = new MockHttpServletResponse();
+                            try {
+                                formatService.exec("eng", FormatType.html.toString(), mdId.toString(), null, formatterName,
+                                    Boolean.TRUE.toString(), false, FormatterWidth._100, new ServletWebRequest(servletRequest, response));
+                            } catch (Throwable t) {
+                                Log.info(Geonet.GEONETWORK, "Error while initializing the Formatter with id: " + formatterName, t);
+                            }
                         }
                     }
                 }
@@ -541,5 +552,13 @@ public class Geonetwork implements ApplicationHandler {
         // Beans registered using SingletonBeanRegistry#registerSingleton don't have their
         // @PreDestroy called. So do it manually.
         oaipmhDis.shutdown();
+
+        // shutdown data manager
+        try {
+            _applicationContext.getBean(DataManager.class).destroy();
+        } catch (Exception e) {
+            logger.error("Raised exception while stopping data manager");
+            logger.error(e);
+        }
     }
 }

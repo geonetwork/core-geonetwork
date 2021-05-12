@@ -32,6 +32,8 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.*;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Zip or unzip files
@@ -101,7 +103,11 @@ public class ZipUtil {
     public static FileSystem createZipFs(Path path) throws IOException, URISyntaxException {
         Files.deleteIfExists(path);
 
+        Map<String, Object> env = new HashMap<>();
+        env.put("create", String.valueOf(true));
+        env.put("useTempFile", Boolean.TRUE);
+
         URI uri = new URI("jar:" + path.toUri());
-        return FileSystems.newFileSystem(uri, Collections.singletonMap("create", String.valueOf(true)));
+        return FileSystems.newFileSystem(uri, env);
     }
 }

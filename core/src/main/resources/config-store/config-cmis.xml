@@ -25,11 +25,17 @@
 <beans
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://www.springframework.org/schema/beans"
+        xmlns:context="http://www.springframework.org/schema/context"
         xsi:schemaLocation="
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     ">
 
-<!--   If you want data stored in cmis compliant application, use the following: -->
+    <context:property-placeholder location="classpath:config-store/config-cmis-overrides.properties"
+                                  file-encoding="UTF-8"
+                                  ignore-unresolvable="true"
+                                  />
+
 <!-- Alfrsco sample -->
 <!--    <bean id="cmisconfiguration" class="org.fao.geonet.resources.CMISConfiguration">-->
 <!--      &lt;!&ndash;property name="repositoryId" value="-default-"/&ndash;&gt;-->
@@ -42,7 +48,7 @@
 <!--      &lt;!&ndash;property name="bindingType" value="atompub"/>-->
 <!--      <property name="atompubUrl" value="/api/-default-/public/cmis/versions/1.1/atom"/&ndash;&gt;-->
 <!--      &lt;!&ndash;property name="bindingType" value="webservices"/>-->
-<!--      <property name="externalResourceManagementUrl" value="http://localhost:8080/share/page/document-details?nodeRef=workspace://SpacesStore/{cmisobjectid}"/>-->
+<!--      <property name="externalResourceManagementUrl" value="http://localhost:8080/share/page/{type:folder:document}-details?nodeRef=workspace://SpacesStore/{cmisobjectid}"/>-->
 <!--      <property name="externalResourceManagementWindowParameters" value="toolbar=0,width=600,height=600"/>-->
 <!--      <property name="externalResourceManagementModalEnabled" value="true"/>-->
 <!--    </bean>-->
@@ -61,7 +67,7 @@
 <!--    &lt;!&ndash;property name="bindingType" value="webservices"/>-->
 <!--</bean>-->
 
-    <!-- Using default configuration which collect values from env variables.
+    <!-- Using configuration which collect values from env variables.
        CMIS_REPOSITORY_ID=-default-
        CMIS_USERNAME=username
        CMIS_PASSWORD=password
@@ -69,12 +75,55 @@
        CMIS_BASE_REPOSITORY_PATH=geonetwork
        CMIS_BINDING_TYPE=browser
        CMIS_BROWSER_URL=/api/-default-/public/cmis/versions/1.1/browser
-       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_URL=http://localhost:8080/share/page/document-details?nodeRef=workspace://SpacesStore/{cmisobjectid}
+       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_URL=http://localhost:8080/share/page/{type:folder:document}-details?nodeRef=workspace://SpacesStore/{cmisobjectid}
        CMIS_EXTERNAL_RESOURCE_MANAGEMENT_WINDOW_PARAMETERS=toolbar=0,width=600,height=600
        CMIS_EXTERNAL_RESOURCE_MANAGEMENT_MODAL_ENABLED=true
+       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_FOLDER_ENABLED=true
+       CMIS_EXTERNAL_RESOURCE_MANAGEMENT_FOLDER_ROOT=/public
        CMIS_VERSIONING_ENABLED=true
+       CMIS_VERSIONING_STATE=MAJOR
+       CMIS_VERSIONING_MAJOR_ON_UPDATE=false
     -->
     <bean id="cmisconfiguration" class="org.fao.geonet.resources.CMISConfiguration">
+
+        <property name="servicesBaseUrl" value="${cmis.services.base.url}"/>
+        <property name="bindingType" value="${cmis.binding.type}"/>
+        <property name="baseRepositoryPath" value="${cmis.base.repository.path}"/>
+        <property name="username" value="${cmis.username}"/>
+        <property name="password" value="${cmis.password}"/>
+        <property name="repositoryId" value="${cmis.repository.id}"/>
+        <property name="repositoryName" value="${cmis.repository.name}"/>
+
+        <property name="externalResourceManagementUrl" value="${cmis.external.resource.management.url}"/>
+        <property name="externalResourceManagementWindowParameters" value="${cmis.external.resource.management.window.parameters}"/>
+        <property name="externalResourceManagementModalEnabled" value="${cmis.external.resource.management.modal.enabled}"/>
+        <property name="externalResourceManagementFolderEnabled" value="${cmis.external.resource.management.folder.enabled}"/>
+        <property name="externalResourceManagementFolderRoot" value="${cmis.external.resource.management.folder.root}"/>
+
+        <property name="versioningEnabled" value="${cmis.versioning.enabled}"/>
+        <property name="versioningState" value="${cmis.versioning.state}"/>
+        <property name="versioningMajorOnUpdate" value="${cmis.versioning.major.on.update}"/>
+
+        <property name="cmisMetadataUUIDPropertyName" value="${cmis.metadata.uuid.property.name}"/>
+
+        <property name="browserUrl" value="${cmis.browser.url}"/>
+
+        <property name="atompubUrl" value="${cmis.atompub.url}"/>
+
+        <property name="webservicesBaseUrl" value="${cmis.webservices.base.url}"/>
+        <property name="webservicesRepositoryService" value="${cmis.webservices.repository.service}"/>
+        <property name="webservicesNavigationService" value="${cmis.webservices.navigation.service}"/>
+        <property name="webservicesObjectService" value="${cmis.webservices.object.service}"/>
+        <property name="webservicesVersioningService" value="${cmis.webservices.versioning.service}"/>
+        <property name="webservicesDiscoveryService" value="${cmis.webservices.discovery.service}"/>
+        <property name="webservicesRelationshipService" value="${cmis.webservices.relationship.service}"/>
+        <property name="webservicesMultifilingService" value="${cmis.webservices.multifiling.service}"/>
+        <property name="webservicesPolicyService" value="${cmis.webservices.policy.service}"/>
+        <property name="webservicesAclService" value="${cmis.webservices.acl.service}"/>
+        <property name="webservicesMemoryThreshold" value="${cmis.webservices.memory.threshold}"/>
+    </bean>
+
+    <bean id="cmisutils" class="org.fao.geonet.resources.CMISUtils">
     </bean>
 
     <bean id="filesystemStore"

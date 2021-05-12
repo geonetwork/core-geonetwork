@@ -32,6 +32,29 @@
   <!-- <sec:debug/> -->
   <import resource="config-security-core.xml"/>
   <import resource="config-security-mapping.xml"/>
+
+  <!-- Security options
+
+  geonetwork.security.type can be supplied
+  using the -Dgeonetwork.security.type
+  or via env as GEONETWORK_SECURITY_TYPE
+  If not supplied it will default to "default" security type.
+
+  i.e. -Dgeonetwork.security.type=keycloak
+
+  Option include
+     default         - Default security
+     keycloak        - Keycloak security (see config-security-keycloak.xml for more details)
+     ldap            - ldap security (see config-security-ldap.xml for more details)
+     ldap-recursive  - ldap-recursive security (see config-security-ldap-recursive.xml for more details)
+     ecas            - ecas security (see config-security-ecas.xml for more details)
+     cas             - cas security (see config-security-cas.xml for more details)
+     cas-ldap        - cas-ldap security (see config-security-cas-ldap.xml for more details)
+     cas-database    - cas-database security (see config-security-cas-database.xml for more details)
+     shibboleth      - Shibboleth security (see config-security-shibboleth.xml for more details)
+  -->
+
+  <import resource="config-security-${geonetwork.security.type:default}.xml"/>
   <!--<import resource="config-security-keycloak.xml"/> -->
   <!--<import resource="config-security-ldap.xml"/>-->
   <!--<import resource="config-security-ldap-recursive.xml"/>-->

@@ -37,8 +37,9 @@ More information:
 
 - `Using the latest ISO Standard for Geographic Information (ISO19115-1) for an INSPIRE Discovery Service <http://cnig.gouv.fr/wp-content/uploads/2015/06/titellus_fx_prunayre_iso19115-3_inspire2015.pdf>`_
 
+- `How-to use contact directory with ISO19115-3 standard? <https://github.com/geonetwork/core-geonetwork/pull/5457>`_
 
-This standard is maintained on https://github.com/metadata101/iso19115-3.2018
+This standard is maintained on https://github.com/geonetwork/core-geonetwork/tree/main/schemas/iso19115-3.2018
 and is available by default in GeoNetwork 3.8+. The TC211 is maintaining the XSD for this standard on https://github.com/ISO-TC211/XML.
 
 

@@ -45,6 +45,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public abstract class AbstractStore implements Store {
     @Override
     public final List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid, final Sort sort,
@@ -105,7 +108,9 @@ public abstract class AbstractStore implements Store {
             metadata = _appContext.getBean(IMetadataUtils.class).findOneByUuid(metadataUuid);
         }
         if (metadata == null) {
-            throw new ResourceNotFoundException(String.format("Metadata with UUID '%s' not found.", metadataUuid));
+            throw new ResourceNotFoundException(String.format("Metadata with UUID '%s' not found.", metadataUuid))
+                .withMessageKey("exception.resourceNotFound.metadata")
+                .withDescriptionKey("exception.resourceNotFound.metadata.description", new String[]{ metadataUuid });
         }
         return metadata.getId();
     }
@@ -120,23 +125,34 @@ public abstract class AbstractStore implements Store {
         boolean canEdit = getAccessManager(context).canEdit(context, String.valueOf(metadataId));
         if ((visibility == null && !canEdit) || (visibility == MetadataResourceVisibility.PRIVATE && !canEdit)) {
             throw new SecurityException(String.format("User '%s' does not have privileges to access '%s' resources for metadata '%s'.",
-                                                      context.getUserSession() != null ?
-                                                              context.getUserSession().getUsername() + "/" + context.getUserSession()
-                                                                      .getProfile() :
-                                                              "anonymous", visibility == null ? "any" : visibility, metadataUuid));
+                context.userName(), visibility == null ? "any" : visibility, metadataUuid));
         }
         return metadataId;
     }
 
+    /**
+     *
+     * @param context Service context used to determine user
+     * @param metadataUuid UUID of metadata record to check
+     * @param visibility resource visibility
+     * @param approved
+     * @return The metadata id used to access resources, obtained and approved from provided metadataUuid
+     * @throws Exception A security exception if the content is not allowed to access these resources
+     */
     protected int canDownload(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, Boolean approved)
             throws Exception {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
         if (visibility == MetadataResourceVisibility.PRIVATE) {
-            boolean canDownload = getAccessManager(context).canDownload(context, String.valueOf(metadataId));
-            if (!canDownload) {
-                throw new SecurityException(String.format(
+            if(context instanceof ServiceContext.AppHandlerServiceContext) {
+                // internal access granted
+            }
+            else {
+                boolean canDownload = getAccessManager(context).canDownload(context, String.valueOf(metadataId));
+                if (!canDownload) {
+                    throw new SecurityException(String.format(
                         "Current user can't download resources for metadata '%s' and as such can't access the requested resource.",
                         metadataUuid));
+                }
             }
         }
         return metadataId;
@@ -219,5 +235,38 @@ public abstract class AbstractStore implements Store {
         if (resourceId.contains("..") || resourceId.startsWith("/") || resourceId.startsWith("file:/")) {
             throw new SecurityException(String.format("Invalid resource identifier '%s'.", resourceId));
         }
+    }
+
+    public ResourceManagementExternalProperties getResourceManagementExternalProperties() {
+        return new ResourceManagementExternalProperties() {
+            @Override
+            public boolean isEnabled() {
+                return false;
+            }
+
+            @Override
+            public String getWindowParameters() {
+                return null;
+            }
+
+            @Override
+            public boolean isModal() {
+                return false;
+            }
+
+            @Override
+            public boolean isFolderEnabled() {
+                return false;
+            }
+
+            @Override
+            public String toString() {
+                try {
+                    return new ObjectMapper().writeValueAsString(this);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException("Error converting ResourceManagementExternalProperties to json", e);
+                }
+            }
+        };
     }
 }

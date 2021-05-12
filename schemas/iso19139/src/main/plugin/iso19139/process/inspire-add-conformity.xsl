@@ -46,6 +46,9 @@
     </msg>
     <msg id="a" xml:lang="dut">INSPIRE-thema(s) gevonden. Voer deze taak uit om de INSPIRE-conformiteit sectie toe te voegen.
     </msg>
+    <msg id="a" xml:lang="ita">Trovato un tema INSPIRE. 
+        Lancia questo processo per aggiungere l'elemento di conformità INSPIRE.
+    </msg>
   </xsl:variable>
 
 

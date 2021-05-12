@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.setting;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
 
 import static org.fao.geonet.kernel.setting.SettingManager.isPortRequired;
 
@@ -44,40 +45,15 @@ public class SettingInfo {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
 
         String protocol = settingManager.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
-        return getSiteUrl(protocol.equalsIgnoreCase("https"));
-    }
-
-    /**
-     * Return a string like 'http://HOST[:PORT]'
-     */
-    public String getSiteUrl(boolean secureUrl) {
-        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-
-        String protocol;
         Integer port;
-            String host = settingManager.getValue(Settings.SYSTEM_SERVER_HOST);
-            Integer secureport = toIntOrNull(Settings.SYSTEM_SERVER_SECURE_PORT);
-            Integer insecureport = toIntOrNull(Settings.SYSTEM_SERVER_PORT);
-        if (secureUrl) {
-            protocol = "https";
-            if (secureport == null && insecureport == null) {
-                port = 443;
-            } else if (secureport != null) {
-                port = secureport;
-            } else {
-                protocol = "http";
-                port = insecureport;
-            }
+        String host = settingManager.getValue(Settings.SYSTEM_SERVER_HOST);
+        Integer configuredPort = toIntOrNull(Settings.SYSTEM_SERVER_PORT);
+        if (configuredPort != null) {
+            port = configuredPort;
+        } else if (protocol.equalsIgnoreCase(Geonet.HttpProtocol.HTTPS)) {
+            port = Geonet.DefaultHttpPort.HTTPS;
         } else {
-            protocol = "http";
-            if (secureport == null && insecureport == null) {
-                port = 80;
-            } else if (insecureport != null) {
-                port = insecureport;
-            } else {
-                protocol = "https";
-                port = secureport;
-            }
+            port = Geonet.DefaultHttpPort.HTTP;
         }
 
         StringBuffer sb = new StringBuffer(protocol + "://");

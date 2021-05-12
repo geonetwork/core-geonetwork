@@ -42,11 +42,11 @@
       ['$scope', '$http', '$rootScope', '$translate',
        '$location', '$window', '$timeout',
        'gnUtilityService', 'gnConfig', 'gnGlobalSettings',
-       'vcRecaptchaService', '$q',
+       'vcRecaptchaService', 'gnUrlUtils', '$q',
        function($scope, $http, $rootScope, $translate,
            $location, $window, $timeout,
                gnUtilityService, gnConfig, gnGlobalSettings,
-               vcRecaptchaService, $q) {
+               vcRecaptchaService, gnUrlUtils, $q) {
           $scope.formAction = '../../signin#' +
          $location.path();
           $scope.registrationStatus = null;
@@ -62,7 +62,14 @@
          gnConfig['system.userSelfRegistration.recaptcha.publickey'];
           $scope.resolveRecaptcha = false;
 
-          $scope.redirectUrl = gnUtilityService.getUrlParameter('redirect');
+          var redirect = gnUtilityService.getUrlParameter('redirect');
+
+          if ((redirect) && gnUrlUtils.urlIsSameOrigin(redirect)) {
+            $scope.redirectUrl = redirect;
+          } else {
+            $scope.redirectUrl = "";
+          }
+
           $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
           $scope.gnConfig = gnConfig;
           $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
@@ -96,6 +103,13 @@
            $scope.sendPassword = value;
            $('#username').focus();
           };
+
+         var showForgotPassword = gnUtilityService.getUrlParameter('showforgotpassword');
+
+         if ((showForgotPassword) && (showForgotPassword === 'true')) {
+           $scope.setSendPassword(true);
+         }
+
          /**
           * Register user. An email will be sent to the new
           * user and another to the catalog admin if a profile

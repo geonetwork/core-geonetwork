@@ -95,7 +95,8 @@
       this.getFormatterPath = function() {
         var tokens = $location.path().split('/');
         if (tokens.length > 2 && tokens[3] === 'formatters') {
-          return '../api/records/' + $location.url().split(/^metadraf|metadata\//)[1];
+          var formatterInfo =  $location.url().replace("/metadraf/", "").replace("/metadata/", "");
+          return '../api/records/' + formatterInfo;
         } else {
           return undefined;
         }

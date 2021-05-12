@@ -49,12 +49,13 @@
     'gnCurrentEdit',
     '$q',
     '$http',
+    '$window',
     '$rootScope',
     '$translate',
     '$filter',
     'Metadata',
     function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit,
-             $q, $http, $rootScope, $translate, $filter, Metadata) {
+             $q, $http, $window, $rootScope, $translate, $filter, Metadata) {
 
       var reload = false;
       var openCb = {};
@@ -285,6 +286,50 @@
           } else {
             console.warn('No callback functions available for \'' + type +
                 '\'. Check the type value.');
+          }
+        },
+
+        /**
+         * @ngdoc method
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         * @name gnOnlinesrc#openExternalResourceManagement
+         *
+         * @description
+         * Open open external resource management popup
+         * function (from the directive).
+         *
+         * @param {r} MetadataResource
+         * @param {$window} window object
+         */
+        openExternalResourceManagement: function(r, $window) {
+          try {
+            var url = r.metadataResourceExternalManagementProperties.url;
+          } catch (e) {
+            console.log("external management url not defined")
+            return
+          }
+
+          var modal = gnCurrentEdit.resourceManagementExternalProperties.modal;
+          var externalManagementWindowsParameters = gnCurrentEdit.resourceManagementExternalProperties.windowParameters;
+
+          var win = window.open(url, "_blank", externalManagementWindowsParameters)
+
+          if (modal) {
+            var ZIndex = $('.modal').css("z-index");
+            $('.modal').css("z-index", 0);
+            var timer = setInterval(function () {
+              if (win.closed) {
+                clearInterval(timer);
+                $('.modal').css("z-index", ZIndex);
+                $rootScope.$broadcast('gnFileStoreUploadDone');
+              } else {
+                // whenever user comes back to the browser window give them focus on the popup.
+                // This will simulat a modal
+                if (document.hasFocus()) {
+                  win.focus()
+                }
+              }
+            }, 250);
           }
         },
 

@@ -61,8 +61,7 @@
                 '/' + scope.md.uuid +
                 (scope.formatter === undefined || scope.formatter == '' ?
                   '' :
-                  formatter);
-
+                  formatter + ((formatter && scope.md.draft == 'y') ? '&approved=false' : '&approved=true'));
               element.attr('href', url);
             } else {
               element.on('click', function(e) {

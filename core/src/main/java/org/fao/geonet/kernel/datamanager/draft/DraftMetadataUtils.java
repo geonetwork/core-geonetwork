@@ -28,7 +28,26 @@ import jeeves.server.context.ServiceContext;
 import org.eclipse.jetty.io.RuntimeIOException;
 import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.domain.MetadataDraft;
+import org.fao.geonet.domain.MetadataFileUpload;
+import org.fao.geonet.domain.MetadataHarvestInfo;
+import org.fao.geonet.domain.MetadataRatingByIp;
+import org.fao.geonet.domain.MetadataRatingByIpId;
+import org.fao.geonet.domain.MetadataSourceInfo;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.MetadataValidationId;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -55,7 +74,13 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.annotation.Nonnull;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 
@@ -86,11 +111,9 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     @Autowired
     IMetadataUtils metadataUtils;
 
-    private ServiceContext context;
 
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        this.context = context;
-        super.init(context, force);
+    public void init(ServiceContext appHandlerContext) throws Exception {
+         super.init(appHandlerContext);
     }
 
     @Override
@@ -249,7 +272,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     public AbstractMetadata findOneByUuid(String uuid) {
         AbstractMetadata md = super.findOneByUuid(uuid);
         try {
-            if (md != null && am.canEdit(context, Integer.toString(md.getId()))) {
+            if (md != null && am.canEdit(getServiceContext(), Integer.toString(md.getId()))) {
                 AbstractMetadata tmp = metadataDraftRepository.findOneByUuid(uuid);
                 if (tmp != null) {
                     md = tmp;
@@ -540,6 +563,19 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
                 }
             }
 
+            // Copy validation status from original metadata
+            List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(templateMetadata.getId());
+            for (MetadataValidation mv : validations) {
+                MetadataValidation metadataValidation = new MetadataValidation()
+                    .setId(new MetadataValidationId(finalId, mv.getId().getValidationType()))
+                    .setStatus(mv.getStatus()).setRequired(mv.isRequired())
+                    .setValid(mv.isValid()).setValidationDate(mv.getValidationDate())
+                    .setNumTests(mv.getNumTests()).setNumFailures(mv.getNumFailures())
+                    .setReportUrl(mv.getReportUrl()).setReportContent(mv.getReportContent());
+
+                metadataValidationRepository.save(metadataValidation);
+            }
+
             // Enable workflow on draft and make sure original record has also the workflow
             // enabled
             Set<Integer> metadataIds = new HashSet<Integer>();
@@ -547,8 +583,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
             // --- use StatusActionsFactory and StatusActions class to
             // --- change status and carry out behaviours for status changes
-            StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);
-            StatusActions sa = saf.createStatusActions(context);
+            StatusActionsFactory statusActionsFactory = context.getBean(StatusActionsFactory.class);
+            StatusActions statusActions = statusActionsFactory.createStatusActions(context);
 
             int author = context.getUserSession().getUserIdAsInt();
             Integer status = Integer.valueOf(StatusValue.Status.DRAFT);
@@ -567,7 +603,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
                     List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                     listOfStatusChange.add(metadataStatus);
-                    sa.onStatusChange(listOfStatusChange);
+                    statusActions.onStatusChange(listOfStatusChange);
                 }
             }
 
@@ -581,7 +617,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     @Override
     public void cloneFiles(AbstractMetadata original, AbstractMetadata dest) {
         try {
-            StoreUtils.copyDataDir(context, original.getUuid(), dest.getUuid(), false);
+            StoreUtils.copyDataDir(getServiceContext(), original.getUuid(), dest.getUuid(), false);
             cloneStoreFileUploadRequests(original, dest);
 
         } catch (Exception ex) {
@@ -601,7 +637,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
                 oldApproved=false;
                 newApproved=true;
             }
-            StoreUtils.replaceDataDir(context, original.getUuid(), dest.getUuid(), oldApproved, newApproved);
+            StoreUtils.replaceDataDir(getServiceContext(), original.getUuid(), dest.getUuid(), oldApproved, newApproved);
             cloneStoreFileUploadRequests(original, dest);
 
         } catch (Exception ex) {
@@ -640,7 +676,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
      * Stores a file upload request in the MetadataFileUploads table.
      */
     private void cloneStoreFileUploadRequests(AbstractMetadata original, AbstractMetadata copy) {
-        MetadataFileUploadRepository repo = context.getBean(MetadataFileUploadRepository.class);
+        MetadataFileUploadRepository repo = getServiceContext().getBean(MetadataFileUploadRepository.class);
 
         repo.deleteAll(MetadataFileUploadSpecs.hasMetadataId(copy.getId()));
 

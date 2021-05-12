@@ -86,7 +86,17 @@
                 <span data-translate="">protocol</span>
               </label>
               <div class="col-sm-9">
-                <div id="gn-addonlinesrc-protocol-list"
+                <input type="text" data-ng-if="(params.linkType.fields.protocol.thesaurus != undefined) && (params.linkType.fields.protocol.thesaurus != '')"
+                       data-ng-model="params.protocol" class="form-control"
+                       name="protocol"
+                       data-ng-required="params.linkType.fields.protocol.required"
+                       data-init-on-load="true"
+                       data-gn-keyword-picker=""
+                       data-thesaurus-key="{{params.linkType.fields.protocol.thesaurus}}"
+                       data-order-by-id="true"
+                       lang="lang" />
+
+                <div id="gn-addonlinesrc-protocol-list" data-ng-if="(params.linkType.fields.protocol.thesaurus == undefined) || (params.linkType.fields.protocol.thesaurus == '')"
                      data-schema-info-combo="element"
                      data-init-on-load="true"
                      name="protocol"
@@ -234,35 +244,41 @@
                      for="gn-addonlinesrc-description-single-textarea"
                      class="col-sm-2 control-label"
                      data-translate="">description</label>
-              <div id="gn-addonlinesrc-description-single-row"
-                   class="col-sm-9"
-                   data-ng-if="!isFieldMultilingual('desc')">
-              <textarea rows="3"
-                        id="gn-addonlinesrc-description-single-textarea"
-                        data-gn-autogrow=""
-                        data-ng-required="params.linkType.fields.desc.required"
-                        data-ng-model="params.desc"
-                        class="form-control input-sm"
-                        placeholder="description"
-                        data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
-                        name="description"/>
+              <div class="col-sm-9" data-ng-if="!params.linkType.fields.desc.directive">
+                <div id="gn-addonlinesrc-description-single-row"
+                     data-ng-if="!isFieldMultilingual('desc')">
+                  <textarea rows="3"
+                          id="gn-addonlinesrc-description-single-textarea"
+                          data-gn-autogrow=""
+                          data-ng-required="params.linkType.fields.desc.required"
+                          data-ng-model="params.desc"
+                          class="form-control input-sm"
+                          placeholder="description"
+                          data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
+                          name="description"/>
+                </div>
+                <div id="gn-addonlinesrc-description-multilingual-row"
+                     data-ng-if="isFieldMultilingual('desc')"
+                     gn-multilingual-field="{{mdOtherLanguages}}"
+                     data-main-language="{{mdLang}}"
+                     expanded="false">
+                  <textarea data-ng-repeat="(key, val) in mdLangs"
+                          id="gn-addonlinesrc-description-multilingual-{{val}}"
+                          rows="3"
+                          lang="{{val}}"
+                          data-ng-required="params.linkType.fields.applicationProfile.required"
+                          data-ng-model="params.desc[val]"
+                          class="form-control input-sm"
+                          placeholder="description"
+                          data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
+                          name="description"/>
+                </div>
               </div>
-              <div id="gn-addonlinesrc-description-multilingual-row"
-                   class="col-sm-9"
-                   data-ng-if="isFieldMultilingual('desc')"
-                   gn-multilingual-field="{{mdOtherLanguages}}"
-                   data-main-language="{{mdLang}}"
-                   expanded="false">
-              <textarea data-ng-repeat="(key, val) in mdLangs"
-                        id="gn-addonlinesrc-description-multilingual-{{val}}"
-                        rows="3"
-                        lang="{{val}}"
-                        data-ng-required="params.linkType.fields.applicationProfile.required"
-                        data-ng-model="params.desc[val]"
-                        class="form-control input-sm"
-                        placeholder="description"
-                        data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
-                        name="description"/>
+              <div data-ng-if="params.linkType.fields.desc.directive === 'gn-multientry-combiner-online-resources-description'">
+                <div data-gn-multientry-combiner-online-resources-description="{{params.linkType.fields.desc.directiveConfig}}"
+                  class="col-sm-12 col-xs-12 gn-value nopadding-in-table"
+                    data-label="description" data-ng-required="params.linkType.fields.desc.required" >
+                </div>
               </div>
 
               <div class="col-sm-1 gn-control"></div>
@@ -301,8 +317,14 @@
       <div id="gn-addonlinesrc-file-panel"
            class="panel panel-default"
            data-ng-show="params.linkType.sources.filestore">
-        <div class="panel-heading"
-             data-translate>fileStore
+        <div class="panel-heading">
+          <span data-translate>fileStore</span>
+          <a class="btn btn-link btn-xs pull-right"
+             title="{{'externalResourceManagement' | translate}}"
+             data-ng-click="onlinesrcService.openExternalResourceManagement(gnCurrentEdit.resourceContainerDescription)"
+             data-ng-if="gnCurrentEdit.resourceManagementExternalProperties.folderEnabled && gnCurrentEdit.resourceContainerDescription.url.length > 0">
+            <i class="fa fa-folder-open"></i>
+          </a>
         </div>
         <div class="panel-body">
           <div id="gn-addonlinesrc-file-input"

@@ -34,9 +34,9 @@ import org.springframework.context.ApplicationContext;
 import java.util.Map;
 import java.util.Observer;
 
-//import org.fao.geonet.services.util.z3950.GNSearchTask;
-
 /**
+ * Present GeoNetwork search results as JZkit Searchable.
+ *
  * @author 'Timo Proescholdt <tproescholdt@wmo.int>' interface between JZkit and GN. not currently
  *         used
  */

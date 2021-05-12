@@ -112,9 +112,9 @@ public class MetadataSocialApi {
         HttpServletRequest request
     )
         throws Exception {
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
         ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
 
         String ip = context.getIpAddress();
         if (ip == null) {
@@ -147,6 +147,7 @@ public class MetadataSocialApi {
             }
         }
         return rating;
+      }
     }
 
     /**

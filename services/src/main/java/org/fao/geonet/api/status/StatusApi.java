@@ -60,8 +60,8 @@ public class StatusApi {
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public List<StatusValue> getStatusList() throws Exception {
-        return statusValueRepository.findAll();
+    public List<StatusValue> getStatus() throws Exception {
+          return statusValueRepository.findAll();
     }
 
 

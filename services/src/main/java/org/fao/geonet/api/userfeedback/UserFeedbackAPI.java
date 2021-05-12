@@ -28,6 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -186,18 +187,18 @@ public class UserFeedbackAPI {
         @Parameter(hidden = true) final HttpServletResponse response,
         @Parameter(hidden = true) final HttpSession httpSession) {
 
-        final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
-        if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-            return null;
-        }
+            if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                return null;
+            }
 
-        try {
             Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getMetadataUserComments");
 
             // Check permission for metadata
-            final AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+            final AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
             if (metadata == null) {
                 printOutputMessage(response, HttpStatus.FORBIDDEN, ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
                 return null;
@@ -249,6 +250,7 @@ public class UserFeedbackAPI {
         @Parameter(hidden = true) final HttpSession httpSession)
         throws Exception {
 
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
         if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
@@ -280,13 +282,13 @@ public class UserFeedbackAPI {
         }
 
         // Check permission for metadata
-        final AbstractMetadata metadata = ApiUtils.canViewRecord(userfeedback.getMetadata().getUuid(), request);
+        final AbstractMetadata metadata = ApiUtils.canViewRecord(userfeedback.getMetadata().getUuid(), context);
         if (metadata == null) {
             printOutputMessage(response, HttpStatus.FORBIDDEN, ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
             return null;
         }
-
         return dto;
+      }
     }
 
     /**

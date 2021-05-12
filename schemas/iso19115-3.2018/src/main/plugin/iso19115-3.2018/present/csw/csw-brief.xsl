@@ -66,24 +66,13 @@
       <xsl:for-each
         select="$identification/mri:extent/gex:EX_Extent/gex:geographicElement/gex:EX_GeographicBoundingBox|
         $identification/srv:extent/gex:EX_Extent/gex:geographicElement/gex:EX_GeographicBoundingBox">
-        <xsl:variable name="rsi"
-          select="/mdb:MD_Metadata/mdb:referenceSystemInfo/mrs:MD_ReferenceSystem/
-          mrs:referenceSystemIdentifier/mcc:MD_Identifier|/mdb:MD_Metadata/mdb:referenceSystemInfo/
-          *[contains(@gco:isoType, 'MD_ReferenceSystem')]/mrs:referenceSystemIdentifier/mcc:MD_Identifier"/>
-        <xsl:variable name="auth" select="$rsi/mcc:codeSpace/gco:CharacterString"/>
-        <xsl:variable name="id" select="$rsi/mcc:code/gco:CharacterString"/>
-
-        <ows:BoundingBox crs="{$auth}::{$id}">
+        <ows:BoundingBox crs="urn:ogc:def:crs:EPSG:6.6:4326">
           <ows:LowerCorner>
-            <xsl:value-of
-              select="concat(gex:eastBoundLongitude/gco:Decimal, ' ', gex:southBoundLatitude/gco:Decimal)"
-            />
+            <xsl:value-of select="concat(gex:southBoundLatitude/gco:Decimal, ' ', gex:westBoundLongitude/gco:Decimal)"/>
           </ows:LowerCorner>
 
           <ows:UpperCorner>
-            <xsl:value-of
-              select="concat(gex:westBoundLongitude/gco:Decimal, ' ', gex:northBoundLatitude/gco:Decimal)"
-            />
+            <xsl:value-of select="concat(gex:northBoundLatitude/gco:Decimal, ' ', gex:eastBoundLongitude/gco:Decimal)"/>
           </ows:UpperCorner>
         </ows:BoundingBox>
       </xsl:for-each>

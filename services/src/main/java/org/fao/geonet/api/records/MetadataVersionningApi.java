@@ -25,6 +25,7 @@ package org.fao.geonet.api.records;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -85,12 +86,14 @@ public class MetadataVersionningApi {
             String metadataUuid,
         HttpServletRequest request
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
 
-        dataManager.versionMetadata(ApiUtils.createServiceContext(request),
-            String.valueOf(metadata.getId()), metadata.getXmlData(false));
+        dataManager.versionMetadata(context,
+                String.valueOf(metadata.getId()), metadata.getXmlData(false));
 
-        return new ResponseEntity(HttpStatus.CREATED);
+            return new ResponseEntity(HttpStatus.CREATED);
+        }
     }
 
 
@@ -124,7 +127,7 @@ public class MetadataVersionningApi {
     ) throws Exception {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        try {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
 

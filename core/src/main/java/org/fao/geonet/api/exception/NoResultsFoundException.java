@@ -23,7 +23,12 @@
 
 package org.fao.geonet.api.exception;
 
-public class NoResultsFoundException extends Exception {
+import java.util.Locale;
+
+import org.fao.geonet.exceptions.LocalizedException;
+
+public class NoResultsFoundException extends LocalizedException {
+
     public NoResultsFoundException() {
         super();
     }
@@ -38,5 +43,39 @@ public class NoResultsFoundException extends Exception {
 
     public NoResultsFoundException(Throwable cause) {
         super(cause);
+    }
+
+    protected String getResourceBundleBeanQualifier() {
+        return "apiMessages";
+    }
+
+    @Override
+    public NoResultsFoundException withMessageKey(String messageKey) {
+        super.withMessageKey(messageKey);
+        return this;
+    }
+
+    @Override
+    public NoResultsFoundException withMessageKey(String messageKey, Object[] messageKeyArgs) {
+        super.withMessageKey(messageKey, messageKeyArgs);
+        return this;
+    }
+
+    @Override
+    public NoResultsFoundException withDescriptionKey(String descriptionKey) {
+        super.withDescriptionKey(descriptionKey);
+        return this;
+    }
+
+    @Override
+    public NoResultsFoundException withDescriptionKey(String descriptionKey, Object[] descriptionKeyArgs) {
+        super.withDescriptionKey(descriptionKey, descriptionKeyArgs);
+        return this;
+    }
+
+    @Override
+    public NoResultsFoundException withLocale(Locale locale) {
+        super.withLocale(locale);
+        return this;
     }
 }

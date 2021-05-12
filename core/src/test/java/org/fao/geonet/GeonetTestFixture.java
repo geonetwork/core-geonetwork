@@ -155,21 +155,25 @@ public class GeonetTestFixture {
 
         ServiceContext serviceContext = test.createServiceContext();
 
-        ApplicationContextHolder.set(_applicationContext);
-        serviceContext.setAsThreadLocal();
+        try {
+            ApplicationContextHolder.set(_applicationContext);
+            serviceContext.setAsThreadLocal();
 //      TODOES
 //        _applicationContext.getBean(EsSearchManager.class).initNonStaticData(100);
-        _applicationContext.getBean(DataManager.class).init(serviceContext, false);
-        _applicationContext.getBean(ThesaurusManager.class).init(true, serviceContext, "WEB-INF/data/config/codelist");
+            _applicationContext.getBean(DataManager.class).init(serviceContext);
+            _applicationContext.getBean(ThesaurusManager.class).init(true, serviceContext, "WEB-INF/data/config/codelist");
 
 
-        addSourceUUID(dataDir);
+            addSourceUUID(dataDir);
 
-        final DataSource dataSource = _applicationContext.getBean(DataSource.class);
-        try (Connection conn = dataSource.getConnection()) {
-            ThreadUtils.init(conn.getMetaData().getURL(), _applicationContext.getBean(SettingManager.class));
+            final DataSource dataSource = _applicationContext.getBean(DataSource.class);
+            try (Connection conn = dataSource.getConnection()) {
+                ThreadUtils.init(conn.getMetaData().getURL(), _applicationContext.getBean(SettingManager.class));
+            }
+
+        }finally {
+            serviceContext.clearAsThreadLocal();
         }
-
     }
 
 

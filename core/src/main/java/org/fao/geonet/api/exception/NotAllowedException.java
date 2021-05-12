@@ -23,7 +23,12 @@
 package org.fao.geonet.api.exception;
 
 
-public class NotAllowedException extends RuntimeException {
+import java.util.Locale;
+
+import org.fao.geonet.exceptions.LocalizedRuntimeException;
+
+public class NotAllowedException extends LocalizedRuntimeException {
+
     /**
      * Constructs a new NotAllowedException exception with {@code null} as its
      * detail message.  The cause is not initialized, and may subsequently be
@@ -93,5 +98,39 @@ public class NotAllowedException extends RuntimeException {
      */
     public NotAllowedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
+    }
+
+    protected String getResourceBundleBeanQualifier() {
+        return "apiMessages";
+    }
+
+    @Override
+    public NotAllowedException withMessageKey(String messageKey) {
+        super.withMessageKey(messageKey);
+        return this;
+    }
+
+    @Override
+    public NotAllowedException withMessageKey(String messageKey, Object[] messageKeyArgs) {
+        super.withMessageKey(messageKey, messageKeyArgs);
+        return this;
+    }
+
+    @Override
+    public NotAllowedException withDescriptionKey(String descriptionKey) {
+        super.withDescriptionKey(descriptionKey);
+        return this;
+    }
+
+    @Override
+    public NotAllowedException withDescriptionKey(String descriptionKey, Object[] descriptionKeyArgs) {
+        super.withDescriptionKey(descriptionKey, descriptionKeyArgs);
+        return this;
+    }
+
+    @Override
+    public NotAllowedException withLocale(Locale locale) {
+        super.withLocale(locale);
+        return this;
     }
 }

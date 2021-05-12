@@ -39,10 +39,6 @@
     <label>Name</label>
     <description>Feature catalogue name</description>
   </element>
-  <element name="gco:range">
-    <label>Range</label>
-    <description></description>
-  </element>
   <element name="gfc:scope">
     <label>Scope</label>
     <description>Scope definition</description>
@@ -56,27 +52,29 @@
     <description>Catalogue date</description>
   </element>
   <element name="gfc:producer">
-    <label>Catalogue producer</label>
-    <description>Catalogue responsible</description>
+    <label>Producer</label>
+    <description>Feature catalogue responsible</description>
   </element>
   <element name="gfc:featureType">
-    <label>Property description</label>
-    <description>Property description</description>
+    <label>Featuretype</label>
+    <btnLabel>Add featuretype</btnLabel>
+    <description>Describes a type of features</description>
   </element>
   <element name="gfc:isAbstract">
     <label>Abstract</label>
-    <description>Is this element an abstract element ?</description>
+    <description>Is this element an abstract element?</description>
   </element>
   <element name="gfc:FC_FeatureType">
-    <label>Attribute table description</label>
-    <description>Attribute table description</description>
+    <label>Featuretype</label>
+    <description>Description of a type of features</description>
   </element>
   <element name="gfc:typeName">
-    <label>Property name</label>
-    <description></description>
+    <label>Typename</label>
+    <description>Describes a type of feature</description>
   </element>
   <element name="gfc:carrierOfCharacteristics">
-    <label>Elements</label>
+    <label>Carrier of Characteristics</label>
+    <btnLabel>Add carrier</btnLabel>
     <description>Association, attribute, operation, ...</description>
   </element>
   <element name="gfc:definition">
@@ -87,22 +85,6 @@
     <label>Field of application</label>
     <description>Field of application</description>
   </element>
-  <element name="gmd:responsibleParty">
-    <label>Responsible party</label>
-    <description>Responsible party</description>
-  </element>
-  <element name="gmd:CI_ResponsibleParty">
-    <label>Responsible party</label>
-    <description>Responsible party</description>
-  </element>
-  <element name="gco:lower">
-    <label>Lower cardinality</label>
-    <description>Lower cardinality</description>
-  </element>
-  <element name="gco:upper">
-    <label>Upper cardinality</label>
-    <description>Upper cardinality</description>
-  </element>
   <element name="gfc:cardinality">
     <label>Cardinalities</label>
     <description>Cardinalities</description>
@@ -112,7 +94,8 @@
     <description/>
   </element>
   <element name="gfc:listedValue">
-    <label>Codelist</label>
+    <label>Codelist value</label>
+    <btnLabel>Add codelist value</btnLabel>
     <description>List of values for this element.</description>
   </element>
   <element name="gfc:constrainedBy">
@@ -240,43 +223,39 @@
   <element name="gfc:valueMeasurementUnit">
     <label>Value measurement unit</label>
   </element>
-  <element name="gco:CharacterString">
-    <label>Text</label>
-    <description></description>
+  <element name="gfc:FC_Binding">
+      <label>Binding</label>
   </element>
-  <element name="gmx:Anchor">
-    <label>Anchor</label>
-    <description></description>
+  <element name="gfc:FC_BoundFeatureAttribute">
+      <label>Bound Feature Attribute</label>
   </element>
-  <element name="gmx:FileName">
-    <label>File name</label>
-    <description></description>
+  <element name="gfc:FC_BoundAssociationRole">
+      <label>Bound Association Role</label>
   </element>
-  <!-- ==================================================== -->
-  <element name="gmx:name">
-    <label>Name</label>
-    <description>Feature catalogue name</description>
+
+  <element name="isInfinite">
+      <label>Infinite</label>
   </element>
-  <element name="gmx:scope">
-    <label>Scope</label>
-    <description>Scope definition</description>
+  <element name="xsi:nil">
+      <label>Nill</label>
   </element>
-  <element name="gmx:versionNumber">
-    <label>Version</label>
-    <description>Catalogue version</description>
-  </element>
-  <element name="gmx:versionDate">
-    <label>Date</label>
-    <description>Catalogue date</description>
-  </element>
-  <element name="gmx:fieldOfApplication">
-    <label>Field of application</label>
-    <description>Field of application</description>
+  <element name="codeSpace">
+      <label>Codespace</label>
   </element>
   <element name="gco:nilReason">
-    <label>Nil reason</label>
-    <description/>
-    <help/>
-    <condition/>
+      <label>Nil Reason</label>
+  </element>
+  <element name="xlink:href">
+      <label>Link</label>
+  </element>
+    <element name="gmx:subCatalogue">
+    <label>Sub catalogue</label>
+    <btnLabel>Add sub catalogue</btnLabel>
+    <description>Describes a sub catalogue</description>
+  </element>
+  <element name="gmx:versionDate">
+    <label>Version date</label>
+    <btnLabel>Add date</btnLabel>
+    <description>Describes the date of the version</description>
   </element>
 </labels>

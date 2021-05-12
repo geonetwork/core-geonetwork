@@ -176,26 +176,27 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
         @Parameter(description = API_PARAM_BACKUP_FIRST, required = false) @RequestParam(required = false, defaultValue = "true") boolean withBackup,
         HttpServletRequest request) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        Store store = context.getBean("resourceStore", Store.class);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
+            Store store = context.getBean("resourceStore", Store.class);
 
-        if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
-            && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
-            MetadataUtils.backupRecord(metadata, context);
+            if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
+                && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
+                MetadataUtils.backupRecord(metadata, context);
+            }
+
+            boolean approved = true;
+            if (metadata instanceof MetadataDraft) {
+                approved = false;
+            }
+
+            store.delResources(context, metadata.getUuid(), approved);
+            RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, metadata.getId() + "");
+            metadataManager.deleteMetadata(context, metadata.getId() + "");
+            recordDeletedEvent.publish(ApplicationContextHolder.get());
+
+            dataManager.forceIndexChanges();
         }
-
-        boolean approved=true;
-        if (metadata instanceof MetadataDraft) {
-            approved=false;
-        }
-
-        store.delResources(context, metadata.getUuid(), approved);
-        RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, metadata.getId() + "");
-        metadataManager.deleteMetadata(context, metadata.getId() + "");
-        recordDeletedEvent.publish(ApplicationContextHolder.get());
-
-        dataManager.forceIndexChanges();
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete one or more records", description ="User MUST be able to edit the record to delete it. "
@@ -216,37 +217,38 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = ApiParams.API_PARAM_BUCKET_NAME, required = false) @RequestParam(required = false) String bucket,
         @Parameter(description = API_PARAM_BACKUP_FIRST, required = false) @RequestParam(required = false, defaultValue = "true") boolean withBackup,
         @Parameter(hidden = true) HttpSession session, HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        Store store = context.getBean("resourceStore", Store.class);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            Store store = context.getBean("resourceStore", Store.class);
 
-        Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
+            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
 
-        SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
-        for (String uuid : records) {
-            AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
-            if (metadata == null) {
-                report.incrementNullRecords();
-            } else if (!accessManager.canEdit(context, String.valueOf(metadata.getId()))
-                || metadataDraftRepository.findOneByUuid(uuid) != null) {
-                report.addNotEditableMetadataId(metadata.getId());
-            } else {
-                if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
-                    && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
-                    MetadataUtils.backupRecord(metadata, context);
+            SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
+            for (String uuid : records) {
+                AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
+                if (metadata == null) {
+                    report.incrementNullRecords();
+                } else if (!accessManager.canEdit(context, String.valueOf(metadata.getId()))
+                    || metadataDraftRepository.findOneByUuid(uuid) != null) {
+                    report.addNotEditableMetadataId(metadata.getId());
+                } else {
+                    if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
+                        && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
+                        MetadataUtils.backupRecord(metadata, context);
+                    }
+
+                    store.delResources(context, metadata.getUuid());
+
+                    RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, String.valueOf(metadata.getId()));
+                    metadataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
+                    recordDeletedEvent.publish(ApplicationContextHolder.get());
+
+                    report.incrementProcessedRecords();
+                    report.addMetadataId(metadata.getId());
                 }
-
-                store.delResources(context, metadata.getUuid());
-
-                RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, String.valueOf(metadata.getId()));
-                metadataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
-                recordDeletedEvent.publish(ApplicationContextHolder.get());
-
-                report.incrementProcessedRecords();
-                report.addMetadataId(metadata.getId());
             }
+            report.close();
+            return report;
         }
-        report.close();
-        return report;
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Add a record", description = "Add one or more record from an XML fragment, "
@@ -350,41 +352,42 @@ public class MetadataInsertDeleteApi {
                 throw new Exception(
                     String.format("No XML or MEF or ZIP file found in server folder '%s'.", serverFolder));
             }
-            ServiceContext context = ApiUtils.createServiceContext(request);
-            for (Path f : files) {
-                if (MEFLib.isValidArchiveExtensionForMEF(f.getFileName().toString())) {
-                    try {
-                        MEFLib.Version version = MEFLib.getMEFVersion(f);
-                        List<String> ids = MEFLib.doImport(version == MEFLib.Version.V1 ? "mef" : "mef2",
-                            uuidProcessing, transformWith, settingManager.getSiteId(), metadataType, category,
-                            group, rejectIfInvalid, assignToCatalog, context, f);
-                        for (String id : ids) {
-                            report.addMetadataInfos(Integer.parseInt(id), id, !publishToAll, false,
+            try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+                for (Path f : files) {
+                    if (MEFLib.isValidArchiveExtensionForMEF(f.getFileName().toString())) {
+                        try {
+                            MEFLib.Version version = MEFLib.getMEFVersion(f);
+                            List<String> ids = MEFLib.doImport(version == MEFLib.Version.V1 ? "mef" : "mef2",
+                                uuidProcessing, transformWith, settingManager.getSiteId(), metadataType, category,
+                                group, rejectIfInvalid, assignToCatalog, context, f);
+                            for (String id : ids) {
+                                report.addMetadataInfos(Integer.parseInt(id), id, !publishToAll, false,
                                     String.format("Metadata imported from MEF with id '%s'", id));
-                            triggerCreationEvent(request, id);
+                                triggerCreationEvent(request, id);
 
-                            report.incrementProcessedRecords();
+                                report.incrementProcessedRecords();
+                            }
+                        } catch (Exception e) {
+                            report.addError(e);
+                            report.addInfos(String.format("Failed to import MEF file '%s'. Check error for details.",
+                                f.getFileName().toString()));
                         }
-                    } catch (Exception e) {
-                        report.addError(e);
-                        report.addInfos(String.format("Failed to import MEF file '%s'. Check error for details.",
-                            f.getFileName().toString()));
-                    }
-                } else {
-                    try {
-                        Pair<Integer, String> pair = loadRecord(metadataType, Xml.loadFile(f), uuidProcessing, group,
+                    } else {
+                        try {
+                            Pair<Integer, String> pair = loadRecord(metadataType, Xml.loadFile(f), uuidProcessing, group,
                                 category, rejectIfInvalid, publishToAll, transformWith, schema, extra, request);
-                        report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false,
+                            report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false,
                                 String.format("Metadata imported from server folder with UUID '%s'", pair.two()));
 
-                        triggerCreationEvent(request, pair.two());
+                            triggerCreationEvent(request, pair.two());
 
-                    } catch (Exception e) {
-                        report.addError(e);
+                        } catch (Exception e) {
+                            report.addError(e);
+                        }
+                        report.incrementProcessedRecords();
                     }
-                    report.incrementProcessedRecords();
-                }
 
+                }
             }
         }
         report.close();
@@ -425,7 +428,6 @@ public class MetadataInsertDeleteApi {
         // User assigned uuid: check if already exists
         String metadataUuid = null;
 
-
         if (generateUuid && !StringUtils.isEmpty(targetUuid)) {
             // Check if the UUID exists
             try {
@@ -455,54 +457,55 @@ public class MetadataInsertDeleteApi {
             }
         }
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        String newId = dataManager.createMetadata(context, String.valueOf(sourceMetadata.getId()), group,
-            settingManager.getSiteId(), context.getUserSession().getUserIdAsInt(),
-            isChildOfSource ? sourceMetadata.getUuid() : null, metadataType.toString(), isVisibleByAllGroupMembers,
-            metadataUuid);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            String newId = dataManager.createMetadata(context, String.valueOf(sourceMetadata.getId()), group,
+                settingManager.getSiteId(), context.getUserSession().getUserIdAsInt(),
+                isChildOfSource ? sourceMetadata.getUuid() : null, metadataType.toString(), isVisibleByAllGroupMembers,
+                metadataUuid);
 
-        triggerCreationEvent(request, newId);
+            triggerCreationEvent(request, newId);
 
-        dataManager.activateWorkflowIfConfigured(context, newId, group);
+            dataManager.activateWorkflowIfConfigured(context, newId, group);
 
-        try {
-            StoreUtils.copyDataDir(context, sourceMetadata.getId(), Integer.parseInt(newId), true);
-        } catch (Exception e) {
-            Log.warning(Geonet.DATA_MANAGER,
-                String.format(
-                    "Error while copying metadata resources. Error is %s. "
-                        + "Metadata is created but without resources from the source record with id '%s':",
-                    e.getMessage(), newId));
-        }
-        if (hasCategoryOfSource) {
-            final Collection<MetadataCategory> categories = dataManager.getCategories(sourceMetadata.getId() + "");
             try {
-                for (MetadataCategory c : categories) {
-                    dataManager.setCategory(context, newId, c.getId() + "");
-                }
-            } catch (Exception e) {
-                Log.warning(Geonet.DATA_MANAGER,
-                    String.format("Error while copying source record category to new record. Error is %s. "
-                            + "Metadata is created but without the categories from the source record with id '%d':",
-                        e.getMessage(), newId));
-            }
-        }
-
-        if (category != null && category.length > 0) {
-            try {
-                for (String c : category) {
-                    dataManager.setCategory(context, newId, c);
-                }
+                StoreUtils.copyDataDir(context, sourceMetadata.getId(), Integer.parseInt(newId), true);
             } catch (Exception e) {
                 Log.warning(Geonet.DATA_MANAGER,
                     String.format(
-                        "Error while setting record category to new record. Error is %s. "
-                            + "Metadata is created but without the requested categories.",
+                        "Error while copying metadata resources. Error is %s. "
+                            + "Metadata is created but without resources from the source record with id '%s':",
                         e.getMessage(), newId));
             }
-        }
+            if (hasCategoryOfSource) {
+                final Collection<MetadataCategory> categories = dataManager.getCategories(sourceMetadata.getId() + "");
+                try {
+                    for (MetadataCategory c : categories) {
+                        dataManager.setCategory(context, newId, c.getId() + "");
+                    }
+                } catch (Exception e) {
+                    Log.warning(Geonet.DATA_MANAGER,
+                        String.format("Error while copying source record category to new record. Error is %s. "
+                                + "Metadata is created but without the categories from the source record with id '%d':",
+                            e.getMessage(), newId));
+                }
+            }
 
-        return newId;
+            if (category != null && category.length > 0) {
+                try {
+                    for (String c : category) {
+                        dataManager.setCategory(context, newId, c);
+                    }
+                } catch (Exception e) {
+                    Log.warning(Geonet.DATA_MANAGER,
+                        String.format(
+                            "Error while setting record category to new record. Error is %s. "
+                                + "Metadata is created but without the requested categories.",
+                            e.getMessage(), newId));
+                }
+            }
+
+            return newId;
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Add a record from XML or MEF/ZIP file", description ="Add record in the catalog by uploading files.")
@@ -530,54 +533,55 @@ public class MetadataInsertDeleteApi {
         }
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         if (file != null) {
-            ServiceContext context = ApiUtils.createServiceContext(request);
-            for (MultipartFile f : file) {
-                if (MEFLib.isValidArchiveExtensionForMEF(f.getOriginalFilename())) {
-                    Path tempFile = Files.createTempFile("mef-import", ".zip");
-                    try {
-                        FileUtils.copyInputStreamToFile(f.getInputStream(), tempFile.toFile());
+            try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+                for (MultipartFile f : file) {
+                    if (MEFLib.isValidArchiveExtensionForMEF(f.getOriginalFilename())) {
+                        Path tempFile = Files.createTempFile("mef-import", ".zip");
+                        try {
+                            FileUtils.copyInputStreamToFile(f.getInputStream(), tempFile.toFile());
 
-                        MEFLib.Version version = MEFLib.getMEFVersion(tempFile);
+                            MEFLib.Version version = MEFLib.getMEFVersion(tempFile);
 
-                        List<String> ids = MEFLib.doImport(version == MEFLib.Version.V1 ? "mef" : "mef2",
+                            List<String> ids = MEFLib.doImport(version == MEFLib.Version.V1 ? "mef" : "mef2",
                                 uuidProcessing, transformWith, settingManager.getSiteId(), metadataType, category,
                                 group, rejectIfInvalid, assignToCatalog, context, tempFile);
-                        if (ids.isEmpty()) {
-                            //we could have used a finer-grained error handling inside the MEFLib import call (MEF MD file processing)
-                            //This is a catch-for-call for the case when there is no record is imported, to notify the user the import is not successful.
-                            throw new BadFormatEx("Import 0 record, check whether the importing file is a valid MEF archive.");
-                        }
-                        ids.forEach(e -> {
-                            report.addMetadataInfos(Integer.parseInt(e), e, !publishToAll, false,
+                            if (ids.isEmpty()) {
+                                //we could have used a finer-grained error handling inside the MEFLib import call (MEF MD file processing)
+                                //This is a catch-for-call for the case when there is no record is imported, to notify the user the import is not successful.
+                                throw new BadFormatEx("Import 0 record, check whether the importing file is a valid MEF archive.");
+                            }
+                            ids.forEach(e -> {
+                                report.addMetadataInfos(Integer.parseInt(e), e, !publishToAll, false,
                                     String.format("Metadata imported with ID '%s'", e));
 
-                            try {
-                                triggerCreationEvent(request, e);
-                            } catch (Exception e1) {
-                                report.addError(e1);
-                                report.addInfos(
-                                    String.format("Impossible to store event for '%s'. Check error for details.",
-                                        f.getOriginalFilename()));
-                            }
+                                try {
+                                    triggerCreationEvent(request, e);
+                                } catch (Exception e1) {
+                                    report.addError(e1);
+                                    report.addInfos(
+                                        String.format("Impossible to store event for '%s'. Check error for details.",
+                                            f.getOriginalFilename()));
+                                }
 
-                            report.incrementProcessedRecords();
-                        });
-                    } catch (Exception e) {
-                        report.addError(e);
-                        report.addInfos(String.format("Failed to import MEF file '%s'. Check error for details.",
-                            f.getOriginalFilename()));
-                    } finally {
-                        IO.deleteFile(tempFile, false, Geonet.MEF);
-                    }
-                } else {
-                    Pair<Integer, String> pair = loadRecord(metadataType, Xml.loadStream(f.getInputStream()),
+                                report.incrementProcessedRecords();
+                            });
+                        } catch (Exception e) {
+                            report.addError(e);
+                            report.addInfos(String.format("Failed to import MEF file '%s'. Check error for details.",
+                                f.getOriginalFilename()));
+                        } finally {
+                            IO.deleteFile(tempFile, false, Geonet.MEF);
+                        }
+                    } else {
+                        Pair<Integer, String> pair = loadRecord(metadataType, Xml.loadStream(f.getInputStream()),
                             uuidProcessing, group, category, rejectIfInvalid, publishToAll, transformWith, schema,
                             extra, request);
-                    report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false, String.format("Metadata imported with UUID '%s'", pair.two()));
+                        report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false, String.format("Metadata imported with UUID '%s'", pair.two()));
 
-                    triggerImportEvent(request, pair.two());
+                        triggerImportEvent(request, pair.two());
 
-                    report.incrementProcessedRecords();
+                        report.incrementProcessedRecords();
+                    }
                 }
             }
         }
@@ -615,112 +619,113 @@ public class MetadataInsertDeleteApi {
                 + "You MUST provide a filename in this case."));
         }
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        String styleSheetWmc = dataDirectory.getWebappDir() + File.separator + Geonet.Path.IMPORT_STYLESHEETS
-            + File.separator + "OGCWMC-OR-OWSC-to-ISO19139.xsl";
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            String styleSheetWmc = dataDirectory.getWebappDir() + File.separator + Geonet.Path.IMPORT_STYLESHEETS
+                + File.separator + "OGCWMC-OR-OWSC-to-ISO19139.xsl";
 
-        FilePathChecker.verify(filename);
+            FilePathChecker.verify(filename);
 
-        // Convert the context in an ISO19139 records
-        Map<String, Object> xslParams = new HashMap<String, Object>();
-        xslParams.put("viewer_url", viewerUrl);
-        xslParams.put("map_url", url);
-        xslParams.put("topic", topic);
-        xslParams.put("title", title);
-        xslParams.put("abstract", recordAbstract);
-        xslParams.put("lang", context.getLanguage());
+            // Convert the context in an ISO19139 records
+            Map<String, Object> xslParams = new HashMap<String, Object>();
+            xslParams.put("viewer_url", viewerUrl);
+            xslParams.put("map_url", url);
+            xslParams.put("topic", topic);
+            xslParams.put("title", title);
+            xslParams.put("abstract", recordAbstract);
+            xslParams.put("lang", context.getLanguage());
 
-        // Assign current user to the record
-        UserSession us = context.getUserSession();
+            // Assign current user to the record
+            UserSession us = context.getUserSession();
 
-        if (us != null) {
-            xslParams.put("currentuser_name", us.getName() + " " + us.getSurname());
-            // phone number is georchestra-specific
-            // xslParams.put("currentuser_phone", us.getPrincipal().getPhone());
-            xslParams.put("currentuser_mail", us.getEmailAddr());
-            xslParams.put("currentuser_org", us.getOrganisation());
+            if (us != null) {
+                xslParams.put("currentuser_name", us.getName() + " " + us.getSurname());
+                // phone number is georchestra-specific
+                // xslParams.put("currentuser_phone", us.getPrincipal().getPhone());
+                xslParams.put("currentuser_mail", us.getEmailAddr());
+                xslParams.put("currentuser_org", us.getOrganisation());
+            }
+
+            // 1. JDOMize the string
+            Element wmcDoc = Xml.loadString(xml, false);
+            // 2. Apply XSL (styleSheetWmc)
+            Element transformedMd = Xml.transform(wmcDoc, new File(styleSheetWmc).toPath(), xslParams);
+
+            // 4. Inserts the metadata (does basically the same as the metadata.insert.paste
+            // service (see Insert.java)
+            String uuid = UUID.randomUUID().toString();
+
+            String date = new ISODate().toString();
+            SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
+
+            final List<String> id = new ArrayList<String>();
+            final List<Element> md = new ArrayList<Element>();
+
+            md.add(transformedMd);
+
+            // Import record
+            Importer.importRecord(uuid, uuidProcessing, md, "iso19139", 0, settingManager.getSiteId(),
+                settingManager.getSiteName(), null, context, id, date, date, group, MetadataType.METADATA);
+
+            final Store store = context.getBean("resourceStore", Store.class);
+            final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+            final String metadataUuid = metadataUtils.getMetadataUuid(id.get(0));
+
+            // Save the context if no context-url provided
+            if (StringUtils.isEmpty(url)) {
+                store.putResource(context, metadataUuid, filename, IOUtils.toInputStream(Xml.getString(wmcDoc)), null,
+                    MetadataResourceVisibility.PUBLIC, true);
+
+                // Update the MD
+                Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
+                onlineSrcParams.put("protocol", "WWW:DOWNLOAD-OGC:OWS-C");
+                onlineSrcParams.put("url",
+                    settingManager.getNodeURL() + String.format("api/records/%s/attachments/%s", uuid, filename));
+                onlineSrcParams.put("name", filename);
+                onlineSrcParams.put("desc", title);
+                transformedMd = Xml.transform(transformedMd,
+                    schemaManager.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"),
+                    onlineSrcParams);
+                dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(),
+                    null, true);
+            }
+
+            if (StringUtils.isNotEmpty(overview) && StringUtils.isNotEmpty(overviewFilename)) {
+                store.putResource(context, metadataUuid, overviewFilename, new ByteArrayInputStream(Base64.decodeBase64(overview)), null,
+                    MetadataResourceVisibility.PUBLIC, true);
+
+                // Update the MD
+                Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
+                onlineSrcParams.put("thumbnail_url", settingManager.getNodeURL()
+                    + String.format("api/records/%s/attachments/%s", uuid, overviewFilename));
+                transformedMd = Xml.transform(transformedMd,
+                    schemaManager.getSchemaDir("iso19139").resolve("process").resolve("thumbnail-add.xsl"),
+                    onlineSrcParams);
+                dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(),
+                    null, true);
+            }
+
+            int iId = Integer.parseInt(id.get(0));
+            if (publishToAll) {
+                dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.view.getId());
+                dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.download.getId());
+                dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.dynamic.getId());
+            }
+            if (StringUtils.isNotEmpty(group)) {
+                int gId = Integer.parseInt(group);
+                dataManager.setOperation(context, iId, gId, ReservedOperation.view.getId());
+                dataManager.setOperation(context, iId, gId, ReservedOperation.download.getId());
+                dataManager.setOperation(context, iId, gId, ReservedOperation.dynamic.getId());
+            }
+
+            dataManager.indexMetadata(id);
+            report.addMetadataInfos(Integer.parseInt(id.get(0)), uuid, !publishToAll, false, uuid);
+
+            triggerCreationEvent(request, uuid);
+
+            report.incrementProcessedRecords();
+            report.close();
+            return report;
         }
-
-        // 1. JDOMize the string
-        Element wmcDoc = Xml.loadString(xml, false);
-        // 2. Apply XSL (styleSheetWmc)
-        Element transformedMd = Xml.transform(wmcDoc, new File(styleSheetWmc).toPath(), xslParams);
-
-        // 4. Inserts the metadata (does basically the same as the metadata.insert.paste
-        // service (see Insert.java)
-        String uuid = UUID.randomUUID().toString();
-
-        String date = new ISODate().toString();
-        SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
-
-        final List<String> id = new ArrayList<String>();
-        final List<Element> md = new ArrayList<Element>();
-
-        md.add(transformedMd);
-
-        // Import record
-        Importer.importRecord(uuid, uuidProcessing, md, "iso19139", 0, settingManager.getSiteId(),
-            settingManager.getSiteName(), null, context, id, date, date, group, MetadataType.METADATA);
-
-        final Store store = context.getBean("resourceStore", Store.class);
-        final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
-        final String metadataUuid = metadataUtils.getMetadataUuid(id.get(0));
-
-        // Save the context if no context-url provided
-        if (StringUtils.isEmpty(url)) {
-            store.putResource(context, metadataUuid, filename, IOUtils.toInputStream(Xml.getString(wmcDoc)), null,
-                MetadataResourceVisibility.PUBLIC, true);
-
-            // Update the MD
-            Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
-            onlineSrcParams.put("protocol", "WWW:DOWNLOAD-OGC:OWS-C");
-            onlineSrcParams.put("url",
-                settingManager.getNodeURL() + String.format("api/records/%s/attachments/%s", uuid, filename));
-            onlineSrcParams.put("name", filename);
-            onlineSrcParams.put("desc", title);
-            transformedMd = Xml.transform(transformedMd,
-                schemaManager.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"),
-                onlineSrcParams);
-            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(),
-                null, true);
-        }
-
-        if (StringUtils.isNotEmpty(overview) && StringUtils.isNotEmpty(overviewFilename)) {
-            store.putResource(context, metadataUuid, overviewFilename, new ByteArrayInputStream(Base64.decodeBase64(overview)), null,
-                MetadataResourceVisibility.PUBLIC, true);
-
-            // Update the MD
-            Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
-            onlineSrcParams.put("thumbnail_url", settingManager.getNodeURL()
-                + String.format("api/records/%s/attachments/%s", uuid, overviewFilename));
-            transformedMd = Xml.transform(transformedMd,
-                schemaManager.getSchemaDir("iso19139").resolve("process").resolve("thumbnail-add.xsl"),
-                onlineSrcParams);
-            dataManager.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(),
-                null, true);
-        }
-
-        int iId = Integer.parseInt(id.get(0));
-        if (publishToAll) {
-            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.view.getId());
-            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.download.getId());
-            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.dynamic.getId());
-        }
-        if (StringUtils.isNotEmpty(group)) {
-            int gId = Integer.parseInt(group);
-            dataManager.setOperation(context, iId, gId, ReservedOperation.view.getId());
-            dataManager.setOperation(context, iId, gId, ReservedOperation.download.getId());
-            dataManager.setOperation(context, iId, gId, ReservedOperation.dynamic.getId());
-        }
-
-        dataManager.indexMetadata(id);
-        report.addMetadataInfos(Integer.parseInt(id.get(0)), uuid, !publishToAll, false, uuid);
-
-        triggerCreationEvent(request, uuid);
-
-        report.incrementProcessedRecords();
-        report.close();
-        return report;
     }
 
     /**
@@ -754,23 +759,24 @@ public class MetadataInsertDeleteApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
 
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-        DataManager dataMan = applicationContext.getBean(DataManager.class);
-        Element beforeMetadata = dataMan.getMetadata(serviceContext, String.valueOf(metadata.getId()), false, false, false);
-        XMLOutputter outp = new XMLOutputter();
-        String xmlBefore = outp.outputString(beforeMetadata);
-        LinkedHashMap<String, String> titles = new LinkedHashMap<>();
-        try {
-           titles = metadataUtils.extractTitles(Integer.toString(metadata.getId()));
-        } catch (Exception e) {
-            Log.warning(Geonet.DATA_MANAGER,
-                String.format(
-                    "Error while extracting title for the metadata %d " +
-                        "while creating delete event. Error is %s. " +
-                        "It may happen on subtemplates.",
-                    metadata.getId(), e.getMessage()));
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
+            DataManager dataMan = applicationContext.getBean(DataManager.class);
+            Element beforeMetadata = dataMan.getMetadata(serviceContext, String.valueOf(metadata.getId()), false, false, false);
+            XMLOutputter outp = new XMLOutputter();
+            String xmlBefore = outp.outputString(beforeMetadata);
+            LinkedHashMap<String, String> titles = new LinkedHashMap<>();
+            try {
+                titles = metadataUtils.extractTitles(Integer.toString(metadata.getId()));
+            } catch (Exception e) {
+                Log.warning(Geonet.DATA_MANAGER,
+                    String.format(
+                        "Error while extracting title for the metadata %d " +
+                            "while creating delete event. Error is %s. " +
+                            "It may happen on subtemplates.",
+                        metadata.getId(), e.getMessage()));
+            }
+            return new RecordDeletedEvent(metadata.getId(), metadata.getUuid(), titles, userSession.getUserIdAsInt(), xmlBefore);
         }
-        return new RecordDeletedEvent(metadata.getId(), metadata.getUuid(), titles, userSession.getUserIdAsInt(), xmlBefore);
     }
 
 
@@ -796,119 +802,119 @@ public class MetadataInsertDeleteApi {
                                              final boolean rejectIfInvalid, final boolean publishToAll, final String transformWith, String schema,
                                              final String extra, HttpServletRequest request) throws Exception {
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+          if (!transformWith.equals("_none_")) {
+              Path folder = dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS);
+              FilePathChecker.verify(transformWith);
+              Path xslFile = folder.resolve(transformWith + ".xsl");
+              if (Files.exists(xslFile)) {
+                  xmlElement = Xml.transform(xmlElement, xslFile);
+              } else {
+                  throw new ResourceNotFoundException(String.format("XSL transformation '%s' not found.", transformWith));
+              }
+          }
 
-        if (!transformWith.equals("_none_")) {
-            Path folder = dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS);
-            FilePathChecker.verify(transformWith);
-            Path xslFile = folder.resolve(transformWith + ".xsl");
-            if (Files.exists(xslFile)) {
-                xmlElement = Xml.transform(xmlElement, xslFile);
-            } else {
-                throw new ResourceNotFoundException(String.format("XSL transformation '%s' not found.", transformWith));
-            }
-        }
+          if (schema == null) {
+              schema = dataManager.autodetectSchema(xmlElement);
+              if (schema == null) {
+                  throw new IllegalArgumentException("Can't detect schema for metadata automatically. "
+                      + "You could try to force the schema with the schema parameter.");
+                  // TODO: Report what are the supported schema
+              }
+          } else {
+              // TODO: Check that the schema is supported
+          }
 
-        if (schema == null) {
-            schema = dataManager.autodetectSchema(xmlElement);
-            if (schema == null) {
-                throw new IllegalArgumentException("Can't detect schema for metadata automatically. "
-                    + "You could try to force the schema with the schema parameter.");
-                // TODO: Report what are the supported schema
-            }
-        } else {
-            // TODO: Check that the schema is supported
-        }
+          if (rejectIfInvalid) {
+              try {
+                  Integer groupId = null;
+                  if (StringUtils.isNotEmpty(group)) {
+                      groupId = Integer.parseInt(group);
+                  }
+                  DataManager.validateExternalMetadata(schema, xmlElement, context, groupId);
+              } catch (XSDValidationErrorEx e) {
+                  throw new IllegalArgumentException(e);
+              }
+          }
 
-        if (rejectIfInvalid) {
-            try {
-                Integer groupId = null;
-                if (StringUtils.isNotEmpty(group)) {
-                    groupId = Integer.parseInt(group);
-                }
-                DataManager.validateExternalMetadata(schema, xmlElement, context, groupId);
-            } catch (XSDValidationErrorEx e) {
-                throw new IllegalArgumentException(e);
-            }
-        }
+          // --- if the uuid does not exist we generate it for metadata and templates
+          String uuid;
+          if (metadataType == MetadataType.SUB_TEMPLATE || metadataType == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+              // subtemplates may need to be loaded with a specific uuid
+              // that will be attached to the root element so check for that
+              // and if not found, generate a new uuid
+              uuid = xmlElement.getAttributeValue("uuid");
+              if (StringUtils.isEmpty(uuid)) {
+                  uuid = UUID.randomUUID().toString();
+              }
+          } else {
+              uuid = dataManager.extractUUID(schema, xmlElement);
+              if (uuid.length() == 0) {
+                  uuid = UUID.randomUUID().toString();
+                  xmlElement = dataManager.setUUID(schema, uuid, xmlElement);
+              }
+          }
 
-        // --- if the uuid does not exist we generate it for metadata and templates
-        String uuid;
-        if (metadataType == MetadataType.SUB_TEMPLATE || metadataType == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
-            // subtemplates may need to be loaded with a specific uuid
-            // that will be attached to the root element so check for that
-            // and if not found, generate a new uuid
-            uuid = xmlElement.getAttributeValue("uuid");
-            if (StringUtils.isEmpty(uuid)) {
-                uuid = UUID.randomUUID().toString();
-            }
-        } else {
-            uuid = dataManager.extractUUID(schema, xmlElement);
-            if (uuid.length() == 0) {
-                uuid = UUID.randomUUID().toString();
-                xmlElement = dataManager.setUUID(schema, uuid, xmlElement);
-            }
-        }
+          if (uuidProcessing == MEFLib.UuidAction.NOTHING) {
+              AbstractMetadata md = metadataRepository.findOneByUuid(uuid);
+              if (md != null) {
+                  throw new IllegalArgumentException(
+                      String.format("A record with UUID '%s' already exist and you choose no "
+                          + "action on UUID processing. Choose to overwrite existing record "
+                          + "or to generate a new UUID.", uuid));
+              }
+          }
 
-        if (uuidProcessing == MEFLib.UuidAction.NOTHING) {
-            AbstractMetadata md = metadataRepository.findOneByUuid(uuid);
-            if (md != null) {
-                throw new IllegalArgumentException(
-                    String.format("A record with UUID '%s' already exist and you choose no "
-                        + "action on UUID processing. Choose to overwrite existing record "
-                        + "or to generate a new UUID.", uuid));
-            }
-        }
+          String date = new ISODate().toString();
 
-        String date = new ISODate().toString();
+          final List<String> id = new ArrayList<String>();
+          final List<Element> md = new ArrayList<Element>();
+          md.add(xmlElement);
 
-        final List<String> id = new ArrayList<String>();
-        final List<Element> md = new ArrayList<Element>();
-        md.add(xmlElement);
+          // Import record
+          Map<String, String> sourceTranslations = Maps.newHashMap();
+          try {
+              Importer.importRecord(uuid, uuidProcessing, md, schema, 0, settingManager.getSiteId(),
+                  settingManager.getSiteName(), sourceTranslations, context, id, date, date, group, metadataType);
 
-        // Import record
-        Map<String, String> sourceTranslations = Maps.newHashMap();
-        try {
-            Importer.importRecord(uuid, uuidProcessing, md, schema, 0, settingManager.getSiteId(),
-                settingManager.getSiteName(), sourceTranslations, context, id, date, date, group, metadataType);
+          } catch (DataIntegrityViolationException ex) {
+              throw ex;
+          } catch (Exception ex) {
+              throw ex;
+          }
+          int iId = Integer.parseInt(id.get(0));
+          uuid = dataManager.getMetadataUuid(iId + "");
 
-        } catch (DataIntegrityViolationException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw ex;
-        }
-        int iId = Integer.parseInt(id.get(0));
-        uuid = dataManager.getMetadataUuid(iId + "");
+          // Set template
+          dataManager.setTemplate(iId, metadataType, null);
 
-        // Set template
-        dataManager.setTemplate(iId, metadataType, null);
+          if (publishToAll) {
+              dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.view.getId());
+              dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.download.getId());
+              dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.dynamic.getId());
+          }
 
-        if (publishToAll) {
-            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.view.getId());
-            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.download.getId());
-            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.dynamic.getId());
-        }
+          dataManager.activateWorkflowIfConfigured(context, id.get(0), group);
 
-        dataManager.activateWorkflowIfConfigured(context, id.get(0), group);
+          if (category != null) {
+              for (String c : category) {
+                  dataManager.setCategory(context, id.get(0), c);
+              }
+          }
 
-        if (category != null) {
-            for (String c : category) {
-                dataManager.setCategory(context, id.get(0), c);
-            }
-        }
+          if (extra != null) {
+              metadataRepository.update(iId, new Updater<Metadata>() {
+                  @Override
+                  public void apply(@Nonnull Metadata metadata) {
+                      if (extra != null) {
+                          metadata.getDataInfo().setExtra(extra);
+                      }
+                  }
+              });
+          }
 
-        if (extra != null) {
-            metadataRepository.update(iId, new Updater<Metadata>() {
-                @Override
-                public void apply(@Nonnull Metadata metadata) {
-                    if (extra != null) {
-                        metadata.getDataInfo().setExtra(extra);
-                    }
-                }
-            });
-        }
-
-        dataManager.indexMetadata(id.get(0), true);
-        return Pair.read(Integer.valueOf(id.get(0)), uuid);
+          dataManager.indexMetadata(id.get(0), true);
+          return Pair.read(Integer.valueOf(id.get(0)), uuid);
+      }
     }
 }

@@ -25,6 +25,7 @@ package org.fao.geonet.listener.metadata.draft;
 
 import java.util.Arrays;
 
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
@@ -70,13 +71,15 @@ public class UpdateOperations implements ApplicationListener<MetadataShare> {
     @Autowired
     private MetadataDraftRepository metadataDraftRepository;
 
+    @Autowired
+    ServiceManager serviceManager;
+
     @Override
     public void onApplicationEvent(MetadataShare event) {
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void doAfterCommit(MetadataShare event) {
-
+    public void doBeforeCommit(MetadataShare event) {
         try {
 
             Log.trace(Geonet.DATA_MANAGER, "UpdateOperationsListener: " + event.getRecord() + " op: "
@@ -95,9 +98,9 @@ public class UpdateOperations implements ApplicationListener<MetadataShare> {
                 MetadataDraft draft = metadataDraftRepository.findOneByUuid(md.getUuid());
 
                 if (draft != null) {
+                  try (ServiceContext context = serviceManager.createServiceContext("update_operations", -1)) {
                     // Copy privileges from original metadata
                     OperationAllowed op = event.getOp();
-                    ServiceContext context = ServiceContext.get();
 
                     // Only interested in editing and reviewing privileges
                     // No one else should be able to see it
@@ -127,7 +130,7 @@ public class UpdateOperations implements ApplicationListener<MetadataShare> {
                             }
                         }
                     }
-
+                  }
                 }
             }
         } catch (Throwable e) {

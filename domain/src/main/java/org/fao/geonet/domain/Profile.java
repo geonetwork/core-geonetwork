@@ -31,7 +31,15 @@ import java.util.Set;
 
 /**
  * The enumeration of profiles available in geonetwork.
- *
+ * <ul>
+ *     <li>Administrator</li>
+ *     <li>Administrator - UserAdmin</li>
+ *     <li>Administrator - UserAdmin - Reviewer</li>
+ *     <li>Administrator - UserAdmin - Reviewer - Editor</li>
+ *     <li>Administrator - UserAdmin - Reviewer - Editor - RegisteredUser</li>
+ *     <li>Administrator - UserAdmin - Reviewer - Editor - RegisteredUser - Guest</li>
+ *     <li>Administrator - Monitor</li>
+ * </ul>
  * @author Jesse
  */
 public enum Profile {

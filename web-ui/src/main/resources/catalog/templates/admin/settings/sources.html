@@ -75,7 +75,7 @@
             <button type="button" class="btn btn-danger pull-right"
                     data-ng-disabled="source.type !== 'subportal' || (source.type === 'subportal' && !user.isAdministrator())"
                     data-gn-click-and-spin="removeSource()">
-              <i class="fa fa-times"></i>&nbsp;
+              <i class="fa fa-trash"></i>&nbsp;
               <span data-translate="">removeSource</span>
             </button>
           </div>
@@ -123,7 +123,7 @@
                   <a href="" data-ng-click="deleteSourceLogo()"
                      class="text-danger">
                     <i data-ng-show="source.logo"
-                       class="fa fa-times delete"></i>
+                       class="fa fa-trash delete"></i>
                   </a>
                 </div>
               </div>

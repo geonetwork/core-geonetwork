@@ -26,53 +26,68 @@ public class InspireValidationRunnable implements Runnable {
     private final String testId;
     private final String endPoint;
     private final int mdId;
-    private final ServiceContext context;
+    /** Provided service context, cleaned up when task is complete */
+    private ServiceContext validationContext;
 
+    /**
+     * Schedule INSPIRE validation for later.
+     *
+     * @param context Validation context, it is the responsibility of this runnable to clean up
+     * @param endPoint
+     * @param testId
+     * @param mdId
+     */
     public InspireValidationRunnable(ServiceContext context,
                                      String endPoint, String testId, int mdId) {
-        this.context = context;
+        this.validationContext = context;
         this.testId = testId;
         this.mdId = mdId;
         this.endPoint = endPoint;
     }
 
     public void run() {
-        TransactionManager.runInTransaction("inspire-validation", ApplicationContextHolder.get(),
-            CREATE_NEW, ALWAYS_COMMIT, false, new TransactionTask<Object>() {
-                @Override
-                public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                    InspireValidatorUtils inspireValidatorUtils =
-                        ApplicationContextHolder.get().getBean(InspireValidatorUtils.class);
+        validationContext.setAsThreadLocal();
+        try {
+            TransactionManager.runInTransaction("inspire-validation", ApplicationContextHolder.get(),
+                CREATE_NEW, ALWAYS_COMMIT, false, new TransactionTask<Object>() {
+                    @Override
+                    public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                        InspireValidatorUtils inspireValidatorUtils =
+                            ApplicationContextHolder.get().getBean(InspireValidatorUtils.class);
 
-                    MetadataValidationRepository metadataValidationRepository =
-                        ApplicationContextHolder.get().getBean(MetadataValidationRepository.class);
+                        MetadataValidationRepository metadataValidationRepository =
+                            ApplicationContextHolder.get().getBean(MetadataValidationRepository.class);
 
-                    // Waits until the validation result is available
-                    inspireValidatorUtils.waitUntilReady(context, endPoint, testId);
+                        // Waits until the validation result is available
+                        inspireValidatorUtils.waitUntilReady(validationContext, endPoint, testId);
 
-                    String reportUrl = inspireValidatorUtils.getReportUrl(endPoint, testId);
-                    String reportXmlUrl = InspireValidatorUtils.getReportUrlXML(endPoint, testId);
-                    String reportXml = inspireValidatorUtils.retrieveReport(context, reportXmlUrl);
+                        String reportUrl = inspireValidatorUtils.getReportUrl(endPoint, testId);
+                        String reportXmlUrl = inspireValidatorUtils.getReportUrlXML(endPoint, testId);
+                        String reportXml = inspireValidatorUtils.retrieveReport(validationContext, reportXmlUrl);
 
-                    String validationStatus = inspireValidatorUtils.isPassed(context, endPoint, testId);
+                        String validationStatus = inspireValidatorUtils.isPassed(validationContext, endPoint, testId);
 
-                    MetadataValidationStatus metadataValidationStatus =
-                        inspireValidatorUtils.calculateValidationStatus(validationStatus);
+                        MetadataValidationStatus metadataValidationStatus =
+                            inspireValidatorUtils.calculateValidationStatus(validationStatus);
 
-                    MetadataValidation metadataValidation = new MetadataValidation()
-                        .setId(new MetadataValidationId(mdId, "inspire"))
-                        .setStatus(metadataValidationStatus).setRequired(false)
-                        .setReportUrl(reportUrl).setReportContent(reportXml);
+                        MetadataValidation metadataValidation = new MetadataValidation()
+                            .setId(new MetadataValidationId(mdId, "inspire"))
+                            .setStatus(metadataValidationStatus).setRequired(false)
+                            .setReportUrl(reportUrl).setReportContent(reportXml);
 
-                    metadataValidationRepository.save(metadataValidation);
+                        metadataValidationRepository.save(metadataValidation);
 
-                    DataManager dataManager =
-                        ApplicationContextHolder.get().getBean(DataManager.class);
+                        DataManager dataManager =
+                            ApplicationContextHolder.get().getBean(DataManager.class);
 
-                    dataManager.indexMetadata(new ArrayList<>(Arrays.asList(mdId + "")));
+                        dataManager.indexMetadata(new ArrayList<>(Arrays.asList(mdId + "")));
 
-                    return null;
-                }
-            });
+                        return null;
+                    }
+                });
+        } finally {
+            validationContext.clearAsThreadLocal();
+            validationContext.clear();
+        }
     }
 }

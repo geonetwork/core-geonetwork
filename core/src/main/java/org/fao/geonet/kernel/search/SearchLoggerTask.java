@@ -24,6 +24,9 @@
 package org.fao.geonet.kernel.search;
 
 import jeeves.server.context.ServiceContext;
+import jeeves.server.context.ServiceContext.ServiceDetails;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Sort;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.log.SearcherLogger;
@@ -43,12 +46,14 @@ public class SearchLoggerTask implements Runnable {
     Object sort;
     String geomWKT;
     String value;
-    private ServiceContext srvContext;
+
+    /** Details data structured used to pass service context details to SearcherLogger */
+    private ServiceDetails serviceDetails;
 
     public void configure(ServiceContext srvContext,
                           Object query, int numHits, Object sort, String geomWKT,
                           String value) {
-        this.srvContext = srvContext;
+        this.serviceDetails = new ServiceDetails( srvContext);
         this.query = query;
         this.numHits = numHits;
         this.sort = sort;
@@ -59,7 +64,7 @@ public class SearchLoggerTask implements Runnable {
     public void run() {
         try {
             SearcherLogger searchLogger = ApplicationContextHolder.get().getBean(SearcherLogger.class);
-            searchLogger.logSearch(srvContext, query, numHits, sort, geomWKT, value);
+            searchLogger.logSearch(serviceDetails, query, numHits, sort, geomWKT, value);
         } catch (Exception e) {
             Log.error(Geonet.SEARCH_LOGGER, "SearchLogger task error:" + e.getMessage(), e);
         }

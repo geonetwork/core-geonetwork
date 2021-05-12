@@ -25,6 +25,8 @@ package org.fao.geonet.listener.metadata.draft;
 
 import java.util.Arrays;
 
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataDraft;
@@ -55,6 +57,9 @@ public class DraftCreated implements ApplicationListener<MetadataDraftAdd> {
     @Autowired
     private IMetadataIndexer metadataIndexer;
 
+    @Autowired
+    ServiceManager serviceManager;
+
     @Override
     public void onApplicationEvent(MetadataDraftAdd event) {
     }
@@ -62,7 +67,7 @@ public class DraftCreated implements ApplicationListener<MetadataDraftAdd> {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMPLETION)
     public void doAfterCommit(MetadataDraftAdd event) {
         Log.trace(Geonet.DATA_MANAGER, "Reindexing non drafted versions of uuid " + event.getMd().getUuid());
-        try {
+        try (ServiceContext context = serviceManager.createServiceContext("draft_created", -1)) {
             for (AbstractMetadata md : metadataUtils.findAllByUuid(event.getMd().getUuid())) {
                 if (!(md instanceof MetadataDraft)) {
                     Log.trace(Geonet.DATA_MANAGER, "Reindexing " + md.getId());

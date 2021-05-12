@@ -70,7 +70,18 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USERS_IDENTICON;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
@@ -84,6 +95,11 @@ import static org.springframework.data.jpa.domain.Specification.where;
     description = "User operations")
 @Controller("users")
 public class UsersApi {
+    /**
+     * Username pattern with allowed chars. Username may only contain alphanumeric characters or single hyphens,
+     * single at signs or single dots. Cannot begin or end with a hyphen, at sign or dot.
+     */
+    private static final String USERNAME_PATTERN = "^[a-zA-Z0-9]+([-_.@]?[a-zA-Z0-9]+)*$";
 
     @Autowired
     SettingManager settingManager;
@@ -428,6 +444,13 @@ public class UsersApi {
             throw new IllegalArgumentException(errorMessage);
         }
 
+        if (!userDto.getUsername().matches(USERNAME_PATTERN)) {
+            throw new IllegalArgumentException(Params.USERNAME
+                + " may only contain alphanumeric characters or single hyphens, single at signs or single dots. "
+                + "Cannot begin or end with a hyphen, at sign or dot."
+            );
+        }
+
         List<User> existingUsers = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
         if (!existingUsers.isEmpty()) {
             throw new IllegalArgumentException("Users with username "
@@ -513,6 +536,12 @@ public class UsersApi {
                 "Another user with username '%s' ignore case already exists", user.getUsername()));
         }
 
+        if (!userDto.getUsername().matches(USERNAME_PATTERN)) {
+            throw new IllegalArgumentException(Params.USERNAME
+                + " may only contain alphanumeric characters or single hyphens, single at signs or single dots. "
+                + "Cannot begin or end with a hyphen, at sign or dot."
+            );
+        }
 
         if (!myProfile.getAll().contains(profile)) {
             throw new IllegalArgumentException(
@@ -536,6 +565,20 @@ public class UsersApi {
             List<UserGroup> usergroups =
                 userGroupRepository.findAll(Specification.where(
                     hasUserId(Integer.parseInt(userDto.getId()))));
+
+            List<Integer> userToUpdateGroupIds = usergroups.stream()
+                .map(ug -> ug.getId().getGroupId())
+                .collect(Collectors.toList());
+
+            Set<Integer> groupsInCommon = myUserAdminGroups.stream()
+                .distinct()
+                .filter(userToUpdateGroupIds::contains)
+                .collect(Collectors.toSet());
+
+            // UserAdmin can't update users that are not in the groups administered
+            if (groupsInCommon.isEmpty()) {
+                throw new IllegalArgumentException("You don't have rights to do this");
+            }
 
             //keep unknown groups as is
             for (UserGroup ug : usergroups) {

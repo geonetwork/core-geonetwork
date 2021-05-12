@@ -83,7 +83,7 @@ public class IndexingTask extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
-        ServiceContext serviceContext = serviceManager.createServiceContext("indexing", applicationContext);
+      try (ServiceContext serviceContext = serviceManager.createServiceContext("indexing", applicationContext)) {
         serviceContext.setLanguage("eng");
         serviceContext.setAsThreadLocal();
 
@@ -92,5 +92,6 @@ public class IndexingTask extends QuartzJobBean {
                 + new Date() + ". Checking if any records need to be indexed ...");
         }
         indexRecords();
+      }
     }
 }

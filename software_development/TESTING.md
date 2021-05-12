@@ -1,6 +1,6 @@
 # Testing
 
-GeoNetwork is a standard Java project, primarily using on JUnit for testing. There is am important separation between unit tests and integration tests.
+GeoNetwork primarily uses JUnit for testing. With an important separation between unit tests and integration tests.
 
 ## Unit Tests
 
@@ -8,7 +8,7 @@ In Geonetwork *Unit Tests* should be very very quick to execute and not start up
 the execution time of the unit tests very short.
     
 Efficient Unit tests do not require super classes and any assistance methods can be static
-imports, for example statically ``importing org.junit.Assert``` or ``org.junit.Assume``` or ``org.fao.geonet.Assert``.
+imports, for example statically ``importing org.junit.Assert`` or ``org.junit.Assume`` or ``org.fao.geonet.Assert``.
 
 ## Integration Tests
 
@@ -16,7 +16,7 @@ imports, for example statically ``importing org.junit.Assert``` or ``org.junit.A
 a unit test. However, even though the tests take longer they should still be implemented in such a way to be as efficient as possible.
 
 Starting GeoNetwork in a way that isolates each integration test from each other integration test is non-trivial.  Because of this
-there are `abstract` super classes to assist with this.  Many modules have module specific Abstract classes.  For example `domain`, `core`, `harvesters` and `services` modules all have module specific super classes that need to be used.  (`harvesting` has 2 superclasses depending on what is to be tested.)
+there are `abstract` super classes to assist with this.  Many modules have module specific Abstract classes.  For example `domain`, `core`, `harvesters` and `services` modules all have module specific super classes to make writing integration tests easier (`harvesting` has 2 superclasses depending on what is to be tested.)
     
 The easiest way to learn how to implement an integration test is to search for other integration tests in the same module as the class
 you want to test.

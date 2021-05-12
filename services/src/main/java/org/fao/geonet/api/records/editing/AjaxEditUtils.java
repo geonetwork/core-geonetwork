@@ -47,7 +47,10 @@ import org.jdom.filter.Filter;
 import java.util.*;
 
 /**
- * Embedded Metadata Update API for AJAX Editor support
+ * Embedded Metadata Update API for AJAX Editor support.
+ *
+ * Facade provides additional utility methods to assist with AJAX editing, making use of beans
+ * obtained from the provided service context.
  */
 public class AjaxEditUtils extends EditUtils {
 

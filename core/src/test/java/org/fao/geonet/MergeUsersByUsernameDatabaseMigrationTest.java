@@ -83,6 +83,7 @@ public class MergeUsersByUsernameDatabaseMigrationTest extends AbstractCoreInteg
 
 
         ServiceContext serviceContext = createServiceContext();
+      try {
         loginAs(user1, serviceContext);
         final Element sampleMetadataXml = getSampleMetadataXml();
         byte[] xmlBytes = Xml.getString(sampleMetadataXml).getBytes("UTF-8");
@@ -102,6 +103,9 @@ public class MergeUsersByUsernameDatabaseMigrationTest extends AbstractCoreInteg
         loginAs(user4, serviceContext);
         metadataIdList.put(importMetadataXML(serviceContext, "uuid", new ByteArrayInputStream(xmlBytes),
             MetadataType.METADATA, group1.getId(), Params.GENERATE_UUID), group1.getId());
+      } finally {
+        serviceContext.clearAsThreadLocal();
+      }
     }
 
     @Test

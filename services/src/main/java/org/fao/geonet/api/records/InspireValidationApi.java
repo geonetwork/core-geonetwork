@@ -211,10 +211,14 @@ public class InspireValidationApi {
         String id = String.valueOf(metadata.getId());
 
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
-        ServiceContext context = ApiUtils.createServiceContext(request);
         String getRecordByIdUrl = null;
         String testId = null;
 
+        // The following is unusual, we are creating a service context so it is our responsibility
+        // to ensure it is cleaned up.
+        //
+        // This is going to be accomplished by the scheduled InspireValidationRunnable
+        ServiceContext context = ApiUtils.createServiceContext(request);
         try {
             Element md = (Element) ApiUtils.getUserSession(session).getProperty(Geonet.Session.METADATA_EDITING + id);
             if (md == null) {
@@ -246,6 +250,7 @@ public class InspireValidationApi {
 
 
                 md.detach();
+
                 Attribute schemaLocAtt = schemaManager.getSchemaLocation(
                     "iso19139", context);
 
@@ -292,6 +297,9 @@ public class InspireValidationApi {
         } catch (Exception e) {
             response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
             return "";
+        } finally {
+            context.clearAsThreadLocal();
+            // context clear is handled scheduled InspireValidationRunnable above
         }
     }
 
@@ -341,9 +349,7 @@ public class InspireValidationApi {
     ) throws Exception {
 
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
-        try {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
             if (inspireValidatorUtils.isReady(context, URL, testId)) {
                 Map<String, String> values = new HashMap<>();
 

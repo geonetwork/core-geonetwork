@@ -90,11 +90,20 @@ import jeeves.transaction.BeforeRollbackTransactionListener;
 
 import static org.fao.geonet.kernel.setting.Settings.METADATA_VCS;
 
+/**
+ * Subversion manager.
+ */
 public class SvnManager implements AfterCommitTransactionListener, BeforeRollbackTransactionListener {
     private static String username = "geonetwork";
     private static String password = "geonetwork";
     // configure via setter in Geonetwork app
-    private ServiceContext context;
+    /**
+     * Shared application handler service context provided by GeoNetwork application for bean lookup.
+     *
+     * In most cases a ServiceContext is provided for access ot the user session.
+     */
+    private ServiceContext appHandlerContext;
+
     // configure in init method
     private SVNURL repoUrl;
     // configure in spring configuration of bean
@@ -278,8 +287,13 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
         this.subversionPath = subversionPath;
     }
 
+    /**
+     * Set shared application handler service context used for bean lookup.
+     *
+     * @param context application handler context.
+     */
     public void setContext(ServiceContext context) {
-        this.context = context;
+        this.appHandlerContext = context;
     }
 
     /**
@@ -553,7 +567,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
             return;
         }
 
-        DataManager dataMan = context.getBean(DataManager.class);
+        DataManager dataMan = appHandlerContext.getBean(DataManager.class);
 
         try {
             // get the metadata record and if different commit changes
@@ -694,8 +708,8 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
         // get owner from the database
         Set<Integer> ids = new HashSet<Integer>();
         ids.add(Integer.valueOf(id));
-        AbstractMetadata metadata = this.context.getBean(IMetadataUtils.class).findOne(id);
-        User user = this.context.getBean(UserRepository.class).findById(metadata.getSourceInfo().getOwner()).get();
+        AbstractMetadata metadata = appHandlerContext.getBean(IMetadataUtils.class).findOne(id);
+        User user = appHandlerContext.getBean(UserRepository.class).findById(metadata.getSourceInfo().getOwner()).get();
         // Backwards compatibility.  Format the metadata as XML in same format as previous versions.
         Element xml = new Element("results").addContent(
             new Element("record")

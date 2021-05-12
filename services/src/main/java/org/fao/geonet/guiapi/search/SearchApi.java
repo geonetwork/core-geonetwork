@@ -123,7 +123,8 @@ public class SearchApi {
     private Element query(Map<String, String> queryFields, HttpServletRequest request) {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        }
 
         // TODOES this is the proxy
         throw new NotImplementedException("Not implemented in ES");

@@ -191,9 +191,10 @@ public class DirectoryApi {
             String identifierXpath,
         HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         return collectEntries(context, uuids, bucket, xpath, identifierXpath, false, null);
+      }
     }
 
 
@@ -236,9 +237,9 @@ public class DirectoryApi {
         // TODO: Add an option to set groupOwner ?
         // TODO: Add an option to set privileges ?
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         return collectEntries(context, uuids, bucket, xpath, identifierXpath, true, null);
+      }
     }
 
 
@@ -366,9 +367,9 @@ public class DirectoryApi {
             String fq,
         HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         return updateRecordEntries(context, uuids, bucket, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, false, fq);
+      }
     }
 
 
@@ -420,9 +421,9 @@ public class DirectoryApi {
             String fq,
         HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         return updateRecordEntries(context, uuids, bucket, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, true, fq);
+      }
     }
 
 
@@ -617,7 +618,7 @@ public class DirectoryApi {
             MultipartHttpServletRequest request)
         throws Exception {
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
 
         MetadataSchema metadataSchema = dataManager.getSchema(schema);
@@ -716,6 +717,7 @@ public class DirectoryApi {
             report.close();
         }
         return report;
+      }
     }
 
     private Geometry reprojGeom(String geomProjectionTo, boolean lenient, SimpleFeature feature)

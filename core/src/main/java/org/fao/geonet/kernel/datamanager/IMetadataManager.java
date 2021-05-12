@@ -53,11 +53,17 @@ public interface IMetadataManager {
     /**
      * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
      *
-     * @param context
-     * @param force
+     * @param context ServiceContext used for initialization
      * @throws Exception
      */
-    public void init(ServiceContext context, Boolean force) throws Exception;
+    public void init(ServiceContext context) throws Exception;
+
+    /**
+     * Clean up metadata manager during application shutdown.
+     *
+     * @throws Exception
+     */
+    public void destroy() throws Exception;
 
     /**
      * Removes the record with the id metadataId

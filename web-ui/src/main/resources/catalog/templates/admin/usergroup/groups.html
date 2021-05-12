@@ -59,7 +59,7 @@
                   data-ng-hide="!groupSelected.id || groupSelected.id<0"
                   data-gn-confirm-click="{{'groupDeleteConfirm' | translate}}"
                   data-ng-click="deleteGroup(groupSelected.id)" id="gn-btn-group-delete">
-            <i class="fa fa-times"></i>&nbsp;
+            <i class="fa fa-trash"></i>&nbsp;
             <span data-translate="">deleteGroup</span>
           </button>
         </div>
@@ -79,6 +79,7 @@
               <input type="text" id="groupname" name="name" class="form-control"
                      data-ng-disabled="!user.isAdministratorOrMore()"
                      data-ng-model="groupSelected.name"
+                     data-ng-pattern="/^[a-zA-Z0-9]+([-_]?[a-zA-Z0-9]+)*$/"
                      data-ng-maxlength="32"
                      data-ng-required="true"/>
               <p class="help-block" data-translate="">groupNameHelp</p>
@@ -86,6 +87,9 @@
                 <span class="error" data-ng-show="gnGroupEdit.name.$error.maxlength"
                       data-translate="">groupNameMaxlength</span>
               </p>
+              <p class="help-block"
+                 ng-if="gnGroupEdit.name.$error.pattern"
+                 data-translate="">patternGroupName</p>
             </div>
 
 

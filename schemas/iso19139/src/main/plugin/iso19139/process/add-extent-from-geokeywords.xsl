@@ -42,6 +42,8 @@
     </msg>
     <msg id="a" xml:lang="dut">Er zijn trefwoorden opgenomen die een locatie beschrijven (ie.</msg>
     <msg id="b" xml:lang="dut">). Probeer metadata dekking te berekenen met behulp van de opgenomen trefwoorden.</msg>
+    <msg id="a" xml:lang="ita">Il campo parola chiave contiene un termine geografico (es.</msg>
+    <msg id="b" xml:lang="ita">). Prova a impostare l'estensione geografica usando il dati nel thesaurus.</msg>
   </xsl:variable>
 
   <!-- GeoNetwork base url -->

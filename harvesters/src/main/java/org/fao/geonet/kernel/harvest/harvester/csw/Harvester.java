@@ -87,6 +87,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
     private Logger log;
     private CswParams params;
+    /** Shared service context managed by HarvestManager */
     private ServiceContext context;
 
     /**

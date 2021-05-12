@@ -99,7 +99,7 @@
             var parser = new ol.format.WMSCapabilities();
             cachedGetCapabilitiesUrls[getCapabilitiesUrl] = parser.read(data);
           }
-          
+
            // do a deep copy of the capabilities obj
           var result = JSON.parse(JSON.stringify(cachedGetCapabilitiesUrls[getCapabilitiesUrl]));
 
@@ -148,18 +148,17 @@
         };
 
         var parseWMTSCapabilities = function(data) {
-          var parser = new ol.format.WMTSCapabilities();
-          var result = parser.read(data);
 
-          //result.contents.Layer = result.contents.layers;
-          result.Contents.operationsMetadata = result.OperationsMetadata;
+          try {
+            var parser = new ol.format.WMTSCapabilities();
+            var result = parser.read(data);
 
-          var capUrlMatch = data.match(/<ServiceMetadataURL xlink:href="(.+)"/);
-          if (capUrlMatch) {
-            result.Contents.serviceMetadataURL = capUrlMatch[1];
+            result.Contents.operationsMetadata = result.OperationsMetadata;
+            return result.Contents;
+          } catch(e) {
+            return e.message;
           }
 
-          return result.Contents;
         };
 
         var parseWCSCapabilities = function(data) {
@@ -315,15 +314,16 @@
                   timeout: timeout
                 })
                     .success(function(data, status, headers, config) {
-                      if (data) {
-                        defer.resolve(parseWMTSCapabilities(data));
-                      }
-                      else {
-                        defer.reject();
+                      var wmtsCap = parseWMTSCapabilities(data);
+
+                      if (!wmtsCap.operationsMetadata) {
+                        defer.reject($translate.instant('wmtsFailedToParseCapabilities'));
+                      } else {
+                        defer.resolve(wmtsCap);
                       }
                     })
                     .error(function(data, status, headers, config) {
-                      defer.reject(status);
+                      defer.reject($translate.instant('wmtsFailedToParseCapabilities'));
                     });
               }
             }
@@ -418,7 +418,7 @@
                 });
 
             if (bboxProp) {
-              extent = proj.getWorldExtent() && ol.extent.containsExtent(proj.getWorldExtent(),
+              extent = !proj.getWorldExtent() || ol.extent.containsExtent(proj.getWorldExtent(),
                       bboxProp) ?
                       ol.proj.transformExtent(bboxProp, 'EPSG:4326', proj) :
                       proj.getExtent();

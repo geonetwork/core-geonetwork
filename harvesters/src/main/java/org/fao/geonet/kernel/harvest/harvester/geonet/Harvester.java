@@ -72,6 +72,7 @@ class Harvester implements IHarvester<HarvestResult> {
     private Logger log;
 
     private GeonetParams params;
+    /** Shared service context managed by HarvestManager */
     private ServiceContext context;
 
     /**

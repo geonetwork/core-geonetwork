@@ -617,84 +617,85 @@ public class CatalogApi {
         allRequestParams.put("hitsPerPage", Integer.toString(hitsPerPage));
         allRequestParams.put("from", Integer.toString(from));
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        RdfOutputManager manager = new RdfOutputManager(
-            thesaurusManager.buildResultfromThTable(context), hitsPerPage);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            RdfOutputManager manager = new RdfOutputManager(
+                thesaurusManager.buildResultfromThTable(context), hitsPerPage);
 
-        // Copy all request parameters
-        /// Mimic old Jeeves param style
-        Element params = new Element("params");
-        allRequestParams.forEach((k, v) -> {
-            params.addContent(new Element(k).setText(v));
-        });
+            // Copy all request parameters
+            /// Mimic old Jeeves param style
+            Element params = new Element("params");
+            allRequestParams.forEach((k, v) -> {
+                params.addContent(new Element(k).setText(v));
+            });
 
-        // Perform the search on the Lucene Index
-        RdfSearcher rdfSearcher = new RdfSearcher(params, context);
-        List results = rdfSearcher.search(context);
-        rdfSearcher.close();
+            // Perform the search on the Lucene Index
+            RdfSearcher rdfSearcher = new RdfSearcher(params, context);
+            List results = rdfSearcher.search(context);
+            rdfSearcher.close();
 
-        // Calculates the pagination information, needed for the LDP Paging and Hydra Paging
-        int numberMatched = rdfSearcher.getSize();
-        int firstPageFrom = numberMatched > 0 ? 1 : 0;
-        int firstPageTo = numberMatched > hitsPerPage ? hitsPerPage : numberMatched;
-        int nextFrom = to < numberMatched ? to + 1 : to;
-        int nextTo = to + hitsPerPage < numberMatched ? to + hitsPerPage : numberMatched;
-        int prevFrom = from - hitsPerPage > 0 ? from - hitsPerPage : 1;
-        int prevTo = to - hitsPerPage > 0 ? to - hitsPerPage : numberMatched;
-        int lastPageFrom = 0 < (numberMatched % hitsPerPage) ? numberMatched - (numberMatched % hitsPerPage) + 1 : (numberMatched - hitsPerPage + 1 > 0 ? numberMatched - hitsPerPage + 1 : numberMatched);
-        long versionTokenETag = rdfSearcher.getVersionToken();
-        String canonicalURL = hostURL + request.getRequestURI();
-        String currentPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + from + "&to=" + to;
-        String lastPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + lastPageFrom + "&to=" + numberMatched;
-        String firstPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + firstPageFrom + "&to=" + firstPageTo;
-        String previousPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + prevFrom + "&to=" + prevTo;
-        String nextPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + nextFrom + "&to=" + nextTo;
+            // Calculates the pagination information, needed for the LDP Paging and Hydra Paging
+            int numberMatched = rdfSearcher.getSize();
+            int firstPageFrom = numberMatched > 0 ? 1 : 0;
+            int firstPageTo = numberMatched > hitsPerPage ? hitsPerPage : numberMatched;
+            int nextFrom = to < numberMatched ? to + 1 : to;
+            int nextTo = to + hitsPerPage < numberMatched ? to + hitsPerPage : numberMatched;
+            int prevFrom = from - hitsPerPage > 0 ? from - hitsPerPage : 1;
+            int prevTo = to - hitsPerPage > 0 ? to - hitsPerPage : numberMatched;
+            int lastPageFrom = 0 < (numberMatched % hitsPerPage) ? numberMatched - (numberMatched % hitsPerPage) + 1 : (numberMatched - hitsPerPage + 1 > 0 ? numberMatched - hitsPerPage + 1 : numberMatched);
+            long versionTokenETag = rdfSearcher.getVersionToken();
+            String canonicalURL = hostURL + request.getRequestURI();
+            String currentPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + from + "&to=" + to;
+            String lastPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + lastPageFrom + "&to=" + numberMatched;
+            String firstPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + firstPageFrom + "&to=" + firstPageTo;
+            String previousPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + prevFrom + "&to=" + prevTo;
+            String nextPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + nextFrom + "&to=" + nextTo;
 
-        // Hydra Paging information (see also: http://www.hydra-cg.com/spec/latest/core/)
-        String hydraPagedCollection = "<hydra:PagedCollection xmlns:hydra=\"http://www.w3.org/ns/hydra/core#\" rdf:about=\"" + currentPage.replaceAll("&", "&amp;") + "\">\n" +
-            "<rdf:type rdf:resource=\"hydra:PartialCollectionView\"/>" +
-            "<hydra:lastPage>" + lastPage.replaceAll("&", "&amp;") + "</hydra:lastPage>\n" +
-            "<hydra:totalItems rdf:datatype=\"http://www.w3.org/2001/XMLSchema#integer\">" + numberMatched + "</hydra:totalItems>\n" +
-            ((prevFrom <= prevTo && prevFrom < from && prevTo < to) ? "<hydra:previousPage>" + previousPage.replaceAll("&", "&amp;") + "</hydra:previousPage>\n" : "") +
-            ((nextFrom <= nextTo && from < nextFrom && to < nextTo) ? "<hydra:nextPage>" + nextPage.replaceAll("&", "&amp;") + "</hydra:nextPage>\n" : "") +
-            "<hydra:firstPage>" + firstPage.replaceAll("&", "&amp;") + "</hydra:firstPage>\n" +
-            "<hydra:itemsPerPage rdf:datatype=\"http://www.w3.org/2001/XMLSchema#integer\">" + hitsPerPage + "</hydra:itemsPerPage>\n" +
-            "</hydra:PagedCollection>";
-        // Construct the RDF output
-        File rdfFile = manager.createRdfFile(context, results, 1, hydraPagedCollection);
+            // Hydra Paging information (see also: http://www.hydra-cg.com/spec/latest/core/)
+            String hydraPagedCollection = "<hydra:PagedCollection xmlns:hydra=\"http://www.w3.org/ns/hydra/core#\" rdf:about=\"" + currentPage.replaceAll("&", "&amp;") + "\">\n" +
+                "<rdf:type rdf:resource=\"hydra:PartialCollectionView\"/>" +
+                "<hydra:lastPage>" + lastPage.replaceAll("&", "&amp;") + "</hydra:lastPage>\n" +
+                "<hydra:totalItems rdf:datatype=\"http://www.w3.org/2001/XMLSchema#integer\">" + numberMatched + "</hydra:totalItems>\n" +
+                ((prevFrom <= prevTo && prevFrom < from && prevTo < to) ? "<hydra:previousPage>" + previousPage.replaceAll("&", "&amp;") + "</hydra:previousPage>\n" : "") +
+                ((nextFrom <= nextTo && from < nextFrom && to < nextTo) ? "<hydra:nextPage>" + nextPage.replaceAll("&", "&amp;") + "</hydra:nextPage>\n" : "") +
+                "<hydra:firstPage>" + firstPage.replaceAll("&", "&amp;") + "</hydra:firstPage>\n" +
+                "<hydra:itemsPerPage rdf:datatype=\"http://www.w3.org/2001/XMLSchema#integer\">" + hitsPerPage + "</hydra:itemsPerPage>\n" +
+                "</hydra:PagedCollection>";
+            // Construct the RDF output
+            File rdfFile = manager.createRdfFile(context, results, 1, hydraPagedCollection);
 
-        try (
-            ServletOutputStream out = response.getOutputStream();
-            InputStream in = new FileInputStream(rdfFile)
-        ) {
-            byte[] bytes = new byte[1024];
-            int bytesRead;
+            try (
+                ServletOutputStream out = response.getOutputStream();
+                InputStream in = new FileInputStream(rdfFile)
+            ) {
+                byte[] bytes = new byte[1024];
+                int bytesRead;
 
-            response.setContentType("application/rdf+xml");
+                response.setContentType("application/rdf+xml");
 
-            //Set the Lucene versionToken as ETag response header parameter
-            response.addHeader("ETag", Long.toString(versionTokenETag));
-            //Include the response header "link" parameters as suggested by the W3C Linked Data Platform paging specification (see also: https://www.w3.org/2012/ldp/hg/ldp-paging.html).
-            response.addHeader("Link", "<http://www.w3.org/ns/ldp#Page>; rel=\"type\"");
-            response.addHeader("Link", canonicalURL + "; rel=\"canonical\"; etag=" + versionTokenETag);
+                //Set the Lucene versionToken as ETag response header parameter
+                response.addHeader("ETag", Long.toString(versionTokenETag));
+                //Include the response header "link" parameters as suggested by the W3C Linked Data Platform paging specification (see also: https://www.w3.org/2012/ldp/hg/ldp-paging.html).
+                response.addHeader("Link", "<http://www.w3.org/ns/ldp#Page>; rel=\"type\"");
+                response.addHeader("Link", canonicalURL + "; rel=\"canonical\"; etag=" + versionTokenETag);
 
-            response.addHeader("Link", "<" + firstPage + "> ; rel=\"first\"");
-            if (nextFrom <= nextTo && from < nextFrom && to < nextTo) {
-                response.addHeader("Link", "<" + nextPage + "> ; rel=\"next\"");
+                response.addHeader("Link", "<" + firstPage + "> ; rel=\"first\"");
+                if (nextFrom <= nextTo && from < nextFrom && to < nextTo) {
+                    response.addHeader("Link", "<" + nextPage + "> ; rel=\"next\"");
+                }
+                if (prevFrom <= prevTo && prevFrom < from && prevTo < to) {
+                    response.addHeader("Link", "<" + previousPage + "> ; rel=\"prev\"");
+                }
+                response.addHeader("Link", "<" + lastPage + "> ; rel=\"last\"");
+
+                //Write the paged RDF result to the message body
+                while ((bytesRead = in.read(bytes)) != -1) {
+                    out.write(bytes, 0, bytesRead);
+                }
+            } catch (FileNotFoundException e) {
+                Log.error(API.LOG_MODULE_NAME, "Get catalog content as RDF. Error: " + e.getMessage(), e);
+            } catch (IOException e) {
+                Log.error(API.LOG_MODULE_NAME, "Get catalog content as RDF. Error: " + e.getMessage(), e);
             }
-            if (prevFrom <= prevTo && prevFrom < from && prevTo < to) {
-                response.addHeader("Link", "<" + previousPage + "> ; rel=\"prev\"");
-            }
-            response.addHeader("Link", "<" + lastPage + "> ; rel=\"last\"");
-
-            //Write the paged RDF result to the message body
-            while ((bytesRead = in.read(bytes)) != -1) {
-                out.write(bytes, 0, bytesRead);
-            }
-        } catch (FileNotFoundException e) {
-            Log.error(API.LOG_MODULE_NAME, "Get catalog content as RDF. Error: " + e.getMessage(), e);
-        } catch (IOException e) {
-            Log.error(API.LOG_MODULE_NAME, "Get catalog content as RDF. Error: " + e.getMessage(), e);
         }
     }
 

@@ -39,16 +39,7 @@
                   select="/root/search/response[1]/summary[1]/@count"/>
 
     <div class="row"
-      id="{/root/gui/systemConfig/system/site/siteId}"
-      itemscope="itemscope"
-      itemtype="http://schema.org/DataCatalog">
-      <meta itemprop="name" content="{/root/gui/systemConfig/system/site/name}"></meta>
-      <span itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization">
-        <meta itemprop="name" content="{/root/gui/systemConfig/system/site/organization}"></meta>
-        <meta itemprop="email" content="{/root/gui/systemConfig/system/feedback/email}"></meta>
-      </span>
-      <meta itemprop="url" content="{$nodeUrl}search"></meta>
-
+      id="{/root/gui/systemConfig/system/site/siteId}">
       <div class="col-md-3 gn-facet">
         <div>
           <xsl:variable name="parameters"
@@ -169,11 +160,7 @@
             <ul class="list-group gn-resultview gn-resultview-sumup">
               <xsl:for-each select="metadata">
                <li class="list-group-item gn-grid"
-                   id="{*[name()='geonet:info']/uuid}"
-                   itemprop="dataset"
-                   itemscope="itemscope"
-                   itemtype="{gn-fn-core:get-schema-org-class(type[1])}">
-                 <meta itemprop="url" content="{$nodeUrl}api/records/{*[name()='geonet:info']/uuid}"></meta>
+                   id="{*[name()='geonet:info']/uuid}">
                  <div class="row">
                    <xsl:if test="count(category) > 0">
                      <div class="gn-md-category">
@@ -191,9 +178,8 @@
                  </div>
 
                  <div class="gn-md-title">
-                   <h1 itemprop="name">
-                     <a href="{$nodeUrl}api/records/{*[name()='geonet:info']/uuid}"
-                        itemprop="url">
+                   <h1>
+                     <a href="{$nodeUrl}api/records/{*[name()='geonet:info']/uuid}">
                        <!-- <i class="fa gn-icon-{type}" title="{type}">&#160;</i> -->
                        <xsl:choose>
                          <xsl:when test="title != ''">
@@ -211,12 +197,11 @@
                     <xsl:for-each select="image[1]">
                       <div class="gn-md-thumbnail pull-left">
                         <img class="gn-img-thumbnail"
-                             itemprop="thumbnailUrl"
                              alt="{thumbnail}"
                              src="{tokenize(., '\|')[2]}" />
                       </div>
                     </xsl:for-each>
-                    <p itemprop="description">
+                    <p>
                       <xsl:value-of select="abstract"/>
                     </p>
                   </div>

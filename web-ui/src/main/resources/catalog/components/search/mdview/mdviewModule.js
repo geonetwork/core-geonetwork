@@ -47,11 +47,11 @@
     '$scope', '$http', '$compile', 'gnSearchSettings', 'gnSearchLocation',
     'gnMetadataActions', 'gnAlertService', '$translate', '$location',
     'gnMdView', 'gnMdViewObj', 'gnMdFormatter', 'gnConfig',
-    'gnGlobalSettings', 'gnConfigService', '$rootScope',
+    'gnGlobalSettings', 'gnConfigService', 'gnUrlUtils', '$rootScope',
     function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
              gnMetadataActions, gnAlertService, $translate, $location,
              gnMdView, gnMdViewObj, gnMdFormatter, gnConfig,
-             gnGlobalSettings, gnConfigService, $rootScope) {
+             gnGlobalSettings, gnConfigService, gnUrlUtils, $rootScope) {
 
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
@@ -188,7 +188,17 @@
           }
         }
       }
+      // $scope.$watch('mdView.current.record', loadFormatter);
+      $rootScope.$on('$locationChangeSuccess', loadFormatter)
       $scope.$watch('mdView.recordsLoaded', loadFormatter);
+
+      $scope.currentFormatterWithoutDraftInfo = function () {
+        if ($scope.currentFormatter) {
+          return gnUrlUtils.remove($scope.currentFormatter, ['approved'], true);
+        } else {
+          return $scope.currentFormatter;
+        }
+      }
 
       // Know from what path we come from
       $scope.gnMdViewObj = gnMdViewObj;

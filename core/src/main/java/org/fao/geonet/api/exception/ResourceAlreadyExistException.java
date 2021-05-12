@@ -23,7 +23,12 @@
 
 package org.fao.geonet.api.exception;
 
-public class ResourceAlreadyExistException extends Exception {
+import java.util.Locale;
+
+import org.fao.geonet.exceptions.LocalizedException;
+
+public class ResourceAlreadyExistException extends LocalizedException {
+
     public ResourceAlreadyExistException() {
         super();
     }
@@ -38,5 +43,39 @@ public class ResourceAlreadyExistException extends Exception {
 
     public ResourceAlreadyExistException(Throwable cause) {
         super(cause);
+    }
+
+    protected String getResourceBundleBeanQualifier() {
+        return "apiMessages";
+    }
+
+    @Override
+    public ResourceAlreadyExistException withMessageKey(String messageKey) {
+        super.withMessageKey(messageKey);
+        return this;
+    }
+
+    @Override
+    public ResourceAlreadyExistException withMessageKey(String messageKey, Object[] messageKeyArgs) {
+        super.withMessageKey(messageKey, messageKeyArgs);
+        return this;
+    }
+
+    @Override
+    public ResourceAlreadyExistException withDescriptionKey(String descriptionKey) {
+        super.withDescriptionKey(descriptionKey);
+        return this;
+    }
+
+    @Override
+    public ResourceAlreadyExistException withDescriptionKey(String descriptionKey, Object[] descriptionKeyArgs) {
+        super.withDescriptionKey(descriptionKey, descriptionKeyArgs);
+        return this;
+    }
+
+    @Override
+    public ResourceAlreadyExistException withLocale(Locale locale) {
+        super.withLocale(locale);
+        return this;
     }
 }

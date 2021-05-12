@@ -46,6 +46,11 @@
     </msg>
     <msg id="a" xml:lang="dut">Er is een verwijzing gevonden naar de WMS service </msg>
     <msg id="b" xml:lang="dut">. Gebruik deze functie om de dekking, de projectie of thumbnail af te leiden of bij te werken vanuit deze WMS-service voor de laag met de naam: </msg>
+    <msg id="a" xml:lang="ita">Un servizio WMS</msg>
+    <msg id="b" xml:lang="ita">è definito nella sezione di risorse online. 
+        Lancia questo processo per aggiornare l'estensione, il CRS o l'anteprima di questo servizio WMS
+        con il layer di nome:
+    </msg>
   </xsl:variable>
 
   <!-- Process parameters and variables-->

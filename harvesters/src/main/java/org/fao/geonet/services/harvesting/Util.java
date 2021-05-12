@@ -37,6 +37,14 @@ import java.util.List;
 
 //=============================================================================
 
+/**
+ * Utility class used by HarvestManager to schedule background activities.
+ * <p>
+ * Please note that background activities make use of a shared service context and
+ * do not have access to the user session unless you take special care
+ * to provide a service context for their use.
+ * </p>
+ */
 public class Util {
     //--------------------------------------------------------------------------
     //---
@@ -44,6 +52,17 @@ public class Util {
     //---
     //--------------------------------------------------------------------------
 
+    /**
+     * Utility method used to schedule job on a number of metadata records.
+     * <p>
+     * Exec will process the provided job for each id provided as part of params.
+     * </p>
+     * @param params Element listing harvesters to run
+     * @param context Service context used t look up GeonetContext
+     * @param job Job to run for each indicated harvester
+     * @return Response structured with each harvest job and their
+     * @throws Exception
+     */
     public static Element exec(Element params, ServiceContext context, Job job) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         HarvestManager hm = gc.getBean(HarvestManager.class);
@@ -54,6 +73,10 @@ public class Util {
         Element response = new Element(Jeeves.Elem.RESPONSE);
 
         for (Element el : paramList) {
+            String name = el.getName();
+            if( !"id".equalsIgnoreCase(el.getName())){
+                continue; // skip non ids like "_content_type" and "active"
+            }
             String id = el.getText();
             String res = job.execute(hm, id).toString();
 
@@ -67,14 +90,18 @@ public class Util {
         return response;
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Exec service: executes the job on all input ids returning the status
-    //---               for each one
-    //---
-    //--------------------------------------------------------------------------
-
+    /**
+     * Execute job to run on all input ids, the status is returned for each one.
+     */
     public interface Job {
+        /**
+         * Execute job on input id, returning status.
+         *
+         * @param hm HarvestManager scheduling activity
+         * @param id harvester id
+         * @return operation result indicating job status
+         * @throws Exception
+         */
         public OperResult execute(HarvestManager hm, String id) throws Exception;
     }
 }

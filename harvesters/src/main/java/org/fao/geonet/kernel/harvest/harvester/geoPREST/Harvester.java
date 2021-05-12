@@ -81,6 +81,7 @@ class Harvester implements IHarvester<HarvestResult> {
     private GeoPRESTParams params;
 
     //---------------------------------------------------------------------------
+    /** Shared service context managed by HarvestManager */
     private ServiceContext context;
 
     //---------------------------------------------------------------------------

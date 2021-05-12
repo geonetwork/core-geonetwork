@@ -76,7 +76,8 @@
     </div>
   </div>
 
-  <div data-gn-map-field="searchObj.searchMap"
+  <div data-ng-show="!mapFilterCollapsed"
+       data-gn-map-field="searchObj.searchMap"
        data-gn-map-field-geom="searchObj.params.geometry"
        data-gn-map-field-opt="searchObj.mapfieldOption"
        class="gn-search-map hidden-xs">
@@ -85,7 +86,9 @@
   <button data-ng-click="toggleMap()"
           title="{{'toggleMiniMap' | translate}}"
           class="gn-toggle gn-minimap-toggle btn btn-primary gn-minimap-button hidden-xs">
-    <i class="fa fa-angle-double-right" ></i>
+    <i class="fa"
+       data-ng-class="{'fa-angle-double-right': !mapFilterCollapsed,
+                       'fa-angle-double-left': mapFilterCollapsed}" ></i>
     <strong class="gn-minimap-toggle gn-minimap-text" data-translate="">map</strong>
   </button>
 </div>

@@ -157,13 +157,13 @@ public class ValidateApi {
         @Parameter(hidden = true)
             HttpServletRequest request
     ) throws Exception {
+
         UserSession userSession = ApiUtils.getUserSession(session);
 
-        SimpleMetadataProcessingReport report =
-            new SimpleMetadataProcessingReport();
-        try {
-            ApplicationContext applicationContext = ApplicationContextHolder.get();
-            ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)){
 
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
             report.setTotalRecords(records.size());
@@ -327,8 +327,7 @@ public class ValidateApi {
         @Parameter(hidden = true)
             HttpServletRequest request
     ) throws Exception {
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-
+      try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
         MInspireEtfValidateProcess registredMAnalyseProcess = getRegistredMInspireEtfValidateProcess(serviceContext);
 
         registredMAnalyseProcess.deleteAll();
@@ -339,6 +338,7 @@ public class ValidateApi {
 
         registredMAnalyseProcess.processMetadata(records, mode);
         return new ResponseEntity(HttpStatus.CREATED);
+      }
     }
 
     private MInspireEtfValidateProcess getRegistredMInspireEtfValidateProcess(ServiceContext serviceContext) {

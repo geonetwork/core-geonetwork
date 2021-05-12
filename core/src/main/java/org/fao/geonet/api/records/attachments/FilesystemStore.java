@@ -30,6 +30,7 @@ import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceContainer;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -111,28 +112,9 @@ public class FilesystemStore extends AbstractStore {
             return new ResourceHolderImpl(resourceFile, getResourceDescription(context, metadataUuid, visibility, resourceFile, approved));
         } else {
             throw new ResourceNotFoundException(
-                    String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
-        }
-    }
-
-
-    @Override
-    public ResourceHolder getResourceInternal(
-        final String metadataUuid,
-        final MetadataResourceVisibility visibility,
-        final String resourceId,
-        Boolean approved) throws Exception {
-        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
-        checkResourceId(resourceId);
-
-        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId).
-            resolve(getFilename(metadataUuid, resourceId));
-
-        if (Files.exists(resourceFile)) {
-            return new ResourceHolderImpl(resourceFile, null);
-        } else {
-            throw new ResourceNotFoundException(
-                String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
+                String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                .withMessageKey("exception.resourceNotFound.resource", new String[]{ resourceId })
+                .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{ resourceId, metadataUuid });
         }
     }
 
@@ -162,6 +144,24 @@ public class FilesystemStore extends AbstractStore {
         }
         return new FilesystemStoreResource(metadataUuid, metadataId, filePath.getFileName().toString(), settingManager.getNodeURL() + "api/records/",
                                            visibility, fileSize, new Date(Files.getLastModifiedTime(filePath).toMillis()), approved);
+    }
+
+    @Override
+    public MetadataResourceContainer getResourceContainerDescription(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
+
+        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
+        if (!Files.exists(metadataDir)) {
+            try {
+                Files.createDirectories(metadataDir);
+            } catch (Exception e) {
+                throw new IOException(
+                    String.format("Can't create folder '%s' for metadata '%d'.", metadataDir, metadataId));
+            }
+        }
+
+        SettingManager settingManager = context.getBean(SettingManager.class);
+        return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid, settingManager.getNodeURL() + "api/records/", approved);
     }
 
     @Override

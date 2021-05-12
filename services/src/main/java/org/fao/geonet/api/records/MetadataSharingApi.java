@@ -252,30 +252,31 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
+            ApplicationContext appContext = ApplicationContextHolder.get();
 
-        boolean skipAllReservedGroup = false;
+            boolean skipAllReservedGroup = false;
 
-        //--- in case of owner, privileges for groups 0,1 and GUEST are disabled
-        //--- and are not sent to the server. So we cannot remove them
-        UserSession us = ApiUtils.getUserSession(session);
-        boolean isAdmin = Profile.Administrator == us.getProfile();
-        if (!isAdmin && !accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
-            skipAllReservedGroup = true;
+            //--- in case of owner, privileges for groups 0,1 and GUEST are disabled
+            //--- and are not sent to the server. So we cannot remove them
+            UserSession us = ApiUtils.getUserSession(session);
+            boolean isAdmin = Profile.Administrator == us.getProfile();
+            if (!isAdmin && !accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
+                skipAllReservedGroup = true;
+            }
+
+            List<Operation> operationList = operationRepository.findAll();
+            Map<String, Integer> operationMap = new HashMap<>(operationList.size());
+            for (Operation o : operationList) {
+                operationMap.put(o.getName(), o.getId());
+            }
+
+            List<GroupOperations> privileges = sharing.getPrivileges();
+            setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
+                ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, null, request);
+            metadataIndexer.indexMetadataPrivileges(metadata.getUuid(), metadata.getId());
         }
-
-        List<Operation> operationList = operationRepository.findAll();
-        Map<String, Integer> operationMap = new HashMap<>(operationList.size());
-        for (Operation o : operationList) {
-            operationMap.put(o.getName(), o.getId());
-        }
-
-        List<GroupOperations> privileges = sharing.getPrivileges();
-        setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
-            ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, null, request);
-        metadataIndexer.indexMetadataPrivileges(metadata.getUuid(), metadata.getId());
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -475,74 +476,76 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
-        // TODO: Restrict to user group only in response depending on settings?
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        UserSession userSession = ApiUtils.getUserSession(session);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            // TODO: Restrict to user group only in response depending on settings?
+            AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
+            ApplicationContext appContext = ApplicationContextHolder.get();
 
-        SharingResponse sharingResponse = new SharingResponse();
-        sharingResponse.setOwner(userSession.getUserId());
-        Integer groupOwner = metadata.getSourceInfo().getGroupOwner();
-        if (groupOwner != null) {
-            sharingResponse.setGroupOwner(String.valueOf(groupOwner));
-        }
+            UserSession userSession = ApiUtils.getUserSession(session);
 
-        //--- retrieve groups operations
-        Set<Integer> userGroups = accessManager.getUserGroups(
-            userSession,
-            context.getIpAddress(), // TODO: Use the request
-            false);
-
-        List<Group> elGroup = groupRepository.findAll();
-        List<Operation> allOperations = operationRepository.findAll();
-
-        List<GroupPrivilege> groupPrivileges = new ArrayList<>(elGroup.size());
-        if (elGroup != null) {
-            for (Group g : elGroup) {
-                GroupPrivilege groupPrivilege = new GroupPrivilege();
-                groupPrivilege.setGroup(g.getId());
-                groupPrivilege.setReserved(g.isReserved());
-                // TODO: Restrict to user group only in response depending on settings?
-                groupPrivilege.setUserGroup(userGroups.contains(g.getId()));
-
-                // TODO: Collecting all those info is probably a bit slow when having lots of groups
-                final Specification<UserGroup> hasGroupId = UserGroupSpecs.hasGroupId(g.getId());
-                final Specification<UserGroup> hasUserId = UserGroupSpecs.hasUserId(userSession.getUserIdAsInt());
-                final Specification<UserGroup> hasUserIdAndGroupId = where(hasGroupId).and(hasUserId);
-                List<UserGroup> userGroupEntities = userGroupRepository.findAll(hasUserIdAndGroupId);
-                List<Profile> userGroupProfile = new ArrayList<>();
-                for (UserGroup ug : userGroupEntities) {
-                    userGroupProfile.add(ug.getProfile());
-                }
-                groupPrivilege.setUserProfile(userGroupProfile);
-
-
-                //--- get all operations that this group can do on given metadata
-                Specification<OperationAllowed> hasGroupIdAndMetadataId =
-                    where(hasGroupId(g.getId()))
-                        .and(hasMetadataId(metadata.getId()));
-                List<OperationAllowed> operationAllowedForGroup =
-                    operationAllowedRepository.findAll(hasGroupIdAndMetadataId);
-
-                Map<String, Boolean> operations = new HashMap<>(allOperations.size());
-                for (Operation o : allOperations) {
-
-                    boolean operationSetForGroup = false;
-                    for (OperationAllowed operationAllowed : operationAllowedForGroup) {
-                        if (o.getId() == operationAllowed.getId().getOperationId()) {
-                            operationSetForGroup = true;
-                            break;
-                        }
-                    }
-                    operations.put(o.getName(), operationSetForGroup);
-                }
-                groupPrivilege.setOperations(operations);
-                groupPrivileges.add(groupPrivilege);
+            SharingResponse sharingResponse = new SharingResponse();
+            sharingResponse.setOwner(userSession.getUserId());
+            Integer groupOwner = metadata.getSourceInfo().getGroupOwner();
+            if (groupOwner != null) {
+                sharingResponse.setGroupOwner(String.valueOf(groupOwner));
             }
+
+            //--- retrieve groups operations
+            Set<Integer> userGroups = accessManager.getUserGroups(
+                userSession,
+                context.getIpAddress(), // TODO: Use the request
+                false);
+
+            List<Group> elGroup = groupRepository.findAll();
+            List<Operation> allOperations = operationRepository.findAll();
+
+            List<GroupPrivilege> groupPrivileges = new ArrayList<>(elGroup.size());
+            if (elGroup != null) {
+                for (Group g : elGroup) {
+                    GroupPrivilege groupPrivilege = new GroupPrivilege();
+                    groupPrivilege.setGroup(g.getId());
+                    groupPrivilege.setReserved(g.isReserved());
+                    // TODO: Restrict to user group only in response depending on settings?
+                    groupPrivilege.setUserGroup(userGroups.contains(g.getId()));
+
+                    // TODO: Collecting all those info is probably a bit slow when having lots of groups
+                    final Specification<UserGroup> hasGroupId = UserGroupSpecs.hasGroupId(g.getId());
+                    final Specification<UserGroup> hasUserId = UserGroupSpecs.hasUserId(userSession.getUserIdAsInt());
+                    final Specification<UserGroup> hasUserIdAndGroupId = where(hasGroupId).and(hasUserId);
+                    List<UserGroup> userGroupEntities = userGroupRepository.findAll(hasUserIdAndGroupId);
+                    List<Profile> userGroupProfile = new ArrayList<>();
+                    for (UserGroup ug : userGroupEntities) {
+                        userGroupProfile.add(ug.getProfile());
+                    }
+                    groupPrivilege.setUserProfile(userGroupProfile);
+
+
+                    //--- get all operations that this group can do on given metadata
+                    Specification<OperationAllowed> hasGroupIdAndMetadataId =
+                        where(hasGroupId(g.getId()))
+                            .and(hasMetadataId(metadata.getId()));
+                    List<OperationAllowed> operationAllowedForGroup =
+                        operationAllowedRepository.findAll(hasGroupIdAndMetadataId);
+
+                    Map<String, Boolean> operations = new HashMap<>(allOperations.size());
+                    for (Operation o : allOperations) {
+
+                        boolean operationSetForGroup = false;
+                        for (OperationAllowed operationAllowed : operationAllowedForGroup) {
+                            if (o.getId() == operationAllowed.getId().getOperationId()) {
+                                operationSetForGroup = true;
+                                break;
+                            }
+                        }
+                        operations.put(o.getName(), operationSetForGroup);
+                    }
+                    groupPrivilege.setOperations(operations);
+                    groupPrivileges.add(groupPrivilege);
+                }
+            }
+            sharingResponse.setPrivileges(groupPrivileges);
+            return sharingResponse;
         }
-        sharingResponse.setPrivileges(groupPrivileges);
-        return sharingResponse;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -576,28 +579,29 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
+            ApplicationContext appContext = ApplicationContextHolder.get();
 
-        Group group = groupRepository.findById(groupIdentifier).get();
-        if (group == null) {
-            throw new ResourceNotFoundException(String.format(
-                "Group with identifier '%s' not found.", groupIdentifier
-            ));
+            Group group = groupRepository.findById(groupIdentifier).get();
+            if (group == null) {
+                throw new ResourceNotFoundException(String.format(
+                    "Group with identifier '%s' not found.", groupIdentifier
+                ));
+            }
+
+            Integer previousGroup = metadata.getSourceInfo().getGroupOwner();
+            Group oldGroup = null;
+            if (previousGroup != null) {
+                oldGroup = groupRepository.findById(previousGroup).get();
+            }
+
+            metadata.getSourceInfo().setGroupOwner(groupIdentifier);
+            metadataManager.save(metadata);
+            dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
+
+            new RecordGroupOwnerChangeEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(group, RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
         }
-
-        Integer previousGroup = metadata.getSourceInfo().getGroupOwner();
-        Group oldGroup = null;
-        if (previousGroup != null) {
-            oldGroup = groupRepository.findById(previousGroup).get();
-        }
-
-        metadata.getSourceInfo().setGroupOwner(groupIdentifier);
-        metadataManager.save(metadata);
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
-
-        new RecordGroupOwnerChangeEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(group, RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -623,38 +627,39 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        UserSession userSession = ApiUtils.getUserSession(session);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            ApplicationContext appContext = ApplicationContextHolder.get();
+            UserSession userSession = ApiUtils.getUserSession(session);
 
-        SharingResponse sharingResponse = new SharingResponse();
-        sharingResponse.setOwner(userSession.getUserId());
+            SharingResponse sharingResponse = new SharingResponse();
+            sharingResponse.setOwner(userSession.getUserId());
 
-        List<Operation> allOperations = operationRepository.findAll();
+            List<Operation> allOperations = operationRepository.findAll();
 
-        //--- retrieve groups operations
-        Set<Integer> userGroups = accessManager.getUserGroups(
-            context.getUserSession(),
-            context.getIpAddress(), false);
+            //--- retrieve groups operations
+            Set<Integer> userGroups = accessManager.getUserGroups(
+                context.getUserSession(),
+                context.getIpAddress(), false);
 
-        List<Group> elGroup = groupRepository.findAll();
-        List<GroupPrivilege> groupPrivileges = new ArrayList<>(elGroup.size());
+            List<Group> elGroup = groupRepository.findAll();
+            List<GroupPrivilege> groupPrivileges = new ArrayList<>(elGroup.size());
 
-        for (Group g : elGroup) {
-            GroupPrivilege groupPrivilege = new GroupPrivilege();
-            groupPrivilege.setGroup(g.getId());
-            groupPrivilege.setReserved(g.isReserved());
-            groupPrivilege.setUserGroup(userGroups.contains(g.getId()));
+            for (Group g : elGroup) {
+                GroupPrivilege groupPrivilege = new GroupPrivilege();
+                groupPrivilege.setGroup(g.getId());
+                groupPrivilege.setReserved(g.isReserved());
+                groupPrivilege.setUserGroup(userGroups.contains(g.getId()));
 
-            Map<String, Boolean> operations = new HashMap<>(allOperations.size());
-            for (Operation o : allOperations) {
-                operations.put(o.getName(), false);
+                Map<String, Boolean> operations = new HashMap<>(allOperations.size());
+                for (Operation o : allOperations) {
+                    operations.put(o.getName(), false);
+                }
+                groupPrivilege.setOperations(operations);
+                groupPrivileges.add(groupPrivilege);
             }
-            groupPrivilege.setOperations(operations);
-            groupPrivileges.add(groupPrivilege);
+            sharingResponse.setPrivileges(groupPrivileges);
+            return sharingResponse;
         }
-        sharingResponse.setPrivileges(groupPrivileges);
-        return sharingResponse;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -709,13 +714,11 @@ public class MetadataSharingApi {
         throws Exception {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        try {
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
 
             final ApplicationContext context = ApplicationContextHolder.get();
-
-            ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
@@ -779,15 +782,15 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
-        MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        try {
+        MetadataProcessingReport report = new SimpleMetadataProcessingReport();
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, serviceContext);
             report.setTotalRecords(1);
 
             final ApplicationContext context = ApplicationContextHolder.get();
 
-            ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+
             List<String> listOfUpdatedRecords = new ArrayList<>();
             updateOwnership(groupIdentifier, userIdentifier,
                 report, dataManager, accessManager, metadataRepository,
@@ -937,40 +940,40 @@ public class MetadataSharingApi {
      */
     private void shareMetadataWithAllGroup(String metadataUuid, boolean publish,
                                            HttpSession session, HttpServletRequest request) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
+            ApplicationContext appContext = ApplicationContextHolder.get();
 
+            //--- in case of owner, privileges for groups 0,1 and GUEST are disabled
+            //--- and are not sent to the server. So we cannot remove them
+            UserSession us = ApiUtils.getUserSession(session);
+            boolean isAdmin = Profile.Administrator == us.getProfile();
+            boolean isMdGroupReviewer = accessManager.getReviewerGroups(us).contains(metadata.getSourceInfo().getGroupOwner());
+            boolean isReviewOperationAllowedOnMdForUser = accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()));
+            boolean isPublishForbiden = !isMdGroupReviewer && !isAdmin && !isReviewOperationAllowedOnMdForUser;
+            if (isPublishForbiden) {
 
-        //--- in case of owner, privileges for groups 0,1 and GUEST are disabled
-        //--- and are not sent to the server. So we cannot remove them
-        UserSession us = ApiUtils.getUserSession(session);
-        boolean isAdmin = Profile.Administrator == us.getProfile();
-        boolean isMdGroupReviewer = accessManager.getReviewerGroups(us).contains(metadata.getSourceInfo().getGroupOwner());
-        boolean isReviewOperationAllowedOnMdForUser = accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()));
-        boolean isPublishForbiden = !isMdGroupReviewer && !isAdmin && !isReviewOperationAllowedOnMdForUser;
-        if (isPublishForbiden) {
-
-            throw new Exception(String.format("User not allowed to publish the metadata %s. You need to be administrator, or reviewer of the metadata group or reviewer with edit privilege on the metadata.",
+                throw new Exception(String.format("User not allowed to publish the metadata %s. You need to be administrator, or reviewer of the metadata group or reviewer with edit privilege on the metadata.",
                     metadataUuid));
 
+            }
+
+            DataManager dataManager = appContext.getBean(DataManager.class);
+
+            OperationRepository operationRepository = appContext.getBean(OperationRepository.class);
+            List<Operation> operationList = operationRepository.findAll();
+            Map<String, Integer> operationMap = new HashMap<>(operationList.size());
+            for (Operation o : operationList) {
+                operationMap.put(o.getName(), o.getId());
+            }
+
+            SharingParameter sharing = buildSharingForPublicationConfig(publish);
+
+            List<GroupOperations> privileges = sharing.getPrivileges();
+            setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
+                ApiUtils.getUserSession(session).getUserIdAsInt(), true, null, request);
+            dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
         }
-
-        DataManager dataManager = appContext.getBean(DataManager.class);
-
-        OperationRepository operationRepository = appContext.getBean(OperationRepository.class);
-        List<Operation> operationList = operationRepository.findAll();
-        Map<String, Integer> operationMap = new HashMap<>(operationList.size());
-        for (Operation o : operationList) {
-            operationMap.put(o.getName(), o.getId());
-        }
-
-        SharingParameter sharing = buildSharingForPublicationConfig(publish);
-
-        List<GroupOperations> privileges = sharing.getPrivileges();
-        setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
-            ApiUtils.getUserSession(session).getUserIdAsInt(), true,null, request);
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
     }
 
 
@@ -990,7 +993,7 @@ public class MetadataSharingApi {
 
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        try {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
 
@@ -1002,15 +1005,12 @@ public class MetadataSharingApi {
             UserSession us = ApiUtils.getUserSession(session);
             boolean isAdmin = Profile.Administrator == us.getProfile();
 
-            ServiceContext context = ApiUtils.createServiceContext(request);
-
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
                 AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
                 if (metadata == null) {
                     report.incrementNullRecords();
-                } else if (!accessMan.canEdit(
-                    ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
+                } else if (!accessMan.canEdit(context, String.valueOf(metadata.getId()))) {
                     report.addNotEditableMetadataId(metadata.getId());
                 } else {
                     boolean skipAllReservedGroup = false;

@@ -23,6 +23,8 @@
 
 package org.fao.geonet.listener.metadata.draft;
 
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -71,12 +73,15 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
     @Autowired
     IMetadataUtils metadataUtils;
 
+    @Autowired
+    ServiceManager serviceManager;
+
     @Override
     public void onApplicationEvent(MetadataStatusChanged event) {
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void doAfterCommit(MetadataStatusChanged event) {
+    public void doBeforeCommit(MetadataStatusChanged event) {
         try {
             Log.trace(Geonet.DATA_MANAGER, "Status changed for metadata with id " + event.getMd().getId());
 
@@ -87,14 +92,15 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
                 case StatusValue.Status.DRAFT:
                 case StatusValue.Status.SUBMITTED:
                     if (event.getMd() instanceof Metadata) {
-                        Log.trace(Geonet.DATA_MANAGER,
-                            "Replacing contents of record (ID=" + event.getMd().getId() + ") with draft, if exists.");
-                        draftUtilities.replaceMetadataWithDraft(event.getMd());
+                        try (ServiceContext context = serviceManager.createServiceContext("approve_record", event.getUser())) {
+                            Log.trace(Geonet.DATA_MANAGER,
+                                "Replacing contents of record (ID=" + event.getMd().getId() + ") with draft, if exists.");
+                            draftUtilities.replaceMetadataWithDraft(event.getMd());
+                        }
                     }
                     break;
                 case StatusValue.Status.RETIRED:
-//                case StatusValue.Status.REJECTED:
-                    try {
+                    try (ServiceContext context = serviceManager.createServiceContext("approve_record", event.getUser())){
                         Log.trace(Geonet.DATA_MANAGER,
                             "Removing draft from record (ID=" + event.getMd().getId() + "), if exists.");
                         removeDraft(event.getMd());
@@ -104,7 +110,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
                     }
                     break;
                 case StatusValue.Status.APPROVED:
-                    try {
+                    try (ServiceContext context = serviceManager.createServiceContext("approve_record", event.getUser())){
                         Log.trace(Geonet.DATA_MANAGER, "Replacing contents of approved record (ID=" + event.getMd().getId()
                             + ") with draft, if exists.");
                         approveWithDraft(event);

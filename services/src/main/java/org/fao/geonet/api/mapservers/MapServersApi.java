@@ -514,6 +514,7 @@ public class MapServersApi {
                                    String metadataAbstract,
                                    HttpServletRequest request,
                                    MapServersUtils.ACTION action) throws Exception {
+      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         // purge \\n from metadataTitle - geoserver prefers layer titles on a single line
         metadataTitle = metadataTitle.replace("\\n", "");
         metadataAbstract = metadataAbstract.replace("\\n", "");
@@ -521,9 +522,6 @@ public class MapServersApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         MapServer m = mapServerRepository.findOneById(Integer.valueOf(mapserverId));
         GeoServerNode g = new GeoServerNode(m);
-
-
-        ServiceContext context = ApiUtils.createServiceContext(request);
 
         String baseUrl = settingManager.getSiteURL(context);
         GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(),
@@ -568,5 +566,6 @@ public class MapServersApi {
                 }
             }
         }
+      }
     }
 }

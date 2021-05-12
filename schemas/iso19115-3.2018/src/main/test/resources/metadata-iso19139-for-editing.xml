@@ -12641,8 +12641,7 @@ La liste des changements d'état sont accessibles ici :
         <host name="system/server/host" position="210" datatype="0" datatypeName="STRING">localhost</host>
         <port name="system/server/port" position="230" datatype="1" datatypeName="INT">8080</port>
         <protocol name="system/server/protocol" position="220" datatype="0" datatypeName="STRING">http</protocol>
-        <securePort name="system/server/securePort" position="240" datatype="1" datatypeName="INT">8443</securePort>
-      </server>
+       </server>
       <shib name="system/shib" position="1760">
         <firstname name="system/shib/firstname" position="1760" datatype="0" datatypeName="STRING">Shib-InetOrgPerson-givenName</firstname>
         <path name="system/shib/path" position="1720" datatype="0" datatypeName="STRING">/geonetwork/srv/en/shib.user.login</path>
@@ -12792,7 +12791,6 @@ La liste des changements d'état sont accessibles ici :
           <host name="system/server/host" position="210" datatype="0" datatypeName="STRING">localhost</host>
           <port name="system/server/port" position="230" datatype="1" datatypeName="INT">8080</port>
           <protocol name="system/server/protocol" position="220" datatype="0" datatypeName="STRING">http</protocol>
-          <securePort name="system/server/securePort" position="240" datatype="1" datatypeName="INT">8443</securePort>
         </server>
         <shib name="system/shib" position="1760">
           <firstname name="system/shib/firstname" position="1760" datatype="0" datatypeName="STRING">Shib-InetOrgPerson-givenName</firstname>
