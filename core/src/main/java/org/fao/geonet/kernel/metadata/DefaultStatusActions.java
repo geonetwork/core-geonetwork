@@ -283,7 +283,22 @@ public class DefaultStatusActions implements StatusActions {
         subject = compileMessageWithIndexFields(subject, metadata.getUuid(), this.language);
         message = compileMessageWithIndexFields(message, metadata.getUuid(), this.language);
         for (User user : userToNotify) {
-            sendEmail(user.getEmail(), subject, message);
+            String salutation = user.getName();
+            if (StringUtils.isEmpty(salutation)) {
+                //If we did not have a name then use the Surname only
+                salutation = user.getSurname();
+            } else {
+                if (!StringUtils.isEmpty(user.getSurname())) {
+                    salutation += " " + user.getSurname();
+                }
+            }
+            //If we have a salutation then end it with a ","
+            if (StringUtils.isEmpty(salutation)) {
+                salutation = "";
+            } else {
+                salutation += ",\n\n";
+            }
+            sendEmail(user.getEmail(), subject, salutation + message);
         }
     }
 
