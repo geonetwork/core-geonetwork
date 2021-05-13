@@ -1,0 +1,45 @@
+<div>
+  <div class="row form-group" data-ng-repeat="f in harvester.filters track by $index">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      <select class="form-control" data-ng-model="f['condition']" data-ng-readonly="{{$index == 0}}">
+        <option value="AND">AND</option>
+        <option value="OR">OR</option>
+      </select>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-3">
+      <select class="form-control" data-ng-model="f['field']">
+        <option data-ng-repeat="c in cswCriteria track by $index">{{c.replace('__', ':') | translate}}</option>
+      </select>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-3">
+      <select class="form-control" data-ng-model="f['operator']">
+        <option value="LIKE">LIKE</option>
+        <option value="EQUAL">EQUAL</option>
+        <option value="NOTEQUAL">NOT EQUAL</option>
+        <option value="NOTLIKE">NOT LIKE</option>
+      </select>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-3">
+      <input type="text" class="form-control" placeholder="value" data-ng-model="f['value']"/>
+    </div>
+
+
+
+    <div class="col-lg-1 col-md-1 col-sm-1">
+      <button type="button" class="btn btn-default" data-ng-click="removeFilter($index)">X</button>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <button type="button" class="btn btn-default" data-ng-click="addFilter()" data-ng-disabled="!enableAddFilter">Add filter</button>
+
+      <textarea type="text" class="form-control hidden" data-ng-model="filterString" />
+    </div>
+  </div>
+
+
+</div>
