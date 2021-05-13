@@ -42,6 +42,45 @@
     </searches>
   </xsl:template>
 
+  <xsl:template match="*" mode="filters">
+    <filters>
+      <xsl:for-each select="filter/children">
+        <xsl:sort select="position/value" data-type="number" />
+        <filter>
+          <field>
+            <xsl:value-of select="field/value"/>
+          </field>
+          <operator>
+            <xsl:value-of select="operator/value"/>
+          </operator>
+          <value>
+            <xsl:value-of select="value/value"/>
+          </value>
+          <condition>
+            <xsl:value-of select="condition/value"/>
+          </condition>
+        </filter>
+      </xsl:for-each>
+    </filters>
+  </xsl:template>
+
+  <xsl:template match="*" mode="bboxFilter">
+    <bboxFilter>
+      <bbox-xmin>
+        <xsl:value-of select="bbox-xmin/value"/>
+      </bbox-xmin>
+      <bbox-ymin>
+        <xsl:value-of select="bbox-ymin/value"/>
+      </bbox-ymin>
+      <bbox-xmax>
+        <xsl:value-of select="bbox-xmax/value"/>
+      </bbox-xmax>
+      <bbox-ymax>
+        <xsl:value-of select="bbox-ymax/value"/>
+      </bbox-ymax>
+    </bboxFilter>
+  </xsl:template>
+
   <xsl:template match="children">
     <xsl:copy-of select="search/children/child::*"/>
   </xsl:template>

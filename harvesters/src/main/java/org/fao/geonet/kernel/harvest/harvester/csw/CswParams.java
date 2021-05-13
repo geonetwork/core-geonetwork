@@ -59,7 +59,10 @@ public class CswParams extends AbstractParams {
      * </pre>
      */
     public String xslfilter;
-    public List<Element> eltSearches = new ArrayList<Element>();
+
+    public List<Element> eltFilters = new ArrayList<Element>();
+
+    public Element bboxFilter;
 
     @Override
     public String getIcon() {
@@ -78,7 +81,7 @@ public class CswParams extends AbstractParams {
         super.create(node);
 
         Element site = node.getChild("site");
-        Element searches = node.getChild("searches");
+        Element filters = node.getChild("filters");
 
         capabUrl = Util.getParam(site, "capabilitiesUrl", "");
         rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource", false);
@@ -89,16 +92,15 @@ public class CswParams extends AbstractParams {
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);
         icon = Util.getParam(site, "icon", "default.gif");
 
-        if (searches != null) {
-            if (searches.getChild("search") != null) {
-                @SuppressWarnings("unchecked")
-                List<Element> tmp = searches.getChild("search").getChildren();
-                eltSearches = tmp;
-            } else {
-                eltSearches = new ArrayList<Element>();
-            }
+        if (filters != null) {
+            @SuppressWarnings("unchecked")
+            List<Element> tmp = filters.getChildren();
+            eltFilters = tmp;
+        } else {
+            eltFilters = new ArrayList<Element>();
         }
 
+        bboxFilter = node.getChild("bboxFilter");
 
     }
 
@@ -109,7 +111,7 @@ public class CswParams extends AbstractParams {
         super.update(node);
 
         Element site = node.getChild("site");
-        Element searches = node.getChild("searches");
+        Element filters = node.getChild("filters");
 
         capabUrl = Util.getParam(site, "capabilitiesUrl", capabUrl);
         rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource", rejectDuplicateResource);
@@ -121,17 +123,15 @@ public class CswParams extends AbstractParams {
 
         icon = Util.getParam(site, "icon", icon);
 
-        //--- if some search queries are given, we drop the previous ones and
+        //--- if some filter queries are given, we drop the previous ones and
         //--- set these new ones
-
-        if (searches != null) {
-            if (searches.getChild("search") != null) {
-                @SuppressWarnings("unchecked")
-                List<Element> tmp = searches.getChild("search").getChildren();
-                eltSearches = tmp;
-            }
+        if (filters != null) {
+            @SuppressWarnings("unchecked")
+            List<Element> tmp = filters.getChildren();
+            eltFilters = tmp;
         }
 
+        bboxFilter = node.getChild("bboxFilter");
     }
 
     /**
@@ -151,7 +151,8 @@ public class CswParams extends AbstractParams {
         copy.xslfilter = xslfilter;
         copy.outputSchema = outputSchema;
 
-        copy.eltSearches = eltSearches;
+        copy.eltFilters = eltFilters;
+        copy.bboxFilter = bboxFilter;
 
         return copy;
     }

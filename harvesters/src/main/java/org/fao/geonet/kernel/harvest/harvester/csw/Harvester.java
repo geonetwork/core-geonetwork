@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -69,7 +70,7 @@ import org.jdom.Namespace;
 
 class Harvester implements IHarvester<HarvestResult> {
     // FIXME : Currently switch from POST to GET for testing mainly.
-    public static final String PREFERRED_HTTP_METHOD = AbstractHttpRequest.Method.GET.toString();
+    public static final String PREFERRED_HTTP_METHOD = AbstractHttpRequest.Method.POST.toString();
 
     private final static String ATTRIB_SEARCHRESULT_MATCHED = "numberOfRecordsMatched";
 
@@ -113,28 +114,12 @@ class Harvester implements IHarvester<HarvestResult> {
 
         //--- perform all searches
 
-        Search s = new Search();
-
-        for (Element element : params.eltSearches) {
-            if (cancelMonitor.get()) {
-                return new HarvestResult();
-            }
-
-            if (element.getChildText("value") != null) {
-                if (!element.getChildText("value").trim().equals("")) {
-                    s.addAttribute(element.getName(), element.getChildText("value").trim());
-                }
-            } else if (element.getText() != null) {
-                s.addAttribute(element.getName(), element.getText().trim());
-            }
-        }
-
         boolean error = false;
         HarvestResult result = null;
     	Set<String> uuids = new HashSet<String>();
         try {
             Aligner aligner = new Aligner(cancelMonitor, context, server, params, log);
-            searchAndAlign(server, s, uuids, aligner, errors);
+            searchAndAlign(server, uuids, aligner, errors);
             result = aligner.cleanupRemovedRecords(uuids);
         } catch (Exception t) {
             error = true;
@@ -223,13 +208,12 @@ class Harvester implements IHarvester<HarvestResult> {
     /**
      * Does CSW GetRecordsRequest
      * @param server
-     * @param s
      * @param uuids
      * @param aligner
      * @param harvesterErrors
      * @throws Exception
      */
-    private void searchAndAlign(CswServer server, Search s, Set<String> uuids,
+    private void searchAndAlign(CswServer server, Set<String> uuids,
         Aligner aligner, List<HarvestError> harvesterErrors) throws Exception {
         int start = 1;
 
@@ -245,7 +229,7 @@ class Harvester implements IHarvester<HarvestResult> {
         CswOperation oper = server.getOperation(CswServer.GET_RECORDS);
 
         // Use the preferred HTTP method and check one exist.
-        configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD);
+        configRequest(request, oper, server, PREFERRED_HTTP_METHOD);
 
         if (params.isUseAccount()) {
             log.debug("Logging into server (" + params.getUsername() + ")");
@@ -263,7 +247,7 @@ class Harvester implements IHarvester<HarvestResult> {
             }
             errors.add(new HarvestError(context, ex));
 
-            configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD.equals("GET") ? "POST" : "GET");
+            configRequest(request, oper, server, PREFERRED_HTTP_METHOD.equals("GET") ? "POST" : "GET");
         }
 
 
@@ -394,7 +378,7 @@ class Harvester implements IHarvester<HarvestResult> {
         log.debug("Records added to result list : " + uuids.size());
     }
 
-    private void setUpRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, URL url,
+    private void setUpRequest(GetRecordsRequest request, CswOperation oper, CswServer server, URL url,
                               ConstraintLanguage constraintLanguage, String constraint, AbstractHttpRequest.Method method) {
 
         request.setUrl(context, url);
@@ -429,8 +413,7 @@ class Harvester implements IHarvester<HarvestResult> {
     /**
      * Configs the harvester request.
      */
-    private void configRequest(final GetRecordsRequest request, final CswOperation oper, final CswServer server,
-                               final Search s, final String preferredMethod)
+    private void configRequest(final GetRecordsRequest request, final CswOperation oper, final CswServer server, final String preferredMethod)
         throws Exception {
         if (oper.getGetUrl() == null && oper.getPostUrl() == null) {
             throw new OperationAbortedEx("No GET or POST DCP available in this service.");
@@ -438,22 +421,22 @@ class Harvester implements IHarvester<HarvestResult> {
 
         // Use the preferred HTTP method and check one exist.
         if (oper.getGetUrl() != null && preferredMethod.equals("GET") && oper.getConstraintLanguage().contains("cql_text")) {
-            setUpRequest(request, oper, server, s, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(s),
+            setUpRequest(request, oper, server, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(params.eltFilters, params.bboxFilter),
                 AbstractHttpRequest.Method.GET);
         } else if (oper.getPostUrl() != null && preferredMethod.equals("POST") && oper.getConstraintLanguage().contains("filter")) {
-            setUpRequest(request, oper, server, s, oper.getPostUrl(), ConstraintLanguage.FILTER, getFilterConstraint(s),
+            setUpRequest(request, oper, server, oper.getPostUrl(), ConstraintLanguage.FILTER, getFilterConstraint(params.eltFilters, params.bboxFilter),
                 AbstractHttpRequest.Method.POST);
         } else {
             if (oper.getGetUrl() != null && oper.getConstraintLanguage().contains("cql_text")) {
-                setUpRequest(request, oper, server, s, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(s),
+                setUpRequest(request, oper, server, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(params.eltFilters, params.bboxFilter),
                     AbstractHttpRequest.Method.GET);
             } else if (oper.getPostUrl() != null && oper.getConstraintLanguage().contains("filter")) {
-                setUpRequest(request, oper, server, s, oper.getPostUrl(), ConstraintLanguage.FILTER, getFilterConstraint(s),
+                setUpRequest(request, oper, server, oper.getPostUrl(), ConstraintLanguage.FILTER, getFilterConstraint(params.eltFilters, params.bboxFilter),
                     AbstractHttpRequest.Method.POST);
             } else {
                 // TODO : add GET+FE and POST+CQL support
                 log.warning("No GET (using CQL) or POST (using FE) DCP available in this service... Trying GET CQL anyway ...");
-                setUpRequest(request, oper, server, s, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(s),
+                setUpRequest(request, oper, server, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(params.eltFilters, params.bboxFilter),
                     AbstractHttpRequest.Method.GET);
             }
         }
@@ -589,6 +572,73 @@ class Harvester implements IHarvester<HarvestResult> {
         prop.addContent(literal);
 
         queryables.add(prop);
+    }
+
+
+    private String getFilterConstraint(List<Element> filters, Element bboxFilter) throws Exception {
+        Path file = context.getAppPath().resolve("xml").resolve("csw").resolve("harvester-csw-filter.xsl");
+
+        Element eltFilter = new Element("filters");
+        for(Element e: filters) {
+            Element e1 = (Element) e.clone();
+
+            eltFilter.addContent(e1.detach());
+        }
+
+        Element cswFilter = Xml.transform(eltFilter, file);
+
+        if (bboxFilter != null) {
+            Map<String, Double> bboxCoordinates = new HashMap<>();
+            bboxCoordinates.put("bbox-xmin", Double.parseDouble(bboxFilter.getChildText("bbox-xmin")));
+            bboxCoordinates.put("bbox-ymin", Double.parseDouble(bboxFilter.getChildText("bbox-ymin")));
+            bboxCoordinates.put("bbox-xmax", Double.parseDouble(bboxFilter.getChildText("bbox-xmax")));
+            bboxCoordinates.put("bbox-ymax", Double.parseDouble(bboxFilter.getChildText("bbox-ymax")));
+
+
+            Element and = new Element("And", Csw.NAMESPACE_OGC);
+            and.addContent(buildBboxFilter(bboxCoordinates));
+            cswFilter.addContent(and);
+        }
+
+        return Xml.getString(cswFilter);
+    }
+
+    private String getCqlConstraint(List<Element> filters, Element bboxFilter) throws Exception {
+        Path file = context.getAppPath().resolve("xml").resolve("csw").resolve("harvester-csw-cql.xsl");
+
+        Element eltFilter = new Element("filters");
+        for(Element e: filters) {
+            Element e1 = (Element) e.clone();
+
+            eltFilter.addContent(e1.detach());
+        }
+
+        Element cswFilter = Xml.transform(eltFilter, file);
+
+        String cqlFilter = Xml.getString(cswFilter);
+
+        if (bboxFilter != null) {
+            Map<String, Double> bboxCoordinates = new HashMap<>();
+            bboxCoordinates.put("bbox-xmin", Double.parseDouble(bboxFilter.getChildText("bbox-xmin")));
+            bboxCoordinates.put("bbox-ymin", Double.parseDouble(bboxFilter.getChildText("bbox-ymin")));
+            bboxCoordinates.put("bbox-xmax", Double.parseDouble(bboxFilter.getChildText("bbox-xmax")));
+            bboxCoordinates.put("bbox-ymax", Double.parseDouble(bboxFilter.getChildText("bbox-ymax")));
+
+            Element and = new Element("And", Csw.NAMESPACE_OGC);
+            and.addContent(buildBboxFilter(bboxCoordinates));
+            cswFilter.addContent(and);
+
+            if (StringUtils.isNotEmpty(cqlFilter)) {
+                cqlFilter = cqlFilter + " AND ";
+            }
+            //BBOX(the_geom, -90, 40, -60, 45)
+            cqlFilter = cqlFilter + String.format("BBOX(the_geom, %s, %s, %s, %s)",
+                bboxCoordinates.get("bbox-xmin"), bboxCoordinates.get("bbox-ymin"),
+                bboxCoordinates.get("bbox-xmax"), bboxCoordinates.get("bbox-ymax")
+            );
+        }
+
+        return cqlFilter;
     }
 
     private String getCqlConstraint(Search s) {
