@@ -4,7 +4,7 @@
   </a>
 
   <div>
-    {{layer.get('title') || layer.get('name')}}
+    {{layer.name || layer.get('label')}}
     <span class="text-muted small" ng-if="layer.get('attribution')">
       <br>
       &copy;
