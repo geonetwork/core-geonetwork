@@ -110,5 +110,6 @@
   "addAnnotations": "Associer des annotations",
   "panierDrawBbox": "Dessiner une emprise pour l'extraction",
   "panierDataExtent": "Emprise de la donnée",
-  "userFeedback": "Retours utilisateur"
+  "userFeedback": "Retours utilisateur",
+  "deleteLayer": "Supprimer la couche"
 }

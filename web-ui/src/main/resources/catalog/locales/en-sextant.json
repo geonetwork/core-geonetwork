@@ -109,5 +109,6 @@
   "addAnnotations": "Associate annotations",
   "panierDrawBbox": "Draw an extent for extracting the data",
   "panierDataExtent": "Actual extent for this data",
-  "userFeedback": "User feedbacks"
+  "userFeedback": "User feedbacks",
+  "deleteLayer": "Remove this layer"
 }
