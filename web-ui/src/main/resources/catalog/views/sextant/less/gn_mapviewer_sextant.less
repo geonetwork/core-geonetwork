@@ -867,7 +867,7 @@
   }
 
   .sxt-wfsfilter-panel {
-    padding: 20px;
+    padding: 8px;
     .wfs-filter-group {
       display: flex !important;
       > button {
@@ -1208,14 +1208,20 @@ sxt-annotations-editor {
   .btn-danger {
     background: @btn-danger-bg !important;
   }
-  ul.nav-tabs {
-    margin-bottom: 4px;
-    & > li > a {
-      padding: 6px;
-      line-height: 10px;
-      font-size: 10px;
-      font-weight: bold;
-      text-transform: uppercase;
+  .layer-menu-tabs {
+    overflow: auto;
+    ul.nav-tabs {
+      margin-bottom: 4px;
+      & > li > a {
+        padding: 6px;
+        line-height: 10px;
+        font-size: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+    }
+    .tab-content {
+      overflow: auto;
     }
   }
 }
