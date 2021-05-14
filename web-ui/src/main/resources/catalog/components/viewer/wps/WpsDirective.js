@@ -390,6 +390,14 @@
                         input.complexData._default.format.mimeType
                         ) || 'gml';
 
+                        // check if geom can be multi
+                        var isMulti = false;
+                        input.metadata.forEach(function(m) {
+                          if (m.title.contains('allowMultipart')){
+                            isMulti = true;
+                          }
+                        });
+
                         scope.getGeomType = function(geom) {
                           if (!geom) {return;}
                           var geom_type;
@@ -411,6 +419,9 @@
 
                             default:
                               geom_type = null;
+                          }
+                          if (geom_type && isMulti) {
+                            geom_type = 'Multi' + geom_type;
                           }
                           return geom_type;
                         }

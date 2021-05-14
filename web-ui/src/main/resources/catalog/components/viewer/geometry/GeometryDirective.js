@@ -75,12 +75,13 @@
               gnGeometryService) {
             var ctrl = this;
             var layer = gnGeometryService.getCommonLayer(ctrl.map, ctrl.nameType);
-            var source = layer.getSource();
+            ctrl.source = layer.getSource();
             ctrl.features = new ol.Collection();
+            ctrl.geomIsMulti =  ctrl.geometryType.contains('Multi');
 
             ctrl.drawInteraction = new ol.interaction.Draw({
               type: ctrl.geometryType,
-              source: source
+              source: ctrl.source
             });
             ctrl.modifyInteraction = new ol.interaction.Modify({
               features: ctrl.features
@@ -111,15 +112,12 @@
 
             // remove all my features from the map
             function removeMyFeatures() {
-              var func = function(f) { return f.ol_uid; };
-              ctrl.features.forEach(function(feature) {
-                source.removeFeature(feature);
-              });
+              ctrl.source.clear();
               ctrl.features.clear();
             }
 
             // modifies the output value
-            function updateOutput(feature) {
+            function updateOutput(feature, isNew) {
               // no feature: clear output
               if (!feature) {
                 ctrl.output = null;
@@ -137,15 +135,59 @@
                     // TODO: make sure this works everytime?
                   }
                   );
-            };
+              // When adding a geom to an existing feature we must update the layer
+              if (ctrl.geomIsMulti && !isNew) {
+                ctrl.source.refresh();
+              }
+            }
+
+            ctrl.drawInteraction.on('drawstart', function() {
+              ctrl.map.getInteractions().forEach((interaction) => {
+                if (interaction instanceof ol.interaction.Draw && ctrl.drawInteraction != interaction) {
+                  interaction.setActive(false);
+                }
+              });
+            })
+            ctrl.drawInteraction.on('modifystart', function() {
+              ctrl.map.getInteractions().forEach((interaction) => {
+                if (interaction instanceof ol.interaction.Modify && ctrl.modifyInteraction != interaction) {
+                  interaction.setActive(false);
+                }
+              });
+            });
 
             // clear existing features on draw end & save feature
             ctrl.drawInteraction.on('drawend', function(event) {
-              removeMyFeatures();
-              updateOutput(event.feature);
-              ctrl.drawInteraction.active = false;
-              ctrl.features.push(event.feature);
+              // simple geom
+              if (!ctrl.geomIsMulti) {
+                removeMyFeatures();
+                ctrl.drawInteraction.active = false;
+              }
+              // for multi geom, we append the feature to the existing one.
+              else {
+                if (ctrl.geometryType.toLowerCase().contains('point')) {
+                  ctrl.features.getArray().forEach(function(f) {
+                    event.feature.getGeometry().appendPoint(f.getGeometry().getPoints()[0]);
+                  });
+                }
+                else if (ctrl.geometryType.toLowerCase().contains('line')) {
+                  ctrl.features.getArray().forEach(function(f) {
+                    event.feature.getGeometry().appendLineString(f.getGeometry().getLineStrings()[0]);
+                  });
+                }
+                else if (ctrl.geometryType.toLowerCase().contains('polygon')) {
+                  ctrl.features.getArray().forEach(function(f) {
+                    event.feature.getGeometry().appendPolygon(f.getGeometry().getPolygons()[0]);
+                  });
+                }
 
+                else {
+                  console.error("Error when getting geometry type '{}' is not supported".format(ctrl.geometryType));
+                }
+
+              }
+              ctrl.features.push(event.feature);
+              updateOutput(event.feature);
               // prevent interference by zoom interaction
               // see https://github.com/openlayers/openlayers/issues/3610
               if (ctrl.zoomInteraction) {
@@ -164,11 +206,12 @@
 
             // update output on modify end
             ctrl.modifyInteraction.on('modifyend', function(event) {
-              updateOutput(event.features.item(0));
+              updateOutput(event.features.item(0), true);
             });
 
             // reset drawing
             ctrl.reset = function() {
+
               removeMyFeatures();
               updateOutput();
             };

@@ -154,7 +154,7 @@
        * This prints the output of a geometry tool according to options given
        *
        * @param {ol.Map} map open layers map
-       * @param {ol.Feature} feature feature to output
+       * @param {ol.Feature} feature feature to output (can be multi)
        * @param {object} options options
        * @param {string} options.crs default is EPSG:4326
        * @param {string} options.format default is GML
