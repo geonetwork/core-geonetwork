@@ -315,7 +315,7 @@
     "csw-rejectDuplicateResourceHelp": "Comparison is made on the element 'gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString'. It only applies to records in ISO19139 or ISO profiles.",
     "cswCapabilitiesAdvProperties": "Advanced configuration",
     "noCswCriteriaFoundInCapabilities": "No search criteria found in <a href='{{url}}'>capabilities</a>. All records will be harvested from that server.",
-    "CswCriteriaFoundInCapabilities": "Optionally use one or more search criteria below to restrict the records to harvest. Use '%' wildcard character in order to query using like operator (ie. ogc:PropertyIsLike) instead of equal.",
+    "CswCriteriaFoundInCapabilities": "Optionally use one or more search criteria below to restrict the records to harvest. For the 'like' operator use '%'  for wildCard, '_' for single char and \\ for escape char.",
     "errorRetrievingCswCapabilities": "Error occurred while retrieving service <a href='{{url}}'>capabilities</a>. Check service URL or current status.",
     "cswRequest": "CSW request",
     "cswResponse": "CSW response",
