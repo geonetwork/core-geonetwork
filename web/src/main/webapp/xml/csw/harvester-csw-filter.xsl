@@ -97,7 +97,30 @@
           </ogc:PropertyIsEqualTo>
         </ogc:Not>
       </xsl:when>
-
+      <xsl:when test="$filter/operator = 'LESSTHAN'">
+        <ogc:PropertyIsLessThan>
+          <ogc:PropertyName><xsl:value-of select="$filter/field"/></ogc:PropertyName>
+          <ogc:Literal><xsl:value-of select="$filter/value"/></ogc:Literal>
+        </ogc:PropertyIsLessThan>
+      </xsl:when>
+      <xsl:when test="$filter/operator = 'LESSTHANOREQUALTO'">
+        <ogc:PropertyIsLessThanEqualTo>
+          <ogc:PropertyName><xsl:value-of select="$filter/field"/></ogc:PropertyName>
+          <ogc:Literal><xsl:value-of select="$filter/value"/></ogc:Literal>
+        </ogc:PropertyIsLessThanEqualTo>
+      </xsl:when>
+      <xsl:when test="$filter/operator = 'GREATERTHAN'">
+        <ogc:PropertyIsGreaterThan>
+          <ogc:PropertyName><xsl:value-of select="$filter/field"/></ogc:PropertyName>
+          <ogc:Literal><xsl:value-of select="$filter/value"/></ogc:Literal>
+        </ogc:PropertyIsGreaterThan>
+      </xsl:when>
+      <xsl:when test="$filter/operator = 'GREATERTHANOREQUALTO'">
+        <ogc:PropertyIsGreaterThanEqualTo>
+          <ogc:PropertyName><xsl:value-of select="$filter/field"/></ogc:PropertyName>
+          <ogc:Literal><xsl:value-of select="$filter/value"/></ogc:Literal>
+        </ogc:PropertyIsGreaterThanEqualTo>
+      </xsl:when>
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>

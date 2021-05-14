@@ -12,7 +12,7 @@
             <xsl:with-param name="position" select="1" />
         </xsl:call-template>
       </xsl:variable>
-      
+
       <xsl:value-of select="normalize-space($cql)" />
     </xsl:template>
 
@@ -68,7 +68,18 @@
       <xsl:when test="$filter/operator = 'NOTEQUAL'">
         <xsl:value-of select="$filter/field"/> &lt;&gt; '<xsl:value-of select="$filter/value"/>'
       </xsl:when>
-
+      <xsl:when test="$filter/operator = 'LESSTHAN'">
+        <xsl:value-of select="$filter/field"/> &lt; '<xsl:value-of select="$filter/value"/>'
+      </xsl:when>
+      <xsl:when test="$filter/operator = 'LESSTHANOREQUALTO'">
+        <xsl:value-of select="$filter/field"/> &lt;= '<xsl:value-of select="$filter/value"/>'
+      </xsl:when>
+      <xsl:when test="$filter/operator = 'GREATERTHAN'">
+        <xsl:value-of select="$filter/field"/> &gt; '<xsl:value-of select="$filter/value"/>'
+      </xsl:when>
+      <xsl:when test="$filter/operator = 'GREATERTHANOREQUALTO'">
+        <xsl:value-of select="$filter/field"/> &gt;= '<xsl:value-of select="$filter/value"/>'
+      </xsl:when>
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
