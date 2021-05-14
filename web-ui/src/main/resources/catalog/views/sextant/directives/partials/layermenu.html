@@ -42,16 +42,7 @@
   </div>
 
   <tabset class="flex-grow">
-    <tab>
-      <tab-heading translate>mapLegend</tab-heading>
-      <div>
-        <img ng-src="{{layer.get('legend')}}"
-             alt="{{layer.get('label')}} {{'mapLegend' | translate}}"
-             aria-label="{{layer.get('label')}} {{'mapLegend' | translate}}"/>
-      </div>
-    </tab>
-
-    <tab ng-if="hasIndexedFeatures || (wfsLink && user.canEditRecord(layer.get('md')))">
+    <tab ng-if="hasIndexedFeatures || (wfsLink && user.canEditRecord(layer.get('md')))" active="true">
       <tab-heading translate>filter</tab-heading>
       <div>
         <div gn-wfs-filter-facets
@@ -59,6 +50,15 @@
              feature-type-name="wfsLink.featureTypeName"
              mode="group">
         </div>
+      </div>
+    </tab>
+
+    <tab>
+      <tab-heading translate>mapLegend</tab-heading>
+      <div>
+        <img ng-src="{{layer.get('legend')}}"
+             alt="{{layer.get('label')}} {{'mapLegend' | translate}}"
+             aria-label="{{layer.get('label')}} {{'mapLegend' | translate}}"/>
       </div>
     </tab>
 
