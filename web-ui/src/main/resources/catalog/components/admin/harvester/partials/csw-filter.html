@@ -31,7 +31,7 @@
     </div>
 
     <div class="col-lg-1 col-md-1 col-sm-1">
-      <button type="button" class="btn btn-default" data-ng-click="removeFilter($index)">X</button>
+      <button type="button" class="btn btn-default" data-ng-click="removeFilter($index)"><i class="fa fa-times text-danger"></i></button>
     </div>
   </div>
 
@@ -39,8 +39,10 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
       <button type="button" class="btn btn-default"
               data-ng-click="addFilter()"
-              data-ng-disabled="!enableAddFilter"
-              data-translate="">csw-harvesterAddFilter</button>
+              data-ng-disabled="!enableAddFilter">
+        <i class="fa fa-plus"></i>
+        <span data-translate="">csw-harvesterAddFilter</span>
+      </button>
 
     </div>
   </div>
