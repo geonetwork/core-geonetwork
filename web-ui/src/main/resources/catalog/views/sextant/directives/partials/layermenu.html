@@ -51,7 +51,7 @@
       </div>
     </tab>
 
-    <tab ng-if="wfs || (wfsLink && user.canEditRecord(layer.get('md')))">
+    <tab ng-if="hasIndexedFeatures || (wfsLink && user.canEditRecord(layer.get('md')))">
       <tab-heading translate>filter</tab-heading>
       <div>
         <div gn-wfs-filter-facets
