@@ -110,5 +110,7 @@
   "panierDrawBbox": "Draw an extent for extracting the data",
   "panierDataExtent": "Actual extent for this data",
   "userFeedback": "User feedbacks",
-  "deleteLayer": "Remove this layer"
+  "deleteLayer": "Remove this layer",
+  "expandLayerMenu": "Expand this menu",
+  "reduceLayerMenu": "Reduce this menu"
 }

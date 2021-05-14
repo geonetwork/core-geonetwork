@@ -1,4 +1,13 @@
 <div class="sxt-layer-menu flex-col flex-align-stretch">
+  <a href
+     class="small sxt-layer-menu-expand-button"
+     ng-click="ctrl.expanded = !ctrl.expanded">
+    <span class="fa fa-fw"
+          ng-class="{'fa-expand': !ctrl.expanded, 'fa-compress': ctrl.expanded}"></span
+    ><span ng-if="!ctrl.expanded" translate>expandLayerMenu</span
+    ><span ng-if="ctrl.expanded" translate>reduceLayerMenu</span>
+  </a>
+
   <a href ng-click="handleClose()" class="close-btn">
     <i class="fa fa-times"></i>
   </a>
@@ -41,7 +50,7 @@
     </button>
   </div>
 
-  <tabset class="layer-menu-tabs flex-grow flex-shrink flex-col flex-align-stretch">
+  <tabset class="sxt-layer-menu-tabs flex-grow flex-shrink flex-col flex-align-stretch">
     <tab ng-if="hasIndexedFeatures || (wfsLink && user.canEditRecord(layer.get('md')))" active="true">
       <tab-heading translate>filter</tab-heading>
       <div class="sxt-wfsfilter-panel"

@@ -15,7 +15,7 @@
           user: '<',
           onClose: '&'
         },
-        controller: ['$scope', function($scope) {
+        controller: ['$scope', '$element', function($scope, $element) {
           this.addToPanier = function() {
             gnViewerSettings.resultviewFns.addMdLayerToPanier($scope.download, $scope.layer.get('md'));
           }
@@ -37,6 +37,22 @@
             }
             $scope.map.removeLayer($scope.layer);
           }
+
+          // this defines a custom property which will add a 'data-expanded' attribute
+          // on the host element when its value changes
+          var expanded;
+          Object.defineProperty(this, 'expanded', {
+            get: function () {
+              return expanded;
+            },
+            set: function(value) {
+              expanded = value;
+              $element[0].toggleAttribute('data-expanded', expanded); // note: this will fail in IE11
+            }
+          });
+
+          // initially not expanded
+          this.expanded = false;
         }],
         controllerAs: 'ctrl',
         link: function(scope) {

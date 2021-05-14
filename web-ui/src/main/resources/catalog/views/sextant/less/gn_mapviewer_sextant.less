@@ -618,7 +618,6 @@
   }
 
   .layers .sxt-layertree {
-    min-height: 50%;
     overflow-x: hidden;
     overflow-y: auto;
     ul {
@@ -626,7 +625,10 @@
     }
   }
   .layers sxt-layer-menu {
-    height: 50%;
+    height: 55%;
+  }
+  .layers sxt-layer-menu[data-expanded] {
+    height: 100%;
   }
   #importLayer {
     & > .panel-body {
@@ -1178,10 +1180,12 @@ sxt-annotations-editor {
 }
 
 .sxt-layer-menu {
+  @margin-top: 12px;
   border-top: 1px solid #ddd;
-  padding-top: 8px;
+  padding-top: 14px;
+  margin-top: @margin-top;
   position: relative;
-  height: 100%;
+  height: calc(~"100% - " @margin-top);
   button {
     width: auto !important;
     height: auto !important;
@@ -1208,7 +1212,7 @@ sxt-annotations-editor {
   .btn-danger {
     background: @btn-danger-bg !important;
   }
-  .layer-menu-tabs {
+  .sxt-layer-menu-tabs {
     overflow: auto;
     ul.nav-tabs {
       margin-bottom: 4px;
@@ -1223,6 +1227,19 @@ sxt-annotations-editor {
     .tab-content {
       overflow: auto;
     }
+  }
+  .sxt-layer-menu-expand-button {
+    font-size: 12px;
+    text-align: center;
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 100px;
+    padding: 4px 8px;
+    line-height: 12px;
   }
 }
 
