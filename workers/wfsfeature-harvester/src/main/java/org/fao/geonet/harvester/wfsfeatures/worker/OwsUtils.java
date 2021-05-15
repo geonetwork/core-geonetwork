@@ -25,6 +25,7 @@ package org.fao.geonet.harvester.wfsfeatures.worker;
 
 import org.apache.http.client.utils.URIBuilder;
 import org.opengis.feature.type.AttributeDescriptor;
+import org.opengis.temporal.Instant;
 
 
 /**
@@ -73,7 +74,11 @@ public class OwsUtils {
                 descriptor.getType().getBinding().isAssignableFrom(
                     java.sql.Timestamp.class) ||
                 descriptor.getType().getBinding().isAssignableFrom(
-                    java.sql.Date.class)) {
+                    java.sql.Date.class) ||
+                descriptor.getType().getBinding().isAssignableFrom(
+                    Instant.class
+                )
+            ) {
                 type = "date";
             } else if (descriptor.getType().getBinding().isAssignableFrom(
                 Long.class)) {
