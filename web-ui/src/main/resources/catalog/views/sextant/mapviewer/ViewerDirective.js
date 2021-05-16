@@ -192,7 +192,8 @@
                   return scope.activeTools.layers || scope.activeTools.import ||
                     scope.activeTools.contexts || scope.activeTools.print ||
                     scope.mInteraction.active || scope.drawVector.active ||
-                    scope.activeTools.benthique || scope.activeTools.processes;
+                    scope.activeTools.benthique || scope.activeTools.processes ||
+                    scope.activeTools.layerOrder;
                 }
                 catch (e) {}
                 return false;

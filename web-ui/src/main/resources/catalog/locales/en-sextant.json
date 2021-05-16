@@ -112,5 +112,6 @@
   "userFeedback": "User feedbacks",
   "deleteLayer": "Remove this layer",
   "expandLayerMenu": "Expand this menu",
-  "reduceLayerMenu": "Reduce this menu"
+  "reduceLayerMenu": "Reduce this menu",
+  "layerOrder": "Layer order"
 }

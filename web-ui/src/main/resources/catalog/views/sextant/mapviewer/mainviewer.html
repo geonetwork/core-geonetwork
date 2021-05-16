@@ -24,6 +24,10 @@
         <span class="fsxt">d</span>
         <span role="tooltip" data-translate="">add</span>
       </button>
+      <button class="btn btn-default" ng-model="activeTools.layerOrder" type="submit" rel="#layerOrder" gi-btn="active">
+        <span class="fa fa-sort"></span>
+        <span role="tooltip" data-translate="">layerOrder</span>
+      </button>
       <button class="btn btn-default" ng-model="activeTools.contexts" type="submit" rel="#contexts" gi-btn="active">
         <span class="fa fa-bookmark"></span>
         <span role="tooltip" data-translate="">Contexts</span>
@@ -97,6 +101,14 @@
                           on-close="clearActiveLayer()">
           </sxt-layer-menu>
         </div>
+      </div>
+
+      <!--Layer order-->
+      <div class="panel panel-default panel-tools"
+           id="layerOrder"
+           ng-show="activeTools.layerOrder">
+        <br>
+        <div gn-layerorder-panel="map"></div>
       </div>
 
       <!--Import layer WMS,WMTS,KML-->

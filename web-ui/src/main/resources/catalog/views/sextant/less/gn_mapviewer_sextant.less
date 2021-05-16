@@ -781,23 +781,6 @@
         margin-bottom: 0;
       }
     }
-    .list-group-item {
-      font-size: @sxt-fontsize;
-      border: none;
-      label {
-        padding: 2px 0 2px 0px;
-        &:hover {
-          text-decoration: none;
-          cursor: pointer;
-        }
-      }
-    }
-    .list-group {
-      height: auto;
-      max-height: none !important;
-      overflow: visible;
-      margin: 0px;
-    }
     .fa-plus-square-o {
       &:before {
         content: "\f0fe";
@@ -1240,6 +1223,29 @@ sxt-annotations-editor {
     border-radius: 100px;
     padding: 4px 8px;
     line-height: 12px;
+  }
+}
+
+[gn-layerorder-panel] {
+  .list-group-item {
+    font-size: @sxt-fontsize;
+    border: none;
+
+    label {
+      padding: 2px 0 2px 0px;
+
+      &:hover {
+        text-decoration: none;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .list-group {
+    height: auto;
+    max-height: none !important;
+    overflow: visible;
+    margin: 0px;
   }
 }
 

@@ -113,5 +113,6 @@
   "userFeedback": "Retours utilisateur",
   "deleteLayer": "Supprimer la couche",
   "expandLayerMenu": "Agrandir le menu",
-  "reduceLayerMenu": "Réduire le menu"
+  "reduceLayerMenu": "Réduire le menu",
+  "layerOrder": "Ordre des couches"
 }
