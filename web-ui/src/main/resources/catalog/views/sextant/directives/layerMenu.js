@@ -3,8 +3,8 @@
 
   var module = angular.module('sxt_layermenu', []);
 
-  module.directive('sxtLayerMenu', ['gnMap', 'wfsFilterService', 'gnMdView', 'gnViewerSettings',
-    function (gnMap, wfsFilterService, gnMdView, gnViewerSettings) {
+  module.directive('sxtLayerMenu', ['gnMap', 'wfsFilterService', 'gnMdView', 'gnViewerSettings', '$timeout',
+    function (gnMap, wfsFilterService, gnMdView, gnViewerSettings, $timeout) {
       return {
         restrict: 'E',
         templateUrl: '../../catalog/views/sextant/directives/' +
@@ -108,6 +108,14 @@
 
           scope.$watch('layer', function (newVal) {
             handleLayerChange(newVal);
+          });
+
+          scope.$watch('layer.get(\'legend\')', function (newVal) {
+            // replace with a 1x1px image to clear the image before loading the new legend
+            scope.legendUrl = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+            $timeout(function () {
+              scope.legendUrl = newVal;
+            });
           });
         }
       };
