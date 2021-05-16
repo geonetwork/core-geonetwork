@@ -56,29 +56,38 @@
         }],
         controllerAs: 'ctrl',
         link: function(scope) {
-          if (scope.layer.get('md')) {
+          function handleLayerChange(newLayer) {
+            // clear local variables
+            scope.download = null;
+            scope.wfsLink = null;
+            scope.hasIndexedFeatures = false;
+            scope.process = false;
+
+            // layer has no associated metadata: do nothing
+            if (!newLayer.get('md')) { return; }
+
             // look for downloads
-            var d = scope.layer.get('downloads');
-            var downloadable = scope.layer.get('md').download === true;
-            if(Array.isArray(d) && downloadable) {
+            var d = newLayer.get('downloads');
+            var downloadable = newLayer.get('md').download === true;
+            if (Array.isArray(d) && downloadable) {
               scope.download = d[0];
             }
 
             // look for indexed wfs
-            var wfsLink = scope.layer.get('wfs');
-            if(Array.isArray(wfsLink) && downloadable) {
+            var wfsLink = newLayer.get('wfs');
+            if (Array.isArray(wfsLink) && downloadable) {
               wfsLink = wfsLink[0];
             } else {
               wfsLink = undefined;
             }
-            if(wfsLink) {
+            if (wfsLink) {
               scope.wfsLink = wfsLink;
               var indexObject = wfsFilterService.registerEsObject(wfsLink.url, wfsLink.name);
               indexObject.init({
                 wfsUrl: wfsLink.url,
                 featureTypeName: wfsLink.name
               });
-              indexObject.searchWithFacets({}).then(function(data) {
+              indexObject.searchWithFacets({}).then(function (data) {
                 if (data.count > 0) {
                   scope.hasIndexedFeatures = true;
                 }
@@ -86,16 +95,20 @@
             }
 
             // look for processes
-            var processable = scope.layer.get('md').process === true;
-            var p = scope.layer.get('processes');
-            if(Array.isArray(p) && processable) {
+            var processable = newLayer.get('md').process === true;
+            var p = newLayer.get('processes');
+            if (Array.isArray(p) && processable) {
               scope.process = p;
             }
           }
 
-          scope.handleClose = function() {
+          scope.handleClose = function () {
             scope.onClose();
           };
+
+          scope.$watch('layer', function (newVal) {
+            handleLayerChange(newVal);
+          });
         }
       };
     }]);
