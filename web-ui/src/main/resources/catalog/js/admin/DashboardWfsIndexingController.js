@@ -223,7 +223,7 @@
                 featureType: featureType,
                 status: 'not started',
                 mdUuid: producer.wfsHarvesterParam.metadataUuid,
-                strategy: producer.wfsHarvesterParam.strategy || '',
+                strategy: producer.wfsHarvesterParam.strategy || 'investigator',
                 cronScheduleExpression: producer.cronExpression,
                 cronScheduleProducerId: producer.id
               };
@@ -458,7 +458,7 @@
         var params = {
           typeName: job.featureType,
           url: job.url,
-          strategy: job.strategy,
+          strategy: job.strategy || 'investigator',
           metadataUuid: job.mdUuid,
           tokenizedFields: null,
           treeFields : null
