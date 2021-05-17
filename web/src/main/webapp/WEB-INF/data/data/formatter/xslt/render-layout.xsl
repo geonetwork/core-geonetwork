@@ -108,6 +108,7 @@
 
       <div class="gn-multilingual-field">
         <ul class="nav nav-pills">
+          <script src="{$nodeUrl}../catalog/views/sextant/sextant-formatter-utils.js?v={$buildNumber}">&amp;nbsp;</script>
           <script src="{$nodeUrl}../catalog/js/GnLandingPageLib.js?v={$buildNumber}">&amp;nbsp;</script>
           <script type="text/javascript">
             window.onload = function() {
