@@ -1,10 +1,19 @@
 <div class="sxt-layer-menu flex-col flex-align-stretch">
+  <a href
+     class="small sxt-layer-menu-expand-button"
+     ng-click="ctrl.expanded = !ctrl.expanded">
+    <span class="fa fa-fw"
+          ng-class="{'fa-expand': !ctrl.expanded, 'fa-compress': ctrl.expanded}"></span
+    ><span ng-if="!ctrl.expanded" translate>expandLayerMenu</span
+    ><span ng-if="ctrl.expanded" translate>reduceLayerMenu</span>
+  </a>
+
   <a href ng-click="handleClose()" class="close-btn">
     <i class="fa fa-times"></i>
   </a>
 
   <div>
-    {{layer.get('title') || layer.get('name')}}
+    {{layer.name || layer.get('label')}}
     <span class="text-muted small" ng-if="layer.get('attribution')">
       <br>
       &copy;
@@ -41,24 +50,23 @@
     </button>
   </div>
 
-  <tabset class="flex-grow">
-    <tab>
-      <tab-heading translate>mapLegend</tab-heading>
-      <div>
-        <img ng-src="{{layer.get('legend')}}"
-             alt="{{layer.get('label')}} {{'mapLegend' | translate}}"
-             aria-label="{{layer.get('label')}} {{'mapLegend' | translate}}"/>
+  <tabset class="sxt-layer-menu-tabs flex-grow flex-shrink flex-col flex-align-stretch">
+    <tab ng-if="hasIndexedFeatures || (wfsLink && user.canEditRecord(layer.get('md')))" active="true">
+      <tab-heading translate>filter</tab-heading>
+      <div class="sxt-wfsfilter-panel"
+           gn-wfs-filter-facets
+           layer="layer" wfs-url="wfsLink.url"
+           feature-type-name="wfsLink.featureTypeName"
+           mode="group">
       </div>
     </tab>
 
-    <tab ng-if="wfs || (wfsLink && user.canEditRecord(layer.get('md')))">
-      <tab-heading translate>filter</tab-heading>
+    <tab>
+      <tab-heading translate>mapLegend</tab-heading>
       <div>
-        <div gn-wfs-filter-facets
-             layer="layer" wfs-url="wfsLink.url"
-             feature-type-name="wfsLink.featureTypeName"
-             mode="group">
-        </div>
+        <img ng-src="{{legendUrl}}"
+             alt="{{layer.get('label')}} {{'mapLegend' | translate}}"
+             aria-label="{{layer.get('label')}} {{'mapLegend' | translate}}"/>
       </div>
     </tab>
 
@@ -96,10 +104,10 @@
 
   <div class="flex-row flex-center width-100">
     <button type="button"
-            class="btn btn-danger btn-sm"
+            class="btn btn-danger btn-sm flex-grow"
             ng-click="handleClose(); ctrl.deleteLayer()"
             translate>
-      remove
+      deleteLayer
     </button>
   </div>
 </div>

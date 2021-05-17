@@ -3,8 +3,8 @@
 
   var module = angular.module('sxt_layermenu', []);
 
-  module.directive('sxtLayerMenu', ['gnMap', 'wfsFilterService', 'gnMdView', 'gnViewerSettings',
-    function (gnMap, wfsFilterService, gnMdView, gnViewerSettings) {
+  module.directive('sxtLayerMenu', ['gnMap', 'wfsFilterService', 'gnMdView', 'gnViewerSettings', '$timeout',
+    function (gnMap, wfsFilterService, gnMdView, gnViewerSettings, $timeout) {
       return {
         restrict: 'E',
         templateUrl: '../../catalog/views/sextant/directives/' +
@@ -15,7 +15,7 @@
           user: '<',
           onClose: '&'
         },
-        controller: ['$scope', function($scope) {
+        controller: ['$scope', '$element', function($scope, $element) {
           this.addToPanier = function() {
             gnViewerSettings.resultviewFns.addMdLayerToPanier($scope.download, $scope.layer.get('md'));
           }
@@ -37,32 +37,57 @@
             }
             $scope.map.removeLayer($scope.layer);
           }
+
+          // this defines a custom property which will add a 'data-expanded' attribute
+          // on the host element when its value changes
+          var expanded;
+          Object.defineProperty(this, 'expanded', {
+            get: function () {
+              return expanded;
+            },
+            set: function(value) {
+              expanded = value;
+              $element[0].toggleAttribute('data-expanded', expanded); // note: this will fail in IE11
+            }
+          });
+
+          // initially not expanded
+          this.expanded = false;
         }],
         controllerAs: 'ctrl',
         link: function(scope) {
-          if (scope.layer.get('md')) {
+          function handleLayerChange(newLayer) {
+            // clear local variables
+            scope.download = null;
+            scope.wfsLink = null;
+            scope.hasIndexedFeatures = false;
+            scope.process = false;
+
+            // layer has no associated metadata: do nothing
+            if (!newLayer.get('md')) { return; }
+
             // look for downloads
-            var d = scope.layer.get('downloads');
-            var downloadable = scope.layer.get('md').download === true;
-            if(Array.isArray(d) && downloadable) {
+            var d = newLayer.get('downloads');
+            var downloadable = newLayer.get('md').download === true;
+            if (Array.isArray(d) && downloadable) {
               scope.download = d[0];
             }
 
             // look for indexed wfs
-            var wfsLink = scope.layer.get('wfs');
-            if(Array.isArray(wfsLink) && downloadable) {
+            var wfsLink = newLayer.get('wfs');
+            if (Array.isArray(wfsLink) && downloadable) {
               wfsLink = wfsLink[0];
             } else {
               wfsLink = undefined;
             }
-            if(wfsLink) {
+            if (wfsLink) {
               scope.wfsLink = wfsLink;
               var indexObject = wfsFilterService.registerEsObject(wfsLink.url, wfsLink.name);
               indexObject.init({
                 wfsUrl: wfsLink.url,
                 featureTypeName: wfsLink.name
               });
-              indexObject.searchWithFacets({}).then(function(data) {
+              indexObject.searchWithFacets({}).then(function (data) {
                 if (data.count > 0) {
                   scope.hasIndexedFeatures = true;
                 }
@@ -70,16 +95,28 @@
             }
 
             // look for processes
-            var processable = scope.layer.get('md').process === true;
-            var p = scope.layer.get('processes');
-            if(Array.isArray(p) && processable) {
+            var processable = newLayer.get('md').process === true;
+            var p = newLayer.get('processes');
+            if (Array.isArray(p) && processable) {
               scope.process = p;
             }
           }
 
-          scope.handleClose = function() {
+          scope.handleClose = function () {
             scope.onClose();
           };
+
+          scope.$watch('layer', function (newVal) {
+            handleLayerChange(newVal);
+          });
+
+          scope.$watch('layer.get(\'legend\')', function (newVal) {
+            // replace with a 1x1px image to clear the image before loading the new legend
+            scope.legendUrl = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+            $timeout(function () {
+              scope.legendUrl = newVal;
+            });
+          });
         }
       };
     }]);
