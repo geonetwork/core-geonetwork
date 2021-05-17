@@ -904,7 +904,7 @@
     <xsl:param name="codeListValue"/>
     <!-- The correct codeList Location goes here -->
     <xsl:variable name="codeListLocation" select="'http://standards.iso.org/iso/19139/resources/gmxCodelists.xml'"/>
-    <xsl:if test="$codeListValue">
+    <xsl:for-each select="$codeListValue">
       <xsl:element name="{$elementName}">
         <xsl:element name="{$codeListName}">
           <xsl:attribute name="codeList">
@@ -914,14 +914,14 @@
           </xsl:attribute>
           <xsl:attribute name="codeListValue">
             <!-- the anyValidURI value is used for testing with paths -->
-            <xsl:value-of select="$codeListValue"/>
+            <xsl:value-of select="current()"/>
             <!-- commented out for testing -->
             <!--<xsl:value-of select="$codeListValue"/>-->
           </xsl:attribute>
-          <xsl:value-of select="$codeListValue"/>
+          <xsl:value-of select="current()"/>
         </xsl:element>
       </xsl:element>
-    </xsl:if>
+    </xsl:for-each>
   </xsl:template>
 
   <xsl:template name="writeCharacterStringElement">

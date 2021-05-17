@@ -18,7 +18,7 @@
 
   <!-- TODO : add form constraints -->
   <div class="row">
-    <div class="col-sm-7">
+    <div class="col-sm-8">
       <div class="panel panel-default">
         <div class="panel-body">
 
@@ -60,7 +60,7 @@
             <div id="gn-import-folder-row" class="form-group" data-ng-if="importMode === 'importFromDir'">
               <label id="gn-import-folder-label"
                      for="gn-import-folder-input"
-                     class="col-sm-5 control-label"
+                     class="col-sm-4 control-label"
                      data-translate="">directory</label>
               <div class="col-sm-7">
                 <input type="text"
@@ -85,36 +85,38 @@
             <div id="gn-import-uploadfile-row" class="form-group" data-ng-show="importMode === 'uploadFile'">
               <label id="gn-import-uploadfile-label"
                      for="md-import-upload"
-                     class="col-sm-5 control-label"></label>
-              <div id="gn-import-uploadfile-panel" class="col-sm-7">
+                     class="col-sm-4 control-label"></label>
+              <div id="gn-import-uploadfile-panel" class="col-sm-8">
 
                 <div class="panel panel-default">
                   <div class="panel-body">
-
                     <span class="btn btn-success btn-block fileinput-button">
                       <i class="fa fa-plus fa-white"/>
                       <span data-translate="">chooseOnlinesrc</span>
                       <input type="file"
-                            multiple="true"
-                            id="md-import-file"
-                            name="file"/>
+                             multiple="true"
+                             id="md-import-file"
+                             name="file"/>
                     </span>
-
-                    <ul id="gn-import-uploadfile-list">
-                      <li data-ng-repeat="file in queue">
-                        <div class="preview" data-file-upload-preview="file"></div>
-                        {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
-                        <i class="fa fa-times" data-ng-click="clear(file)"/>
-                      </li>
-                    </ul>
-
-                    <div id="gn-import-uploadfile-alert"
-                         class="alert alert-warning"
-                         data-ng-show="unsupportedFile"
-                         data-translate="">unsupportedFileExtension
-                    </div>
                   </div>
                 </div>
+
+                <ul id="gn-import-uploadfile-list" class="list-group gn-margin-top">
+                  <li data-ng-repeat="file in queue" class="list-group-item clearfix">
+                    <div class="preview" data-file-upload-preview="file"></div>
+                    <div class="text-ellipsis width-50 pull-left" title="{{file.name}}">{{file.name}}</div><span title="{{file.name}}"> ({{file.type}} / {{file.size | formatFileSize}})</span>
+                    <button data-ng-click="clear(file)" class="btn btn-default btn-xs pull-right" title="{{'delete' | translate}}">
+                      <i class="fa fa-times"/>
+                    </button>
+                  </li>
+                </ul>
+
+                <div id="gn-import-uploadfile-alert"
+                     class="alert alert-warning"
+                     data-ng-show="unsupportedFile"
+                     data-translate="">unsupportedFileExtension
+                </div>
+
               </div>
             </div>
 
@@ -122,9 +124,9 @@
             <div id="gn-import-copypaste-row" class="form-group" data-ng-if="importMode === 'copyPaste'">
               <label id="gn-import-copypaste-label"
                      for="gn-import-copypaste-textarea"
-                     class="col-sm-5 control-label"
+                     class="col-sm-4 control-label"
                      data-translate="">metadataContent</label>
-              <div class="col-sm-7">
+              <div class="col-sm-8">
                 <textarea id="gn-import-copypaste-textarea"
                           class="form-control"
                           rows="8"
@@ -138,9 +140,9 @@
             <div id="gn-import-uploadurl-row" class="form-group" data-ng-if="importMode === 'uploadFileByUrl'">
               <label id="gn-import-uploadurl-label"
                      for="gn-import-uploadurl-input"
-                     class="col-sm-5 control-label"
+                     class="col-sm-4 control-label"
                      data-translate="">metadataContent</label>
-              <div class="col-sm-7">
+              <div class="col-sm-8">
                 <input id="gn-import-uploadurl-input"
                        class="form-control" type="text"
                        placeholder="http://"
@@ -156,9 +158,9 @@
                  class="form-group">
               <label id="gn-import-type-label"
                      for="gn-import-type-list"
-                     class="col-sm-5 control-label"
+                     class="col-sm-4 control-label"
                      data-translate="">typeOfRecord</label>
-              <div class="col-sm-7">
+              <div class="col-sm-8">
                 <div id="gn-import-type-list"
                      gn-recordtypes-combo="params.metadataType"></div>
 
@@ -171,9 +173,9 @@
             <div id="gn-import-action-row" class="form-group">
               <label id="gn-import-action-label"
                      for="gn-import-action-list"
-                     class="col-sm-5 control-label"
+                     class="col-sm-4 control-label"
                      data-translate="">uuidAction</label>
-              <div id="gn-import-action-list" class="col-sm-7">
+              <div id="gn-import-action-list" class="col-sm-8">
                 <div id="gn-import-action-list-none-row" class="radio">
                   <label>
                     <input id="gn-import-action-list-none-radio"
@@ -207,9 +209,9 @@
             <div id="gn-import-xslt-row" class="form-group">
               <label id="gn-import-xslt-label"
                      for="gn-import-xslt-input"
-                     class="col-sm-5 control-label"
+                     class="col-sm-4 control-label"
                      data-translate="">xsltToApply</label>
-              <div class="col-sm-7">
+              <div class="col-sm-8">
                 <div data-gn-import-xsl="params.transformWith"/>
                 <input id="gn-import-xslt-input"
                        type="text"
@@ -219,8 +221,8 @@
               </div>
             </div>
 
-            <div id="gn-import-validate-row" class="form-group">
-              <div class="col-sm-offset-5 col-sm-7">
+            <div id="gn-import-validate-row" class="form-group gn-no">
+              <div class="col-sm-offset-4 col-sm-8">
                 <div class="checkbox">
                   <label>
                     <input id="gn-import-validate-checkbox"
@@ -234,7 +236,7 @@
             </div>
 
             <div id="gn-import-publish-row" class="form-group">
-              <div class="col-sm-offset-5 col-sm-7">
+              <div class="col-sm-offset-4 col-sm-8">
                 <div class="checkbox">
                   <label>
                     <input id="gn-import-publish-checkbox"
@@ -249,7 +251,7 @@
             </div>
 
             <div id="gn-import-assigncatalog-row" class="form-group">
-              <div class="col-sm-offset-5 col-sm-7">
+              <div class="col-sm-offset-4 col-sm-8">
                 <div class="checkbox">
                   <label>
                     <input id="gn-import-assigncatalog-checkbox"
@@ -265,10 +267,10 @@
 
             <div id="gn-import-assigngroup-row" class="form-group">
               <label id="gn-import-assigngroup-label"
-                     class="col-sm-5 control-label"
+                     class="col-sm-4 control-label"
                      for="gn-import-assigngroup-input"
                      data-translate="">assignToGroup</label>
-              <div class="col-sm-7">
+              <div class="col-sm-8">
                 <div id="gn-import-assigngroup-list"
                      data-groups-combo=""
                      data-owner-group="params.group"
@@ -285,10 +287,10 @@
 
             <div id="gn-import-assigncategory-row" class="form-group">
               <label id="gn-import-assigncategory-label"
-                     class="col-sm-5 control-label"
+                     class="col-sm-4 control-label"
                      for="gn-import-assigncategory-input"
                      data-translate="">assignToCategory</label>
-              <div class="col-sm-7">
+              <div class="col-sm-8">
                 <div id="gn-import-assigncategory-list"
                      data-gn-category="params.category"
                      data-lang="{{lang}}"/>
@@ -320,7 +322,7 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-5">
+    <div class="col-sm-4">
 
       <div id="gn-import-reports-row">
         <div data-ng-repeat="report in reports track by $index">

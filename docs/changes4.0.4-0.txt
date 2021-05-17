@@ -1,0 +1,88 @@
+================================================================================
+===
+=== GeoNetwork 4.0.4: List of changes
+===
+================================================================================
+- Updates from transifex.
+- Metadata import - catch update metadata resources link exception with metadata templates and avoid stopping the import process
+- Update download transifex script with Swedish
+- Harvester / Localfile / Disable script option. (#5651)
+- Fix for harvester badge displaying on new line
+- Move encryptor configuration file to the data directory config folder
+- Harvester / GeoNetwork protocol / Label with version supported (#5650)
+- Use thesaurus multilingual value for thesaurus, if available, to display the title in the metadata editor
+- Restyling of the imported file list (#5606)
+- ISO19139 / Mapping / Codelist may have multiple values
+- Use display catalogue name in the header setting to display/hide the catalogue name in small devices
+- Admin / Status / Index errors as facet.
+- Search / Reload page with param does not restore query
+- Fix for missing icons for the topics on the homepage
+- ISO19115-3 / Indexing / Lineage
+- Fix add-schema script, schema groupId added in services pom.xml should be org.geonetwork-opensource.schemas, not org.geonetwork-opensource (#5613)
+- Resources / All resources are not images (#5620)
+- Fix autoCommit error when using a JNDI connection (#5625)
+- Update main references
+- Editor / Date picker / Hide timezone for year/month (#5614)
+- Index health check improvements (#5612)
+- Use default language for regions if not available in the UI language
+- Uniform view for the bounding geometries in the Editor
+- Map / GetFeatureInfo / Don't query background (#5605)
+- UI config / Apply filter to main statistics (#5611)
+- Editor / Date picker / Avoid JS error if config is undefined. (#5610)
+- Proxy / Add proxy for microservices. (#5604)
+- Bump junit from 4.12 to 4.13.1 in /integration-test
+- Bump junit from 4.12 to 4.13.1
+- Editor / Timezone / Hide time zone selector (#5601)
+- DOI / Typo (#5602)
+- Metadata editor - fix rendering of codelists in template fields (#5600)
+- Change the order of the buttons in the second toolbar of the metadata view (#5598)
+- Fix for heading / label mixup
+- Fix PreUpdate event in settings listeners. Related to #5476
+- Fix the privileges value before the update for RecordPrivilegesChangeEvent in metadata sharing API
+- Password enforcement
+- Update-fixed-info / Use db dates  (#5275)
+- Admin / Harvester / No harvester in list after error
+- Editor / List formats as protocols. (#5465)
+- ISO19115-3 / Multilingual / Avoid error on feature catalogue indexing
+- Insecure password change function. Fixes #5538 (#5550)
+- Encrypt passwords stored in the database (#5476)
+- Improved visual hierarchy in admin settings and user interface settings
+- ISO19115-3 / Associated resource / Adding URL with a # truncate beginning of URL
+- Fix check for non existent setting in SettingManager.getValues
+- ISO19139 indexing - handle gco:isoType with gmd:MD_Metadata value
+- Index / documentStandard field replace schema field (#5517)
+- Add option for PNG images to mcc:fileType Recommended values
+- Translation of roles when a contact is listed with multiple roles - fix dependency injection, related to #5541 (#5566)
+- Fix time offset when CatalogUiTimezone is Browser
+- UI fix & improvement
+- Fix for the `gn-status` field in the editor that was inheriting a class that messed up the layout
+- Add links of  when users add online resource (e.g.: application)
+- Add typeahead template to sanitisize the suggestions. Fixes #5536 (#5552)
+- Generic error  message in 'Upload a file from URL'. Fixes #5535 (#5553)
+- Fix translation of roles when a contact is listed with multiple roles
+- Add WMS layer - use layer name if the layer title is empty
+- Fix specification conformance indexing if date is empty. Avoid indexing the conformance if title is empty (#5548)
+- Change resourceIdentifier index field to 'object' type (#5546)
+- Fix resource identifier indexing (#5544)
+- ISO19139 Swedish translations (#5529)
+- INSPIRE / Validation / Remove internal schematron. (#5513)
+- Adding Swedish to the webb-ui (#5459)
+- Date picker / Config may be undefined. Limit may only be max or min and not both.
+- WFS Feature filter / Some user can create facet tree from value
+- Formatter / Datacite / Avoid empty elements. (#5500)
+- feat(WPS) when min/max dates are specified, limit datepicker values a… (#5494)
+- Thesaurus / Fix same cache key for all ThesaurusBasedRegionsDAO
+- Fix regression on "Compute extents from keywords" button (#5455)
+- Admin / Hits / Missing total
+- Language mapper / Reload langs once db is populated.
+- Indexing / Fix data url in ISO19115-3 and avoid error on multiple explanation.
+- Record view / Fix resource identifier display
+- Map / OWS / speed up WMS capabilities parsing
+- Thumbnail / Use dataUrl and fix size parameter on home page (only used when internal thumbnail).
+- Facet / Interactive date range. (#5471)
+- Group is now mandatory / Fix save your map.
+- Introduction of `gn-card`.
+- Overview / Stored in index and used as dataURL. (#5467)
+- Admin / Harvester / No harvester in list after error
+- Update to Elasticsearch 7.11.1 (#5464)
+- Update version to 4.0.4-SNAPSHOT

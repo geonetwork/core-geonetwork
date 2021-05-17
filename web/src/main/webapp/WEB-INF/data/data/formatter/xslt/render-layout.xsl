@@ -781,6 +781,7 @@
               </xsl:apply-templates>
             </xsl:for-each>
           </xsl:for-each>
+          &#160;
         </div>
       </xsl:for-each>
     </div>

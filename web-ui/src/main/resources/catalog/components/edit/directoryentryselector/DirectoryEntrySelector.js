@@ -85,7 +85,12 @@
               // Can restrict how to insert the entry (xlink, text ..)
               // insertModes: '@'
               // If true, will only show entries with a valid status of 1
-              showValidOnly: '@'
+              showValidOnly: '@',
+              // Only required when using tag input mode
+              // ie. insertModes === 'tags'
+              elementXpath: '@',
+              values: '@',
+              maxTags: '@'
             },
             templateUrl: '../../catalog/components/edit/' +
                 'directoryentryselector/partials/' +
@@ -120,18 +125,25 @@
 
 
                   var insertModes = iAttrs.insertModes;
+
+                  scope.insertAsTags = insertModes === 'tags';
+
                   if (insertModes) {
                     insertModes = insertModes.split(',');
                   }
 
                   scope.insertAsXlink = !insertModes ||
-                 insertModes.indexOf('xlink') >= 0;
+                    insertModes.indexOf('xlink') >= 0 ||
+                    scope.insertAsTags ;
                   scope.insertAsText = !insertModes ||
-                 insertModes.indexOf('text') >= 0;
+                    insertModes.indexOf('text') >= 0;
 
                   // Separator between each contact XML
-                  // snippet
-                  var separator = '&&&';
+                  // snippet depends on the insert mode.
+                  // When using tagsinput, the gn_replace_all is the root
+                  // with values as children. When using X mode,
+                  // then each snippet are separated by &&&
+                  var separator = scope.insertAsTags ? '' : '&&&';
 
                   // Only local mode (faster)
                   var url = 'local://' + gnGlobalSettings.nodeId +
@@ -162,7 +174,9 @@
 
                   scope.snippet = null;
                   scope.snippetRef = gnEditor.
-                      buildXMLFieldName(scope.elementRef, scope.elementName);
+                      buildXMLFieldName(
+                        scope.elementRef, scope.elementName,
+                        scope.insertAsTags ? '_P' : '_X');
 
                   scope.attrs = iAttrs;
                   scope.add = function() {
@@ -186,13 +200,12 @@
 
                   // <request><codelist schema="iso19139"
                   // name="gmd:CI_RoleCode" /></request>
-                  scope.addEntry = function(entry, role, usingXlink) {
+                  scope.addEntry = function(entry, role, usingXlink, saveEdits) {
                     var defer = $q.defer();
-                    gnCurrentEdit.working = true;
+                    gnCurrentEdit.working = saveEdits;
                     if (!(entry instanceof Array)) {
                       entry = [entry];
                     }
-
                     scope.snippet = '';
                     var snippets = [];
 
@@ -205,7 +218,7 @@
                         //                   scope.searchResults.records = null;
                         //                   scope.searchResults.count = null;
                         // Only if editing.
-                        if (gnCurrentEdit.id) {
+                        if (gnCurrentEdit.id && saveEdits) {
                           $timeout(function() {
                             // Save the metadata and refresh the form
                             gnEditor.save(gnCurrentEdit.id, true).then(
@@ -306,6 +319,184 @@
                         scope.roles = data.entry;
                       });
 
+
+                  // Typeahead and tag input mode
+                  scope.selected = [];
+                  var id = '#tagsinput_'
+                    + scope.elementRef
+                    + scope.elementName.replace(':', '');
+
+                  function buildTag(d) {
+                    return {uuid: d._id,
+                      label: d._source.resourceTitle
+                        || d._source.resourceTitleObject.default
+                        || '-'};
+                  }
+
+                  var initTagsInput = function() {
+                    $timeout(function() {
+                      try {
+                        $(id).tagsinput({
+                          itemValue: 'label',
+                          itemText: 'label',
+                          maxTags: scope.maxTags
+                        });
+
+                        // Add selection to the list of tags
+                        angular.forEach(scope.selected, function(c) {
+                          $(id).tagsinput('add', c);
+                        });
+
+                        var field = $(id).tagsinput('input');
+                        field.attr('placeholder',
+                          $translate.instant('searchAcontact'));
+
+                        // Add selection to the list of tags
+                        // angular.forEach(scope.selected, function(keyword) {
+                        //   $(id).tagsinput('add', keyword);
+                        // });
+
+                        getRecordsAutocompleter = function(config) {
+
+                          var recordsAutocompleter = new Bloodhound({
+                            datumTokenizer: Bloodhound.tokenizers.whitespace('title'),
+                            queryTokenizer: Bloodhound.tokenizers.whitespace,
+                            limit: config.max || 10,
+                            remote: {
+                              wildcard: 'QUERY',
+                              url: '../api/search/records/_search',
+                              prepare: function (query, settings) {
+                                settings.type = "POST";
+                                settings.contentType = "application/json; charset=UTF-8";
+                                settings.data = JSON.stringify(
+                                  {from: 0, size: 10, query: {
+                                    bool: {
+                                      must: {
+                                        query_string: {
+                                          query: "any:" + (query || '*')
+                                        }
+                                      },
+                                      filter: [
+                                        {term: {isTemplate: 's'}},
+                                        {term: {root: 'gmd:CI_ResponsibleParty'}}
+                                      ]
+                                    }}});
+                                return settings;
+                              },
+                              transform: function(response) {
+                                return response.hits.hits.map(function(d, i) {
+                                  return buildTag(d);
+                                });
+                              }
+                            }
+                          });
+
+                          recordsAutocompleter.initialize();
+                          return recordsAutocompleter;
+                        };
+                        autocompleter = getRecordsAutocompleter({max: 10});
+
+                        // Init typeahead
+                        field.typeahead({
+                          minLength: 0,
+                          highlight: true
+                        }, {
+                          name: 'hit',
+                          displayKey: 'label',
+                          limit: Infinity,
+                          source: autocompleter.ttAdapter()
+                        }).bind('typeahead:selected',
+                          $.proxy(function(obj, r) {
+                            this.tagsinput('add', r);
+
+                            // Clear typeahead
+                            this.tagsinput('input').typeahead('val', '');
+                            field.blur();
+                            field.triggerHandler('input');
+
+                            // Update selection and snippet
+                            var ta = this;
+                            $timeout(function() {
+                              scope.selected = ta.tagsinput('items');
+                              //getSnippet(); // FIXME: should not be necessary
+                              // as there is a watch on it ?
+                            }, 100);
+                          }, $(id))
+                        );
+
+                        field.bind("keydown keypress", function(event){
+                          if (event.isDefaultPrevented()) {
+                            event.stopPropagation(); // need to prevent this from bubbling - or something might action it
+                            field.focus(); //allow to type again
+                            return false;   //this event has already been handled by tt-typeahead, dont do it twice!
+                          }
+                        });
+
+                        $(id).on('itemRemoved', function() {
+                          var ta = $(this);
+                          $timeout(function() {
+                            scope.selected = ta.tagsinput('items');
+                          }, 100);
+                        });
+
+                        function getSnippet() {
+                          scope.addEntry(
+                            scope.selected,
+                            scope.withRoleSelection ? role : undefined,
+                            scope.insertAsXlink,
+                            false).then(function(r) {
+                            console.log(r);
+                          });
+                        }
+
+                        scope.$watchCollection('selected', getSnippet);
+                      } catch (e) {
+                        console.warn('No tagsinput for ' + id +
+                          ', error: ' + e.message);
+                      }
+                    });
+                  };
+
+                  if (scope.insertAsTags) {
+                    // Populate initial values based on Xlink
+                    // containing the UUID.
+                    // Then initialize tags input
+                    var urls = scope.values === '' ? [] : scope.values.split('◿'),
+                      i = 0;
+                    scope.initialStateComplete = undefined;
+                    var w = scope.$watch('initialStateComplete', function(n, o) {
+                      if (n) {
+                        initTagsInput();
+                        w();
+                      }
+                    });
+                    scope.initialStateComplete = urls.length === i;
+
+                    urls.forEach(function(url, i) {
+                      // local://srv/api/registries/entries/af8a36bb-ecea-4880-bf83-26b691e7570e?
+                      //  transformation=contact-from-iso19139-to-foaf-agent&lang=eng,fre&schema=dcat2
+                      uuid = url.replace(/.*entries\/(.*)\?.*/, '$1');
+                      $http.post('../api/search/records/_search', {"query": {
+                          "bool" : {
+                            "must": [
+                              {"multi_match": {
+                                  "query": uuid,
+                                  "fields": ['uuid']}},
+                              {"terms": {"isTemplate": ["s"]}}
+                            ]
+                          }
+                        }}, {cache: true}).then(function(r) {
+                        if (r.data.hits.total.value == 1) {
+                          i ++;
+                          var tag = buildTag(r.data.hits.hits[0]);
+                          scope.selected.push(tag);
+                          scope.initialStateComplete = urls.length === i;
+                        }
+                      });
+                    });
+                  }
+
+
                   scope.openSelector = function() {
                     openModal({
                       title: $translate.instant('chooseEntry'),
@@ -375,6 +566,7 @@
                post: function postLink(scope, iElement, iAttrs) {
                  scope.ctrl = {};
 
+                 scope.withRoleSelection = iAttrs['withRoleSelection'] == 'false' || true;
                  scope.defaultRoleCode = iAttrs['defaultRole'] || null;
                  scope.defaultRole = null;
                  angular.forEach(scope.roles, function(r) {
@@ -385,8 +577,9 @@
                  scope.addSelectedEntry = function(role, usingXlink) {
                    scope.addEntry(
                    scope.stateObj.selectRecords[0],
-                   role,
-                   usingXlink).then(function(r) {
+                   scope.withRoleSelection ? role : undefined,
+                   usingXlink,
+                   true).then(function(r) {
                      scope.closeModal();
                    });
                  };

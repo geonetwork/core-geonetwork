@@ -48,7 +48,8 @@
 
     <!-- The thesaurus snippet to insert once received -->
     <div>
-      <input name="{{elementRef}}" type="hidden" value="{{snippet}}"/>
+      <input name="{{elementRef}}{{elementXpath != '' ? '_xml' : ''}}" type="hidden" value="{{snippet}}"/>
+      <input name="{{elementRefXpath}}" type="hidden" value="{{elementXpath}}"/>
     </div>
   </span>
 </div>

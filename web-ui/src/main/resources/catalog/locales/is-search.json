@@ -367,6 +367,8 @@
     "shareByEmail": "Deila með tölvupósti",
     "zoomto": "Þysja að",
     "recordNotFound": "Færslan með auðkennið <strong>{{uuid}}</strong> fannst ekki eða var ekki deilt með þér. Reyndu að <a href=\"catalog.signin?redirect={{url}}\">skrá þig inn</a> ef þú ert með reikning. ",
+    "recordNotFoundAuthenticatedUser": "The record with identifier <strong>{{uuid}}</strong> was not found or is not shared with you.",
+    "recordNotFoundAuthenticatedAdministrator": "The record with identifier <strong>{{uuid}}</strong> was not found",
     "intersectWith": "skarast við",
     "fullyOutsideOf": "Alveg fyrir utan",
     "encloses": "Umlykur",
@@ -526,5 +528,6 @@
     "GUFemail": "Your Email address",
     "GUForganization": "Your Organization",
     "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed",
-    "rssFeed": "RSS feed"
+    "rssFeed": "RSS feed",
+    "approve": "Samþykkja"
 }

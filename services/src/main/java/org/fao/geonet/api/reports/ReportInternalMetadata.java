@@ -3,10 +3,7 @@ package org.fao.geonet.api.reports;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -133,8 +130,7 @@ public class ReportInternalMetadata implements IReport {
                 }
 
 
-                String mdTitle = ReportUtils.retrieveMetadataTitle(
-                    context, metadata.getId());
+                String mdTitle = ReportUtils.retrieveMetadataTitle(metadata.getUuid());
 
                 // Build the record element with the information for the report
                 List<String> record = new ArrayList<>();

@@ -444,26 +444,24 @@ public class GeonetworkDataDirectory {
             }
         }
 
-        Path encryptorFolder = configDir.resolve(Geonet.File.ENCRYPTOR_DIR);
-        if (!Files.exists(encryptorFolder)) {
-            Log.info(Geonet.DATA_DIRECTORY, "     - Copying encryptor directory...");
-            try {
-                final Path srcEncryptorDir = getDefaultDataDir(webappDir).resolve("config").resolve(Geonet.File.ENCRYPTOR_DIR);
-                final Path destDir = this.configDir.resolve(Geonet.File.ENCRYPTOR_DIR);
-                // Copy encryptor dir if doesn't exist
-                if (!Files.exists(destDir)) {
-                    IO.copyDirectoryOrFile(srcEncryptorDir, destDir, true);
-                }
 
-            } catch (IOException e) {
-                Log.info(
-                    Geonet.DATA_DIRECTORY,
-                    "      - Error copying encryptor config directory: "
-                        + e.getMessage());
-                throw e;
+        Log.info(Geonet.DATA_DIRECTORY, "     - Copying encryptor.properties file...");
+        try {
+            final Path srcEncryptorFile = getDefaultDataDir(webappDir).resolve("config").resolve(Geonet.File.ENCRYPTOR_CONFIGURATION);
+            final Path destEncryptorFile = this.configDir.resolve("encryptor.properties");
+            // Copy encryptor.properties if doesn't exist
+            if (!Files.exists(destEncryptorFile)) {
+                IO.copyDirectoryOrFile(srcEncryptorFile, destEncryptorFile, true);
             }
 
+        } catch (IOException e) {
+            Log.info(
+                Geonet.DATA_DIRECTORY,
+                "      - Error copying encryptor.propeties file: "
+                    + e.getMessage());
+            throw e;
         }
+
 
         final Path locDir = webappDir.resolve("loc");
         if (!Files.exists(locDir)) {

@@ -1278,7 +1278,7 @@
                     ['url', 'name'].forEach(function(pName) {
                       setParameterValue(pName, o[pName]);
                     });
-                    scope.params.protocol = 'WWW:DOWNLOAD-1.0-http--download';
+                    scope.params.protocol = scope.params.protocol || 'WWW:DOWNLOAD';
                   }
                 };
 

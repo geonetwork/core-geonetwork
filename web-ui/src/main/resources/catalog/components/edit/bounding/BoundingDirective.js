@@ -50,7 +50,9 @@
         restrict: 'E',
         scope: {
           polygonXml: '@',
-          identifier: '@'
+          identifier: '@',
+          // default is <gmd:polygon xmlns:gmd...>${geom}</gmd:polygon>
+          geomwrapper: '@'
         },
         templateUrl: '../../catalog/components/edit/bounding/' +
             'partials/boundingpolygon.html',
@@ -79,7 +81,7 @@
 
             // init map
             ctrl.map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP);
-            ctrl.map.get('creationPromise').then(function() {
+            ctrl.map.get('sizePromise').then(function() {
               ctrl.initValue();
             });
 
@@ -149,7 +151,7 @@
             });
 
             // output for editor (equals input by default)
-            ctrl.outputPolygonXml = surroundGmlWithGmdPolygon(ctrl.polygonXml);
+            ctrl.outputPolygonXml = surroundWithWrapper(ctrl.polygonXml);
 
             // projection list
             ctrl.projections = gnMap.getMapConfig().projectionList;
@@ -236,8 +238,13 @@
 
               // fit view if geom is valid & not empty
               if ((forceFitView || ctrl.fromTextInput) && feature.getGeometry() &&
-                  !ol.extent.isEmpty(feature.getGeometry().getExtent())) {
-                ctrl.map.getView().fit(getEnlargedExtent(feature), ctrl.map.getSize());
+                !ol.extent.isEmpty(feature.getGeometry().getExtent())) {
+                var extent = getEnlargedExtent(feature);
+                if (gnMap.isValidExtent(extent)) {
+                  ctrl.map.getView().fit(
+                    extent,
+                    ctrl.map.getSize(), {nearest: true});
+                }
               }
 
               var outputCrs = $attrs['outputCrs'] ? $attrs['outputCrs'] :
@@ -249,7 +256,7 @@
               if (!ctrl.readOnly) {
                 // GML 3.2.1 is used for ISO19139:2007
                 // TODO: ISO19115-3:2018
-                ctrl.outputPolygonXml = surroundGmlWithGmdPolygon(gnGeometryService.printGeometryOutput(
+                ctrl.outputPolygonXml = surroundWithWrapper(gnGeometryService.printGeometryOutput(
                   ctrl.map,
                   feature,
                   {
@@ -265,6 +272,7 @@
               if (!ctrl.fromTextInput) {
                 ctrl.updateInputTextFromGeometry(feature);
               }
+
             };
 
             // this will receive errors from the geometry tool input parsing
@@ -332,11 +340,10 @@
                   );
             };
 
-            function surroundGmlWithGmdPolygon(gmlString) {
-              return '<gmd:polygon xmlns:gmd="http://www.isotc211.org/2005/gmd">' +
-                 gmlString +
-                '</gmd:polygon>';
-
+            function surroundWithWrapper(gmlString) {
+              var geomwrapper = ctrl.geomwrapper
+                || '<gmd:polygon xmlns:gmd="http://www.isotc211.org/2005/gmd">${geom}</gmd:polygon>';
+              return geomwrapper.replace('${geom}', gmlString);
             }
           }
         ]

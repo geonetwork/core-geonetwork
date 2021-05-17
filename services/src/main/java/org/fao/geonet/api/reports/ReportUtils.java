@@ -25,16 +25,16 @@ package org.fao.geonet.api.reports;
 
 import com.google.common.collect.ImmutableSet;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.lang.NotImplementedException;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexFields;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -118,26 +118,11 @@ public final class ReportUtils {
     /**
      * Retrieves a metadata title from the Lucene index.
      *
-     * @param context    Service context.
-     * @param metadataId Metadata identifier.
+     * @param metadataUuid Metadata identifier.
      * @return Metadata title.
      */
-    public static String retrieveMetadataTitle(final ServiceContext context,
-                                               final int metadataId) {
-        return retrieveMetadataIndexField(context, metadataId, "_defaultTitle");
-    }
-
-
-    /**
-     * Retrieves a metadata uuid from the Lucene index.
-     *
-     * @param context    Service context.
-     * @param metadataId Metadata identifier.
-     * @return Metadata uuid.
-     */
-    public static String retrieveMetadataUuid(final ServiceContext context,
-                                              final int metadataId) {
-        return retrieveMetadataIndexField(context, metadataId, "_uuid");
+    public static String retrieveMetadataTitle(final String metadataUuid) {
+        return retrieveMetadataIndexField(metadataUuid, "title");
     }
 
 
@@ -148,32 +133,28 @@ public final class ReportUtils {
      * <p>
      * TODO / TODOES
      *
-     * @param context    Service context.
-     * @param metadataId Metadata identifier.
+     * @param metadataUuid Metadata identifier.
      * @param fieldName  Lucene field name.
      * @return Field value.
      */
     private static String retrieveMetadataIndexField(
-        final ServiceContext context,
-        final int metadataId,
+        final String metadataUuid,
         final String fieldName) {
-        String value = "";
-
-        throw new NotImplementedException("Not implemented in ES");
-//        try {
-//
-//            value = LuceneSearcher.getMetadataFromIndexById(
-//                    context.getLanguage(),
-//                    metadataId + "",
-//                    fieldName);
-//
-//            if (value == null) {
-//                value = "";
-//            }
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-
-//        return value;
+        EsSearchManager searchManager = ApplicationContextHolder.get().getBean(EsSearchManager.class);
+        try {
+            Map<String, Object> mdIndexFields = searchManager.getDocument(metadataUuid);
+            if ("title".equals(fieldName)) {
+                Object titleObjectField = mdIndexFields.get(IndexFields.RESOURCE_TITLE + "Object");
+                Object titleField = mdIndexFields.get(IndexFields.RESOURCE_TITLE);
+                if (titleObjectField instanceof HashMap) {
+                    return (String) ((HashMap<?, ?>) titleObjectField).get("default");
+                } else if (titleField instanceof String) {
+                    return (String) titleField;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

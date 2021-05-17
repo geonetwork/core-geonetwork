@@ -538,6 +538,9 @@
                      // Initialize tooltip when description returned
                      var html = '';
 
+                     // Add description to the body html
+                     html += '<p>' + info.description + '</p>';
+
                      // TODO: externalize in a template.
                      if (angular.isArray(info.help)) {
                        angular.forEach(info.help, function(helpText) {
@@ -555,9 +558,6 @@
                      if (iconMode) {
                        closeTooltips();
                      }
-
-                     // Add description to the body html
-                     html += '<p>' + info.description + '</p>';
 
                      // Right same width as field
                      // For legend, popover is right
