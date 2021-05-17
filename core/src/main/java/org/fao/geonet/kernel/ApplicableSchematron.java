@@ -44,7 +44,7 @@ public class ApplicableSchematron {
         return schematron;
     }
 
-    ApplicableSchematron(SchematronRequirement requirement, Schematron schematron) {
+    public ApplicableSchematron(SchematronRequirement requirement, Schematron schematron) {
         this.requirement = requirement;
         this.schematron = schematron;
     }

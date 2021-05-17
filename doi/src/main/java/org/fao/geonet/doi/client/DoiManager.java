@@ -22,27 +22,35 @@
 //==============================================================================
 package org.fao.geonet.doi.client;
 
+import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.ApplicableSchematron;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchematronValidator;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataSchemaUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Namespace;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -67,6 +75,12 @@ public class DoiManager {
     DataManager dm;
     SettingManager sm;
     BaseMetadataSchemaUtils schemaUtils;
+
+    @Autowired
+    SchematronValidator validator;
+
+    @Autowired
+    SchematronRepository schematronRepository;
 
     public static final String DOI_GET_SAVED_QUERY = "doi-get";
 
@@ -148,7 +162,7 @@ public class DoiManager {
             dataciteMetadata == null ?
             convertXmlToDataCiteFormat(metadata.getDataInfo().getSchemaId(),
                 metadata.getXmlData(false)) : dataciteMetadata;
-        checkPreConditionsOnDataCite(metadata, doi, dataciteFormatMetadata);
+        checkPreConditionsOnDataCite(metadata, doi, dataciteFormatMetadata, serviceContext.getLanguage());
         conditions.put(DoiConditions.DATACITE_FORMAT_IS_VALID, true);
         return conditions;
     }
@@ -200,7 +214,6 @@ public class DoiManager {
                 metadata.getUuid()));
         }
 
-
         // Record MUST not contains a DOI
         final MetadataSchema schema = schemaUtils.getSchema(metadata.getDataInfo().getSchemaId());
         Element xml = metadata.getXmlData(false);
@@ -248,9 +261,53 @@ public class DoiManager {
      * @param metadata
      * @param doi
      * @param dataciteMetadata
+     * @param language
      */
-    private void checkPreConditionsOnDataCite(AbstractMetadata metadata, String doi, Element dataciteMetadata) throws DoiClientException {
+    private void checkPreConditionsOnDataCite(AbstractMetadata metadata, String doi, Element dataciteMetadata, String language) throws DoiClientException {
         // * DataCite API is up an running ?
+
+
+        try {
+            List<MetadataValidation> validations = new ArrayList<>();
+            List<ApplicableSchematron> applicableSchematron = Lists.newArrayList();
+            ApplicableSchematron schematron =
+                new ApplicableSchematron(
+                    SchematronRequirement.REQUIRED,
+                    schematronRepository.findOneByFileAndSchemaName("schematron-rules-datacite.xsl",
+                        metadata.getDataInfo().getSchemaId()));
+            applicableSchematron.add(schematron);
+            Element rules = validator.applyCustomSchematronRules(metadata.getDataInfo().getSchemaId(),
+                metadata.getId(),
+                metadata.getXmlData(false),
+                language,
+                validations,
+                applicableSchematron);
+
+
+            List<Namespace> namespaces = new ArrayList<>();
+            namespaces.add(Geonet.Namespaces.GEONET);
+            namespaces.add(Geonet.Namespaces.SVRL);
+            List<?> failures = Xml.selectNodes(rules, ".//svrl:failed-assert/svrl:text/*", namespaces);
+            StringBuilder message = new StringBuilder();
+            if (failures.size() > 0) {
+                message.append("<ul>");
+                failures.forEach(f -> {
+                    message.append("<li>").append(((Element)f).getTextNormalize()).append("</li>");
+                });
+                message.append("</ul>");
+
+                throw new DoiClientException(String.format(
+                    "Record '%s' is not conform with DataCite format. %d mandatory field(s) missing. %s",
+                    metadata.getUuid(), failures.size(), message));
+            }
+        } catch (IOException|JDOMException e) {
+            throw new DoiClientException(String.format(
+                "Record '%s' is not conform with DataCite validation rules for mandatory fields. Error is: %s. " +
+                    "Required fields in DataCite are: identifier, creators, titles, publisher, publicationYear, resourceType. " +
+                    "<a href='%sapi/records/%s/formatters/datacite?output=xml'>Check the DataCite format output</a> and " +
+                    "adapt the record content to add missing information.",
+                metadata.getUuid(), e.getMessage(), sm.getNodeURL(), metadata.getUuid()));
+        }
 
         // XSD validation
         try {
