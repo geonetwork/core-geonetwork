@@ -945,6 +945,10 @@ public class BaseMetadataManager implements IMetadataManager {
                     changeDate = metadata.getDataInfo().getChangeDate().getDateAndTime();
                     createDate = metadata.getDataInfo().getCreateDate().getDateAndTime();
                 }
+                else {
+                    env.addContent(new Element("newRecord").setText("true"));
+                    createDate = new ISODate().toString();
+                }
                 env.addContent(new Element("changeDate").setText(changeDate));
                 env.addContent(new Element("createDate").setText(createDate));
             }
