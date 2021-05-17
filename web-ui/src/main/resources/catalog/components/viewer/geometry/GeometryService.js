@@ -262,6 +262,44 @@
 
       /**
        * @ngdoc method
+       * @methodOf gn_geometry.service:appendToMultiGeometry
+       * @name gnGeometryService#appendToMultiGeometry
+       *
+       * @description
+       * Takes a multi geometry and an array of geometries (of length 1) in order
+       * to merge the first element of the array into the base geometry
+       *
+       * @param {ol.geom} baseGeom # multi
+       * @param {array<ol.geom>} multiGeometries # multi
+       * @return {ol.geom} merged geometries
+       */
+      this.appendToMultiGeometry = function(baseGeom, multiGeometries) {
+        var geomType = baseGeom.getType();
+        switch (geomType) {
+          case 'MultiPoint':
+            multiGeometries.forEach(function(f) {
+              baseGeom.appendPoint(f.getGeometry().getPoints()[0]);
+            });
+            break;
+          case 'MultiLineString':
+            multiGeometries.forEach(function(f) {
+              baseGeom.appendLineString(f.getGeometry().getLineStrings()[0]);
+            });
+            break;
+          case 'MultiPolygon':
+            multiGeometries.forEach(function(f) {
+              baseGeom.appendPolygon(f.getGeometry().getPolygons()[0]);
+            });
+            break;
+          default:
+            console.error("Error when getting geometry type '{}' is not supported".format(geomType));
+            break;
+        }
+        return baseGeom;
+      };
+
+      /**
+       * @ngdoc method
        * @methodOf gn_geometry.service:gnGeometryService
        * @name gnGeometryService#printGeometryOutput
        *

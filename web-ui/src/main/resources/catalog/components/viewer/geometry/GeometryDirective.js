@@ -98,10 +98,18 @@
             // add our layer&interactions to the map
             ctrl.map.addInteraction(ctrl.drawInteraction);
             ctrl.map.addInteraction(ctrl.modifyInteraction);
+
             ctrl.drawInteraction.setActive(false);
             ctrl.modifyInteraction.setActive(false);
             olDecorateInteraction(ctrl.drawInteraction);
             olDecorateInteraction(ctrl.modifyInteraction);
+
+
+            // remove all my features from the map
+            function removeMyFeatures() {
+              ctrl.source.clear();
+              ctrl.features.clear();
+            }
 
             // cleanup when scope is destroyed
             $scope.$on('$destroy', function() {
@@ -109,12 +117,6 @@
               ctrl.map.removeInteraction(ctrl.drawInteraction);
               ctrl.map.removeInteraction(ctrl.modifyInteraction);
             });
-
-            // remove all my features from the map
-            function removeMyFeatures() {
-              ctrl.source.clear();
-              ctrl.features.clear();
-            }
 
             // modifies the output value
             function updateOutput(feature, isNew) {
@@ -165,29 +167,15 @@
               }
               // for multi geom, we append the feature to the existing one.
               else {
-                if (ctrl.geometryType.toLowerCase().contains('point')) {
-                  ctrl.features.getArray().forEach(function(f) {
-                    event.feature.getGeometry().appendPoint(f.getGeometry().getPoints()[0]);
-                  });
-                }
-                else if (ctrl.geometryType.toLowerCase().contains('line')) {
-                  ctrl.features.getArray().forEach(function(f) {
-                    event.feature.getGeometry().appendLineString(f.getGeometry().getLineStrings()[0]);
-                  });
-                }
-                else if (ctrl.geometryType.toLowerCase().contains('polygon')) {
-                  ctrl.features.getArray().forEach(function(f) {
-                    event.feature.getGeometry().appendPolygon(f.getGeometry().getPolygons()[0]);
-                  });
-                }
-
-                else {
-                  console.error("Error when getting geometry type '{}' is not supported".format(ctrl.geometryType));
-                }
-
+                var geom = gnGeometryService.appendToMultiGeometry(
+                  event.feature.getGeometry(),
+                  ctrl.features.getArray()
+                );
+                event.feature.setGeometry(geom);
               }
               ctrl.features.push(event.feature);
               updateOutput(event.feature);
+
               // prevent interference by zoom interaction
               // see https://github.com/openlayers/openlayers/issues/3610
               if (ctrl.zoomInteraction) {
