@@ -166,7 +166,7 @@ public class EsWFSFeatureIndexer {
      * @param connect   Init datastore ie. connect to WFS, retrieve schema
      */
     public void initialize(Exchange exchange, boolean connect) throws InvalidArgumentException {
-       WFSHarvesterParameter configuration = (WFSHarvesterParameter) exchange.getProperty("configuration");
+        WFSHarvesterParameter configuration = (WFSHarvesterParameter) exchange.getProperty("configuration");
         if (configuration == null) {
             throw new InvalidArgumentException("Missing WFS harvester configuration.");
         }
@@ -282,7 +282,7 @@ public class EsWFSFeatureIndexer {
                             LOGGER.warn("Error while getting feature for {}#{}. Exception is: {}", new Object[] {
                                 typeName, nbOfFeatures, e.getMessage()});
                             report.put("error_ss", String.format(
-                                "Error while getting feature for {}#{}. Exception is: {}",
+                                "Error while getting feature for %s#%s. Exception is: %s",
                                 typeName, nbOfFeatures, e.getMessage()
                             ));
                             continue;
@@ -356,9 +356,8 @@ public class EsWFSFeatureIndexer {
                                     LOGGER.warn("Error while getting attribute feature for {}#{} attribute {}, value {}. Exception is: {}", new Object[] {
                                         typeName, nbOfFeatures, attributeName, attributeValue, instantException.getMessage()});
                                     report.put("error_ss", String.format(
-                                        "Error while getting attribute feature for {}#{} attribute {}, value {}. Exception is: {}", new Object[]{
-                                            typeName, nbOfFeatures, attributeName, attributeValue, instantException.getMessage()
-                                        }));
+                                        "Error while getting attribute feature for %s#%s attribute %s, value %s. Exception is: %s",
+                                            typeName, nbOfFeatures, attributeName, attributeValue, instantException.getMessage()));
                                 }
                             } else {
                                 String value = attributeValue.toString();
