@@ -529,5 +529,7 @@
   "GUForganization": "Your Organization",
   "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed",
   "rssFeed": "RSS feed",
-  "approve": "Approve"
+  "approve": "Approve",
+  "pointOfTruth": "Point of truth of this metadata record",
+  "metadataLinkage": "Metadata linkage"
 }

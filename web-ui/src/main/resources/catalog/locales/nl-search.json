@@ -529,5 +529,7 @@
     "GUForganization": "Uw organisatie",
     "printUnsupportedLayerTypes": "De volgende laag typen zijn aanwezig, echter deze kunnen niet geprint worden",
     "rssFeed": "RSS-feed",
-    "approve": "Goedkeuren"
+    "approve": "Goedkeuren",
+    "pointOfTruth": "Point of truth of this metadata record",
+    "metadataLinkage": "Metadata linkage"
 }
