@@ -212,6 +212,15 @@
                setDcOutput();
              }
 
+             // To force drawing the bbox when the metadata extent changes.
+             // Required in CSW harvester, as the directive is initialised
+             // before the extent is assigned.
+             scope.$watchCollection('extent.md', function(newValue, oldValue) {
+                if (newValue !== oldValue) {
+                  scope.updateBbox();
+                }
+             });
+
              scope.$watch('projs.form', function(newValue, oldValue) {
                var extent = gnMap.reprojExtent(
                scope.extent.form, oldValue, newValue
