@@ -615,13 +615,22 @@
       };
 
       $scope.$watchCollection('extent', function(n, o) {
-        if (n !== o && n.md != null && $scope.harvesterSelected
-          && $scope.harvesterSelected.bboxFilter
-          && angular.isDefined($scope.harvesterSelected.bboxFilter['bbox-xmin'])) {
-          $scope.harvesterSelected.bboxFilter['bbox-xmin'] = parseFloat(n.md[0]);
-          $scope.harvesterSelected.bboxFilter['bbox-ymin'] = parseFloat(n.md[1]);
-          $scope.harvesterSelected.bboxFilter['bbox-xmax'] = parseFloat(n.md[2]);
-          $scope.harvesterSelected.bboxFilter['bbox-ymax'] = parseFloat(n.md[3]);
+        if (n !== o) {
+          if (!$scope.harvesterSelected.bboxFilter) {
+            $scope.harvesterSelected.bboxFilter = {};
+          }
+
+          if (n.md != null && $scope.harvesterSelected) {
+            $scope.harvesterSelected.bboxFilter['bbox-xmin'] = parseFloat(n.md[0]);
+            $scope.harvesterSelected.bboxFilter['bbox-ymin'] = parseFloat(n.md[1]);
+            $scope.harvesterSelected.bboxFilter['bbox-xmax'] = parseFloat(n.md[2]);
+            $scope.harvesterSelected.bboxFilter['bbox-ymax'] = parseFloat(n.md[3]);
+          } else {
+            $scope.harvesterSelected.bboxFilter['bbox-xmin'] = NaN;
+            $scope.harvesterSelected.bboxFilter['bbox-ymin'] = NaN;
+            $scope.harvesterSelected.bboxFilter['bbox-xmax'] = NaN;
+            $scope.harvesterSelected.bboxFilter['bbox-ymax'] = NaN;
+          }
         }
       });
 
@@ -705,7 +714,7 @@
                       }
                       for (var i = 0; i < bboxProperties.length; i ++) {
                         if (!$scope.harvesterSelected.bboxFilter[bboxProperties[i]]) {
-                          $scope.harvesterSelected.bboxFilter[bboxProperties[i]] = '';
+                          $scope.harvesterSelected.bboxFilter[bboxProperties[i]] = NaN;
                         }
                       }
                     }

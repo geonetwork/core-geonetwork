@@ -58,7 +58,8 @@
              extent: '=?',
              lang: '=',
              schema: '@',
-             location: '@'
+             location: '@',
+             showClearButton: '='
            },
            link: function(scope, element, attrs) {
              scope.drawing = false;
@@ -202,7 +203,7 @@
 
              var initExtents = function(map) {
                // Redefine map projection once map has been created.
-               // We do this because the user might have set up an 
+               // We do this because the user might have set up an
                // alternative projection in the config-viewer.xml.
                scope.projs.map = map.getView().getProjection().getCode();
                // Init extent from md for map and form
@@ -326,6 +327,15 @@
                feature.setGeometry(geom);
                feature.getGeometry().setCoordinates(coordinates);
                scope.extent.map = geom.getExtent();
+             };
+
+             scope.clearMap = function() {
+               scope.extent.md = null;
+               scope.extent.map = [];
+               scope.extent.form = [];
+
+               feature.setGeometry(null);
+               scope.updateBbox()
              };
 
              /**
