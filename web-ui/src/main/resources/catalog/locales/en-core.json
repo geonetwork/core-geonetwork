@@ -545,5 +545,10 @@
     "onTheWeb": "More online information",
     "pdfReportTocTitle": "Contents",
     "metadataValidated": "Metadata validated.",
-    "wmtsLayerNoUsableMatrixSet": "The WMTS layer could not be added. This may be because none of the projections advertised in the service matches any of the known projections of the application."
+    "wmtsLayerNoUsableMatrixSet": "The WMTS layer could not be added. This may be because none of the projections advertised in the service matches any of the known projections of the application.",
+    "chooseRegion": "Choose a region",
+    "clickToDrawABox": "Click once to enable control and draw a box. Click again to stop drawing.",
+    "drawRectangle": "Draw extent",
+    "clickToClearMapBox": "Click to clear the map box.",
+    "clearRectangle": "Clear extent"
 }

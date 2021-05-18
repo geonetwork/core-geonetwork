@@ -73,13 +73,22 @@
           </ul>
         </div>
       </div>
-      <!--Draw Button-->
       <div class=" pull-right" ng-if="!readOnly">
-        <button class="btn btn-default"
+        <!--Draw Button-->
+       <button class="btn btn-default"
                 title="{{'clickToDrawABox' | translate}}"
                 data-ng-click="drawMap()"
                 data-ng-class="{active : drawing}">
           <i class="fa fa-pencil"></i>&nbsp;<span data-translate="">drawRectangle</span>
+        </button>
+
+        <!--Clear Button-->
+        &nbsp;
+        <button class="btn btn-default"
+                title="{{'clickToClearMapBox' | translate}}"
+                data-ng-if="showClearButton"
+                data-ng-click="clearMap()">
+          <i class="fa fa-times"></i>&nbsp;<span data-translate="">clearRectangle</span>
         </button>
       </div>
     </div>
@@ -130,6 +139,6 @@
         </tr>
       </table>
     </div>
-    
+
   </div>
 </div>
