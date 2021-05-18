@@ -1502,7 +1502,11 @@
 
             var legendUrl = serviceUrl + '/legend?f=json';
             var legendPromise = $http.get(legendUrl).then(function (response) {
-              return gnEsriUtils.renderLegend(response.data, layer);
+              if (response.data.error) {
+                return $q.when();
+              } else {
+                return gnEsriUtils.renderLegend(response.data, layer);
+              }
             })
 
             var gnMap = this;
@@ -1512,9 +1516,12 @@
               .then(function (results) {
                 var layerInfo = results[0];
                 var legendUrl = results[1];
-                var extent =
-                  [layerInfo.extent.xmin, layerInfo.extent.ymin, layerInfo.extent.xmax, layerInfo.extent.ymax];
-                if (layerInfo.extent.spatialReference && layerInfo.extent.spatialReference.wkid) {
+                var extent = layerInfo.extent ?
+                  [layerInfo.extent.xmin, layerInfo.extent.ymin, layerInfo.extent.xmax, layerInfo.extent.ymax] : map.getView().calculateExtent();
+                if (layerInfo.extent
+                  && layerInfo.extent.spatialReference
+                  && layerInfo.extent.spatialReference.wkid) {
+
                   var srcProj = ol.proj.get(layerInfo.extent.spatialReference.wkid);
                   if (srcProj) {
                     try {
