@@ -932,6 +932,12 @@ public class BaseMetadataManager implements IMetadataManager {
             env.addContent(new Element("id").setText(id));
             env.addContent(new Element("uuid").setText(uuid));
 
+            if (metadata != null) {
+                env.addContent(new Element("newRecord").setText("false"));
+            } else {
+                env.addContent(new Element("newRecord").setText("true"));
+            }
+
             env.addContent(thesaurusManager.buildResultfromThTable(context));
 
             Element schemaLoc = new Element("schemaLocation");
@@ -946,7 +952,6 @@ public class BaseMetadataManager implements IMetadataManager {
                     createDate = metadata.getDataInfo().getCreateDate().getDateAndTime();
                 }
                 else {
-                    env.addContent(new Element("newRecord").setText("true"));
                     createDate = new ISODate().toString();
                 }
                 env.addContent(new Element("changeDate").setText(changeDate));
