@@ -230,7 +230,6 @@
     </xsl:copy>
   </xsl:template>
 
-
   <!-- Update revision date -->
   <xsl:template match="mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue='lastUpdate']">
     <xsl:copy>
