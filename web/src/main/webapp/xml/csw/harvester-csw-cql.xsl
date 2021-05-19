@@ -80,6 +80,12 @@
       <xsl:when test="$filter/operator = 'GREATERTHANOREQUALTO'">
         <xsl:value-of select="$filter/field"/> &gt;= '<xsl:value-of select="$filter/value"/>'
       </xsl:when>
+      <xsl:when test="$filter/operator = 'ISNULL'">
+        <xsl:value-of select="$filter/field"/> IS NULL
+      </xsl:when>
+      <xsl:when test="$filter/operator = 'ISNOTNULL'">
+        <xsl:value-of select="$filter/field"/> IS NOT NULL
+      </xsl:when>
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>

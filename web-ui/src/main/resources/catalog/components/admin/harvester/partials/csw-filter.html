@@ -19,19 +19,28 @@
         <option value="LIKE" data-translate="">csw-harvesterOperatorLike</option>
         <option value="NOTEQUAL" data-translate="">csw-harvesterOperatorNotEqual</option>
         <option value="NOTLIKE" data-translate="">csw-harvesterOperatorNotEqual</option>
+        <option value="ISNULL" data-translate="">csw-harvesterOperatorIsNull</option>
+        <option value="ISNOTNULL" data-translate="">csw-harvesterOperatorIsNotNull</option>
         <option value="LESSTHAN" data-translate="">csw-harvesterOperatorLessThan</option>
         <option value="GREATERTHAN" data-translate="">csw-harvesterOperatorGreaterThan</option>
         <option value="LESSTHANOREQUALTO" data-translate="">csw-harvesterOperatorLessThanOrEqualTo</option>
         <option value="GREATERTHANOREQUALTO" data-translate="">csw-harvesterOperatorGreaterThanOrEqualTo</option>
+
       </select>
     </div>
 
     <div class="col-lg-3 col-md-3 col-sm-3">
-      <input type="text" class="form-control" placeholder="value" data-ng-model="f['value']"/>
+      <input type="text" class="form-control"
+             placeholder="{{((f['operator'] == 'ISNULL') || (f['operator'] == 'ISNOTNULL')) ?'':('csw-harvesterValuePlaceholder' | translate)}}"
+             data-ng-model="f['value']"
+             data-ng-disabled="((f['operator'] == 'ISNULL') || (f['operator'] == 'ISNOTNULL'))"/>
     </div>
 
     <div class="col-lg-1 col-md-1 col-sm-1">
-      <button type="button" class="btn btn-default" data-ng-click="removeFilter($index)"><i class="fa fa-times text-danger"></i></button>
+      <button type="button" class="btn btn-default"
+              data-ng-click="removeFilter($index)">
+        <i class="fa fa-times text-danger"></i>
+      </button>
     </div>
   </div>
 

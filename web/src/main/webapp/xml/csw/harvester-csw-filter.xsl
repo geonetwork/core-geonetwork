@@ -121,6 +121,18 @@
           <ogc:Literal><xsl:value-of select="$filter/value"/></ogc:Literal>
         </ogc:PropertyIsGreaterThanEqualTo>
       </xsl:when>
+      <xsl:when test="$filter/operator = 'ISNULL'">
+        <ogc:PropertyIsNull>
+          <ogc:PropertyName><xsl:value-of select="$filter/field"/></ogc:PropertyName>
+        </ogc:PropertyIsNull>
+      </xsl:when>
+      <xsl:when test="$filter/operator = 'ISNOTNULL'">
+        <ogc:Not>
+          <ogc:PropertyIsNull>
+            <ogc:PropertyName><xsl:value-of select="$filter/field"/></ogc:PropertyName>
+          </ogc:PropertyIsNull>
+        </ogc:Not>
+      </xsl:when>
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
