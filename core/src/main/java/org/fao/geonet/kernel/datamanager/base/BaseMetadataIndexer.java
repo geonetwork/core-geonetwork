@@ -354,7 +354,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             final String changeDate = fullMd.getDataInfo().getChangeDate().getDateAndTime();
             final String source = fullMd.getSourceInfo().getSourceId();
             final MetadataType metadataType = fullMd.getDataInfo().getType();
-            final String root = fullMd.getDataInfo().getRoot();
             final String uuid = fullMd.getUuid();
             String indexKey = uuid;
             if (fullMd instanceof MetadataDraft) {
@@ -375,7 +374,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")"); // DEBUG
             }
 
-            fields.put(Geonet.IndexFieldNames.ROOT, root);
             fields.put(Geonet.IndexFieldNames.SCHEMA, schema);
             fields.put(Geonet.IndexFieldNames.RECORDLINKFLAG, "record");
             fields.put(Geonet.IndexFieldNames.DATABASE_CREATE_DATE, createDate);
@@ -399,7 +397,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     "Schema '%s' is not registerd in this catalog. Install it or remove those records",
                     schema
                 ));
-                searchManager.index(null, md, indexKey, fields, metadataType, root, forceRefreshReaders);
+                searchManager.index(null, md, indexKey, fields, metadataType, forceRefreshReaders);
                 Log.error(Geonet.DATA_MANAGER, String.format(
                     "Record %s / Schema '%s' is not registerd in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
                     metadataId, schema));
@@ -528,7 +526,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
                 fields.putAll(addExtraFields(fullMd));
 
-                searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType, root, forceRefreshReaders);
+                searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType, forceRefreshReaders);
             }
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId

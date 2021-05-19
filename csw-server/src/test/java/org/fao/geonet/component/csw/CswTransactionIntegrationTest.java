@@ -389,7 +389,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         extras.put("_isTemplate", "n");
         extras.put("_owner", "" + ownerId);
         _searchManager.index(schemaDir, metadata.getXmlData(false), "" + metadata.getId(), extras,
-            MetadataType.METADATA, metadata.getDataInfo().getRoot(), false);
+            MetadataType.METADATA,false);
     }
 
     private Element createUpdateTransaction(String property, Object newValue) {

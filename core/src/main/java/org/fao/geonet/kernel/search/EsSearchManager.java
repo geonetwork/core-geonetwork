@@ -376,7 +376,7 @@ public class EsSearchManager implements ISearchManager {
     @Override
     public void index(Path schemaDir, Element metadata, String id,
                       Multimap<String, Object> dbFields,
-                      MetadataType metadataType, String root,
+                      MetadataType metadataType,
                       boolean forceRefreshReaders) throws Exception {
 
         Element docs = new Element("doc");
@@ -782,17 +782,22 @@ public class EsSearchManager implements ISearchManager {
     public Map<String, String> getDocsChangeDate() throws Exception {
         // TODO: Response could be large
         // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/master/java-rest-high-search-scroll.html
-
-        int from = 0;
-        SettingInfo si = ApplicationContextHolder.get().getBean(SettingInfo.class);
-        int size = Integer.parseInt(si.getSelectionMaxRecords());
-
-        final SearchResponse response = client.query(defaultIndex, "*", null, docsChangeIncludedFields, from, size);
-
         final Map<String, String> docs = new HashMap<>();
-        response.getHits().forEach(r -> {
-            docs.put(r.getId(), (String) r.getSourceAsMap().get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE));
-        });
+        try {
+            int from = 0;
+            SettingInfo si = ApplicationContextHolder.get().getBean(SettingInfo.class);
+            int size = Integer.parseInt(si.getSelectionMaxRecords());
+
+            final SearchResponse response = client.query(defaultIndex, "*", null, docsChangeIncludedFields, from, size);
+
+            response.getHits().forEach(r -> {
+                docs.put(r.getId(), (String) r.getSourceAsMap().get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE));
+            });
+        } catch (Exception e) {
+            LOGGER.error("Error while collecting all documents: {}", e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
         return docs;
     }
 
