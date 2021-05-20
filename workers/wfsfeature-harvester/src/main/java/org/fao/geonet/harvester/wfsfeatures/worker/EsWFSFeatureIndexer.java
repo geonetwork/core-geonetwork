@@ -42,13 +42,13 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.rest.RestStatus;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.index.es.EsRestClient;
-import org.geotools.data.Query;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.store.ReprojectingFeatureCollection;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.referencing.CRS;
+import org.geotools.temporal.object.DefaultInstant;
 import org.geotools.util.logging.Logging;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
@@ -57,6 +57,7 @@ import org.locationtech.jts.geom.PrecisionModel;
 import org.locationtech.jts.precision.GeometryPrecisionReducer;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.geometry.BoundingBox;
+import org.opengis.temporal.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,6 +176,8 @@ public class EsWFSFeatureIndexer {
             configuration.getMetadataUuid(),
             configuration.getUrl(),
             configuration.getTypeName(),
+            configuration.getTreeFields(),
+            configuration.getTokenizedFields(),
             exchange.getExchangeId()});
 
         WFSHarvesterExchangeState config = new WFSHarvesterExchangeState(configuration);
@@ -272,7 +275,18 @@ public class EsWFSFeatureIndexer {
                 while (features.hasNext()) {
 
                     try {
-                        SimpleFeature feature = features.next();
+                        SimpleFeature feature = null;
+                        try {
+                            feature = features.next();
+                        } catch (Exception e) {
+                            LOGGER.warn("Error while getting feature for {}#{}. Exception is: {}", new Object[] {
+                                typeName, nbOfFeatures, e.getMessage()});
+                            report.put("error_ss", String.format(
+                                "Error while getting feature for %s#%s. Exception is: %s",
+                                typeName, nbOfFeatures, e.getMessage()
+                            ));
+                            continue;
+                        }
                         ObjectNode rootNode = protoNode.deepCopy();
                         titleResolver.setTitle(rootNode, feature);
 
@@ -334,7 +348,17 @@ public class EsWFSFeatureIndexer {
                                 rootNode.put("bbox_ymin", bbox.getMinY());
                                 rootNode.put("bbox_xmax", bbox.getMaxX());
                                 rootNode.put("bbox_ymax", bbox.getMaxY());
-
+                            } else if (attributeValue instanceof Instant) {
+                                try {
+                                    rootNode.put(getDocumentFieldName(attributeName),
+                                        ((DefaultInstant) attributeValue).getPosition().getDate().toInstant().toString());
+                                } catch (Exception instantException) {
+                                    LOGGER.warn("Error while getting attribute feature for {}#{} attribute {}, value {}. Exception is: {}", new Object[] {
+                                        typeName, nbOfFeatures, attributeName, attributeValue, instantException.getMessage()});
+                                    report.put("error_ss", String.format(
+                                        "Error while getting attribute feature for %s#%s attribute %s, value %s. Exception is: %s",
+                                            typeName, nbOfFeatures, attributeName, attributeValue, instantException.getMessage()));
+                                }
                             } else {
                                 String value = attributeValue.toString();
                                 rootNode.put(getDocumentFieldName(attributeName),
@@ -512,6 +536,7 @@ public class EsWFSFeatureIndexer {
             this.url = url;
             this.firstFeatureIndex = firstFeatureIndex;
             this.report = report;
+
             this.metadataUuid = metadataUuid;
             this.bulk =  new BulkRequest(index);
             this.bulkSize = 0;
