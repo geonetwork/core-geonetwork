@@ -453,6 +453,33 @@ ul.gn-resultview li.list-group-item {
 
   }
 
+  // map for csw harvester
+  .gn-drawmap-panel {
+    .gn-editor-map {
+      padding: 0 15px 15px 15px;
+      position: relative;
+      margin-top: 0;
+      [ol-map] {
+        border-radius: 0;
+        .ol-attribution {
+          .gn-attribution();
+        }
+      }
+    }
+    .gn-editor-map-toolbar {
+      margin: 30px 15px 0 15px;
+      padding: 10px;
+      border: 1px solid @panel-default-border;
+      background-color: @panel-default-heading-bg;
+      border-bottom: 0;
+    }
+    .gn-editor-map + .gn-editor-map-toolbar {
+      margin: -15px 15px 0 15px;
+      border-top: 0;
+      border-bottom: 1px solid @panel-default-border;
+    }
+  }
+
 }
 
 
