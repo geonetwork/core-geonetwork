@@ -110,6 +110,20 @@
         },
         track_total_hits: true
       },
+      harvester: {
+        facets: gnGlobalSettings.gnCfg.mods.admin.facetConfig,
+        source: {
+          includes: [
+            'id',
+            'uuid',
+            'overview.*',
+            'resource*',
+            'isTemplate',
+            'valid'
+          ]
+        },
+        track_total_hits: true
+      },
       directory: {
         facets: {
           'valid': {

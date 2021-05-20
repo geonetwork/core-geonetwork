@@ -42,18 +42,23 @@
   module.controller('GnHarvestSettingsController', [
     '$scope', '$q', '$http', '$translate', '$injector', '$rootScope',
     'gnSearchManagerService', 'gnUtilityService', '$timeout',
-    'Metadata', 'gnMapsManager',
+    'Metadata', 'gnMapsManager', 'gnGlobalSettings',
     function($scope, $q, $http, $translate, $injector, $rootScope,
              gnSearchManagerService, gnUtilityService, $timeout,
-             Metadata, gnMapsManager) {
+             Metadata, gnMapsManager, gnGlobalSettings) {
 
       $scope.searchObj = {
         internal: true,
-        params: {
+        configId: 'harvester',
+        defaultParams: {
           isTemplate: ['y', 'n', 's', 't'],
           sortBy: 'resourceTitleObject.default.keyword'
         }};
+      $scope.searchObj.params = angular.extend({},
+        $scope.searchObj.params,
+        $scope.searchObj.defaultParams);
 
+      $scope.facetConfig = gnGlobalSettings.gnCfg.mods.admin.facetConfig;
       $scope.harvesterTypes = {};
       $scope.harvesterSelected = null;
       $scope.harvesterUpdated = false;

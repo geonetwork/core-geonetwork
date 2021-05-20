@@ -32,7 +32,7 @@
                 <i class="fa fa-spinner fa-spin fa-2x"/>
               </span>
               <span>{{ 'lastRun' | translate }}: {{ h.info.lastRun | gnFromNow }}</span><br>
-              <span>{{ 'harvesterRecords' | translate }}: {{h.info.result.total}}</span>
+              <span data-ng-if="h.info.result.total">{{ 'harvesterRecords' | translate }}: {{h.info.result.total}}</span>
             </p>
           </a>
           <span data-gn-pagination-list=""
@@ -97,7 +97,8 @@
   </div>
 
 
-  <div class="col-lg-8" data-ng-hide="harvesterSelected['@id'] == null">
+  <div class="col-lg-8" data-ng-hide="harvesterSelected['@id'] == null"
+       data-ng-search-form="">
 
     <tabset id="harvester-tabset" type="pills" justified="false" role="tablist">
       <tab heading="{{'settings' | translate}}"
@@ -291,13 +292,15 @@
           </div>
         </div>
       </tab>
-      <tab heading="{{'results' | translate}}"
+      <tab heading="{{ searchResults.count }} {{'metadataRecords' | translate}}"
+           data-ng-hide="harvesterSelected['@id'] == ''
+                          || searchResults.count == '-1'
+                          || isLoadingOneHarvester
+                          || deleting.indexOf(harvesterSelected['@id']) > -1"
+           data-ng-show="searchResults.count > 0"
            role="tab">
         <div id="gn-harvest-records-panel"
-             class="gn-margin-top"
-             data-ng-hide="harvesterSelected['@id'] == '' || isLoadingOneHarvester || deleting.indexOf(harvesterSelected['@id']) > -1"
-             data-ng-search-form=""
-             data-ng-show="searchResults.count != '0'">
+             class="gn-margin-top">
 
           <div class="panel panel-default">
             <div class="panel-heading">
@@ -314,49 +317,10 @@
                   </li>
                 </ul>
 
-                <!-- TODO: loop over configurable list -->
-                <span data-ng-repeat="r in searchResults.facets"
-                      data-ng-if="r.key === 'availableInServices'">
-                  <ul class="col-md-4 text-center list-group gn-nomargin-bottom"
-                      data-ng-repeat="i in r.items">
-                    <li class="list-group-item">
-                      <h1>
-                        <i class="fa fa-download" data-ng-if="i.value === 'availableInDownloadService'"></i>
-                        <i class="fa fa-eye" data-ng-if="i.value === 'availableInViewService'"></i>
-                        {{ i.count }}</h1>
-                      <p>
-                        {{ 'availableInServices-' + i.value | translate }}
-                      </p>
-                    </li>
-                  </ul>
-                </span>
+
+                <div data-ng-show="searchResults.records.length > 0"
+                     data-es-facets="searchResults.facets"></div>
               </div>
-
-              <div class="row">
-
-                <ul class=" list-group gn-nomargin-bottom height-auto">
-
-                  <li class="col-lg-6 col-md-12 list-group-item gn-margin-top"
-                      data-ng-repeat="f in searchResults.facets"
-                      data-ng-if="f.key === 'cl_hierarchyLevel.key' || f.key === 'tag.default'">
-                    <!-- topic/keyword -->
-                    <div data-ng-if="f.key === 'tag.default'"
-                         data-ng-show="f.items.length > 0">
-                      <h4 data-translate="">facet-tag</h4>
-                      <div gn-facet-vega="f"></div>
-                    </div>
-                    <!-- hierarchy -->
-                    <div data-ng-if="f.key === 'cl_hierarchyLevel.key'"
-                         data-ng-show="f.items.length > 0">
-                      <h4 data-translate="">facet-cl_hierarchyLevel</h4>
-                      <div gn-facet-vega="f" class="maxwidth-100"></div>
-                    </div>
-
-                  </li>
-
-                </ul>
-              </div>
-
             </div>
           </div>
           <div class="panel panel-default">
@@ -388,6 +352,12 @@
                         data-translate-values="{records: '{{searchResults.count}}'}">
                         deleteHarvesterRecords</span>
                 </button>
+              </div>
+
+
+              <div data-search-filter-tags
+                   data-dimensions="searchResults.facets"
+                   ng-if="searchResults.facets">
               </div>
 
               <!-- This information is not relevant for GeoNetwork protocol
