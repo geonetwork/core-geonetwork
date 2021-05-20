@@ -43,10 +43,10 @@
     'gnAlertService',
     'gnMeasure',
     'gnViewerService',
-    '$location', '$q', '$translate', '$timeout',
+    '$location', '$q', '$translate', '$timeout', '$http',
     function(gnMap, gnConfig, gnSearchLocation, gnMetadataManager,
              gnSearchSettings, gnViewerSettings, gnAlertService, gnMeasure,
-             gnViewerService, $location, $q, $translate, $timeout) {
+             gnViewerService, $location, $q, $translate, $timeout, $http) {
       return {
         restrict: 'A',
         replace: true,
@@ -336,6 +336,25 @@
                 positioning: 'bottom-left'
               });
               scope.map.addOverlay(overlay);
+
+              // Collect some catalogue info to enable/disable tools
+              // depending on catalog content.
+              scope.metrics = {};
+              $http.post('../api/search/records/_search', {
+                "size": 0,
+                "aggs" : {
+                  "metrics" : {
+                    "filters" : {
+                      "filters" : {
+                        "maps" :   { "query_string" : { "query" : "+resourceType:\"map/interactive\""   }}
+                      }
+                    }
+                  }
+                }}, {cache: true}).then(
+                function(r) {
+                  scope.metrics.mapsNumber = r.data.aggregations.metrics.buckets.maps.doc_count;
+                });
+
 
               // watch open tool specified by the service; this will allow code
               // from anywhere to interact with the viewer tabs

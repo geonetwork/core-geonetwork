@@ -673,7 +673,7 @@ public class MetadataInsertDeleteApi {
 
             // Update the MD
             Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
-            onlineSrcParams.put("protocol", "WWW:DOWNLOAD-OGC:OWS-C");
+            onlineSrcParams.put("protocol", "OGC:OWS-C");
             onlineSrcParams.put("url",
                 settingManager.getNodeURL() + String.format("api/records/%s/attachments/%s", uuid, filename));
             onlineSrcParams.put("name", filename);
