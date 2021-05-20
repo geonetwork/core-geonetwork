@@ -64,7 +64,6 @@ public class OpenApiConfig  {
         List<Server> servers = new ArrayList<>();
 
         String version = settingManager.getValue(SYSTEM_PLATFORM_VERSION);
-
         String hostUrl = settingManager.getBaseURL().replaceAll("/+$", "");
 
         ServerVariable catalogVariable = new ServerVariable()
