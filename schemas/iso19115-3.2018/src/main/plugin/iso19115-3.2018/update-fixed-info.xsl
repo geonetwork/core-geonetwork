@@ -150,6 +150,18 @@
               </cit:CI_Date>
             </mdb:dateInfo>
           </xsl:when>
+          <xsl:when test="$currentDateType = 'creation' and /root/env/newRecord = 'true'">
+              <mdb:dateInfo>
+                <cit:CI_Date>
+                  <cit:date>
+                    <gco:DateTime><xsl:value-of select="/root/env/createDate"/></gco:DateTime>
+                  </cit:date>
+                  <cit:dateType>
+                    <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="creation"/>
+                  </cit:dateType>
+                </cit:CI_Date>
+              </mdb:dateInfo>
+          </xsl:when>
           <xsl:otherwise>
             <xsl:copy-of select="."/>
           </xsl:otherwise>
@@ -217,7 +229,6 @@
       <xsl:apply-templates select="mdb:acquisitionInformation"/>
     </xsl:copy>
   </xsl:template>
-
 
   <!-- Update revision date -->
   <xsl:template match="mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue='lastUpdate']">
