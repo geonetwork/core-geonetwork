@@ -70,26 +70,40 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- Insert the DOI after the last onLine element of the first distributionInfo section.
-   This expect to have one onLine element at least.
-  <xsl:template match="gmd:distributionInfo[1]/*/gmd:transferOptions/*/gmd:onLine[
-                              not($isDoiAlreadySet) and
-                              name(following-sibling::*[1]) != 'gmd:onLine']"
+  <!-- Insert the DOI in the first distributionInfo section
+  (a distribution format is mandatory in ISO
+  and a publisher (distributor) is required for a DOI
+  so it should always exist).
+
+  Adding a new transfer option block. 
+  <xsl:template match="gmd:distributionInfo[not($isDoiAlreadySet) and position() = 1]"
                 priority="2">
-    <xsl:copy-of select="."/>
-    <gmd:onLine>
-      <gmd:CI_OnlineResource>
-        <gmd:linkage>
-          <gmd:URL><xsl:value-of select="$doi"/></gmd:URL>
-        </gmd:linkage>
-        <gmd:protocol>
-          <gco:CharacterString><xsl:value-of select="$doiProtocol"/></gco:CharacterString>
-        </gmd:protocol>
-        <gmd:name>
-          <gco:CharacterString><xsl:value-of select="$doiName"/></gco:CharacterString>
-        </gmd:name>
-      </gmd:CI_OnlineResource>
-    </gmd:onLine>
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <gmd:MD_Distribution>
+        <xsl:apply-templates select="*/@*"/>
+        <xsl:apply-templates select="*/gmd:distributionFormat"/>
+        <xsl:apply-templates select="*/gmd:distributor"/>
+        <xsl:apply-templates select="*/gmd:transferOptions"/>
+        <gmd:transferOptions>
+          <gmd:MD_DigitalTransferOptions>
+            <gmd:onLine>
+              <gmd:CI_OnlineResource>
+                <gmd:linkage>
+                  <gmd:URL><xsl:value-of select="$doi"/></gmd:URL>
+                </gmd:linkage>
+                <gmd:protocol>
+                  <gco:CharacterString><xsl:value-of select="$doiProtocol"/></gco:CharacterString>
+                </gmd:protocol>
+                <gmd:name>
+                  <gco:CharacterString><xsl:value-of select="$doiName"/></gco:CharacterString>
+                </gmd:name>
+              </gmd:CI_OnlineResource>
+            </gmd:onLine>
+          </gmd:MD_DigitalTransferOptions>
+        </gmd:transferOptions>
+      </gmd:MD_Distribution>
+    </xsl:copy>
   </xsl:template>
   -->
 

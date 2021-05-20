@@ -4,6 +4,7 @@
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+                xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -15,12 +16,21 @@
 
   <xsl:param name="doi"
              select="''"/>
+  <xsl:variable name="doiProtocol"
+                select="'DOI'"/>
+  <xsl:variable name="doiName"
+                select="'Digital Object Identifier (DOI)'"/>
+  <xsl:param name="doiProtocolRegex"
+             select="'(DOI|WWW:LINK-1.0-http--metadata-URL)'"/>
 
   <xsl:variable name="isDoiAlreadySet"
                 select="count(//mdb:identificationInfo/*/mri:citation/*/
                               cit:identifier/*/mcc:code[
                                 contains(*/text(), 'doi.org')
                                 or contains(*/@xlink:href, 'doi.org')]) > 0"/>
+
+<!--  <xsl:variable name="isDoiAlreadySet"-->
+<!--                select="count(//mdb:distributionInfo//mrd:onLine/*[matches(cit:protocol/gco:CharacterString, $doiProtocolRegex)]/cit:linkage/gco:CharacterString[. != '']) > 0"/>-->
 
 
   <xsl:template match="mdb:identificationInfo[1]/*/mri:citation/*[not($isDoiAlreadySet)]"
@@ -63,6 +73,36 @@
                           "/>
     </xsl:copy>
   </xsl:template>
+
+
+  <!--<xsl:template match="mdb:distributionInfo[not($isDoiAlreadySet) and position() = 1]">
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <mrd:MD_Distribution>
+        <xsl:apply-templates select="*/@*"/>
+        <xsl:apply-templates select="*/mrd:distributionFormat"/>
+        <xsl:apply-templates select="*/mrd:distributor"/>
+        <xsl:apply-templates select="*/mrd:transferOptions"/>
+        <mrd:transferOptions>
+          <mrd:MD_DigitalTransferOptions>
+            <mrd:onLine>
+              <cit:CI_OnlineResource>
+                <cit:linkage>
+                  <gco:CharacterString><xsl:value-of select="$doi"/></gco:CharacterString>
+                </cit:linkage>
+                <cit:protocol>
+                  <gco:CharacterString><xsl:value-of select="$doiProtocol"/></gco:CharacterString>
+                </cit:protocol>
+                <cit:name>
+                  <gco:CharacterString><xsl:value-of select="$doiName"/></gco:CharacterString>
+                </cit:name>
+              </cit:CI_OnlineResource>
+            </mrd:onLine>
+          </mrd:MD_DigitalTransferOptions>
+        </mrd:transferOptions>
+      </mrd:MD_Distribution>
+    </xsl:copy>
+  </xsl:template>-->
 
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">
