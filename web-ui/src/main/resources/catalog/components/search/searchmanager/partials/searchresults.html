@@ -34,7 +34,9 @@
           data-ng-click="onClick(md)">
         <div data-ng-if="options.mode == 'title'">
           <gn-md-type-widget metadata="md"></gn-md-type-widget>
-          {{md.resourceTitle}}
+          <a href="catalog.search#/metadata/{{md.uuid}}">
+            {{md.resourceTitle}}
+          </a>
         </div>
         <div class="row" data-ng-if="options.mode == 'simple'">
           <div class="col-lg-12"
