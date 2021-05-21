@@ -83,9 +83,6 @@
               scope.setActiveLayer = function(layer) {
                 scope.activeLayer = layer;
               }
-              scope.clearActiveLayer = function() {
-                scope.activeLayer = null;
-              }
               scope.getActiveLayer = function() {
                 return scope.activeLayer;
               }

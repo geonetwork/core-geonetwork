@@ -12,8 +12,7 @@
         scope: {
           layer: '<',
           map: '<',
-          user: '<',
-          onClose: '&'
+          user: '<'
         },
         controller: ['$scope', '$element', function($scope, $element) {
           this.addToPanier = function() {
@@ -101,10 +100,6 @@
               scope.process = p;
             }
           }
-
-          scope.handleClose = function () {
-            scope.onClose();
-          };
 
           scope.$watch('layer', function (newVal) {
             handleLayerChange(newVal);

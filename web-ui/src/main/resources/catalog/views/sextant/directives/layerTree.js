@@ -26,9 +26,9 @@
           var $this = this;
           this.user = $scope.user;
 
-          this.toggleActiveLayer = function(layer) {
+          this.setActiveLayer = function(layer) {
             // uses ViewerDirective scope
-            $scope.getActiveLayer() === layer ? $scope.clearActiveLayer() : $scope.setActiveLayer(layer);
+            $scope.setActiveLayer(layer);
           };
           this.isActiveLayer = function(layer) {
             // uses ViewerDirective scope
@@ -191,6 +191,15 @@
           // layers loaded for the first time are always from a context
           scope.layersFromContext = true;
 
+          // browse the tree to find the first layer and select it
+          function selectFirstLayer(node) {
+            if (node instanceof ol.layer.Base && !node.get('loading')) {
+              scope.setActiveLayer(node);
+            } else if (Array.isArray(node.nodes)) {
+              node.nodes.forEach(selectFirstLayer);
+            }
+          }
+
           // Build the layer manager tree depending on layer groups
           var buildTree = function() {
             if(debounce > 0) {
@@ -258,6 +267,11 @@
                   scope.layerTree.nodes.push(l);
                 }
               });
+
+              // if no layer selected, use the first one
+              if (!scope.getActiveLayer()) {
+                scope.layerTree.nodes.forEach(selectFirstLayer);
+              }
 
               debounce--;
             }, 100);
@@ -422,9 +436,9 @@
 
           }
 
-          scope.toggleActiveLayer = function() {
+          scope.setActiveLayer = function() {
             // uses sxtLayertree controller
-            controller.toggleActiveLayer(scope.member);
+            controller.setActiveLayer(scope.member);
           };
           scope.isActiveLayer = function() {
             // uses sxtLayertree controller
