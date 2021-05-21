@@ -529,7 +529,5 @@
     "GUForganization": "Din organisation",
     "printUnsupportedLayerTypes": "Följande lagertyper finns men kan inte skrivas ut",
     "rssFeed": "RSS-flöde",
-    "approve": "Godkänna",
-    "pointOfTruth": "Point of truth of this metadata record",
-    "metadataLinkage": "Metadata linkage"
+    "approve": "Godkänna"
 }

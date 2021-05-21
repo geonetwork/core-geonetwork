@@ -529,7 +529,5 @@
     "GUForganization": "Organisation",
     "printUnsupportedLayerTypes": "Le format des couches suivantes n'est pas supporté par l'impression PDF :",
     "rssFeed": "Flux RSS",
-    "approve": "Approuver",
-    "pointOfTruth": "Point of truth of this metadata record",
-    "metadataLinkage": "Metadata linkage"
+    "approve": "Approuver"
 }
