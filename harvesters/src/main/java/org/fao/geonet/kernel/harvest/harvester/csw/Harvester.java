@@ -388,9 +388,11 @@ class Harvester implements IHarvester<HarvestResult> {
             preferredOutputSchema = this.params.outputSchema;
         }
         request.setOutputSchema(preferredOutputSchema);
-        request.setConstraintLanguage(constraintLanguage);
-        request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-        request.setConstraint(constraint);
+        if (StringUtils.isNotEmpty(constraint)) {
+            request.setConstraintLanguage(constraintLanguage);
+            request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
+            request.setConstraint(constraint);
+        }
         request.setMethod(method);
 
         // Adapt the typename parameter to the outputschema used
@@ -594,28 +596,42 @@ class Harvester implements IHarvester<HarvestResult> {
             bboxCoordinates.put("bbox-xmax", Double.parseDouble(bboxFilter.getChildText("bbox-xmax")));
             bboxCoordinates.put("bbox-ymax", Double.parseDouble(bboxFilter.getChildText("bbox-ymax")));
 
+            if (cswFilter.getChildren().size() == 0) {
+                cswFilter.addContent(buildBboxFilter(bboxCoordinates));
+            } else {
+                Element filterContent = ((Element) cswFilter.getChildren().get(0));
+                filterContent = (Element) filterContent.detach();
 
-            Element and = new Element("And", Csw.NAMESPACE_OGC);
-            and.addContent(buildBboxFilter(bboxCoordinates));
-            cswFilter.addContent(and);
+                Element and = new Element("And", Csw.NAMESPACE_OGC);
+                and.addContent(filterContent);
+                and.addContent(buildBboxFilter(bboxCoordinates));
+                cswFilter.setContent(and);
+            }
         }
 
-        return Xml.getString(cswFilter);
+        if (cswFilter.getChildren().size() == 0) {
+            return StringUtils.EMPTY;
+        } else {
+            return Xml.getString(cswFilter);
+        }
     }
 
     private String getCqlConstraint(List<Element> filters, Element bboxFilter) throws Exception {
-        Path file = context.getAppPath().resolve("xml").resolve("csw").resolve("harvester-csw-cql.xsl");
+        String cqlFilter = "";
 
-        Element eltFilter = new Element("filters");
-        for(Element e: filters) {
-            Element e1 = (Element) e.clone();
+        if (filters.size() > 0) {
+            Path file = context.getAppPath().resolve("xml").resolve("csw").resolve("harvester-csw-cql.xsl");
 
-            eltFilter.addContent(e1.detach());
+            Element eltFilter = new Element("filters");
+            for(Element e: filters) {
+                Element e1 = (Element) e.clone();
+
+                eltFilter.addContent(e1.detach());
+            }
+
+            Element cswFilter = Xml.transform(eltFilter, file);
+            cqlFilter = cswFilter.getText();
         }
-
-        Element cswFilter = Xml.transform(eltFilter, file);
-
-        String cqlFilter = Xml.getString(cswFilter);
 
         if (bboxFilter != null) {
             Map<String, Double> bboxCoordinates = new HashMap<>();
@@ -623,10 +639,6 @@ class Harvester implements IHarvester<HarvestResult> {
             bboxCoordinates.put("bbox-ymin", Double.parseDouble(bboxFilter.getChildText("bbox-ymin")));
             bboxCoordinates.put("bbox-xmax", Double.parseDouble(bboxFilter.getChildText("bbox-xmax")));
             bboxCoordinates.put("bbox-ymax", Double.parseDouble(bboxFilter.getChildText("bbox-ymax")));
-
-            Element and = new Element("And", Csw.NAMESPACE_OGC);
-            and.addContent(buildBboxFilter(bboxCoordinates));
-            cswFilter.addContent(and);
 
             if (StringUtils.isNotEmpty(cqlFilter)) {
                 cqlFilter = cqlFilter + " AND ";
@@ -639,66 +651,6 @@ class Harvester implements IHarvester<HarvestResult> {
         }
 
         return cqlFilter;
-    }
-
-    private String getCqlConstraint(Search s) {
-        ArrayList<String> queryables = new ArrayList<String>();
-        Map<String, Double> bboxCoordinates = new HashMap<String, Double>();
-
-        if (!s.attributesMap.isEmpty()) {
-            for (Map.Entry<String, String> entry : s.attributesMap.entrySet()) {
-                if (bboxParameters.contains(entry.getKey())
-                    && StringUtils.isNotEmpty(entry.getValue())) {
-                    bboxCoordinates.put(entry.getKey(), Double.valueOf(entry.getValue()));
-                } else if (entry.getValue() != null) {
-                    buildCqlQueryable(queryables, "csw:" + entry.getKey(), entry.getValue());
-                }
-            }
-        } else {
-            log.debug("no search criterion specified, harvesting all ... ");
-        }
-        //--- build CQL query
-        StringBuffer sb = new StringBuffer();
-
-        for (int i = 0; i < queryables.size(); i++) {
-            sb.append(queryables.get(i));
-
-            if (i < queryables.size() - 1) {
-                sb.append(" AND ");
-            }
-        }
-
-        if (bboxCoordinates.size() > 0) {
-            if (queryables.size() > 0) {
-                sb.append(" AND ");
-            }
-            //BBOX(the_geom, -90, 40, -60, 45)
-            sb.append(String.format("BBOX(the_geom, %s, %s, %s, %s)",
-                bboxCoordinates.get("bbox-xmin"), bboxCoordinates.get("bbox-ymin"),
-                bboxCoordinates.get("bbox-xmax"), bboxCoordinates.get("bbox-ymax")
-                ));
-        }
-
-        return (queryables.size() == 0 && bboxCoordinates.size() == 0) ? null : sb.toString();
-    }
-
-    /**
-     * Build CQL from user entry. If parameter value contains '%', then the like operator is used.
-     */
-    private void buildCqlQueryable(List<String> queryables, String name, String value) {
-        if (value.length() != 0) {
-            if (value.contains("%")) {
-                buildCqlQueryable(queryables, name, value, "like");
-            } else {
-                buildCqlQueryable(queryables, name, value, "=");
-            }
-        }
-    }
-
-    private void buildCqlQueryable(List<String> queryables, String name, String value, String operator) {
-        if (value.length() != 0) {
-            queryables.add(name + " " + operator + " '" + value + "'");
-        }
     }
 
     private Element doSearch(CatalogRequest request, int start, int max) throws Exception {
