@@ -1209,7 +1209,6 @@ sxt-annotations-editor {
     }
     .tab-content {
       overflow: auto;
-      height: auto; // without this, a scrollbar is always visible in chrome
     }
   }
   .sxt-layer-menu-expand-button {
@@ -1231,15 +1230,30 @@ sxt-annotations-editor {
   .list-group-item {
     font-size: @sxt-fontsize;
     border: none;
+    display: table-row;
+    margin-bottom: .3em;
+  }
 
-    label {
-      padding: 2px 0 2px 0px;
-
-      &:hover {
+  .gn-order-buttons {
+    display: table-cell;
+    width: 1.2em;
+    float: left;
+    padding: .3em 0;
+    a {
+      display: inline-block;
+      &:hover, &:focus {
         text-decoration: none;
-        cursor: pointer;
+      }
+      &.disabled {
+        color: #999999;
+        cursor: not-allowed;
       }
     }
+  }
+  label {
+    padding: .3em 0;
+    display: table-cell;
+    vertical-align: middle;
   }
 
   .list-group {

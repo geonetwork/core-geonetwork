@@ -50,7 +50,6 @@
   "ncwms": "Advanced parameters",
   "orgs": "Organism",
   "statements": "Statements",
-  "showMetadata": "Show metadata",
   "accessData": "Data access",
   "process": "Process",
   "Printing": "Printing in progress",
@@ -111,7 +110,11 @@
   "panierDataExtent": "Actual extent for this data",
   "userFeedback": "User feedbacks",
   "deleteLayer": "Remove this layer",
-  "expandLayerMenu": "Expand this menu",
-  "reduceLayerMenu": "Reduce this menu",
-  "layerOrder": "Layer order"
+  "expandLayerMenu": "Expand options",
+  "reduceLayerMenu": "Reduce options",
+  "layerOrder": "Layer order",
+  "showMetadata": "Show metadata",
+  "showMetadataTooltip": "Show the layer metadata",
+  "layerExtentZoomTooltip": "Zoom on the layer extent",
+  "downloadTooltip": "Download the dataset"
 }

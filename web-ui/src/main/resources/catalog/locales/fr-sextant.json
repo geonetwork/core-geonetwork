@@ -49,7 +49,6 @@
   "ncwms": "Paramètres avancés",
   "orgs": "Affiliation",
   "statements": "Généalogie",
-  "showMetadata": "Afficher la métadonnée",
   "accessData": "Accès aux données",
   "process": "Traitement",
   "Printing": "En cours d'impression",
@@ -112,7 +111,12 @@
   "panierDataExtent": "Emprise de la donnée",
   "userFeedback": "Retours utilisateur",
   "deleteLayer": "Supprimer la couche",
-  "expandLayerMenu": "Agrandir le menu",
-  "reduceLayerMenu": "Réduire le menu",
-  "layerOrder": "Ordre des couches"
+  "expandLayerMenu": "Agrandir les options",
+  "reduceLayerMenu": "Réduire les options",
+  "layerOrder": "Ordre des couches",
+  "showMetadata": "Métadonnées",
+  "showMetadataTooltip": "Afficher les métadonnées",
+  "layerExtentZoom": "Zoomer",
+  "layerExtentZoomTooltip": "Zoomer sur l'étendue de la couche",
+  "downloadTooltip": "Télécharger la donnée"
 }

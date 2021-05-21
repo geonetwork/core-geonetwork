@@ -8,20 +8,26 @@
     ><span ng-if="ctrl.expanded" translate>reduceLayerMenu</span>
   </a>
 
-  <a href ng-click="handleClose()" class="close-btn">
-    <i class="fa fa-times"></i>
-  </a>
-
-  <div>
-    {{layer.name || layer.get('label')}}
-    <span class="text-muted small" ng-if="layer.get('attribution')">
-      <br>
-      &copy;
-      <span ng-if="!layer.get('attributionUrl')">{{layer.get('attribution')}}</span>
-      <span ng-if="layer.get('attributionUrl')">
-        <a href="{{layer.get('attributionUrl')}}" target="_blank">{{layer.get('attribution')}}</a>
+  <div class="flex-row flex-align-start">
+    <div>
+      {{layer.name || layer.get('label')}}
+      <span class="text-muted small" ng-if="layer.get('attribution')">
+        <br>
+        &copy;
+        <span ng-if="!layer.get('attributionUrl')">{{layer.get('attribution')}}</span>
+        <span ng-if="layer.get('attributionUrl')">
+          <a href="{{layer.get('attributionUrl')}}" target="_blank">{{layer.get('attribution')}}</a>
+        </span>
       </span>
-    </span>
+    </div>
+    <div class="flex-spacer flex-grow"></div>
+    <button type="button"
+            class="btn btn-danger btn-sm"
+            ng-click="handleClose(); ctrl.deleteLayer()"
+            title="{{'deleteLayer' | translate}}"
+            translate>
+      <span class="fa fa-fw fa-trash"></span>
+    </button>
   </div>
 
   <div class="flex-row flex-align-stretch width-100 sxt-layer-menu-top-buttons">
@@ -29,24 +35,24 @@
             class="flex-grow btn btn-secondary btn-sm"
             ng-disabled="!layer.get('md') || layer.get('metadataUrl')"
             ng-click="ctrl.showMetadata()"
-            translate>
-      showMetadata
+            title="{{ 'showMetadataTooltip' | translate }}">
+      <span class="fa fa-file-text"></span>&nbsp;<span translate>showMetadata</span>
     </button>
 
     <button type="button"
             class="flex-grow btn btn-secondary btn-sm"
             ng-disabled="!layer.get('cextent')"
             ng-click="ctrl.zoomToExtent()"
-            translate>
-      layerExtentZoom
+            title="{{ 'layerExtentZoomTooltip' | translate }}">
+      <span class="fa fa-search"></span>&nbsp;<span translate>layerExtentZoom</span>
     </button>
 
     <button type="button"
             class="flex-grow btn btn-secondary btn-sm"
             ng-disabled="!download"
             ng-click="ctrl.addToPanier()"
-            translate>
-      download
+            title="{{ 'downloadTooltip' | translate }}">
+      <span class="fa fa-download"></span>&nbsp;<span translate>download</span>
     </button>
   </div>
 
@@ -81,11 +87,12 @@
 
     <tab>
       <tab-heading translate>settings</tab-heading>
-      <div>
-        <p>
-          <input type="range" min="0" max="1" step="0.05" ng-model="layer.opacity" />
+      <div class="flex-col flex-align-stretch">
+        <div class="flex-row flex-align-center" style="margin: 1em">
           <span translate>opacity</span>
-        </p>
+          <div class="flex-spacer"></div>
+          <input type="range" min="0" max="1" step="0.05" ng-model="layer.opacity" />
+        </div>
         <div ng-if="layer.get('advanced')"
              gn-ncwms-transect
              map="map"
@@ -101,13 +108,4 @@
       </div>
     </tab>
   </tabset>
-
-  <div class="flex-row flex-center width-100">
-    <button type="button"
-            class="btn btn-danger btn-sm flex-grow"
-            ng-click="handleClose(); ctrl.deleteLayer()"
-            translate>
-      deleteLayer
-    </button>
-  </div>
 </div>
