@@ -219,11 +219,7 @@
       </xsl:otherwise>
     </xsl:choose>
 
-    <xsl:if test="$isVegaEnabled">
-      <script src="{$uiResourcesPath}lib/vega/vega.js"></script>
-    </xsl:if>
-
-    <xsl:if test="$angularApp = 'gn_admin'">
+    <xsl:if test="$isVegaEnabled or $angularApp = ('gn_editor', 'gn_admin')">
       <script src="{$uiResourcesPath}lib/vega/vega.js"></script>
     </xsl:if>
 
