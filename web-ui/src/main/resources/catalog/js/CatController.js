@@ -1353,7 +1353,7 @@ goog.require('gn_alert');
       $scope.showHealthIndexError = false;
 
       function healthCheckStatus(r) {
-        var data = r.data, isCritical = r.config.url.indexOf('critical') !== -1;
+        var data = r.data, isCritical = r.config && r.config.url.indexOf('critical') !== -1;
         angular.forEach(data, function(o) {
           $scope.healthCheck[o.name] = (o.status === 'OK');
         });
