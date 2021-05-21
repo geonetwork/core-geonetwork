@@ -33,7 +33,7 @@
   var sextant = document.createElement('script');
 
   // copy input attributes to the script which loads Sextant
-  copyScriptAttribute(sextant, 'catalog');
+  copyScriptAttribute(sextant, 'portal');
   copyScriptAttribute(sextant, 'max-sm');
   copyScriptAttribute(sextant, 'max-md');
   copyScriptAttribute(sextant, 'size');

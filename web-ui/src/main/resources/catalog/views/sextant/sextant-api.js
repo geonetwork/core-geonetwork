@@ -7,7 +7,7 @@
   var appRoot = document.currentScript.parentElement;
   var scriptEl = document.currentScript;
 
-  var catalogId = scriptEl.hasAttribute('catalog') ? scriptEl.getAttribute('catalog') : null;
+  var catalogId = scriptEl.hasAttribute('portal') ? scriptEl.getAttribute('portal') : null;
   var sxtSize = scriptEl.hasAttribute('size') ? scriptEl.getAttribute('size') : null;
   var sxtSizeDiff = scriptEl.hasAttribute('size-diff') ? scriptEl.getAttribute('size-diff') : null;
   var sizeClass = scriptEl.hasAttribute('max-sm') ? 'sxt-max-sm' :
