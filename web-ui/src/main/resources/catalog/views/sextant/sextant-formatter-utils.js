@@ -13,8 +13,8 @@
     contentChild.style.maxHeight = pxSize + 'px';
     contentChild.style.overflowY = 'hidden';
 
-    var toggleBtn = element.querySelector('a.sxt-collapse-toggle');
-    toggleBtn.textContent = 'read more...';
+    var toggleBtn = element.querySelector('.sxt-collapse-toggle');
+    toggleBtn.innerHTML = '<span class="fa fa-lg fa-plus-circle"></span>';
     element.setAttribute('data-collapsed', '');
   }
 
@@ -26,8 +26,8 @@
     contentChild.style.removeProperty('max-height');
     contentChild.style.removeProperty('overflow-y');
 
-    var toggleBtn = element.querySelector('a.sxt-collapse-toggle');
-    toggleBtn.textContent = 'show less';
+    var toggleBtn = element.querySelector('.sxt-collapse-toggle');
+    toggleBtn.innerHTML = '<span class="fa fa-lg fa-minus-circle"></span>';
     element.removeAttribute('data-collapsed');
   }
 
@@ -78,7 +78,7 @@
         // create & append collapse button
         var toggleButton = document.createElement('a');
         toggleButton.setAttribute('href', '');
-        toggleButton.classList.add('sxt-collapse-toggle');
+        toggleButton.classList.add('sxt-collapse-toggle', 'pull-right');
         toggleButton.addEventListener('click', function (event) {
           if (element.hasAttribute('data-collapsed')) {
             expandElement(element);
