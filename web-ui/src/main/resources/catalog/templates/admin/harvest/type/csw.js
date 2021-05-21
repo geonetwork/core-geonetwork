@@ -33,7 +33,8 @@ var gnHarvestercsw = {
         "every" : "0 0 0 ? * *",
         "oneRunOnly" : false,
         "overrideUuid": "SKIP",
-        "status" : "active"
+        "status" : "active",
+        "scheduleEnabled" : "true"
       },
       "ifRecordExistAppendPrivileges": false,
       "privileges" : [ {
@@ -99,6 +100,7 @@ var gnHarvestercsw = {
       + '    <overrideUuid>' + h.options.overrideUuid + '</overrideUuid>'
       + '    <every>' + h.options.every + '</every>'
       + '    <status>' + h.options.status + '</status>'
+      + '    <scheduleEnabled>' + h.options.scheduleEnabled + '</scheduleEnabled>'
       + '  </options>'
       + '  <content>'
       + '    <validate>' + h.content.validate + '</validate>'

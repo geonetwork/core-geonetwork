@@ -247,7 +247,8 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         initInfo(context);
 
         initializeLog();
-        if (status == Status.ACTIVE) {
+        if (getParams().isScheduleEnabled()) {
+        //if (status == Status.ACTIVE) {
             doSchedule();
         }
     }
@@ -400,11 +401,17 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
      * Set the harvester status to {@link Status#ACTIVE} and unschedule any scheduled jobs.
      */
     public OperResult stop(final Status newStatus) throws SchedulerException {
+        return stop(newStatus, true);
+    }
+
+    public OperResult stop(final Status newStatus, boolean interrupt) throws SchedulerException {
         this.cancelMonitor.set(true);
 
-        JobKey jobKey = jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME);
-        if (getScheduler().checkExists(jobKey)) {
-            getScheduler().interrupt(jobKey);
+        if (interrupt) {
+            JobKey jobKey = jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME);
+            if (getScheduler().checkExists(jobKey)) {
+                getScheduler().interrupt(jobKey);
+            }
         }
 
         try {
@@ -534,12 +541,16 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
             if (lock.tryLock(SHORT_WAIT, TimeUnit.SECONDS)) {
                 doUpdate(id, node);
 
-                if (status == Status.ACTIVE) {
+                if (getParams().isScheduleEnabled()) {
+                //if (status == Status.ACTIVE) {
                     //--- stop executor
                     doUnschedule();
                     //--- restart executor
                     error = null;
                     doSchedule();
+                } else {
+                    //--- stop executor
+                    doUnschedule();
                 }
             } else {
                 log.error("Harvester '" + this.getID() + "' looks deadlocked.");
@@ -676,8 +687,9 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                         h.process();
                         logger.info("Ended harvesting from node : " + nodeName);
 
-                        if (getParams().isOneRunOnly()) {
-                            stop(Status.INACTIVE);
+                        if (getParams().isOneRunOnly() || !getParams().isScheduleEnabled()) {
+                            // No need to interrupt the harvesterjob, already finished
+                            stop(Status.INACTIVE, false);
                         }
                     } catch (InvalidParameterValueEx e) {
                         logger.error("The harvester " + this.getParams().getName() + "["
@@ -955,6 +967,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         harvesterSettingsManager.add(ID_PREFIX + optionsId, "overrideUUID", params.getOverrideUuid());
         harvesterSettingsManager.add(ID_PREFIX + optionsId, "ifRecordExistAppendPrivileges", params.isIfRecordExistAppendPrivileges());
         harvesterSettingsManager.add(ID_PREFIX + optionsId, "status", status);
+        harvesterSettingsManager.add(ID_PREFIX + optionsId, "scheduleEnabled", params.isScheduleEnabled());
 
         //--- setup content node ---------------------------------------
 

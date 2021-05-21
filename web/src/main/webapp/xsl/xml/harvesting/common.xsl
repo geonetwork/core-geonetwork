@@ -81,6 +81,9 @@
         <status>
           <xsl:value-of select="$opt/status/value"/>
         </status>
+        <scheduleEnabled>
+          <xsl:value-of select="$opt/scheduleEnabled/value" />
+        </scheduleEnabled>
 
         <xsl:apply-templates select="$opt" mode="options"/>
       </options>
