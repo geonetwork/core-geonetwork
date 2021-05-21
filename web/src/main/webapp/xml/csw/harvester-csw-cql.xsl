@@ -13,7 +13,9 @@
         </xsl:call-template>
       </xsl:variable>
 
-      <xsl:value-of select="normalize-space($cql)" />
+      <cql>
+        <xsl:value-of select="normalize-space($cql)" />
+      </cql>
     </xsl:template>
 
     <xsl:template name="getCondition">
