@@ -212,7 +212,7 @@ public class SettingManager {
             if (!se.get().isEncrypted()) {
                 value = se.get().getStoredValue();
             } else {
-                throw new RuntimeException("Encrypted settings can't be accessed before encryptor is initialized");
+                throw new IllegalStateException("Encrypted settings can't be accessed before encryptor is initialized");
             }
         }
 
