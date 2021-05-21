@@ -307,7 +307,7 @@
               <span data-translate="">summary</span>
             </div>
             <div class="panel-body">
-              <div class="row">
+              <div class="row gn-margin-bottom">
                 <ul class="col-md-4 text-center list-group gn-nomargin-bottom">
                   <li class="list-group-item">
                     <h1><i class="fa fa-file-text-o"></i> {{ searchResults.count }}</h1>
@@ -316,9 +316,10 @@
                     </p>
                   </li>
                 </ul>
-
-
+              </div>
+              <div class="row">
                 <div data-ng-show="searchResults.records.length > 0"
+                     class="gn-harvester-facets"
                      data-es-facets="searchResults.facets"></div>
               </div>
             </div>

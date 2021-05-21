@@ -273,7 +273,7 @@ goog.require('gn_alert');
               'meta': {
                 'vega': 'arc'
               }
-            },
+            }
           },
           'aafacetConfig': {
             'cl_hierarchyLevel.key': {
