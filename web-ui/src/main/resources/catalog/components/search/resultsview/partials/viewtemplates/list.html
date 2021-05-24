@@ -43,7 +43,7 @@
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6">
           <div class="gn-md-abstract text-muted">
-            <p title="{{md.resourceAbstract}}">{{md.resourceAbstract.split('.')[0] | striptags}}.</p>
+            <p title="{{md.resourceAbstract}}">{{md.resourceAbstract.split('\n')[0] | striptags}}</p>
             <div gn-grid-related=""
                  gn-grid-related-uuid="::md.uuid"
                  template="../../catalog/views/default/templates/gridRelatedList.html"></div>
