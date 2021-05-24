@@ -185,7 +185,7 @@
 
               if (!$scope.metadataFound) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant('metadataNotFound') || 'metadataNotFound',
+                  title: $translate.instant('metadataNotFound', {id: $routeParams.id}) || 'metadataNotFound',
                   error: $routeParams.id,
                   timeout: 0,
                   type: 'danger'
