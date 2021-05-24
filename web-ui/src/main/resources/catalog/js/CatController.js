@@ -778,7 +778,7 @@ goog.require('gn_alert');
               'meta': {
                 'vega': 'arc'
               }
-            },
+            }
           }
         },
         'signin': {
