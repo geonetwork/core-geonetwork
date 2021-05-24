@@ -1107,7 +1107,7 @@ goog.require('gn_alert');
       });
 
       // login url for inline signin form in top toolbar
-      $scope.signInFormAction = '../../signin#' + $location.path();
+      $scope.signInFormAction = '../../signin#' + $location.url();
 
       // when the login input have focus, do not close the dropdown/popup
       $scope.focusLoginPopup = function() {
