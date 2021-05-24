@@ -5,21 +5,21 @@
     <div id="gn-harvest-settings-selected-schedule-buttons" class="btn-group pull-right" data-toggle="buttons">
       <label id="gn-harvest-settings-selected-schedule-buttons-enable"
              class="btn btn-primary"
-             data-ng-click="harvester.options.status = 'active'"
-             data-ng-class="harvester.options.status === 'active' ? 'active' : ''">
+             data-ng-click="harvester.options.scheduleEnabled = true"
+             data-ng-class="harvester.options.scheduleEnabled === true ? 'active' : ''">
         <input type="radio" name="harvesterStatus"/>
         <strong data-translate="" class="">enable</strong>
       </label>
       <label id="gn-harvest-settings-selected-schedule-buttons-disable"
              class="btn btn-primary"
-             data-ng-class="harvester.options.status === 'active' ? '' : 'active'"
-             data-ng-click="harvester.options.status = 'inactive'">
+             data-ng-class="harvester.options.scheduleEnabled === true ? '' : 'active'"
+             data-ng-click="harvester.options.scheduleEnabled = false">
         <input type="radio" name="harvesterStatus"/>
         <strong data-translate="" class="">disable</strong>
       </label>
     </div>
   </legend>
-  <div id="gn-harvest-settings-selected-schedule-freq-row" data-ng-show="harvester.options.status === 'active'">
+  <div id="gn-harvest-settings-selected-schedule-freq-row" data-ng-show="harvester.options.scheduleEnabled === true">
     <label id="gn-harvest-settings-selected-schedule-freq-label" class="control-label" data-translate="">frequency</label>
     <div class="input-group">
       <input id="gn-harvest-settings-selected-schedule-freq-input" type="text" class="form-control" data-ng-model="harvester.options.every"/>
@@ -45,7 +45,7 @@
     <p ng-show="timeZone" class="help-block" data-translate="" data-translate-values="{ timeZoneTransl: timeZone, zoneOffset: timeZoneOffset}">harvesterTimeZoneHelp</p>
   </div>
 
-  <div id="gn-harvest-settings-selected-schedule-run-row" data-ng-show="harvester.options.status === 'active'">
+  <div id="gn-harvest-settings-selected-schedule-run-row" data-ng-show="harvester.options.scheduleEnabled === true">
     <label class="control-label">
       <input id="gn-harvest-settings-selected-schedule-run-checkbox" type="checkbox" data-ng-model="harvester.options.oneRunOnly"/>&nbsp;
       <span id="gn-harvest-settings-selected-schedule-run-label" data-translate="">oneRunOnly</span>

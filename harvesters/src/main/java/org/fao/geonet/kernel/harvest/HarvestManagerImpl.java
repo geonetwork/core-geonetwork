@@ -638,7 +638,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
         for (Map.Entry<String, AbstractHarvester> pair : hmHarvesters.entrySet()) {
            AbstractHarvester harvester = pair.getValue();
-           if ( Common.Status.ACTIVE.equals(harvester.getStatus())) {
+           //if ( Common.Status.ACTIVE.equals(harvester.getStatus())) {
+           if (harvester.getParams().isScheduleEnabled()) {
                try {
                    TimeZone triggerTimeZone =  harvester.getTriggerTimezone();
                    String triggerTimeZoneId = defaultTimeZoneId;

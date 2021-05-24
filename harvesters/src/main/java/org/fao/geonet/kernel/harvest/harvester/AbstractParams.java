@@ -85,6 +85,7 @@ public abstract class AbstractParams implements Cloneable {
     private String username;
     private String password;
     private String every;
+    private boolean scheduleEnabled;
     private boolean oneRunOnly;
     private HarvestValidationEnum validate;
     private String importXslt;
@@ -187,6 +188,7 @@ public abstract class AbstractParams implements Cloneable {
         setPassword(Util.getParam(account, "password", ""));
 
         setEvery(Util.getParam(opt, "every", "0 0 0 * * ?"));
+        setScheduleEnabled(Util.getParam(opt, "scheduleEnabled", true));
 
         setOneRunOnly(Util.getParam(opt, "oneRunOnly", false));
         setOverrideUuid(
@@ -269,6 +271,7 @@ public abstract class AbstractParams implements Cloneable {
 
         setEvery(Util.getParam(opt, "every", getEvery()));
         setOneRunOnly(Util.getParam(opt, "oneRunOnly", isOneRunOnly()));
+        setScheduleEnabled(Util.getParam(opt, "scheduleEnabled", isScheduleEnabled()));
 
         setOverrideUuid(
                 OverrideUuid.valueOf(
@@ -340,6 +343,8 @@ public abstract class AbstractParams implements Cloneable {
         }
 
         copy.setNodeElement(getNodeElement());
+
+        copy.setScheduleEnabled(isScheduleEnabled());
     }
 
     /**
@@ -630,5 +635,14 @@ public abstract class AbstractParams implements Cloneable {
 
     public void setBatchEdits(String batchEdits) {
         this.batchEdits = batchEdits;
+    }
+
+
+    public boolean isScheduleEnabled() {
+        return scheduleEnabled;
+    }
+
+    public void setScheduleEnabled(boolean scheduleEnabled) {
+        this.scheduleEnabled = scheduleEnabled;
     }
 }
