@@ -357,6 +357,88 @@ ul.gn-resultview li.list-group-item {
           }
         }
       }
+      #gn-harvest-records-panel {
+        .gn-harvester-facets {
+          .gn-facet {
+            opacity: 1;
+            .gn-facet-root-container {
+              .clearfix();
+              .gn-facet-container {
+                width: calc(~"(100% / 3) - 15px");
+                float: left;
+                margin: 5px 15px 5px 0;
+                .gn-facet-item {
+                  a.flex-row {
+                    padding: 10px 15px;
+                    border-radius: @list-group-border-radius;
+                    border: 1px solid @list-group-border;
+                    text-align: center;
+                    flex-direction: column-reverse;
+                    &:hover {
+                      text-decoration: none;
+                    }
+                    .fa {
+                      display: none;
+                    }
+                    .gn-facet-label {
+                      color: #333;
+                      margin-bottom: 10px;
+                    }
+                    .gn-facet-count {
+                      color: #333;
+                      font-weight: 500;
+                      font-size: 36px;
+                      margin: 10px 0 0 0;
+                      &:after {
+                        content: none;
+                      }
+                      &:before {
+                        display: inline-block;
+                        font: normal normal normal 14px/1 FontAwesome;
+                        font-size: inherit;
+                        text-rendering: auto;
+                        -webkit-font-smoothing: antialiased;
+                        margin-right: 10px;
+                        content: "\f0f6";
+                      }
+                    }
+                    .gn-facet-count-0 {
+                      display: block;
+                    }
+                    &.gn-facet-checked {
+                      border-color: @brand-success;
+                    }
+                    &.gn-facet-checked-inverted {
+                      border-color: @brand-danger;
+                    }
+                  }
+                  a[title*="Download"] {
+                    .gn-facet-count {
+                      &:before {
+                        content: "\f019";
+                      }
+                    }
+                  }
+                  a[title*="View"] {
+                    .gn-facet-count {
+                      &:before {
+                        content: "\f06e";
+                      }
+                    }
+                  }
+                  .facet-invert {
+                    right: 18px;
+                    margin-top: 5px;
+                  }
+                }
+              }
+            }
+          }
+        }
+        .search-filter-tags .panel-body {
+          padding-left: 15px;
+        }
+      }
     }
     // settings page
     [data-ng-controller="GnSystemSettingsController"] {

@@ -567,7 +567,7 @@
               // scale: {scheme: 'category20b'}
             }
           };
-          if (scope.facet.meta.vega === 'bar') {
+          if ((scope.facet.meta) && (scope.facet.meta.vega === 'bar')) {
             mark = 'bar';
             encoding = {
               y: {

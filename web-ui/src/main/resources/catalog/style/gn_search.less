@@ -90,6 +90,15 @@
     }
     .gn-facet-count {
       margin-left: 3px;
+      &:before {
+        content: "(";
+      }
+      &:after {
+        content: ")";
+      }
+      &.gn-facet-count-0 {
+        display: none;
+      }
     }
   }
   .gn-facet-header {

@@ -82,7 +82,9 @@
     };
 
     this.getFinalParams = function() {
-      return $scope.finalParams;
+      var p = angular.copy($scope.finalParams, {});
+      p.query_string = JSON.stringify($scope.searchObj.state.filters);
+      return p;
     };
 
     this.getSearchResults = function() {
@@ -283,16 +285,16 @@
         if(angular.isObject(filters)) {
           var query_string = JSON.stringify(filters);
           if (Object.keys(filters).length) {
-            params.query_string = query_string
+            params.query_string = query_string;
           } else {
-            delete params.query_string
+            delete params.query_string;
           }
         } else {
           if (filters != '') {
             params.query_string = filters;
             $scope.searchObj.state.filters = JSON.parse(filters);
           } else {
-            delete params.query_string
+            delete params.query_string;
           }
         }
 
