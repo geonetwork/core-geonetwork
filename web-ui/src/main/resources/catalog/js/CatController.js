@@ -263,22 +263,6 @@ goog.require('gn_alert');
             'cl_hierarchyLevel.key': {
               'terms': {
                 'field': 'cl_hierarchyLevel.key'
-              }
-            },
-            'tag.default': {
-              'terms': {
-                'field': 'tag.default',
-                'size': 10
-              },
-              'meta': {
-                'vega': 'arc'
-              }
-            }
-          },
-          'aafacetConfig': {
-            'cl_hierarchyLevel.key': {
-              'terms': {
-                'field': 'cl_hierarchyLevel.key'
               },
               'aggs': {
                 'format': {
