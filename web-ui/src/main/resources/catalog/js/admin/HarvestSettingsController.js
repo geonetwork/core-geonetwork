@@ -421,11 +421,10 @@
       };
       $scope.stopping = false;
       $scope.stopHarvester = function() {
-        var status = $scope.harvesterSelected.options.status;
         var id = $scope.harvesterSelected['@id'];
         $scope.stopping = true;
         return $http.get('admin.harvester.stop?_content_type=json&id=' +
-            id + '&status=' + status)
+            id)
             .success(function(data) {
               $scope.$parent.loadHarvesters().then(refreshSelectedHarvester);
             }).then(function() {

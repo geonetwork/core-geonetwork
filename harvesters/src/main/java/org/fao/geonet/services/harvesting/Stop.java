@@ -53,14 +53,9 @@ public class Stop implements Service {
     //--------------------------------------------------------------------------
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        String statusParam = org.fao.geonet.Util.getParam(params, "status", Common.Status.INACTIVE.toString());
-        if (statusParam.isEmpty()) {
-            statusParam = Common.Status.INACTIVE.toString();
-        }
-        final Common.Status newStatus = Common.Status.parse(statusParam);
         return Util.exec(params, context, new Util.Job() {
             public OperResult execute(HarvestManager hm, String id) throws Exception {
-                return hm.stop(id, newStatus);
+                return hm.stop(id, Common.Status.INACTIVE);
             }
         });
     }
