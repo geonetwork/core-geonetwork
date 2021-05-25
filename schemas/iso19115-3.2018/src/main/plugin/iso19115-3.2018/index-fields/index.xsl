@@ -1045,7 +1045,7 @@
 
 
       <xsl:for-each select="mdb:resourceLineage/*">
-        <xsl:copy-of select="gn-fn-index:add-multilingual-field('lineage', 
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('lineage',
                                 mrl:statement, $allLanguages)"/>
 
         <xsl:for-each select=".//mrl:source[@uuidref != '']">
@@ -1080,6 +1080,14 @@
           <format>
             <xsl:value-of select="."/>
           </format>
+        </xsl:for-each>
+
+        <xsl:for-each select="mrd:distributor/mrd:MD_Distributor[mrd:distributorContact]">
+          <!-- Indexing resource contact -->
+          <xsl:apply-templates mode="index-contact"
+                               select="mrd:distributorContact">
+            <xsl:with-param name="fieldSuffix" select="'ForDistribution'"/>
+          </xsl:apply-templates>
         </xsl:for-each>
 
         <xsl:for-each select="mrd:transferOptions/*/
