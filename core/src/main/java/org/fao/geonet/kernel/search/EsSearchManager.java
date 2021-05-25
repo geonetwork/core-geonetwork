@@ -528,6 +528,7 @@ public class EsSearchManager implements ISearchManager {
             .add("format")
             .add("contact")
             .add("contactForResource")
+            .add("contactForDistribution")
             .add("OrgForResource")
             .add("resourceProviderOrgForResource")
             .add("resourceVerticalRange")
