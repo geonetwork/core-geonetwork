@@ -342,9 +342,9 @@ goog.require('gn_alert');
             //     'treeKeySeparator': '/'
             //   }
             // },
-            'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree.default': {
+            'th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default': {
               'terms': {
-                'field': 'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree.default',
+                'field': 'th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default',
                 'size': 100,
                 "order" : { "_key" : "asc" }
               }
