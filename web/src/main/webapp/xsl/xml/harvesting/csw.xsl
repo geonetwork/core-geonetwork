@@ -35,11 +35,28 @@
 
 
   <xsl:template match="*" mode="searches">
-    <searches>
-      <search>
-        <xsl:apply-templates select="children"/>
-      </search>
-    </searches>
+    <!-- Convert old search filter values to the new filter format -->
+    <xsl:if test="count(children/filters/children) = 0 and count(children/search/children/*[string(.)]) > 0">
+      <filters>
+        <xsl:for-each select="children/search/children/*[string(.)]">
+          <xsl:variable name="searchValue" select="normalize-space(.)" />
+
+          <filter>
+            <field>
+              <xsl:value-of select="name()"/>
+            </field>
+            <operator>
+              <xsl:choose>
+                <xsl:when test="contains($searchValue, '%')">LIKE</xsl:when>
+                <xsl:otherwise>EQUAL</xsl:otherwise>
+              </xsl:choose>
+            </operator>
+            <value><xsl:value-of select="normalize-space(.)"/></value>
+            <condition><xsl:if test="position() > 1">AND</xsl:if></condition>
+          </filter>
+        </xsl:for-each>
+      </filters>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="*" mode="filters">
