@@ -230,7 +230,7 @@
               }
             });
           }
-          // we bbox is cleared value is still set to ',,,'
+          // when bbox is cleared value is still set to ',,,'
           if (input.boundingBoxData && data && data != ',,,') {
             var bbox = data.split(',');
             request.value.dataInputs.input.push({
@@ -241,8 +241,8 @@
                 boundingBoxData: {
                   dimensions: 2,
                   crs: 'EPSG:4326',
-                  lowerCorner: [bbox[0], bbox[1]],
-                  upperCorner: [bbox[2], bbox[3]]
+                  lowerCorner: [bbox[1], bbox[0]],
+                  upperCorner: [bbox[3], bbox[2]]
                 }
               }
             });
