@@ -78,7 +78,8 @@
         // create & append collapse button
         var toggleButton = document.createElement('a');
         toggleButton.setAttribute('href', '');
-        toggleButton.classList.add('sxt-collapse-toggle', 'pull-right');
+        toggleButton.classList.add('sxt-collapse-toggle', 'text-right');
+        toggleButton.style.display = 'block';
         toggleButton.addEventListener('click', function (event) {
           if (element.hasAttribute('data-collapsed')) {
             expandElement(element);
