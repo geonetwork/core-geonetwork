@@ -37,6 +37,8 @@
         class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
   <bean id="dataStore" class="org.geotools.data.memory.MemoryDataStore"/>
 
+  <bean id="translationPackBuilder" class="org.fao.geonet.api.tools.i18n.TranslationPackBuilder" />
+
   <bean lazy-init="false" id="initializeDatabaseWithTestData"
         class="org.springframework.jdbc.datasource.init.DataSourceInitializer">
     <property name="dataSource" ref="jdbcDataSource"/>
