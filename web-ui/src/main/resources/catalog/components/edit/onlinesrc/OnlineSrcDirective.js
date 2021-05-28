@@ -1273,11 +1273,12 @@
                         scope.metadataTitle = '';
                         var md = new Metadata(scope.stateObj.selectRecords[0]);
                         var links = md.getLinksByType();
+                        setParameterValue('desc', md.resourceTitle);
                         if (angular.isArray(links) && links.length === 1) {
                           scope.params.url = links[0].url;
                         } else {
                           scope.metadataLinks = links;
-                          scope.metadataTitle = md.title;
+                          scope.metadataTitle = md.resourceTitle;
                         }
                       }
                     });
