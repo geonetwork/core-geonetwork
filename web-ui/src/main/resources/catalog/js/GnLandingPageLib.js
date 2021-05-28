@@ -79,5 +79,9 @@
           }
         }
       });
+
+    // SEXTANT SPECIFIC: process collapsable field
+    sxtFormatterUtils.processCollapsableField('.gn-abstract');
+    sxtFormatterUtils.processCollapsableField('.sxt-field-collapse');
   };
 })();

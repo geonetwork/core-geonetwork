@@ -235,7 +235,7 @@
               <xsl:with-param name="key" select="'sxt-view-lineage'"/>
             </xsl:call-template>
           </td>
-          <td>
+          <td class="sxt-field-collapse">
             <xsl:apply-templates mode="render-value"
                                  select="$metadata/gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement"/>
           </td>
