@@ -10,7 +10,7 @@
 
   <div class="flex-row flex-align-start">
     <div>
-      {{layer.name || layer.get('label')}}
+      <span style="word-break: break-word">{{layer.name || layer.get('label')}}</span>
       <span class="text-muted small" ng-if="layer.get('attribution')">
         <br>
         &copy;
@@ -23,7 +23,7 @@
     <div class="flex-spacer flex-grow"></div>
     <button type="button"
             class="btn btn-danger btn-sm"
-            ng-click="handleClose(); ctrl.deleteLayer()"
+            ng-click="ctrl.deleteLayer()"
             title="{{'deleteLayer' | translate}}"
             translate>
       <span class="fa fa-fw fa-trash"></span>
@@ -33,7 +33,7 @@
   <div class="flex-row flex-align-stretch width-100 sxt-layer-menu-top-buttons">
     <button type="button"
             class="flex-grow btn btn-secondary btn-sm"
-            ng-disabled="!layer.get('md') || layer.get('metadataUrl')"
+            ng-disabled="!layer.get('md') && !layer.get('metadataUrl')"
             ng-click="ctrl.showMetadata()"
             title="{{ 'showMetadataTooltip' | translate }}">
       <span class="fa fa-file-text"></span>&nbsp;<span translate>showMetadata</span>

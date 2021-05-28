@@ -195,8 +195,13 @@
           function selectFirstLayer(node) {
             if (node instanceof ol.layer.Base && !node.get('loading')) {
               scope.setActiveLayer(node);
+              return true;
             } else if (Array.isArray(node.nodes)) {
-              node.nodes.forEach(selectFirstLayer);
+              for (var i = 0; i < node.nodes.length; i++) {
+                if (selectFirstLayer(node.nodes[i])) {
+                  return true;
+                }
+              }
             }
           }
 
@@ -268,9 +273,13 @@
                 }
               });
 
-              // if no layer selected, use the first one
+              // if the selected layer is not part of the map anymore, clear it
+              if (scope.layers.indexOf(scope.getActiveLayer()) === -1) {
+                scope.setActiveLayer(null);
+              }
+              // if no layer selected, select the first one
               if (!scope.getActiveLayer()) {
-                scope.layerTree.nodes.forEach(selectFirstLayer);
+                selectFirstLayer(scope.layerTree);
               }
 
               debounce--;
