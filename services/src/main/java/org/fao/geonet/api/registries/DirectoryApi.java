@@ -579,11 +579,11 @@ public class DirectoryApi {
             boolean lenient,
         @Parameter(
             description = "Attribute table charset",
-            defaultValue = "",
             required = false
         )
         @RequestParam(
-            required = false
+            required = false,
+            defaultValue = ""
         )
             String charset,
         @Parameter(
