@@ -32,10 +32,21 @@
           href=""
           data-ng-class="isSelected(md) ? 'active' : ''"
           data-ng-click="onClick(md)">
-        <div data-ng-if="options.mode == 'title'">
+        <div data-ng-if="options.mode == 'title'
+              && options.selection.mode === undefined">
           <gn-md-type-widget metadata="md"></gn-md-type-widget>
           <a href="catalog.search#/metadata/{{md.uuid}}">
             {{md.resourceTitle}}
+          </a>
+        </div>
+        <div data-ng-if="options.mode == 'title'
+              && options.selection.mode !== undefined">
+          <gn-md-type-widget metadata="md"></gn-md-type-widget>
+          {{md.resourceTitle}}
+
+          <a class="pull-right"
+             href="catalog.search#/metadata/{{md.uuid}}">
+            <i class="fa fa-eye"></i>
           </a>
         </div>
         <div class="row" data-ng-if="options.mode == 'simple'">
