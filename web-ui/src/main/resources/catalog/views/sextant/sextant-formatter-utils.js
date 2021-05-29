@@ -51,6 +51,33 @@
   }
 
   /**
+   * Creates a toggle button and position it in the parent element
+   * @param {HTMLElement} parentElement
+   */
+  function createToggleButton(parentElement) {
+    var toggleButton = document.createElement('a');
+    toggleButton.setAttribute('href', '');
+    toggleButton.classList.add('sxt-collapse-toggle', 'text-right');
+    toggleButton.style.display = 'block';
+    toggleButton.style.position = 'absolute';
+    toggleButton.style.bottom = '0';
+    toggleButton.style.left = '0';
+    toggleButton.style.right = '0';
+    toggleButton.style.padding = '0.5em';
+
+    // get parent background color to determine the gradient
+    var parentBgColor = getComputedStyle(parentElement).backgroundColor;
+    var baseColor = '255, 255, 255';
+    var matches = /^rgba?\(([0-9]+, [0-9]+, [0-9]+)/.exec(parentBgColor);
+    if (matches && parentBgColor !== 'rgba(0, 0, 0, 0)') {
+      baseColor = matches[1];
+    }
+    toggleButton.style.background = 'linear-gradient(0deg, rgba(' + baseColor + ', 1) 40%, rgba(' + baseColor + ', 0))'
+    parentElement.appendChild(toggleButton);
+    return toggleButton;
+  }
+
+  /**
    * This namespace provides lightweight utilities for static formatters (thus not relying on angularjs)
    */
   sxtFormatterUtils = {
@@ -72,14 +99,15 @@
         var contentChild = document.createElement('div');
         contentChild.classList.add('sxt-collapse-content');
         contentChild.innerHTML = element.innerHTML;
+        contentChild.style.paddingBottom = '0.5em';
         element.innerHTML = '';
+        element.style.position = 'relative';
         element.appendChild(contentChild);
+        if (!getComputedStyle(element).position) {
+          element.style.position = 'relative';
+        }
 
-        // create & append collapse button
-        var toggleButton = document.createElement('a');
-        toggleButton.setAttribute('href', '');
-        toggleButton.classList.add('sxt-collapse-toggle', 'text-right');
-        toggleButton.style.display = 'block';
+        var toggleButton = createToggleButton(element);
         toggleButton.addEventListener('click', function (event) {
           if (element.hasAttribute('data-collapsed')) {
             expandElement(element);
@@ -88,7 +116,6 @@
           }
           event.preventDefault();
         });
-        element.appendChild(toggleButton);
 
         // element is collapsed initially
         collapseElement(element, maxHeightPx);
