@@ -599,8 +599,8 @@
                     scope.outputsVisible = true;
 
                     scope.wpsLink.output.lineage = false;
-                    scope.wpsLink.output.storeExecuteResponse = false;
-                    scope.wpsLink.output.status = false;
+                    scope.wpsLink.output.storeExecuteResponse = true; // SPECIFIC SEXTANT: async by default
+                    scope.wpsLink.output.status = true; // SPECIFIC SEXTANT: async by default
                     scope.optionsVisible = true;
 
                     // use existing process desc if available
