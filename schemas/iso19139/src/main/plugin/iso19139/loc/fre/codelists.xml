@@ -1858,12 +1858,12 @@
 			<label>Carte</label>
 			<description></description>
 		</entry>
-		<entry>
+		<entry hideInEditMode="true">
 			<code>staticMap</code>
 			<label>Carte statique</label>
 			<description></description>
 		</entry>
-		<entry>
+		<entry hideInEditMode="true">
 			<code>interactiveMap</code>
 			<label>Carte interactive</label>
 			<description></description>

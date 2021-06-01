@@ -1966,7 +1966,7 @@
 		</entry>-->
 
 		<!-- Used for facet translation only and not displayed in editor -->
-		<entry hideInEditMode="true">
+		<entry>
 			<code>map</code>
 			<label>Map</label>
 			<description></description>
