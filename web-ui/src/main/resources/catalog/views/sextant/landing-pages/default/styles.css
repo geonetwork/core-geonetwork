@@ -49,19 +49,17 @@ div.gn-landing-page-header-default {
 
 .gn-md-side-access .well {
   padding: 0px !important;
-  background-color: #ebecec;
+  background-color: ebecec;
   border: none;
-
 }
 
 .gn-md-side-access .btn {
   background-color: #b7b8b9;
   color: white;
   font-weight: bold;
-  text-align: center;
   font-size: 16px;
-  margin-left: 5px;
   margin-bottom: 10px;
+  margin-top: 10px;
   border-radius: 5px;
   border: none;
 }
@@ -78,4 +76,30 @@ section.links,
   height: 60px;
   position: absolute;
   width: 100%;
+}
+
+.gn-metadata-view.gn-view-sextant div header > h1,
+.gn-metadata-view.gn-view-sextant div header > h1 > div {
+  font-size: 22px !important;
+}
+
+.gn-abstract p:last-of-type {
+  margin-bottom: 0px;
+}
+
+.gn-metadata-view dl > dt {
+  width: auto !important;
+  margin-right: 6px;
+}
+
+.gn-md-side-social span.badge {
+  margin-bottom: 6px;
+}
+
+.gn-md-side-social {
+  word-break: break-word !important;
+}
+
+.gn-md-side br {
+  display: none;
 }

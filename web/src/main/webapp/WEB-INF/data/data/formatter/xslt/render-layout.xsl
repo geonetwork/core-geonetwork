@@ -145,72 +145,132 @@
           </xsl:if>
         </ul>
       </div>
-      <br/>
-
-      <xsl:variable name="defaultUrlConfig">
-        <url>
-          <fre>https://sextant.ifremer.fr/Donnees/Catalogue#/metadata/${uuid}</fre>
-          <eng>https://sextant.ifremer.fr/eng/Data/Catalogue#/metadata/${uuid}</eng>
-        </url>
-      </xsl:variable>
-
-      <xsl:variable name="portalLinkConfig">
-        <xsl:choose>
-          <xsl:when test="$portalLink = 'group'">
-            <xsl:variable name="groupInfo"
-                          select="utils:getGroupDetails($groupOwner)"/>
-            <xsl:variable name="groupUrlConfig"
-                          select="$groupInfo/record/website/text()"/>
-            <xsl:choose>
-              <xsl:when test="starts-with($groupUrlConfig, '&lt;')">
-                <xsl:copy-of select="saxon:parse($groupUrlConfig)"/>
-              </xsl:when>
-              <xsl:when test="starts-with($groupUrlConfig, 'http')">
-                <url>
-                  <eng><xsl:value-of select="$groupUrlConfig"/></eng>
-                  <fre><xsl:value-of select="$groupUrlConfig"/></fre>
-                </url>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:copy-of select="$defaultUrlConfig"/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:copy-of select="$defaultUrlConfig"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
+    </xsl:if>
+  </xsl:template>
 
 
-      <section class="gn-md-side-access">
-        <div class="well text-center">
-          <xsl:for-each select="distinct-values(($metadataMainLanguages, $metadataOtherLanguages/*[@default]/@code, $metadataOtherLanguages/*[not(@default)]/@code))">
+  <xsl:template name="render-portal-link">
+    <xsl:choose>
+      <xsl:when test="$language = 'all'">
+        <xsl:variable name="metadataOtherLanguages">
+          <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
+        </xsl:variable>
+        <xsl:variable name="metadataMainLanguages">
+          <saxon:call-template name="{concat('get-', $schema, '-language')}"/>
+        </xsl:variable>
 
-            <xsl:variable name="portalLinkForLanguage"
-                          select="if ($portalLinkConfig/url/*[name() = current()])
-                                  then $portalLinkConfig/url/*[name() = current()]/text()
-                                  else 'https://sextant.ifremer.fr/Donnees/Catalogue#/metadata/${uuid}'"/>
+        <xsl:variable name="defaultUrlConfig">
+          <url>
+            <fre>https://sextant.ifremer.fr/Donnees/Catalogue#/metadata/${uuid}</fre>
+            <eng>https://sextant.ifremer.fr/eng/Data/Catalogue#/metadata/${uuid}</eng>
+          </url>
+        </xsl:variable>
+
+        <xsl:variable name="portalLinkConfig">
+          <xsl:choose>
+            <xsl:when test="$portalLink = 'group'">
+              <xsl:variable name="groupInfo"
+                            select="utils:getGroupDetails($groupOwner)"/>
+              <xsl:variable name="groupUrlConfig"
+                            select="$groupInfo/record/website/text()"/>
+              <xsl:choose>
+                <xsl:when test="starts-with($groupUrlConfig, '&lt;')">
+                  <xsl:copy-of select="saxon:parse($groupUrlConfig)"/>
+                </xsl:when>
+                <xsl:when test="starts-with($groupUrlConfig, 'http')">
+                  <url>
+                    <eng><xsl:value-of select="$groupUrlConfig"/></eng>
+                    <fre><xsl:value-of select="$groupUrlConfig"/></fre>
+                  </url>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:copy-of select="$defaultUrlConfig"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:copy-of select="$defaultUrlConfig"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+
+        <section class="gn-md-side-access">
+          <div class="well text-center">
+            <xsl:for-each select="distinct-values(($metadataMainLanguages, $metadataOtherLanguages/*[@default]/@code, $metadataOtherLanguages/*[not(@default)]/@code))">
+
+              <xsl:variable name="portalLinkForLanguage"
+                            select="if ($portalLinkConfig/url/*[name() = current()])
+                                then $portalLinkConfig/url/*[name() = current()]/text()
+                                else 'https://sextant.ifremer.fr/Donnees/Catalogue#/metadata/${uuid}'"/>
+              <a class="btn btn-block btn-primary"
+                 xml:lang="{current()}"
+                 href="{replace($portalLinkForLanguage, '\$\{uuid\}', $metadataUuid)}">
+                <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
+
+                <xsl:call-template name="landingpage-label">
+                  <xsl:with-param name="key" select="'linkToPortal'"/>
+                </xsl:call-template>
+              </a>
+            </xsl:for-each>
+
+            <xsl:call-template name="landingpage-label">
+              <xsl:with-param name="key" select="'linkToPortal-help'"/>
+            </xsl:call-template>
+          </div>
+        </section>
+      </xsl:when>
+      <xsl:when test="$language != all and $portalLink != ''">
+        <xsl:variable name="defaultUrl"
+                      select="concat('https://sextant.ifremer.fr/Donnees/Catalogue#/metadata/', $metadataUuid)"/>
+        <!--<xsl:variable name="defaultUrl"
+                      select="concat($nodeUrl,
+                                if($language = 'all') then 'eng' else $language,
+                                '/catalog.search#/metadata/', $metadataUuid)"/>-->
+        <xsl:variable name="portalUrl">
+          <xsl:choose>
+            <xsl:when test="$portalLink = 'default'">
+              <xsl:value-of select="$defaultUrl"/>
+            </xsl:when>
+            <xsl:when test="$portalLink = 'group'">
+              <xsl:variable name="groupInfo"
+                            select="utils:getGroupDetails($groupOwner)"/>
+              <xsl:value-of select="if ($groupInfo/record/website/text() != '')
+                                        then $groupInfo/record/website/text()
+                                        else $defaultUrl"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$portalLink"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+        <section class="gn-md-side-access">
+          <div class="well text-center">
             <a class="btn btn-block btn-primary"
-               xml:lang="{current()}"
-               href="{replace($portalLinkForLanguage, '\$\{uuid\}', $metadataUuid)}">
+               href="{replace($portalUrl, '\$\{uuid\}', $metadataUuid)}">
               <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
 
               <xsl:call-template name="landingpage-label">
                 <xsl:with-param name="key" select="'linkToPortal'"/>
               </xsl:call-template>
             </a>
-          </xsl:for-each>
 
-          <xsl:call-template name="landingpage-label">
-            <xsl:with-param name="key" select="'linkToPortal-help'"/>
-          </xsl:call-template>
-        </div>
-      </section>
-      <br/>
-
-
-    </xsl:if>
+            <xsl:call-template name="landingpage-label">
+              <xsl:with-param name="key" select="'linkToPortal-help'"/>
+            </xsl:call-template>
+            <!--<a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+               target="_blank" class="btn btn-default">
+              <i class="fa fa-fw fa-linkedin">&#160;</i>&#160;
+            </a>
+            <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+               target="_blank" class="btn btn-default">
+              <i class="fa fa-fw fa-envelope-o">&#160;</i>&#160;
+            </a>-->
+          </div>
+        </section>
+      </xsl:when>
+    </xsl:choose>
   </xsl:template>
 
 
@@ -281,7 +341,6 @@
 
         <div class="row">
           <div class="col-md-9">
-
             <header>
               <xsl:if test="$header != 'false'">
                 <h1>
@@ -289,8 +348,15 @@
                   <xsl:copy-of select="$title"/>
                 </h1>
               </xsl:if>
-
-
+            </header>
+          </div>
+          <div class="col-md-3">
+            <xsl:call-template name="render-language-switcher"/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-9">
+            <header>
               <div>
                 <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
               </div>
@@ -299,8 +365,8 @@
                      data-user="user"
                      data-types="{$related}">&#160;</div>
               </xsl:if>
-
             </header>
+
             <div>
               <xsl:choose>
                 <xsl:when test="$template != ''">
@@ -329,59 +395,8 @@
             </div>
           </div>
           <div class="gn-md-side gn-md-side-advanced col-md-3">
-            <xsl:call-template name="render-language-switcher"/>
 
-            <xsl:if test="$language != all and $portalLink != ''">
-              <xsl:variable name="defaultUrl"
-                            select="concat('https://sextant.ifremer.fr/Donnees/Catalogue#/metadata/', $metadataUuid)"/>
-              <!--<xsl:variable name="defaultUrl"
-                            select="concat($nodeUrl,
-                                      if($language = 'all') then 'eng' else $language,
-                                      '/catalog.search#/metadata/', $metadataUuid)"/>-->
-              <xsl:variable name="portalUrl">
-                <xsl:choose>
-                  <xsl:when test="$portalLink = 'default'">
-                    <xsl:value-of select="$defaultUrl"/>
-                  </xsl:when>
-                  <xsl:when test="$portalLink = 'group'">
-                    <xsl:variable name="groupInfo"
-                                  select="utils:getGroupDetails($groupOwner)"/>
-                    <xsl:value-of select="if ($groupInfo/record/website/text() != '')
-                                          then $groupInfo/record/website/text()
-                                          else $defaultUrl"/>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:value-of select="$portalLink"/>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </xsl:variable>
-
-              <section class="gn-md-side-access">
-                <div class="well text-center">
-                  <a class="btn btn-block btn-primary"
-                     href="{replace($portalUrl, '\$\{uuid\}', $metadataUuid)}">
-                    <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
-
-                    <xsl:call-template name="landingpage-label">
-                      <xsl:with-param name="key" select="'linkToPortal'"/>
-                    </xsl:call-template>
-                  </a>
-
-                  <xsl:call-template name="landingpage-label">
-                    <xsl:with-param name="key" select="'linkToPortal-help'"/>
-                  </xsl:call-template>
-                  <!--<a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                     target="_blank" class="btn btn-default">
-                    <i class="fa fa-fw fa-linkedin">&#160;</i>&#160;
-                  </a>
-                  <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                     target="_blank" class="btn btn-default">
-                    <i class="fa fa-fw fa-envelope-o">&#160;</i>&#160;
-                  </a>-->
-                </div>
-              </section>
-              <br/>
-            </xsl:if>
+            <xsl:call-template name="render-portal-link"/>
 
             <section class="links"
                      ng-show="downloads.length > 0 || links.length > 0 ||layers.length > 0">
@@ -390,8 +405,6 @@
               <!--<br/>
               <xsl:apply-templates mode="getLicense" select="$metadata"/>-->
             </section>
-
-            <br/>
 
             <xsl:apply-templates mode="getOverviews" select="$metadata"/>
             <xsl:apply-templates mode="getExtent" select="$metadata"/>
@@ -403,8 +416,6 @@
               </xsl:apply-templates>
             </xsl:if>
 
-
-            <br/>
             <xsl:if test="$css != 'checkpoint' and
                           $view != 'emodnetHydrography' and
                           $view != 'earthObservation' and
