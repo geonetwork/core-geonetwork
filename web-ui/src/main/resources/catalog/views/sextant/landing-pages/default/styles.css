@@ -92,14 +92,11 @@ section.links,
   margin-right: 6px;
 }
 
-.gn-md-side-social span.badge {
-  margin-bottom: 6px;
-}
-
-.gn-md-side-social {
-  word-break: break-word !important;
-}
-
 .gn-md-side br {
   display: none;
+}
+
+.vcenter {
+  display: flex;
+  align-items: center;
 }

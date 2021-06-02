@@ -339,7 +339,7 @@
         </xsl:if>
 
 
-        <div class="row">
+        <div class="row vcenter">
           <div class="col-md-9">
             <header>
               <xsl:if test="$header != 'false'">
