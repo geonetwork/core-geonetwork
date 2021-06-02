@@ -279,21 +279,7 @@
               </dd>
             </dl>
           </xsl:if>
-          <xsl:if test="$metadata/gmd:referenceSystemInfo">
-            <dl>
-              <dt>
-                <xsl:call-template name="landingpage-label">
-                  <xsl:with-param name="key" select="'sxt-view-crs'"/>
-                </xsl:call-template>
-              </dt>
-              <dd>
-                <xsl:for-each select="$metadata/gmd:referenceSystemInfo/*/gmd:referenceSystemIdentifier/*/gmd:code">
-                  <xsl:apply-templates mode="render-value" select="."/>
-                  <br/>
-                </xsl:for-each>
-              </dd>
-            </dl>
-          </xsl:if>
+
 
           <xsl:variable name="scales"
                         select="$metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator/*[. != '']"/>
@@ -326,6 +312,19 @@
                   <xsl:value-of select="concat(., ' ', ./@uom)"/>
                   <br/>
                 </xsl:for-each>
+              </dd>
+            </dl>
+          </xsl:if>
+
+          <xsl:if test="$metadata/gmd:referenceSystemInfo">
+            <dl>
+              <dt>
+                <xsl:call-template name="landingpage-label">
+                  <xsl:with-param name="key" select="'sxt-view-crs'"/>
+                </xsl:call-template>
+              </dt>
+              <dd>
+                <xsl:value-of select="string-join($metadata/gmd:referenceSystemInfo/*/gmd:referenceSystemIdentifier/*/gmd:code/gco:CharacterString/text()[. != ''], ', ')"/>
               </dd>
             </dl>
           </xsl:if>
