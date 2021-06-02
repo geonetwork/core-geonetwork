@@ -613,7 +613,13 @@
               <i class="fa fa-fw fa-cog"></i>
               <span data-translate="">sourceCatalog</span>
             </h2>
-            <img ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.sourceCatalogue}}.png"
+            <img data-ng-if="isPreferGroupLogo && recordGroup.logo"
+                 data-ng-src="{{gnUrl}}../images/harvesting/{{recordGroup.logo}}"
+                 title="{{recordGroup.label | gnLocalized}}"
+                 aria-label="{{recordGroup.label | gnLocalized}}"
+                 class="gn-source-logo"/>
+            <img data-ng-if="!isPreferGroupLogo"
+                 data-ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.sourceCatalogue}}.png"
                 aria-label="{{'sourceCatalog' | translate}}"
                 class="gn-source-logo"/>
           </section>
