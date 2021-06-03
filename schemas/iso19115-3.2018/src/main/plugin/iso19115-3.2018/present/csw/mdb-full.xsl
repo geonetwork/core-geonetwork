@@ -3,10 +3,11 @@
   xmlns:gn="http://www.fao.org/geonetwork"
   exclude-result-prefixes="#all">
 
-  <xsl:template match="@*|node()[name(.)!='gn:info']">
-    <xsl:variable name="info" select="gn:info"/>
+  <xsl:template match="@*|node()">
     <xsl:copy>
-      <xsl:apply-templates select="@*|node()[name(.)!='gn:info']"/>
+      <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
+
+  <xsl:template match="gn:info" priority="2"/>
 </xsl:stylesheet>

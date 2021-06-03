@@ -14,11 +14,10 @@
   xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:ows="http://www.opengis.net/ows"
-  xmlns:geonet="http://www.fao.org/geonetwork"
+  xmlns:gn="http://www.fao.org/geonetwork"
   exclude-result-prefixes="#all">
 
   <xsl:template match="mdb:MD_Metadata|*[contains(@gco:isoType,'MD_Metadata')]">
-    <xsl:variable name="info" select="geonet:info"/>
     <xsl:copy>
       <xsl:apply-templates select="mdb:metadataIdentifier"/>
       <xsl:apply-templates select="mdb:defaultLocale"/>
@@ -169,4 +168,6 @@
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
+
+  <xsl:template match="gn:info" priority="2"/>
 </xsl:stylesheet>
