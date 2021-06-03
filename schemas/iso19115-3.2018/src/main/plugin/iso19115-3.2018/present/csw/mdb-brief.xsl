@@ -18,7 +18,6 @@
   exclude-result-prefixes="#all">
 
   <xsl:template match="mdb:MD_Metadata|*[contains(@gco:isoType,'MD_Metadata')]">
-    <xsl:variable name="info" select="gn:info"/>
     <xsl:copy>
       <xsl:apply-templates select="mdb:metadataIdentifier"/>
       <xsl:apply-templates select="mdb:metadataScope"/>
@@ -77,4 +76,5 @@
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template match="gn:info" priority="2"/>
 </xsl:stylesheet>
