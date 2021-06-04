@@ -17,9 +17,9 @@
   color: darken(@brand-danger, 20%);
 }
 .gn-workflow-status {
-  background-color: rgba(255, 255, 255 , 0.7);
-  border-color: darken(@brand-success, 5%);
-  color: @brand-success;
+  //background-color: rgba(255, 255, 255 , 0.7);
+  //border-color: darken(@brand-success, 5%);
+  //color: @brand-success;
 }
 /* Decide here which status should be displayed or not and with which colors */
 .gn-workingcopy-status {
@@ -245,6 +245,37 @@
         margin-right: 5px;
       }
     }
+    //background colors
+    &.gn-status-bg {
+      .gn-status {
+        border-color: #fff;
+        color: #fff;
+        background: none;
+        border-radius: 5px;
+        margin-left: 4px;
+      }
+    }
+    &.gn-status-ongoing-bg {
+      background-color: darken(@brand-info, 5%);
+    }
+    &.gn-status-completed-bg {
+      background-color: darken(@brand-success, 5%);
+    }
+    &.gn-status-historicalArchive-bg {
+      background-color: darken(@brand-warning, 5%);
+    }
+    &.gn-status-obsolete-bg {
+      background-color: darken(@brand-danger, 5%);
+    }
+    &.gn-workflow-status-bg {
+      background-color: rgba(255, 255, 255 , 0.7);
+    }
+    &.gn-workflow-status-mdview-bg {
+      background-color: darken(@brand-success, 5%);
+    }
+    &.gn-workflow-status-1-bg {
+      background-color: darken(@brand-danger, 5%);
+    }
   }
   &:hover, &.gn-record-selected {
     background-color: @panel-footer-bg;
@@ -394,7 +425,7 @@ ul.gn-resultview {
 
 }
 // 5 types of info lists
-// 
+//
 // ----- small & large
 .gn-info-list-small, .gn-info-list-large {
   .gn-info-list {

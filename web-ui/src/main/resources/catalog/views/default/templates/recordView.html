@@ -34,6 +34,21 @@
       <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
     </div>
 
+    <!-- status message on top -->
+    <div data-ng-if="mdView.current.record.cl_status.length > 0"
+         data-ng-repeat="c in mdView.current.record.cl_status track by $index"
+         title="{{c.key | translate}}"
+         class="gn-status-stamp">
+      <span class="gn-status gn-status-mdview gn-status-{{c.key}}">{{c.key | translate}}</span>
+    </div>
+    <!-- status message as watermark -->
+    <div data-ng-if="mdView.current.record.cl_status.length > 0"
+         data-ng-repeat="c in mdView.current.record.cl_status track by $index"
+         title="{{c.key | translate}}"
+         class="gn-status-stamp-top gn-status-bg gn-status-{{c.key}}-bg">
+      <span class="gn-status gn-status-mdview">{{c.key | translate}}</span>
+    </div>
+
     <div class="row gn-md-view"
         data-ng-show="mdView.current.record">
 
@@ -135,9 +150,7 @@
           class="gn-metadata-display">
       </div>
 
-
       <div data-ng-show="!gnMdViewObj.usingFormatter" class="gn-metadata-display">
-
 
       <div class="col-md-8 gn-record">
         <h1>
@@ -149,7 +162,8 @@
         </h1>
 
 
-        <div class="lead1 gn-margin-bottom"
+
+        <div class="gn-margin-bottom"
              data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></div>
 
           <!-- Display the first metadata status (apply to ISO19139 record) -->
@@ -161,6 +175,8 @@
                 {{c.key | translate}}
             </div>
           </div>
+
+
           <div data-gn-related-observer>
             <div data-gn-related="mdView.current.record"
                 data-user="user"

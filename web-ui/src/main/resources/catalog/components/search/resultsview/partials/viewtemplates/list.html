@@ -63,7 +63,11 @@
       </div>
     </div>
     <!-- /.gn-card-body -->
-    <div class="panel-footer gn-card-footer clearfix">
+    <div class="panel-footer gn-card-footer clearfix gn-status-bg gn-status-{{(md.cl_status[0].key | translate).replace(' ','').toLowerCase()}}-bg">
+      <div data-ng-if="md.cl_status.length > 0"
+           title="{{md.cl_status[0]}}"
+           class="gn-status gn-status-{{md.cl_status[0]}}">{{md.cl_status[0].key | translate}}
+      </div>
       <div class="gn-toolbar">
         <div class="pull-left gn-md-category"
              title="{{'listOfCategories' | translate}}"
