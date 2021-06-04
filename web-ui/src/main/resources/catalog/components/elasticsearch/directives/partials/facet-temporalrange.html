@@ -3,7 +3,6 @@
        title="{{'facets.temporalRange.help' | translate}}"></div>
   <div class="input-daterange input-group input-group-sm"
        gn-bootstrap-datepicker="range"
-       data-date-format="dd-mm-yyyy"
        data-config="dateRangeConfig"
        on-change-fn="setRange({from: range.from, to: range.to})"
        date-only-highlight="true">
@@ -19,6 +18,11 @@
            data-ng-model-options="{debounce: 500}"
            name="end"/>
     <span class="input-group-btn">
+      <button class="btn btn-default"
+              data-ng-click="reset()"
+              title="{{'reset' | translate}}">
+        <icon class="fa fa-fw fa-times"/>
+      </button>
       <button class="btn btn-default"
               data-ng-click="filter()"
               title="{{'apply' | translate}}">
