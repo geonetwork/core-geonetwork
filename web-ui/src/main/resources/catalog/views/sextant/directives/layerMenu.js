@@ -39,19 +39,40 @@
 
           // this defines a custom property which will add a 'data-expanded' attribute
           // on the host element when its value changes
-          var expanded;
-          Object.defineProperty(this, 'expanded', {
+          var currentSize;
+          Object.defineProperty(this, 'panelSize', {
             get: function () {
-              return expanded;
+              return currentSize;
             },
             set: function(value) {
-              expanded = value;
-              $element[0].toggleAttribute('data-expanded', expanded); // note: this will fail in IE11
+              currentSize = value;
+              // $element[0].toggleAttribute('data-expanded', expanded); // note: this will fail in IE11
+              switch(currentSize) {
+                case 'collapsed':
+                  $element.css('height', '26px');
+                  break;
+                case 'middle':
+                  $element.css('height', '55%');
+                  break;
+                case 'full':
+                  $element.css('height', '100%');
+                  break;
+              }
             }
           });
 
-          // initially not expanded
-          this.expanded = false;
+          /**
+           * current menu panel size
+           * @type {'collapsed'|'middle'|'full'}
+           */
+          this.panelSize = 'collapsed';
+
+          this.togglePanel = function() {
+            this.panelSize = this.panelSize === 'collapsed' ? 'middle' : 'collapsed';
+          }
+          this.panelOpened = function() {
+            return this.panelSize !== 'collapsed';
+          }
         }],
         controllerAs: 'ctrl',
         link: function(scope) {

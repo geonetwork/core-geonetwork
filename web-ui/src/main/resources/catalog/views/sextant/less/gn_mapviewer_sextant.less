@@ -567,46 +567,6 @@
     }
   }
 
-  .sxt-layer-separator {
-    margin-bottom: -.8em;
-  }
-  .panel-tools .sxt-layer-tabs {
-    display: block;
-    margin-left: 2em;
-    margin-bottom: 1em;
-    button.btn {
-      width: auto;
-      background: white;
-      color: @sxt-base-color;
-      text-transform: uppercase;
-      flex: 0;
-      padding: 2px 6px;
-      font-weight: bold;
-      &.active {
-        box-shadow: inset @sxt-shadow;
-        background: @sxt-button-color;
-        color: white;
-      }
-    }
-  }
-  .tools {
-    .tools-bar-close-btn {
-      background: white;
-      color: @sxt-base-color;
-      height: 24px;
-      width: 2em;
-      margin-right: -.5em;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-      margin-left: .5em;
-    }
-
-    .tools-bar-close-btn-single {
-      position: absolute;
-      right: 1em;
-    }
-  }
-
   &.leftBarExpanded {
     gn-features-tables, .gn-viewer-info-pane {
       left             : 29em;
@@ -623,12 +583,6 @@
     ul {
       font-size: 12px;
     }
-  }
-  .layers sxt-layer-menu {
-    height: 55%;
-  }
-  .layers sxt-layer-menu[data-expanded] {
-    height: 100%;
   }
   #importLayer {
     & > .panel-body {
@@ -1165,7 +1119,7 @@ sxt-annotations-editor {
 .sxt-layer-menu {
   @margin-top: 12px;
   border-top: 1px solid #ddd;
-  padding-top: 14px;
+  padding-top: 18px;
   margin-top: @margin-top;
   position: relative;
   height: calc(~"100% - " @margin-top);
@@ -1180,49 +1134,66 @@ sxt-annotations-editor {
     right: 0;
     padding: 3px;
   }
-  & > *:not(:last-child) {
-    margin-bottom: 8px;
-  }
-  .sxt-layer-menu-top-buttons {
+  .sxt-layer-menu-body {
     & > *:not(:last-child) {
-      margin-right: 8px;
+      margin-bottom: 8px;
     }
-    button {
-      width: 20px !important;
-      white-space: normal;
-    }
-  }
-  .btn-danger {
-    background: @btn-danger-bg !important;
-  }
-  .sxt-layer-menu-tabs {
-    overflow: auto;
-    ul.nav-tabs {
-      margin-bottom: 4px;
-      & > li > a {
-        padding: 6px;
-        line-height: 10px;
-        font-size: 10px;
-        font-weight: bold;
-        text-transform: uppercase;
+
+    .sxt-layer-menu-top-buttons {
+      & > *:not(:last-child) {
+        margin-right: 8px;
+      }
+
+      button {
+        width: 20px !important;
+        white-space: normal;
       }
     }
-    .tab-content {
+
+    .btn-danger {
+      background: @btn-danger-bg !important;
+    }
+
+    .sxt-layer-menu-tabs {
       overflow: auto;
+
+      ul.nav-tabs {
+        margin-bottom: 4px;
+
+        & > li > a {
+          padding: 6px;
+          line-height: 10px;
+          font-size: 10px;
+          font-weight: bold;
+          text-transform: uppercase;
+        }
+      }
+
+      .tab-content {
+        overflow: auto;
+      }
     }
   }
-  .sxt-layer-menu-expand-button {
-    font-size: 12px;
-    text-align: center;
+  .sxt-layer-menu-button-bar {
     position: absolute;
     top: -12px;
-    left: 50%;
-    transform: translate(-50%, 0);
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 100px;
-    padding: 4px 8px;
-    line-height: 12px;
+    left: 8px;
+
+    & > button.btn {
+      width: auto;
+      background: white;
+      color: @sxt-base-color;
+      text-transform: uppercase;
+      font-size: 12px;
+      line-height: 12px;
+      padding: 6px 6px;
+
+      &.active {
+        box-shadow: inset @sxt-shadow;
+        background: @sxt-button-color;
+        color: white;
+      }
+    }
   }
 }
 
