@@ -30,6 +30,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.tools.i18n.TranslationPackBuilder;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
@@ -66,6 +67,9 @@ public class TagsApi {
 
     @Autowired
     private MetadataRepository metadataRepository;
+
+    @Autowired
+    private TranslationPackBuilder translationPackBuilder;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get tags",
@@ -122,8 +126,10 @@ public class TagsApi {
                     label == null ? category.getName() : label);
             }
             categoryRepository.save(category);
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
 
+            translationPackBuilder.clearCache();
+
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -184,7 +190,15 @@ public class TagsApi {
     ) throws Exception {
         Optional<MetadataCategory> existingCategory = categoryRepository.findById(tagIdentifier);
         if (existingCategory.isPresent()) {
+            // Rebuild translation pack cache if there are changes in the translations
+            boolean clearTranslationPackCache =
+                !existingCategory.get().getLabelTranslations().equals(category.getLabelTranslations());
+
             updateCategory(tagIdentifier, category);
+
+            if (clearTranslationPackCache) {
+                translationPackBuilder.clearCache();
+            }
         } else {
             throw new ResourceNotFoundException(String.format(
                 "Category with id '%d' does not exist.",
@@ -239,6 +253,8 @@ public class TagsApi {
                 ));
             } else {
                 categoryRepository.deleteById(tagIdentifier);
+
+                translationPackBuilder.clearCache();
             }
         } else {
             throw new ResourceNotFoundException(String.format(

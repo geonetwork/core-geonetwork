@@ -37,6 +37,49 @@
         class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
   <bean id="dataStore" class="org.geotools.data.memory.MemoryDataStore"/>
 
+  <bean id="translationPackBuilder" class="org.fao.geonet.api.tools.i18n.TranslationPackBuilder" />
+
+  <util:map id="translationPacks">
+    <entry key="gnui">
+      <util:list>
+        <value>json/gnui</value>
+        <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:DS_InitiativeTypeCode+gmd:MD_SpatialRepresentationTypeCode</value>
+        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode</value>
+        <value>db/MetadataCategory+Operation+Group+StatusValue+Source</value>
+      </util:list>
+    </entry>
+    <entry key="login">
+      <util:list>
+        <value>json/core</value>
+      </util:list>
+    </entry>
+    <entry key="search">
+      <util:list>
+        <value>json/core+search+v4</value>
+        <value>json/schemas</value>
+        <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:DS_InitiativeTypeCode+gmd:MD_SpatialRepresentationTypeCode</value>
+        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode</value>
+        <value>db/MetadataCategory+Operation+Group+StatusValue+Source</value>
+      </util:list>
+    </entry>
+    <entry key="admin">
+      <util:list>
+        <value>json/core+search+admin+v4</value>
+        <value>json/schemas</value>
+        <value>db/MetadataCategory+Operation+Group+StatusValue+Source</value>
+      </util:list>
+    </entry>
+    <entry key="editor">
+      <util:list>
+        <value>json/core+search+editor+v4</value>
+        <value>json/schemas</value>
+        <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:DS_InitiativeTypeCode+gmd:MD_SpatialRepresentationTypeCode</value>
+        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode</value>
+        <value>db/MetadataCategory+Operation+Group+StatusValue+Source</value>
+      </util:list>
+    </entry>
+  </util:map>
+
   <bean lazy-init="false" id="initializeDatabaseWithTestData"
         class="org.springframework.jdbc.datasource.init.DataSourceInitializer">
     <property name="dataSource" ref="jdbcDataSource"/>

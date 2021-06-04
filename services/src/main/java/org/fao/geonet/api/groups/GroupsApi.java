@@ -42,6 +42,7 @@ import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.attachments.AttachmentsApi;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.api.tools.i18n.TranslationPackBuilder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
@@ -140,6 +141,9 @@ public class GroupsApi {
     private UserGroupRepository userGroupRepository;
     @Autowired
     private DataManager dm;
+
+    @Autowired
+    private TranslationPackBuilder translationPackBuilder;
 
     private static Resources.ResourceHolder getImage(Resources resources, ServiceContext serviceContext, Group group) throws IOException {
         final Path logosDir = resources.locateLogosDir(serviceContext);
@@ -335,6 +339,8 @@ public class GroupsApi {
             throw new RuntimeException(ex.getMessage());
         }
 
+        translationPackBuilder.clearCache();
+
         return new ResponseEntity<>(group.getId(), HttpStatus.CREATED);
     }
 
@@ -442,11 +448,20 @@ public class GroupsApi {
                 MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
             ));
         } else {
+            // Rebuild translation pack cache if there are changes in the translations
+            boolean clearTranslationPackCache =
+                !existing.get().getLabelTranslations().equals(group.getLabelTranslations());
+
             try {
                 groupRepository.saveAndFlush(group);
             } catch (Exception ex) {
                 Log.error(API.LOG_MODULE_NAME, ExceptionUtils.getStackTrace(ex));
                 throw new RuntimeException(ex.getMessage());
+            }
+
+
+            if (clearTranslationPackCache) {
+                translationPackBuilder.clearCache();
             }
         }
     }
@@ -514,6 +529,7 @@ public class GroupsApi {
 
             groupRepository.deleteById(groupIdentifier);
 
+            translationPackBuilder.clearCache();
         } else {
             throw new ResourceNotFoundException(String.format(
                 MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
