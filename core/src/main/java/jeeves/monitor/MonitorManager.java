@@ -23,7 +23,6 @@
 
 package jeeves.monitor;
 
-import com.sun.corba.se.spi.activation.ServerManager;
 import com.yammer.metrics.core.*;
 import com.yammer.metrics.log4j.InstrumentedAppender;
 import com.yammer.metrics.reporting.JmxReporter;

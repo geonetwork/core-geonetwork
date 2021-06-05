@@ -143,11 +143,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 	@Autowired
 	private UserFeedbackRepository userFeedbackRepository;
 
-	@Autowired
-	@Qualifier("resourceStore")
-	private Store store;
-	@Autowired
-	private Resources resources;
+//	@Autowired
+//	private Resources resources;
 
 	// FIXME remove when get rid of Jeeves
 	private ServiceContext servContext;
