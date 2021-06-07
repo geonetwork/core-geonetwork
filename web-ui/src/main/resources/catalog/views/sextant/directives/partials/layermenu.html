@@ -2,6 +2,13 @@
   <div class="flex-row sxt-layer-menu-button-bar">
     <button type="button"
             class="btn"
+            ng-click="ctrl.togglePanel()"
+            ng-class="{'active': ctrl.panelOpened()}">
+      <span translate>layerMenu</span>
+    </button>
+    <div class="flex-spacer flex-grow"></div>
+    <button type="button"
+            class="btn"
             ng-if="ctrl.panelSize !== 'collapsed'"
             ng-click="ctrl.panelSize = 'collapsed'"
             title="{{'collapseLayerMenu' | translate}}">
@@ -21,12 +28,6 @@
             title="{{'expandLayerMenuFull' | translate}}">
       <span class="fa fa-fw fa-window-maximize"></span>
     </button>
-    <button type="button"
-            class="btn"
-            ng-click="ctrl.togglePanel()"
-            ng-class="{'active': ctrl.panelOpened()}">
-      <span translate>layerMenu</span>
-    </button>
   </div>
 
   <div class="sxt-layer-menu-body" ng-if="ctrl.panelOpened()">
@@ -42,14 +43,6 @@
           </span>
         </span>
       </div>
-      <div class="flex-spacer flex-grow"></div>
-      <button type="button"
-              class="btn btn-danger btn-sm"
-              ng-click="ctrl.deleteLayer()"
-              title="{{'deleteLayer' | translate}}"
-              translate>
-        <span class="fa fa-fw fa-trash"></span>
-      </button>
     </div>
 
     <div class="flex-row flex-align-stretch width-100 sxt-layer-menu-top-buttons">
@@ -63,6 +56,14 @@
 
       <button type="button"
               class="flex-grow btn btn-secondary btn-sm"
+              ng-disabled="!download"
+              ng-click="ctrl.addToPanier()"
+              title="{{ 'downloadTooltip' | translate }}">
+        <span class="fa fa-download"></span>&nbsp;<span translate>download</span>
+      </button>
+
+      <button type="button"
+              class="flex-grow btn btn-secondary btn-sm"
               ng-disabled="!layer.get('cextent')"
               ng-click="ctrl.zoomToExtent()"
               title="{{ 'layerExtentZoomTooltip' | translate }}">
@@ -70,11 +71,11 @@
       </button>
 
       <button type="button"
-              class="flex-grow btn btn-secondary btn-sm"
-              ng-disabled="!download"
-              ng-click="ctrl.addToPanier()"
-              title="{{ 'downloadTooltip' | translate }}">
-        <span class="fa fa-download"></span>&nbsp;<span translate>download</span>
+              class="btn btn-danger btn-sm"
+              ng-click="ctrl.deleteLayer()"
+              title="{{'deleteLayer' | translate}}"
+              translate>
+        <span class="fa fa-fw fa-trash"></span>
       </button>
     </div>
 
