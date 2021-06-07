@@ -249,7 +249,11 @@ public class MetadataWorkflowApi {
 
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
 
-        if (!isMdWorkflowEnable) {
+        int author = context.getUserSession().getUserIdAsInt();
+        MetadataStatus metadataStatus = convertParameter(metadata.getId(), metadata.getUuid(), status, author);
+        
+        if (metadataStatus.getStatusValue().getType() == StatusValueType.workflow
+            && !isMdWorkflowEnable) {
             throw new FeatureNotEnabledException(
                 "Metadata workflow is disabled, can not be set the status of metadata");
         }
@@ -277,8 +281,6 @@ public class MetadataWorkflowApi {
         // --- change status and carry out behaviours for status changes
         StatusActions sa = statusActionFactory.createStatusActions(context);
 
-        int author = context.getUserSession().getUserIdAsInt();
-        MetadataStatus metadataStatus = convertParameter(metadata.getId(), metadata.getUuid(), status, author);
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
         listOfStatusChange.add(metadataStatus);
         sa.onStatusChange(listOfStatusChange);
