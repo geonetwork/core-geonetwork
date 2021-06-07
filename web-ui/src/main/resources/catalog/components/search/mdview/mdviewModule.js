@@ -61,6 +61,8 @@
       $scope.isUserFeedbackEnabled = false;
       $scope.isRatingEnabled = false;
       $scope.isSocialbarEnabled = gnGlobalSettings.gnCfg.mods.recordview.isSocialbarEnabled;
+      $scope.showStatusWatermark = gnGlobalSettings.gnCfg.mods.recordview.showStatusWatermark;
+      $scope.showStatusTopBar = gnGlobalSettings.gnCfg.mods.recordview.showStatusTopBar;
 
       gnConfigService.load().then(function(c) {
         $scope.isRecordHistoryEnabled = gnConfig['system.metadata.history.enabled'];

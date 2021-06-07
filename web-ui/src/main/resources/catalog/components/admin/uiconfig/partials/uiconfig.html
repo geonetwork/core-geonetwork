@@ -636,6 +636,17 @@
            data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
           {{('ui-' + key + '-help') | translate}} </p>
       </div>
+      <div data-ng-switch-when="showStatusFooter">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
 
       <div data-ng-switch-when="disabledTools">
         <h3>{{('ui-' + key) | translate}}</h3>
@@ -742,6 +753,30 @@
       </div>
 
       <div data-ng-switch-when="isSocialbarEnabled">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+      <div data-ng-switch-when="showStatusWatermark">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+      <div data-ng-switch-when="showStatusTopBar">
         <input type="checkbox"
                id="{{key}}-checkbox"
                data-ng-model="mCfg[key]"/>&nbsp;

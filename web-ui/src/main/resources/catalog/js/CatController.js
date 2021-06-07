@@ -556,6 +556,7 @@ goog.require('gn_alert');
             'maps': ['ows']
           },
           'isFilterTagsDisplayedInSearch': true,
+          'showStatusFooter': true,
           'usersearches': {
             'enabled': false,
             'includePortals': true,
@@ -636,7 +637,9 @@ goog.require('gn_alert');
         },
         'recordview': {
           'enabled': true,
-          'isSocialbarEnabled': true
+          'isSocialbarEnabled': true,
+          'showStatusWatermark': false,
+          'showStatusTopBar': true
         },
         'editor': {
           'enabled': true,
