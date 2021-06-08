@@ -53,40 +53,16 @@
       {{h.authorName}}
     </div>
     <div class="timeline-body" data-ng-show="h.closeDate == null">
-
       <div data-ng-show="h.statusValue.name == 'doiCreationTask'"
-           data-ng-init="key = h.id.metadataId + '-' + h.id.statusId">
-        <h2 data-translate="">createDoiForRecord</h2>
-        <div class="text-muted" data-translate="">createDoiForRecord-help</div>
-
-        <a class="btn btn-primary"
-           data-gn-click-and-spin="doiCreationTask.check(h)">
-          <i class="fa fa-fw"
-             data-ng-class="{'fa-check': response.doiCreationTask.check == null, 'fa-thumbs-up': response.doiCreationTask.check.status === 200, 'fa-thumbs-down': response.doiCreationTask.check.status === 400}" ></i>
-          <span data-translate="">doiCreationTaskCheckAction</span>
-        </a>
-
-        <a class="btn btn-primary"
-           data-ng-disabled="response.doiCreationTask.check.status !== 200"
-           data-gn-click-and-spin="doiCreationTask.create(h)">
-          <i class="fa fa-fw fa-play"/>
-          <span data-translate="">doiCreationTaskCreateAction</span>
-        </a>
-
-        <a class="btn btn-default"
-           data-translate=""
-           data-ng-show="user.isAdministratorOrMore()"
-           data-gn-click-and-spin="closeTask(h)">closeTask</a>
-
-        <div data-ng-if="response.doiCreationTask.check"
-             data-ng-class="{'text-danger': response.doiCreationTask.check.status === 400}"
-             data-ng-bind-html="response.doiCreationTask.check.data.description">
-        </div>
-        <div data-ng-if="response.doiCreationTask.create"
-             data-ng-class="{'text-danger': response.doiCreationTask.create.status === 400}"
-             data-ng-bind-html="response.doiCreationTask.create.data.description">
-        </div>
+           data-gn-doi-wizard="h.id.metadataId">
       </div>
+
+      <a class="btn btn-default"
+         data-ng-show="$parent.$parent.user.isAdministratorOrMore()"
+         data-gn-click-and-spin="closeTask(h)">
+        <i class="fa fa-fw fa-times"></i>
+        <span data-translate="">closeTask</span>
+      </a>
     </div>
   </div>
 </li>

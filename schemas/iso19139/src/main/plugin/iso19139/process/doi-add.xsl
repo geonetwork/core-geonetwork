@@ -23,16 +23,58 @@
                 select="'Digital Object Identifier (DOI)'"/>
 
 
-  <xsl:variable name="isDoiAlreadSet"
+  <xsl:variable name="isDoiAlreadySet"
                 select="count(//gmd:distributionInfo//gmd:onLine/*[matches(gmd:protocol/gco:CharacterString, $doiProtocolRegex)]/gmd:linkage/gmd:URL[. != '']) > 0"/>
+
+  <!--<xsl:variable name="isDoiAlreadySet"
+                select="count(//gmd:identificationInfo/*/gmd:citation/*/
+                              gmd:identifier/*/gmd:code[
+                                contains(*/text(), 'datacite.org/doi/')
+                                or contains(*/text(), 'doi.org')
+                                or contains(*/@xlink:href, 'doi.org')]) > 0"/>-->
+
+  <!--<xsl:template match="gmd:identificationInfo[1]/*/gmd:citation/*[not($isDoiAlreadySet)]"
+                priority="2">
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+
+      <xsl:copy-of select="gmd:title
+                           |gmd:alternateTitle
+                           |gmd:date
+                           |gmd:edition
+                           |gmd:editionDate
+                           |gmd:identifier
+                          "/>
+      <gmd:identifier>
+        <gmd:MD_Identifier>
+          <gmd:code>
+            <gmx:Anchor xlink:href="{$doi}">
+              <xsl:value-of select="$doi"/>
+            </gmx:Anchor>
+&lt;!&ndash;            <gco:CharacterString><xsl:value-of select="$doi"/></gco:CharacterString>&ndash;&gt;
+          </gmd:code>
+        </gmd:MD_Identifier>
+      </gmd:identifier>
+
+      <xsl:copy-of select="gmd:citedResponsibleParty
+                           |gmd:presentationForm
+                           |gmd:series
+                           |gmd:otherCitationDetails
+                           |gmd:collectiveTitle
+                           |gmd:ISBN
+                           |gmd:ISSN
+                          "/>
+    </xsl:copy>
+  </xsl:template>-->
 
   <!-- Insert the DOI in the first distributionInfo section
   (a distribution format is mandatory in ISO
   and a publisher (distributor) is required for a DOI
   so it should always exist).
 
-  Adding a new transfer option block. -->
-  <xsl:template match="gmd:distributionInfo[not($isDoiAlreadSet) and position() = 1]"
+  Adding a new transfer option block.
+  -->
+  <xsl:template match="gmd:distributionInfo[not($isDoiAlreadySet) and position() = 1]"
                 priority="2">
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
@@ -61,6 +103,7 @@
       </gmd:MD_Distribution>
     </xsl:copy>
   </xsl:template>
+
 
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">

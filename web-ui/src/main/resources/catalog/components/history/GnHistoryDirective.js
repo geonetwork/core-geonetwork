@@ -101,8 +101,8 @@
 
   module
     .directive(
-      'gnRecordHistoryStep', ['gnRecordTaskService', 'gnRecordHistoryService',
-        function(gnRecordTaskService, gnRecordHistoryService) {
+      'gnRecordHistoryStep', ['gnDoiService', 'gnRecordHistoryService', '$translate', '$window',
+        function(gnDoiService, gnRecordHistoryService, $translate, $window) {
           return {
             restrict: 'A',
             replace: true,
@@ -115,28 +115,6 @@
                 '../../catalog/components/history/partials/historyStep.html',
             link: function postLink(scope, element, attrs) {
 
-              scope.response = {
-                doiCreationTask: {}
-              };
-              scope.doiCreationTask = {
-                check: function(status) {
-                  scope.response.doiCreationTask = {};
-                  scope.response.doiCreationTask['check'] = null;
-                  return gnRecordTaskService.doiCreationTask.check(status).then(function (r) {
-                    scope.response.doiCreationTask['check'] = r;
-                  }, function (r) {
-                    scope.response.doiCreationTask['check'] = r;
-                  });
-                },
-                create: function(status){
-                  return gnRecordTaskService.doiCreationTask.create(status).then(function(r) {
-                    scope.response.doiCreationTask['create'] = r;
-                    scope.closeTask(status);
-                  }, function(r) {
-                    scope.response.doiCreationTask['create'] = r;
-                  });
-                }
-              };
 
               scope.removeStep = function(s){
                 gnRecordHistoryService.delete(s).then(function(r) {
@@ -159,10 +137,10 @@
   module
     .directive(
       'gnHistory', [
-        '$http', '$filter', 'gnConfig', '$translate',
-        'gnSearchManagerService', 'gnRecordHistoryService', 'gnRecordTaskService',
-        function($http, $filter, gnConfig, $translate,
-                 gnSearchManagerService, gnRecordHistoryService, gnRecordTaskService) {
+        '$http', '$filter', 'gnConfig', 'gnConfigService', '$translate',
+        'gnSearchManagerService', 'gnRecordHistoryService', 'gnDoiService',
+        function($http, $filter, gnConfig, gnConfigService, $translate,
+                 gnSearchManagerService, gnRecordHistoryService, gnDoiService) {
           return {
             restrict: 'A',
             replace: true,
