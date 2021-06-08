@@ -34,7 +34,7 @@
                 exclude-result-prefixes="#all">
 
   <xsl:variable name="dateFormatRegex"
-                select="'(0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-([12]\d{3})'"/>
+                select="'(\d{4}-[01]\d-[0-3]\d.*)'"/>
 
   <xsl:template mode="getLicense" match="gmd:MD_Metadata[$view = 'sextant']">
     <xsl:apply-templates mode="render-value"
@@ -85,12 +85,20 @@
         <td>
           <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[gmd:date/* != '']">
             <dl>
-              <dt>
+              <!--<dt>
                 <xsl:apply-templates mode="render-value" select="gmd:dateType/*/@codeListValue"/>
-              </dt>
+              </dt>-->
+
+              <xsl:variable name="dateType">
+                <xsl:apply-templates  mode="render-value" select="gmd:dateType/*/@codeListValue"/>
+              </xsl:variable>
+
+
               <dd>
                 <xsl:value-of select="if (matches(gmd:date/*, $dateFormatRegex)) then format-date(xs:date(tokenize(gmd:date/*, 'T')[1]), '[D01]-[M01]-[Y0001]') else gmd:date/*"/>
-<!--                    <xsl:apply-templates mode="render-value" select="gmd:date/*"/>-->
+                <xsl:text>&#10;(</xsl:text>
+                <xsl:copy-of select="if (count($dateType/element()) = 0) then concat(' ', $dateType, ' ') else  $dateType/element()"/>
+                <xsl:text>)</xsl:text>
               </dd>
             </dl>
           </xsl:for-each>
@@ -122,17 +130,24 @@
               <xsl:if test="gml:timePosition != ''">
                 <xsl:value-of select="concat ($schemaStrings/sxt-view-temporal-at, ' ', gml:timePosition)"/>
               </xsl:if>
+              &#160;
+              <xsl:variable name="type">
+                <xsl:call-template name="landingpage-label">
+                  <xsl:with-param name="key" select="'sxt-view-temporal'"/>
+                </xsl:call-template>
+              </xsl:variable>
+              (<xsl:copy-of select="if (count($type/element()) = 0) then concat(' ', $type, ' ') else $type/element()"/>)
               <br/>
             </xsl:for-each>
           </xsl:variable>
 
           <xsl:if test="$temporalCoverageContent != ''">
             <dl>
-              <dt>
+              <!--<dt>
                 <xsl:call-template name="landingpage-label">
                   <xsl:with-param name="key" select="'sxt-view-temporal'"/>
                 </xsl:call-template>
-              </dt>
+              </dt>-->
               <dd>
                 <xsl:copy-of select="$temporalCoverageContent"/>
               </dd>

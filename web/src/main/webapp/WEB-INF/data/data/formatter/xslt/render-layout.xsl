@@ -213,10 +213,9 @@
                 </xsl:call-template>
               </a>
             </xsl:for-each>
-
-            <xsl:call-template name="landingpage-label">
+            <!--<xsl:call-template name="landingpage-label">
               <xsl:with-param name="key" select="'linkToPortal-help'"/>
-            </xsl:call-template>
+            </xsl:call-template>-->
           </div>
         </section>
       </xsl:when>

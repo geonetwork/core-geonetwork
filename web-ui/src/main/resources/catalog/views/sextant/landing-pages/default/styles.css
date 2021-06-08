@@ -54,8 +54,9 @@ div.gn-landing-page-header-default {
 }
 
 .gn-md-side-access .btn {
-  background-color: #b7b8b9;
   color: white;
+  white-space: normal;
+  word-break: break-word;
   font-weight: bold;
   font-size: 16px;
   margin-bottom: 10px;
@@ -83,18 +84,14 @@ section.links,
   font-size: 22px !important;
 }
 
-.gn-abstract p:last-of-type {
-  margin-bottom: 0px;
-}
-
-.gn-metadata-view dl > dt {
-  width: auto !important;
-  margin-right: 6px;
-}
-
 .gn-md-side br {
   display: none;
 }
+
+.gn-md-side-social > br {
+  display: block;
+}
+
 
 .vcenter {
   display: flex;
