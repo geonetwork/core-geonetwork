@@ -91,7 +91,7 @@
                   autoUpload: scope.autoUpload,
                   url:
                     "../api/records/" +
-                    gnCurrentEdit.uuid +
+                    encodeURIComponent(gnCurrentEdit.uuid) +
                     "/attachments?visibility=" +
                     (scope.visibility || "public"),
                   dropZone: $("#gn-upload-" + scope.id),

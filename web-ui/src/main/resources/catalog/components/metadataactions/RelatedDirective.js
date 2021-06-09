@@ -54,7 +54,7 @@
           method: "get",
           url:
             "../api/records/" +
-            uuidOrId +
+            encodeURIComponent(uuidOrId) +
             "/related?type=" +
             (types ? types.split("|").join("&type=") : "") +
             (approved === false ? "&approved=false" : ""),

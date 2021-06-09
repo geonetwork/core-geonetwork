@@ -130,7 +130,7 @@
 
       this.getUuid = function () {
         if (this.isMdView()) {
-          return $location.path().split("/")[2];
+          return $location.path().replace(/\/metadata\/(.*)($|\/formatters.*)/, "$1");
         }
       };
 

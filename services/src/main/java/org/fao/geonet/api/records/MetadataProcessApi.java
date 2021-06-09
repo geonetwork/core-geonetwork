@@ -85,7 +85,7 @@ public class MetadataProcessApi {
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get suggestions", description ="Analyze the record an suggest processes to improve the quality of the record.<br/>"
         + "<a href='https://docs.geonetwork-opensource.org/latest/user-guide/workflow/batchupdate-xsl/'>More info</a>")
-    @RequestMapping(value = "/{metadataUuid}/processes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{metadataUuid:.+}/processes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Record suggestions."),
@@ -133,7 +133,7 @@ public class MetadataProcessApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Preview process result", description =API_OP_NOTE_PROCESS)
-    @RequestMapping(value = "/{metadataUuid}/processes/{process:.+}", method = {
+    @RequestMapping(value = "/{metadataUuid:.+}/processes/{process:.+}", method = {
         RequestMethod.GET}, produces = MediaType.APPLICATION_XML_VALUE)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
@@ -158,7 +158,7 @@ public class MetadataProcessApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Apply a process", description =API_OP_NOTE_PROCESS)
-    @RequestMapping(value = "/{metadataUuid}/processes/{process:.+}", method = {
+    @RequestMapping(value = "/{metadataUuid:.+}/processes/{process:.+}", method = {
         RequestMethod.POST,}, produces = MediaType.APPLICATION_XML_VALUE)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)

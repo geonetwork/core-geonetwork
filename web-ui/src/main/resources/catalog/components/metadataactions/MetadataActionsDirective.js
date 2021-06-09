@@ -491,7 +491,10 @@
               method = "delete";
             }
             $http[method](
-              "../api/records/" + scope.metadataUuid + "/tags?id=" + c.id
+              "../api/records/" +
+                encodeURIComponent(scope.metadataUuid) +
+                "/tags?id=" +
+                c.id
             ).then(
               function () {
                 if (existIndex === -1) {
@@ -499,7 +502,6 @@
                   scope.currentCategories.values.push(c.name);
                 } else {
                   scope.ids.splice(existIndex, 1);
-
                   angular.forEach(scope.currentCategories.values, function (cat, idx) {
                     if (cat === c.name) {
                       scope.currentCategories.values.splice(idx, 1);
