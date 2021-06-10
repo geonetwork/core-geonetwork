@@ -160,7 +160,7 @@
       this.validateMdLinks = function(bucket) {
         $rootScope.$broadcast('operationOnSelectionStart');
         return gnHttp.callService('../api/records/links?' +
-          'bucket=' + bucket, null, {
+          'analyze=true&bucket=' + bucket, null, {
           method: 'POST'
         }).then(function(data) {
           $rootScope.processReport = data.data;
