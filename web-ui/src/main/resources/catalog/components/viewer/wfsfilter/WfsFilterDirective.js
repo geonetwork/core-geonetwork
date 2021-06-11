@@ -117,14 +117,15 @@
     'gnSearchSettings',
     'gnFeaturesTableManager',
     'gnAlertService',
-    'gnFacetTree',
+    'gnWfsService',
+    'gnOwsCapabilities',
     function($http, wfsFilterService, $q, $rootScope, $translate,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
              gnSearchSettings, gnFeaturesTableManager,
-             gnAlertService, gnFacetTree) {
+             gnAlertService, gnWfsService, gnOwsCapabilities) {
       return {
         restrict: 'A',
-        replace: true,
+        replace: false,
         templateUrl: '../../catalog/components/viewer/wfsfilter/' +
           'partials/wfsfilterfacet.html',
         scope: {
@@ -224,7 +225,7 @@
                 // expecting that the layer as a corresponding feature type
                 // with same name.
                 return (layer != null ? layer.get('url') : scope.wfsUrl)
-                  .replace(/wms/i, 'wfs');
+                  .replace(/wms|WMS/i, 'wfs');
               } else if (mode === 'group') {
                 // Collect WFS URL in the same transfer option group
                 // as the WMS URL. Get the group
@@ -243,6 +244,7 @@
             angular.extend(scope, {
               fields: [],
               isWfsAvailable: undefined,
+              isFeatureTypeAvailable: undefined,
               isFeaturesIndexed: false,
               status: null,
               // FIXME: On page reload the md is undefined and the filter does not work
@@ -314,6 +316,13 @@
               });
           };
 
+          scope.checkFeatureTypeInWfs = function() {
+            gnWfsService.getCapabilities(scope.url).then(function(capObj) {
+              var capL = gnOwsCapabilities.getLayerInfoFromWfsCap(scope.featureTypeName, capObj, scope.uuid);
+              scope.isFeatureTypeAvailable = angular.isDefined(capL);
+            });
+          }
+
           /**
            * Init the index Request Object, either from meta index or from
            * application profile.
@@ -324,7 +333,6 @@
             // `olrObject.initialParams` with external config
             // appProfile = TMP_PROFILE;
             if (appProfile && appProfile.fields) {
-
               indexObject.indexFields =
                 wfsFilterService.indexMergeApplicationProfile(
                   indexObject.filteredDocTypeFieldsInfo, appProfile);
@@ -376,6 +384,7 @@
             }, function(error) {
               scope.status = error.data ? 'indexAccessError' : error.statusText;
               scope.statusTitle = error.statusText;
+              scope.checkFeatureTypeInWfs();
             });
           };
           scope.dropFeatures = function() {
