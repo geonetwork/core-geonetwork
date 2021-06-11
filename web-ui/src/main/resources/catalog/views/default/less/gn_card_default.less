@@ -1,36 +1,6 @@
 @import "../../../style/gn_bootstrap.less";
 @import "gn_variables_default.less";
 
-// status
-.gn-status, .gn-workflow-status {
-  position: relative;
-  float: left;
-  color: darken(@brand-info, 25%);
-}
-.gn-status-completed {
-  color: darken(@brand-success, 20%);
-}
-.gn-status-historicalArchive {
-  color: darken(@brand-warning, 20%);
-}
-.gn-status-obsolete {
-  color: darken(@brand-danger, 20%);
-}
-.gn-workflow-status {
-  //background-color: rgba(255, 255, 255 , 0.7);
-  //border-color: darken(@brand-success, 5%);
-  //color: @brand-success;
-}
-/* Decide here which status should be displayed or not and with which colors */
-.gn-workingcopy-status {
-  margin-top: 0;
-  i {
-    height: 34px;
-    width: 34px;
-    margin-top: -1px;
-  }
-}
-
 // cards
 @gn-card-thumbnail-width: 140px;
 @gn-card-height: 24em;
@@ -247,34 +217,62 @@
     }
     //background colors
     &.gn-status-bg {
+      background-color: #fff;
       .gn-status {
-        border-color: #fff;
-        color: #fff;
         background: none;
         border-radius: 5px;
         margin-left: 4px;
       }
     }
+    &.gn-status-bg-default,
     &.gn-status-ongoing-bg {
       background-color: darken(@brand-info, 5%);
+      .gn-status {
+        border-color: #fff;
+        color: #fff;
+      }
     }
     &.gn-status-completed-bg {
       background-color: darken(@brand-success, 5%);
+      .gn-status {
+        border-color: #fff;
+        color: #fff;
+      }
     }
     &.gn-status-historicalArchive-bg {
       background-color: darken(@brand-warning, 5%);
+      .gn-status {
+        border-color: #fff;
+        color: #fff;
+      }
     }
     &.gn-status-obsolete-bg {
       background-color: darken(@brand-danger, 5%);
+      .gn-status {
+        border-color: #fff;
+        color: #fff;
+      }
     }
     &.gn-workflow-status-bg {
       background-color: rgba(255, 255, 255 , 0.7);
+      .gn-status {
+        border-color: #fff;
+        color: #fff;
+      }
     }
     &.gn-workflow-status-mdview-bg {
       background-color: darken(@brand-success, 5%);
+      .gn-status {
+        border-color: #fff;
+        color: #fff;
+      }
     }
     &.gn-workflow-status-1-bg {
       background-color: darken(@brand-danger, 5%);
+      .gn-status {
+        border-color: #fff;
+        color: #fff;
+      }
     }
   }
   &:hover, &.gn-record-selected {
@@ -295,6 +293,41 @@
     }
   }
 }
+
+// status
+.gn-status, .gn-workflow-status {
+  position: relative;
+  float: left;
+  color: darken(@brand-info, 25%);
+}
+.gn-status-completed {
+  color: darken(@brand-success, 20%);
+}
+.gn-status-historicalArchive {
+  color: darken(@brand-warning, 20%);
+}
+.gn-status-obsolete {
+  color: darken(@brand-danger, 20%);
+}
+.gn-status-superseded {
+  color: darken(@brand-danger, 20%);
+}
+.gn-workflow-status {
+  //background-color: rgba(255, 255, 255 , 0.7);
+  //border-color: darken(@brand-success, 5%);
+  //color: @brand-success;
+}
+/* Decide here which status should be displayed or not and with which colors */
+.gn-workingcopy-status {
+  margin-top: 0;
+  i {
+    height: 34px;
+    width: 34px;
+    margin-top: -1px;
+  }
+}
+
+
 
 // styling for all search results
 ul.gn-resultview {

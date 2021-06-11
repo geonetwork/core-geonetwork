@@ -35,18 +35,20 @@
     </div>
 
     <!-- status message on top -->
-    <div data-ng-if="mdView.current.record.cl_status.length > 0 && showStatusTopBar"
-         data-ng-repeat="c in mdView.current.record.cl_status track by $index"
+    <div data-ng-repeat="c in mdView.current.record.cl_status track by $index">
+      <div data-ng-show="showStatusTopBarFor.indexOf(c.key) !== -1"
          title="{{c.key | translate}}"
          class="gn-status-stamp-top gn-status-bg gn-status-{{c.key}}-bg">
-      <span class="gn-status gn-status-mdview">{{c.key | translate}}</span>
+        <span class="gn-status gn-status-mdview">{{c.key | translate}}</span>
+      </div>
     </div>
     <!-- status message as watermark -->
-    <div data-ng-if="mdView.current.record.cl_status.length > 0 && showStatusWatermark"
-         data-ng-repeat="c in mdView.current.record.cl_status track by $index"
-         title="{{c.key | translate}}"
-         class="gn-status-stamp">
-      <span class="gn-status gn-status-mdview gn-status-{{c.key}}">{{c.key | translate}}</span>
+    <div data-ng-repeat="c in mdView.current.record.cl_status track by $index">
+        <div data-ng-show="showStatusWatermarkFor.indexOf(c.key) !== -1"
+           title="{{c.key | translate}}"
+           class="gn-status-stamp">
+        <span class="gn-status gn-status-mdview gn-status-{{c.key}}">{{c.key | translate}}</span>
+      </div>
     </div>
 
 
@@ -169,12 +171,15 @@
              data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></div>
 
           <!-- Display the first metadata status (apply to ISO19139 record) -->
-          <div class="row" data-ng-if="!showStatusTopBar">
+          <div class="row">
             <div data-ng-if="mdView.current.record.cl_status.length > 0"
-                 data-ng-repeat="c in mdView.current.record.cl_status track by $index"
-                 title="{{c.key | translate}}"
-                 class="gn-status gn-status-mdview gn-status-{{c.key}}">
-                {{c.key | translate}}
+                 data-ng-repeat="c in mdView.current.record.cl_status track by $index">
+              <div data-ng-if="showStatusWatermarkFor.indexOf(c.key) === -1
+                               && showStatusTopBarFor.indexOf(c.key) === -1"
+                   title="{{c.key | translate}}"
+                   class="gn-status gn-status-mdview gn-status-{{c.key}}">
+                  {{c.key | translate}}
+              </div>
             </div>
           </div>
 

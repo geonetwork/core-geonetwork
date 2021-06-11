@@ -639,7 +639,7 @@ i.fa-times.delete:hover {
     display: inline-block;
     margin-top: 5px;
     margin-right: 5px;
-    border-radius: 20px;
+    border-radius: 5px;
     padding: 5px 8px;
     color: @brand-primary;
     font-weight: 500;
@@ -664,6 +664,10 @@ i.fa-times.delete:hover {
     color: @brand-warning;
   }
   .gn-status-obsolete {
+    border-color: darken(@brand-danger, 5%);
+    color: @brand-danger;
+  }
+  .gn-status-superseded {
     border-color: darken(@brand-danger, 5%);
     color: @brand-danger;
   }
