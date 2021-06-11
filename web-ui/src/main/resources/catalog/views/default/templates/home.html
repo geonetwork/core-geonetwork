@@ -103,9 +103,8 @@
             <a class="pull-left clearfix"
               title="{{facet.key}}"
               role="link"
-              data-ng-init="field = (aggResponse.meta && aggResponse.meta.field) || homeFacet.key"
-              data-ng-href='#/search?query_string={"{{field}}": {"{{facet.key}}": true} }'>
-
+              data-ng-init="field = (aggResponse.meta && aggResponse.meta.field) || homeFacet.key; value = aggResponse.meta && aggResponse.meta.wildcard ? (facet.key + '*') : facet.key"
+              data-ng-href='#/search?query_string={"{{field}}": {"{{value}}": true} }'>
               <!-- TODOES Link label to icons? -->
               <span class="badge-icon badge-result-topic pull-left">
                 <i class="fa fa-3x gn-icon gn-icon-{{facet.key.replace('/', '').replace(' ', '')}}"
