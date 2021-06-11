@@ -341,7 +341,13 @@ public class EditLib {
                     fragment = addGmlNamespaceToFragment(fragment);
 
                     // Add content
-                    Element node = Xml.loadString(fragment, false);
+                    Element node=null;
+                    try {
+                        node = Xml.loadString(fragment, false);
+                    } catch (JDOMException e) {
+                        LOGGER.warn("Fragment string '{}' is not a valid Node. This will be treated as regular String to parse to current element '<{}:{}>.", fragment, el.getNamespacePrefix(), el.getName());
+                    }
+
                     if (replaceExisting) {
                         @SuppressWarnings("unchecked")
                         List<Element> children = node.getChildren();
@@ -357,6 +363,8 @@ public class EditLib {
                         for (Attribute a : attributes) {
                             el.setAttribute((Attribute) a.clone());
                         }
+                    } else if (node == null) {
+                        el.addContent(fragment);
                     } else {
                         el.addContent(node);
                     }
