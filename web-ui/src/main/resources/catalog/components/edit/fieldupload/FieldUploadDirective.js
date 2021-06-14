@@ -78,6 +78,7 @@
             var elementNs = scope.elementName.split(':')[0];
             var elementXlinkNs = 'xlink';
 
+            // Use underscore _.escape to encode html entities in the xml snippet
             scope.xmlSnippet = '<' + scope.elementName +
               ' xmlns:' +
               elementNs + '="' +
@@ -90,8 +91,8 @@
               '" xmlns:' + anchorElementNs + '="' +
               gnSchemaManagerService.findNamespaceUri(anchorElementNs,
                 gnCurrentEdit.schema) + '">' +
-              '<' + anchorElement + ' xlink:href="' + scope.linkHref + '">' +
-              scope.value + '</' + anchorElement + '>' +
+              '<' + anchorElement + ' xlink:href="' + _.escape(scope.linkHref) + '">' +
+              _.escape(scope.value) + '</' + anchorElement + '>' +
               '</' + scope.elementName + '>';
           };
 
