@@ -2,7 +2,7 @@
 
 The GeoNetwork community takes the security of the software and all services based on the software product seriously. On this page you can find the versions for which the community provides security patches. 
 
-If you believe you have found a security vulnerability in the software or an implementation of the software, please report it to geonetwork@osgeo.org as described below. Do not publish the vulnerability in any public forums.
+If you believe you have found a security vulnerability in the software or an implementation of the software, please report it to geonetwork@osgeo.org as described below. Do not publish the vulnerability in any public forums (such as twitter, email list or issue tracker).
 
 ## Supported Versions
 
