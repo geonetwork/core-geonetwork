@@ -469,7 +469,7 @@ public final class XslUtil {
                 }
             }
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK,"XslUtil getJsonSettingValue error: " + e.getMessage(), e);
+            Log.error(Geonet.GEONETWORK,"XslUtil getJsonSettingValue '" + key + "' error: " + e.getMessage(), e);
         }
         return "";
     }
@@ -687,7 +687,7 @@ public final class XslUtil {
             return values.get(fieldname);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
+            Log.error(Geonet.GEONETWORK, "Failed to get index field '" + fieldname + "' value on '" + id + "', caused by " + e.getMessage());
         }
         return "";
     }
@@ -770,6 +770,11 @@ public final class XslUtil {
             if (iso3LangCode.equalsIgnoreCase("DEU")) {
                 return "DE";
             }
+
+            if (iso3LangCode.equalsIgnoreCase("NLD")) {
+                return "NL";
+            }
+
             String iso2LangCode = null;
 
             try {
@@ -788,12 +793,12 @@ public final class XslUtil {
                     iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode);
                 }
             } catch (Exception ex) {
-                Log.error(Geonet.GEONETWORK, "Failed to get iso 2 language code for " + iso3LangCode + " caused by " + ex.getMessage());
+                Log.info(Geonet.GEONETWORK, "Failed to get iso 2 language code for " + iso3LangCode + " caused by " + ex.getMessage());
 
             }
             /* Triggers when the language can't be matched to a code */
             if (iso2LangCode == null) {
-                Log.error(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code", new Error());
+                Log.info(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code");
                 return iso3LangCode.substring(0, 2);
             } else {
                 return iso2LangCode;
@@ -964,7 +969,7 @@ public final class XslUtil {
                 return outputter.output(new Document(metadata));
             }
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK,"XslUtil getRecord error: " + e.getMessage(), e);
+            Log.error(Geonet.GEONETWORK,"XslUtil getRecord '" + uuid + "' error: " + e.getMessage(), e);
         }
         return null;
     }
@@ -993,7 +998,7 @@ public final class XslUtil {
 
             return e.evaluate();
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK,"XslUtil evaluate error: " + e.getMessage(), e);
+            Log.error(Geonet.GEONETWORK,"XslUtil evaluate '" + formula + "' error: " + e.getMessage(), e);
             return null;
         }
     }
@@ -1086,7 +1091,7 @@ public final class XslUtil {
         try {
             return DefaultEncoder.getInstance().encodeForURL(str);
         } catch (EncodingException ex) {
-            Log.error(Geonet.GEONETWORK,"XslUtil encode for URL error: " + ex.getMessage(), ex);
+            Log.error(Geonet.GEONETWORK,"XslUtil encode for URL '" + str + "' error: " + ex.getMessage(), ex);
             return str;
         }
     }
@@ -1128,7 +1133,7 @@ public final class XslUtil {
         try {
             return java.net.URLDecoder.decode(str, "UTF-8");
         } catch (Exception ex) {
-            Log.error(Geonet.GEONETWORK,"XslUtil decodeURLParameter error: " + ex.getMessage(), ex);
+            Log.error(Geonet.GEONETWORK,"XslUtil decodeURLParameter '" + str + "' error: " + ex.getMessage(), ex);
             return str;
         }
     }
@@ -1421,7 +1426,7 @@ public final class XslUtil {
             }
         } catch (Exception e) {
             Log.error(Geonet.GEONETWORK,
-                    "Get related document error: " + e.getMessage(), e);
+                    "Get related document '" + uuid + "' error: " + e.getMessage(), e);
         }
         return recordLinks;
     }
@@ -1434,7 +1439,7 @@ public final class XslUtil {
                             getTargetAssociatedResources(uuid, parentUuid)));
         } catch (Exception e) {
             Log.error(Geonet.GEONETWORK,
-                    "Get related document error: " + e.getMessage(), e);
+                    "Get related document '" + uuid + "' error: " + e.getMessage(), e);
         }
         return null;
     }
