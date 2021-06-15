@@ -71,7 +71,7 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="addLineBreaksAndHyperlinksInternal">
-          <xsl:with-param name="txt" select="."/>
+          <xsl:with-param name="txt" select="$txt"/>
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
