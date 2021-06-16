@@ -546,6 +546,98 @@ ul.gn-resultview li.list-group-item {
     [data-ng-controller="GnDashboardRenderController"] {
       margin: -25px -10px -50px -10px;
     }
+
+    // UI settings
+    #uiSettingsPage {
+      padding-top: 40px;
+      @media (max-width: @screen-md-max) {
+        padding-top: 70px;
+      }
+      @media (max-width: @screen-sm-max) {
+        padding-top: 100px;
+      }
+      #toolbarUiSettings {
+        position: fixed;
+        width: calc(~"100vw - @{gn-sidebar-width} - 55px");
+        background-color: #f7f7f7;
+        margin-top: -75px;
+        padding-top: 25px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid @panel-default-border;
+        z-index: 10;
+        @media (max-width: @screen-md-max) {
+          margin-top: -110px;
+          .btn-toolbar {
+            float: left !important;
+            margin-top: 5px;
+          }
+        }
+        @media (max-width: @screen-sm-max) {
+          border-left: none;
+          padding-left: 0;
+          margin-left: -1px;
+          margin-top: -145px;
+          .btn-toolbar {
+            margin-top: 10px;
+            padding-bottom: 5px;
+            .input-group {
+              margin-left: 0;
+            }
+            label {
+              min-width: 100%;
+            }
+          }
+        }
+        @media (max-width: @screen-xs-max) {
+          position: relative;
+          width: 100%;
+          padding-top: 25px;
+          .btn-toolbar {
+            .btn {
+              float: none;
+            }
+            .input-group {
+              width: 100%;
+              float: none;
+            }
+            #gn-btn-settings-save {
+              width: 100%;
+              margin-top: 5px;
+            }
+          }
+        }
+      }
+      #settings-tabset {
+        margin-top: 30px;
+        .nav-pills {
+          .make-md-column(3);
+          .make-md-column-push(9);
+          padding-right: 0;
+          border-left: 1px solid @panel-default-border;
+          > li {
+            float: none;
+          }
+          @media (max-width: @screen-sm-max) {
+            padding-left: 0;
+            margin-bottom: 10px;
+            border: none;
+          }
+        }
+        .tab-content {
+          .make-md-column(9);
+          .make-md-column-pull(3);
+          padding-left: 0;
+        }
+      }
+      @media (max-width: @screen-sm-max) {
+        .form-horizontal {
+          .control-label {
+            text-align: left;
+          }
+        }
+      }
+
+    }
   }
 
   // map for csw harvester
