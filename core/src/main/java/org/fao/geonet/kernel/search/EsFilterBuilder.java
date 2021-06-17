@@ -37,7 +37,9 @@ public class EsFilterBuilder {
         } else {
             // op0 (ie. view operation) contains one of the ids of your groups
             Set<Integer> groups = accessManager.getUserGroups(userSession, context.getIpAddress(), false);
-            final String ids = groups.stream().map(Object::toString)
+            final String ids = groups.stream()
+                .map(Object::toString)
+                .map(e -> e.replace("-", "\\\\-"))
                 .collect(Collectors.joining(" OR "));
             String operationFilter = String.format("op%d:(%s)", ReservedOperation.view.getId(), ids);
 
@@ -45,11 +47,11 @@ public class EsFilterBuilder {
             String ownerFilter = "";
             if (userSession.getUserIdAsInt() > 0) {
                 // OR you are owner
-                ownerFilter = String.format("owner:%d");
+                ownerFilter = String.format("owner:%d", userSession.getUserIdAsInt());
                 // OR member of groupOwner
                 // TODOES
             }
-            return String.format("%s %s", operationFilter, ownerFilter).trim();
+            return String.format("(%s %s)", operationFilter, ownerFilter).trim();
         }
     }
     /**

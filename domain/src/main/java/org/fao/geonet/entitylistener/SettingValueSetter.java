@@ -50,11 +50,8 @@ public class SettingValueSetter implements GeonetworkEntityListener<Setting> {
                 entity.setStoredValue(entity.getValue());
             }
         } else if (type == PersistentEventType.PreUpdate) {
-            // PreUpdate should deal with storedValue, at least during the startup of the
-            // application, the transient value is cleared in PreUpdate and storedValue has the
-            // correct value.
-            if (entity.isEncrypted() && StringUtils.isNotEmpty(entity.getStoredValue())) {
-                entity.setStoredValue(this.encryptor.encrypt(entity.getStoredValue()));
+            if (entity.isEncrypted() && StringUtils.isNotEmpty(entity.getValue())) {
+                entity.setStoredValue(this.encryptor.encrypt(entity.getValue()));
             }
 
         } else if ((type == PersistentEventType.PostLoad) ||  (type == PersistentEventType.PostUpdate)) {

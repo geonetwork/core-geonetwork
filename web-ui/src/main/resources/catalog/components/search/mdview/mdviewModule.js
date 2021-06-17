@@ -64,6 +64,7 @@
 
       gnConfigService.load().then(function(c) {
         $scope.isRecordHistoryEnabled = gnConfig['system.metadata.history.enabled'];
+        $scope.isPreferGroupLogo = gnConfig['system.metadata.prefergrouplogo'];
 
         var statusSystemRating =
           gnConfig['system.localrating.enable'];
@@ -195,5 +196,13 @@
       $scope.$watch('gnMdViewObj.from', function(v) {
         $scope.fromView = v ? v.substring(1) : v;
       });
+
+      if ($scope.gnMdViewObj.current.record
+        && $scope.gnMdViewObj.current.record.groupOwner) {
+        $http.get('../api/groups/' + $scope.gnMdViewObj.current.record.groupOwner,
+          {cache: true}).success(function(data) {
+          $scope.recordGroup = data;
+        });
+      }
     }]);
 })();

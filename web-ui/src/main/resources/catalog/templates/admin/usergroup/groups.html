@@ -15,7 +15,11 @@
           <a href="" class="list-group-item"
              data-ng-repeat="g in pageItems()"
              data-ng-class="g.id === groupSelected.id ? 'active' : ''"
-             data-ng-click="selectGroup(g)"> {{g.label[lang]|empty:g.name}} </a>
+             data-ng-click="selectGroup(g)"> {{g.label[lang]|empty:g.name}}
+            <img data-ng-if="g.logo"
+                 data-ng-src="../../images/harvesting/{{g.logo}}"
+                 class="pull-right gn-logo" />
+          </a>
           <span data-gn-pagination-list=""
                 data-items="groups | filter:groupSearch | orderBy:sortByLabel"
                 data-cache="groups"/>

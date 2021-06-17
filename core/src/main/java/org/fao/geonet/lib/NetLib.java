@@ -170,10 +170,9 @@ public class NetLib {
                 Log.error(Geonet.GEONETWORK, "Proxy credentials cannot be used");
             }
         } else {
-            Properties props = System.getProperties();
-            props.put("http.proxyHost", "");
-            props.put("http.proxyPort", "");
-            props.put("http.nonProxyHosts", "");
+            System.clearProperty("http.proxyHost");
+            System.clearProperty("http.proxyHost");
+            System.clearProperty("http.nonProxyHosts");
         }
     }
 
