@@ -22,13 +22,12 @@
  */
 
 (function() {
-  goog.provide('gn_history');
+  goog.provide('gn_doi');
 
-  goog.require('gn_history_directive');
-  goog.require('gn_history_service');
-  goog.require('gn_doi');
+  goog.require('gn_doi_directive');
+  goog.require('gn_doi_service');
 
-  var module = angular.module('gn_history',
-      ['gn_history_directive', 'gn_history_service', 'gn_doi']);
+  var module = angular.module('gn_doi',
+      ['gn_doi_directive', 'gn_doi_service']);
 
 })();
