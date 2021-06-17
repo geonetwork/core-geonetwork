@@ -470,6 +470,7 @@
         'gnEditor',
         'gnCurrentEdit',
         'gnMap',
+        'gnMapsManager',
         'gnGlobalSettings',
         'Metadata',
         '$rootScope',
@@ -479,7 +480,7 @@
         '$filter',
         '$log',
         function(gnOnlinesrc, gnOwsCapabilities, gnWfsService, gnSchemaManagerService,
-            gnEditor, gnCurrentEdit, gnMap, gnGlobalSettings, Metadata,
+            gnEditor, gnCurrentEdit, gnMap, gnMapsManager, gnGlobalSettings, Metadata,
             $rootScope, $translate, $timeout, $http, $filter, $log) {
           return {
             restrict: 'A',
@@ -526,28 +527,58 @@
 
 
                 function loadLayers() {
-                  if (!angular.isArray(scope.map.getSize()) ||
-                      scope.map.getSize().indexOf(0) >= 0) {
-                    $timeout(function() {
-                      scope.map.updateSize();
-                      if (projectedExtent != null) {
-                        scope.map.getView().fit(
-                          projectedExtent,
-                          scope.map.getSize());
+                  scope.map.get('creationPromise').then(function() {
+                    if (!angular.isArray(scope.map.getSize()) ||
+                        scope.map.getSize().indexOf(0) >= 0) {
+                      $timeout(function() {
+                        scope.map.updateSize();
+                        if (projectedExtent != null) {
+                          scope.map.getView().fit(
+                            projectedExtent,
+                            scope.map.getSize());
+                        }
+                      }, 300);
+                    }
+                  })
+
+                  /**
+                   * Function used to remove a parameter (case insensitive) from a URL by parameter name
+                   * @param key the parameter name
+                   * @param sourceURL the original URL
+                   * @returns {string} a URL without the parameter called `key`.
+                   *
+                   * @see https://stackoverflow.com/a/16941754/1140558
+                   */
+                  function removeParam(key, sourceURL) {
+                    var protocolHostAndPath = sourceURL.split("?")[0],
+                      param,
+                      params_arr = [],
+                      queryString = (sourceURL.indexOf("?") !== -1) ? sourceURL.split("?")[1] : "";
+                    if (queryString !== "") {
+                      params_arr = queryString.split("&");
+                      for (var i = params_arr.length - 1; i >= 0; i -= 1) {
+                        param = params_arr[i].split("=")[0];
+                        if (param.toLowerCase() === key.toLowerCase()) {
+                          params_arr.splice(i, 1);
+                        }
                       }
-                    }, 300);
+                      if (params_arr.length > 0) {
+                        protocolHostAndPath = protocolHostAndPath + "?" + params_arr.join("&");
+                      }
+                    }
+                    return protocolHostAndPath;
                   }
 
+
                   // Reset map
-                  angular.forEach(scope.map.getLayers(), function(layer) {
-                    scope.map.removeLayer(layer);
+                  angular.forEach(scope.map.getLayers(), function(layer, index) {
+                    if (index !== 0) {
+                      scope.map.removeLayer(layer);
+                    }
                   });
 
                   var conf = gnMap.getMapConfig();
 
-                  scope.map.addLayer(new ol.layer.Tile({
-                    source:  new ol.source.OSM()
-                  }));
                   // TODO: Add base layer from config
                   // This does not work because createLayerFromProperties
                   // return a promise and base layer is added twice.
@@ -573,10 +604,10 @@
                       function(layer) {
                         scope.map.addLayer(new ol.layer.Tile({
                           source: new ol.source.TileWMS({
-                            url: layer.url,
+                            url: removeParam('request', layer.url),
                             params: {
                               'LAYERS': layer.name,
-                              'URL': layer.url
+                              'URL': removeParam('request', layer.url)
                             }
                           })
                         }));
@@ -637,15 +668,17 @@
                 var initThumbnailMaker = function() {
 
                   if (!scope.loaded) {
-                    scope.map = new ol.Map({
-                      layers: [],
-                      renderer: 'canvas',
-                      view: new ol.View({
-                        center: [0, 0],
-                        projection: gnMap.getMapConfig().projection,
-                        zoom: 2
-                      })
-                    });
+                    scope.map = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);
+
+                    // scope.map = new ol.Map({
+                    //   layers: [],
+                    //   renderer: 'canvas',
+                    //   view: new ol.View({
+                    //     center: [0, 0],
+                    //     projection: gnMap.getMapConfig().projection,
+                    //     zoom: 2
+                    //   })
+                    // });
 
                     // we need to wait the scope.hidden binding is done
                     // before rendering the map.
