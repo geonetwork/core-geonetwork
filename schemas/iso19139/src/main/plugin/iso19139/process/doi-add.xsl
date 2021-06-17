@@ -29,7 +29,8 @@
   <xsl:variable name="isDoiAlreadySet"
                 select="count(//gmd:identificationInfo/*/gmd:citation/*/
                               gmd:identifier/*/gmd:code[
-                                contains(*/text(), 'doi.org')
+                                contains(*/text(), 'datacite.org/doi/')
+                                or contains(*/text(), 'doi.org')
                                 or contains(*/@xlink:href, 'doi.org')]) > 0"/>
 
   <!--<xsl:variable name="isDoiAlreadySet"
@@ -76,6 +77,7 @@
   so it should always exist).
 
   Adding a new transfer option block.
+  -->
   <xsl:template match="gmd:distributionInfo[not($isDoiAlreadySet) and position() = 1]"
                 priority="2">
     <xsl:copy>
@@ -105,7 +107,6 @@
       </gmd:MD_Distribution>
     </xsl:copy>
   </xsl:template>
-  -->
 
 
   <!-- Do a copy of every nodes and attributes -->
