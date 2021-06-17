@@ -170,6 +170,14 @@
               <br/>
               <strong>{{resource.title | gnLocalized: lang}}</strong><br/>
               {{resource.description | gnLocalized: lang}}
+
+              <div data-ng-if="resource.protocol.match('OGC:WMS') !== null"
+                   data-gn-wfs-filter-facets=""
+                   manager-only="true"
+                   data-wfs-url="{{::resource.lUrl}}"
+                   data-feature-type-name="{{::resource.title | gnLocalized: lang}}"
+                   data-md="gnCurrentEdit.metadata"
+                   data-boot-mode="index"></div>
             </div>
             <div class="col-md-1 text-right">
               <a href=""
