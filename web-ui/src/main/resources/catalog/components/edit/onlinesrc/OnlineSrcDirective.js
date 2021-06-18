@@ -28,6 +28,7 @@
   goog.require('ga_print_directive');
   goog.require('gn_utility');
   goog.require('gn_filestore');
+  goog.require('gn_urlutils_service');
 
   /**
    * @ngdoc overview
@@ -46,7 +47,8 @@
     'gn_utility',
     'gn_filestore',
     'blueimp.fileupload',
-    'ga_print_directive'
+    'ga_print_directive',
+    'gn_urlutils_service'
   ])
     .directive('gnRemoteRecordSelector', ['$http', 'gnGlobalSettings',
       function($http, gnGlobalSettings) {
@@ -471,6 +473,7 @@
         'gnCurrentEdit',
         'gnMap',
         'gnMapsManager',
+        'gnUrlUtils',
         'gnGlobalSettings',
         'Metadata',
         '$rootScope',
@@ -480,7 +483,7 @@
         '$filter',
         '$log',
         function(gnOnlinesrc, gnOwsCapabilities, gnWfsService, gnSchemaManagerService,
-            gnEditor, gnCurrentEdit, gnMap, gnMapsManager, gnGlobalSettings, Metadata,
+            gnEditor, gnCurrentEdit, gnMap, gnMapsManager, gnUrlUtils, gnGlobalSettings, Metadata,
             $rootScope, $translate, $timeout, $http, $filter, $log) {
           return {
             restrict: 'A',
@@ -541,35 +544,6 @@
                     }
                   })
 
-                  /**
-                   * Function used to remove a parameter (case insensitive) from a URL by parameter name
-                   * @param key the parameter name
-                   * @param sourceURL the original URL
-                   * @returns {string} a URL without the parameter called `key`.
-                   *
-                   * @see https://stackoverflow.com/a/16941754/1140558
-                   */
-                  function removeParam(key, sourceURL) {
-                    var protocolHostAndPath = sourceURL.split("?")[0],
-                      param,
-                      params_arr = [],
-                      queryString = (sourceURL.indexOf("?") !== -1) ? sourceURL.split("?")[1] : "";
-                    if (queryString !== "") {
-                      params_arr = queryString.split("&");
-                      for (var i = params_arr.length - 1; i >= 0; i -= 1) {
-                        param = params_arr[i].split("=")[0];
-                        if (param.toLowerCase() === key.toLowerCase()) {
-                          params_arr.splice(i, 1);
-                        }
-                      }
-                      if (params_arr.length > 0) {
-                        protocolHostAndPath = protocolHostAndPath + "?" + params_arr.join("&");
-                      }
-                    }
-                    return protocolHostAndPath;
-                  }
-
-
                   // Reset map
                   angular.forEach(scope.map.getLayers(), function(layer, index) {
                     if (index !== 0) {
@@ -604,10 +578,10 @@
                       function(layer) {
                         scope.map.addLayer(new ol.layer.Tile({
                           source: new ol.source.TileWMS({
-                            url: removeParam('request', layer.url),
+                            url: gnUrlUtils.remove(layer.url, ['request'], true),
                             params: {
                               'LAYERS': layer.name,
-                              'URL': removeParam('request', layer.url)
+                              'URL': gnUrlUtils.remove(layer.url, ['request'], true)
                             }
                           })
                         }));
