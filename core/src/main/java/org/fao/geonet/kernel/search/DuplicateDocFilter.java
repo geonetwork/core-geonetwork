@@ -50,7 +50,9 @@ import java.util.BitSet;
  */
 public class DuplicateDocFilter extends Filter {
 
-    final IntSet hits = new IntBitSet();
+    private static int MAX_METADATA_ID = 500000000;
+
+    final IntSet hits = new IntBitSet(MAX_METADATA_ID);
     private Query _query;
 
     public DuplicateDocFilter(Query query) {
