@@ -154,6 +154,8 @@
     <facet name="SIH_Engins_valides" indexKey="thesaurus-external.theme.SIH_Engins_valides" label="SIH_Engins_valides"/>
     <facet name="SIH_Categories_Engins" indexKey="thesaurus-external.theme.SIH_Categories_Engins" label="SIH_Categories_Engins"/>
     <facet name="SIH_Especes_scientifiques" indexKey="thesaurus-external.theme.SIH_Especes_scientifiques" label="SIH_Especes_scientifiques"/>
+    <facet name="SIH_Types_donnees" indexKey="thesaurus-local.theme.sih_type_donnees" label="SIH_Types_donnees"/>
+    <facet name="SIH_Facade_maritime" indexKey="thesaurus-local.theme.sih_facade_maritime" label="SIH_Facade_maritime"/>
 
     <facet name="emodnet-checkpoint.environmental.matrix" indexKey="thesaurus-local.theme.emodnet-checkpoint.environmental.matrix" label="emodnet-checkpoint.environmental.matrix"/>
     <facet name="emodnet-checkpoint.challenges" indexKey="thesaurus-local.theme.emodnet-checkpoint.challenges" label="emodnet-checkpoint.challenges"/>
@@ -327,6 +329,8 @@
       <item facet="SIH_Engins_valides" max="300"/>
       <item facet="SIH_Categories_Engins" max="300"/>
       <item facet="SIH_Especes_scientifiques" max="300"/>
+      <item facet="SIH_Types_donnees" max="300"/>
+      <item facet="SIH_Facade_maritime" max="300"/>      
       <item facet="emodnet-checkpoint.environmental.matrix" max="300"/>
       <item facet="emodnet-checkpoint.challenges" max="300"/>
       <item facet="emodnet-checkpoint.level.of.characteristics" max="300"/>
