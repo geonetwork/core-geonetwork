@@ -157,5 +157,8 @@
   "commonProtocols": "General protocols:",
   "indexStatusSynchronized": "Records in index/db = <strong>{{indexStatus['index.count']}}/{{indexStatus['db.count']}}</strong>",
   "indexStatusSynchronized-error": "When number of records is not equal in the database and in the index, check first that the catalogue point to the correct index. If yes, try to reindex the catalogue from admin > tools. If there is still a difference, check for indexing errors in the log file and fix the metadata record using the XML view.",
-  "IndexReadOnlyHealthCheck": "Index is in readonly mode"
+  "IndexReadOnlyHealthCheck": "Index is in readonly mode",
+  "summary": "Resumen",
+  "metadataRecords": "Metadata records",
+  "results": "Resultados"
 }
