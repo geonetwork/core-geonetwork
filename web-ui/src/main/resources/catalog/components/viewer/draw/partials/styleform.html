@@ -31,14 +31,15 @@
     <div class="form-group">
       <label class="col-xs-4"
              for="gn-draw-radius-input">
-        {{'textInput'|translate}}
+        {{'annotation'|translate}}
       </label>
-      <div class="col-xs-6">
-        <input type="text"
+      <div class="col-xs-7">
+        <textarea type="text"
                id="gn-draw-text-input-point"
                class="form-control input-sm"
                data-ng-model="style.text.text"
-               placeholder="{{'textInput'|translate}}">
+               placeholder="{{'annotation'|translate}}">
+          </textarea>
       </div>
     </div>
   </div>
@@ -75,14 +76,15 @@
       <label class="col-xs-4"
              id="gn-draw-text-value-line"
              for="gn-draw-radius-input">
-        {{'textInput'|translate}}
+        {{'annotation'|translate}}
       </label>
-      <div class="col-xs-6">
-        <input type="text"
+      <div class="col-xs-7">
+        <textarea
                id="gn-draw-text-line-input"
                class="form-control input-sm"
                data-ng-model="style.text.text"
-               placeholder="{{'textInput'|translate}}">
+               placeholder="{{'annotation'|translate}}">
+        </textarea>
       </div>
     </div>
   </div>
@@ -94,7 +96,7 @@
              for="gn-draw-width-input-polygon">
         {{'drawWidth'|translate}}
       </label>
-      <div class="col-xs-4">
+      <div class="col-xs-6">
         <input type="number"
                id="gn-draw-width-input-polygon"
                class="form-control input-sm"
@@ -106,7 +108,7 @@
       <label class="col-xs-4">
         {{'drawStrokeColor'|translate}}
       </label>
-      <div class="col-xs-6">
+      <div class="col-xs-5">
         <color-picker
           ng-model="style.stroke.color"
           color-picker-format="'rgb'"
@@ -130,14 +132,15 @@
       <label class="col-xs-4"
              id="gn-draw-text-value-ply"
              for="gn-draw-radius-input">
-        {{'textInput'|translate}}
+        {{'annotation'|translate}}
       </label>
-      <div class="col-xs-6">
-        <input type="text"
+      <div class="col-xs-7">
+        <textarea type="text"
                id="gn-draw-text-ply-input"
                class="form-control input-sm"
                data-ng-model="style.text.text"
-               placeholder="{{'textInput'|translate}}">
+               placeholder="{{'annotation'|translate}}">
+          </textarea>
       </div>
     </div>
   </div>
@@ -146,9 +149,9 @@
   <div data-ng-if="getType() == 'text'">
     <div class="form-group">
       <div class="col-xs-12">
-        <label >{{'textInput'|translate}}
+        <label >{{'annotation'|translate}}
           <input class="form-control" ng-model="style.text.text"
-                 placeholder="{{'textInput'|translate}}"
+                 placeholder="{{'annotation'|translate}}"
                  title="{{'tipDrawText'|translate}}">
         </label>
       </div>
