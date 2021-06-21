@@ -62,6 +62,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
+import javax.resource.NotSupportedException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -157,6 +158,11 @@ public class JCloudStore extends AbstractStore {
             throw new ResourceNotFoundException(
                 String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
         }
+    }
+
+    @Override
+    public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
+        throw new NotSupportedException("JCloud does not support getResourceInternal.");
     }
 
     private String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
