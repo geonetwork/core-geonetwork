@@ -12,7 +12,7 @@
      ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'gn-facet-checked' + (ctrl.item.inverted ? '-inverted' : '') : ''"
      title="{{::ctrl.item.value}}"
      ng-click="ctrl.filter(ctrl.facet, ctrl.item)">
-    <span class="fa fa-fw text-primary"
+    <span class="fa fa-fw"
           ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'fa-check-square' : 'fa-square-o'">
     </span>
     <span class="gn-facet-label flex-shrink text-ellipsis">
