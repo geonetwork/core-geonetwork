@@ -1109,21 +1109,22 @@
 
                 function checkIsOgc(protocol) {
 
-                  if (protocol && protocol.indexOf('OGC:WMS') >= 0) {
-                    return 'WMS';
+                  if (scope.config.loadMapCapabilities !== "false") {
+                    if (protocol && protocol.indexOf('OGC:WMS') >= 0) {
+                      return 'WMS';
+                    }
+                    else if (protocol && protocol.indexOf('OGC:WFS') >= 0) {
+                      return 'WFS';
+                    }
+                    else if (protocol && protocol.indexOf('OGC:WMTS') >= 0) {
+                      return 'WMTS';
+                    }
+                    else if (protocol && protocol.indexOf('OGC:WCS') >= 0) {
+                      return 'WCS';
+                    }
                   }
-                  else if (protocol && protocol.indexOf('OGC:WFS') >= 0) {
-                    return 'WFS';
-                  }
-                  else if (protocol && protocol.indexOf('OGC:WMTS') >= 0) {
-                    return 'WMTS';
-                  }
-                  else if (protocol && protocol.indexOf('OGC:WCS') >= 0) {
-                    return 'WCS';
-                  }
-                  else {
-                    return null;
-                  }
+
+                  return null;
                 }
 
                 /**
