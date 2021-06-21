@@ -204,6 +204,36 @@
           // END SEXTANT SPECIFIC
 
           /**
+           * Get either stroke or fill for text based on drawType
+           * @param {text} drawType
+           * @param {object} styleCfg the style config object
+           * @return color
+           */
+          var getColorFromDrawType = function(drawType, styleCfg) {
+            if (drawType === 'point') {
+              return styleCfg.image.fill.color;
+            }
+            else if (drawType === 'text') {
+              return styleCfg.text.fill.color;
+            }
+            return styleCfg.stroke.color;
+          };
+
+          /**
+           * Returns the offset values for the label depending on the geom
+           *
+           * @param {text} drawType: point, line or Polygon
+           * @return {object} x and y offset
+           */
+          var getLabelOffsetForGeomType = function(drawType) {
+            if (drawType === 'point') {
+              return {'x': 20 , 'y': 20};
+            }
+            return {'x': 0 , 'y': 0 }; // default
+
+          };
+
+          /**
            * Create a `ol.style.Style` object from style config mapped with
            * style form.
            *
@@ -213,6 +243,23 @@
            */
           var createStyleFromConfig = function(feature, styleCfg) {
             var drawType = feature.get('_type');
+            var offsetValues = getLabelOffsetForGeomType(drawType);
+            var textStyle = new ol.style.Text({
+              font: styleCfg.text.font,
+              offsetY: offsetValues.y,
+              offsetX: offsetValues.x,
+              text: styleCfg.text.text,
+              fill: new ol.style.Fill({
+                color: getColorFromDrawType(drawType, styleCfg)
+              }),
+              stroke: (styleCfg.text.stroke &&
+                (styleCfg.text.stroke.width > 0)) ?
+                new ol.style.Stroke({
+                  color: styleCfg.text.stroke.color,
+                  width: styleCfg.text.stroke.width
+                }) : undefined
+            });
+
             var styleObjCfg = {
               fill: new ol.style.Fill({
                 color: styleCfg.fill.color
@@ -222,24 +269,7 @@
                 width: styleCfg.stroke.width
               })
             };
-
-            // It is a Text feature
-            if (drawType === 'text') {
-              styleObjCfg.text = new ol.style.Text({
-                font: styleCfg.text.font,
-                text: styleCfg.text.text,
-                fill: new ol.style.Fill({
-                  color: styleCfg.text.fill.color
-                }),
-                stroke: (styleCfg.text.stroke &&
-                    (styleCfg.text.stroke.width > 0)) ?
-                    new ol.style.Stroke({
-                      color: styleCfg.text.stroke.color,
-                      width: styleCfg.text.stroke.width
-                    }) : undefined
-              });
-            }
-            else if (drawType === 'point') {
+            if (drawType === 'point') {
               styleObjCfg.image = new ol.style.Circle({
                 radius: styleCfg.image.radius,
                 fill: new ol.style.Fill({
@@ -247,6 +277,7 @@
                 })
               });
             }
+            styleObjCfg.text = textStyle;
             return new ol.style.Style(styleObjCfg);
           };
 
@@ -369,10 +400,10 @@
           }, {
             interaction: drawPolygon,
             label: 'Polygon'
-          }, {
+          }, /*{
             interaction: drawText,
             label: 'Text'
-          }];
+          }*/];
 
           // Manage selection
           var select = new ol.interaction.Select({

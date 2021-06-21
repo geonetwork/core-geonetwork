@@ -332,6 +332,7 @@
   "drawStrokeColor":"Stroke color",
   "drawWidth":"Width",
   "drawRadius":"Radius",
+  "offset":"Label offset",
   "drawColor":"Color",
   "red":"red",
   "orange":"orange",

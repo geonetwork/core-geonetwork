@@ -326,6 +326,7 @@
     "drawStrokeColor": "Couleur de trait",
     "drawWidth": "Largeur",
     "drawRadius": "Rayon",
+    "offset": "Décallage de l'étiquette",
     "drawColor": "Couleur",
     "red": "rouge",
     "orange": "orange",
