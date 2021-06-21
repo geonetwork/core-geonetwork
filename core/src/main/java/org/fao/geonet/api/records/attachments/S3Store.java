@@ -218,6 +218,18 @@ public class S3Store extends AbstractStore {
         return String.format("Unable to remove resource '%s'.", resourceId);
     }
 
+    @Override
+    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
+        for (MetadataResourceVisibility visibility: MetadataResourceVisibility.values()) {
+            final List<MetadataResource> resources = getResources(context, sourceUuid, visibility, null, sourceApproved);
+            for (MetadataResource resource: resources) {
+                try (Store.ResourceHolder holder = getResource(context, targetUuid, visibility, resource.getFilename(), targetApproved)) {
+                    putResource(context, targetUuid, holder.getPath(), visibility, targetApproved);
+                }
+            }
+        }
+    }
+
     private boolean tryDelResource(final String metadataUuid, final int metadataId, final MetadataResourceVisibility visibility,
             final String resourceId) throws Exception {
         final String key = getKey(metadataUuid, metadataId, visibility, resourceId);
