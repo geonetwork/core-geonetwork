@@ -74,9 +74,15 @@
           scope.languages = angular.fromJson(attrs.gnMultilingualField);
           var mainLanguage = scope.mainLanguage;
           // Have to map the main language to one of the languages in the inputs
-          if (angular.isDefined(scope.languages[mainLanguage])) {
-            mainLanguage = scope.languages[mainLanguage].substring(1);
-          } else {
+          var langDefined = false;
+          angular.forEach(scope.languages, function(value, key) {
+            if (value.contains(mainLanguage)) {
+              mainLanguage = value.substring(1);
+              langDefined = true;
+            }
+          });
+
+          if (!langDefined) {
             $(element).find(formFieldsSelector).each(function() {
               var lang = $(this).attr('lang');
               if (angular.isDefined(scope.languages[lang])) {
