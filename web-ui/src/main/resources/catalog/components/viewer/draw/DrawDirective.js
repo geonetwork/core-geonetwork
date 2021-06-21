@@ -220,6 +220,20 @@
           };
 
           /**
+           * Returns the offset values for the label depending on the geom
+           *
+           * @param {text} drawType: point, line or Polygon
+           * @return {object} x and y offset
+           */
+          var getLabelOffsetForGeomType = function(drawType) {
+            if (drawType === 'point') {
+              return {'x': 20 , 'y': 20};
+            }
+            return {'x': 0 , 'y': 0 }; // default
+
+          };
+
+          /**
            * Create a `ol.style.Style` object from style config mapped with
            * style form.
            *
@@ -229,10 +243,11 @@
            */
           var createStyleFromConfig = function(feature, styleCfg) {
             var drawType = feature.get('_type');
+            var offsetValues = getLabelOffsetForGeomType(drawType);
             var textStyle = new ol.style.Text({
               font: styleCfg.text.font,
-              offsetY: styleCfg.text.offsetY,
-              offsetX: styleCfg.text.offsetX,
+              offsetY: offsetValues.y,
+              offsetX: offsetValues.x,
               text: styleCfg.text.text,
               fill: new ol.style.Fill({
                 color: getColorFromDrawType(drawType, styleCfg)
@@ -264,7 +279,7 @@
             }
             styleObjCfg.text = textStyle;
             return new ol.style.Style(styleObjCfg);
-          }
+          };
 
           /**
            * Serialize an `ol.style.Style` to a JSON object.
@@ -385,10 +400,10 @@
           }, {
             interaction: drawPolygon,
             label: 'Polygon'
-          }, {
+          }, /*{
             interaction: drawText,
             label: 'Text'
-          }];
+          }*/];
 
           // Manage selection
           var select = new ol.interaction.Select({
