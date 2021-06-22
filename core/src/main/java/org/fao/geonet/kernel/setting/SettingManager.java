@@ -38,6 +38,7 @@ import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Log;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -86,6 +87,9 @@ public class SettingManager {
 
     @Autowired
     SourceRepository sourceRepository;
+
+    @Autowired
+    StandardPBEStringEncryptor encryptor;
 
     @PostConstruct
     private void init() {
@@ -195,10 +199,27 @@ public class SettingManager {
             Log.error(Geonet.SETTINGS, "  Requested setting with name: " + path + "  not found. Add it to the settings table.");
             return null;
         }
+
         String value = se.get().getValue();
+
+        // This case occurs during the application startup, before the encryptor is initialized:
+        // value is null and storedValue has the correct value in this case.
+        // Affects OpenApiConfig and SettingManager PostConstruct that retrieve settings during the startup,
+        // before the encryptor is initialized.
+        // TODO: Improve EncryptorInitializer. For now it depends on GeonetworkDataDirectory
+        //  that requires to be initialised in GeoNetwork start method.
+        if (!encryptor.isInitialized()) {
+            if (!se.get().isEncrypted()) {
+                value = se.get().getStoredValue();
+            } else {
+                throw new IllegalStateException("Encrypted settings can't be accessed before encryptor is initialized");
+            }
+        }
+
         if (value == null && ! nullable) {
             Log.warning(Geonet.SETTINGS, "  Requested setting with name: " + path + " but null value found. Check the settings table.");
         }
+
         return value;
     }
 

@@ -82,6 +82,7 @@
     "kor": "Korean",
     "by": "by",
     "cat": "Català",
+    "swe": "Svenska",
     "catalog": "catalog",
     "chi": "中文",
     "city": "City",
@@ -480,6 +481,11 @@
     "doiCreationTaskCheckAction": "Check pre-conditions",
     "doiCreationTaskCheckAction-help": "Check that a record can be submitted to DataCite for DOI creation. DataCite API endpoint is configured in the catalogue settings, DataCite requires some fields to be populated, record must be public and provide a conversion to the DataCite format.",
     "doiCreationTaskCreateAction": "Create DOI",
+    "doiCreationTaskUpdateAction": "Update DOI",
+    "doiViewLink": "Check DOI URL",
+    "doi": "DOI",
+    "doiCheckExistingMetadata": "Check DataCite metadata document",
+    "doiViewMetadata": "DataCite metadata",
     "doiCreationTaskCreateAction-help": "Create the DOI for the record and close the task",
     "editorHome": "Editor board",
     "adminHome": "Summary",
@@ -544,5 +550,10 @@
     "onTheWeb": "More online information",
     "pdfReportTocTitle": "Contents",
     "metadataValidated": "Metadata validated.",
-    "wmtsLayerNoUsableMatrixSet": "The WMTS layer could not be added. This may be because none of the projections advertised in the service matches any of the known projections of the application."
+    "wmtsLayerNoUsableMatrixSet": "The WMTS layer could not be added. This may be because none of the projections advertised in the service matches any of the known projections of the application.",
+    "chooseRegion": "Choose a region",
+    "clickToDrawABox": "Click once to enable control and draw a box. Click again to stop drawing.",
+    "drawRectangle": "Draw extent",
+    "clickToClearMapBox": "Click to clear the map box.",
+    "clearRectangle": "Clear extent"
 }

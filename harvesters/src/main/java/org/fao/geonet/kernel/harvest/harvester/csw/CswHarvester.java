@@ -29,6 +29,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.jdom.Element;
 
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Harvest metadata from other catalogues using the CSW protocol
@@ -59,20 +60,28 @@ public class CswHarvester extends AbstractHarvester<HarvestResult, CswParams> {
         harvesterSettingsManager.add("id:" + siteId, "xslfilter", params.xslfilter);
         harvesterSettingsManager.add("id:" + siteId, "outputSchema", params.outputSchema);
 
-        //--- store dynamic search nodes
-        String searchID = harvesterSettingsManager.add(path, "search", "");
+        //--- store dynamic filter nodes
+        String filtersID = harvesterSettingsManager.add(path, "filters", "");
 
-        if (params.eltSearches != null) {
-            for (Element element : params.eltSearches) {
-                if (!element.getName().startsWith("parser")) {
-                    Element value = element.getChild("value");
-                    if (value != null) {
-                        harvesterSettingsManager.add("id:" + searchID, element.getName(), value.getText());
-                    } else {
-                        harvesterSettingsManager.add("id:" + searchID, element.getName(), element.getText());
-                    }
+        if (params.eltFilters != null) {
+            int i = 1;
+            for (Element element : params.eltFilters) {
+                String fID = harvesterSettingsManager.add("id:" + filtersID, "filter", "");
+
+                for (Element value : (List<Element>) element.getChildren()) {
+                    harvesterSettingsManager.add("id:" + fID, value.getName(), value.getText());
                 }
+
+                harvesterSettingsManager.add("id:" + fID, "position", i++);
             }
+        }
+
+        if (params.bboxFilter != null) {
+            String bboxFilterID = harvesterSettingsManager.add(path, "bboxFilter", "");
+            for (Element value : (List<Element>) params.bboxFilter.getChildren()) {
+                harvesterSettingsManager.add("id:" + bboxFilterID, value.getName(), value.getText());
+            }
+
         }
     }
 

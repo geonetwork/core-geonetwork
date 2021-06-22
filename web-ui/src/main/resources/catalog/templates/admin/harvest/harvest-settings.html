@@ -8,7 +8,7 @@
 
       <div class="panel-body">
         <input id="gn-harvest-select-search"
-               class="form-control"
+               class="form-control gn-margin-bottom"
                data-ng-show="$parent.harvesters.length > 1"
                data-ng-model="harvesterSearch.$"
                data-ng-change="firstPage()"
@@ -21,11 +21,19 @@
              data-ng-class="[h['@id'] === harvesterSelected['@id'] ? 'active' : '', h.error ? 'list-group-item-danger' : '']"
              data-ng-click="selectHarvester(h)"
              title="{{h.error ? ('selectForError' | translate) : (h.info.lastRun.length === 0 ? '' : ('lastRun' | translate) + (h.info.lastRun | gnFromNow))}}">
-            <i data-ng-show="h.options.status === 'active'" class="fa fa-play"/>
-            <i data-ng-show="h.options.status === 'inactive'" class="fa fa-pause"/>
-            <span class="gn-harvester-name"> {{h.site.name}}
-            ({{('harvester-' + h['@type']) | translate}})</span> <span class="badge">{{h.info.result.total}}</span>
-            <i data-ng-show="h.info.running" class="fa fa-spinner fa-spin"/>
+
+            <p>
+              <i data-ng-show="h.options.status === 'active'" class="fa fa-play"/>
+              <i data-ng-show="h.options.status === 'inactive'" class="fa fa-pause"/>
+              <span class="gn-harvester-name"><strong>{{h.site.name}}</strong> ({{('harvester-' + h['@type']) | translate}})</span>
+            </p>
+            <p>
+              <span data-ng-show="h.info.running" class="pull-right">
+                <i class="fa fa-spinner fa-spin fa-2x"/>
+              </span>
+              <span>{{ 'lastRun' | translate }}: {{ h.info.lastRun | gnFromNow }}</span><br>
+              <span data-ng-if="h.info.result.total">{{ 'harvesterRecords' | translate }}: {{h.info.result.total}}</span>
+            </p>
           </a>
           <span data-gn-pagination-list=""
                 data-items="$parent.harvesters | filter:harvesterSearch | orderBy:'name'"
@@ -57,7 +65,7 @@
         <div id="gn-harvest-select-clone-row" class="btn-group" data-ng-show="$parent.harvesters.length > 0">
           <button id="gn-harvest-select-clone-button"
                   type="button"
-                  class="btn dropdown-toggle"
+                  class="btn btn-default dropdown-toggle"
                   data-toggle="dropdown">
             <span class="fa fa-copy"></span>&nbsp;
             <span data-translate="">cloneHarvester</span>
@@ -76,7 +84,7 @@
 
         <button id="gn-harvest-select-refresh-button"
                 type="button"
-                class="btn"
+                class="btn btn-default"
                 data-ng-show="$parent.harvesters.length > 0"
                 data-ng-click="$parent.refreshHarvester()"
                 title="{{'refreshHarvester' | translate}}">
@@ -84,13 +92,19 @@
         </button>
       </div>
     </div>
-    
+
     <div id="gn-harvest-select-help-button" data-gn-need-help="user-guide/harvesting/index.html"></div>
   </div>
 
 
-  <div class="col-lg-8" data-ng-hide="harvesterSelected['@id'] == null">
-    <div id="gn-harvest-settings-panel" class="panel panel-default">
+  <div class="col-lg-8" data-ng-hide="harvesterSelected['@id'] == null"
+       data-ng-search-form="">
+
+    <tabset id="harvester-tabset" type="pills" justified="false" role="tablist">
+      <tab heading="{{'settings' | translate}}"
+           role="tab"
+           active="true">
+        <div id="gn-harvest-settings-panel" class="panel panel-default gn-margin-top">
       <div class="panel-heading clearfix">
         <span id="gn-harvest-settings-title">
           <span data-ng-hide="harvesterSelected['@id'] == ''" data-translate="">updateHarvester</span>
@@ -160,165 +174,207 @@
         <div id="gn-harvest-settings-selected-row" data-ng-include="getTplForHarvester()"></div>
       </div>
     </div>
-
-    <div id="gn-harvest-history-panel"
-         class="panel panel-default"
-         data-ng-hide="harvesterSelected['@id'] == '' || isLoadingOneHarvester || deleting.indexOf(harvesterSelected['@id']) > -1">
-      <div class="panel-heading">
-        <span id="gn-harvest-history-title">
-          <span data-translate="">harvesterHistory</span>
-          <i data-ng-show="isLoadingHarvesterHistory" class="fa fa-spinner fa-spin"></i>
-        </span>
-        <div id="gn-harvest-history-buttons" class="btn-toolbar">
-          <button id="gn-harvest-history-buttons-delete"
-                  type="button"
-                  class="btn btn-primary pull-right btn-danger"
-                  data-ng-hide="harvesterHistory.length === 0"
-                  data-ng-click="deleteHarvesterHistory()">
-            <span class="fa fa-times"></span>
-            <span data-translate="">deleteHarvesterHistory</span>
-          </button>
-        </div>
-      </div>
-      <div class="panel-body">
-        <div id="gn-harvest-history-alert" class="alert alert-info" data-ng-show="harvesterHistory.length === 0">
-          <strong data-translate="">noHarvesterHistory</strong>
-        </div>
-        <ul id="gn-harvest-history-timeline-row" class="timeline timeline-1-col" data-ng-show="harvesterHistory.length !== 0">
-          <li class="timeline-inverted"
-              data-ng-repeat="h in harvesterHistory">
-            <div class="timeline-badge"
-                 data-ng-class="h.deleted == 'true' ? 'warning' : (h.info[0]['stack'] ? 'danger' : 'success')">
-              <i class="fa"
-                 data-ng-class="h.deleted == 'true' ? 'fa-times' : 'fa-chevron-right'"></i>
+      </tab>
+      <tab heading="{{'harvesterHistory'|translate}}"
+           role="tab">
+        <div id="gn-harvest-history-panel"
+             class="panel panel-default gn-margin-top"
+             data-ng-hide="harvesterSelected['@id'] == '' || isLoadingOneHarvester || deleting.indexOf(harvesterSelected['@id']) > -1">
+          <div class="panel-heading">
+            <span id="gn-harvest-history-title">
+              <span data-translate="">harvesterHistory</span>
+              <i data-ng-show="isLoadingHarvesterHistory" class="fa fa-spinner fa-spin"></i>
+            </span>
+            <div id="gn-harvest-history-buttons" class="btn-toolbar">
+              <button id="gn-harvest-history-buttons-delete"
+                      type="button"
+                      class="btn btn-primary pull-right btn-danger"
+                      data-ng-hide="harvesterHistory.length === 0"
+                      data-ng-click="deleteHarvesterHistory()">
+                <span class="fa fa-times"></span>
+                <span data-translate="">deleteHarvesterHistory</span>
+              </button>
             </div>
-            <div class="timeline-panel">
-              <div class="timeline-heading" data-ng-if="h.info[0]['stack'] !== undefined">
-                <h4 class="timeline-title">
-                  {{h.info[0]['@id']}}
-                </h4>
-                <p>
-                  <small class="text-muted">
-                    <i class="fa fa-clock-o"></i>
-                    {{ h.harvestdate | gnFromNow }}
-                  </small>
-                </p>
-                <div class="timeline-body">
-                  {{h.info[0]['message']}}
-
-                  <pre><span data-ng-repeat="line in h.info[0]['stack']">{{line['@class']}} {{line['@file']}} ({{line['@line']}}) #{{line['@method']}}
-</span></pre>
+          </div>
+          <div class="panel-body">
+            <div id="gn-harvest-history-alert" class="alert alert-info" data-ng-show="harvesterHistory.length === 0">
+              <strong data-translate="">noHarvesterHistory</strong>
+            </div>
+            <ul id="gn-harvest-history-timeline-row" class="timeline timeline-1-col" data-ng-show="harvesterHistory.length !== 0">
+              <li class="timeline-inverted"
+                  data-ng-repeat="h in harvesterHistory">
+                <div class="timeline-badge"
+                     data-ng-class="h.deleted == 'true' ? 'warning' : (h.info[0]['stack'] ? 'danger' : 'success')">
+                  <i class="fa"
+                     data-ng-class="h.deleted == 'true' ? 'fa-times' : 'fa-chevron-right'"></i>
                 </div>
-              </div>
+                <div class="timeline-panel">
+                  <div class="timeline-heading" data-ng-if="h.info[0]['stack'] !== undefined">
+                    <h4 class="timeline-title">
+                      {{h.info[0]['@id']}}
+                    </h4>
+                    <p>
+                      <small class="text-muted">
+                        <i class="fa fa-clock-o"></i>
+                        {{ h.harvestdate | gnFromNow }}
+                      </small>
+                    </p>
+                    <div class="timeline-body">
+                      {{h.info[0]['message']}}
 
-              <div class="timeline-heading" data-ng-if="h.info[0]['stack'] === undefined">
-                <h4 data-ng-show="h.deleted == 'true'">
-                  <strong>{{h.info[0][0]['@recordsRemoved']}}</strong>
-                  <span data-ng-show="h.info[0][0]['@recordsRemoved']" data-translate="">recordsRemoved</span></h4>
-                  <strong>{{h.info[0][0]['@recordsTransfered']}}</strong>
-                  <span data-ng-show="h.info[0][0]['@recordsTransfered']" data-translate="">recordsTransfered</span></h4>
-                <h4 data-ng-show="h.deleted == 'false'" class="timeline-title">
-                  <strong>{{h.info[0].total}}</strong>
-                  <span data-translate="">recordsHarvestedIn</span>
-                  <strong>{{h.elapsedtime}}</strong>
-                  <span data-translate="">seconds</span>
-                </h4>
-                <p>
-                  <small class="text-muted">
-                    <i class="fa fa-clock-o"></i>
-                    {{ h.harvestdate | gnFromNow }}
-                  </small>
-                </p>
-              </div>
-              <div class="timeline-body">
-                <p>
-                <ul>
-                  <li data-ng-repeat="(k, v) in h.info[0]"
-                      data-ng-show="v > 0">
-                    {{k}}: {{v}}
+                      <pre><span data-ng-repeat="line in h.info[0]['stack']">{{line['@class']}} {{line['@file']}} ({{line['@line']}}) #{{line['@method']}}
+    </span></pre>
+                    </div>
+                  </div>
+
+                  <div class="timeline-heading" data-ng-if="h.info[0]['stack'] === undefined">
+                    <h4 data-ng-show="h.deleted == 'true'">
+                      <strong>{{h.info[0][0]['@recordsRemoved']}}</strong>
+                      <span data-ng-show="h.info[0][0]['@recordsRemoved']" data-translate="">recordsRemoved</span></h4>
+                      <strong>{{h.info[0][0]['@recordsTransfered']}}</strong>
+                      <span data-ng-show="h.info[0][0]['@recordsTransfered']" data-translate="">recordsTransfered</span></h4>
+                    <h4 data-ng-show="h.deleted == 'false'" class="timeline-title">
+                      <strong>{{h.info[0].total}}</strong>
+                      <span data-translate="">recordsHarvestedIn</span>
+                      <strong>{{h.elapsedtime}}</strong>
+                      <span data-translate="">seconds</span>
+                    </h4>
+                    <p>
+                      <small class="text-muted">
+                        <i class="fa fa-clock-o"></i>
+                        {{ h.harvestdate | gnFromNow }}
+                      </small>
+                    </p>
+                  </div>
+                  <div class="timeline-body">
+                    <p>
+                    <ul>
+                      <li data-ng-repeat="(k, v) in h.info[0]"
+                          data-ng-show="v > 0">
+                        {{k}}: {{v}}
+                      </li>
+                    </ul>
+                    <!-- in some scenario logfile returns an array of files, take first -->
+                    <a data-ng-show="h.info[0].logfile"
+                       ng-href="admin.harvester.log?file={{ (h.info[0].logfile | asArray)[0] | encodeURIComponent }}" target="_blank"
+                       data-translate="">logFile</a>
+                    </p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <ul id="gn-harvest-history-pager-row" class="pager" data-ng-show="harvesterHistory.length !== 0">
+              <li data-ng-class="harvesterHistoryPaging.page == 1 ? 'disabled' : ''"
+                  data-ng-show="harvesterHistoryPaging.pages > 0"><a href=""
+                                                                     data-ng-click="historyFirstPage()"
+                                                                     class="ng-scope">«</a></li>
+              <li data-ng-class="harvesterHistoryPaging.page == 1 ? 'disabled' : ''"
+                  data-ng-show="harvesterHistoryPaging.pages > 0"><a href=""
+                                                                     data-ng-click="historyPreviousPage()"
+                                                                     class="ng-scope">‹</a></li>
+              <li class="ng-binding">
+                {{harvesterHistoryPaging.page}} / {{harvesterHistoryPaging.pages}} <em data-translate=""
+                                                                                       class="ng-scope">of </em>
+                <ng-pluralize count="harvesterHistoryPaging.total"
+                              when="{'0 ': ('noRecordFound' | translate), 'one': '1 ' + ('record' | translate), 'other': '{} ' + ('records' | translate)}"></ng-pluralize>
+              </li>
+              <li
+                data-ng-class="harvesterHistoryPaging.page == harvesterHistoryPaging.pages ? 'disabled' : ''"
+                data-ng-show="harvesterHistoryPaging.pages > 0"><a href=""
+                                                                   data-ng-click="historyNextPage()"
+                                                                   class="ng-scope">›</a></li>
+              <li
+                data-ng-class="harvesterHistoryPaging.page == harvesterHistoryPaging.pages ? 'disabled' : ''"
+                data-ng-show="harvesterHistoryPaging.pages > 0"><a href=""
+                                                                   data-ng-click="historyLastPage()"
+                                                                   class="ng-scope">»</a></li>
+            </ul>
+          </div>
+        </div>
+      </tab>
+      <tab heading="{{ searchResults.count }} {{'metadataRecords' | translate}}"
+           data-ng-hide="harvesterSelected['@id'] == ''
+                          || searchResults.count == '-1'
+                          || isLoadingOneHarvester
+                          || deleting.indexOf(harvesterSelected['@id']) > -1"
+           data-ng-show="searchResults.count > 0"
+           role="tab">
+        <div id="gn-harvest-records-panel"
+             class="gn-margin-top">
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <span data-translate="">summary</span>
+            </div>
+            <div class="panel-body">
+              <div class="row gn-margin-bottom">
+                <ul class="col-md-4 text-center list-group gn-nomargin-bottom">
+                  <li class="list-group-item">
+                    <h1><i class="fa fa-file-text-o"></i> {{ searchResults.count }}</h1>
+                    <p data-translate="">
+                      metadataRecords
+                    </p>
                   </li>
                 </ul>
-                <!-- in some scenario logfile returns an array of files, take first -->
-                <a data-ng-show="h.info[0].logfile"
-                   ng-href="admin.harvester.log?file={{ (h.info[0].logfile | asArray)[0] | encodeURIComponent }}" target="_blank"
-                   data-translate="">logFile</a>
-                </p>
+              </div>
+              <div class="row">
+                <div data-ng-show="searchResults.records.length > 0"
+                     class="gn-harvester-facets"
+                     data-es-facets="searchResults.facets"></div>
               </div>
             </div>
-          </li>
-        </ul>
-        <ul id="gn-harvest-history-pager-row" class="pager" data-ng-show="harvesterHistory.length !== 0">
-          <li data-ng-class="harvesterHistoryPaging.page == 1 ? 'disabled' : ''"
-              data-ng-show="harvesterHistoryPaging.pages > 0"><a href=""
-                                                                 data-ng-click="historyFirstPage()"
-                                                                 class="ng-scope">«</a></li>
-          <li data-ng-class="harvesterHistoryPaging.page == 1 ? 'disabled' : ''"
-              data-ng-show="harvesterHistoryPaging.pages > 0"><a href=""
-                                                                 data-ng-click="historyPreviousPage()"
-                                                                 class="ng-scope">‹</a></li>
-          <li class="ng-binding">
-            {{harvesterHistoryPaging.page}} / {{harvesterHistoryPaging.pages}} <em data-translate=""
-                                                                                   class="ng-scope">of </em>
-            <ng-pluralize count="harvesterHistoryPaging.total"
-                          when="{'0 ': ('noRecordFound' | translate), 'one': '1 ' + ('record' | translate), 'other': '{} ' + ('records' | translate)}"></ng-pluralize>
-          </li>
-          <li
-            data-ng-class="harvesterHistoryPaging.page == harvesterHistoryPaging.pages ? 'disabled' : ''"
-            data-ng-show="harvesterHistoryPaging.pages > 0"><a href=""
-                                                               data-ng-click="historyNextPage()"
-                                                               class="ng-scope">›</a></li>
-          <li
-            data-ng-class="harvesterHistoryPaging.page == harvesterHistoryPaging.pages ? 'disabled' : ''"
-            data-ng-show="harvesterHistoryPaging.pages > 0"><a href=""
-                                                               data-ng-click="historyLastPage()"
-                                                               class="ng-scope">»</a></li>
-        </ul>
-      </div>
-    </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <span id="gn-harvest-records-title" data-translate="">harvesterRecords</span>
+            </div>
 
-    <div id="gn-harvest-records-panel"
-         class="panel panel-default"
-         data-ng-hide="harvesterSelected['@id'] == '' || isLoadingOneHarvester || deleting.indexOf(harvesterSelected['@id']) > -1"
-         data-ng-search-form=""
-         data-ng-show="searchResults.count != '0'">
-      <div class="panel-heading">
-        <span id="gn-harvest-records-title" data-translate="">harvesterRecords</span>
-        <div id="gn-harvest-records-buttons" class="btn-toolbar pull-right">
-          <button id="gn-harvest-records-buttons-assign"
-                  type="button"
-                  class="btn btn-primary btn-warning"
-                  data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
-                  data-gn-click-and-spin="assignHarvestedRecordToLocalNode()">
-            <span class="fa fa-database"></span>
-            <span data-translate=""
-                  data-translate-values="{records: '{{searchResults.count}}'}">assignHarvestedRecordToLocalNode</span>
-          </button>
+            <div class="panel-body">
 
-          <button id="gn-harvest-records-buttons-delete"
-                  type="button"
-                  class="btn btn-warning"
-                  data-gn-click-and-spin="deleteHarvesterRecord(harvesterSelected['@id'])"
-                  data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
-                  title="{{'deleteHarvesterRecordsHelp' | translate}}">
-            <span class="fa fa-trash-o"></span>&nbsp;
-            <span data-translate=""
-                  data-translate-values="{records: '{{searchResults.count}}'}">
-            deleteHarvesterRecords</span>
-          </button>
+              <div id="gn-harvest-records-buttons" class="gn-margin-bottom">
+                <button id="gn-harvest-records-buttons-assign"
+                        type="button"
+                        class="btn btn-primary btn-warning"
+                        data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
+                        data-gn-click-and-spin="assignHarvestedRecordToLocalNode()">
+                  <span class="fa fa-database"></span>
+                  <span data-translate=""
+                        data-translate-values="{records: '{{searchResults.count}}'}">assignHarvestedRecordToLocalNode</span>
+                </button>
+
+                <button id="gn-harvest-records-buttons-delete"
+                        type="button"
+                        class="btn btn-warning"
+                        data-gn-click-and-spin="deleteHarvesterRecord(harvesterSelected['@id'])"
+                        data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
+                        title="{{'deleteHarvesterRecordsHelp' | translate}}">
+                  <span class="fa fa-trash-o"></span>&nbsp;
+                  <span data-translate=""
+                        data-translate-values="{records: '{{searchResults.count}}'}">
+                        deleteHarvesterRecords</span>
+                </button>
+              </div>
+
+
+              <div data-search-filter-tags
+                   data-dimensions="searchResults.facets"
+                   ng-if="searchResults.facets">
+              </div>
+
+              <!-- This information is not relevant for GeoNetwork protocol
+                  which attach records to the source catalogs which has different
+                  UUIDs. TODO -->
+
+              <div data-gn-search-form-results=""
+                   data-gn-search-form-results-mode="title"
+                   data-search-results="searchResults"
+                   data-pagination-info="paginationInfo">
+              </div>
+            </div>
+          </div>
+
         </div>
-      </div>
-
-      <div class="panel-body">
-        <!-- This information is not relevant for GeoNetwork protocol
-            which attach records to the source catalogs which has different
-            UUIDs. TODO -->
-
-        <div data-gn-search-form-results=""
-             data-gn-search-form-results-mode="title"
-             data-search-results="searchResults"
-             data-pagination-info="paginationInfo">
-        </div>
-      </div>
-    </div>
+      </tab>
+    </tabset>
   </div>
 </div>

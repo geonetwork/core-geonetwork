@@ -157,5 +157,8 @@
   "commonProtocols": "Algemene protocollen:",
   "indexStatusSynchronized": "Records in index/db = <strong>{{indexStatus['index.count']}}/{{indexStatus['db.count']}}</strong>",
   "indexStatusSynchronized-error": "Als het aantal records in de database en in de index niet gelijk is, controleer dan eerst of de catalogus naar de juiste index verwijst. Zo ja, probeer dan de catalogus opnieuw te indexeren via admin&gt; tools. Als er nog steeds een verschil is, controleert u op indexeringsfouten in het logbestand en corrigeert u het metagegevensrecord met behulp van de XML-weergave.",
-  "IndexReadOnlyHealthCheck": "Index is niet schrijfbaar"
+  "IndexReadOnlyHealthCheck": "Index is niet schrijfbaar",
+  "summary": "Samenvatting",
+  "metadataRecords": "Metadata records",
+  "results": "Resultaten"
 }

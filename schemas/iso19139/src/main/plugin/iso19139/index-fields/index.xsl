@@ -919,8 +919,8 @@
       <xsl:variable name="legalTextList"
                     select="if ($isService) then $eu9762009 else $eu10892010"/>
 
-      <xsl:for-each-group select="gmd:dataQualityInfo/*/gmd:report"
-                          group-by="*/gmd:result/*/gmd:specification/gmd:CI_Citation/
+      <xsl:for-each-group select="gmd:dataQualityInfo/*/gmd:report/*/gmd:result"
+                          group-by="*/gmd:specification/gmd:CI_Citation/
     gmd:title/gco:CharacterString">
         <xsl:variable name="title" select="current-grouping-key()"/>
         <xsl:variable name="matchingEUText"
@@ -929,7 +929,7 @@
                               else daobs:search-in($legalTextList/*, $title)"/>
 
         <xsl:variable name="pass"
-                      select="*/gmd:result/*/gmd:pass/gco:Boolean"/>
+                      select="*/gmd:pass/gco:Boolean"/>
 
         <xsl:if test="count($matchingEUText) = 1">
           <inspireConformResource>
@@ -940,14 +940,14 @@
         <xsl:if test="string($title)">
           <specificationConformance type="object">{
             "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
-            <xsl:if test="string(*/gmd:result/*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date)">
-              "date": "<xsl:value-of select="*/gmd:result/*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date" />",
+            <xsl:if test="string(*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date)">
+              "date": "<xsl:value-of select="*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date" />",
             </xsl:if>
-            <xsl:if test="*/gmd:result/*/gmd:specification/*/gmd:title/@xlink:href">
-              "link": "<xsl:value-of select="*/gmd:result/*/gmd:specification/*/gmd:title/@xlink:href"/>",
+            <xsl:if test="*/gmd:specification/*/gmd:title/@xlink:href">
+              "link": "<xsl:value-of select="*/gmd:specification/*/gmd:title/@xlink:href"/>",
             </xsl:if>
-            <xsl:if test="*/gmd:result/*/gmd:explanation/*/text() != ''">
-              "explanation": "<xsl:value-of select="gn-fn-index:json-escape((*/gmd:result/*/gmd:explanation/*/text())[1])" />",
+            <xsl:if test="*/gmd:explanation/*/text() != ''">
+              "explanation": "<xsl:value-of select="gn-fn-index:json-escape((*/gmd:explanation/*/text())[1])" />",
             </xsl:if>
             "pass": "<xsl:value-of select="$pass" />"
             }
@@ -1029,6 +1029,14 @@
           <format>
             <xsl:value-of select="."/>
           </format>
+        </xsl:for-each>
+
+        <!-- Indexing distributor contact -->
+        <xsl:for-each select="gmd:distributor/*[gmd:distributorContact]">
+          <xsl:apply-templates mode="index-contact"
+                               select="gmd:distributorContact">
+            <xsl:with-param name="fieldSuffix" select="'ForDistribution'"/>
+          </xsl:apply-templates>
         </xsl:for-each>
 
         <xsl:for-each select="gmd:transferOptions/*/

@@ -48,27 +48,28 @@
            data-translate="">
         CswCriteriaFoundInCapabilities
       </div>
-      <div class="form-group" data-ng-repeat="c in cswCriteria track by $index">
+
+      <div data-gn-csw-harvester-filter="harvesterSelected"
+           data-csw-criteria="cswCriteria" />
+
+      <!--<div class="form-group" data-ng-repeat="c in cswCriteria track by $index">
         <label class="control-label col-lg-4">{{c.replace('__', ':') | translate}}</label>
         <div class="col-lg-8">
           <input type="text" class="form-control gn-csw-criteria" id="csw-{{c}}"
                  data-ng-model="harvesterSelected.searches[0][c].value"/>
         </div>
-      </div>
-      <div class="form-group"
-           data-ng-show="cswBboxFilter">
-        <label class="control-label col-lg-4" data-translate="">bbox</label>
-        <div class="col-lg-8">
-          <div class=""
-               data-gn-draw-bbox=""
+      </div>-->
+      <div data-ng-show="cswBboxFilter">
+        <label class="control-label" data-translate="">csw-harvesterBboxFilter</label>
+          <div data-gn-draw-bbox=""
                data-extent="extent"
                data-hleft=""
                data-hright=""
                data-hbottom=""
                data-htop=""
+               data-show-clear-button="true"
                data-lang="$parent.$parent.lang">
           </div>
-        </div>
       </div>
     </fieldset>
 

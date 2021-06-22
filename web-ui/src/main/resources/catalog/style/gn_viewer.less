@@ -882,10 +882,17 @@ gn-geometry-tool .btn-group {
   }
 }
 [data-gn-search-layer-for-map] {
-  .gn-md-thumbnail .gn-img-thumbnail {
-    width: 40px;
-    height: 40px;
-    margin: 2px !important;
+  .gn-md-thumbnail {
+    &.col-md-2 {
+      padding: 0px;
+      width: 40px;
+      margin-right: 0px;
+    }
+    .gn-img-thumbnail {
+      width: 40px !important;
+      height: 40px;
+      margin: 0px !important;
+    }
   }
 }
 

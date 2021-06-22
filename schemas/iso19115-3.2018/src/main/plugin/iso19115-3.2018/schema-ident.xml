@@ -76,7 +76,7 @@ Ce schéma est également composé des normes :
   <standardUrl xml:lang="en">http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=32579</standardUrl>
   <standardUrl xml:lang="fr">http://www.iso.org/iso/fr/home/store/catalogue_tc/catalogue_detail.htm?csnumber=32579</standardUrl>
   <!-- FIXME: add all required schemas -->
-  <schemaLocation>http://standards.iso.org/iso/19115/-3/mds/2.0 http://standards.iso.org/iso/19115/-3/mds/2.0/mds.xsd</schemaLocation>
+  <schemaLocation>http://standards.iso.org/iso/19115/-3/mdb/2.0 https://schemas.isotc211.org/19115/-3/mdb/2.0/mdb.xsd</schemaLocation>
   <autodetect xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
               xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
               xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"

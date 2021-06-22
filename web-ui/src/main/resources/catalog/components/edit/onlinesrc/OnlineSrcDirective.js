@@ -1109,21 +1109,22 @@
 
                 function checkIsOgc(protocol) {
 
-                  if (protocol && protocol.indexOf('OGC:WMS') >= 0) {
-                    return 'WMS';
+                  if (scope.config.loadMapCapabilities !== "false") {
+                    if (protocol && protocol.indexOf('OGC:WMS') >= 0) {
+                      return 'WMS';
+                    }
+                    else if (protocol && protocol.indexOf('OGC:WFS') >= 0) {
+                      return 'WFS';
+                    }
+                    else if (protocol && protocol.indexOf('OGC:WMTS') >= 0) {
+                      return 'WMTS';
+                    }
+                    else if (protocol && protocol.indexOf('OGC:WCS') >= 0) {
+                      return 'WCS';
+                    }
                   }
-                  else if (protocol && protocol.indexOf('OGC:WFS') >= 0) {
-                    return 'WFS';
-                  }
-                  else if (protocol && protocol.indexOf('OGC:WMTS') >= 0) {
-                    return 'WMTS';
-                  }
-                  else if (protocol && protocol.indexOf('OGC:WCS') >= 0) {
-                    return 'WCS';
-                  }
-                  else {
-                    return null;
-                  }
+
+                  return null;
                 }
 
                 /**
@@ -1273,11 +1274,12 @@
                         scope.metadataTitle = '';
                         var md = new Metadata(scope.stateObj.selectRecords[0]);
                         var links = md.getLinksByType();
+                        setParameterValue('desc', md.resourceTitle);
                         if (angular.isArray(links) && links.length === 1) {
                           scope.params.url = links[0].url;
                         } else {
                           scope.metadataLinks = links;
-                          scope.metadataTitle = md.title;
+                          scope.metadataTitle = md.resourceTitle;
                         }
                       }
                     });

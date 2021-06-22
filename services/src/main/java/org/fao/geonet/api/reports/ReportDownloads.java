@@ -4,16 +4,11 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.domain.MetadataFileDownload;
-import org.fao.geonet.domain.MetadataFileDownload_;
-import org.fao.geonet.domain.MetadataFileUpload;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.repository.MetadataFileDownloadRepository;
-import org.fao.geonet.repository.MetadataFileUploadRepository;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataFileDownloadSpecs;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 
 import java.io.PrintWriter;
@@ -33,6 +28,8 @@ public class ReportDownloads implements IReport {
      */
     private final ReportFilter reportFilter;
 
+    @Autowired
+    MetadataRepository metadataRepository;
 
     /**
      * Creates a report for metadata file downloads instance.
@@ -143,11 +140,9 @@ public class ReportDownloads implements IReport {
                 }
 
 
-                // Get metadata title/uuid from index
-                String metadataTitle = ReportUtils.retrieveMetadataTitle(
-                    context, fileDownload.getMetadataId());
-                String metadataUuid = ReportUtils.retrieveMetadataUuid(
-                    context, fileDownload.getMetadataId());
+                Optional<Metadata> metadata = metadataRepository.findById(fileDownload.getMetadataId());
+                String metadataUuid = metadata.get().getUuid();
+                String metadataTitle = ReportUtils.retrieveMetadataTitle(metadataUuid);
 
                 List<String> record = new ArrayList<>();
                 record.add(metadataUuid);

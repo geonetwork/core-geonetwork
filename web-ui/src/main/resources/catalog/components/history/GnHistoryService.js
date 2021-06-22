@@ -36,20 +36,20 @@
       function($http, $filter) {
         this.delete = function (step) {
           return $http.delete('../api/records/' + step.metadataId + '/status/' +
-            step.statusId + '.' + step.userId + '.' + step.changeDate.dateAndTime);
+            step.statusId + '.' + step.userId + '.' + step.dateChange);
         };
 
         this.close = function (step, optionalDateOrNow) {
           return $http.put('../api/records/' + step.metadataId + '/status/' +
             step.statusId + '.' + step.userId + '.' +
-            step.changeDate.dateAndTime +
+            step.dateChange +
             '/close?closeDate=' + (optionalDateOrNow || moment().format('YYYY-MM-DDTHH:mm:ss')));
         };
 
         this.restoreHistoryElement = function(step) {
           return $http.post('../api/records/' + step.metadataId + '/status/' +
               step.statusId + '.' + step.userId + '.' +
-              step.changeDate.dateAndTime + '/restore');
+              step.dateChange + '/restore');
         };
 
         function buildFilter(filter) {
@@ -85,24 +85,4 @@
           return $http.get('../api/records/status/search' + buildFilter(filter));
         };
       }]);
-
-
-  /**
-   * Service to deal with tasks. For now only DOI related.
-   */
-  module
-    .service(
-      'gnRecordTaskService', [
-        '$http', 'gnConfig', '$translate',
-        function($http, gnConfig, $translate) {
-
-          this.doiCreationTask = {
-            check: function (status) {
-              return $http.get('../api/records/' + status.metadataId + '/doi/checkPreConditions');
-            },
-            create: function (status) {
-              return $http.put('../api/records/' + status.metadataId + '/doi');
-            }
-          };
-        }]);
 })();

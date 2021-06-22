@@ -415,6 +415,7 @@
             type="button"
             class="btn navbar-btn"
             data-ng-class="gnAddLink.$valid && !isUrlOk ? 'btn-warning' : 'btn-success'"
+            ng-disabled="!gnAddLink.$valid"
             data-gn-click-and-spin="addOnlinesrc()">
       <i class="fa gn-icon-onlinesrc"/>
       <i class="icon-external-link"></i>&nbsp;
@@ -423,6 +424,9 @@
       </span>
       <span data-ng-show="gnAddLink.$valid && !isUrlOk">
         {{((isEditing ? 'update' : 'add') + 'LinkAnyway') | translate}}
+      </span>
+      <span data-ng-show="!gnAddLink.$valid">
+        {{((isEditing ? 'update' : 'add') + 'Onlinesrc') | translate}}
       </span>
     </button>
     <div id="gn-addonlinesrc-add-help"

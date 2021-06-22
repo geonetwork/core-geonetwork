@@ -42,18 +42,23 @@
   module.controller('GnHarvestSettingsController', [
     '$scope', '$q', '$http', '$translate', '$injector', '$rootScope',
     'gnSearchManagerService', 'gnUtilityService', '$timeout',
-    'Metadata', 'gnMapsManager',
+    'Metadata', 'gnMapsManager', 'gnGlobalSettings',
     function($scope, $q, $http, $translate, $injector, $rootScope,
              gnSearchManagerService, gnUtilityService, $timeout,
-             Metadata, gnMapsManager) {
+             Metadata, gnMapsManager, gnGlobalSettings) {
 
       $scope.searchObj = {
         internal: true,
-        params: {
+        configId: 'harvester',
+        defaultParams: {
           isTemplate: ['y', 'n', 's', 't'],
           sortBy: 'resourceTitleObject.default.keyword'
         }};
+      $scope.searchObj.params = angular.extend({},
+        $scope.searchObj.params,
+        $scope.searchObj.defaultParams);
 
+      $scope.facetConfig = gnGlobalSettings.gnCfg.mods.admin.facetConfig;
       $scope.harvesterTypes = {};
       $scope.harvesterSelected = null;
       $scope.harvesterUpdated = false;
@@ -94,40 +99,29 @@
                   $scope.harvesterSelected.content.batchEdits = '';
                 }
               }
-              if ($scope.harvesterSelected.searches) {
-                if ($scope.harvesterSelected.searches[0].from) {
-                  $scope.harvesterSelected.searches[0].from =
-                     new Date($scope.harvesterSelected.searches[0].from);
-                }
-
-                if ($scope.harvesterSelected.searches[0].until) {
-                  $scope.harvesterSelected.searches[0].until =
-                  new Date($scope.harvesterSelected.searches[0].until);
-                }
-
-
-                s = $scope.harvesterSelected.searches[0];
-                if ($scope.harvesterSelected.searches[0]['bbox-xmin']) {
+              if ($scope.harvesterSelected.bboxFilter) {
+                s = $scope.harvesterSelected.bboxFilter;
+                if ($scope.harvesterSelected.bboxFilter['bbox-xmin']) {
                   bboxProperties.forEach(function(coordinate) {
-                    s[coordinate].value = parseFloat(s[coordinate].value);
+                    s[coordinate] = parseFloat(s[coordinate]);
                   });
                   $scope.extent.md = [
-                    s['bbox-xmin'].value,
-                    s['bbox-ymin'].value,
-                    s['bbox-xmax'].value,
-                    s['bbox-ymax'].value
+                    s['bbox-xmin'],
+                    s['bbox-ymin'],
+                    s['bbox-xmax'],
+                    s['bbox-ymax']
                   ];
                   $scope.extent.form = [
-                    s['bbox-xmin'].value,
-                    s['bbox-ymin'].value,
-                    s['bbox-xmax'].value,
-                    s['bbox-ymax'].value
+                    s['bbox-xmin'],
+                    s['bbox-ymin'],
+                    s['bbox-xmax'],
+                    s['bbox-ymax']
                   ];
                 } else {
-                  s['bbox-xmin'] = {value: NaN};
-                  s['bbox-ymin'] = {value: NaN};
-                  s['bbox-xmax'] = {value: NaN};
-                  s['bbox-ymax'] = {value: NaN};
+                  s['bbox-xmin'] = NaN;
+                  s['bbox-ymin'] = NaN;
+                  s['bbox-xmax'] = NaN;
+                  s['bbox-ymax'] = NaN;
                   $scope.extent = {
                     md: [],
                     map: [],
@@ -626,15 +620,22 @@
       };
 
       $scope.$watchCollection('extent', function(n, o) {
-        if (n !== o && n.md != null && $scope.harvesterSelected
-          && $scope.harvesterSelected.searches
-          && $scope.harvesterSelected.searches[0]
-          && $scope.harvesterSelected.searches[0]['bbox-xmin']
-          && angular.isDefined($scope.harvesterSelected.searches[0]['bbox-xmin'].value)) {
-          $scope.harvesterSelected.searches[0]['bbox-xmin'].value = parseFloat(n.md[0]);
-          $scope.harvesterSelected.searches[0]['bbox-ymin'].value = parseFloat(n.md[1]);
-          $scope.harvesterSelected.searches[0]['bbox-xmax'].value = parseFloat(n.md[2]);
-          $scope.harvesterSelected.searches[0]['bbox-ymax'].value = parseFloat(n.md[3]);
+        if (n !== o) {
+          if (!$scope.harvesterSelected.bboxFilter) {
+            $scope.harvesterSelected.bboxFilter = {};
+          }
+
+          if (n.md != null && $scope.harvesterSelected) {
+            $scope.harvesterSelected.bboxFilter['bbox-xmin'] = parseFloat(n.md[0]);
+            $scope.harvesterSelected.bboxFilter['bbox-ymin'] = parseFloat(n.md[1]);
+            $scope.harvesterSelected.bboxFilter['bbox-xmax'] = parseFloat(n.md[2]);
+            $scope.harvesterSelected.bboxFilter['bbox-ymax'] = parseFloat(n.md[3]);
+          } else {
+            $scope.harvesterSelected.bboxFilter['bbox-xmin'] = NaN;
+            $scope.harvesterSelected.bboxFilter['bbox-ymin'] = NaN;
+            $scope.harvesterSelected.bboxFilter['bbox-xmax'] = NaN;
+            $scope.harvesterSelected.bboxFilter['bbox-ymax'] = NaN;
+          }
         }
       });
 
@@ -713,9 +714,12 @@
                   var checkSpatialCapabilities = function() {
                     if ($(this).attr("name") === 'BBOX') {
                       $scope.cswBboxFilter = true;
+                      if (!$scope.harvesterSelected.bboxFilter) {
+                        $scope.harvesterSelected.bboxFilter = {};
+                      }
                       for (var i = 0; i < bboxProperties.length; i ++) {
-                        if (!$scope.harvesterSelected.searches[0][bboxProperties[i]]) {
-                          $scope.harvesterSelected.searches[0][bboxProperties[i]] = {value: ''};
+                        if (!$scope.harvesterSelected.bboxFilter[bboxProperties[i]]) {
+                          $scope.harvesterSelected.bboxFilter[bboxProperties[i]] = NaN;
                         }
                       }
                     }

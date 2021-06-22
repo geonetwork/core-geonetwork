@@ -4,13 +4,16 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.lang.NotImplementedException;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataFileUpload_;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 
 import java.io.PrintWriter;
@@ -27,6 +30,8 @@ public class ReportUploads implements IReport {
      */
     private final ReportFilter reportFilter;
 
+    @Autowired
+    MetadataRepository metadataRepository;
 
     /**
      * Creates a report for metadata file uploads instance.
@@ -107,11 +112,9 @@ public class ReportUploads implements IReport {
 
                 String fileName = fileUpload.getFileName();
 
-                // Get metadata title from index
-                String metadataTitle = ReportUtils.retrieveMetadataTitle(
-                    context, fileUpload.getMetadataId());
-                String metadataUuid = ReportUtils.retrieveMetadataUuid(
-                    context, fileUpload.getMetadataId());
+                Optional<Metadata> metadata = metadataRepository.findById(fileUpload.getMetadataId());
+                String metadataUuid = metadata.get().getUuid();
+                String metadataTitle = ReportUtils.retrieveMetadataTitle(metadataUuid);
 
 
                 // Online resource description from the index ...
@@ -120,7 +123,7 @@ public class ReportUploads implements IReport {
                 fields.add("linkage_name_des");
 
 // TODOES
-                throw new NotImplementedException("Not implemented in ES");
+//                throw new NotImplementedException("Not implemented in ES");
 //                Map<String, Map<String, String>> fieldValues =
 //                        LuceneSearcher.getAllMetadataFromIndexFor(
 //                                context.getLanguage(), "_id",
@@ -132,21 +135,21 @@ public class ReportUploads implements IReport {
 //                            fieldValues.get("0").get("linkage_name_des");
 //                }
 //
-//                // Build the record element with the information for the report
-//                List<String> record = new ArrayList<>();
-//                record.add(metadataUuid);
-//                record.add(metadataTitle);
-//                record.add(fileName);
-//                record.add(uploadDescription);
-//                record.add(fileUpload.getUploadDate());
-//                record.add(username);
-//                record.add(surname);
-//                record.add(name);
-//                record.add(email);
-//                record.add(profile);
-//                record.add(fileUpload.getDeletedDate());
-//
-//                csvFilePrinter.printRecord(record);
+                // Build the record element with the information for the report
+                List<String> record = new ArrayList<>();
+                record.add(metadataUuid);
+                record.add(metadataTitle);
+                record.add(fileName);
+                record.add(uploadDescription);
+                record.add(fileUpload.getUploadDate());
+                record.add(username);
+                record.add(surname);
+                record.add(name);
+                record.add(email);
+                record.add(profile);
+                record.add(fileUpload.getDeletedDate());
+
+                csvFilePrinter.printRecord(record);
             }
         } finally {
             writer.flush();

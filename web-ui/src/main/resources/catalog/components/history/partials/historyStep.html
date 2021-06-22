@@ -28,19 +28,19 @@
         (h.statusValue.label | gnLocalized | translate:{h: h}) }}
       </strong>
       <span class="text-muted"
-            data-gn-humanize-time="{{h.changeDate.dateAndTime}}"
+            data-gn-humanize-time="{{h.dateChange}}"
             data-from-now=""></span>
 
-      <span data-ng-if="h.statusValue.type == 'task'" data-ng-show="h.dueDate != null">,
+      <span data-ng-if="h.statusValue.type == 'task'" data-ng-show="h.dateDue != null">,
         <span data-translate="">taskDueDate</span>
         <span class="text-muted"
-              data-gn-humanize-time="{{h.dueDate.dateAndTime}}"
+              data-gn-humanize-time="{{h.dateDue}}"
               data-from-now=""></span>
       </span>
-      <span data-ng-if="h.statusValue.type == 'task'" data-ng-show="h.closeDate != null">,
+      <span data-ng-if="h.statusValue.type == 'task'" data-ng-show="h.dateClose != null">,
         <span data-translate="">taskCloseDate</span>
         <span class="text-muted"
-              data-gn-humanize-time="{{h.closeDate.dateAndTime}}"
+              data-gn-humanize-time="{{h.dateClose}}"
               data-from-now=""></span>
       </span><br/>
 
@@ -68,7 +68,7 @@
 
           <a class="btn btn-default"
              target="_blank"
-             data-ng-href="../api/records/{{h.uuid}}/status/{{h.statusId}}.{{h.userId}}.{{h.changeDate.dateAndTime}}/after"
+             data-ng-href="../api/records/{{h.uuid}}/status/{{h.statusId}}.{{h.userId}}.{{h.dateChange}}/after"
              data-ng-if="!h.currentStateEmpty"
              data-ng-hide="noSourceViewOption">
             <i class="fa fa-fw fa-search"
@@ -86,41 +86,18 @@
         </span>
       </div>
     </div>
-    <div class="timeline-body" data-ng-show="h.closeDate == null">
-
+    <div class="timeline-body" data-ng-show="h.dateClose == null"
+         data-ng-init="key = h.metadataId + '-' + h.statusId">
       <div data-ng-show="h.statusValue.name == 'doiCreationTask'"
-           data-ng-init="key = h.metadataId + '-' + h.statusId">
-        <h2 data-translate="">createDoiForRecord</h2>
-        <div class="text-muted" data-translate="">createDoiForRecord-help</div>
-
-        <a class="btn btn-primary"
-           data-gn-click-and-spin="doiCreationTask.check(h)">
-          <i class="fa fa-fw"
-             data-ng-class="{'fa-check': response.doiCreationTask.check == null, 'fa-thumbs-up': response.doiCreationTask.check.status === 200, 'fa-thumbs-down': response.doiCreationTask.check.status === 400}" ></i>
-          <span data-translate="">doiCreationTaskCheckAction</span>
-        </a>
-
-        <a class="btn btn-primary"
-           data-ng-disabled="response.doiCreationTask.check.status !== 200"
-           data-gn-click-and-spin="doiCreationTask.create(h)">
-          <i class="fa fa-fw fa-play"/>
-          <span data-translate="">doiCreationTaskCreateAction</span>
-        </a>
-
-        <a class="btn btn-default"
-           data-translate=""
-           data-ng-show="user.isAdministratorOrMore()"
-           data-gn-click-and-spin="closeTask(h)">closeTask</a>
-
-        <div data-ng-if="response.doiCreationTask.check"
-             data-ng-class="{'text-danger': response.doiCreationTask.check.status === 400}">
-        {{response.doiCreationTask.check.data.description}}
-        </div>
-        <div data-ng-if="response.doiCreationTask.create"
-             data-ng-class="{'text-danger': response.doiCreationTask.create.status === 400}">
-          {{response.doiCreationTask.create.data.description}}
-        </div>
+           data-gn-doi-wizard="h.metadataId">
       </div>
+
+      <a class="btn btn-default"
+         data-ng-show="$parent.$parent.user.isAdministratorOrMore()"
+         data-gn-click-and-spin="closeTask(h)">
+        <i class="fa fa-fw fa-times"></i>
+        <span data-translate="">closeTask</span>
+      </a>
     </div>
   </div>
 </li>

@@ -18,8 +18,7 @@
     <span class="gn-facet-label flex-shrink text-ellipsis">
       {{::ctrl.item.value | facetTranslator: ctrl.facet.key | capitalize}}
     </span>
-    <span class="gn-facet-count flex-no-shrink"
-          data-ng-if="::ctrl.item.count">({{::ctrl.item.count}})</span>
+    <span class="gn-facet-count flex-no-shrink gn-facet-count-{{ctrl.item.count}}">{{::ctrl.item.count}}</span>
   </a>
   <div class="flex-spacer"></div>
   <a href
