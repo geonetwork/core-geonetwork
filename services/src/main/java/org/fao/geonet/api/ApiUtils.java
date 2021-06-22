@@ -270,6 +270,20 @@ public class ApiUtils {
     }
 
     /**
+     * Check if the current user can share this record.
+     */
+    static public AbstractMetadata canShareRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        AbstractMetadata metadata = getRecord(metadataUuid);
+        AccessManager accessManager = appContext.getBean(AccessManager.class);
+        if (!accessManager.canShare(createServiceContext(request), String.valueOf(metadata.getId()))) {
+            throw new SecurityException(String.format(
+                "You can't change record privileges with UUID %s", metadataUuid));
+        }
+        return metadata;
+    }
+
+    /**
      * Check if the current user can review this record.
      */
     static public AbstractMetadata canReviewRecord(String metadataUuid, HttpServletRequest request) throws Exception {

@@ -263,6 +263,17 @@ public class AccessManager {
 
     /**
      * Returns true if, and only if, at least one of these conditions is satisfied: <ul> <li>the
+     * user is owner (@see #isOwner)</li></ul>
+     *
+     * @param id The metadata internal identifier
+     */
+    public boolean canShare(final ServiceContext context, final String id) throws Exception {
+        //Check if is owner or is admin or is reviewer in the same group
+        return isOwner(context, id);
+    }
+
+    /**
+     * Returns true if, and only if, at least one of these conditions is satisfied: <ul> <li>the
      * user is owner (@see #isOwner)</li> <li>the user has reviewing rights over the metadata</li> </ul>
      *
      * @param id The metadata internal identifier
