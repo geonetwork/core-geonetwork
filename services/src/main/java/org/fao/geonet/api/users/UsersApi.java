@@ -43,6 +43,7 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -105,6 +106,9 @@ public class UsersApi {
 
     @Autowired
     LanguageUtils languageUtils;
+
+    @Autowired(required=false)
+    SecurityProviderConfiguration securityProviderConfiguration;
 
     private BufferedImage pixel;
 
@@ -401,12 +405,16 @@ public class UsersApi {
         @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
+        if (securityProviderConfiguration != null && !securityProviderConfiguration.isUserProfileUpdateEnabled()) {
+            return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
+        }
+
         Profile profile = Profile.findProfileIgnoreCase(userDto.getProfile());
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
-
-        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
         if (profile == Profile.Administrator) {
             checkIfAtLeastOneAdminIsEnabled(userDto, userRepository);
@@ -479,6 +487,8 @@ public class UsersApi {
         @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
         Profile profile = Profile.findProfileIgnoreCase(userDto.getProfile());
 
@@ -546,10 +556,18 @@ public class UsersApi {
             }
         }
 
-        fillUserFromParams(user, userDto);
+        if (securityProviderConfiguration == null || securityProviderConfiguration.isUserProfileUpdateEnabled()) {
+            fillUserFromParams(user, userDto);
+        } else {
+            // If profile update is not enabled then the only thing that can be changed it enabling/disabling the user.
+            user.setEnabled(userDto.isEnabled());
+        }
 
         user = userRepository.save(user);
-        setUserGroups(user, groups);
+
+        if (securityProviderConfiguration == null || securityProviderConfiguration.isUserGroupUpdateEnabled()) {
+            setUserGroups(user, groups);
+        }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -582,6 +600,9 @@ public class UsersApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
+        if (securityProviderConfiguration != null && !securityProviderConfiguration.isUserProfileUpdateEnabled()) {
+            return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
+        }
 
         // Validate passwordResetDto data
         PasswordResetDtoValidator passwordResetValidator = new PasswordResetDtoValidator();

@@ -520,6 +520,29 @@ public final class XslUtil {
         return false;
     }
 
+    /**
+     * Check if user profile update is enabled.
+     */
+    public static boolean isUserProfileUpdateEnabled() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.isUserProfileUpdateEnabled();
+        }
+        return true;
+    }
+
+    /**
+     * Check if user group update is enabled.
+     */
+    public static boolean isUserGroupUpdateEnabled() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.isUserGroupUpdateEnabled();
+        }
+        return true;
+    }
 
     /**
      * get security provider

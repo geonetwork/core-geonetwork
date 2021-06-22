@@ -281,6 +281,18 @@
       <script type="text/javascript" src="{$uiResourcesPath}lib/angular.ext/ui-ace.js?v={$buildNumber}"></script>
     </xsl:if>
 
+    <!-- Load variables that are required for user group profile management. -->
+    <xsl:if test="$angularApp = 'gn_admin'">
+      <script type="text/javascript">
+        var module = angular.module('<xsl:value-of select="$angularApp"/>');
+        module.config(['gnGlobalSettings',
+        function(gnGlobalSettings) {
+        gnGlobalSettings.isDisableLoginForm = <xsl:value-of select="$isDisableLoginForm"/>;
+        gnGlobalSettings.isUserProfileUpdateEnabled = <xsl:value-of select="$isUserProfileUpdateEnabled"/>;
+        gnGlobalSettings.isUserGroupUpdateEnabled = <xsl:value-of select="$isUserGroupUpdateEnabled"/>;
+        }]);
+      </script>
+    </xsl:if>
 
     <script type="text/javascript">
       var module = angular.module('<xsl:value-of select="$angularApp"/>');
