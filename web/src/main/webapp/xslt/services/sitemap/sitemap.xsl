@@ -33,6 +33,10 @@
   <xsl:variable name="indexDocs" select="/root/response/indexDocs"/>
   <xsl:variable name="changeDate" select="/root/response/changeDate"/>
 
+  <xsl:variable name="sitemapLinkUrl"
+                select="util:getSettingValue('system/server/sitemapLinkUrl')"/>
+
+
   <xsl:template match="/root">
     <xsl:choose>
       <!-- Return index document -->
@@ -121,14 +125,20 @@
               </xsl:when>
 
               <xsl:otherwise>
-                <xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid, '?language=all')"/>
+                <xsl:variable name="metadataUrl">
+                  <xsl:choose>
+                    <xsl:when test="contains(upper-case(normalize-space($sitemapLinkUrl)), '{{UUID}}')"><xsl:value-of select="replace($sitemapLinkUrl, '\{\{UUID\}\}', $uuid, 'i' )"/></xsl:when>
+                    <xsl:otherwise><xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid, '?language=all')"/></xsl:otherwise>
+                  </xsl:choose>
+                </xsl:variable>
+                <xsl:value-of select="$metadataUrl"/>
               </xsl:otherwise>
             </xsl:choose>
           </loc>
           <lastmod>
             <xsl:value-of select="substring($changedate,1,10)"/>
           </lastmod>
-          
+
           <!--
           <dct:format>
               <xsl:value-of select="$schemaid"/>
