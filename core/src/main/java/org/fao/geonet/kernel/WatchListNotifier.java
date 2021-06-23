@@ -68,7 +68,7 @@ public class WatchListNotifier extends QuartzJobBean {
     private String permalinkApp = "catalog.search#/search?_uuid={{filter}}";
 
     @Value("${usersavedselection.watchlist.recordurl}")
-    private String permalinkRecordApp = "api/records/{{index:_uuid}}";
+    private String permalinkRecordApp = "api/records/{{index:uuid}}";
 
     public String getPermalinkApp() {
         return permalinkApp;
