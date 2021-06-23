@@ -68,12 +68,9 @@ public abstract class StoreUtils {
     public static void copyDataDir(ServiceContext context, String oldUuid, String newUuid, boolean newApproved) throws Exception {
         final Store store = context.getBean("resourceStore", Store.class);
         for (MetadataResourceVisibility visibility: MetadataResourceVisibility.values()) {
-            final List<MetadataResource> resources = store.getResources(context, oldUuid, visibility, null, true);
-            for (MetadataResource resource: resources) {
-                try (Store.ResourceHolder holder = store.getResource(context, oldUuid, visibility, resource.getFilename(), true)) {
-                    store.putResource(context, newUuid, holder.getPath(), visibility, newApproved);
-                }
-            }
+            //Copy from approved copy to working copy
+            boolean oldApproved = true;
+            store.copyResources(context, oldUuid, newUuid, visibility, oldApproved, newApproved);
         }
     }
 
@@ -133,20 +130,8 @@ public abstract class StoreUtils {
             List<MetadataResource> targetAddResources = exceptMetadataResource(sourceResources, targetResources);
             List<MetadataResource> targetUpdateResources = exceptMetadataResource(targetResources, targetDeleteResources);
 
-            // Add new records
-            for (MetadataResource resource: targetAddResources) {
-                try (Store.ResourceHolder holder = store.getResource(context, sourceUuid, visibility, resource.getFilename(), sourceApproved)) {
-                    store.putResource(context, targetUuid, holder.getPath(), visibility, targetApproved);
-                }
-            }
-
-            // update new records
-
-            for (MetadataResource resource: targetUpdateResources) {
-                try (Store.ResourceHolder holder = store.getResource(context, sourceUuid, visibility, resource.getFilename(), sourceApproved)) {
-                    store.putResource(context, targetUuid, holder.getPath(), visibility, targetApproved);
-                }
-            }
+            // copy records from source to target
+            store.copyResources(context, sourceUuid, targetUuid, visibility, sourceApproved, targetApproved);
 
             // delete old records
             for (MetadataResource resource: targetDeleteResources) {
