@@ -1,0 +1,48 @@
+<div class="combiner">
+  <div data-ng-transclude=""/>
+<!--  <input type="hidden" data-ng-attr-id="{{config.valueElementId}}" data-ng-value="hiddenFieldValue" />-->
+
+  <div style="padding-left: 15px; padding-right: 15px">
+    <div class="form-group" ng-repeat="c in config.config" ng-if="c.type !== 'fixedValue'">
+      <div class="config">
+        <div ng-if="c.heading[currentUILang] != ''">
+          <label for="field_{{$index}}" class=" ">{{c.heading[currentUILang]}}</label>
+        </div>
+        <div class="thesaurus">
+          <div ng-if="c.type === 'thesaurus'">
+            <input class="form-control hidden"
+                   data-gn-keyword-picker=""
+                   data-thesaurus-key="{{c.thesaurus}}"
+                   data-faux-multilingual="true"
+                   data-focus-to-input="false"
+                   lang="{{lang}}"
+                   type="text"
+                   ng-model="$parent.individualValues[lang][$parent.$index]"
+                   ng-repeat="(lang, langValues) in individualValues"
+                   reset-value="{{$parent.individualValues[lang][$parent.$index]}}"/>
+
+          </div>
+        </div>
+
+        <div ng-if="c.type == 'freeText'">
+          <input class="form-control hidden"
+                 lang="{{lang}}"
+                 type="text"
+                 ng-model="$parent.$parent.individualValues[lang][$parent.$index]"
+                 ng-repeat="(lang, langValues) in individualValues"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="gn-multilingual-field" ng-if="langs.length > 1">
+    <ul class="nav nav-pills">
+      <li ng-repeat="langinfo in langs" data-ng-class="{'active': langinfo.lang === currentLang}">
+        <a ng-click="changeLang(langinfo.lang)">{{langinfo.isolang|translate}}</a>
+      </li>
+    </ul>
+  </div>
+
+</div>
