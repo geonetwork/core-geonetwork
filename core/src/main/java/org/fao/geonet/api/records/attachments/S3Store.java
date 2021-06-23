@@ -54,11 +54,13 @@ public class S3Store extends AbstractStore {
     @Autowired
     S3Credentials s3;
 
+    @Autowired
+    SettingManager settingManager;
+
     @Override
     public List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid,
             final MetadataResourceVisibility visibility, String filter, Boolean approved) throws Exception {
         final int metadataId = canEdit(context, metadataUuid, approved);
-        final SettingManager settingManager = context.getBean(SettingManager.class);
 
         final String resourceTypeDir = getMetadataDir(metadataId) + "/" + visibility.toString();
 
@@ -75,7 +77,7 @@ public class S3Store extends AbstractStore {
             final String filename = getFilename(key);
             Path keyPath = new File(filename).toPath().getFileName();
             if (matcher.matches(keyPath)) {
-                MetadataResource resource = createResourceDescription(settingManager, metadataUuid, visibility, filename, object.getSize(),
+                MetadataResource resource = createResourceDescription(metadataUuid, visibility, filename, object.getSize(),
                                                                       object.getLastModified(), metadataId, approved);
                 resourceList.add(resource);
             }
@@ -86,7 +88,7 @@ public class S3Store extends AbstractStore {
         return resourceList;
     }
 
-    private MetadataResource createResourceDescription(final SettingManager settingManager, final String metadataUuid,
+    private MetadataResource createResourceDescription(final String metadataUuid,
             final MetadataResourceVisibility visibility, final String resourceId, long size, Date lastModification, int metadataId, boolean approved) {
         return new FilesystemStoreResource(metadataUuid, metadataId, getFilename(metadataUuid, resourceId),
                                            settingManager.getNodeURL() + "api/records/", visibility, size, lastModification, approved);
@@ -105,8 +107,7 @@ public class S3Store extends AbstractStore {
         try {
             final S3Object object = s3.getClient().getObject(
                 s3.getBucket(), getKey(metadataUuid, metadataId, visibility, resourceId));
-            final SettingManager settingManager = context.getBean(SettingManager.class);
-            return new ResourceHolderImpl(object, createResourceDescription(settingManager, metadataUuid, visibility, resourceId,
+            return new ResourceHolderImpl(object, createResourceDescription(metadataUuid, visibility, resourceId,
                                                                             object.getObjectMetadata().getContentLength(),
                                                                             object.getObjectMetadata().getLastModified(), metadataId, approved));
         } catch (AmazonServiceException ignored) {
@@ -125,7 +126,6 @@ public class S3Store extends AbstractStore {
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
             final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved)
             throws Exception {
-        final SettingManager settingManager = context.getBean(SettingManager.class);
         final int metadataId = canEdit(context, metadataUuid, approved);
         String key = getKey(metadataUuid, metadataId, visibility, filename);
         ObjectMetadata metadata = new ObjectMetadata();
@@ -133,14 +133,13 @@ public class S3Store extends AbstractStore {
             metadata.setLastModified(changeDate);
         }
         final PutObjectResult putAnswer = s3.getClient().putObject(s3.getBucket(), key, is, metadata);
-        return createResourceDescription(settingManager, metadataUuid, visibility, filename, putAnswer.getMetadata().getContentLength(),
+        return createResourceDescription(metadataUuid, visibility, filename, putAnswer.getMetadata().getContentLength(),
                                          putAnswer.getMetadata().getLastModified(), metadataId, approved);
     }
 
     @Override
     public MetadataResource patchResourceStatus(final ServiceContext context, final String metadataUuid, final String resourceId,
             final MetadataResourceVisibility visibility, Boolean approved) throws Exception {
-        SettingManager settingManager = context.getBean(SettingManager.class);
         int metadataId = canEdit(context, metadataUuid, approved);
 
         String sourceKey = null;
@@ -154,7 +153,7 @@ public class S3Store extends AbstractStore {
                     break;
                 } else {
                     // already the good visibility
-                    return createResourceDescription(settingManager, metadataUuid, visibility, resourceId, metadata.getContentLength(),
+                    return createResourceDescription(metadataUuid, visibility, resourceId, metadata.getContentLength(),
                                                      metadata.getLastModified(), metadataId, approved);
                 }
             } catch (AmazonServiceException ignored) {
@@ -166,7 +165,7 @@ public class S3Store extends AbstractStore {
             final CopyObjectResult copyResult = s3.getClient().copyObject(
                 s3.getBucket(), sourceKey, s3.getBucket(), destKey);
             s3.getClient().deleteObject(s3.getBucket(), sourceKey);
-            return createResourceDescription(settingManager, metadataUuid, visibility, resourceId, metadata.getContentLength(),
+            return createResourceDescription(metadataUuid, visibility, resourceId, metadata.getContentLength(),
                                              copyResult.getLastModifiedDate(), metadataId, approved);
         } else {
             throw new ResourceNotFoundException(
@@ -227,10 +226,9 @@ public class S3Store extends AbstractStore {
             final MetadataResourceVisibility visibility, final String filename, Boolean approved) throws Exception {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
         final String key = getKey(metadataUuid, metadataId, visibility, filename);
-        SettingManager settingManager = context.getBean(SettingManager.class);
         try {
             final ObjectMetadata metadata = s3.getClient().getObjectMetadata(s3.getBucket(), key);
-            return createResourceDescription(settingManager, metadataUuid, visibility, filename, metadata.getContentLength(),
+            return createResourceDescription(metadataUuid, visibility, filename, metadata.getContentLength(),
                                              metadata.getLastModified(), metadataId, approved);
         } catch (AmazonServiceException e) {
             return null;
@@ -242,7 +240,6 @@ public class S3Store extends AbstractStore {
 
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
 
-        SettingManager settingManager = context.getBean(SettingManager.class);
         return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid, settingManager.getNodeURL() + "api/records/", approved);
     }
 

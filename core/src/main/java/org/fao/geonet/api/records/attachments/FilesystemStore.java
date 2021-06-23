@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,6 +68,9 @@ import javax.annotation.Nullable;
 public class FilesystemStore extends AbstractStore {
     public static final String DEFAULT_FILTER = "*.*";
 
+    @Autowired
+    SettingManager settingManager;
+
     public FilesystemStore() {
     }
 
@@ -74,7 +78,6 @@ public class FilesystemStore extends AbstractStore {
     public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility,
                                                String filter, Boolean approved) throws Exception {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
-        SettingManager settingManager = context.getBean(SettingManager.class);
 
         Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
         Path resourceTypeDir = metadataDir.resolve(visibility.toString());
@@ -127,7 +130,6 @@ public class FilesystemStore extends AbstractStore {
     private MetadataResource getResourceDescription(final ServiceContext context, final String metadataUuid,
                                                     final MetadataResourceVisibility visibility, final Path filePath, Boolean approved)
             throws IOException {
-        SettingManager settingManager = context.getBean(SettingManager.class);
         Integer metadataId = null;
 
         try {
@@ -160,7 +162,6 @@ public class FilesystemStore extends AbstractStore {
             }
         }
 
-        SettingManager settingManager = context.getBean(SettingManager.class);
         return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid, settingManager.getNodeURL() + "api/records/", approved);
     }
 

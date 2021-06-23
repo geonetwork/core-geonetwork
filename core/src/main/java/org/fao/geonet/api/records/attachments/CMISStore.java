@@ -70,11 +70,13 @@ public class CMISStore extends AbstractStore {
     @Autowired
     CMISUtils cmisUtils;
 
+    @Autowired
+    SettingManager settingManager;
+
     @Override
     public List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid,
                                                final MetadataResourceVisibility visibility, String filter, Boolean approved) throws Exception {
         final int metadataId = canDownload(context, metadataUuid, visibility, approved);
-        final SettingManager settingManager = context.getBean(SettingManager.class);
 
         final String resourceTypeDir = getMetadataDir(context, metadataId) + cmisConfiguration.getFolderDelimiter() + visibility.toString();
 
@@ -98,7 +100,7 @@ public class CMISStore extends AbstractStore {
                     Path keyPath = new File(cmisFilePath).toPath().getFileName();
                     if (matcher.matches(keyPath)) {
                         final String filename = getFilename(cmisFilePath);
-                        MetadataResource resource = createResourceDescription(context, settingManager, metadataUuid, visibility, filename, object, metadataId, approved);
+                        MetadataResource resource = createResourceDescription(context, metadataUuid, visibility, filename, object, metadataId, approved);
                         resourceList.add(resource);
                     }
                 }
@@ -113,7 +115,7 @@ public class CMISStore extends AbstractStore {
         return resourceList;
     }
 
-    private MetadataResource createResourceDescription(final ServiceContext context, final SettingManager settingManager, final String metadataUuid,
+    private MetadataResource createResourceDescription(final ServiceContext context, final String metadataUuid,
                                                        final MetadataResourceVisibility visibility, final String resourceId,
                                                        Document document, int metadataId, boolean approved) {
 
@@ -143,8 +145,7 @@ public class CMISStore extends AbstractStore {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         try {
             final CmisObject object = cmisConfiguration.getClient().getObjectByPath(getKey(context, metadataUuid, metadataId, visibility, resourceId));
-            final SettingManager settingManager = context.getBean(SettingManager.class);
-            return new ResourceHolderImpl(object, createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId,
+            return new ResourceHolderImpl(object, createResourceDescription(context, metadataUuid, visibility, resourceId,
                 (Document) object, metadataId, approved));
         } catch (CmisObjectNotFoundException e) {
             Log.warning(Geonet.RESOURCES, String.format("Error getting metadata resource. '%s' not found for metadata '%s'", resourceId, metadataUuid));
@@ -163,7 +164,6 @@ public class CMISStore extends AbstractStore {
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
                                         final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved)
             throws Exception {
-        final SettingManager settingManager = context.getBean(SettingManager.class);
         final int metadataId = canEdit(context, metadataUuid, approved);
         String key = getKey(context, metadataUuid, metadataId, visibility, filename);
 
@@ -193,7 +193,7 @@ public class CMISStore extends AbstractStore {
             }
         }
 
-        return createResourceDescription(context, settingManager, metadataUuid, visibility, filename,
+        return createResourceDescription(context, metadataUuid, visibility, filename,
              doc, metadataId, approved);
     }
 
@@ -231,7 +231,6 @@ public class CMISStore extends AbstractStore {
     @Override
     public MetadataResource patchResourceStatus(final ServiceContext context, final String metadataUuid, final String resourceId,
                                                 final MetadataResourceVisibility visibility, Boolean approved) throws Exception {
-        SettingManager settingManager = context.getBean(SettingManager.class);
         int metadataId = canEdit(context, metadataUuid, approved);
 
         // Don't use caching for this process.
@@ -250,7 +249,7 @@ public class CMISStore extends AbstractStore {
                     break;
                 } else {
                     // already the good visibility
-                    return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, (Document) object, metadataId, approved);
+                    return createResourceDescription(context, metadataUuid, visibility, resourceId, (Document) object, metadataId, approved);
                 }
             } catch (CmisObjectNotFoundException ignored) {
                 // ignored
@@ -284,7 +283,7 @@ public class CMISStore extends AbstractStore {
                         "No permissions to modify metadata resource '%s' for metadata '%s'.", resourceId, metadataUuid));
             }
 
-            return createResourceDescription(context, settingManager, metadataUuid, visibility, resourceId, (Document) object, metadataId, approved);
+            return createResourceDescription(context, metadataUuid, visibility, resourceId, (Document) object, metadataId, approved);
         } else {
             Log.warning(Geonet.RESOURCES,
                     String.format("Could not update permissions. Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
@@ -389,10 +388,10 @@ public class CMISStore extends AbstractStore {
                                                    final MetadataResourceVisibility visibility, final String filename, Boolean approved) throws Exception {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
         final String key = getKey(context, metadataUuid, metadataId, visibility, filename);
-        SettingManager settingManager = context.getBean(SettingManager.class);
+
         try {
             final CmisObject object = cmisConfiguration.getClient().getObjectByPath(key);
-            return createResourceDescription(context, settingManager, metadataUuid, visibility, filename, (Document)object, metadataId, approved);
+            return createResourceDescription(context, metadataUuid, visibility, filename, (Document)object, metadataId, approved);
         } catch (CmisObjectNotFoundException e) {
             return null;
         }
@@ -404,7 +403,6 @@ public class CMISStore extends AbstractStore {
 
         final String key = getMetadataDir(context, metadataId);
 
-        SettingManager settingManager = context.getBean(SettingManager.class);
         try {
             String folderRoot = cmisConfiguration.getExternalResourceManagementFolderRoot();
             if (folderRoot == null) {
