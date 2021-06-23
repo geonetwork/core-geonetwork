@@ -207,7 +207,7 @@ public class CMISResources extends Resources {
                                     final Path appPath, final String filename, final byte[] defaultValue,
                                     final long loadSince) throws IOException {
         final Path file = locateResource(resourcesDir, context, appPath, filename);
-        final String key = getKey(file, filename);
+        final String key = getKey(file);
         try {
             final CmisObject object = cmisConfiguration.getClient().getObjectByPath(key);
             if (object != null) {
