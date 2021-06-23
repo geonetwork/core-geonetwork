@@ -72,6 +72,8 @@ import java.util.regex.Pattern;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
 
+import com.google.common.base.Joiner;
+
 public class DefaultStatusActions implements StatusActions {
 
     public static final Pattern metadataLuceneField = Pattern.compile("\\{\\{index:([^\\}]+)\\}\\}");
@@ -304,7 +306,9 @@ public class DefaultStatusActions implements StatusActions {
 
         String message = MessageFormat.format(textTemplate, replyToDescr, // Author of the change
                 status.getChangeMessage(), translatedStatusName, status.getChangeDate(), status.getDueDate(),
-                status.getCloseDate(), owner == null ? "" : owner.getName() + " " + owner.getSurname(), siteUrl);
+                status.getCloseDate(),
+                owner == null ? "" : Joiner.on(" ").skipNulls().join( owner.getName(), owner.getSurname()),
+                siteUrl);
 
         IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
         AbstractMetadata metadata = metadataRepository.findOne(status.getMetadataId());
@@ -312,7 +316,14 @@ public class DefaultStatusActions implements StatusActions {
         subject = compileMessageWithIndexFields(subject, metadata.getUuid(), this.language);
         message = compileMessageWithIndexFields(message, metadata.getUuid(), this.language);
         for (User user : userToNotify) {
-            sendEmail(user.getEmail(), subject, message);
+            String salutation = Joiner.on(" ").skipNulls().join( user.getName(), user.getSurname());
+            //If we have a salutation then end it with a ","
+            if (StringUtils.isEmpty(salutation)) {
+                salutation = "";
+            } else {
+                salutation += ",\n\n";
+            }
+            sendEmail(user.getEmail(), subject, salutation + message);
         }
     }
 
