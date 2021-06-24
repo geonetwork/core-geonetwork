@@ -107,5 +107,6 @@
   "ui-settings-sextant": "Sextant-specific configuration",
   "addAnnotations": "Associate annotations",
   "panierDrawBbox": "Draw an extent for extracting the data",
-  "panierDataExtent": "Actual extent for this data"
+  "panierDataExtent": "Actual extent for this data",
+  "textInput": "Annotation"
 }
