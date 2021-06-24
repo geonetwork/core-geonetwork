@@ -68,7 +68,7 @@ public abstract class StoreUtils {
     public static void copyDataDir(ServiceContext context, String oldUuid, String newUuid, boolean newApproved) throws Exception {
         final Store store = context.getBean("resourceStore", Store.class);
         for (MetadataResourceVisibility visibility: MetadataResourceVisibility.values()) {
-            //Copy from approved copy to working copy
+            // Copy from approved copy to working copy
             boolean oldApproved = true;
             store.copyResources(context, oldUuid, newUuid, visibility, oldApproved, newApproved);
         }

@@ -249,11 +249,6 @@ public class S3Store extends AbstractStore {
         return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid, settingManager.getNodeURL() + "api/records/", approved);
     }
 
-    @Override
-    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
-        // TODO Auto-generated method stub
-    }
-
     private String getMetadataDir(final int metadataId) {
         return s3.getKeyPrefix() + metadataId;
     }

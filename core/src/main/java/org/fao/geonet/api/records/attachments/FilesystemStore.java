@@ -184,10 +184,6 @@ public class FilesystemStore extends AbstractStore {
         return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid, settingManager.getNodeURL() + "api/records/", approved);
     }
 
-    @Override
-    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
-        // TODO Auto-generated method stub
-    }
 
     @Override
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,

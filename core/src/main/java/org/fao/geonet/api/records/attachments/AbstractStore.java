@@ -206,6 +206,16 @@ public abstract class AbstractStore implements Store {
         return patchResourceStatus(context, metadataUuid, resourceId, metadataResourceVisibility, true);
     }
 
+    @Override
+    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
+        final List<MetadataResource> resources = getResources(context, sourceUuid, metadataResourceVisibility, null, true);
+        for (MetadataResource resource: resources) {
+            try (Store.ResourceHolder holder = getResource(context, sourceUuid, metadataResourceVisibility, resource.getFilename(), true)) {
+                putResource(context, targetUuid, holder.getPath(), metadataResourceVisibility, targetApproved);
+            }
+        }
+    }
+
     protected String getFilename(final String metadataUuid, final String resourceId) {
         // It's not always clear when we get a resourceId or a filename
         String prefix = metadataUuid + "/attachments/";
