@@ -144,14 +144,14 @@
             }
 
             ctrl.drawInteraction.on('drawstart', function() {
-              ctrl.map.getInteractions().forEach((interaction) => {
+              angular.forEach(ctrl.map.getInteractions(), function(interaction) {
                 if (interaction instanceof ol.interaction.Draw && ctrl.drawInteraction != interaction) {
                   interaction.setActive(false);
                 }
               });
             })
             ctrl.drawInteraction.on('modifystart', function() {
-              ctrl.map.getInteractions().forEach((interaction) => {
+              angular.forEach(ctrl.map.getInteractions(), function(interaction) {
                 if (interaction instanceof ol.interaction.Modify && ctrl.modifyInteraction != interaction) {
                   interaction.setActive(false);
                 }
