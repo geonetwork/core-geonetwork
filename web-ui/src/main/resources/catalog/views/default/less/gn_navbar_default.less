@@ -35,6 +35,15 @@
       color: @gn-menubar-color-hover;
       background-color: @gn-menubar-background-hover;
     }
+    &:focus {
+      outline: 2px auto -webkit-focus-ring-color;
+    }
+  }
+  .btn {
+    &:focus {
+      outline: 2px auto -webkit-focus-ring-color;
+      outline-offset: 0;
+    }
   }
   .navbar-nav li.dropdown-hover.open:not(.active) > .dropdown-toggle {
     &:hover, &:focus {
@@ -42,15 +51,30 @@
     }
     
   }
+  .language-switcher {
+    .form-control {
+      &:focus {
+        box-shadow: none;
+        outline: 2px auto -webkit-focus-ring-color;
+      }
+    }
+  }
   .dropdown-menu {
     > li {
       > a {
         padding: 8px 20px;
+        &:focus {
+          box-shadow: none;
+          outline: 2px auto -webkit-focus-ring-color;
+        }
       }
     }
     .dropdown-header {
       color: @gray;
       cursor: text !important;
+    }
+    .fa-fw {
+      width: 2em;
     }
   }
   .navbar-nav > .active > a {
@@ -79,9 +103,10 @@
     display: none
   }
   input.ng-invalid, .has-error .form-control {
-    border-color: #f98258;
+    border-color: @brand-danger;
     &:focus {
-      box-shadow: none; // inset 0 1px 1px rgba(0,0,0,.075), 0 0 4px rgb(250, 140, 99);
+      box-shadow: none;
+      outline: 2px auto @brand-danger;
     }
   }
   .gn-user-info {
@@ -114,6 +139,29 @@
     }
     .navbar-nav .open .dropdown-menu > li > a {
       min-width: 0;
+    }
+    .navbar-accessible {
+      .dropdown-menu {
+        display: block;
+        position: static;
+        float: none;
+        width: auto;
+        margin-top: 0;
+        background-color: transparent;
+        border: 0;
+        box-shadow: none;
+        .gn-menuitem-xs {
+          a {
+            min-width: 0;
+          }
+        }
+      }
+      .username-dropdown {
+        margin-top: 10px;
+      }
+      .navbar-form {
+        width: calc(~"100% + 30px");
+      }
     }
     .gn-clear-xs {
       clear: both;
@@ -155,16 +203,17 @@
           display: block;
           padding: 7px 20px !important;
           height: auto;
-          i {
-            font-size: 22px;
-            margin: 3px 0;
-          }
           span {
             display: block;
             max-width: 100%;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+          }
+          .fa {
+            display: inline-block;
+            font-size: 22px;
+            // margin: 3px auto;
           }
           [data-gnv-layer-indicator] {
             display: none;
