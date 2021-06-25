@@ -36,6 +36,23 @@
         templateUrl: '../../catalog/components/search/searchoptions/partials/' +
             'searchoptions.html',
         link: function(scope, element, attrs, controller) {
+          Object.defineProperty(scope, 'exactMatch', {
+            get: function() {
+              return controller.getExactMatch();
+            },
+            set: function(value) {
+              controller.setExactMatch(value);
+            }
+          });
+
+          Object.defineProperty(scope, 'titleOnly', {
+            get: function() {
+              return controller.getTitleOnly();
+            },
+            set: function(value) {
+              controller.setTitleOnly(value);
+            }
+          });
         }
       };
     }]);
