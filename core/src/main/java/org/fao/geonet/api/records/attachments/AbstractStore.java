@@ -208,9 +208,9 @@ public abstract class AbstractStore implements Store {
 
     @Override
     public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
-        final List<MetadataResource> resources = getResources(context, sourceUuid, metadataResourceVisibility, null, true);
+        final List<MetadataResource> resources = getResources(context, sourceUuid, metadataResourceVisibility, null, sourceApproved);
         for (MetadataResource resource: resources) {
-            try (Store.ResourceHolder holder = getResource(context, sourceUuid, metadataResourceVisibility, resource.getFilename(), true)) {
+            try (Store.ResourceHolder holder = getResource(context, sourceUuid, metadataResourceVisibility, resource.getFilename(), sourceApproved)) {
                 putResource(context, targetUuid, holder.getPath(), metadataResourceVisibility, targetApproved);
             }
         }

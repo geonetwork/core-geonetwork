@@ -197,12 +197,12 @@ public class CMISStore extends AbstractStore {
         // so this is done in the following call after the document is created
         if (cmisConfiguration.existSecondaryProperty()) {
             Map<String, Object> secondaryProperties = new HashMap<>();
+            if (MapUtils.isNotEmpty(additionalProperties)) {
+                secondaryProperties.putAll(additionalProperties);
+            }
             setCmisMetadataUUIDSecondary(doc, secondaryProperties, metadataUuid);
             try {
                 doc.updateProperties(secondaryProperties);
-                if (MapUtils.isNotEmpty(additionalProperties)) {
-                    doc.updateProperties(additionalProperties,true);
-                }
             } catch (Exception e) {
                 Log.error(Geonet.RESOURCES,
                     String.format("Unable to update CMIS secondary property on metadata resource '%s' for metadata '%s'.", key, metadataUuid), e);
@@ -448,11 +448,11 @@ public class CMISStore extends AbstractStore {
 
             for (Map.Entry<String, Document> sourceEntry : sourceDocumentMap.entrySet()) {
                 Document sourceDocument = sourceEntry.getValue();
-                if (sourceDocument instanceof Document) {
-                    // Get cmis properties from the source document
-                    Map<String, Object> sourceProperties = getSecondaryProperties(sourceDocument);
-                    putResource(context, targetUuid, sourceDocument.getName(), sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, targetApproved, sourceProperties);
-                }
+
+                // Get cmis properties from the source document
+                Map<String, Object> sourceProperties = getSecondaryProperties(sourceDocument);
+                putResource(context, targetUuid, sourceDocument.getName(), sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, targetApproved, sourceProperties);
+
             }
         } catch (CmisObjectNotFoundException  e) {
             Log.warning("Cannot find folder object from CMIS ... Abort copping resources from "+sourceResourceTypeDir, e);
@@ -460,18 +460,16 @@ public class CMISStore extends AbstractStore {
     }
 
     private Map<String, Object> getSecondaryProperties(Document document) {
-        String secondaryPropertyId=null;
-        for (Property<?> property:document.getProperties()) {
-            if(property.getId().equals(PropertyIds.SECONDARY_OBJECT_TYPE_IDS)) {
-                secondaryPropertyId = property.getValueAsString();
-                break;
-            }
+        String aspectId=null;
+        Property aspectProperty = document.getProperty(PropertyIds.SECONDARY_OBJECT_TYPE_IDS);
+        if (aspectProperty != null) {
+            aspectId = aspectProperty.getValueAsString();
         }
 
         Map<String, Object> properties = new HashMap<>();
-        if (!StringUtils.isEmpty(secondaryPropertyId)) {
+        if (!StringUtils.isEmpty(aspectId)) {
             for (Property<?> property:document.getProperties()) {
-                if (property.getId().contains(secondaryPropertyId) && property.getValue()!=null) {
+                if (property.getId().startsWith(aspectId) && property.getValue()!=null) {
                     properties.put(property.getId(), property.getValue());
                 }
             }

@@ -127,8 +127,6 @@ public abstract class StoreUtils {
 
             // In order to sync the 2 folders, we need to identify the records to be added, deleted and updated.
             List<MetadataResource> targetDeleteResources  = exceptMetadataResource(targetResources, sourceResources);
-            List<MetadataResource> targetAddResources = exceptMetadataResource(sourceResources, targetResources);
-            List<MetadataResource> targetUpdateResources = exceptMetadataResource(targetResources, targetDeleteResources);
 
             // copy records from source to target
             store.copyResources(context, sourceUuid, targetUuid, visibility, sourceApproved, targetApproved);
