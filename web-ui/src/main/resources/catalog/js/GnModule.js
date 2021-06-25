@@ -44,6 +44,7 @@
   goog.require('gn_search_sextant_commonconfig');
   goog.require('gn_utility');
   goog.require('gn_openlayers');
+  goog.require('gn_searchoptions');
 
   /**
    * GnModule just manage angular injection with
@@ -71,7 +72,8 @@
     'gn_cors_interceptor',
     'gn_openlayers',
     'gn_indexingtask',
-    'gn_batchtask'
+    'gn_batchtask',
+    'gn_searchoptions'
   ]);
 
 })();
