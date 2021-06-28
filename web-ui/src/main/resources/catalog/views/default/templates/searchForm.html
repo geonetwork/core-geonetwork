@@ -49,21 +49,15 @@
             </button>
             <button type="button"
                     class="btn btn-default btn-lg dropdown-toggle"
-                    data-ng-if="::exactMatchToggle"
+                    data-ng-if="::searchOptions"
                     data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu"
-                data-ng-if="::exactMatchToggle">
-              <li class="dropdown-header"
-                  title="{{'exactMatch-help' | translate}}">
-                <label>
-                  <input type="checkbox"
-                         data-ng-model="searchObj.state.exactMatch"
-                         aria-label="{{'exactMatch' | translate}}">
-                  <span data-translate="">exactMatch</span>
-                </label>
+            <ul class="dropdown-menu dropdown-auto"
+                data-ng-if="::searchOptions">
+              <li>
+                <gn-search-options></gn-search-options>
               </li>
             </ul>
             <button type="button"
