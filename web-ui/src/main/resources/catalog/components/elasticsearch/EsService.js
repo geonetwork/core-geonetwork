@@ -56,8 +56,11 @@
        *
        * @param queryHook
        * @param p
+       * @param luceneQueryString
+       * @param {boolean} exactMatch search for exact value
+       * @param {boolean} titleOnly search in title only
        */
-      this.buildQueryClauses = function(queryHook, p, luceneQueryString, exactMatch) {
+      this.buildQueryClauses = function(queryHook, p, luceneQueryString, exactMatch, titleOnly) {
         var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
           'sortBy', 'sortOrder', 'resultType', 'facet.q', 'any', 'geometry', 'query_string',
           'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo', 'geom', 'relation',
@@ -70,7 +73,7 @@
             if (queryExpression == null) {
               // var queryBase = '${any} resourceTitleObject.default:(${any})^2',
               var queryBase = '(' + gnGlobalSettings.gnCfg.mods.search.queryBase + ')',
-                  defaultQuery = '${any}';
+                defaultQuery = '${any}';
               if (queryBase.indexOf(defaultQuery) === -1) {
                 console.warn('Check your configuration. Query base \'' +
                   queryBase + '\' MUST contains a \'${any}\' token ' +
@@ -81,8 +84,8 @@
               }
               var searchString = escapeSpecialCharacters(p.any),
                 q = queryBase.replace(
-                      /\$\{any\}/g,
-                      exactMatch === true ? '\"' + searchString + '\"' : searchString);
+                  /\$\{any\}/g,
+                  exactMatch === true ? '\"' + searchString + '\"' : searchString);
               queryStringParams.push(q);
             } else {
               queryStringParams.push(queryExpression[1]);
@@ -92,13 +95,23 @@
           if (luceneQueryString) {
             queryStringParams.push(luceneQueryString);
           }
-          queryHook.must.push({
-            query_string: {
-              query: queryStringParams.join(' AND ').trim()
-            }
-          });
-        }
 
+          if (titleOnly) {
+            queryHook.must.push({
+              query_string: {
+                fields: ["resourceTitleObject.*"],
+                query: p.any
+              }
+            });
+          } else {
+
+            queryHook.must.push({
+              query_string: {
+                query: queryStringParams.join(' AND ').trim()
+              }
+            });
+          }
+        }
         // ranges criteria (for dates)
         if (p.creationDateFrom || p.creationDateTo) {
           queryHook.must.push({
@@ -249,7 +262,7 @@
         }
 
         var queryHook = query.function_score.query.bool;
-        this.buildQueryClauses(queryHook, p, luceneQueryString, searchState.exactMatch);
+        this.buildQueryClauses(queryHook, p, luceneQueryString, searchState.exactMatch, searchState.titleOnly);
 
         if(p.from) {
           params.from = p.from - 1;
