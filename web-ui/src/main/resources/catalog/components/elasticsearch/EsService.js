@@ -100,7 +100,8 @@
             queryHook.must.push({
               query_string: {
                 fields: ["resourceTitleObject.*"],
-                query: p.any
+                query: gnGlobalSettings.gnCfg.mods.search.queryTitle.replace(
+                  /\$\{any\}/g, escapeSpecialCharacters(p.any))
               }
             });
           } else {
