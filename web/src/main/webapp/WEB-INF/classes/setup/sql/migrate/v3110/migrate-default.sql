@@ -26,3 +26,5 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'spa','Record res
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'tur','Record restored.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'vie','Record restored.');
 
+-- In the JPA table upgrade the foreign key creation fails.
+ALTER TABLE MetadataStatus ADD FOREIGN KEY (relatedMetadataStatusId) REFERENCES MetadataStatus(id);
