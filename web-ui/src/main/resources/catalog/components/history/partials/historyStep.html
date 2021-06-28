@@ -93,6 +93,7 @@
       </div>
 
       <a class="btn btn-default"
+         data-ng-if="h.statusValue.type === 'task'"
          data-ng-show="$parent.$parent.user.isAdministratorOrMore()"
          data-gn-click-and-spin="closeTask(h)">
         <i class="fa fa-fw fa-times"></i>
