@@ -131,8 +131,10 @@ goog.require('gn_alert');
           // Full text on all fields
           // 'queryBase': '${any}',
           // Full text but more boost on title match
-          'queryBase': 'any:(${any}) resourceTitleObject.langfre:(${any})^2 resourceTitleObject.langeng:(${any})^2 uuid:(${any})',
+          'queryBase': 'any:(${any}) resourceTitleObject.default:(${any})^2',
+          'queryTitle': '${any}',
           'exactMatchToggle': true,
+          'exactTitleToggle': true,
           // Score query may depend on where we are in the app?
           'scoreConfig': {
             // Score experiments:
