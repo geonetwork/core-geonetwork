@@ -339,7 +339,7 @@
                 </xsl:call-template>
               </dt>
               <dd>
-                <xsl:value-of select="string-join($metadata/gmd:referenceSystemInfo/*/gmd:referenceSystemIdentifier/*/gmd:code/gco:CharacterString/text()[. != ''], ', ')"/>
+                <xsl:value-of select="string-join($metadata/gmd:referenceSystemInfo/*/gmd:referenceSystemIdentifier/*/gmd:code/*/text()[. != ''], ', ')"/>
               </dd>
             </dl>
           </xsl:if>
