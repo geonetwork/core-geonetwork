@@ -42,12 +42,10 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.es.EsHTTPProxy;
-import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.records.rdf.RdfOutputManager;
 import org.fao.geonet.api.records.rdf.RdfSearcher;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.guiapi.search.XsltResponseWriter;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -55,7 +53,6 @@ import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
@@ -423,12 +420,23 @@ public class CatalogApi {
                             Map<String, String> overviewProperties = (HashMap) i;
                             t.setText(overviewProperties.get("url") + "|" + overviewProperties.get("name"));
                             r.addContent(t);
+                        } else if (i instanceof HashMap) {
+                            Element t = new Element(e.getKey());
+                            Map<String, String> tags = (HashMap) i;
+                            t.setText(tags.get("default")); // TODOES: Multilingual support
+                            r.addContent(t);
                         } else {
                             Element t = new Element(e.getKey());
                             t.setText((String) i);
                             r.addContent(t);
                         }
                     });
+                } else if (v instanceof HashMap && e.getKey().equals("geom")) {
+                    Element t = new Element(e.getKey());
+                    t.setText(((HashMap)v).get("coordinates").toString());
+                    r.addContent(t);
+                }  else if (v instanceof HashMap) {
+                    // Skip.
                 } else {
                     Element t = new Element(e.getKey());
                     t.setText(v.toString());
