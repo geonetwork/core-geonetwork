@@ -43,11 +43,27 @@
           <property name="xpath"
                     value="*//gmd:CI_OnlineResource/gmd:linkage/gmd:URL[starts-with(normalize-space(text()), 'http')]/text()"/>
           <property name="protocol"
-                    value="../../gmd:protocol/gco:CharacterString"/>
+                    value="../../gmd:protocol/gco:CharacterString|../../gmd:protocol/gmx:Anchor/@xlink:href"/>
+          <property name="name"
+                    value="../../gmd:name/gco:CharacterString|../../gmd:name/gmx:Anchor/@xlink:href"/>
+          <property name="description"
+                    value="../../gmd:description/gco:CharacterString|../../gmd:description/gmx:Anchor/@xlink:href"/>
+          <property name="function"
+                    value="../../gmd:function/gco:CharacterString|../../gmd:function/gmx:Anchor/@xlink:href"/>
         </bean>
         <bean class="org.fao.geonet.kernel.schema.HttpLink">
           <property name="xpath"
                     value="*//gmd:graphicOverview/*/gmd:fileName/gco:CharacterString[starts-with(normalize-space(text()), 'http')]/text()"/>
+          <property name="description"
+                    value="../../../gmd:fileDescription/gco:CharacterString"/>
+        </bean>
+        <bean class="org.fao.geonet.kernel.schema.HttpLink">
+          <property name="xpath"
+                    value="*//srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL[starts-with(normalize-space(text()), 'http')]/text()"/>
+          <property name="dcp"
+                    value="../../../srv:DCP/srv:DCPList/@codeListValue"/>
+          <property name="operation"
+                    value="../../../srv:operationName/gco:CharacterString|../../../srv:operationName/gmx:Anchor/@xlink:href"/>        
         </bean>
       </util:list>
     </property>
