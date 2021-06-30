@@ -207,7 +207,7 @@ public class ValidateApi {
 
             // index records
             BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, report.getMetadata());
-            r.process(true);
+            r.process(settingManager.getSiteId(), true);
         } catch (Exception e) {
             throw e;
         } finally {
@@ -278,7 +278,7 @@ public class ValidateApi {
 
             // index records
             BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, report.getMetadata());
-            r.process(true);
+            r.process(settingManager.getSiteId(), true);
         } catch (Exception e) {
             throw e;
         } finally {
@@ -344,7 +344,7 @@ public class ValidateApi {
     private MInspireEtfValidateProcess getRegistredMInspireEtfValidateProcess(ServiceContext serviceContext) {
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
 
-        MInspireEtfValidateProcess mAnalyseProcess = new MInspireEtfValidateProcess(URL, serviceContext, appContext);
+        MInspireEtfValidateProcess mAnalyseProcess = new MInspireEtfValidateProcess(settingManager.getSiteId(), URL, serviceContext, appContext);
         mBeanExporter.registerManagedResource(mAnalyseProcess, mAnalyseProcess.getObjectName());
         try {
             mBeanExporter.unregisterManagedResource(mAnalyseProcesses.removeLast().getObjectName());

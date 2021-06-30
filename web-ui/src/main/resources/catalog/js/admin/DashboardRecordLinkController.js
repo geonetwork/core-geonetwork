@@ -187,7 +187,8 @@
   var ICON = ['fa-question', 'fa-question', 'fa-spinner fa-spin', 'fa-check', 'fa-exclamation-triangle'];
   var CLASS = ['', '', '', 'success', 'warning'];
 
-  module.directive('gnDashboardRecordLinksProcessesContainer', ['$http', function($http) {
+  module.directive('gnDashboardRecordLinksProcessesContainer', ['$http', 'gnConfig',
+    function($http, gnConfig) {
     return {
       restrict: 'E',
       scope: {},
@@ -219,7 +220,9 @@
         };
 
         this.refresh = function() {
-          $http.get('../../jolokia/read/geonetwork:name=url-check,idx=*').then(function(result) {
+          $http.get('../../jolokia/read/'
+            + 'geonetwork-' + gnConfig['system.site.siteId']
+            + ':name=url-check,idx=*').then(function(result) {
 
             if (!result.data || !result.data.value) { return; }
 
@@ -256,7 +259,7 @@
                 });
               }
             });
-            setTimeout(me.refresh, 1000);
+            setTimeout(me.refresh, 5000);
           });
         };
 

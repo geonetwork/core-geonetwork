@@ -28,14 +28,13 @@ import org.apache.camel.component.quartz2.QuartzComponent;
 import org.apache.camel.component.quartz2.QuartzEndpoint;
 import org.apache.camel.model.RouteDefinition;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.TriggerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableMBeanExport;
-import org.springframework.jmx.support.RegistrationPolicy;
 
 import javax.annotation.PostConstruct;
 
@@ -46,6 +45,8 @@ public class MessageProducerFactory {
     protected RouteBuilder routeBuilder;
     @Autowired
     protected QuartzComponent quartzComponent;
+    @Autowired
+    protected SettingManager settingManager;
 
     private static Logger LOGGER = LoggerFactory.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
 
@@ -59,14 +60,15 @@ public class MessageProducerFactory {
     }
 
     public void registerAndStart(MessageProducer messageProducer) throws Exception {
-        quartzComponent.createEndpoint("quartz2://" + messageProducer.getId());
+        quartzComponent.createEndpoint(buildFrom(messageProducer.getId()));
         writeRoute(messageProducer);
         reschedule(messageProducer);
     }
 
     public void reschedule(MessageProducer messageProducer) throws Exception {
         QuartzEndpoint toReschedule = (QuartzEndpoint) routeBuilder.getContext().getEndpoints().stream()
-            .filter(x -> x.getEndpointKey().compareTo("quartz2://" + messageProducer.getId()) == 0).findFirst().get();
+            .filter(x -> x.getEndpointKey().compareTo(
+                buildFrom(messageProducer.getId())) == 0).findFirst().get();
 
         String msgCronExpression = messageProducer.getCronExpession() == null ? NEVER : messageProducer.getCronExpession();
         CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(toReschedule.getTriggerKey()).withSchedule(CronScheduleBuilder.cronSchedule(msgCronExpression)).build();
@@ -83,12 +85,18 @@ public class MessageProducerFactory {
 
     public void destroy(Long id) throws Exception {
         routeBuilder.getContext().removeRouteDefinition(findRoute(id));
-        routeBuilder.getContext().removeEndpoints("quartz2://" + id);
+        routeBuilder.getContext().removeEndpoints(buildFrom(id));
+    }
+
+    private String buildFrom(Long id) {
+        return String.format("quartz2://%s-%s",
+            settingManager.getSiteId(),
+            id);
     }
 
     private void writeRoute(MessageProducer messageProducer) throws Exception {
         RouteDefinition routeDefinition = routeBuilder
-            .from("quartz2://" + messageProducer.getId())
+            .from(buildFrom(messageProducer.getId()))
             .noAutoStartup()
             .setBody(routeBuilder.constant(messageProducer.getMessage()))
             .to(messageProducer.getTargetUri());
@@ -104,6 +112,6 @@ public class MessageProducerFactory {
     }
 
     private boolean routeInputHasQuart2RouteIdUrl(RouteDefinition route, Long id) {
-        return route.getInputs().size() == 1 && route.getInputs().get(0).getUri().equalsIgnoreCase("quartz2://" + id);
+        return route.getInputs().size() == 1 && route.getInputs().get(0).getUri().equalsIgnoreCase(buildFrom(id));
     }
 }

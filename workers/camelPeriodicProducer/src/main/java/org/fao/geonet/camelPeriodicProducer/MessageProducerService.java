@@ -87,7 +87,7 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
                     try {
                         messageProducerFactory.registerAndStart(buildWfsHarvesterParameterMessageProducer(messageProducerEntity));
                     } catch (Exception e) {
-                        LOGGER.error("failed to initialise persisted quartz wfs harvester command messages producer, id: ({}).", messageProducerEntity.getId());
+                        LOGGER.error("Failed to initialise persisted quartz wfs harvester command messages producer, id: ({}).", messageProducerEntity.getId());
                     }
                 });
             isConfigured = true;

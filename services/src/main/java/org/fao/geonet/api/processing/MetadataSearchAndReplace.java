@@ -78,7 +78,7 @@ public class MetadataSearchAndReplace extends MetadataIndexerProcessor {
     }
 
     @Override
-    public void process() throws Exception {
+    public void process(String catalogueId) throws Exception {
         GeonetContext gc = (GeonetContext) context
             .getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);

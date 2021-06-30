@@ -307,7 +307,7 @@ public class DirectoryApi {
         if (save) {
             dataManager.flush();
             BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, listOfEntriesInternalId);
-            r.process();
+            r.process(settingManager.getSiteId());
             report.close();
             return new ResponseEntity<>(report, HttpStatus.CREATED);
         } else {
@@ -496,7 +496,7 @@ public class DirectoryApi {
             dataManager.flush();
             BatchOpsMetadataReindexer r =
                 new BatchOpsMetadataReindexer(dataManager, listOfRecordInternalId);
-            r.process();
+            r.process(settingManager.getSiteId());
             report.close();
             return new ResponseEntity<>(report, HttpStatus.CREATED);
         } else {
@@ -714,7 +714,7 @@ public class DirectoryApi {
             ));
 
             BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, listOfRecordInternalId);
-            r.process();
+            r.process(settingManager.getSiteId());
 
             errors.forEach((k, v) ->
                 report.addError(v)

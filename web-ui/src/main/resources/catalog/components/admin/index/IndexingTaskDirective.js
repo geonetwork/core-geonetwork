@@ -111,8 +111,8 @@
    * <gn-indexing-tasks-container />
    */
   module.directive('gnIndexingTasksContainer', [
-    '$http',
-    function ($http) {
+    '$http', 'gnConfig',
+    function ($http, gnConfig) {
       return {
         restrict: 'E',
         scope: {},
@@ -128,7 +128,9 @@
             var me = this;
 
             this.refresh = function () {
-              $http.get('../../jolokia/read/geonetwork:name=indexing-task,idx=*')
+              $http.get('../../jolokia/read/'
+                + 'geonetwork-' + gnConfig['system.site.siteId']
+                + ':name=indexing-task,idx=*')
                 .then(function (result) {
                   //console.log(result);
                   me.tasks.length = 0;
