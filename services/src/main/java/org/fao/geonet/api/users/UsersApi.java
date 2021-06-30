@@ -604,10 +604,13 @@ public class UsersApi {
             throw new UserNotFoundEx(Integer.toString(userIdentifier));
         }
 
-        PasswordEncoder encoder = PasswordUtil.encoder(ApplicationContextHolder.get());
+        // If the user is the current users then the user needs to know the old password. (even if the user is an administrator changing their own password)
+        if (myUserId.equals(Integer.toString(userIdentifier))) {
+            PasswordEncoder encoder = PasswordUtil.encoder(ApplicationContextHolder.get());
 
-        if (!encoder.matches(passwordResetDto.getPasswordOld(), user.get().getPassword())) {
-            throw new IllegalArgumentException("The old password is not valid");
+            if (!encoder.matches(passwordResetDto.getPasswordOld(), user.get().getPassword())) {
+                throw new IllegalArgumentException("The old password is not valid");
+            }
         }
 
         String passwordHash = PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
