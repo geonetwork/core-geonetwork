@@ -1587,8 +1587,12 @@
 
                   // Append * for like search
                   scope.updateParams = function() {
-                    scope.searchObj.params.any =
-                        '*' + scope.searchObj.any + '*';
+                    var addWildcard = scope.searchObj.any.indexOf('"') === -1
+                      && scope.searchObj.any.indexOf('*') === -1
+                      && scope.searchObj.any.indexOf('q(') !== 0;
+                    scope.searchObj.params.any = addWildcard
+                      ? '*' + scope.searchObj.any + '*'
+                      : scope.searchObj.any;
                   };
 
                   /**
@@ -1731,8 +1735,12 @@
                     if (scope.searchObj.any == '') {
                       scope.$broadcast('resetSearch');
                     } else {
-                      scope.searchObj.params.any =
-                      '*' + scope.searchObj.any + '*';
+                      var addWildcard = scope.searchObj.any.indexOf('"') === -1
+                        && scope.searchObj.any.indexOf('*') === -1
+                        && scope.searchObj.any.indexOf('q(') !== 0;
+                      scope.searchObj.params.any = addWildcard
+                        ? '*' + scope.searchObj.any + '*'
+                        : scope.searchObj.any;
                     }
                   };
 
