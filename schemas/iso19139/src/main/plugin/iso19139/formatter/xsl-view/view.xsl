@@ -361,7 +361,29 @@
        gco:Angle|gmx:FileName|
        gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
        gco:LocalName|gmd:PT_FreeText|
-       gco:Date|gco:DateTime|*/@codeListValue]|*[gts:TM_PeriodDuration != '']"
+       gco:Date|gco:DateTime|*[gts:TM_PeriodDuration != '']"
+                priority="50">
+    <xsl:param name="fieldName" select="''" as="xs:string"/>
+
+    <xsl:if test="normalize-space(string-join(*, '')) != ''">
+      <dl>
+        <dt>
+          <xsl:call-template name="render-field-label">
+            <xsl:with-param name="fieldName" select="$fieldName"/>
+            <xsl:with-param name="languages" select="$allLanguages"/>
+          </xsl:call-template>
+        </dt>
+        <dd><xsl:comment select="name()"/>
+          <xsl:apply-templates mode="render-value" select="*|*/@codeListValue"/>
+          <xsl:apply-templates mode="render-value" select="@*"/>
+        </dd>
+      </dl>
+    </xsl:if>
+  </xsl:template>
+
+  <!-- Codelist elements -->
+  <xsl:template mode="render-field"
+                match="*[*/@codeListValue]"
                 priority="50">
     <xsl:param name="fieldName" select="''" as="xs:string"/>
 
@@ -374,7 +396,14 @@
           </xsl:call-template>
         </dt>
         <dd><xsl:comment select="name()"/>
-          <xsl:apply-templates mode="render-value" select="*|*/@codeListValue"/>
+          <xsl:choose>
+            <xsl:when test="normalize-space(*/@codeListValue) != ''">
+              <xsl:apply-templates mode="render-value" select="*/@codeListValue"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates mode="render-value" select="*"/>
+            </xsl:otherwise>
+          </xsl:choose>
           <xsl:apply-templates mode="render-value" select="@*"/>
         </dd>
       </dl>
