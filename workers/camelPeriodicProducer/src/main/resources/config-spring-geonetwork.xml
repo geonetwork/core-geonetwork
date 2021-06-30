@@ -28,8 +28,21 @@
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+  <bean id="schedulerFactory"
+        class="org.quartz.impl.StdSchedulerFactory">
+    <constructor-arg name="props">
+      <props>
+        <prop key="org.quartz.scheduler.instanceName">geonetwork-harvest-wfs</prop>
+        <prop key="org.quartz.threadPool.threadCount">2</prop>
+      </props>
+    </constructor-arg>
+  </bean>
+
+  <bean class="org.apache.camel.component.quartz2.QuartzComponent">
+    <property name="schedulerFactory" ref="schedulerFactory"/>
+  </bean>
+
   <bean class="org.fao.geonet.camelPeriodicProducer.MessageProducerFactory"/>
-  <bean class="org.apache.camel.component.quartz2.QuartzComponent"/>
   <bean class="org.fao.geonet.camelPeriodicProducer.MessageProducerService"/>"
 
 </beans>

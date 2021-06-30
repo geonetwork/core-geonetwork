@@ -110,17 +110,19 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
         return inError.intValue();
     }
 
-    public void process(boolean runInCurrentThread) throws Exception {
-        wrapAsyncProcess(runInCurrentThread);
+    public void process(String catalogueId, boolean runInCurrentThread) throws Exception {
+        wrapAsyncProcess(catalogueId, runInCurrentThread);
         allCompleted.get();
     }
 
-    public void process() throws Exception {
-        process(false);
+    public void process(String catalogueId) throws Exception {
+        process(catalogueId, false);
     }
 
-    public String wrapAsyncProcess(boolean runInCurrentThread) throws Exception {
-        probeName = new ObjectName(String.format("geonetwork:name=indexing-task,idx=%s", this.hashCode()));
+    public String wrapAsyncProcess(String catalogueId, boolean runInCurrentThread) throws Exception {
+        probeName = new ObjectName(String.format(
+            "geonetwork-%s:name=indexing-task,idx=%s",
+            catalogueId, this.hashCode()));
         exporter.registerManagedResource(this, probeName);
         return processAsync(runInCurrentThread);
     }

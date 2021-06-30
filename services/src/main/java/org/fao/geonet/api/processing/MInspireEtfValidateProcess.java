@@ -60,14 +60,18 @@ public class MInspireEtfValidateProcess implements SelfNaming {
     private long analyseMdDate = Long.MAX_VALUE;
 
 
-    public MInspireEtfValidateProcess(String URL,
-                                      ServiceContext serviceContext, ApplicationContext appContext) {
+    public MInspireEtfValidateProcess(String catalogueId,
+                                      String URL,
+                                      ServiceContext serviceContext,
+                                      ApplicationContext appContext) {
         this.URL = URL;
         this.serviceContext = serviceContext;
         this.appContext = appContext;
 
         try {
-            this.probeName = new ObjectName(String.format("geonetwork:name=batch-etf-inspire,idx=%s", this.hashCode()));
+            this.probeName = new ObjectName(String.format(
+                "geonetwork-%s:name=batch-etf-inspire,idx=%s",
+                catalogueId, this.hashCode()));
         } catch (MalformedObjectNameException e) {
             e.printStackTrace();
         }

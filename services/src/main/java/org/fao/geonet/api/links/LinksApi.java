@@ -45,6 +45,7 @@ import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.url.UrlAnalyzer;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -105,13 +106,15 @@ public class LinksApi {
     MBeanExporter mBeanExporter;
     @Autowired
     AccessManager accessManager;
+    @Autowired
+    SettingManager settingManager;
 
     private ArrayDeque<SelfNaming> mAnalyseProcesses = new ArrayDeque<>(NUMBER_OF_SUBSEQUENT_PROCESS_MBEAN_TO_KEEP);
 
     @PostConstruct
     public void iniMBeansSlidingWindowWithEmptySlot() {
         for (int i = 0; i < NUMBER_OF_SUBSEQUENT_PROCESS_MBEAN_TO_KEEP; i++) {
-            EmptySlot emptySlot = new EmptySlot(i);
+            EmptySlot emptySlot = new EmptySlot(settingManager.getSiteId(), i);
             mAnalyseProcesses.addFirst(emptySlot);
             try {
                 mBeanExporter.registerManagedResource(emptySlot, emptySlot.getObjectName());
@@ -364,7 +367,11 @@ public class LinksApi {
     }
 
     private MAnalyseProcess getRegistredMAnalyseProcess() {
-        MAnalyseProcess mAnalyseProcess = new MAnalyseProcess(linkRepository, metadataRepository, urlAnalyser, appContext);
+        MAnalyseProcess mAnalyseProcess = new MAnalyseProcess(
+            settingManager.getSiteId(),
+            linkRepository,
+            metadataRepository,
+            urlAnalyser, appContext);
         mBeanExporter.registerManagedResource(mAnalyseProcess, mAnalyseProcess.getObjectName());
         try {
             mBeanExporter.unregisterManagedResource(mAnalyseProcesses.removeLast().getObjectName());

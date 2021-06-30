@@ -53,7 +53,7 @@ public abstract class MetadataIndexerProcessor {
         this.dm = dm;
     }
 
-    public abstract void process() throws Exception;
+    public abstract void process(String catalogueId) throws Exception;
 
     protected DataManager getDataManager() {
         return dm;
