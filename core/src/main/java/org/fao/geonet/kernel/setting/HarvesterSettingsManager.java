@@ -216,7 +216,12 @@ public class HarvesterSettingsManager {
      * When adding to a newly created node, path must be 'id:...'.
      */
     public String add(String path, Object name, Object value) {
-        if (name == null)
+        return add(path, name, value, false);
+    }
+
+    public String add(String path, Object name, Object value, boolean encrypted) {
+
+            if (name == null)
             throw new IllegalArgumentException("Name cannot be null");
 
         String sName = makeString(name);
@@ -231,7 +236,8 @@ public class HarvesterSettingsManager {
         if (parent == null)
             return null;
 
-        HarvesterSetting child = new HarvesterSetting().setParent(parent).setName(sName).setValue(sValue);
+        HarvesterSetting child = new HarvesterSetting().setParent(parent)
+            .setName(sName).setValue(sValue).setEncrypted(encrypted);
 
         settingsRepo.save(child);
         return Integer.toString(child.getId());

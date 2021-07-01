@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -21,28 +21,28 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
+package org.fao.geonet.api.users.validation;
+
+import org.fao.geonet.api.users.PasswordUpdateParameter;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+
 
 /**
- * Domain objects geonetwork.  These are JPA entities and are configured via javax.persistence
- * annotations.
+ * Validator for PasswordUpdateParameter.
  *
- * @author Jesse
  */
-@TypeDefs
-    ({
-        @TypeDef(
-            name="encryptedString",
-            typeClass= EncryptedStringType.class,
-            parameters={
-                @Parameter(name="encryptorRegisteredName",
-                    value="STRING_ENCRYPTOR")
-            }
-        )
-    })
+public class PasswordUpdateParameterValidator implements Validator {
 
-package org.fao.geonet.domain;
+    @Override
+    public boolean supports(Class<?> clazz) {
+        return PasswordUpdateParameter.class.isAssignableFrom(clazz);
+    }
 
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.jasypt.hibernate4.type.EncryptedStringType;
+    @Override
+    public void validate(Object target, Errors errors) {
+        PasswordUpdateParameter passwordUpdate = (PasswordUpdateParameter) target;
+
+        PasswordValidationUtils.rejectIfInvalid(errors, passwordUpdate.getPassword());
+    }
+}

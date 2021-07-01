@@ -113,7 +113,7 @@ public class SourcesController {
     }
 
     public void updateNormalSource(String uuid, final HttpServletRequest request) {
-        final HarvesterSetting harvesterUuidSetting = harvesterSettingRepository.findOneByNameAndValue("uuid", uuid);
+        final HarvesterSetting harvesterUuidSetting = harvesterSettingRepository.findOneByNameAndStoredValue("uuid", uuid);
         final String translationsIdPath;
         if (harvesterUuidSetting != null) {
             HarvesterSetting harvesterSite = harvesterUuidSetting.getParent();

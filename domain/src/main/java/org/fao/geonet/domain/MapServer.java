@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -24,12 +24,10 @@
 package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.MapServerEntityListenerManager;
+import org.hibernate.annotations.Type;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.persistence.*;
 
-import java.util.Map;
 
 /**
  * An entity representing mapserver used for publishing records as WMS, WFS, WCS.
@@ -38,6 +36,7 @@ import java.util.Map;
  *
  * @author Francois
  */
+
 @Entity
 @Table(name = "Mapservers")
 @Cacheable
@@ -232,6 +231,7 @@ public class MapServer extends GeonetEntity {
      * @return the password.
      */
     @Column(length = 128)
+    @Type(type="encryptedString")
     public String getPassword() {
         return _password;
     }

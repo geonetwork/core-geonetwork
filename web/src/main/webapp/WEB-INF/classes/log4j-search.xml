@@ -30,6 +30,9 @@
     <appender-ref ref="consoleAppender"/>
     <appender-ref ref="fileAppender"/>
   </logger>
+  <logger name="geonetwork.encryptor">
+    <level value="INFO"/>
+  </logger>
   <logger name="geonetwork.search" additivity="true">
     <level value="DEBUG"/>
   </logger>

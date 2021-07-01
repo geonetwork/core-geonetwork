@@ -31,7 +31,11 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.api.users.model.PasswordResetDto;
 import org.fao.geonet.api.users.model.UserDto;
+import org.fao.geonet.api.users.validation.PasswordResetDtoValidator;
+import org.fao.geonet.api.users.validation.UserDtoValidator;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.UserNotFoundEx;
@@ -49,7 +53,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,6 +82,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -94,6 +102,11 @@ import static org.springframework.data.jpa.domain.Specifications.where;
     description = "User operations")
 @Controller("users")
 public class UsersApi {
+    /**
+     * Username pattern with allowed chars. Username may only contain alphanumeric characters or single hyphens,
+     * single at signs or single dots. Cannot begin or end with a hyphen, at sign or dot.
+     */
+    private static final String USERNAME_PATTERN = "^[a-zA-Z0-9]+([-_.@]?[a-zA-Z0-9]+)*$";
 
     @Autowired
     SettingManager settingManager;
@@ -112,6 +125,9 @@ public class UsersApi {
 
     @Autowired
     DataManager dataManager;
+
+    @Autowired
+    LanguageUtils languageUtils;
 
     private BufferedImage pixel;
 
@@ -320,7 +336,7 @@ public class UsersApi {
         // this is the case
         if (dataManager.isUserMetadataOwner(userIdentifier)) {
             IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
-            final long numUserRecords =  metadataRepository.count(MetadataSpecs.isOwnedByUser(userIdentifier));
+            final long numUserRecords = metadataRepository.count(MetadataSpecs.isOwnedByUser(userIdentifier));
             throw new IllegalArgumentException(
                 String.format(
                     "Cannot delete a user that is also metadata owner of %d record(s) (can be records, templates, subtemplates). Change owner of those records or remove them first.",
@@ -407,6 +423,8 @@ public class UsersApi {
         @RequestBody
             UserDto userDto,
         @ApiIgnore
+            BindingResult bindingResult,
+        @ApiIgnore
             ServletRequest request,
         @ApiIgnore
             HttpSession httpSession
@@ -414,6 +432,9 @@ public class UsersApi {
         Profile profile = Profile.findProfileIgnoreCase(userDto.getProfile());
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
+
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
         if (profile == Profile.Administrator) {
             checkIfAtLeastOneAdminIsEnabled(userDto, userRepository);
@@ -427,11 +448,20 @@ public class UsersApi {
                     + " max profile permitted is: " + myProfile);
         }
 
-        if (StringUtils.isEmpty(userDto.getUsername())) {
-            throw new IllegalArgumentException(Params.USERNAME
-                + " is a required parameter for "
-                + Params.Operation.NEWUSER + " " + "operation");
+        // Validate userDto data
+        UserDtoValidator userValidator = new UserDtoValidator();
+        userValidator.validate(userDto, bindingResult);
+        String errorMessage = ApiUtils.processRequestValidation(bindingResult, messages);
+        if (StringUtils.isNotEmpty(errorMessage)) {
+            throw new IllegalArgumentException(errorMessage);
         }
+
+       if (!userDto.getUsername().matches(USERNAME_PATTERN)) {
+           throw new IllegalArgumentException(Params.USERNAME
+               + " may only contain alphanumeric characters or single hyphens, single at signs or single dots. "
+               + "Cannot begin or end with a hyphen, at sign or dot."
+              );
+       }
 
         List<User> existingUsers = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
         if (!existingUsers.isEmpty()) {
@@ -519,6 +549,12 @@ public class UsersApi {
                 "Another user with username '%s' ignore case already exists", user.getUsername()));
         }
 
+        if (!userDto.getUsername().matches(USERNAME_PATTERN)) {
+            throw new IllegalArgumentException(Params.USERNAME
+                + " may only contain alphanumeric characters or single hyphens, single at signs or single dots. "
+                + "Cannot begin or end with a hyphen, at sign or dot."
+            );
+        }
 
         if (!myProfile.getAll().contains(profile)) {
             throw new IllegalArgumentException(
@@ -590,22 +626,25 @@ public class UsersApi {
         )
         @PathVariable
             Integer userIdentifier,
-        @ApiParam(
-            value = "Password to change."
-        )
-        @RequestParam(value = Params.PASSWORD) String password,
-        @ApiParam(
-            value = "Password to change (repeat)."
-        )
-        @RequestParam(value = Params.PASSWORD + "2") String password2,
+        @RequestBody
+            PasswordResetDto passwordResetDto,
+        @ApiIgnore
+            BindingResult bindingResult,
         @ApiIgnore
             ServletRequest request,
         @ApiIgnore
             HttpSession httpSession
     ) throws Exception {
 
-        if (!password.equals(password2)) {
-            throw new IllegalArgumentException("Passwords should be equal");
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
+        // Validate passwordResetDto data
+        PasswordResetDtoValidator passwordResetValidator = new PasswordResetDtoValidator();
+        passwordResetValidator.validate(passwordResetDto, bindingResult);
+        String errorMessage = ApiUtils.processRequestValidation(bindingResult, messages);
+        if (StringUtils.isNotEmpty(errorMessage)) {
+            throw new IllegalArgumentException(errorMessage);
         }
 
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -621,8 +660,14 @@ public class UsersApi {
             throw new UserNotFoundEx(Integer.toString(userIdentifier));
         }
 
+        PasswordEncoder encoder = PasswordUtil.encoder(ApplicationContextHolder.get());
+
+        if (!encoder.matches(passwordResetDto.getPasswordOld(), user.getPassword())) {
+            throw new IllegalArgumentException("The old password is not valid");
+        }
+
         String passwordHash = PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
-            password);
+            passwordResetDto.getPassword());
         user.getSecurity().setPassword(passwordHash);
         user.getSecurity().getSecurityNotifications().remove(UserSecurityNotification.UPDATE_HASH_REQUIRED);
         userRepository.save(user);
@@ -883,8 +928,8 @@ public class UsersApi {
 
 class GroupElem {
 
-    private String profile;
-    private Integer id;
+    private final String profile;
+    private final Integer id;
 
     public GroupElem(String profile, Integer id) {
         this.id = id;
