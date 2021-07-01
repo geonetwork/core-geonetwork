@@ -227,7 +227,7 @@
            */
           var getLabelOffsetForGeomType = function(drawType) {
             if (drawType === 'point') {
-              return {'x': 20 , 'y': 20};
+              return {'x': 0 , 'y': 20};
             }
             return {'x': 0 , 'y': 0 }; // default
 
@@ -249,6 +249,7 @@
               offsetY: offsetValues.y,
               offsetX: offsetValues.x,
               text: styleCfg.text.text,
+              textAlign: 'center',
               fill: new ol.style.Fill({
                 color: getColorFromDrawType(drawType, styleCfg)
               }),
@@ -400,10 +401,12 @@
           }, {
             interaction: drawPolygon,
             label: 'Polygon'
-          }, /*{
-            interaction: drawText,
-            label: 'Text'
-          }*/];
+          // SEXTANT SPECIFIC
+          // }, {
+          //   interaction: drawText,
+          //   label: 'Text'
+          // END SEXTANT SPECIFIC
+          }];
 
           // Manage selection
           var select = new ol.interaction.Select({

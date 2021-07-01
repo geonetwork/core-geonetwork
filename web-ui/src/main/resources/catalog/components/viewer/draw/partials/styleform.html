@@ -31,14 +31,14 @@
     <div class="form-group">
       <label class="col-xs-4"
              for="gn-draw-radius-input">
-        {{'Annotation'|translate}}
+        {{'textInput'|translate}}
       </label>
       <div class="col-xs-7">
         <textarea type="text"
                id="gn-draw-text-input-point"
                class="form-control input-sm"
                data-ng-model="style.text.text"
-               placeholder="{{'Annotation'|translate}}">
+               placeholder="{{'textInput'|translate}}">
           </textarea>
       </div>
     </div>
@@ -76,14 +76,14 @@
       <label class="col-xs-4"
              id="gn-draw-text-value-line"
              for="gn-draw-radius-input">
-        {{'Annotation'|translate}}
+        {{'textInput'|translate}}
       </label>
       <div class="col-xs-7">
         <textarea
                id="gn-draw-text-line-input"
                class="form-control input-sm"
                data-ng-model="style.text.text"
-               placeholder="{{'Annotation'|translate}}">
+               placeholder="{{'textInput'|translate}}">
         </textarea>
       </div>
     </div>
@@ -132,14 +132,14 @@
       <label class="col-xs-4"
              id="gn-draw-text-value-ply"
              for="gn-draw-radius-input">
-        {{'Annotation'|translate}}
+        {{'textInput'|translate}}
       </label>
       <div class="col-xs-7">
         <textarea type="text"
                id="gn-draw-text-ply-input"
                class="form-control input-sm"
                data-ng-model="style.text.text"
-               placeholder="{{'Annotation'|translate}}">
+               placeholder="{{'textInput'|translate}}">
           </textarea>
       </div>
     </div>
@@ -149,9 +149,9 @@
   <div data-ng-if="getType() == 'text'">
     <div class="form-group">
       <div class="col-xs-12">
-        <label >{{'Annotation'|translate}}
+        <label >{{'textInput'|translate}}
           <input class="form-control" ng-model="style.text.text"
-                 placeholder="{{'Annotation'|translate}}"
+                 placeholder="{{'textInput'|translate}}"
                  title="{{'tipDrawText'|translate}}">
         </label>
       </div>

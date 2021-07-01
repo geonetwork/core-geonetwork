@@ -107,5 +107,6 @@
   "ui-settings-sextant": "Configuration spécifique Sextant",
   "addAnnotations": "Associer des annotations",
   "panierDrawBbox": "Dessiner une emprise pour l'extraction",
-  "panierDataExtent": "Emprise de la donnée"
+  "panierDataExtent": "Emprise de la donnée",
+  "textInput": "Annotation"
 }
