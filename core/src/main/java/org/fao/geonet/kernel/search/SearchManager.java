@@ -1246,7 +1246,8 @@ public class SearchManager implements ISearchManager {
                 synchronized (_tracker) {
                     setupIndex(true);
                 }
-                dataMan.init(context, true);
+                //dataMan.init(context, true);
+                dataMan.refreshIndex(true);
             }
             return true;
         } catch (Exception e) {

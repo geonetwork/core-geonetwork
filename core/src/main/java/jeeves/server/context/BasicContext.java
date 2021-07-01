@@ -43,9 +43,8 @@ import javax.persistence.EntityManager;
 //=============================================================================
 
 /**
- * Contains a minimun context for a job execution (schedule, service etc...)
+ * Contains a minimum context for a job execution (schedule, service etc...)
  */
-
 public class BasicContext implements Logger {
 
     private final ConfigurableApplicationContext jeevesApplicationContext;
@@ -116,6 +115,12 @@ public class BasicContext implements Logger {
     @Nonnull
     <T> T getBean(Class<T> beanType) {
         return jeevesApplicationContext.getBean(beanType);
+    }
+
+    public
+    @Nonnull
+    <T> T getBean(String name, Class<T> beanType) {
+        return jeevesApplicationContext.getBean(name, beanType);
     }
 
     //--------------------------------------------------------------------------

@@ -145,6 +145,7 @@ public class Register extends AbstractFormatService {
             return response;
         } finally {
             IO.deleteFile(uploadedFile, false, Geonet.FORMATTER);
+            context.clear();
         }
     }
 

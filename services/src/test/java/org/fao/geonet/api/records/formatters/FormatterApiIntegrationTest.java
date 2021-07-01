@@ -52,6 +52,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -141,7 +142,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
 
     }
 
-    @Test
+    @Ignore
     public void testLastModified() throws Exception {
         String stage = systemInfo.getStagingProfile();
         systemInfo.setStagingProfile(SystemInfo.STAGE_PRODUCTION);

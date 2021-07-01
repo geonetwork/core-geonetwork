@@ -392,6 +392,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         FormatType formatType = FormatType.valueOf(type.toLowerCase());
         final ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
+
+      try {
         if (metadata == null) {
             metadata = getXmlFromUrl(context, lang, url, request);
         }
@@ -412,6 +414,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
 
         writeOutResponse(context, "", lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
+      } finally {
+          context.clear(); // prevent further use
+      }
     }
 
     /**
@@ -473,6 +478,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         String resolvedId = resolveId(id, uuid);
         ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
+      try {
+        // context used as a parameter, not set as threadlocal
+
         Lib.resource.checkPrivilege(context, resolvedId, ReservedOperation.view);
 
         final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
@@ -519,6 +527,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
             writeOutResponse(context, resolvedId, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
+      } finally {
+          context.clear();
+      }
     }
 
     private void writeOutResponse(ServiceContext context, String metadataUuid, String lang, HttpServletResponse response, FormatType formatType, byte[] formattedMetadata) throws Exception {
@@ -604,6 +615,17 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return createFormatterAndParams(key.lang, key.formatType, key.formatterId, key.width, request, context, metadata, metadataInfo);
     }
 
+    /**
+     * Service context for metadata.formatter.
+     *
+     * When creating a service context you are responsible for managing on the current thread and any cleanup.
+     *
+     * The serviceContext is creating using the ApplicationContext from {@link ApplicationContextHolder}.
+     * @param lang la
+     * @param type
+     * @param request
+     * @return service context for metadat.formatter
+     */
     private ServiceContext createServiceContext(String lang, FormatType type, HttpServletRequest request) {
         final ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
         return serviceManager.createServiceContext("metadata.formatter" + type, lang, request);
@@ -827,6 +849,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         public StoreInfoAndDataLoadResult call() throws Exception {
             serviceContext.setAsThreadLocal();
 
+          try {
+
             Pair<FormatterImpl, FormatterParams> result =
                 loadMetadataAndCreateFormatterAndParams(serviceContext, key, request);
             FormatterImpl formatter = result.one();
@@ -846,6 +870,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                 loadWithheld = new FormatMetadata(serviceContext, withheldKey, request);
             }
             return new StoreInfoAndDataLoadResult(bytes, changeDate, isPublishedMd, withheldKey, loadWithheld);
+          } finally {
+              serviceContext.clear();
+          }
         }
     }
 }

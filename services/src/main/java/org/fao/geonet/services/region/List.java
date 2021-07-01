@@ -155,6 +155,8 @@ public class List {
         ServiceContext context = serviceManager.createServiceContext("regions.list", lang, nativeRequest);
         Collection<RegionsDAO> daos = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
 
+     try {
+
         long lastModified = -1;
         for (RegionsDAO dao : daos) {
             if (dao.includeInListing()) {
@@ -186,6 +188,10 @@ public class List {
         nativeResponse.setHeader("Cache-Control", "no-cache");
 
         return new ListRegionsResponse(regions);
+
+      } finally {
+          context.clear();
+      }
     }
 
 }

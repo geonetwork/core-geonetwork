@@ -160,55 +160,60 @@ public class GetRelated implements Service, RelatedMetadata {
         IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
 
         final ServiceContext context = serviceManager.createServiceContext("xml.relation", lang, request);
+        // context used as parameter, not set as threadlocale
+        try {
+            AbstractMetadata md;
+            if (id != null) {
+                md = metadataRepository.findOne(id);
 
-        AbstractMetadata md;
-        if (id != null) {
-            md = metadataRepository.findOne(id);
+                if (md == null) {
+                    throw new IllegalArgumentException("No Metadata found with id " + id);
+                }
+            } else {
+                md = metadataRepository.findOneByUuid(uuid);
 
-            if (md == null) {
-                throw new IllegalArgumentException("No Metadata found with id " + id);
+                if (md == null) {
+                    throw new IllegalArgumentException("No Metadata found with uuid " + uuid);
+                }
             }
-        } else {
-            md = metadataRepository.findOneByUuid(uuid);
+            id = md.getId();
+            uuid = md.getUuid();
 
-            if (md == null) {
-                throw new IllegalArgumentException("No Metadata found with uuid " + uuid);
+            Element raw = new Element("root").addContent(Arrays.asList(
+                new Element("gui").addContent(Arrays.asList(
+                    new Element("language").setText(lang),
+                    new Element("url").setText(context.getBaseUrl())
+                )),
+                getRelated(context, id, uuid, type, from, to, fast)
+            ));
+
+            Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
+
+            final Element transform = Xml.transform(raw, relatedXsl);
+            final Set<String> acceptContentType = Sets.newHashSet(Iterators.forEnumeration(request.getHeaders("Accept")));
+
+            byte[] response;
+            String contentType;
+            if (acceptsType(acceptContentType, "json")) {
+                response = Xml.getJSON(transform).getBytes(Constants.CHARSET);
+                contentType = "application/json";
+            } else if (acceptContentType.isEmpty() ||
+                acceptsType(acceptContentType, "xml") ||
+                acceptContentType.contains("*/*") ||
+                acceptContentType.contains("text/plain")) {
+                response = Xml.getString(transform).getBytes(Constants.CHARSET);
+                contentType = "application/xml";
+            } else {
+                throw new IllegalArgumentException(acceptContentType + " is not supported");
             }
+
+            MultiValueMap<String, String> headers = new HttpHeaders();
+            headers.add("Content-Type", contentType);
+
+            return new HttpEntity<>(response, headers);
+        } finally {
+            context.clear();
         }
-        id = md.getId();
-        uuid = md.getUuid();
-
-        Element raw = new Element("root").addContent(Arrays.asList(
-            new Element("gui").addContent(Arrays.asList(
-                new Element("language").setText(lang),
-                new Element("url").setText(context.getBaseUrl())
-            )),
-            getRelated(context, id, uuid, type, from, to, fast)
-        ));
-        Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
-
-        final Element transform = Xml.transform(raw, relatedXsl);
-        final Set<String> acceptContentType = Sets.newHashSet(Iterators.forEnumeration(request.getHeaders("Accept")));
-
-        byte[] response;
-        String contentType;
-        if (acceptsType(acceptContentType, "json")) {
-            response = Xml.getJSON(transform).getBytes(Constants.CHARSET);
-            contentType = "application/json";
-        } else if (acceptContentType.isEmpty() ||
-            acceptsType(acceptContentType, "xml") ||
-            acceptContentType.contains("*/*") ||
-            acceptContentType.contains("text/plain")) {
-            response = Xml.getString(transform).getBytes(Constants.CHARSET);
-            contentType = "application/xml";
-        } else {
-            throw new IllegalArgumentException(acceptContentType + " is not supported");
-        }
-
-        MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.add("Content-Type", contentType);
-
-        return new HttpEntity<>(response, headers);
     }
 
     private boolean acceptsType(Set<String> acceptContentType, String toCheck) {

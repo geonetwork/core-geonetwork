@@ -1,6 +1,31 @@
+//=============================================================================
+//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.kernel.datamanager;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -22,25 +47,24 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 /**
- * Utility interface for records
- * 
- * @author delawen
+ * Utility interface for working with records.
  *
+ * @author delawen
  */
 public interface IMetadataUtils {
 
     /**
      * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
-     * 
+     *
      * @param context
      * @param force
      * @throws Exception
      */
-    public void init(ServiceContext context, Boolean force) throws Exception;
+    public void init(ServiceContext context) throws Exception;
 
     /**
      * Notify a metadata modification
-     * 
+     *
      * @param md
      * @param metadataId
      * @throws Exception
@@ -49,7 +73,7 @@ public interface IMetadataUtils {
 
     /**
      * Return the uuid of the record with the defined id
-     * 
+     *
      * @param id
      * @return
      * @throws Exception
@@ -90,7 +114,7 @@ public interface IMetadataUtils {
 
     /**
      * Extract the last editing date from the record
-     * 
+     *
      * @param schema
      * @param md
      * @return
@@ -100,7 +124,7 @@ public interface IMetadataUtils {
 
     /**
      * Modify the UUID of a record. Uses the proper XSL transformation from the schema
-     * 
+     *
      * @param schema
      * @param uuid
      * @param md
@@ -111,7 +135,7 @@ public interface IMetadataUtils {
 
     /**
      * Returns the summary of the md record
-     * 
+     *
      * @param md
      * @return
      * @throws Exception
@@ -120,7 +144,7 @@ public interface IMetadataUtils {
 
     /**
      * Returns the identifier of the record with uuid uuid
-     * 
+     *
      * @param uuid
      * @return
      * @throws Exception
@@ -129,14 +153,14 @@ public interface IMetadataUtils {
 
     /**
      * Returns the version of the record with identifier id
-     * 
+     *
      * @param id
      * @return
      */
     String getVersion(String id);
 
     /**
-     * 
+     *
      * Returns the version of a metadata, incrementing it if necessary.
      *
      * @param id
@@ -146,7 +170,7 @@ public interface IMetadataUtils {
 
     /**
      * Mark a record as template (or not)
-     * 
+     *
      * @param id
      * @param metadataType
      * @throws Exception
@@ -155,7 +179,7 @@ public interface IMetadataUtils {
 
     /**
      * Mark a record as template (or not)
-     * 
+     *
      * @param id
      * @param metadataType
      * @throws Exception
@@ -164,7 +188,7 @@ public interface IMetadataUtils {
 
     /**
      * Mark a record as harvested
-     * 
+     *
      * @param id
      * @param harvestUuid
      * @throws Exception
@@ -173,7 +197,7 @@ public interface IMetadataUtils {
 
     /**
      * Mark a record as harvested
-     * 
+     *
      * @param id
      * @param harvestUuid
      * @throws Exception
@@ -182,7 +206,7 @@ public interface IMetadataUtils {
 
     /**
      * Mark a record as harvested from the harvestUri
-     * 
+     *
      * @param id
      * @param harvestUuid
      * @throws Exception
@@ -201,7 +225,7 @@ public interface IMetadataUtils {
 
     /**
      * Increases the popularity of the record defined by the id
-     * 
+     *
      * @param srvContext
      * @param id
      * @throws Exception
@@ -244,7 +268,7 @@ public interface IMetadataUtils {
 
     /**
      * Returns the thumbnails associated to the record with id metadataId
-     * 
+     *
      * @param context
      * @param metadataId
      * @return
@@ -254,7 +278,7 @@ public interface IMetadataUtils {
 
     /**
      * Add thumbnail to the record defined with the id
-     * 
+     *
      * @param context
      * @param id
      * @param small
@@ -265,7 +289,7 @@ public interface IMetadataUtils {
 
     /**
      * Remove thumbnail from the record defined with the id
-     * 
+     *
      * @param context
      * @param id
      * @param small
@@ -276,7 +300,7 @@ public interface IMetadataUtils {
 
     /**
      * Add data commons to the record defined with the id
-     * 
+     *
      * @param context
      * @param id
      * @param small
@@ -288,7 +312,7 @@ public interface IMetadataUtils {
 
     /**
      * Add creative commons to the record defined with the id
-     * 
+     *
      * @param context
      * @param id
      * @param small
@@ -300,7 +324,7 @@ public interface IMetadataUtils {
 
     /**
      * Helper function to prevent loop dependency
-     * 
+     *
      * @param metadataManager
      */
     void setMetadataManager(IMetadataManager metadataManager);
@@ -324,7 +348,7 @@ public interface IMetadataUtils {
 
     /**
      * Count how many records are associated to a user
-     * 
+     *
      * @param ownedByUser
      * @return
      */
@@ -332,7 +356,7 @@ public interface IMetadataUtils {
 
     /**
      * Given an identifier, return the record associated to it
-     * 
+     *
      * @param id
      * @return
      */
@@ -340,7 +364,7 @@ public interface IMetadataUtils {
 
     /**
      * Find all the ids of the records that fits the specification
-     * 
+     *
      * @param specs
      * @return
      */
@@ -348,14 +372,14 @@ public interface IMetadataUtils {
 
     /**
      * Count the total number of records available on the platform
-     * 
+     *
      * @return
      */
     public long count();
 
     /**
      * Find the record with the UUID uuid
-     * 
+     *
      * @param firstMetadataId
      * @return
      */
@@ -363,7 +387,7 @@ public interface IMetadataUtils {
 
     /**
      * Find the record that fits the specification
-     * 
+     *
      * @param spec
      * @return
      */
@@ -371,7 +395,7 @@ public interface IMetadataUtils {
 
     /**
      * Find the record that fits the id
-     * 
+     *
      * @param id
      * @return
      */
@@ -388,7 +412,7 @@ public interface IMetadataUtils {
 
     /**
      * Find all the metadata with the identifiers
-     * 
+     *
      * @see org.springframework.data.repository.CrudRepository#findAll(java.lang.Iterable)
      * @param keySet
      * @return
@@ -397,7 +421,7 @@ public interface IMetadataUtils {
 
     /**
      * Returns all entities matching the given {@link Specification}.
-     * 
+     *
      * @param spec
      * @return
      */
@@ -413,7 +437,7 @@ public interface IMetadataUtils {
 
     /**
      * Check if a record with identifier iId exists
-     * 
+     *
      * @param iId
      * @return
      */
@@ -421,7 +445,7 @@ public interface IMetadataUtils {
 
     /**
      * Load all records that satisfy the criteria provided and convert each to XML of the form:
-     * 
+     *
      * <pre>
      *  &lt;entityName&gt;
      *      &lt;property&gt;propertyValue&lt;/property&gt;
@@ -437,7 +461,7 @@ public interface IMetadataUtils {
 
     /**
      * Load all entities that satisfy the criteria provided and convert each to XML of the form:
-     * 
+     *
      * <pre>
      *  &lt;entityName&gt;
      *      &lt;property&gt;propertyValue&lt;/property&gt;
@@ -459,7 +483,7 @@ public interface IMetadataUtils {
      * @return an object for performing statistic calculation queries.
      */
     MetadataReportsQueries getMetadataReports();
-    
+
     /**
      * Check if another record exist with that UUID. This is not allowed
      * and would return a DataIntegrityViolationException

@@ -44,6 +44,19 @@ import javax.persistence.RollbackException;
  * Created by Jesse on 3/10/14.
  */
 public class TransactionManager {
+
+    /**
+     * Used to run a {@link TransactionTask} with appropriate commit, rollback and notifications behaviour.
+     *
+     * @param name Transaction name
+     * @param context Application context
+     * @param transactionRequirement Approach used for execution
+     * @param commitBehavior Approach used for commit
+     * @param readOnly Force rollback behavior
+     * @param action transaction being executed
+     * @param <V> result type
+     * @return result of transaction
+     */
     public static <V> V runInTransaction(String name,
                                          ApplicationContext context,
                                          TransactionRequirement transactionRequirement,
@@ -52,50 +65,100 @@ public class TransactionManager {
                                          final TransactionTask<V> action) {
         final PlatformTransactionManager transactionManager = context.getBean(PlatformTransactionManager.class);
         final Throwable[] exception = new Throwable[1];
-        TransactionStatus transaction = null;
+        TransactionStatus status = null;
         boolean isNewTransaction = false;
-        boolean rolledBack = false;
+        boolean isRolledBack = false;
+        boolean isCommitted = false;
         V result = null;
         try {
             DefaultTransactionDefinition definition = new DefaultTransactionDefinition(transactionRequirement.propagationId);
             definition.setName(name);
             definition.setReadOnly(readOnly);
-            transaction = transactionManager.getTransaction(definition);
-            isNewTransaction = transaction.isNewTransaction();
+            status = transactionManager.getTransaction(definition);
+            isNewTransaction = status.isNewTransaction();
 
             if (isNewTransaction) {
-                Collection<NewTransactionListener> listeners = context.getBeansOfType(NewTransactionListener.class).values();
-                for (NewTransactionListener listener : listeners) {
-                    listener.newTransaction(transaction);
+                try {
+                    fireNewTransaction(context, transactionManager, status);
+                }
+                catch(Throwable t) {
+                    Log.warning(Log.JEEVES, "New transaction:", t);
+                    // warning as we continue with action below
                 }
             }
 
-            result = action.doInTransaction(transaction);
+            result = action.doInTransaction(status);
 
         } catch (Throwable e) {
             Log.error(Log.JEEVES, "Error occurred within a transaction", e);
             if (exception[0] == null) {
                 exception[0] = e;
             }
-            rolledBack = true;
-            doRollback(context, transactionManager, transaction);
+
+            try {
+                doRollback(context, transactionManager, status);
+            }
+            finally {
+                isRolledBack = true;
+            }
         } finally {
             try {
-                if (readOnly) {
-                    doRollback(context, transactionManager, transaction);
-                } else if (!rolledBack && (isNewTransaction || commitBehavior == CommitBehavior.ALWAYS_COMMIT)) {
-                    doCommit(context, transactionManager, transaction);
+                if (readOnly && !isRolledBack) {
+                    try {
+                        doRollback(context, transactionManager, status);
+                    }
+                    finally {
+                        isRolledBack = true;
+                    }
+                } else if (!isRolledBack && (isNewTransaction || commitBehavior == CommitBehavior.ALWAYS_COMMIT)) {
+                    try {
+                        doCommit(context, transactionManager, status);
+                    }
+                    finally {
+                        isCommitted = true;
+                    }
                 }
             } catch (TransactionSystemException e) {
                 if (!(e.getOriginalException() instanceof RollbackException)) {
                     Log.error(Log.JEEVES, "ERROR committing transaction, will try to rollback", e);
-                    doRollback(context, transactionManager, transaction);
+                    if (!isRolledBack) {
+                        try {
+                            doRollback(context, transactionManager, status);
+                        }
+                        finally {
+                            isRolledBack = true;
+                        }
+                    }
                 } else {
                     Log.debug(Log.JEEVES, "ERROR committing transaction, will try to rollback", e);
+                    if (!isRolledBack) {
+                        try {
+                            doRollback(context, transactionManager, status);
+                        }
+                        finally {
+                            isRolledBack = true;
+                        }
+                    }
                 }
             } catch (Throwable t) {
                 Log.error(Log.JEEVES, "ERROR committing transaction, will try to rollback", t);
-                doRollback(context, transactionManager, transaction);
+                if (!isRolledBack) {
+                    try {
+                        doRollback(context, transactionManager, status);
+                    }
+                    finally {
+                        isRolledBack = true;
+                    }
+                }
+            }
+            Log.debug(
+                Log.JEEVES,
+                "Run in transaction completed:" +
+                    (isRolledBack?" rolled back":"") +
+                    (isCommitted?" committed":"")
+            );
+            if( isRolledBack == false && isCommitted == false ){
+                Log.warning(  Log.JEEVES, "Run in transaction did not complete cleanly, transaction not committed or rolledback");
             }
         }
 
@@ -105,57 +168,245 @@ public class TransactionManager {
             } else if (exception[0] instanceof Error) {
                 throw (Error) exception[0];
             } else {
-                throw new RuntimeException(exception[0]);
+                throw new RuntimeException("Run in transaction '"+action+"': "+exception[0].getLocalizedMessage(), exception[0]);
             }
         }
         return result;
     }
 
-    protected static void doCommit(ApplicationContext context, PlatformTransactionManager transactionManager, TransactionStatus transaction) {
-
-        for (BeforeCommitTransactionListener listener : context.getBeansOfType(BeforeCommitTransactionListener.class).values()) {
-            listener.beforeCommit(transaction);
+    /**
+     * Safely perform {@link PlatformTransactionManager#commit(TransactionStatus)}.
+     *
+     * This method is responsible for safely logging any notification failures as warnings, rather than failing outright.
+     *
+     * @param context context used to obtain listeners to notify
+     * @param transactionManager manager responsible for execution
+     * @param status transaction status
+     */
+    protected static void doCommit(ApplicationContext context, PlatformTransactionManager transactionManager, TransactionStatus status) {
+        try {
+            fireBeforeCommit(context, transactionManager, status);
+        }
+        catch( Throwable t ){
+            Log.warning(Log.JEEVES, "Commit transaction - before:", t);
         }
 
-        transactionManager.commit(transaction);
+        if ( status == null || status.isCompleted()){
+            // not calling return here to preserve previous logic
+            // we can check if the following log messages are seen before taking defensive action
+            Log.debug( Log.JEEVES,"transactionManager.commit called unexpectedly when transaction is already completed ");
+        }
 
-        for (AfterCommitTransactionListener listener : context.getBeansOfType(AfterCommitTransactionListener.class).values()) {
-            listener.afterCommit(transaction);
+        try {
+            transactionManager.commit(status);
+        }
+        finally {
+            try {
+                fireAfterCommit(context, transactionManager, status);
+            }
+            catch( Throwable t) {
+                Log.warning(Log.JEEVES, "Commit transaction - after:", t);
+            }
         }
     }
 
+    /**
+     * Notify context AfterCommitTransactionListener instances of transaction status after commit.
+     *
+     * @param context context to obtains listeners from
+     * @param transactionManager manager responsible for execution
+     * @param status transaction status
+     * @throws Throwable
+     */
+    private static void fireAfterCommit(ApplicationContext context,
+                                        PlatformTransactionManager transactionManager,
+                                        @Nullable TransactionStatus status) throws Throwable {
+        Throwable afterCommitFailure = null;
+
+        Collection<AfterCommitTransactionListener> listeners = context.getBeansOfType
+            (AfterCommitTransactionListener.class).values();
+        for (AfterCommitTransactionListener listener : listeners) {
+            try {
+                listener.afterCommit(status);
+            }
+            catch (Throwable t){
+                Log.debug(Log.JEEVES, "Listener "+listener.toString()+" newTransaction callback failed: "+ t);
+                afterCommitFailure = t;
+            }
+        }
+        if (afterCommitFailure != null){
+            throw afterCommitFailure;
+        }
+    }
+
+    /**
+     * Notify context BeforeCommitTransactionListener instances of transaction status change.
+     *
+     * @param context context used to obtain listeners
+     * @param transactionManager manager responsible for execution
+     * @param status transaction status
+     * @throws Throwable
+     */
+    private static void fireBeforeCommit(ApplicationContext context,
+                                         PlatformTransactionManager transactionManager,
+                                         @Nullable TransactionStatus status) throws Throwable {
+        Throwable beforeCommitFailure = null;
+
+        Collection<BeforeCommitTransactionListener> listeners = context.getBeansOfType
+            (BeforeCommitTransactionListener.class).values();
+        for (BeforeCommitTransactionListener listener : listeners) {
+            try {
+                listener.beforeCommit(status);
+            }
+            catch (Throwable t){
+                Log.debug(Log.JEEVES, "Listener "+listener.toString()+" newTransaction callback failed: "+ t);
+                beforeCommitFailure = t;
+            }
+        }
+        if (beforeCommitFailure != null){
+            throw beforeCommitFailure;
+        }
+    }
+
+    /**
+     * Notify context NewTransactionListener instances of transaction status change.
+     *
+     * @param context context used to obtain listeners
+     * @param transactionManager manager responsible for execution
+     * @param status transaction status
+     * @throws Throwable
+     */
+    private static void fireNewTransaction(ApplicationContext context,
+                                           PlatformTransactionManager transactionManager,
+                                           @Nullable TransactionStatus status) throws Throwable {
+        Throwable newTransactionFailure = null;
+
+        Collection<NewTransactionListener> listeners = context.getBeansOfType
+            (NewTransactionListener.class).values();
+        for (NewTransactionListener listener : listeners) {
+            try {
+                listener.newTransaction(status);
+            }
+            catch (Throwable t){
+                Log.debug(Log.JEEVES, "Listener "+listener.toString()+" newTransaction callback failed: "+ t);
+                newTransactionFailure = t;
+            }
+        }
+        if (newTransactionFailure != null){
+            throw newTransactionFailure;
+        }
+    }
+
+    /**
+     * Notify context AfterRollbackTransactionListener instances of transaction status change.
+     *
+     * @param context context used to obtain listeners
+     * @param transactionManager manager responsible for execution
+     * @param status transaction status
+     * @throws Throwable
+     */
+    private static void fireAfterRollback(ApplicationContext context,
+                                          PlatformTransactionManager transactionManager,
+                                          @Nullable TransactionStatus status) throws Throwable {
+        Throwable afterRollbackFailure = null;
+
+        Collection<AfterRollbackTransactionListener> listeners = context.getBeansOfType
+            (AfterRollbackTransactionListener.class).values();
+        for (AfterRollbackTransactionListener listener : listeners) {
+            try {
+                listener.afterRollback(status);
+            }
+            catch (Throwable t){
+                Log.debug(Log.JEEVES, "Listener "+listener.toString()+" afterRollback callback failed: "+ t);
+                afterRollbackFailure = t;
+            }
+        }
+        if (afterRollbackFailure != null){
+            throw afterRollbackFailure;
+        }
+    }
+
+    /**
+     * Notify context BeforeRollbackTransactionListener instances of transaction status change.
+     *
+     * @param context context used to obtain listeners
+     * @param transactionManager manager responsible for execution
+     * @param status transaction status
+     * @throws Throwable
+     */
+    private static void fireBeforeRollback(ApplicationContext context,
+                                           PlatformTransactionManager transactionManager,
+                                           @Nullable TransactionStatus status) throws Throwable {
+        Throwable beforeRollbackFailure = null;
+
+        Collection<BeforeRollbackTransactionListener> listeners = context.getBeansOfType
+            (BeforeRollbackTransactionListener.class).values();
+        for (BeforeRollbackTransactionListener listener : listeners) {
+            try {
+                listener.beforeRollback(status);
+            }
+            catch (Throwable t){
+                Log.debug(Log.JEEVES, "Listener "+listener.toString()+" beforeRollback callback failed: "+ t);
+                beforeRollbackFailure = t;
+            }
+        }
+        if (beforeRollbackFailure != null){
+            throw beforeRollbackFailure;
+        }
+    }
+
+    /**
+     * Safely perform {@link PlatformTransactionManager#rollback(TransactionStatus)}.
+     *
+     * This method is responsible for safely logging any notification failures as warnings, rather than failing outright.
+     *
+     * @param context context used to obtain listeners to notify
+     * @param transactionManager manager responsible for execution
+     * @param status transaction status
+     */
     private static void doRollback(ApplicationContext context,
                                    PlatformTransactionManager transactionManager,
-                                   @Nullable TransactionStatus transaction) {
+                                   @Nullable TransactionStatus status) {
+        if ( status == null || status.isCompleted()){
+            return; // nothing to do transaction already completed
+        }
         try {
-            if (transaction != null && !transaction.isCompleted()) {
+            fireBeforeRollback( context, transactionManager, status);
+        }
+        catch (Throwable t) {
+            Log.warning(Log.JEEVES, "Rolling back transaction - before:", t);
+        }
 
-                try {
-                    Collection<BeforeRollbackTransactionListener> listeners = context.getBeansOfType
-                        (BeforeRollbackTransactionListener.class).values();
-                    for (BeforeRollbackTransactionListener listener : listeners) {
-                        listener.beforeRollback(transaction);
-                    }
-                } finally {
-                    transactionManager.rollback(transaction);
-                    Collection<AfterRollbackTransactionListener> listeners = context.getBeansOfType(
-                        AfterRollbackTransactionListener.class).values();
-                    for (AfterRollbackTransactionListener listener : listeners) {
-                        listener.afterRollback(transaction);
-                    }
-                }
-            }
-            //what if the transaction is completed?
-            //maybe then we shouldn't be here
-        } catch (Throwable t) {
+        try {
+            transactionManager.rollback(status);
+        }
+        catch (Throwable t) {
             Log.error(Log.JEEVES, "ERROR rolling back transaction", t);
+        }
+        finally {
+            try {
+                fireAfterRollback(context, transactionManager, status);
+            }
+            catch (Throwable t) {
+                Log.warning(Log.JEEVES, "Rolling back transaction - after:", t);
+            }
         }
     }
 
+    /**
+     * Approach used for transaction execution.
+     */
     public static enum TransactionRequirement {
+        /** Support a current transaction; create a new one if none exists. */
         CREATE_ONLY_WHEN_NEEDED(TransactionDefinition.PROPAGATION_REQUIRED),
+
+        /** Support a current transaction; throw an exception if no current transaction exists. */
         THROW_EXCEPTION_IF_NOT_PRESENT(TransactionDefinition.PROPAGATION_MANDATORY),
+
+        /** Create a new transaction, suspending the current transaction if one exists. */
         CREATE_NEW(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+
+        /** Propagation id defined by {@link org.springframework.transaction.TransactionDefinition} */
         private final int propagationId;
 
         TransactionRequirement(int propagation) {
@@ -163,7 +414,9 @@ public class TransactionManager {
         }
     }
 
+    /** Approach used for transaction commit */
     public static enum CommitBehavior {
-        ALWAYS_COMMIT, ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS
+        ALWAYS_COMMIT,
+        ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS
     }
 }

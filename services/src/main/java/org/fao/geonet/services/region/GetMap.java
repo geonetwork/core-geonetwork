@@ -235,6 +235,8 @@ public class GetMap {
         ServiceContext context = serviceManager.createServiceContext("region.getmap." + imageFormat, lang,
             request.getNativeRequest(HttpServletRequest.class));
 
+      try {
+
         if (id == null && geomParam == null) {
             throw new BadParameterEx(Params.ID, "Either " + GEOM_PARAM + " or " + Params.ID + " is required");
         }
@@ -379,6 +381,10 @@ public class GetMap {
             headers.add("Content-Type", "image/" + imageFormat);
             return new HttpEntity<>(out.toByteArray(), headers);
         }
+
+      } finally {
+          context.clear();
+      }
     }
 
     private double calculateExpandFactor(Envelope bboxOfImage, String srs) throws Exception {
