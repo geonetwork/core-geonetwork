@@ -36,6 +36,12 @@
         templateUrl: '../../catalog/components/search/searchoptions/partials/' +
             'searchoptions.html',
         link: function(scope, element, attrs, controller) {
+          // this enables to keep the dropdown active when we click on the label
+          element.find('label > span').each(function(i, e) {
+            $(e).on('click', function () {
+              $(e).parent().find('input').focus();
+            });
+          });
           Object.defineProperty(scope, 'exactMatch', {
             get: function() {
               return controller.getExactMatch();
