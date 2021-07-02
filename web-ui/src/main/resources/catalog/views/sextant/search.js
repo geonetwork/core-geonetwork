@@ -609,6 +609,7 @@
       $scope.facetConfig = searchSettings.facetConfig;
 
       $scope.titleSearchOnly = $scope.searchObj.params.hasOwnProperty('title');
+      $scope.exactMatchOnly = $scope.searchObj.params.hasOwnProperty('exactMatch');
       $scope.titleSearchToggleVisible = false;
 
       var dropDownCheckboxElement;
@@ -621,50 +622,31 @@
 
       $scope.isInputActive = function () {
         return inputSearchElement.is(':focus') ||
+          dropDownCheckboxElement.is(':focus-within') ||
           dropDownCheckboxElement.is(':active');
       };
 
-      // $scope.toggleTitleSearchOnly = function() {
-      //   inputSearchElement.focus();
-      //   $scope.titleSearchOnly = !$scope.titleSearchOnly;
-      //   if ($scope.titleSearchOnly) {
-      //     $scope.searchObj.params.title = $scope.searchObj.params.any;
-      //     delete $scope.searchObj.params.any;
-      //   } else {
-      //     $scope.searchObj.params.any = $scope.searchObj.params.title;
-      //     delete $scope.searchObj.params.title;
-      //   }
-      // }
-      // $scope.isTitleSearchEnabled = function() {
-      //   return $scope.titleSearchOnly;
-      // }
-      // $scope.showTitleSearchToggle = function(visible) {
-      //   $scope.titleSearchToggleVisible = visible;
-      // }
+       function addWildcardOnWords(searchString) {
+         return searchString && searchString.split(/\s+/).map(function(part) {
+            //do not add wildcards on uui
+           return part.match(/[a-f0-9]{8}(?:-[a-f0-9]{4}){4}[a-f0-9]{8}/) ? part : part + '*';
+         }).join(' ')
+       }
+       function removeWildcardOnWords(searchString) {
+         return searchString && searchString.split(/\s+/).map(function(part) {
+           return part.replace(/\*$/, '');
+         }).join(' ')
+       }
 
-      // function addWildcardOnWords(searchString) {
-      //   return searchString && searchString.split(/\s+/).map(function(part) {
-      //     // do not add wildcards on uui
-      //     return part.match(/[a-f0-9]{8}(?:-[a-f0-9]{4}){4}[a-f0-9]{8}/) ? part : part + '*';
-      //   }).join(' ')
-      // }
-      // function removeWildcardOnWords(searchString) {
-      //   return searchString && searchString.split(/\s+/).map(function(part) {
-      //     return part.replace(/\*$/, '');
-      //   }).join(' ')
-      // }
-
-      // $scope.searchInput = {};
-      // Object.defineProperty($scope.searchInput, 'model', {
-      //   set: function(newValue) {
-      //     var key = $scope.titleSearchOnly ? 'title' : 'any';
-      //     $scope.searchObj.params[key] = addWildcardOnWords(newValue);
-      //   },
-      //   get: function() {
-      //     var key = $scope.titleSearchOnly ? 'title' : 'any';
-      //     return removeWildcardOnWords($scope.searchObj.params[key]);
-      //   }
-      // });
+       $scope.searchInput = {};
+       Object.defineProperty($scope.searchInput, 'model', {
+         set: function(newValue) {
+           $scope.searchObj.params['any'] = addWildcardOnWords(newValue);
+         },
+         get: function() {
+           return removeWildcardOnWords($scope.searchObj.params["any"]);
+         }
+       });
     }]);
 
   module.directive('sxtFixMdlinks', [ 'sxtService',
