@@ -56,6 +56,10 @@
        * Delete a category
        */
       $scope.deleteCategory = function(id) {
+
+        var doDelete = confirm($translate.instant('confirmDeletecategory'));
+
+        if (doDelete) {
         $http.delete('../api/tags/' + id)
             .then(function(r) {
               if (r.status === 204) {
@@ -75,6 +79,7 @@
                 timeout: 0,
                 type: 'danger'});
             });
+        }
       };
 
       /**
