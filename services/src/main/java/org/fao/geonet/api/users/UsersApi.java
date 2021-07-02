@@ -142,8 +142,13 @@ public class UsersApi {
             List<User> allUsers = userRepository.findAll(SortUtils.createSort(User_.name));
 
             // Filter users which are not in current user admin groups
-            allUsers.removeIf(u -> !userGroupIds.containsAll(getGroupIds(u.getId())) ||
-                u.getProfile().equals(Profile.Administrator));
+            allUsers.removeIf(u -> {
+                List<Integer> groupIdsForUser = getGroupIds(u.getId());
+
+                return groupIdsForUser.isEmpty() ||
+                    !userGroupIds.containsAll(groupIdsForUser) ||
+                    u.getProfile().equals(Profile.Administrator);
+            });
 //              TODO-API: Check why there was this check on profiles ?
 //                    if (!profileSet.contains(profile))
 //                        alToRemove.add(elRec);
