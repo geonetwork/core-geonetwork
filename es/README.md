@@ -2,8 +2,10 @@
 
 ## Manual installation
 
-1. Download Elasticsearch (at least 7.6.2 for Geonetwork 4.0.x) from https://www.elastic.co/downloads/elasticsearch
-and copy to the ES module. eg. es/elasticsearch-7.6.2
+1. Download Elasticsearch (up to 7.10.2 for Geonetwork 4.0.x) from https://www.elastic.co/downloads/elasticsearch
+and copy to the ES module. eg. es/elasticsearch-7.10.2
+   
+   .. info:: Elasticsearch 7.10.2 is available using the Apache 2.0 open source license. Newer versions of Elasticsearch use the Server Side Public License, see [faq](https://www.elastic.co/pricing/faq/licensing).
  
 2. Start ES using:
 
@@ -35,14 +37,15 @@ and copy to the ES module. eg. es/elasticsearch-7.6.2
 1. Use docker pull to download the image (you can check version in the :file:`pom.xml` file):
 
    ```
-   docker pull docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+   docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.2
    ```
 
-2. Use docker run, leacing 9200 available:
+2. Use docker run, leaving 9200 available:
 
    ```
-   docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+   docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.10.2
    ```
+   
 
 3. Check that elasticsearch is running by visiting http://localhost:9200 in a browser
 

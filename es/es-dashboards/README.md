@@ -2,7 +2,9 @@
 
 ## Manual installation
 
-Download Kibana from https://www.elastic.co/downloads/kibana. For Geonetwork 3.8.x download at least version 7.2.1
+Download Kibana from https://www.elastic.co/downloads/kibana. For Geonetwork 4.0.x use up to 7.10.2.
+
+.. info:: Elasticsearch 7.10.2 is available using the Apache 2.0 open source license. Newer versions of Elasticsearch use the Server Side Public License, see [faq](https://www.elastic.co/pricing/faq/licensing).
 
 Set Kibana base path and index name in config/kibana.yml:
 
@@ -10,7 +12,6 @@ Set Kibana base path and index name in config/kibana.yml:
 server.basePath: "/geonetwork/dashboards"
 server.rewriteBasePath: false
 kibana.index: ".dashboards"
-
 ```
 
 Adapt if needed ```elasticsearch.url``` and ```server.host```.
