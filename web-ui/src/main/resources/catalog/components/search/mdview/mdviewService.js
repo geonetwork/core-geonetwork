@@ -72,7 +72,6 @@
 
         // Set the route only if not same as before
         formatter = gnSearchLocation.getFormatter();
-        gnMdViewObj.usingFormatter = formatter !== undefined;
 
         gnUtilityService.scrollTo();
 

@@ -526,12 +526,30 @@ goog.require('gn_alert');
           'formatter': {
             'list': [{
               'label': 'defaultView',
+              'views': [ {
+                'if': {
+                  'standardName': 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product'
+                },
+                'url' : '/formatters/xsl-view?root=div&view=advanced'
+              }, {
+                'if': {'documentStandard': 'iso19115-3.2018'},
+                'url' : '/dada'
+              }, {
+                'if': {
+                  'standardName': [
+                    'ISO 19115:2003/19139 - EMODNET - BATHYMETRY',
+                    'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY']
+                },
+                'url' : '/formatters/xsl-view?root=div&view=emodnetHydrography'
+              }],
               'url' : ''
             }, {
               'label': 'full',
-              'url' : '/formatters/xsl-view?root=div&view=advanced'
-            }],
-            defaultUrl: ''
+              'url' : '/formatters/xsl-view?root=div&view=xml'
+            }, {
+              'label': 'extra',
+              'url' : '/main'
+            }]
           },
           'downloadFormatter': [{
             'label': 'exportMEF',
