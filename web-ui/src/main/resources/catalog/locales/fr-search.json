@@ -186,7 +186,7 @@
     "orTypeAServiceUrl": "saisir l'URL d'un service {{type}}",
     "addAllLayersToMap": "Ajouter toutes les {{number}} couches à la carte",
     "downloadsAndResources": "Téléchargements et liens",
-    "sourceCatalog": "Fourni par",
+    "sourceCatalog": "Catalogue d'origine",
     "tempExtent": "Étendue temporelle",
     "more": "plus",
     "less": "moins",
