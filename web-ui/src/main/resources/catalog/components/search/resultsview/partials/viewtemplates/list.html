@@ -147,7 +147,7 @@
             <i class="fa fa-pencil"></i>
             <span data-translate="" class="sr-only">edit</span>
           </a>
-          <div data-ng-if="md.draft == 'e'"
+          <div data-ng-if="(md.draft == 'e') && (md['geonet:info'].edit == 'true')"
                title="{{'workingCopy' | translate}}"
                class="gn-workingcopy-status pull-left">
             <i class="fa fa-pencil"></i>
