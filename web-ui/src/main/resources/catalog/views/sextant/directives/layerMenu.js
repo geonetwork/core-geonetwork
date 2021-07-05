@@ -37,8 +37,8 @@
             $scope.map.removeLayer($scope.layer);
           }
 
-          // this defines a custom property which will add a 'data-expanded' attribute
-          // on the host element when its value changes
+          // this defines a custom property which will define the css height
+          // of the host element when its value changes
           var currentSize;
           Object.defineProperty(this, 'panelSize', {
             get: function () {
@@ -46,7 +46,6 @@
             },
             set: function(value) {
               currentSize = value;
-              // $element[0].toggleAttribute('data-expanded', expanded); // note: this will fail in IE11
               switch(currentSize) {
                 case 'collapsed':
                   $element.css('height', '26px');
