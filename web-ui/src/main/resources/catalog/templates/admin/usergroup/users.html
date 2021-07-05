@@ -310,7 +310,7 @@
           </fieldset>
         </form>
 
-        <div data-ng-search-form="" class="panel panel-default">
+        <div data-ng-search-form="" class="panel panel-default" data-ng-if="userSelected.id > 0">
           <div class="panel-heading"
                data-gn-slide-toggle="">
             <i class="fa fa-search"/>&nbsp;
@@ -331,7 +331,7 @@
         </div>
 
         <br/>
-        <div data-gn-saved-selections=""
+        <div data-gn-saved-selections="" data-ng-if="userSelected.id > 0"
              data-gn-saved-selections-panel="userSelected"/>
       </div>
     </div>
