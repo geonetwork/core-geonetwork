@@ -158,17 +158,17 @@
             </xsl:otherwise>
           </xsl:choose>
         </div>
-        <xsl:if test="$hasSidePanel">
-          <div class="col-md-4 gn-editor-sidebar">
-            <div class="gn-editor-tools-container">
-              <xsl:apply-templates mode="form-builder"
-                                   select="$viewConfig/sidePanel/*">
-                <xsl:with-param name="base" select="$metadata"/>
-              </xsl:apply-templates>
-            </div>
-          </div>
-        </xsl:if>
       </form>
+      <xsl:if test="$hasSidePanel">
+        <div class="col-md-4 gn-editor-sidebar">
+          <div class="gn-editor-tools-container">
+            <xsl:apply-templates mode="form-builder"
+                                 select="$viewConfig/sidePanel/*">
+              <xsl:with-param name="base" select="$metadata"/>
+            </xsl:apply-templates>
+          </div>
+        </div>
+      </xsl:if>
     </div>
   </xsl:template>
 
