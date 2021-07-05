@@ -7,18 +7,21 @@
 <!--    ng-focus="showTitleSearchToggle(true)"-->
 <!--    typeahead-popup-template-url="../../catalog/views/sextant/templates/searchForm-typeahead.html"-->
     <input type="text"
+           class="form-control"
            placeholder="{{'anyPlaceHolder' | translate}}"
            title="{{'anyFieldTitle' | translate}}"
-           class="form-control"
            id="anySearchField"
            autocomplete="off"
-           data-ng-model="searchObj.params.any"
+           ng-model="searchInput.model"
+           ng-blur="showTitleSearchToggle(false)"
+           ng-focus="showTitleSearchToggle(true)"
            data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
            data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
            typeahead-focus-first="false"
            typeahead-loading="anyLoading"
            typeahead-min-length="1"
-           typeahead-wait-ms="300">
+           typeahead-wait-ms="300"
+           typeahead-popup-template-url="../../catalog/views/sextant/templates/searchForm-typeahead.html">
     <span class="input-group-btn">
       <button type="submit" data-ng-click="triggerSearch()" class="btn btn-default search-btn">
         <i class="fa fa-search"></i>
