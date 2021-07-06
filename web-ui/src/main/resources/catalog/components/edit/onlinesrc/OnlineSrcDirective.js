@@ -1096,7 +1096,7 @@
                           });
                     }
                   } else if (url.indexOf('http') === 0) {
-                    return $http.get(scope.onlinesrcService.getApprovedUrl(url)).then(function(response) {
+                    return $http.head(scope.onlinesrcService.getApprovedUrl(url)).then(function(response) {
                       scope.isUrlOk = response.status === 200;
                     },
                     function(response) {
