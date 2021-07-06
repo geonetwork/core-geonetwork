@@ -66,6 +66,7 @@
           $scope.gnConfig = gnConfig;
           $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
           $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;
+         $scope.isUserProfileUpdateEnabled = gnGlobalSettings.isUserProfileUpdateEnabled;
 
          $scope.passwordMinLength =
            Math.min(gnConfig['system.security.passwordEnforcement.minLength'], 6);
