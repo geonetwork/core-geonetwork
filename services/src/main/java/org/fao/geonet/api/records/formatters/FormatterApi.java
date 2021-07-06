@@ -376,6 +376,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      * up-to-date and if maximum performance is required.
      */
     @RequestMapping(value = "/{portal}/{lang}/md.format.public.{type}")
+    @io.swagger.v3.oas.annotations.Operation(hidden = true)
     public HttpEntity<byte[]> getCachedPublicMetadata(
         @PathVariable final String lang,
         @PathVariable final String type,

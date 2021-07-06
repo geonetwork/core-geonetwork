@@ -2,6 +2,8 @@ package org.fao.geonet.api.sld;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
@@ -29,10 +31,14 @@ import javax.mail.internet.ParseException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.TransformerException;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -219,9 +225,20 @@ public class SldApi {
         @Parameter(description = "The SLD identifier",
             required = true)
         @PathVariable("id") int id,
+        @PathVariable("extension") String extension,
         HttpServletResponse response) throws ResourceNotFoundException {
         try {
             TextFile file = fileRepository.findById(id).get();
+            // Validate that the file id found matches the extension
+            if (!StringUtils.isEmpty(extension)) {
+                Path path = new File(id + "." + extension).toPath();
+                String extensionMimeType = Files.probeContentType(path);
+                if (!file.getMimeType().equals(extensionMimeType)) {
+                    throw new ResourceNotFoundException(String.format(
+                        "SLD '%s' with extension '%s' not found. ",
+                        id, extension));
+                }
+            }
             response.setContentType(file.getMimeType() + "; charset=utf-8");
             PrintWriter writer = response.getWriter();
             writer.write(file.getContent());
