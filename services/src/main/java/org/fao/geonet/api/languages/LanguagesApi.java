@@ -28,20 +28,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.lib.DbLib;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +55,7 @@ import java.util.List;
 })
 @Tag(name = "languages",
     description = "Languages operations")
-@Controller("languages")
+@RestController
 public class LanguagesApi {
 
     @Autowired
@@ -66,6 +63,7 @@ public class LanguagesApi {
 
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
+
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get languages",
