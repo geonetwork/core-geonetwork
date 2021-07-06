@@ -90,6 +90,16 @@
                 return !!scope.activeLayer;
               }
 
+              scope.toggleLayerMenu = function() {
+                scope.$broadcast('layerMenu.toggle');
+              }
+              scope.collapseLayerMenu = function() {
+                scope.$broadcast('layerMenu.collapse');
+              }
+              scope.openLayerMenu = function() {
+                scope.$broadcast('layerMenu.open');
+              }
+
               var firstRun = true;
               scope.handleTabParsing = function() {
                 if (!firstRun) { return; }

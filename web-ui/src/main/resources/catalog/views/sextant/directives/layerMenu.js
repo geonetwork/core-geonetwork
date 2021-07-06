@@ -64,7 +64,7 @@
            * current menu panel size
            * @type {'collapsed'|'middle'|'full'}
            */
-          this.panelSize = 'collapsed';
+          this.panelSize = 'middle';
 
           this.togglePanel = function() {
             this.panelSize = this.panelSize === 'collapsed' ? 'middle' : 'collapsed';
@@ -72,6 +72,20 @@
           this.panelOpened = function() {
             return this.panelSize !== 'collapsed';
           }
+
+          $scope.$on('layerMenu.collapse', function () {
+            if (this.panelOpened()) {
+              this.togglePanel();
+            }
+          }.bind(this));
+          $scope.$on('layerMenu.open', function () {
+            if (!this.panelOpened()) {
+              this.togglePanel();
+            }
+          }.bind(this));
+          $scope.$on('layerMenu.toggle', function () {
+              this.togglePanel();
+          }.bind(this));
         }],
         controllerAs: 'ctrl',
         link: function(scope) {

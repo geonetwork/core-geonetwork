@@ -28,7 +28,12 @@
 
           this.setActiveLayer = function(layer) {
             // uses ViewerDirective scope
-            $scope.setActiveLayer(layer);
+            if (!this.isActiveLayer(layer)) {
+              $scope.setActiveLayer(layer);
+              $scope.openLayerMenu();
+            } else {
+              $scope.toggleLayerMenu()
+            }
           };
           this.isActiveLayer = function(layer) {
             // uses ViewerDirective scope
@@ -273,9 +278,10 @@
                 }
               });
 
-              // if the selected layer is not part of the map anymore, clear it
+              // if the selected layer is not part of the map anymore, clear it (and collapse menu)
               if (scope.layers.indexOf(scope.getActiveLayer()) === -1) {
                 scope.setActiveLayer(null);
+                scope.collapseLayerMenu();
               }
               // if no layer selected, select the first one
               if (!scope.getActiveLayer()) {
