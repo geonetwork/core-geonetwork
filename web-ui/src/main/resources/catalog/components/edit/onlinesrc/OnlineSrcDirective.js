@@ -28,6 +28,7 @@
   goog.require('ga_print_directive');
   goog.require('gn_utility');
   goog.require('gn_filestore');
+  goog.require('gn_urlutils_service');
 
   /**
    * @ngdoc overview
@@ -46,7 +47,8 @@
     'gn_utility',
     'gn_filestore',
     'blueimp.fileupload',
-    'ga_print_directive'
+    'ga_print_directive',
+    'gn_urlutils_service'
   ])
     .directive('gnRemoteRecordSelector', ['$http', 'gnGlobalSettings',
       function($http, gnGlobalSettings) {
@@ -470,6 +472,8 @@
         'gnEditor',
         'gnCurrentEdit',
         'gnMap',
+        'gnMapsManager',
+        'gnUrlUtils',
         'gnGlobalSettings',
         'Metadata',
         '$rootScope',
@@ -479,7 +483,7 @@
         '$filter',
         '$log',
         function(gnOnlinesrc, gnOwsCapabilities, gnWfsService, gnSchemaManagerService,
-            gnEditor, gnCurrentEdit, gnMap, gnGlobalSettings, Metadata,
+            gnEditor, gnCurrentEdit, gnMap, gnMapsManager, gnUrlUtils, gnGlobalSettings, Metadata,
             $rootScope, $translate, $timeout, $http, $filter, $log) {
           return {
             restrict: 'A',
@@ -526,28 +530,29 @@
 
 
                 function loadLayers() {
-                  if (!angular.isArray(scope.map.getSize()) ||
-                      scope.map.getSize().indexOf(0) >= 0) {
-                    $timeout(function() {
-                      scope.map.updateSize();
-                      if (projectedExtent != null) {
-                        scope.map.getView().fit(
-                          projectedExtent,
-                          scope.map.getSize());
-                      }
-                    }, 300);
-                  }
+                  scope.map.get('creationPromise').then(function() {
+                    if (!angular.isArray(scope.map.getSize()) ||
+                        scope.map.getSize().indexOf(0) >= 0) {
+                      $timeout(function() {
+                        scope.map.updateSize();
+                        if (projectedExtent != null) {
+                          scope.map.getView().fit(
+                            projectedExtent,
+                            scope.map.getSize());
+                        }
+                      }, 300);
+                    }
+                  })
 
                   // Reset map
-                  angular.forEach(scope.map.getLayers(), function(layer) {
-                    scope.map.removeLayer(layer);
+                  angular.forEach(scope.map.getLayers(), function(layer, index) {
+                    if (index !== 0) {
+                      scope.map.removeLayer(layer);
+                    }
                   });
 
                   var conf = gnMap.getMapConfig();
 
-                  scope.map.addLayer(new ol.layer.Tile({
-                    source:  new ol.source.OSM()
-                  }));
                   // TODO: Add base layer from config
                   // This does not work because createLayerFromProperties
                   // return a promise and base layer is added twice.
@@ -573,10 +578,10 @@
                       function(layer) {
                         scope.map.addLayer(new ol.layer.Tile({
                           source: new ol.source.TileWMS({
-                            url: layer.url,
+                            url: gnUrlUtils.remove(layer.url, ['request'], true),
                             params: {
                               'LAYERS': layer.name,
-                              'URL': layer.url
+                              'URL': gnUrlUtils.remove(layer.url, ['request'], true)
                             }
                           })
                         }));
@@ -637,15 +642,17 @@
                 var initThumbnailMaker = function() {
 
                   if (!scope.loaded) {
-                    scope.map = new ol.Map({
-                      layers: [],
-                      renderer: 'canvas',
-                      view: new ol.View({
-                        center: [0, 0],
-                        projection: gnMap.getMapConfig().projection,
-                        zoom: 2
-                      })
-                    });
+                    scope.map = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);
+
+                    // scope.map = new ol.Map({
+                    //   layers: [],
+                    //   renderer: 'canvas',
+                    //   view: new ol.View({
+                    //     center: [0, 0],
+                    //     projection: gnMap.getMapConfig().projection,
+                    //     zoom: 2
+                    //   })
+                    // });
 
                     // we need to wait the scope.hidden binding is done
                     // before rendering the map.
