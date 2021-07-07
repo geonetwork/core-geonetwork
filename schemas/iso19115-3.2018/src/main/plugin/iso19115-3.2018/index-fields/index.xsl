@@ -951,9 +951,9 @@
       <xsl:variable name="legalTextList"
                     select="if ($isService) then $eu9762009 else $eu10892010"/>
 
-      <xsl:for-each-group select="mdb:dataQualityInfo/*/mdq:report"
-                          group-by="*/mdq:result/*/mdq:specification/cit:CI_Citation/
-                                        cit:title/gco:CharacterString">
+      <xsl:for-each-group select="mdb:dataQualityInfo/*/mdq:report/*/mdq:result"
+                          group-by="*/mdq:specification/cit:CI_Citation/
+                                        cit:title/(gco:CharacterString|gcx:Anchor)">
 
         <xsl:variable name="title" select="current-grouping-key()"/>
         <xsl:variable name="matchingEUText"
@@ -962,7 +962,7 @@
                               else daobs:search-in($legalTextList/*, $title)"/>
 
         <xsl:variable name="pass"
-                      select="*/mdq:result/*/mdq:pass/gco:Boolean"/>
+                      select="*/mdq:pass/gco:Boolean"/>
 
         <xsl:if test="count($matchingEUText) = 1">
           <inspireConformResource>
@@ -973,14 +973,14 @@
         <xsl:if test="string($title)">
           <specificationConformance type="object">{
             "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
-            <xsl:if test="string(*/mdq:result/*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)">
-            "date": "<xsl:value-of select="*/mdq:result/*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date" />",
+            <xsl:if test="string(*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)">
+            "date": "<xsl:value-of select="*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date" />",
             </xsl:if>
-            <xsl:if test="*/mdq:result/*/mdq:specification/*/cit:title/@xlink:href">
-              "link": "<xsl:value-of select="*/mdq:result/*/mdq:specification/*/cit:title/@xlink:href"/>",
+            <xsl:if test="*/mdq:specification/*/cit:title/*/@xlink:href">
+              "link": "<xsl:value-of select="*/mdq:specification/*/cit:title/*/@xlink:href"/>",
             </xsl:if>
-            <xsl:if test="*/mdq:result/*/mdq:explanation/*/text() != ''">
-              "explanation": "<xsl:value-of select="gn-fn-index:json-escape((*/mdq:result/*/mdq:explanation/*/text())[1])" />",
+            <xsl:if test="*/mdq:explanation/*/text() != ''">
+              "explanation": "<xsl:value-of select="gn-fn-index:json-escape((*/mdq:explanation/*/text())[1])" />",
             </xsl:if>
             "pass": "<xsl:value-of select="$pass" />"
             }
