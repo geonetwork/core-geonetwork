@@ -210,7 +210,7 @@
       var indexObject = layer.get('indexObject');
       var isArcGis = layer.getSource() instanceof ol.source.ImageArcGISRest;
       var type = 'gfi';
-      if (!!indexObject) {
+      if (!!indexObject && indexObject.totalCount > 0) {
         type = 'index';
       } else if (isArcGis) {
         type = 'esri';
