@@ -433,6 +433,9 @@
 
           if (source instanceof ol.source.OSM) {
             name = '{type=osm}';
+          } else if (source instanceof ol.source.WMTS
+            && source.getLayer().indexOf('ch.swisstopo.') === 0) {
+            name = '{type=map.geo.admin.ch,name=' + layer.getSource().getLayer() + '}';
           } else if (source instanceof ol.source.BingMaps) {
             name = '{type=bing_aerial}';
           } else if (source instanceof ol.source.Stamen) {

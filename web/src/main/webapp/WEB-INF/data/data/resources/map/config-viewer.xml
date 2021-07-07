@@ -79,7 +79,17 @@
                 <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://tds0.ifremer.fr/thredds/wms/CORIOLIS-GLOBAL-CORA04.0-OBS_FULL_TIME_SERIE?"/>
             </ows-context:Server>
             <ows-context:StyleList/>
-        </ows-context:Layer>
+     </ows-context:Layer>
+	     
+    Example for map.geo.admin.ch
+    <ows-context:Layer name="{type=map.geo.admin.ch,name=ch.swisstopo.pixelkarte-farbe}"
+                       group="Background layers"
+                       hidden="false"
+                       opacity="1">
+      <ows:Title>map.geo.admin.ch</ows:Title>
+    </ows-context:Layer>
+
+
     -->
   </ows-context:ResourceList>
 </ows-context:OWSContext>

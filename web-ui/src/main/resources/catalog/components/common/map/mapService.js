@@ -1432,6 +1432,42 @@
             return defer.promise;
           },
 
+          buildMapGeoAdminBaseLayer: function(layer) {
+            var resolutions = [
+              4000, 3750, 3500, 3250, 3000, 2750, 2500, 2250, 2000, 1750, 1500, 1250,
+              1000, 750, 650, 500, 250, 100, 50, 20, 10, 5, 2.5, 2, 1.5, 1, 0.5
+            ];
+
+            var matrixIds = [];
+            for (var i = 0; i < resolutions.length; i++) {
+              matrixIds.push(i);
+            }
+
+            var tileGrid = new ol.tilegrid.WMTS({
+              origin: [420000, 350000],
+              resolutions: resolutions,
+              matrixIds: matrixIds
+            });
+
+            var defaultUrl = '//wmts{5-9}.geo.admin.ch/1.0.0/{Layer}/default/' +
+              '20140520/21781/' +
+              '{TileMatrix}/{TileRow}/{TileCol}.jpeg';
+
+            return new ol.layer.Tile({
+              source: new ol.source.WMTS(({
+                crossOrigin: 'anonymous',
+                url: defaultUrl,
+                tileGrid: tileGrid,
+                layer: layer || 'ch.swisstopo.pixelkarte-farbe',
+                requestEncoding: 'REST',
+                projection: 'EPSG:21781'
+              })),
+              title: layer + ' (map.geo.admin.ch)',
+              extent: [434250, 37801.909073720046, 894750, 337801.90907372005],
+              useInterimTilesOnError: false
+            });
+          },
+
           addEsriRestFromScratch: function(map, url, name, createOnly, md) {
             if (url === '') {
               var error = "Trying to add an ESRI layer with no service URL. Layer name is " + name + ". Check the metadata or the map.";
@@ -1951,7 +1987,6 @@
                   source: new ol.source.OSM(),
                   title: title ||  'OpenStreetMap'
                 });
-              //ALEJO: tms support
               case 'tms':
                 return new ol.layer.Tile({
                   source: new ol.source.XYZ({
@@ -2030,6 +2065,9 @@
                       return layer;
                     });
                 break;
+
+              case 'map.geo.admin.ch':
+                return this.buildMapGeoAdminBaseLayer(opt.name)
             }
           },
 
