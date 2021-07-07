@@ -1473,7 +1473,6 @@
     "ui-autoFitOnLayer-help":"If checked, the map will automatically zoom on data when adding a layer from a record. Otherwise, a message will be shown to let the user zoom on data manually.",
     "styleVariable-gnHeaderHeight":"Height",
     "styleVariable-gnSearchBackgroundColor": "Backgound color",
-    "confirmDeletecategory": "Are you sure you want to delete this category?",
-    "confirmCancelEdit": "Do you want to cancel all changes and close the editor?"
+    "confirmDeletecategory": "Are you sure you want to delete this category?"
 }
 
