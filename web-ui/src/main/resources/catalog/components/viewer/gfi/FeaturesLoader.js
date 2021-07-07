@@ -478,15 +478,26 @@
           queryObject.sort.push(sort);
         }
         if (coordinates) {
-          var coords = ol.proj.transform(coordinates,
-              map.getView().getProjection(), 'EPSG:4326');
+          var radius = map.getView().getResolution() / 0.4; // meters
+          var minLonMaxLat = ol.proj.transform(
+            [coordinates[0] - radius, coordinates[1] + radius],
+            map.getView().getProjection(),
+            'EPSG:4326'
+          );
+          var maxLonMinLat = ol.proj.transform(
+            [coordinates[0] + radius, coordinates[1] - radius],
+            map.getView().getProjection(),
+            'EPSG:4326'
+          );
           queryObject.query.bool.filter = {
             'geo_shape': {
               'geom': {
                 'shape': {
-                  'type': 'circle',
-                  'radius': map.getView().getResolution() / 400 + 'km',
-                  'coordinates': coords
+                  'type': 'envelope',
+                  'coordinates': [
+                    minLonMaxLat,
+                    maxLonMinLat
+                  ]
                 },
                 'relation': 'intersects'
               }
