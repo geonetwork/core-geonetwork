@@ -24,8 +24,13 @@
 package org.fao.geonet.kernel.schema;
 
 public class HttpLink {
-    private String protocol;
-    private String xpath;
+    private String protocol;    //from gmd:onLine/gmd:CI_OnlineResource/gmd:protocol
+    private String operation;   //from srv:containsOperations/srv:SV_OperationMetadata/srv:operationName 
+    private String dcp;         //from srv:containsOperations/srv:SV_OperationMetadata/srv:DCP/srv:DCPList/@codeListValue
+    private String name;        //from gmd:onLine/gmd:CI_OnlineResource/gmd:name
+    private String description; //from gmd:onLine/gmd:CI_OnlineResource/gmd:description
+    private String function;    //from gmd:onLine/gmd:CI_OnlineResource/gmd:function
+    private String xpath; 
 
     public void setXpath(String xpath) {
         this.xpath = xpath;
@@ -42,4 +47,45 @@ public class HttpLink {
     public String getProtocol() {
         return protocol;
     }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setDcp(String dcp) {
+        this.dcp = dcp;
+    }
+
+    public String getDcp() {
+        return dcp;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setFunction(String function) {
+        this.function = function;
+    }
+
+    public String getFunction() {
+        return function;
+    }
+
 }
