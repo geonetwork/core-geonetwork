@@ -238,7 +238,7 @@
       <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
     </xsl:if>
 
-    <xsl:if test="$angularApp = 'gn_search' or $angularApp = 'gn_login'">
+    <xsl:if test="$angularApp = 'gn_search' or $angularApp = 'gn_login' or $angularApp = 'gn_admin'">
       <script type="text/javascript">
         var module = angular.module('<xsl:value-of select="$angularApp"/>');
         module.config(['gnGlobalSettings',
@@ -246,6 +246,7 @@
         gnGlobalSettings.isDisableLoginForm = <xsl:value-of select="$isDisableLoginForm"/>;
         gnGlobalSettings.isShowLoginAsLink = <xsl:value-of select="$isShowLoginAsLink"/>;
         gnGlobalSettings.isUserProfileUpdateEnabled = <xsl:value-of select="$isUserProfileUpdateEnabled"/>;
+        gnGlobalSettings.isUserGroupUpdateEnabled = <xsl:value-of select="$isUserGroupUpdateEnabled"/>;
         }]);
       </script>
 
@@ -280,19 +281,6 @@
     <xsl:if test="$angularApp = 'gn_editor' or $angularApp = 'gn_admin'">
       <script type="text/javascript" src="{$uiResourcesPath}lib/ace/ace.js?v={$buildNumber}"></script>
       <script type="text/javascript" src="{$uiResourcesPath}lib/angular.ext/ui-ace.js?v={$buildNumber}"></script>
-    </xsl:if>
-
-    <!-- Load variables that are required for user group profile management. -->
-    <xsl:if test="$angularApp = 'gn_admin'">
-      <script type="text/javascript">
-        var module = angular.module('<xsl:value-of select="$angularApp"/>');
-        module.config(['gnGlobalSettings',
-        function(gnGlobalSettings) {
-        gnGlobalSettings.isDisableLoginForm = <xsl:value-of select="$isDisableLoginForm"/>;
-        gnGlobalSettings.isUserProfileUpdateEnabled = <xsl:value-of select="$isUserProfileUpdateEnabled"/>;
-        gnGlobalSettings.isUserGroupUpdateEnabled = <xsl:value-of select="$isUserGroupUpdateEnabled"/>;
-        }]);
-      </script>
     </xsl:if>
 
     <script type="text/javascript">
