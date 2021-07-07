@@ -400,7 +400,7 @@
           }, {
             interaction: drawPolygon,
             label: 'Polygon'
-          }, /*{
+          } /*{
             interaction: drawText,
             label: 'Text'
           }*/];
