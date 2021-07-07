@@ -190,6 +190,13 @@
             }
 
             scope.currentLayer = scope.layer;
+
+            // SPECIFIC SEXTANT: use nested wms if we're in a group
+            if (scope.layer.get('originalWms')) {
+              scope.currentLayer = scope.layer.get('originalWms');
+            }
+            // END SPECIFIC SEXTANT
+
             var source = scope.currentLayer.getSource();
             if (!source || !(source instanceof ol.source.ImageWMS ||
               source instanceof ol.source.TileWMS)) {
