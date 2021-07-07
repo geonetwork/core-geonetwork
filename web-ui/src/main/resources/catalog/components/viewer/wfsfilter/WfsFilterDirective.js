@@ -178,13 +178,6 @@
 
           var textInputsHistory = {};
 
-          // use nested wms if we're in a group
-          if (scope.baseLayer && scope.baseLayer.get('originalWms')) {
-            scope.layer = scope.baseLayer.get('originalWms');
-          } else if (scope.baseLayer) {
-            scope.layer = scope.baseLayer
-          }
-
           /**
            * Init the directive when the scope.layer has changed.
            * If the layer is given through the isolate scope object, the init
@@ -196,7 +189,8 @@
               return;
             }
 
-            var source = scope.layer.getSource();
+            scope.currentLayer = scope.layer;
+            var source = scope.currentLayer.getSource();
             if (!source || !(source instanceof ol.source.ImageWMS ||
               source instanceof ol.source.TileWMS)) {
               return;
@@ -214,7 +208,7 @@
               } else if (mode === 'group') {
                 // Collect WFS URL in the same transfer option group
                 // as the WMS URL. Get the group
-                var group = layer.get('md').getLinkGroup(scope.layer);
+                var group = layer.get('md').getLinkGroup(scope.currentLayer);
                 // Get the corresponding WFS and optional application profile
                 var wfs = layer.get('md').getLinksByType(group, '#OGC:WFS');
                 if (wfs.length > 0) {
@@ -223,7 +217,7 @@
               }
             }
 
-            scope.wfsUrl = getWfsUrl(mode, scope.layer);
+            scope.wfsUrl = getWfsUrl(mode, scope.currentLayer);
 
             angular.extend(scope, {
               fields: [],
@@ -231,8 +225,8 @@
               isFeaturesIndexed: false,
               status: null,
               // FIXME: On page reload the md is undefined and the filter does not work
-              md: scope.layer.get('md'),
-              mdUrl: scope.layer.get('url'),
+              md: scope.currentLayer.get('md'),
+              mdUrl: scope.currentLayer.get('url'),
               url: gnGlobalSettings.getNonProxifiedUrl(scope.wfsUrl)
             });
 
@@ -240,9 +234,7 @@
             // FIXME ? This comes from Sextant probably and
             // does not work here when current layer change
             // the previous featureTypeName is still used.
-            // ftName = scope.featureTypeName ||             ftName = scope.featureTypeName ||
-            ;
-            ftName = scope.layer.getSource().getParams().LAYERS;
+            ftName = scope.currentLayer.getSource().getParams().LAYERS;
             scope.featureTypeName = ftName;
 
             appProfile = null;
@@ -261,7 +253,7 @@
             });
             indexObject = wfsFilterService.registerEsObject(scope.url, ftName);
             scope.indexObject = indexObject;
-            scope.layer.set('indexObject', indexObject);
+            scope.currentLayer.set('indexObject', indexObject);
 
             // check whether the WFS service is already in the database
             scope.messageProducersApiUrl = '../api/msg_producers';
@@ -657,7 +649,7 @@
               angular.element(boxElt).scope().clear();
             }
 
-            scope.layer.set('esConfig', null);
+            scope.currentLayer.set('esConfig', null);
             scope.$broadcast('FiltersChanged');
 
             // reset text search in facets
@@ -850,10 +842,10 @@
           };
 
           scope.resetSLDFilters = function() {
-            scope.layer.getSource().updateParams({
+            scope.currentLayer.getSource().updateParams({
               SLD: null
             });
-            scope.layer.setExtent();
+            scope.currentLayer.setExtent();
           };
 
           /**
@@ -870,7 +862,7 @@
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output,
               appProfile, scope.fields);
-            var layer = scope.layer;
+            var layer = scope.currentLayer;
 
             indexObject.pushState();
             layer.set('esConfig', indexObject);
@@ -933,17 +925,10 @@
             });
           };
 
-          // Init the directive
-          if (scope.layer) {
+          // Init the directive when the layer changes (will trigger on initial value too)
+          scope.$watch('layer', function() {
             init();
-          }
-          else {
-            scope.$watch('layer', function(n, o) {
-              if (n !== o) {
-                init();
-              }
-            });
-          }
+          });
 
           //Manage geographic search
           scope.$watch(function() {
@@ -989,12 +974,12 @@
           scope.showTable = function() {
             gnFeaturesTableManager.clear();
             gnFeaturesTableManager.addTable({
-              name: scope.layer.get('label') || scope.layer.get('name'),
+              name: scope.currentLayer.get('label') || scope.currentLayer.get('name'),
               type: 'index'
             }, {
               map: scope.map,
               indexObject: indexObject,
-              layer: scope.layer
+              layer: scope.currentLayer
             });
           };
 
