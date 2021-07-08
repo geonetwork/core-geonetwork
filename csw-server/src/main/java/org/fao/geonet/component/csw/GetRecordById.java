@@ -162,8 +162,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService {
                 // to the requested MD
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
 
-                final SettingInfo settingInfo = gc.getBean(SearchManager.class).getSettingInfo();
-                final String displayLanguage = LuceneSearcher.determineLanguage(context, request, settingInfo).presentationLanguage;
+                final String displayLanguage = LuceneSearcher.determineLanguage(context, request).presentationLanguage;
                 Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null,
                     displayLanguage);
 

@@ -140,6 +140,41 @@ import static org.fao.geonet.constants.Geonet.IndexFieldNames.DATABASE_CHANGE_DA
  * Indexes metadata using Lucene.
  */
 public class SearchManager implements ISearchManager {
+    public static final Comparator<Element> INDEX_COMPARATOR = new Comparator<Element>() {
+        public int compare(Element o1, Element o2) {
+            // <Field name="_locale" string="{string($iso3LangId)}" store="true" index="true" token="false"/>
+            int name = compare(o1, o2, "name");
+            int string = compare(o1, o2, "string");
+            int store = compare(o1, o2, "store");
+            int index = compare(o1, o2, "index");
+            if (name != 0) {
+                return name;
+            }
+            if (string != 0) {
+                return string;
+            }
+            if (store != 0) {
+                return store;
+            }
+            if (index != 0) {
+                return index;
+            }
+            return 0;
+        }
+
+        private int compare(Element o1, Element o2, String attName) {
+            return safeGet(o1, attName).compareTo(safeGet(o2, attName));
+        }
+
+        public String safeGet(Element e, String attName) {
+            String att = e.getAttributeValue(attName);
+            if (att == null) {
+                return "";
+            } else {
+                return att;
+            }
+        }
+    };
     private static Logger SE_LOGGER = LoggerFactory.getLogger(Geonet.SEARCH_ENGINE);
     private static Logger LU_LOGGER = LoggerFactory.getLogger(Geonet.LUCENE);
     private static Logger IE_LOGGER = LoggerFactory.getLogger(Geonet.INDEX_ENGINE);
@@ -210,10 +245,6 @@ public class SearchManager implements ISearchManager {
      */
     public static PerFieldAnalyzerWrapper getAnalyzer() {
         return _analyzer;
-    }
-
-    public static PerFieldAnalyzerWrapper getSearchAnalyzer() {
-        return _searchAnalyzer;
     }
 
     /**
@@ -294,12 +325,6 @@ public class SearchManager implements ISearchManager {
     private static Constructor<? extends SpatialFilter> constructor(Class<? extends SpatialFilter> clazz)
         throws SecurityException, NoSuchMethodException {
         return clazz.getConstructor(org.apache.lucene.search.Query.class, int.class, Geometry.class, Pair.class);
-    }
-
-    public SettingInfo getSettingInfo() {
-
-        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        return applicationContext.getBean(SettingInfo.class);
     }
 
     /**
@@ -522,11 +547,6 @@ public class SearchManager implements ISearchManager {
 
         _spatial.end();
         _luceneOptimizerManager.shutdown();
-    }
-
-    @Override
-    public MetaSearcher newSearcher(String stylesheetName) throws Exception {
-        return null;
     }
 
     private void createDocumentBoost() {
@@ -966,7 +986,7 @@ public class SearchManager implements ISearchManager {
         String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
 
         final Element request = new Element("request").addContent(new Element(Geonet.IndexFieldNames.ANY).setText(searchValue));
-        String language = LuceneSearcher.determineLanguage(context, request, context.getBean(SettingInfo.class)).analyzerLanguage;
+        String language = LuceneSearcher.determineLanguage(context, request).analyzerLanguage;
         final PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(language, true);
         String analyzedSearchValue = LuceneSearcher.analyzeText(fieldName, searchValueWithoutWildcard, analyzer);
         boolean startsWithOnly = !searchValue.startsWith("*") && searchValue.endsWith("*");
@@ -1107,7 +1127,7 @@ public class SearchManager implements ISearchManager {
      * otherlanguages and merge the fields with those in defaultLang.
      */
     @SuppressWarnings(value = "unchecked")
-    private void mergeDefaultLang(Element defaultLang, List<Element> otherLanguages) {
+    protected void mergeDefaultLang(Element defaultLang, List<Element> otherLanguages) {
         final String langCode;
         if (defaultLang.getAttribute(Geonet.IndexFieldNames.LOCALE) == null) {
             langCode = "";
@@ -1132,55 +1152,33 @@ public class SearchManager implements ISearchManager {
             }
         }
 
-        SortedSet<Element> toInclude = new TreeSet<Element>(new Comparator<Element>() {
-            public int compare(Element o1, Element o2) {
-                // <Field name="_locale" string="{string($iso3LangId)}" store="true" index="true" token="false"/>
-                int name = compare(o1, o2, "name");
-                int string = compare(o1, o2, "string");
-                int store = compare(o1, o2, "store");
-                int index = compare(o1, o2, "index");
-                if (name != 0) {
-                    return name;
-                }
-                if (string != 0) {
-                    return string;
-                }
-                if (store != 0) {
-                    return store;
-                }
-                if (index != 0) {
-                    return index;
-                }
-                return 0;
-            }
+        SortedSet<Element> toInclude = new TreeSet<Element>(INDEX_COMPARATOR);
 
-            private int compare(Element o1, Element o2, String attName) {
-                return safeGet(o1, attName).compareTo(safeGet(o2, attName));
-            }
-
-            public String safeGet(Element e, String attName) {
-                String att = e.getAttributeValue(attName);
-                if (att == null) {
-                    return "";
-                } else {
-                    return att;
-                }
-            }
-        });
+        for (Element element : (List<Element>) defaultLang.getChildren()) {
+            toInclude.add(element);
+        }
 
         if (toMerge != null) {
             toMerge.detach();
             otherLanguages.remove(toMerge);
-            for (Element element : (List<Element>) defaultLang.getChildren()) {
-                toInclude.add(element);
-            }
             for (Element element : (List<Element>) toMerge.getChildren()) {
                 toInclude.add(element);
             }
             toMerge.removeContent();
-            defaultLang.removeContent();
-            defaultLang.addContent(toInclude);
         }
+
+        defaultLang.removeContent();
+        defaultLang.addContent(toInclude);
+
+        for (Element element : otherLanguages) {
+            toInclude.clear();
+            for (Element index : (List<Element>) element.getChildren()) {
+                toInclude.add(index);
+            }
+            element.removeContent();
+            element.addContent(toInclude);
+        }
+
     }
 
     // utilities

@@ -45,8 +45,6 @@ public interface ISearchManager {
 
     void end() throws Exception;
 
-    MetaSearcher newSearcher(String stylesheetName) throws Exception;
-
     /**
      * Indexes a metadata record.
      *

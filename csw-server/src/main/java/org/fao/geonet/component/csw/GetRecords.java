@@ -98,6 +98,9 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     private SchemaManager _schemaManager;
 
     @Autowired
+    private SettingInfo settingInfo;
+
+    @Autowired
     public GetRecords(ApplicationContext context) {
         _searchController = new SearchController(context);
     }
@@ -180,7 +183,6 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         // a comma separated list (such as GN's own CSW Harvesting Client), the check assumes a comma-separated list,
         // and checks whether its values are not other than csw:Record or gmd:MD_Metadata. If both are sent,
         // gmd:MD_Metadata is preferred.
-        final SettingInfo settingInfo = context.getBean(SearchManager.class).getSettingInfo();
         String typeName = checkTypenames(query, settingInfo.getInspireEnabled());
 
         // set of elementnames or null
@@ -759,9 +761,9 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SearchManager sm = gc.getBean(SearchManager.class);
-        boolean requestedLanguageOnTop = sm.getSettingInfo().getRequestedLanguageOnTop();
+        boolean requestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();
 
-        String preferredLanguage = LuceneSearcher.determineLanguage(context, request, sm.getSettingInfo()).presentationLanguage;
+        String preferredLanguage = LuceneSearcher.determineLanguage(context, request).presentationLanguage;
 
         // we always want to keep the relevancy as part of the sorting mechanism
         return LuceneSearcher.makeSort(sortFields, preferredLanguage, requestedLanguageOnTop);
