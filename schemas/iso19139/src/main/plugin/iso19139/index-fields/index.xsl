@@ -927,7 +927,7 @@
 
       <xsl:for-each-group select="gmd:dataQualityInfo/*/gmd:report/*/gmd:result"
                           group-by="*/gmd:specification/gmd:CI_Citation/
-    gmd:title/gco:CharacterString">
+    gmd:title/(gco:CharacterString|gmx:Anchor)">
         <xsl:variable name="title" select="current-grouping-key()"/>
         <xsl:variable name="matchingEUText"
                       select="if ($inspireRegulationLaxCheck)
@@ -949,8 +949,8 @@
             <xsl:if test="string(*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date)">
               "date": "<xsl:value-of select="*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date" />",
             </xsl:if>
-            <xsl:if test="*/gmd:specification/*/gmd:title/@xlink:href">
-              "link": "<xsl:value-of select="*/gmd:specification/*/gmd:title/@xlink:href"/>",
+            <xsl:if test="*/gmd:specification/*/gmd:title/*/@xlink:href">
+              "link": "<xsl:value-of select="*/gmd:specification/*/gmd:title/*/@xlink:href"/>",
             </xsl:if>
             <xsl:if test="*/gmd:explanation/*/text() != ''">
               "explanation": "<xsl:value-of select="gn-fn-index:json-escape((*/gmd:explanation/*/text())[1])" />",
