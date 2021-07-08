@@ -245,11 +245,12 @@
           } else if(md.getSchema() == 'iso19110') {
             url = '../api/records/' + uuid + '/formatters/xsl-view?root=div';
           } else if(md.getSchema() == 'iso19115-3.2018') {
-            if(md.standardName === 'ISO 19115-3:2018 - Remote Sensing') {
-              url = '../api/records/' + uuid + '/formatters/cersat?view=cersat&root=div&loadJS=false&template=cersat-summary-view&header=false&related=';
-            } else {
-              url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&header=false&view=earthObservation&related=';
-            }
+            url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&header=false&view=earthObservation&related=';
+            // if(md.standardName === 'ISO 19115-3:2018 - Remote Sensing') {
+            //   url = '../api/records/' + uuid + '/formatters/cersat?view=cersat&root=div&loadJS=false&template=cersat-summary-view&header=false&related=';
+            // } else {
+            //   url = '../api/records/' + uuid + '/formatters/xsl-view?root=div&header=false&view=earthObservation&related=';
+            // }
           } else if(md.getSchema() == 'iso19115-3') {
             var view;
             if(md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Upstream Data') {
