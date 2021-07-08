@@ -139,6 +139,18 @@ public class KeycloakConfiguration implements SecurityProviderConfiguration {
         }
         this.loginType=parsedLoginType.toString();
     }
+
+    @Override
+    public boolean isUserProfileUpdateEnabled() {
+        // If updating profile from the security provider then disable the profile updates in the interface
+        return !updateProfile;
+    }
+
+    @Override
+    public boolean isUserGroupUpdateEnabled() {
+        // If updating group from the security provider then disable the group updates in the interface
+        return !updateGroup;
+    }
 }
 
 

@@ -32,6 +32,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.security.ldap.LDAPConstants;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -73,6 +74,9 @@ public class PasswordApi {
     @Autowired
     SettingManager sm;
 
+    @Autowired(required=false)
+    SecurityProviderConfiguration securityProviderConfiguration;
+
     @io.swagger.v3.oas.annotations.Operation(summary = "Update user password",
         description = "Get a valid changekey by email first and then update your password.")
     @RequestMapping(
@@ -94,6 +98,10 @@ public class PasswordApi {
         throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
+        if (securityProviderConfiguration != null && !securityProviderConfiguration.isUserProfileUpdateEnabled()) {
+            return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
+        }
 
         ServiceContext context = ApiUtils.createServiceContext(request);
 
@@ -183,6 +191,10 @@ public class PasswordApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         String language = locale.getISO3Language();
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
+        if (securityProviderConfiguration != null && !securityProviderConfiguration.isUserProfileUpdateEnabled()) {
+            return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
+        }
 
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
