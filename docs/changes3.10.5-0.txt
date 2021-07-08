@@ -1,0 +1,26 @@
+================================================================================
+===
+=== GeoNetwork 3.10.5: List of changes
+===
+================================================================================
+- Configuration option to retrict the map services supported in map extent API's (region.getmap and {metadatauuid}/extents.png) the usage of non-predefined map services (#5166)
+- Encode username value in http error responses for password recovery  to prevent potential XSS (#5164)
+- [BP] Fix typo, related to #5111 (#5163)
+- [BP] Update sitemap.xsl (#5148)
+- [BP] Move value to config.properties file
+- [BP] Fix region map url for WMS service to use https, fixes #2951
+- prevent display of html or {...} in filtertags (#5104)
+- [BP] Small fix and style improvements for the PDF output: (#5139)
+- [BP] Harvester / OGC WxS / Fix nested CharacterString.
+- [BP] Global exception controller should  not return body content if requested text/html. Fixes #5042
+- [BP] Xslt formatter - resolve section names with metadata element names using labels.xml
+- [BP] Formatter / JSON-LD / Avoid error on multiple hierarchyLevel (#5109)
+- [BP] ISO19139 / Codelist / Hierarchy level / Don't use radio mode
+- [BP] API / Language / Delete / Add missing source translation table (#5111)
+- add some common languages to prevent 404's (#5093)
+- missing comma in array in json-ld (#5088)
+- Allow the use of ThesaurusService in search page (#5086)
+- Don't cleanup versions map in EditLib constructor as it's a static resource shared between all the EditLib instances (#5070)
+- Test using UTC-04:00 rather than location for ZoneId
+- ISODate Z indicate UTC timezone and document ISODate constructor use of milliseconds
+- Update version to 3.10.5-SNAPSHOT

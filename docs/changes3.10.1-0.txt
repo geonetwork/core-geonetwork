@@ -1,0 +1,68 @@
+================================================================================
+===
+=== GeoNetwork 3.10.1: List of changes
+===
+================================================================================
+- Update ISO19115-3 submodule.
+- PDF / Print polygon extent when record is not public (#4460)
+- DB migration / resources.get converted to attachments API
+- Add override and random UUID options to OAI-PMH harvester (#4453)
+- Remove invalid content length header in log file download. The value was set to the log file size, but the service returns a zip file with different size, causing download issues in some cases
+- Help / Link to trunk
+- [BP] Remove unused namespaces from OAI records
+- Update Kibana version in README.md
+- Update version of ElasticSearch in README.md
+- Index gmd:otherConstraints with gmx:Anchor (#4449)
+- [BP] Stop infinite harvester loop if start > nextRecord (#4446)
+- Update ISO19115-3 submodule.
+- Sharing / Add definition of publish. (#4405)
+- ISO19139 / Multilingual / Add Anchor and fallback to non empty value (#4435)
+- INSPIRE / CSW / Validator trigger error if ResponseLanguage is empty (#4434)
+- Attachements / type is now visibility and values are uppercase on GET. (#4429)
+- MEF / Avoid exception when user do not have download privileges. (#4428)
+- chore(closure) add missing listen_ function
+- Fix fill of multi-polygon in region.getmap
+- add closure in wro sources
+- chore typo and replace deprecated closure clone
+- chore add closure missing methods
+- [BP] Address glitch with duplicate or missing logfiles (#4439)
+- Update submodule.
+- Portal / Upload logo when one is added
+- ISO19139 / Citation / Date is last publication or revision date
+- Add support for drawing 19115-3 bounding polygons
+- Display bounding polygons in 19139 full view
+- Icrease length of Validation.valType column
+- Update from transifex.
+- Record view / Add download menu configuration. (#4400)
+- Styling improvements to the full metadata view (#4414)
+- CSW / Configuration of the capabilities is now done using a service metadata record (#4390)
+- Editor / Record becomes draft even with workflow disabled  (#4407)
+- Editor / Init language autocomplete only on focus (#4409)
+- Record view / Spatial representation type can contain multiple values
+- Use an existing variable in stead of creating a new one
+- Use `File Identifier` in metadata tab of the full metadata view
+- pom - switch to https for repo.maven
+- Do not use an empty string as `background-image`
+- Handle AccessDeniedException to return http status code 403 instead of 400
+- Portal / Allow /srv/ to redirect to home. (#4387)
+- avoid rss search to send link with two slashes
+- Update all font-awesome version numbers and fix the location
+- Process / Fix missing thesaurusDir variable required by some processes.
+- Utility / Add download JSON from URL and return XML (to be used in XSLT). Eg. To build feature catalogue from ESRI Rest service.
+- Editor / Associated panel / Add placeholder for URL and local network choices in ISO19115-3.
+- Add support for custom sql file for data initialization
+- Fix typo in en-search.json
+- MEF / Move back attachment folders in the record folder
+- (gn) fix translation key in homepage
+- Search filter tags / put panel below basket & user searches
+- Search filter tags / minor rewrite & clarify code
+- INSPIRE validation / Add last validation state. (#4388)
+- Formatter / PDF / Restore the header with logo
+- Fix for too wide logo in result list
+- Search filter tags / store facet filters in cache for when dimensions are not available
+- Search filter tags / add generic translation for geometry filter
+- Search filter tags / correctly translate categories & wrap text instead of ellipsis
+- Search filter tags / better behaviour in batch edit
+- Search filter tags / put container on the side with facets
+- Search filter tags / rework & simplify
+- Update version to 3.10.1-SNAPSHOT
