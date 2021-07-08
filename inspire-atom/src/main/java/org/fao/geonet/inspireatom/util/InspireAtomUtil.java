@@ -524,7 +524,7 @@ public class InspireAtomUtil {
 
         String serviceMdUuid = null;
         Document luceneParamSearch = createDefaultLuceneSearcherParams();
-        luceneParamSearch.getRootElement().addContent(new Element("operatesOn").setText(datasetMd.getUuid() + " or " + spIdentifier));
+        luceneParamSearch.getRootElement().addContent(new Element("operatesOn").setText(datasetMd.getUuid() + "* or " + spIdentifier + "*"));
         luceneParamSearch.getRootElement().addContent(new Element("serviceType").setText("download"));
 
         try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
