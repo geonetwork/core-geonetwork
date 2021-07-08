@@ -367,18 +367,18 @@ public class XslProcessApi {
                     Log.info("org.fao.geonet.services.metadata",
                         "Processing metadata with id:" + id);
 
-                    Element beforeMetadata = dataMan.getMetadata(context, id, false, false, false);
+                    Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(id), false, false, false);
 
-                    XslProcessUtils.process(context, id, process,
+                    XslProcessUtils.process(context, String.valueOf(id), process,
                         true, index, updateDateStamp, xslProcessingReport,
                         siteURL, request.getParameterMap());
 
-                    Element afterMetadata = dataMan.getMetadata(context, id, false, false, false);
+                    Element afterMetadata = dataMan.getMetadata(context, String.valueOf(id), false, false, false);
 
                     XMLOutputter outp = new XMLOutputter();
                     String xmlAfter = outp.outputString(afterMetadata);
                     String xmlBefore = outp.outputString(beforeMetadata);
-                    new RecordProcessingChangeEvent(Long.parseLong(id), this.userId, xmlBefore, xmlAfter, process).publish(appContext);
+                    new RecordProcessingChangeEvent(id, this.userId, xmlBefore, xmlAfter, process).publish(appContext);
                 }
             }
         }
