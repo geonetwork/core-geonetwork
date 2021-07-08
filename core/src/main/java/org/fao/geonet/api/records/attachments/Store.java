@@ -335,6 +335,19 @@ public interface Store {
      */
     MetadataResourceContainer getResourceContainerDescription(final ServiceContext context, final String metadataUuid, Boolean approved) throws Exception;
 
+    /**
+     * Copy all resources from none approved (draft working copy) to approved folder.
+     *
+     *
+     * @param context
+     * @param sourceUuid               The source metadata UUID
+     * @param targetUuid               The target metadata UUID
+     * @param sourceApproved
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
+     *
+     */
+    void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception;
+
     interface ResourceHolder extends Closeable {
         Path getPath();
         MetadataResource getMetadata();
