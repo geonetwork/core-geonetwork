@@ -51,30 +51,37 @@
         }, 100);
       };
 
+      /**
+       * Ask for confirmation to delete the category
+       */
+      $scope.deleteCategory = function(id) {
+        $scope.delCategoryId = id;
+        $('#gn-confirm-delete-category').modal('show');
+      };
 
       /**
        * Delete a category
        */
-      $scope.deleteCategory = function(id) {
-        $http.delete('../api/tags/' + id)
-            .then(function(r) {
-              if (r.status === 204) {
-                $scope.unselectCategory();
-                loadCategories();
-              } else {
-                $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant('categoryDeleteError'),
-                  error: r.data,
-                  timeout: 0,
-                  type: 'danger'});
-              }
-            }, function(r) {
+      $scope.confirmDeleteCategory = function(id) {
+        $http.delete('../api/tags/' + $scope.delCategoryId)
+          .then(function(r) {
+            if (r.status === 204) {
+              $scope.unselectCategory();
+              loadCategories();
+            } else {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('categoryDeleteError'),
                 error: r.data,
                 timeout: 0,
                 type: 'danger'});
-            });
+            }
+          }, function(r) {
+            $rootScope.$broadcast('StatusUpdated', {
+              title: $translate.instant('categoryDeleteError'),
+              error: r.data,
+              timeout: 0,
+              type: 'danger'});
+          });
       };
 
       /**
