@@ -252,4 +252,13 @@ public class ResourceLoggerStore extends AbstractStore {
 
         repo.save(metadataFileUpload);
     }
+
+    @Override
+    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid,
+                              MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
+        if (decoratedStore != null) {
+            decoratedStore.copyResources(context, sourceUuid, targetUuid, metadataResourceVisibility, sourceApproved, targetApproved);
+        }
+
+    }
 }
