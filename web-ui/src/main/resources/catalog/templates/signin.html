@@ -104,7 +104,7 @@
         <div class="panel-body text-muted">
 
           <!-- register -->
-          <div data-ng-show="gnConfig[gnConfig.key.isSelfRegisterEnabled]">
+          <div data-ng-show="gnConfig[gnConfig.key.isSelfRegisterEnabled] && isUserProfileUpdateEnabled">
             <b data-translate="">needAnAccount</b>
             <p data-translate="">needAnAccountInfo</p>
             <p>
@@ -113,7 +113,7 @@
           </div>
 
           <!-- forgot passpword -->
-          <div data-ng-show="gnConfig['system.feedback.mailServer.hostIsDefined']">
+          <div data-ng-show="gnConfig['system.feedback.mailServer.hostIsDefined'] && isUserProfileUpdateEnabled">
             <b data-translate="">forgetDetails</b>
             <span data-ng-show="sendPassword === false">
               <p data-translate="">forgetDetailsInfo</p>

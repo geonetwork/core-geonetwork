@@ -29,6 +29,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.security.ldap.LDAPConstants;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -84,6 +85,9 @@ public class PasswordApi {
     @Autowired
     SettingManager sm;
 
+    @Autowired(required=false)
+    SecurityProviderConfiguration securityProviderConfiguration;
+
     @ApiOperation(value = "Update user password",
         nickname = "updatePassword",
         notes = "Get a valid changekey by email first and then update your password.")
@@ -107,7 +111,11 @@ public class PasswordApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
-      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        if (securityProviderConfiguration != null && !securityProviderConfiguration.isUserProfileUpdateEnabled()) {
+            return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
+        }
+
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         User user = userRepository.findOneByUsername(username);
         if (user == null) {
@@ -197,6 +205,10 @@ public class PasswordApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         String language = locale.getISO3Language();
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
+        if (securityProviderConfiguration != null && !securityProviderConfiguration.isUserProfileUpdateEnabled()) {
+            return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
+        }
 
         try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
 

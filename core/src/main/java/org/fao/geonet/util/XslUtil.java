@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2017 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2020 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -383,6 +383,30 @@ public final class XslUtil {
         }
         // If we cannot find SecurityProviderConfiguration then default to false.
         return false;
+    }
+
+    /**
+     * Check if user profile update is enabled.
+     */
+    public static boolean isUserProfileUpdateEnabled() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.isUserProfileUpdateEnabled();
+        }
+        return true;
+    }
+
+    /**
+     * Check if user group update is enabled.
+     */
+    public static boolean isUserGroupUpdateEnabled() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.isUserGroupUpdateEnabled();
+        }
+        return true;
     }
 
     /**

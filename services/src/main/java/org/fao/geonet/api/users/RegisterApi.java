@@ -1,5 +1,5 @@
 //=============================================================================
-//===   Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===   Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===   United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===   and United Nations Environment Programme (UNEP)
 //===
@@ -33,6 +33,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
@@ -84,6 +85,9 @@ public class RegisterApi {
     @Autowired
     LanguageUtils languageUtils;
 
+    @Autowired(required=false)
+    SecurityProviderConfiguration securityProviderConfiguration;
+
     @ApiOperation(value = "Create user account",
         nickname = "registerUser",
         notes = "User is created with a registered user profile. username field is ignored and the email is used as " +
@@ -108,7 +112,11 @@ public class RegisterApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
-      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+        if (securityProviderConfiguration != null && !securityProviderConfiguration.isUserProfileUpdateEnabled()) {
+            return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
+        }
+
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
         SettingManager sm = context.getBean(SettingManager.class);
         boolean selfRegistrationEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_ENABLE);
