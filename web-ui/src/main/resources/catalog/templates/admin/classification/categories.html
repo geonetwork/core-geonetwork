@@ -1,4 +1,5 @@
-<div class="row" data-ng-controller="GnCategoriesController">
+<div class="row" data-ng-controller="GnCategoriesController"
+     id="gn-categories-container">
   <div class="col-lg-5">
     <div class="panel panel-default">
       <div class="panel-heading" data-translate=""> categories</div>
@@ -94,5 +95,11 @@
         </div>
       </div>
     </form>
+  </div>
+
+  <div gn-modal class="gn-confirm-delete"
+       gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmDeleteCategory}"
+       id="gn-confirm-delete-category">
+    <p translate>confirmDeletecategory</p>
   </div>
 </div>

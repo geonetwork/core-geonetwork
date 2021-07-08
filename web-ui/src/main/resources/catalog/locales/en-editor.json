@@ -419,5 +419,6 @@
     "status-no-status": "Workflow not active",
     "draft": "Working copy",
     "link": "Link",
-    "link-text": "Link text"
+    "link-text": "Link text",
+    "confirmCancelEdit": "Do you want to cancel all changes and close the editor?"
 }
