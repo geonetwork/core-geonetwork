@@ -97,12 +97,11 @@
           }
 
           if (titleOnly) {
-            var query = gnGlobalSettings.gnCfg.mods.search.queryTitle.replace(
-              /\$\{any\}/g, escapeSpecialCharacters(p.any));
             queryHook.must.push({
               query_string: {
                 fields: ["resourceTitleObject.*"],
-                query: exactMatch ? query.replaceAll("*", "") : query // remove wild cards for exact match
+                query: gnGlobalSettings.gnCfg.mods.search.queryTitle.replace(
+                  /\$\{any\}/g, escapeSpecialCharacters(p.any))
               }
             });
           } else {
