@@ -546,9 +546,6 @@ goog.require('gn_alert');
             }, {
               'label': 'full',
               'url' : '/formatters/xsl-view?root=div&view=xml'
-            }, {
-              'label': 'extra',
-              'url' : '/main'
             }]
           },
           'downloadFormatter': [{

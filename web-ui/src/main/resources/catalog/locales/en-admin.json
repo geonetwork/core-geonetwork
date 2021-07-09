@@ -1191,6 +1191,8 @@
     "ui-resultViewTpls": "List of templates for search results",
     "ui-resultTemplate": "Default template used for search results",
     "ui-formatter": "List of formatter for record view",
+    "ui-formatter-conditional-views": "Conditional views",
+    "ui-formatter-help": "Configure which formatter to use and optionally add conditional views to load formatter depending on record properties. eg. [\n  {\n    \"if\": {\n      \"standardName\": [\n        \"ISO 19115:2003/19139 - EMODNET - BATHYMETRY\",\n        \"ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY\"\n      ]\n    },\n    \"url\": \"/formatters/xsl-view?root=div&view=emodnetHydrography\"}]",
     "ui-downloadFormatter": "List of formatter for record export",
     "ui-linkTypes": "List of link types",
     "ui-mod-map": "Map application",
