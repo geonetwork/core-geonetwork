@@ -626,27 +626,28 @@
           dropDownCheckboxElement.is(':active');
       };
 
-       function addWildcardOnWords(searchString) {
-         return searchString && searchString.split(/\s+/).map(function(part) {
-            //do not add wildcards on uui
-           return part.match(/[a-f0-9]{8}(?:-[a-f0-9]{4}){4}[a-f0-9]{8}/) ? part : part + '*';
-         }).join(' ')
-       }
-       function removeWildcardOnWords(searchString) {
-         return searchString && searchString.split(/\s+/).map(function(part) {
-           return part.replace(/\*$/, '');
-         }).join(' ')
-       }
+      function addWildcardOnWords(searchString) {
+        return searchString && searchString.split(/\s+/).map(function (part) {
+          //do not add wildcards on uuid
+          return part.match(/[a-f0-9]{8}(?:-[a-f0-9]{4}){4}[a-f0-9]{8}/) ? part : part + '*'
+        }).join(' ')
+      }
 
-       $scope.searchInput = {};
-       Object.defineProperty($scope.searchInput, 'model', {
-         set: function(newValue) {
-           $scope.searchObj.params['any'] = addWildcardOnWords(newValue);
-         },
-         get: function() {
-           return removeWildcardOnWords($scope.searchObj.params["any"]);
-         }
-       });
+      function removeWildcardOnWords(searchString) {
+        return searchString && searchString.split(/\s+/).map(function (part) {
+          return part.replace(/\*$/, '')
+        }).join(' ')
+      }
+
+      $scope.searchInput = {}
+      Object.defineProperty($scope.searchInput, 'model', {
+        set: function (newValue) {
+          $scope.searchObj.params['any'] = addWildcardOnWords(newValue)
+        },
+        get: function () {
+          return removeWildcardOnWords($scope.searchObj.params['any'])
+        }
+      })
     }]);
 
   module.directive('sxtFixMdlinks', [ 'sxtService',

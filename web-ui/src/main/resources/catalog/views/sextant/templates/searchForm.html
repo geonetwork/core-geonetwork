@@ -3,9 +3,6 @@
   <!--any field-->
   <div class="input-group gn-search-input">
 
-<!--    ng-blur="showTitleSearchToggle(false)"-->
-<!--    ng-focus="showTitleSearchToggle(true)"-->
-<!--    typeahead-popup-template-url="../../catalog/views/sextant/templates/searchForm-typeahead.html"-->
     <input type="text"
            class="form-control"
            placeholder="{{'anyPlaceHolder' | translate}}"
@@ -13,8 +10,6 @@
            id="anySearchField"
            autocomplete="off"
            ng-model="searchInput.model"
-           ng-blur="showTitleSearchToggle(false)"
-           ng-focus="showTitleSearchToggle(true)"
            data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
            data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
            typeahead-focus-first="false"
