@@ -292,7 +292,7 @@
 
             scope.removeOverview = function(thumbnail) {
               var url = thumbnail.url[gnCurrentEdit.mdLanguage];
-              if (url.match(".*/api/records/(.*)/attachments/.*") == null) {
+              if (url.match(".*/api/records/" + gnCurrentEdit.uuid + "/attachments/.*") == null) {
                 // An external URL
                 gnOnlinesrc.removeThumbnail(thumbnail).then(function() {
                   // and update list.
