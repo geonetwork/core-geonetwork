@@ -66,7 +66,7 @@ import org.locationtech.jts.util.Assert;
  */
 @MappedSuperclass
 public abstract class AbstractMetadata extends GeonetEntity {
-    static final String ID_SEQ_NAME = "metadata_id_seq";
+    static public final String ID_SEQ_NAME = "metadata_id_seq";
     public static final String METADATA_CATEG_JOIN_TABLE_CATEGORY_ID = "categoryId";
     private int _id;
     private String _uuid;
@@ -82,7 +82,7 @@ public abstract class AbstractMetadata extends GeonetEntity {
      * @return the id of the metadata
      */
     @Id
-    @SequenceGenerator(name=AbstractMetadata.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+    @SequenceGenerator(name=AbstractMetadata.ID_SEQ_NAME, sequenceName = AbstractMetadata.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(nullable = false)
     public int getId() {

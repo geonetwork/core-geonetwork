@@ -70,7 +70,7 @@ import org.fao.geonet.entitylistener.GroupEntityListenerManager;
 @Cacheable
 @Access(AccessType.PROPERTY)
 @EntityListeners(GroupEntityListenerManager.class)
-@SequenceGenerator(name = Group.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = Group.ID_SEQ_NAME, sequenceName = Group.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class Group extends Localized implements Serializable {
     static final String ID_SEQ_NAME = "group_id_seq";
 

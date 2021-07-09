@@ -42,7 +42,7 @@ import javax.persistence.*;
 @Cacheable
 @Access(AccessType.PROPERTY)
 @EntityListeners(MapServerEntityListenerManager.class)
-@SequenceGenerator(name = MapServer.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@SequenceGenerator(name = MapServer.ID_SEQ_NAME, sequenceName = MapServer.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class MapServer extends GeonetEntity {
     static final String ID_SEQ_NAME = "mapserver_id_seq";
 
