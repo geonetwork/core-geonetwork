@@ -110,6 +110,8 @@
   "searchInvalidResponse": "Query returned an invalid response. Check the console for details.",
   "exactMatch": "Exact match",
   "exactMatch-help": "Exact match means that '\"' are added to the search terms.",
+  "titleOnly": "Search in title only",
+  "titleOnly-help": "Search in title only.",
   "wfsIndexingEndDate": "Last indexing date",
   "wfsIndexingScheduled": "Scheduled?",
   "wfsIndexingNewSchedule": "Add WFS harvester",

@@ -147,6 +147,8 @@
       $scope.isFilterTagsDisplayedInSearch = gnGlobalSettings.gnCfg.mods.search.isFilterTagsDisplayedInSearch;
       $scope.showStatusFooterFor = gnGlobalSettings.gnCfg.mods.search.showStatusFooterFor;
       $scope.exactMatchToggle = gnGlobalSettings.gnCfg.mods.search.exactMatchToggle;
+      $scope.exactTitleToggle = gnGlobalSettings.gnCfg.mods.search.exactTitleToggle;
+      $scope.searchOptions = gnGlobalSettings.gnCfg.mods.search.searchOptions;
       $scope.gnWmsQueue = gnWmsQueue;
       $scope.$location = $location;
       $scope.activeTab = '/home';

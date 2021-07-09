@@ -110,6 +110,8 @@
   "searchInvalidResponse": "La réponse du service de recherche est invalide. Vérifier la console.",
   "exactMatch": "Correspondance exacte",
   "exactMatch-help": "Correspondance exacte signifie que des \\\"' sont ajoutés autour des termes recherchés.",
+  "titleOnly": "Rechercher uniquement dans le titre",
+  "titleOnly-help": "Rechercher uniquement dans le titre.",
   "wfsIndexingEndDate": "Dernière exécution",
   "wfsIndexingScheduled": "Planifié ?",
   "wfsIndexingNewSchedule": "Ajouter un moissoneur",
