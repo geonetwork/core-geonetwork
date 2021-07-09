@@ -79,8 +79,13 @@
         }
       });
 
+      /**
+       * First matching view for each formatter is returned.
+       *
+       * @param record
+       * @returns {*[]}
+       */
       function getFormatterForRecord(record) {
-        console.log('getFormatterForRecord', record);
         var list = [];
         if (record == null) {
           return list;
