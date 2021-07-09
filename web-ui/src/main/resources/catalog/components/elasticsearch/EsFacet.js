@@ -61,7 +61,8 @@
       'documentStandard',
       'cl_status*',
       'mdStatus*',
-      'recordLink'
+      'recordLink',
+      'th_sextant-theme_tree' // SPECIFIC SEXTANT
     ]};
     this.configs = {
       search: {

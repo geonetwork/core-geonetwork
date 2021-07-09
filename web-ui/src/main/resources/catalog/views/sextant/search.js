@@ -327,12 +327,14 @@
 
           loadLayerPromise.then(function(layer) {
             if(layer) {
-              var group, theme = md.sextantTheme;
+              var group = null;
+              var themeTree = md['th_sextant-theme_tree'];
+              var layerTheme = themeTree && themeTree.key && themeTree.key[0];
               var themes = sxtGlobals.keywords.sextantTheme;
-              if(angular.isArray(themes)) {
+              if(layerTheme && angular.isArray(themes)) {
                 for (var i = 0; i < themes.length; i++) {
                   var t = themes[i];
-                  if (t.props.uri == theme) {
+                  if (t.props.uri === layerTheme) {
                     group = t.label;
                     break;
                   }
