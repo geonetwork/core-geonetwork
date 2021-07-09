@@ -201,7 +201,7 @@
         </li>
         <li class="open signin-dropdown"
             data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && isShowLoginAsLink">
-          <a href="{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}"
+          <a href="{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign | encodeURIComponent}}"
              title="{{'signIn'|translate}}"
              class="gn-menuheader-xs"
              data-ng-keypress="$event"
