@@ -779,6 +779,8 @@
     "system/csw/metadataPublic-help": "When a transaction insert a new record via the CSW-T protocol, automatically publish the record to all users.",
     "system/csw/transactionUpdateCreateXPath": "Create element if it does not exist when using XPath in CSW transaction.",
     "system/csw/transactionUpdateCreateXPath-help": "If not checked, only existing elements can be updated.",
+    "system/csw/proxyUrl": "CSW proxy url",
+    "system/csw/proxyUrl-help": "Custom CSW url to override the base CSW of the application.",
     "system/downloadservice": "Download service",
     "system/downloadservice/leave": "Use metadata linkage as is - no changes to linkage",
     "system/downloadservice/leave-help": "Selecting this option means that GeoNetwork will not handle file downloads.",

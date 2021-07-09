@@ -606,6 +606,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/enable', 'true', 2, 1210, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/enabledWhenIndexing', 'true', 2, 1211, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/capabilityRecordUuid', '-1', 0, 1220, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/proxyUrl', '', 0, 1221, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/metadataPublic', 'false', 2, 1310, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/transactionUpdateCreateXPath', 'true', 2, 1320, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/enable', 'false', 2, 1910, 'n');

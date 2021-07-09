@@ -205,8 +205,8 @@
         <ows:Operation name="GetCapabilities">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+              <ows:Get xlink:href="$END-POINT-URL"/>
+              <ows:Post xlink:href="$END-POINT-URL"/>
             </ows:HTTP>
           </ows:DCP>
           <ows:Parameter name="sections">
@@ -223,8 +223,8 @@
         <ows:Operation name="DescribeRecord">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+              <ows:Get xlink:href="$END-POINT-URL"/>
+              <ows:Post xlink:href="$END-POINT-URL"/>
             </ows:HTTP>
           </ows:DCP>
           <ows:Parameter name="outputFormat">
@@ -242,16 +242,16 @@
         <ows:Operation name="GetDomain">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+              <ows:Get xlink:href="$END-POINT-URL"/>
+              <ows:Post xlink:href="$END-POINT-URL"/>
             </ows:HTTP>
           </ows:DCP>
         </ows:Operation>
         <ows:Operation name="GetRecords">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+              <ows:Get xlink:href="$END-POINT-URL"/>
+              <ows:Post xlink:href="$END-POINT-URL"/>
             </ows:HTTP>
           </ows:DCP>
           <ows:Parameter name="resultType">
@@ -276,8 +276,8 @@
         <ows:Operation name="GetRecordById">
           <ows:DCP>
             <ows:HTTP>
-              <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-              <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+              <ows:Get xlink:href="$END-POINT-URL"/>
+              <ows:Post xlink:href="$END-POINT-URL"/>
             </ows:HTTP>
           </ows:DCP>
           <ows:Parameter name="outputSchema"/>
@@ -335,7 +335,7 @@
 
           <inspire_ds:ExtendedCapabilities>
             <inspire_com:ResourceLocator>
-              <inspire_com:URL>$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_com:URL>
+              <inspire_com:URL>$END-POINT-URL?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_com:URL>
               <inspire_com:MediaType>application/xml</inspire_com:MediaType>
             </inspire_com:ResourceLocator>
 

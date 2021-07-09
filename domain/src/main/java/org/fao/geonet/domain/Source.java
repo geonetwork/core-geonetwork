@@ -26,7 +26,6 @@ package org.fao.geonet.domain;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.entitylistener.SourceEntityListenerManager;
 import org.fao.geonet.repository.LanguageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.Map;
@@ -60,6 +59,7 @@ public class Source extends Localized {
     private String serviceRecord;
     private ISODate creationDate = new ISODate();
     private Integer groupOwner;
+    private String proxyCswUrl;
 
     /**
      * Default constructor.  Required by framework.
@@ -269,5 +269,20 @@ public class Source extends Localized {
 
     public void setServiceRecord(String serviceRecord) {
         this.serviceRecord = serviceRecord;
+    }
+
+    /**
+     * Get the csw proxy url related to this subportal.
+     * If empty, CSW uses the default web application CSW url.
+     *
+     * @return the csw proxy url related to this subportal.
+     */
+    @Column(name = "proxyUrl")
+    public String getProxyCswUrl() {
+        return proxyCswUrl;
+    }
+
+    public void setProxyCswUrl(String proxyUrl) {
+        this.proxyCswUrl = proxyUrl;
     }
 }
