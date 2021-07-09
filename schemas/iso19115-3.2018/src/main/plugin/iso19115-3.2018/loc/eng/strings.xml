@@ -143,6 +143,22 @@
   <addCrs4258cersat>ETRS89 (EPSG:4258) - Equirectangular projection</addCrs4258cersat>
   <addCrs3035cersat>ETRS89 / LAEA Europe (EPSG:3035) - Lambert azimuthal equal-area projection</addCrs3035cersat>
 
+  <cersat-version>Version</cersat-version>
+  <cersat-opdataset>Operational dataset</cersat-opdataset>
+  <cersat-citation>Citation</cersat-citation>
+  <cersat-projects>Project(s)</cersat-projects>
+  <cersat-product>Product</cersat-product>
+  <cersat-obssource>Observation source(s)</cersat-obssource>
+  <cersat-temporal>Temporal</cersat-temporal>
+  <cersat-spatial>Spatial</cersat-spatial>
+  <cersat-contacts>Contact(s)</cersat-contacts>
+  <cersat-resources>Resource(s)</cersat-resources>
+  <cersat-dataaccess>Data access</cersat-dataaccess>
+  <cersat-helpdesk>Help desk</cersat-helpdesk>
+  <cersat-accesspolicy>Access policy</cersat-accesspolicy>
+  <cersat-formats>Format(s)</cersat-formats>
+  <cersat-publications>Publication(s)</cersat-publications>
+
   <sxt-view-networkLink>Data access</sxt-view-networkLink>
 
   <extent>Geographic bounding box</extent>
