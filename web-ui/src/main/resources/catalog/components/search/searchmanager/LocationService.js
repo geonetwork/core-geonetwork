@@ -135,7 +135,7 @@
           $location.path(this.SEARCH);
         }
         var params = angular.copy(searchObjParam, {}), urlParams = {};
-        if (angular.isObject(params)) {
+        if (angular.isObject(searchObjParam)) {
           var keys = Object.keys(params);
           keys.map(function(k) {
             if (k != 'query_string' && angular.isObject(params[k])) {
