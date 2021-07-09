@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import java.io.IOException;
@@ -222,8 +223,9 @@ public class FilesystemStore implements PersistentStore {
             }
 
             if(StringUtils.isNotEmpty(landingPageFormatter)) {
-                final Path landingPageFile = getLandingPageCacheDir().resolve(key.mdUuid + ".html");
-                Files.createDirectories(landingPageFile.getParent());
+                final Path landingPageDir = getLandingPageCacheDir().resolve(key.mdUuid);
+                final Path landingPageFile = getLandingPageCacheDir().resolve(key.mdUuid).resolve("index.html");
+                Files.createDirectories(landingPageDir);
                 Files.deleteIfExists(landingPageFile);
                 try {
                     Files.createLink(landingPageFile, privatePath);
@@ -331,7 +333,7 @@ public class FilesystemStore implements PersistentStore {
                         }
                     } else {
                         Files.deleteIfExists(publicPath);
-                        final Path landingPageFile = getLandingPageCacheDir().resolve(metadataUuid + ".html");
+                        final Path landingPageFile = getLandingPageCacheDir().resolve(metadataUuid);
                         Files.deleteIfExists(landingPageFile);
                     }
                     return super.visitFile(privatePath, attrs);
@@ -386,8 +388,8 @@ public class FilesystemStore implements PersistentStore {
             try {
                 final Path publicPath = toPublicPath(privatePath);
                 Files.deleteIfExists(publicPath);
-                final Path landingPageFile = getLandingPageCacheDir().resolve(mdUuid + ".html");
-                Files.deleteIfExists(landingPageFile);
+                final Path landingPageDir = getLandingPageCacheDir().resolve(mdUuid);
+                FileSystemUtils.deleteRecursively(landingPageDir.toFile());
             } finally {
                 try (PreparedStatement statement = metadataDb.prepareStatement(QUERY_REMOVE)) {
                     statement.setInt(1, keyHashCode);
