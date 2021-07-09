@@ -92,10 +92,14 @@
           return undefined;
         }
       };
-      this.getFormatterPath = function() {
+      this.getFormatterPath = function(defaultFormatter) {
         var tokens = $location.path().split('/');
         if (tokens.length > 2 && tokens[3] === 'formatters') {
           return '../api/records/' + $location.url().split(/^metadraf|metadata\//)[1];
+        } else if (tokens.length > 2 && tokens[3] === 'main') {
+          return undefined; // Angular view
+        } else if (defaultFormatter) {
+          return '../api/records/' + $location.url().split(/^metadraf|metadata\//)[1] + defaultFormatter;
         } else {
           return undefined;
         }

@@ -264,6 +264,11 @@
                        id="ui-formatterURL-{{$index}}"
                        data-ng-model="opt.url"/>
               </div>
+
+              <div class="row">
+                <label class="control-label">{{('ui-' + key + '-conditional-views') | translate}}</label>
+                <gn-json-edit height="300" model="opt.views"></gn-json-edit>
+              </div>
             </td>
             <td>
               <a class="btn btn-link text-danger"
