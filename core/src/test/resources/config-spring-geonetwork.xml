@@ -31,4 +31,7 @@
   <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer"/>
   <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>
   <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>
+
+  <!-- DataManager need ThesaurusManager need SettingManager need a ServletContext-->
+  <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext"/>
 </beans>
