@@ -104,10 +104,10 @@
               class="col-xs-12 col-sm-6 col-md-3 col-lg-2 gn-topic">
           <div class="panel panel-default">
             <div class="panel-body">
-              <a title="{{facet.key}}"
-                 class="clearfix"
+              <a class="clearfix"
+                 title="{{facet.key}}"
                  role="link"
-                 data-ng-init="field = (aggResponse.meta && aggResponse.meta.field) || homeFacet.key"
+                 data-ng-init="field = (aggResponse.meta && aggResponse.meta.field) || homeFacet.key; value = aggResponse.meta && aggResponse.meta.wildcard ? (facet.key + '*') : facet.key"
                  data-ng-href='#/search?query_string={"{{field}}": {"{{facet.key}}": true} }'>
                 <i class="fa fa-2x gn-icon-{{facet.key.replace('/', '').replace(' ', '')}} pull-left"
                    data-ng-show="homeFacet.key === 'cl_topic.key' || homeFacet.key === 'cl_hierarchyLevel.key'">
