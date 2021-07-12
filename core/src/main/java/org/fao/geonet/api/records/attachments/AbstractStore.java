@@ -45,6 +45,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public abstract class AbstractStore implements Store {
     @Override
     public final List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid, final Sort sort,
@@ -203,6 +206,16 @@ public abstract class AbstractStore implements Store {
         return patchResourceStatus(context, metadataUuid, resourceId, metadataResourceVisibility, true);
     }
 
+    @Override
+    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
+        final List<MetadataResource> resources = getResources(context, sourceUuid, metadataResourceVisibility, null, sourceApproved);
+        for (MetadataResource resource: resources) {
+            try (Store.ResourceHolder holder = getResource(context, sourceUuid, metadataResourceVisibility, resource.getFilename(), sourceApproved)) {
+                putResource(context, targetUuid, holder.getPath(), metadataResourceVisibility, targetApproved);
+            }
+        }
+    }
+
     protected String getFilename(final String metadataUuid, final String resourceId) {
         // It's not always clear when we get a resourceId or a filename
         String prefix = metadataUuid + "/attachments/";
@@ -219,5 +232,38 @@ public abstract class AbstractStore implements Store {
         if (resourceId.contains("..") || resourceId.startsWith("/") || resourceId.startsWith("file:/")) {
             throw new SecurityException(String.format("Invalid resource identifier '%s'.", resourceId));
         }
+    }
+
+    public ResourceManagementExternalProperties getResourceManagementExternalProperties() {
+        return new ResourceManagementExternalProperties() {
+            @Override
+            public boolean isEnabled() {
+                return false;
+            }
+
+            @Override
+            public String getWindowParameters() {
+                return null;
+            }
+
+            @Override
+            public boolean isModal() {
+                return false;
+            }
+
+            @Override
+            public boolean isFolderEnabled() {
+                return false;
+            }
+
+            @Override
+            public String toString() {
+                try {
+                    return new ObjectMapper().writeValueAsString(this);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException("Error converting ResourceManagementExternalProperties to json", e);
+                }
+            }
+        };
     }
 }

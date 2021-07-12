@@ -1,10 +1,12 @@
 <div>
   <div class="clearfix">
     <div data-ng-show="searchResults.count > 0">
-      <ng-pluralize count="searchResults.count"
-                    when="{'0 ': ('noRecordFound' | translate),
-              'one': '1 ' +  ('record' | translate),
-              'other': '{} ' +  ('records' | translate)}"/>
+      <strong>
+        <ng-pluralize count="searchResults.count"
+                      when="{'0 ': ('noRecordFound' | translate),
+                'one': '1 ' +  ('record' | translate),
+                'other': '{} ' +  ('records' | translate)}"/>
+      </strong>
     </div>
     <div data-ng-show="options.selection.mode.indexOf('local') === -1">
       <div class="btn-group pull-right"
@@ -30,9 +32,22 @@
           href=""
           data-ng-class="isSelected(md) ? 'active' : ''"
           data-ng-click="onClick(md)">
-        <div data-ng-if="options.mode == 'title'">
+        <div data-ng-if="options.mode == 'title'
+              && options.selection.mode === undefined">
+          <gn-md-type-widget metadata="md"></gn-md-type-widget>
+          <a href="catalog.search#/metadata/{{md.uuid}}">
+            {{md.resourceTitle}}
+          </a>
+        </div>
+        <div data-ng-if="options.mode == 'title'
+              && options.selection.mode !== undefined">
           <gn-md-type-widget metadata="md"></gn-md-type-widget>
           {{md.resourceTitle}}
+
+          <a class="pull-right"
+             href="catalog.search#/metadata/{{md.uuid}}">
+            <i class="fa fa-eye"></i>
+          </a>
         </div>
         <div class="row" data-ng-if="options.mode == 'simple'">
           <div class="col-lg-12"

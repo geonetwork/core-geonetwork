@@ -6,10 +6,18 @@
 .gn-results-editor {
   .gn-status {
     font-weight: 500;
+    color: @text-muted;
+    border: 1px solid @btn-default-border;
+    padding: 0 5px;
+    margin-right: 5px;
+    border-radius: 3px;
   }
   tr:hover {
     background-color: @panel-footer-bg;
     transition: background-color ease 0.5s;
+  }
+  .gn-record-details {
+    margin-top: 5px;
   }
 }
 
@@ -81,12 +89,6 @@
   }
   .gn-search-facet {
     padding-bottom: 15px;
-  }
-  // modal dialog (wider for for multilingual)
-  @media (min-width: @screen-sm-min) {
-    .modal-dialog {
-      width: 760px;
-    }
   }
   form.gn-editor {
     // tabs above editor

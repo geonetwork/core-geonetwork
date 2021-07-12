@@ -26,7 +26,9 @@ then
   exit
 fi
 
-if [[ $1 != [0-9].[0-9].[0-9] ]]; then 
+if [[ $1 =~ ^[0-9]+.[0-9]+.[0-9]+$ ]]; then
+    echo
+else
 	echo
 	echo 'Update failed due to incorrect versionnumber format (' $1 ')'
 	echo 'The format should be three numbers separated by dots. e.g.: 2.7.0'
@@ -36,7 +38,9 @@ if [[ $1 != [0-9].[0-9].[0-9] ]]; then
 	exit
 fi
 
-if [[ $2 != [0-9].[0-9].[0-9] ]]; then 
+if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+$ ]]; then
+    echo
+else
 	echo
 	echo 'Update failed due to incorrect new versionnumber format (' $2 ')'
 	echo 'The format should be three numbers separated by dots. e.g.: 2.7.1'
@@ -62,12 +66,11 @@ version="$1"
 new_version="$2"
 
 # Update version in sphinx doc files
-sed $sedopt "s/${version}/${new_version}-SNAPSHOT/g" docs/eng/users/source/conf.py 
-sed $sedopt "s/${version}/${new_version}-SNAPSHOT/g" docs/eng/developer/source/conf.py
+sed $sedopt "s/${version}/${new_version}-SNAPSHOT/g" docs/manuals/source/conf.py
 
-# Update ZIP distribution
-sed $sedopt "s/\<property name=\"version\" value=\"${version}\" \/\>/\<property name=\"version\" value=\"${new_version}\" \/\>/g" release/build.xml
-sed $sedopt "s/\<property name=\"subVersion\" value=\"0\" \/\>/\<property name=\"subVersion\" value=\"SNAPSHOT\" \/\>/g" release/build.xml
+# Update release properties
+sed $sedopt "s/version=${version}/version=${new_version}/g" release/build.properties
+sed $sedopt "s/subVersion=0/subVersion=SNAPSHOT/g" release/build.properties
 
 # Update version pom files
 find . -name pom.xml -exec sed $sedopt "s/${version}/${new_version}-SNAPSHOT/g" {} \;

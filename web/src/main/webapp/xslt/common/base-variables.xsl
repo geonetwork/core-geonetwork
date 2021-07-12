@@ -71,6 +71,12 @@
   <xsl:variable name="isShowLoginAsLink"
                 select="util:isShowLoginAsLink()"/>
 
+  <xsl:variable name="isUserProfileUpdateEnabled"
+                select="util:isUserProfileUpdateEnabled()"/>
+
+  <xsl:variable name="isUserGroupUpdateEnabled"
+                select="util:isUserGroupUpdateEnabled()"/>
+
   <!-- Define which JS module to load using Closure -->
   <xsl:variable name="angularApp" select="
     if ($service = 'admin.console') then 'gn_admin'

@@ -439,6 +439,25 @@
       </xsl:for-each>]
       </xsl:element>
 
+
+      <!-- If keyword is related to a thesaurus available
+      in current catalogue, checked the keyword exists in the thesaurus.
+      If not, report an error in indexingErrorMsg field.
+
+      This case may trigger editor warning message when a keyword is not
+       found in the thesaurus. Try to anticipate this and advertise those
+       records in the admin.
+
+       TODO: Thesaurus id must be defined by a check in thesaurus manager based on multilingual titles.-->
+      <xsl:for-each select="$keywords">
+        <xsl:if test="$thesaurusId != ''
+                and util:getKeywordUri((*/text())[1], $thesaurusId, $mainLanguage) = ''">
+          <indexingErrorMsg>Warning / Keyword <xsl:value-of select="(*/text())[1]"/> not found in <xsl:value-of select="$thesaurusId"/>.</indexingErrorMsg>
+          <indexingError>true</indexingError>
+        </xsl:if>
+      </xsl:for-each>
+      
+
       <xsl:variable name="thesaurusTree" as="node()">
         <values>
           <xsl:for-each select="$keywords">
@@ -477,6 +496,7 @@
           </xsl:for-each>
         </values>
       </xsl:variable>
+
 
       <xsl:if test="count($thesaurusTree/*) > 0">
         <xsl:element name="{$thesaurusField}_tree">

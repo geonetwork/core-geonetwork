@@ -47,8 +47,7 @@
            $location, $window, $timeout,
                gnUtilityService, gnConfig, gnGlobalSettings,
                vcRecaptchaService, $q) {
-          $scope.formAction = '../../signin#' +
-         $location.path();
+          $scope.formAction = '../../signin#' + $location.url();
           $scope.registrationStatus = null;
           $scope.sendPassword = false;
           $scope.password = null;
@@ -67,6 +66,7 @@
           $scope.gnConfig = gnConfig;
           $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
           $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;
+         $scope.isUserProfileUpdateEnabled = gnGlobalSettings.isUserProfileUpdateEnabled;
 
          $scope.passwordMinLength =
            Math.min(gnConfig['system.security.passwordEnforcement.minLength'], 6);
@@ -96,6 +96,13 @@
            $scope.sendPassword = value;
            $('#username').focus();
           };
+
+         var showForgotPassword = gnUtilityService.getUrlParameter('showforgotpassword');
+
+         if ((showForgotPassword) && (showForgotPassword === 'true')) {
+           $scope.setSendPassword(true);
+         }
+
          /**
           * Register user. An email will be sent to the new
           * user and another to the catalog admin if a profile

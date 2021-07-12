@@ -55,13 +55,15 @@
         },
         controller: ['$scope',
           function($scope) {
+            var sortConfig = gnSearchSettings.sortBy.split('#');
             $scope.searchObj = {
               permalink: false,
               hitsperpageValues: gnSearchSettings.hitsperpageValues,
               sortbyValues: gnSearchSettings.sortbyValues,
+              filters: gnSearchSettings.filters,
               params: {
-                from: 1,
-                to: 9
+                sortBy: sortConfig[0] || 'relevance',
+                sortOrder: sortConfig[1] || ''
               }
             };
             if ($scope.mode === 'map') {

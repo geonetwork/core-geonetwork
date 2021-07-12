@@ -207,5 +207,21 @@ public class ShibbolethUserConfiguration implements SecurityProviderConfiguratio
             return LoginType.FORM.toString();
         }
     }
+
+    @Override
+    public boolean isUserProfileUpdateEnabled() {
+        // TODO: returning true to keep old functionality the same.  Need someone to test Shibboleth functionality to validate if disabling the userProfileUpdate is desired.
+        return true;
+        // If updating profile from the security provider then disable the profile updates in the interface
+        //return !updateProfile;
+    }
+
+    @Override
+    public boolean isUserGroupUpdateEnabled() {
+        // TODO: returning true to keep old functionality the same.  Need someone to test Shibboleth functionality to validate if disabling the userProfileUpdate is desired.
+        return true;
+        // If updating group from the security provider then disable the group updates in the interface
+        //return !updateGroup;
+    }
 }
 

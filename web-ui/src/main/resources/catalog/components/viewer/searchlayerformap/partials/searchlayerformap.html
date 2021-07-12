@@ -1,5 +1,7 @@
 <div>
-  <form role="form" data-ng-search-form="">
+  <form role="form"
+        data-ng-search-form=""
+        data-runSearch="true">
     <input type="hidden" name="_csrf" value="{{csrf}}"/>
     <div class="form-group">
       <div class="input-group">
@@ -7,13 +9,16 @@
           class="fa fa-search"/></span>
         <input class="form-control"
                data-ng-change="triggerSearch()"
-               data-ng-focus="triggerSearch()"
                type="text"
                data-ng-model="searchObj.params.any"
                data-ng-model-options="modelOptions"
                aria-label="{{'search' | translate}}"
                placeholder="{{'search' | translate}}" autofocus=""/>
       </div>
+
+      <div data-sortby-combo=""
+           data-params="searchObj.params"
+           data-gn-sortby-values="searchObj.sortbyValues"></div>
     </div>
 
     <!--
@@ -40,19 +45,29 @@
           data-ng-repeat="m in searchResults.records"
           data-ng-init="md = getMetadata(m)">
         <h3>
-          <a data-ng-click="loadMap(md.relevantMapLinks[0], md)"
-             title="{{'addMap' | translate}}">
-          {{md.resourceTitle}}
+          <a data-ng-if="mode === 'map'"
+             data-ng-click="loadMap(md.relevantMapLinks[0], md)"
+             title="{{'addToMap' | translate}}">
+            {{md.resourceTitle}}
+          </a>
+          <span data-ng-if="mode !== 'map'">
+            {{md.resourceTitle}}
+          </span>
+          -
+          <a class=""
+             ng-href="#/metadata/{{md.uuid}}"
+             title="{{'openRecord' | translate}}" translate>
+            openRecord
           </a>
         </h3>
-        <div class="clearfix">
-          <div class="gn-md-thumbnail pull-left">
+        <div class="row">
+          <div class="col-md-2 gn-md-thumbnail">
             <img class="gn-img-thumbnail"
                   alt="{{md.resourceTitle}}"
-                  data-ng-src="{{md.overview[0].url}}"
-                  data-ng-if="md.overview[0].url"/>
+                  data-ng-src="{{md.overview[0].data || (md.overview[0].url | thumbnailUrlSize)}}"
+                  data-ng-if="md.overview[0]"/>
           </div>
-          <div class="">
+          <div class="col-md-10">
             <ul>
                 <li data-ng-repeat="link in md.relevantLinks">
                   <a data-ng-click="addToMap(link)">
@@ -66,13 +81,6 @@
                 </li>
               </ul>
           </div>
-
-          <br/>
-          <a class=""
-             ng-href="#/metadata/{{md.uuid}}"
-             title="{{'openRecord' | translate}}" translate>
-            openRecord
-          </a>
         </div>
       </li>
     </ul>

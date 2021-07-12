@@ -23,31 +23,10 @@
 
 package org.fao.geonet.api.registries;
 
-import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAM_RECORD_GROUP;
-import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAM_RECORD_UUID_PROCESSING;
-
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
@@ -76,6 +55,7 @@ import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;
 import org.geotools.data.Query;
 import org.geotools.data.collection.ListFeatureCollection;
+import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.feature.FeatureIterator;
@@ -105,14 +85,28 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+
+import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAM_RECORD_GROUP;
+import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAM_RECORD_UUID_PROCESSING;
+
 
 @EnableWebMvc
 @Service
@@ -464,11 +458,11 @@ public class DirectoryApi {
             AbstractMetadata record = null;
             try {
                 record = metadataRepository.findOneByUuid(recordUuid);
-            } catch (IncorrectResultSizeDataAccessException e){
+            } catch (IncorrectResultSizeDataAccessException e) {
                 Log.warning(Geonet.GEONETWORK, String.format(
                     "More than one record found with UUID '%s'. Error is '%s'.",
                     recordUuid, e.getMessage()));
-            } catch (Exception ec){
+            } catch (Exception ec) {
                 Log.warning(Geonet.GEONETWORK, String.format(
                     "Constraints violation for record found with UUID '%s'. Error is '%s'. This probably due to record having same UUID in XML which was not synched with database.",
                     recordUuid, ec.getMessage()));
@@ -598,6 +592,15 @@ public class DirectoryApi {
         )
             boolean lenient,
         @Parameter(
+            description = "Attribute table charset",
+            required = false
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = ""
+        )
+            String charset,
+        @Parameter(
             description = "Create only bounding box for each spatial objects.",
             required = false)
         @RequestParam(
@@ -653,7 +656,7 @@ public class DirectoryApi {
 
         for (File shapeFile : shapeFiles) {
 
-            SimpleFeatureCollection collection = shapeFileToFeatureCollection(shapeFile);
+            SimpleFeatureCollection collection = shapeFileToFeatureCollection(shapeFile, charset);
 
             try (FeatureIterator<SimpleFeature> features = collection.features()) {
 
@@ -812,10 +815,13 @@ public class DirectoryApi {
         return StringUtils.isNotEmpty(featureDescriptionValue) ? featureDescriptionValue : "";
     }
 
-    private SimpleFeatureCollection shapeFileToFeatureCollection(File shapefile) throws IOException {
+    private SimpleFeatureCollection shapeFileToFeatureCollection(File shapefile, String charset) throws IOException {
         Map<String, Object> map = new HashMap<>();
         map.put("url", shapefile.toURI().toURL());
         DataStore dataStore = DataStoreFinder.getDataStore(map);
+        if (dataStore instanceof ShapefileDataStore && StringUtils.isNotEmpty(charset)) {
+            ((ShapefileDataStore) dataStore).setCharset(Charset.forName(charset));
+        }
         String typeName = dataStore.getTypeNames()[0];
         SimpleFeatureSource source = dataStore.getFeatureSource(typeName);
         Query query = new Query(typeName, Filter.INCLUDE);

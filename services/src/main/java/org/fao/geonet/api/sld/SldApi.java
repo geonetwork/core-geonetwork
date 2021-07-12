@@ -2,19 +2,9 @@ package org.fao.geonet.api.sld;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import javax.mail.internet.ParseException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.TransformerException;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
@@ -39,12 +29,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
+
+import javax.mail.internet.ParseException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.TransformerException;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Service
 @RequestMapping(value = {
@@ -242,9 +242,20 @@ public class SldApi {
         @Parameter(description = "The SLD identifier",
             required = true)
         @PathVariable("id") int id,
+        @PathVariable("extension") String extension,
         HttpServletResponse response) throws ResourceNotFoundException {
         try {
             TextFile file = fileRepository.findById(id).get();
+            // Validate that the file id found matches the extension
+            if (!StringUtils.isEmpty(extension)) {
+                Path path = new File(id + "." + extension).toPath();
+                String extensionMimeType = Files.probeContentType(path);
+                if (!file.getMimeType().equals(extensionMimeType)) {
+                    throw new ResourceNotFoundException(String.format(
+                        "SLD '%s' with extension '%s' not found. ",
+                        id, extension));
+                }
+            }
             response.setContentType(file.getMimeType() + "; charset=utf-8");
             PrintWriter writer = response.getWriter();
             writer.write(file.getContent());

@@ -1,0 +1,77 @@
+================================================================================
+===
+=== GeoNetwork 3.10.2: List of changes
+===
+================================================================================
+- Remove unused JS code from EditorController - parseXmlError (#4588)
+- error message are now json, no need to convert them from xml (#4445)
+- Validation / Index in current thread to avoid lock (#4587)
+- Formatter / ISO19139 / Fix layout when email is here (#4586)
+- Prevent user searches requests for unlogged users in search results page #4396
+- User feedback / Fix JS error on init. (#4579)
+- Multi portal mode / getNodeId may be triggered outside a request scope (eg. harvesting) (#4578)
+- AWS S3 storage bug fix (#4573)
+- Protect error-json.xsl for XSS and set contentType=application/json for the error page
+- Updates from transifex.
+- Update 115-3 submodule.
+- (gn) editor / improve highlight directives for perf
+- Add better support for gmd:language containing gmd:LanguageCode and gco:CharacterString (#4572)
+- Update ISO19115-3 submodule.
+- Updates from transifex.
+- Update ISO19115-3 submodule.
+- Map / Background layer / Add support for WMS group layer
+- Admin / UI config / Download formatter support (#4564)
+- Portal / Add info with a link to the portal and its CSW endpoint.
+- Multinode / Cleanup datadir node setup (not used anymore).
+- Thesaurus / Regions / Brexit
+- Fixes for metadata rating: - Use metadata rating setting to enable  the metadata rating panel in the metadata detail page instead of the user feedback setting (contact us feature). - Add var declaration to javascript variable
+- Formatter / Display a section only if there is something in
+- Fix for the `none` background image causing a 404 to a non existing page (#4558)
+- fix multilingual save issue (#4563)
+- change order of nav-pills in multilingual fields (#4549) (#4560)
+- [BP] Fix for the `none` background image causing a 404 to a non existing page (#4558)
+- Multi portal mode / User entity listener may be triggered outside a request scope
+- API / Threads status / Add missing portal mapping
+- INSPIRE / Add example for a migration from TG1.3 to 2.0 (#4538)
+- INSPIRE / Add example for a migration from TG1.3 to 2.0 (#4538)
+- Fixed checking in XslFormatter to retrieve schema locations to make a case-insensitive comparison (the value of the schema was converted to lowercase, but not the values in the schema list) (#4548)
+- Bump jetty.version from 9.4.22.v20191022 to 9.4.27.v20200227
+- Map / External viewer improvements (#4521)
+- Harvester / CSW / Misc fix.
+- Harvester / Delete associated records does not work when FK exists
+- Editor / Init country autocomplete only on focus
+- Multi portal mode / Fix shared NodeInfo (#4542)
+- Lib update.
+- Replace mixin with plain CSS code
+- Truncate the username, so long username don't break the UI
+- API / Region / Return null.
+- Metadata display modes - Switch to Full View doesn't work when metadata record is called in Simple View from external web application #4511
+- [BP] Fixed checking in XslFormatter to retrieve schema locations to make a case-insensitive comparison (the value of the schema was converted to lowercase, but not the values in the schema list) (#4548)
+- [BP] Change Oh to Zero (#4532)
+- [BP] Remove extra comma in json object in CatController, introduced in #4509
+- DB / Migration / MergeUsersByUsernameDatabaseMigration / Flush deletion before inserting new merged user
+- Improve cookie warning message (#4509)
+- Privileges / When user can't download disable download action (#4471)
+- Formatter / XSL / Improvement when not using tabs (#4470)
+- PDF / Language parameter does not override Accept-Language header in all cases. (#4520)
+- Test / Do not force reindex in test (#4018)
+- Log / Avoid exception on 'Can't find bundle for base name messages, locale en' #4515
+- Update LocalisationService.js
+- CSW / Add post processing for portal.
+- Add post processing xslt for CSW results
+- Fix typo in opening XML tag
+- Updates from transifex.
+- Update iso19139 oasis-catalog.xml references to 2007 schema files. Fixes apiso.xsd issue described in #3836
+- Period duration / Add readonly mode.
+- [BP] Update Portuguese iso19139 strings.xml file
+- Update ISO19115-3 submodule.
+- Region API / Move to /api (#4491)
+- Editing / History / Only save changes at the end of the editing session
+- Import from server folder, xml text or url doesn't use the Publish option #4489
+- Support INSPIRE Themes thesaurus title with anchor in iso19139 INSPIRE metadata view (#4474)
+-  Use system property log_dir to customise the parent directory of the log folder: (#4473)
+- Sitemap / Move to spring. (#4465)
+- Set datainfo root when creating metadata from a template
+- Default display of citation proposal to off
+- chore: use map projection for input geometry
+- Update version to 3.10.2-SNAPSHOT

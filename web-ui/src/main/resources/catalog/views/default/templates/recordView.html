@@ -34,6 +34,25 @@
       <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
     </div>
 
+    <!-- status message on top -->
+    <div data-ng-repeat="c in mdView.current.record.cl_status track by $index">
+      <div data-ng-show="showStatusTopBarFor.indexOf(c.key) !== -1"
+         title="{{c.key | translate}}"
+         class="gn-status-stamp-top gn-status-bg gn-status-{{c.key}}-bg">
+        <span class="gn-status gn-status-mdview">{{c.key | translate}}</span>
+      </div>
+    </div>
+    <!-- status message as watermark -->
+    <div data-ng-repeat="c in mdView.current.record.cl_status track by $index">
+        <div data-ng-show="showStatusWatermarkFor.indexOf(c.key) !== -1"
+           title="{{c.key | translate}}"
+           class="gn-status-stamp">
+        <span class="gn-status gn-status-mdview gn-status-{{c.key}}">{{c.key | translate}}</span>
+      </div>
+    </div>
+
+
+
     <div class="row gn-md-view"
         data-ng-show="mdView.current.record">
 
@@ -135,9 +154,7 @@
           class="gn-metadata-display">
       </div>
 
-
       <div data-ng-show="!gnMdViewObj.usingFormatter" class="gn-metadata-display">
-
 
       <div class="col-md-8 gn-record">
         <h1>
@@ -149,18 +166,24 @@
         </h1>
 
 
-        <div class="lead1 gn-margin-bottom"
+
+        <div class="gn-margin-bottom"
              data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></div>
 
           <!-- Display the first metadata status (apply to ISO19139 record) -->
           <div class="row">
             <div data-ng-if="mdView.current.record.cl_status.length > 0"
-                 data-ng-repeat="c in mdView.current.record.cl_status track by $index"
-                 title="{{c.key | translate}}"
-                 class="gn-status gn-status-mdview gn-status-{{c.key}}">
-                {{c.key | translate}}
+                 data-ng-repeat="c in mdView.current.record.cl_status track by $index">
+              <div data-ng-if="showStatusWatermarkFor.indexOf(c.key) === -1
+                               && showStatusTopBarFor.indexOf(c.key) === -1"
+                   title="{{c.key | translate}}"
+                   class="gn-status gn-status-mdview gn-status-{{c.key}}">
+                  {{c.key | translate}}
+              </div>
             </div>
           </div>
+
+
           <div data-gn-related-observer>
             <div data-gn-related="mdView.current.record"
                 data-user="user"
@@ -613,7 +636,13 @@
               <i class="fa fa-fw fa-cog"></i>
               <span data-translate="">sourceCatalog</span>
             </h2>
-            <img ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.sourceCatalogue}}.png"
+            <img data-ng-if="isPreferGroupLogo && recordGroup.logo"
+                 data-ng-src="{{gnUrl}}../images/harvesting/{{recordGroup.logo}}"
+                 title="{{recordGroup.label | gnLocalized}}"
+                 aria-label="{{recordGroup.label | gnLocalized}}"
+                 class="gn-source-logo"/>
+            <img data-ng-if="!isPreferGroupLogo"
+                 data-ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.sourceCatalogue}}.png"
                 aria-label="{{'sourceCatalog' | translate}}"
                 class="gn-source-logo"/>
           </section>

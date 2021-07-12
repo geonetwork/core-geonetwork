@@ -29,6 +29,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.io.Files;
+
+import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.domain.MetadataResourceContainer;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.MultiPolygon;
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -95,6 +101,7 @@ import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -536,6 +543,29 @@ public final class XslUtil {
         return false;
     }
 
+    /**
+     * Check if user profile update is enabled.
+     */
+    public static boolean isUserProfileUpdateEnabled() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.isUserProfileUpdateEnabled();
+        }
+        return true;
+    }
+
+    /**
+     * Check if user group update is enabled.
+     */
+    public static boolean isUserGroupUpdateEnabled() {
+        SecurityProviderConfiguration securityProviderConfiguration = SecurityProviderConfiguration.get();
+
+        if (securityProviderConfiguration != null) {
+            return securityProviderConfiguration.isUserGroupUpdateEnabled();
+        }
+        return true;
+    }
 
     /**
      * get security provider
@@ -551,9 +581,46 @@ public final class XslUtil {
     }
 
     /**
-     * Optimistically check if user can access a given url.  If not possible to determine then
-     * the methods will return true.  So only use to show url links, not check if a user has access
-     * for certain.  Spring security should ensure that users cannot access restricted urls though.
+     * get external manager url for resource.
+     *
+     * @param metadataUuid uuid of the record
+     * @param approved is metadata approved
+     * @return url to access the resource. Or null if not supported
+     */
+    public static MetadataResourceContainer getResourceContainerDescription(String metadataUuid, Boolean approved) throws Exception {
+        Store store = BeanFactoryAnnotationUtils.qualifiedBeanOfType(ApplicationContextHolder.get().getBeanFactory(), Store.class, "filesystemStore");
+
+        if (store != null) {
+            if (store.getResourceManagementExternalProperties() != null && store.getResourceManagementExternalProperties().isFolderEnabled()) {
+                ServiceContext context = ServiceContext.get();
+                return store.getResourceContainerDescription(ServiceContext.get(), metadataUuid, approved);
+            } else {
+                // Return an empty object which should not be used because the folder is not enabled.
+                return new FilesystemStoreResourceContainer(metadataUuid, -1, null, null, null, approved);
+            }
+        }
+        Log.error(Geonet.RESOURCES, "Could not locate a Store bean in getResourceContainerDescription");
+        return null;
+    }
+
+    /**
+     * get resource management external properties.
+     *
+     * @return the windows parameters to be used.
+     */
+    public static Store.ResourceManagementExternalProperties getResourceManagementExternalProperties() {
+        Store store = BeanFactoryAnnotationUtils.qualifiedBeanOfType(ApplicationContextHolder.get().getBeanFactory(), Store.class, "filesystemStore");
+        if (store != null) {
+            return store.getResourceManagementExternalProperties();
+        }
+        Log.error(Geonet.RESOURCES,"Could not locate a Store bean in getResourceManagementExternalProperties");
+        return null;
+    }
+
+    /**
+     * Optimistically check if user can access a given url.  If not possible to determine then the
+     * methods will return true.  So only use to show url links, not check if a user has access for
+     * certain.  Spring security should ensure that users cannot access restricted urls though.
      *
      * @param serviceName the raw services name (main.home) or (admin)
      * @return true if accessible or system is unable to determine because the current

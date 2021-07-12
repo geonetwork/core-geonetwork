@@ -86,7 +86,8 @@ goog.require('gn_alert');
           'logoInHeaderPosition': 'left',
           'fluidHeaderLayout': true,
           'showGNName': true,
-          'isHeaderFixed': false
+          'isHeaderFixed': false,
+          'isMenubarAccessible': true
         },
         'cookieWarning': {
           'enabled': true,
@@ -131,7 +132,7 @@ goog.require('gn_alert');
           // Full text on all fields
           // 'queryBase': '${any}',
           // Full text but more boost on title match
-          'queryBase': 'any:(${any}) resourceTitleObject.default:(${any})^2',
+          'queryBase': 'any:(${any}) resourceTitleObject.\\*:(${any})^2',
           'queryTitle': '${any}',
           'searchOptions': true,
           // Score query may depend on where we are in the app?
@@ -245,7 +246,7 @@ goog.require('gn_alert');
           'facetTabField': '',
           // Enable vega only if using vega facet type
           // See https://github.com/geonetwork/core-geonetwork/pull/5349
-          'isVegaEnabled': false,
+          'isVegaEnabled': true,
           'facetConfig': {
             'groupPublished': {
               'terms': {
@@ -584,6 +585,7 @@ goog.require('gn_alert');
             'maps': ['ows']
           },
           'isFilterTagsDisplayedInSearch': true,
+          'showStatusFooterFor': 'historicalArchive,obsolete,superseded',
           'usersearches': {
             'enabled': false,
             'includePortals': true,
@@ -664,7 +666,9 @@ goog.require('gn_alert');
         },
         'recordview': {
           'enabled': true,
-          'isSocialbarEnabled': true
+          'isSocialbarEnabled': true,
+          'showStatusWatermarkFor': 'historicalArchive,obsolete,superseded',
+          'showStatusTopBarFor': ''
         },
         'editor': {
           'enabled': true,
@@ -754,7 +758,44 @@ goog.require('gn_alert');
         },
         'admin': {
           'enabled': true,
-          'appUrl': '../../{{node}}/{{lang}}/admin.console'
+          'appUrl': '../../{{node}}/{{lang}}/admin.console',
+          'facetConfig': {
+            'availableInServices': {
+              'filters': {
+                //"other_bucket_key": "others",
+                // But does not support to click on it
+                'filters': {
+                  'availableInViewService': {
+                    'query_string': {
+                      'query': '+linkProtocol:/OGC:WMS.*/'
+                    }
+                  },
+                  'availableInDownloadService': {
+                    'query_string': {
+                      'query': '+linkProtocol:/OGC:WFS.*/'
+                    }
+                  }
+                }
+              }
+            },
+            'cl_hierarchyLevel.key': {
+              'terms': {
+                'field': 'cl_hierarchyLevel.key'
+              },
+              'meta': {
+                'vega': 'arc'
+              }
+            },
+            'tag.default': {
+              'terms': {
+                'field': 'tag.default',
+                'size': 10
+              },
+              'meta': {
+                'vega': 'arc'
+              }
+            }
+          }
         },
         'signin': {
           'enabled': true,
@@ -795,6 +836,8 @@ goog.require('gn_alert');
       current: null,
       isDisableLoginForm: false,
       isShowLoginAsLink: false,
+      isUserProfileUpdateEnabled: true,
+      isUserGroupUpdateEnabled: true,
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
         // start from the default config to make sure every field is present
         // and override with config arg if required
@@ -813,6 +856,7 @@ goog.require('gn_alert');
           this.gnCfg.mods.search.scoreConfig = config.mods.search.scoreConfig;
           this.gnCfg.mods.search.facetConfig = config.mods.search.facetConfig;
           this.gnCfg.mods.home.facetConfig = config.mods.home.facetConfig;
+          this.gnCfg.mods.admin.facetConfig = config.mods.admin.facetConfig;
         }
 
         if (gnUrl) {
@@ -848,6 +892,7 @@ goog.require('gn_alert');
         copy.mods.home.facetConfig = {};
         copy.mods.search.facetConfig = {};
         copy.mods.search.scoreConfig = {};
+        copy.mods.admin.facetConfig = {};
         copy.mods.map["map-editor"].layers = [];
         return copy;
       },
@@ -979,7 +1024,9 @@ goog.require('gn_alert');
       $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
       $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
       $scope.isHeaderFixed = gnGlobalSettings.gnCfg.mods.header.isHeaderFixed;
+      $scope.isMenubarAccessible = gnGlobalSettings.gnCfg.mods.header.isMenubarAccessible;
       $scope.isLogoInHeader = gnGlobalSettings.gnCfg.mods.header.isLogoInHeader;
+      $scope.isFooterEnabled = gnGlobalSettings.gnCfg.mods.footer.enabled;
 
       var url = gnGlobalSettings.gnUrl || location.href;
       try {
@@ -1061,9 +1108,18 @@ goog.require('gn_alert');
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
       $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
       $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;
+      $scope.isUserProfileUpdateEnabled = gnGlobalSettings.isUserProfileUpdateEnabled;
+      $scope.isUserGroupUpdateEnabled = gnGlobalSettings.isUserGroupUpdateEnabled;
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
 
+      $scope.isSelfRegisterPossible = function() {
+        return gnConfig['system.userSelfRegistration.enable'];
+      };
+
+      $scope.isHostDefined = function () {
+        return gnConfig['system.feedback.mailServer.hostIsDefined'];
+      };
 
       $scope.layout = {
         hideTopToolBar: false
@@ -1123,7 +1179,7 @@ goog.require('gn_alert');
       });
 
       // login url for inline signin form in top toolbar
-      $scope.signInFormAction = '../../signin#' + $location.path();
+      $scope.signInFormAction = '../../signin#' + $location.url();
 
       // when the login input have focus, do not close the dropdown/popup
       $scope.focusLoginPopup = function() {

@@ -436,8 +436,10 @@
 
       checkIsIndexing();
 
-      $scope.rebuildIndex = function(dropFirst) {
-        return $http.put('../api/site/index?reset=' + dropFirst + "&asynchronous=true")
+      $scope.rebuildIndex = function(dropFirst, index) {
+        var url = '../api/site/index?reset=' + dropFirst + "&asynchronous=true"
+          + (index ? '&indices=' + index : '');
+        return $http.put(url)
             .success(function(data) {
               checkIsIndexing();
             })

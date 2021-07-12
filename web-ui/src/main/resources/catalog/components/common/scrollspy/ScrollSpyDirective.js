@@ -155,7 +155,9 @@
             }
 
             // Spy only first level of fieldsets
-            rootElement.find('> fieldset > legend').each(registerSpy);
+            rootElement
+              .find('> fieldset > legend, > div > fieldset > legend')
+              .each(registerSpy);
             $(window).scroll(function() {
               if (scope.isEnabled) {
                 scope.$apply(function() {

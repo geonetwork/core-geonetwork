@@ -111,6 +111,20 @@
         },
         track_total_hits: true
       },
+      harvester: {
+        facets: gnGlobalSettings.gnCfg.mods.admin.facetConfig,
+        source: {
+          includes: [
+            'id',
+            'uuid',
+            'overview.*',
+            'resource*',
+            'isTemplate',
+            'valid'
+          ]
+        },
+        track_total_hits: true
+      },
       directory: {
         facets: {
           'valid': {
@@ -294,25 +308,31 @@
       for (var fieldId in reqAggs) {
         var respAgg = respAggs[fieldId];
         var reqAgg = reqAggs[fieldId];
+        var fieldConfig = configId
+          && this.configs[configId].facets
+          && this.configs[configId].facets[fieldId];
 
         function facetHasProperty(configId, fieldId, propertyKey) {
-          return configId && this.configs[configId].facets
-            && this.configs[configId].facets[fieldId]
-            && this.configs[configId].facets[fieldId][propertyKey];
+          return fieldConfig
+                 && fieldConfig[propertyKey];
         }
+        var searchFieldId =
+          fieldConfig
+          && fieldConfig.meta
+          && fieldConfig.meta.field
+            ? fieldConfig.meta.field
+            : fieldId
         var facetModel = {
           key: fieldId,
-          userHasRole: configId && this.configs[configId].facets
-            && this.configs[configId].facets[fieldId]
-            && this.configs[configId].facets[fieldId].meta
-            && this.configs[configId].facets[fieldId].meta.userHasRole,
-          collapsed: configId && this.configs[configId].facets
-            && this.configs[configId].facets[fieldId]
-            && this.configs[configId].facets[fieldId].meta
-            && this.configs[configId].facets[fieldId].meta.collapsed,
+          userHasRole: fieldConfig
+            && fieldConfig.meta
+            && fieldConfig.meta.userHasRole,
+          collapsed: fieldConfig
+            && fieldConfig.meta
+            && fieldConfig.meta.collapsed,
           meta: respAgg.meta,
           items: [],
-          path: (path || []).concat([fieldId])
+          path: (path || []).concat([searchFieldId])
         };
 
         if (reqAgg.hasOwnProperty('terms')) {
@@ -332,8 +352,15 @@
             var esFacet = this;
             respAgg.buckets.forEach(function (bucket) {
               if (angular.isDefined(bucket.key)) {
-                var key = (bucket.key_as_string || bucket.key),
-                    itemPath = facetModel.path.concat([key + '']);
+
+                var isWildcard = fieldConfig && fieldConfig.meta
+                  && fieldConfig.meta.wildcard,
+                  key = (bucket.key_as_string || bucket.key),
+                  itemPath = facetModel.path.concat([
+                    isWildcard ?
+                      (key + '*').replace(' ', '\\\\ ') :
+                      (key + '')
+                  ]);
                 var facet = {
                   value: key,
                   count: bucket.doc_count,

@@ -745,7 +745,7 @@
        * Return an object containing metadata contacts
        * as an array and resource contacts as array
        *
-       * @return {{metadata: Array, resource: Array}}
+       * @return {{metadata: Array, resource: Array, distribution: Array}}
        */
       getAllContacts: function() {
         this.allContacts = {metadata:[], resource:[]};
@@ -754,6 +754,9 @@
         }
         if (this.contactForResource && this.contactForResource.length > 0){
           this.allContacts.resource = this.contactForResource;
+        }
+        if (this.contactForDistribution && this.contactForDistribution.length > 0){
+          this.allContacts.distribution = this.contactForDistribution;
         }
         return this.allContacts;
       },

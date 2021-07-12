@@ -286,4 +286,63 @@
             }
           };
         }]);
+
+
+  /**
+   * CSW Harvester filter
+   */
+  module.directive('gnCswHarvesterFilter',
+    ['$http', '$translate', '$rootScope',
+      function($http, $translate, $rootScope) {
+
+        return {
+          restrict: 'A',
+          replace: false,
+          templateUrl: '../../catalog/components/admin/harvester/partials/' +
+            'csw-filter.html',
+          scope: {
+            harvester: '=gnCswHarvesterFilter',
+            cswCriteria: '=cswCriteria'
+          },
+          link: function(scope, element, attrs) {
+            scope.enableAddFilter = false;
+
+            scope.addFilter = function() {
+              var condition = 'AND';
+
+              if (angular.isUndefined(scope.harvester.filters) ||
+                  (scope.harvester.filters.length == 0)) {
+                scope.harvester.filters = [];
+                condition = '';
+              }
+
+              scope.harvester.filters.push({
+                field: scope.cswCriteria[0].replace('__', ':'),
+                operator: 'LIKE',
+                value: '',
+                condition: condition
+              });
+            }
+
+            scope.removeFilter = function(index) {
+              scope.harvester.filters.splice(index, 1);
+
+              if (scope.harvester.filters.length > 0){
+                scope.harvester.filters[0].condition = '';
+
+              }
+            }
+
+            scope.$watch('harvester.filters', function(newCol, oldCol, scope) {
+              scope.filterString = JSON.stringify(scope.harvester.filters);
+            }, true);
+
+            scope.$watch('cswCriteria', function(newCol, oldCol, scope) {
+              if  ((scope.cswCriteria) && (scope.cswCriteria.length > 0)) {
+                scope.enableAddFilter = true;
+              }
+            }, true);
+          }
+        };
+      }]);
 })();

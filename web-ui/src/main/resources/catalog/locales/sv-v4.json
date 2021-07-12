@@ -87,7 +87,7 @@
   "facet-th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree": "INSPIRE Prioriterad datamängd",
   "isPublishedToAll-true": "Publika poster",
   "isPublishedToAll-false": "Begränsade poster",
-  "indexRecordsWithErrors": "Indexera poster med fel",
+  "indexRecordsWithErrors": "Indexposter med fel",
   "top10IndexingErrors": "Topp 10 indexeringsfel:",
   "facet-indexingErrorMsg": "Indexeringsfel",
   "rebuildIndex": "Indexera om poster",
@@ -157,5 +157,8 @@
   "commonProtocols": "Allmänna protokoll:",
   "indexStatusSynchronized": "Poster i index/db = <strong>{{indexStatus [&#39;index.count&#39;]}} / {{indexStatus [&#39;db.count&#39;]}}</strong>",
   "indexStatusSynchronized-error": "När antalet poster inte är lika i databasen och i indexet, kontrollera först att katalogen pekar på rätt index. Om ja, försök att återindexera katalogen från admin&gt; verktyg. Om det fortfarande finns en skillnad, kontrollera om det finns indexeringsfel i loggfilen och fixa metadataposten med hjälp av XML-vyn.",
-  "IndexReadOnlyHealthCheck": "Indexet är enbart i läsbart läge"
+  "IndexReadOnlyHealthCheck": "Indexet är enbart i läsbart läge",
+  "summary": "Sammanfattning",
+  "metadataRecords": "Metadataposter",
+  "results": "Resultat"
 }

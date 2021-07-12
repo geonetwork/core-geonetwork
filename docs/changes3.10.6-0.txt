@@ -1,0 +1,57 @@
+================================================================================
+===
+=== GeoNetwork 3.10.6: List of changes
+===
+================================================================================
+- [BP] Fixed another broken image related to #5299 (#5347)
+- [BP] Fixed broken site logo image on fresh installation. (#5342)
+- [BP] Fix some working copy merge issues (#5279) (#5346)
+- [BP] Fix working copy resource display (#5299)
+- [BP] Add Italian strings to iso19139/process/ files (#5108) (#5341)
+- [BP] ISO19139 - Preserve locale codes in metadata. Fixes #5060 (#5293)
+- [BP] Remove unused file server.prop (#5327)
+- [BP] Update installer zip package name to geonetwork-bundle-VERSION.zip
+- [BP] release cleanup (#5325)
+- [BP] Event handling improvements (#5194)
+- [BP] Update file copy so that it will overwrite any existing file which is required when approving a record that was previously published (#5309)
+- [BP] Update Remote INSPIRE Atom feeds to process dataset feeds from service feeds
+- [BP] ISO19139 / ISO19115-3.2018 - Force gco:DateTime on elements that doesn't support gco:Date (#5300)
+- [BP] Hide workflow option in versioning page when the workflow is not enabled
+- [BP] ISO19115-3 / Fix mdq:DQ_QuantitativeResult not displayed (#5303)
+- [BP] java 8 only (#5112)
+- [BP] Harvester / From folder / Unable to reset XSLT once set (#5281)
+- [BP] Add translation for "sample" on search module. (#5297)
+- [BP] Fix typo in README.md (#5295)
+- [BP] [a11y] Accessibility improvements for the footer (#5073)
+- [BP] Make the subbar on the result view accessible (by keyboard): (#5067)
+- [BP] Updated validation api so that it supports working copy and fixed other validation bugs (#5231)
+- [BP] User feedback / Fix placeholder
+- [BP] [a11y] Change language picker into dropdown (#5136)
+- [BP] Use the portal/source label as the name in the menu (#5245)
+- [BP] Time to replace travis #5314
+- Trigger delete event when metadata records are deleted (#5248)
+- [BP] Do not show workflow related messages when workflow is not enabled (#5283)
+- [BP] Fixed issue where links to /accessDenied.jsp/eng/service-not-allowed?referer=UNKNOWN could cause endless redirects as accessDenied.jsp is not a recognized node
+- [BP] Fix permission issue related to guest users. Guest users were not able to update their profile or change their password. Fixes issue #5252 (#5256)
+- [BP] If no metadata records then it is OK to have 0 results from index. (#5265)
+- [BP] add dutch translations
+- [BP] Align icons and labels
+- [BP] Remove unused icons for the static pages links (#5106)
+- [BP] Metadata CSV export - Remove non letter/number characters in thesaurus identifier processing
+- [BP] ISO 19115-3 rules validation for 'Associated resources' never validates #4623
+- [BP] [5234] Fix for overflowing CSW Harvester filter list (#5246)
+- [BP] Fix bug related to canceling working copy removes approved resource (#5214) (#5219)
+- [BP] Fixed issues with ResourceLoggerStore where it was not supporting working copy metadata records correctly Work creating a working copy it would create new MetadataFileUpload using the approved metadata id. This was causing duplicate active MetadataFileUpload which generating exceptions. (#5223)
+- [BP] Fix null group bug if attempting to publish sample data.
+- Fix for WFS download dropdown in Record view
+- [BP] Small improvements to the MiniMap: (#5195)
+- [BP] Update date format in title to contain the time zone as GMT.  This will help eliminate confusion as to when the template/metadata was created.
+- [BP] Fix bug where errors from the report should be added to the error and not the info (#5172)
+- [BP] Fixes #5186 - gmx:MimeFileType should be gcx:MimeFileType
+- [BP] Don't remove geographic description for multilingual data since the widget does not support multilingual data.
+- [BP] Integration tests README.md improvements (#5184)
+- [BP] Properties / Remove unused
+- [BP] Hide GeoNetwork name on smaller screens and show labels on other buttons
+- [BP] Fix for the 'empty' user icon on small screens.
+- [BP] Improve MetadataManager bean declaration (#5051) (#5055)
+- Update version to 3.10.6-SNAPSHOT

@@ -47,7 +47,7 @@
         <div class="gn-md-details">
           <div class="gn-md-abstract text-muted">
             <div class="ellipsis">
-              <p>{{md.resourceAbstract.split('.')[0] | striptags}}.</p>
+              <p>{{md.resourceAbstract.split('\n')[0] | striptags}}</p>
             </div>
           </div>
         </div>
@@ -58,17 +58,22 @@
     </div>
     <!-- /.gn-card-body -->
 
-    <div class="panel-footer gn-card-footer clearfix">
+    <div class="panel-footer gn-card-footer clearfix"
+         data-ng-class="{
+         'gn-status-bg': showStatusFooterFor && showStatusFooterFor.length > 0,
+         'gn-status-bg-default gn-status-{{md.cl_status[0].key}}-bg':
+          showStatusFooterFor.indexOf(md.cl_status[0].key) !== -1
+          }">
       <div data-ng-if="md.cl_status.length > 0"
-           title="{{md.cl_status[0]}}"
-           class="gn-status gn-status-{{md.cl_status[0]}}">{{md.cl_status[0].key | translate}}
+           title="{{md.cl_status[0].key | translate}}"
+           class="gn-status gn-status-{{md.cl_status[0].key}}">{{md.cl_status[0].key | translate}}
       </div>
       <div class="gn-toolbar">
         <gn-links-btn class="pull-right"></gn-links-btn>
         <!--<div gn-grid-related gn-grid-related-uuid="::md.uuid"
              class="pull-right"
              template="../../catalog/views/default/templates/gridRelated.html"></div>-->
-        <div data-ng-if="md.draft == 'e'"
+        <div data-ng-if="(md.draft == 'e') && (md.edit == true)"
              title="{{'workingCopy' | translate}}"
              class="gn-workingcopy-status pull-right">
           <i class="fa fa-pencil"></i>

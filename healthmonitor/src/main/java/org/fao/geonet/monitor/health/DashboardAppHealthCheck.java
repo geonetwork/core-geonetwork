@@ -50,13 +50,19 @@ public class DashboardAppHealthCheck implements HealthCheckFactory {
                 if (StringUtils.isNotEmpty(dashboardAppUrl)) {
                     ClientHttpResponse httpResponse = null;
                     try {
-                        String url = settingManager.getBaseURL() + "dashboards/api/status";
+                        String url = dashboardAppUrl;
                         httpResponse = httpRequestFactory.execute(new HttpGet(url));
 
-                        if (httpResponse.getRawStatusCode() == 200) {
+                        if (httpResponse.getRawStatusCode() == 200 // Kibana default config
+                            || httpResponse.getRawStatusCode() == 404 // Kibana alive but probably using a custom basePath
+                        ) {
                             return Result.healthy(String.format(
                                 "Dashboard application is running."
                             ));
+                            // Could make sense to do some more checks.
+                            // Kibana status may be red/yellow ?
+                            // String url = settingManager.getBaseURL() + "dashboards/api/status";
+                            // but proxy need authentication
                         } else {
                             return Result.unhealthy(
                                 "Dashboard application is not available currently. " +

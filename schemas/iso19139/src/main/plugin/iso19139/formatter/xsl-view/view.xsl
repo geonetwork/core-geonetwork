@@ -160,7 +160,7 @@
                   <span class="badge"><xsl:copy-of select="."/></span>
                 </xsl:when>
                 <xsl:otherwise>
-                  <a href='#/search?query_string=%7B"tag":%7B"{.}":true%7D%7D'>
+                  <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
                     <span class="badge"><xsl:copy-of select="."/></span>
                   </a>
                 </xsl:otherwise>
@@ -179,7 +179,7 @@
                 <span class="badge"><xsl:copy-of select="."/></span>
               </xsl:when>
               <xsl:otherwise>
-                <a href='#/search?query_string=%7B"tag":%7B"{.}":true%7D%7D'>
+                <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
                   <span class="badge"><xsl:copy-of select="."/></span>
                 </a>
               </xsl:otherwise>
@@ -444,6 +444,35 @@
         </dt>
         <dd><xsl:comment select="name()"/>
           <xsl:apply-templates mode="render-value" select="*|*/@codeListValue"/>
+          <xsl:apply-templates mode="render-value" select="@*"/>
+        </dd>
+      </dl>
+    </xsl:if>
+  </xsl:template>
+
+  <!-- Codelist elements -->
+  <xsl:template mode="render-field"
+                match="*[*/@codeListValue]"
+                priority="50">
+    <xsl:param name="fieldName" select="''" as="xs:string"/>
+
+    <xsl:if test="normalize-space(string-join(*|*/@codeListValue, '')) != ''">
+      <dl>
+        <dt>
+          <xsl:call-template name="render-field-label">
+            <xsl:with-param name="fieldName" select="$fieldName"/>
+            <xsl:with-param name="languages" select="$allLanguages"/>
+          </xsl:call-template>
+        </dt>
+        <dd><xsl:comment select="name()"/>
+          <xsl:choose>
+            <xsl:when test="normalize-space(*/@codeListValue) != ''">
+              <xsl:apply-templates mode="render-value" select="*/@codeListValue"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates mode="render-value" select="*"/>
+            </xsl:otherwise>
+          </xsl:choose>
           <xsl:apply-templates mode="render-value" select="@*"/>
         </dd>
       </dl>

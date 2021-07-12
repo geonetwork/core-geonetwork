@@ -1,0 +1,82 @@
+================================================================================
+===
+=== GeoNetwork 4.0.5: List of changes
+===
+================================================================================
+- Transifex update.
+- Formatter / Multilingual support / Can't define the language anymore
+- DOI / Improvements (#5734)
+- WFS feature harvester / Manage from editor. (#5744)
+- Proxy / Properly unset properties if no proxy used.
+- add security policy so github picks it up (#5489)
+- Indexing / Index extentDescription as array
+- Fix encoding issue in field upload directive
+- Fix encryptor issue when the settings are used in the editor, the encrypted settings are re-encrypted several times
+- Group / Restore possibility to use group logo / In non debug mode avoid JS error
+- ISO19115-3 / XSD location change
+- CSW / Fix query when user is authenticated and not admin
+- Show label on add resource button when the dialog is opened
+- Remove left sidebar animation in Admin
+- Group / Restore possibility to use group logo.
+- Facet / Temporal range / Fix selection when using custom format eg. YYYY (#5727)
+- Link validation / Trigger link test when processing a selection
+- Scroll spy / Editor / Fix empty in editor
+- Use Github Actions instead of Travis for main branch
+- Improved CSW harvester filters - convert old search filter values to the new filter format
+- Improved CSW harvester filters - fixes for Filter / Cql constraint build and code cleanup
+- Improved CSW harvester filters - fix filter operator text and improved layout for BBOX filter
+- Improved CSW harvester filters - support for is null operator
+- Improved CSW harvester filters - draw the bbox in the map directive when the harvester is loaded
+- Improved CSW harvester filters - allow to reset bbox filter
+- Improved CSW harvester filters - update translation and use font awesome icons in buttons
+- Improved CSW harvester filters - translations and additional filters
+- Improved CSW harvester filters
+- HealthCheck / Dashboard / Use config URL
+- Link validation improvements (#5724)
+- ISO19115-3 / Remove geonet:info element from CSW response.
+- Status / Mail notification / SMTP server may allow all users by IP ...
+- Editor / Associated resource / Set description based on selected records
+- Search results / Adapt template if selection is on or not
+- Directory / Import entries from shape / Add charset parameters (#5713)
+- Clear translations cache after updating sources, categories and group translations (#5714)
+- Statistics page in the admin without padding/whitespace
+- Index contact for distribution (#5708)
+- Facet / Config / Fix example for priority dataset
+- Draft / Fix editor init when opening a draft
+- Editor / Open action improvements (#5705)
+- Config / Remove testing config.
+- Aggs / Temporal range improvements
+- Harvester / Add visual summary (totals/graphs) (#5646)
+- Abstract with dots is not rendered properly in the results list. Split by \n instead of dot to render the abstract in the search results. Fixes #5704
+- Fix retrieval of settings during the application startup if the encryptor is not initialised (#5700)
+- Error indexing iso19139 records with 2 results in data quality reports - Fixes #5698
+- Add settings and styling for the map height when there is no footer (#5696)
+- Languages / swe / Add translation for UI / Typo
+- ISO19139 / Subtemplate / Indexing / Multilingual support.
+- Indexing / Improvements
+- Map / Add layer / Search improvements (#5690)
+- Harvesting / WFS / Attributes / Instant type support (#5688)
+- Indexing / Add field if a keyword is not found in thesaurus. (#5684)
+- ISO19115-3 / Set creation date
+- Language / Add swedish
+- DOI / Improvements (#5671)
+- ISO19115-3 / Editor config / Avoid duplicated directiveAttributes
+- Pages / API / Embed HTML.
+- Elasticsearch migration / Restore admin reports. (#5683)
+- Editor improvements related to DCAT support (#5616)
+- WFS Indexing / Avoid NPE when getSuperclass is null (#5679)
+- Formatter / Template field may generate self closing tag and break HTML layout
+- Status change / Improvements (#5676)
+- API / Missing method in OpenAPI document.
+- fix csrf token when integrated with keycloak (#5673)
+- Formatter / Improve rendering of line breaks, hyperlinks and email links
+- Add isoLang (i.e. en, fr) into a link. (#5642)
+- Bump guava from 24.1.1-jre to 29.0-jre
+- Bump commons-io from 2.1 to 2.7
+- Editor / List format as protocol in helper list (#5644)
+- Documentation / Update link to 4.0.x version
+- Aggregation / Tree / Substitute separator even if not translated.
+- Fix for the panel arrow in the collapsed state in the Editor
+- Index / Keyword / Add link property if the keyword is in a thesausur
+- Fix typo in download-from-transifex.sh
+- Update version to 4.0.5-SNAPSHOT

@@ -581,8 +581,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 -->
         <xsl:for-each select="gmd:resourceConstraints/gmd:MD_LegalConstraints">
             <xsl:variable name="accessConstraints" select="gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue"/>
-            <xsl:variable name="otherConstraints" select="normalize-space(gmd:otherConstraints/gco:CharacterString)"/>
-            <xsl:variable name="translated-otherConstraints" select="normalize-space(gmd:otherConstraints/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=concat('#',upper-case(java:threeCharLangCode($requestedLanguage)))])"/>
+            <xsl:variable name="otherConstraints" select="normalize-space(gmd:otherConstraints[1]/(gco:CharacterString|gmx:Anchor))"/>
+            <xsl:variable name="translated-otherConstraints" select="normalize-space(gmd:otherConstraints[1]/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=concat('#',upper-case(java:threeCharLangCode($requestedLanguage)))])"/>
             <xsl:variable name="resultValue">
                 <xsl:choose>
                     <xsl:when test="$accessConstraints='otherRestrictions' and $otherConstraints!=''">

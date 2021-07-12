@@ -1,4 +1,5 @@
-<form name="wfsFilterForm">
+<form name="wfsFilterForm"
+      ng-if="isFeatureTypeAvailable !== false">
   <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <!--WFS not available alert-->
@@ -18,14 +19,68 @@
 
   <div>
 
-    <!--Facet count-->
-    <div data-ng-if="isFeaturesIndexed" class="count text-center"
-         data-ng-if="showCount">
-      {{count | number}}&nbsp;/&nbsp;{{countTotal | number}}&nbsp;<span translate="">features</span>
+    <!--admin buttons-->
+    <div class="btn-group dropup wfs-filter-group">
+      <!--Facet count-->
+      <div class="btn btn-default btn-xs disabled"
+           data-ng-if="isFeaturesIndexed" class="count text-center"
+           data-ng-if="showCount">
+        {{count | number}}&nbsp;/&nbsp;{{countTotal | number}}&nbsp;<span translate="">features</span>
+      </div>
+
+      <button class="btn btn-default btn-xs"
+              data-ng-if="!managerOnly && isFeaturesIndexed"
+              title="{{::'Table' | translate}}"
+              ng-click="showTable()">
+        <i class="fa fa-table"></i>
+      </button>
+      <button class="btn btn-default btn-xs"
+              ng-class="{ disabled: !filtersChanged }"
+              data-ng-if="!managerOnly && isFeaturesIndexed"
+              title="{{::'applyFilter' | translate}}"
+              data-gn-click-and-spin="filterWMS()"
+              data-gn-click-and-spin-stay-disabled="true">
+        <i class="fa fa-filter"></i>
+      </button>
+      <button class="btn btn-default btn-xs"
+              title="{{::'refresh' | translate}}"
+              data-ng-click="initIndexRequest()">
+        <i class="fa fa-refresh"></i>
+      </button>
+      <button data-ng-if="user.canEditRecord(md) || md.isHarvested == 'true'"
+              type="button"
+              class="btn btn-default btn-xs dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-cog"></i>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"
+          data-ng-if="user.canEditRecord(md) || md.isHarvested == 'true'">
+        <li>
+          <a href="" data-ng-click="indexWFSFeatures('1.1.0')">
+            <i class="fa fa-cloud-download"></i>&nbsp;
+            <span data-translate="">reindexWFSFeatures</span>
+          </a>
+        </li>
+        <li>
+          <a href="" data-ng-click="dropFeatures()">
+            <i class="fa fa-eraser"></i>&nbsp;
+            <span data-translate="">removeFeatures</span>
+          </a>
+        </li>
+      </ul>
+      <a data-ng-if="managerOnly"
+         title="{{'addToMap' | translate}}"
+         data-ng-href="catalog.search#/map?add={{mapAddCmd | encodeURIComponent}}"
+         class="btn btn-default btn-xs">
+        <i class="fa fa-globe"></i>
+      </a>
     </div>
 
+
     <!--Facet fields-->
-    <div data-ng-if="isFeaturesIndexed"
+    <div data-ng-if="!managerOnly && isFeaturesIndexed"
          class="gn-facet"
          data-ng-repeat="field in fields track by field.name">
       <h5 gn-collapsible="field.expanded">
@@ -77,7 +132,7 @@
     </div>
     <!--Geometry Field-->
     <div class="gn-facet"
-         ng-if="isFeaturesIndexed && indexObject.geomField">
+         ng-if="!managerOnly && isFeaturesIndexed && indexObject.geomField">
       <h5 gn-collapsible="indexObject.geomField.expanded">
         <span class="fa fa-arrow-circle-right"
               data-ng-class="{'fa-rotate-90': indexObject.geomField.expanded, 'gn-field-empty': !isFilterActive('geometry')}"></span>
@@ -92,57 +147,9 @@
       </div>
     </div>
 
-    <!--admin buttons-->
-    <div class="btn-group dropup wfs-filter-group">
-      <button class="btn btn-default btn-xs" ng-class="{ disabled: !filtersChanged }"
-              data-gn-click-and-spin="filterWMS()"
-              data-gn-click-and-spin-stay-disabled="true">
-        <i class="fa fa-filter"></i>&nbsp;
-        <span data-translate="">applyFilter</span>
-      </button>
-      <button ng-if="::sextant" class="btn btn-default btn-xs"
-              title="{{'refresh' | translate}}"
-              data-ng-click="initIndexRequest()">
-        <i class="fa fa-refresh"></i>
-      </button>
-      <button data-ng-if="user.canEditRecord(md) || md.isHarvested == 'true'"
-              type="button" class="btn btn-default btn-xs dropdown-toggle"
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="fa fa-cog"></i>
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"
-          data-ng-if="user.canEditRecord(md) || md.isHarvested == 'true'">
-        <li>
-          <a href="" data-ng-click="indexWFSFeatures('1.1.0')">
-            <i class="fa fa-pie-chart"></i>&nbsp;
-            <span data-translate="">reindexWFSFeatures</span>
-          </a>
-        </li>
-        <li>
-          <a href="" data-ng-click="initIndexRequest()">
-            <i class="fa fa-refresh"></i>&nbsp;
-            <span data-translate="">refresh</span>
-          </a>
-        </li>
-        <li>
-          <a href="" data-ng-click="dropFeatures()">
-            <i class="fa fa-times"></i>&nbsp;
-            <span data-translate="">removeFeatures</span>
-          </a>
-        </li>
-      </ul>
-      <button class="btn btn-default btn-xs"
-              data-ng-if="isFeaturesIndexed"
-              ng-click="showTable()">
-        <i class="fa fa-table"></i>&nbsp;
-        <span data-translate="">Table</span>
-      </button>
-    </div>
-
-    <hr>
-    <button data-gn-click-and-spin="resetFacets(false).then(filterWMS)"
-            class="btn btn-primary gn-reset-facets">
+    <button data-ng-if="!managerOnly && isFeaturesIndexed"
+            data-gn-click-and-spin="resetFacets(false).then(filterWMS)"
+            class="btn btn-primary btn-xs gn-reset-facets">
       <span translate>reset</span>
     </button>
 

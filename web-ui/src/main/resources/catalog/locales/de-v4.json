@@ -157,5 +157,8 @@
   "commonProtocols": "Allgemeine Protokolle:",
   "indexStatusSynchronized": "Datensätze in index / db = <strong>{{indexStatus [&#39;index.count&#39;]}} / {{indexStatus [&#39;db.count&#39;]}}</strong>",
   "indexStatusSynchronized-error": "Wenn die Anzahl der Datensätze in der Datenbank und im Index nicht gleich ist, überprüfen Sie zunächst, ob der Katalog auf den richtigen Index verweist. Wenn ja, versuchen Sie, den Katalog über admin&gt; tools neu zu indizieren. Wenn es immer noch einen Unterschied gibt, überprüfen Sie die Protokolldatei auf Indizierungsfehler und korrigieren Sie den Metadatensatz mithilfe der XML-Ansicht.",
-  "IndexReadOnlyHealthCheck": "Der Index befindet sich im schreibgeschützten Modus"
+  "IndexReadOnlyHealthCheck": "Der Index befindet sich im schreibgeschützten Modus",
+  "summary": "Zusammenfassung",
+  "metadataRecords": "Metadata records",
+  "results": "Resultate"
 }

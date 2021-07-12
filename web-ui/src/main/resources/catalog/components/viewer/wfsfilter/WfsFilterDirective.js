@@ -117,28 +117,32 @@
     'gnSearchSettings',
     'gnFeaturesTableManager',
     'gnAlertService',
-    'gnTreeFromSlash',
+    'gnWfsService',
+    'gnOwsCapabilities',
     function($http, wfsFilterService, $q, $rootScope, $translate,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
              gnSearchSettings, gnFeaturesTableManager,
-             gnAlertService, gnTreeFromSlash) {
+             gnAlertService, gnWfsService, gnOwsCapabilities) {
       return {
         restrict: 'A',
-        replace: true,
+        replace: false,
         templateUrl: '../../catalog/components/viewer/wfsfilter/' +
           'partials/wfsfilterfacet.html',
         scope: {
-          featureTypeName: '@',
+          featureTypeName: '@?',
           wfsUrl: '@',
           displayCount: '@',
-          baseLayer: '=baseLayer',
-          layer: '=layer'
+          baseLayer: '=?baseLayer',
+          layer: '=?layer',
+          md: '=?',
+          managerOnly: '@?'
         },
         controller: function() {},
         link: function(scope, element, attrs, ctrl) {
 
           var indexUrl, uuid, ftName, appProfile,
             appProfilePromise, wfsIndexJobSavedPromise;
+          scope.managerOnly = scope.managerOnly === 'true';
           scope.map = scope.$parent.map;
           var map = scope.map;
 
@@ -178,6 +182,13 @@
 
           var textInputsHistory = {};
 
+          // use nested wms if we're in a group
+          if (scope.baseLayer && scope.baseLayer.get('originalWms')) {
+            scope.layer = scope.baseLayer.get('originalWms');
+          } else if (scope.baseLayer) {
+            scope.layer = scope.baseLayer
+          }
+
           /**
            * Init the directive when the scope.layer has changed.
            * If the layer is given through the isolate scope object, the init
@@ -185,7 +196,14 @@
            * all different feature types.
            */
           function init() {
-            if (scope.layer == null) {
+            if (scope.layer == null && scope.wfsUrl == null) {
+              console.warn("WFS data view can only work on a layer " +
+                "or with a wfsUrl attribute.")
+
+              if (scope.featureTypeName == null) {
+                console.warn("WFS data view can only work with a wfsUrl attribute " +
+                  "if featureTypeName attribute is also set.")
+              }
               return;
             }
 
@@ -197,10 +215,13 @@
             }
             // END SPECIFIC SEXTANT
 
-            var source = scope.currentLayer.getSource();
-            if (!source || !(source instanceof ol.source.ImageWMS ||
-              source instanceof ol.source.TileWMS)) {
-              return;
+            if (scope.layer != null) {
+              var source = scope.layer.getSource();
+              if (!source || !(source instanceof ol.source.ImageWMS ||
+                source instanceof ol.source.TileWMS)) {
+                console.warn("WFS data view can only work with a ImageWMS or TileWMS source");
+                return;
+              }
             }
 
             function getWfsUrl(mode, layer) {
@@ -211,7 +232,8 @@
                 // Simply try to replace wms in URL by wfs
                 // expecting that the layer as a corresponding feature type
                 // with same name.
-                return layer.get('url').replace(/wms/i, 'wfs');
+                return (layer != null ? layer.get('url') : scope.wfsUrl)
+                  .replace(/wms|WMS/i, 'wfs');
               } else if (mode === 'group') {
                 // Collect WFS URL in the same transfer option group
                 // as the WMS URL. Get the group
@@ -224,24 +246,32 @@
               }
             }
 
-            scope.wfsUrl = getWfsUrl(mode, scope.currentLayer);
+            scope.originalUrl = scope.wfsUrl;
+            scope.wfsUrl = getWfsUrl(mode, scope.layer);
 
             angular.extend(scope, {
               fields: [],
               isWfsAvailable: undefined,
+              isFeatureTypeAvailable: undefined,
               isFeaturesIndexed: false,
               status: null,
               // FIXME: On page reload the md is undefined and the filter does not work
-              md: scope.currentLayer.get('md'),
-              mdUrl: scope.currentLayer.get('url'),
+              md: scope.layer ? scope.layer.get('md') : scope.md,
+              mdUrl: scope.layer ? scope.layer.get('url') : null,
               url: gnGlobalSettings.getNonProxifiedUrl(scope.wfsUrl)
             });
 
             uuid = scope.md && scope.md.uuid;
-            // FIXME ? This comes from Sextant probably and
-            // does not work here when current layer change
-            // the previous featureTypeName is still used.
-            ftName = scope.currentLayer.getSource().getParams().LAYERS;
+
+            scope.mapAddCmd = angular.toJson([{
+              url: scope.originalUrl,
+              name: scope.featureTypeName,
+              uuid: uuid
+            }]);
+
+            ftName = scope.layer
+              ? scope.layer.getSource().getParams().LAYERS
+              : scope.featureTypeName;
             scope.featureTypeName = ftName;
 
             appProfile = null;
@@ -260,7 +290,7 @@
             });
             indexObject = wfsFilterService.registerEsObject(scope.url, ftName);
             scope.indexObject = indexObject;
-            scope.currentLayer.set('indexObject', indexObject);
+            scope.layer && scope.layer.set('indexObject', indexObject);
 
             // check whether the WFS service is already in the database
             scope.messageProducersApiUrl = '../api/msg_producers';
@@ -286,13 +316,20 @@
             if (url.indexOf('GetCapabilities') === -1) {
               url = url + (url.indexOf('?') === -1 ? '?' : '&') + 'request=GetCapabilities';
             }
-            return $http.get(url)
+            return $http.head(url)
               .then(function() {
                 scope.isWfsAvailable = true;
               }, function() {
                 scope.isWfsAvailable = false;
               });
           };
+
+          scope.checkFeatureTypeInWfs = function() {
+            gnWfsService.getCapabilities(scope.url).then(function(capObj) {
+              var capL = gnOwsCapabilities.getLayerInfoFromWfsCap(scope.featureTypeName, capObj, scope.uuid);
+              scope.isFeatureTypeAvailable = angular.isDefined(capL);
+            });
+          }
 
           /**
            * Init the index Request Object, either from meta index or from
@@ -304,7 +341,6 @@
             // `olrObject.initialParams` with external config
             // appProfile = TMP_PROFILE;
             if (appProfile && appProfile.fields) {
-
               indexObject.indexFields =
                 wfsFilterService.indexMergeApplicationProfile(
                   indexObject.filteredDocTypeFieldsInfo, appProfile);
@@ -356,6 +392,7 @@
             }, function(error) {
               scope.status = error.data ? 'indexAccessError' : error.statusText;
               scope.statusTitle = error.statusText;
+              scope.checkFeatureTypeInWfs();
             });
           };
           scope.dropFeatures = function() {
@@ -576,27 +613,31 @@
           };
 
           function setFeatureExtent(agg) {
-            scope.autoZoomToExtent = true;
-            if (scope.autoZoomToExtent
-              && agg.bbox_xmin.value && agg.bbox_ymin.value
-              && agg.bbox_xmax.value && agg.bbox_ymax.value) {
-              var isPoint = agg.bbox_xmin.value === agg.bbox_xmax.value
-                && agg.bbox_ymin.value === agg.bbox_ymax.value,
-                radius = .05,
-                extent = [agg.bbox_xmin.value, agg.bbox_ymin.value,
-                  agg.bbox_xmax.value, agg.bbox_ymax.value];
+            if (scope.layer) {
+              scope.autoZoomToExtent = true;
+              if (scope.autoZoomToExtent
+                && agg.bbox_xmin.value && agg.bbox_ymin.value
+                && agg.bbox_xmax.value && agg.bbox_ymax.value) {
+                var isPoint = agg.bbox_xmin.value === agg.bbox_xmax.value
+                  && agg.bbox_ymin.value === agg.bbox_ymax.value,
+                  radius = .05,
+                  extent = [agg.bbox_xmin.value, agg.bbox_ymin.value,
+                    agg.bbox_xmax.value, agg.bbox_ymax.value];
 
-              if (isPoint) {
-                var point = new ol.geom.Point([agg.bbox_xmin.value, agg.bbox_ymin.value]);
-                extent = new ol.extent.buffer(point.getExtent(), radius);
+                if (isPoint) {
+                  var point = new ol.geom.Point([agg.bbox_xmin.value, agg.bbox_ymin.value]);
+                  extent = new ol.extent.buffer(point.getExtent(), radius);
+                }
+                scope.featureExtent = ol.extent.applyTransform(extent,
+                  ol.proj.getTransform("EPSG:4326", scope.map.getView().getProjection()));
               }
-              scope.featureExtent = ol.extent.applyTransform(extent,
-                ol.proj.getTransform("EPSG:4326", scope.map.getView().getProjection()));
             }
           };
 
           scope.zoomToResults = function () {
-            scope.map.getView().fit(scope.featureExtent, scope.map.getSize());
+            if (scope.layer) {
+              scope.map.getView().fit(scope.featureExtent, scope.map.getSize());
+            }
           };
 
           // scope.$watch('featureExtent', function(n, o) {
@@ -656,7 +697,7 @@
               angular.element(boxElt).scope().clear();
             }
 
-            scope.currentLayer.set('esConfig', null);
+            scope.layer && scope.layer.set('esConfig', null);
             scope.$broadcast('FiltersChanged');
 
             // reset text search in facets
@@ -849,10 +890,12 @@
           };
 
           scope.resetSLDFilters = function() {
-            scope.currentLayer.getSource().updateParams({
-              SLD: null
-            });
-            scope.currentLayer.setExtent();
+            if (scope.layer) {
+              scope.layer.getSource().updateParams({
+                SLD: null
+              });
+              scope.layer.setExtent();
+            }
           };
 
           /**
@@ -932,10 +975,17 @@
             });
           };
 
-          // Init the directive when the layer changes (will trigger on initial value too)
-          scope.$watch('layer', function() {
+          // Init the directive
+          if (scope.layer || (scope.wfsUrl && scope.featureTypeName)) {
             init();
-          });
+          }
+          else {
+            scope.$watch('layer', function(n, o) {
+              if (n !== o) {
+                init();
+              }
+            });
+          }
 
           //Manage geographic search
           scope.$watch(function() {

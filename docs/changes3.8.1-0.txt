@@ -1,0 +1,50 @@
+================================================================================
+===
+=== GeoNetwork 3.8.1: List of changes
+===
+================================================================================
+- Fix: Remove padding in Admin page
+- fix #4040 if count=numrecords, nextrecord should not be 0
+- Update from transifex.
+- Spliting the large GN stylesheet into smaller ones
+- ISO19139 / Formatter / Indeterminate position label not correct
+- ES / By default do not insert in a public index
+- API / Xsl process reports are only returned as JSON (#3996).
+- Portal list (#4042)
+- Add UI configuration for footer (enabled/disabled)
+- Add more compact interface in the UI config when main field is disabled
+- Map / Zooming to layer extent after adding new layer to map has no effect  #3807
+- Harvester / GeoNetwork 2.x / Fix (#4047)
+- Added or changed menu icons in the admin sidebar
+- OGC / GetCapabilities / Time out set to 1 min. (#4046)
+- User search / Fix test.
+- API / Documentation / Redirect to default index.html
+- Portal / Set name depending on language in header and CSW capabilities (#4029)
+- User searches / Relate user searches with groups (#4033)
+- ES / Add source name field (#4032)
+- Fix Inspire atom submodule endpoints
+- i18n / Add Portuguesa (pt_BT from transifex).
+- Formatter improvements (#3991)
+- ES / Add option to populate an index with only public records. (#3985)
+- ISO19139 / Multilingual record / Fix online source name editing
+- shoot down hook no added every get
+- Added extra classes to related resources
+- Update linked-data-checker.xsl
+- Update keywords-comma-exploder.xsl
+- Test / More robust in case the default are not the one expected. Comment test error on less compilation.
+- Editor / Validation panel on top (#4014)
+- ISO19139 / Support main language encoded using CharacterString or LanguageCode #4012
+- Fix for overlapping buttons on contribute dashboard on medium sized screens (#4003)
+- ISO19139 / Add migration to ISO19115-3.2018
+- Build / Travis / Point to 3.8.x branch
+- Home page / Add link to open record when clicking the thumbnail (and not only the title)
+- ISO19110 / Display code before name
+- Fix tests
+- Editor / Associated resources / Set default value to action (#3981)
+- Editor / Documentation / How to customize associated panel list of link types ? (#3989)
+- Map / Cache getcapabilities parsing. (#3988)
+- WFS harvester / SLD / Send GetStyle request with direct httpClient (#3986)
+- Map / Print / Translate layout (#3987)
+- Editor / Table mode / Add option to not to have a fieldset around the (#3978)
+- ISO19110 / Index responsible party and add version identifier (#3982)
+- Update version to 3.8.1-SNAPSHOT

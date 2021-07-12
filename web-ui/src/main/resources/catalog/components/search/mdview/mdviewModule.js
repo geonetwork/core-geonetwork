@@ -63,9 +63,12 @@
       $scope.isUserFeedbackEnabled = false;
       $scope.isRatingEnabled = false;
       $scope.isSocialbarEnabled = gnGlobalSettings.gnCfg.mods.recordview.isSocialbarEnabled;
+      $scope.showStatusWatermarkFor = gnGlobalSettings.gnCfg.mods.recordview.showStatusWatermarkFor;
+      $scope.showStatusTopBarFor = gnGlobalSettings.gnCfg.mods.recordview.showStatusTopBarFor;
 
       gnConfigService.load().then(function(c) {
         $scope.isRecordHistoryEnabled = gnConfig['system.metadata.history.enabled'];
+        $scope.isPreferGroupLogo = gnConfig['system.metadata.prefergrouplogo'];
 
         var statusSystemRating =
           gnConfig['system.localrating.enable'];
@@ -197,5 +200,13 @@
       $scope.$watch('gnMdViewObj.from', function(v) {
         $scope.fromView = v ? v.substring(1) : v;
       });
+
+      if ($scope.gnMdViewObj.current.record
+        && $scope.gnMdViewObj.current.record.groupOwner) {
+        $http.get('../api/groups/' + $scope.gnMdViewObj.current.record.groupOwner,
+          {cache: true}).success(function(data) {
+          $scope.recordGroup = data;
+        });
+      }
     }]);
 })();

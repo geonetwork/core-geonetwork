@@ -326,15 +326,25 @@
         scope.signal = null;
 
         scope.vl = null;
-        scope.dateFormat = scope.facet.meta.dateFormat || 'DD-MM-YYYY';
-        scope.vegaDateFormat = scope.facet.meta.vegaDateFormat || '%d-%m-%Y';
+        scope.dateFormat = scope.facet.meta && scope.facet.meta.dateFormat || 'DD-MM-YYYY';
+        scope.vegaDateFormat = scope.facet.meta && scope.facet.meta.vegaDateFormat || '%d-%m-%Y';
+
+        function moment2datePickerFormat(format) {
+          // M > m, D > d, Y > y
+          // https://momentjs.com/docs/#/displaying/
+          // https://bootstrap-datepicker.readthedocs.io/en/latest/options.html#format
+          return format.toLowerCase();
+        }
+
         scope.dateRangeConfig = {
-          maxViewMode: scope.facet.meta.dateSelectMode || 'days',
-          minViewMode: scope.facet.meta.dateSelectMode || 'days'
+          maxViewMode: scope.facet.meta && scope.facet.meta.dateSelectMode || 'days',
+          minViewMode: scope.facet.meta && scope.facet.meta.dateSelectMode || 'days',
+          format: moment2datePickerFormat(scope.dateFormat)
         };
         scope.initialRange = angular.copy(scope.facet.items);
 
         function buildData() {
+
           angular.forEach(scope.initialRange, function(d) {
             d.type = 'all';
             return d;
@@ -343,8 +353,9 @@
             d.type = 'current';
             return d;
           });
-          return [].concat(scope.initialRange, scope.facet.items);
-            }
+          var items = [].concat(scope.initialRange, scope.facet.items);
+          return items;
+        }
         // Assign the specification to a local variable vlSpec.
         var vlSpec = {
           $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
@@ -362,13 +373,13 @@
           },
           vconcat: [{
             mark: {
-              type: scope.facet.meta.mark || 'bar',
+              type: scope.facet.meta && scope.facet.meta.mark || 'bar',
               cornerRadiusEnd: 2
             },
             height: 100,
-            selection: {
-              pts: {type: "single"}
-            },
+            // selection: {
+            //   pts: {type: "single"}
+            // },
             encoding: {
               x: {
                 field: 'key',
@@ -455,12 +466,12 @@
 
           scope.vl.view.addEventListener('click',
             function(event, item) {
-            if (item.datum && item.datum.$$hashKey) { // Avoid brush click
+            if (item && item.datum && item.datum.$$hashKey) { // Avoid brush click
               var vlId = item.datum.$$hashKey,
                 rangeItems = scope.vl.view.data('facetValues').filter(
                 function(e, i, a) {
-                  return e.$$hashKey === vlId ||
-                    (a[i - 1] && a[i - 1].$$hashKey === vlId);
+                  return e.type === 'current' && (e.$$hashKey === vlId ||
+                    (a[i - 1] && a[i - 1].$$hashKey === vlId));
                 }, []),
                 selected = item.datum,
                 next = rangeItems[1];
@@ -513,15 +524,28 @@
             });
         }
 
+        scope.reset = function() {
+          scope.range.from = undefined;
+          scope.range.to = undefined;
+        }
+
         scope.setRange = function() {
-          scope.signal = scope.range.from === undefined && scope.range.to === undefined
-            ? {}
+          scope.signal = (
+            (scope.range.from === undefined && scope.range.to === undefined)
+            || (scope.range.from === '' && scope.range.to === '')
+            ) ? {}
             : { key: [
               moment(scope.range.from, scope.dateFormat).valueOf(),
               moment(scope.range.to, scope.dateFormat).valueOf()
             ], update: false};
+          if (scope.vl) {
             scope.vl.view.signal('brush', scope.signal);
+          }
         }
+
+        scope.$watch('range.from', scope.setRange);
+        scope.$watch('range.to', scope.setRange);
+        scope.$on('resetSelection', scope.reset);
       }
     }
   }])
@@ -567,7 +591,7 @@
               // scale: {scheme: 'category20b'}
             }
           };
-          if (scope.facet.meta.vega === 'bar') {
+          if ((scope.facet.meta) && (scope.facet.meta.vega === 'bar')) {
             mark = 'bar';
             encoding = {
               y: {

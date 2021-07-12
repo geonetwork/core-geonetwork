@@ -671,14 +671,14 @@ public class MetadataWorkflowApi {
             if (s.getStatusValue().getType().equals(StatusValueType.event)) {
                 status.setCurrentStatus(extractCurrentStatus(s));
                 status.setPreviousStatus(extractPreviousStatus(s));
-//            } else if (s.getStatusValue().getType().equals(StatusValueType.task)) {
-//                status.setDateChange(s.getChangeDate().getDateAndTime());
-//                if (s.getDueDate() != null) {
-//                    status.setDateDue(s.getDueDate().getDateAndTime());
-//                }
-//                if (s.getCloseDate() != null) {
-//                    status.setDateClose(s.getCloseDate().getDateAndTime());
-//                }
+            } else if (s.getStatusValue().getType().equals(StatusValueType.task)) {
+                status.setDateChange(s.getChangeDate().getDateAndTime());
+                if (s.getDueDate() != null) {
+                    status.setDateDue(s.getDueDate().getDateAndTime());
+                }
+                if (s.getCloseDate() != null) {
+                    status.setDateClose(s.getCloseDate().getDateAndTime());
+                }
             }
 
             if (s.getTitles() != null && s.getTitles().size() > 0) {

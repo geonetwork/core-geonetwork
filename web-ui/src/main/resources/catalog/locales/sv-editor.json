@@ -117,7 +117,7 @@
     "createSmall": "Skapa liten",
     "cantAddLinkToDataset": "Det går inte att lägga till länk till måldatasystemet. Du kan antagligen inte redigera den posten. Uppdaterar endast tjänsten.",
     "current": "aktuell",
-    "datasetFound": "Dataset found and added to map preview",
+    "datasetFound": "Datamängden hittades och lades till i förhandsgranskningen av kartan",
     "datasetNotFound": "Datamängd hittades inte - 404",
     "datasets": "Datamängd",
     "dateMode": "Datum eller datumtid",

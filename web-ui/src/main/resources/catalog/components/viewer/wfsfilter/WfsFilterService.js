@@ -347,8 +347,8 @@
           var fieldObj = fields && fields.filter(function(field) {
             return field.name.indexOf(fieldName) === 3;
           })[0];
-          var tokenSeparator = appProfile && appProfile.tokenizedFields &&
-            appProfile.tokenizedFields[fieldName];
+          var tokenSeparator = (appProfile && appProfile.tokenizedFields &&
+            appProfile.tokenizedFields[fieldName]) || '';
 
           var values = attrValue.values && Object.keys(attrValue.values).length ?
             attrValue.values : attrValue.value;

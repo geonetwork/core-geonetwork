@@ -1,0 +1,59 @@
+<div>
+  <div class="row form-group" data-ng-repeat="f in harvester.filters track by $index">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      <select class="form-control" data-ng-model="f['condition']" data-ng-readonly="{{$index == 0}}">
+        <option value="AND" data-translate="">csw-harvesterConditionAnd</option>
+        <option value="OR" data-translate="">csw-harvesterConditionOr</option>
+      </select>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-3">
+      <select class="form-control" data-ng-model="f['field']">
+        <option data-ng-repeat="c in cswCriteria track by $index">{{c.replace('__', ':') | translate}}</option>
+      </select>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-3">
+      <select class="form-control" data-ng-model="f['operator']">
+        <option value="EQUAL" data-translate="">csw-harvesterOperatorEqual</option>
+        <option value="NOTEQUAL" data-translate="">csw-harvesterOperatorNotEqual</option>
+        <option value="LIKE" data-translate="">csw-harvesterOperatorLike</option>
+        <option value="NOTLIKE" data-translate="">csw-harvesterOperatorNotLike</option>
+        <option value="ISNULL" data-translate="">csw-harvesterOperatorIsNull</option>
+        <option value="ISNOTNULL" data-translate="">csw-harvesterOperatorIsNotNull</option>
+        <option value="LESSTHAN" data-translate="">csw-harvesterOperatorLessThan</option>
+        <option value="GREATERTHAN" data-translate="">csw-harvesterOperatorGreaterThan</option>
+        <option value="LESSTHANOREQUALTO" data-translate="">csw-harvesterOperatorLessThanOrEqualTo</option>
+        <option value="GREATERTHANOREQUALTO" data-translate="">csw-harvesterOperatorGreaterThanOrEqualTo</option>
+      </select>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-3">
+      <input type="text" class="form-control"
+             placeholder="{{((f['operator'] == 'ISNULL') || (f['operator'] == 'ISNOTNULL')) ?'':('csw-harvesterValuePlaceholder' | translate)}}"
+             data-ng-model="f['value']"
+             data-ng-disabled="((f['operator'] == 'ISNULL') || (f['operator'] == 'ISNOTNULL'))"/>
+    </div>
+
+    <div class="col-lg-1 col-md-1 col-sm-1">
+      <button type="button" class="btn btn-default"
+              data-ng-click="removeFilter($index)">
+        <i class="fa fa-times text-danger"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <button type="button" class="btn btn-default"
+              data-ng-click="addFilter()"
+              data-ng-disabled="!enableAddFilter">
+        <i class="fa fa-plus"></i>
+        <span data-translate="">csw-harvesterAddFilter</span>
+      </button>
+
+    </div>
+  </div>
+
+
+</div>

@@ -30,7 +30,7 @@
 
         <button type="button" class="btn btn-primary btn-block" id="gn-btn-user-add"
                 data-ng-click="addUser()"
-                data-ng-show="user.isUserAdminOrMore()">
+                data-ng-show="user.isUserAdminOrMore() && isUserProfileUpdateEnabled">
           <i class="fa fa-plus"/>
           <span data-translate="">newUser</span>
         </button>
@@ -43,8 +43,9 @@
     <div class="panel panel-default">
       <div class="panel-heading"
            title="{{searchResults.count > 0 ? ('cantDeleteUserHavingRecords' | translate) : ''}}">
-        <span data-ng-hide="userSelected.id == ''" data-translate="">updateUser</span>
-        <span data-ng-hide="userSelected.id != ''" data-translate="">newUser</span>
+        <span data-ng-hide="userSelected.id == '' || !isUserProfileUpdateEnabled" data-translate="">updateUser</span>
+        <span data-ng-hide="userSelected.id != '' || !isUserProfileUpdateEnabled" data-translate="">newUser</span>
+        <span data-ng-hide="isUserProfileUpdateEnabled" data-translate="">user</span>
         <strong>{{userSelected.name}} {{userSelected.surname}}</strong>
         ({{userSelected.profile | translate}})
         <span data-ng-show="userSelected.security.authtype.length > 0">
@@ -52,7 +53,7 @@
         </span>
         <div class="btn-toolbar">
           <button type="button" class="btn btn-default pull-right"
-                  data-ng-hide="hideResetPassword()"
+                  data-ng-hide="hideResetPassword() || isDisableLoginForm"
                   data-ng-click="resetPassword(userSelected.id)">
             <i class="fa fa-lock fa-fw"></i> <span data-translate=""
           >resetPassword</span></button>
@@ -102,7 +103,7 @@
                        data-gn-duplicate-check="userSelected.username"
                        data-gn-duplicate-check-apply="userOperation == 'newuser'"
                        data-gn-duplicate-check-remote="../api/users/properties/userid?exist={value}"
-                       data-ng-disabled="!user.isUserAdminOrMore()"
+                       data-ng-disabled="!user.isUserAdminOrMore() || !isUserProfileUpdateEnabled"
                        autocomplete="off"/>
                 <p class="help-block" data-translate="">usernameHelp</p>
                 <p class="help-block"
@@ -162,14 +163,16 @@
               <div class="col-sm-9">
                 <input type="text" name="name" class="form-control"
                        data-ng-model="userSelected.name"
-                       data-ng-required="true"/>
+                       data-ng-required="true"
+                       data-ng-disabled="!isUserProfileUpdateEnabled"/>
               </div>
             </div>
             <div data-ng-class="userSelected.surname == '' ? 'has-error' : ''" class="form-group">
               <label class="control-label col-sm-3" data-translate="">surname</label>
               <div class="col-sm-9">
                 <input type="text" name="surname" class="form-control"
-                       data-ng-model="userSelected.surname" data-ng-required=""/>
+                       data-ng-model="userSelected.surname" data-ng-required=""
+                       data-ng-disabled="!isUserProfileUpdateEnabled"/>
               </div>
             </div>
             <div
@@ -178,7 +181,8 @@
               <label class="control-label col-sm-3" data-translate="">email</label>
               <div class="col-sm-9">
                 <input type="email" name="email" class="form-control"
-                       data-ng-model="userSelected.emailAddresses[0]" data-ng-required="true"/>
+                       data-ng-model="userSelected.emailAddresses[0]" data-ng-required="true"
+                       data-ng-disabled="!isUserProfileUpdateEnabled"/>
                 <p class="help-block" data-translate="">configureYourAvatar</p>
               </div>
             </div>
@@ -187,7 +191,8 @@
               <!-- TODO : Add org list -->
               <div class="col-sm-9">
                 <input type="text" name="org" class="form-control"
-                       data-ng-model="userSelected.organisation"/>
+                       data-ng-model="userSelected.organisation"
+                       data-ng-disabled="!isUserProfileUpdateEnabled"/>
               </div>
             </div>
 
@@ -198,7 +203,8 @@
                 <label class="control-label col-sm-3" data-translate="">address</label>
                 <div class="col-sm-9">
                   <input type="text" name="address" class="form-control"
-                         data-ng-model="userSelected.addresses[0].address"/>
+                         data-ng-model="userSelected.addresses[0].address"
+                         data-ng-disabled="!isUserProfileUpdateEnabled"/>
                 </div>
               </div>
 
@@ -206,7 +212,8 @@
                 <label class="control-label col-sm-3" data-translate="">zip</label>
                 <div class="col-sm-9">
                   <input type="text" name="zip" class="form-control"
-                         data-ng-model="userSelected.addresses[0].zip"/>
+                         data-ng-model="userSelected.addresses[0].zip"
+                         data-ng-disabled="!isUserProfileUpdateEnabled"/>
                 </div>
               </div>
 
@@ -215,7 +222,8 @@
                 <label class="control-label col-sm-3" data-translate="">state</label>
                 <div class="col-sm-9">
                   <input type="text" name="state" class="form-control"
-                         data-ng-model="userSelected.addresses[0].state"/>
+                         data-ng-model="userSelected.addresses[0].state"
+                         data-ng-disabled="!isUserProfileUpdateEnabled"/>
                 </div>
               </div>
 
@@ -224,7 +232,8 @@
                 <label class="control-label col-sm-3" data-translate="">city</label>
                 <div class="col-sm-9">
                   <input type="text" name="city" class="form-control"
-                         data-ng-model="userSelected.addresses[0].city"/>
+                         data-ng-model="userSelected.addresses[0].city"
+                         data-ng-disabled="!isUserProfileUpdateEnabled"/>
                 </div>
               </div>
 
@@ -234,13 +243,14 @@
                 <div class="col-sm-9">
                   <input type="text" name="country" class="form-control"
                          data-ng-model="userSelected.addresses[0].country"
-                         data-gn-country-picker=""/>
+                         data-gn-country-picker=""
+                         data-ng-disabled="!isUserProfileUpdateEnabled"/>
                 </div>
               </div>
             </fieldset>
 
 
-            <fieldset data-ng-if="!user.isUserAdminOrMore()">
+            <fieldset data-ng-if="!user.isUserAdminOrMore() && isUserGroupUpdateEnabled">
               <legend data-translate="profile"></legend>
 
               <div data-ng-if="groupsByProfile['RegisteredUser'].length > 0">
@@ -265,7 +275,7 @@
               </div>
             </fieldset>
 
-            <fieldset data-ng-if="user.isUserAdminOrMore()">
+            <fieldset data-ng-if="user.isUserAdminOrMore() && isUserGroupUpdateEnabled">
               <legend data-translate="">defineUserGroupsPerProfile</legend>
               <input type="hidden" name="profile" data-ng-model="userSelected.profile"
                      value="{{userSelected.profile}}"/>
@@ -310,7 +320,7 @@
           </fieldset>
         </form>
 
-        <div data-ng-search-form="" class="panel panel-default">
+        <div data-ng-search-form="" class="panel panel-default" data-ng-if="userSelected.id > 0">
           <div class="panel-heading"
                data-gn-slide-toggle="">
             <i class="fa fa-search"/>&nbsp;
@@ -331,7 +341,7 @@
         </div>
 
         <br/>
-        <div data-gn-saved-selections=""
+        <div data-gn-saved-selections="" data-ng-if="userSelected.id > 0"
              data-gn-saved-selections-panel="userSelected"/>
       </div>
     </div>

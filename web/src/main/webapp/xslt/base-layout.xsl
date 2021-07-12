@@ -67,7 +67,7 @@
       loading site information, check user login state
       and a facet search to get main site information.
       -->
-      <body data-ng-controller="GnCatController" data-ng-class="[isHeaderFixed ? 'gn-header-fixed' : 'gn-header-relative', isLogoInHeader ? 'gn-logo-in-header' : 'gn-logo-in-navbar']">
+      <body data-ng-controller="GnCatController" data-ng-class="[isHeaderFixed ? 'gn-header-fixed' : 'gn-header-relative', isLogoInHeader ? 'gn-logo-in-header' : 'gn-logo-in-navbar', isFooterEnabled ? 'gn-show-footer' : 'gn-hide-footer']">
 
         <div data-gn-alert-manager=""></div>
 
@@ -88,7 +88,7 @@
               <div class="navbar navbar-default gn-top-bar"
                    role="navigation"
                    data-ng-hide="layout.hideTopToolBar"
-                   data-ng-include="'{$uiResourcesPath}templates/top-toolbar.html'"></div>
+                   data-ng-include="isMenubarAccessible ? '{$uiResourcesPath}templates/top-toolbar-accessible.html' : '{$uiResourcesPath}templates/top-toolbar.html'"></div>
             </xsl:if>
 
             <xsl:apply-templates mode="content" select="."/>

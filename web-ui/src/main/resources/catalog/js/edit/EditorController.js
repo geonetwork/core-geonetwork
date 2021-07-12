@@ -137,6 +137,9 @@
        */
       var duration = 300;
 
+
+
+
       /**
        * Function to call after form load
        * to move view menu to top toolbar
@@ -169,7 +172,9 @@
             $http.post('../api/search/records/_search', {"query": {
                 "bool" : {
                   "must": [
-                    {"term": {"id": $routeParams.id}},
+                    {"multi_match": {
+                        "query": $routeParams.id,
+                        "fields": ['id', 'uuid']}},
                     {"terms": {"draft": ["n", "y", "e"]}},
                     {"terms": {"isTemplate": ["n", "y", "s"]}}
                   ]
@@ -180,7 +185,7 @@
 
               if (!$scope.metadataFound) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant('metadataNotFound') || 'metadataNotFound',
+                  title: $translate.instant('metadataNotFound', {id: $routeParams.id}) || 'metadataNotFound',
                   error: $routeParams.id,
                   timeout: 0,
                   type: 'danger'
@@ -188,9 +193,8 @@
                 return;
               }
 
-              $scope.id = $routeParams.id;
-
               gnCurrentEdit.metadata = new Metadata(r.data.hits.hits[0]);
+              $scope.id = gnCurrentEdit.metadata.id;
               $scope.mdSchema = gnCurrentEdit.metadata.documentStandard;
               gnCurrentEdit.schema = $scope.mdSchema;
               $scope.mdCategories = {values: []};
@@ -276,9 +280,9 @@
                 $scope.layout.hideTopToolBar = true;
 
                 angular.extend(gnCurrentEdit, {
-                  id: $routeParams.id,
-                  formId: '#gn-editor-' + $routeParams.id,
-                  containerId: '#gn-editor-container-' + $routeParams.id,
+                  id: gnCurrentEdit.metadata.id,
+                  formId: '#gn-editor-' + gnCurrentEdit.metadata.id,
+                  containerId: '#gn-editor-container-' + gnCurrentEdit.metadata.id,
                   associatedPanelConfigId: 'default',
                   tab: $location.search()['tab'] || defaultTab,
                   displayAttributes: $location.search()['displayAttributes'] === 'true',
@@ -290,6 +294,7 @@
                   formLoadExtraFn: formLoadExtraFunctions,
                   codelistFilter: '',
                   working: false
+
                 });
 
                 $scope.gnCurrentEdit = gnCurrentEdit;
@@ -588,6 +593,12 @@
       };
 
       $scope.cancel = function(refreshForm) {
+
+        var doCancel = confirm($translate.instant('confirmCancelEdit'));
+
+        if (!doCancel) {
+          return false;
+        }
         $scope.savedStatus = gnCurrentEdit.savedStatus;
         if ($location.search()['justcreated']) {
           // Remove newly created record

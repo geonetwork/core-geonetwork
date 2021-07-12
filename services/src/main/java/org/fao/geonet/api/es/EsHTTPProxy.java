@@ -344,7 +344,9 @@ public class EsHTTPProxy {
                                   JsonNode esQuery) throws Exception {
 
         // Build filter node
-        String esFilter = buildQueryFilter(context, "");
+        String esFilter = buildQueryFilter(context,
+                                            "",
+                                            esQuery.toString().contains("\"draft\":"));
         JsonNode nodeFilter = objectMapper.readTree(esFilter);
 
         JsonNode queryNode = esQuery.get("query");
@@ -388,7 +390,7 @@ public class EsHTTPProxy {
     /**
      * Add search privilege criteria to a query.
      */
-    private String buildQueryFilter(ServiceContext context, String type) throws Exception {
+    private String buildQueryFilter(ServiceContext context, String type, boolean isSearchingForDraft) throws Exception {
         StringBuilder query = new StringBuilder();
         query.append(buildPermissionsFilter(context).trim());
 
@@ -399,7 +401,10 @@ public class EsHTTPProxy {
         } else if (type.equalsIgnoreCase("subtemplate")) {
             query.append(" AND (isTemplate:s)");
         }
-        query.append(" AND (draft:n OR draft:e)");
+
+        if (!isSearchingForDraft) {
+            query.append(" AND (draft:n OR draft:e)");
+        }
 
         final String portalFilter = buildPortalFilter();
         if (!"".equals(portalFilter)) {

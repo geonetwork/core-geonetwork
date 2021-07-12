@@ -396,6 +396,10 @@
                tab: getInputValue('currTab'),
                geoPublisherConfig:
                angular.fromJson(getInputValue('geoPublisherConfig')),
+               resourceContainerDescription:
+                 angular.fromJson(getInputValue('resourceContainerDescription')),
+               resourceManagementExternalProperties:
+                 angular.fromJson(getInputValue('resourceManagementExternalProperties')),
                extent: extent,
                dataFormats: dataFormats,
                isMinor: getInputValue('minor') === 'true',

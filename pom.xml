@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.0.5-SNAPSHOT</version>
+  <version>4.0.6-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -1483,6 +1483,12 @@
     <!-- Define the default analyzer for full text search. -->
     <es.index.analyzer.default>standard</es.index.analyzer.default>
 <!--    <es.default.analyzer>french_light</es.default.analyzer>-->
+
+    <!-- Define the number of records allowed to be retrieved during search.
+    Increase the value for large catalogue.
+    TODO: Probably better to switch to scroll API for full indexing. -->
+    <es.index.max_result_window.limit>15000</es.index.max_result_window.limit>
+
     <es.index.mapping.total_fields.limit>4000</es.index.mapping.total_fields.limit>
     <es.index.query.bool.max_clause_count>3000</es.index.query.bool.max_clause_count>
 
@@ -1529,7 +1535,7 @@
     <spring.security.version>5.2.5.RELEASE</spring.security.version>
     <spring.jpa.version>2.2.8.RELEASE</spring.jpa.version>
     <springboot.version>2.2.2.RELEASE</springboot.version>
-    <springdoc.version>1.3.9</springdoc.version>
+    <springdoc.version>1.5.9</springdoc.version>
 
     <metrics.version>2.1.1</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
