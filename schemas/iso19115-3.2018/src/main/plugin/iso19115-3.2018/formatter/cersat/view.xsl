@@ -115,110 +115,114 @@
 
     <div class="row">
       <div class="col-md-8">
-        <div class="row cersat-head-badge">
-          <xsl:variable name="version"
-                        select="$metadata/mdb:resourceLineage/*/mrl:processStep/*/mrl:stepDateTime/*"/>
+        <div class="row">
+          <div class="col-md-12 cersat-head-badge">
+            <xsl:variable name="version"
+                          select="$metadata/mdb:resourceLineage/*/mrl:processStep/*/mrl:stepDateTime/*"/>
 
-          <xsl:for-each select="$version">
-            <xsl:sort select="gml:timePosition" order="descending"/>
-            <xsl:if test="position() = 1">
+            <xsl:for-each select="$version">
+              <xsl:sort select="gml:timePosition" order="descending"/>
+              <xsl:if test="position() = 1">
+                <div class="cersat-bg cersat-bg-lightgreen">
+                  <div>
+                    <xsl:value-of select="$schemaStrings/cersat-version"/>
+                  </div>
+                  <div class="cersat-bg-white"><xsl:value-of select="gml:identifier"/></div>
+                </div>
+              </xsl:if>
+            </xsl:for-each>
+
+
+            <xsl:variable name="doiUrl"
+                          select="$metadata/mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:code/*[contains(lower-case(text()), 'doi')]"/>
+            <xsl:if test="$doiUrl != ''">
               <div class="cersat-bg cersat-bg-lightgreen">
                 <div>
-                  <xsl:value-of select="$schemaStrings/cersat-version"/>
+                  DOI
                 </div>
-                <div class="cersat-bg-white"><xsl:value-of select="gml:identifier"/></div>
+                <div class="cersat-bg-white">
+                  <a href="{$doiUrl}">
+                    <xsl:value-of select="$doiUrl"/>
+                  </a>
+                </div>
               </div>
             </xsl:if>
-          </xsl:for-each>
 
 
-          <xsl:variable name="doiUrl"
-                        select="$metadata/mdb:identificationInfo/*/mri:citation/*/cit:identifier/*/mcc:code/*[contains(lower-case(text()), 'doi')]"/>
-          <xsl:if test="$doiUrl != ''">
-            <div class="cersat-bg cersat-bg-lightgreen">
-              <div>
-                DOI
+            <xsl:variable name="status"
+                          select="$metadata/mdb:identificationInfo/*/mri:status/*/@codeListValue"/>
+            <xsl:if test="$status != ''">
+              <div class="cersat-bg cersat-bg-lightgreen">
+                <div>
+                  <xsl:value-of select="$schemaStrings/cersat-opdataset"/>
+                </div>
+                <div class="cersat-bg-white">
+                  <xsl:value-of select="tr:codelist-value-label(
+                                          tr:create($schema),
+                                          'MD_ProgressCode',
+                                          $status)"/>
+                </div>
               </div>
-              <div class="cersat-bg-white">
-                <a href="{$doiUrl}">
-                  <xsl:value-of select="$doiUrl"/>
-                </a>
-              </div>
-            </div>
-          </xsl:if>
-
-
-          <xsl:variable name="status"
-                        select="$metadata/mdb:identificationInfo/*/mri:status/*/@codeListValue"/>
-          <xsl:if test="$status != ''">
-            <div class="cersat-bg cersat-bg-lightgreen">
-              <div>
-                <xsl:value-of select="$schemaStrings/cersat-opdataset"/>
-              </div>
-              <div class="cersat-bg-white">
-                <xsl:value-of select="tr:codelist-value-label(
-                                        tr:create($schema),
-                                        'MD_ProgressCode',
-                                        $status)"/>
-              </div>
-            </div>
-          </xsl:if>
+            </xsl:if>
+          </div>
         </div>
 
 
         <div class="row">
-          <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:graphicOverview/*">
-            <img data-gn-img-modal="md"
-                 class="gn-img-thumbnail pull-left"
-                 alt="{$schemaStrings/overview}"
-                 src="{mcc:fileName/*}"/>
-          </xsl:for-each>
+          <div class="col-md-12">
+            <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:graphicOverview/*">
+              <img data-gn-img-modal="md"
+                   class="gn-img-thumbnail pull-left"
+                   alt="{$schemaStrings/overview}"
+                   src="{mcc:fileName/*}"/>
+            </xsl:for-each>
 
-          <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:abstract">
-            <xsl:variable name="txt">
-              <xsl:call-template name="get-iso19115-3.2018-localised">
-                <xsl:with-param name="langId" select="$langId"/>
-              </xsl:call-template>
-            </xsl:variable>
-            <xsl:call-template name="addLineBreaksAndHyperlinks">
-              <xsl:with-param name="txt" select="$txt"/>
-            </xsl:call-template>
-          </xsl:for-each>
-        </div>
-
-
-        <xsl:variable name="gcmd-keyword"
-                      select="$metadata/mdb:identificationInfo/*/mri:descriptiveKeywords
-                                  [contains(*/mri:thesaurusName/*/cit:title/(gcx:Anchor|gco:CharacterString),
-                                  'Cersat - GCMD parameter')]/*/mri:keyword"/>
-        <xsl:if test="count($gcmd-keyword) > 0">
-          <div class="row cersat-gcmd">
-            <xsl:for-each select="$gcmd-keyword">
-              <div class="badge">
+            <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:abstract">
+              <xsl:variable name="txt">
                 <xsl:call-template name="get-iso19115-3.2018-localised">
                   <xsl:with-param name="langId" select="$langId"/>
                 </xsl:call-template>
+              </xsl:variable>
+              <xsl:call-template name="addLineBreaksAndHyperlinks">
+                <xsl:with-param name="txt" select="$txt"/>
+              </xsl:call-template>
+            </xsl:for-each>
+
+
+            <xsl:variable name="gcmd-keyword"
+                          select="$metadata/mdb:identificationInfo/*/mri:descriptiveKeywords
+                                    [contains(*/mri:thesaurusName/*/cit:title/(gcx:Anchor|gco:CharacterString),
+                                    'Cersat - GCMD parameter')]/*/mri:keyword"/>
+            <xsl:if test="count($gcmd-keyword) > 0">
+              <div class="row cersat-gcmd">
+                <xsl:for-each select="$gcmd-keyword">
+                  <div class="badge">
+                    <xsl:call-template name="get-iso19115-3.2018-localised">
+                      <xsl:with-param name="langId" select="$langId"/>
+                    </xsl:call-template>
+                  </div>
+                </xsl:for-each>
+              </div>
+            </xsl:if>
+
+
+            <xsl:variable name="citation"
+                          select="$metadata/mdb:identificationInfo/*/mri:resourceConstraints/
+                                mco:MD_LegalConstraints/mco:otherConstraints[2]"/>
+            <xsl:for-each select="$citation">
+              <div class="cersat-bg cersat-bg-green">
+                <div>
+                  <xsl:value-of select="$schemaStrings/cersat-citation"/>
+                </div>
+                <div class="cersat-bg-white">
+                  <xsl:call-template name="get-iso19115-3.2018-localised">
+                    <xsl:with-param name="langId" select="$langId"/>
+                  </xsl:call-template>
+                </div>
               </div>
             </xsl:for-each>
           </div>
-        </xsl:if>
-
-
-        <xsl:variable name="citation"
-                      select="$metadata/mdb:identificationInfo/*/mri:resourceConstraints/
-                              mco:MD_LegalConstraints/mco:otherConstraints[2]"/>
-        <xsl:for-each select="$citation">
-          <div class="row cersat-bg cersat-bg-green">
-            <div>
-              <xsl:value-of select="$schemaStrings/cersat-citation"/>
-            </div>
-            <div class="cersat-bg-white">
-              <xsl:call-template name="get-iso19115-3.2018-localised">
-                <xsl:with-param name="langId" select="$langId"/>
-              </xsl:call-template>
-            </div>
-          </div>
-        </xsl:for-each>
+        </div>
 
 
         <div class="row">
@@ -275,11 +279,9 @@
                     <div class="cersat-bg-white">
                       <a title="{cit:protocol/*/text()}"
                          href="{cit:linkage/*/text()}">
-                        <strong>
-                          <xsl:value-of select="if (cit:name/*/text() != '')
-                                                then cit:name/*/text()
-                                                else cit:linkage/*/text()"/>
-                        </strong>
+                        <xsl:value-of select="if (cit:name/*/text() != '')
+                                              then cit:name/*/text()
+                                              else cit:linkage/*/text()"/>
                       </a>
                     </div>
                   </div>
