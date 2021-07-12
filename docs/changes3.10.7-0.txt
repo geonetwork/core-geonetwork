@@ -1,0 +1,71 @@
+================================================================================
+===
+=== GeoNetwork 3.10.7: List of changes
+===
+================================================================================
+- Fix download-from-transifex.sh script
+- [BP] Update the filter for INSPIRE Atom dataset feed to support the remote operatesOn indexing format (#5816)
+- [BP] Local INSPIRE Atom feed xslt: (#5815)
+- Update doc url to point to 3.10.x documentation (#5819)
+- [BP] Add confirm to delete Category and Cancel edits to metadata (#5813)
+- [BP] Fix Thumbnail generator (#5757)
+- [BP] Search results - metadata with a working copy display a label 'Working copy' if the metadata has a draft copy, even for public users. Fixes #5580
+- [BP] Create user form issues 2 requests to userselection api that return status code 400. Fixes #4545
+- [BP] iso19139 full view - codelist elements - display the codelistValue translation only if the element has a text also
+- [BP] Users without groups assigned are listed in the users lists for any UserAdmin
+- [BP] Metadata editor - option to disable OGC Capabilites layer processing in the online resource panel.
+- [BP] Associated resource / Feature catalog / Missing list of values
+- [BP] Add settings and styling for the map height when there is no footer (#5696)
+- mend
+- [BP] Generic error  message in 'Upload a file from URL'. Fixes #5535 (#5553)
+- #5334 Fix Conformity checks in INSPIRE strict rules (3.10.x) (#5335)
+- Add option for PNG images to mcc:fileType Recommended values
+- [BP] Update user - verify user groups when updating a user by a UserAdmin. Fixes #5537 (#5560)
+- [BP] Fixes embedded Cross-Site Scripting issues in #5536 (#5551)
+- [BP] Update sample jndi configuration to point to correct filename (#5543)
+- [BP] Fixes some challenges in google-structured-data-test (#5508)
+- [BP] Updated schematron name on error messages so that it does not overlap. (#5521)
+- [BP] Update ZipUtil.java to use tempFile configuration to avoid memory issue (#5526)
+- [BP] Fix draft metadata manager update method to check if should be applied to the draft metadata or the published metadata. Caused an error in the schema upgrade process when applied to the draft metadata
+- [BP] Full view doesn't work in a draft version of a metadata record. Fixes #5373 (#5433)
+- [BP] Update message if metadata is not found depending on the authentication status
+- [BP] Use the configured CSW Service metadata to fill the meta headers for description / keywords for the html content (#5447)
+- [BP] Fix parse of logo upload in groups management when the content type includes the charset encoding (#5460)
+- [BP] Enable preemptive for csw requests with credentials (#5497)
+- [BP] Index temporal extent period, fix multiple temporal extent display inthe metadata detail page. Fixes #5483 (#5485)
+- [BP] Add a WMTS error message when the URL can't be parsed (#5292)
+- [BP] Use button to recover the password, anchor doesn't work well with ng-disable and can be clicked when disabled (#5478)
+- [BP] Stream attachments to the browser without reading them first (#5462)
+- [BP] INSPIRE Atom fixes: - Update JPA specification to filter metadata with schemas based on iso19139 also. - Atom feed parse: truncate fields longer than the database related fields.
+- [BP] INSPIRE geometry fields lead to 0 results in opensearch. Fixes #4218 (#5434)
+- [BP] Fix issue using custom UUIDs. (#5440)
+- [BP] User $translateProvider.useSanitizeValueStrategy('escapeParameters') for encoding sanitizing (#5461)
+- [BP] consider proj.worldextent not defined fix for #4868
+- [BP] Check for redirect parameter (#5491)
+- [BP] Remove non required data-translate directive usage in gnMetadataGroupUpdater directive (#5490)
+- [BP] Manage url redirects with URL.openConnection (#5512)
+- [BP] Update Thesaurus keywords to ISO19115-3.2018
+- Update README.md
+- Fix regression on "Compute extents from keywords" button (#5455)
+- [BP] One styling for all scrollbars and increase the width/height
+- [BP] Use maven major, minor, patch, build, qualifier definition for version (#5452) (#5451)
+- Log transaction manager notification failures (#5408)
+- [BP] Kibana / Only allow access to authenticated users in the catalog.
+- [BP] Retrieve INSPIRE Atom feed language from self link element instead of the feed language attribute that is optional (#5435)
+- [BP] Bulk publish cancels working copy. Fixes #5419
+- [BP] Fix for validation result gets lost when approving record and copy validation results when creating a draft. Fixes #5209
+- [BP] Update getMdObjByUuid to use the draft information in the metadata when the workflow is enabled. Fixes #5343
+- [BP] remove schema-org annotations from list pages, we use embedded json-ld now fixes #5411
+- [BP] Avoid request check not modified as unsupported on chrome and edge (#5406)
+- [BP] Don't allow empty group owner in harvesters. Fixes #4423
+- Backport add-schema.sh from master and adapt for 3.10.x branch (#5403)
+- [BP] Reset password service: - Use generic messages for user reset password services to avoid revealing users registered. - Fixes in alert display in the UI for info messages.
+- [BP] Protect AccessManager code using user session
+- [BP] Record to CSW Capabilities - Handle dates with gco:Date for INSPIRE MetadataDate element
+- [BP] Record to CSW Capabilities - extract language iso2code with twoCharLangCode function, update in date element to use the text value
+- [BP] fix xpath to match only the main citation title, not other citation titles
+- [BP] Fixed unhandled error and its xsl regular expression. Fixed root element in Schematron title translation. (#5220)
+- Change to 3.10-SNAPSHOT (#5096)
+- #5212 Fix logo in record view (3.10.x) (#5337)
+- #5119 Fix codelist rendering (3.10.x) (#5339)
+- Update version to 3.10.7-SNAPSHOT
