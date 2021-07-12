@@ -1586,6 +1586,11 @@
               name()='gmd:MD_Metadata' and
               contains(gmd:metadataStandardName/gco:CharacterString, 'EMODNET')]">
     <entry>
+      <code>Creative Commons Attribution 4.0 International</code>
+      <label>Creative Commons Attribution 4.0 International</label>
+      <description></description>
+    </entry>
+    <entry>
       <code>SeaDataNet licence</code>
       <label>SeaDataNet licence</label>
       <description></description>
@@ -1853,12 +1858,12 @@
 			<label>Carte</label>
 			<description></description>
 		</entry>
-		<entry>
+		<entry hideInEditMode="true">
 			<code>staticMap</code>
 			<label>Carte statique</label>
 			<description></description>
 		</entry>
-		<entry>
+		<entry hideInEditMode="true">
 			<code>interactiveMap</code>
 			<label>Carte interactive</label>
 			<description></description>
@@ -1868,6 +1873,66 @@
       <label>Catalogue d'attributs</label>
       <description></description>
     </entry>
+
+    <!-- From ISO19115-3 -->
+    <entry>
+      <code>aggregate</code>
+      <label>Agrégat</label>
+      <description>Les informations s’appliquent à une ressource d’agrégat
+      </description>
+    </entry>
+    <entry>
+      <code>application</code>
+      <label>Application</label>
+      <description>Ressource d’informations hébergée dans un ensemble spécifique
+        de matériel et accessible sur un réseau
+      </description>
+    </entry>
+    <entry>
+      <code>collection</code>
+      <label>Ensemble</label>
+      <description>Les informations s’appliquent à un ensemble non structuré
+      </description>
+    </entry>
+    <entry>
+      <code>coverage</code>
+      <label>Couverture</label>
+      <description>Les informations s’appliquent à une couverture</description>
+    </entry>
+    <entry>
+      <code>document</code>
+      <label>Document</label>
+      <description>Les informations s’appliquent à un document</description>
+    </entry>
+    <entry>
+      <code>initiative</code>
+      <label>Initiative</label>
+      <description>Les informations s’appliquent à une initiativee</description>
+    </entry>
+    <entry>
+      <code>metadata</code>
+      <label>Métadonnées</label>
+      <description>Les informations s’appliquent à des métadonnées</description>
+    </entry>
+    <entry>
+      <code>product</code>
+      <label>Produit</label>
+      <description>Les métadonnées décrivant une spécification de contenu
+        informationnel dans l’ISO 19131
+      </description>
+    </entry>
+    <entry>
+      <code>repository</code>
+      <label>Dépôt de données</label>
+      <description>Les informations s’appliquent à un dépôt de données
+      </description>
+    </entry>
+    <entry>
+      <code>sample</code>
+      <label>Echantillon</label>
+      <description>Les informations s’appliquent à un échantillone</description>
+    </entry>
+
 	</codelist>
 <!--
 	Example to customize scope code codelist for a service metadata record.

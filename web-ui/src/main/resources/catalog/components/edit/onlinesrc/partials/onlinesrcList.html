@@ -196,6 +196,11 @@
               <br/>
               <strong>{{resource.title | gnLocalized: lang}}</strong><br/>
               {{resource.description | gnLocalized: lang}}
+
+              <div data-ng-if="resource.lUrl.match('/doi/') !== null"
+                   data-gn-doi-wizard="gnCurrentEdit.uuid"
+                   data-gn-doi-url="resource.lUrl"
+                   data-xs-mode="true"></div>
             </div>
             <div class="col-md-1 text-right">
               <a href=""

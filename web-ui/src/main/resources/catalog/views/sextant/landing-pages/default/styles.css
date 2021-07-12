@@ -1,5 +1,5 @@
 body {
-  background: url(bg_page.gif);
+  background: url("Fond-marin-La-Reunion-reduit.jpg");
   height: 100%;
   margin: 0;
   padding: 0;
@@ -14,31 +14,32 @@ body {
   padding: 0px !important;
 }
 
-div.gn-landing-page-header {
-  height: 100px;
+div.gn-landing-page-header-default h1 {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0px;
+}
+
+div.gn-landing-page-header-default div.subtitle {
+  font-size: 1em;
+  color: white;
+  margin: 0px;
+}
+
+div.gn-landing-page-header-default .col-md-1 {
+  padding: 5px;
+}
+
+div.gn-landing-page-header-default {
+  height: 120px;
   line-height: 100px;
   text-align: left;
   padding-left: 20px;
   vertical-align: middle;
-  background: url(bandeaulogo.jpg);
-  background-size: 100% 100px;
+  background-color: #093564;
 }
 
-div.gn-landing-page-header::before {
-  color: #fff;
-  font-size: 3.5rem;
-  font-weight: normal;
-  /*font-family: 'open_sanslight';*/
-  content: "SEXTANT";
-}
-
-div.gn-landing-page-header::after {
-  color: #fff;
-  font-size: 2.5rem;
-  font-weight: normal;
-  /*font-family: 'open_sanslight';*/
-  content: "Infrastructure de données géographiques marines et littorales";
-}
 
 .gn-md-side-access {
   background-color: #ebecec;
@@ -50,17 +51,16 @@ div.gn-landing-page-header::after {
   padding: 0px !important;
   background-color: #ebecec;
   border: none;
-
 }
 
 .gn-md-side-access .btn {
-  background-color: #b7b8b9;
   color: white;
+  white-space: normal;
+  word-break: break-word;
   font-weight: bold;
-  text-align: center;
   font-size: 16px;
-  margin-left: 5px;
   margin-bottom: 10px;
+  margin-top: 10px;
   border-radius: 5px;
   border: none;
 }
@@ -77,4 +77,23 @@ section.links,
   height: 60px;
   position: absolute;
   width: 100%;
+}
+
+.gn-metadata-view.gn-view-sextant div header > h1,
+.gn-metadata-view.gn-view-sextant div header > h1 > div {
+  font-size: 22px !important;
+}
+
+.gn-md-side br {
+  display: none;
+}
+
+.gn-md-side-social > br {
+  display: block;
+}
+
+
+.vcenter {
+  display: flex;
+  align-items: center;
 }

@@ -87,22 +87,4 @@
       }]);
 
 
-  /**
-   * Service to deal with tasks. For now only DOI related.
-   */
-  module
-    .service(
-      'gnRecordTaskService', [
-        '$http', 'gnConfig', '$translate',
-        function($http, gnConfig, $translate) {
-
-          this.doiCreationTask = {
-            check: function (status) {
-              return $http.get('../api/records/' + status.metadataId + '/doi/checkPreConditions');
-            },
-            create: function (status) {
-              return $http.put('../api/records/' + status.metadataId + '/doi');
-            }
-          };
-        }]);
 })();

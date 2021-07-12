@@ -23,11 +23,20 @@
 
 package org.fao.geonet.api.records.formatters.cache;
 
-import static org.fao.geonet.constants.Params.Access.PRIVATE;
-import static org.fao.geonet.constants.Params.Access.PUBLIC;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.FileSystemUtils;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -36,23 +45,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.UUID;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.PreDestroy;
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.fao.geonet.constants.Params.Access.PRIVATE;
+import static org.fao.geonet.constants.Params.Access.PUBLIC;
 
 /**
  * A {@link PersistentStore} that saves the files to
@@ -209,8 +206,9 @@ public class FilesystemStore implements PersistentStore {
             }
 
             if(StringUtils.isNotEmpty(landingPageFormatter)) {
-                final Path landingPageFile = getLandingPageCacheDir().resolve(key.mdUuid + ".html");
-                Files.createDirectories(landingPageFile.getParent());
+                final Path landingPageDir = getLandingPageCacheDir().resolve(key.mdUuid);
+                final Path landingPageFile = getLandingPageCacheDir().resolve(key.mdUuid).resolve("index.html");
+                Files.createDirectories(landingPageDir);
                 Files.deleteIfExists(landingPageFile);
                 try {
                     Files.createLink(landingPageFile, privatePath);
@@ -318,7 +316,7 @@ public class FilesystemStore implements PersistentStore {
                         }
                     } else {
                         Files.deleteIfExists(publicPath);
-                        final Path landingPageFile = getLandingPageCacheDir().resolve(metadataUuid + ".html");
+                        final Path landingPageFile = getLandingPageCacheDir().resolve(metadataUuid);
                         Files.deleteIfExists(landingPageFile);
                     }
                     return super.visitFile(privatePath, attrs);
@@ -373,8 +371,8 @@ public class FilesystemStore implements PersistentStore {
             try {
                 final Path publicPath = toPublicPath(privatePath);
                 Files.deleteIfExists(publicPath);
-                final Path landingPageFile = getLandingPageCacheDir().resolve(mdUuid + ".html");
-                Files.deleteIfExists(landingPageFile);
+                final Path landingPageDir = getLandingPageCacheDir().resolve(mdUuid);
+                FileSystemUtils.deleteRecursively(landingPageDir.toFile());
             } finally {
                 try (PreparedStatement statement = metadataDb.prepareStatement(QUERY_REMOVE)) {
                     statement.setInt(1, keyHashCode);

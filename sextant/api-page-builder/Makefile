@@ -19,3 +19,10 @@ build: ## Build the image
 
 test: ## Run the tests in the docker image
 	docker run sextant/api-page-builder pytest /app/tests
+
+run-default: ## Run the builder using default conf
+	docker run \
+    -v ${PWD}/conf/sample.yaml:/app/conf/sample.yaml \
+    -v ${PWD}/output:/out \
+    sextant/api-page-builder \
+    ./run.py -i /app/conf/sample.yaml -o /out --host "http://localhost:8080"

@@ -1261,14 +1261,27 @@
   <xsl:template mode="render-field"
                 match="gco:Date|gml:beginPosition|gml:endPosition">
     <xsl:param name="fieldName"/>
-    <dl>
-      <dt>
-        <xsl:value-of select="$fieldName"/>
-      </dt>
-      <dd>
-        <xsl:apply-templates mode="render-value"/>
-      </dd>
-    </dl>
+
+    <xsl:variable name="value">
+      <xsl:apply-templates mode="render-value"/>
+    </xsl:variable>
+
+    <xsl:if test="$value != ''">
+      <dl>
+        <dt>
+          <xsl:value-of select="$fieldName"/>
+        </dt>
+        <dd>
+          <xsl:apply-templates mode="render-value"/>
+        </dd>
+      </dl>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template mode="render-field"
+                match="gco:DateTime">
+    <xsl:apply-templates mode="render-value"
+                         select="."/>
   </xsl:template>
 
   <xsl:template mode="render-value"

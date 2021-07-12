@@ -411,8 +411,7 @@ public class DefaultStatusActions implements StatusActions {
             ApplicationContext applicationContext = ApplicationContextHolder.get();
             SettingManager sm = applicationContext.getBean(SettingManager.class);
             // Doesn't make sense go further without any mailserver set...
-            if(StringUtils.isNotBlank(sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME)) &&
-               StringUtils.isNotBlank(sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST))) {
+            if(StringUtils.isNotBlank(sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST))) {
                 List<String> to = new ArrayList<>();
                 to.add(sendTo);
                 MailUtil.sendMail(to, subject, message, null, sm, replyTo, replyToDescr);

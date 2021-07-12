@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2017 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -21,31 +21,26 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.kernel;
+(function () {
+  goog.provide('gn_doi_service');
 
-import org.fao.geonet.domain.Schematron;
-import org.fao.geonet.domain.SchematronRequirement;
+  var module = angular.module('gn_doi_service', []);
 
-/**
- *
- * Class to model a schematron requirement and the related
- * schematron to apply if the requirement succeeds.
- *
- */
-public class ApplicableSchematron {
-    final SchematronRequirement requirement;
-    final Schematron schematron;
-
-    public SchematronRequirement getRequirement() {
-        return requirement;
-    }
-
-    public Schematron getSchematron() {
-        return schematron;
-    }
-
-    public ApplicableSchematron(SchematronRequirement requirement, Schematron schematron) {
-        this.requirement = requirement;
-        this.schematron = schematron;
-    }
-}
+  /**
+   * Service to deal with DOI.
+   */
+  module
+    .service(
+      'gnDoiService', [
+        '$http',
+        function ($http) {
+          return {
+            check: function (id) {
+              return $http.get('../api/records/' + id + '/doi/checkPreConditions');
+            },
+            create: function (id) {
+              return $http.put('../api/records/' + id + '/doi');
+            }
+          };
+        }]);
+})();

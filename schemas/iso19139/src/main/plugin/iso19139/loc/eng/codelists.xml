@@ -1689,6 +1689,11 @@
               name()='gmd:MD_Metadata' and
               contains(gmd:metadataStandardName/gco:CharacterString, 'EMODNET')]">
     <entry>
+      <code>Creative Commons Attribution 4.0 International</code>
+      <label>Creative Commons Attribution 4.0 International</label>
+      <description></description>
+    </entry>
+    <entry>
       <code>SeaDataNet licence</code>
       <label>SeaDataNet licence</label>
       <description></description>
@@ -1961,7 +1966,7 @@
 		</entry>-->
 
 		<!-- Used for facet translation only and not displayed in editor -->
-		<entry hideInEditMode="true">
+		<entry>
 			<code>map</code>
 			<label>Map</label>
 			<description></description>
@@ -1981,6 +1986,62 @@
       <label>Feature catalog</label>
       <description></description>
     </entry>
+
+    <!-- From ISO19115-3 -->
+    <entry>
+      <code>aggregate</code>
+      <label>Aggregate</label>
+      <description>Information applies to an aggregate resource</description>
+    </entry>
+    <entry>
+      <code>application</code>
+      <label>Application</label>
+      <description>Information resource hosted on a specific set of hardware and
+        accessible over a network
+      </description>
+    </entry>
+    <entry>
+      <code>collection</code>
+      <label>Collection</label>
+      <description>Information applies to an unstructured set</description>
+    </entry>
+    <entry>
+      <code>coverage</code>
+      <label>Coverage</label>
+      <description>Information applies to a coverage</description>
+    </entry>
+    <entry>
+      <code>document</code>
+      <label>Document</label>
+      <description>Information applies to a document</description>
+    </entry>
+    <entry>
+      <code>initiative</code>
+      <label>Initiative</label>
+      <description>Information applies to an initiative</description>
+    </entry>
+    <entry>
+      <code>metadata</code>
+      <label>Metadata</label>
+      <description>Information applies to metadata</description>
+    </entry>
+    <entry>
+      <code>product</code>
+      <label>Product</label>
+      <description>Metadata describing an ISO 19131 data product specification
+      </description>
+    </entry>
+    <entry>
+      <code>repository</code>
+      <label>Repository</label>
+      <description>Information applies to a repository</description>
+    </entry>
+    <entry>
+      <code>sample</code>
+      <label>Sample</label>
+      <description>Information applies to a sample</description>
+    </entry>
+
 	</codelist>
 	<codelist name="gmd:MD_ScopeCode" displayIf="/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/srv:SV_ServiceIdentification">
 		<entry>

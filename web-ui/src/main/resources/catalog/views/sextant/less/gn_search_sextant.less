@@ -1174,7 +1174,7 @@ to a common CSS class?
       max-height: 100%;
     }
 
-    min-height: 250px;
+    min-height: 200px;
 
     // center thumbnail/extent vertically, ignoring <br> elements
     display: flex;
@@ -1192,7 +1192,8 @@ to a common CSS class?
       display: none;
     }
   }
-  section.links, section.gn-md-side-overview,
+
+  section.links, section.gn-md-side-access,
   section.gn-md-side-social, section.gn-md-side-providedby,
   section.gn-md-side-permalink, section.gn-md-side-associated {
     margin: 0 0 1.5em;
@@ -1904,11 +1905,20 @@ h1.view-header {
     width: 25%
   }
 }
-.gn-md-view .gn-md-side .gn-img-thumbnail {
-  border: none
+.gn-md-view .gn-md-side .gn-img-thumbnail,
+.gn-md-view .gn-md-side .gn-md-side-extent .thumbnail {
+  border: none;
+  padding: 0px;
 }
 //end
 
+.gn-md-side-social span.badge {
+  margin-bottom: 6px;
+}
+
+.gn-md-side-social {
+  word-break: break-word !important;
+}
 
 [gn-main-viewer] .panel-tools .panel-carousel .list-group-item,
 .gn-main-viewer .panel-tools .panel-carousel .list-group-item {
@@ -1920,10 +1930,6 @@ h1.view-header {
   .gn-img-thumbnail {
     border: none !important;
   }
-}
-
-.gn, .g span.fa.fa-fw {
-  color: @brand-primary;
 }
 
 @import "sextant-cersat.less";

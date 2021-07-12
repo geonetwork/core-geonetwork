@@ -245,7 +245,6 @@
           } else if(md.documentStandard == 'iso19110') {
             url = '../api/records/' + uuid + '/formatters/xsl-view?root=div';
           } else if(md.documentStandard == 'iso19115-3.2018') {
-
             var view;
             if(md.standardName === 'ISO 19115-3:2018 - Remote Sensing') {
               url = '../api/records/' + uuid + '/formatters/cersat?view=cersat&root=div&loadJS=false&template=cersat-summary-view&header=false&related=';

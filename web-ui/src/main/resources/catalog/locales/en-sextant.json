@@ -13,6 +13,7 @@
   "validateConstraints": "Validate limits/constraints of use",
   "basketCancel": "Cancel",
   "Télécharger": "Download",
+  "doiDefinedForRecord": "DOI defined",
   "textFillColor": "Color",
   "searchPlaces": "Search a place…",
   "sextantThemes" : "Sextant Themes",
@@ -118,5 +119,6 @@
   "showMetadata": "Show metadata",
   "showMetadataTooltip": "Show the layer metadata",
   "layerExtentZoomTooltip": "Zoom on the layer extent",
-  "downloadTooltip": "Download the dataset"
+  "downloadTooltip": "Download the dataset",
+  "textInput": "Annotation"
 }

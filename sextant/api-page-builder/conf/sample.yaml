@@ -11,6 +11,7 @@ sites:
   simm : https://www.milieumarinfrance.fr/Acces-aux-donnees/Catalogue
   simm-oi : https://oceans-indien-austral.milieumarinfrance.fr/Acces-aux-Donnees/Catalogue
   simm-sar : https://sar.milieumarinfrance.fr/Nos-rubriques/Referentiels-geographiques
+  jerico : https://www.jerico-ri.eu/sextant-test/#/map
 
 # Sextant host used in the above sites; this should include a scheme (https:// or http://) or start with //
 live_host: //sextant.ifremer.fr
