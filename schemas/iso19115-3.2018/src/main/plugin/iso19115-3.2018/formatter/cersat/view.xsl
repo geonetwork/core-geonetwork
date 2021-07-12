@@ -147,11 +147,22 @@
             </div>
           </xsl:if>
 
-          <div class="cersat-bg cersat-bg-lightgreen">
-            <div>
-              <xsl:value-of select="$schemaStrings/cersat-opdataset"/>
+
+          <xsl:variable name="status"
+                        select="$metadata/mdb:identificationInfo/*/mri:status/*/@codeListValue"/>
+          <xsl:if test="$status != ''">
+            <div class="cersat-bg cersat-bg-lightgreen">
+              <div>
+                <xsl:value-of select="$schemaStrings/cersat-opdataset"/>
+              </div>
+              <div class="cersat-bg-white">
+                <xsl:value-of select="tr:codelist-value-label(
+                                        tr:create($schema),
+                                        'MD_ProgressCode',
+                                        $status)"/>
+              </div>
             </div>
-          </div>
+          </xsl:if>
         </div>
 
 

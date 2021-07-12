@@ -144,7 +144,7 @@
   <addCrs3035cersat>ETRS89 / LAEA Europe (EPSG:3035) - Lambert azimuthal equal-area projection</addCrs3035cersat>
 
   <cersat-version>Version</cersat-version>
-  <cersat-opdataset>Operational dataset</cersat-opdataset>
+  <cersat-opdataset>Status</cersat-opdataset>
   <cersat-citation>Citation</cersat-citation>
   <cersat-projects>Project(s)</cersat-projects>
   <cersat-product>Product</cersat-product>

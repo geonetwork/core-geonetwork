@@ -513,6 +513,9 @@
                 </snippet>
               </template>
             </action>
+
+            <field xpath="/*/mdb:identificationInfo/*/mri:status"/>
+
           </section>
 
           <section name="eo-source">
