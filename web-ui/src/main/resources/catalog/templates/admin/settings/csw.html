@@ -87,6 +87,18 @@
 
               <p class="help-block">{{'system/csw/transactionUpdateCreateXPath-help' | translate}}</p>
             </div>
+
+              <div data-ng-show="cswSettings['system/csw/enable']">
+              <label for="cswProxyUrl">
+                 <span>{{'system/csw/proxyUrl' | translate}}</span>
+              </label>
+                <input type="text" class="form-control" id="cswProxyUrl" name="system/csw/proxyUrl"
+                       value="{{cswSettings['system/csw/proxyUrl']}}"
+                       data-ng-model="cswSettings['system/csw/proxyUrl']"/>
+
+
+              <p class="help-block">{{'system/csw/proxyUrl-help' | translate}}</p>
+            </div>
           </form>
 
 

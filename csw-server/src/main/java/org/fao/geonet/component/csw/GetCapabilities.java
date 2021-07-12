@@ -56,6 +56,7 @@ import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.net.URL;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -104,12 +105,18 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         boolean isFromRecord = false;
 
-        String recordUuidToUseForCapability = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID);
+        SettingManager sm = gc.getBean(SettingManager.class);
+
+        String proxyCswUrl = sm.getValue(Settings.SYSTEM_CSW_CAPABILITY_PROXY_URL);
+        String recordUuidToUseForCapability = sm.getValue(Settings.SYSTEM_CSW_CAPABILITY_RECORD_UUID);
+
         if (!NodeInfo.DEFAULT_NODE.equals(context.getNodeId())) {
             final Source source = sourceRepository.findById(nodeinfo.getId()).get();
             if(source.getServiceRecord() != null) {
                 recordUuidToUseForCapability = source.getServiceRecord().toString();
             }
+
+            proxyCswUrl = source.getProxyCswUrl();
         }
         Element capabilities = null;
         String message = null;
@@ -176,7 +183,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                 currentLanguage = context.getLanguage();
             }
 
-            substitute(context, capabilities, currentLanguage);
+            substitute(context, capabilities, currentLanguage, proxyCswUrl);
 
             handleSections(request, capabilities);
 
@@ -320,28 +327,42 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
     }
 
-    private void substitute(ServiceContext context, Element capab, String langId) throws Exception {
+    private void substitute(ServiceContext context, Element capab, String langId, String proxyCswUrl) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
 
         HashMap<String, String> vars = new HashMap<String, String>();
 
-        String protocol = sm.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
-        vars.put("$PROTOCOL", protocol);
-        vars.put("$HOST", sm.getValue(Settings.SYSTEM_SERVER_HOST));
+        if (StringUtils.isNotEmpty(proxyCswUrl)) {
+            vars.put("$END-POINT-URL", proxyCswUrl);
+            vars.put("$PROVIDER-SITE", proxyCswUrl);
+        } else {
+            String protocol = sm.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
+            String host = sm.getValue(Settings.SYSTEM_SERVER_HOST);
+            vars.put("$PROTOCOL", protocol);
+            vars.put("$HOST", sm.getValue(Settings.SYSTEM_SERVER_HOST));
 
-        String insecureport = sm.getValue(Settings.SYSTEM_SERVER_PORT);
-        String secureport = sm.getValue(Settings.SYSTEM_SERVER_SECURE_PORT);
+            String insecureport = sm.getValue(Settings.SYSTEM_SERVER_PORT);
+            String secureport = sm.getValue(Settings.SYSTEM_SERVER_SECURE_PORT);
 
-        String port = "https".equals(protocol) ? secureport : insecureport;
-        vars.put("$PORT", isPortRequired(protocol, port) ? ":" + port : "");
-        vars.put("$END-POINT", context.getService());
-        vars.put("$NODE_ID", context.getNodeId());
+            String port = "https".equals(protocol) ? secureport : insecureport;
+            vars.put("$PORT", isPortRequired(protocol, port) ? ":" + port : "");
+            vars.put("$END-POINT", context.getService());
+            vars.put("$NODE_ID", context.getNodeId());
 
-        String providerName = sm.getValue(Settings.SYSTEM_SITE_ORGANIZATION);
-        vars.put("$PROVIDER_NAME", StringUtils.isNotEmpty(providerName) ? providerName : "GeoNetwork opensource");
+            String providerName = sm.getValue(Settings.SYSTEM_SITE_ORGANIZATION);
+            vars.put("$PROVIDER_NAME", StringUtils.isNotEmpty(providerName) ? providerName : "GeoNetwork opensource");
 
-        vars.put("$SERVLET", context.getBaseUrl());
+            vars.put("$SERVLET", context.getBaseUrl());
+
+            //$PROTOCOL://$HOST$PORT$SERVLET
+            vars.put("$PROVIDER-SITE", String.format("%s://%s%s%s", protocol, host, port, context.getBaseUrl()));
+
+            //$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT
+            vars.put("$END-POINT-URL", String.format("%s://%s%s%s/%s/%s/%s", protocol, host, port, context.getBaseUrl(),
+                context.getNodeId(), langId, context.getService()));
+        }
+
 
         boolean isTitleDefined = false;
         String sourceUuid = NodeInfo.DEFAULT_NODE.equals(nodeinfo.getId()) ? sm.getSiteId() : nodeinfo.getId();
@@ -353,6 +374,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             vars.put("$TITLE", sm.getSiteName());
         }
         vars.put("$LOCALE", langId);
+
 
         Lib.element.substitute(capab, vars);
     }

@@ -315,6 +315,7 @@ public class SourcesApi {
             entity.setGroupOwner(source.getGroupOwner());
             entity.setServiceRecord(source.getServiceRecord());
             entity.setUiConfig(source.getUiConfig());
+            entity.setProxyCswUrl(source.getProxyCswUrl());
             entity.setLogo(source.getLogo());
             Map<String, String> labelTranslations = source.getLabelTranslations();
             if (labelTranslations != null) {

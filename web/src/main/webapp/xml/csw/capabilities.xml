@@ -20,7 +20,7 @@
   </ows:ServiceIdentification>
   <ows:ServiceProvider>
     <ows:ProviderName></ows:ProviderName>
-    <ows:ProviderSite xlink:href="$PROTOCOL://$HOST$PORT$SERVLET"/>
+    <ows:ProviderSite xlink:href="$PROVIDER-SITE"/>
     <ows:ServiceContact>
       <ows:IndividualName></ows:IndividualName>
       <ows:PositionName></ows:PositionName>
@@ -47,8 +47,8 @@
     <ows:Operation name="GetCapabilities">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-          <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+          <ows:Get xlink:href="$END-POINT-URL"/>
+          <ows:Post xlink:href="$END-POINT-URL"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="sections">
@@ -65,8 +65,8 @@
     <ows:Operation name="DescribeRecord">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-          <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+          <ows:Get xlink:href="$END-POINT-URL"/>
+          <ows:Post xlink:href="$END-POINT-URL"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="outputFormat">
@@ -84,16 +84,16 @@
     <ows:Operation name="GetDomain">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-          <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+          <ows:Get xlink:href="$END-POINT-URL"/>
+          <ows:Post xlink:href="$END-POINT-URL"/>
         </ows:HTTP>
       </ows:DCP>
     </ows:Operation>
     <ows:Operation name="GetRecords">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-          <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+          <ows:Get xlink:href="$END-POINT-URL"/>
+          <ows:Post xlink:href="$END-POINT-URL"/>
         </ows:HTTP>
       </ows:DCP>
       <!-- FIXME : Gets it from enum or conf -->
@@ -119,8 +119,8 @@
     <ows:Operation name="GetRecordById">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
-          <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT"/>
+          <ows:Get xlink:href="$END-POINT-URL"/>
+          <ows:Post xlink:href="$END-POINT-URL"/>
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="outputSchema"/>
