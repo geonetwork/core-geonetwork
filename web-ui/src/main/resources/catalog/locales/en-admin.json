@@ -639,6 +639,8 @@
     "recordWithNoTitle": "- Record with no title / wrongly indexed -",
     "rebuildIndex": "Reindex records",
     "dropIndexAndRebuild": "Delete index and reindex",
+    "dropFeaturesIndexAndRebuild": "Delete and create data index",
+    "dropFeaturesIndexAndRebuild-help": "Remove completely the index containing data and recreate it. It does not reindex the data. Check <a href='admin.console?debug#/harvest/wfs-indexing'>data harvesting console to relaunch harvesting</a>.",
     "rebuildIndexHelp": "While rebuilding index, search may return incomplete results and the CSW GetRecords operation can be disabled (if you selected the option in the settings). Use this function, when catalog traffic is low. It's recommended to rebuild index manually from here when making changes directly in the database. If you change index mapping (cf. <a href='https://github.com/geonetwork/core-geonetwork/blob/es/web/src/main/webResources/WEB-INF/data/config/index/records.json'>records.json</a>), then you have to click on 'Delete index and reindex'.",
     "recordsAuthor": "Metadata records authors",
     "recordsBy": "Record's statistics by",
