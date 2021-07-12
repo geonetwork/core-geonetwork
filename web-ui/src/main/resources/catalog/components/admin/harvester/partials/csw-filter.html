@@ -8,9 +8,8 @@
     </div>
 
     <div class="col-lg-3 col-md-3 col-sm-3">
-      <select class="form-control" data-ng-model="f['field']">
-        <option data-ng-repeat="c in cswCriteria track by $index">{{c.replace('__', ':') | translate}}</option>
-      </select>
+      <input type="text" data-ng-model="f['field']" id="tagsinput_{{$index}}"
+             class="form-control"></input>
     </div>
 
     <div class="col-lg-3 col-md-3 col-sm-3">
