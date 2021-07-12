@@ -221,6 +221,74 @@
         </xsl:for-each>
 
 
+        <div class="row">
+          <div class="col-md-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <xsl:value-of select="$schemaStrings/cersat-dataaccess"/>
+              </div>
+              <div class="panel-body">
+                <div class="row">
+
+                  <xsl:variable name="accessPolicy"
+                                select="$metadata/mdb:identificationInfo/*
+                                        /mri:resourceConstraints/mco:MD_LegalConstraints
+                                        /mco:accessConstraints/*/@codeListValue"/>
+
+                  <xsl:if test="$accessPolicy != ''">
+                    <strong>
+                      <xsl:value-of select="$schemaStrings/cersat-accesspolicy"/>
+                    </strong>
+
+                    <xsl:variable name="codelistTranslation"
+                                  select="tr:codelist-value-label(
+                                              tr:create($schema),
+                                              'MD_RestrictionCode',
+                                              $accessPolicy)"/>
+                    <xsl:value-of select="$codelistTranslation"/>
+                  </xsl:if>
+                </div>
+
+                <xsl:variable name="formats"
+                              select="$metadata//mrd:distributionFormat/*/mrd:formatSpecificationCitation/*[cit:title/*/text() != '']"/>
+                <xsl:if test="count($formats) > 0">
+                  <div class="row">
+                    <strong>
+                      <xsl:value-of select="$schemaStrings/cersat-formats"/>
+                    </strong>
+                    <xsl:for-each select="$formats">
+                      <xsl:value-of select="concat(cit:title, ' ', cit:edition)"/>
+                      <xsl:if test="position() &lt; last()">, </xsl:if>
+                    </xsl:for-each>
+                  </div>
+                </xsl:if>
+
+                <xsl:variable name="online"
+                              select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue != 'information']"/>
+                <xsl:for-each select="$online">
+                  <div class="cersat-bg cersat-bg-blue">
+                    <div>
+                      <xsl:value-of select="if (cit:description/*/text() != '')
+                                            then cit:description/*/text()
+                                            else cit:protocol/*/text()"/>
+                    </div>
+                    <div class="cersat-bg-white">
+                      <a title="{cit:protocol/*/text()}"
+                         href="{cit:linkage/*/text()}">
+                        <strong>
+                          <xsl:value-of select="if (cit:name/*/text() != '')
+                                                then cit:name/*/text()
+                                                else cit:linkage/*/text()"/>
+                        </strong>
+                      </a>
+                    </div>
+                  </div>
+                </xsl:for-each>
+              </div>
+            </div>
+          </div>
+        </div>
+
 
         <div class="row">
           <div class="col-md-6">
@@ -289,64 +357,6 @@
                 </div>
               </div>
             </xsl:if>
-
-
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <xsl:value-of select="$schemaStrings/cersat-dataaccess"/>
-              </div>
-              <div class="panel-body">
-                <div class="row">
-
-                  <xsl:variable name="accessPolicy"
-                                select="$metadata/mdb:identificationInfo/*
-                                    /mri:resourceConstraints/mco:MD_LegalConstraints
-                                    /mco:accessConstraints/*/@codeListValue"/>
-
-                  <xsl:if test="$accessPolicy != ''">
-                    <strong>
-                      <xsl:value-of select="$schemaStrings/cersat-accesspolicy"/>
-                    </strong>
-
-                    <xsl:variable name="codelistTranslation"
-                                  select="tr:codelist-value-label(
-                                          tr:create($schema),
-                                          'MD_RestrictionCode',
-                                          $accessPolicy)"/>
-                    <xsl:value-of select="$codelistTranslation"/>
-                  </xsl:if>
-                </div>
-
-                <xsl:variable name="formats"
-                              select="$metadata//mrd:distributionFormat/*/mrd:formatSpecificationCitation/*[cit:title/*/text() != '']"/>
-                <xsl:if test="count($formats) > 0">
-                  <div class="row">
-                    <strong>
-                      <xsl:value-of select="$schemaStrings/cersat-formats"/>
-                    </strong>
-                    <xsl:for-each select="$formats">
-                      <xsl:value-of select="concat(cit:title, ' ', cit:edition)"/>
-                      <xsl:if test="position() &lt; last()">, </xsl:if>
-                    </xsl:for-each>
-                  </div>
-                </xsl:if>
-
-                <xsl:variable name="online"
-                              select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue != 'information']"/>
-                <xsl:for-each select="$online">
-                  <a class="badge"
-                     title="{cit:protocol/*/text()}"
-                     href="{cit:linkage/*/text()}">
-                    <xsl:value-of select="if (cit:description/*/text() != '')
-                  then cit:description/*/text()
-                  else if (cit:name/*/text() != '')
-                  then cit:name/*/text()
-                  else cit:protocol/*/text()"/>
-                  </a>
-                </xsl:for-each>
-
-              </div>
-            </div>
           </div>
         </div>
       </div>
