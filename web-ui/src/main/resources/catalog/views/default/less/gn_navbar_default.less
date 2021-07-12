@@ -49,7 +49,7 @@
     &:hover, &:focus {
       background-color: @gn-menubar-background-hover;
     }
-    
+
   }
   .language-switcher {
     .form-control {
@@ -140,7 +140,10 @@
     .navbar-nav .open .dropdown-menu > li > a {
       min-width: 0;
     }
-    .navbar-accessible {
+    .dropdown {
+      button.dropdown-toggle {
+        display: none;
+      }
       .dropdown-menu {
         display: block;
         position: static;
@@ -199,7 +202,6 @@
         margin-left: -1px;
         margin-top: -1px;
         a {
-          color: @gn-menubar-color;
           display: block;
           padding: 7px 20px !important;
           height: auto;
@@ -213,7 +215,6 @@
           .fa {
             display: inline-block;
             font-size: 22px;
-            // margin: 3px auto;
           }
           [data-gnv-layer-indicator] {
             display: none;
@@ -271,6 +272,7 @@
     }
     .language-switcher {
       padding: 10px 15px;
+      float: none !important;
       .form-control {
         width: calc(~"100% - 3px");
       }

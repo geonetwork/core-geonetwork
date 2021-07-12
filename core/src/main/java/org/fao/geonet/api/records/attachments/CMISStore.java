@@ -32,6 +32,7 @@ import org.apache.chemistry.opencmis.commons.enums.UnfileObject;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisConstraintException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
+import org.apache.commons.collections.MapUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -170,6 +171,12 @@ public class CMISStore extends AbstractStore {
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
                                         final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved)
             throws Exception {
+        return putResource(context, metadataUuid, filename, is, changeDate, visibility, approved, null);
+    }
+
+    private MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
+                                        final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved, Map<String, Object> additionalProperties)
+        throws Exception {
         final int metadataId = canEdit(context, metadataUuid, approved);
         String key = getKey(context, metadataUuid, metadataId, visibility, filename);
 
@@ -189,7 +196,10 @@ public class CMISStore extends AbstractStore {
         // CMIS Secondary properties cannot be set in the same call that creates the document and sets it's properties,
         // so this is done in the following call after the document is created
         if (cmisConfiguration.existSecondaryProperty()) {
-            Map<String, Object> secondaryProperties = new HashMap<String, Object>();
+            Map<String, Object> secondaryProperties = new HashMap<>();
+            if (MapUtils.isNotEmpty(additionalProperties)) {
+                secondaryProperties.putAll(additionalProperties);
+            }
             setCmisMetadataUUIDSecondary(doc, secondaryProperties, metadataUuid);
             try {
                 doc.updateProperties(secondaryProperties);
@@ -200,7 +210,7 @@ public class CMISStore extends AbstractStore {
         }
 
         return createResourceDescription(context, metadataUuid, visibility, filename,
-             doc, metadataId, approved);
+            doc, metadataId, approved);
     }
 
     private void setCmisMetadataUUIDPrimary(Map<String, Object> properties, String metadataUuid) {
@@ -424,6 +434,48 @@ public class CMISStore extends AbstractStore {
         } catch (CmisObjectNotFoundException e) {
             return null;
         }
+    }
+
+    @Override
+    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
+        final int sourceMetadataId = canEdit(context, sourceUuid, metadataResourceVisibility, sourceApproved);
+        final String sourceResourceTypeDir = getMetadataDir(context, sourceMetadataId) + cmisConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
+        try {
+            Folder sourceParentFolder = (Folder) cmisConfiguration.getClient().getObjectByPath(sourceResourceTypeDir);
+
+            Map<String, Document> sourceDocumentMap = cmisUtils.getCmisObjectMap(sourceParentFolder, null);
+
+
+            for (Map.Entry<String, Document> sourceEntry : sourceDocumentMap.entrySet()) {
+                Document sourceDocument = sourceEntry.getValue();
+
+                // Get cmis properties from the source document
+                Map<String, Object> sourceProperties = getSecondaryProperties(sourceDocument);
+                putResource(context, targetUuid, sourceDocument.getName(), sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, targetApproved, sourceProperties);
+
+            }
+        } catch (CmisObjectNotFoundException  e) {
+            Log.warning("Cannot find folder object from CMIS ... Abort copping resources from "+sourceResourceTypeDir, e);
+        }
+    }
+
+    private Map<String, Object> getSecondaryProperties(Document document) {
+        String aspectId=null;
+        Property aspectProperty = document.getProperty(PropertyIds.SECONDARY_OBJECT_TYPE_IDS);
+        if (aspectProperty != null) {
+            aspectId = aspectProperty.getValueAsString();
+        }
+
+        Map<String, Object> properties = new HashMap<>();
+        if (!StringUtils.isEmpty(aspectId)) {
+            for (Property<?> property:document.getProperties()) {
+                if (property.getId().startsWith(aspectId) && property.getValue()!=null) {
+                    properties.put(property.getId(), property.getValue());
+                }
+            }
+        }
+
+        return properties;
     }
 
 

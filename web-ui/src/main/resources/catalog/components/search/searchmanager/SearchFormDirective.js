@@ -339,7 +339,6 @@
 
       $scope.$broadcast('beforeSearchReset', preserveGeometrySearch);
 
-      $scope.searchObj.state.exactMatch = false;
       if (searchParams) {
         $scope.searchObj.params = searchParams;
       } else {
@@ -353,8 +352,10 @@
 
       self.resetPagination(customPagination);
       $scope.searchObj.state = {
-        filters: {}
-      }
+        filters: {},
+        exactMatch: false,
+        titleOnly: false
+      };
       $scope.triggerSearch();
       $scope.$broadcast('resetSelection');
     };
@@ -515,7 +516,36 @@
         facet.exclude,
         facetConfigs
       );
-    }
+    };
+
+    /**
+     * @param {boolean} value
+     */
+    this.setExactMatch = function(value) {
+      $scope.searchObj.state.exactMatch = value;
+    };
+
+    /**
+     * @return {boolean}
+     */
+    this.getExactMatch = function() {
+      return $scope.searchObj.state.exactMatch;
+    };
+
+    /**
+     * @param {boolean} value
+     */
+    this.setTitleOnly = function(value) {
+      $scope.searchObj.state.titleOnly = value;
+    };
+
+    /**
+     * @return {boolean}
+     */
+    this.getTitleOnly = function() {
+      return $scope.searchObj.state.titleOnly;
+    };
+
   };
 
   searchFormController['$inject'] = [

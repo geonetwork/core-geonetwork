@@ -292,7 +292,7 @@
 
             scope.removeOverview = function(thumbnail) {
               var url = thumbnail.url[gnCurrentEdit.mdLanguage];
-              if (url.match(".*/api/records/(.*)/attachments/.*") == null) {
+              if (url.match(".*/api/records/" + gnCurrentEdit.uuid + "/attachments/.*") == null) {
                 // An external URL
                 gnOnlinesrc.removeThumbnail(thumbnail).then(function() {
                   // and update list.
@@ -1594,8 +1594,12 @@
 
                   // Append * for like search
                   scope.updateParams = function() {
-                    scope.searchObj.params.any =
-                        '*' + scope.searchObj.any + '*';
+                    var addWildcard = scope.searchObj.any.indexOf('"') === -1
+                      && scope.searchObj.any.indexOf('*') === -1
+                      && scope.searchObj.any.indexOf('q(') !== 0;
+                    scope.searchObj.params.any = addWildcard
+                      ? '*' + scope.searchObj.any + '*'
+                      : scope.searchObj.any;
                   };
 
                   /**
@@ -1738,8 +1742,12 @@
                     if (scope.searchObj.any == '') {
                       scope.$broadcast('resetSearch');
                     } else {
-                      scope.searchObj.params.any =
-                      '*' + scope.searchObj.any + '*';
+                      var addWildcard = scope.searchObj.any.indexOf('"') === -1
+                        && scope.searchObj.any.indexOf('*') === -1
+                        && scope.searchObj.any.indexOf('q(') !== 0;
+                      scope.searchObj.params.any = addWildcard
+                        ? '*' + scope.searchObj.any + '*'
+                        : scope.searchObj.any;
                     }
                   };
 

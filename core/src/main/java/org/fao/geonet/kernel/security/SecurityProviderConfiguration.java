@@ -94,6 +94,18 @@ public interface SecurityProviderConfiguration {
 		// If we cannot find SecurityProviderConfiguration then default to false.
 		return null;
 	}
+
+    /**
+     * Check if the user profile should be updatable.
+     * If the data is coming from the security providers then the security provider then it may make sense to disable the profile update
+     */
+    boolean isUserProfileUpdateEnabled();
+
+    /**
+     * Check if the user group should be updatable.
+     * If the data is coming from the security providers then the security provider then it may make sense to disable the user group updates
+     */
+    boolean isUserGroupUpdateEnabled();
 }
 
 

@@ -184,6 +184,7 @@ public class FilesystemStore extends AbstractStore {
         return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid, settingManager.getNodeURL() + "api/records/", approved);
     }
 
+
     @Override
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,
                                         final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility,
