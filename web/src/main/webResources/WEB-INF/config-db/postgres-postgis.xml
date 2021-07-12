@@ -32,8 +32,6 @@
   <!-- context:property-placeholder location="file:${catalina.home}/conf/jdbc.properties" ignore-resource-not-found="true" file-encoding="UTF-8" ignore-unresolvable="true" order="0"/-->
 
   <import resource="defaultJdbcDataSource.xml"/>
-  <import resource="postgis-alternate-datasource.xml"/>
-
   <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
     <constructor-arg value="POSTGRESQL"/>
   </bean>
