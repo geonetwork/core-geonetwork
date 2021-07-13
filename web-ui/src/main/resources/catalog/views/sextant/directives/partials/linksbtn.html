@@ -37,9 +37,8 @@
     </button>
     <ul class="dropdown-menu small-dropdown" role="menu">
       <li ng-repeat="layer in layers"><a href="" ng-click="resultviewFns.addMdLayerToMap(layer, md, $event)" title="{{layer.desc || layer.name}}">
-        <span class="fa fa-google" ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>
-        <span class="fsxt" ng-if="layer.contentType=='application/vnd.ogc.wms_xml' || layer.contentType=='OGC:WMTS'">c</span>
-        <span class="fa fa-globe" ng-if="layer.contentType=='OGC:OWS-C'"></span>
+        <span class="fsxt" ng-if="layer.protocol =='OGC:WMTS' || layer.protocol =='OGC:WMS'">c</span>
+        <span class="fa fa-globe" ng-if="layer.protocol=='OGC:OWS-C'"></span>
         {{layer.description || layer.desc || layer.name}} </a>
       </li>
       <li class="divider" ng-if="!hasExternalViewer()"></li>
