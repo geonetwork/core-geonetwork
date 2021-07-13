@@ -12,10 +12,22 @@
          data-ng-repeat="r in items track by $index">
       <div class="gn-related-icon-col col-xs-2 col-sm-2 text-center">
         <strong>
-          <div class="clearfix">
+          <div data-ng-class="{'hidden': $index != 0}"
+               class="clearfix">
             <i class="fa"
                data-ng-class="icon"/>
           </div>
+
+          <strong  data-ng-class="{'hidden': $index != 0}"
+                   data-ng-if="(mainType !== 'WMS')
+                            && (mainType !== 'WMSSERVICE')
+                            && (mainType !== 'WMTS')
+                            && (mainType !== 'WMTSSERVICE')
+                            && (mainType !== 'WFS')
+                            && (mainType !== 'WCS')">
+            {{('link-' + type) | translate}}
+          </strong>
+
           <span data-ng-if="badge != ''"
                 class="label label-default"
                 data-ng-class="{

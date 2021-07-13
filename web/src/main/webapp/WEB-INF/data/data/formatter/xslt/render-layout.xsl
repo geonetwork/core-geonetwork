@@ -424,7 +424,7 @@
               </xsl:apply-templates>
             </xsl:if>
 
-            <div data-gn-more-like-this="md"/>
+            <!-- HIDDEN IN SEXTANT <div data-gn-more-like-this="md"/>-->
 
 
             <br/>
