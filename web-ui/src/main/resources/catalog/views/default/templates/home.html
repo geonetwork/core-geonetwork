@@ -101,7 +101,7 @@
         <span data-ng-show="homeFacet.key !== 'inspireThemeUri'"
               data-ng-init="aggResponse = searchInfo.aggregations[homeFacet.key]"
               data-ng-repeat="facet in searchInfo.aggregations[homeFacet.key].buckets"
-              class="col-xs-12 col-sm-6 col-md-3 col-lg-2 gn-topic">
+              class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic">
           <div class="panel panel-default">
             <div class="panel-body">
               <a class="clearfix"
@@ -127,7 +127,7 @@
         <span data-ng-repeat="(key, facet) in searchInfo.aggregations.inspireThemeUri.buckets"
               data-ng-show="homeFacet.key === 'inspireThemeUri'"
               data-ng-init="code = facet.key.slice(facet.key.lastIndexOf('/')+1)"
-              class="col-xs-12 col-sm-6 col-md-3 col-lg-2 gn-topic bg-iti-{{::code}}">
+              class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic bg-iti-{{::code}}">
           <div class="panel panel-default">
             <div class="panel-body">
               <a class=" clearfix"
@@ -151,7 +151,7 @@
       <div class="row">
         <div data-ng-repeat="(key, facet) in searchInfo.aggregations[homeFacet.lastKey].buckets"
              data-ng-show="facet.key"
-             class="col-xs-12 col-sm-6 col-md-3 col-lg-2 gn-topic">
+             class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic">
           <div class="panel panel-default">
             <div class="panel-body">
               <a title="{{facet.key}}"
