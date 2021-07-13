@@ -1602,9 +1602,17 @@ ul.invalid {
 .gn-facet .gn-facet-container a.flex-row.gn-facet-checked * {
   color:  @brand-primary;
 }
+
 .gn-facet-root-container {
+  div.gn-facet-filter {
+    position: sticky;
+    z-index: 150;
+    top: 0;
+  }
   input.gn-facet-filter.input-sm {
-    width: calc(~"100% - 80px");
+    width: calc(~"100% - 30px");
+    margin-left: 0px;
+
   }
 }
 
@@ -1620,7 +1628,7 @@ span.text-ellipsis {
     display: none;
   }
   .gn-facet-container {
-    margin-left: 18px;
+    margin-left: 2px;
     margin-top: 5px;
     margin-bottom: 5px;
 
@@ -1692,6 +1700,7 @@ span.text-ellipsis {
     position: relative;
     &:before {
       font-family: FontAwesome;
+      background-color: white;
       content: "\f0b0";
       float: right;
       font-size: 16px;
