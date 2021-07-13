@@ -18,6 +18,14 @@
 .gn-row-topics {
   background-color: @gn-topics-background-color;
   padding: 30px 20px 40px 20px;
+  @media (max-width: @screen-xs-max) {
+    padding: 30px 10px;
+  }
+  @media (max-width: 400px) {
+    .col-xs-6 {
+      width: 100% !important;
+    }
+  }
   h1 {
     font-size: 20px;
   }
