@@ -82,9 +82,11 @@
     <tabset class="sxt-layer-menu-tabs flex-grow flex-shrink flex-col flex-align-stretch">
       <tab ng-if="hasIndexedFeatures || (wfsLink && user.canEditRecord(layer.get('md')))" active="true">
         <tab-heading translate>filter</tab-heading>
+
         <div class="sxt-wfsfilter-panel"
              gn-wfs-filter-facets
-             layer="layer" wfs-url="wfsLink.url"
+             layer="layer"
+             wfs-url="wfsLink.url"
              feature-type-name="wfsLink.featureTypeName"
              mode="group">
         </div>

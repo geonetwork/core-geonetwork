@@ -129,8 +129,8 @@
         templateUrl: '../../catalog/components/viewer/wfsfilter/' +
           'partials/wfsfilterfacet.html',
         scope: {
-          featureTypeName: '@?',
-          wfsUrl: '@',
+          featureTypeName: '=?',
+          wfsUrl: '=',
           displayCount: '@',
           baseLayer: '=?baseLayer',
           layer: '=?layer',

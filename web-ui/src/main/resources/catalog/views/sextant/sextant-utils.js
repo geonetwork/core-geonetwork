@@ -64,13 +64,13 @@
         else if(md.resourceType.indexOf('service')>=0) {
           md.icon = {cls: 'fa-globe', title: 'service'}
         }
-        else if(md.type.indexOf('repository')>=0) {
+        else if(md.resourceType.indexOf('repository')>=0) {
           md.icon = {cls: 'fa-folder-open', title: 'repository'}
         }
-        else if(md.type.indexOf('document')>=0) {
+        else if(md.resourceType.indexOf('document')>=0) {
           md.icon = {cls: 'fa-file', title: 'document'}
         }
-        else if(md.type.indexOf('initiative')>=0) {
+        else if(md.resourceType.indexOf('initiative')>=0) {
           md.icon = {cls: 'fa-group', title: 'initiative'}
         }
       }
