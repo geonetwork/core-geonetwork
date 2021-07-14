@@ -729,6 +729,7 @@ goog.require('gn_alert');
           }
         },
         'admin': {
+          'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/admin.console',
           'facetConfig': {
             'availableInServices': {

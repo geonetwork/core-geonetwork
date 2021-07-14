@@ -104,7 +104,7 @@
           </li>
         </ul>
       </li>
-      <li class="dropdown" data-ng-show="user.isUserAdminOrMore()">
+      <li data-ng-if="gnCfg.mods.admin.enabled" class="dropdown" data-ng-show="user.isUserAdminOrMore()">
         <a title="{{'adminConsole' | translate}}"
            href
            class="dropdown-toggle gn-menuheader-xs"
