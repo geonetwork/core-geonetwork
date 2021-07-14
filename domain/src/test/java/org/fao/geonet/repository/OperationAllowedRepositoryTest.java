@@ -30,6 +30,7 @@ import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -108,9 +109,9 @@ public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTes
     public void deleteAllByMetadataIdExceptGroupId() {
         System.out.println("deleteAllByMdIdNotGroup");
         assertEquals(4, _opAllowRepo.count());
-        _opAllowRepo.deleteAllByMetadataIdExceptGroupId(_md1.getId(), new int[]{
+        _opAllowRepo.deleteAllByMetadataIdExceptGroupId(_md1.getId(), Arrays.asList(
             _allGroup.getId()
-        });
+        ));
 
         assertEquals(2, _opAllowRepo.count());
         List<OperationAllowed> opAllowedFound = _opAllowRepo.findAll();
