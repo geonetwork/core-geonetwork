@@ -42,9 +42,9 @@
         background-color: #ddd;
         cursor: pointer;
       }
-      &:focus {
-        outline: @gn-outline;
-      }
+    }
+    input:focus + span {
+      outline: @gn-outline;
     }
     input:checked + span {
       background-color: @brand-primary;
