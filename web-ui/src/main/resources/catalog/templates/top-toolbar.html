@@ -148,7 +148,7 @@
       </div>
     </div>
 
-    <ul data-ng-if="gnCfg.mods.signin.enabled"
+    <ul data-ng-if="gnCfg.mods.authentication.enabled"
         class="nav navbar-nav navbar-right username-dropdown">
       <li class="dropdown dropdown-hover open" data-ng-show="authenticated">
         <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}#/organization/users?userOrGroup={{user.username}}"
@@ -208,7 +208,7 @@
       </li>
       <li class="dropdown dropdown-hover open signin-dropdown"
         data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !isShowLoginAsLink && !isDisableLoginForm">
-        <a href="{{gnCfg.mods.signin.appUrl | signInLink}}"
+        <a href="{{gnCfg.mods.authentication.signinUrl | signInLink}}"
            title="{{'signIn'|translate}}"
            class="dropdown-toggle gn-menuheader-xs"
            data-ng-keypress="$event"

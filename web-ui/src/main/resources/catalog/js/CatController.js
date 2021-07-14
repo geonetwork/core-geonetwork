@@ -638,7 +638,6 @@ goog.require('gn_alert');
             'appUrl': 'https://secure.geonames.org/searchJSON'
         },
         'recordview': {
-          'enabled': true,
           'isSocialbarEnabled': true,
           'showStatusWatermarkFor': 'historicalArchive,obsolete,superseded',
           'showStatusTopBarFor': ''
@@ -730,7 +729,6 @@ goog.require('gn_alert');
           }
         },
         'admin': {
-          'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/admin.console',
           'facetConfig': {
             'availableInServices': {
@@ -770,12 +768,10 @@ goog.require('gn_alert');
             }
           }
         },
-        'signin': {
+        'authentication': {
           'enabled': true,
-          'appUrl': '../../{{node}}/{{lang}}/catalog.signin'
-        },
-        'signout': {
-          'appUrl': '../../signout'
+          'signinUrl': '../../{{node}}/{{lang}}/catalog.signin',
+          'signoutUrl': '../../signout'
         },
         'page': {
           'enabled': true,
@@ -1032,7 +1028,7 @@ goog.require('gn_alert');
       gnConfig.env.defaultNode = defaultNode;
       gnConfig.env.baseURL = detectBaseURL(gnGlobalSettings.gnCfg.baseURLDetector);
 
-      $scope.signoutUrl = gnGlobalSettings.gnCfg.mods.signout.appUrl
+      $scope.signoutUrl = gnGlobalSettings.gnCfg.mods.authentication.signoutUrl
         + '?redirectUrl='
         + window.location.href.slice(
             0,
