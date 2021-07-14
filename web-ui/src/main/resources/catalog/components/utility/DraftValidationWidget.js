@@ -26,29 +26,30 @@
 
   var module = angular.module('gn_draftvalidationwidget', []);
 
-  module.directive('gnDraftValidationWidget', ['gnSearchManagerService',
-    function(gnSearchManagerService) {
+  module.directive('gnDraftValidationWidget', ['gnSearchManagerService', 'gnESClient',
+    function(gnSearchManagerService, gnESClient) {
       return {
         restrict: 'E',
         scope: {
           metadata: '='
         },
         link: function(scope) {
-          gnSearchManagerService.gnSearch({
-            uuid: scope.metadata.uuid,
-            isTemplate: 'y or n',
-            draft: 'y'
-          }).then(function(data) {
-            var i = 0;
-            data.metadata.forEach(function (md, index) {
-              if(md.draft == 'y') {
-                // This will only happen if the draft exists
-                // and the user can see it
-                scope.draft = data.metadata[i];   
+          gnESClient.search(
+            {
+              'query':{
+                'query_string': {
+                  'query': '+uuid:' + scope.metadata.uuid + ' +draft:y +isTemplate:("y" OR "n")'
+                },
               }
+            }).then(function(data) {
+              data.hits.hits.forEach(function (md, index) {
+                if(md._source.draft == 'y') {
+                  // This will only happen if the draft exists
+                  // and the user can see it
+                  scope.draft = data.hits.hits[index]._source;
+                }
+              });
             });
-          });
-          
         },
         templateUrl: '../../catalog/components/utility/' +
             'partials/draftvalidationwidget.html'
