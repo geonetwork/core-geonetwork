@@ -56,17 +56,19 @@
 
             var hyperlinkTagName = 'A';
             if (element.get(0).tagName === hyperlinkTagName) {
-              var url = window.location.pathname + '#/' +
-                (scope.md.draft == 'y' ? 'metadraf' : 'metadata') +
-                '/' + scope.md.uuid +
-                (scope.formatter === undefined || scope.formatter == '' ?
-                  '' :
-                  formatter);
+              var url = window.location.pathname
+                + (window.location.search === '?debug' ? '?debug' : '')
+                + '#/'
+                + (scope.md.draft == 'y' ? 'metadraf' : 'metadata')
+                + '/'
+                + encodeURIComponent(scope.md.uuid)
+                + (scope.formatter === undefined || scope.formatter == ''
+                  ? '' : formatter);
 
               element.attr('href', url);
             } else {
               element.on('click', function(e) {
-                gnMdView.setLocationUuid(scope.md.uuid, formatter);
+                gnMdView.setLocationUuid(encodeURIComponent(scope.md.uuid), formatter);
               });
             }
             if (scope.records && scope.records.length) {

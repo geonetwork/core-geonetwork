@@ -34,7 +34,7 @@
          return {
            get: function(metadataUuid, filter) {
              return $http.get('../api/records/' +
-                                  metadataUuid + '/attachments', {
+               encodeURIComponent(metadataUuid) + '/attachments', {
                params: {
                  filter: filter,
                  _random: Math.floor(Math.random() * 10000),

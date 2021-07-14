@@ -186,8 +186,9 @@
           var f = gnSearchLocation.getFormatterPath();
           $scope.currentFormatter = '';
           if (f != undefined) {
+            var uuid = gnSearchLocation.getUuid();
             $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, '$1');
-            $scope.loadFormatter(f);
+            $scope.loadFormatter(f.replace(uuid, encodeURIComponent(uuid)));
           }
         }
       }

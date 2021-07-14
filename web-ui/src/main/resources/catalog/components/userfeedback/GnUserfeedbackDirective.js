@@ -48,7 +48,7 @@
         var numberOfCommentsDisplayed = size || -1;
         return $http({
           method: 'GET',
-          url: '../api/records/' + metatdataUUID +
+          url: '../api/records/' + encodeURIComponent(metatdataUUID) +
           '/userfeedback?size=' + numberOfCommentsDisplayed,
           isArray: true
         });
@@ -57,7 +57,7 @@
       this.loadRating = function(metatdataUUID) {
         return $http({
           method: 'GET',
-          url: '../api/records/' + metatdataUUID + '/userfeedbackrating',
+          url: '../api/records/' + encodeURIComponent(metatdataUUID) + '/userfeedbackrating',
           isArray: false
         });
       };

@@ -117,7 +117,7 @@ public class MetadataExtentApi {
         summary = "Get record extents as image",
         description = API_EXTENT_DESCRIPTION)
     @RequestMapping(
-        value = "/{metadataUuid}/extents.png",
+        value = "/{metadataUuid:.+}/extents.png",
         produces = {
             MediaType.IMAGE_PNG_VALUE
         },
@@ -155,7 +155,7 @@ public class MetadataExtentApi {
         summary = "Get list of record extents",
         description = API_EXTENT_DESCRIPTION)
     @RequestMapping(
-        value = "/{metadataUuid}/extents.json",
+        value = "/{metadataUuid:.+}/extents.json",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         },
@@ -217,7 +217,7 @@ public class MetadataExtentApi {
         summary = "Get one record extent as image",
         description = API_EXTENT_DESCRIPTION)
     @RequestMapping(
-        value = "/{metadataUuid}/extents/{geometryIndex}.png",
+        value = "/{metadataUuid:.+}/extents/{geometryIndex}.png",
         produces = {
             MediaType.IMAGE_PNG_VALUE
         },

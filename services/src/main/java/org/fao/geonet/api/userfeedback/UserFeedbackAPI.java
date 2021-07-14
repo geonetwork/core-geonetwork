@@ -173,7 +173,7 @@ public class UserFeedbackAPI {
      * @throws Exception the exception
      */
     @io.swagger.v3.oas.annotations.Operation(summary = "Provides an average rating for a metadata record")
-    @RequestMapping(value = "/records/{metadataUuid}/userfeedbackrating", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/records/{metadataUuid:.+}/userfeedbackrating", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public RatingAverage getMetadataRating(
@@ -302,7 +302,7 @@ public class UserFeedbackAPI {
         description = " This list will include also the draft user feedback if the client is logged as reviewer."
     )
     @RequestMapping(
-        value = "/records/{metadataUuid}/userfeedback",
+        value = "/records/{metadataUuid:.+}/userfeedback",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
@@ -487,7 +487,7 @@ public class UserFeedbackAPI {
         summary = "Send an email to catalogue administrator or record's contact",
         description = "")
     @RequestMapping(
-        value = "/records/{metadataUuid}/alert",
+        value = "/records/{metadataUuid:.+}/alert",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)

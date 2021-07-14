@@ -417,7 +417,7 @@
 
       this.assignCategories = function(metadataId, categories) {
         var defer = $q.defer();
-        $http.get('../records/' + metadataId +
+        $http.get('../records/' + encodeURIComponent(metadataId) +
                   '/tags?id=' + categories.join('&id='))
             .success(function(data) {
               defer.resolve(data);

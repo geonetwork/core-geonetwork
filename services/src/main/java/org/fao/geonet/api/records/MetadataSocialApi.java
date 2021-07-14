@@ -85,7 +85,7 @@ public class MetadataSocialApi {
             "When a remote rating is applied, the local rating is not updated. It will be updated on the next " +
             "harvest run (FIXME ?).")
     @RequestMapping(
-        value = "/{metadataUuid}/rate",
+        value = "/{metadataUuid:.+}/rate",
         method = RequestMethod.PUT
     )
     @ResponseStatus(HttpStatus.CREATED)

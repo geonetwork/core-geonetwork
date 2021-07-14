@@ -295,7 +295,7 @@
               method = 'delete';
             }
             $http[method]('../api/records/' +
-                          scope.metadataUuid + '/tags?id=' + c.id)
+              encodeURIComponent(scope.metadataUuid) + '/tags?id=' + c.id)
                 .then(function() {
                   if (existIndex === -1) {
                     scope.ids.push(c.id);

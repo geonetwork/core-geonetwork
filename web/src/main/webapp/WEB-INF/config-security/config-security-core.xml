@@ -63,8 +63,32 @@
         <ref bean="coreFilterChain"/>
       </list>
     </constructor-arg>
+<!--    <property name="firewall" ref="httpFirewall"/>-->
   </bean>
 
+<!--
+  UUID with URL special character support.
+  eg. info:doi:10.24396/ORDAR-56 or http://dada.moo/ORDAR-56
+
+  In order to support UUID with character like / or ; in it, you need
+  to disable default Spring HTTP Firewall behaviour which consider those characters unsecure.
+  Error would look like "URL contained a potentially malicious String "%2F""
+  For this uncomment the following and adjust StrictHttpFirewall configuration.
+  Also uncomment above firewall property of filterChainProxy.
+
+  Client side already URL encode UUIDs and with this, spring will not
+  decode path before matching URL (which would cause issue with request mapping)
+
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+    <property name="urlDecode" value="false"/>
+  </bean>
+
+  <bean id="httpFirewall"
+        class="org.springframework.security.web.firewall.StrictHttpFirewall">
+    <property name="allowUrlEncodedSlash" value="true"/>
+    <property name="allowUrlEncodedDoubleSlash" value="true"/>
+  </bean>
+-->
 
   <bean id="coreFilterChain"
         class="org.springframework.security.web.DefaultSecurityFilterChain">

@@ -126,7 +126,7 @@
                   scope.queue = [];
                   scope.filestoreUploadOptions = {
                     autoUpload: scope.autoUpload,
-                    url: '../api/records/' + scope.uuid +
+                    url: '../api/records/' + encodeURIComponent(scope.uuid) +
                         '/attachments?visibility=' + defaultStatus,
                     dropZone: $('#' + scope.id),
                     singleUpload: false,

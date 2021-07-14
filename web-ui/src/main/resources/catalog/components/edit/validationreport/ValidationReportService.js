@@ -35,7 +35,7 @@
       return {
         get: function() {
           return $http.put(
-              '../api/records/' + gnCurrentEdit.uuid + '/validate/internal');
+              '../api/records/' + encodeURIComponent(gnCurrentEdit.uuid) + '/validate/internal');
         },
         errorCheck: function() {
           return this.get()

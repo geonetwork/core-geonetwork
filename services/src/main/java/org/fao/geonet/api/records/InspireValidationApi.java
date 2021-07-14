@@ -125,7 +125,7 @@ public class InspireValidationApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get test suites available.",
         description = "TG13, TG2, ...")
-    @RequestMapping(value = "/{metadataUuid}/validate/inspire/testsuites",
+    @RequestMapping(value = "/{metadataUuid:.+}/validate/inspire/testsuites",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_JSON_VALUE
@@ -153,7 +153,7 @@ public class InspireValidationApi {
             + "An INSPIRE endpoint must be configured in Settings. "
             + "This activates an asyncronous process, this method does not return any report. "
             + "This method returns an id to be used to get the report.")
-    @RequestMapping(value = "/{metadataUuid}/validate/inspire",
+    @RequestMapping(value = "/{metadataUuid:.+}/validate/inspire",
         method = RequestMethod.PUT,
         produces = {
             MediaType.TEXT_PLAIN_VALUE

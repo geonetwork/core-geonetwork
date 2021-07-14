@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.Constants;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -65,6 +66,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -160,22 +162,22 @@ public class MetadataApi {
         List<String> accept = Arrays.asList(acceptHeader.split(","));
 
         String defaultFormatter = "xsl-view";
+        String encodedUuid = URLEncoder.encode(metadataUuid, Constants.ENCODING);
         if (accept.contains(MediaType.TEXT_HTML_VALUE)
             || accept.contains(MediaType.APPLICATION_XHTML_XML_VALUE)
             || accept.contains("application/pdf")) {
-            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
+            return "redirect:" + (encodedUuid + "/formatters/" + defaultFormatter);
         } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)
             || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
-            return "forward:" + (metadataUuid + "/formatters/xml");
+            return "redirect:" + (encodedUuid + "/formatters/xml");
         } else if (accept.contains("application/zip")
             || accept.contains(MEF_V1_ACCEPT_TYPE)
             || accept.contains(MEF_V2_ACCEPT_TYPE)) {
-            return "forward:" + (metadataUuid + "/formatters/zip");
+            return "redirect:" + (encodedUuid + "/formatters/zip");
         } else {
-            // FIXME this else is never reached because any of the accepted medias match one of the previous if conditions.
             response.setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_XHTML_XML_VALUE);
             //response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
-            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
+            return "redirect:" + (encodedUuid + "/formatters/" + defaultFormatter);
         }
     }
 
@@ -184,8 +186,8 @@ public class MetadataApi {
         description = "")
     @RequestMapping(value =
         {
-            "/{metadataUuid}/formatters/xml",
-            "/{metadataUuid}/formatters/json"
+            "/{metadataUuid:.+}/formatters/xml",
+            "/{metadataUuid:.+}/formatters/json"
         },
         method = RequestMethod.GET,
         produces = {
@@ -310,7 +312,7 @@ public class MetadataApi {
         description = "Metadata Exchange Format (MEF) is returned. MEF is a ZIP file containing " +
             "the metadata as XML and some others files depending on the version requested. " +
             "See http://geonetwork-opensource.org/manuals/trunk/eng/users/annexes/mef-format.html.")
-    @RequestMapping(value = "/{metadataUuid}/formatters/zip",
+    @RequestMapping(value = "/{metadataUuid:.+}/formatters/zip",
         method = RequestMethod.GET,
         consumes = {
             MediaType.ALL_VALUE
@@ -549,7 +551,7 @@ public class MetadataApi {
         description = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
             "to this records.<br/>" +
             "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
-    @RequestMapping(value = "/{metadataUuid}/featureCatalog",
+    @RequestMapping(value = "/{metadataUuid:.+}/featureCatalog",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_XML_VALUE,

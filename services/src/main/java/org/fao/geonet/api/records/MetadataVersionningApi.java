@@ -72,7 +72,7 @@ public class MetadataVersionningApi {
         summary = "(Experimental) Enable version control",
         description = "")
     @RequestMapping(
-        value = "/{metadataUuid}/versions",
+        value = "/{metadataUuid:.+}/versions",
         method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('Editor')")

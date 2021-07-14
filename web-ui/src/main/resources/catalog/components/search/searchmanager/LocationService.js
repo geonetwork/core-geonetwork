@@ -85,16 +85,16 @@
             $location.path() == '';
       };
       this.getFormatter = function() {
-        var tokens = $location.path().split('/');
-        if (tokens.length > 2 && tokens[3] === 'formatters') {
-          return '/formatters/' + $location.url().split('/formatters/')[1];
+        var tokens = $location.path().split('/formatters/');
+        if (tokens.length === 2) {
+          return '/formatters/' + tokens[1];
         } else {
           return undefined;
         }
       };
       this.getFormatterPath = function() {
-        var tokens = $location.path().split('/');
-        if (tokens.length > 2 && tokens[3] === 'formatters') {
+        var tokens = $location.path().split('/formatters/');
+        if (tokens.length === 2) {
           return '../api/records/' + $location.url().split(/^metadraf|metadata\//)[1];
         } else {
           return undefined;
@@ -116,7 +116,9 @@
 
       this.getUuid = function() {
         if (this.isMdView()) {
-          return $location.path().split('/')[2];
+          return $location.path()
+            .split('/formatters')[0]
+            .replace(/\/metadata\/(.*)/, '$1');
         }
       };
 

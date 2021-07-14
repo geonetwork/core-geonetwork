@@ -86,7 +86,7 @@ public class MetadataTagApi {
         description = "Tags are used to classify information.<br/>" +
             "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/tag-information/tagging-with-categories.html'>More info</a>")
     @RequestMapping(
-        value = "/{metadataUuid}/tags",
+        value = "/{metadataUuid:.+}/tags",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         },
@@ -114,7 +114,7 @@ public class MetadataTagApi {
         summary = "Add tags to a record",
         description = "")
     @RequestMapping(
-        value = "/{metadataUuid}/tags",
+        value = "/{metadataUuid:.+}/tags",
         method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiResponses(value = {
@@ -181,7 +181,7 @@ public class MetadataTagApi {
         summary = "Delete tags of a record",
         description = "")
     @RequestMapping(
-        value = "/{metadataUuid}/tags",
+        value = "/{metadataUuid:.+}/tags",
         method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @ApiResponses(value = {

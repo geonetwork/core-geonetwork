@@ -554,7 +554,7 @@
               <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
                   alt="{{'extent' | translate}}"
                   aria-label="{{'extent' | translate}}"
-                  data-ng-src="../api/records/{{mdView.current.record.uuid}}/extents.png"/>
+                  data-ng-src="../api/records/{{mdView.current.record.uuid | encodeURIComponent}}/extents.png"/>
             </p>
 
           </section>

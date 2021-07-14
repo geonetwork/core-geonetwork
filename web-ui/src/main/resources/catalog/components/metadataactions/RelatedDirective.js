@@ -46,7 +46,7 @@
       var canceller = $q.defer();
       var request = $http({
         method: 'get',
-        url: '../api/records/' + uuidOrId + '/related?' +
+        url: '../api/records/' + encodeURIComponent(uuidOrId) + '/related?' +
             (types ?
             'type=' + types.split('|').join('&type=') :
             ''),

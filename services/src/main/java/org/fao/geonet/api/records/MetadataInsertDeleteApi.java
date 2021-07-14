@@ -168,7 +168,7 @@ public class MetadataInsertDeleteApi {
         + "By default, a backup is made in ZIP format. After that, "
         + "the record attachments are removed, the document removed "
         + "from the index and then from the database.")
-    @RequestMapping(value = "/{metadataUuid}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{metadataUuid:.+}", method = RequestMethod.DELETE)
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Record deleted."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(HttpStatus.NO_CONTENT)

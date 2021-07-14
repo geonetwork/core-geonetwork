@@ -72,7 +72,7 @@ import java.util.List;
  */
 @EnableWebMvc
 @Service
-@RequestMapping(value = {"/{portal}/api/records/{metadataUuid}/attachments"})
+@RequestMapping(value = {"/{portal}/api/records/{metadataUuid:.+}/attachments"})
 @Tag(name = "records", description = "Metadata record operations")
 public class AttachmentsApi {
     public static final Integer MIN_IMAGE_SIZE = 1;
