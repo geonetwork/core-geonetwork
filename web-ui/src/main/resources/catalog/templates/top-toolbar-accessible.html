@@ -104,7 +104,7 @@
           </li>
         </ul>
       </li>
-      <li class="dropdown" data-ng-show="user.isUserAdminOrMore()">
+      <li data-ng-if="gnCfg.mods.admin.enabled" class="dropdown" data-ng-show="user.isUserAdminOrMore()">
         <a title="{{'adminConsole' | translate}}"
            href
            class="dropdown-toggle gn-menuheader-xs"
@@ -147,7 +147,7 @@
     </ul>
 
     <div class="navbar-right">
-      <ul data-ng-if="gnCfg.mods.signin.enabled"
+      <ul data-ng-if="gnCfg.mods.authentication.enabled"
           class="nav navbar-nav username-dropdown accessible-dropdown">
         <!-- logged in -->
         <li class="dropdown" data-ng-show="authenticated">
@@ -213,7 +213,7 @@
         <!-- not logged in -->
         <li class="dropdown signin-dropdown"
           data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !isShowLoginAsLink && !isDisableLoginForm">
-          <a href="{{gnCfg.mods.signin.appUrl | signInLink}}"
+          <a href="{{gnCfg.mods.authentication.signinUrl | signInLink}}"
              title="{{'signIn'|translate}}"
              class="dropdown-toggle gn-menuheader-xs"
              data-ng-keypress="$event"
