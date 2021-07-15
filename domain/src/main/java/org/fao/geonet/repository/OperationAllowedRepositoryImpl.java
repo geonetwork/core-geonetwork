@@ -27,7 +27,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
@@ -43,8 +42,6 @@ import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.OperationAllowed_;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Optional;
 
@@ -104,27 +101,5 @@ public class OperationAllowedRepositoryImpl implements OperationAllowedRepositor
         query.select(root.get(OperationAllowed_.id).get(idAttribute));
         query.distinct(true);
         return _entityManager.createQuery(query).getResultList();
-    }
-
-    @Transactional
-    @Override
-    @Modifying(clearAutomatically=true)
-    public int deleteAllByMetadataIdExceptGroupId(int metadataId, int[] groupId) {
-        final String opAllowedEntityName = OperationAllowed.class.getSimpleName();
-        final String metadataIdPath = SortUtils.createPath(OperationAllowed_.id, OperationAllowedId_.metadataId);
-        final String groupIdPath = SortUtils.createPath(OperationAllowed_.id, OperationAllowedId_.groupId);
-        StringBuffer groupExcluded = new StringBuffer();
-        for (int g : groupId) {
-            groupExcluded.append(" and ");
-            groupExcluded.append(groupIdPath);
-            groupExcluded.append(" != ");
-            groupExcluded.append(g);
-        }
-        final Query query = _entityManager.createQuery("DELETE FROM " + opAllowedEntityName + " where " + metadataIdPath + " = "
-            + metadataId + groupExcluded.toString());
-
-        final int affected = query.executeUpdate();
-        return affected;
-
     }
 }
