@@ -89,7 +89,6 @@
     <!-- Create a first document representing the main record. -->
     <doc>
       <xsl:copy-of select="gn-fn-index:add-field('docType', 'metadata')"/>
-      <xsl:copy-of select="gn-fn-index:add-field('documentStandard', 'dublin-core')"/>
 
       <!-- Index the metadata document as XML -->
       <document>
