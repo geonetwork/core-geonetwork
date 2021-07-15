@@ -1,0 +1,32 @@
+================================================================================
+===
+=== GeoNetwork 3.12.1: List of changes
+===
+================================================================================
+- [BP] Remove deleteAllByMetadataIdExceptGroupId from custom implementation and use the repository @query instead. (#5828)
+- [BP] Add salutation to notification message. (#5686)
+- [BP] Escape login redirect url (#5829)
+- [BP] Add a Bootstrap layout and column to a static page (#5843)
+- fix duplicate string in normalize-space, if record both has a title as well as identifier has a citation with title (#5830)
+- Fix tests - related to f5818c50084c86d83526b3761fac66564429916b (#5838)
+- [BP] Add isoLang (i.e. en, fr) into a link. (#5642)
+- [BP] Overview / Removal / Do not delete attachement from other records (#5821)
+- Update the filter for INSPIRE Atom dataset feed to support the remote operatesOn indexing format (#5816)
+- [BP] Add copy resource interface, implement cmis resource copy with additional properties (#5776)
+- [BP] Fixed CMIS resource bug where the wrong key function was called causing an invalid key to be generated. (#5775)
+- [BP] Refactor - autowire settingManager bean to make code cleaner. (#5773)
+- [BP] User Profile Readonly for keycloak users  (#5769)
+- Add confirm to delete Category and Cancel edits to metadata (#5813)
+- [BP] Fix Thumbnail generator (#5757)
+- [BP] Search results - metadata with a working copy display a label 'Working copy' if the metadata has a draft copy, even for public users. Fixes #5580
+- [BP] Create user form issues 2 requests to userselection api that return status code 400. Fixes #4545
+- [BP] iso19139 full view - codelist elements - display the codelistValue translation only if the element has a text also
+- [BP] Users without groups assigned are listed in the users lists for any UserAdmin
+- [BP] Add a scrollbar to the privileges popup when group names are too long (#5799)
+- Fix bug in signin link (#5630)
+- [BP] Metadata editor - option to disable OGC Capabilites layer processing in the online resource panel.
+- Fix for indenting the 'multientry combiner` (#5764)
+- [BP] Associated resource / Feature catalog / Missing list of values
+- [BP] Add settings and styling for the map height when there is no footer (#5696)
+- fix csrf token when integrated with keycloak (#5672)
+- Update version for 3.12.1-SNAPSHOT
