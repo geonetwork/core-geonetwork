@@ -248,7 +248,7 @@
               if (type !== this.SEARCH_MAP) {
                 // Because search map is fit by result md bbox
                 var newPromise = map.get('sizePromise').then(function () {
-                  map.getView().fit(config.extent, map.getSize(), {nearest: true});
+                  map.getView().fit(config.extent, map.getSize());
                 });
 
                 map.set('sizePromise', newPromise);
