@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.datamanager.base;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -108,7 +109,7 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
     @Override
     public void deleteMetadataOper(String metadataId, boolean skipAllReservedGroup) throws Exception {
         if (skipAllReservedGroup) {
-            int[] exclude = new int[]{ReservedGroup.all.getId(), ReservedGroup.intranet.getId(), ReservedGroup.guest.getId()};
+            List<Integer> exclude = Arrays.asList(ReservedGroup.all.getId(), ReservedGroup.intranet.getId(), ReservedGroup.guest.getId());
             opAllowedRepo.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), exclude);
         } else {
             opAllowedRepo.deleteAllByMetadataId(Integer.parseInt(metadataId));
