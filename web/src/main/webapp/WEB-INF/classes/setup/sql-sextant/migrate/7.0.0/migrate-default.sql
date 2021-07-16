@@ -81,13 +81,15 @@ DELETE FROM GUF_RatingCriteria WHERE id NOT IN (-1, 3);
 ALTER TABLE guf_userfeedbacks_guf_rating DROP COLUMN GUF_UserFeedbacks_uuid;
 
 
-UPDATE Settings SET value='4.0.2' WHERE name='system/platform/version';
+UPDATE Settings SET value='4.0.6' WHERE name='system/platform/version';
 UPDATE Settings SET value='0' WHERE name='system/platform/subVersion';
 
 DELETE FROM settings_ui;
 
 UPDATE settings SET value = '1' WHERE name = 'system/threadedindexing/maxthreads';
 DELETE FROM settings_ui;
+
+UPDATE StatusValues SET notificationLevel = 'catalogueAdministrator' WHERE name = 'doiCreationTask';
 
 -- #############################################
 -- After application starts
@@ -119,14 +121,10 @@ SELECT setval('status_value_id_seq', (SELECT max(id) + 1 FROM statusvalues));
 SELECT setval('user_id_seq', (SELECT max(id) + 1 FROM users));
 SELECT setval('user_search_id_seq', (SELECT max(id) + 1 FROM usersearch));
 
-
 UPDATE messageproducerentity SET strategy = 'investigator';
-
 
 INSERT INTO metadatastatus (id, changedate, changemessage, closedate, currentstate, duedate, metadataid, owner, previousstate, titles, userid, uuid, statusid)
 SELECT nextval('metadatastatus_id_seq'), changedate, changemessage, closedate, currentstate, duedate, metadataid, COALESCE(owner, 0), previousstate, null, userid, (SELECT uuid FROM metadata WHERE id = s.metadataid), statusid
 FROM metadatastatus_backup s;
 
 -- DROP TABLE metadatastatus_backup;
-
-UPDATE StatusValues SET notificationLevel = 'catalogueAdministrator' WHERE name = 'doiCreationTask';
