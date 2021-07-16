@@ -241,7 +241,7 @@
                 url = '../api/records/' + uuid + '/formatters/' + searchSettings.metadataFormatter;
             }
           } else if(md.documentStandard == 'dublin-core') {
-            url = '../api/records/' + uuid + '/formatters/xsl-view';
+            url = '../api/records/' + uuid + '/formatters/xsl-view?view=sextant&root=div&template=sextant-summary-view';
           } else if(md.documentStandard == 'iso19110') {
             url = '../api/records/' + uuid + '/formatters/xsl-view?root=div';
           } else if(md.documentStandard == 'iso19115-3.2018') {

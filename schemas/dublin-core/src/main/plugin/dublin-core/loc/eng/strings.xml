@@ -34,4 +34,27 @@
   <providedBy>Provided by</providedBy>
   <shareOnSocialSite>Share on social sites</shareOnSocialSite>
   <associatedResources>Associated resources</associatedResources>
+
+  <sxt-view-date>Date(s)</sxt-view-date>
+  <sxt-view-contact>Contact(s)</sxt-view-contact>
+  <sxt-view-author>Author(s)</sxt-view-author>
+  <sxt-view-publisher>Publisher(s)</sxt-view-publisher>
+  <sxt-view-keyword>Keywords</sxt-view-keyword>
+  <sxt-view-source>Source</sxt-view-source>
+  <sxt-view-lineage>Lineage</sxt-view-lineage>
+  <sxt-view-constraints>Constraints</sxt-view-constraints>
+  <sxt-view-spatialRepresentationType>Data type</sxt-view-spatialRepresentationType>
+  <sxt-view-geoinfo>Spatial informations</sxt-view-geoinfo>
+  <sxt-view-crs>Coordinate system</sxt-view-crs>
+  <sxt-view-scale>Scale</sxt-view-scale>
+  <sxt-view-resolution>Resolution</sxt-view-resolution>
+  <sxt-view-description>Description</sxt-view-description>
+  <sxt-view-temporal-from>From</sxt-view-temporal-from>
+  <sxt-view-temporal-to>To</sxt-view-temporal-to>
+  <sxt-view-temporal-at>At</sxt-view-temporal-at>
+  <sxt-view-temporal>Temporal coverage</sxt-view-temporal>
+  <sxt-keyword-section>Tags</sxt-keyword-section>
+  <sxt-view-related>Related resources</sxt-view-related>
+  <sxt-record-citation>When using this dataset in a publication, also cite the related work(s) with:</sxt-record-citation>
+  <sxt-view-networkLink>Data access</sxt-view-networkLink>
 </strings>
