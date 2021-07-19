@@ -129,13 +129,15 @@
     'gnGlobalSettings',
     'gnESClient',
     'gnESFacet',
+    'gnFacetSorter',
     'gnExternalViewer',
     function($scope, $location, $filter,
              suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
              gnMap, gnMdView, mdView, gnWmsQueue,
              gnSearchLocation, gnOwsContextService,
-             hotkeys, gnGlobalSettings, gnESClient, gnESFacet, gnExternalViewer) {
+             hotkeys, gnGlobalSettings, gnESClient,
+             gnESFacet, gnFacetSorter, gnExternalViewer) {
 
 
       var viewerMap = gnSearchSettings.viewerMap;
@@ -164,6 +166,8 @@
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
       $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
       $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
+
+      $scope.facetSorter = gnFacetSorter.sortByTranslation;
 
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();

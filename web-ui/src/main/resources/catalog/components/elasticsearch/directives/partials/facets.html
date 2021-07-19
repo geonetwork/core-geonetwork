@@ -72,7 +72,7 @@
              ng-if="::facet.type !== 'dates' && !(facet.meta && facet.meta.vega)"
              es-facet="::facet"
              es-facet-item="::item"
-             ng-repeat="item in facet.items">
+             ng-repeat="item in facet.items | orderBy:facetSorter(facet, facet.key)">
         </div>
 
         <div class=""

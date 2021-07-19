@@ -33,10 +33,11 @@
    * All facet panel
    * @constructor
    */
-  var FacetsController = function ($scope) {
+  var FacetsController = function ($scope, $filter) {
     this.fLvlCollapse = {}
     this.currentFacet
     this.$scope = $scope
+    this.$filter = $filter
 
     $scope.$watch(
       function () {
@@ -97,10 +98,29 @@
   }
 
   FacetsController.prototype.filterTerms = function (facet) {
-    this.searchCtrl.filterTerms(facet).then(function (terms) {
-      angular.merge(facet, terms);
-      facet.items = terms.items;
-    });
+    if (facet.meta && facet.meta.filterByTranslation) {
+      var match = [];
+      if (!facet.originalItems) {
+        facet.originalItems = facet.items;
+      }
+      if (facet.include === '') {
+        facet.items = facet.originalItems;
+        return;
+      }
+      for (var i = 0; i < facet.originalItems.length; i ++) {
+        var bucket = facet.originalItems[i],
+            t = this.$filter('facetTranslator')(bucket.value, facet.key);
+        if (t.match(new RegExp(facet.include, 'i')) != null) {
+          match.push(bucket);
+        }
+      }
+      facet.items = match;
+    } else {
+      this.searchCtrl.filterTerms(facet).then(function (terms) {
+        angular.merge(facet, terms);
+        facet.items = terms.items;
+      });
+    }
   }
 
   FacetsController.prototype.filter = function (facet, item) {
@@ -133,7 +153,7 @@
   }
 
   FacetsController.$inject = [
-    '$scope'
+    '$scope', '$filter'
   ]
 
   // Define the translation group key matching the facet key
@@ -142,6 +162,19 @@
     ['groupOwner', 'group'],
     ['sourceCatalogue', 'source']
   ]);
+
+  module.service('gnFacetSorter', ['$filter', function($filter) {
+    this.sortByTranslation = function(agg, bucket) {
+      if (agg && agg.meta && agg.meta.orderByTranslation) {
+        return function(facet) {
+          return $filter('facetTranslator')(facet.value || facet.key, bucket);
+        }
+      } else {
+        return function(facet) {return facet.key};
+      }
+    }
+  }]);
+
 
   module.filter('facetTranslator', ['$translate', function($translate) {
 
@@ -183,8 +216,8 @@
   }]);
 
   module.directive('esFacets', [
-   'gnLangs',
-    function (gnLangs) {
+   'gnFacetSorter',
+    function (gnFacetSorter) {
       return {
         restrict: 'A',
         controllerAs: 'ctrl',
@@ -201,6 +234,7 @@
             'partials/facets.html'
         },
         link: function (scope, element, attrs) {
+          scope.facetSorter = gnFacetSorter.sortByTranslation;
         }
       }
     }])
