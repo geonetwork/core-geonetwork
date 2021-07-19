@@ -183,7 +183,6 @@
       // in default mode.
       function loadFormatter(n, o) {
         if (n === true) {
-          getRecordGroup();
           var f = gnSearchLocation.getFormatterPath();
           $scope.currentFormatter = '';
           if (f != undefined) {
@@ -199,15 +198,5 @@
       $scope.$watch('gnMdViewObj.from', function(v) {
         $scope.fromView = v ? v.substring(1) : v;
       });
-
-      function getRecordGroup() {
-        if ($scope.gnMdViewObj.current.record
-          && $scope.gnMdViewObj.current.record.groupOwner) {
-          $http.get('../api/groups/' + $scope.gnMdViewObj.current.record.groupOwner,
-            {cache: true}).success(function(data) {
-            $scope.recordGroup = data;
-          });
-        }
-      }
     }]);
 })();
