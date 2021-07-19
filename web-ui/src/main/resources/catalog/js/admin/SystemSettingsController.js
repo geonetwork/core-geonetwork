@@ -363,7 +363,7 @@
 
         $(formId + " .form-group").filter(function() {
 
-          var filterText = $(this).find('label').text().toLowerCase();
+          var filterText = $(this).find("label, h3").text().toLowerCase();
           var matchStart = filterText.indexOf("" + filterValue.toLowerCase() + "");
 
           if (matchStart > -1) {
