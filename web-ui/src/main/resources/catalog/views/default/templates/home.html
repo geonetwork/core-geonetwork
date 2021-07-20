@@ -100,7 +100,8 @@
       <div class="row">
         <span data-ng-show="homeFacet.key !== 'inspireThemeUri'"
               data-ng-init="aggResponse = searchInfo.aggregations[homeFacet.key]"
-              data-ng-repeat="facet in searchInfo.aggregations[homeFacet.key].buckets"
+              data-ng-repeat="facet in searchInfo.aggregations[homeFacet.key].buckets
+                                | orderBy:facetSorter(searchInfo.aggregations[homeFacet.key], homeFacet.key) track by facet.key"
               class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic">
           <div class="panel panel-default">
             <div class="panel-body">
