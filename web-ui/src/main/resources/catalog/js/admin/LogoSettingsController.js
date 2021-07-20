@@ -138,8 +138,6 @@
           } else {
             $(this).hide();
           }
-          // check parent
-          // $scope.filterParent($(this));
         });
       };
 
@@ -150,8 +148,6 @@
           $('#filter-settings').val('');
           // show the element
           $(this).show();
-          // show the fieldsets
-          // $(formId + ' fieldset').show();
         });
 
       };
