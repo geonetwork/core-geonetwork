@@ -358,8 +358,10 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 Element sortProp = new Element("SortProperty", Csw.NAMESPACE_OGC);
                 sortBy.addContent(sortProp);
 
-                Element propName = new Element("PropertyName", Csw.NAMESPACE_OGC).setText(field);
-                Element sortOrder = new Element("SortOrder", Csw.NAMESPACE_OGC).setText(ascen ? "ASC" : "DESC");
+                Element propName = new Element("PropertyName", Csw.NAMESPACE_OGC)
+                    .setText(field);
+                Element sortOrder = new Element("SortOrder", Csw.NAMESPACE_OGC)
+                    .setText(ascen ? "ASC" : "DESC");
 
                 sortProp.addContent(propName);
                 sortProp.addContent(sortOrder);
@@ -740,13 +742,12 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
             boolean isDescOrder = "DESC".equals(order);
 
-            // Map CSW search field to Lucene for sorting. And if not mapped assumes the field is a Lucene field.
-            String luceneSortField = _fieldMapper.mapSort(field);
-            if (luceneSortField != null) {
-                sortFields.add(new FieldSortBuilder(luceneSortField).order(isDescOrder?SortOrder.DESC:SortOrder.ASC));
-            //} else {
-                //    sortFields.add(new FieldSortBuilder(field).order(isDescOrder?SortOrder.DESC:SortOrder.ASC));
-            }
+            // Map CSW search field to index field for sorting.
+            // And if not mapped assumes the field is an index field.
+            String indexField = _fieldMapper.mapSort(field);
+            sortFields.add(
+                new FieldSortBuilder(StringUtils.isEmpty(indexField) ? field : indexField)
+                    .order(isDescOrder ? SortOrder.DESC : SortOrder.ASC));
         }
 
         return sortFields;
