@@ -997,6 +997,19 @@
                   }
                 }
               },
+              "langfre": {
+                "type": "text",
+                "analyzer": "french",
+                "copy_to": [
+                  "anyfre"
+                ],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
               "link": {
                 "type": "keyword"
               }
@@ -1219,6 +1232,10 @@
       "any": {
         "type": "text",
         "analyzer": "${es.index.analyzer.default}"
+      },
+      "anyfre": {
+        "type": "text",
+        "analyzer": "french"
       },
       "anytext": {
         "type": "search_as_you_type"
