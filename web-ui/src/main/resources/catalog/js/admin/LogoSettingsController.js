@@ -124,6 +124,46 @@
             });
       };
 
+      $scope.filterLogoList = function(e,formId) {
+
+        var filterValue = e.target.value.toLowerCase();
+
+        $(formId + " .list-group-item").filter(function() {
+
+          var filterText = $(this).find('label').text().toLowerCase();
+          var matchStart = filterText.indexOf("" + filterValue.toLowerCase() + "");
+
+          if (matchStart > -1) {
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+          // check parent
+          // $scope.filterParent($(this));
+        });
+      };
+
+      $scope.resetFilter = function(formId) {
+
+        $(formId + " .list-group-item").each(function() {
+          // clear filter
+          $('#filter-settings').val('');
+          // show the element
+          $(this).show();
+          // show the fieldsets
+          // $(formId + ' fieldset').show();
+        });
+
+      };
+
+      /**
+       * Toggle the logo height
+       * @param  {String} type Type of logo height selected
+       */
+      $scope.toggleLogoHeight = function(type) {
+        $scope.logoheightType = type;
+      };
+
       loadLogo();
     }]);
 

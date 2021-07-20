@@ -1479,6 +1479,7 @@
     "styleVariable-gnHeaderHeight":"Height",
     "styleVariable-gnSearchBackgroundColor": "Backgound color",
     "confirmDeletecategory": "Are you sure you want to delete this category?",
-    "ui-mod-page": "Static pages"
+    "ui-mod-page": "Static pages",
+    "logoHeight": "Logo height"
 }
 
