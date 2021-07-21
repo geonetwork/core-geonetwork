@@ -24,8 +24,11 @@
 package org.fao.geonet.entitylistener;
 
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.Logger;
 import org.fao.geonet.domain.HarvesterSetting;
+import org.fao.geonet.utils.Log;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -34,6 +37,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  */
 public class HarvesterSettingValueSetter implements GeonetworkEntityListener<HarvesterSetting> {
+    protected Logger log = Log.createLogger("geonetwork.domain");
+
     @Autowired
     private StandardPBEStringEncryptor encryptor;
 
@@ -44,24 +49,32 @@ public class HarvesterSettingValueSetter implements GeonetworkEntityListener<Har
 
     @Override
     public void handleEvent(final PersistentEventType type, final HarvesterSetting entity) {
-        if (type == PersistentEventType.PrePersist) {
-            if (entity.isEncrypted() && StringUtils.isNotEmpty(entity.getValue())) {
-                entity.setStoredValue(this.encryptor.encrypt(entity.getValue()));
-            } else {
-                entity.setStoredValue(entity.getValue());
-            }
+        try {
+            if (type == PersistentEventType.PrePersist) {
+                if (entity.isEncrypted() && StringUtils.isNotEmpty(entity.getValue())) {
+                    entity.setStoredValue(this.encryptor.encrypt(entity.getValue()));
+                } else {
+                    entity.setStoredValue(entity.getValue());
+                }
 
-        } else if (type == PersistentEventType.PreUpdate) {
-            if (entity.isEncrypted() && StringUtils.isNotEmpty(entity.getValue())) {
-                entity.setStoredValue(this.encryptor.encrypt(entity.getValue()));
-            }
+            } else if (type == PersistentEventType.PreUpdate) {
+                if (entity.isEncrypted() && StringUtils.isNotEmpty(entity.getValue())) {
+                    entity.setStoredValue(this.encryptor.encrypt(entity.getValue()));
+                }
 
-        } else if ((type == PersistentEventType.PostLoad) ||  (type == PersistentEventType.PostUpdate)) {
-            if (entity.isEncrypted() && StringUtils.isNotEmpty(entity.getStoredValue())) {
-                entity.setValue(this.encryptor.decrypt(entity.getStoredValue()));
-            } else {
-                entity.setValue(entity.getStoredValue());
+            } else if ((type == PersistentEventType.PostLoad) || (type == PersistentEventType.PostUpdate)) {
+                if (entity.isEncrypted() && StringUtils.isNotEmpty(entity.getStoredValue())) {
+                    entity.setValue(this.encryptor.decrypt(entity.getStoredValue()));
+                } else {
+                    entity.setValue(entity.getStoredValue());
+                }
             }
+        } catch (EncryptionOperationNotPossibleException exception) {
+            log.error(String.format(
+                "Encryption error on harvester settings password. Error is: %s. " +
+                    "Check that encryptor.properties file match your database.",
+                exception.getMessage()
+            ));
         }
     }
 }
