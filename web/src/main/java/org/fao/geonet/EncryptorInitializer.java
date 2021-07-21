@@ -65,6 +65,20 @@ public class EncryptorInitializer {
     @Autowired
     DataSource dataSource;
 
+    private boolean firstInitialSetupFlag;
+
+    /**
+     * Set flag to indicate that a encrypt should be done during initialization
+     * This will cause all fields flag as encrypted to be encrypted.
+     * This should generally only be set during a migration script.
+     *
+     * @param firstInitialSetupFlag indicate that a encrypt should be done during initialization - default false
+     */
+    public void setFirstInitialSetupFlag(boolean firstInitialSetupFlag) {
+        this.firstInitialSetupFlag = firstInitialSetupFlag;
+    }
+
+
     public void init(GeonetworkDataDirectory dataDirectory) throws Exception {
         PropertiesConfiguration conf = getEncryptorPropertiesFile(dataDirectory);
 
@@ -175,7 +189,9 @@ public class EncryptorInitializer {
                 previousEncryptor.initialize();
                 updateDb(previousEncryptor);
             } else {
-                updateDb(null);
+                if (firstInitialSetupFlag) {
+                    updateDb(null);
+                }
             }
         }
 
