@@ -1002,11 +1002,63 @@
                   }
                 }
               },
+              "langeng": {
+                "type": "text",
+                "analyzer": "english",
+                "copy_to": [
+                  "any.langeng"
+                ],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
               "langfre": {
                 "type": "text",
                 "analyzer": "french",
                 "copy_to": [
-                  "anyfre"
+                  "any.langfre"
+                ],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "langger": {
+                "type": "text",
+                "analyzer": "german",
+                "copy_to": [
+                  "any.langger"
+                ],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "langita": {
+                "type": "text",
+                "analyzer": "italian",
+                "copy_to": [
+                  "any.langita"
+                ],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "langroh": {
+                "type": "text",
+                "analyzer": "${es.index.analyzer.default}",
+                "copy_to": [
+                  "any.langroh"
                 ],
                 "fields": {
                   "keyword": {
