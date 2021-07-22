@@ -2,7 +2,7 @@
   "settings": {
     "index": {
       "max_result_window": ${es.index.max_result_window.limit},
-      "query.default_field": "any",
+      "query.default_field": "any.default",
       "mapping.total_fields.limit": ${es.index.mapping.total_fields.limit},
       "analysis": {
         "analyzer": {
@@ -979,7 +979,12 @@
                 "type": "text",
                 "analyzer": "${es.index.analyzer.default}",
                 "copy_to": [
-                  "any",
+                  "any.default",
+                  "any.langeng",
+                  "any.langfre",
+                  "any.langger",
+                  "any.langita",
+                  "any.langroh",
                   "anytext"
                 ],
                 "fields": {
@@ -1083,7 +1088,12 @@
               "default": {
                 "type": "keyword",
                 "copy_to": [
-                  "any",
+                  "any.default",
+                  "any.langeng",
+                  "any.langfre",
+                  "any.langger",
+                  "any.langita",
+                  "any.langroh",
                   "anytext"
                 ]
               },
@@ -1230,12 +1240,37 @@
     ],
     "properties": {
       "any": {
-        "type": "text",
-        "analyzer": "${es.index.analyzer.default}"
-      },
-      "anyfre": {
-        "type": "text",
-        "analyzer": "french"
+        "type": "object",
+        "properties": {
+          "default": {
+            "type": "text",
+            "analyzer": "${es.index.analyzer.default}"
+          },
+          "common": {
+            "type": "text",
+            "analyzer": "${es.index.analyzer.default}"
+          },
+          "langeng": {
+            "type": "text",
+            "analyzer": "english"
+          },
+          "langfre": {
+            "type": "text",
+            "analyzer": "french"
+          },
+          "langger": {
+            "type": "text",
+            "analyzer": "german"
+          },
+          "langita": {
+            "type": "text",
+            "analyzer": "italian"
+          },
+          "langroh": {
+            "type": "text",
+            "analyzer": "${es.index.analyzer.default}"
+          }
+        }
       },
       "anytext": {
         "type": "search_as_you_type"
@@ -1246,7 +1281,12 @@
           "default": {
             "type": "keyword",
             "copy_to": [
-              "any",
+              "any.default",
+              "any.langeng",
+              "any.langfre",
+              "any.langger",
+              "any.langita",
+              "any.langroh",
               "anytext"
             ]
           },
@@ -1307,7 +1347,7 @@
       },
       "uuid": {
         "type": "keyword",
-        "copy_to": "any"
+        "copy_to": "any.common"
       },
       "id": {
         "type": "keyword"
@@ -1358,14 +1398,14 @@
         "properties": {
           "protocol": {
             "type": "keyword",
-            "copy_to": "any"
+            "copy_to": "any.common"
           },
           "link": {
             "type": "text"
           },
           "name": {
             "type": "text",
-            "copy_to": "any"
+            "copy_to": "any.common"
           },
           "description": {
             "type": "text"
@@ -1483,7 +1523,7 @@
         "properties": {
           "code": {
             "type": "keyword",
-            "copy_to": "any"
+            "copy_to": "any.common"
           },
           "codeSpace": {
             "type": "keyword"
