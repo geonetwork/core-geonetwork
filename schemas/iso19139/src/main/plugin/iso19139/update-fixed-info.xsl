@@ -293,7 +293,9 @@
 
 
   <!-- Add required gml attributes if missing -->
-  <xsl:template match="gml:Polygon[not(@gml:id) or not(@srsName)]|
+  <xsl:template match="gml:TimePeriod[not(@gml:id)]|
+                       gml320:TimePeriod[not(@gml:id)]|
+                       ggml:MultiSurface[not(@gml:id) or not(@srsName)]|
                        gml:MultiSurface[not(@gml:id) or not(@srsName)]|
                        gml:LineString[not(@gml:id) or not(@srsName)]|
                        gml320:Polygon[not(@gml320:id) or not(@srsName)]|
@@ -314,9 +316,11 @@
                               then @gml320:id
                               else generate-id(.)"/>
       </xsl:attribute>
-      <xsl:attribute name="srsName">
-        <xsl:value-of select="if (@srsName != '') then @srsName else 'urn:ogc:def:crs:EPSG:6.6:4326'"/>
-      </xsl:attribute>
+      <xsl:if test="local-name(.) != 'TimePeriod'">
+        <xsl:attribute name="srsName">
+          <xsl:value-of select="if (@srsName != '') then @srsName else 'urn:ogc:def:crs:EPSG:6.6:4326'"/>
+        </xsl:attribute>
+      </xsl:if>
       <xsl:copy-of select="@*[name() != 'srsName' and local-name() != 'id']"/>
       <xsl:apply-templates select="*"/>
     </xsl:element>
