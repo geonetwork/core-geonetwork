@@ -980,11 +980,6 @@
                 "analyzer": "${es.index.analyzer.default}",
                 "copy_to": [
                   "any.default",
-                  "any.langeng",
-                  "any.langfre",
-                  "any.langger",
-                  "any.langita",
-                  "any.langroh",
                   "anytext"
                 ],
                 "fields": {
