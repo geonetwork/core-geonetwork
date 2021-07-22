@@ -146,7 +146,7 @@ goog.require('gn_alert');
           // Full text on all fields
           // 'queryBase': '${any}',
           // Full text but more boost on title match
-          'queryBase': 'anyfre:(${any})',
+          'queryBase': 'any.fre:(${any}) any.common:(${any})',
           //'queryBase': 'any:(${any}) resourceTitleObject.\\*:(${any})^2',
           'queryTitle': '${any}',
           'searchOptions': true,
