@@ -55,7 +55,7 @@
   </modules>
   <properties>
     <rootProjectDir>../..</rootProjectDir>
-    <gn.project.version>3.10.5-SNAPSHOT</gn.project.version>
+    <gn.project.version>3.10.5-1</gn.project.version>
   </properties>
 
 </project>
