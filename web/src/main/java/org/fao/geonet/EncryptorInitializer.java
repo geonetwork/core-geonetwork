@@ -246,7 +246,7 @@ public class EncryptorInitializer {
             }
 
             for (Integer key : updatesMapServers.keySet()) {
-                PreparedStatement pstmt = connection.prepareStatement("UPDATE Mapservers SET password==? WHERE id=?");
+                PreparedStatement pstmt = connection.prepareStatement("UPDATE Mapservers SET password=? WHERE id=?");
                 pstmt.setString(1, updatesMapServers.get(key));
                 pstmt.setInt(2, key);
                 pstmt.executeUpdate();
