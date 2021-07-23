@@ -297,7 +297,6 @@
                        gml320:TimePeriod[not(@gml:id)]|
                        gml:Polygon[not(@gml:id) or not(@srsName)]|
                        gml:MultiSurface[not(@gml:id) or not(@srsName)]|
-                       gml:MultiSurface[not(@gml:id) or not(@srsName)]|
                        gml:LineString[not(@gml:id) or not(@srsName)]|
                        gml320:Polygon[not(@gml320:id) or not(@srsName)]|
                        gml320:MultiSurface[not(@gml:id) or not(@srsName)]|
