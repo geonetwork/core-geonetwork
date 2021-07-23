@@ -115,7 +115,15 @@ public class EncryptorInitializer {
             encryptorPasswordPropFile = getPropertyFromEnv(PASSWORD_KEY, "");
             // Creates a random encryptor password if the password is empty
             if (StringUtils.isEmpty(encryptorPasswordPropFile)) {
-                Log.info(LOG_MODULE, "Generating a random password for the database password encryptor");
+                if (!firstInitialSetupFlag) {
+                    Log.error(LOG_MODULE, String.format(
+                        "Password database encryptor initialization error - could not locate encryptor password via encryption " +
+                        "file %s or supplied properties/environment variable (%s). " +
+                        "GeoNetwork can not decrypt passwords already stored in the database. " +
+                        "Either recover the previous password and restart the application or manually null all existing encrypted " +
+                        "passwords in the database and re-enter passwords via the application", conf.getPath(), PASSWORD_KEY));
+                }
+                Log.info(LOG_MODULE, "Generating a new random password for the database password encryptor");
                 encryptorPasswordPropFile = RandomStringUtils.randomAlphanumeric(10);
             }
             encryptorPassword = encryptorPasswordPropFile;
@@ -176,12 +184,12 @@ public class EncryptorInitializer {
             // Save the encryptor.properties file
             conf.save();
 
-            Log.info(LOG_MODULE, "Password database encryptor - encrypting passwords stored in the database");
-
             // Encryptor configuration change: should be unencrypted the passwords with the previous configuration
             // and encrypted with the new one.
             if (!encryptorPassword.equals(encryptorPasswordPropFile) ||
                 !encryptorAlgorithm.equals(encryptorAlgorithmPropFile)) {
+
+                Log.info(LOG_MODULE, "Password database encryptor - re-encrypting passwords stored in the database");
 
                 StandardPBEStringEncryptor previousEncryptor = new StandardPBEStringEncryptor();
                 previousEncryptor.setAlgorithm(encryptorAlgorithmPropFile);
@@ -190,6 +198,7 @@ public class EncryptorInitializer {
                 updateDb(previousEncryptor);
             } else {
                 if (firstInitialSetupFlag) {
+                    Log.info(LOG_MODULE, "Password database encryptor - encrypting passwords stored in the database");
                     updateDb(null);
                 }
             }
