@@ -109,7 +109,13 @@
         // broadcast context load
         $rootScope.$broadcast('owsContextLoaded');
 
+        var uiConfig = {};
+        var mapConfig = gnMap.getMapConfig();
         var context = unmarshaller.unmarshalString(text).value;
+        var mapType = map.get('type');
+        if (mapType && mapConfig) {
+          uiConfig = mapConfig['map-' + mapType];
+        }
         // first remove any existing layer
         var layersToRemove = [];
         map.getLayers().forEach(function(layer) {
@@ -123,31 +129,38 @@
           map.removeLayer(layersToRemove[i]);
         }
 
-        // -- set the Map view (extent/projection)
+        // Set the Map view (extent/projection) from the context
         var bbox = context.general.boundingBox.value;
         var ll = bbox.lowerCorner;
         var ur = bbox.upperCorner;
         var projection = bbox.crs;
 
-        // -- check if projection is available in ol
-        if (!ol.proj.get(projection)){
-         console.warn('Projection '+ projection +' is not available, map will be projected in a spherical mercator projection');
-         projection='EPSG:3857';
-         ll=[-10026376,-15048966];
-         ur=[10026376,15048966];
-       }
+        // Check if projection is available in ol
+        if (!ol.proj.get(projection)) {
+          console.warn('Projection ' + projection + ' is not available, map will be projected in a spherical mercator projection');
+          projection = 'EPSG:3857';
+          ll = [-10026376, -15048966];
+          ur = [10026376, 15048966];
+        }
 
         if (projection == 'EPSG:4326') {
+          // WGS84 expects lat-lon (y,x) not lon-lat (x,y)
           ll.reverse();
           ur.reverse();
         }
 
         var extent = ll.concat(ur);
-        gnViewerSettings.initialExtent = extent;
 
-        // save this extent for later use (for example if the map
-        // is not currently visible)
-        map.set('lastExtent', extent);
+        // Apply extent override from UI settings, if any
+        if (uiConfig && uiConfig.extent &&
+          ol.extent.getWidth(uiConfig.extent) && ol.extent.getHeight(uiConfig.extent)) {
+          extent = uiConfig.extent;
+          // Extent should be specified in the default map projection:
+          // reproject to context projection, if this is not the case already
+          if (mapConfig.projection !== projection) {
+            extent = ol.proj.transformExtent(extent, mapConfig.projection, projection, 8);
+          }
+        }
 
         if (map.getView().getProjection().getCode() != projection) {
           var view = new ol.View({
@@ -159,7 +172,7 @@
         var loadPromise = map.get('sizePromise');
         if (loadPromise) {
           loadPromise.then(function() {
-            map.getView().fit(extent, map.getSize(), { nearest: true });
+            map.getView().fit(extent, map.getSize());
           })
         }
         else {
