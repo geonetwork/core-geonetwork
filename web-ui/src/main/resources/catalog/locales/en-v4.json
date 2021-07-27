@@ -163,5 +163,6 @@
   "IndexReadOnlyHealthCheck": "Index is in readonly mode",
   "summary": "Summary",
   "metadataRecords": "Metadata records",
-  "results": "Results"
+  "results": "Results",
+  "format-zip": "ZIP"
 }
