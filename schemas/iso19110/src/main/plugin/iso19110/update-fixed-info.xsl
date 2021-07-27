@@ -29,6 +29,8 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
                 version="2.0"
                 exclude-result-prefixes="#all"
 >
@@ -39,7 +41,11 @@
     <xsl:apply-templates select="gfc:FC_FeatureCatalogue|gfc:FC_FeatureType"/>
   </xsl:template>
 
-  <!-- =================================================================-->
+  <xsl:template match="@xsi:schemaLocation">
+    <xsl:if test="java:getSettingValue('system/metadata/validation/removeSchemaLocation') = 'false'">
+      <xsl:copy-of select="."/>
+    </xsl:if>
+  </xsl:template>
 
   <xsl:template match="gfc:FC_FeatureCatalogue|gfc:FC_FeatureType[not(parent::node())]">
     <xsl:copy>
