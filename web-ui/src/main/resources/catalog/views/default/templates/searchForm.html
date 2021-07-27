@@ -10,9 +10,12 @@
       </div>
       <div class="col-md-6">
         <div class="input-group gn-form-any">
+          <div class="input-group-btn">
           <button data-gn-user-searches-list=""
                   data-ng-cloak=""
-                  data-mode="button"/>
+                  data-mode="button"
+                  class="btn-favorites"/>
+          </div>
               <input type="text"
                     class="form-control input-lg"
                     id="gn-any-field"
@@ -30,53 +33,39 @@
                     data-typeahead-wait-ms="600">
 
           <div class="input-group-btn">
-
-            <button type="button"
-                    data-ng-click="triggerSearch()"
-                    title="{{'search' | translate}}"
-                    class="btn btn-primary btn-lg">
-              <i class="fa fa-fw fa-search"></i>
-              <span class="sr-only" data-translate="">search</span>
-            </button>
-
             <button type="button"
                     data-ng-click="resetSearch(searchObj.defaultParams);"
                     title="{{'ClearTitle' | translate}}"
                     data-ng-if="::!isFilterTagsDisplayedInSearch"
-                    class="btn btn-default btn-lg">
-              <i class="fa fa-times text-danger"></i>
+                    class="btn btn-default btn-lg btn-reset">
+              <i class="fa fa-times"></i>
               <span class="sr-only" data-translate="">ClearTitle</span>
             </button>
             <button type="button"
-                    class="btn btn-default btn-lg dropdown-toggle"
-                    data-ng-if="::searchOptions"
-                    data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-              <span class="caret"></span>
+                    data-ng-click="triggerSearch()"
+                    title="{{'search' | translate}}"
+                    class="btn btn-default btn-lg btn-search">
+              <i class="fa fa-search"></i>
+              <span class="sr-only" data-translate="">search</span>
             </button>
-            <ul class="dropdown-menu dropdown-auto"
-                data-ng-if="::searchOptions">
-              <li>
-                <gn-search-options></gn-search-options>
-              </li>
-            </ul>
             <button type="button"
-                    class="btn btn-default btn-lg"
-                    title="{{'advanced' | translate}}"
+                    class="btn btn-default btn-lg btn-advanced"
+                    title="{{'searchOptions' | translate}}"
                     data-ng-model="searchObj.advancedMode"
                     btn-checkbox=""
                     btn-checkbox-true="1"
                     btn-checkbox-false="0">
-              <i class="fa fa-ellipsis-v"></i>
-              <span class="sr-only" data-translate="">advanced</span>
+              <i class="fa fa-fw fa-sliders"></i>
+              <span class="sr-only" data-translate="">searchOptions</span>
             </button>
           </div>
         </div>
+        <div data-ng-show="searchObj.advancedMode">
+          <!--Advanced search form-->
+          <div data-ng-include="advancedSearchTemplate"></div>
+        </div>
       </div>
-      <div data-ng-show="searchObj.advancedMode">
-        <!--Advanced search form-->
-        <div data-ng-include="advancedSearchTemplate"></div>
-      </div>
+
     </div>
   </div>
   <!-- /.gn-top-search -->
