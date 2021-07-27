@@ -23,27 +23,33 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:dc="http://purl.org/dc/elements/1.1/"
-                xmlns:dct="http://purl.org/dc/terms/" version="1.0">
-
-  <!-- ================================================================= -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
+                xmlns:dct="http://purl.org/dc/terms/"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                version="2.0"
+                exclude-result-prefixes="java">
 
   <xsl:template match="/root">
     <xsl:apply-templates select="simpledc"/>
   </xsl:template>
 
-  <!-- ================================================================= -->
-
   <xsl:template match="@*|node()">
-    <xsl:copy>
+    <xsl:copy copy-namespaces="no">
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
 
-  <!-- ================================================================= -->
+  <xsl:template match="@xsi:schemaLocation">
+    <xsl:if test="java:getSettingValue('system/metadata/validation/removeSchemaLocation') = 'false'">
+      <xsl:copy-of select="."/>
+    </xsl:if>
+  </xsl:template>
 
   <xsl:template match="simpledc">
     <simpledc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/">
+      <xsl:apply-templates select="@*"/>
       <xsl:apply-templates select="dc:*[name(.)!='dc:identifier']"/>
       <xsl:apply-templates select="dct:*[name(.)!='dct:modified']"/>
       <xsl:choose>

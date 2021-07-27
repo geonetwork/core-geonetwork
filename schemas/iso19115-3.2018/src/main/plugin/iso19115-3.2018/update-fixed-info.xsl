@@ -68,6 +68,12 @@
     <xsl:apply-templates select="mdb:MD_Metadata"/>
   </xsl:template>
 
+  <xsl:template match="@xsi:schemaLocation">
+    <xsl:if test="java:getSettingValue('system/metadata/validation/removeSchemaLocation') = 'false'">
+      <xsl:copy-of select="."/>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="mdb:MD_Metadata">
     <xsl:copy copy-namespaces="no">
       <xsl:apply-templates select="@*"/>
