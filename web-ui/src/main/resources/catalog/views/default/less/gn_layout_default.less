@@ -76,6 +76,17 @@ html, body {
         border-color: darken(@gn-search-button-background-color, 15%);
       }
     }
+    .dropdown-menu {
+      margin: 0;
+      border-radius: 0;
+    }
+    .dropdown-menu > li > a {
+      padding: 6px 16px;
+    }
+    .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+      color: @dropdown-link-hover-color;
+      background-color: @dropdown-link-hover-bg;
+    }
   }
 }
 

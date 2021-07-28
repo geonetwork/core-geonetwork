@@ -10,11 +10,10 @@
       </div>
       <div class="col-md-6">
         <div class="input-group gn-form-any">
-          <div class="input-group-btn">
-          <button data-gn-user-searches-list=""
-                  data-ng-cloak=""
-                  data-mode="button"
-                  class="btn-favorites"/>
+          <div data-gn-user-searches-list=""
+               data-ng-cloak=""
+               data-mode="button"
+               class="input-group-btn btn-favorites">
           </div>
               <input type="text"
                     class="form-control input-lg"
@@ -36,7 +35,6 @@
             <button type="button"
                     data-ng-click="resetSearch(searchObj.defaultParams);"
                     title="{{'ClearTitle' | translate}}"
-                    data-ng-if="::!isFilterTagsDisplayedInSearch"
                     class="btn btn-default btn-lg btn-reset">
               <i class="fa fa-times"></i>
               <span class="sr-only" data-translate="">ClearTitle</span>
