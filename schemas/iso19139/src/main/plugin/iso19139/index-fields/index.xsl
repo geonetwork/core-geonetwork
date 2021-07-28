@@ -904,6 +904,10 @@
       <xsl:for-each select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem">
         <xsl:for-each select="gmd:referenceSystemIdentifier/gmd:RS_Identifier">
           <xsl:variable name="crs" select="gmd:code/*/text()"/>
+          <xsl:variable name="crsLabel"
+                        select="if (gmd:code/*/@xlink:title)
+                                then gmd:code/*/@xlink:title
+                                else $crs"/>
 
           <xsl:if test="$crs != ''">
             <coordinateSystem>
@@ -914,7 +918,7 @@
           <crsDetails type="object">{
             "code": "<xsl:value-of select="gn-fn-index:json-escape((gmd:code/*/text())[1])"/>",
             "codeSpace": "<xsl:value-of select="gn-fn-index:json-escape(gmd:codeSpace/*/text())"/>",
-            "name": "<xsl:value-of select="gn-fn-index:json-escape(gmd:code/*/@xlink:title)"/>",
+            "name": "<xsl:value-of select="gn-fn-index:json-escape($crsLabel)"/>",
             "url": "<xsl:value-of select="gn-fn-index:json-escape(gmd:code/*/@xlink:href)"/>"
             }</crsDetails>
         </xsl:for-each>

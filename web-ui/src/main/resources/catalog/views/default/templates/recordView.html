@@ -443,12 +443,13 @@
                 </ul>
               </td>
             </tr>
-            <tr data-ng-if="mdView.current.record.coordinateSystem">
+            <tr data-ng-if="mdView.current.record.crsDetails">
               <th data-translate="">crs</th>
               <td>
                 <ul>
-                  <li data-ng-repeat="r in mdView.current.record.coordinateSystem">
-                    {{r}}
+                  <li data-ng-repeat="r in mdView.current.record.crsDetails">
+                    <a ng-show="r.url" href="{{r.url}}">{{r.name || r.code}}</a>
+                    <span ng-hide="r.url">{{r.name || r.code}}</span>
                   </li>
                 </ul>
               </td>
