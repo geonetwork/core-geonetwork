@@ -109,7 +109,7 @@
 
              var init = function() {
               // Load topic category code list, then init widget
-               gnTopicCategoryService.getTopicCategories()
+               gnTopicCategoryService.getTopicCategories(gnCurrentEdit.schema)
                .then(function(listOfTopicCategories) {
 
                  angular.forEach(scope.initialTopicCategories, function(topicCategory) {
@@ -117,6 +117,7 @@
                    for (var i = 0; i < listOfTopicCategories.length; i++) {
                      if (listOfTopicCategories[i].getId() == topicCategory) {
                        existingTopicCategory = listOfTopicCategories[i];
+                       break;
                      }
                    }
 
