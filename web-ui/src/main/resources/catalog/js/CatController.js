@@ -672,15 +672,15 @@ goog.require('gn_alert');
                 'size': 15
               }
             },
-            'isValid': {
+            'valid': {
               'terms': {
-                'field': 'isValid',
+                'field': 'valid',
                 'size': 10
               }
             },
-            'isValidInspire': {
+            'valid_inspire': {
               'terms': {
-                'field': 'isValidInspire',
+                'field': 'valid_inspire',
                 'size': 10
               }
             },
