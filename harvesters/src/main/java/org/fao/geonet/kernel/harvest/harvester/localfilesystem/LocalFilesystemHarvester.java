@@ -31,6 +31,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
@@ -260,7 +261,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
         }
 	}
 
-    private boolean isScriptAllowed(List<String> args) {
+    public boolean isScriptAllowed(List<String> args) {
         String scriptFile = args.get(0);
         if(scriptFile == null) {
             log.warning("The beforeScript can't be null.");
@@ -282,10 +283,14 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
 
         List<String> argsWithSemiColon = args
             .stream()
-            .filter(a -> a.contains(";"))
+            .filter(a -> a.contains(";")
+                || a.contains("|")
+                || a.contains("&")
+                || a.contains("`")
+                || a.contains("$"))
             .collect(Collectors.toList());
         if (argsWithSemiColon.size() > 0) {
-            log.warning("The beforeScript can't contains ';'. Only one script can be triggered.");
+            log.warning("The beforeScript can't contains ';|&`$'. Only one script can be triggered with simple arguments.");
             return false;
         }
         return true;
