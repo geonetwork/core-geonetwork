@@ -295,7 +295,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
     public LinkedHashMap<String, String> extractTitles(@Nonnull String id) throws Exception {
         AbstractMetadata metadata = findOne(id);
 
-        if (metadata == null)
+        // If metadata not found or it is not a type metadata then return null
+        if (metadata == null || metadata.getDataInfo().getType() != MetadataType.METADATA)
             return null;
 
         Element md = Xml.loadString(metadata.getData(), false);
