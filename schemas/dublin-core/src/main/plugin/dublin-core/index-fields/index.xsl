@@ -29,6 +29,7 @@
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:daobs="http://daobs.org"
                 xmlns:saxon="http://saxon.sf.net/"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
@@ -75,7 +76,10 @@
                   select="dc:title[1]"/>
 
     <xsl:variable name="resourceTitleObject" as="xs:string"
-                  select="concat('{',$doubleQuote,'default',$doubleQuote,':',$doubleQuote, $mainTitle ,$doubleQuote,'}')"/>
+                  select="concat('{',
+                          $doubleQuote, 'default', $doubleQuote, ':',
+                          $doubleQuote, gn-fn-index:json-escape($mainTitle) ,$doubleQuote,
+                        '}')"/>
 
     <xsl:variable name="identifier" as="xs:string?"
                   select="dc:identifier[1]"/>
@@ -153,30 +157,30 @@
       </xsl:for-each>
 
       <xsl:for-each select="dc:format">
-        <format><xsl:value-of select="string(.)"/></format>
+        <format><xsl:value-of select="gn-fn-index:json-escape(.)"/></format>
       </xsl:for-each>
 
       <xsl:for-each select="dc:type[. != '']">
-        <resourceType><xsl:value-of select="string(.)"/></resourceType>
+        <resourceType><xsl:value-of select="gn-fn-index:json-escape(.)"/></resourceType>
       </xsl:for-each>
 
       <xsl:for-each select="dc:source">
-        <lineage><xsl:value-of select="string(.)"/></lineage>
+        <lineage><xsl:value-of select="gn-fn-index:json-escape(.)"/></lineage>
       </xsl:for-each>
 
       <!-- TODO Change mapping of dc:relation -->
       <xsl:for-each select="dc:relation">
-        <related><xsl:value-of select="string(.)"/></related>
+        <related><xsl:value-of select="gn-fn-index:json-escape(.)"/></related>
       </xsl:for-each>
 
       <!-- TODO Change mapping of dct:accessRights -->
       <xsl:for-each select="dct:accessRights">
-        <useLimitation><xsl:value-of select="string(.)"/></useLimitation>
+        <useLimitation><xsl:value-of select="gn-fn-index:json-escape(.)"/></useLimitation>
       </xsl:for-each>
 
       <!-- TODO Change mapping of dct:rights -->
       <xsl:for-each select="dct:rights">
-        <useLimitation><xsl:value-of select="string(.)"/></useLimitation>
+        <useLimitation><xsl:value-of select="gn-fn-index:json-escape(.)"/></useLimitation>
       </xsl:for-each>
 
       <xsl:variable name="geoTags"
@@ -218,10 +222,24 @@
           "description":""
           }</link>
       </xsl:for-each>
-      <xsl:for-each select="(dct:references|dc:relation)[normalize-space(.) != ''
-                              and matches(., '.*(.gif|.png|.jpeg|.jpg)$', 'i')]">
+
+      <xsl:variable name="overviews"
+                    select="(dct:references|dc:relation)[normalize-space(.) != ''
+                              and matches(., '.*(.gif|.png|.jpeg|.jpg)$', 'i')]"/>
+
+      <xsl:copy-of select="gn-fn-index:add-field('hasOverview',
+                            if (count($overviews) > 0) then 'true' else 'false')"/>
+
+      <xsl:for-each select="$overviews">
         <overview type="object">{
           "url":"<xsl:value-of select="current()"/>"
+          <xsl:if test="$isStoringOverviewInIndex">
+            <xsl:variable name="data"
+                          select="util:buildDataUrl(., 140)"/>
+            <xsl:if test="$data != ''">,
+              "data": "<xsl:value-of select="$data"/>"
+            </xsl:if>
+          </xsl:if>
           }</overview>
       </xsl:for-each>
 
@@ -262,7 +280,7 @@
                     <location><xsl:value-of select="concat($s, ',', $w)"/></location>
                   </xsl:when>
                   <xsl:otherwise>
-                    <geom>
+                    <geom type="object">
                       <xsl:text>{"type": "Polygon",</xsl:text>
                       <xsl:text>"coordinates": [[</xsl:text>
                       <xsl:value-of select="concat('[', $w, ',', $s, ']')"/>
