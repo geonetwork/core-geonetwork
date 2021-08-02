@@ -307,7 +307,14 @@ public class SettingManager {
             return null;
         return Integer.valueOf(value);
     }
-
+    
+    public Integer getValueAsInt(String key, Integer defaultValue) {
+        String value = getValue(key);
+        if (value == null || value.trim().length() == 0)
+            return defaultValue;
+        return Integer.valueOf(value);
+    }
+    
     /**
      * Set the value of a Setting entity
      *

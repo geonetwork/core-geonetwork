@@ -25,6 +25,7 @@ package org.fao.geonet.repository;
 
 import java.util.List;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -33,6 +34,7 @@ import org.fao.geonet.domain.OperationAllowedId;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -119,5 +121,18 @@ public interface OperationAllowedRepository extends GeonetRepository<OperationAl
     @Modifying(clearAutomatically=true)
     @Query("DELETE FROM OperationAllowed where id.groupId = ?1")
     public int deleteAllByGroupId(int id);
+
+    /**
+     * Delete all OperationsAllowed entities with the give metadata and not group ids.
+     *
+     * @param metadataId the metadata id
+     * @param groupIds    the group id
+     */
+    @Nonnegative
+    @Transactional
+    @Modifying(clearAutomatically=true)
+    @Query("DELETE FROM OperationAllowed where metadataId = :metadataId and groupId not in :groupIds")
+    public int deleteAllByMetadataIdExceptGroupId(@Param("metadataId") int metadataId, @Param("groupIds") List<Integer> groupIds);
+
 
 }

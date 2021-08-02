@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet 
+<xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:gmd="http://www.isotc211.org/2005/gmd"
@@ -104,26 +104,27 @@
              select="''"/>
 
   <xsl:variable name="defaultLanguage"
-                select="//gmd:MD_Metadata/gmd:language/*/@codeListValue"/>
+                select="//(gmd:MD_Metadata|*[@gco:isoType = 'gmd:MD_Metadata'])/gmd:language/*/@codeListValue"/>
 
   <!-- TODO: Convert language code eng > en_US ? -->
- 
+
   <xsl:variable name="requestedLanguageExist"
                 select="$lang != ''
-                        and count(//gmd:MD_Metadata/gmd:locale/*[gmd:languageCode/*/@codeListValue = $lang]/@id) > 0"/>
+                        and count(//(gmd:MD_Metadata|*[@gco:isoType = 'gmd:MD_Metadata'])/gmd:locale/*[gmd:languageCode/*/@codeListValue = $lang]/@id) > 0"/>
 
   <xsl:variable name="requestedLanguage"
                 select="if ($requestedLanguageExist)
                         then $lang
-                        else //gmd:MD_Metadata/gmd:language/*/@codeListValue"/>
+                        else //(gmd:MD_Metadata|*[@gco:isoType = 'gmd:MD_Metadata'])/gmd:language/*/@codeListValue"/>
 
   <xsl:variable name="requestedLanguageId"
-                select="concat('#', //gmd:MD_Metadata/gmd:locale/*[gmd:languageCode/*/@codeListValue = $requestedLanguage]/@id)"/>
+                select="concat('#', //(gmd:MD_Metadata|*[@gco:isoType = 'gmd:MD_Metadata'])/gmd:locale/*[gmd:languageCode/*/@codeListValue = $requestedLanguage]/@id)"/>
 
 
 
   <xsl:template name="getJsonLD"
-                mode="getJsonLD" match="gmd:MD_Metadata">
+                mode="getJsonLD"
+                match="gmd:MD_Metadata|*[@gco:isoType = 'gmd:MD_Metadata']">
 	{
 		"@context": "http://schema.org/",
     <xsl:variable name="hierarchyLevels"
@@ -155,7 +156,7 @@
     <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:dateType/*/@codeListValue='revision']/*/gmd:date/*/text()">
 		"dateModified": "<xsl:value-of select="."/>",
     </xsl:for-each>
-    
+
 		"thumbnailUrl": [
     <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*/gmd:fileName/*[. != '']">
     "<xsl:value-of select="."/>"<xsl:if test="position() != last()">,</xsl:if>
@@ -294,8 +295,8 @@
 
 
     <xsl:if test="count(gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent[normalize-space(.) != '']) > 0">
-      ,"temporalCoverage": [<xsl:for-each 
-        select="gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent">"<xsl:value-of 
+      ,"temporalCoverage": [<xsl:for-each
+        select="gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent">"<xsl:value-of
           select="concat(gml:TimePeriod/gml:beginPosition|gml320:TimePeriod/gml320:beginPosition,'/',
             gml:TimePeriod/gml:endPosition|gml320:TimePeriod/gml320:endPosition
       )"/>"<xsl:if test="position() != last()">,</xsl:if></xsl:for-each> ]
@@ -305,10 +306,10 @@
       "temporalCoverage" : "2013-12-19/.."
       "temporalCoverage" : "2008"
       -->
-    
+
     <!-- array of licenses is allowed, not multiple licenses-->
-    <xsl:if test="count(gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints[normalize-space(.) != '']) > 0"> 
-      ,"license":  [<xsl:for-each 
+    <xsl:if test="count(gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints[normalize-space(.) != '']) > 0">
+      ,"license":  [<xsl:for-each
         select="gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints">
         <xsl:choose>
           <xsl:when test="starts-with(normalize-space(string-join(gco:CharacterString/text(),'')),'http') or starts-with(normalize-space(string-join(gco:CharacterString/text(),'')),'//')">

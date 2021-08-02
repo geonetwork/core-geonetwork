@@ -59,6 +59,7 @@
       'isHarvested',
       'dateStamp',
       'documentStandard',
+      'standardNameObject.default',
       'cl_status*',
       'mdStatus*',
       'recordLink',

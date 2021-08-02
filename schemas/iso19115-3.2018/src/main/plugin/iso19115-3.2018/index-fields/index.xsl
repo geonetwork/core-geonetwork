@@ -934,8 +934,13 @@
 
       <xsl:for-each select="mdb:referenceSystemInfo/*">
         <xsl:for-each select="mrs:referenceSystemIdentifier/*">
-          <xsl:variable name="crs" select="(mcc:description/*/text()|mcc:code/*/text())[1]"/>
-
+          <xsl:variable name="crs" select="mcc:code/*/text()"/>
+          <xsl:variable name="crsLabel"
+                        select="if (mcc:description/*[1])
+                                then mcc:description/*[1]/text()
+                                else if (mcc:code/*/@xlink:title)
+                                then mcc:code/*/@xlink:title
+                                else $crs"/>
           <xsl:if test="$crs != ''">
             <coordinateSystem>
               <xsl:value-of select="$crs"/>
@@ -945,7 +950,7 @@
           <crsDetails type="object">{
             "code": "<xsl:value-of select="gn-fn-index:json-escape(mcc:code/*/text())"/>",
             "codeSpace": "<xsl:value-of select="gn-fn-index:json-escape(mcc:codeSpace/*/text())"/>",
-            "name": "<xsl:value-of select="gn-fn-index:json-escape(mcc:description/*/text())"/>",
+            "name": "<xsl:value-of select="gn-fn-index:json-escape($crsLabel)"/>",
             "url": "<xsl:value-of select="gn-fn-index:json-escape(mcc:code/*/@xlink:href)"/>"
             }</crsDetails>
         </xsl:for-each>

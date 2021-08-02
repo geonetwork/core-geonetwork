@@ -19,20 +19,55 @@
   white-space: normal;
 }
 
-.gn-logo-list {
-  .panel {
-    height: 220px;
-
+[data-ng-controller="GnLogoSettingsController"] {
+  .progress {
+    height: 10px;
+    margin-bottom: 0;
+  }
+  .gn-logo-list {
     .panel-body {
-      padding: 2px 5px 5px 5px;
-      img{
-        max-height: 125px;
-        max-width: 100%;
+      .list-group {
+        @media (min-width: @screen-lg-min) {
+          column-count: 2;
+          column-fill: balance;
+        }
+        .list-group-item {
+          break-inside: avoid;
+          img {
+            margin-right: 10px;
+          }
+          label {
+            margin: 0;
+          }
+          &:hover {
+            background-color: @list-group-hover-bg;
+          }
+        }
+        &.gn-logo-height-small {
+          .list-group-item {
+            img {
+              max-height: 40px;
+            }
+          }
+        }
+        &.gn-logo-height-medium {
+          .list-group-item {
+            img {
+              max-height: 100px;
+            }
+          }
+        }
+        &.gn-logo-height-large {
+          .list-group-item {
+            img {
+              max-height: 150px;
+            }
+          }
+        }
       }
     }
   }
 }
-
 .bootstrap-table {
   a {
     word-break: break-all;

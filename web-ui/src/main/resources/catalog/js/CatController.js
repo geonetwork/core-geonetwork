@@ -554,12 +554,27 @@ goog.require('gn_alert');
           'formatter': {
             'list': [{
               'label': 'defaultView',
+              // Conditional views can be used to configure custom
+              // formatter to use depending on metadata properties.
+              // 'views': [ {
+              //   'if': {'standardName': 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product'},
+              //   'url' : '/formatters/xsl-view?root=div&view=advanced'
+              // }, {
+              //   'if': {
+              //     'standardName': [
+              //       'ISO 19115:2003/19139 - EMODNET - BATHYMETRY',
+              //       'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY']
+              //   },
+              //   'url' : '/formatters/xsl-view?root=div&view=emodnetHydrography'
+              // }, {
+              //   'if': {'documentStandard': 'iso19115-3.2018'},
+              //   'url' : '/dada'
+              // }],
               'url' : ''
             }, {
               'label': 'full',
-              'url' : '/formatters/xsl-view?root=div&view=advanced'
-            }],
-            defaultUrl: ''
+              'url' : '/formatters/xsl-view?root=div&view=xml'
+            }]
           },
           'downloadFormatter': [{
             'label': 'exportMEF',
@@ -665,7 +680,6 @@ goog.require('gn_alert');
           'appUrl': 'https://secure.geonames.org/searchJSON'
         },
         'recordview': {
-          'enabled': true,
           'isSocialbarEnabled': true,
           'showStatusWatermarkFor': 'historicalArchive,obsolete,superseded',
           'showStatusTopBarFor': ''
@@ -700,15 +714,15 @@ goog.require('gn_alert');
                 'size': 15
               }
             },
-            'isValid': {
+            'valid': {
               'terms': {
-                'field': 'isValid',
+                'field': 'valid',
                 'size': 10
               }
             },
-            'isValidInspire': {
+            'valid_inspire': {
               'terms': {
-                'field': 'isValidInspire',
+                'field': 'valid_inspire',
                 'size': 10
               }
             },
@@ -797,12 +811,10 @@ goog.require('gn_alert');
             }
           }
         },
-        'signin': {
+        'authentication': {
           'enabled': true,
-          'appUrl': '../../{{node}}/{{lang}}/catalog.signin'
-        },
-        'signout': {
-          'appUrl': '../../signout'
+          'signinUrl': '../../{{node}}/{{lang}}/catalog.signin',
+          'signoutUrl': '../../signout'
         },
         'page': {
           'enabled': true,
@@ -1087,7 +1099,7 @@ goog.require('gn_alert');
       gnConfig.env.defaultNode = defaultNode;
       gnConfig.env.baseURL = detectBaseURL(gnGlobalSettings.gnCfg.baseURLDetector);
 
-      $scope.signoutUrl = gnGlobalSettings.gnCfg.mods.signout.appUrl
+      $scope.signoutUrl = gnGlobalSettings.gnCfg.mods.authentication.signoutUrl
         + '?redirectUrl='
         + window.location.href.slice(
             0,

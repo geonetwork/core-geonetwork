@@ -622,13 +622,12 @@
     <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
 
 
-    <xsl:variable name="elementName" select="name()" />
+    <xsl:variable name="elementName" select="name()"/>
 
     <xsl:variable name="topicCategories">
-      <xsl:for-each select="../*[name() = $elementName]">
-        <xsl:value-of select="gmd:MD_TopicCategoryCode/text()" />
-        <xsl:if test="position() != last()">,</xsl:if>
-      </xsl:for-each>
+      <xsl:value-of select="string-join(
+                            ../*[name() = $elementName]/gmd:MD_TopicCategoryCode/text(),
+                            ',')"/>
     </xsl:variable>
 
     <xsl:call-template name="render-element">

@@ -39,6 +39,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -192,11 +193,11 @@ public class EncryptorInitializer {
              Statement statement = connection.createStatement()) {
             final String encryptedSettings = "SELECT name, value FROM Settings WHERE encrypted = 'y'";
 
-
             Map<String, String> updates = new HashMap<>();
 
             try (ResultSet settingsResultSet = statement.executeQuery(encryptedSettings)) {
                 int numberOfSettings = encryptDatabaseValuesStringId(previousEncryptor, updates, settingsResultSet);
+
                 Log.debug(LOG_MODULE, "  Number of settings of type password to update: " + numberOfSettings);
             } catch (Exception ex) {
                 Log.error(LOG_MODULE, "Error getting the settings' passwords for encrypting them");
@@ -205,12 +206,15 @@ public class EncryptorInitializer {
             }
 
             for (String key : updates.keySet()) {
-                statement.execute("UPDATE Settings SET value='" + updates.get(key) + "' WHERE name='" + key + "'");
+                PreparedStatement pstmt = connection.prepareStatement("UPDATE Settings SET value=? WHERE name=?");
+                pstmt.setString(1, updates.get(key));
+                pstmt.setString(2, key);
+                pstmt.executeUpdate();
             }
 
             final String encryptedHarvesterSettings = "SELECT name, value FROM HarvesterSettings WHERE name = 'password'";
+            updates = new HashMap<>();
             try (ResultSet harvesterSettingsResultSet = statement.executeQuery(encryptedHarvesterSettings)) {
-                updates = new HashMap<>();
                 int numberOfHarvesterSettings = encryptDatabaseValuesStringId(previousEncryptor, updates, harvesterSettingsResultSet);
 
                 Log.debug(LOG_MODULE, "  Number of harvester settings of type password to update: " + numberOfHarvesterSettings);
@@ -221,7 +225,10 @@ public class EncryptorInitializer {
             }
 
             for (String key : updates.keySet()) {
-                statement.execute("UPDATE HarvesterSettings SET value='" + updates.get(key) + "' WHERE name='" + key + "'");
+                PreparedStatement pstmt = connection.prepareStatement("UPDATE HarvesterSettings SET value=? WHERE name=?");
+                pstmt.setString(1, updates.get(key));
+                pstmt.setString(2, key);
+                pstmt.executeUpdate();
             }
 
 
@@ -239,7 +246,10 @@ public class EncryptorInitializer {
             }
 
             for (Integer key : updatesMapServers.keySet()) {
-                statement.execute("UPDATE Mapservers SET password='" + updatesMapServers.get(key) + "' WHERE id='" + key + "'");
+                PreparedStatement pstmt = connection.prepareStatement("UPDATE Mapservers SET password=? WHERE id=?");
+                pstmt.setString(1, updatesMapServers.get(key));
+                pstmt.setInt(2, key);
+                pstmt.executeUpdate();
             }
 
             connection.commit();

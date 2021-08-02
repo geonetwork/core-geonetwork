@@ -81,6 +81,58 @@
         }
       });
 
+      /**
+       * First matching view for each formatter is returned.
+       *
+       * @param record
+       * @returns {*[]}
+       */
+      function getFormatterForRecord(record) {
+        var list = [];
+        if (record == null) {
+          return list;
+        }
+        for (var i = 0; i < gnSearchSettings.formatter.list.length; i ++) {
+          var f = gnSearchSettings.formatter.list[i];
+          if (f.views === undefined) {
+            list.push(f);
+          } else {
+            // Check conditional views
+            var isViewSet = false;
+
+            viewLoop:
+            for (var j = 0; j < f.views.length; j ++) {
+              var v = f.views[j];
+
+              if (v.if) {
+                for (var key in v.if) {
+                  if (v.if.hasOwnProperty(key)) {
+                    var values = angular.isArray(v.if[key])
+                      ? v.if[key]
+                      : [v.if[key]]
+
+                    if (values.includes(record[key])) {
+                      list.push({label: f.label, url: v.url});
+                      isViewSet = true;
+                      break viewLoop;
+                    }
+                  }
+                }
+              } else {
+                console.warn('A conditional view MUST have a if property. ' +
+                  'eg. {"if": {"documentStandard": "iso19115-3.2018"}, "url": "..."}')
+              }
+            }
+            if (f.url !== undefined && !isViewSet) {
+              list.push(f);
+            }
+          }
+        }
+        return list;
+      }
+
+      $scope.recordFormatterList = getFormatterForRecord($scope.mdView.current.record);
+
       $scope.search = function(params) {
         $location.path('/search');
         $location.search(params);
@@ -185,8 +237,13 @@
       // in default mode.
       function loadFormatter(n, o) {
         if (n === true) {
-          var f = gnSearchLocation.getFormatterPath();
+          $scope.recordFormatterList = getFormatterForRecord($scope.mdView.current.record);
+
+          var f = gnSearchLocation.getFormatterPath($scope.recordFormatterList[0].url);
           $scope.currentFormatter = '';
+
+          gnMdViewObj.usingFormatter = f !== undefined;
+
           if (f != undefined) {
             $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, '$1');
             $scope.loadFormatter(f);
@@ -200,13 +257,5 @@
       $scope.$watch('gnMdViewObj.from', function(v) {
         $scope.fromView = v ? v.substring(1) : v;
       });
-
-      if ($scope.gnMdViewObj.current.record
-        && $scope.gnMdViewObj.current.record.groupOwner) {
-        $http.get('../api/groups/' + $scope.gnMdViewObj.current.record.groupOwner,
-          {cache: true}).success(function(data) {
-          $scope.recordGroup = data;
-        });
-      }
     }]);
 })();

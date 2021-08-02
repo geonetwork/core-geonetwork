@@ -41,6 +41,7 @@
    */
   module.directive('gnWmsImport', [
     'gnOwsCapabilities',
+    'gnAlertService',
     'gnMap',
     '$translate',
     '$timeout',
@@ -48,9 +49,10 @@
     'Metadata',
     'gnViewerSettings',
     'gnGlobalSettings',
-    function(gnOwsCapabilities, gnMap, $translate, $timeout,
-             gnSearchManagerService, Metadata, gnViewerSettings,
-             gnGlobalSettings) {
+    'gnSearchSettings',
+    function(gnOwsCapabilities, gnAlertService, gnMap, $translate, $timeout,
+             gnESClient, Metadata, gnViewerSettings,
+             gnGlobalSettings, gnSearchSettings) {
       return {
         restrict: 'A',
         replace: true,
@@ -139,17 +141,24 @@
           // Get the list of services registered in the catalog
           if (attrs.servicesListFromCatalog) {
             // FIXME: Only load the first 100 services
-            gnESClient.search(
-              {
-                'from': 0,
-                'size':100,
-                'sort': [{'resourceTitleObject.default.keyword': 'asc'}],
-                'query':{
-                  'query_string': {
-                    'query': '+isTemplate:n +serviceType:("OGC:WMS" OR "OGC:WFS" OR "OGC:WMTS")'
-                  }
+            var query = {
+              'from': 0,
+              'size':100,
+              'sort': [{'resourceTitleObject.default.keyword': 'asc'}],
+              'query':{
+                'bool': {
+                  'must': [{'query_string': {
+                    'query': '+isTemplate:n ' +
+                             '+serviceType:("OGC:WMS" OR "OGC:WFS" OR "OGC:WMTS")'
+                    }
+                  }]
                 }
-            }).then(function(data) {
+              }
+            };
+            if (gnSearchSettings.filters) {
+              query.query.bool.filter = gnSearchSettings.filters;
+            }
+            gnESClient.search(query).then(function(data) {
               angular.forEach(data.hits.hits, function(record) {
                 var md = new Metadata(record);
                 if (scope.format === 'all') {

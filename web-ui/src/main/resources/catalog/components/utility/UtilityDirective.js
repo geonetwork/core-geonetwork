@@ -24,7 +24,41 @@
 (function() {
   goog.provide('gn_utility_directive');
 
-  var module = angular.module('gn_utility_directive', [
+
+  var module = angular.module('gn_utility_directive', []);
+
+  module.directive('gnRecordOriginLogo', [
+    'gnConfig', 'gnConfigService', 'gnGlobalSettings', '$http',
+    function(gnConfig, gnConfigService, gnGlobalSettings, $http) {
+      return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          md: '=gnRecordOriginLogo'
+        },
+        templateUrl: '../../catalog/components/utility/' +
+          'partials/recordOriginLogo.html',
+        link: function(scope, element, attrs) {
+          gnConfigService.load().then(function(c) {
+            scope.recordGroup = null;
+            scope.gnUrl = gnGlobalSettings.gnUrl;
+            scope.isPreferGroupLogo = gnConfig['system.metadata.prefergrouplogo'];
+
+            function getRecordGroup() {
+              if (scope.md
+                && scope.md.groupOwner) {
+                $http.get('../api/groups/' + scope.md.groupOwner,
+                  {cache: true}).success(function (data) {
+                  scope.recordGroup = data;
+                });
+              }
+            }
+
+            scope.$watch('md', getRecordGroup);
+          });
+        }
+      };
+    }
   ]);
 
   module.directive('gnConfirmClick', [

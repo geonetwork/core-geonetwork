@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet 
+<xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:gmd="http://www.isotc211.org/2005/gmd"
+	xmlns:gco="http://www.isotc211.org/2005/gco"
 	exclude-result-prefixes="#all"
 	version="2.0">
 
@@ -12,7 +13,7 @@
   <xsl:template match="/">
     <textResponse>
       <xsl:apply-templates mode="getJsonLD"
-                           select="*/gmd:MD_Metadata"/>
+                           select="*/(gmd:MD_Metadata|*[@gco:isoType = 'gmd:MD_Metadata'])"/>
     </textResponse>
   </xsl:template>
 </xsl:stylesheet>

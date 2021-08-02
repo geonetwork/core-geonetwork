@@ -90,3 +90,11 @@ html, body {
   position: absolute;
   z-index: 100;
 }
+
+// no padding for containers on small screens
+@media (max-width: @screen-xs-max) {
+  .container-fluid {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}

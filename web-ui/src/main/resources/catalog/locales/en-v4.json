@@ -74,7 +74,14 @@
   "facet-resourceTemporalDateRange": "Temporal extent",
   "facet-serviceType": "Service type",
   "facet-cl_topic": "Topic",
-  "facet-valid": "Valid",
+  "facet-valid": "Validation status",
+  "valid-1": "Valid",
+  "valid-0": "Invalid",
+  "valid--1": "Unknown",
+  "facet-valid_inspire": "INSPIRE validation status",
+  "valid_inspire-1": "Valid",
+  "valid_inspire-0": "Invalid",
+  "valid_inspire--1": "Unknown",
   "facet-OrgForResource": "Organizations",
   "facet-sourceCatalogue": "Catalogues",
   "facet-groupOwner": "Record groups",
@@ -164,5 +171,6 @@
   "IndexReadOnlyHealthCheck": "Index is in readonly mode",
   "summary": "Summary",
   "metadataRecords": "Metadata records",
-  "results": "Results"
+  "results": "Results",
+  "format-zip": "ZIP"
 }

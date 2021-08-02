@@ -72,7 +72,6 @@
     <!-- Create a first document representing the main record. -->
     <doc>
       <docType>metadata</docType>
-      <documentStandard>dublin-core</documentStandard>
 
       <!-- Index the metadata document as XML -->
       <document>
