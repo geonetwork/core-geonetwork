@@ -106,6 +106,7 @@
   <eo-start>Start</eo-start>
   <eo-domain>Domain</eo-domain>
   <eo-end>End</eo-end>
+  <eo-bbox>Bounding box</eo-bbox>
   <eo-latency>Latency</eo-latency>
   <eo-ip-code>Instrument and platform code</eo-ip-code>
   <eo-project>Project</eo-project>

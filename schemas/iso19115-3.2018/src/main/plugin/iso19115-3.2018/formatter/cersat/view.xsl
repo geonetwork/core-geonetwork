@@ -204,35 +204,22 @@
                 </xsl:for-each>
               </div>
             </xsl:if>
-
-
-            <xsl:variable name="citation"
-                          select="$metadata/mdb:identificationInfo/*/mri:resourceConstraints/
-                                mco:MD_LegalConstraints/mco:otherConstraints[2]"/>
-            <xsl:for-each select="$citation">
-              <div class="cersat-bg cersat-bg-green">
-                <div>
-                  <xsl:value-of select="$schemaStrings/cersat-citation"/>
-                </div>
-                <div class="cersat-bg-white">
-                  <xsl:call-template name="get-iso19115-3.2018-localised">
-                    <xsl:with-param name="langId" select="$langId"/>
-                  </xsl:call-template>
-                </div>
-              </div>
-            </xsl:for-each>
           </div>
         </div>
 
 
         <div class="row">
           <div class="col-md-12">
-            <div class="panel panel-default">
+            <h2>
+              <xsl:value-of select="$schemaStrings/cersat-dataaccess"/>
+            </h2>
+
+            <!--<div class="panel panel-default">
               <div class="panel-heading">
                 <xsl:value-of select="$schemaStrings/cersat-dataaccess"/>
               </div>
-              <div class="panel-body">
-                <div class="row">
+              <div class="panel-body">-->
+                <div class="">
 
                   <xsl:variable name="accessPolicy"
                                 select="$metadata/mdb:identificationInfo/*
@@ -256,7 +243,7 @@
                 <xsl:variable name="formats"
                               select="$metadata//mrd:distributionFormat/*/mrd:formatSpecificationCitation/*[cit:title/*/text() != '']"/>
                 <xsl:if test="count($formats) > 0">
-                  <div class="row">
+                  <div class="">
                     <strong>
                       <xsl:value-of select="$schemaStrings/cersat-formats"/>
                     </strong>
@@ -270,24 +257,45 @@
                 <xsl:variable name="online"
                               select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue != 'information']"/>
                 <xsl:for-each select="$online">
-                  <div class="cersat-bg cersat-bg-blue">
-                    <div>
+                  <div>
+                    <strong>
                       <xsl:value-of select="if (cit:description/*/text() != '')
                                             then cit:description/*/text()
                                             else cit:protocol/*/text()"/>
-                    </div>
-                    <div class="cersat-bg-white">
-                      <a title="{cit:protocol/*/text()}"
-                         href="{cit:linkage/*/text()}">
-                        <xsl:value-of select="if (cit:name/*/text() != '')
+                    </strong>
+                    <xsl:choose>
+                      <xsl:when test="cit:protocol/*/text() = 'Local'">
+                        <xsl:value-of select="cit:linkage/*/text()"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <a title="{cit:protocol/*/text()}"
+                           href="{cit:linkage/*/text()}">
+                          <xsl:value-of select="if (cit:name/*/text() != '')
                                               then cit:name/*/text()
                                               else cit:linkage/*/text()"/>
-                      </a>
-                    </div>
+                        </a>
+                      </xsl:otherwise>
+                    </xsl:choose>
                   </div>
                 </xsl:for-each>
+              <!--</div>
+            </div>-->
+
+            <xsl:variable name="citation"
+                          select="$metadata/mdb:identificationInfo/*/mri:resourceConstraints/
+                                mco:MD_LegalConstraints/mco:otherConstraints[2]"/>
+            <xsl:for-each select="$citation">
+              <div class="cersat-bg cersat-bg-green">
+                <div>
+                  <xsl:value-of select="$schemaStrings/cersat-citation"/>
+                </div>
+                <div class="cersat-bg-white">
+                  <xsl:call-template name="get-iso19115-3.2018-localised">
+                    <xsl:with-param name="langId" select="$langId"/>
+                  </xsl:call-template>
+                </div>
               </div>
-            </div>
+            </xsl:for-each>
           </div>
         </div>
 
@@ -550,20 +558,13 @@
               <div>
                 <strong>
                   <xsl:call-template name="landingpage-label">
-                    <xsl:with-param name="key" select="'eo-latitude'"/>
+                    <xsl:with-param name="key" select="'eo-bbox'"/>
                   </xsl:call-template>
                 </strong>
-                <xsl:value-of select="format-number(gex:southBoundLatitude, $numberFormat)"/> to
-                <xsl:value-of select="format-number(gex:northBoundLatitude, $numberFormat)"/>
-              </div>
-              <div>
-                <strong>
-                  <xsl:call-template name="landingpage-label">
-                    <xsl:with-param name="key" select="'eo-longitude'"/>
-                  </xsl:call-template>
-                </strong>
-                <xsl:value-of select="format-number(gex:westBoundLongitude, $numberFormat)"/> to
-                <xsl:value-of select="format-number(gex:eastBoundLongitude, $numberFormat)"/>
+                <xsl:value-of select="format-number(gex:southBoundLatitude, $numberFormat)"/> S to
+                <xsl:value-of select="format-number(gex:northBoundLatitude, $numberFormat)"/> N,
+                <xsl:value-of select="format-number(gex:westBoundLongitude, $numberFormat)"/> W to
+                <xsl:value-of select="format-number(gex:eastBoundLongitude, $numberFormat)"/> E
               </div>
             </xsl:for-each>
 
@@ -575,10 +576,11 @@
     </div>
 
     <div class="row">
-      <h2>
-        <xsl:value-of select="$schemaStrings/cersat-publications"/>
-      </h2>
-      ???
+      <div class="col-md-12">
+        <h2>
+          <xsl:value-of select="$schemaStrings/cersat-publications"/>
+        </h2>
+      </div>
     </div>
 
   </xsl:template>

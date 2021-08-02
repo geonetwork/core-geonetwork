@@ -98,6 +98,7 @@
   <eo-start>Début</eo-start>
   <eo-domain>Domaine</eo-domain>
   <eo-end>Fin</eo-end>
+  <eo-bbox>Bounding box</eo-bbox>
   <eo-latency>Latence</eo-latency>
   <eo-ip-code>Code de l'instrument et de la plateforme</eo-ip-code>
   <eo-project>Projet</eo-project>
