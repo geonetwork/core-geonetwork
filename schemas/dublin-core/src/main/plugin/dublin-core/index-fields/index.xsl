@@ -136,6 +136,7 @@
       </xsl:for-each>
 
       <xsl:for-each select="dct:modified[. != '']">
+        <dateStamp><xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space(.))"/></dateStamp>
 
         <xsl:variable name="revisionDate"
                       select="date-util:convertToISOZuluDateTime(string(current()))"/>

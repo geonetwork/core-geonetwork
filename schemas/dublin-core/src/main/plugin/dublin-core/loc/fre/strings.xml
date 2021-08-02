@@ -30,6 +30,10 @@
   <xml>XML</xml>
   <default>Simple</default>
   <advanced>Complète</advanced>
+  
+  <overviews>Aperçus</overviews>
+  <noThesaurusName>Mots clés</noThesaurusName>
+  <spatialExtent>Étendue spatiale</spatialExtent>
 
   <providedBy>Provided by</providedBy>
   <shareOnSocialSite>Share on social sites</shareOnSocialSite>
