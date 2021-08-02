@@ -129,7 +129,8 @@
         return list;
       }
 
-      $scope.recordFormatterList = getFormatterForRecord($scope.mdView.current.record);
+      $scope.recordFormatterList =
+        gnMdFormatter.getFormatterForRecord($scope.mdView.current.record);
 
       $scope.search = function(params) {
         $location.path('/search');
@@ -235,7 +236,8 @@
       // in default mode.
       function loadFormatter(n, o) {
         if (n === true) {
-          $scope.recordFormatterList = getFormatterForRecord($scope.mdView.current.record);
+          $scope.recordFormatterList =
+            gnMdFormatter.getFormatterForRecord($scope.mdView.current.record);
 
           var f = gnSearchLocation.getFormatterPath($scope.recordFormatterList[0].url);
           $scope.currentFormatter = '';
