@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.fao.geonet.api.reports.ReportUtils.CSV_FORMAT;
+
 /**
  * Creates a users report including last login date.
  *
@@ -55,9 +57,7 @@ public class ReportUsers implements IReport {
 
         try {
             // Initialize CSVPrinter object
-            CSVFormat csvFileFormat =
-                CSVFormat.DEFAULT.withRecordSeparator("\n");
-            csvFilePrinter = new CSVPrinter(writer, csvFileFormat);
+            csvFilePrinter = new CSVPrinter(writer, CSV_FORMAT);
 
             // Retrieve users
             final UserRepository userRepository =
