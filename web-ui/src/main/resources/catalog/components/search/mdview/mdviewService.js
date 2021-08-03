@@ -349,7 +349,6 @@
             scope.$parent.md = md;
             scope.md = md;
           }
-          return url;
           return url ||
             ('../api/records/' + uuid
               + gnMetadataFormatter.getFormatterForRecord(md)[0].url);
