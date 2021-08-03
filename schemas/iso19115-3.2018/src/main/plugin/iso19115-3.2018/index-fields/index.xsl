@@ -35,6 +35,7 @@
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
+                xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
                 xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
                 xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
@@ -188,8 +189,10 @@
         </pointOfTruthURL>
       </xsl:if>-->
 
+      <xsl:variable name="standardName"
+                    select="mdb:metadataStandard/cit:CI_Citation/cit:title"/>
       <xsl:for-each
-        select="mdb:metadataStandard/cit:CI_Citation/cit:title">
+        select="$standardName">
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('standardName', ., $allLanguages)"/>
 
         <xsl:for-each select="../cit:edition/*">
@@ -372,7 +375,61 @@
           </xsl:for-each>
         </xsl:for-each>
 
-        <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAbstract', mri:abstract, $allLanguages)"/>
+
+
+        <xsl:variable name="isCersat"
+                      select="count($standardName[*/text() = 'ISO 19115-3:2018 - Remote Sensing']) > 0"/>
+        <xsl:choose>
+          <xsl:when test="$isCersat">
+            <xsl:variable name="projects"
+                          select="mri:descriptiveKeywords
+                              [contains(*/mri:thesaurusName/*/cit:title/(gcx:Anchor|gco:CharacterString),
+                              'Cersat - Project')]/*/mri:keyword/*/text()"/>
+            <xsl:variable name="parameters"
+                          select="mri:descriptiveKeywords
+                              [contains(*/mri:thesaurusName/*/cit:title/(gcx:Anchor|gco:CharacterString),
+                              'Cersat - Parameter')]/*/mri:keyword/*/text()"/>
+            <xsl:variable name="temporalResolution"
+                          select="mri:temporalResolution/*/text()"/>
+            <xsl:variable name="spatialResolution"
+                          select="mri:spatialResolution/*//mri:distance"/>
+            <xsl:variable name="platforms"
+                          select="ancestor::mdb:MD_Metadata/mdb:acquisitionInformation
+                                    /*/mac:instrument
+                                    //mac:mountedOn/mac:MI_Platform
+                                    /mac:identifier/*/mcc:code/*/text()"/>
+
+            <xsl:variable name="customAbstract">
+              <xsl:if test="count($projects) > 0">
+                <xsl:value-of select="concat('Project(s): ', string-join($projects, ', '))"/><xsl:text>&#xd;&#xa;</xsl:text>
+              </xsl:if>
+              <xsl:if test="count($platforms) > 0">
+                <xsl:value-of select="concat('Platform(s): ', string-join($platforms, ', '))"/><xsl:text>&#xd;&#xa;</xsl:text>
+              </xsl:if>
+              <xsl:if test="count($parameters) > 0">
+                <xsl:value-of select="concat('Parameters(s): ', string-join($parameters, ', '))"/><xsl:text>&#xd;&#xa;</xsl:text>
+              </xsl:if>
+              <xsl:if test="count($temporalResolution) > 0">
+                <xsl:value-of select="concat('Temporal resolution: ', string-join($temporalResolution, ', '))"/><xsl:text>&#xd;&#xa;</xsl:text>
+              </xsl:if>
+              <xsl:if test="count($spatialResolution) > 0">
+                <xsl:variable name="res" as="node()*">
+                  <xsl:for-each select="$spatialResolution/*">
+                    <value><xsl:value-of select="concat(text(), ' ', @uom)"/></value>
+                  </xsl:for-each>
+                </xsl:variable>
+                <xsl:value-of select="concat('Spatial resolution: ', string-join($res, ', '))"/><xsl:text>&#xd;&#xa;</xsl:text>
+              </xsl:if>
+            </xsl:variable>
+
+            <resourceAbstractObject type="object">{
+              "default": "<xsl:value-of select="gn-fn-index:json-escape($customAbstract)"/>"
+              }</resourceAbstractObject>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAbstract', mri:abstract, $allLanguages)"/>
+          </xsl:otherwise>
+        </xsl:choose>
 
 
 
