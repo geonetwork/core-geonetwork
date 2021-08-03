@@ -231,7 +231,7 @@
               </tr>
               <tr
                 data-ng-if="mdView.current.record.cat.length > 0 ||
-                        mdView.current.record.topic.length > 0">
+                        mdView.current.record.cl_topic.length > 0">
                 <th data-translate="">listOfCategories</th>
                 <td>
                   <button data-ng-repeat="cat in mdView.current.record.cat"
@@ -242,13 +242,13 @@
                     {{('cat-' + cat) | translate}}
                   </button>
 
-                  <button data-ng-repeat="cat in mdView.current.record.topic track by $index"
-                          data-ng-click="filterBy('topic', cat)"
+                  <button data-ng-repeat="cat in mdView.current.record.cl_topic track by $index"
+                          data-ng-click="filterBy('cl_topic.key', cat.key)"
                           data-ng-if="cat != ''"
                           class="btn btn-sm btn-default"
-                          title="{{'clickToFilterOn' | translate}} {{cat | translate}}">
-                    <span class="fa gn-icon-{{cat}} topic-color"></span>&nbsp;
-                    {{cat | translate}}
+                          title="{{'clickToFilterOn' | translate}} {{cat.key | translate}}">
+                    <span class="fa gn-icon-{{cat.key}} topic-color"></span>&nbsp;
+                    {{cat.key | translate}}
                   </button>
                 </td>
               </tr>

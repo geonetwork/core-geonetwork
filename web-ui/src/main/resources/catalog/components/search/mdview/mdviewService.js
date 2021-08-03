@@ -288,14 +288,67 @@
     '$q',
     'gnMetadataManager',
     'sxtService',
+    'gnUtilityService',
     function($rootScope, $http, $compile, $translate,
-             $sce, gnAlertService, gnConfig,
-             gnSearchSettings, $q, gnMetadataManager, sxtService) {
+             $sce, gnAlertService,
+             gnSearchSettings, $q, gnMetadataManager, sxtService,
+             gnUtilityService) {
 
+      /**
+       * First matching view for each formatter is returned.
+       *
+       * @param record
+       * @returns {*[]}
+       */
+      this.getFormatterForRecord = function(record) {
+        var list = [];
+        if (record == null) {
+          return list;
+        }
+        for (var i = 0; i < gnSearchSettings.formatter.list.length; i ++) {
+          var f = gnSearchSettings.formatter.list[i];
+          if (f.views === undefined) {
+            list.push(f);
+          } else {
+            // Check conditional views
+            var isViewSet = false;
+
+            viewLoop:
+              for (var j = 0; j < f.views.length; j ++) {
+                var v = f.views[j];
+
+                if (v.if) {
+                  for (var key in v.if) {
+                    if (v.if.hasOwnProperty(key)) {
+                      var values = angular.isArray(v.if[key])
+                        ? v.if[key]
+                        : [v.if[key]]
+
+                      var recordValue = gnUtilityService.getObjectValueByPath(record, key);
+                      if (values.includes(recordValue)) {
+                        list.push({label: f.label, url: v.url});
+                        isViewSet = true;
+                        break viewLoop;
+                      }
+                    }
+                  }
+                } else {
+                  console.warn('A conditional view MUST have a if property. ' +
+                    'eg. {"if": {"documentStandard": "iso19115-3.2018"}, "url": "..."}')
+                }
+              }
+            if (f.url !== undefined && !isViewSet) {
+              list.push(f);
+            }
+          }
+        }
+        return list;
+      }
 
       this.getFormatterUrl = function(fUrl, scope, uuid, opt_url) {
         var url;
         var promiseMd;
+        var gnMetadataFormatter = this;
         if (scope && scope.md) {
           var deferMd = $q.defer();
           deferMd.resolve(scope.md);
@@ -320,6 +373,9 @@
             sxtService.feedMd(scope.$parent);
           }
           return url;
+          return url ||
+            ('../api/records/' + uuid
+              + gnMetadataFormatter.getFormatterForRecord(md)[0].url);
         });
       };
 
