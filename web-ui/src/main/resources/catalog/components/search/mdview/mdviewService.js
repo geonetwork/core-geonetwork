@@ -290,9 +290,10 @@
     'sxtService',
     'gnUtilityService',
     function($rootScope, $http, $compile, $translate,
-             $sce, gnAlertService,
+             $sce, gnAlertService, gnConfig,
              gnSearchSettings, $q, gnMetadataManager, sxtService,
              gnUtilityService) {
+
 
       /**
        * First matching view for each formatter is returned.
@@ -372,7 +373,6 @@
             scope.md = md;
             sxtService.feedMd(scope.$parent);
           }
-          return url;
           return url ||
             ('../api/records/' + uuid
               + gnMetadataFormatter.getFormatterForRecord(md)[0].url);

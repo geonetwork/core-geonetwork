@@ -556,21 +556,42 @@ goog.require('gn_alert');
               'label': 'defaultView',
               // Conditional views can be used to configure custom
               // formatter to use depending on metadata properties.
-              // 'views': [ {
-              //   'if': {'standardName': 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product'},
-              //   'url' : '/formatters/xsl-view?root=div&view=advanced'
-              // }, {
-              //   'if': {
-              //     'standardName': [
-              //       'ISO 19115:2003/19139 - EMODNET - BATHYMETRY',
-              //       'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY']
-              //   },
-              //   'url' : '/formatters/xsl-view?root=div&view=emodnetHydrography'
-              // }, {
-              //   'if': {'documentStandard': 'iso19115-3.2018'},
-              //   'url' : '/dada'
-              // }],
-              'url' : ''
+              'views': [ {
+                'if': {'standardNameObject.default': 'ISO 19115-3 - Emodnet Checkpoint - Upstream Data'},
+                'url' : '/formatters/xsl-view?root=div&loadJS=false&tabs=false&css=checkpoint&related=&header=false&view=medsea'
+              }, {
+                'if': {'standardNameObject.default': 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product'},
+                'url' : '/formatters/xsl-view?root=div&loadJS=false&tabs=false&css=checkpoint&related=&header=false&view=checkpoint-tdp'
+              }, {
+                'if': {'standardNameObject.default': 'ISO 19115-3 - Emodnet Checkpoint - Data Product Specification'},
+                'url' : '/formatters/xsl-view?root=div&loadJS=false&tabs=false&css=checkpoint&related=&header=false&view=checkpoint-dps'
+              }, {
+                'if': {
+                  'standardName': [
+                    'ISO 19115:2003/19139 - EMODNET - BATHYMETRY',
+                    'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY']
+                },
+                'url' : '/formatters/xsl-view?root=div&header=false&css=sextant&loadJS=false&tabs=false&view=emodnetHydrography'
+              }, {
+                'if': {
+                  'standardName': [
+                    'ISO 19115:2003/19139 - EMODNET - SDN']
+                },
+                'url' : '/formatters/xsl-view?root=div&header=false&loadJS=false&tabs=false&css=sextant&related=&view=sdn'
+              }, {
+                'if': {
+                  'standardNameObject.default': [
+                    'ISO 19115-3:2018 - Remote Sensing']
+                },
+                'url' : '/formatters/cersat?view=cersat&root=div&loadJS=false&template=cersat-summary-view&header=false&related='
+              }, {
+                'if': {'documentStandard': 'iso19110'},
+                'url' : '/formatters/xsl-view?root=div'
+              }, {
+                'if': {'documentStandard': 'dublin-core'},
+                'url' : '/formatters/xsl-view?view=sextant&root=div&template=sextant-summary-view'
+              }],
+              'url' : '/formatters/xsl-view?view=sextant&root=div&loadJS=false&template=sextant-summary-view&header=false&related='
             }, {
               'label': 'full',
               'url' : '/formatters/xsl-view?root=div&view=xml'

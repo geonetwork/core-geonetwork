@@ -58,7 +58,8 @@
       <li data-ng-class="{'disabled' : !currentFormatter}">
         <a href="" data-ng-click="format()" translate>simpleView</a>
       </li>
-      <li data-ng-repeat="f in formatter.list" data-ng-class="{'disabled' : f == currentFormatter}">
+      <li data-ng-repeat="f in recordFormatterList"
+          data-ng-class="{'disabled' : f == currentFormatter}">
         <a href="" data-ng-click="format(f)">{{f.label | translate}}</a>
       </li>
     </ul>
