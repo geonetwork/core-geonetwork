@@ -57,6 +57,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.fao.geonet.api.ApiUtils.setHeaderVaryOnAccept;
+
 
 @RequestMapping(value = {
     "/{portal}/api/sources"
@@ -93,8 +95,11 @@ public class SourcesApi {
         @RequestParam(
             value = "group",
             required = false)
-            Integer group
+            Integer group,
+        @Parameter(hidden = true)
+            HttpServletResponse response
     ) throws Exception {
+        setHeaderVaryOnAccept(response);
         if (group != null) {
             return sourceRepository.findByGroupOwner(group);
         } else {
@@ -121,6 +126,7 @@ public class SourcesApi {
         Element sourcesList = new Element("sources");
         sources.stream().map(GeonetEntity::asXml).forEach(sourcesList::addContent);
         response.setContentType(MediaType.TEXT_HTML_VALUE);
+        setHeaderVaryOnAccept(response);
         response.getWriter().write(
             new XsltResponseWriter(null, "portal")
                 .withJson("catalog/locales/en-core.json")
