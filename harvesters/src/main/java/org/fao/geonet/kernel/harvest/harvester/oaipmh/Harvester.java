@@ -494,7 +494,9 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
     catch(Exception e)
     {
             HarvestError harvestError = new HarvestError(context, e);
-            harvestError.setDescription("Raised exception while getting metadata file : "+ e);
+            harvestError.setDescription(String.format(
+                "Raised exception while getting metadata file %s. Error is: %s",
+                ri.id, e.getMessage()));
             this.errors.add(harvestError);
             harvestError.printLog();
             result.unretrievable++;

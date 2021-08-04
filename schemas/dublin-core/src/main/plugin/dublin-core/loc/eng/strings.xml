@@ -31,6 +31,10 @@
   <default>Simple</default>
   <advanced>Full</advanced>
 
+  <overviews>Overviews</overviews>
+  <spatialExtent>Spatial extent</spatialExtent>
+  <noThesaurusName>Keywords</noThesaurusName>
+
   <providedBy>Provided by</providedBy>
   <shareOnSocialSite>Share on social sites</shareOnSocialSite>
   <associatedResources>Associated resources</associatedResources>
