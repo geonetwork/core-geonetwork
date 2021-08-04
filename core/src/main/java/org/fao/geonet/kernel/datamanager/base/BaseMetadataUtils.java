@@ -336,12 +336,16 @@ public class BaseMetadataUtils implements IMetadataUtils {
     public LinkedHashMap<String, String> extractTitles(@Nonnull String id) throws Exception {
         AbstractMetadata metadata = findOne(id);
 
-        if (metadata == null)
-            return null;
+        // If metadata exists, and it is metadata or template then extract the titles otherwise we will return null
+        if (metadata != null &&
+            (metadata.getDataInfo().getType() == MetadataType.METADATA ||
+            metadata.getDataInfo().getType() == MetadataType.TEMPLATE)) {
 
-        Element md = Xml.loadString(metadata.getData(), false);
+            Element md = Xml.loadString(metadata.getData(), false);
 
-        return extractTitles(metadata.getDataInfo().getSchemaId(), md);
+            return extractTitles(metadata.getDataInfo().getSchemaId(), md);
+        }
+        return null;
     }
 
     /**
