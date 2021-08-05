@@ -172,6 +172,7 @@
   "metadataRecords": "Metadata records",
   "results": "Results",
   "format-zip": "ZIP",
+  "facet-geometry": "Spatial filter",
   "usingCswFromNode": "Using portal CSW: ",
   "validateInspireUsingNode": "Remote INSPIRE validation using portal ",
   "noINSPIRETestTokenAvailable": "INSPIRE validator returned an empty token. Validation status can't be checked now. Retry later.",

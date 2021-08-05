@@ -424,8 +424,18 @@
     }
 
     this.updateState = function(path, value, doNotRemove) {
-      if(path[0] === 'any' || path[0] === 'uuid') {
+      if(path[0] === 'any'
+        || path[0] === 'uuid'
+        || path[0] === 'geometry'
+      ) {
         delete $scope.searchObj.params[path[0]];
+        if (path[0] === 'geometry') {
+          $scope.$broadcast('beforeSearchReset', false);
+        }
+      } else if(path[0] === 'resourceTemporalDateRange' && value === true
+        // // Remove range see SearchFilterTagsDirective
+      ) {
+        delete $scope.searchObj.state.filters[path[0]];
       } else {
         var filters = $scope.searchObj.state.filters;
         var getter = parse(path.join('^^^'));
