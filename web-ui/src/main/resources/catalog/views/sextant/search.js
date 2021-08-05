@@ -470,7 +470,7 @@
         return !!gnSearchSettings.viewerUrl;
       };
 
-      var sortConfig = gnSearchSettings.sortBy.split('#');
+      var sortConfig = gnSearchSettings.sortBy;
       angular.extend($scope.searchObj, {
         advancedMode: false,
         viewerMap: viewerMap,
