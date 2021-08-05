@@ -25,6 +25,8 @@ package org.fao.geonet.api.reports;
 
 import com.google.common.collect.ImmutableSet;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.QuoteMode;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -44,6 +46,10 @@ import java.util.*;
  */
 public final class ReportUtils {
 
+    public static final CSVFormat CSV_FORMAT =
+        CSVFormat.DEFAULT
+            .withRecordSeparator("\n")
+            .withQuoteMode(QuoteMode.ALL);
     /**
      * Constructor.
      */

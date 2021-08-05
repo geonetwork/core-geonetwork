@@ -70,19 +70,20 @@
                     gnConfig[gnConfig.key.isInspireEnabled] &&
                     angular.isString(gnConfig['system.inspire.remotevalidation.url']) &&
                     gnCurrentEdit.schema.match(/iso19139|iso19115-3/) != null;
+
+                  scope.validationNode = gnConfig['system.inspire.remotevalidation.nodeid'];
                 });
               });
 
               scope.validateInspire = function(test, mode) {
 
                 if (scope.isEnabled) {
-
                   scope.isDownloadingRecord = true;
                   scope.token = null;
                   var url = '../api/records/' + scope.inspMdUuid +
                     '/validate/inspire?testsuite=' + test;
-                  if (angular.isDefined(mode)) {
-                    url += '&mode=' + mode;
+                  if (angular.isDefined(scope.validationNode) && scope.validationNode !== '') {
+                    url += '&mode=' + scope.validationNode;
                   }
                   $http({
                     method: 'PUT',
@@ -139,6 +140,15 @@
               }
               scope.checkInBackgroud = function(token) {
                 scope.stop = undefined;
+                if (token === '') {
+                  gnAlertService.addAlert({
+                    msg: $translate.instant('noINSPIRETestTokenAvailable'),
+                    type: 'danger'
+                  });
+                  scope.isDownloadingRecord = false;
+                  scope.isDownloadedRecord = false;
+                  return;
+                }
                 scope.stop = $interval(function() {
                   $http({
                     method: 'GET',

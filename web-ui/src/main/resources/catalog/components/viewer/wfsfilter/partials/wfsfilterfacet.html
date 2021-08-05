@@ -9,15 +9,14 @@
           data-translate-values="{'url': '{{wfsUrl}}'}">wfsNotAvailable</span>
   </div>
 
-  <!--WFS not indexed alert-->
-  <div data-ng-show="status"
-       class="alert alert-warning" title="{{statusTitle}}">
-    <button type="button" class="close"
-            data-ng-click="status = null"><i class="fa fa-times"/></button>
-    <span>{{status | translate}}</span>
-  </div>
-
-  <div>
+  <div data-ng-show="isWfsAvailable">
+    <!--WFS not indexed alert-->
+    <div data-ng-show="status"
+         class="alert alert-warning" title="{{statusTitle}}">
+      <button type="button" class="close"
+              data-ng-click="status = null"><i class="fa fa-times"/></button>
+      <span>{{status | translate}}</span>
+    </div>
 
     <!--admin buttons-->
     <div class="btn-group dropup wfs-filter-group">

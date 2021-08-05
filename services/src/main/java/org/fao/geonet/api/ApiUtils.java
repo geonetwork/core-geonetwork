@@ -53,6 +53,7 @@ import org.springframework.validation.ObjectError;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -334,6 +335,20 @@ public class ApiUtils {
         try (OutputStream out = Files.newOutputStream(outFile)) {
             ImageIO.write(bimg, type, out);
         }
+    }
+
+    /**
+     * Avoid browser cache issue when the same API Path serving various formats.
+     *
+     * eg. go to the API path serving HTML, then go to the main app
+     * which is using the same API path but processing the JSON response.
+     * Browser history back will return to the JSON output instead of the HTML one.
+     *
+     * Use the Vary header to indicate to the browser that the cache depends
+     * on Accept header.
+     */
+    public static void setHeaderVaryOnAccept(HttpServletResponse response) {
+        response.setHeader("Vary", "Accept");
     }
 
     /**
