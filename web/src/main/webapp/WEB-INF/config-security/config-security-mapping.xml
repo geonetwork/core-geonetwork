@@ -53,7 +53,7 @@
                            access="permitAll"/>
         <sec:intercept-url pattern="/monitor/.*" access="hasAuthority('Monitor')"/>
         <sec:intercept-url pattern="/monitor" access="hasAuthority('Monitor')"/>
-        <sec:intercept-url pattern="/\w*healthcheck"
+        <sec:intercept-url pattern="/\w*healthcheck.*"
                            access="hasAuthority('Monitor')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/service-not-allowed!?.*"
                            access="permitAll"/>
