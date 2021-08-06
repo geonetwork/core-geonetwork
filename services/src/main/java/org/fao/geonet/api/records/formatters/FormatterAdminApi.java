@@ -75,6 +75,7 @@ import java.util.Set;
 
 import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
 import static org.fao.geonet.api.records.formatters.FormatterConstants.VIEW_XSL_FILENAME;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  * List all formatters
@@ -95,9 +96,10 @@ public class FormatterAdminApi extends AbstractFormatService {
     private final static String[] extensions = {"properties", "xml", "xsl", "css", "js"};
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Get formatters"
+        summary = "Get formatter files"
     )
     @RequestMapping(
+        method = GET,
         value = "/{portal}/api/formatters/{schema:.+}/{formatter}/files",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
@@ -207,6 +209,7 @@ public class FormatterAdminApi extends AbstractFormatService {
         summary = "Get formatters"
     )
     @RequestMapping(
+        method = GET,
         value = "/{portal}/api/formatters",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
@@ -256,7 +259,7 @@ public class FormatterAdminApi extends AbstractFormatService {
         summary = "Download a formatter as ZIP"
     )
     @RequestMapping(
-        method = RequestMethod.GET,
+        method = GET,
         value = "/{portal}/api/formatters/{schema:.+}/{formatter}",
         produces = {
             "application/zip"
@@ -422,6 +425,7 @@ public class FormatterAdminApi extends AbstractFormatService {
         summary = "Get formatter file content"
     )
     @RequestMapping(
+        method = GET,
         value = "/{portal}/api/formatters/{schema:.+}/{formatter}/files/{file:.+}",
         produces = {
             MediaType.TEXT_PLAIN_VALUE
