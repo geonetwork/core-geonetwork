@@ -479,13 +479,13 @@
         filters: gnSearchSettings.filters,
         defaultParams: {
           isTemplate: 'n',
-          sortBy: sortConfig[0] || 'relevance',
-          sortOrder: sortConfig[1] || ''
+          sortBy: sortConfig.sortBy || 'relevance',
+          sortOrder: sortConfig.sortOrder || ''
         },
         params: {
           isTemplate: 'n',
-          sortBy: sortConfig[0] || 'relevance',
-          sortOrder: sortConfig[1] || ''
+          sortBy: sortConfig.sortBy || 'relevance',
+          sortOrder: sortConfig.sortOrder|| ''
         },
         sortbyValues: gnSearchSettings.sortbyValues
       });
