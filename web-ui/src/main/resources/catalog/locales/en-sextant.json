@@ -120,5 +120,6 @@
   "showMetadataTooltip": "Show the layer metadata",
   "layerExtentZoomTooltip": "Zoom on the layer extent",
   "downloadTooltip": "Download the dataset",
-  "textInput": "Annotation"
+  "textInput": "Annotation",
+  "facet-availableInServices": "Available in"
 }

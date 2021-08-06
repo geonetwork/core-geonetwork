@@ -248,15 +248,17 @@ goog.require('gn_alert');
           // See https://github.com/geonetwork/core-geonetwork/pull/5349
           'isVegaEnabled': true,
           'facetConfig': {
-            'groupPublished': {
+            'group': {
               'terms': {
-                'field': 'groupPublished',
+                'field': 'groupPublishedId',
                 'size': 200,
-                "order" : { "_key" : "asc" },
-                'include': '.*'
+                'include': '.*',
+                'exclude': '1'
               },
               'meta': {
-                'caseInsensitiveInclude': true,
+                'field': 'groupPublishedId',
+                'orderByTranslation': true,
+                'filterByTranslation': true,
                 'displayFilter': true,
                 'collapsed': true
               }
@@ -333,18 +335,18 @@ goog.require('gn_alert');
             // GEMET configuration for multilingual catalog
             // The key is translated on client side by loading
             // required concepts
-            'th_gemet_tree.key': {
-              'terms': {
-                'field': 'th_gemet_tree.key',
-                'size': 100,
-                "order" : { "_key" : "asc" },
-                "include": "[^\^]+^?[^\^]+"
-                // Limit to 2 levels
-              },
-              'meta': {
-                'collapsed': true
-              }
-            },
+            // 'th_gemet_tree.key': {
+            //   'terms': {
+            //     'field': 'th_gemet_tree.key',
+            //     'size': 100,
+            //     "order" : { "_key" : "asc" },
+            //     "include": "[^\^]+^?[^\^]+"
+            //     // Limit to 2 levels
+            //   },
+            //   'meta': {
+            //     'collapsed': true
+            //   }
+            // },
             // 'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree.default': {
             //   'terms': {
             //     'field': 'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree.default',
@@ -371,17 +373,17 @@ goog.require('gn_alert');
             //     //"include": "EEA.*"
             //   }
             // },
-            "resolutionScaleDenominator": {
-              "histogram": {
-                "field": "resolutionScaleDenominator",
-                "interval": 10000,
-                "keyed" : true,
-                'min_doc_count': 1
-              },
-              'meta': {
-                'collapsed': true
-              }
-            },
+            // "resolutionScaleDenominator": {
+            //   "histogram": {
+            //     "field": "resolutionScaleDenominator",
+            //     "interval": 10000,
+            //     "keyed" : true,
+            //     'min_doc_count': 1
+            //   },
+            //   'meta': {
+            //     'collapsed': true
+            //   }
+            // },
             // "serviceType": {
             //   'collapsed': true,
             //   "terms": {
@@ -389,31 +391,34 @@ goog.require('gn_alert');
             //     "size": 10
             //   }
             // },
+            // "creationYearForResource": {
+            //   "histogram": {
+            //     "field": "creationYearForResource",
+            //     "interval": 10,
+            //     "keyed" : true,
+            //     'min_doc_count': 1
+            //   },
+            //   'meta': {
+            //     'collapsed': true
+            //   }
+            // },
             "creationYearForResource": {
-              "histogram": {
+              "terms": {
                 "field": "creationYearForResource",
-                "interval": 5,
-                "keyed" : true,
-                'min_doc_count': 1
+                "size": 10,
+                "order": {
+                  "_key": "desc"
+                }
               },
               'meta': {
                 'collapsed': true
               }
             },
-            // "creationYearForResource": {
-            //   "terms": {
-            //     "field": "creationYearForResource",
-            //     "size": 10,
-            //     "order": {
-            //       "_key": "desc"
-            //     }
-            //   }
-            // },
             'OrgForResource': {
               'terms': {
                 'field': 'OrgForResource',
                 'include': '.*',
-                'size': 15
+                'size': 10
               },
               'meta': {
                 'collapsed': true,
@@ -424,34 +429,34 @@ goog.require('gn_alert');
                 'caseInsensitiveInclude': true
               }
             },
-            'cl_maintenanceAndUpdateFrequency.key': {
-              'terms': {
-                'field': 'cl_maintenanceAndUpdateFrequency.key',
-                'size': 10
-              },
-              "meta": {
-                "collapsed": true
-              }
-            },
-            'cl_status.key': {
-              'terms': {
-                'field': 'cl_status.key',
-                'size': 10
-              },
-              'meta': {
-                'collapsed': true
-              }
-            },
-            'dateStamp' : {
-              'auto_date_histogram' : {
-                'field' : 'dateStamp',
-                'buckets': 50
-              },
-              "meta": {
-                'userHasRole': 'isReviewerOrMore',
-                'collapsed': true
-              }
-            },
+            // 'cl_maintenanceAndUpdateFrequency.key': {
+            //   'terms': {
+            //     'field': 'cl_maintenanceAndUpdateFrequency.key',
+            //     'size': 10
+            //   },
+            //   "meta": {
+            //     "collapsed": true
+            //   }
+            // },
+            // 'cl_status.key': {
+            //   'terms': {
+            //     'field': 'cl_status.key',
+            //     'size': 10
+            //   },
+            //   'meta': {
+            //     'collapsed': true
+            //   }
+            // },
+            // 'dateStamp' : {
+            //   'auto_date_histogram' : {
+            //     'field' : 'dateStamp',
+            //     'buckets': 50
+            //   },
+            //   "meta": {
+            //     'userHasRole': 'isReviewerOrMore',
+            //     'collapsed': true
+            //   }
+            // },
             'availableInServices': {
               'filters': {
                 //"other_bucket_key": "others",

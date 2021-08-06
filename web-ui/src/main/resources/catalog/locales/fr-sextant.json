@@ -121,5 +121,6 @@
   "layerExtentZoom": "Zoomer",
   "layerExtentZoomTooltip": "Zoomer sur l'étendue de la couche",
   "downloadTooltip": "Télécharger la donnée",
-  "textInput": "Annotation"
+  "textInput": "Annotation",
+  "facet-availableInServices": "Services associés"
 }

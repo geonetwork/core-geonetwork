@@ -87,6 +87,7 @@
   "facet-groupOwner": "Record groups",
   "facet-recordOwner": "Record authors",
   "facet-groupPublished": "Catalogue",
+  "facet-group": "Catalogue",
   "facet-documentStandard": "Standards",
   "facet-isHarvested": "Harvested",
   "facet-isTemplate": "Record types",
