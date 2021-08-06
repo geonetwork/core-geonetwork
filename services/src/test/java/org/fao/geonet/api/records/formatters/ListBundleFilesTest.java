@@ -41,7 +41,7 @@ public class ListBundleFilesTest {
         // extensions = {"properties", "xml", "xsl", "css", "js"};
         Mockito.when(p.toString()).thenReturn("file.properties", "manifest.xml", "view.xsl", "custom.css", "custom.js", "README");
 
-        ListBundleFiles lst = new ListBundleFiles();
+        FormatterAdminApi lst = new FormatterAdminApi();
         Method prvMeth = ReflectionUtils.findMethod(lst.getClass(), "isEditibleFileType", Path.class);
         prvMeth.setAccessible(true);
 
