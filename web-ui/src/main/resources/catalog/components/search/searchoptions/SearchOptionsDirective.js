@@ -26,7 +26,7 @@
 
   var module = angular.module('gn_searchoptions_directive', []);
 
-  module.directive('gnSearchOptions', [function() {
+  module.directive('gnSearchOptions', ['$rootScope', 'gnGlobalSettings', function($rootScope, gnGlobalSettings) {
 
       return {
         restrict: 'E',
@@ -36,6 +36,12 @@
         templateUrl: '../../catalog/components/search/searchoptions/partials/' +
             'searchoptions.html',
         link: function(scope, element, attrs, controller) {
+          scope.user = $rootScope.user;
+          scope.initOnlyMyRecord = function() {
+            scope.onlyMyRecord = gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly
+
+          };
+          scope.initOnlyMyRecord();
           // this enables to keep the dropdown active when we click on the label
           element.find('label > span').each(function(i, e) {
             $(e).on('click', function () {
@@ -57,6 +63,15 @@
             },
             set: function(value) {
               controller.setTitleOnly(value);
+            }
+          });
+
+          Object.defineProperty(scope, 'onlyMyRecord', {
+            get: function() {
+              return controller.getOnlyMyRecord();
+            },
+            set: function(value) {
+              controller.setOnlyMyRecord(value);
             }
           });
         }
