@@ -546,6 +546,31 @@
       return $scope.searchObj.state.titleOnly;
     };
 
+    /**
+     * @param {boolean} value
+     */
+    this.setOnlyMyRecord = function(value) {
+      if (value){
+        $scope.searchObj.params['owner'] = $scope.user.id;
+      } else {
+        delete $scope.searchObj.params['owner'];
+      }
+    };
+
+    /**
+     * @return {boolean}
+     */
+    this.getOnlyMyRecord = function() {
+      $scope.value;
+      if ($scope.searchObj.params['owner']){
+        $scope.value = true
+      }
+      else {
+        $scope.value = false
+      }
+      return $scope.value;
+    };
+
   };
 
   searchFormController['$inject'] = [
