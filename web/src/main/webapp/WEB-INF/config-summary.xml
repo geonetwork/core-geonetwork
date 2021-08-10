@@ -204,7 +204,7 @@
     <facet name="mission-atlantic-bodc-parameters" indexKey="thesaurus-local.theme.mission-atlantic-bodc-parameters" label="mission-atlantic-bodc-parameters"/>
     <facet name="mission-atlantic-data-type" indexKey="thesaurus-local.theme.mission-atlantic-data-type" label="mission-atlantic-data-type"/>
     <facet name="mission-atlantic-goos-observing-platforms" indexKey="thesaurus-local.theme.mission-atlantic-goos-observing-platforms" label="mission-atlantic-goos-observing-platforms"/>
-    <facet name="mission-atlantic-format" indexKey="thesaurus-local.theme.mission-atlantic-format" label="mission-atlantic-format"/>
+    <facet name="mission-atlantic-work-package" indexKey="thesaurus-local.theme.mission-atlantic-work-package" label="mission-atlantic-work-package"/>
 
     <facet name="mdActions" indexKey="_mdActions" label="mdActions"/>
   </facets>
@@ -366,7 +366,7 @@
       <item facet="mission-atlantic-bodc-parameters" max="300"/>
       <item facet="mission-atlantic-data-type" max="300"/>
       <item facet="mission-atlantic-goos-observing-platforms" max="300"/>      
-      <item facet="mission-atlantic-format" max="300"/>   
+      <item facet="mission-atlantic-work-package" max="300"/>
       <item facet="mdActions"/>
       <!--<item facet="metadataPOC" max="15"/>-->
     </summaryType>
