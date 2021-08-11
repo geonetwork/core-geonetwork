@@ -99,10 +99,9 @@
 
     <xsl:copy-of select="gn-fn-index:add-field('Org', $org)"/>
 
-    <any><xsl:value-of select="$title"/></any>
-    <any><xsl:value-of select="$org"/></any>
-    <any><xsl:value-of select="$name"/></any>
-    <any><xsl:value-of select="$mail"/></any>
+    <any type="object">{"common": "<xsl:value-of
+      select="gn-fn-index:json-escape(normalize-space(.))"/>"}</any>
+    
     <xsl:for-each
       select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
       <xsl:copy-of select="gn-fn-index:add-field('email', .)"/>
@@ -132,7 +131,6 @@
           </xsl:for-each>
           }</resourceTitleObject>
 
-        <any><xsl:value-of select="$description"/></any>
       </xsl:when>
       <xsl:otherwise>
         <resourceTitle>[<xsl:value-of select="string-join(.//gco:Decimal, ', ')"/>]</resourceTitle>
@@ -150,8 +148,6 @@
                         then gmd:name/gco:CharacterString
                         else concat(gmd:name/gco:CharacterString, ' ', gmd:version/gco:CharacterString)"/>
     <resourceTitle><xsl:value-of select="$title"/></resourceTitle>
-
-    <any><xsl:value-of select="$title"/></any>
 
     <xsl:call-template name="subtemplate-common-fields"/>
   </xsl:template>
