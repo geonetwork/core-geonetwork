@@ -20,6 +20,17 @@
               "reverse"
             ]
           },
+          "french_rebuilt": {
+            "tokenizer":  "standard",
+            "filter": [
+              "french_elision",
+              "lowercase",
+              "french_stop",
+              "asciifolding",
+              "french_keywords",
+              "french_stemmer"
+            ]
+          },
           "synInspireAnnexes": {
             "tokenizer": "keyword",
             "filter": [
@@ -70,6 +81,27 @@
             "type": "shingle",
             "min_shingle_size": 2,
             "max_shingle_size": 3
+          },
+          "french_elision": {
+            "type":         "elision",
+            "articles_case": true,
+            "articles": [
+              "l", "m", "t", "qu", "n", "s",
+              "j", "d", "c", "jusqu", "quoiqu",
+              "lorsqu", "puisqu"
+            ]
+          },
+          "french_stop": {
+            "type":       "stop",
+            "stopwords":  "_french_"
+          },
+          "french_keywords": {
+            "type":       "keyword_marker",
+            "keywords":   []
+          },
+          "french_stemmer": {
+            "type":       "stemmer",
+            "language":   "light_french"
           },
           "keepInspireServiceTypes": {
             "type": "keep",
@@ -1012,7 +1044,7 @@
               },
               "langfre": {
                 "type": "text",
-                "analyzer": "french",
+                "analyzer": "french_rebuilt",
                 "copy_to": [
                   "any.langfre"
                 ],
@@ -1135,13 +1167,31 @@
               "default": {
                 "type": "keyword",
                 "copy_to": [
-                  "any.default",
-                  "any.langeng",
-                  "any.langfre",
-                  "any.langger",
-                  "any.langita",
-                  "any.langroh",
-                  "anytext"
+                  "any.default"
+                ]
+              },
+              "langeng": {
+                "type": "keyword",
+                "copy_to": [
+                  "any.langeng"
+                ]
+              },
+              "langfre": {
+                "type": "keyword",
+                "copy_to": [
+                  "any.langfre"
+                ]
+              },
+              "langger": {
+                "type": "keyword",
+                "copy_to": [
+                  "any.langger"
+                ]
+              },
+              "langita": {
+                "type": "keyword",
+                "copy_to": [
+                  "any.langita"
                 ]
               },
               "text": {
@@ -1303,7 +1353,7 @@
           },
           "langfre": {
             "type": "text",
-            "analyzer": "french"
+            "analyzer": "french_rebuilt"
           },
           "langger": {
             "type": "text",
@@ -1329,16 +1379,32 @@
             "type": "keyword",
             "copy_to": [
               "any.default",
-              "any.langeng",
-              "any.langfre",
-              "any.langger",
-              "any.langita",
-              "any.langroh",
               "anytext"
             ]
           },
-          "text": {
-            "type": "keyword"
+          "langeng": {
+            "type": "keyword",
+            "copy_to": [
+              "any.langeng"
+            ]
+          },
+          "langfre": {
+            "type": "keyword",
+            "copy_to": [
+              "any.langfre"
+              ]
+          },
+          "langger": {
+            "type": "keyword",
+            "copy_to": [
+              "any.langger"
+              ]
+          },
+          "langita": {
+            "type": "keyword",
+            "copy_to": [
+              "any.langita"
+              ]
           },
           "link": {
             "type": "keyword"
@@ -1448,7 +1514,8 @@
             "copy_to": "any.common"
           },
           "link": {
-            "type": "text"
+            "type": "text",
+            "copy_to": "any.common"
           },
           "name": {
             "type": "text",
@@ -1612,6 +1679,10 @@
             "ignore_above": 256
           }
         }
+      },
+      "email": {
+        "type": "keyword",
+        "copy_to": "any.common"
       },
       "groupPublished": {
         "type": "keyword"
