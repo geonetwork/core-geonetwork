@@ -146,8 +146,10 @@ goog.require('gn_alert');
           // Full text on all fields
           // 'queryBase': '${any}',
           // Full text but more boost on title match
-          'queryBase': 'any.fre:(${any}) any.common:(${any})',
-          //'queryBase': 'any:(${any}) resourceTitleObject.\\*:(${any})^2',
+          // * Search in all languages
+          'queryBase': 'any.\\*:(${any}) any.common:(${any}) resourceTitleObject.\\*:(${any})^2',
+          // * Search in French fields (with french analysis)
+          // 'queryBase': 'any.langfre:(${any}) any.common:(${any}) resourceTitleObject.langfre:(${any})^2',
           'queryTitle': '${any}',
           'searchOptions': true,
           // Score query may depend on where we are in the app?
