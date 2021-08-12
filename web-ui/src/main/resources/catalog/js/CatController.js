@@ -159,7 +159,7 @@ goog.require('gn_alert');
             exactMatch: true,
             language: true
           },
-          // can be:
+          // Language strategy can be:
           // * searchInUILanguage: search in UI languages
           // eg. full text field is any.langfre if French
           // * searchInAllLanguages: search using any.* fields
