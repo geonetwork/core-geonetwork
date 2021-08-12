@@ -45,7 +45,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RequestMapping(value = {
-    "/{portal}/api/formatters"
+    "/{portal}/api/formatters/cache"
 })
 @Tag(name = "formatters",
     description = "Formatter operations")
@@ -59,7 +59,6 @@ public class CacheApi {
         summary = "Get formatter cache info",
         description = "")
     @RequestMapping(
-        value = "/cache",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -85,7 +84,6 @@ public class CacheApi {
         //      })
     )
     @RequestMapping(
-        value = "/cache",
         method = RequestMethod.DELETE
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)

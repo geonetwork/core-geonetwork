@@ -94,7 +94,7 @@
       };
 
       $scope.$watch('user.id', function(newId, o) {
-        if (newId !== o && angular.isDefined(newId) && $scope.onlyMyRecord.is) {
+        if (newId !== o && angular.isDefined(newId) && $scope.onlyMyRecord) {
           setOwner();
         }
       });
