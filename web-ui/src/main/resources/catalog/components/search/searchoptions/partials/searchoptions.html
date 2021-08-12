@@ -38,8 +38,8 @@
              data-ng-model="languageStrategy"
              aria-label="{{'searchInDetectedLanguage' | translate}}">
       <span data-translate="">searchInDetectedLanguage</span>
-      <span data-ng-show="$parent.searchObj.state.detectedLanguage">
-        ({{$parent.searchObj.state.detectedLanguage | translate}})
+      <span data-ng-show="$parent.$parent.searchObj.state.detectedLanguage">
+        ({{$parent.$parent.searchObj.state.detectedLanguage | translate}})
       </span>
     </label>
     <label>
