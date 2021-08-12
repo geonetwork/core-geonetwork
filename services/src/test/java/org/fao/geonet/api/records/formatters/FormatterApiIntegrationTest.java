@@ -26,14 +26,12 @@ package org.fao.geonet.api.records.formatters;
 import com.google.common.collect.Lists;
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
-import org.apache.http.HttpStatus;
 import org.apache.log4j.Level;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.MockRequestFactoryGeonet;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.records.formatters.groovy.EnvironmentProxy;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
@@ -43,7 +41,6 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.IO;
@@ -64,7 +61,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.ServletWebRequest;
 
-import javax.annotation.Nonnull;
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -96,7 +92,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
     @Autowired
     private FormatterApi formatService;
     @Autowired
-    private ListFormatters listService;
+    private FormatterAdminApi listService;
     @Autowired
     private IsoLanguagesMapper mapper;
     @Autowired
@@ -198,8 +194,9 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
     @Test
     @Ignore
     public void testExec() throws Exception {
-        final ListFormatters.FormatterDataResponse formatters = listService.exec(null, null, schema, false, false);
-        for (ListFormatters.FormatterData formatter : formatters.getFormatters()) {
+        final FormatterAdminApi.FormatterDataResponse formatters =
+            listService.listFormatters(null, null, schema, false, false);
+        for (FormatterAdminApi.FormatterData formatter : formatters.getFormatters()) {
             MockHttpServletRequest request = new MockHttpServletRequest();
             request.getSession();
             request.setPathInfo("/eng/blahblah");

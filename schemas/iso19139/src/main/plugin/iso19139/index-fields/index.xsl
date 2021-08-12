@@ -903,7 +903,7 @@
 
       <xsl:for-each select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem">
         <xsl:for-each select="gmd:referenceSystemIdentifier/gmd:RS_Identifier">
-          <xsl:variable name="crs" select="gmd:code/*/text()"/>
+          <xsl:variable name="crs" select="(gmd:code/*/text())[1]"/>
           <xsl:variable name="crsLabel"
                         select="if (gmd:code/*/@xlink:title)
                                 then gmd:code/*/@xlink:title

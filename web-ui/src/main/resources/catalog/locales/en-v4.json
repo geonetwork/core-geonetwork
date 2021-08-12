@@ -173,5 +173,11 @@
   "summary": "Summary",
   "metadataRecords": "Metadata records",
   "results": "Results",
-  "format-zip": "ZIP"
+  "format-zip": "ZIP",
+  "facet-geometry": "Spatial filter",
+  "usingCswFromNode": "Using portal CSW: ",
+  "validateInspireUsingNode": "Remote INSPIRE validation using portal ",
+  "noINSPIRETestTokenAvailable": "INSPIRE validator returned an empty token. Validation status can't be checked now. Retry later.",
+  "system/inspire/remotevalidation/nodeid": "Portal identifier to use for the validation",
+  "system/inspire/remotevalidation/nodeid-help": "If null, the record is uploaded to the validator, if a node is defined, then the CSW url of this node is used, the validator will make a GetRecordById request to retrieve the record."
 }

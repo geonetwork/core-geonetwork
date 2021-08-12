@@ -1,5 +1,4 @@
-<div class="dropdown-header"
-    title="{{'exactMatch-help' | translate}}">
+<div title="{{'exactMatch-help' | translate}}">
   <label>
     <input type="checkbox"
            data-ng-model="exactMatch"
@@ -7,12 +6,19 @@
     <span data-translate="">exactMatch</span>
   </label>
 </div>
-<div class="dropdown-header"
-    title="{{'titleOnly-help' | translate}}">
+<div title="{{'titleOnly-help' | translate}}">
   <label>
     <input type="checkbox"
            data-ng-model="titleOnly"
            aria-label="{{'titleOnly' | translate}}">
     <span data-translate="">titleOnly</span>
+  </label>
+</div>
+<div data-ng-show="user.isConnected()">
+  <label>
+    <input type="checkbox"
+           data-ng-model="onlyMyRecord"
+           aria-label="{{'onlyMyRecord' | translate}}">
+    <span data-translate="">onlyMyRecord</span>
   </label>
 </div>

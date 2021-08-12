@@ -101,9 +101,13 @@ public class XsltFormatter implements FormatterImpl {
         // Some XSLT are used by both formatters and Jeeves and Spring MVC services
         Element translations = new Element("translations");
         Element gui = new Element("gui");
-        gui.addContent(new Element("url").setText(fparams.url + "../.."));
+        String baseUrl = settingManager.getBaseURL();
+        String context = baseUrl.replace(settingManager.getServerURL(), "");
+        gui.addContent(new Element("url").setText(
+            context.substring(0, context.length() - 1)
+        ));
         gui.addContent(new Element("nodeUrl").setText(settingManager.getNodeURL()));
-        gui.addContent(new Element("baseUrl").setText(settingManager.getBaseURL()));
+        gui.addContent(new Element("baseUrl").setText(baseUrl));
         gui.addContent(new Element("serverUrl").setText(settingManager.getServerURL()));
         gui.addContent(new Element("language").setText(fparams.context.getLanguage()));
         gui.addContent(new Element("reqService").setText("md.format.html"));

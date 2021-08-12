@@ -37,7 +37,7 @@
           <span class="fa fa-fw"
                 data-ng-hide="canManageUserSearches() && search.featuredType !== ''"/>
 
-          <a data-ng-href="#/search?{{search.url}}">
+          <a data-ng-href="#/{{routeSearch}}?{{search.url}}">
             {{search.names[lang] || search.names['eng'] || ('userSearchNameMissing' | translate)}}
 
             <img data-ng-if="search.logo"

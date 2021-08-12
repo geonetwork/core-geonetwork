@@ -6,6 +6,7 @@
 @import "gn_doc.less";
 @import "gn_icons.less";
 @import "ellipsis.less";
+@import "../views/default/less/gn_variables_default.less"; // must be last
 
 @fa-version: '4.4.0';
 @fa-font-path: '../catalog/lib/style/font-awesome/fonts';
@@ -145,7 +146,7 @@ div[gn-transfer-ownership] * .list-group {
     }
   }
   .gn-editor-board {
-    padding-top: 120px;
+    padding-top: calc(~"@{gn-header-height} + @{gn-menubar-height}");
     @media (max-width: @screen-xs-max) {
       padding-top: 0;
       .container-fluid, .col-sm-12 {
@@ -757,7 +758,8 @@ i.fa-times.delete:hover {
     background-color: darken(@brand-warning, 5%);
     color: #fff;
   }
-  .gn-status-obsolete-bg {
+  .gn-status-obsolete-bg,
+  .gn-status-superseded-bg {
     background-color: darken(@brand-danger, 5%);
     color: #fff;
   }

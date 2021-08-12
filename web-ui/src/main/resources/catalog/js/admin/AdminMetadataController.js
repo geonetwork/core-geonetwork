@@ -37,10 +37,10 @@
    */
   module.controller('GnAdminMetadataController', [
     '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
-    'gnSearchManagerService',
+    'gnSearchManagerService', 'gnGlobalSettings',
     'gnUtilityService',
     function($scope, $routeParams, $http, $rootScope, $translate, $compile,
-            gnSearchManagerService,
+            gnSearchManagerService, gnGlobalSettings,
             gnUtilityService) {
 
       $scope.pageMenu = {
@@ -81,6 +81,21 @@
       $scope.loadTplReport = null;
       $scope.tplLoadRunning = false;
       $scope.sampleLoadRunning = false;
+      $scope.searchObj = {
+        internal: true,
+        any: '',
+        defaultParams: {
+          any: '',
+          isTemplate: 'n',
+          from: 1,
+          to: 50
+        }
+      };
+      $scope.searchObj.params = angular.extend({},
+        $scope.searchObj.defaultParams);
+
+      $scope.modelOptions =
+        angular.copy(gnGlobalSettings.modelOptions);
 
       function loadSchemas() {
         $http.get('../api/standards').
@@ -192,15 +207,12 @@
       $scope.formatterFiles = [];
       $scope.metadataId = '';
 
-      /**
-       * Load list of logos
-       */
       loadFormatter = function() {
         $scope.formatters = [];
-        $http.get('md.formatter.list?_content_type=json').
+        $http.get('../api/formatters').
             success(function(data) {
               if (data !== 'null') {
-                $scope.formatters = data.formatters; // TODO: check multiple
+                $scope.formatters = data.formatters;
               }
             }).error(function(data) {
               // TODO
@@ -227,17 +239,13 @@
       };
 
       $scope.listFormatterFiles = function(f) {
-        //md.formatter.files?id=sextant
         $scope.formatterFiles = [];
 
-        var url = 'md.formatter.files?_content_type=json&id=' + f.id;
-        if (f.schema) {
-          url += '&schema=' + f.schema;
-        }
+        var url = '../api/formatters/' + f.schema + '/' + f.id + '/files';
         $http.get(url).success(function(data) {
           if (data !== 'null') {
             // Format files
-            angular.forEach(data.file, function(file) {
+            angular.forEach(data.file ? data.file : data, function(file) {
               file.dir = '.'; // File from root directory
               file['@path'] = file['@name'];
               $scope.formatterFiles.push(file);
@@ -262,26 +270,19 @@
       };
 
       $scope.selectFormatter = function(f) {
-        //md.formatter.files?id=sextant
         $scope.formatterSelected = f;
         $scope.listFormatterFiles(f);
       };
 
 
       $scope.downloadFormatter = function(f) {
-        var url = 'md.formatter.download?id=' + f.id;
-        if (f.schema) {
-          url += '&schema=' + f.schema;
-        }
+        var url = '../api/formatters/' + f.schema + '/' + f.id;
         location.replace(url, '_blank');
       };
 
       $scope.formatterDelete = function(f) {
-        var url = 'md.formatter.remove?id=' + f.id;
-        if (f.schema) {
-          url += '&schema=' + f.schema;
-        }
-        $http.get(url)
+        var url = '../api/formatters/' + f.schema + '/' + f.id
+        $http.delete(url)
             .success(function(data) {
               $scope.formatterSelected = null;
               loadFormatter();
@@ -297,33 +298,30 @@
 
       $scope.$watch('selectedFile', function() {
         if ($scope.selectedFile) {
-          var params = {
-            id: $scope.formatterSelected.id,
-            fname: $scope.selectedFile['@path']
-          };
-          if ($scope.formatterSelected.schema) {
-            params.schema = $scope.formatterSelected.schema;
-          }
           $http({
-            url: 'md.formatter.edit?_content_type=json',
-            method: 'POST',
-            data: $.param(params),
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            url: '../api/formatters/'
+            + $scope.formatterSelected.schema
+            + '/' + $scope.formatterSelected.id
+            + '/files/' + $scope.selectedFile['@path'],
+            method: 'GET'
           }).success(function(fileContent) {
-            $scope.formatterFile = fileContent[0];
+            $scope.formatterFile = fileContent;
           });
         }
       });
 
       $scope.saveFormatterFile = function(formId) {
         $http({
-          url: 'md.formatter.update?_content_type=json',
+          url: '../api/formatters/'
+            + $scope.formatterSelected.schema
+            + '/' + $scope.formatterSelected.id
+            + '/files/' + $scope.selectedFile['@path'],
           method: 'POST',
           data: $(formId).serialize(),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(
             function(response) {
-              if (response.status === 200) {
+              if (response.status === 201) {
                 $rootScope.$broadcast('StatusUpdated', {
                   msg: $translate.instant('formatterFileUpdated',
                       {file: $scope.selectedFile['@name']}),
@@ -340,13 +338,32 @@
             });
       };
 
-      $scope.testFormatter = function(mode) {
-        var service = 'md.format.' + (mode == 'HTML' ? 'html' : 'xml');
-        var url = service + '?uuid=' + $scope.metadataId +
-            '&xsl=' + $scope.formatterSelected.id;
-        if ($scope.formatterSelected.schema) {
-          url += '&schema=' + $scope.formatterSelected.schema;
+      $scope.previewOn = function(uuid) {
+        $scope.metadataId = uuid;
+      };
+
+      $scope.updateParams = function() {
+        if ($scope.searchObj.any == '') {
+          $scope.$broadcast('resetSearch');
+        } else {
+          var addWildcard = $scope.searchObj.any.indexOf('"') === -1
+            && $scope.searchObj.any.indexOf('*') === -1
+            && $scope.searchObj.any.indexOf('q(') !== 0;
+          $scope.searchObj.params.any = addWildcard
+            ? '*' + $scope.searchObj.any + '*'
+            : $scope.searchObj.any;
         }
+      };
+
+      $scope.clearSearch = function() {
+        $scope.$broadcast('resetSearch');
+      };
+
+      $scope.testFormatter = function(mode) {
+        var url = '../api/records/'
+          + $scope.metadataId + '/formatters/'
+          + $scope.formatterSelected.id
+          + (mode == 'XML' ? '?output=xml' : '');
 
         if (mode == 'DEBUG') {
           url += '&debug=true';
