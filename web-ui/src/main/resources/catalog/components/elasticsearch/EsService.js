@@ -263,6 +263,15 @@
         if (angular.isArray(filters)) {
           query.function_score['query'].bool.filter = filters;
         }
+        if (p.titleOnly) {
+          searchState.titleOnly = true;
+          delete p.titleOnly;
+        }
+        if (p.exactMatch) {
+          searchState.exactMatch = true;
+          delete p.exactMatch;
+        }
+
 
         var queryHook = query.function_score.query.bool;
         this.buildQueryClauses(queryHook, p, luceneQueryString, searchState.exactMatch, searchState.titleOnly);

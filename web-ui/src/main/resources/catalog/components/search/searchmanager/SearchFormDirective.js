@@ -263,7 +263,7 @@
     };
 
     /**
-     * If we use permalink, the triggerSerach call will in fact just update
+     * If we use permalink, the triggerSearch call will in fact just update
      * the url with the params, then the event $locationChangeSuccess will call
      * the geonetwork search from url params.
      */
@@ -522,6 +522,7 @@
      * @param {boolean} value
      */
     this.setExactMatch = function(value) {
+      this.updateSearchParams({'exactMatch': value});
       $scope.searchObj.state.exactMatch = value;
     };
 
@@ -536,6 +537,7 @@
      * @param {boolean} value
      */
     this.setTitleOnly = function(value) {
+      this.updateSearchParams({'titleOnly': value});
       $scope.searchObj.state.titleOnly = value;
     };
 
