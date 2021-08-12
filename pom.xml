@@ -619,8 +619,23 @@
 
       <!-- GeoTools and spatial search stuff -->
       <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-opengis</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.geotools.xsd</groupId>
         <artifactId>gt-xsd-gml3</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-fes</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-core</artifactId>
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
@@ -1107,6 +1122,11 @@
       <dependency>
         <groupId>org.elasticsearch.client</groupId>
         <artifactId>elasticsearch-rest-high-level-client</artifactId>
+        <version>${es.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.elasticsearch</groupId>
+        <artifactId>elasticsearch</artifactId>
         <version>${es.version}</version>
       </dependency>
       <dependency>
