@@ -354,7 +354,11 @@
       $scope.searchObj.state = {
         filters: {},
         exactMatch: false,
-        titleOnly: false
+        titleOnly: false,
+        languageStrategy: 'searchInAllLanguages',
+        forcedLanguage: undefined,
+        languageWhiteList: undefined,
+        detectedLanguage: undefined,
       };
       $scope.triggerSearch();
       $scope.$broadcast('resetSelection');
@@ -556,6 +560,53 @@
      */
     this.getTitleOnly = function() {
       return $scope.searchObj.state.titleOnly;
+    };
+
+
+    /**
+     * @param {string} value
+     */
+    this.setLanguageStrategy = function(value) {
+      $scope.searchObj.state.languageStrategy = value;
+    };
+
+    /**
+     * @return {string}
+     */
+    this.getLanguageStrategy = function() {
+      return $scope.searchObj.state.languageStrategy;
+    };
+
+    /**
+     * @param {string} value
+     */
+    this.setForcedLanguage = function(value) {
+      $scope.searchObj.state.forcedLanguage = value;
+    };
+
+    /**
+     * @return {string}
+     */
+    this.getForcedLanguage = function() {
+      return $scope.searchObj.state.forcedLanguage;
+    };
+
+    /**
+     * @param {array<string>} value
+     */
+    this.setLanguageWhiteList = function(value) {
+      $scope.searchObj.state.languageWhiteList = value;
+    };
+
+    /**
+     * @return {array<string>}
+     */
+    this.getLanguageWhiteList = function() {
+      return $scope.searchObj.state.languageWhiteList;
+    };
+
+    this.getDetectedLanguage = function() {
+      return $scope.searchObj.state.detectedLanguage;
     };
 
     /**

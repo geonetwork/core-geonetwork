@@ -1553,6 +1553,9 @@
       "mainLanguage": {
         "type": "keyword"
       },
+      "otherLanguage": {
+        "type": "keyword"
+      },
       "metadataIdentifier": {
         "type": "keyword"
       },

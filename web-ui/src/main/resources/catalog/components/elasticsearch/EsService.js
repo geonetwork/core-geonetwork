@@ -49,6 +49,20 @@
         return gnEsLuceneQueryParser.facetsToLuceneQuery(facetsState);
       }
 
+      function autoDetectLanguage(any, languageWhiteList) {
+        var whitelist =
+          languageWhiteList
+          || Object.keys(gnGlobalSettings.gnCfg.mods.header.languages);
+        var detectedLanguage = franc.all(any, {
+            whitelist: whitelist,
+            minLength: 10
+          }),
+          firstLanguage = detectedLanguage[0];
+        // console.log('Detecting language for "', p.any, '" in ', languageWhitelist);
+        // console.log(' => Detection failed: ', failedToDetect, ' / First match: ', firstLanguage);
+        // console.log(detectedLanguage);
+        return firstLanguage[0];
+      }
 
       /**
        * Build all clauses to be added to the Elasticsearch
@@ -60,7 +74,8 @@
        * @param {boolean} exactMatch search for exact value
        * @param {boolean} titleOnly search in title only
        */
-      this.buildQueryClauses = function(queryHook, p, luceneQueryString, exactMatch, titleOnly) {
+      this.buildQueryClauses = function(queryHook, p, luceneQueryString,
+                                        state) {
         var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
           'sortBy', 'sortOrder', 'resultType', 'facet.q', 'any', 'geometry', 'query_string',
           'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo', 'geom', 'relation',
@@ -82,10 +97,41 @@
                   'Using default value \'${any}\'.');
                 queryBase = defaultQuery;
               }
+
+              var languageFound = false,
+                searchLanguage = 'lang' + state.forcedLanguage,
+                uiLanguage = 'lang' + gnGlobalSettings.iso3lang;
+              state.detectedLanguage = undefined;
+              if (state.forcedLanguage !== undefined) {
+                searchLanguage = 'lang' + state.forcedLanguage;
+                languageFound = true;
+              } else if (state.languageStrategy === 'searchInDetectedLanguage') {
+                searchLanguage = autoDetectLanguage(p.any, state.languageWhiteList);
+                state.detectedLanguage = searchLanguage;
+                languageFound = searchLanguage !== 'und';
+                searchLanguage = languageFound ? 'lang' + searchLanguage : '\\*';
+              } else if (state.languageStrategy === 'searchInUILanguage') {
+                searchLanguage = uiLanguage;
+                languageFound = true;
+              } else if (state.languageStrategy === 'searchInAllLanguages') {
+                languageFound = false;
+                searchLanguage = '\\*';
+                uiLanguage = '\\*';
+              }
+
               var searchString = escapeSpecialCharacters(p.any),
-                q = queryBase.replace(
+                q = queryBase
+                  .replace(
+                    /\$\{uiLang\}/g,
+                    uiLanguage)
+                  .replace(
+                    /\$\{searchLang\}/g,
+                    languageFound && searchLanguage
+                                ? searchLanguage : '\\*')
+                  .replace(
                   /\$\{any\}/g,
-                  exactMatch === true ? '\"' + searchString + '\"' : searchString);
+                  state.exactMatch === true
+                              ? '\"' + searchString + '\"' : searchString);
               queryStringParams.push(q);
             } else {
               queryStringParams.push(queryExpression[1]);
@@ -96,14 +142,14 @@
             queryStringParams.push(luceneQueryString);
           }
 
-          if (titleOnly) {
+          if (state.titleOnly) {
             var query = gnGlobalSettings.gnCfg.mods.search.queryTitle.replace(
               /\$\{any\}/g, escapeSpecialCharacters(p.any));
 
             queryHook.must.push({
               query_string: {
                 fields: ["resourceTitleObject.*"],
-                query: exactMatch === true ? '\"' + query + '\"' : query
+                query: state.exactMatch === true ? '\"' + query + '\"' : query
               }
             });
           } else {
@@ -274,7 +320,7 @@
         }
 
         var queryHook = query.function_score.query.bool;
-        this.buildQueryClauses(queryHook, p, luceneQueryString, searchState.exactMatch, searchState.titleOnly);
+        this.buildQueryClauses(queryHook, p, luceneQueryString, searchState);
 
         if(p.from) {
           params.from = p.from - 1;
