@@ -146,12 +146,21 @@ goog.require('gn_alert');
           // Full text on all fields
           // 'queryBase': '${any}',
           // Full text but more boost on title match
-          // * Search in all languages
-          'queryBase': 'any.\\*:(${any}) any.common:(${any}) resourceTitleObject.\\*:(${any})^2',
+          // * Search in languages depending on the strategy selected
+          'queryBase': 'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:(${any})^2',
+          // * Force UI language - in this case set languageStrategy to searchInUILanguage
+          // and disable language options in searchOptions
+          // 'queryBase': 'any.${uiLang}:(${any}) any.common:(${any}) resourceTitleObject.${uiLang}:(${any})^2',
           // * Search in French fields (with french analysis)
           // 'queryBase': 'any.langfre:(${any}) any.common:(${any}) resourceTitleObject.langfre:(${any})^2',
           'queryTitle': '${any}',
-          'searchOptions': true,
+          'searchOptions': {
+            titleOnly: true,
+            exactMatch: true,
+            language: true
+          },
+          // can be searchInUILanguage, searchInAllLanguages, searchInDetectedLanguage
+          'languageStrategy': 'searchInAllLanguages',
           // Score query may depend on where we are in the app?
           'scoreConfig': {
             // Score experiments:
@@ -222,8 +231,9 @@ goog.require('gn_alert');
                   'multi_match': {
                     "query": "",
                     "type": "bool_prefix",
+                    "analyzer": "french",
                     "fields": [
-                      "resourceTitleObject.*",
+                      "resourceTitleObject.langfre",
                       "resourceAbstractObject.*",
                       "tag",
                       "resourceIdentifier"
