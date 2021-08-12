@@ -850,6 +850,12 @@
         <scope>test</scope>
       </dependency>
       <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>${jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-all</artifactId>
         <version>1.10.19</version>
@@ -1550,6 +1556,7 @@
     <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.5.9</httpcomponents.version>
     <jasypt.version>1.9.3</jasypt.version>
+    <jupiter.version>5.7.0</jupiter.version>
 
     <skipIT>true</skipIT> <!-- disable integration tests by default, use the "it" profile to run them which enables them -->
   </properties>
