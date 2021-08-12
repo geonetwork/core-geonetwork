@@ -159,7 +159,15 @@ goog.require('gn_alert');
             exactMatch: true,
             language: true
           },
-          // can be searchInUILanguage, searchInAllLanguages, searchInDetectedLanguage
+          // can be:
+          // * searchInUILanguage: search in UI languages
+          // eg. full text field is any.langfre if French
+          // * searchInAllLanguages: search using any.* fields
+          // (no analysis is done, more records are returned)
+          // * searchInDetectedLanguage: restrict the search to the language detected
+          // based on user search. If language detection fails, search in all languages.
+          // * searchInThatLanguage: Force a language using searchInThatLanguage:fre
+          // 'languageStrategy': 'searchInThatLanguage:fre',
           'languageStrategy': 'searchInAllLanguages',
           // Score query may depend on where we are in the app?
           'scoreConfig': {

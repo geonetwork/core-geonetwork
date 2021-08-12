@@ -113,6 +113,15 @@
               } else if (state.languageStrategy === 'searchInUILanguage') {
                 searchLanguage = uiLanguage;
                 languageFound = true;
+              } else if (state.languageStrategy
+                && state.languageStrategy.indexOf('searchInThatLanguage') === 0) {
+                var config = state.languageStrategy.split(':');
+                if (config.length !== 2) {
+                  console.warn('When using language strategy searchInThatLanguage, configuration MUST be like searchInThatLanguage:fre');
+                } else {
+                  searchLanguage = 'lang' + config[1];
+                  languageFound = true;
+                }
               } else if (state.languageStrategy === 'searchInAllLanguages') {
                 languageFound = false;
                 searchLanguage = '\\*';
