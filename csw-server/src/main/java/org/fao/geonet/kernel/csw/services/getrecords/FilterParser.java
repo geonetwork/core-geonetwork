@@ -60,19 +60,37 @@ public class FilterParser {
 
     /**
      * Converts a XML representation of an OGC Filter into a OpenGIS Filter.
-     * 
-     * @param xml XML representation of Filter.
+     *
+     * @param xml           XML representation of Filter.
      * @param filterVersion OGC Filter API version to use.
-     * @return Parsed filter or null if parsed object is not of class Filter or xml input was null.
+     * @return Parsed filter or null if parsed object is not of class Filter or xml
+     *         input was null.
      */
+
     public static Filter parseFilter(Element xml, String filterVersion) {
-        if (xml == null)
+        if (xml == null) {
             return null;
+        }
+        return parseFilter(Xml.getString(xml), filterVersion);
+    }
+
+    /**
+     * Converts a XML representation of an OGC Filter into a OpenGIS Filter.
+     *
+     * @param xml           XML-String representing the Filter.
+     * @param filterVersion OGC Filter API version to use.
+     * @return Parsed filter or null if parsed object is not of class Filter or
+     *         input was null.
+     */
+    public static Filter parseFilter(String string, String filterVersion) {
+        if (string == null) {
+            return null;
+        }
 
         final Parser parser = createFilterParser(filterVersion);
         parser.setValidating(true);
         parser.setFailOnValidationError(true);
-        String string = Xml.getString(xml);
+
         try {
             final Object parseResult = parser.parse(new StringReader(string));
             if (parseResult instanceof Filter) {
