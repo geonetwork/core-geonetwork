@@ -23,6 +23,9 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords.es;
 
+import static org.fao.geonet.kernel.csw.services.getrecords.es.EsJsonHelper.array;
+import static org.fao.geonet.kernel.csw.services.getrecords.es.EsJsonHelper.boolbdr;
+import static org.fao.geonet.kernel.csw.services.getrecords.es.EsJsonHelper.match;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -43,6 +46,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+/**
+ * CswFilter2Es converts (XML-based) CSW queries into ElasticSearch queries.
+ * These ES-queries are in JSON-notation. We do not want to test the resulting
+ * JSON-String char-by-char. Instead, we create an expected object-tree,
+ * deserialize the result-String and then compare them on a tree-level.
+ *
+ * We use Jackson to build the JSON trees.
+ *
+ * @author bhoefling
+ *
+ */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = CswFilter2EsTestConfiguration.class)
 class CswFilter2EsTest {
@@ -54,7 +68,7 @@ class CswFilter2EsTest {
 
     /**
      * Example test on how to use Jackson to compare two JSON Objects.
-     * 
+     *
      * @throws IOException
      */
     @Test
@@ -71,15 +85,39 @@ class CswFilter2EsTest {
     }
 
     @Test
-    void firstSimpleTest() {
-        final String myXML = "<Filter xmlns=\"http://www.opengis.net/ogc\">\n"
-                + "    <PropertyIsLike wildCard=\"%\" singleChar=\"_\" escapeChar=\"\\\">\n"
-                + "          <PropertyName>Title</PropertyName>\n" + "          <Literal>%Hydrological%</Literal>\n"
-                + "    </PropertyIsLike>\n" + "      </Filter>";
+    void firstSimpleTest() throws IOException {
+        final String myXML = "<Filter xmlns=\"http://www.opengis.net/ogc\">\n" + "    <PropertyIsEqualTo>\n"
+                + "          <PropertyName>Title</PropertyName>\n" + "          <Literal>Hydrological</Literal>\n"
+                + "    </PropertyIsEqualTo>\n" + "      </Filter>";
 
         final Filter filter = FilterParser.parseFilter(myXML, FilterCapabilities.VERSION_110);
         final String result = CswFilter2Es.translate(filter, fieldMapper);
         assertNotNull(result);
-        System.out.println(result);
+
+        // EXPECTED:
+        final ObjectNode expected = boolbdr().must(array(match("Title", "Hydrological"))).filter(queryStringPart())
+                .bld();
+
+        assertEquals(expected, MAPPER.readTree(new StringReader(result)));
+    }
+
+    /**
+     * <pre>
+     * {
+     *   "query_string": {
+     *     "query": "%s"
+     * }
+     * </pre>
+     *
+     * @return see description.
+     */
+    private static ObjectNode queryStringPart() {
+        // build the "query_string" part:
+        final ObjectNode query = MAPPER.createObjectNode();
+        query.put("query", "%s");
+
+        final ObjectNode queryString = MAPPER.createObjectNode();
+        queryString.set("query_string", query);
+        return queryString;
     }
 }
