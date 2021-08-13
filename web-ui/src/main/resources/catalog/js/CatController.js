@@ -243,10 +243,9 @@ goog.require('gn_alert');
                   'multi_match': {
                     "query": "",
                     "type": "bool_prefix",
-                    "analyzer": "french",
                     "fields": [
-                      "resourceTitleObject.langfre",
-                      "resourceAbstractObject.*",
+                      "resourceTitleObject.${searchLang}",
+                      "resourceAbstractObject.${searchLang}",
                       "tag",
                       "resourceIdentifier"
                       // "anytext",
