@@ -1,27 +1,56 @@
+/*
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.kernel.csw.services.getrecords.es;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.StringReader;
 
-import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.FilterParser;
 import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
-import org.jdom.Element;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.opengis.filter.Filter;
 import org.opengis.filter.capability.FilterCapabilities;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = CswFilter2EsTestConfiguration.class)
 class CswFilter2EsTest {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    @Autowired
+    IFieldMapper fieldMapper;
 
     /**
      * Example test on how to use Jackson to compare two JSON Objects.
@@ -39,5 +68,18 @@ class CswFilter2EsTest {
         root3.put("query", 23);
         root3.put("query2", 42);
         assertEquals(root1, root3);
+    }
+
+    @Test
+    void firstSimpleTest() {
+        final String myXML = "<Filter xmlns=\"http://www.opengis.net/ogc\">\n"
+                + "    <PropertyIsLike wildCard=\"%\" singleChar=\"_\" escapeChar=\"\\\">\n"
+                + "          <PropertyName>Title</PropertyName>\n" + "          <Literal>%Hydrological%</Literal>\n"
+                + "    </PropertyIsLike>\n" + "      </Filter>";
+
+        final Filter filter = FilterParser.parseFilter(myXML, FilterCapabilities.VERSION_110);
+        final String result = CswFilter2Es.translate(filter, fieldMapper);
+        assertNotNull(result);
+        System.out.println(result);
     }
 }
