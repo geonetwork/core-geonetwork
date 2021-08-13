@@ -49,10 +49,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 /**
  * CswFilter2Es converts (XML-based) CSW queries into ElasticSearch queries.
  * These ES-queries are in JSON-notation. We do not want to test the resulting
- * JSON-String char-by-char. Instead, we create an expected object-tree,
- * deserialize the result-String and then compare them on a tree-level.
- *
- * We use Jackson to build the JSON trees.
+ * JSON-String char-by-char as this is error-prone.<br>
+ * 
+ * Instead, we deserialize the output string back to a JSON-tree. We then
+ * compare this output tree with an expected tree we built up using an
+ * Elasticsearch oriented DSL.
+ * 
  *
  * @author bhoefling
  *
@@ -85,23 +87,46 @@ class CswFilter2EsTest {
     }
 
     @Test
-    void firstSimpleTest() throws IOException {
-        final String myXML = "<Filter xmlns=\"http://www.opengis.net/ogc\">\n" + "    <PropertyIsEqualTo>\n"
+    void testPropertyIsEqualTo() throws IOException {
+
+        // INPUT:
+        final String input = "<Filter xmlns=\"http://www.opengis.net/ogc\">\n" + "    <PropertyIsEqualTo>\n"
                 + "          <PropertyName>Title</PropertyName>\n" + "          <Literal>Hydrological</Literal>\n"
                 + "    </PropertyIsEqualTo>\n" + "      </Filter>";
 
-        final Filter filter = FilterParser.parseFilter(myXML, FilterCapabilities.VERSION_110);
+        // EXPECTED:
+        final ObjectNode expected = boolbdr(). //
+                must(array(match("Title", "Hydrological"))). //
+                filter(queryStringPart()). //
+                bld();
+
+        assertFilterEquals(expected, input);
+    }
+
+    void assertFilterEquals(JsonNode expected, String actual) throws IOException {
+        assertFilterEquals(expected, actual, FilterCapabilities.VERSION_110);
+    }
+
+    /**
+     * Converts xml-string into OGC Filter expression using a specific filter version.
+     * This Filter is then finally converted to an ElasticSearch expression and checked
+     * against the expected output
+     * @param expected JsonNode representing the expected ElasticSearch query.
+     * @param actual XML text of the OGC Filter.
+     * @param filterSpecVersion see {@link FilterCapabilities}
+     * @throws IOException
+     */
+    void assertFilterEquals(JsonNode expected, String actual, String filterSpecVersion) throws IOException {
+        final Filter filter = FilterParser.parseFilter(actual, filterSpecVersion);
         final String result = CswFilter2Es.translate(filter, fieldMapper);
         assertNotNull(result);
-
-        // EXPECTED:
-        final ObjectNode expected = boolbdr().must(array(match("Title", "Hydrological"))).filter(queryStringPart())
-                .bld();
 
         assertEquals(expected, MAPPER.readTree(new StringReader(result)));
     }
 
     /**
+     * Builds up the following sub-tree:
+     * 
      * <pre>
      * {
      *   "query_string": {
