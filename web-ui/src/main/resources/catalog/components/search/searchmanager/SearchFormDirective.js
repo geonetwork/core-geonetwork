@@ -567,6 +567,7 @@
      * @param {string} value
      */
     this.setLanguageStrategy = function(value) {
+      this.updateSearchParams({'languageStrategy': value});
       $scope.searchObj.state.languageStrategy = value;
     };
 
@@ -581,6 +582,7 @@
      * @param {string} value
      */
     this.setForcedLanguage = function(value) {
+      this.updateSearchParams({'forcedLanguage': value});
       $scope.searchObj.state.forcedLanguage = value;
     };
 

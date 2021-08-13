@@ -42,7 +42,9 @@
           scope.optionsConfig = gnGlobalSettings.gnCfg.mods.search.searchOptions;
           scope.init = function() {
             scope.onlyMyRecord = gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly;
-            scope.languageStrategy = gnGlobalSettings.gnCfg.mods.search.languageStrategy;
+            scope.languageStrategy = controller.getLanguageStrategy()
+              || gnGlobalSettings.gnCfg.mods.search.languageStrategy;
+            scope.forcedLanguage = controller.getForcedLanguage();
             scope.languagesAvailable = [];
             scope.languagesStats = {};
 

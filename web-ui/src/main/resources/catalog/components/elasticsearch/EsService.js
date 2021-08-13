@@ -320,6 +320,14 @@
           searchState.exactMatch = true;
           delete p.exactMatch;
         }
+        if (p.forcedLanguage) {
+          searchState.forcedLanguage = p.forcedLanguage;
+          delete p.forcedLanguage;
+        }
+        if (p.languageStrategy) {
+          searchState.languageStrategy = p.languageStrategy;
+          delete p.languageStrategy;
+        }
 
         var queryHook = query.function_score.query.bool;
         this.buildQueryClauses(queryHook, p, luceneQueryString, searchState);
