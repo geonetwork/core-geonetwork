@@ -186,6 +186,7 @@
   "system/inspire/remotevalidation/nodeid-help": "If null, the record is uploaded to the validator, if a node is defined, then the CSW url of this node is used, the validator will make a GetRecordById request to retrieve the record.",
   "onlyMyRecord": "Only my records",
   "searchWithLang": "Search ",
+  "searchAllLanguages-help": "Define which language is giving priorities to some records.",
   "searchInAllLanguages": "in all languages",
   "searchInUILanguage": "in UI language",
   "searchInDetectedLanguage": "in detected language",

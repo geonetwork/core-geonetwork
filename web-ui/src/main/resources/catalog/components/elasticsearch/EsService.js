@@ -77,7 +77,7 @@
           searchLanguage = 'lang' + state.forcedLanguage;
           languageFound = true;
         } else if (state.languageStrategy === 'searchInDetectedLanguage') {
-          searchLanguage = autoDetectLanguage(p.any, state.languageWhiteList);
+          searchLanguage = autoDetectLanguage(any, state.languageWhiteList);
           state.detectedLanguage = searchLanguage;
           languageFound = searchLanguage !== 'und';
           searchLanguage = languageFound ? 'lang' + searchLanguage : '\\*';
