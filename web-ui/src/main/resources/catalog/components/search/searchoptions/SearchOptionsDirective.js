@@ -42,41 +42,51 @@
           scope.optionsConfig = gnGlobalSettings.gnCfg.mods.search.searchOptions;
           scope.init = function() {
             scope.onlyMyRecord = gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly;
-            scope.languageStrategy = gnGlobalSettings.gnCfg.mods.search.languageStrategy;
+
+            scope.languageStrategy = controller.getLanguageStrategy()
+              || gnGlobalSettings.gnCfg.mods.search.languageStrategy;
+            scope.forcedLanguage = controller.getForcedLanguage();
             scope.languagesAvailable = [];
             scope.languagesStats = {};
-            $http.post('../api/search/records/_search', {
-              size: 0,
-              query: {
-                terms: {isTemplate: ['n']}
-              },
-              aggregations: {
-                mainLanguage: {
-                  terms: {
-                    field: 'mainLanguage',
-                    size: 10,
-                    exclude: ''
-                  }
+
+            var configWhiteList = gnGlobalSettings.gnCfg.mods.search.languageWhitelist;
+            if (configWhiteList
+              && configWhiteList.length > 0) {
+              scope.languagesAvailable = configWhiteList;
+              controller.setLanguageWhiteList(configWhiteList);
+            } else {
+              $http.post('../api/search/records/_search', {
+                size: 0,
+                query: {
+                  terms: {isTemplate: ['n']}
                 },
-                otherLanguage: {
-                  terms: {
-                    field: 'otherLanguage',
-                    size: 10,
-                    exclude: ''
+                aggregations: {
+                  mainLanguage: {
+                    terms: {
+                      field: 'mainLanguage',
+                      size: 10,
+                      exclude: ''
+                    }
+                  },
+                  otherLanguage: {
+                    terms: {
+                      field: 'otherLanguage',
+                      size: 10,
+                      exclude: ''
+                    }
                   }
                 }
-              }
-            }).
-            success(function(data) {
-              angular.forEach(data.aggregations.mainLanguage.buckets, function(i) {
-                scope.languagesStats[i.key] = i.doc_count;
+              }).success(function (data) {
+                angular.forEach(data.aggregations.mainLanguage.buckets, function (i) {
+                  scope.languagesStats[i.key] = i.doc_count;
+                });
+                angular.forEach(data.aggregations.otherLanguage.buckets, function (i) {
+                  scope.languagesStats[i.key] = i.doc_count;
+                });
+                scope.languagesAvailable = Object.keys(scope.languagesStats);
+                controller.setLanguageWhiteList(scope.languagesAvailable);
               });
-              angular.forEach(data.aggregations.otherLanguage.buckets, function(i) {
-                scope.languagesStats[i.key] = i.doc_count;
-              });
-              scope.languagesAvailable = Object.keys(scope.languagesStats);
-              controller.setLanguageWhiteList(scope.languagesAvailable);
-            });
+            }
           };
 
           // this enables to keep the dropdown active when we click on the label
