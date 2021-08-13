@@ -153,7 +153,7 @@ goog.require('gn_alert');
           // 'queryBase': 'any.${uiLang}:(${any}) any.common:(${any}) resourceTitleObject.${uiLang}:(${any})^2',
           // * Search in French fields (with french analysis)
           // 'queryBase': 'any.langfre:(${any}) any.common:(${any}) resourceTitleObject.langfre:(${any})^2',
-          'queryTitle': 'resourceTitleObject.${searchLang}:${any}',
+          'queryTitle': 'resourceTitleObject.${searchLang}:(${any})',
           'searchOptions': {
             titleOnly: true,
             exactMatch: true,

@@ -133,7 +133,9 @@
               }
 
               var searchString = escapeSpecialCharacters(p.any),
-                q = queryBase
+                q = (state.titleOnly
+                  ? gnGlobalSettings.gnCfg.mods.search.queryTitle
+                  : queryBase)
                   .replace(
                     /\$\{uiLang\}/g,
                     uiLanguage)
@@ -155,23 +157,11 @@
             queryStringParams.push(luceneQueryString);
           }
 
-          if (state.titleOnly) {
-            var query = gnGlobalSettings.gnCfg.mods.search.queryTitle.replace(
-              /\$\{any\}/g, escapeSpecialCharacters(p.any));
-
-            queryHook.must.push({
-              query_string: {
-                query: state.exactMatch === true ? '\"' + query + '\"' : query
-              }
-            });
-          } else {
-
-            queryHook.must.push({
-              query_string: {
-                query: queryStringParams.join(' AND ').trim()
-              }
-            });
-          }
+          queryHook.must.push({
+            query_string: {
+              query: queryStringParams.join(' AND ').trim()
+            }
+          });
         }
         // ranges criteria (for dates)
         if (p.creationDateFrom || p.creationDateTo) {
