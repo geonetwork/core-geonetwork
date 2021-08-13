@@ -103,16 +103,55 @@ class CswFilter2EsTest {
         assertFilterEquals(expected, input);
     }
 
+    @Test
+    void testLogicalAnd() throws IOException {
+
+        // INPUT:
+        final String input = "      <Filter xmlns=\"http://www.opengis.net/ogc\">\n" //
+                + "        <And>\n" //
+                + "      <PropertyIsEqualTo>\n" //
+                + "        <PropertyName>Title</PropertyName>\n" //
+                + "            <Literal>Hydrological</Literal>\n" //
+                + "      </PropertyIsEqualTo>\n" //
+                + "      <PropertyIsEqualTo>\n" //
+                + "        <PropertyName>Title</PropertyName>\n" //
+                + "            <Literal>Africa</Literal>\n" //
+                + "      </PropertyIsEqualTo>\n" //
+                + "    </And>\n" //
+                + "      </Filter>\n" //
+                + "";
+
+        // EXPECTED:
+        final ObjectNode expected = boolbdr(). //
+                must(array(match("Title", "Africa"), //
+                        match("Title", "Hydrological")))
+                . //
+                filter(queryStringPart()). //
+                bld();
+
+        assertFilterEquals(expected, input);
+    }
+
+    /**
+     * {@see #assertFilterEquals(JsonNode, String, String)} with
+     * FilterCapabilities.VERSION_110 in use.
+     * 
+     * @param expected
+     * @param actual
+     * @throws IOException
+     */
     void assertFilterEquals(JsonNode expected, String actual) throws IOException {
         assertFilterEquals(expected, actual, FilterCapabilities.VERSION_110);
     }
 
     /**
-     * Converts xml-string into OGC Filter expression using a specific filter version.
-     * This Filter is then finally converted to an ElasticSearch expression and checked
-     * against the expected output
-     * @param expected JsonNode representing the expected ElasticSearch query.
-     * @param actual XML text of the OGC Filter.
+     * Converts xml-string into OGC Filter expression using a specific filter
+     * version. This Filter is then finally converted to an ElasticSearch expression
+     * and checked against the expected output
+     * 
+     * @param expected          JsonNode representing the expected ElasticSearch
+     *                          query.
+     * @param actual            XML text of the OGC Filter.
      * @param filterSpecVersion see {@link FilterCapabilities}
      * @throws IOException
      */

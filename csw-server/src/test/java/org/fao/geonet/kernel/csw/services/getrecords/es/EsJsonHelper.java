@@ -23,6 +23,8 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords.es;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -148,8 +150,17 @@ public class EsJsonHelper {
 
     }
 
-    public static ArrayNode array(ObjectNode item) {
+    public static ArrayNode array(ObjectNode... items) {
         final ArrayNode boolNode = MAPPER.createArrayNode();
-        return boolNode.add(item);
+
+        for (final ObjectNode node : items) {
+            boolNode.add(node);
+        }
+        return boolNode;
+    }
+
+    public static ArrayNode array(List<ObjectNode> items) {
+        final ArrayNode boolNode = MAPPER.createArrayNode();
+        return boolNode.addAll(items);
     }
 }
