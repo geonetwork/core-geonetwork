@@ -463,6 +463,18 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         return this;
     }
 
+    /**
+     * Fills out the templateSpatial.
+     * 
+     * @param shapeType For example "bbox" or "polygon".
+     * @param coords    The coordinates in the form needed by shapeType.
+     * @param relation  Spatial operation, like "intersects".
+     * @return
+     */
+    private String fillTemplateSpatial(String shapeType, String coords, String relation) {
+        return String.format(templateSpatial, shapeType, coords, relation);
+    }
+
     @Override
     public Object visit(BBOX filter, Object extraData) {
         return addGeomFilter(filter,"bbox", extraData);
@@ -484,7 +496,7 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         stack.pop();
 
 
-        String filterSpatial = templateSpatial;
+        final String filterSpatial;
 
         WKTReader reader = new WKTReader();
         try {
@@ -496,7 +508,7 @@ public class CswFilter2Es extends AbstractFilterVisitor {
                 // top left, bottom right
                 String coordsValue = String.format("[[%f, %f], [%f, %f]]",
                     coords[1].x, coords[1].y, coords[3].x, coords[3].y);
-                filterSpatial = String.format(filterSpatial, "envelope",coordsValue, "intersects");
+                filterSpatial = fillTemplateSpatial("envelope",coordsValue, "intersects");
 
             } else {
                 if (geometryJts instanceof Polygon) {
@@ -504,7 +516,7 @@ public class CswFilter2Es extends AbstractFilterVisitor {
 
                     String coordinatesText = buildCoordinatesString(polygonGeom.getCoordinates());
 
-                    filterSpatial = String.format(filterSpatial, "polygon",
+                    filterSpatial = fillTemplateSpatial("polygon",
                         String.format("[[%s]]", coordinatesText), geoOperator);
 
                 } else if (geometryJts instanceof Point) {
@@ -512,15 +524,17 @@ public class CswFilter2Es extends AbstractFilterVisitor {
 
                     String coordsValue = String.format("[%f, %f]",
                         pointGeom.getX(), pointGeom.getY());
-                    filterSpatial = String.format(filterSpatial, "point", coordsValue, geoOperator);
+                    filterSpatial = fillTemplateSpatial("point", coordsValue, geoOperator);
 
                 } else if (geometryJts instanceof LineString) {
                     LineString lineStringGeom = (LineString) geometryJts;
 
                     String coordinatesText = buildCoordinatesString(lineStringGeom.getCoordinates());
 
-                    filterSpatial = String.format(filterSpatial, "linestring",
+                    filterSpatial = fillTemplateSpatial("linestring",
                         String.format("[%s]", coordinatesText), geoOperator);
+                } else {
+                    filterSpatial = null;
                 }
             }
 
