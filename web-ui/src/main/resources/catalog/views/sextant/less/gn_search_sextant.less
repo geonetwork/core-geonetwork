@@ -1585,7 +1585,7 @@ ul.invalid {
 .gn-facet-list.panel {
   border: none;
   margin: 0px;
-  padding: 0px;
+  padding: 0 0 30 0;
   .panel-heading {
     display:none;
   }
@@ -1605,17 +1605,13 @@ ul.invalid {
   color:  @brand-primary;
 }
 
-.gn-facet-root-container {
-  div.gn-facet-filter {
-    position: sticky;
-    z-index: 150;
-    top: 0;
-  }
-  input.gn-facet-filter.input-sm {
-    width: calc(~"100% - 30px");
-    margin-left: 0px;
-
-  }
+.input-group.input-group-sm.gn-facet-input-group {
+  position: sticky;
+  z-index: 150;
+  top: 0;
+  background-color: white;
+  margin-left: 0px;
+  width: 100%;
 }
 
 span.text-ellipsis {
