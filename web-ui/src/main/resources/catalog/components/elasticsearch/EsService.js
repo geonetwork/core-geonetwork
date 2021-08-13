@@ -51,8 +51,12 @@
 
       function autoDetectLanguage(any, languageWhiteList) {
         var whitelist =
-          languageWhiteList
-          || Object.keys(gnGlobalSettings.gnCfg.mods.header.languages);
+          gnGlobalSettings.gnCfg.mods.search.languageWhitelist
+          && gnGlobalSettings.gnCfg.mods.search.languageWhitelist.length > 0
+          ? gnGlobalSettings.gnCfg.mods.search.languageWhitelist
+          : (
+            languageWhiteList
+            || Object.keys(gnGlobalSettings.gnCfg.mods.header.languages));
         var detectedLanguage = franc.all(any, {
             whitelist: whitelist,
             minLength: 10
@@ -157,7 +161,6 @@
 
             queryHook.must.push({
               query_string: {
-                fields: ["resourceTitleObject.*"],
                 query: state.exactMatch === true ? '\"' + query + '\"' : query
               }
             });

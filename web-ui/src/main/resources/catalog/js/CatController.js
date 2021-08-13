@@ -153,7 +153,7 @@ goog.require('gn_alert');
           // 'queryBase': 'any.${uiLang}:(${any}) any.common:(${any}) resourceTitleObject.${uiLang}:(${any})^2',
           // * Search in French fields (with french analysis)
           // 'queryBase': 'any.langfre:(${any}) any.common:(${any}) resourceTitleObject.langfre:(${any})^2',
-          'queryTitle': '${any}',
+          'queryTitle': 'resourceTitleObject.${searchLang}:${any}',
           'searchOptions': {
             titleOnly: true,
             exactMatch: true,
@@ -169,6 +169,10 @@ goog.require('gn_alert');
           // * searchInThatLanguage: Force a language using searchInThatLanguage:fre
           // 'languageStrategy': 'searchInThatLanguage:fre',
           'languageStrategy': 'searchInAllLanguages',
+          // Limit language detection to some languages only.
+          // If empty, the list of languages in catalogue records is used
+          // and if none found, mods.header.languages is used.
+          'languageWhitelist': [],
           // Score query may depend on where we are in the app?
           'scoreConfig': {
             // Score experiments:

@@ -358,7 +358,7 @@
         languageStrategy: 'searchInAllLanguages',
         forcedLanguage: undefined,
         languageWhiteList: undefined,
-        detectedLanguage: undefined,
+        detectedLanguage: undefined
       };
       $scope.triggerSearch();
       $scope.$broadcast('resetSelection');
