@@ -278,10 +278,10 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         }
 
         // Process the stack entries for the processed children elements to calculate the filter condition
-        int n = filter.getChildren().size();
+        final int n = filter.getChildren().size();
 
-        List<String> conditionList = new ArrayList<>();
-        while (n-- > 0) {
+        final List<String> conditionList = new ArrayList<>(n);
+        for (int i = n; i > 0; i--) {
             conditionList.add(stack.pop());
         }
 
@@ -355,7 +355,6 @@ public class CswFilter2Es extends AbstractFilterVisitor {
 
     @Override
     public Object visit(PropertyIsEqualTo filter, Object extraData) {
-        String filterEqualTo = templateMatch;
 
         assert filter.getExpression1() instanceof PropertyName;
         filter.getExpression1().accept(expressionVisitor, extraData);
@@ -366,7 +365,7 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         String dataPropertyValue = stack.pop();
         String dataPropertyName = stack.pop();
 
-        filterEqualTo = String.format(filterEqualTo, dataPropertyName, dataPropertyValue);
+        final String filterEqualTo = String.format(templateMatch, dataPropertyName, dataPropertyValue);
         stack.push(filterEqualTo);
 
         return this;
