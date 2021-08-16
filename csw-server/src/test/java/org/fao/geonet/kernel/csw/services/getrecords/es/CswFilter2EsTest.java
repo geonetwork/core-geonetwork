@@ -162,6 +162,67 @@ class CswFilter2EsTest {
     }
 
     /**
+     * A more complex example with AND, OR and BBox filter.
+     * 
+     * @throws IOException
+     */
+    @Test
+    void testFilterWithAndOrAndSpatialBBox() throws IOException {
+
+        // INPUT:
+        final String input = "      <ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\">\n" //
+                + "        <ogc:And>\n" //
+                + "          <ogc:Or>\n" //
+                + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
+                + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
+                + "              <ogc:Literal>data</ogc:Literal>\n" //
+                + "            </ogc:PropertyIsEqualTo>\n" //
+                + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
+                + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
+                + "              <ogc:Literal>dataset</ogc:Literal>\n" //
+                + "            </ogc:PropertyIsEqualTo>\n" //
+                + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
+                + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
+                + "              <ogc:Literal>datasetcollection</ogc:Literal>\n" //
+                + "            </ogc:PropertyIsEqualTo>\n" //
+                + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
+                + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
+                + "              <ogc:Literal>series</ogc:Literal>\n" //
+                + "            </ogc:PropertyIsEqualTo>\n" //
+                + "          </ogc:Or>\n" //
+                + "          <ogc:BBOX>\n" //
+                + "            <gml:Envelope xmlns:gml=\"http://www.opengis.net/gml\">\n" //
+                + "              <gml:lowerCorner>-180 -90</gml:lowerCorner>\n" //
+                + "              <gml:upperCorner>180 90</gml:upperCorner>\n" //
+                + "            </gml:Envelope>\n" //
+                + "          </ogc:BBOX>\n" //
+                + "        </ogc:And>\n" //
+                + "      </ogc:Filter>";
+
+        final ObjectNode propertiesPart = boolbdr().should(array( //
+                match("Type", "series"), //
+                match("Type", "datasetcollection"), //
+                match("Type", "dataset"), //
+                match("Type", "data") //
+        )) //
+                .bld();
+
+        final ObjectNode geoShapePart = geoShape("geom", //
+                envelope(-180d, -90d, 180d, 90d), //
+                "intersects");
+
+        // EXPECTED:
+        final ObjectNode expected = boolbdr(). //
+                must(array(geoShapePart, //
+                        propertiesPart)) //
+                . //
+                filter(queryStringPart()). //
+                bld();
+
+        assertFilterEquals(expected, input);
+    }
+
+    /**
      * {@see #assertFilterEquals(JsonNode, String, String)} with
      * FilterCapabilities.VERSION_110 in use.
      * 
