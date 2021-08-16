@@ -328,7 +328,7 @@ public class EncryptorInitializer {
 
         if (StringUtils.isEmpty(propertyValue)) {
             // System environment variable
-            propertyValue = System.getenv(propertyName.replace('.', '_'));
+            propertyValue = System.getenv(propertyName.toUpperCase().replace('.', '_'));
         }
 
         if (StringUtils.isEmpty(propertyValue)) {
