@@ -25,6 +25,8 @@ package org.fao.geonet.kernel.csw.services.getrecords.es;
 
 import java.util.List;
 
+import org.geotools.geometry.jts.ReferencedEnvelope;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -60,6 +62,72 @@ public class EsJsonHelper {
         final ObjectNode outer = MAPPER.createObjectNode();
         outer.set("match", matchObject);
         return outer;
+    }
+
+    private static ArrayNode bound(double x, double y) {
+        final ArrayNode bound = MAPPER.createArrayNode();
+        bound.add(x);
+        bound.add(y);
+        return bound;
+    }
+
+    /**
+     * An Envelope.
+     * 
+     * @param x0
+     * @param y0
+     * @param x1
+     * @param y1
+     * @return
+     */
+    public static ObjectNode envelope(double x0, double y0, double x1, double y1) {
+        final ArrayNode bbox = MAPPER.createArrayNode();
+        bbox.add(bound(x0, y0));
+        bbox.add(bound(x1, y1));
+
+        return shape("envelope", bbox);
+    }
+
+    /**
+     * Creates a "geo_shape" node.
+     * 
+     * @param property The name of the index' property where the geometry search
+     *                 should take place.
+     * @param geometry A geometry.
+     * @param relation For example "intersects".
+     * @return
+     */
+    public static ObjectNode geoShape(String property, ObjectNode geometry, String relation) {
+        final ObjectNode geoShape = MAPPER.createObjectNode();
+        geoShape.set("shape", geometry);
+        geoShape.put("relation", relation);
+
+        final ObjectNode propertyNode = MAPPER.createObjectNode();
+        propertyNode.set(property, geoShape);
+
+        final ObjectNode outer = MAPPER.createObjectNode();
+        outer.set("geo_shape", propertyNode);
+        return outer;
+
+    }
+
+    /**
+     * Crate a "shape" object.<br>
+     * 
+     * It is the responsibility of the caller that type and coordinates fit
+     * together.
+     * 
+     * @param shapeType   For example "envelope" or "point".
+     * @param coordinates
+     * @return
+     */
+    public static ObjectNode shape(String shapeType, ArrayNode coordinates) {
+        final ObjectNode shape = MAPPER.createObjectNode();
+
+        shape.put("type", shapeType);
+        shape.set("coordinates", coordinates);
+
+        return shape;
     }
 
     /**

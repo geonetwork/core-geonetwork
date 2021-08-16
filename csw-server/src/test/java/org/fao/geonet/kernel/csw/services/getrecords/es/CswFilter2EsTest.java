@@ -26,6 +26,8 @@ package org.fao.geonet.kernel.csw.services.getrecords.es;
 import static org.fao.geonet.kernel.csw.services.getrecords.es.EsJsonHelper.array;
 import static org.fao.geonet.kernel.csw.services.getrecords.es.EsJsonHelper.boolbdr;
 import static org.fao.geonet.kernel.csw.services.getrecords.es.EsJsonHelper.match;
+import static org.fao.geonet.kernel.csw.services.getrecords.es.EsJsonHelper.geoShape;
+import static org.fao.geonet.kernel.csw.services.getrecords.es.EsJsonHelper.envelope;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -88,7 +90,8 @@ class CswFilter2EsTest {
 
     @Test
     void testPropertyIsEqualTo() throws IOException {
-
+        // TODO: When we use Java 15, convert these to nice multiline-strings with
+        // triple-quotes.
         // INPUT:
         final String input = "<Filter xmlns=\"http://www.opengis.net/ogc\">\n" + "    <PropertyIsEqualTo>\n"
                 + "          <PropertyName>Title</PropertyName>\n" + "          <Literal>Hydrological</Literal>\n"
@@ -125,6 +128,32 @@ class CswFilter2EsTest {
         final ObjectNode expected = boolbdr(). //
                 must(array(match("Title", "Africa"), //
                         match("Title", "Hydrological")))
+                . //
+                filter(queryStringPart()). //
+                bld();
+
+        assertFilterEquals(expected, input);
+    }
+
+    @Test
+    void testSpatialBBox() throws IOException {
+
+        // INPUT:
+        final String input = "      <ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\">\n" //
+                + "          <ogc:BBOX>\n" //
+                + "            <gml:Envelope xmlns:gml=\"http://www.opengis.net/gml\">\n" //
+                + "              <gml:lowerCorner>-180 -90</gml:lowerCorner>\n" //
+                + "              <gml:upperCorner>180 90</gml:upperCorner>\n" //
+                + "            </gml:Envelope>\n" //
+                + "          </ogc:BBOX>\n" //
+                + "      </ogc:Filter>\n" //
+                + "";
+
+        // EXPECTED:
+        final ObjectNode expected = boolbdr(). //
+                must(array(geoShape("geom", //
+                        envelope(-180d, -90d, 180d, 90d), //
+                        "intersects"))) //
                 . //
                 filter(queryStringPart()). //
                 bld();
