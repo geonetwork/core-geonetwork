@@ -644,10 +644,12 @@
       $scope.searchInput = {}
       Object.defineProperty($scope.searchInput, 'model', {
         set: function (newValue) {
-          $scope.searchObj.params['any'] = addWildcardOnWords(newValue)
+          $scope.searchObj.params['any'] = newValue;
+          // $scope.searchObj.params['any'] = addWildcardOnWords(newValue)
         },
         get: function () {
-          return removeWildcardOnWords($scope.searchObj.params['any'])
+          return $scope.searchObj.params['any']
+          // return removeWildcardOnWords($scope.searchObj.params['any']);
         }
       })
     }]);
