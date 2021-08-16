@@ -26,7 +26,9 @@ package org.fao.geonet.kernel.csw.services.getrecords.es;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
+import org.fao.geonet.utils.Log;
 import org.geotools.filter.visitor.AbstractFilterVisitor;
 import org.locationtech.jts.geom.*;
 import org.locationtech.jts.io.WKTReader;
@@ -538,7 +540,8 @@ public class CswFilter2Es extends AbstractFilterVisitor {
 
             stack.push(filterSpatial);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Log.error(Geonet.CSW, "Error parsing geospatial object", ex);
+            throw new RuntimeException(ex);
         }
 
         return this;
