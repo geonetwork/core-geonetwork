@@ -294,7 +294,7 @@
                   function(contact) {
                     var copy = angular.copy(contact[0]);
                     angular.extend(copy, {
-                      roles: _.pluck(contact, 'role')
+                      roles: _.map(contact, 'role')
                     });
 
                     return copy;
