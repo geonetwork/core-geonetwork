@@ -49,10 +49,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequestMapping(value = {
@@ -76,26 +73,20 @@ public class LanguagesApi {
         this.defaultLanguage = defaultLanguage;
     }
 
-    private LinkedHashSet<String> languages;
-
-    @Resource(name="languages")
-    public void setLanguages(LinkedHashSet<String> languages) {
-        this.languages = languages;
-    }
-
-
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Get application languages",
-        description = "Languages available in this version of the application.")
+        summary = "Get languages available in the application",
+        description = "Languages available in this version of the application. Those that you can add using PUT operation and which have SQL script to initialize the language.")
     @RequestMapping(
         value = "/application",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     public List<Language> getApplicationLanguages() throws Exception {
-        ApplicationContextHolder.get().getBean(Lang)
-        List<Language> list = languages.stream().map(l -> {
+        Set<String> applicationLanguages =
+            (Set<String>) ApplicationContextHolder.get().getBean("languages");
+        List<Language> list = applicationLanguages.stream().map(l -> {
             Language language = new Language();
             language.setId(l);
             if (l.equals(defaultLanguage)) {
@@ -151,8 +142,8 @@ public class LanguagesApi {
             HttpServletRequest request
     ) throws IOException, ResourceNotFoundException {
 
-        Language lang = languageRepository.findById(langCode).get();
-        if (lang == null) {
+        Optional<Language> lang = languageRepository.findById(langCode);
+        if (!lang.isPresent()) {
             String languageDataFile = "loc-" + langCode + "-default.sql";
             Path templateFile = dataDirectory.getWebappDir().resolve("WEB-INF")
                 .resolve("classes").resolve("setup").resolve("sql").resolve("data")
@@ -176,7 +167,7 @@ public class LanguagesApi {
             ));
         } else {
             throw new RuntimeException(String.format(
-                "Language '%s' already available.", lang.getId()
+                "Language '%s' already available.", lang.get().getId()
             ));
         }
     }
