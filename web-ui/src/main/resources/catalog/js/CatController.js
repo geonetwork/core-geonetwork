@@ -846,14 +846,11 @@ goog.require('gn_alert');
         gnViewerSettings.geocoder = this.gnCfg.mods.geocoder.appUrl || defaultConfig.mods.geocoder.appUrl;
       },
       getObjectKeysPaths: function(obj, stopKeyList, allLevels, prefix) {
-        var isobject = function(x){
-          return Object.prototype.toString.call(x) === '[object Object]';
-        };
         var keys = Object.keys(obj);
         var that = this;
         prefix = prefix ? prefix + '.' : '';
         return keys.reduce(function(result, key){
-          if (isobject(obj[key]) && Object.keys(obj[key]).length > 0 && (stopKeyList === undefined
+          if (angular.isObject(obj[key]) && Object.keys(obj[key]).length > 0 && (stopKeyList === undefined
             || (stopKeyList && stopKeyList.indexOf(key) === -1))) {
             if(allLevels) {
               result.push(prefix + key);
