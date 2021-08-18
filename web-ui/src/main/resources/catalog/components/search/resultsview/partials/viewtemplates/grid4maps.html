@@ -7,8 +7,7 @@
 
     <div class="panel-heading gn-card-heading">
       <div class="gn-md-title">
-        <a ng-href="#/metadata/{{md.uuid}}"
-           title="{{md.resourceTitle}}">
+        <a>
           <h1>{{md.resourceTitle}}</h1>
         </a>
       </div>
@@ -18,12 +17,9 @@
       <div class="gn-md-contents">
         <div class="gn-md-thumbnail"
              data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}">
-          <a ng-href="#/metadata/{{md.uuid}}"
-             title="{{'openRecord' | translate}}" translate>
-            <div class="gn-img-thumbnail"
-                 style="background-image: url('{{md.overview[0].data || (md.overview[0].url | thumbnailUrlSize)}}')">
-            </div>
-          </a>
+          <div class="gn-img-thumbnail"
+               style="background-image: url('{{md.overview[0].data || (md.overview[0].url | thumbnailUrlSize)}}')">
+          </div>
         </div>
       </div>
     </div>
