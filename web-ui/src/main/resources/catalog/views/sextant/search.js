@@ -42,7 +42,12 @@
 
   // this will loop until the loading screen has been removed
   function removeLoadingScreen() {
-    if (!$('.gn .sxt-loading').length) {
+    var cssLoaded = false;
+    for (var i = 0; i < document.styleSheets.length; i++) {
+      cssLoaded = cssLoaded ||
+        document.styleSheets.item(i).href && document.styleSheets.item(i).href.indexOf('geonetwork/static') > 0;
+    }
+    if (!cssLoaded) {
       setTimeout(removeLoadingScreen, 500);
       return;
     }
