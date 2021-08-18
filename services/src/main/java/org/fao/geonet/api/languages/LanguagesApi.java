@@ -28,6 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -41,6 +42,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -48,7 +50,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequestMapping(value = {
     "/{portal}/api/languages"
@@ -63,6 +68,43 @@ public class LanguagesApi {
 
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
+
+    private String defaultLanguage;
+
+    @Resource(name="defaultLanguage")
+    public void setDefaultLanguage(String defaultLanguage) {
+        this.defaultLanguage = defaultLanguage;
+    }
+
+    private LinkedHashSet<String> languages;
+
+    @Resource(name="languages")
+    public void setLanguages(LinkedHashSet<String> languages) {
+        this.languages = languages;
+    }
+
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get application languages",
+        description = "Languages available in this version of the application.")
+    @RequestMapping(
+        value = "/application",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public List<Language> getApplicationLanguages() throws Exception {
+        ApplicationContextHolder.get().getBean(Lang)
+        List<Language> list = languages.stream().map(l -> {
+            Language language = new Language();
+            language.setId(l);
+            if (l.equals(defaultLanguage)) {
+                language.setDefaultLanguage(true);
+            }
+            return language;
+        }).collect(Collectors.toList());
+        return list;
+    }
 
 
     @io.swagger.v3.oas.annotations.Operation(
