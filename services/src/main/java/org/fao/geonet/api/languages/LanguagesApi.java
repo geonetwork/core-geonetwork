@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -199,12 +200,19 @@ public class LanguagesApi {
             String langCode,
         HttpServletRequest request
     ) throws IOException, ResourceNotFoundException {
-        Language lang = languageRepository.findById(langCode).get();
-        if (lang == null) {
+        Optional<Language> lang = languageRepository.findById(langCode);
+        if (!lang.isPresent()) {
             throw new ResourceNotFoundException(String.format(
                 "Language '%s' not found.", langCode
             ));
         } else {
+            long count = languageRepository.count();
+            if (count == 1) {
+                throw new NotAllowedException(String.format(
+                    "You can't delete the last language. Add another one before removing %s.",
+                    langCode
+                ));
+            }
             final String LANGUAGE_DELETE_SQL = "language-delete.sql";
 
             Path templateFile = dataDirectory.getWebappDir().resolve("WEB-INF")
@@ -215,7 +223,7 @@ public class LanguagesApi {
                 try (BufferedReader br = new BufferedReader(new FileReader(templateFile.toFile()))) {
                     String line;
                     while ((line = br.readLine()) != null) {
-                        data.add(String.format(line, lang.getId()));
+                        data.add(String.format(line, lang.get().getId()));
                     }
                 }
                 if (data.size() > 0) {

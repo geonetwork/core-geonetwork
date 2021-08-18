@@ -6,7 +6,8 @@
       <div class="panel-body">
         <div class="well" data-translate="">languages.manage.help</div>
 
-        <table class="table table-striped">
+        <table class="table table-striped"
+               data-ng-show="dbLanguages.length > 0">
           <thead>
             <tr>
               <td data-translate="">language.name</td>
@@ -19,6 +20,7 @@
             <td>{{l.id}}</td>
             <td>
               <button class="btn btn-xs btn-danger"
+                      data-ng-hide="dbLanguages.length === 1"
                       data-ng-click="removeLanguage(l)">
                 <i class="fa fa-fw fa-times"></i>
                 <span data-translate="">language.remove</span>
@@ -26,7 +28,9 @@
             </td>
           </tr>
         </table>
-        <div data-ng-if="applicationLanguagesNotAlreadyAvailable.length > 0">
+
+        <div data-ng-if="applicationLanguagesNotAlreadyAvailable.length > 0"
+             class="btn-group">
           <button class="btn btn-default dropdown-toggle"
                   type="button"
                   data-toggle="dropdown"
