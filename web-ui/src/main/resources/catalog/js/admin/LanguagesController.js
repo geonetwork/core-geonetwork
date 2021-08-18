@@ -33,61 +33,52 @@
     '$scope', '$http', '$rootScope', '$translate',
     function($scope, $http, $rootScope, $translate) {
       $scope.dbLanguages = [];
+      $scope.applicationLanguagesNotAlreadyAvailable = [];
+
       function loadDbLanguages() {
         $http.get('../api/languages').then(function(r) {
           $scope.dbLanguages = r.data;
+          $http.get('../api/languages/application').then(function(r) {
+            $scope.applicationLanguagesNotAlreadyAvailable = r.data.filter(function(l) {
+              return $scope.dbLanguages.find(function(dbL) {
+                return dbL.id === l.id}) === undefined;
+            });
+          });
         });
       }
 
+      $scope.removeLanguage = function(l) {
+        $http.delete('../api/languages/' + l.id).then(function(r) {
+          $rootScope.$broadcast('StatusUpdated', {
+            msg: $translate.instant('language.removed'),
+            timeout: 2,
+            type: 'success'});
+          loadDbLanguages();
+        }, function(r) {
+          $rootScope.$broadcast('StatusUpdated', {
+            title: $translate.instant('language.removal.error'),
+            error: r.data,
+            timeout: 0,
+            type: 'danger'});
+          loadDbLanguages();
+        });
+      };
+      $scope.addLanguage = function(l) {
+        $http.put('../api/languages/' + l.id).then(function(r) {
+          $rootScope.$broadcast('StatusUpdated', {
+            msg: $translate.instant('language.added'),
+            timeout: 2,
+            type: 'success'});
+          loadDbLanguages();
+        }, function(r) {
+          $rootScope.$broadcast('StatusUpdated', {
+            title: $translate.instant('language.added.error'),
+            error: r.data,
+            timeout: 0,
+            type: 'danger'});
+          loadDbLanguages();
+        });
+      };
       loadDbLanguages();
-      return;
-
-
-      $scope.uiConfigurations = [];
-      $scope.source = null;
-      $scope.filteredSources = null;
-
-      $scope.updateSource = function() {
-        var url = '../api/sources' + (
-          $scope.isNew ? '' : '/' + $scope.source.uuid);
-        $http.put(url,
-                  $scope.source)
-            .success(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate.instant('sourceUpdated'),
-                timeout: 2,
-                type: 'success'});
-
-              loadSources();
-            })
-            .error(function(data) {
-                  $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate.instant('sourceUpdateError'),
-                    error: data,
-                    timeout: 0,
-                    type: 'danger'});
-                });
-      };
-
-
-
-      $scope.removeSource = function() {
-        $http.delete('../api/sources/' + $scope.source.uuid)
-            .success(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate.instant('sourceRemoved'),
-                timeout: 2,
-                type: 'success'});
-
-              loadSources();
-            })
-            .error(function(data) {
-                  $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate.instant('sourceRemovedError'),
-                    error: data,
-                    timeout: 0,
-                    type: 'danger'});
-                });
-      };
     }]);
 })();
