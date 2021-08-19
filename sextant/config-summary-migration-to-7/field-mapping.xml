@@ -1,0 +1,226 @@
+<fields>
+  <field v3="_groupPublished" v4="groupPublishedId">
+    "group": {
+    "terms": {
+    "field": "groupPublishedId",
+    "size": 200,
+    "include": ".*",
+    "exclude": "1"
+    },
+    "meta": {
+    "field": "groupPublishedId",
+    "orderByTranslation": true,
+    "filterByTranslation": true,
+    "displayFilter": true,
+    "collapsed": true
+    }
+    }
+  </field>
+  <field v3="keyword" v4="tag.default"/>
+  <field v3="keywordType-parameter" v4="keywordType-parameter.default"/>
+  <field v3="sextantTheme" v4="th_sextant-theme_tree.key">
+    "th_sextant-theme_tree.key": {
+    "terms": {
+    "field": "th_sextant-theme_tree.key",
+    "size": 100,
+    "order" : { "_key" : "asc" }
+    },
+    "meta": {
+    "collapsed": true,
+    "translateOnLoad": true,
+    "treeKeySeparator": "/",
+    "wildcard": true
+    }
+    }
+  </field>
+  <field v3="topicCat" v4="cl_topic.key"/>
+  <field v3="category" v4="cat"/>
+  <field v3="inspireTheme" v4="inspireThemeUri">
+    "th_httpinspireeceuropaeutheme-theme_tree.key": {
+    "terms": {
+    "field": "th_httpinspireeceuropaeutheme-theme_tree.key",
+    "size": 34,
+    "order" : { "_key" : "asc" }
+    },
+    "meta": {
+    "translateOnLoad": true
+    }
+    }
+  </field>
+  <field v3="inspireTheme_en">
+    "th_httpinspireeceuropaeutheme-theme_tree.key": {
+    "terms": {
+    "field": "th_httpinspireeceuropaeutheme-theme_tree.key",
+    "size": 34,
+    "order" : { "_key" : "asc" }
+    },
+    "meta": {
+    "translateOnLoad": true
+    }
+    }
+  </field>
+  <field v3="inspireTheme_fr">
+    "th_httpinspireeceuropaeutheme-theme_tree.key": {
+    "terms": {
+    "field": "th_httpinspireeceuropaeutheme-theme_tree.key",
+    "size": 34,
+    "order" : { "_key" : "asc" }
+    },
+    "meta": {
+    "translateOnLoad": true
+    }
+    }
+  </field>
+  <field v3="inspireThemeWithAc">
+    "th_httpinspireeceuropaeutheme-theme_tree.key": {
+    "terms": {
+    "field": "th_httpinspireeceuropaeutheme-theme_tree.key",
+    "size": 34,
+    "order" : { "_key" : "asc" }
+    },
+    "meta": {
+    "translateOnLoad": true
+    }
+    }
+  </field>
+  <field v3="inspireThemeURI">
+    "th_httpinspireeceuropaeutheme-theme_tree.key": {
+    "terms": {
+    "field": "th_httpinspireeceuropaeutheme-theme_tree.key",
+    "size": 34,
+    "order" : { "_key" : "asc" }
+    },
+    "meta": {
+    "translateOnLoad": true
+    }
+    }
+  </field>
+  <field v3="denominator" v4="resolutionScaleDenominator">
+    "resolutionScaleDenominator": {
+    "histogram": {
+    "field": "resolutionScaleDenominator",
+    "interval": 10000,
+    "keyed" : true,
+    "min_doc_count": 1
+    }
+    }
+  </field>
+  <field v3="resolution" v4="resolutionDistance">
+    "resolutionDistance": {
+    "terms": {
+    "field": "resolutionDistance",
+    "include": ".* (m|km)"
+    }
+    }
+  </field>
+  <field v3="spatialRepresentationType" v4="cl_spatialRepresentationType.key"/>
+  <field v3="orgName" v4="OrgForResource">
+    "OrgForResource": {
+    "terms": {
+    "field": "OrgForResource",
+    "include": ".*",
+    "size": 15
+    },
+    "meta": {
+    "caseInsensitiveInclude": true
+    }
+    }
+  </field>
+  <field v3="metadataPOC" v4="Org">
+    "Org": {
+    "terms": {
+    "field": "Org",
+    "include": ".*",
+    "size": 15
+    },
+    "meta": {
+    "caseInsensitiveInclude": true
+    }
+    }
+  </field>
+  <field v3="serviceType" v4="serviceType"/>
+  <field v3="type" v4="cl_hierarchyLevel.key"/>
+  <field v3="createDateYear" v4="creationYearForResource"/>
+  <field v3="format" v4="format"/>
+  <field v3="title" v4="resourceTitleObject.default.keyword"/>
+  <field v3="metadataType" v4="isTemplate"/>
+  <field v3="isValid" v4="valid"/>
+  <field v3="isValidInspire" v4="valid_inspire"/>
+  <field v3="isHarvested" v4="isHarvested"/>
+  <field v3="mdStatus" v4="mdStatus"/>
+  <field v3="status" v4="cl_status.key"/>
+  <field v3="sourceCatalog" v4="cl_status.key"/>
+  <field v3="standard" v4="documentStandard"/>
+  <field v3="subTemplateType" v4="root"/>
+  <field v3="recordOwner" v4="recordOwner"/>
+  <field v3="groupOwner" v4="groupOwner"/>
+  <field v3="publishedForGroup" v4="groupPublished"/>
+  <field v3="isPublishedToAll" v4="isPublishedToAll"/>
+  <field v3="p01" v4="th_BODC-Parameter-Usage-Vocabulary.default"/>
+  <field v3="p02" v4="th_P02.default"/>
+  <field v3="p03" v4="th_P03.default"/>
+  <field v3="p35" v4="th_P35.default"/>
+  <field v3="A05" v4="th_A05.default"/>
+  <field v3="C19" v4="th_C19.default"/>
+  <field v3="L04" v4="th_L04.default"/>
+  <field v3="P36" v4="th_P36.default"/>
+  <field v3="P08" v4="th_P08.default"/>
+  <field v3="atlantos_element" v4="th_atlantos_element.default"/>
+  <field v3="portail-donnees-facette-discipline" v4="th_portail-donnees-facette-comment.default"/>
+  <field v3="portail-donnees-facette-type" v4="th_portail-donnees-facette-type.default"/>
+  <field v3="portail-donnees-facette-comment" v4="th_portail-donnees-facette-comment.default"/>
+  <field v3="SIH_Especes_commerciales" v4="th_SIH_Especes_commerciales.default"/>
+  <field v3="SIH_Groupes_Especes" v4="th_SIH_Groupes_Especes.default"/>
+  <field v3="SIH_Engins_valides" v4="th_SIH_Engins_valides.default"/>
+  <field v3="SIH_Categories_Engins" v4="th_SIH_Categories_Engins.default"/>
+  <field v3="SIH_Types_donnees" v4="th_sih_type_donnees.default"/>
+  <field v3="SIH_Facade_maritime" v4="th_sih_facade_maritime.default"/>
+  <field v3="emodnet-checkpoint.environmental.matrix" v4="th_matrix.default"/>
+  <field v3="emodnet-checkpoint.challenges" v4="th_challenges.default"/>
+  <field v3="emodnet-checkpoint.level.of.characteristics" v4="th_characteristics.default"/>
+  <field v3="emodnet-checkpoint.production.mode" v4="th_mode.default"/>
+  <field v3="ParameterUsageVocabulary-other" v4="th_P01.default"/>
+  <field v3="dcsmm-descripteur-other" v4="th_dcsmm-descripteur.default"/>
+  <field v3="dcsmm-methode" v4="th_dcsmm-methode.default"/>
+  <field v3="dcsmm-type-espace" v4="th_dcsmm-type-espace.default"/>
+  <field v3="dcsmm-area" v4="th_dcsmm.area.default"/>
+  <field v3="maintenanceAndUpdateFrequency" v4="cl_maintenanceAndUpdateFrequency.default"/>
+  <field v3="odatis_variables" v4="th_odatis_thematiques.default"/>
+  <field v3="odatis_centre_donnees" v4="th_odatis_centre_donnees.default"/>
+  <field v3="odatis_type_jeux_donnee" v4="th_type_jeux_donnee.default"/>
+  <field v3="lops-projets" v4="th_lops_projets.default"/>
+  <field v3="simm-reglementaire" v4="th_reglementaire.default"/>
+  <field v3="simm-thematiques" v4="th_thematiques.default"/>
+  <field v3="cersat-platform" v4="th_cersat_platform.default"/>
+  <field v3="cersat-latency" v4="th_cersat_latency.default"/>
+  <field v3="cersat-parameter" v4="th_cersat_parameter.default"/>
+  <field v3="cersat-sensor" v4="th_cersat_sensor.default"/>
+  <field v3="cersat-processing-level" v4="th_cersat_processing_level.default"/>
+  <field v3="cersat-project" v4="th_cersat_project.default"/>
+  <field v3="myocean-reference-geographical-area" v4="th_reference-geographical-area.default"/>
+  <field v3="theme-GCMDparameter" v4="th_GCMDparameter.default"/>
+  <field v3="mission-atlantic-resources" v4=""/>
+  <field v3="mission-atlantic-case-studies" v4=""/>
+  <field v3="mission-atlantic-odemm" v4=""/>
+  <field v3="mission-atlantic-bodc-parameters" v4=""/>
+  <field v3="mission-atlantic-data-type" v4=""/>
+  <field v3="mission-atlantic-work-package" v4=""/>
+
+
+  <field v3="eolien_groupe" thesaurusDoesNotExist="" v4=""/>
+  <field v3="eolien_jeu_de_donnees" thesaurusDoesNotExist="" v4=""/>
+  <field v3="eolien_stade" thesaurusDoesNotExist="" v4=""/>
+  <field v3="eolien_type" thesaurusDoesNotExist="" v4=""/>
+  <field v3="ocean-hackaton_ville" thesaurusDoesNotExist="" v4=""/>
+  <field v3="SIH_Especes_scientifiques" thesaurusDoesNotExist="" v4=""/>
+
+  <field v3="hasDqMeasures" v4=""/>
+  <field v3="orgNameTree" v4=""/>
+  <field v3="hasCheckpointCpt" v4=""/>
+  <field v3="hasDqEmptyCptMeasures" v4=""/>
+  <field v3="hasDqCptNotCovered" v4=""/>
+  <field v3="resource_responsibleParty_edmerp" v4=""/>
+  <field v3="resource_responsibleParty_edmo" v4=""/>
+  <field v3="resource_responsibleParty_originator" v4=""/>
+  <field v3="checkpointType" v4=""/>
+</fields>

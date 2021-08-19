@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<bean:beans default-lazy-init="true"
+            xmlns="http://www.fao.org/geonetwork/spring"
+            xmlns:bean="http://www.springframework.org/schema/beans"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.fao.org/geonetwork/spring http://www.fao.org/geonetwork/spring/gn-spring.xsd
+    "
+>
+  <!--
+      Configuration of the taxonomy index used for faceting and
+      formatting/building facet summaries
+
+      Each facet to be indexed is defined in the facets element. The facets element
+      lists the facets to index and how they should be indexed using attributes on facet elements as follows:
+
+      * name: the name of the facet
+      * indexKey: the name of the indexing field to be used for the facet
+      * label: the label to use for the facet in returned summaries
+      * classifier: (optional) a reference to a spring bean that should be used to
+          determine facet values for the indexing field.
+          The bean must implement the org.fao.kernel.search.classifier.Classifier interface
+          Defaults to a classifier which uses the value of the field to be indexed
+
+      When a facet definitionis modified or added, the index MUST be rebuilt.
+
+      How facet summaries should be built and formatted for each summary type is defined
+      in the summaryTypes element. The summaryTypes element contains a number of summary type elements each
+      of which define a facet summary that can be configured for a service. Each summary type
+      element contains a number of item elements defining facets to be returned and how they
+      should be formatted as follows:
+
+      * facet: the name of a facet defined above
+      * (optional) sortBy: the ordering for the facet. Defaults to by count.
+      * (optional) sortOrder: asc or desc. Defaults is descendant.
+      * (optional) max: the number of values to be returned for the facet. Defaults to 10.
+      * (optional) depth: the depth to which hierarchical facets should be summarised. Defaults to 1.
+      * (optional) format: the format to be used for generating facet summary elements. Defaults to
+          'FACET_NAME'. Can also be 'DIMENSION', which uses a top level
+          dimension tag and category tags for sub-categories which is more suitable for hierarchical facets.
+      * (optional) translator: Define a DB translator to retrieve label from description
+          tables (eg. categoriesdes) or codelist translator to retrieve label from schema
+          codelists files.
+      * (optional) pageSize: "show more"/"show less" page size of the facet items in the UI
+
+    eg. for category
+
+          <item dimension="category" plural="categories" indexKey="_cat" max="45"
+              translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
+
+    or for group
+
+          <item dimension="groupOwner" plural="groupOwners" indexKey="_groupOwner"
+          max="99" sortBy="value" translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+
+  -->
+  <facets>
+    <facet name="keyword" indexKey="keyword" label="keywords" localized="true"/>
+    <facet name="keywordType-parameter" indexKey="keywordType-parameter" label="keywordType-parameter"/>
+    <facet name="sextantTheme" indexKey="sextantTheme" label="sextantThemes"/>
+    <facet name="topicCat" indexKey="topicCat" label="topicCats" localized="true"/>
+    <facet name="category" indexKey="_cat" label="categories" localized="true"/>
+    <facet name="inspireTheme" indexKey="inspiretheme" label="inspireThemes"/>
+    <facet name="inspireTheme_en" indexKey="inspireTheme_en" label="inspireThemes_en"/>
+    <facet name="inspireTheme_fr" indexKey="inspireTheme_fr" label="inspireThemes_fr"/>
+    <facet name="inspireThemeWithAc" indexKey="inspirethemewithac" label="inspireThemesWithAc"/>
+    <facet name="inspireThemeURI" indexKey="inspirethemeuri" label="inspireThemesURI"/>
+    <facet name="denominator" indexKey="denominator" label="denominators"/>
+    <facet name="resolution" indexKey="resolution" label="resolutions"/>
+    <facet name="spatialRepresentationType" indexKey="cl_spatialRepresentationType"
+           label="spatialRepresentationTypes"/>
+    <facet name="orgName" indexKey="orgName" label="orgNames" localized="true"/>
+    <facet name="resource_responsibleParty_edmerp"
+           indexKey="resource_responsibleParty_edmerp"
+           label="edmerp"
+           localized="true"/>
+    <facet name="resource_responsibleParty_edmo"
+           indexKey="resource_responsibleParty_edmo"
+           label="edmo"
+           localized="true"/>
+    <facet name="resource_responsibleParty_originator"
+           indexKey="resource_responsibleParty_originator"
+           label="originator"
+           localized="true"/>
+    <facet name="orgNameTree" indexKey="orgNameTree" label="orgNamesTree" classifier="slashSplitClassifier"/>
+    <facet name="metadataPOC" indexKey="metadataPOC" label="metadataPOCs"/>
+    <facet name="serviceType" indexKey="serviceType" label="serviceTypes"/>
+    <facet name="type" indexKey="type" label="types"/>
+    <facet name="createDateYear" indexKey="createDateYear" label="createDateYears"/>
+    <facet name="format" indexKey="format" label="formats"/>
+    <facet name="title" indexKey="title" label="titles"/>
+    <facet name="metadataType" indexKey="_isTemplate" label="metadataTypes"/>
+    <facet name="isValid" indexKey="_valid" label="isValid"/>
+    <facet name="hasDqMeasures" indexKey="hasDqMeasures" label="hasDqMeasures"/>
+    <facet name="isValidInspire" indexKey="_valid_inspire" label="isValidInspire"/>
+    <facet name="isHarvested" indexKey="_isHarvested" label="isHarvested"/>
+    <facet name="mdStatus" indexKey="_status" label="mdStatus"/>
+    <facet name="status" indexKey="cl_status" label="status"/>
+    <facet name="sourceCatalog" indexKey="_source" label="sourceCatalog"/>
+    <facet name="standard" indexKey="_schema" label="standards"/>
+    <facet name="checkpointType" indexKey="checkpointType" label="checkpointType"/>
+    <facet name="hasCheckpointCpt" indexKey="hasCheckpointCpt" label="hasCheckpointCpt"/>
+    <facet name="hasDqEmptyCptMeasures" indexKey="hasDqEmptyCptMeasures" label="hasDqEmptyCptMeasures"/>
+    <facet name="hasDqCptNotCovered" indexKey="hasDqCptNotCovered" label="hasDqCptNotCovered"/>
+    <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
+    <facet name="recordOwner" indexKey="recordOwner" label="recordOwner"/>
+    <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
+    <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
+    <facet name="isPublishedToAll" indexKey="_isPublishedToAll" label="isPublishedToAll" />
+
+
+    <facet name="p01" label="p01" indexKey="thesaurus-external.parameter.NVS.P01"/>
+    <facet name="p02" label="p02" indexKey="thesaurus-external.parameter.NVS.P02"/>
+    <facet name="p03" label="p03" indexKey="thesaurus-external.parameter.NVS.P03"/>
+    <facet name="p35" label="p35" indexKey="thesaurus-external.parameter.NVS.P35"/>
+    <facet name="A05" label="A05" indexKey="thesaurus-external.parameter.NVS.A05"/>
+    <facet name="C19" label="C19" indexKey="thesaurus-external.reference-geographical-area.NVS.C19"/>
+    <facet name="L04" label="L04" indexKey="thesaurus-external.parameter.NVS.L04"/>
+    <facet name="P36" label="P36" indexKey="thesaurus-external.parameter.NVS.P36"/>
+    <facet name="P08" indexKey="thesaurus-external.parameter.NVS.P08" label="P08"/>
+
+    <facet name="atlantos_element" label="atlantos_element" indexKey="thesaurus-local.theme.atlantos_element"/>
+
+    <facet name="portail-donnees-facette-discipline" label="portail-donnees-facette-discipline" indexKey="thesaurus-local.discipline.portail-donnees-facette-discipline"/>
+    <facet name="portail-donnees-facette-type" label="portail-donnees-facette-type" indexKey="thesaurus-local.theme.portail-donnees-facette-type"/>
+    <facet name="portail-donnees-facette-comment" label="portail-donnees-facette-comment" indexKey="thesaurus-local.theme.portail-donnees-facette-comment"/>
+
+    <facet name="SIH_Especes_commerciales" indexKey="thesaurus-external.theme.SIH_Especes_commerciales" label="SIH_Especes_commerciales"/>
+    <facet name="SIH_Groupes_Especes" indexKey="thesaurus-external.theme.SIH_Groupes_Especes" label="SIH_Groupes_Especes"/>
+    <facet name="SIH_Engins_valides" indexKey="thesaurus-external.theme.SIH_Engins_valides" label="SIH_Engins_valides"/>
+    <facet name="SIH_Categories_Engins" indexKey="thesaurus-external.theme.SIH_Categories_Engins" label="SIH_Categories_Engins"/>
+    <facet name="SIH_Especes_scientifiques" indexKey="thesaurus-external.theme.SIH_Especes_scientifiques" label="SIH_Especes_scientifiques"/>
+    <facet name="SIH_Types_donnees" indexKey="thesaurus-local.theme.sih_type_donnees" label="SIH_Types_donnees"/>
+    <facet name="SIH_Facade_maritime" indexKey="thesaurus-local.theme.sih_facade_maritime" label="SIH_Facade_maritime"/>
+
+    <facet name="emodnet-checkpoint.environmental.matrix" indexKey="thesaurus-local.theme.emodnet-checkpoint.environmental.matrix" label="emodnet-checkpoint.environmental.matrix"/>
+    <facet name="emodnet-checkpoint.challenges" indexKey="thesaurus-local.theme.emodnet-checkpoint.challenges" label="emodnet-checkpoint.challenges"/>
+    <facet name="emodnet-checkpoint.level.of.characteristics" indexKey="thesaurus-local.theme.emodnet-checkpoint.level.of.characteristics" label="emodnet-checkpoint.level.of.characteristics"/>
+    <facet name="emodnet-checkpoint.production.mode" indexKey="thesaurus-local.theme.emodnet-checkpoint.production.mode" label="emodnet-checkpoint.production.mode"/>
+    <facet name="ParameterUsageVocabulary-other" indexKey="thesaurus-ParameterUsageVocabulary(other)" label="ParameterUsageVocabulary-other"/>
+
+    <facet name="dcsmm-descripteur" indexKey="thesaurus-local.theme.dcsmm-descripteur" label="dcsmm-descripteur"/>
+    <facet name="dcsmm-methode" indexKey="thesaurus-local.theme.dcsmm-methode" label="dcsmm-methode"/>
+    <facet name="dcsmm-type-espace" indexKey="thesaurus-local.theme.dcsmm-type-espace" label="dcsmm-type-espace"/>
+    <facet name="dcsmm-area" indexKey="thesaurus-local.place.dcsmm.area" label="dcsmm-area"/>
+
+    <facet name="_groupPublished" indexKey="_groupPublished" label="publishedForGroup"/>
+
+    <facet name="maintenanceAndUpdateFrequency" indexKey="cl_maintenanceAndUpdateFrequency"
+           label="maintenanceAndUpdateFrequencies"/>
+
+    <facet name="odatis_variables" indexKey="thesaurus-local.theme.odatis_variables" label="odatis_variables"/>
+    <facet name="odatis_centre_donnees" indexKey="thesaurus-local.theme.odatis_centre_donnees" label="odatis_centre_donnees"/>
+    <facet name="odatis_type_jeux_donnee" indexKey="thesaurus-local.theme.type_jeux_donnee" label="odatis_type_jeux_donnee"/>
+
+    <facet name="lops-projets" indexKey="thesaurus-local.theme.lops_projets" label="lops-projets"/>
+
+    <facet name="simm-reglementaire" indexKey="thesaurus-local.theme.simm.reglementaire" label="simm-reglementaire"/>
+    <facet name="simm-thematiques" indexKey="thesaurus-local.theme.simm.thematiques" label="simm-thematiques"/>
+
+    <facet name="cersat-platform" indexKey="thesaurus-local.theme.cersat_platform" label="cersat-platform"/>
+    <facet name="cersat-latency" indexKey="thesaurus-local.theme.cersat_latency" label="cersat-latency"/>
+    <facet name="cersat-parameter" indexKey="thesaurus-local.theme.cersat_parameter" label="cersat-parameter"/>
+    <facet name="cersat-sensor" indexKey="thesaurus-local.theme.cersat_sensor" label="cersat-sensor"/>
+    <facet name="cersat-processing-level" indexKey="thesaurus-local.theme.cersat_processing_level" label="cersat-processing-level"/>
+    <facet name="cersat-project" indexKey="thesaurus-local.theme.cersat_project" label="cersat-project"/>
+    <facet name="myocean-reference-geographical-area" indexKey="thesaurus-local.reference-geographical-area.myocean.reference-geographical-area" label="myocean-reference-geographical-area"/>
+    <facet name="theme-GCMDparameter" indexKey="thesaurus-external.theme.GCMDparameter" label="theme-GCMDparameter"/>
+
+    <facet name="ocean-hackaton_ville" indexKey="thesaurus-local.place.oh_ville" label="ocean-hackaton_ville"/>
+
+    <facet name="eolien_groupe" indexKey="thesaurus-local.theme.eolien_groupe" label="eolien_groupe"/>
+    <facet name="eolien_jeu_de_donnees" indexKey="thesaurus-local.theme.Eolien_jeu_de_donnees" label="eolien_jeu_de_donnees"/>
+    <facet name="eolien_stade" indexKey="thesaurus-local.theme.eolien_stade" label="eolien_stade"/>
+    <facet name="eolien_type" indexKey="thesaurus-local.theme.Eolien_type" label="eolien_type"/>
+
+    <facet name="mission-atlantic-resources" indexKey="thesaurus-local.theme.mission-atlantic-resources" label="mission-atlantic-resources"/>
+    <facet name="mission-atlantic-case-studies" indexKey="thesaurus-local.theme.mission-atlantic-case-studies" label="mission-atlantic-case-studies"/>
+    <facet name="mission-atlantic-odemm" indexKey="thesaurus-local.theme.mission-atlantic-odemm" label="mission-atlantic-odemm"/>
+    <facet name="mission-atlantic-bodc-parameters" indexKey="thesaurus-local.theme.mission-atlantic-bodc-parameters" label="mission-atlantic-bodc-parameters"/>
+    <facet name="mission-atlantic-data-type" indexKey="thesaurus-local.theme.mission-atlantic-data-type" label="mission-atlantic-data-type"/>
+    <facet name="mission-atlantic-work-package" indexKey="thesaurus-local.theme.mission-atlantic-work-package" label="mission-atlantic-work-package"/>
+
+    <facet name="mdActions" indexKey="_mdActions" label="mdActions"/>
+  </facets>
+
+  <summaryTypes>
+    <summaryType name="details" format="DIMENSION">
+      <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
+      <item facet="mdActions"/>
+      <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
+      <item facet="inspireThemeURI" sortBy="value" sortOrder="asc" max="35"
+            translator="term:http://inspire.ec.europa.eu/theme"/>
+      <!--<item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>-->
+      <!--<item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>-->
+      <item facet="keyword" max="15"/>
+      <item facet="inspireTheme_fr" sortBy="value" sortOrder="asc" max="35"/>
+      <item facet="inspireTheme_en" sortBy="value" sortOrder="asc" max="35"/>
+      <item facet="sextantTheme" max="300"/>
+      <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
+      <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
+      <item facet="orgName" max="15"/>
+      <item facet="resource_responsibleParty_edmerp" max="200"/>
+      <item facet="resource_responsibleParty_edmo" max="200"/>
+      <item facet="resource_responsibleParty_originator" max="200"/>
+      <item facet="metadataPOC" max="15"/>
+      <item facet="maintenanceAndUpdateFrequency" translator="codelist:gmd:MD_MaintenanceFrequencyCode"/>
+      <item facet="status" translator="codelist:gmd:MD_ProgressCode"/>
+      <item facet="serviceType"/>
+      <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
+      <item facet="format" max="15" sortBy="value" sortOrder="asc"/>
+      <item facet="publishedForGroup" max="199" sortBy="value"
+            translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
+      <item facet="p01" max="300"/>
+      <item facet="p02" max="300"/>
+      <item facet="p03" max="300"/>
+      <item facet="p35" max="300"/>
+      <item facet="emodnet-checkpoint.challenges" max="300"/>
+      <item facet="emodnet-checkpoint.level.of.characteristics" max="300"/>
+      <item facet="emodnet-checkpoint.production.mode" max="300"/>
+      <item facet="portail-donnees-facette-discipline" max="300"/>
+      <item facet="portail-donnees-facette-type" max="300"/>
+      <item facet="portail-donnees-facette-comment" max="300"/>
+      <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
+      <item facet="resolution" sortBy="value" sortOrder="desc"/>
+      <!--
+      <item facet="region"
+            translator="term:http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox"/>
+      <item facet="gemetKeyword"
+            translator="term:http://geonetwork-opensource.org/gemet"/>
+      -->
+    </summaryType>
+
+
+    <summaryType name="manager" format="DIMENSION">
+      <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
+      <item facet="category" max="99" sortBy="value"
+            translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
+      <item facet="mdStatus" max="10" sortBy="value"
+            translator="db:org.fao.geonet.repository.StatusValueRepository:findOne:int"/>
+      <item facet="sourceCatalog" translator="db:org.fao.geonet.repository.SourceRepository:findOneByUuid"/>
+      <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
+      <item facet="isValidInspire" max="3" sortBy="value" translator="apploc:validStatus-"/>
+      <item facet="groupOwner" max="199" sortBy="value"
+            translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+      <item facet="recordOwner" max="45" sortBy="value"/>
+      <item facet="publishedForGroup" max="199" sortBy="value"
+            translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
+      <item facet="standard" max="15" sortBy="value"/>
+      <item facet="emodnet-checkpoint.challenges" max="300"/>
+      <item facet="checkpointType" max="3" sortBy="value" translator="apploc:"/>
+      <item facet="hasCheckpointCpt" max="3" sortBy="value" translator="apploc:"/>
+      <item facet="hasDqEmptyCptMeasures" max="3" sortBy="value" translator="apploc:"/>
+      <item facet="hasDqCptNotCovered" max="3" sortBy="value" translator="apploc:"/>
+      <item facet="hasDqMeasures" max="3" sortBy="value" translator="apploc:"/>
+      <item facet="isHarvested" max="2" sortBy="value" translator="apploc:"/>
+      <item facet="metadataType" max="3" sortBy="value" translator="apploc:recordType-"/>
+      <item facet="isPublishedToAll" max="2" sortBy="value" translator="apploc:"/>
+    </summaryType>
+
+    <!-- (deprecated) old-style configuration supporting only
+    flat facet. It's recommended to use format="DIMENSION" for facet.
+    See above. -->
+    <summaryType name="hits">
+      <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
+      <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
+      <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
+      <item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>
+      <item facet="inspireThemeURI" sortBy="value" sortOrder="asc" max="35"
+            translator="term:http://inspire.ec.europa.eu/theme"/>
+      <item facet="keyword" max="15"/>
+      <item facet="inspireTheme_fr" sortBy="value" sortOrder="asc" max="35"/>
+      <item facet="inspireTheme_en" sortBy="value" sortOrder="asc" max="35"/>
+      <item facet="sextantTheme" max="300"/>
+      <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
+      <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
+      <item facet="orgName" max="15"/>
+      <item facet="resource_responsibleParty_edmerp" max="200"/>
+      <item facet="resource_responsibleParty_edmo" max="200"/>
+      <item facet="resource_responsibleParty_originator" max="200"/>
+      <item facet="metadataPOC" max="15"/>
+      <item facet="maintenanceAndUpdateFrequency" translator="codelist:gmd:MD_MaintenanceFrequencyCode"/>
+      <item facet="status" translator="codelist:gmd:MD_ProgressCode"/>
+      <item facet="serviceType"/>
+      <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
+      <item facet="format" max="15" sortBy="value" sortOrder="asc"/>
+      <item facet="publishedForGroup" max="199" sortBy="value"
+            translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
+      <item facet="p01" max="300"/>
+      <item facet="p02" max="300"/>
+      <item facet="p03" max="300"/>
+      <item facet="p35" max="300"/>
+      <item facet="A05" max="300"/>
+      <item facet="C19" max="300"/>
+      <item facet="L04" max="300"/>
+      <item facet="P36" max="300"/>
+      <item facet="P08" max="300"/>
+      <item facet="atlantos_element" max="300"/>
+      <item facet="portail-donnees-facette-discipline" max="300"/>
+      <item facet="portail-donnees-facette-type" max="300"/>
+      <item facet="portail-donnees-facette-comment" max="300"/>
+      <item facet="SIH_Especes_commerciales" max="300"/>
+      <item facet="SIH_Groupes_Especes" max="300"/>
+      <item facet="SIH_Engins_valides" max="300"/>
+      <item facet="SIH_Categories_Engins" max="300"/>
+      <item facet="SIH_Especes_scientifiques" max="300"/>
+      <item facet="SIH_Types_donnees" max="300"/>
+      <item facet="SIH_Facade_maritime" max="300"/>
+      <item facet="emodnet-checkpoint.environmental.matrix" max="300"/>
+      <item facet="emodnet-checkpoint.challenges" max="300"/>
+      <item facet="emodnet-checkpoint.level.of.characteristics" max="300"/>
+      <item facet="emodnet-checkpoint.production.mode" max="300"/>
+      <item facet="checkpointType" max="3" sortBy="value" translator="apploc:"/>
+      <item facet="ParameterUsageVocabulary-other" max="300"/>
+      <item facet="dcsmm-descripteur" max="300"/>
+      <item facet="dcsmm-methode" max="300"/>
+      <item facet="dcsmm-type-espace" max="300"/>
+      <item facet="dcsmm-area" max="300"/>
+      <item facet="odatis_variables" max="300"/>
+      <item facet="odatis_centre_donnees" max="300"/>
+      <item facet="odatis_type_jeux_donnee" max="300"/>
+      <item facet="lops-projets" max="300"/>
+      <item facet="simm-reglementaire" max="300"/>
+      <item facet="simm-thematiques" max="300"/>
+      <item facet="cersat-platform" max="300"/>
+      <item facet="cersat-latency" max="300"/>
+      <item facet="cersat-parameter" max="300"/>
+      <item facet="cersat-sensor" max="300"/>
+      <item facet="cersat-processing-level" max="300"/>
+      <item facet="cersat-project" max="300"/>
+      <item facet="myocean-reference-geographical-area" max="300"/>
+      <item facet="theme-GCMDparameter" max="300"/>
+      <item facet="ocean-hackaton_ville" max="300"/>
+      <item facet="eolien_groupe" max="300"/>
+      <item facet="eolien_jeu_de_donnees" max="300"/>
+      <item facet="eolien_stade" max="300"/>
+      <item facet="eolien_type" max="300"/>
+      <item facet="mission-atlantic-resources" max="300"/>
+      <item facet="mission-atlantic-case-studies" max="300"/>
+      <item facet="mission-atlantic-odemm" max="300"/>
+      <item facet="mission-atlantic-bodc-parameters" max="300"/>
+      <item facet="mission-atlantic-data-type" max="300"/>
+      <item facet="mission-atlantic-work-package" max="300"/>
+      <item facet="mdActions"/>
+      <!--<item facet="metadataPOC" max="15"/>-->
+    </summaryType>
+    <summaryType name="subtemplates">
+      <item facet="subTemplateType"/>
+      <item facet="groupOwner" max="99" sortBy="value"
+            translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+      <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
+      <item facet="recordOwner" max="45" sortBy="value"/>
+    </summaryType>
+    <summaryType name="contact" format="DIMENSION">
+      <item facet="orgNameTree" max="99"/>
+      <item facet="groupOwner" max="99" sortBy="value"
+            translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+      <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
+    </summaryType>
+    <summaryType name="checkpoint" format="DIMENSION">
+      <item facet="emodnet-checkpoint.challenges" max="300"/>
+      <item facet="p02" max="300"/>
+      <item facet="groupOwner" max="99" sortBy="value"
+            translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+    </summaryType>
+    <summaryType name="titles">
+      <item facet="title" sortOrder="desc" max="100"/>
+    </summaryType>
+    <summaryType name="results">
+      <item facet="keyword" max="100"/>
+    </summaryType>
+    <summaryType name="results_with_summary">
+      <item facet="keyword" max="15"/>
+      <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
+      <item facet="denominator" sortBy="value" sortOrder="asc" max="20"/>
+      <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
+      <item facet="orgName" max="15"/>
+      <item facet="metadataPOC" max="15"/>
+      <item facet="serviceType"/>
+      <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
+      <item facet="createDateYear" sortOrder="asc" max="40"/>
+    </summaryType>
+    <summaryType name="suggestions">
+      <item facet="keyword"/>
+      <item facet="title" sortOrder="desc" max="100"/>
+      <item facet="inspireTheme" sortBy="value" sortOrder="asc"/>
+      <item facet="denominator" sortBy="value" sortOrder="asc"/>
+      <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
+      <item facet="orgName" max="100"/>
+      <item facet="metadataPOC"/>
+      <item facet="serviceType"/>
+      <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
+      <item facet="createDateYear" sortOrder="asc"/>
+      <item facet="keywordType-parameter" max="300"/>
+      <item facet="inspireTheme_fr" max="35"/>
+      <item facet="inspireTheme_en" max="35"/>
+      <item facet="sextantTheme" max="300"/>
+      <item facet="publishedForGroup" max="199" sortBy="value"
+            translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
+      <item facet="_groupPublished" max="199" sortBy="value"
+            translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
+      <item facet="p01" max="300"/>
+      <item facet="p02" max="300"/>
+      <item facet="p03" max="300"/>
+      <item facet="p35" max="300"/>
+    </summaryType>
+  </summaryTypes>
+</bean:beans>
