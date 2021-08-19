@@ -68,6 +68,8 @@
         // include sextant API
         var templateInclude = document.createElement("div");
         templateInclude.className = "gn " + sizeClass;
+        templateInclude.style.overflow = 'hidden';
+        templateInclude.style.position = 'relative';
         templateInclude.setAttribute("ng-include", "'../../catalog/views/sextant/templates/index.html'");
         templateInclude.setAttribute("ng-controller", "GnCatController");
         templateInclude.setAttribute("sxt-size", sxtSize !== null ? sxtSize : "auto");
