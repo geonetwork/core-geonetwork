@@ -28,7 +28,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.site.model.ListLogFilesResponse;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -92,13 +91,10 @@ public class LoggingApi {
         java.util.List<ListLogFilesResponse.LogFileResponse> logFileList =
             new ArrayList<>();
         String loggingConfigurationFolder = dataDirectory.getWebappDir() + "/WEB-INF/classes";
-        // overrides if a "loggingConfigurationPath" bean is available
-        try {
-            loggingConfigurationFolder = (String) ApplicationContextHolder.get().getBean("loggingConfigurationPath");
-        } catch (Exception e) {
-            // stick with the folder in the classpath.
+        // overrides if a "geonetwork.log.configdir" is available as a java property
+        if (System.getProperty(LogUtils.GEONETWORK_LOG_CONFIGDIR_PROP) != null) {
+            loggingConfigurationFolder = System.getProperty(LogUtils.GEONETWORK_LOG_CONFIGDIR_PROP);
         }
-
         File folder = new File(loggingConfigurationFolder);
 
         if (folder != null && folder.isDirectory()) {

@@ -29,7 +29,6 @@ import org.fao.geonet.domain.Setting;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SettingRepository;
-import org.springframework.beans.BeansException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -44,6 +43,7 @@ import java.util.Optional;
 public class LogUtils {
     public static final String DEFAULT_LOG_FILE = "log4j.xml";
 
+    public static final String GEONETWORK_LOG_CONFIGDIR_PROP = "geonetwork.log.configdir";
 
     /**
      * Refresh logger configuration. If settings is not set in database, using default log4j.xml
@@ -60,12 +60,7 @@ public class LogUtils {
         }
 
 
-        String loggingConfigurationPath;
-        try {
-            loggingConfigurationPath = (String) ApplicationContextHolder.get().getBean("loggingConfigurationPath");
-        } catch (BeansException e) {
-            loggingConfigurationPath = null;
-        }
+        String loggingConfigurationPath = System.getProperty(GEONETWORK_LOG_CONFIGDIR_PROP);
         // get log config from db settings
         String log4jProp = setting != null ? setting.getValue() : DEFAULT_LOG_FILE;
         URL url ;
