@@ -868,19 +868,24 @@
                   <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
                     ,"lte": "<xsl:value-of select="$zuluEndDate"/>"
                   </xsl:if>
-                  }</resourceTemporalExtentDateRange>
+                }</resourceTemporalExtentDateRange>
               </xsl:when>
               <xsl:otherwise>
                 <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Lower and upper bounds empty. Date range not indexed.</indexingErrorMsg>
               </xsl:otherwise>
             </xsl:choose>
 
-
             <xsl:if test="$zuluStartDate != ''
                           and $zuluEndDate != ''
                           and $start &gt; $end">
               <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Lower range bound '<xsl:value-of select="$start"/>' can not be greater than upper bound '<xsl:value-of select="$end"/>'.</indexingErrorMsg>
             </xsl:if>
+
+
+            <xsl:call-template name="build-range-details">
+              <xsl:with-param name="start" select="$start"/>
+              <xsl:with-param name="end" select="$end"/>
+            </xsl:call-template>
           </xsl:for-each>
 
           <xsl:for-each select=".//gex:verticalElement/*">

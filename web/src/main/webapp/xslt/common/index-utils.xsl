@@ -395,6 +395,40 @@
   </xsl:template>
 
 
+  <xsl:template name="build-range-details">
+    <xsl:param name="start" as="node()?"/>
+    <xsl:param name="end" as="node()?"/>
+
+    <xsl:variable name="rangeStartDetails">
+      <xsl:if test="$start != ''">
+        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $start, '&quot;')"/></value>
+      </xsl:if>
+      <xsl:for-each select="$start/@*[. != '']">
+        <value><xsl:value-of select="concat('&quot;', name(.), '&quot;: &quot;', gn-fn-index:json-escape(.), '&quot;')"/></value>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="rangeEndDetails">
+      <xsl:if test="$end != ''">
+        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $end, '&quot;')"/></value>
+      </xsl:if>
+      <xsl:for-each select="$end/@*[. != '']">
+        <value><xsl:value-of select="concat('&quot;', name(.), '&quot;: &quot;', gn-fn-index:json-escape(.), '&quot;')"/></value>
+      </xsl:for-each>
+    </xsl:variable>
+
+    <xsl:if test="count($rangeStartDetails/value) > 0 or count($rangeEndDetails/value) > 0">
+      <resourceTemporalExtentDetails type="object">{
+        "start": {
+        <xsl:value-of select="string-join($rangeStartDetails/value, ',')"/>
+        },
+        "end": {
+        <xsl:value-of select="string-join($rangeEndDetails/value, ',')"/>
+        }
+        }</resourceTemporalExtentDetails>
+    </xsl:if>
+  </xsl:template>
+
+
   <xsl:template name="build-thesaurus-fields">
     <xsl:param name="thesaurus" as="xs:string"/>
     <xsl:param name="thesaurusId" as="xs:string"/>
@@ -456,7 +490,7 @@
           <indexingError>true</indexingError>
         </xsl:if>
       </xsl:for-each>
-      
+
 
       <xsl:variable name="thesaurusTree" as="node()">
         <values>
