@@ -133,7 +133,7 @@ goog.require('gn_alert');
           // 'queryBase': '${any}',
           // Full text but more boost on title match
           // * Search in languages depending on the strategy selected
-          'queryBase': 'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:(${any})^2',
+          'queryBase': 'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:(${any})^4',
           // * Force UI language - in this case set languageStrategy to searchInUILanguage
           // and disable language options in searchOptions
           // 'queryBase': 'any.${uiLang}:(${any}) any.common:(${any}) resourceTitleObject.${uiLang}:(${any})^2',
@@ -336,14 +336,15 @@ goog.require('gn_alert');
             //     'size': 10
             //   }
             // },
-            "th_httpinspireeceuropaeuthemetheme.key": {
-              "terms": {
-                "field": "th_httpinspireeceuropaeuthemetheme.key",
-                "size": 34,
-                "exclude": "http.*"
+            'th_httpinspireeceuropaeutheme-theme_tree.key': {
+              'terms': {
+                'field': 'th_httpinspireeceuropaeutheme-theme_tree.key',
+                'size': 34,
+                "order" : { "_key" : "asc" }
               },
               'meta': {
-                'collapsed': true
+                'collapsed': true,
+                'translateOnLoad': true
               }
             },
             // GEMET configuration for non multilingual catalog
