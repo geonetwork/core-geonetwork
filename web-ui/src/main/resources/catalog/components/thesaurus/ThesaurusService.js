@@ -308,7 +308,6 @@
                 }
                 if (lang) {
                   params.lang = lang;
-                  params.langWithId = langWithId;
                 }
                 if (wrapper) {
                   params.wrapper = wrapper;
