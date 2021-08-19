@@ -89,11 +89,11 @@ Default index is configured with analyzer for the following languages:
 * German
 * Italian
   
-To add a new language, update the index schema in `datadir/config/index/records.json` and update the fields containing fields starting with `lang`.
+To add a new language, update the index schema in `datadir/config/index/records.json` and update the containing fields starting with `lang`.
 
 First create a full text search field for the new language in the `any` object field eg. `any.langfre` and define the proper analyzer.
 
-Then add the new language like others.
+Then add the new language like the others.
 
 From the admin console > tools, Delete index and reindex.
 
