@@ -62,9 +62,6 @@
             minLength: 10
           }),
           firstLanguage = detectedLanguage[0];
-        // console.log('Detecting language for "', p.any, '" in ', languageWhitelist);
-        // console.log(' => Detection failed: ', failedToDetect, ' / First match: ', firstLanguage);
-        // console.log(detectedLanguage);
         return firstLanguage[0];
       }
 
