@@ -58,6 +58,7 @@ public class Metadata extends AbstractMetadata implements Serializable {
     public static final String METADATA_CATEG_JOIN_TABLE_NAME = "MetadataCateg";
     private List<UserFeedback> userFeedbacks;
 
+
     public Metadata() {
     }
 
@@ -94,5 +95,15 @@ public class Metadata extends AbstractMetadata implements Serializable {
 
     public void setUserFeedbacks(@Nonnull List<UserFeedback> userFeedbacks) {
         this.userFeedbacks = userFeedbacks;
+    }
+
+
+    @OneToMany(mappedBy = "metadata", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    public Set<MetadataIndicator> getMetadataIndicators() {
+        return metadataIndicators;
+    }
+
+    public void setMetadataIndicators(@Nonnull Set<MetadataIndicator> metadataIndicators) {
+        this.metadataIndicators = metadataIndicators;
     }
 }

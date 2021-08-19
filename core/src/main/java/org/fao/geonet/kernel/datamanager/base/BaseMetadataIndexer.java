@@ -524,6 +524,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     }
                 }
 
+                // Index metadata indicators
+                fullMd.getIndicators().forEach(indicator -> {
+                    fields.put(String.format("indicator_%s", indicator.getName()), indicator.getValue());
+                });
+
                 fields.putAll(addExtraFields(fullMd));
 
                 searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType, forceRefreshReaders);

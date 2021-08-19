@@ -42,6 +42,7 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo_;
+import org.fao.geonet.domain.MetadataIndicator;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.domain.Pair;
@@ -240,6 +241,46 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         assertNull(allSourceInfo.get(metadata2.getId()));
         assertNotNull(allSourceInfo.get(metadata3.getId()));
     }
+
+    @Test
+    public void testAddMetadataIndicator() throws Exception {
+        Metadata metadata = newMetadata();
+        assertTrue(metadata.getMetadataIndicators().isEmpty());
+
+        MetadataIndicator newIndicator = new MetadataIndicator().setName("indicator1").setValue("value1");
+        newIndicator.setMetadata(metadata);
+        metadata.getIndicators().add(newIndicator);
+
+        _repo.save(metadata);
+
+
+        Metadata metadataSaved = _repo.findOneByUuid(metadata.getUuid());
+        assertEquals(1, metadataSaved.getMetadataIndicators().size());
+        assertEquals(metadata.getIndicators(), metadataSaved.getIndicators());
+    }
+
+    @Test
+    public void testDeleteMetadataIndicators() throws Exception {
+        Metadata metadata = newMetadata();
+        assertTrue(metadata.getMetadataIndicators().isEmpty());
+
+        MetadataIndicator newIndicator = new MetadataIndicator().setName("indicator1").setValue("value1");
+        newIndicator.setMetadata(metadata);
+        metadata.getIndicators().add(newIndicator);
+
+        _repo.save(metadata);
+
+
+        metadata = _repo.findOneByUuid(metadata.getUuid());
+        metadata.getIndicators().clear();
+
+        _repo.save(metadata);
+
+        metadata = _repo.findOneByUuid(metadata.getUuid());
+
+        assertEquals(0, metadata.getMetadataIndicators().size());
+    }
+
 
     private Metadata updateChangeDate(Metadata metadata, String date) {
         metadata.getDataInfo().setChangeDate(new ISODate(date));

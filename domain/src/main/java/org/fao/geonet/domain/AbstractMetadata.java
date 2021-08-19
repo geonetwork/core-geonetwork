@@ -266,7 +266,15 @@ public abstract class AbstractMetadata extends GeonetEntity {
     @Transient
     protected Set<MetadataCategory> metadataCategories = new HashSet<MetadataCategory>();
 
-	@Override
+    @Transient
+    public Set<MetadataIndicator> getIndicators() {
+        return (Set<MetadataIndicator>) metadataIndicators;
+    }
+    @Transient
+    protected Set<MetadataIndicator> metadataIndicators = new HashSet<MetadataIndicator>();
+
+
+    @Override
 	public String toString() {
 		final int maxLen = 3;
 		return this.getClass().getSimpleName() + " [_id=" + _id + ", " + (_uuid != null ? "_uuid=" + _uuid + ", " : "")

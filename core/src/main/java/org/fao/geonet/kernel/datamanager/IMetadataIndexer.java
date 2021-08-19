@@ -44,7 +44,7 @@ public interface IMetadataIndexer {
 
     /**
      * This is a hopefully soon to be deprecated when no deps on context
-     * 
+     *
      * @param context
      * @throws Exception
      */
