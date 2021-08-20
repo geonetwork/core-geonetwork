@@ -984,7 +984,7 @@
 
   <!-- Link to other metadata records -->
   <xsl:template mode="render-field"
-                match="srv:operatesOn[@uuidref]"
+                match="srv:operatesOn[@uuidref]|gmd:featureCatalogueCitation[@uuidref]|gmd:source[@uuidref]|gmd:aggregateDataSetIdentifier/*/gmd:code[@uuidref]"
                 priority="100">
     <xsl:variable name="nodeName" select="name()"/>
 
