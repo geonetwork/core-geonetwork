@@ -927,7 +927,7 @@
                 //   this will NOT update fields in this list.
                 var initMultilingualFields = function(doNotModifyFields) {
                   scope.config.multilingualFields.forEach(function(f) {
-                    if ( (!doNotModifyFields) || (!_.contains(doNotModifyFields,f)) ) {
+                    if ( (!doNotModifyFields) || (!_.includes(doNotModifyFields,f)) ) {
                       scope.params[f] = {};
                       setParameterValue(f, '');
                     }

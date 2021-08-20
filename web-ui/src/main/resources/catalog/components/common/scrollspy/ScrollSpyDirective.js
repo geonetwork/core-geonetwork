@@ -180,14 +180,14 @@
           // This is required as the scrollspy need the element
           // to be available in the DOM to be initialized.
           if (scope.watch) {
-            scope.$watch('watch', function(value) {
+            scope.$watch('watch', function(n, o) {
               // Wait for the template to render
               // FIXME: may not work properly ?
-              $timeout(function() {
-                if (scope.spyElems.length === 0) {
+              if (n !== o) {
+                $timeout(function() {
                   init();
-                }
-              }, 200);
+                }, 200);
+              }
             }, true);
           } else {
             init();

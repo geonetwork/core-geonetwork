@@ -47,7 +47,7 @@
             name: userTimezone,
             offset: moment.tz(userTimezone).format('Z / z')
           }];
-        _.each(moment.tz.names(), function(tz, index, list) {
+        _.forEach(moment.tz.names(), function(tz, index, list) {
           timezoneNames.push({
             name: tz,
             offset: moment.tz(tz).format('Z / z')

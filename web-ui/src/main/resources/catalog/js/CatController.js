@@ -812,34 +812,31 @@ goog.require('gn_alert');
           blur: 0
         }
       },
+      stopKeyList: [
+        'langDetector',
+        'nodeDetector',
+        'serviceDetector',
+        'baseURLDetector',
+        'languages',
+        'cookieWarning',
+        'facetConfig',
+        'filters',
+        'scoreConfig',
+        'autocompleteConfig',
+        'moreLikeThisConfig'
+      ],
       current: null,
       isDisableLoginForm: false,
       isShowLoginAsLink: false,
       isUserProfileUpdateEnabled: true,
       isUserGroupUpdateEnabled: true,
-      init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
-        // start from the default config to make sure every field is present
-        // and override with config arg if required
-        angular.merge(this.gnCfg, config, {});
-
-        // special case: languages (replace with object from config if available)
-        if (config && config.mods) {
-          this.gnCfg.mods.header.languages = angular.extend({
-            mods: {
-              header: {
-                languages: {}
-              }
-            }
-          }, config).mods.header.languages;
-
-          this.gnCfg.mods.search.scoreConfig = config.mods.search.scoreConfig;
-          this.gnCfg.mods.search.facetConfig = config.mods.search.facetConfig;
-          this.gnCfg.mods.home.facetConfig = config.mods.home.facetConfig;
-          this.gnCfg.mods.admin.facetConfig = config.mods.admin.facetConfig;
-        }
-
+      init: function(configOverlay, gnUrl, gnViewerSettings, gnSearchSettings) {
+        this.applyConfig(configOverlay);
+        this.setLegacyOption(gnViewerSettings, gnSearchSettings);
         this.gnUrl = gnUrl || '../';
         this.proxyUrl = this.gnUrl + '../proxy?url=';
+      },
+      setLegacyOption: function(gnViewerSettings, gnSearchSettings) {
         gnViewerSettings.mapConfig = this.gnCfg.mods.map;
         angular.extend(gnSearchSettings, this.gnCfg.mods.search);
         this.isMapViewerEnabled = this.gnCfg.mods.map.enabled;
@@ -848,22 +845,75 @@ goog.require('gn_alert');
           gnViewerSettings.mapConfig['map-viewer'].context;
         gnViewerSettings.geocoder = this.gnCfg.mods.geocoder.appUrl || defaultConfig.mods.geocoder.appUrl;
       },
+      getObjectKeysPaths: function(obj, stopKeyList, allLevels, prefix) {
+        var keys = Object.keys(obj);
+        var that = this;
+        prefix = prefix ? prefix + '.' : '';
+        return keys.reduce(function(result, key){
+          if (angular.isObject(obj[key]) && Object.keys(obj[key]).length > 0 && (stopKeyList === undefined
+            || (stopKeyList && stopKeyList.indexOf(key) === -1))) {
+            if(allLevels) {
+              result.push(prefix + key);
+            }
+            result = result.concat(that.getObjectKeysPaths(obj[key], stopKeyList, allLevels, prefix + key));
+          } else {
+            result.push(prefix + key);
+          }
+          return result;
+        }, []);
+      },
+      deleteValueByPath: function(obj, path) {
+        var i;
+        path = path.split('.');
+        for (i = 0; i < path.length - 1; i++)
+          obj = obj[path[i]];
+
+        delete obj[path[i]];
+        return obj;
+      },
+      applyConfig: function(configOverlay, runAllChecks) {
+        var pathToUpdate = this.getObjectKeysPaths(configOverlay, this.stopKeyList, false);
+        for(var i = 0; i < pathToUpdate.length; i++) {
+          var p = pathToUpdate[i],
+            o = _.get(configOverlay, p);
+          if (o !== undefined) {
+            _.set(this.gnCfg, p, o);
+          }
+          if (runAllChecks) {
+            optionInDefaultConfig = _.get(defaultConfig, p);
+            if (optionInDefaultConfig === undefined) {
+              console.warn('Path ' + p + ' not found in default configuration. Check your custom configuration.', config);
+            }
+          }
+        }
+      },
+      cleanConfig: function(config) {
+        var pathToClean = this.getObjectKeysPaths(defaultConfig, this.stopKeyList, true);
+        for(var i = 0; i < pathToClean.length; i++) {
+          var p = pathToClean[i],
+            optionInDefault = _.get(defaultConfig, p),
+            option = _.get(config, p);
+          if (option !== undefined
+            && JSON.stringify(option) === JSON.stringify(optionInDefault)) {
+            this.deleteValueByPath(config, p);
+          }
+        }
+        var pathToRemove = this.getObjectKeysPaths(config, this.stopKeyList, true);
+        for(var i = 0; i < pathToRemove.length; i++) {
+          var p = pathToRemove[i],
+            pathToken = p.split('.'),
+            option = _.get(config, p);
+          if (angular.isObject(option)
+            && Object.keys(option).length === 0) {
+            var key = pathToken.pop();
+            parent = _.get(config, pathToken.join('.'));
+            delete parent[key];
+          }
+        }
+        return config;
+      },
       getDefaultConfig: function() {
         return angular.copy(defaultConfig);
-      },
-      // this returns a copy of the default config without the languages object
-      // this way, the object can be used as reference for a complete ui
-      // settings page
-      getMergeableDefaultConfig: function() {
-        var copy = angular.copy(defaultConfig);
-        copy.mods.header.languages = {};
-        copy.mods.search.grid.related = [];
-        copy.mods.home.facetConfig = {};
-        copy.mods.search.facetConfig = {};
-        copy.mods.search.scoreConfig = {};
-        copy.mods.admin.facetConfig = {};
-        copy.mods.map["map-editor"].layers = [];
-        return copy;
       },
       getProxyUrl: function() {
         return this.proxyUrl;
@@ -1318,7 +1368,7 @@ goog.require('gn_alert');
                 $scope.homeFacet = {
                   list: keys,
                   key: selectedFacet,
-                  lastKey: keys[keys.length - 1]
+                  lastKey: keys.length > 1 ? keys[keys.length - 1] : undefined
                 };
               });
             }
