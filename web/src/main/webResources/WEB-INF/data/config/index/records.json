@@ -1125,6 +1125,19 @@
                   }
                 }
               },
+              "langspa": {
+                "type": "text",
+                "analyzer": "spanish",
+                "copy_to": [
+                  "any.langspa"
+                ],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
               "langroh": {
                 "type": "text",
                 "analyzer": "${es.index.analyzer.default}",
@@ -1236,6 +1249,12 @@
                 "type": "keyword",
                 "copy_to": [
                   "any.langita"
+                ]
+              },
+              "langspa": {
+                "type": "keyword",
+                "copy_to": [
+                  "any.langspa"
                 ]
               },
               "text": {
@@ -1407,6 +1426,10 @@
             "type": "text",
             "analyzer": "italian"
           },
+          "langspa": {
+            "type": "text",
+            "analyzer": "spanish"
+          },
           "langroh": {
             "type": "text",
             "analyzer": "${es.index.analyzer.default}"
@@ -1449,6 +1472,12 @@
             "copy_to": [
               "any.langita"
               ]
+          },
+          "langspa": {
+            "type": "keyword",
+            "copy_to": [
+              "any.langspa"
+            ]
           },
           "link": {
             "type": "keyword"
