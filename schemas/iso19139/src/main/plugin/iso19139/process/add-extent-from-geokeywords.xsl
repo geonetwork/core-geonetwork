@@ -54,10 +54,14 @@
 
   <!-- Replace or not existing extent -->
   <xsl:param name="replace" select="'0'"/>
+  <xsl:param name="boundingAll" select="'0'"/>
+  <xsl:param name="addExtentFor" select="''"/>
 
 
   <xsl:variable name="replaceMode"
                 select="geonet:parseBoolean($replace)"/>
+  <xsl:variable name="boundingAllMode"
+                select="geonet:parseBoolean($boundingAll)"/>
   <xsl:variable name="serviceUrl"
                 select="concat(substring($gurl, 1, string-length($gurl)-4), 'api/registries/vocabularies/search?_content_type=xml&amp;q=')"/>
 
@@ -86,12 +90,14 @@
                   target="extent">
         <name>
           <xsl:value-of select="geonet:i18n($add-extent-loc, 'a', $guiLang)"/><xsl:value-of
-          select="string-join($geoKeywords/gco:CharacterString, ', ')"/>
+          select="string-join($geoKeywords/(gco:CharacterString|gmx:Anchor), ', ')"/>
           <xsl:value-of select="geonet:i18n($add-extent-loc, 'b', $guiLang)"/>
         </name>
         <operational>true</operational>
         <params>{"gurl":{"type":"string", "defaultValue":"<xsl:value-of select="$gurl"/>"},
           "lang":{"type":"string", "defaultValue":"<xsl:value-of select="$lang"/>"},
+          "addExtentFor":{"type":"string", "defaultValue":""},
+          "boundingAll":{"type":"boolean", "defaultValue":"<xsl:value-of select="$boundingAll"/>"},
           "replace":{"type":"boolean", "defaultValue":"<xsl:value-of select="$replace"/>"}}
         </params>
       </suggestion>
@@ -170,8 +176,9 @@
         <xsl:when test="$replaceMode">
           <xsl:for-each select="srv:extent|gmd:extent">
             <xsl:if
-              test="gmd:EX_Extent/gmd:temporalElement or gmd:EX_Extent/gmd:verticalElement
-                            or gmd:EX_Extent/gmd:geographicElement[gmd:EX_BoundingPolygon]">
+              test="gmd:EX_Extent/gmd:temporalElement
+                    or gmd:EX_Extent/gmd:verticalElement
+                    or gmd:EX_Extent/gmd:geographicElement[gmd:EX_BoundingPolygon]">
               <xsl:copy>
                 <xsl:copy-of select="gmd:EX_Extent"/>
               </xsl:copy>
@@ -216,16 +223,39 @@
     <xsl:param name="srv" select="false()"/>
     <!-- Only check keyword in main metadata language
      TODO: support multilingual keyword -->
-    <xsl:for-each
-      select="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[
-        normalize-space(gco:CharacterString) != '' and
-        not(gco:CharacterString/@gco:nilReason)]">
-      <xsl:call-template name="get-bbox">
-        <xsl:with-param name="word" select="gco:CharacterString"/>
-        <xsl:with-param name="srv" select="$srv"/>
-      </xsl:call-template>
 
-    </xsl:for-each>
+    <xsl:variable name="extentList">
+      <xsl:for-each
+        select="if ($addExtentFor = '')
+                then gmd:descriptiveKeywords/*/gmd:keyword[
+                    normalize-space((gco:CharacterString|gmx:Anchor)) != ''
+                    and not(gco:CharacterString/@gco:nilReason)
+                    and ../gmd:type/*/@codeListValue='place']
+                else  gmd:descriptiveKeywords/*/gmd:keyword[
+                    normalize-space((gco:CharacterString|gmx:Anchor)) = $addExtentFor]">
+        <xsl:call-template name="get-bbox">
+          <xsl:with-param name="word" select="gco:CharacterString|gmx:Anchor"/>
+          <xsl:with-param name="srv" select="$srv"/>
+        </xsl:call-template>
+      </xsl:for-each>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$boundingAllMode">
+        <xsl:element name="{if($srv) then 'srv:extent' else 'gmd:extent'}">
+          <xsl:copy-of
+            select="geonet:make-iso-extent(
+              string(min($extentList//gmd:westBoundLongitude)),
+              string(min($extentList//gmd:southBoundLatitude)),
+              string(max($extentList//gmd:eastBoundLongitude)),
+              string(max($extentList//gmd:northBoundLatitude)),
+              string-join($extentList//gmd:description, ', '))"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of select="$extentList"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 
@@ -236,25 +266,16 @@
 
     <xsl:if test="normalize-space($word)!=''">
       <!-- Get keyword information -->
-      <xsl:variable name="keyword" select="document(concat($serviceUrl, encode-for-uri($word)))"/>
+      <xsl:variable name="keyword"
+                    select="document(concat($serviceUrl, encode-for-uri($word)))"/>
       <!-- It should be one but if one keyword is found in more
           thant one thesaurus, then each will be processed.-->
       <xsl:for-each select="$keyword/response/keyword">
-        <xsl:if test="geo">
-          <xsl:choose>
-            <xsl:when test="$srv">
-              <srv:extent>
-                <xsl:copy-of
-                  select="geonet:make-iso-extent(geo/west, geo/south, geo/east, geo/north, $word)"/>
-              </srv:extent>
-            </xsl:when>
-            <xsl:otherwise>
-              <gmd:extent>
-                <xsl:copy-of
-                  select="geonet:make-iso-extent(geo/west, geo/south, geo/east, geo/north, $word)"/>
-              </gmd:extent>
-            </xsl:otherwise>
-          </xsl:choose>
+        <xsl:if test="geo and geo/west != '' and geo/south != '' and geo/east != '' and geo/north != '' and count(value[text() = $word]) = 1">
+          <xsl:element name="{if($srv) then 'srv:extent' else 'gmd:extent'}">
+            <xsl:copy-of
+              select="geonet:make-iso-extent(geo/west, geo/south, geo/east, geo/north, $word)"/>
+          </xsl:element>
         </xsl:if>
       </xsl:for-each>
     </xsl:if>
