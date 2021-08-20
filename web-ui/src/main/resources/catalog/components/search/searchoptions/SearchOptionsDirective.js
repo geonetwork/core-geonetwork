@@ -26,7 +26,9 @@
 
   var module = angular.module('gn_searchoptions_directive', []);
 
-  module.directive('gnSearchOptions', ['$rootScope', 'gnGlobalSettings', function($rootScope, gnGlobalSettings) {
+  module.directive('gnSearchOptions', [
+    '$rootScope', '$http', 'gnGlobalSettings',
+    function($rootScope, $http, gnGlobalSettings) {
 
       return {
         restrict: 'E',
@@ -37,11 +39,55 @@
             'searchoptions.html',
         link: function(scope, element, attrs, controller) {
           scope.user = $rootScope.user;
-          scope.initOnlyMyRecord = function() {
-            scope.onlyMyRecord = gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly
+          scope.optionsConfig = gnGlobalSettings.gnCfg.mods.search.searchOptions;
+          scope.init = function() {
+            scope.onlyMyRecord = gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly;
+            scope.languageStrategy = controller.getLanguageStrategy()
+              || gnGlobalSettings.gnCfg.mods.search.languageStrategy;
+            scope.forcedLanguage = controller.getForcedLanguage();
+            scope.languagesAvailable = [];
+            scope.languagesStats = {};
 
+            var configWhiteList = gnGlobalSettings.gnCfg.mods.search.languageWhitelist;
+            if (configWhiteList
+              && configWhiteList.length > 0) {
+              scope.languagesAvailable = configWhiteList;
+              controller.setLanguageWhiteList(configWhiteList);
+            } else {
+              $http.post('../api/search/records/_search', {
+                size: 0,
+                query: {
+                  terms: {isTemplate: ['n']}
+                },
+                aggregations: {
+                  mainLanguage: {
+                    terms: {
+                      field: 'mainLanguage',
+                      size: 10,
+                      exclude: ''
+                    }
+                  },
+                  otherLanguage: {
+                    terms: {
+                      field: 'otherLanguage',
+                      size: 10,
+                      exclude: ''
+                    }
+                  }
+                }
+              }).success(function (data) {
+                angular.forEach(data.aggregations.mainLanguage.buckets, function (i) {
+                  scope.languagesStats[i.key] = i.doc_count;
+                });
+                angular.forEach(data.aggregations.otherLanguage.buckets, function (i) {
+                  scope.languagesStats[i.key] = i.doc_count;
+                });
+                scope.languagesAvailable = Object.keys(scope.languagesStats);
+                controller.setLanguageWhiteList(scope.languagesAvailable);
+              });
+            }
           };
-          scope.initOnlyMyRecord();
+
           // this enables to keep the dropdown active when we click on the label
           element.find('label > span').each(function(i, e) {
             $(e).on('click', function () {
@@ -66,6 +112,33 @@
             }
           });
 
+          Object.defineProperty(scope, 'languageStrategy', {
+            get: function() {
+              return controller.getLanguageStrategy();
+            },
+            set: function(value) {
+              controller.setLanguageStrategy(value);
+            }
+          });
+
+          Object.defineProperty(scope, 'forcedLanguage', {
+            get: function() {
+              return controller.getForcedLanguage();
+            },
+            set: function(value) {
+              controller.setForcedLanguage(value);
+            }
+          });
+
+          Object.defineProperty(scope, 'languageWhiteList', {
+            get: function() {
+              return controller.getLanguageWhiteList();
+            },
+            set: function(value) {
+              controller.setLanguageWhiteList(value);
+            }
+          });
+
           Object.defineProperty(scope, 'onlyMyRecord', {
             get: function() {
               return controller.getOnlyMyRecord();
@@ -74,6 +147,13 @@
               controller.setOnlyMyRecord(value);
             }
           });
+
+          scope.$watch('languageStrategy', function(n, o) {
+            if (o === 'forceALanguage') {
+              controller.setForcedLanguage(undefined);
+            }
+          })
+          scope.init();
         }
       };
     }]);

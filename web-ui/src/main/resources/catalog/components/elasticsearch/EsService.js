@@ -49,6 +49,90 @@
         return gnEsLuceneQueryParser.facetsToLuceneQuery(facetsState);
       }
 
+      function autoDetectLanguage(any, languageWhiteList) {
+        var whitelist =
+          gnGlobalSettings.gnCfg.mods.search.languageWhitelist
+          && gnGlobalSettings.gnCfg.mods.search.languageWhitelist.length > 0
+          ? gnGlobalSettings.gnCfg.mods.search.languageWhitelist
+          : (
+            languageWhiteList
+            || Object.keys(gnGlobalSettings.gnCfg.mods.header.languages));
+        var detectedLanguage = franc.all(any, {
+            whitelist: whitelist,
+            minLength: 10
+          }),
+          firstLanguage = detectedLanguage[0];
+        return firstLanguage[0];
+      }
+
+      function getLanguageConfig(any, state) {
+        var languageFound = false,
+          searchLanguage = 'lang' + state.forcedLanguage,
+          uiLanguage = 'lang' + gnGlobalSettings.iso3lang;
+        state.detectedLanguage = undefined;
+        if (state.forcedLanguage !== undefined) {
+          searchLanguage = 'lang' + state.forcedLanguage;
+          languageFound = true;
+        } else if (state.languageStrategy === 'searchInDetectedLanguage') {
+          searchLanguage = autoDetectLanguage(any, state.languageWhiteList);
+          state.detectedLanguage = searchLanguage;
+          languageFound = searchLanguage !== 'und';
+          searchLanguage = languageFound ? 'lang' + searchLanguage : '\\*';
+        } else if (state.languageStrategy === 'searchInUILanguage') {
+          searchLanguage = uiLanguage;
+          languageFound = true;
+        } else if (state.languageStrategy
+          && state.languageStrategy.indexOf('searchInThatLanguage') === 0) {
+          var config = state.languageStrategy.split(':');
+          if (config.length !== 2) {
+            console.warn('When using language strategy searchInThatLanguage, configuration MUST be like searchInThatLanguage:fre');
+          } else {
+            searchLanguage = 'lang' + config[1];
+            languageFound = true;
+          }
+        } else if (state.languageStrategy === 'searchInAllLanguages') {
+          languageFound = false;
+          searchLanguage = '\\*';
+          uiLanguage = '\\*';
+        }
+        return {
+          languageFound: languageFound,
+          searchLanguage: searchLanguage,
+          uiLanguage: uiLanguage
+        };
+      }
+
+      function injectLanguage(text, languageConfig, escape) {
+        return text
+          .replace(
+            /\$\{uiLang\}/g,
+            languageConfig.uiLanguage)
+          .replace(
+            /\$\{searchLang\}/g,
+            languageConfig.languageFound && languageConfig.searchLanguage
+              ? languageConfig.searchLanguage : (escape ? '\\*' : '*'));
+      }
+
+
+      function filterPermalinkFlags(p, searchState) {
+        if (p.titleOnly) {
+          searchState.titleOnly = true;
+          delete p.titleOnly;
+        }
+        if (p.exactMatch) {
+          searchState.exactMatch = true;
+          delete p.exactMatch;
+        }
+        if (p.forcedLanguage) {
+          searchState.forcedLanguage = p.forcedLanguage;
+          delete p.forcedLanguage;
+        }
+        if (p.languageStrategy) {
+          searchState.languageStrategy = p.languageStrategy;
+          delete p.languageStrategy;
+        }
+        delete p.forcedLanguage;
+      }
 
       /**
        * Build all clauses to be added to the Elasticsearch
@@ -60,7 +144,8 @@
        * @param {boolean} exactMatch search for exact value
        * @param {boolean} titleOnly search in title only
        */
-      this.buildQueryClauses = function(queryHook, p, luceneQueryString, exactMatch, titleOnly) {
+      this.buildQueryClauses = function(queryHook, p, luceneQueryString,
+                                        state) {
         var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
           'sortBy', 'sortOrder', 'resultType', 'facet.q', 'any', 'geometry', 'query_string',
           'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo', 'geom', 'relation',
@@ -82,10 +167,16 @@
                   'Using default value \'${any}\'.');
                 queryBase = defaultQuery;
               }
-              var searchString = escapeSpecialCharacters(p.any),
-                q = queryBase.replace(
+
+              var languageConfig = getLanguageConfig(p.any, state),
+                searchString = escapeSpecialCharacters(p.any),
+                q = injectLanguage(state.titleOnly
+                  ? gnGlobalSettings.gnCfg.mods.search.queryTitle
+                  : queryBase, languageConfig, true)
+                  .replace(
                   /\$\{any\}/g,
-                  exactMatch === true ? '\"' + searchString + '\"' : searchString);
+                  state.exactMatch === true
+                              ? '\"' + searchString + '\"' : searchString);
               queryStringParams.push(q);
             } else {
               queryStringParams.push(queryExpression[1]);
@@ -96,24 +187,11 @@
             queryStringParams.push(luceneQueryString);
           }
 
-          if (titleOnly) {
-            var query = gnGlobalSettings.gnCfg.mods.search.queryTitle.replace(
-              /\$\{any\}/g, escapeSpecialCharacters(p.any));
-
-            queryHook.must.push({
-              query_string: {
-                fields: ["resourceTitleObject.*"],
-                query: exactMatch === true ? '\"' + query + '\"' : query
-              }
-            });
-          } else {
-
-            queryHook.must.push({
-              query_string: {
-                query: queryStringParams.join(' AND ').trim()
-              }
-            });
-          }
+          queryHook.must.push({
+            query_string: {
+              query: queryStringParams.join(' AND ').trim()
+            }
+          });
         }
         // ranges criteria (for dates)
         if (p.creationDateFrom || p.creationDateTo) {
@@ -264,17 +342,10 @@
           query.function_score['query'].bool.filter = filters;
         }
 
-        if (p.titleOnly) {
-          searchState.titleOnly = true;
-          delete p.titleOnly;
-        }
-        if (p.exactMatch) {
-          searchState.exactMatch = true;
-          delete p.exactMatch;
-        }
+        filterPermalinkFlags(p, searchState);
 
         var queryHook = query.function_score.query.bool;
-        this.buildQueryClauses(queryHook, p, luceneQueryString, searchState.exactMatch, searchState.titleOnly);
+        this.buildQueryClauses(queryHook, p, luceneQueryString, searchState);
 
         if(p.from) {
           params.from = p.from - 1;
@@ -320,37 +391,49 @@
        * @param query Completion query
        * @returns es request params
        */
-      this.getSuggestParams = function(field, query, searchObj) {
+      this.getSuggestParams = function(field, any, searchObj) {
+        var currentSearch = {};
+        angular.copy(searchObj, currentSearch);
 
-        var params = {}, defaultScore = {
+        var params = {},
+          languageConfig = getLanguageConfig(any, currentSearch.state),
+          defaultScore = {
           "script_score" : {
             "script" : {
               "source": "_score"
             }
           }
-        }, autocompleteQuery = {};
+        },
+          autocompleteQuery = {};
+
         angular.copy(gnGlobalSettings.gnCfg.mods.search.autocompleteConfig.query, autocompleteQuery);
         angular.copy({"query": {
           "function_score": gnGlobalSettings.gnCfg.mods.search.scoreConfig ?
             gnGlobalSettings.gnCfg.mods.search.scoreConfig : defaultScore
         }}, params);
+
+        // Inject language in field name to search on
+        var queryFields = autocompleteQuery.bool.must[0].multi_match.fields;
+        angular.forEach(queryFields, function(k, i) {
+          queryFields[i] = injectLanguage(k, languageConfig, false);
+        });
         params.query.function_score['query'] = autocompleteQuery;
-
-
-        var currentSearch = {};
-        angular.copy(searchObj, currentSearch);
 
         // The multi_match will take care of the any filter.
         currentSearch.params.any = undefined;
 
         try {
-          params.query.function_score.query.bool.must[0].multi_match.query = query;
+          params.query.function_score.query.bool.must[0].multi_match.query = any;
+
+          filterPermalinkFlags(currentSearch.params, currentSearch.state);
 
           // Inject current search to contextualize suggestions
           var queryHook = params.query.function_score.query.bool;
           var luceneQueryString = currentSearch.state && currentSearch.state.filters ? gnEsLuceneQueryParser.facetsToLuceneQuery(currentSearch.state.filters) : undefined;
 
-          this.buildQueryClauses(queryHook, currentSearch.params, luceneQueryString);
+          this.buildQueryClauses(
+            queryHook, currentSearch.params,
+            luceneQueryString, currentSearch.state);
 
           return params;
         } catch (e) {

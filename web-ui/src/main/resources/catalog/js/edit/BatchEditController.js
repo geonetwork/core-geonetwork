@@ -59,7 +59,7 @@
 
       // Only my record toggle
       $scope.toggleOnlyMyRecord = function(callback) {
-        $scope.onlyMyRecord.is ? setOwner() : unsetOwner();
+        $scope.onlyMyRecord ? setOwner() : unsetOwner();
         callback();
       };
       var setOwner = function() {
@@ -69,7 +69,7 @@
         delete $scope.searchObj.params['owner'];
       };
       $scope.$watch('user.id', function(newId) {
-        if (angular.isDefined(newId) && $scope.onlyMyRecord.is) {
+        if (angular.isDefined(newId) && $scope.onlyMyRecord) {
           setOwner();
         }
       });
