@@ -47,11 +47,40 @@
       </div>
     </div>
   </div>
-  <!--<div class="col-lg-12">
+  <div class="col-lg-12">
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">translations.manage</div>
       <div class="panel-body">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <td data-translate="">translation.key</td>
+            <td data-translate="">language.name</td>
+            <td data-translate="">translation.value</td>
+          </tr>
+          </thead>
+          <tr data-ng-repeat="l in dbTranslations">
+            <td>{{l.fieldName}}</td>
+            <td>{{l.langId | translate}}</td>
+            <td>
+              <input class="form-control" type="text" data-ng-model="l.value"/>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              <button class="btn btn-default">
+                <i class="fa fa-fw fa-plus"></i>
+                <span data-translate="">translation.add</span>
+              </button>
+            </td>
+          </tr>
+        </table>
+{{dbTranslations}}
+        <button class="btn btn-default">
+          <i class="fa fa-fw fa-save"></i>
+          <span data-translate="">translations.save</span>
+        </button>
       </div>
     </div>
-  </div>-->
+  </div>
 </div>

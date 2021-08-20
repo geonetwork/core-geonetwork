@@ -80,5 +80,16 @@
         });
       };
       loadDbLanguages();
+
+
+
+      $scope.dbTranslations = [];
+
+      function loadDbTranslations() {
+        $http.get('../api/i18n/db/custom').then(function(r) {
+          $scope.dbTranslations = r.data;
+        });
+      };
+      loadDbTranslations();
     }]);
 })();
