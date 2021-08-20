@@ -60,6 +60,7 @@
     <jsSource webappPath="/catalog/lib/angular.ext/date.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/angular-floatThead.js"/>
     <jsSource webappPath="/catalog/lib/tinycolor.js"/>
+    <jsSource webappPath="/catalog/lib/franc-min/franc-min.js"/>
     <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/proj4js-compressed.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/openlayers/ol.js" minimize="false"/>
@@ -128,6 +129,7 @@
     <jsSource webappPath="/catalog/lib/angular.ext/colorpicker/angularjs-color-picker.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.floatThead-slim.min.js"/>
     <jsSource webappPath="/catalog/lib/tinycolor.js"/>
+    <jsSource webappPath="/catalog/lib/franc-min/franc-min.js"/>
     <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/proj4js-compressed.js" minimize="false"/>
     <!-- FIXME in non debug mode, 3D mode does not work when WMS layer is displayed.

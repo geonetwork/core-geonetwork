@@ -99,10 +99,9 @@
 
     <xsl:copy-of select="gn-fn-index:add-field('Org', $org)"/>
 
-    <any><xsl:value-of select="$title"/></any>
-    <any><xsl:value-of select="$org"/></any>
-    <any><xsl:value-of select="$name"/></any>
-    <any><xsl:value-of select="$mail"/></any>
+    <any type="object">{"common": "<xsl:value-of
+      select="gn-fn-index:json-escape(normalize-space(.))"/>"}</any>
+    
     <xsl:for-each
       select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
       <xsl:copy-of select="gn-fn-index:add-field('email', .)"/>

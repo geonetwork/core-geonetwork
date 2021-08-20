@@ -146,9 +146,33 @@ goog.require('gn_alert');
           // Full text on all fields
           // 'queryBase': '${any}',
           // Full text but more boost on title match
-          'queryBase': 'any:(${any}) resourceTitleObject.\\*:(${any})^2',
-          'queryTitle': '${any}',
-          'searchOptions': true,
+          // * Search in languages depending on the strategy selected
+          'queryBase': 'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:(${any})^2',
+          // * Force UI language - in this case set languageStrategy to searchInUILanguage
+          // and disable language options in searchOptions
+          // 'queryBase': 'any.${uiLang}:(${any}) any.common:(${any}) resourceTitleObject.${uiLang}:(${any})^2',
+          // * Search in French fields (with french analysis)
+          // 'queryBase': 'any.langfre:(${any}) any.common:(${any}) resourceTitleObject.langfre:(${any})^2',
+          'queryTitle': 'resourceTitleObject.${searchLang}:(${any})',
+          'searchOptions': {
+            titleOnly: true,
+            exactMatch: true,
+            language: true
+          },
+          // Language strategy can be:
+          // * searchInUILanguage: search in UI languages
+          // eg. full text field is any.langfre if French
+          // * searchInAllLanguages: search using any.* fields
+          // (no analysis is done, more records are returned)
+          // * searchInDetectedLanguage: restrict the search to the language detected
+          // based on user search. If language detection fails, search in all languages.
+          // * searchInThatLanguage: Force a language using searchInThatLanguage:fre
+          // 'languageStrategy': 'searchInThatLanguage:fre',
+          'languageStrategy': 'searchInAllLanguages',
+          // Limit language detection to some languages only.
+          // If empty, the list of languages in catalogue records is used
+          // and if none found, mods.header.languages is used.
+          'languageWhitelist': [],
           // Score query may depend on where we are in the app?
           'scoreConfig': {
             // Score experiments:
@@ -220,8 +244,8 @@ goog.require('gn_alert');
                     "query": "",
                     "type": "bool_prefix",
                     "fields": [
-                      "resourceTitleObject.*",
-                      "resourceAbstractObject.*",
+                      "resourceTitleObject.${searchLang}",
+                      "resourceAbstractObject.${searchLang}",
                       "tag",
                       "resourceIdentifier"
                       // "anytext",
