@@ -57,7 +57,7 @@
         <ul class="dropdown-menu" role="menu">
           <!-- links -->
           <xsl:choose>
-            <xsl:when test="$isTemplate = 's'">
+            <xsl:when test="$isTemplate = ('s', 't')">
               <li role="menuitem">
                 <xsl:if test="'simple' = $currentView/@name">
                   <xsl:attribute name="class">disabled</xsl:attribute>
