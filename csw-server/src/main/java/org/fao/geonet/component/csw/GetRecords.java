@@ -745,11 +745,15 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             // Map CSW search field to index field for sorting.
             // And if not mapped assumes the field is an index field.
             String indexField = _fieldMapper.mapSort(field);
-            sortFields.add(
-                new FieldSortBuilder(StringUtils.isEmpty(indexField) ? field : indexField)
-                    .order(isDescOrder ? SortOrder.DESC : SortOrder.ASC));
+            if(StringUtils.isEmpty(indexField) && field.toLowerCase().equals("relevance")) {
+                indexField = "_score";
+            }
+            if(!StringUtils.isEmpty(indexField)) {
+                sortFields.add(
+                        new FieldSortBuilder(indexField)
+                                .order(isDescOrder ? SortOrder.DESC : SortOrder.ASC));
+            }
         }
-
         return sortFields;
     }
 
