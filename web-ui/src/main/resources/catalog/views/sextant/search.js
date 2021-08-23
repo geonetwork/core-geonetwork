@@ -568,11 +568,6 @@
         }
       });
 
-
-      if (searchSettings.filters) {
-        $scope.searchObj.hiddenParams = searchSettings.filters;
-      }
-
       // Get Thesaurus config and set first one as active
       $scope.thesaurus = searchSettings.defaultListOfThesaurus;
 

@@ -381,24 +381,30 @@
           searchSettings.metadataFormatter = sxtSettings.metadataFormatter;
         }
         if(sxtSettings.metadataType)  {
-              searchSettings.filters.type = sxtSettings.metadataType;
+          searchSettings.filters.push({
+            "query_string": {
+              "query": "+type:" + sxtSettings.metadataType
             }
-          }
+          });
+        }
+      }
 
       searchSettings.sortbyDefault = searchSettings.sortbyValues[0];
 
-      // searchSettings.hiddenParams = {
-      //   type: 'dataset or series or publication or nonGeographicDataset or ' +
-      //       'feature or featureCatalog or map'
-      // };
       searchSettings.configWho = searchSettings.configWho || '';
       if(searchSettings.configWho) {
-        angular.extend(searchSettings.filters, {
-          orgName: searchSettings.configWho.replace(/,/g, ' or ')
-        })
+        searchSettings.filters.push({
+            "query_string": {
+              "query": "+orgName:(\"" + searchSettings.configWho.replace(/,/g, '\" OR \"') + "\")"
+            }
+          });
       }
       if(searchSettings.excludeChildrenFromSearch) {
-        searchSettings.filters.isChild = 'false';
+        searchSettings.filters.push({
+          "query_string": {
+            "query": "!_exists_:parentUuid"
+          }
+        });
       }
 
       if (searchSettings.hideSourceRelations) {
@@ -408,13 +414,15 @@
           }
         );
       }
-      // SEXTANT DEPRECATED?
-      // searchSettings.configWhat = searchSettings.configWhat || '';
-      // if(searchSettings.configWhat) {
-      //   angular.extend(searchSettings.filters, {
-      //     _groupPublished: searchSettings.configWhat.replace(/,/g, ' or ')
-      //   })
-      // }
+
+      searchSettings.configWhat = searchSettings.configWhat || '';
+      if(searchSettings.configWhat) {
+        searchSettings.filters.push({
+          "query_string": {
+            "query": "+groupPublished:(\"" + searchSettings.configWhat.replace(/,/g, '\" OR \"') + "\")"
+          }
+        });
+      }
 
       var searchMap = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
       var viewerMap = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);
