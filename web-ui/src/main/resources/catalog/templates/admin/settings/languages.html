@@ -19,11 +19,11 @@
             <td>{{l.name}}</td>
             <td>{{l.id}}</td>
             <td>
-              <button class="btn btn-xs btn-danger"
+              <button class="btn btn-default btn-xs"
+                      title="{{'language.remove' | translate}}"
                       data-ng-hide="dbLanguages.length === 1"
                       data-ng-click="removeLanguage(l)">
-                <i class="fa fa-fw fa-times"></i>
-                <span data-translate="">language.remove</span>
+                <i class="fa fa-fw fa-times text-danger"></i>
               </button>
             </td>
           </tr>
@@ -51,35 +51,88 @@
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">translations.manage</div>
       <div class="panel-body">
-        <table class="table table-striped">
-          <thead>
-          <tr>
-            <td data-translate="">translation.key</td>
-            <td data-translate="">language.name</td>
-            <td data-translate="">translation.value</td>
-          </tr>
-          </thead>
-          <tr data-ng-repeat="l in dbTranslations">
-            <td>{{l.fieldName}}</td>
-            <td>{{l.langId | translate}}</td>
-            <td>
-              <input class="form-control" type="text" data-ng-model="l.value"/>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3">
-              <button class="btn btn-default">
-                <i class="fa fa-fw fa-plus"></i>
-                <span data-translate="">translation.add</span>
-              </button>
-            </td>
-          </tr>
-        </table>
-{{dbTranslations}}
-        <button class="btn btn-default">
-          <i class="fa fa-fw fa-save"></i>
-          <span data-translate="">translations.save</span>
-        </button>
+
+        <div class="btn-group pull-right">
+          <button class="btn btn-default"
+                  data-ng-click="saveTranslations()">
+            <i class="fa fa-fw fa-save"></i>
+            <span data-translate="">translations.save</span>
+          </button>
+          <button type="button"
+                  class="btn btn-default dropdown-toggle"
+                  data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li class=""
+                data-ng-click="removeAllTranslations()">
+              <i class="fa fa-fw fa-times text-danger"></i>
+              <span data-translate="">translations.remove.all</span>
+            </li>
+            <!--<li class=""
+                title="{{'translations.synch.all.help' || translate}}"
+                data-ng-click="synchAllTranslations()">
+              <i class="fa fa-fw"></i>
+              <span data-translate="">translations.synch.all</span>
+            </li>-->
+          </ul>
+        </div>
+
+        <tabset type="pills" justified="false" role="tablist">
+          <tab heading="{{'translation.table.view' | translate}}"
+               active="true"
+               role="tab">
+            <table class="table table-striped">
+              <thead>
+              <tr data-ng-show="dbTranslations.length > 0">
+                <td data-translate="">translation.key</td>
+                <td data-translate="">language.name</td>
+                <td data-translate="">translation.value</td>
+              </tr>
+              </thead>
+              <tr data-ng-repeat="l in dbTranslations">
+                <td>
+                  <span data-ng-show="dbTranslations[$index - 1].fieldName != l.fieldName">
+                    {{l.fieldName}}
+                    <button class="btn btn-default btn-xs pull-right"
+                            title="{{'translation.remove.for' | translate}} {{l.fieldName}}"
+                            data-ng-click="removeTranslation(l.fieldName)">
+                      <i class="fa fa-fw fa-times text-danger"></i>
+                    </button>
+                  </span>
+                </td>
+                <td>{{l.langId | translate}}</td>
+                <td>
+                  <input class="form-control" type="text" data-ng-model="l.value"/>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3">
+                  <div class="input-group">
+                    <span class="input-group-addon"
+                          data-translate="">translation.addFor</span>
+                    <input type="text" class="form-control"
+                           data-ng-model="newKey"
+                           placeholder="{{'translation.key'}}">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default"
+                              data-ng-disabled="newKey === ''"
+                              data-ng-click="addTranslation(newKey)">
+                        <i class="fa fa-fw fa-plus"></i>
+                        <span data-translate="">translation.add</span>
+                      </button>
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </tab>
+          <tab heading="{{'translation.json.view' | translate}}"
+               role="tab">
+            <gn-json-edit height="600" model="dbTranslations"></gn-json-edit>
+          </tab>
+        </tabset>
       </div>
     </div>
   </div>
