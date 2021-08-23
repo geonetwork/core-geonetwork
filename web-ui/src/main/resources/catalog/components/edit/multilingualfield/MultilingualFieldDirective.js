@@ -134,14 +134,14 @@
             var result = [];
             $(element).find(formFieldsSelector).each(function() {
               var key = _.invert(languages)["#"+this.lang];
-              if (!_.findWhere(result,{key: key})) // in lookups (i.e. country) there could be multiples of the same things
+              if (!_.find(result,{key: key})) // in lookups (i.e. country) there could be multiples of the same things
                 result.push({"key":key,"value":"#"+this.lang});
             });
 
             //there might be missing ones in the result list - add them now
             for (var key in languages) {
                 //do we have this key already?
-                if (!_.findWhere(result,{key: key})) {
+                if (!_.find(result,{key: key})) {
                      result.push( {"key":key,"value":languages[key]});
                 }
             }

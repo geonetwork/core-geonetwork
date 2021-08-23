@@ -586,7 +586,7 @@
               </ul>
             </div>
 
-            <div data-ng-show="mdView.current.record.resourceTemporalExtentDateRange">
+            <div data-ng-show="mdView.current.record.resourceTemporalExtentDetails">
               <h2>
                 <i class="fa fa-fw fa-clock-o"></i>
                 <span data-translate="">tempExtent</span>
@@ -594,17 +594,26 @@
 
 
               <div class="flex-row flex-align-center gn-period"
-                  data-ng-repeat="range in mdView.current.record.resourceTemporalExtentDateRange">
+                  data-ng-repeat="range in mdView.current.record.resourceTemporalExtentDetails">
                 <div class="flex-start"
-                    data-ng-show="range.gte">
-                  <dt data-gn-humanize-time="{{range.gte}}"/>
+                    data-ng-show="range.start">
+                  <dt>
+                    <span data-ng-show="range.start.indeterminatePosition">{{range.start.indeterminatePosition | translate}}&nbsp;</span>
+                    <span data-gn-humanize-time="{{range.start.date}}"/>
+                    <span data-ng-show="range.start.calendarEraName">{{range.start.calendarEraName | translate}}</span>
+
+                  </dt>
                 </div>
                 <div class="spacer">
                   <i class="fa fa-chevron-right"></i>
                 </div>
                 <div class="flex-end"
-                    data-ng-show="range.lte">
-                  <dt data-gn-humanize-time="{{range.lte}}"/>
+                    data-ng-show="range.end">
+                  <dt>
+                    <span data-ng-show="range.end.indeterminatePosition">{{range.end.indeterminatePosition | translate}}&nbsp;</span>
+                    <span data-gn-humanize-time="{{range.end.date}}"/>
+                    <span data-ng-show="range.end.calendarEraName">{{range.end.calendarEraName | translate}}</span>
+                  </dt>
                 </div>
               </div>
             </div>

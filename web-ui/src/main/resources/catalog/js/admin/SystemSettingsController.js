@@ -213,7 +213,7 @@
         $scope.uiConfiguration = undefined;
         $scope.uiConfigurationId = '';
         $scope.uiConfigurationIdIsValid = false;
-        $http.get('../api/ui')
+        return $http.get('../api/ui')
           .success(function(data) {
             for (var i = 0; i < data.length; i ++) {
               data[i].configuration == angular.toJson(data[i].configuration);
@@ -255,16 +255,16 @@
         $scope.createOrUpdateUiConfiguration(false, defaultConfigId);
       };
       $scope.updateUiConfig = function() {
-        $scope.createOrUpdateUiConfiguration(true);
+        return $scope.createOrUpdateUiConfiguration(true);
       };
       $scope.createOrUpdateUiConfiguration = function(isUpdate, id) {
         var newid = id || $scope.uiConfiguration.id;
         $scope.lastUiConfiguration = newid;
         if (newid) {
-          $http.put('../api/ui' + (isUpdate ? '/' + newid : ''), {
+          return $http.put('../api/ui' + (isUpdate ? '/' + newid : ''), {
             "id": newid,
-            // TODO: copy an existing one?
-            "configuration": (isUpdate ? $scope.uiConfiguration.configuration : JSON.stringify(gnGlobalSettings.gnCfg))
+            "configuration": (isUpdate ? $scope.uiConfiguration.configuration
+              : null)
           }, {responseType: 'text'}).then(function(r) {
             loadUiConfigurations();
           }, function(r) {
@@ -279,7 +279,7 @@
 
       $scope.deleteUiConfig = function() {
         $scope.lastUiConfiguration = undefined;
-        $http.delete('../api/ui/' + $scope.uiConfiguration.id).then(function(r) {
+        return $http.delete('../api/ui/' + $scope.uiConfiguration.id).then(function(r) {
           loadUiConfigurations();
         });
       };

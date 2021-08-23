@@ -362,7 +362,8 @@
         </xsl:apply-templates>
 
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceCredit', gmd:credit, $allLanguages)"/>
-
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('supplementalInformation', gmd:supplementalInformation, $allLanguages)"/>
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('purpose', gmd:purpose, $allLanguages)"/>
 
         <xsl:variable name="overviews"
                       select="gmd:graphicOverview/gmd:MD_BrowseGraphic/
@@ -854,6 +855,11 @@
                           and $start &gt; $end">
               <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Lower range bound '<xsl:value-of select="$start"/>' can not be greater than upper bound '<xsl:value-of select="$end"/>'.</indexingErrorMsg>
             </xsl:if>
+
+            <xsl:call-template name="build-range-details">
+              <xsl:with-param name="start" select="$start"/>
+              <xsl:with-param name="end" select="$end"/>
+            </xsl:call-template>
           </xsl:for-each>
 
           <xsl:for-each select=".//gmd:verticalElement/*">
