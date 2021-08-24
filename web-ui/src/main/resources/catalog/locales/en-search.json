@@ -532,5 +532,6 @@
   "displayMousePosition": "Display mouse position (Use 'c' shortcut to copy position to clipboard).",
   "copyMousePosition": "Copy mouse position to clipboard",
   "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed",
-  "rssFeed": "RSS feed"
+  "rssFeed": "RSS feed",
+  "esriCapabilitiesFailed": "Can't parse ESRI Rest capabilities document."
 }
