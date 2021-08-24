@@ -568,6 +568,15 @@
           }
         }
     },
+    'dcsmm-descripteur': {
+      'th_dcsmm.descripteur.default':
+        {
+          'terms': {
+            'field': 'th_dcsmm.descripteur.default',
+            'size': 300
+          }
+        }
+    },
     '_groupPublished': {
       'group': {
         'terms': {
@@ -604,20 +613,26 @@
         }
     },
     'odatis_centre_donnees': {
-      'th_odatis_centre_donnees.default':
+      'th_odatis_centre_donnees_tree.default':
         {
           'terms': {
-            'field': 'th_odatis_centre_donnees.default',
+            'field': 'th_odatis_centre_donnees_tree.default',
             'size': 300
+          },
+          'meta': {
+            'treeKeySeparator': '/'
           }
         }
     },
     'odatis_type_jeux_donnee': {
-      'th_type_jeux_donnee.default':
+      'th_type_jeux_donnee_tree.default':
         {
           'terms': {
-            'field': 'th_type_jeux_donnee.default',
+            'field': 'th_type_jeux_donnee_tree.default',
             'size': 300
+          },
+          'meta': {
+            'treeKeySeparator': '/'
           }
         }
     },
@@ -719,6 +734,30 @@
             'size': 300
           }
         }
+    },
+    'mdActions': {
+      'availableInServices': {
+        'filters': {
+          'filters': {
+            'availableInViewService': {
+              'query_string': {
+                'query': '+linkProtocol:/OGC:WMS.*/'
+              }
+            },
+            'availableInDownloadService': {
+              'query_string': {
+                'query': '+linkProtocol:/OGC:WFS.*/'
+              }
+            },
+            'availableInProcessingService': {
+              'query_string': {
+                'default_field': 'linkProtocol',
+                'query': '+linkProtocol:/OGC:WPS.*/'
+              }
+            }
+          }
+        }
+      }
     }
   })
 
