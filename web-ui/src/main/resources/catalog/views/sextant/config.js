@@ -2,7 +2,9 @@
 
   goog.provide('gn_search_sextant_config');
 
-  var module = angular.module('gn_search_sextant_config', []);
+  goog.require('gn_sxt_utils');
+
+  var module = angular.module('gn_search_sextant_config', ['gn_sxt_utils']);
 
   module.constant('gnPanierSettings', {});
 
@@ -25,9 +27,10 @@
     'gnConfigService',
     'gnMapsManager',
     'gnUrlUtils',
+    'sxtService',
     function(searchSettings, viewerSettings, gnPanierSettings,
              gnGlobalSettings, gnMap, gnConfigService, gnMapsManager,
-             gnUrlUtils) {
+             gnUrlUtils, sxtService) {
 
       if(typeof sxtSettings != 'undefined') {
         gnGlobalSettings.init({},
@@ -386,6 +389,17 @@
               "query": "+type:" + sxtSettings.metadataType
             }
           });
+        }
+
+        var esFacetConfig = gnGlobalSettings.gnCfg.mods.search.facetConfig;
+
+        // legacy Sextant facets are specified as array, so in that case we know we have to migrate them
+        if (Array.isArray(sxtSettings.facetConfig)) {
+          sxtService.migrateLegacyFacetConfigToEs(esFacetConfig, sxtSettings.facetConfig);
+        }
+        // otherwise, let's just assume the intent was to specify v7-compatible configuration
+        else if (typeof sxtSettings.facetConfig === 'object') {
+          angular.extend(esFacetConfig, sxtSettings.facetConfig);
         }
       }
 

@@ -546,10 +546,8 @@
 
   module.controller('gnsSextantSearch', [
     '$scope',
-    'gnSearchSettings',
-    function($scope, gnSearchSettings) {
+    function($scope) {
       $scope.ctrl = {};
-      $scope.facetConfig = gnSearchSettings.facetConfig;
     }]);
 
   module.controller('gnsSextantSearchForm', [

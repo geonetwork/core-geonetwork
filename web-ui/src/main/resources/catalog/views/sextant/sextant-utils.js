@@ -2,10 +2,11 @@
 
   goog.provide('gn_sxt_utils');
 
-  var module = angular.module('gn_sxt_utils', [
-  ]);
+  goog.require('gn_sxt_legacy_facet_mapping');
 
-  module.service('sxtService', [ function() {
+  var module = angular.module('gn_sxt_utils', ['gn_sxt_legacy_facet_mapping']);
+
+  module.service('sxtService', ['SEXTANT_LEGACY_FACET_MAPPING', function(SEXTANT_LEGACY_FACET_MAPPING) {
 
     var panierEnabled = typeof sxtSettings === 'undefined' || !angular.isUndefined(sxtSettings.tabOverflow.panier);
 
@@ -93,34 +94,38 @@
 
       scope.downloads = md.getLinksByType.apply(md, downloadTypes);
       scope.layers = md.getLinksByType.apply(md, layerTypes);
-      // scope.layers = [];
-      //
-      // angular.forEach(md.linksTree, function(transferOptions, i) {
-      //
-      //   // get all layers and downloads for this transferOptions
-      //   var layers = md.getLinksByType.apply(md,
-      //     [i+1].concat(layerTypes));
-      //
-      //   var downloads = md.getLinksByType.apply(md,
-      //     [i+1].concat(downloadTypes));
-      //
-      //   if(downloads.length > 0) {
-      //     // If only one layer, hide any WFS or WCS links unless there are several
-      //     // note: this does not apply if there is only one download link (otherwise we might end up with 0 links)
-      //     // https://gitlab.ifremer.fr/sextant/geonetwork/-/wikis/Catalogue#les-protocoles
-      //     if(layers.length === 1 && downloads.length > 1) {
-      //       var multipleWxS = md.getLinksByType(i+1, '#OGC:WFS', '#OGC:WCS').length > 1;
-      //
-      //       if (!multipleWxS) {
-      //         downloads = md.getLinksByType.apply(md,
-      //           [i+1].concat(downloadTypesWithoutWxS));
-      //       }
-      //     }
-      //
-      //     scope.downloads = scope.downloads.concat(downloads);
-      //   }
-      //   scope.layers = scope.layers.concat(layers);
-      // }.bind(this));
+    };
+
+    /**
+     * This transforms the legacy (sextant v6 and below) facet format to the new ES-compatible format
+     * Existing ES facets will be removed.
+     * If the facet fails to be migrated, a warning is shown in the console
+     * @param {Object} esFacetConfig
+     * @param {Array} sxtFacetConfig
+     */
+    this.migrateLegacyFacetConfigToEs = function (esFacetConfig, sxtFacetConfig) {
+      function addEsFacetConfig(sxtFacet) {
+        try {
+          var esFacetTemplate = SEXTANT_LEGACY_FACET_MAPPING[sxtFacet.key];
+          var esFacetName = Object.keys(esFacetTemplate)[0];
+          var esFacet = angular.extend({}, esFacetTemplate);
+          esFacet[esFacetName].meta = angular.extend({
+            displayFilter: !!sxtFacet.filter,
+            collapsed: !sxtFacet.opened
+          }, esFacetTemplate[esFacetName].meta);
+          angular.extend(esFacetConfig, esFacet);
+        } catch(e) {
+          console.warn('A legacy Sextant v6 facet could not be migrated to v7\n'+
+            'The following error was thrown: ' + e.message, sxtFacet)
+        }
+      }
+      // clean existing facets, add new ones
+      for (var key in esFacetConfig) {
+        delete esFacetConfig[key];
+      }
+      for (var i = 0; i < sxtFacetConfig.length; i++) {
+        addEsFacetConfig(sxtFacetConfig[i]);
+      }
     };
 
   }]);
