@@ -222,6 +222,17 @@
                   <button
                     data-ng-repeat="cat in mdView.current.record.inspireTheme_syn"
                     data-ng-click="filterBy('inspireTheme_syn', cat)"
+                    data-ng-if="!sortKeywordsAlphabetically"
+                    class="btn btn-sm btn-default {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
+                    title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}}">
+                    <span class="iti-{{cat.split('|')[0]}}"></span>
+                    <!-- TODOES: Restore icon -->{{cat}}
+                  </button>
+
+                  <button
+                    data-ng-repeat="cat in mdView.current.record.inspireTheme_syn | orderBy: 'toString()'"
+                    data-ng-click="filterBy('inspireTheme_syn', cat)"
+                    data-ng-if="sortKeywordsAlphabetically"
                     class="btn btn-sm btn-default {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
                     title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}}">
                     <span class="iti-{{cat.split('|')[0]}}"></span>
@@ -236,15 +247,37 @@
                 <td>
                   <button data-ng-repeat="cat in mdView.current.record.cat"
                           data-ng-click="filterBy('cat', cat)"
+                          data-ng-if="!sortKeywordsAlphabetically"
                           class="btn btn-sm btn-default"
                           title="{{'clickToFilterOn' | translate}} {{('cat-' + cat) | translate}}">
                     <span class="fa gn-icon-{{cat}} resource-color"></span>&nbsp;
                     {{('cat-' + cat) | translate}}
                   </button>
 
+                  <button data-ng-repeat="cat in mdView.current.record.cat  | orderBy:sortByCategory"
+                          data-ng-click="filterBy('cat', cat)"
+                          data-ng-if="sortKeywordsAlphabetically"
+                          class="btn btn-sm btn-default"
+                          title="{{'clickToFilterOn' | translate}} {{('cat-' + cat) | translate}}">
+                    <span class="fa gn-icon-{{cat}} resource-color"></span>&nbsp;
+                    {{('cat-' + cat) | translate}}
+                  </button>
+
+                  <hr data-ng-if="mdView.current.record.cat.length > 0 &&
+                        mdView.current.record.cl_topic.length > 0"/>
+
                   <button data-ng-repeat="cat in mdView.current.record.cl_topic track by $index"
                           data-ng-click="filterBy('cl_topic.key', cat.key)"
-                          data-ng-if="cat != ''"
+                          data-ng-if="(cat != '') && !sortKeywordsAlphabetically"
+                          class="btn btn-sm btn-default"
+                          title="{{'clickToFilterOn' | translate}} {{cat.key | translate}}">
+                    <span class="fa gn-icon-{{cat.key}} topic-color"></span>&nbsp;
+                    {{cat.key | translate}}
+                  </button>
+
+                  <button data-ng-repeat="cat in mdView.current.record.cl_topic  | orderBy: 'key | translate'"
+                          data-ng-click="filterBy('cl_topic.key', cat.key)"
+                          data-ng-if="(cat != '') && sortKeywordsAlphabetically"
                           class="btn btn-sm btn-default"
                           title="{{'clickToFilterOn' | translate}} {{cat.key | translate}}">
                     <span class="fa gn-icon-{{cat.key}} topic-color"></span>&nbsp;
@@ -257,7 +290,7 @@
                 <td>
                   <ul>
                     <li data-ng-repeat="k in t.keywords track by $index"
-                        data-ng-if="k"
+                        data-ng-if="(k) && !sortKeywordsAlphabetically"
                         class="tt-cursor">
                         <span data-ng-hide="::!!k.link">{{::k.default | capitalize}}</span>
                         <a href=""
@@ -270,6 +303,22 @@
                            data-ng-click="filterBy('tag.default', k.default)">
                           <i class="fa fa-search"/>
                         </a>
+                    </li>
+
+                    <li data-ng-repeat="k in t.keywords | orderBy: 'default'"
+                        data-ng-if="(k) && sortKeywordsAlphabetically"
+                        class="tt-cursor">
+                      <span data-ng-hide="::!!k.link">{{::k.default | capitalize}}</span>
+                      <a href=""
+                         data-ng-href="{{::k.link}}"
+                         data-ng-show="::!!k.link">
+                        {{::k.default | capitalize}}</a>&nbsp;
+                      <a href=""
+                         title="{{'clickToFilterOn' | translate}} {{::k.default | capitalize}}"
+                         aria-label="{{'clickToFilterOn' | translate}} {{::k.default | capitalize}}"
+                         data-ng-click="filterBy('tag.default', k.default)">
+                        <i class="fa fa-search"/>
+                      </a>
                     </li>
                   </ul>
                 </td>
