@@ -47,11 +47,11 @@
     '$scope', '$http', '$compile', 'gnSearchSettings', 'gnSearchLocation',
     'gnMetadataActions', 'gnAlertService', '$translate', '$location',
     'gnMdView', 'gnMdViewObj', 'gnMdFormatter', 'gnConfig',
-    'gnGlobalSettings', 'gnConfigService', '$rootScope',
+    'gnGlobalSettings', 'gnConfigService', '$rootScope', '$filter',
     function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
              gnMetadataActions, gnAlertService, $translate, $location,
              gnMdView, gnMdViewObj, gnMdFormatter, gnConfig,
-             gnGlobalSettings, gnConfigService, $rootScope) {
+             gnGlobalSettings, gnConfigService, $rootScope, $filter) {
 
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
@@ -252,6 +252,10 @@
         }
       }
       $scope.$watch('mdView.recordsLoaded', loadFormatter);
+
+      $scope.sortByCategory = function(cat) {
+        return $filter('translate')('cat-' + cat);
+      };
 
       // Know from what path we come from
       $scope.gnMdViewObj = gnMdViewObj;

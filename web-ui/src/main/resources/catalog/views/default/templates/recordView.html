@@ -247,6 +247,16 @@
                 <td>
                   <button data-ng-repeat="cat in mdView.current.record.cat"
                           data-ng-click="filterBy('cat', cat)"
+                          data-ng-if="!sortKeywordsAlphabetically"
+                          class="btn btn-sm btn-default"
+                          title="{{'clickToFilterOn' | translate}} {{('cat-' + cat) | translate}}">
+                    <span class="fa gn-icon-{{cat}} resource-color"></span>&nbsp;
+                    {{('cat-' + cat) | translate}}
+                  </button>
+
+                  <button data-ng-repeat="cat in mdView.current.record.cat  | orderBy:sortByCategory"
+                          data-ng-click="filterBy('cat', cat)"
+                          data-ng-if="sortKeywordsAlphabetically"
                           class="btn btn-sm btn-default"
                           title="{{'clickToFilterOn' | translate}} {{('cat-' + cat) | translate}}">
                     <span class="fa gn-icon-{{cat}} resource-color"></span>&nbsp;
