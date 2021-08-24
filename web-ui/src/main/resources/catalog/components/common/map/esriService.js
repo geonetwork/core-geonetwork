@@ -33,8 +33,8 @@
   var TITLE_FONT = 'bold ' + FONT_SIZE + 'px sans-serif';
   var LABEL_FONT = FONT_SIZE + 'px sans-serif';
 
-  module.service('gnEsriUtils', ['$q',
-    function($q) {
+  module.service('gnEsriUtils', ['$q', '$http', '$translate', 'gnUrlUtils',
+    function($q, $http, $translate, gnUrlUtils) {
       return {
         /**
          * Renders a JSON legend asynchronously to an image
@@ -160,6 +160,38 @@
             }
           }
           return [width, height];
+        },
+
+        /**
+         * Returns a promise resolving to the capabilities document of an ESRI Rest service.
+         * @param {String} url
+         * @return {Promise<String>} capabilities document
+         */
+        getCapabilities: function(url) {
+          var timeout = 60 * 1000;
+          var defer = $q.defer();
+          if (url) {
+            url = url + '?f=json';
+
+            if (gnUrlUtils.isValid(url)) {
+              $http.get(url, {
+                cache: true,
+                timeout: timeout
+              })
+                .success(function(data, status, headers, config) {
+                  if (!!data.mapName) {
+                    defer.resolve(data);
+                  } else {
+                    defer.reject($translate.instant('esriCapabilitiesFailed'));
+                  }
+                })
+                .error(function(data, status, headers, config) {
+                  defer.reject($translate.instant('esriCapabilitiesFailed'));
+                });
+            }
+
+          }
+          return defer.promise;
         }
       }
     }
