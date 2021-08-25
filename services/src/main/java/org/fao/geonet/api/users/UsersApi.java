@@ -43,6 +43,7 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.base.BaseMetadataStatus;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.*;
@@ -97,6 +98,9 @@ public class UsersApi {
 
     @Autowired
     UserGroupRepository userGroupRepository;
+
+    @Autowired
+    BaseMetadataStatus baseMetadataStatus;
 
     @Autowired
     UserSavedSelectionRepository userSavedSelectionRepository;
@@ -326,8 +330,14 @@ public class UsersApi {
         }
 
         if (dataManager.isUserMetadataStatus(userIdentifier)) {
-            throw new IllegalArgumentException(
-                "Cannot delete a user that has set a metadata status");
+            Optional<User> nobody = userRepository.findById(0);
+            if (nobody.isPresent()) {
+                baseMetadataStatus.transferMetadataStatusOwnership(userIdentifier,
+                    nobody.get().getId());
+            } else {
+              throw new IllegalArgumentException(
+                "Cannot delete a user that has set a metadata status. Check in database to transfer those status to another user or create a user nobody with id = 0.");
+            }
         }
 
         userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId,
