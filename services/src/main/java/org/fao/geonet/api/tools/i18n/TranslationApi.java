@@ -59,6 +59,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -124,22 +125,21 @@ public class TranslationApi {
             );
         }
         List<Translations> translations = translationsRepository.findAllByFieldName(translationKey);
-        if(translations.size() == 0) {
-            values.forEach((l, v) -> {
-                Translations t = new Translations();
-                t.setLangId(l);
-                t.setFieldName(translationKey);
-                t.setValue(v);
-                translationsRepository.save(t);
-            });
-        } else {
-            translations.forEach(e -> {
-                if (values.containsKey(e.getLangId())) {
-                    e.setValue(values.get(e.getLangId()));
-                }
-            });
-            translationsRepository.saveAll(translations);
-        }
+
+        values.forEach((langId, translated) -> {
+            Optional<Translations> optTranslation =
+                    translations.stream().filter(t -> t.getLangId().equals(langId)).findFirst();
+            Translations translation;
+            if (optTranslation.isPresent()) {
+                translation = optTranslation.get();
+            } else {
+                translation = new Translations();
+                translation.setLangId(langId);
+                translation.setFieldName(translationKey);
+            }
+            translation.setValue(translated);
+            translationsRepository.save(translation);
+        });
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
