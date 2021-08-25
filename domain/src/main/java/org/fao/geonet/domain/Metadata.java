@@ -98,7 +98,8 @@ public class Metadata extends AbstractMetadata implements Serializable {
     }
 
 
-    @OneToMany(mappedBy = "metadata", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="metadata_id", nullable=false)
     public Set<MetadataIndicator> getMetadataIndicators() {
         return metadataIndicators;
     }

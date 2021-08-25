@@ -34,8 +34,6 @@ public class MetadataIndicator implements Serializable {
     private String name;
     private String value;
 
-    private Metadata metadata;
-
     /**
      * Get the id of the metadata indicator.
      * <p>
@@ -81,17 +79,4 @@ public class MetadataIndicator implements Serializable {
         this.value = value;
         return this;
     }
-
-    @ManyToOne
-    @JoinColumn(name = "metadata_uuid", referencedColumnName = "uuid")
-    @JsonIgnore
-    public Metadata getMetadata() {
-        return metadata;
-    }
-
-
-    public void setMetadata(Metadata metadata) {
-        this.metadata = metadata;
-    }
-
 }

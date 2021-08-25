@@ -248,7 +248,6 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         assertTrue(metadata.getMetadataIndicators().isEmpty());
 
         MetadataIndicator newIndicator = new MetadataIndicator().setName("indicator1").setValue("value1");
-        newIndicator.setMetadata(metadata);
         metadata.getIndicators().add(newIndicator);
 
         _repo.save(metadata);
@@ -265,7 +264,6 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         assertTrue(metadata.getMetadataIndicators().isEmpty());
 
         MetadataIndicator newIndicator = new MetadataIndicator().setName("indicator1").setValue("value1");
-        newIndicator.setMetadata(metadata);
         metadata.getIndicators().add(newIndicator);
 
         _repo.save(metadata);

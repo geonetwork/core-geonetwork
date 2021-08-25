@@ -128,7 +128,6 @@ public class MetadataIndicatorApi {
                 indicator.get().setValue(value);
             } else {
                 MetadataIndicator newIndicator = new MetadataIndicator().setName(key).setValue(value);
-                newIndicator.setMetadata((Metadata) metadata);
                 metadata.getIndicators().add(newIndicator);
 
             }
