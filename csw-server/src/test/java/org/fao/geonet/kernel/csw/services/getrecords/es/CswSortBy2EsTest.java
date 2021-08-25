@@ -60,7 +60,7 @@ class CswSortBy2EsTest {
     IFieldMapper fieldMapper;
 
     @Test
-    void sortByRelevance() {
+    void sortByRelevanceDESC() {
         Element request = createSortByBaseRequest(
                 new Element("SortBy", Geonet.Namespaces.OGC)
                         .addContent(new Element("SortProperty", Geonet.Namespaces.OGC)
