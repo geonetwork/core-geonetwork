@@ -29,14 +29,12 @@ import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SortByParser;
 import org.jdom.Element;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -58,7 +56,7 @@ import java.util.List;
 class CswSortBy2EsTest {
 
     @Autowired
-    SortByParser parser;
+    SortByParser toTest;
 
     @Test
     void sortByRelevanceDESC() {
@@ -68,7 +66,8 @@ class CswSortBy2EsTest {
                                 .addContent(new Element("PropertyName", Geonet.Namespaces.OGC).setText("Relevance"))
                                 .addContent(new Element("SortOrder", Geonet.Namespaces.OGC).setText("DESC"))));
 
-        List<SortBuilder<FieldSortBuilder>> sortFields = parser.parseSortBy(request);
+        List<SortBuilder<FieldSortBuilder>> sortFields = toTest.parseSortBy(request);
+
         assertEquals(1, sortFields.size());
         FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
         assertEquals(sortField.getFieldName(), "_score");
@@ -83,7 +82,8 @@ class CswSortBy2EsTest {
                                 .addContent(new Element("PropertyName", Geonet.Namespaces.OGC).setText("Relevance"))
                                 .addContent(new Element("SortOrder", Geonet.Namespaces.OGC).setText("ASC"))));
 
-        List<SortBuilder<FieldSortBuilder>> sortFields = parser.parseSortBy(request);
+        List<SortBuilder<FieldSortBuilder>> sortFields = toTest.parseSortBy(request);
+
         assertEquals(1, sortFields.size());
         FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
         assertEquals(sortField.getFieldName(), "_score");
@@ -98,7 +98,8 @@ class CswSortBy2EsTest {
                                 .addContent(new Element("PropertyName", Geonet.Namespaces.OGC).setText("title"))
                                 .addContent(new Element("SortOrder", Geonet.Namespaces.OGC).setText("DESC"))));
 
-        List<SortBuilder<FieldSortBuilder>> sortFields = parser.parseSortBy(request);
+        List<SortBuilder<FieldSortBuilder>> sortFields = toTest.parseSortBy(request);
+
         assertEquals(1, sortFields.size());
         FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
         assertEquals(sortField.getFieldName(), "title");
@@ -116,7 +117,8 @@ class CswSortBy2EsTest {
                                 .addContent(new Element("PropertyName", Geonet.Namespaces.OGC).setText("Relevance"))
                                 .addContent(new Element("SortOrder", Geonet.Namespaces.OGC).setText("DESC"))));
 
-        List<SortBuilder<FieldSortBuilder>> sortFields = parser.parseSortBy(request);
+        List<SortBuilder<FieldSortBuilder>> sortFields = toTest.parseSortBy(request);
+        
         assertEquals(2, sortFields.size());
         FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
         assertEquals(sortField.getFieldName(), "title");
