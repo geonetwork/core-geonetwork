@@ -91,6 +91,8 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     private CatalogConfiguration _catalogConfig;
     @Autowired
     private FieldMapper _fieldMapper;
+    @Autowired
+    private SortByParser _sortByParser;
 
     @Autowired
     private SchemaManager _schemaManager;
@@ -242,8 +244,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
             response.addContent(echoedRequest);
         } else {
-            SortByParser parser = new SortByParser();
-            List<SortBuilder<FieldSortBuilder>> sort = parser.parseSortBy(request, _fieldMapper);
+            List<SortBuilder<FieldSortBuilder>> sort = _sortByParser.parseSortBy(request);
 
             response = new Element(getName() + "Response", Csw.NAMESPACE_CSW);
 

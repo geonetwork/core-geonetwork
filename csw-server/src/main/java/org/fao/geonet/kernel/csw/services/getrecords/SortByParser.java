@@ -29,6 +29,7 @@ import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.fao.geonet.csw.common.Csw;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +37,10 @@ import java.util.List;
 
 public class SortByParser {
 
-    public List<SortBuilder<FieldSortBuilder>> parseSortBy(Element request, IFieldMapper fieldMapper) {
+    @Autowired
+    IFieldMapper fieldMapper;
+
+    public List<SortBuilder<FieldSortBuilder>> parseSortBy(Element request) {
         Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
         if (query == null) {
             return Collections.emptyList();
@@ -60,7 +64,7 @@ public class SortByParser {
             if (field == null) {
                 continue;
             }
-            String indexField = getEsSortFieldName(fieldMapper, field);
+            String indexField = getEsSortFieldName(field);
             if (!StringUtils.isEmpty(indexField)) {
                 sortFields.add(
                         new FieldSortBuilder(indexField)
@@ -70,7 +74,7 @@ public class SortByParser {
         return sortFields;
     }
 
-    private String getEsSortFieldName(IFieldMapper fieldMapper, String cswField) {
+    private String getEsSortFieldName(String cswField) {
         String matchingEsField = fieldMapper.mapSort(cswField);
         if (StringUtils.isEmpty(matchingEsField) && cswField.toLowerCase().equals("relevance")) {
             return "_score";
