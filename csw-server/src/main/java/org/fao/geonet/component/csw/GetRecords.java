@@ -221,9 +221,6 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             maxHitsInSummary = Integer.parseInt(sMaxRecordsInKeywordSummary);
         }
 
-        SortByParser parser = new SortByParser();
-        List<SortBuilder<FieldSortBuilder>> sort = parser.parseSortBy(request, _fieldMapper);
-
         Element response;
         if (resultType == ResultType.VALIDATE) {
             //String schema = context.getAppPath() + Geonet.Path.VALIDATION + "csw/2.0.2/csw-2.0.2.xsd";
@@ -245,6 +242,9 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
             response.addContent(echoedRequest);
         } else {
+            SortByParser parser = new SortByParser();
+            List<SortBuilder<FieldSortBuilder>> sort = parser.parseSortBy(request, _fieldMapper);
+
             response = new Element(getName() + "Response", Csw.NAMESPACE_CSW);
 
             Attribute schemaLocation = new Attribute("schemaLocation", "http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd", Csw.NAMESPACE_XSI);
