@@ -31,6 +31,7 @@ import org.fao.geonet.csw.common.Csw;
 import org.jdom.Element;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SortByParser {
@@ -38,12 +39,12 @@ public class SortByParser {
     public List<SortBuilder<FieldSortBuilder>> parseSortBy(Element request, IFieldMapper fieldMapper) {
         Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
         if (query == null) {
-            return null;
+            return Collections.emptyList();
         }
 
         Element sortBy = query.getChild("SortBy", Csw.NAMESPACE_OGC);
         if (sortBy == null) {
-            return null;
+            return Collections.emptyList();
         }
 
         List<SortBuilder<FieldSortBuilder>> sortFields = new ArrayList<>();
