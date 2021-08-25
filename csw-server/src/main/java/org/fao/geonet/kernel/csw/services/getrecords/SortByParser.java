@@ -60,10 +60,7 @@ public class SortByParser {
             if (field == null) {
                 continue;
             }
-            String indexField = fieldMapper.mapSort(field);
-            if (StringUtils.isEmpty(indexField) && field.toLowerCase().equals("relevance")) {
-                indexField = "_score";
-            }
+            String indexField = getEsSortFieldName(fieldMapper, field);
             if (!StringUtils.isEmpty(indexField)) {
                 sortFields.add(
                         new FieldSortBuilder(indexField)
@@ -71,5 +68,13 @@ public class SortByParser {
             }
         }
         return sortFields;
+    }
+
+    private String getEsSortFieldName(IFieldMapper fieldMapper, String field) {
+        String indexField = fieldMapper.mapSort(field);
+        if (StringUtils.isEmpty(indexField) && field.toLowerCase().equals("relevance")) {
+            return "_score";
+        }
+        return indexField;
     }
 }
