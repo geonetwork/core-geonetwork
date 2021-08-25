@@ -170,27 +170,29 @@
         getCapabilities: function(url) {
           var timeout = 60 * 1000;
           var defer = $q.defer();
-          if (url) {
-            url = url + '?f=json';
 
-            if (gnUrlUtils.isValid(url)) {
-              $http.get(url, {
-                cache: true,
-                timeout: timeout
-              })
-                .success(function(data, status, headers, config) {
-                  if (!!data.mapName) {
-                    defer.resolve(data);
-                  } else {
-                    defer.reject($translate.instant('esriCapabilitiesFailed'));
-                  }
-                })
-                .error(function(data, status, headers, config) {
-                  defer.reject($translate.instant('esriCapabilitiesFailed'));
-                });
-            }
+          url = gnUrlUtils.append(url,
+            gnUrlUtils.toKeyValue({
+              f: 'json'
+            }));
 
-          }
+          $http.get(url, {
+            cache: true,
+            timeout: timeout
+          })
+            .success(function(data, status, headers, config) {
+              // Check if the response contains a mapName property,
+              // to verify it's an ESRI Rest Capabilities document.
+              if (!!data.mapName) {
+                defer.resolve(data);
+              } else {
+                defer.reject($translate.instant('esriCapabilitiesNoValid'));
+              }
+            })
+            .error(function(data, status, headers, config) {
+              defer.reject($translate.instant('esriCapabilitiesFailed'));
+            });
+
           return defer.promise;
         }
       }

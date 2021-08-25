@@ -533,5 +533,7 @@
   "copyMousePosition": "Copy mouse position to clipboard",
   "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed",
   "rssFeed": "RSS feed",
-  "esriCapabilitiesFailed": "Can't parse ESRI Rest capabilities document."
+  "esriCapabilitiesFailed": "Error retrieving the ESRI Rest capabilities document.",
+  "esriCapabilitiesNoValid": "The response is not a valid ESRI Rest capabilities document."
+
 }
