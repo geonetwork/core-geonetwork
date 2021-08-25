@@ -56,16 +56,16 @@ public class SortByParser {
 
             boolean isDescOrder = "DESC".equals(order);
 
-            if(field == null) {
+            if (field == null) {
                 continue;
             }
             // Map CSW search field to index field for sorting.
             // And if not mapped assumes the field is an index field.
             String indexField = fieldMapper.mapSort(field);
-            if(StringUtils.isEmpty(indexField) && field.toLowerCase().equals("relevance")) {
+            if (StringUtils.isEmpty(indexField) && field.toLowerCase().equals("relevance")) {
                 indexField = "_score";
             }
-            if(!StringUtils.isEmpty(indexField)) {
+            if (!StringUtils.isEmpty(indexField)) {
                 sortFields.add(
                         new FieldSortBuilder(indexField)
                                 .order(isDescOrder ? SortOrder.DESC : SortOrder.ASC));
