@@ -59,8 +59,6 @@ public class SortByParser {
             if (field == null) {
                 continue;
             }
-            // Map CSW search field to index field for sorting.
-            // And if not mapped assumes the field is an index field.
             String indexField = fieldMapper.mapSort(field);
             if (StringUtils.isEmpty(indexField) && field.toLowerCase().equals("relevance")) {
                 indexField = "_score";
