@@ -23,9 +23,10 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords.es;
 
+import static junit.framework.TestCase.assertEquals;
+
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.fao.geonet.Assert;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
@@ -80,10 +81,10 @@ class CswSortBy2EsTest {
 
         SortByParser parser = new SortByParser();
         List<SortBuilder<FieldSortBuilder>> sortFields = parser.parseSortBy(request, fieldMapper);
-        Assert.assertEquals(1, sortFields.size());
+        assertEquals(1, sortFields.size());
         FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
-        Assert.assertEquals(sortField.getFieldName(), "_score");
-        Assert.assertEquals(sortField.order().toString(), "desc");
+        assertEquals(sortField.getFieldName(), "_score");
+        assertEquals(sortField.order().toString(), "desc");
     }
 
     @Test
@@ -96,10 +97,10 @@ class CswSortBy2EsTest {
 
         SortByParser parser = new SortByParser();
         List<SortBuilder<FieldSortBuilder>> sortFields = parser.parseSortBy(request, fieldMapper);
-        Assert.assertEquals(1, sortFields.size());
+        assertEquals(1, sortFields.size());
         FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
-        Assert.assertEquals(sortField.getFieldName(), "_score");
-        Assert.assertEquals(sortField.order().toString(), "asc");
+        assertEquals(sortField.getFieldName(), "_score");
+        assertEquals(sortField.order().toString(), "asc");
     }
 
     @Test
@@ -112,10 +113,10 @@ class CswSortBy2EsTest {
 
         SortByParser parser = new SortByParser();
         List<SortBuilder<FieldSortBuilder>> sortFields = parser.parseSortBy(request, fieldMapper);
-        Assert.assertEquals(1, sortFields.size());
+        assertEquals(1, sortFields.size());
         FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
-        Assert.assertEquals(sortField.getFieldName(), "title");
-        Assert.assertEquals(sortField.order().toString(), "desc");
+        assertEquals(sortField.getFieldName(), "title");
+        assertEquals(sortField.order().toString(), "desc");
     }
 
     @Test
@@ -131,12 +132,12 @@ class CswSortBy2EsTest {
 
         SortByParser parser = new SortByParser();
         List<SortBuilder<FieldSortBuilder>> sortFields = parser.parseSortBy(request, fieldMapper);
-        Assert.assertEquals(2, sortFields.size());
+        assertEquals(2, sortFields.size());
         FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
-        Assert.assertEquals(sortField.getFieldName(), "title");
-        Assert.assertEquals(sortField.order().toString(), "desc");
+        assertEquals(sortField.getFieldName(), "title");
+        assertEquals(sortField.order().toString(), "desc");
         FieldSortBuilder sortField2 = (FieldSortBuilder)sortFields.get(1);
-        Assert.assertEquals(sortField2.getFieldName(), "_score");
-        Assert.assertEquals(sortField2.order().toString(), "desc");
+        assertEquals(sortField2.getFieldName(), "_score");
+        assertEquals(sortField2.order().toString(), "desc");
     }
 }
