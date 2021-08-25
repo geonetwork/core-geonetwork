@@ -36,4 +36,12 @@ public class IdentityFieldMapper implements IFieldMapper {
         return field;
     }
 
+    @Override
+    public String mapSort(String field) {
+        if(field == null || field.toLowerCase().equals("relevance")) {
+            return "";
+        }
+        return field;
+    }
+
 }
