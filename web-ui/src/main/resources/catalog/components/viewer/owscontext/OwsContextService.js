@@ -649,7 +649,7 @@
           if (type === 'wmts') {
             promise = gnMap.addWmtsFromScratch(map, res.href, name, createOnly);
           } else if (type === 'arcgis') {
-            promise = gnMap.addEsriRestFromScratch(map, res.href, name, createOnly);
+            promise = gnMap.addEsriRestLayer(map, res.href, name, createOnly);
           }
 
           // if it's not WMTS, let's assume it is wms

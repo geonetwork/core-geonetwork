@@ -104,7 +104,7 @@
           };
 
           this.addEsriRestLayer = function(getCapLayer) {
-            return gnMap.addEsriRestFromScratch($scope.map, $scope.url + '/' + getCapLayer.id , null, null, null);
+            return gnMap.addEsriRestLayer($scope.map, $scope.url + '/' + getCapLayer.id , null, null, null);
           };
         }],
         link: function(scope, element, attrs) {
