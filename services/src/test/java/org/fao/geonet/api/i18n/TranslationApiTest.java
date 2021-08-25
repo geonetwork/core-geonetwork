@@ -62,7 +62,7 @@ public class TranslationApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void testTranslationsApiAndRepo() throws Exception {
         List<Translations> t = translationsRepository.findAllByFieldName("test");
-        Assert.assertTrue(t.size() == 0);
+        Assert.assertEquals(0, t.size());
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         this.mockHttpSession = loginAsAdmin();
@@ -75,7 +75,7 @@ public class TranslationApiTest extends AbstractServiceIntegrationTest {
             .andExpect(status().is(201));
 
         t = translationsRepository.findAllByFieldName("test");
-        Assert.assertTrue(t.size() == 2);
+        Assert.assertEquals(2, t.size());
 
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -94,18 +94,51 @@ public class TranslationApiTest extends AbstractServiceIntegrationTest {
             .andExpect(status().is(201));
 
         Translations value = translationsRepository.findOneByLangIdAndFieldName("eng", "test");
-        Assert.assertTrue(value.getValue().equals("West Africa"));
+        Assert.assertEquals("West Africa", value.getValue());
 
         this.mockMvc.perform(delete("/srv/api/i18n/db/translations/test")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk());
 
         t = translationsRepository.findAllByFieldName("test");
-        Assert.assertTrue(t.size() == 0);
+        Assert.assertEquals(0, t.size());
 
 
         this.mockMvc.perform(delete("/srv/api/i18n/db/translations/notExisting")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404));
+    }
+
+    @Test
+    public void testPutNewTranslationsDbWithoutReplace() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        // first define some translations
+        this.mockMvc.perform(put("/srv/api/i18n/db/translations/test")
+                        .content("{\"eng\": \"Africa\", \"fre\": \"Afrique\"}")
+                        .contentType(API_JSON_EXPECTED_ENCODING)
+                        .session(this.mockHttpSession)
+                        .accept(MediaType.parseMediaType("application/json")))
+                        .andExpect(status().is(201));
+
+        Assert.assertEquals(2, translationsRepository.findAllByFieldName("test").size());
+
+        // then add a new language
+        this.mockMvc.perform(put("/srv/api/i18n/db/translations/test")
+                        .content("{\"fre\": \"Afrique de l'ouest\", \"ger\": \"Afrika\"}")
+                        .contentType(API_JSON_EXPECTED_ENCODING)
+                        .session(this.mockHttpSession)
+                        .accept(MediaType.parseMediaType("application/json")))
+                        .andExpect(status().is(201));
+
+        Assert.assertEquals(3, translationsRepository.findAllByFieldName("test").size());
+
+        Translations translatedGer = translationsRepository.findOneByLangIdAndFieldName("ger", "test");
+        Translations translatedFre = translationsRepository.findOneByLangIdAndFieldName("fre", "test");
+        Translations translatedEng = translationsRepository.findOneByLangIdAndFieldName("eng", "test");
+        Assert.assertEquals("Afrika", translatedGer.getValue());
+        Assert.assertEquals("Afrique de l'ouest", translatedFre.getValue());
+        Assert.assertEquals("Africa", translatedEng.getValue());
     }
 }
