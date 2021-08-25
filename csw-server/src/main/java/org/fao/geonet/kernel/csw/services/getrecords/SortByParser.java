@@ -52,33 +52,33 @@ public class SortByParser {
         }
 
         List<SortBuilder<FieldSortBuilder>> sortFields = new ArrayList<>();
-
         @SuppressWarnings("unchecked")
         List<Element> list = sortBy.getChildren();
         for (Element el : list) {
-            String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
-            String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
-
-            boolean isDescOrder = "DESC".equals(order);
-
-            if (field == null) {
-                continue;
-            }
-            String indexField = getEsSortFieldName(field);
-            if (!StringUtils.isEmpty(indexField)) {
-                sortFields.add(
-                        new FieldSortBuilder(indexField)
-                                .order(isDescOrder ? SortOrder.DESC : SortOrder.ASC));
+            String esSortFieldName = getEsSortFieldName(el);
+            if (!StringUtils.isEmpty(esSortFieldName)) {
+                SortOrder esSortOrder = getEsSortOrder(el);
+                sortFields.add(new FieldSortBuilder(esSortFieldName).order(esSortOrder));
             }
         }
         return sortFields;
     }
 
-    private String getEsSortFieldName(String cswField) {
-        String matchingEsField = fieldMapper.mapSort(cswField);
-        if (StringUtils.isEmpty(matchingEsField) && cswField.toLowerCase().equals("relevance")) {
+    private String getEsSortFieldName(Element el) {
+        String cswField = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
+        if (cswField == null) {
+            return null;
+        }
+        String matchingEsFieldOrEmpty = fieldMapper.mapSort(cswField);
+        if (StringUtils.isEmpty(matchingEsFieldOrEmpty) && cswField.toLowerCase().equals("relevance")) {
             return "_score";
         }
-        return matchingEsField;
+        return matchingEsFieldOrEmpty;
+    }
+
+    private SortOrder getEsSortOrder(Element el) {
+        String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
+        boolean isDescOrder = "DESC".equals(order);
+        return isDescOrder ? SortOrder.DESC : SortOrder.ASC;
     }
 }

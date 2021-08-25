@@ -118,7 +118,7 @@ class CswSortBy2EsTest {
                                 .addContent(new Element("SortOrder", Geonet.Namespaces.OGC).setText("DESC"))));
 
         List<SortBuilder<FieldSortBuilder>> sortFields = toTest.parseSortBy(request);
-        
+
         assertEquals(2, sortFields.size());
         FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
         assertEquals(sortField.getFieldName(), "title");
