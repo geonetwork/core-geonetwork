@@ -42,7 +42,12 @@
 
   // this will loop until the loading screen has been removed
   function removeLoadingScreen() {
+    var loadingScreen = $('.gn .sxt-loading');
     var cssLoaded = false;
+    if (!loadingScreen.size()) {
+      setTimeout(removeLoadingScreen, 500);
+      return;
+    }
     for (var i = 0; i < document.styleSheets.length; i++) {
       cssLoaded = cssLoaded ||
         document.styleSheets.item(i).href && document.styleSheets.item(i).href.indexOf('geonetwork/static') > 0;
@@ -51,12 +56,18 @@
       setTimeout(removeLoadingScreen, 500);
       return;
     }
-    $('.gn .sxt-loading').remove();
+    loadingScreen.remove();
     $('.gn').css({
       'overflow-y': 'auto',
       'overflow-x': 'hidden'
     });
   }
+
+  // if we're in API mode, make sure the loading screen renders well
+  $('.gn').css({
+    'overflow': 'hidden',
+    'position': 'relative'
+  });
 
   if(typeof sxtSettings != 'undefined') {
     var catModule = angular.module('gn_cat_controller');
@@ -79,12 +90,6 @@
       }
     ]);
 
-    // avoid FOUC (flash of unstyled content)
-    $('.gn').css({
-      'overflow': 'hidden',
-      'position': 'relative'
-    });
-
     // api css loading: add a <link> element to the correct stylesheet
     // also add a preload link to inform the browser of the priority of the css
     // when the css is loaded, hide the loading screen & restore the general overflow attribute
@@ -106,7 +111,7 @@
     head.appendChild(preloadLink);
     head.appendChild(link);
   } else {
-    window.addEventListener('load', removeLoadingScreen);
+    removeLoadingScreen();
   }
 
   module.value('sxtGlobals', {
