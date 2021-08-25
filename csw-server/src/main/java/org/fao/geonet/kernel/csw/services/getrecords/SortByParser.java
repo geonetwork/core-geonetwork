@@ -70,11 +70,11 @@ public class SortByParser {
         return sortFields;
     }
 
-    private String getEsSortFieldName(IFieldMapper fieldMapper, String field) {
-        String indexField = fieldMapper.mapSort(field);
-        if (StringUtils.isEmpty(indexField) && field.toLowerCase().equals("relevance")) {
+    private String getEsSortFieldName(IFieldMapper fieldMapper, String cswField) {
+        String matchingEsField = fieldMapper.mapSort(cswField);
+        if (StringUtils.isEmpty(matchingEsField) && cswField.toLowerCase().equals("relevance")) {
             return "_score";
         }
-        return indexField;
+        return matchingEsField;
     }
 }
