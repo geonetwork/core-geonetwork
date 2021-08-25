@@ -59,18 +59,6 @@ class CswSortBy2EsTest {
     @Autowired
     IFieldMapper fieldMapper;
 
-    private Element createSortByBaseRequest(Element SortBy) {
-        return new Element("GetRecords", Csw.NAMESPACE_CSW)
-                .setAttribute("service", "CSW")
-                .setAttribute("version", "2.0.2")
-                .setAttribute("resultType", "results")
-                .setAttribute("startPosition", "3")
-                .setAttribute("maxRecords", "1")
-                .setAttribute("outputSchema", "csw:Record")
-                .addContent(new Element("Query", Csw.NAMESPACE_CSW)
-                        .addContent(SortBy));
-    }
-
     @Test
     void testSortByRelevance() throws IOException {
         Element request = createSortByBaseRequest(
@@ -139,5 +127,17 @@ class CswSortBy2EsTest {
         FieldSortBuilder sortField2 = (FieldSortBuilder)sortFields.get(1);
         assertEquals(sortField2.getFieldName(), "_score");
         assertEquals(sortField2.order().toString(), "desc");
+    }
+
+    private Element createSortByBaseRequest(Element SortBy) {
+        return new Element("GetRecords", Csw.NAMESPACE_CSW)
+                .setAttribute("service", "CSW")
+                .setAttribute("version", "2.0.2")
+                .setAttribute("resultType", "results")
+                .setAttribute("startPosition", "3")
+                .setAttribute("maxRecords", "1")
+                .setAttribute("outputSchema", "csw:Record")
+                .addContent(new Element("Query", Csw.NAMESPACE_CSW)
+                        .addContent(SortBy));
     }
 }
