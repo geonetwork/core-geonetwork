@@ -60,7 +60,7 @@ class CswSortBy2EsTest {
     IFieldMapper fieldMapper;
 
     @Test
-    void testSortByRelevance() {
+    void sortByRelevance() {
         Element request = createSortByBaseRequest(
                 new Element("SortBy", Geonet.Namespaces.OGC)
                         .addContent(new Element("SortProperty", Geonet.Namespaces.OGC)
@@ -76,7 +76,7 @@ class CswSortBy2EsTest {
     }
 
     @Test
-    void testSortByRelevanceASC() {
+    void sortByRelevanceASC() {
         Element request = createSortByBaseRequest(
                 new Element("SortBy", Geonet.Namespaces.OGC)
                         .addContent(new Element("SortProperty", Geonet.Namespaces.OGC)
@@ -92,7 +92,7 @@ class CswSortBy2EsTest {
     }
 
     @Test
-    void testSortByIndexField() {
+    void sortByIndexField() {
         Element request = createSortByBaseRequest(
                 new Element("SortBy", Geonet.Namespaces.OGC)
                         .addContent(new Element("SortProperty", Geonet.Namespaces.OGC)
@@ -108,7 +108,7 @@ class CswSortBy2EsTest {
     }
 
     @Test
-    void testSortByMultipleProperties() {
+    void sortByMultipleProperties() {
         Element request = createSortByBaseRequest(
                 new Element("SortBy", Geonet.Namespaces.OGC)
                         .addContent(new Element("SortProperty", Geonet.Namespaces.OGC)
