@@ -45,6 +45,7 @@ import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
+import org.fao.geonet.kernel.csw.services.getrecords.SortByParser;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.CustomElementSetRepository;
@@ -220,10 +221,10 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             maxHitsInSummary = Integer.parseInt(sMaxRecordsInKeywordSummary);
         }
 
-        List<SortBuilder<FieldSortBuilder>> sort = getSortFields(request, context);
+        SortByParser parser = new SortByParser();
+        List<SortBuilder<FieldSortBuilder>> sort = parser.parseSortBy(request, _fieldMapper);
 
         Element response;
-
         if (resultType == ResultType.VALIDATE) {
             //String schema = context.getAppPath() + Geonet.Path.VALIDATION + "csw/2.0.2/csw-2.0.2.xsd";
             Path schema = context.getAppPath().resolve(Geonet.Path.VALIDATION).resolve("csw202_apiso100/csw/2.0.2/CSW-discovery.xsd");
@@ -687,76 +688,6 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             throw new InvalidParameterValueEx("maxRecords", max);
         }
     }
-
-    /**
-     * a return value >= 0 means that a distributed search was requested, otherwise the method returns -1.
-     *
-     * TODO unused method
-     *
-     * @param request
-     * @return
-     * @throws InvalidParameterValueEx
-     */
-//    private int getHopCount(Element request) throws InvalidParameterValueEx {
-//        Element ds = request.getChild("DistributedSearch", Csw.NAMESPACE_CSW);
-//        if (ds == null) {
-//            return -1;
-//        }
-//        String hopCount = ds.getAttributeValue("hopCount");
-//        if (hopCount == null) {
-//            return 2;
-//        }
-//        try {
-//            int value = Integer.parseInt(hopCount);
-//            if (value >= 0) {
-//                return value;
-//            }
-//        }
-//        catch (NumberFormatException ignored) {
-//            throw new InvalidParameterValueEx("hopCount", hopCount);
-//        }
-//        throw new InvalidParameterValueEx("hopCount", hopCount);
-//    }
-
-    /**
-     * TODO javadoc.
-     */
-    private List<SortBuilder<FieldSortBuilder>>  getSortFields(Element request, ServiceContext context) {
-        Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
-        if (query == null) {
-            return null;
-        }
-
-        Element sortBy = query.getChild("SortBy", Csw.NAMESPACE_OGC);
-        if (sortBy == null) {
-            return null;
-        }
-
-        List<SortBuilder<FieldSortBuilder>> sortFields = new ArrayList<>();
-
-        @SuppressWarnings("unchecked")
-        List<Element> list = sortBy.getChildren();
-        for (Element el : list) {
-            String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
-            String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
-
-            boolean isDescOrder = "DESC".equals(order);
-
-            // Map CSW search field to index field for sorting.
-            // And if not mapped assumes the field is an index field.
-            String indexField = _fieldMapper.mapSort(field);
-            if(StringUtils.isEmpty(indexField) && field.toLowerCase().equals("relevance")) {
-                indexField = "_score";
-            }
-            if(!StringUtils.isEmpty(indexField)) {
-                sortFields.add(
-                        new FieldSortBuilder(indexField)
-                                .order(isDescOrder ? SortOrder.DESC : SortOrder.ASC));
-            }
-        }
-        return sortFields;
-    }
-
 
     /**
      * Returns the values of ElementNames in the query, or null if there are none.
