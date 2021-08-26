@@ -434,7 +434,7 @@ public class EsHTTPProxy {
 
         // If admin you can see all
         if (Profile.Administrator.equals(userSession.getProfile())) {
-            return "*";
+            return "*:*";
         } else {
             // op0 (ie. view operation) contains one of the ids of your groups
             Set<Integer> groups = accessManager.getUserGroups(userSession, context.getIpAddress(), false);
