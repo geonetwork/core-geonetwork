@@ -23,21 +23,21 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords.es;
 
+import static junit.framework.TestCase.assertEquals;
+
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.fao.geonet.Assert;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SortByParser;
 import org.jdom.Element;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -52,11 +52,81 @@ import java.util.List;
  * @author fgravin
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = CswFilter2EsTestConfiguration.class)
+@ContextConfiguration(classes = {CswFilter2EsTestConfiguration.class, CswSortBy2EsTest.TestConfig.class})
 class CswSortBy2EsTest {
 
     @Autowired
-    IFieldMapper fieldMapper;
+    SortByParser toTest;
+
+    @Test
+    void sortByRelevanceDESC() {
+        Element request = createSortByBaseRequest(
+                new Element("SortBy", Geonet.Namespaces.OGC)
+                        .addContent(new Element("SortProperty", Geonet.Namespaces.OGC)
+                                .addContent(new Element("PropertyName", Geonet.Namespaces.OGC).setText("Relevance"))
+                                .addContent(new Element("SortOrder", Geonet.Namespaces.OGC).setText("DESC"))));
+
+        List<SortBuilder<FieldSortBuilder>> sortFields = toTest.parseSortBy(request);
+
+        assertEquals(1, sortFields.size());
+        FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
+        assertEquals(sortField.getFieldName(), "_score");
+        assertEquals(sortField.order().toString(), "desc");
+    }
+
+    @Test
+    void sortByRelevanceASC() {
+        Element request = createSortByBaseRequest(
+                new Element("SortBy", Geonet.Namespaces.OGC)
+                        .addContent(new Element("SortProperty", Geonet.Namespaces.OGC)
+                                .addContent(new Element("PropertyName", Geonet.Namespaces.OGC).setText("Relevance"))
+                                .addContent(new Element("SortOrder", Geonet.Namespaces.OGC).setText("ASC"))));
+
+        List<SortBuilder<FieldSortBuilder>> sortFields = toTest.parseSortBy(request);
+
+        assertEquals(1, sortFields.size());
+        FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
+        assertEquals(sortField.getFieldName(), "_score");
+        assertEquals(sortField.order().toString(), "asc");
+    }
+
+    @Test
+    void sortByIndexField() {
+        Element request = createSortByBaseRequest(
+                new Element("SortBy", Geonet.Namespaces.OGC)
+                        .addContent(new Element("SortProperty", Geonet.Namespaces.OGC)
+                                .addContent(new Element("PropertyName", Geonet.Namespaces.OGC).setText("title"))
+                                .addContent(new Element("SortOrder", Geonet.Namespaces.OGC).setText("DESC"))));
+
+        List<SortBuilder<FieldSortBuilder>> sortFields = toTest.parseSortBy(request);
+
+        assertEquals(1, sortFields.size());
+        FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
+        assertEquals(sortField.getFieldName(), "title");
+        assertEquals(sortField.order().toString(), "desc");
+    }
+
+    @Test
+    void sortByMultipleProperties() {
+        Element request = createSortByBaseRequest(
+                new Element("SortBy", Geonet.Namespaces.OGC)
+                        .addContent(new Element("SortProperty", Geonet.Namespaces.OGC)
+                                .addContent(new Element("PropertyName", Geonet.Namespaces.OGC).setText("title"))
+                                .addContent(new Element("SortOrder", Geonet.Namespaces.OGC).setText("DESC")))
+                        .addContent(new Element("SortProperty", Geonet.Namespaces.OGC)
+                                .addContent(new Element("PropertyName", Geonet.Namespaces.OGC).setText("Relevance"))
+                                .addContent(new Element("SortOrder", Geonet.Namespaces.OGC).setText("DESC"))));
+
+        List<SortBuilder<FieldSortBuilder>> sortFields = toTest.parseSortBy(request);
+
+        assertEquals(2, sortFields.size());
+        FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
+        assertEquals(sortField.getFieldName(), "title");
+        assertEquals(sortField.order().toString(), "desc");
+        FieldSortBuilder sortField2 = (FieldSortBuilder)sortFields.get(1);
+        assertEquals(sortField2.getFieldName(), "_score");
+        assertEquals(sortField2.order().toString(), "desc");
+    }
 
     private Element createSortByBaseRequest(Element SortBy) {
         return new Element("GetRecords", Csw.NAMESPACE_CSW)
@@ -70,73 +140,10 @@ class CswSortBy2EsTest {
                         .addContent(SortBy));
     }
 
-    @Test
-    void testSortByRelevance() throws IOException {
-        Element request = createSortByBaseRequest(
-                new Element("SortBy", Geonet.Namespaces.OGC)
-                        .addContent(new Element("SortProperty", Geonet.Namespaces.OGC)
-                                .addContent(new Element("PropertyName", Geonet.Namespaces.OGC).setText("Relevance"))
-                                .addContent(new Element("SortOrder", Geonet.Namespaces.OGC).setText("DESC"))));
-
-        SortByParser parser = new SortByParser();
-        List<SortBuilder<FieldSortBuilder>> sortFields = parser.parseSortBy(request, fieldMapper);
-        Assert.assertEquals(1, sortFields.size());
-        FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
-        Assert.assertEquals(sortField.getFieldName(), "_score");
-        Assert.assertEquals(sortField.order().toString(), "desc");
-    }
-
-    @Test
-    void testSortByRelevanceASC() throws IOException {
-        Element request = createSortByBaseRequest(
-                new Element("SortBy", Geonet.Namespaces.OGC)
-                        .addContent(new Element("SortProperty", Geonet.Namespaces.OGC)
-                                .addContent(new Element("PropertyName", Geonet.Namespaces.OGC).setText("Relevance"))
-                                .addContent(new Element("SortOrder", Geonet.Namespaces.OGC).setText("ASC"))));
-
-        SortByParser parser = new SortByParser();
-        List<SortBuilder<FieldSortBuilder>> sortFields = parser.parseSortBy(request, fieldMapper);
-        Assert.assertEquals(1, sortFields.size());
-        FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
-        Assert.assertEquals(sortField.getFieldName(), "_score");
-        Assert.assertEquals(sortField.order().toString(), "asc");
-    }
-
-    @Test
-    void testSortByIndexField() throws IOException {
-        Element request = createSortByBaseRequest(
-                new Element("SortBy", Geonet.Namespaces.OGC)
-                        .addContent(new Element("SortProperty", Geonet.Namespaces.OGC)
-                                .addContent(new Element("PropertyName", Geonet.Namespaces.OGC).setText("title"))
-                                .addContent(new Element("SortOrder", Geonet.Namespaces.OGC).setText("DESC"))));
-
-        SortByParser parser = new SortByParser();
-        List<SortBuilder<FieldSortBuilder>> sortFields = parser.parseSortBy(request, fieldMapper);
-        Assert.assertEquals(1, sortFields.size());
-        FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
-        Assert.assertEquals(sortField.getFieldName(), "title");
-        Assert.assertEquals(sortField.order().toString(), "desc");
-    }
-
-    @Test
-    void testSortByMultipleProperties() throws IOException {
-        Element request = createSortByBaseRequest(
-                new Element("SortBy", Geonet.Namespaces.OGC)
-                        .addContent(new Element("SortProperty", Geonet.Namespaces.OGC)
-                                .addContent(new Element("PropertyName", Geonet.Namespaces.OGC).setText("title"))
-                                .addContent(new Element("SortOrder", Geonet.Namespaces.OGC).setText("DESC")))
-                        .addContent(new Element("SortProperty", Geonet.Namespaces.OGC)
-                                .addContent(new Element("PropertyName", Geonet.Namespaces.OGC).setText("Relevance"))
-                                .addContent(new Element("SortOrder", Geonet.Namespaces.OGC).setText("DESC"))));
-
-        SortByParser parser = new SortByParser();
-        List<SortBuilder<FieldSortBuilder>> sortFields = parser.parseSortBy(request, fieldMapper);
-        Assert.assertEquals(2, sortFields.size());
-        FieldSortBuilder sortField = (FieldSortBuilder)sortFields.get(0);
-        Assert.assertEquals(sortField.getFieldName(), "title");
-        Assert.assertEquals(sortField.order().toString(), "desc");
-        FieldSortBuilder sortField2 = (FieldSortBuilder)sortFields.get(1);
-        Assert.assertEquals(sortField2.getFieldName(), "_score");
-        Assert.assertEquals(sortField2.order().toString(), "desc");
+    static class TestConfig {
+        @Bean
+        public SortByParser sortByParser() {
+            return new SortByParser();
+        }
     }
 }

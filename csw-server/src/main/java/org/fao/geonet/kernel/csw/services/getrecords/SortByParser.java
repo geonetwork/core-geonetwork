@@ -29,48 +29,56 @@ import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.fao.geonet.csw.common.Csw;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SortByParser {
 
-    public List<SortBuilder<FieldSortBuilder>> parseSortBy(Element request, IFieldMapper fieldMapper) {
+    @Autowired
+    IFieldMapper fieldMapper;
+
+    public List<SortBuilder<FieldSortBuilder>> parseSortBy(Element request) {
         Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
         if (query == null) {
-            return null;
+            return Collections.emptyList();
         }
 
         Element sortBy = query.getChild("SortBy", Csw.NAMESPACE_OGC);
         if (sortBy == null) {
-            return null;
+            return Collections.emptyList();
         }
 
         List<SortBuilder<FieldSortBuilder>> sortFields = new ArrayList<>();
-
         @SuppressWarnings("unchecked")
         List<Element> list = sortBy.getChildren();
         for (Element el : list) {
-            String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
-            String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
-
-            boolean isDescOrder = "DESC".equals(order);
-
-            if(field == null) {
-                continue;
-            }
-            // Map CSW search field to index field for sorting.
-            // And if not mapped assumes the field is an index field.
-            String indexField = fieldMapper.mapSort(field);
-            if(StringUtils.isEmpty(indexField) && field.toLowerCase().equals("relevance")) {
-                indexField = "_score";
-            }
-            if(!StringUtils.isEmpty(indexField)) {
-                sortFields.add(
-                        new FieldSortBuilder(indexField)
-                                .order(isDescOrder ? SortOrder.DESC : SortOrder.ASC));
+            String esSortFieldName = getEsSortFieldName(el);
+            if (!StringUtils.isEmpty(esSortFieldName)) {
+                SortOrder esSortOrder = getEsSortOrder(el);
+                sortFields.add(new FieldSortBuilder(esSortFieldName).order(esSortOrder));
             }
         }
         return sortFields;
+    }
+
+    private String getEsSortFieldName(Element el) {
+        String cswField = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
+        if (cswField == null) {
+            return null;
+        }
+        String matchingEsFieldOrEmpty = fieldMapper.mapSort(cswField);
+        if (StringUtils.isEmpty(matchingEsFieldOrEmpty) && cswField.toLowerCase().equals("relevance")) {
+            return "_score";
+        }
+        return matchingEsFieldOrEmpty;
+    }
+
+    private SortOrder getEsSortOrder(Element el) {
+        String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
+        boolean isDescOrder = "DESC".equals(order);
+        return isDescOrder ? SortOrder.DESC : SortOrder.ASC;
     }
 }
