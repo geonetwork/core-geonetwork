@@ -44,7 +44,7 @@
 
   var ROWS = 20;
   var MAX_ROWS = 2000;
-  var FACET_TREE_ROWS = 1000;
+  var FACET_TREE_ROWS = 2000;
   var FACET_RANGE_COUNT = 5;
   var FACET_RANGE_DELIMITER = ' - ';
 
