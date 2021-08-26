@@ -732,23 +732,63 @@
                 }
               }
               if (previous.tree) {
-                var existingKeys = [];
-                function addKey(node) {
-                  if (node.key && scope.isFacetSelected(e.name, node.key)) { existingKeys.push(node.key); }
-                  if (node.nodes) {
-                    for (var i = 0; i < node.nodes.length; i++) {
-                      addKey(node.nodes[i]);
+                // this will generate a new node array containing all the new nodes
+                // plus also the old nodes that were selected (with a count = 0)
+                function mergeNodeArrays(newTreeNodes, oldTreeNodes) {
+                  var result = [];
+                  var oldNode, newNode, oldNodeCopy, newNodeCopy;
+                  var i, j;
+
+                  // first add new nodes
+                  for (i = 0; i < newTreeNodes.length; i++) {
+                    newNode = newTreeNodes[i];
+                    oldNode = null;
+                    for (j = 0; j < oldTreeNodes.length; j++) {
+                      if(oldTreeNodes[j].key === newNode.key) {
+                        oldNode = oldTreeNodes[j];
+                        break;
+                      }
                     }
+                    newNodeCopy = {
+                      count: newNode.count,
+                      key: newNode.key,
+                      name: newNode.name,
+                      value: newNode.value,
+                    }
+                    if (Array.isArray(newNode.nodes)) {
+                      newNodeCopy.nodes = oldNode && Array.isArray(oldNode.nodes) ?
+                        mergeNodeArrays(newNode.nodes, oldNode.nodes) :
+                        newNode.nodes;
+                    }
+                    result.push(newNodeCopy);
                   }
+
+                  // then copy over old nodes which were selected
+                  for (i = 0; i < oldTreeNodes.length; i++) {
+                    oldNode = oldTreeNodes[i];
+                    newNode = null;
+                    for (j = 0; j < newTreeNodes.length; j++) {
+                      if(newTreeNodes[j].key === oldNode.key) {
+                        newNode = newTreeNodes[j];
+                        break;
+                      }
+                    }
+                    if (newNode || !scope.isFacetSelected(e.name, oldNode.key)) {
+                      continue;
+                    }
+                    oldNodeCopy = {
+                      count: 0,
+                      key: oldNode.key,
+                      name: oldNode.name,
+                      value: oldNode.value,
+                      nodes: oldNode.nodes,
+                    }
+                    result.push(oldNodeCopy);
+                  }
+
+                  return result;
                 }
-                addKey(previous.tree);
-                var previousTree = gnTreeFromSlash.getTree(existingKeys.map(function (key) {
-                  return {
-                    key: key,
-                    doc_count: 0
-                  };
-                }));
-                e.tree = angular.merge(previousTree, e.tree);
+                e.tree.nodes = mergeNodeArrays(e.tree.nodes, previous.tree.nodes);
               } else {
                 angular.forEach(previous.values, function (value) {
                   if (!scope.isFacetSelected(e.name, value.value)) {
