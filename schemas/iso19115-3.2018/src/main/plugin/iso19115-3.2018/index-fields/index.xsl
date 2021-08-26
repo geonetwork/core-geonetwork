@@ -1025,7 +1025,7 @@
             ,"attributeTable" : [
             <xsl:for-each select="$attributes">
               <!-- TODO: Add multilingual support-->
-              {"name": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:memberName/gco:CharacterString/text())"/>",
+              {"name": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:memberName/text())"/>",
               "definition": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:definition/gco:CharacterString/text())"/>",
               "code": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:code/*/text())"/>",
               "link": "<xsl:value-of select="*/gfc:code/*/@xlink:href"/>",
