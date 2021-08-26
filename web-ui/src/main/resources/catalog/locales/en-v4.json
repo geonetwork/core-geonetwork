@@ -67,6 +67,7 @@
   "sortBy-resourceTitleObject.default.keyword": "title",
   "sortBy-relevance": "relevancy",
   "sortBy-rating": "rating",
+  "csw-sortByHelp": "Define sort option for GetRecords query. This can solve issue for large sets where some records may change on the remote node during harvesting and returned in different pages. Sorting by 'identifier:A' means by UUID with alphabetical order. Any CSW queryables can be used in combination with A or D for setting the ordering.",
   "moreLikeThis": "Similar records",
   "onTheWeb": "More online information",
   "pdfReportTocTitle": "Contents",
