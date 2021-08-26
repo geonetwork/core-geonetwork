@@ -25,4 +25,5 @@ package org.fao.geonet.kernel.csw.services.getrecords;
 
 public interface IFieldMapper {
     String map(String field);
+    String mapSort(String field);
 }
