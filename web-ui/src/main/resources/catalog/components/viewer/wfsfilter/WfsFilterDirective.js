@@ -753,7 +753,7 @@
                       count: newNode.count,
                       key: newNode.key,
                       name: newNode.name,
-                      value: newNode.value,
+                      value: newNode.value
                     }
                     if (Array.isArray(newNode.nodes)) {
                       newNodeCopy.nodes = oldNode && Array.isArray(oldNode.nodes) ?
@@ -781,7 +781,7 @@
                       key: oldNode.key,
                       name: oldNode.name,
                       value: oldNode.value,
-                      nodes: oldNode.nodes,
+                      nodes: oldNode.nodes
                     }
                     result.push(oldNodeCopy);
                   }
