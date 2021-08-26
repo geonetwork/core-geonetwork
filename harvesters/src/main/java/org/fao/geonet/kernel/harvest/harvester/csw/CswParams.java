@@ -43,6 +43,8 @@ public class CswParams extends AbstractParams {
 
     public String outputSchema;
 
+    public String sortBy = "identifier:A";
+
     public boolean rejectDuplicateResource;
 
     public String queryScope;
@@ -87,6 +89,7 @@ public class CswParams extends AbstractParams {
         xslfilter = Util.getParam(site, "xslfilter", "");
         xpathFilter = Util.getParam(site, "xpathFilter", "");
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);
+        sortBy = Util.getParam(site, "sortBy", sortBy);
         icon = Util.getParam(site, "icon", "default.gif");
 
         if (searches != null) {
@@ -118,6 +121,7 @@ public class CswParams extends AbstractParams {
         xpathFilter = Util.getParam(site, "xpathFilter", "");
         xslfilter = Util.getParam(site, "xslfilter", "");
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);
+        sortBy = Util.getParam(site, "sortBy", sortBy);
 
         icon = Util.getParam(site, "icon", icon);
 
@@ -150,6 +154,7 @@ public class CswParams extends AbstractParams {
         copy.xpathFilter = xpathFilter;
         copy.xslfilter = xslfilter;
         copy.outputSchema = outputSchema;
+        copy.sortBy = sortBy;
 
         copy.eltSearches = eltSearches;
 
