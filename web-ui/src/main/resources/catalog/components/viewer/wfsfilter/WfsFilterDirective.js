@@ -667,7 +667,7 @@
                     doc_count: 0
                   };
                 }));
-                e.tree = angular.merge(e.tree, previousTree);
+                e.tree = angular.merge(previousTree, e.tree);
               } else {
                 angular.forEach(previous.values, function (value) {
                   if (!scope.isFacetSelected(e.name, value.value)) {
