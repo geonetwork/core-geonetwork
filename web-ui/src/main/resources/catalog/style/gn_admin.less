@@ -19,13 +19,21 @@
   white-space: normal;
 }
 
-[data-ng-controller="GnLogoSettingsController"] {
+[data-ng-controller="GnLogoSettingsController"], [data-ng-controller="GnUserGroupController"],
+[data-ng-controller="GnHarvestSettingsController"], [data-ng-controller="GnSourcesController"] {
   .progress {
     height: 10px;
     margin-bottom: 0;
   }
+  .gn-selected-logo {
+    max-height: 50px;
+  }
   .gn-logo-list {
-    .panel-body {
+    .panel-body, .modal-body {
+      .list-group-container {
+        max-height: 500px;
+        overflow: auto;
+      }
       .list-group {
         @media (min-width: @screen-lg-min) {
           column-count: 2;
@@ -66,7 +74,14 @@
         }
       }
     }
+    &.gn-logo-list-lg {
+       .modal-dialog {
+         width: 1000px;
+         max-width: 90%;
+       }
+     }
   }
+
 }
 .bootstrap-table {
   a {

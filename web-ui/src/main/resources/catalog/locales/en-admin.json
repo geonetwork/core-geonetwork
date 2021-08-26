@@ -1479,9 +1479,11 @@
     "ui-autoFitOnLayer":"Always zoom on data",
     "ui-autoFitOnLayer-help":"If checked, the map will automatically zoom on data when adding a layer from a record. Otherwise, a message will be shown to let the user zoom on data manually.",
     "styleVariable-gnHeaderHeight":"Height",
-    "styleVariable-gnSearchBackgroundColor": "Backgound color",
+    "styleVariable-gnSearchBackgroundColor": "Background color",
     "confirmDeletecategory": "Are you sure you want to delete this category?",
     "ui-mod-page": "Static pages",
-    "logoHeight": "Logo height"
+    "logoHeight": "Logo height",
+    "logoSelect": "Logo Selection",
+    "filterLogo": "Filter on the logo name"
 }
 
