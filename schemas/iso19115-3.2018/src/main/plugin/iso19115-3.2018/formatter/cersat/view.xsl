@@ -252,32 +252,36 @@
                       <xsl:if test="position() &lt; last()">, </xsl:if>
                     </xsl:for-each>
                   </div>
+                  <br/>
                 </xsl:if>
 
                 <xsl:variable name="online"
                               select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue != 'information']"/>
-                <xsl:for-each select="$online">
-                  <div>
-                    <strong>
-                      <xsl:value-of select="if (cit:description/*/text() != '')
-                                            then cit:description/*/text()
-                                            else cit:protocol/*/text()"/>
-                    </strong>
-                    <xsl:choose>
-                      <xsl:when test="cit:protocol/*/text() = 'Local'">
-                        <xsl:value-of select="cit:linkage/*/text()"/>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <a title="{cit:protocol/*/text()}"
-                           href="{cit:linkage/*/text()}">
-                          <xsl:value-of select="if (cit:name/*/text() != '')
-                                              then cit:name/*/text()
-                                              else cit:linkage/*/text()"/>
-                        </a>
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </div>
-                </xsl:for-each>
+                <xsl:if test="count($online) > 0">
+                  <xsl:for-each select="$online">
+                    <div>
+                      <strong>
+                        <xsl:value-of select="if (cit:description/*/text() != '')
+                                              then cit:description/*/text()
+                                              else cit:protocol/*/text()"/>
+                      </strong>
+                      <xsl:choose>
+                        <xsl:when test="cit:protocol/*/text() = 'Local'">
+                          <xsl:value-of select="cit:linkage/*/text()"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <a title="{cit:protocol/*/text()}"
+                             href="{cit:linkage/*/text()}">
+                            <xsl:value-of select="if (cit:name/*/text() != '')
+                                                then cit:name/*/text()
+                                                else cit:linkage/*/text()"/>
+                          </a>
+                        </xsl:otherwise>
+                      </xsl:choose>
+                    </div>
+                  </xsl:for-each>
+                  <br/>
+                </xsl:if>
               <!--</div>
             </div>-->
 
@@ -301,71 +305,37 @@
 
 
         <div class="row">
-          <div class="col-md-6">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <xsl:value-of select="$schemaStrings/cersat-contacts"/>
-              </div>
-              <div class="panel-body">
-                <xsl:variable name="help-desk"
-                              select="$metadata/mdb:identificationInfo/*/mri:pointOfContact[.//cit:role/*/@codeListValue = 'pointOfContact']/*/cit:party/cit:CI_Organisation/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress"/>
-                <xsl:if test="$help-desk != ''">
-                  <div class="row cersat-bg cersat-bg-orange">
-                    <div>
-                      <xsl:value-of select="$schemaStrings/cersat-helpdesk"/>
-                    </div>
-                    <div class="cersat-bg-white">
-                      <xsl:value-of select="$help-desk"/>
-                    </div>
-                  </div>
-                </xsl:if>
-
-                <xsl:for-each-group
-                  select="$metadata/mdb:identificationInfo/*/mri:pointOfContact/*"
-                  group-by="cit:role/*/@codeListValue">
-                  <div class="row">
-                    <xsl:variable name="codelistTranslation"
-                                  select="tr:codelist-value-label(
-                                        tr:create($schema),
-                                        'CI_RoleCode',
-                                        current-grouping-key())"/>
-
-                    <strong><xsl:value-of select="$codelistTranslation"/></strong>
-                    <xsl:for-each select="current-group()">
-                      <xsl:value-of select=".//cit:party/*/cit:name"/>
-                      <xsl:value-of select="if(.//cit:electronicMailAddress)
-                      then concat('(', .//cit:electronicMailAddress, ')')
-                      else ''"/>
-                    </xsl:for-each>
-                  </div>
-                </xsl:for-each-group>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6">
+          <div class="col-md-12">
             <xsl:variable name="resources"
                         select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue = 'information']"/>
 
             <xsl:if test="count($resources) &gt; 0">
+              <h2>
+                <xsl:value-of select="$schemaStrings/cersat-resources"/>
+              </h2>
 
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <xsl:value-of select="$schemaStrings/cersat-resources"/>
+              <xsl:for-each select="$resources">
+                <div>
+                  <strong>
+                    <xsl:value-of select="if (cit:description/*/text() != '')
+                                            then cit:description/*/text()
+                                            else cit:protocol/*/text()"/>
+                  </strong>
+                  <xsl:choose>
+                    <xsl:when test="cit:protocol/*/text() = 'Local'">
+                      <xsl:value-of select="cit:linkage/*/text()"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <a title="{cit:protocol/*/text()}"
+                         href="{cit:linkage/*/text()}">
+                        <xsl:value-of select="if (cit:name/*/text() != '')
+                                              then cit:name/*/text()
+                                              else cit:linkage/*/text()"/>
+                      </a>
+                    </xsl:otherwise>
+                  </xsl:choose>
                 </div>
-                <div class="panel-body">
-                  <ul>
-                    <xsl:for-each select="$resources">
-                      <li>
-                        <a href="{cit:linkage/*/text()}"
-                           title="{cit:description/*/text()}">
-                          <xsl:value-of select="cit:name/*/text()"/>
-                        </a>
-                      </li>
-                    </xsl:for-each>
-                  </ul>
-                </div>
-              </div>
+              </xsl:for-each>
             </xsl:if>
           </div>
         </div>
@@ -506,7 +476,7 @@
                       <xsl:with-param name="key" select="'eo-resolution'"/>
                     </xsl:call-template>
                   </strong>
-                </div>
+                </div>&#160;
                 <div data-gn-field-duration-div="{gco:TM_PeriodDuration}"><xsl:value-of select="gco:TM_PeriodDuration"/></div>
               </div>
             </xsl:for-each>
@@ -570,6 +540,46 @@
 
             <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
 
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <xsl:value-of select="$schemaStrings/cersat-contacts"/>
+          </div>
+          <div class="panel-body">
+            <xsl:variable name="help-desk"
+                          select="$metadata/mdb:identificationInfo/*/mri:pointOfContact[.//cit:role/*/@codeListValue = 'pointOfContact']/*/cit:party/cit:CI_Organisation/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress"/>
+            <xsl:if test="$help-desk != ''">
+              <div class="row cersat-bg cersat-bg-orange">
+                <div>
+                  <xsl:value-of select="$schemaStrings/cersat-helpdesk"/>
+                </div>
+                <div class="cersat-bg-white">
+                  <xsl:value-of select="$help-desk"/>
+                </div>
+              </div>
+            </xsl:if>
+
+            <xsl:for-each-group
+              select="$metadata/mdb:identificationInfo/*/mri:pointOfContact/*"
+              group-by="cit:role/*/@codeListValue">
+              <div class="row">
+                <xsl:variable name="codelistTranslation"
+                              select="tr:codelist-value-label(
+                                        tr:create($schema),
+                                        'CI_RoleCode',
+                                        current-grouping-key())"/>
+
+                <strong><xsl:value-of select="$codelistTranslation"/></strong>
+                <xsl:for-each select="current-group()">
+                  <xsl:value-of select=".//cit:party/*/cit:name"/>
+                  <xsl:value-of select="if(.//cit:electronicMailAddress)
+                      then concat('(', .//cit:electronicMailAddress, ')')
+                      else ''"/>
+                </xsl:for-each>
+              </div>
+            </xsl:for-each-group>
           </div>
         </div>
       </div>

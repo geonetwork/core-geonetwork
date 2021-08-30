@@ -80,25 +80,25 @@
   <eo-doi>DOI</eo-doi>
   <eo-level>Niveau</eo-level>
   <eo-feature-type>Type d'entité</eo-feature-type>
-  <eo-acquisition-pattern>Modèle d'acquisition</eo-acquisition-pattern>
-  <eo-compositing>Compositing</eo-compositing>
+  <eo-acquisition-pattern>Type d'acquisition</eo-acquisition-pattern>
+  <eo-compositing>Méthode de fusion</eo-compositing>
   <eo-main-ig-parameters>Principaux paramètres instrumentaux ou géophysiques</eo-main-ig-parameters>
   <eo-gcmd>Mots clés (GCMD)</eo-gcmd>
   <eo-source>Source</eo-source>
   <eo-spatial-coverage>Propriétés spatiales</eo-spatial-coverage>
   <eo-area>Surface</eo-area>
-  <eo-resolution>Résolution</eo-resolution>
+  <eo-resolution>Résolution </eo-resolution>
   <eo-instrument-add>Ajouter un instrument et une plateforme</eo-instrument-add>
   <eo-boundaries>Limites</eo-boundaries>
   <eo-boundaries-code>Zone géographique</eo-boundaries-code>
   <eo-projection>Projection</eo-projection>
   <eo-add-projection>Ajouter une projection</eo-add-projection>
-  <eo-temporal-coverage>Propriétés temporelles</eo-temporal-coverage>
+  <eo-temporal-coverage>Couverture temporelle</eo-temporal-coverage>
   <eo-temporal-extent>Étendue</eo-temporal-extent>
   <eo-start>Début</eo-start>
   <eo-domain>Domaine</eo-domain>
   <eo-end>Fin</eo-end>
-  <eo-bbox>Bounding box</eo-bbox>
+  <eo-bbox>Limites géographiques</eo-bbox>
   <eo-latency>Latence</eo-latency>
   <eo-ip-code>Code de l'instrument et de la plateforme</eo-ip-code>
   <eo-project>Projet</eo-project>
@@ -140,11 +140,11 @@
   <cersat-version>Version</cersat-version>
   <cersat-opdataset>Status</cersat-opdataset>
   <cersat-citation>Citation</cersat-citation>
-  <cersat-projects>Project(s)</cersat-projects>
-  <cersat-product>Product</cersat-product>
-  <cersat-obssource>Observation source(s)</cersat-obssource>
-  <cersat-temporal>Temporal</cersat-temporal>
-  <cersat-spatial>Spatial</cersat-spatial>
+  <cersat-projects>Projet(s)</cersat-projects>
+  <cersat-product>Produit</cersat-product>
+  <cersat-obssource>Source(s) d'observation</cersat-obssource>
+  <cersat-temporal>Propriétés temporelles</cersat-temporal>
+  <cersat-spatial>Propriétés spatiales</cersat-spatial>
   <cersat-contacts>Contact(s)</cersat-contacts>
   <cersat-resources>Resource(s)</cersat-resources>
   <cersat-dataaccess>Data access</cersat-dataaccess>
