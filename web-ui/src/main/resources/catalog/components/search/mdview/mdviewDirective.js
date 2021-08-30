@@ -381,4 +381,12 @@
       };
     }]
   );
+
+  module.directive('gnMetadataIndividual', [
+    '$http', '$filter',
+    function($http, $filter) {
+      return {
+        templateUrl: '../../catalog/components/search/mdview/partials/' +
+          'individual.html'
+      }}]);
 })();

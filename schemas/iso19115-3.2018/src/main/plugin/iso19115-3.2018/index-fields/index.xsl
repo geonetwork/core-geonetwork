@@ -1218,7 +1218,8 @@
   </xsl:template>
 
 
-
+  <!-- TODO: here is a limited vision of 1 org with first individual.
+  ISO19115-3 allows more combinations. -->
   <xsl:template mode="index-contact" match="*[cit:CI_Responsibility]">
     <xsl:param name="fieldSuffix" select="''" as="xs:string"/>
 
@@ -1238,7 +1239,7 @@
     <xsl:variable name="phone"
                   select="(./cit:contactInfo/*/cit:phone/*/cit:number[normalize-space(.) != '']/*/text())[1]"/>
     <xsl:variable name="individualName"
-                  select="(.//cit:individualName/gco:CharacterString/text())[1]"/>
+                  select="(.//cit:CI_Individual/cit:name/gco:CharacterString/text())[1]"/>
     <xsl:variable name="positionName"
                   select="(.//cit:positionName/gco:CharacterString/text())[1]"/>
     <xsl:variable name="address" select="string-join(.//cit:contactInfo/*/cit:address/*/(
@@ -1261,6 +1262,10 @@
         </xsl:element>
       </xsl:if>
     </xsl:if>
+
+    <xsl:variable name="identifiers"
+                  select=".//cit:partyIdentifier/*"/>
+
     <xsl:element name="contact{$fieldSuffix}">
       <!-- TODO: Can be multilingual -->
       <xsl:attribute name="type" select="'object'"/>{
@@ -1274,6 +1279,18 @@
       "position":"<xsl:value-of select="gn-fn-index:json-escape($positionName)"/>",
       "phone":"<xsl:value-of select="gn-fn-index:json-escape($phone)"/>",
       "address":"<xsl:value-of select="gn-fn-index:json-escape($address)"/>"
+      <xsl:if test="count($identifiers) > 0">
+        ,"identifiers":[
+        <xsl:for-each select="$identifiers">
+          {
+            "code": "<xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>",
+            "codeSpace": "<xsl:value-of select="(mcc:codeSpace/(gco:CharacterString|gcx:Anchor))[1]/normalize-space()"/>",
+            "link": "<xsl:value-of select="mcc:code/gcx:Anchor/@xlink:href"/>"
+          }
+          <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>
+        ]
+      </xsl:if>
       }
     </xsl:element>
   </xsl:template>

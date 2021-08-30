@@ -14,16 +14,9 @@
           <strong data-ng-if="::!c.website">
             {{c.organisation}}<br/>
           </strong>
-          <div data-ng-if="c.email != ''">
-            <a href="mailto:{{c.email}}">
-              <span data-ng-hide="c.individual">{{c.email}}</span>
-              <span data-ng-show="c.individual">{{c.individual}}</span>
-              <span data-ng-show="c.position">({{c.position}})</span>
-            </a>
-          </div>
-          <div data-ng-if="c.email === ''">{{c.individual}}
-            <span data-ng-show="c.position">({{c.position}})</span>
-          </div>
+
+          <div data-gn-metadata-individual="c"/>
+
           <div data-ng-if="c.address != ''">{{c.address}}</div>
           <a href="tel:{{c.phone}}"
              data-ng-if="c.phone != ''">
@@ -60,17 +53,7 @@
           </strong>
 
           <span data-ng-repeat="c in contact track by $index">
-            <span data-ng-if="c.email != ''">
-              <a href="mailto:{{c.email}}">
-                <span data-ng-hide="c.individual">{{c.email}}</span>
-                <span data-ng-show="c.individual">{{c.individual}}</span>
-                <span data-ng-show="c.position">({{c.position}})</span>
-              </a>
-            </span>
-            <span data-ng-if="c.email === ''">{{c.individual}}
-              <span data-ng-show="c.position">({{c.position}})</span>
-            </span>
-            <span data-ng-if="!$last">,</span>
+            <div data-gn-metadata-individual="c"/>
           </span>
 
           <!-- Address for organisation: display for 1st contact in organisation -->
@@ -115,24 +98,8 @@
           <li ng-repeat="(roles, contactGroupByRole) in contactGroupByAddress | groupBy:'roles'">
             {{translateRoles(roles)}}:<br/>
             <span data-ng-repeat="c in contactGroupByRole track by $index">
-              <span data-ng-if="c.email != ''">
-                <i class="fa fa-fw fa-envelope"></i>
-                <a href="mailto:{{c.email}}">
-                  <span data-ng-hide="c.individual">{{c.email}}</span>
-                  <span data-ng-show="c.individual">{{c.individual}}</span>
-                  <span data-ng-show="c.position">({{c.position}})</span>
-                </a>
-              </span>
-              <span data-ng-if="c.email === ''">{{c.individual}}
-                <span data-ng-show="c.position">({{c.position}})</span>
-              </span>
-              <br>
-              <i class="fa fa-fw fa-phone" data-ng-if="c.phone != ''"></i>
-              <a href="tel:{{c.phone}}"
-                 data-ng-if="c.phone != ''">
-               {{c.phone}}
-              </a>
-              <span data-ng-if="!$last">,</span>
+              <div data-gn-metadata-individual="c"/>
+              <span data-ng-if="!$last"><hr/></span>
             </span>
           </li>
         </ul>
