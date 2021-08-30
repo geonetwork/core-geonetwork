@@ -70,7 +70,7 @@ public class EncryptorInitializer {
     /**
      * Set flag to indicate that a encrypt should be done during initialization
      * This will cause all fields flag as encrypted to be encrypted.
-     * This should generally only be set during a migration script.
+     * This should generally only be set during initial setup or migration script.
      *
      * @param firstInitialSetupFlag indicate that a encrypt should be done during initialization - default false
      */
