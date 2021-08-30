@@ -369,8 +369,7 @@
             <h2>
               <xsl:value-of select="$schemaStrings/cersat-product"/>
             </h2>
-
-            <xsl:for-each select="$metadata/mdb:contentInfo/*/mrc:processingLevelCode/*/mcc:code">
+            <xsl:for-each select="$metadata/mdb:contentInfo/*/mrc:processingLevelCode/*/mcc:code[*/text() != '']">
               <div>
                 <strong>
                   <xsl:call-template name="landingpage-label">
@@ -381,7 +380,7 @@
               </div>
             </xsl:for-each>
 
-            <xsl:for-each select="$metadata/mdb:contentInfo/*/mrc:attributeDescription">
+            <xsl:for-each select="$metadata/mdb:contentInfo/*/mrc:attributeDescription[*/text() != '']">
               <div>
                 <strong>
                   <xsl:call-template name="landingpage-label">
@@ -392,7 +391,7 @@
               </div>
             </xsl:for-each>
 
-            <xsl:for-each select="$metadata/mdb:contentInfo/*/mrc:processingLevelCode/*/mcc:description">
+            <xsl:for-each select="$metadata/mdb:contentInfo/*/mrc:processingLevelCode/*/mcc:description[*/text() != '']">
               <div>
                 <strong>
                   <xsl:call-template name="landingpage-label">
@@ -405,7 +404,7 @@
 
             <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:descriptiveKeywords
                             [contains(*/mri:thesaurusName/*/cit:title/(gcx:Anchor|gco:CharacterString),
-                            'Cersat - Latency')]/*/mri:keyword">
+                            'Cersat - Latency')]/*/mri:keyword[*/text() != '']">
               <div>
                 <strong>
                   <xsl:call-template name="landingpage-label">
@@ -468,7 +467,7 @@
               </div>
             </xsl:for-each>
 
-            <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:temporalResolution">
+            <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:temporalResolution[gco:TM_PeriodDuration/text() != '']">
               <div class="flex-row">
                 <div>
                   <strong>
@@ -487,7 +486,7 @@
               <xsl:value-of select="$schemaStrings/cersat-spatial"/>
             </h2>
 
-            <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:extent/*/gex:geographicElement/gex:EX_GeographicDescription/gex:geographicIdentifier/*/mcc:code">
+            <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:extent/*/gex:geographicElement/gex:EX_GeographicDescription/gex:geographicIdentifier/*/mcc:code[*/text() != '']">
               <div>
                 <strong>
                   <xsl:call-template name="landingpage-label">
@@ -498,7 +497,7 @@
               </div>
             </xsl:for-each>
 
-            <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:spatialResolution/*//mri:distance">
+            <xsl:for-each select="$metadata/mdb:identificationInfo/*/mri:spatialResolution/*//mri:distance[*/text() != '']">
               <div>
                 <strong>
                   <xsl:call-template name="landingpage-label">
@@ -510,7 +509,7 @@
             </xsl:for-each>
 
             <xsl:for-each select="$metadata/mdb:referenceSystemInfo/*/
-                          mrs:referenceSystemIdentifier/*/mcc:description">
+                          mrs:referenceSystemIdentifier/*/mcc:description[*/text() != '']">
               <div>
                 <strong>
                   <xsl:call-template name="landingpage-label">
@@ -574,9 +573,11 @@
                 <strong><xsl:value-of select="$codelistTranslation"/></strong>
                 <xsl:for-each select="current-group()">
                   <xsl:value-of select=".//cit:party/*/cit:name"/>
-                  <xsl:value-of select="if(.//cit:electronicMailAddress)
-                      then concat('(', .//cit:electronicMailAddress, ')')
-                      else ''"/>
+                  <xsl:for-each select=".//cit:electronicMailAddress">
+                    <a href="mailto:{.}">
+                      <i class="fa fa-envelope"></i>
+                    </a>
+                  </xsl:for-each>
                 </xsl:for-each>
               </div>
             </xsl:for-each-group>
