@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/SIH - Cadre réglementaire">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>SIH - Cadre réglementaire</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_cadre_reglementaire#3240e74f-9cb1-44c4-9584-31be25bd2d38">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Comité des Pêches pour l’Atlantique Centre-Est (COPACE)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoudugnsx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoudugnsx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_cadre_reglementaire#48a5ac90-57eb-474c-bd7d-4b6a3d1804a5">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Commission des Pêcheries de l'Atlantique Nord-est (CPANE)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoudurelx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoudurelx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_cadre_reglementaire#912bad4e-53af-43a7-8bbf-3a742070b98c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Commission Générale des Pêches pour la Méditerranée (CGPM)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoudv37px1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoudv37px1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_cadre_reglementaire#b4ef9f7e-51a3-4a6d-9dba-8549ea6b256a">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Commission Internationale pour la Conservation des Thonidés de l'Atlantique (ICCAT)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoudv8t3x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoudv8t3x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_cadre_reglementaire#c4b986ae-e2e1-490b-9d77-bc671fc19cf7">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Conseil International pour l’Exploration de la Mer (CIEM)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoudvfatx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoudvfatx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_cadre_reglementaire#ecc08603-2149-4ba3-a410-30bf7fa2dd4e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Directive Cadre pour la Planification de l'Espace Maritime (DCPEM)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoudvlf1x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoudvlf1x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_cadre_reglementaire#f59de2b9-f65b-43cf-a301-6fae0444033d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Directive Cadre Stratégie pour le Milieu Marin (DCSMM)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue00ofx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue00ofx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_cadre_reglementaire#90687c37-249d-45ba-9c3e-bd6e53465da0">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Directive Cadre sur l'Eau (DCE)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue08gax1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue08gax1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_cadre_reglementaire#4fe0ee64-9cf3-43ca-8804-5d92a221abda">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Directive de l'Union européenne 92/43/CEE</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue0g7kx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue0g7kx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_cadre_reglementaire#f2c976de-566f-45e0-92b7-67e46db766e6">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Organisation des pêches de l'Atlantique Nord Ouest (OPANO)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue0nuqx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue0nuqx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_cadre_reglementaire#f0c48590-5f57-4bc2-8748-0607b0271984">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Organisation pour l'alimentation et l'agriculture (FAO)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue0ubax1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue0ubax1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

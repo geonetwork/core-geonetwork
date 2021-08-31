@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Ocean Hackathon - Ville">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Ocean Hackathon - Ville</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#1814b847-307b-40cc-9ef5-a81cda321f0b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#9cb605a3-8de0-4ba5-a164-043898862868">
+	<ns5:BoundedBy rdf:nodeID="node1f9gi6igpx11"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#1814b847-307b-40cc-9ef5-a81cda321f0b">
+	<ns2:prefLabel xml:lang="fr">Rimouski</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Rimouski</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1f9gi6igpx15"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx15">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx3">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx15">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx3">
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx14">
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b6d84988-1560-4b51-bf94-ac63fa29f198">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Santiago</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx17">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#03aea1ab-2641-45d2-8412-c06aae7a6571">
+	<ns2:prefLabel xml:lang="en">Fort-de-France</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx11">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#9cb605a3-8de0-4ba5-a164-043898862868">
+	<ns2:prefLabel xml:lang="en">Cape Town</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx17">
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx11">
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx17">
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx11">
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx17">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#4804dc7f-d4b6-4f90-8056-eb229301345e">
+	<ns5:BoundedBy rdf:nodeID="node1f9gi6igpx18"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx16">
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx18">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#e91befa1-053b-49be-8951-0109a639fb9f">
+	<ns2:prefLabel xml:lang="fr">San Francisco</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx18">
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ecca7e96-1313-4453-9403-25a7d4d0ef90">
+	<ns2:prefLabel xml:lang="en">Champs-sur-Marne</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx8">
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#9cb605a3-8de0-4ba5-a164-043898862868">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Cape Town</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx9">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx8">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#e91befa1-053b-49be-8951-0109a639fb9f">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ecca7e96-1313-4453-9403-25a7d4d0ef90">
+	<ns5:BoundedBy rdf:nodeID="node1f9gi6igpx17"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#03aea1ab-2641-45d2-8412-c06aae7a6571">
+	<ns2:prefLabel xml:lang="fr">Fort-de-France</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#64f837fd-ff49-4a48-86ae-d23b956c795e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ecca7e96-1313-4453-9403-25a7d4d0ef90">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#64f837fd-ff49-4a48-86ae-d23b956c795e">
+	<ns2:prefLabel xml:lang="fr">Nouméa</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Nouméa</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ecca7e96-1313-4453-9403-25a7d4d0ef90">
+	<ns2:prefLabel xml:lang="fr">Champs-sur-Marne</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#03aea1ab-2641-45d2-8412-c06aae7a6571">
+	<ns5:BoundedBy rdf:nodeID="node1f9gi6igpx16"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#64f837fd-ff49-4a48-86ae-d23b956c795e">
+	<ns5:BoundedBy rdf:nodeID="node1f9gi6igpx12"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx16">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx12">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx16">
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx12">
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx18">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b6d84988-1560-4b51-bf94-ac63fa29f198">
+	<ns2:prefLabel xml:lang="en">Santiago</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#4804dc7f-d4b6-4f90-8056-eb229301345e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#03aea1ab-2641-45d2-8412-c06aae7a6571">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#4804dc7f-d4b6-4f90-8056-eb229301345e">
+	<ns2:prefLabel xml:lang="fr">Sète</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Sète</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx3">
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx11">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#e91befa1-053b-49be-8951-0109a639fb9f">
+	<ns2:prefLabel xml:lang="en">San Francisco</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1f9gi6igpx8"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c7261906-ad69-4aed-aed8-1162323e030c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Cardiff</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Cardiff</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1f9gi6igpx9"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx18">
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx12">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#498f9f95-7a95-4cee-836e-15fa505ce87d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Rostock</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Rostock</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1f9gi6igpx3"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx3">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b6d84988-1560-4b51-bf94-ac63fa29f198">
+	<ns5:BoundedBy rdf:nodeID="node1f9gi6igpx14"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f9gi6igpx14">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c7f91e77-68da-4f7c-9b01-542621b5e166">
+	<ns2:prefLabel xml:lang="en">Brest</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1fc6ad2nnx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fc6ad2nnx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fc6afff7x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#53b492aa-c1a3-4dd2-bf29-b21c94febb8b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Boulogne-sur-Mer</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Boulogne-sur-Mer</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1fc6ae535x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fc6ae535x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fc6afff7x1">
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c7f91e77-68da-4f7c-9b01-542621b5e166">
+	<ns2:prefLabel xml:lang="fr">Brest</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d1ebb186-bade-4949-9c36-91db44d61387">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">La Rochelle</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">La Rochelle</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1fc6aeu96x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fc6aeu96x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fc6afff7x1">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c7f91e77-68da-4f7c-9b01-542621b5e166">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d3fb5830-164a-4a71-b209-aa86678a2ac2">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Toulon</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Toulon</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1fc6afff7x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#23309433-8a36-49bf-b241-49dd228cdbee">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">International and global data portals</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">International and global data portals</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1fc6alhq0x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fc6alhq0x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#1d0f85bb-3d94-4cf6-805b-d73b984638dc">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Split</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Split</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1fc6apeb7x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fc6apeb7x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#8242f296-c674-4db7-8f44-d36ec89b5cd7">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Mexico</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Mexico</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1fc6aqdjbx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fc6aqdjbx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#000489da-c40d-4294-a80e-2967237fa372">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Cádiz</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Cádiz</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1fc6arfmox1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fc6arfmox1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner>0 0</ns5:lowerCorner>
+	<ns5:upperCorner>0 0</ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

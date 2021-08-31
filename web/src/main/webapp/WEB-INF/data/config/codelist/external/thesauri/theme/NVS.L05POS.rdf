@@ -1,18 +1,19 @@
 <?xml version="1.0"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#" xmlns:pav="http://purl.org/pav/">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="https://schemas.isotc211.org/schemas/19135/-2/reg/1.0/registration.xsd" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#" xmlns:pav="http://purl.org/pav/">
 <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/">
 <skos:prefLabel>Measuring devices</skos:prefLabel>
 <dc:title>Positioning devices</dc:title>
 <skos:altLabel>SDN devices</skos:altLabel>
 <dc:alternative>SDN devices</dc:alternative>
 <dc:description>Terms used to classify groups of sensors, instruments, sources of algorithmically computed data (numerical models) or samplers (collectors of water, SPM, sediment, rock, air or biota samples).</dc:description>
-<dc:date>2018-10-25 02:00:03.0</dc:date>
-<owl:versionInfo>67</owl:versionInfo>
+<dc:date>2021-01-25 14:00:01.0</dc:date>
+<owl:versionInfo>79</owl:versionInfo>
 <grg:RE_RegisterManager>British Oceanographic Data Centre</grg:RE_RegisterManager>
 <dc:publisher>Natural Environment Research Council</dc:publisher>
 <dc:creator>SeaDataNet</dc:creator>
 <grg:RE_RegisterOwner>SeaDataNet</grg:RE_RegisterOwner>
 <rdfs:comment>Governance for vocabularies used in the EU SeaDataNet project implemented as consultation between BODC and the members of the SeaDataNet Technical Task Team</rdfs:comment>
+<rdfs:seeAlso rdf:resource="https://github.com/nvs-vocabs/L05"/>
 
 
 
@@ -75,8 +76,8 @@
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0446/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0719/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0720/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0719/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L21/current/ICAT06/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L05/current/301/"/>
@@ -201,15 +202,46 @@
 <pav:authoredOn>2015-12-09 11:25:50.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0742/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0743/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0751/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0762/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0763/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1606/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1615/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1620/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1621/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1623/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1664/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1514/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1553/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1554/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1547/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1555/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1280/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1299/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1433/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1434/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1435/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1227/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1228/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0841/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0882/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0764/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0765/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0766/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0767/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0482/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0491/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0524/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0456/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0348/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0349/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0389/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0391/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0899/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0926/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0936/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0937/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0792/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0798/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0799/"/>
@@ -217,26 +249,9 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0802/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0803/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0623/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0456/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0482/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0491/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0524/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0348/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0349/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0389/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0391/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1227/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1228/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1280/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1299/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0841/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0882/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0899/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0926/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0936/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0937/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0698/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0742/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0743/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L21/current/ICAT06/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L05/current/301/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
@@ -266,13 +281,19 @@
 <pav:authoredOn>2015-12-09 11:25:50.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1227/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1228/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1615/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1348/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0388/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1446/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1299/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0698/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1664/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1228/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0491/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1645/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1227/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0698/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1623/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L21/current/ICAT06/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/SDNKG01/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
@@ -330,12 +351,15 @@
 <pav:authoredOn>2015-12-09 11:25:50.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0880/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1280/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1227/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0482/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1524/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1521/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0880/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1615/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1228/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L21/current/ICAT06/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/SDNKG01/"/>
@@ -386,6 +410,8 @@
 <pav:authoredOn>2015-12-09 11:25:50.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1637/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1636/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L21/current/ICAT06/"/>
@@ -440,37 +466,45 @@
 <pav:authoredOn>2015-12-09 11:25:50.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0800/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0801/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0802/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0803/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0601/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0457/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1227/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1228/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1251/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0862/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0873/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0878/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0768/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0769/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0524/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0457/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0313/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0199/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0388/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0390/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1227/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1228/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1251/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1299/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1193/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1224/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0862/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0873/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0878/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0899/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0933/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0934/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0935/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0937/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0799/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0798/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0792/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0769/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0768/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0798/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0799/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0800/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0801/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0802/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0803/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0601/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1224/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1193/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1299/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1547/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1554/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1553/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1514/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1621/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1620/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1615/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1606/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0761/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0760/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0735/"/>
@@ -541,6 +575,7 @@
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
+
 
 
 <skos:member>
@@ -747,14 +782,16 @@
 <pav:authoredOn>2012-11-13 13:38:20.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1111/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100002/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L21/current/ICAT06/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
+
+
 
 
 
@@ -859,6 +896,8 @@
 
 
 
+
+
 <skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS19/">
 <dc:identifier>SDN:L05::POS19</dc:identifier>
@@ -874,22 +913,23 @@
 <pav:authoredOn>2015-12-09 11:25:50.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0900/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0698/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0491/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0753/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0482/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0885/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0754/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0833/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0304/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0900/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0885/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0482/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0833/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL1623/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0753/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0698/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L21/current/ICAT06/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/SDNKG01/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
+
 
 
 
@@ -962,6 +1002,9 @@
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
+
+
+
 
 
 

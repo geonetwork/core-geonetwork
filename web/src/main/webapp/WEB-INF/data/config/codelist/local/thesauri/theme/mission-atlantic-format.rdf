@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Mission Atlantic - Format">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Mission Atlantic - Format</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#968ffad8-8ca0-42c6-839b-5afa32c18026">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">ACCDB</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">ACCDB</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">ACCDB</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">ACCDB</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#6e1ca3d0-862b-4cd5-a3b6-07e434849398">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">AIFF</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">AIFF</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">AIFF</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">AIFF</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x2"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x2">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#aebf2713-92bd-436f-a7e1-1ff5b165a680">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">ASCII</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">ASCII</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">ASCII</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">ASCII</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x3"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x3">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#0ba7faa8-7e59-43fb-a91e-e61567a03fc4">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">CSV</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">CSV</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">CSV</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">CSV</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x4"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x4">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d2076218-52d3-4eb7-87ef-88b5c7bec56b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">ESRI Shapefile</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">ESRI Shapefile</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">ESRI Shapefile</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">ESRI Shapefile</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x5"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x5">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#f94d2178-1fcc-489f-9c89-065807e3ad34">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">FLAC</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">FLAC</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">FLAC</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">FLAC</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x6"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x6">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#ee02bee1-f4f8-45dd-a105-42db6528e35f">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">GDB</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">GDB</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">GDB</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">GDB</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x7"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x7">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#23205a3a-bbac-48c1-b796-a2fdc67abfe1">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">geoTIFF</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">geoTIFF</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">geoTIFF</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">geoTIFF</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x8"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x8">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#f70695eb-d609-4220-b2ed-c37ebc926bdb">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">JPEG</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">JPEG</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">JPEG</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">JPEG</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x9"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x9">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#651c3207-f099-4edb-b01d-c65a22fbe3bd">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">MDB</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">MDB</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">MDB</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">MDB</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x10"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x10">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#5b801fbe-141b-4115-a514-b462a5628f08">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">MPEG</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">MPEG</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">MPEG</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">MPEG</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x11"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x11">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#09749ff1-b55f-4ad7-81d0-16e30f18ff6c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">netCDF</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">netCDF</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">netCDF</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">netCDF</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x12"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x12">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#4a2db230-cc24-4195-bf4a-1097841497fe">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">ODV</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">ODV</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">ODV</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">ODV</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x13"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x13">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#062511ee-77d5-4925-95d7-2f4a2e15d04c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">PDF</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">PDF</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">PDF</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">PDF</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x14"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x14">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d90c58c6-cbde-4de6-9ed0-5b965bf6a42d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">TAB</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">TAB</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">TAB</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">TAB</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x15"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x15">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#f9062bbe-62c8-42dd-9f5a-38fe9a3ca56d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">TIFF</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">TIFF</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">TIFF</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">TIFF</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x16"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x16">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#4613f895-98b5-473f-8eed-fd0c711d72d1">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">TXT</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">TXT</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">TXT</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">TXT</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x17"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x17">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#8432a052-bcba-460f-bf80-96cdceb5a765">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">WAV</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">WAV</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">WAV</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">WAV</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x18"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x18">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#bde8ce1e-e19c-4394-b769-1a542344822e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">XLS</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">XLS</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">XLS</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">XLS</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x19"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x19">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1ec4f2e5-ca63-4952-9419-d62cd59e94db">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">XML</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">XML</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">XML</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">XML</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f507tu25x20"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f507tu25x20">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#67395307-45c7-4477-b0f0-332f32c78b97">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">RAW</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">RAW</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">RAW</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">RAW</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f675gcc7x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f675gcc7x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

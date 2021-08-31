@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Mission Atlantic - Work Package">
+	<ns3:title>Mission Atlantic - Work Package</ns3:title>
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#260c7788-26aa-4d6c-a2c4-91228724c9c4">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">WP1 Atlantic Ocean IEA</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">WP1 Atlantic Ocean IEA</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Atlantic Ocean IEA</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Atlantic Ocean IEA</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fco3ecq7x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fco3ecq7x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1516010a-c8c5-4697-91cc-70ffcbe48532">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">WP3 Pelagic Mapping</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">WP3 Pelagic Mapping</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Pelagic Mapping</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Pelagic Mapping</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fco3ecq7x2"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fco3ecq7x2">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#a6548fcd-165b-4006-9969-1e2f49e8ed9e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">WP4 Benthic Mapping</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">WP4 Benthic Mapping</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Benthic Mapping</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Benthic Mapping</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fco3ecq7x3"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fco3ecq7x3">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#be71a47e-c7cb-472d-9a34-26ff7f3aa7a5">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">WP5 Assessing state, drivers and tipping points</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">WP5 Assessing state, drivers and tipping points</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Indicators</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Indicators</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fco3ecq7x4"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fco3ecq7x4">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#bf3579d2-4f7e-4ef4-b6fa-a5d19552997e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">WP7 Risk assessment and uncertainties</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">WP7 Risk assessment and uncertainties</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Risk assessment and uncertainties</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Risk assessment and uncertainties</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fco3ecq7x5"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fco3ecq7x5">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#84dcb5ba-8ef4-4545-bbc4-6712f6c8e5a8">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">WP6 Dynamics of ecosystem state and resources</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">WP6 Dynamics of ecosystem state and resources</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">WP6 Dynamics of ecosystem state and resources</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">WP6 Dynamics of ecosystem state and resources</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1fco606ihx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fco606ihx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

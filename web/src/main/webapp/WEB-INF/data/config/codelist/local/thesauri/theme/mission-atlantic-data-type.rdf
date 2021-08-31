@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Mission Atlantic - Data type (DMP)">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Mission Atlantic - Data type (DMP)</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#33283273-cd7e-481b-a4bd-a463aedf08c3">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Acoustic data</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Acoustic data</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Acoustic data</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Acoustic data</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s16rgvx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s16rgvx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#df6b3fce-014e-4825-8b7d-0c992e33af2d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Biological data</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Biological data</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Biological data</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Biological data</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s172q4x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s172q4x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#5507557a-652a-4511-9068-cabe14406814">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Environmental data</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Environmental data</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Environmental data</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Environmental data</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s17a2sx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s17a2sx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#f8907b2a-26a6-4034-a345-58fbe12bcac9">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Imaging data</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Imaging data</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Imaging data</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Imaging data</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s17h86x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s17h86x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#72cdb99b-aa89-4443-94bc-644065550781">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Modeling data</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Modeling data</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Modeling data</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Modeling data</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s17pg2x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s17pg2x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#a39e783a-bc21-4d0d-a418-7ac208efff5d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Socio-economic data</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Socio-economic data</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Socio-economic data</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Socio-economic data</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s1829ex1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s1829ex1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#4be36c8f-a1d3-4d46-a161-c6fbd898be06">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Spatial data products</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Spatial data products</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Spatial data products</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Spatial data products</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s18bvgx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s18bvgx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

@@ -1,0 +1,449 @@
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="https://schemas.isotc211.org/schemas/19135/-2/reg/1.0/registration.xsd" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#" xmlns:pav="http://purl.org/pav/">
+<skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/P08/current/">
+<skos:prefLabel>SeaDataNet Parameter Disciplines</skos:prefLabel>
+<dc:title>SeaDataNet Parameter Disciplines</dc:title>
+<skos:altLabel>SeaDataNet Disciplines</skos:altLabel>
+<dc:alternative>SeaDataNet Disciplines</dc:alternative>
+<dc:description>Terms used to classify SeaDataNet Agreed Parameter Groups to provide topic/theme level terms in a hierarchical parameter discovery interface.</dc:description>
+<dc:date>2017-02-03 02:00:03.0</dc:date>
+<owl:versionInfo>5</owl:versionInfo>
+<grg:RE_RegisterManager>British Oceanographic Data Centre</grg:RE_RegisterManager>
+<dc:publisher>Natural Environment Research Council</dc:publisher>
+<dc:creator>SeaDataNet</dc:creator>
+<grg:RE_RegisterOwner>SeaDataNet</grg:RE_RegisterOwner>
+<rdfs:comment>Governance for vocabularies used in the EU SeaDataNet project implemented as consultation between BODC and the members of the SeaDataNet Technical Task Team</rdfs:comment>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P08/current/DS07/">
+<dc:identifier>SDN:P08::DS07</dc:identifier>
+<dce:identifier>SDN:P08::DS07</dce:identifier>
+<dc:date>2005-03-10 14:31:52.0</dc:date>
+<skos:notation>SDN:P08::DS07</skos:notation>
+<skos:prefLabel xml:lang="en">Administration and dimensions</skos:prefLabel>
+<skos:altLabel>Administration and dimensions</skos:altLabel>
+<skos:definition xml:lang="en">Parameters related to spatial and temporal co-ordinates, entity referencing (eg record numbering and keys) and access control</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS07/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2005-03-10 14:31:52.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/035/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/001/"/>
+<owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/Z005/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P08/current/DS05/">
+<dc:identifier>SDN:P08::DS05</dc:identifier>
+<dce:identifier>SDN:P08::DS05</dce:identifier>
+<dc:date>2005-03-10 14:31:52.0</dc:date>
+<skos:notation>SDN:P08::DS05</skos:notation>
+<skos:prefLabel xml:lang="en">Atmosphere</skos:prefLabel>
+<skos:altLabel>Atmosphere</skos:altLabel>
+<skos:definition xml:lang="en">The atmospheric sciences domain</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS05/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2005-03-10 14:31:52.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/M005/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/M010/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/035/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/M90/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/M71/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/M06/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/M05/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/M02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/M01/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/001/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P08/current/DS01/">
+<dc:identifier>SDN:P08::DS01</dc:identifier>
+<dce:identifier>SDN:P08::DS01</dce:identifier>
+<dc:date>2005-03-10 14:31:52.0</dc:date>
+<skos:notation>SDN:P08::DS01</skos:notation>
+<skos:prefLabel xml:lang="en">Biological oceanography</skos:prefLabel>
+<skos:altLabel>Biological oceanography</skos:altLabel>
+<skos:definition xml:lang="en">The biological oceanographic science domain</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2005-03-10 14:31:52.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B005/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B015/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B020/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B025/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B027/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B030/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B035/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B045/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B007/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G055/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B055/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B060/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/UWPH/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B070/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B03/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B06/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B07/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B08/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B09/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B10/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B11/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B13/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B16/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B17/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B18/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B19/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B20/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B21/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B25/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B26/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B28/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B37/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B71/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B72/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B73/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B90/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/035/"/>
+<skos:related rdf:resource="http://www.bbc.co.uk/programmes/b0074mmc"/>
+<skos:related rdf:resource="http://www.bbc.co.uk/programmes/b008535y"/>
+<skos:related rdf:resource="http://www.bbc.co.uk/programmes/b0074mjc"/>
+<skos:related rdf:resource="http://www.bbc.co.uk/programmes/b0080pjz"/>
+<skos:related rdf:resource="http://www.bbc.co.uk/programmes/b0074mn1"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B050/"/>
+<skos:related rdf:resource="http://www.bbc.co.uk/programmes/b00818zy"/>
+<skos:related rdf:resource="http://www.bbc.co.uk/programmes/b0074mlf"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/001/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P08/current/DS02/">
+<dc:identifier>SDN:P08::DS02</dc:identifier>
+<dce:identifier>SDN:P08::DS02</dce:identifier>
+<dc:date>2005-03-10 14:31:52.0</dc:date>
+<skos:notation>SDN:P08::DS02</skos:notation>
+<skos:prefLabel xml:lang="en">Chemical oceanography</skos:prefLabel>
+<skos:altLabel>Chemical oceanography</skos:altLabel>
+<skos:definition xml:lang="en">The chemical oceanographic science domain</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS02/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2005-03-10 14:31:52.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/C003/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/C005/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/C010/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/C015/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/C017/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/C020/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/C025/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/C030/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/C035/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/C040/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/C045/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/C050/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/C055/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B007/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H21/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H22/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H23/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H24/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H25/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H26/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H27/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H28/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H30/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H31/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H32/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H33/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H74/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H75/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H76/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H90/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/035/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/001/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P08/current/DS06/">
+<dc:identifier>SDN:P08::DS06</dc:identifier>
+<dce:identifier>SDN:P08::DS06</dce:identifier>
+<dc:date>2005-03-10 14:31:52.0</dc:date>
+<skos:notation>SDN:P08::DS06</skos:notation>
+<skos:prefLabel xml:lang="en">Cross-discipline</skos:prefLabel>
+<skos:altLabel>Cross-discipline</skos:altLabel>
+<skos:definition xml:lang="en">No specific association with an identified domain</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS06/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2005-03-10 14:31:52.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/035/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/O010/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/O005/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/001/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P08/current/DS09/">
+<dc:identifier>SDN:P08::DS09</dc:identifier>
+<dce:identifier>SDN:P08::DS09</dce:identifier>
+<dc:date>2006-08-09 09:59:42.0</dc:date>
+<skos:notation>SDN:P08::DS09</skos:notation>
+<skos:prefLabel xml:lang="en">Cryosphere</skos:prefLabel>
+<skos:altLabel>Cryosphere</skos:altLabel>
+<skos:definition xml:lang="en">The cryosphere science domain, including ice on both land and sea</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS09/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2006-08-09 09:59:42.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/M04/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/035/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H003/"/>
+<skos:related rdf:resource="http://www.bbc.co.uk/programmes/b00818zy"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/001/"/>
+<owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/M015/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P08/current/DS10/">
+<dc:identifier>SDN:P08::DS10</dc:identifier>
+<dce:identifier>SDN:P08::DS10</dce:identifier>
+<dc:date>2016-11-07 12:18:25.0</dc:date>
+<skos:notation>SDN:P08::DS10</skos:notation>
+<skos:prefLabel xml:lang="en">Environment</skos:prefLabel>
+<skos:altLabel>Environment</skos:altLabel>
+<skos:definition xml:lang="en">The domain documenting the habitat (physical, biological or chemical conditions) surrounding an organism or a group of organisms, or factors affecting any part of the earth ecosystem past and present.</skos:definition>
+<owl:versionInfo>2</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS10/2/"/>
+<pav:version>2</pav:version>
+<pav:authoredOn>2016-11-07 12:18:25.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/P90/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H001/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/P13/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H002/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B050/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/P01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/P02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/P12/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/P03/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/035/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/P04/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/P05/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H003/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H005/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/001/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P08/current/DS11/">
+<dc:identifier>SDN:P08::DS11</dc:identifier>
+<dce:identifier>SDN:P08::DS11</dce:identifier>
+<dc:date>2017-02-02 14:38:40.0</dc:date>
+<skos:notation>SDN:P08::DS11</skos:notation>
+<skos:prefLabel xml:lang="en">Fisheries and aquaculture</skos:prefLabel>
+<skos:altLabel>Fisheries and aquaculture</skos:altLabel>
+<skos:definition xml:lang="en">The science domain concerned with aquatic life taken from the wild or farmed for human consumption</skos:definition>
+<owl:versionInfo>2</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS11/2/"/>
+<pav:version>2</pav:version>
+<pav:authoredOn>2017-02-02 14:38:40.0</pav:authoredOn>
+<skos:note xml:lang="en">deprecated</skos:note>
+<owl:deprecated>true</owl:deprecated>
+<dc:isReplacedBy rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS12/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B65/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/B64/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/035/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B020/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H004/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B050/"/>
+<skos:related rdf:resource="http://www.bbc.co.uk/programmes/b0074mn1"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/001/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P08/current/DS12/">
+<dc:identifier>SDN:P08::DS12</dc:identifier>
+<dce:identifier>SDN:P08::DS12</dce:identifier>
+<dc:date>2016-11-07 12:18:27.0</dc:date>
+<skos:notation>SDN:P08::DS12</skos:notation>
+<skos:prefLabel xml:lang="en">Human activities</skos:prefLabel>
+<skos:altLabel>Human activities</skos:altLabel>
+<skos:definition xml:lang="en">The domain documenting the activities of man that have an effect on the Earth System.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS12/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-11-07 12:18:27.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<dc:replaces rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS11/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H006/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H015/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H016/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H014/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H013/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H011/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H010/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H009/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H004/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H005/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H002/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H001/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H007/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H008/"/>
+<skos:related rdf:resource="http://www.bbc.co.uk/programmes/b008535y"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P08/current/DS04/">
+<dc:identifier>SDN:P08::DS04</dc:identifier>
+<dce:identifier>SDN:P08::DS04</dce:identifier>
+<dc:date>2005-03-10 14:31:52.0</dc:date>
+<skos:notation>SDN:P08::DS04</skos:notation>
+<skos:prefLabel xml:lang="en">Marine geology</skos:prefLabel>
+<skos:altLabel>Marine geology</skos:altLabel>
+<skos:definition xml:lang="en">The marine geological science domain</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2005-03-10 14:31:52.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G005/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G015/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G035/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G040/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G045/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G050/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G060/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G055/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G030/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/UWPH/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/GTHM/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/GSED/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/GPYS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G03/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G04/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G08/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G24/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G26/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G27/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G28/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G71/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G72/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G73/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G74/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G75/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G76/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/G90/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/035/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/001/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P08/current/DS03/">
+<dc:identifier>SDN:P08::DS03</dc:identifier>
+<dce:identifier>SDN:P08::DS03</dce:identifier>
+<dc:date>2005-03-10 14:31:52.0</dc:date>
+<skos:notation>SDN:P08::DS03</skos:notation>
+<skos:prefLabel xml:lang="en">Physical oceanography</skos:prefLabel>
+<skos:altLabel>Physical oceanography</skos:altLabel>
+<skos:definition xml:lang="en">The physical oceanographic science domain</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS03/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2005-03-10 14:31:52.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/D005/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/D015/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/D025/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/D020/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/D030/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/D032/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/D034/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/D01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/D03/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/D04/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/D05/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/D06/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/D09/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/D71/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/D72/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/D90/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H09/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H10/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H11/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H13/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H16/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H17/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H71/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H72/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C77/current/H73/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/035/"/>
+<skos:related rdf:resource="http://www.bbc.co.uk/programmes/b0074mjc"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/001/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P08/current/DS08/">
+<dc:identifier>SDN:P08::DS08</dc:identifier>
+<dce:identifier>SDN:P08::DS08</dce:identifier>
+<dc:date>2006-08-09 09:53:32.0</dc:date>
+<skos:notation>SDN:P08::DS08</skos:notation>
+<skos:prefLabel xml:lang="en">Terrestrial</skos:prefLabel>
+<skos:altLabel>Terrestrial</skos:altLabel>
+<skos:definition xml:lang="en">The terrestrial science domain</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS08/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2006-08-09 09:53:32.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G045/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/035/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G040/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G030/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G055/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G060/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G035/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/H003/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B050/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/001/"/>
+<owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/T001/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+</skos:Collection>
+</rdf:RDF>

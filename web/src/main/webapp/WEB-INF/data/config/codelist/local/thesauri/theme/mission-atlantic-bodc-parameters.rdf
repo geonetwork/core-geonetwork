@@ -1,0 +1,1266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#aeefc340-c965-4d9d-94cb-ecae492f5b8c">
+	<ns2:scopeNote xml:lang="en">/Chemical oceanography/Nutrients</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0laiex1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0laiex1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0ropcx1">
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d03b0ea8-a42e-4a2e-b8ac-948c2433ff79">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Chemical oceanography/Other inorganic chemical measurements</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Chemical oceanography/Other inorganic chemical measurements</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Chemical oceanography/Other inorganic chemical measurements</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Chemical oceanography/Other inorganic chemical measurements</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0lhg8x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0lhg8x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0tcgax1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#7b6bea32-80fd-486f-85c3-c77cd16aa3e1">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Chemical oceanography/Other organic chemical measurements</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Chemical oceanography/Other organic chemical measurements</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Chemical oceanography/Other organic chemical measurements</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Chemical oceanography/Other organic chemical measurements</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0lp1ox1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0lp1ox1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d54e7bf8-bb97-45ec-a8b7-cfa93dd387ba">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Human activities/Pollution</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#6d810759-2a5b-4693-8284-81241b264be6">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Chemical oceanography/PCBs and organic micropollutants</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Chemical oceanography/PCBs and organic micropollutants</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Chemical oceanography/PCBs and organic micropollutants</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Chemical oceanography/PCBs and organic micropollutants</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0n6rgx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0n6rgx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d54e7bf8-bb97-45ec-a8b7-cfa93dd387ba">
+	<ns2:prefLabel xml:lang="en">/Human activities/Pollution</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Human activities/Pollution</ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#6aaf56a9-49a1-4aad-9bf3-18f711d6de77">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Cross-discipline/Fluxes</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Cross-discipline/Fluxes</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Cross-discipline/Fluxes</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Cross-discipline/Fluxes</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0ne70x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0ne70x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d54e7bf8-bb97-45ec-a8b7-cfa93dd387ba">
+	<ns2:scopeNote xml:lang="en">/Human activities/Pollution</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0s07jx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#97813161-0f5e-440e-a06f-124e7adf806f">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Cross-discipline/Rate measurements</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Cross-discipline/Rate measurements</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Cross-discipline/Rate measurements</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Cross-discipline/Rate measurements</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0nl4cx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0nl4cx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0s07jx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#871f4f6a-8fb2-4b5b-b618-3a5860d04039">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Cryosphere</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Cryosphere</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Cryosphere</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Cryosphere</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0nt49x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0nt49x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0s07jx1">
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#2a39f901-5351-40fa-96c5-c92fd966565f">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Environment/Construction and structures</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Environment/Construction and structures</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Environment/Construction and structures</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Environment/Construction and structures</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0oh2nx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0oh2nx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#54190e4f-881b-4acb-ac8f-650ba2fabc29">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Human activities/Tourism</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#14f11bab-737f-4dbf-b805-0252bf96798a">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Environment/Habitat</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Environment/Habitat</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Environment/Habitat</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Environment/Habitat</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0oq7dx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0oq7dx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#2185e9e4-52d5-4f88-aa23-7f9e920cd54e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Human activities/Salt extraction</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#284f1204-35fe-4da6-b038-c3d15142a63d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Environment/Pollution</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Environment/Pollution</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Environment/Pollution</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Environment/Pollution</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0p162x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0p162x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#2185e9e4-52d5-4f88-aa23-7f9e920cd54e">
+	<ns2:prefLabel xml:lang="en">/Human activities/Salt extraction</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Human activities/Salt extraction</ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d8102cd8-07a3-4be2-95b6-4359fc69dcb0">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Human activities/Aquaculture</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Human activities/Aquaculture</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Human activities/Aquaculture</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Human activities/Aquaculture</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0p8usx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0p8usx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#2185e9e4-52d5-4f88-aa23-7f9e920cd54e">
+	<ns2:scopeNote xml:lang="en">/Human activities/Salt extraction</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0s72jx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#83780396-1df6-4e8c-ae6a-3616ae30a5f5">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Human activities/Area Management</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Human activities/Area Management</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Human activities/Area Management</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Human activities/Area Management</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0pgfjx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0pgfjx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0s72jx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#492c1d65-1832-4c30-a403-3c9362e6efd3">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Mission Atlantic - BODC Parameters">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Mission Atlantic - BODC Parameters</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#492c1d65-1832-4c30-a403-3c9362e6efd3">
+	<ns2:prefLabel xml:lang="fr">/Human activities/Cables</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Human activities/Cables</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Human activities/Cables</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Human activities/Cables</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0pno2x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0pno2x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#5057ebf1-6d1a-4b67-9dc6-3a753b6ecb41">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Administration and dimensions</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Administration and dimensions</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Administration and dimensions</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Administration and dimensions</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0deg0x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0deg0x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0pno2x1">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0s72jx1">
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#40bb6f5e-cf62-4aff-9297-af424c12ddfe">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Human activities/Construction and structures</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Human activities/Construction and structures</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Human activities/Construction and structures</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Human activities/Construction and structures</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0pv2bx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0pv2bx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#54190e4f-881b-4acb-ac8f-650ba2fabc29">
+	<ns2:prefLabel xml:lang="en">/Human activities/Tourism</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Human activities/Tourism</ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#5da0dac2-a51b-42ab-aa81-48b4798fbf04">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Human activities/Cultural Heritage</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Human activities/Cultural Heritage</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Human activities/Cultural Heritage</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Human activities/Cultural Heritage</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0q75lx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0q75lx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0ropcx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#a1f766c0-8e4c-4799-83f1-305765002f89">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Human activities/Energy</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#611b8c26-8c65-4525-aeb8-82be21a05c9c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Atmosphere/Atmospheric chemistry</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Atmosphere/Atmospheric chemistry</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Atmosphere/Atmospheric chemistry</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Atmosphere/Atmospheric chemistry</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0e2gax1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0e2gax1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#a1f766c0-8e4c-4799-83f1-305765002f89">
+	<ns2:prefLabel xml:lang="en">/Human activities/Energy</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Human activities/Energy</ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#b8904b33-581f-40f6-b1cc-aee6e5c2cf69">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Atmosphere/Meteorology</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Atmosphere/Meteorology</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Atmosphere/Meteorology</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Atmosphere/Meteorology</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0eb98x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0eb98x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#a1f766c0-8e4c-4799-83f1-305765002f89">
+	<ns2:scopeNote xml:lang="en">/Human activities/Energy</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0qekjx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#bbc90411-ba36-4ad1-9f26-5451cab58c0b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Atmosphere/Palaeoclimate</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Atmosphere/Palaeoclimate</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Atmosphere/Palaeoclimate</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Atmosphere/Palaeoclimate</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0eiv1x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0eiv1x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0qekjx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#f4e1b34c-321d-4e04-9f46-99365fbb9314">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Biological oceanography/Bacteria and viruses</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Biological oceanography/Bacteria and viruses</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Biological oceanography/Bacteria and viruses</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Biological oceanography/Bacteria and viruses</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0erg7x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0erg7x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0qekjx1">
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#c1faabb8-378b-471e-a186-da4ac0bf0404">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Biological oceanography/Biota abundance, biomass and diversity</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Biological oceanography/Biota abundance, biomass and diversity</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Biological oceanography/Biota abundance, biomass and diversity</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Biological oceanography/Biota abundance, biomass and diversity</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0f37ix1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0f37ix1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#aeefc340-c965-4d9d-94cb-ecae492f5b8c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Chemical oceanography/Nutrients</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#29b35803-85b5-4aab-9ec6-36397cf3d255">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Biological oceanography/Biota composition</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Biological oceanography/Biota composition</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Biological oceanography/Biota composition</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Biological oceanography/Biota composition</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0fan5x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0fan5x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#4ab1bb66-c8a0-4a2d-9aaf-09735ed50f04">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Human activities/Fisheries</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#53f08f60-0a32-43bb-8a7c-963a8c3b58f3">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Biological oceanography/Birds, mammals and reptiles</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Biological oceanography/Birds, mammals and reptiles</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Biological oceanography/Birds, mammals and reptiles</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Biological oceanography/Birds, mammals and reptiles</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0fhkdx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0fhkdx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#4ab1bb66-c8a0-4a2d-9aaf-09735ed50f04">
+	<ns2:prefLabel xml:lang="en">/Human activities/Fisheries</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Human activities/Fisheries</ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d986f664-a40e-49cb-afb9-a55655d0c593">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Biological oceanography/Disease, damage and mortality</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Biological oceanography/Disease, damage and mortality</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Biological oceanography/Disease, damage and mortality</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Biological oceanography/Disease, damage and mortality</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0fomlx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0fomlx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#4ab1bb66-c8a0-4a2d-9aaf-09735ed50f04">
+	<ns2:scopeNote xml:lang="en">/Human activities/Fisheries</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0qmepx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#71cd8a8f-8b93-465b-869c-3f5d1a737486">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Biological oceanography/Fish</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Biological oceanography/Fish</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Biological oceanography/Fish</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Biological oceanography/Fish</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0fvekx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0fvekx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0qmepx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#5277cb4b-59c0-4778-8ce4-bb910219b5ac">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Biological oceanography/Macroalgae and seagrass</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Biological oceanography/Macroalgae and seagrass</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Biological oceanography/Macroalgae and seagrass</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Biological oceanography/Macroalgae and seagrass</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0g6six1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0g6six1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0qmepx1">
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#a4fe1cf3-caf3-4c87-9845-97a149a3f239">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Biological oceanography/Microzooplankton</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Biological oceanography/Microzooplankton</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Biological oceanography/Microzooplankton</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Biological oceanography/Microzooplankton</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0gepbx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0gepbx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#aeefc340-c965-4d9d-94cb-ecae492f5b8c">
+	<ns2:prefLabel xml:lang="en">/Chemical oceanography/Nutrients</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Chemical oceanography/Nutrients</ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#c6f76196-1632-43cd-8cee-2a8f7ea266db">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Biological oceanography/Other biological measurements</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Biological oceanography/Other biological measurements</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Biological oceanography/Other biological measurements</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Biological oceanography/Other biological measurements</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0gn7ux1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0gn7ux1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#0788a743-761a-403d-bd65-33a4009d337b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Human activities/Hydrocarbon extraction</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#a035f02d-81e9-4b26-9819-c6907129afe5">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Biological oceanography/Phytoplankton and microphytobenthos</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Biological oceanography/Phytoplankton and microphytobenthos</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Biological oceanography/Phytoplankton and microphytobenthos</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Biological oceanography/Phytoplankton and microphytobenthos</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0h02nx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0h02nx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#0788a743-761a-403d-bd65-33a4009d337b">
+	<ns2:prefLabel xml:lang="en">/Human activities/Hydrocarbon extraction</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Human activities/Hydrocarbon extraction</ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#88c95c30-d77e-48d7-8fcb-336e029bcf23">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Biological oceanography/Pigments</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Biological oceanography/Pigments</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Biological oceanography/Pigments</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Biological oceanography/Pigments</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0h7dkx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0h7dkx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#0788a743-761a-403d-bd65-33a4009d337b">
+	<ns2:scopeNote xml:lang="en">/Human activities/Hydrocarbon extraction</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0qu7ax1"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#afc08c03-5aa6-498a-806d-bbed427eb56d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Biological oceanography/Rock and sediment biota</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Biological oceanography/Rock and sediment biota</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Biological oceanography/Rock and sediment biota</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Biological oceanography/Rock and sediment biota</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0hfmcx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0hfmcx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0qu7ax1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#980891aa-6ea4-4197-903e-57dabee99ea7">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Biological oceanography/Underwater photography</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Biological oceanography/Underwater photography</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Biological oceanography/Underwater photography</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Biological oceanography/Underwater photography</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0i06ox1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0i06ox1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0qu7ax1">
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#4e56a9ad-75e6-4c36-a039-7cfc9e9b1e11">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Biological oceanography/Zooplankton</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Biological oceanography/Zooplankton</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Biological oceanography/Zooplankton</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Biological oceanography/Zooplankton</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0i86rx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0i86rx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0tcgax1">
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#884e8336-c19a-49ff-9d13-f066b5c184ab">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Chemical oceanography/Amino acids</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Chemical oceanography/Amino acids</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Chemical oceanography/Amino acids</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Chemical oceanography/Amino acids</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0ioadx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0ioadx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#96febab6-163e-4c5d-8c60-fba04197220b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Human activities/Mining</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#f6abbf5e-0ad9-46b1-b349-033ff3809b41">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Chemical oceanography/Biota composition</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Chemical oceanography/Biota composition</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Chemical oceanography/Biota composition</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Chemical oceanography/Biota composition</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0ivhsx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0ivhsx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#96febab6-163e-4c5d-8c60-fba04197220b">
+	<ns2:prefLabel xml:lang="en">/Human activities/Mining</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Human activities/Mining</ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#5ba58a97-ec49-48c6-a8f2-709d3c25d962">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Chemical oceanography/Carbon, nitrogen and phosphorus</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Chemical oceanography/Carbon, nitrogen and phosphorus</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Chemical oceanography/Carbon, nitrogen and phosphorus</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Chemical oceanography/Carbon, nitrogen and phosphorus</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0j83ax1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0j83ax1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#96febab6-163e-4c5d-8c60-fba04197220b">
+	<ns2:scopeNote xml:lang="en">/Human activities/Mining</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0r63cx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d56c4c06-7a2e-4b3a-8e38-7ae62aca64d2">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Chemical oceanography/Carbonate system</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Chemical oceanography/Carbonate system</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Chemical oceanography/Carbonate system</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Chemical oceanography/Carbonate system</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0jfq0x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0jfq0x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0r63cx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#e4da174c-0a2f-41d3-8586-87a95994f09d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Chemical oceanography/Dissolved gases</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Chemical oceanography/Dissolved gases</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Chemical oceanography/Dissolved gases</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Chemical oceanography/Dissolved gases</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0jndlx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0jndlx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0r63cx1">
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#076a4bb2-a7d3-4360-9660-2d17bcf4a1ad">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Chemical oceanography/Fatty acids</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Chemical oceanography/Fatty acids</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Chemical oceanography/Fatty acids</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Chemical oceanography/Fatty acids</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0juqfx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0juqfx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#54190e4f-881b-4acb-ac8f-650ba2fabc29">
+	<ns2:scopeNote xml:lang="en">/Human activities/Tourism</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0tcgax1"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#193c22c5-4e48-4169-9cbf-7e42c036c8d5">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Chemical oceanography/Halocarbons</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Chemical oceanography/Halocarbons</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Chemical oceanography/Halocarbons</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Chemical oceanography/Halocarbons</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0k5j0x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0k5j0x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#701728ce-ff93-47d4-8785-e78d6354f23b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Human activities/Pipelines</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#3e3584a6-7105-450b-9260-c0fea373788c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Chemical oceanography/Hydrocarbons</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Chemical oceanography/Hydrocarbons</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Chemical oceanography/Hydrocarbons</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Chemical oceanography/Hydrocarbons</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0kd5fx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0kd5fx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#701728ce-ff93-47d4-8785-e78d6354f23b">
+	<ns2:prefLabel xml:lang="en">/Human activities/Pipelines</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Human activities/Pipelines</ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#00770f3a-dfc2-4712-9343-d57b28d876d7">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Chemical oceanography/Isotopes</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Chemical oceanography/Isotopes</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Chemical oceanography/Isotopes</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Chemical oceanography/Isotopes</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0kpjix1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0kpjix1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#701728ce-ff93-47d4-8785-e78d6354f23b">
+	<ns2:scopeNote xml:lang="en">/Human activities/Pipelines</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0ropcx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#8bc281b9-e93c-4a14-95f0-f753a66ace64">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Chemical oceanography/Metal and metalloid concentrations</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Chemical oceanography/Metal and metalloid concentrations</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Chemical oceanography/Metal and metalloid concentrations</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Chemical oceanography/Metal and metalloid concentrations</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0l373x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0l373x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#842333ea-179f-4e01-9e6e-b5be5dba232b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Human activities/Transport</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Human activities/Transport</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Human activities/Transport</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Human activities/Transport</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0uas8x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0uas8x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#69e2dc1b-73fe-481d-abe3-e6a3cf76b114">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Marine geology/Field geophysics</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Marine geology/Field geophysics</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Marine geology/Field geophysics</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Marine geology/Field geophysics</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0ulc3x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0ulc3x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#b3bd73ed-2ba7-48ec-8f4d-12c36304a241">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Marine geology/Geochronology and stratigraphy</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Marine geology/Geochronology and stratigraphy</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Marine geology/Geochronology and stratigraphy</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Marine geology/Geochronology and stratigraphy</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0usbkx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0usbkx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1bcfdd07-c325-48ee-a435-41e05b4d8126">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Marine geology/Geothermal measurements</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Marine geology/Geothermal measurements</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Marine geology/Geothermal measurements</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Marine geology/Geothermal measurements</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0v3nvx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0v3nvx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#4f7680c2-7cc5-4620-bae9-dec6813f5cd5">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Marine geology/Gravity, magnetics and bathymetry</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Marine geology/Gravity, magnetics and bathymetry</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Marine geology/Gravity, magnetics and bathymetry</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Marine geology/Gravity, magnetics and bathymetry</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0vat7x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0vat7x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#6049b72d-2c4b-49f5-b003-b1d43fc2fd45">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Marine geology/Rock and sediment biota</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Marine geology/Rock and sediment biota</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Marine geology/Rock and sediment biota</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Marine geology/Rock and sediment biota</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s0vpv6x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s0vpv6x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#2cf80de8-959d-4fcb-ad2a-66a2250d903d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Marine geology/Rock and sediment chemistry</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Marine geology/Rock and sediment chemistry</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Marine geology/Rock and sediment chemistry</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Marine geology/Rock and sediment chemistry</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s10c35x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s10c35x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#ba1cb67a-f8cd-4006-8c0a-db33f446724c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Marine geology/Rock and sediment lithology and mineralogy</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Marine geology/Rock and sediment lithology and mineralogy</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Marine geology/Rock and sediment lithology and mineralogy</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Marine geology/Rock and sediment lithology and mineralogy</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s10jf3x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s10jf3x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#53a8fcb7-54ae-4078-8e88-b00092f6b797">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Marine geology/Rock and sediment physical properties</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Marine geology/Rock and sediment physical properties</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Marine geology/Rock and sediment physical properties</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Marine geology/Rock and sediment physical properties</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s10rcax1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s10rcax1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#3fdb04ae-4d73-4c1a-a989-fca7d042d704">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Marine geology/Rock and sediment sedimentology</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Marine geology/Rock and sediment sedimentology</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Marine geology/Rock and sediment sedimentology</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Marine geology/Rock and sediment sedimentology</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s113gdx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s113gdx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#8ef45f20-53ad-4213-a381-725c129f264c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Marine geology/Sediment pore water chemistry</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Marine geology/Sediment pore water chemistry</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Marine geology/Sediment pore water chemistry</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Marine geology/Sediment pore water chemistry</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s11abqx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s11abqx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#bf752a7b-4034-483e-bb23-7855914f8a47">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Marine geology/Sedimentation and erosion processes</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Marine geology/Sedimentation and erosion processes</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Marine geology/Sedimentation and erosion processes</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Marine geology/Sedimentation and erosion processes</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s11h97x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s11h97x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#588791c7-860f-4680-8ae4-1c63694ee073">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Marine geology/Sonar and seismics</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Marine geology/Sonar and seismics</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Marine geology/Sonar and seismics</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Marine geology/Sonar and seismics</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s11rplx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s11rplx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#ec4a1bd2-7311-48ad-b27e-081336d97145">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Marine geology/Suspended particulate material</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Marine geology/Suspended particulate material</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Marine geology/Suspended particulate material</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Marine geology/Suspended particulate material</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s123cux1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s123cux1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#3eb7f884-8f8f-4843-b0ac-edbf97346e0d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Marine geology/Underwater photography</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Marine geology/Underwater photography</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Marine geology/Underwater photography</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Marine geology/Underwater photography</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s12cslx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s12cslx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#88bc2afc-2a69-4dfb-a120-ecda3a94c650">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Physical oceanography/Acoustics</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Physical oceanography/Acoustics</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Physical oceanography/Acoustics</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Physical oceanography/Acoustics</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s12kk4x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s12kk4x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#88134097-9732-467b-b860-ad82bb39ce3d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Physical oceanography/Currents</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Physical oceanography/Currents</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Physical oceanography/Currents</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Physical oceanography/Currents</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s12ratx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s12ratx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#5cb520dd-55f1-44ad-a37e-e08459ba4b27">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Physical oceanography/Optical properties</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Physical oceanography/Optical properties</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Physical oceanography/Optical properties</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Physical oceanography/Optical properties</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s132b3x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s132b3x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#26ac8bed-7432-47ac-a2d3-489ddc5aa72d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Physical oceanography/Other physical oceanographic measurements</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Physical oceanography/Other physical oceanographic measurements</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Physical oceanography/Other physical oceanographic measurements</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Physical oceanography/Other physical oceanographic measurements</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s13a9mx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s13a9mx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#c15779ec-1872-430a-bce1-4a560f85499d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Physical oceanography/Sea level</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Physical oceanography/Sea level</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Physical oceanography/Sea level</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Physical oceanography/Sea level</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s13ji8x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s13ji8x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#65be60c2-d4a9-458e-9696-db53fdd1fdf4">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Physical oceanography/Water column temperature and salinity</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Physical oceanography/Water column temperature and salinity</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Physical oceanography/Water column temperature and salinity</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Physical oceanography/Water column temperature and salinity</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s13qe8x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s13qe8x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#dcbaa52d-19bd-4594-9aab-8b70ed1f32e9">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Physical oceanography/Waves</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">/Physical oceanography/Waves</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">/Physical oceanography/Waves</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">/Physical oceanography/Waves</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4s142ajx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4s142ajx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

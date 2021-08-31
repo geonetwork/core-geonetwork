@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Mission Atlantic - Resources">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Mission Atlantic - Resources</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#90e1a9c1-ac2d-492f-b67d-c5d28746a173">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Article and publication</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Article and publication</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Article and publication</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Article and publication</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rurj1ix1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rurj1ix1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#e3cb939f-29c1-4603-94a9-c850e756907f">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Classification</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Classification</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Classification</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Classification</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rus11gx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rus11gx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#45156dd8-3b31-419b-92e1-dcb7d280e7f9">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Data catalogue</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Data catalogue</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Data catalogue</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Data catalogue</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rus9cpx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rus9cpx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#61f28296-8c64-4217-8a3e-fc0bc05b5617">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Dataset</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Dataset</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Dataset</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Dataset</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rusq0ex1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rusq0ex1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#32f044f8-9806-4a7e-b6a7-cb338aed4f97">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Indicator</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Indicator</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Indicator</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Indicator</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rut41sx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rut41sx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#80e02b32-0314-455c-afd5-2add1ce2af8a">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Program and project</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Program and project</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Program and project</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Program and project</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rutcdkx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rutcdkx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#35881d8d-6cf6-4290-bd53-671034ea98fb">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Service</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Service</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Service</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Service</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rutjs0x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rutjs0x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#c8455801-4de6-4baf-bedc-c06255dc85a2">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Tool</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Tool</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Tool</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Tool</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rutrgsx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rutrgsx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

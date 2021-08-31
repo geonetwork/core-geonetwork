@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Eolien - Stade">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Eolien - Stade</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/eolien_stade#218a9193-c2a8-42aa-ada0-8f5a6b5e86d2">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Juvénile</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Juvénile</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1er7ju6o0x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1er7ju6o0x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/eolien_stade#43531655-2555-4f0e-800e-795dc4b44b73">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Adulte</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Adulte</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1er7jujmvx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1er7jujmvx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/eolien_stade#0c2f73b7-42b2-4c4d-aac5-695f1109d566">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Adulte reproducteur</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Adulte reproducteur</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1er7jv3b8x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1er7jv3b8x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

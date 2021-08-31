@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/France Energies Marines - Programmes">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>France Energies Marines - Programmes</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://www.france-energies-marines.org/thesaurus#4571dc31-7a3c-44a0-8b7c-11d4458af063">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">P1. Caractérisation de sites</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">P1. Site characterisation</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1fdc9ulmmx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fdc9ulmmx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://www.france-energies-marines.org/thesaurus#15b52050-5859-427a-a673-b1bfe71120c3">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">P2. Dimensionnement et suivi des systèmes</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">P2. Design and Monitoring of Systems</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1fdc9v3lex1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fdc9v3lex1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://www.france-energies-marines.org/thesaurus#7d1fce59-209a-456a-8446-300ee0018119">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">P3. Intégration environnementale</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">P3. Environmental integration</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1fdc9vljfx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fdc9vljfx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://www.france-energies-marines.org/thesaurus#15355625-2524-4314-b32d-089b3540f2ff">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">P4. Optimisation des parcs</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">P4. Farm optimisation</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1fdca03fnx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1fdca03fnx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

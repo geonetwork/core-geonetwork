@@ -10,16 +10,16 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx1">
+<rdf:Description rdf:nodeID="node1esa9m69sx1">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 	<ns5:upperCorner></ns5:upperCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396354865093">
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx1">
+<rdf:Description rdf:nodeID="node1esa9m69sx1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 </rdf:Description>
@@ -34,20 +34,16 @@
 	<ns2:prefLabel xml:lang="en">D1: Birds, Marine Mammals and Turtles</ns2:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx2">
+<rdf:Description rdf:nodeID="node1esa9m69sx2">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 	<ns5:upperCorner></ns5:upperCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355082701">
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx2"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx2"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e5fd6unpx1">
-	<ns5:upperCorner> </ns5:upperCorner>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e59mld0fx2">
+<rdf:Description rdf:nodeID="node1esa9m69sx2">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 </rdf:Description>
@@ -61,21 +57,21 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx3">
+<rdf:Description rdf:nodeID="node1esa9m69sx4">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 	<ns5:upperCorner></ns5:upperCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355150171">
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx3"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx4"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx3">
+<rdf:Description rdf:nodeID="node1esa9m69sx4">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx4">
+<rdf:Description rdf:nodeID="node1esa9m69sx5">
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
 </rdf:Description>
@@ -89,20 +85,20 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx4">
+<rdf:Description rdf:nodeID="node1esa9m69sx5">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355166339">
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx4"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx5"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355186841">
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx5"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx6"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx5">
+<rdf:Description rdf:nodeID="node1esa9m69sx6">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
@@ -117,20 +113,20 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx5">
+<rdf:Description rdf:nodeID="node1esa9m69sx6">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx6">
+<rdf:Description rdf:nodeID="node1esa9m69sx7">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355200865">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx6"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx7"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx6">
+<rdf:Description rdf:nodeID="node1esa9m69sx7">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
@@ -149,7 +145,7 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx7">
+<rdf:Description rdf:nodeID="node1esa9m69sx8">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -158,16 +154,16 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355231319">
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx7"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx8"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx7">
+<rdf:Description rdf:nodeID="node1esa9m69sx8">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx8">
+<rdf:Description rdf:nodeID="node1esa9m69sx9">
 	<ns5:upperCorner></ns5:upperCorner>
 </rdf:Description>
 
@@ -180,20 +176,20 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx8">
+<rdf:Description rdf:nodeID="node1esa9m69sx9">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355257279">
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx8"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx9"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx8">
+<rdf:Description rdf:nodeID="node1esa9m69sx9">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx9">
+<rdf:Description rdf:nodeID="node1esa9m69sx10">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
@@ -205,24 +201,24 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355326393">
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx10"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx11"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355323091">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
 	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx11"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx12"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx11">
+<rdf:Description rdf:nodeID="node1esa9m69sx12">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx10">
+<rdf:Description rdf:nodeID="node1esa9m69sx11">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 </rdf:Description>
@@ -237,10 +233,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355325824">
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx12"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx13"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx12">
+<rdf:Description rdf:nodeID="node1esa9m69sx13">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -253,26 +249,26 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx12">
+<rdf:Description rdf:nodeID="node1esa9m69sx13">
 	<ns5:lowerCorner></ns5:lowerCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355322555">
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx9"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx10"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355267246">
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx13"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx14"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx13">
+<rdf:Description rdf:nodeID="node1esa9m69sx14">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx12">
+<rdf:Description rdf:nodeID="node1esa9m69sx13">
 	<ns5:upperCorner></ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -287,17 +283,17 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355319620">
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx14"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx15"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx14">
+<rdf:Description rdf:nodeID="node1esa9m69sx15">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx10">
+<rdf:Description rdf:nodeID="node1esa9m69sx11">
 	<ns5:upperCorner></ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -312,10 +308,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355321897">
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx15"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx16"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx15">
+<rdf:Description rdf:nodeID="node1esa9m69sx16">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
@@ -347,7 +343,7 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx16">
+<rdf:Description rdf:nodeID="node1esa9m69sx17">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -356,10 +352,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355573284">
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx16"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx17"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx16">
+<rdf:Description rdf:nodeID="node1esa9m69sx17">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:lowerCorner></ns5:lowerCorner>
 	<ns5:upperCorner></ns5:upperCorner>
@@ -369,7 +365,7 @@
 	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e5fd6unpx1">
+<rdf:Description rdf:nodeID="node1esa9m69sx3">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -377,10 +373,10 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">AES : Analyse Economique et Sociale</ns2:prefLabel>
 	<ns2:scopeNote xml:lang="fr">definition</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx17"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx18"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx17">
+<rdf:Description rdf:nodeID="node1esa9m69sx18">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -389,10 +385,10 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">Carpe Diem</ns2:prefLabel>
 	<ns2:scopeNote xml:lang="fr">définition</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e59mld0fx18"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx19"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e59mld0fx18">
+<rdf:Description rdf:nodeID="node1esa9m69sx19">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -483,11 +479,6 @@
 	<ns2:prefLabel xml:lang="en">Carpe Diem</ns2:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e5fd575ex1">
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
-</rdf:Description>
-
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355150171">
 	<ns2:prefLabel xml:lang="fr">D1: Biodiversité - Céphalopodes</ns2:prefLabel>
 	<ns2:prefLabel xml:lang="en">D1: Fish and Cephalopods</ns2:prefLabel>
@@ -499,15 +490,15 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e5fd575ex1">
+<rdf:Description rdf:nodeID="node1esa9m69sx20">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geonetwork-opensource.org/dcsmm-descripteur#cd22bfbb-d2aa-4508-a427-c56eeda29c51">
-	<ns5:BoundedBy rdf:nodeID="node1e5fd575ex1"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx20"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e5fd575ex1">
+<rdf:Description rdf:nodeID="node1esa9m69sx20">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -520,12 +511,11 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">D1: Biodiversité - Mammifères</ns2:prefLabel>
 	<ns2:scopeNote xml:lang="fr">Biodiversité - Mammifères</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e5fd6unpx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1esa9m69sx3"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1e5fd6unpx1">
+<rdf:Description rdf:nodeID="node1esa9m69sx3">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#1396355186841">
@@ -533,6 +523,20 @@
 	<ns2:prefLabel xml:lang="en">D1: Deep-sea benthic habitats</ns2:prefLabel>
 	<ns2:scopeNote xml:lang="fr">Définition</ns2:scopeNote>
 	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/dcsmm-descripteur#6b02730e-4456-40ae-b3c2-97b7f24a28a0">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">OE : Objectifs Environnementaux</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">ET : Environmental Targets</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1est12ai9x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1est12ai9x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 </rdf:RDF>

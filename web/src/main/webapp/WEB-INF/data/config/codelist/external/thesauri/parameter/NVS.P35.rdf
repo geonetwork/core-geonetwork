@@ -1,12 +1,12 @@
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#" xmlns:pav="http://purl.org/pav/">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="https://schemas.isotc211.org/schemas/19135/-2/reg/1.0/registration.xsd" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#" xmlns:pav="http://purl.org/pav/">
 <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/">
 <skos:prefLabel>EMODnet Chemistry aggregated parameter names</skos:prefLabel>
 <dc:title>EMODnet Chemistry aggregated parameter names</dc:title>
 <skos:altLabel>EMODNET chemistry aggregations</skos:altLabel>
 <dc:alternative>EMODNET chemistry aggregations</dc:alternative>
 <dc:description>Labels used for aggregated parameters in the EMODNET chemistry lot</dc:description>
-<dc:date>2018-03-29 02:00:04.0</dc:date>
-<owl:versionInfo>16</owl:versionInfo>
+<dc:date>2021-02-27 02:00:03.0</dc:date>
+<owl:versionInfo>18</owl:versionInfo>
 <grg:RE_RegisterManager>British Oceanographic Data Centre</grg:RE_RegisterManager>
 <dc:publisher>Natural Environment Research Council</dc:publisher>
 <dc:creator>EMODNet Chemistry Lot</dc:creator>
@@ -2637,15 +2637,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00105/">
 <dc:identifier>SDN:P35::EPC00105</dc:identifier>
 <dce:identifier>SDN:P35::EPC00105</dce:identifier>
-<dc:date>2016-12-12 15:20:45.0</dc:date>
+<dc:date>2021-02-26 17:53:42.0</dc:date>
 <skos:notation>SDN:P35::EPC00105</skos:notation>
 <skos:prefLabel xml:lang="en">Water body chlorophyll-a</skos:prefLabel>
 <skos:altLabel>Water body chlorophyll-a</skos:altLabel>
-<skos:definition xml:lang="en">Concentration of the pigment chlorophyll-a contained in the particlate material of a specified volume of any body of salt or fresh water.</skos:definition>
-<owl:versionInfo>5</owl:versionInfo>
-<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P35/current/EPC00105/5/"/>
-<pav:version>5</pav:version>
-<pav:authoredOn>2016-12-12 15:20:45.0</pav:authoredOn>
+<skos:definition xml:lang="en">Concentration of the pigment chlorophyll-a contained in the particulate material of a specified volume of any body of salt or fresh water.</skos:definition>
+<owl:versionInfo>6</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P35/current/EPC00105/6/"/>
+<pav:version>6</pav:version>
+<pav:authoredOn>2021-02-26 17:53:42.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLSSP6/"/>
@@ -2703,15 +2703,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00106/">
 <dc:identifier>SDN:P35::EPC00106</dc:identifier>
 <dce:identifier>SDN:P35::EPC00106</dce:identifier>
-<dc:date>2016-12-12 15:20:45.0</dc:date>
+<dc:date>2021-02-26 17:53:42.0</dc:date>
 <skos:notation>SDN:P35::EPC00106</skos:notation>
 <skos:prefLabel xml:lang="en">Water body chlorophyll-b</skos:prefLabel>
 <skos:altLabel>Water body chlorophyll-b</skos:altLabel>
-<skos:definition xml:lang="en">Concentration of the pigment chlorophyll-b contained in the particlate material of a specified volume of any body of salt or fresh water.</skos:definition>
-<owl:versionInfo>5</owl:versionInfo>
-<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P35/current/EPC00106/5/"/>
-<pav:version>5</pav:version>
-<pav:authoredOn>2016-12-12 15:20:45.0</pav:authoredOn>
+<skos:definition xml:lang="en">Concentration of the pigment chlorophyll-b contained in the particulate material of a specified volume of any body of salt or fresh water.</skos:definition>
+<owl:versionInfo>6</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P35/current/EPC00106/6/"/>
+<pav:version>6</pav:version>
+<pav:authoredOn>2021-02-26 17:53:42.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLBHPP5/"/>
@@ -2728,15 +2728,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00107/">
 <dc:identifier>SDN:P35::EPC00107</dc:identifier>
 <dce:identifier>SDN:P35::EPC00107</dce:identifier>
-<dc:date>2016-12-12 15:20:45.0</dc:date>
+<dc:date>2021-02-26 17:53:42.0</dc:date>
 <skos:notation>SDN:P35::EPC00107</skos:notation>
 <skos:prefLabel xml:lang="en">Water body chlorophyll-c</skos:prefLabel>
 <skos:altLabel>Water body chlorophyll-c</skos:altLabel>
-<skos:definition xml:lang="en">Concentration of the pigment chlorophyll-c contained in the particlate material of a specified volume of any body of salt or fresh water.</skos:definition>
-<owl:versionInfo>5</owl:versionInfo>
-<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P35/current/EPC00107/5/"/>
-<pav:version>5</pav:version>
-<pav:authoredOn>2016-12-12 15:20:45.0</pav:authoredOn>
+<skos:definition xml:lang="en">Concentration of the pigment chlorophyll-c contained in the particulate material of a specified volume of any body of salt or fresh water.</skos:definition>
+<owl:versionInfo>6</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P35/current/EPC00107/6/"/>
+<pav:version>6</pav:version>
+<pav:authoredOn>2021-02-26 17:53:42.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLCHPP1/"/>
@@ -5058,15 +5058,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00108/">
 <dc:identifier>SDN:P35::EPC00108</dc:identifier>
 <dce:identifier>SDN:P35::EPC00108</dce:identifier>
-<dc:date>2016-12-12 15:20:45.0</dc:date>
+<dc:date>2020-04-15 12:53:01.0</dc:date>
 <skos:notation>SDN:P35::EPC00108</skos:notation>
 <skos:prefLabel xml:lang="en">Water body phaeopigments</skos:prefLabel>
 <skos:altLabel>Water body phaeopigments</skos:altLabel>
-<skos:definition xml:lang="en">Thetotalamountofallchlorophylldegradationproductscontainedintheparticlatematerialofaspecifiedvolumeofanybodyofsaltorfreshwater.</skos:definition>
-<owl:versionInfo>4</owl:versionInfo>
-<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P35/current/EPC00108/4/"/>
-<pav:version>4</pav:version>
-<pav:authoredOn>2016-12-12 15:20:45.0</pav:authoredOn>
+<skos:definition xml:lang="en">The total amount of all chlorophyll degradation products contained in the particulate material of a specified volume of any body of salt or fresh water.</skos:definition>
+<owl:versionInfo>5</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/P35/current/EPC00108/5/"/>
+<pav:version>5</pav:version>
+<pav:authoredOn>2020-04-15 12:53:01.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHAEFLP3/"/>

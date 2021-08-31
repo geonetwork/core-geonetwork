@@ -179,14 +179,14 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#170">
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x1"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax1"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#f3054492-2068-4b1f-84c6-36ebbf2050d8">
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x1">
+<rdf:Description rdf:nodeID="node1evu7dobax1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -351,10 +351,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#175">
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x2"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax2"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x2">
+<rdf:Description rdf:nodeID="node1evu7dobax2">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -413,7 +413,7 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x1">
+<rdf:Description rdf:nodeID="node1evu7dobax1">
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -485,7 +485,7 @@
 	<skos:definition xml:lang="fr"></skos:definition>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x3">
+<rdf:Description rdf:nodeID="node1evu7dobax3">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -672,7 +672,7 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#162">
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x4"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax4"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#161">
@@ -732,10 +732,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#161">
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x5"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax5"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x5">
+<rdf:Description rdf:nodeID="node1evu7dobax5">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -762,7 +762,7 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#164">
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x6"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax6"/>
 	<skos:prefLabel xml:lang="en">/Physical Environment/Hydrodynamics/Tide</skos:prefLabel>
 </rdf:Description>
 
@@ -771,7 +771,7 @@
 	<skos:prefLabel xml:lang="fr">/Milieu physique/Hydrodynamique/Courants</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x6">
+<rdf:Description rdf:nodeID="node1evu7dobax6">
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -806,10 +806,10 @@
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#171">
 	<skos:prefLabel xml:lang="fr">/Milieu physique/Bathymétrie/Isobathes</skos:prefLabel>
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x7"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax7"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x7">
+<rdf:Description rdf:nodeID="node1evu7dobax7">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -858,7 +858,7 @@
 	<rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x8">
+<rdf:Description rdf:nodeID="node1evu7dobax8">
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -867,10 +867,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#120">
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x8"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax8"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x8">
+<rdf:Description rdf:nodeID="node1evu7dobax8">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -891,15 +891,15 @@
 	<rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x9">
+<rdf:Description rdf:nodeID="node1evu7dobax9">
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#150">
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x9"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax9"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x9">
+<rdf:Description rdf:nodeID="node1evu7dobax9">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -915,7 +915,7 @@
 	<skos:prefLabel xml:lang="en">/Human Activities/Oceanographical Cruises</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x5">
+<rdf:Description rdf:nodeID="node1evu7dobax5">
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -923,7 +923,7 @@
 	<skos:prefLabel xml:lang="en">/Physical Environment/Hydrodynamics/Swell</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x4">
+<rdf:Description rdf:nodeID="node1evu7dobax4">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -932,10 +932,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#155">
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x10"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax10"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x10">
+<rdf:Description rdf:nodeID="node1evu7dobax10">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -948,26 +948,26 @@
 	<skos:prefLabel xml:lang="en">/Physical Environment/Hydrodynamics/Currents</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x4">
+<rdf:Description rdf:nodeID="node1evu7dobax4">
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x6">
+<rdf:Description rdf:nodeID="node1evu7dobax6">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#163">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<skos:prefLabel xml:lang="fr">/Milieu physique/Hydrodynamique/Houle</skos:prefLabel>
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x3"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax3"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#178">
 	<skos:prefLabel xml:lang="fr">/Milieu biologique/Contaminants</skos:prefLabel>
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x11"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax11"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x11">
+<rdf:Description rdf:nodeID="node1evu7dobax11">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -975,10 +975,10 @@
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#179">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<skos:prefLabel xml:lang="fr">/Milieu chimique/Contaminants</skos:prefLabel>
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x12"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax12"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x12">
+<rdf:Description rdf:nodeID="node1evu7dobax12">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -986,10 +986,10 @@
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#180">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<skos:prefLabel xml:lang="fr">/Activités humaines/Pollution</skos:prefLabel>
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x13"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax13"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x13">
+<rdf:Description rdf:nodeID="node1evu7dobax13">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -998,7 +998,7 @@
 	<skos:prefLabel xml:lang="en">/Human Activities/Pollution</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x14">
+<rdf:Description rdf:nodeID="node1evu7dobax14">
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -1007,17 +1007,17 @@
 	<rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x14">
+<rdf:Description rdf:nodeID="node1evu7dobax14">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#200">
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x14"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax14"/>
 	<skos:prefLabel xml:lang="fr">/Milieu physique/Limites physiographiques/Toponyme</skos:prefLabel>
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x15">
+<rdf:Description rdf:nodeID="node1evu7dobax15">
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -1025,15 +1025,15 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x16">
+<rdf:Description rdf:nodeID="node1evu7dobax16">
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#b8372faa-d7ea-4f47-8f4c-f17514bb6448">
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x16"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax16"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x16">
+<rdf:Description rdf:nodeID="node1evu7dobax16">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -1047,10 +1047,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#f3054492-2068-4b1f-84c6-36ebbf2050d8">
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x15"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax15"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x15">
+<rdf:Description rdf:nodeID="node1evu7dobax15">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -1065,10 +1065,10 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<skos:prefLabel xml:lang="fr">/Milieu physique/Géologie sédimentologie/Géologie</skos:prefLabel>
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x17"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax17"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x17">
+<rdf:Description rdf:nodeID="node1evu7dobax17">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -1082,13 +1082,13 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1d1qut2p5x18">
+<rdf:Description rdf:nodeID="node1evu7dobax18">
 	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#9b5b4f5f-327a-4487-9ee8-ef204c0a0016">
-	<ns3:BoundedBy rdf:nodeID="node1d1qut2p5x18"/>
+	<ns3:BoundedBy rdf:nodeID="node1evu7dobax18"/>
 	<skos:prefLabel xml:lang="fr">/Milieu biologique/Bio-Informatique</skos:prefLabel>
 	<skos:prefLabel xml:lang="en">/Biological Environment/Bioinformatics</skos:prefLabel>
 </rdf:Description>
@@ -1103,6 +1103,243 @@
 	<skos:prefLabel xml:lang="en">/Physical Environment/Sedimentology Geology/Hydromorphology</skos:prefLabel>
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f01dshkkx1">
+	<ns3:upperCorner> </ns3:upperCorner>
+	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#bce006a0-94dc-4416-aed6-6b4344221997">
+	<ns3:BoundedBy rdf:nodeID="node1f01e0d0qx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f01e0d0qx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns3:lowerCorner> </ns3:lowerCorner>
+	<ns3:upperCorner> </ns3:upperCorner>
+	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f01e1pu9x1">
+	<ns3:upperCorner> </ns3:upperCorner>
+	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#c6ca1866-63b4-4c51-9a6f-a49839f7f6e1">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#9c769b1e-8bec-42c9-9d4f-e47d45be7c30">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#5f7b8f2b-9621-4cc2-90c8-800ed2c2cbd9">
+	<skos:scopeNote xml:lang="ru"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#9c769b1e-8bec-42c9-9d4f-e47d45be7c30">
+	<ns3:BoundedBy rdf:nodeID="node1f01dvfaex1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f01dvfaex1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns3:lowerCorner> </ns3:lowerCorner>
+	<ns3:upperCorner> </ns3:upperCorner>
+	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#bce006a0-94dc-4416-aed6-6b4344221997">
+	<skos:scopeNote xml:lang="ru"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#c6ca1866-63b4-4c51-9a6f-a49839f7f6e1">
+	<ns3:BoundedBy rdf:nodeID="node1f01e1pu9x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#5bd9a1bc-2c66-4471-87af-654993def399">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#9c769b1e-8bec-42c9-9d4f-e47d45be7c30">
+	<skos:scopeNote xml:lang="ru"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#5bd9a1bc-2c66-4471-87af-654993def399">
+	<ns3:BoundedBy rdf:nodeID="node1f01dvvnpx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f01dvvnpx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns3:lowerCorner> </ns3:lowerCorner>
+	<ns3:upperCorner> </ns3:upperCorner>
+	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f01e1pu9x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns3:lowerCorner> </ns3:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#bce006a0-94dc-4416-aed6-6b4344221997">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#5f7b8f2b-9621-4cc2-90c8-800ed2c2cbd9">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#5bd9a1bc-2c66-4471-87af-654993def399">
+	<skos:scopeNote xml:lang="ru"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#5f7b8f2b-9621-4cc2-90c8-800ed2c2cbd9">
+	<ns3:BoundedBy rdf:nodeID="node1f01dshkkx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f01dshkkx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns3:lowerCorner> </ns3:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#5f7b8f2b-9621-4cc2-90c8-800ed2c2cbd9">
+	<skos:scopeNote xml:lang="ch"></skos:scopeNote>
+	<skos:scopeNote xml:lang="nl"></skos:scopeNote>
+	<skos:scopeNote xml:lang="ca"></skos:scopeNote>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="es"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fi"></skos:scopeNote>
+	<skos:scopeNote xml:lang="pt"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:prefLabel xml:lang="es"></skos:prefLabel>
+	<skos:prefLabel xml:lang="fi"></skos:prefLabel>
+	<skos:prefLabel xml:lang="it"></skos:prefLabel>
+	<skos:prefLabel xml:lang="ca"></skos:prefLabel>
+	<skos:prefLabel xml:lang="pt"></skos:prefLabel>
+	<skos:prefLabel xml:lang="en">/Human activities</skos:prefLabel>
+	<skos:prefLabel xml:lang="en"></skos:prefLabel>
+	<skos:prefLabel xml:lang="nl"></skos:prefLabel>
+	<skos:prefLabel xml:lang="ch"></skos:prefLabel>
+	<skos:prefLabel xml:lang="de"></skos:prefLabel>
+	<skos:prefLabel xml:lang="ru"></skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">/Activités humaines</skos:prefLabel>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#9c769b1e-8bec-42c9-9d4f-e47d45be7c30">
+	<skos:scopeNote xml:lang="ch"></skos:scopeNote>
+	<skos:scopeNote xml:lang="nl"></skos:scopeNote>
+	<skos:scopeNote xml:lang="ca"></skos:scopeNote>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="es"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fi"></skos:scopeNote>
+	<skos:scopeNote xml:lang="pt"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:prefLabel xml:lang="es"></skos:prefLabel>
+	<skos:prefLabel xml:lang="fi"></skos:prefLabel>
+	<skos:prefLabel xml:lang="it"></skos:prefLabel>
+	<skos:prefLabel xml:lang="ca"></skos:prefLabel>
+	<skos:prefLabel xml:lang="pt"></skos:prefLabel>
+	<skos:prefLabel xml:lang="en">/Scanned maps</skos:prefLabel>
+	<skos:prefLabel xml:lang="en"></skos:prefLabel>
+	<skos:prefLabel xml:lang="nl"></skos:prefLabel>
+	<skos:prefLabel xml:lang="ch"></skos:prefLabel>
+	<skos:prefLabel xml:lang="de"></skos:prefLabel>
+	<skos:prefLabel xml:lang="ru"></skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">/Cartes scannées</skos:prefLabel>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#5bd9a1bc-2c66-4471-87af-654993def399">
+	<skos:scopeNote xml:lang="ch"></skos:scopeNote>
+	<skos:scopeNote xml:lang="nl"></skos:scopeNote>
+	<skos:scopeNote xml:lang="ca"></skos:scopeNote>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="es"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fi"></skos:scopeNote>
+	<skos:scopeNote xml:lang="pt"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:prefLabel xml:lang="es"></skos:prefLabel>
+	<skos:prefLabel xml:lang="fi"></skos:prefLabel>
+	<skos:prefLabel xml:lang="it"></skos:prefLabel>
+	<skos:prefLabel xml:lang="ca"></skos:prefLabel>
+	<skos:prefLabel xml:lang="pt"></skos:prefLabel>
+	<skos:prefLabel xml:lang="en">/Imagery</skos:prefLabel>
+	<skos:prefLabel xml:lang="en"></skos:prefLabel>
+	<skos:prefLabel xml:lang="nl"></skos:prefLabel>
+	<skos:prefLabel xml:lang="ch"></skos:prefLabel>
+	<skos:prefLabel xml:lang="de"></skos:prefLabel>
+	<skos:prefLabel xml:lang="ru"></skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">/Imagerie</skos:prefLabel>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#bce006a0-94dc-4416-aed6-6b4344221997">
+	<skos:scopeNote xml:lang="ch"></skos:scopeNote>
+	<skos:scopeNote xml:lang="nl"></skos:scopeNote>
+	<skos:scopeNote xml:lang="ca"></skos:scopeNote>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="es"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fi"></skos:scopeNote>
+	<skos:scopeNote xml:lang="pt"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:prefLabel xml:lang="es"></skos:prefLabel>
+	<skos:prefLabel xml:lang="fi"></skos:prefLabel>
+	<skos:prefLabel xml:lang="it"></skos:prefLabel>
+	<skos:prefLabel xml:lang="ca"></skos:prefLabel>
+	<skos:prefLabel xml:lang="pt"></skos:prefLabel>
+	<skos:prefLabel xml:lang="en">/Biological environment</skos:prefLabel>
+	<skos:prefLabel xml:lang="en"></skos:prefLabel>
+	<skos:prefLabel xml:lang="nl"></skos:prefLabel>
+	<skos:prefLabel xml:lang="ch"></skos:prefLabel>
+	<skos:prefLabel xml:lang="de"></skos:prefLabel>
+	<skos:prefLabel xml:lang="ru"></skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">/Milieu biologique</skos:prefLabel>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#c6ca1866-63b4-4c51-9a6f-a49839f7f6e1">
+	<skos:prefLabel xml:lang="es"></skos:prefLabel>
+	<skos:prefLabel xml:lang="fi"></skos:prefLabel>
+	<skos:prefLabel xml:lang="it"></skos:prefLabel>
+	<skos:prefLabel xml:lang="ca"></skos:prefLabel>
+	<skos:prefLabel xml:lang="pt"></skos:prefLabel>
+	<skos:prefLabel xml:lang="en">/Legislation and management</skos:prefLabel>
+	<skos:prefLabel xml:lang="en"></skos:prefLabel>
+	<skos:prefLabel xml:lang="nl"></skos:prefLabel>
+	<skos:prefLabel xml:lang="ch"></skos:prefLabel>
+	<skos:prefLabel xml:lang="de"></skos:prefLabel>
+	<skos:prefLabel xml:lang="ru"></skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">/Réglementation et gestion</skos:prefLabel>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<skos:scopeNote xml:lang="ch"></skos:scopeNote>
+	<skos:scopeNote xml:lang="nl"></skos:scopeNote>
+	<skos:scopeNote xml:lang="ca"></skos:scopeNote>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="es"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fi"></skos:scopeNote>
+	<skos:scopeNote xml:lang="pt"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="ru"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#74b2242c-2d22-45c8-b897-73da35cd6d01">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="fr">/Milieu chimique</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">/Chemical environment</skos:prefLabel>
+	<ns3:BoundedBy rdf:nodeID="node1f091ps5mx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f091ps5mx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns3:lowerCorner> </ns3:lowerCorner>
+	<ns3:upperCorner> </ns3:upperCorner>
+	<ns3:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 </rdf:RDF>

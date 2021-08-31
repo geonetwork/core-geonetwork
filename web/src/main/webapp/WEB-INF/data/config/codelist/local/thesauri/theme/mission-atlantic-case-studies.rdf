@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Mission Atlantic - Case Studies">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Mission Atlantic - Case Studies</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#c5951c52-2fba-4bff-bc5b-66045e079d7e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Atlantic Ocean</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Atlantic Ocean</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Atlantic Ocean</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Atlantic Ocean</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4ruv621x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4ruv621x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#a75bc39c-b517-4229-9819-f78d9731a72d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Benguela Current</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Benguela Current</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Benguela Current</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Benguela Current</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4ruvl08x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4ruvl08x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d5406ae4-7281-4f72-8220-a81c88f325f7">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Canary Current</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Canary Current</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Canary Current</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Canary Current</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rv03rqx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rv03rqx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#85ebf8ba-ef0d-4777-a13e-50a9e2e203f1">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Celtic Seas</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Celtic Seas</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Celtic Seas</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Celtic Seas</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rv0glhx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rv0glhx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#88e7104b-8947-4a69-acef-3326034b1e49">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Central Arctic Ocean</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Central Arctic Ocean</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Central Arctic Ocean</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Central Arctic Ocean</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rv0q4mx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rv0q4mx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d54f26ef-1f65-47f4-86d8-f5cb1bbfabed">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Gulf of Guinea</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Gulf of Guinea</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Gulf of Guinea</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Gulf of Guinea</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rv175hx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rv175hx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#25e3709b-1883-4590-a138-42606f5e9ec4">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Newfoundland Shelf</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Newfoundland Shelf</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Newfoundland Shelf</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Newfoundland Shelf</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rv1herx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rv1herx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#0648c1ea-d825-4e58-bf66-a0992b2a7727">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">North Atlantic Mid-Ocean Ridge</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">North Atlantic Mid-Ocean Ridge</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">North Atlantic Mid-Ocean Ridge</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">North Atlantic Mid-Ocean Ridge</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rv1s97x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rv1s97x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#6459ab60-c02e-41a0-8b61-d55f4c23a7e6">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">North West Atlantic Shelf</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">North West Atlantic Shelf</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">North West Atlantic Shelf</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">North West Atlantic Shelf</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rv25oax1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rv25oax1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1676a8fa-b103-447a-a266-466175b89759">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Norwegian Sea</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Norwegian Sea</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Norwegian Sea</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">Norwegian Sea</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rv2j4ox1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rv2j4ox1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#394d8a48-1b62-4e2a-a39e-b8c5346ef643">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">South Atlantic Mid-Ocean Ridge</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">South Atlantic Mid-Ocean Ridge</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">South Atlantic Mid-Ocean Ridge</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">South Atlantic Mid-Ocean Ridge</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rv2u21x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rv2u21x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#0b8dd1ba-bcbb-449d-aaeb-1f39f16fc719">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">South Brazilian Shelf</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">South Brazilian Shelf</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">South Brazilian Shelf</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en">South Brazilian Shelf</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f4rv3901x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f4rv3901x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

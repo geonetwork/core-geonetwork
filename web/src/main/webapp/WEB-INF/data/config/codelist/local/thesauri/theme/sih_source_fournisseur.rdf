@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#2ebf1299-10c0-4615-983a-49fa9894d97c">
+	<ns2:prefLabel xml:lang="fr">IFREMER/Laboratoire IFREMER de Brest – STH Algues</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eouqf6p6x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqf6p6x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqgvinx1">
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#6a459209-c1ef-4f05-b685-8bfe420c9ace">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">IFREMER/Laboratoire IFREMER de Guyane</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eouqfer7x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqfer7x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqgvinx1">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#b29fce53-3260-4f9a-b9f4-721acce5c298">
+	<ns5:BoundedBy rdf:nodeID="node1eouqhernx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#f226452a-8418-4da3-a177-43a84e588be5">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">IFREMER/Laboratoire IFREMER de La Réunion</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eouqfsm5x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqfsm5x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqhernx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#09a6a493-17fd-4583-a3c2-b26e14c8f3ab">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#8136a5b7-cde1-4e39-9574-d121f58356b7">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">OCEDEV</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eouqg3pdx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqg3pdx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#09a6a493-17fd-4583-a3c2-b26e14c8f3ab">
+	<ns2:prefLabel xml:lang="fr">RIC</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eouqh4isx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/SIH - Source et founisseur">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>SIH - Source et founisseur</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#45ce8d88-8692-4a80-8d3f-03f244cc7607">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">OEC</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eouqg8v6x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqg8v6x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqh4isx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#1b01a48a-efc4-4347-ae12-f018978a9f7b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">COREPEM</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eouqe5ptx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqe5ptx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqh4isx1">
+	<ns5:lowerCorner> </ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#1ea32842-311a-419e-b94a-6e81d32853ad">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">OFB</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eouqgdrhx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqgdrhx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqh4isx1">
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#06d199bb-4138-4584-92b9-359297eb2ef1">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">PECHEURS DE BRETAGNE</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eouqgk0tx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqgk0tx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqhernx1">
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#1b4ed599-714d-4a87-96fd-5da3f178cbe1">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">PECHEURS DU NORD</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eouqgqpfx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqgqpfx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#bc484fda-a2dd-4cd2-bc4e-7c670e342cbb">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">FROMNORD</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eouqebcvx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqebcvx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#b29fce53-3260-4f9a-b9f4-721acce5c298">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqhernx1">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#92573803-103f-48c9-bd9c-9d7515cd481b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">GROUPE EI</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eouqehprx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqehprx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#7d91d072-94d5-49f0-87e8-85fd784e800a">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">PNMMAY</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#c3999bf6-6a3a-4c59-914c-bfabe911508e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">IFREMER</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eouqer04x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqer04x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#7d91d072-94d5-49f0-87e8-85fd784e800a">
+	<ns5:BoundedBy rdf:nodeID="node1eouqgvinx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqgvinx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#2ebf1299-10c0-4615-983a-49fa9894d97c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#b29fce53-3260-4f9a-b9f4-721acce5c298">
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">RIC/RIC 1</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#14218c3e-bf63-47d2-a0b3-57a42c6130be">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">RIC/RIC 3 (ERS V1)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eouqi8fgx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqi8fgx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_source_fournisseur#d0ff2f31-b40b-49c9-8753-45e46841d431">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">RIC/RIC 4 (ERS V3)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eouqii35x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eouqii35x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

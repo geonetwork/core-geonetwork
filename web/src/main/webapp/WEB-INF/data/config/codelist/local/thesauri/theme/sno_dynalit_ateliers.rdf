@@ -8,31 +8,23 @@
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#c5336c19-81a7-41fc-b448-44f02a4fe689">
 	<ns2:prefLabel xml:lang="fr">/Atlantique-Ouest/Awala-Yalimapo</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcqvgkkx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcqvgkkx1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#4203638a-26ba-4a54-be7e-76730fe351d4">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Truc Vert</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr33m2x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x2"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr33m2x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x2">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bvcr4v61x1">
-	<ns5:lowerCorner> </ns5:lowerCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#2aaf6294-9d99-4318-beba-1c3d4308bfa7">
@@ -42,31 +34,26 @@
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#0dbd3608-7de3-4b83-a66e-41a39f8a58da">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Caraïbes</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr3bl0x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x4"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr3bl0x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x4">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr4hnlx1">
-	<ns5:upperCorner> </ns5:upperCorner>
+<rdf:Description rdf:nodeID="node1ekgnmhs6x5">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#b6ded3fb-43cd-4e28-bf19-08289201639a">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Schoelcher</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr3gvqx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x6"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr3gvqx1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x6">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -77,18 +64,12 @@
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#50921769-fe14-4236-b88e-bb705d93a1f1">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Anglet</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcqvos0x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x7"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcqvos0x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x7">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bvcr4v61x1">
-	<ns5:upperCorner> </ns5:upperCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#03cb27aa-0480-4237-9dac-40bd62ce68b4">
@@ -98,71 +79,61 @@
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#6df64f9a-dc20-4509-8cfd-25a34a1028ab">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Biscarosse</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr00obx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x8"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr00obx1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x8">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#03cb27aa-0480-4237-9dac-40bd62ce68b4">
 	<ns2:prefLabel xml:lang="fr">/Manche-Mer du Nord/Agon</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr4654x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x9"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#3a86629f-96b1-44ee-92b0-ef6547052f78">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Gironde</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr0bc2x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x10"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr0bc2x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x10">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr4654x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x9">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#50c4c75f-fbd1-482f-86f2-f456886ba0c6">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Guissény</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr0i48x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x11"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr0i48x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x11">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr4654x1">
-	<ns5:upperCorner> </ns5:upperCorner>
+<rdf:Description rdf:nodeID="node1ekgnmhs6x9">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#b7347e9a-b568-4471-bd31-eb1d80d0d896">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Loire</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr0qr1x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x12"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr0qr1x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x12">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr4v61x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x3">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -173,13 +144,11 @@
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#e71156b9-bbdb-42c6-814c-a27e67a8db98">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Pays de Monts</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr1k7rx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x13"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr1k7rx1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x13">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -191,77 +160,64 @@
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#25456613-4e23-45b2-8605-737a519cec32">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Pointe d'Arçay</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr1smfx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x14"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr1smfx1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x14">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#0cf3c6ee-8353-4744-8aff-3aeeaa435e3f">
-	<ns5:BoundedBy rdf:nodeID="node1bvcr4an3x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x15"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr4an3x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x15">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#e005f19b-e837-48ca-a657-3845b72280a2">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Pointe de Gatseau</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr20efx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x16"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr20efx1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x16">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bvcr4an3x1">
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#2d29601e-6cca-40f2-a76b-0b0092498cff">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Pointe de la Coubre</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr24gox1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x17"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr24gox1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x17">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr4an3x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x15">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#2aaf6294-9d99-4318-beba-1c3d4308bfa7">
-	<ns5:BoundedBy rdf:nodeID="node1bvcr4v61x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x3"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#af5b4291-c549-4be6-81d1-acef04e4f462">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Porsmilin</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr2952x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x18"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr2952x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x18">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr4v61x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x3">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -272,37 +228,32 @@
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#45343c52-e747-4b21-babf-40ee8de426c8">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Sillon de Talbert</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr2jahx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x19"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr2jahx1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x19">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#b93b061c-d8fb-480b-9e3f-8c8743f1d5e6">
 	<ns2:prefLabel xml:lang="fr">/Manche-Mer du Nord/Baie de Somme</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr4hnlx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x5"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#07026847-95be-4ae8-850c-282235038b2d">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Socoa</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr2o02x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x20"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr2o02x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x20">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr4hnlx1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x5">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#ac7fa0dd-dace-4728-983e-7ca6074bf9e9">
@@ -316,144 +267,152 @@
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#ac7fa0dd-dace-4728-983e-7ca6074bf9e9">
 	<ns2:prefLabel xml:lang="fr">/Bretagne - Atlantique Est/Suscinio</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcr2sa1x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x21"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcr2sa1x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x21">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#62a90f65-0dd7-4010-983b-e9b6b735c5be">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Manche-Mer du Nord/Merville-Franceville</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcrdlijx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x22"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcrdlijx1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x22">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#755e910e-3825-4f1d-ac67-4c79804a8779">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Manche-Mer du Nord/Mesnil-Val</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcrdqn1x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x23"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcrdqn1x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x23">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#2e8eaa0d-19ad-46bc-bef9-da43e2db7a05">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Manche-Mer du Nord/Mont-Saint-Michel</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcrdvsrx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x24"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcrdvsrx1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x24">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#79d9925c-9d74-4ae6-b281-932277049d71">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Manche-Mer du Nord/Seine</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcre71ax1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x25"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcre71ax1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x25">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#4f9733b9-55a0-46dc-9cea-e0e93265283a">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Manche-Mer du Nord/Vaches Noires</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcrec9kx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x26"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcrec9kx1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x26">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#16f9442b-cb76-45e2-8d9f-e16d9e55ee6e">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Méditerranée/Espiguette</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcrf1max1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x27"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcrf1max1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x27">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#ebdac562-1783-4fc0-9e7c-455e27e9b955">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Méditerranée/Maguelone - Aresquiers</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcrflt4x1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x28"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcrflt4x1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x28">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#ea95bfcc-6a7d-4b72-9e30-deeb750d5ae9">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Méditerranée/Rade de Hyères</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcrfu6px1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x29"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcrfu6px1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x29">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#97169e29-fbc1-4572-ba3e-923a8f1ab37a">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<ns2:prefLabel xml:lang="fr">/Méditerranée/Rhône</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcrg41sx1"/>
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x30"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcrg41sx1">
+<rdf:Description rdf:nodeID="node1ekgnmhs6x30">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.mysite.org/thesaurus#ea5fe10c-9990-40f8-aa7f-97f0da6da5c6">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Océan Indien/Ermitage</ns2:prefLabel>
-	<ns5:BoundedBy rdf:nodeID="node1bvcrg9dcx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bvcrg9dcx1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
+<rdf:Description rdf:nodeID="node1ekgnmhs6x31">
 	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#ea5fe10c-9990-40f8-aa7f-97f0da6da5c6">
+	<ns5:BoundedBy rdf:nodeID="node1ekgnmhs6x31"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1ekgnmhs6x31">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#ea5fe10c-9990-40f8-aa7f-97f0da6da5c6">
+	<ns2:prefLabel xml:lang="es"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fi"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="it"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ca"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="pt"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="nl"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ch"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="de"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="ru"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">/Océan Indien/Hermitage</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="it"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ch"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="nl"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ca"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="es"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fi"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="pt"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="de"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="ru"></ns2:scopeNote>
 </rdf:Description>
 
 </rdf:RDF>

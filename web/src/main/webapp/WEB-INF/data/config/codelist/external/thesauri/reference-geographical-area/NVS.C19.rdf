@@ -1,17 +1,18 @@
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#" xmlns:pav="http://purl.org/pav/">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="https://schemas.isotc211.org/schemas/19135/-2/reg/1.0/registration.xsd" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#" xmlns:pav="http://purl.org/pav/">
 <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/">
 <skos:prefLabel>SeaVoX salt and fresh water body gazetteer</skos:prefLabel>
 <dc:title>SeaVoX salt and fresh water body gazetteer</dc:title>
 <skos:altLabel>SeaVoX water bodies</skos:altLabel>
 <dc:alternative>SeaVoX water bodies</dc:alternative>
 <dc:description>Terms specified by the SeaVoX vocabulary governance to describe coherent regions of the hydrosphere. Includes land masses enclosing freshwater bodies.</dc:description>
-<dc:date>2018-02-21 02:00:03.0</dc:date>
-<owl:versionInfo>17</owl:versionInfo>
+<dc:date>2020-07-20 15:00:00.0</dc:date>
+<owl:versionInfo>20</owl:versionInfo>
 <grg:RE_RegisterManager>British Oceanographic Data Centre</grg:RE_RegisterManager>
 <dc:publisher>Natural Environment Research Council</dc:publisher>
 <dc:creator>SeaDataNet and MarineXML Vocabulary Content Governance Group</dc:creator>
 <grg:RE_RegisterOwner>SeaDataNet and MarineXML Vocabulary Content Governance Group</grg:RE_RegisterOwner>
 <rdfs:comment>Group set up under the joint auspices of the SeaDataNet project and the Intergovernmental Oceanographic Commission MarineXML Steering Group for controlled vocabulary governance in the marine domain</rdfs:comment>
+<rdfs:seeAlso rdf:resource="https://github.com/nvs-vocabs/C19"/>
 <skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/3_1_2_1/">
 <dc:identifier>SDN:C19::3_1_2_1</dc:identifier>
@@ -60,8 +61,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/265695/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/3_1_2/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/28Bh/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -134,8 +135,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/4036629/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -383,9 +384,9 @@
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00003/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00007/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/eurasia/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00025/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/asia/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00025/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/eurasia/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -548,8 +549,8 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/2_4/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/2_6/"/>
 <skos:related rdf:resource="http://sws.geonames.org/2633321/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00025/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00025/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/baltic_sea/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/01/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -603,8 +604,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/630674/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/9/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/barents_sea/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/07/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -739,6 +740,26 @@
 </skos:Concept>
 </skos:member>
 <skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/SVX00026/">
+<dc:identifier>SDN:C19::SVX00026</dc:identifier>
+<dce:identifier>SDN:C19::SVX00026</dce:identifier>
+<dc:date>2019-09-10 14:55:08.0</dc:date>
+<skos:notation>SDN:C19::SVX00026</skos:notation>
+<skos:prefLabel xml:lang="en">Bay of Brest</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">{"Spatial_Coverage": { "Southernmost_latitude": "48.23522335", "Northernmost_latitude": "48.46034086", "Westernmost_longitude": "-4.56739393", "Easternmost_longitude": "-4.13654856" }}</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00026/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2019-09-10 14:55:08.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_6/"/>
+<owl:sameAs rdf:resource="http://marineregions.org/mrgid/5208"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/1_13/">
 <dc:identifier>SDN:C19::1_13</dc:identifier>
 <dce:identifier>SDN:C19::1_13</dce:identifier>
@@ -758,8 +779,8 @@
 <pav:authoredOn>2009-11-06 12:28:44.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00017/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00017/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/25/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -809,8 +830,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/4030285/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/9/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/9/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/beaufort_sea/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/13/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -891,8 +912,8 @@
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00016/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00018/"/>
-<owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/55/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/bering_sea/"/>
+<owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/55/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -992,8 +1013,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/630673/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/3/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/3/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/black_sea/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/30/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -1166,11 +1187,11 @@
 <pav:authoredOn>2009-11-06 12:28:44.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN013/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN012/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN010/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN011/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN010/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN009/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN013/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00015/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/20/"/>
@@ -1246,8 +1267,8 @@
 <pav:authoredOn>2009-11-06 12:28:44.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00017/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00017/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/caribbean_sea/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/27/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -1305,24 +1326,24 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/SVX00007/">
 <dc:identifier>SDN:C19::SVX00007</dc:identifier>
 <dce:identifier>SDN:C19::SVX00007</dce:identifier>
-<dc:date>2011-05-25 14:06:32.0</dc:date>
+<dc:date>2020-07-20 12:49:56.0</dc:date>
 <skos:notation>SDN:C19::SVX00007</skos:notation>
 <skos:prefLabel xml:lang="en">Caspian Sea</skos:prefLabel>
 <skos:altLabel/>
 <skos:definition xml:lang="en">{"Spatial_Coverage": {
-  "Southernmost_latitude": "47.5",
-  "Northernmost_latitude": "36.5",
+  "Southernmost_latitude": "36.5",
+  "Northernmost_latitude": "47.5",
   "Westernmost_longitude": "46.4996",
   "Easternmost_longitude": "55.0"
 }}</skos:definition>
-<owl:versionInfo>3</owl:versionInfo>
-<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00007/3/"/>
-<pav:version>3</pav:version>
-<pav:authoredOn>2011-05-25 14:06:32.0</pav:authoredOn>
+<owl:versionInfo>4</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00007/4/"/>
+<pav:version>4</pav:version>
+<pav:authoredOn>2020-07-20 12:49:56.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00004/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00004/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/caspian_sea/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/CAS/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -1374,8 +1395,9 @@
 <pav:authoredOn>2009-11-06 12:28:44.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN014/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN015/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00026/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN014/"/>
 <skos:related rdf:resource="http://sws.geonames.org/2960856/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00015/"/>
@@ -1477,8 +1499,8 @@
 <pav:authoredOn>2011-08-12 12:18:29.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN005/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1503,8 +1525,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/4031753/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/9/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/chukchi_sea/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/12/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -1584,8 +1606,8 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/8_3_3/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/8_3_2/"/>
 <skos:related rdf:resource="http://sws.geonames.org/2194166/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00024/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00024/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/64/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -1762,8 +1784,8 @@
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN008/"/>
 <skos:related rdf:resource="http://sws.geonames.org/3020870/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_7/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1841,8 +1863,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/1676969/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00018/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00018/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/east_china_sea/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/50/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -1921,13 +1943,13 @@
 <pav:authoredOn>2009-11-06 12:28:44.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN001/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN002/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN003/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN004/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_7_1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN005/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN007/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN001/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_7_1/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN004/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00015/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/21/"/>
@@ -1956,10 +1978,10 @@
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/IJM/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/MKM/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00025/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/europe/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/eurasia/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/europe/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1984,8 +2006,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN035/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN030/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN030/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -2009,8 +2031,8 @@
 <pav:authoredOn>2011-08-12 12:18:29.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_2/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -2264,6 +2286,25 @@
 </skos:Concept>
 </skos:member>
 <skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/SVX00028/">
+<dc:identifier>SDN:C19::SVX00028</dc:identifier>
+<dce:identifier>SDN:C19::SVX00028</dce:identifier>
+<dc:date>2019-10-03 14:48:20.0</dc:date>
+<skos:notation>SDN:C19::SVX00028</skos:notation>
+<skos:prefLabel xml:lang="en">Grevelingen</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">{"Spatial_Coverage": { "Southernmost_latitude": "51.666471", "Northernmost_latitude": "51.821587", "Westernmost_longitude": "3.814931", "Easternmost_longitude": "4.18561" }}</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00028/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2019-10-03 14:48:20.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/5_5/">
 <dc:identifier>SDN:C19::5_5</dc:identifier>
 <dce:identifier>SDN:C19::5_5</dce:identifier>
@@ -2445,8 +2486,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/453749/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/2/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/2/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/01b/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -2766,6 +2807,44 @@
 </skos:Concept>
 </skos:member>
 <skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/SVX00027/">
+<dc:identifier>SDN:C19::SVX00027</dc:identifier>
+<dce:identifier>SDN:C19::SVX00027</dce:identifier>
+<dc:date>2019-10-03 14:47:10.0</dc:date>
+<skos:notation>SDN:C19::SVX00027</skos:notation>
+<skos:prefLabel xml:lang="en">Haringvliet</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">{"Spatial_Coverage": { "Southernmost_latitude": "51.691775", "Northernmost_latitude": "51.854506", "Westernmost_longitude": "4.032578", "Easternmost_longitude": "4.43613" }}</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00027/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2019-10-03 14:47:10.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/SVX00029/">
+<dc:identifier>SDN:C19::SVX00029</dc:identifier>
+<dce:identifier>SDN:C19::SVX00029</dce:identifier>
+<dc:date>2019-10-03 14:50:44.0</dc:date>
+<skos:notation>SDN:C19::SVX00029</skos:notation>
+<skos:prefLabel xml:lang="en">Hollands Diep</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">{"Spatial_Coverage": { "Southernmost_latitude": "51.679639", "Northernmost_latitude": "51.724791", "Westernmost_longitude": "4.400653", "Easternmost_longitude": "4.639032" }}</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00029/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2019-10-03 14:50:44.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/9_11/">
 <dc:identifier>SDN:C19::9_11</dc:identifier>
 <dce:identifier>SDN:C19::9_11</dce:identifier>
@@ -2962,12 +3041,12 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN036/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN037/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN038/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN030/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN031/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN032/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN033/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN030/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN037/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN038/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00015/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/18/"/>
@@ -3021,17 +3100,17 @@
 <pav:authoredOn>2009-11-06 12:28:44.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN024/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN015/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN016/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN017/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN018/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN020/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN056/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN027/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN015/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN024/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN023/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN027/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN056/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00015/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/19/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/irish_sea/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -3087,8 +3166,8 @@
 <skos:related rdf:resource="http://sws.geonames.org/2038684/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00018/"/>
-<owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/52/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/sea_of_japan/"/>
+<owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/52/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -3164,8 +3243,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/1504324/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/9/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/09/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -3191,9 +3270,9 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/2960850/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/02/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/2/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/02/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -3246,6 +3325,25 @@
 </skos:Concept>
 </skos:member>
 <skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/SVX00030/">
+<dc:identifier>SDN:C19::SVX00030</dc:identifier>
+<dce:identifier>SDN:C19::SVX00030</dce:identifier>
+<dc:date>2019-10-03 14:52:02.0</dc:date>
+<skos:notation>SDN:C19::SVX00030</skos:notation>
+<skos:prefLabel xml:lang="en">Krammer</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">{"Spatial_Coverage": { "Southernmost_latitude": "51.627931", "Northernmost_latitude": "51.701679", "Westernmost_longitude": "4.151201", "Easternmost_longitude": "4.401236" }}</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00030/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2019-10-03 14:52:02.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/1_15/">
 <dc:identifier>SDN:C19::1_15</dc:identifier>
 <dce:identifier>SDN:C19::1_15</dce:identifier>
@@ -3265,8 +3363,8 @@
 <pav:authoredOn>2009-11-06 12:28:44.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00017/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00017/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/15a/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -3836,8 +3934,8 @@
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/1818192/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/46/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/6/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/46a/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -4003,8 +4101,8 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/3_1_2_2/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/3_1_2_3/"/>
 <skos:related rdf:resource="http://sws.geonames.org/6947194/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/3_1/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/28B/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -4085,8 +4183,8 @@
 <pav:authoredOn>2011-08-12 12:18:29.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN023/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -4337,8 +4435,8 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00017/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00015/"/>
 <skos:related rdf:resource="http://sws.geonames.org/3411923/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00005/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/23/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -4420,23 +4518,27 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN040/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN041/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN042/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN043/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN044/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN045/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN046/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN047/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN048/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN049/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN050/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN051/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN052/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN053/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN054/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/NSL01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/NSL02/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/NSL03/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/NSL02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/NSL01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN054/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN053/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN052/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN051/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN050/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN049/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN048/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN047/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN046/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN045/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN044/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN043/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN042/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/UKMDN041/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00030/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00029/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00028/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00027/"/>
 <skos:related rdf:resource="http://sws.geonames.org/2960848/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00015/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
@@ -4475,8 +4577,8 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_9/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_4/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/23a/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -4622,8 +4724,8 @@
 <pav:authoredOn>2009-11-06 12:28:44.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/9/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/14/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -4649,8 +4751,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/2960847/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/9/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/9/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/06/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/norwegian_sea/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -4680,8 +4782,8 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/8/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00025/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
-<owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/500/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/pacific_ocean/"/>
+<owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/500/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -5117,20 +5219,20 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/4_2/">
 <dc:identifier>SDN:C19::4_2</dc:identifier>
 <dce:identifier>SDN:C19::4_2</dce:identifier>
-<dc:date>2009-11-06 12:28:44.0</dc:date>
+<dc:date>2020-07-20 12:47:55.0</dc:date>
 <skos:notation>SDN:C19::4_2</skos:notation>
 <skos:prefLabel xml:lang="en">Scotia Sea</skos:prefLabel>
 <skos:altLabel/>
 <skos:definition xml:lang="en">{"Spatial_Coverage": {
-  "Southernmost_latitude": "-51.7754106846832",
-  "Northernmost_latitude": "-62.1024934499247",
+  "Southernmost_latitude": "-62.1024934499247",
+  "Northernmost_latitude": "-51.7754106846832",
   "Westernmost_longitude": "-63.7443158620076",
   "Easternmost_longitude": "-26.1704163077352"
 }}</skos:definition>
-<owl:versionInfo>2</owl:versionInfo>
-<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/4_2/2/"/>
-<pav:version>2</pav:version>
-<pav:authoredOn>2009-11-06 12:28:44.0</pav:authoredOn>
+<owl:versionInfo>3</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/4_2/3/"/>
+<pav:version>3</pav:version>
+<pav:authoredOn>2020-07-20 12:47:55.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/3426293/"/>
@@ -5161,8 +5263,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/713066/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/3/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/3/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/31/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -5188,8 +5290,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/630669/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/3/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/3/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/29/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -5215,8 +5317,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/2127380/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00018/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/sea_of_okhotsk/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/54/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -5267,8 +5369,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/8299792/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/6/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/48m/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -5752,8 +5854,8 @@
 <pav:authoredOn>2009-11-06 12:28:44.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/4/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/4/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/32a/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -5779,8 +5881,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/4_3/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/8/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/61a/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -5805,21 +5907,21 @@
 <pav:authoredOn>2018-02-20 12:48:50.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_12/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_5/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_9/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_11/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_7/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_4/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_10/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_8/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/4_3/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_11/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_12/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_14/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_6/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/4_2/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_2/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_3/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10_5/"/>
 <skos:related rdf:resource="http://sws.geonames.org/4036776/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/SVX00025/"/>
@@ -5851,8 +5953,8 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/4_1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/4_2/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/4_3/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/4/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/4/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/32b/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -5955,8 +6057,8 @@
 <pav:authoredOn>2011-08-12 12:18:29.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_6/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_4/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_6/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -6460,8 +6562,8 @@
 <pav:authoredOn>2011-08-12 12:18:29.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/1_2/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -6486,9 +6588,9 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/2612845/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/2/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/02/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/2/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -6711,8 +6813,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/4036624/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/10/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P30/current/weddell_sea/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -6812,8 +6914,8 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:related rdf:resource="http://sws.geonames.org/577742/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/9/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/D01/current/D0100003/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/9/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/C16/current/08/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>

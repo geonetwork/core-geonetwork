@@ -1,17 +1,35 @@
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#" xmlns:pav="http://purl.org/pav/">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="https://schemas.isotc211.org/schemas/19135/-2/reg/1.0/registration.xsd" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#" xmlns:pav="http://purl.org/pav/">
 <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/L08/current/">
 <skos:prefLabel>SeaDataNet Data Access Restriction Policies</skos:prefLabel>
 <dc:title>SeaDataNet Data Access Restriction Policies</dc:title>
 <skos:altLabel>SeaDataNet Data Access Policies</skos:altLabel>
 <dc:alternative>SeaDataNet Data Access Policies</dc:alternative>
 <dc:description>Terms used to represent and classify data access policies in operation in the SeaDataNet project.</dc:description>
-<dc:date>2012-05-17 02:00:03.0</dc:date>
-<owl:versionInfo>3</owl:versionInfo>
+<dc:date>2020-11-12 14:00:01.0</dc:date>
+<owl:versionInfo>4</owl:versionInfo>
 <grg:RE_RegisterManager>British Oceanographic Data Centre</grg:RE_RegisterManager>
 <dc:publisher>Natural Environment Research Council</dc:publisher>
 <dc:creator>SeaDataNet</dc:creator>
 <grg:RE_RegisterOwner>SeaDataNet</grg:RE_RegisterOwner>
 <rdfs:comment>Governance for vocabularies used in the EU SeaDataNet project implemented as consultation between BODC and the members of the SeaDataNet Technical Task Team</rdfs:comment>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L08/current/CB/">
+<dc:identifier>SDN:L08::CB</dc:identifier>
+<dce:identifier>SDN:L08::CB</dce:identifier>
+<dc:date>2020-11-12 12:26:02.0</dc:date>
+<skos:notation>SDN:L08::CB</skos:notation>
+<skos:prefLabel xml:lang="en">Creative Commons Attribution 4.0 International</skos:prefLabel>
+<skos:altLabel>CC BY 4.0</skos:altLabel>
+<skos:definition xml:lang="en">The data are available under the Creative Commons Attribution 4.0 International Public License (https://creativecommons.org/licenses/by/4.0/).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L08/current/CB/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2020-11-12 12:26:02.0</pav:authoredOn>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
 <skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L08/current/LS/">
 <dc:identifier>SDN:L08::LS</dc:identifier>

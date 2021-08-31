@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Eolien - Groupe">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Eolien - Groupe</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/eolien_groupe#4c67c6c7-f53c-4a36-980e-aa6e8f91215c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Ichtyofaune</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Ichtyofaune</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1er7k4udex1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1er7k4udex1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/eolien_groupe#ada803ab-a6f7-4c59-97eb-faadaa53de89">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Mollusque</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Mollusque</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1er7k5cuox1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1er7k5cuox1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/eolien_groupe#6cd65e9e-4d33-4f67-a2f8-92a7d1824ac2">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Crustacé</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Crustacé</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1er7k5q5rx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1er7k5q5rx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/eolien_groupe#83ed6496-5d55-4b6d-aa07-3a7174e9dba5">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">Invertébré benthique</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Invertébré benthique</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1er7k68btx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1er7k68btx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

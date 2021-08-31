@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/SIH - Flux">
+	<ns3:title>SIH - Flux</ns3:title>
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#d59079fe-051d-4239-b581-4b3d06bf0b8d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">CAMPAGNES</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue3sijx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue3sijx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#e1ddd2cf-e2e1-4239-b013-909d95b95daf">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">OFIMER</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue42e6x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue42e6x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#60ef3b35-22ae-4d53-956d-c4c8f73e28e6">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">OFIMER-ERS3</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue48n0x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue48n0x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#2355768f-4b4c-444f-a4dd-085024bffb91">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">OFIMER-HISTORIQUE</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue4e5ax1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue4e5ax1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#776cb863-98c3-446c-8e04-1d4f5e9d350c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-ADOUR-HISTORIQUE</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue4kdax1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue4kdax1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#9f7fcbee-7b18-4b49-be45-5155fcad2ba7">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-GEOLOC</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue50gpx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue50gpx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#9103db77-5746-4a43-bdf1-b217d1ed32e7">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIPA-HISTORIQUE</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue57idx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue57idx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#d27d373a-c0f6-417d-95c7-7f0794a9f0e0">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-OBSDEB</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue5desx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue5desx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#aafc60bb-9647-4cc6-bffa-23e4697293c2">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-OBSMER</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue5jqax1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue5jqax1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#39e0666b-7004-48d5-9f83-ab21efbcb44d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-OBSMER-AUTO-ECH-BAUDROIE</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue5qtrx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue5qtrx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#67c36f43-ab2b-4fb5-8bf1-29912e4e222a">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-OBSMER-AUTO-ECH-BAUDROIE-EGLEFIN</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue60pfx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue60pfx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#cb8a218b-ce9b-440d-a989-960a27743dd0">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-OBSMER-AUTO-ECH-CABILLAUD</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue66cix1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue66cix1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#ea4e49c8-bd15-4816-8258-df850bfe3f7f">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-OBSMER-AUTO-ECH-EGLEFIN</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue6bj7x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue6bj7x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#f36b058c-a1a4-43d0-b0aa-d6bc6d887a2a">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-OBSMER-AUTO-ECH-SAINT-PIERRE-ET-MIQ</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue6gudx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue6gudx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#64f7e92a-fc4d-4158-8b6b-a6fd3ed2e3fe">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-OBSMER-AUTO-ECH-YEU</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue6naax1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue6naax1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#0940e9b5-56e5-42fc-92ae-40e85237a79c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-OBSMER-CORSE</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue6slox1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue6slox1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#94005cef-df6d-40b2-99a3-b1c028e6e320">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-OBSMER-HISTORIQUE</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue72dux1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue72dux1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#6ff97b66-28ee-4816-b743-34ae5e7c2b84">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-OBSMER-REJEMCELEC</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue77tdx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue77tdx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#fcce5cf5-6784-4afb-bc51-53473e6db9e6">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-OBSMER-SELUX</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue7dcgx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue7dcgx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#6a028644-aaf1-4377-8f03-89871a3198ba">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-OBSMER-SMAC</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue7kqmx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue7kqmx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#a7e445d2-a476-45a8-bd9c-e4241d816334">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-OBSVENTE</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue7rnpx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue7rnpx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#24889b46-ffc2-4232-a2c6-8102a49a104b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-OPRDEB</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue813bx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue813bx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#6bb5cb3f-60bf-4861-8742-4d53db6cdc0b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-RECOPESCA</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue86nkx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue86nkx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#66977960-d108-4088-a63f-fa55017751ff">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-STATPECHE</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue8bj2x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue8bj2x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#50faa882-948f-4b5c-8653-7502bec5f637">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIH-TELDEB</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue8ghtx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue8ghtx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#e7df5a7e-8fc8-419e-aa5b-24dca09c4aeb">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIPA</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue8llux1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue8llux1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#c963ea71-a4f1-45f0-b387-6208bb69a9d0">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">SIPA-ERS3</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue8qqjx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue8qqjx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://sextant.ifremer.fr/thesaurus/theme/sih_flux#1498e3e1-27c2-4103-9bfd-027545e90f5a">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">USINIERS</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1eoue8v6ux1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1eoue8v6ux1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>
