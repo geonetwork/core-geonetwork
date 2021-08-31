@@ -299,8 +299,8 @@ goog.require('gn_alert');
               },
               'meta': {
                 'collapsed': true,
-                'translateOnLoad': true,
-                'treeKeySeparator': '/'
+                // 'translateOnLoad': true,
+                'treeKeySeparator': '^'
               }
             },
             // 'th_type_jeux_donnee_tree.key': {
