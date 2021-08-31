@@ -149,6 +149,7 @@
   <cersat-resources>Resource(s)</cersat-resources>
   <cersat-dataaccess>Data access</cersat-dataaccess>
   <cersat-helpdesk>Help desk</cersat-helpdesk>
+  <eo-cersat-author>Auteur(s)</eo-cersat-author>
   <cersat-accesspolicy>Access policy</cersat-accesspolicy>
   <cersat-formats>Format(s)</cersat-formats>
   <cersat-publications>Publication(s)</cersat-publications>

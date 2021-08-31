@@ -188,6 +188,24 @@
               </xsl:call-template>
             </xsl:for-each>
 
+            <xsl:variable name="authors"
+                          select="$metadata/mdb:identificationInfo/*/mri:pointOfContact[.//cit:role/*/@codeListValue = 'principalInvestigator']"/>
+            <xsl:if test="count($authors) > 0">
+              <div class="">
+                <strong>
+                  <xsl:value-of select="$schemaStrings/eo-cersat-author"/>
+                </strong>
+                <xsl:for-each select="$authors">
+                  <xsl:value-of select=".//cit:party/*/cit:name"/>
+                  <xsl:for-each select=".//cit:electronicMailAddress">
+                    <a href="mailto:{.}">
+                      <i class="fa fa-envelope"></i>
+                    </a>
+                  </xsl:for-each>
+                  <xsl:if test="position() != last()">,</xsl:if>
+                </xsl:for-each>
+              </div>
+            </xsl:if>
 
             <xsl:variable name="gcmd-keyword"
                           select="$metadata/mdb:identificationInfo/*/mri:descriptiveKeywords
@@ -530,10 +548,10 @@
                     <xsl:with-param name="key" select="'eo-bbox'"/>
                   </xsl:call-template>
                 </strong>
-                <xsl:value-of select="format-number(gex:southBoundLatitude, $numberFormat)"/> S to
-                <xsl:value-of select="format-number(gex:northBoundLatitude, $numberFormat)"/> N,
-                <xsl:value-of select="format-number(gex:westBoundLongitude, $numberFormat)"/> W to
-                <xsl:value-of select="format-number(gex:eastBoundLongitude, $numberFormat)"/> E
+                <xsl:value-of select="format-number(gex:southBoundLatitude, $numberFormat)"/> to
+                <xsl:value-of select="format-number(gex:northBoundLatitude, $numberFormat)"/>,
+                <xsl:value-of select="format-number(gex:westBoundLongitude, $numberFormat)"/> to
+                <xsl:value-of select="format-number(gex:eastBoundLongitude, $numberFormat)"/>
               </div>
             </xsl:for-each>
 
@@ -561,7 +579,9 @@
             </xsl:if>
 
             <xsl:for-each-group
-              select="$metadata/mdb:identificationInfo/*/mri:pointOfContact/*"
+              select="$metadata/mdb:identificationInfo/*/mri:pointOfContact/*[
+                        .//cit:role/*/@codeListValue != 'pointOfContact'
+                        and .//cit:role/*/@codeListValue !=  'principalInvestigator']"
               group-by="cit:role/*/@codeListValue">
               <div class="row">
                 <xsl:variable name="codelistTranslation"

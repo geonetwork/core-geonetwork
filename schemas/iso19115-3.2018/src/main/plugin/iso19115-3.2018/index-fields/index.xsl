@@ -1381,6 +1381,7 @@
         </xsl:element>
       </xsl:if>
     </xsl:if>
+
     <xsl:element name="contact{$fieldSuffix}">
       <!-- TODO: Can be multilingual -->
       <xsl:attribute name="type" select="'object'"/>{
