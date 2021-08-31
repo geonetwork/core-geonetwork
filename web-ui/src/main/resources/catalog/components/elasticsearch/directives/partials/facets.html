@@ -39,6 +39,10 @@
         <span class="fa fa-fw"
               ng-class="ctrl.fLvlCollapse[facet.key] ? 'fa-caret-right' : 'fa-caret-down'"></span>
       </a>
+      <p class="info"
+         ng-show="(('facet-' + facet.key + '-help') | facetKeyTranslator) !== ('facet-' + facet.key + '-help')">
+        {{('facet-' + facet.key + '-help') | facetKeyTranslator}}
+      </p>
       <div class="gn-facet-root-container"
           ng-class="{'collapse': ctrl.fLvlCollapse[facet.key]}">
 

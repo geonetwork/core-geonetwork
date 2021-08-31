@@ -373,12 +373,12 @@ ul.gn-resultview li.list-group-item {
             .gn-facet-root-container {
               .clearfix();
               .gn-facet-container {
-                width: calc(~"(100% / 3) - 15px");
+                width: calc(~"(100% / 4) - 15px");
                 float: left;
                 margin: 5px 15px 5px 0;
                 .gn-facet-item {
                   a.flex-row {
-                    padding: 10px 15px;
+                    padding: 5px 10px;
                     border-radius: @list-group-border-radius;
                     border: 1px solid @list-group-border;
                     text-align: center;
@@ -396,7 +396,7 @@ ul.gn-resultview li.list-group-item {
                     .gn-facet-count {
                       color: #333;
                       font-weight: 500;
-                      font-size: 36px;
+                      font-size: 25px;
                       margin: 10px 0 0 0;
                       &:after {
                         content: none;
@@ -425,6 +425,22 @@ ul.gn-resultview li.list-group-item {
                     .gn-facet-count {
                       &:before {
                         content: "\f019";
+                      }
+                    }
+                  }
+                  a[title*="PASS"] {
+                    .gn-facet-count {
+                      &:before {
+                        content: "\f046";
+                        color: @brand-success !important;
+                      }
+                    }
+                  }
+                  a[title*="FAIL"] {
+                    .gn-facet-count {
+                      &:before {
+                        content: "\f05e";
+                        color: @brand-danger !important;
                       }
                     }
                   }

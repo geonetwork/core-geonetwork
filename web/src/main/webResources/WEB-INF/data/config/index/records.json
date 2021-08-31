@@ -1213,6 +1213,14 @@
             "search_analyzer": "keyword"
           }
         }
+      },
+      {
+        "indicator": {
+          "match": "indicator_*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
       }
     ],
     "properties": {
