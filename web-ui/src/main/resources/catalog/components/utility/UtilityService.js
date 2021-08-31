@@ -345,6 +345,9 @@
 
           var getObjectValueByPath = function(obj, path){
             for (var i = 0, path = path.split('.'), len = path.length; i < len; i++){
+              if (angular.isUndefined(obj)) {
+                return undefined;
+              }
               obj = obj[path[i]];
             };
             return obj;
