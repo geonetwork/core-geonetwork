@@ -398,6 +398,9 @@
                                     /*/mac:instrument
                                     //mac:mountedOn/mac:MI_Platform
                                     /mac:identifier/*/mcc:code/*/text()"/>
+            <xsl:variable name="instruments"
+                          select="ancestor::mdb:MD_Metadata/mdb:acquisitionInformation
+                                    /*/mac:instrument/*/mac:identifier/*/mcc:code/*/text()"/>
 
             <xsl:variable name="customAbstract">
               <xsl:if test="count($projects) > 0">
@@ -405,6 +408,9 @@
               </xsl:if>
               <xsl:if test="count($platforms) > 0">
                 <xsl:value-of select="concat('Platform(s): ', string-join($platforms, ', '))"/><xsl:text>&#xd;&#xa;</xsl:text>
+              </xsl:if>
+              <xsl:if test="count($instruments) > 0">
+                <xsl:value-of select="concat('Instrument(s): ', string-join($instruments, ', '))"/><xsl:text>&#xd;&#xa;</xsl:text>
               </xsl:if>
               <xsl:if test="count($parameters) > 0">
                 <xsl:value-of select="concat('Parameters(s): ', string-join($parameters, ', '))"/><xsl:text>&#xd;&#xa;</xsl:text>
