@@ -27,7 +27,7 @@
               <i data-ng-show="h.options.status === 'inactive'" class="fa fa-pause"/>
               <span class="gn-harvester-name"><strong>{{h.site.name}}</strong> ({{('harvester-' + h['@type']) | translate}})</span>
             </p>
-            <p>
+            <p data-ng-if="h.info.lastRun.length > 0">
               <span data-ng-show="h.info.running" class="pull-right">
                 <i class="fa fa-spinner fa-spin fa-2x"/>
               </span>
