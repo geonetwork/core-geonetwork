@@ -33,7 +33,7 @@
               </span>
               <span>{{ 'lastRun' | translate }}: {{ h.info.lastRun | gnFromNow }}</span><br>
               <span>{{ 'harvesterRecords' | translate }}</span>
-              <table class="table table-bordered table-condensed table-striped">
+              <table data-ng-hide="h.info.running" class="table table-bordered table-condensed table-striped">
                 <thead>
                 <tr>
                   <th data-ng-if="h.info.result.total">{{ 'harvesterTotalRecords' | translate }}</th>
