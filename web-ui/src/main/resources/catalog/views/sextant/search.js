@@ -487,16 +487,6 @@
         searchMap: searchMap,
         panier: [],
         filters: gnSearchSettings.filters,
-        defaultParams: {
-          isTemplate: 'n',
-          sortBy: sortConfig.sortBy || 'relevance',
-          sortOrder: sortConfig.sortOrder || ''
-        },
-        params: {
-          isTemplate: 'n',
-          sortBy: sortConfig.sortBy || 'relevance',
-          sortOrder: sortConfig.sortOrder|| ''
-        },
         sortbyValues: gnSearchSettings.sortbyValues
       });
 

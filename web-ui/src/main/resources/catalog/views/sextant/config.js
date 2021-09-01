@@ -371,7 +371,7 @@
                 name = name.substring(1);
               } else if (name.substring(0, 1) == '-') {
                 name = name.substring(1);
-                direction = 'reverse';
+                direction = 'desc';
               }
               return {
                 sortBy: name,
