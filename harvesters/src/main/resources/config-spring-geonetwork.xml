@@ -43,6 +43,8 @@
         scope="prototype"/>
   <bean id="csw" class="org.fao.geonet.kernel.harvest.harvester.csw.CswHarvester"
         scope="prototype"/>
+  <bean id="csw2" class="org.fao.geonet.kernel.harvest.harvester.csw2.CswHarvester2"
+        scope="prototype"/>
   <bean id="oaipmh" class="org.fao.geonet.kernel.harvest.harvester.oaipmh.OaiPmhHarvester"
         scope="prototype"/>
   <bean id="ogcwxs" class="org.fao.geonet.kernel.harvest.harvester.ogcwxs.OgcWxSHarvester"

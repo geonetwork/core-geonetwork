@@ -52,6 +52,8 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
+import org.fao.geonet.kernel.harvest.harvester.csw.CswParams;
+import org.fao.geonet.kernel.harvest.harvester.csw2.CswHarvester2;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -157,7 +159,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
      * Contains all the warnings and errors that didn't abort the execution, but were thrown during harvesting
      */
     private List<HarvestError> errors = Collections.synchronizedList(new LinkedList<>());
-    private volatile boolean running = false;
+    protected volatile boolean running = false;
 
     public static AbstractHarvester<?, ?> create(String type, ServiceContext context) throws BadParameterEx, OperationAbortedEx {
         if (type == null) {
@@ -721,7 +723,10 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                     logHarvest(logfile, logger, nodeName, lastRun, elapsedTime);
                 } finally {
                     cancelMonitor.set(false);
-                    running = false;
+
+                    if (!(this instanceof CswHarvester2)) {
+                        running = false;
+                    }
                 }
             } else {
                 log.error("Harvester '" + this.getID() + "' looks deadlocked.");

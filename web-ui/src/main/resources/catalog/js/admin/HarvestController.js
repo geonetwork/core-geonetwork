@@ -90,7 +90,7 @@
       $scope.loadHarvesters = function() {
         $scope.isLoadingHarvester = true;
         $scope.harvesters = null;
-        return $http.get('admin.harvester.list?_content_type=json&id=-1').
+        return $http.get('admin.harvester.list?_content_type=json').
             success(
             function(data) {
               if (data != 'null') {
@@ -110,25 +110,42 @@
         for (var i = 0; $scope.harvesters &&
             i < $scope.harvesters.length; i++) {
           var h = $scope.harvesters[i];
-          if (h.info.running) {
+          if (h.info.running && h["@type"] != 'csw2') {
             runningHarvesters.push(h['@id']);
           }
         }
 
         return runningHarvesters;
       };
+
+      var getRunningRemoteHarvesterIds = function() {
+        var runningHarvesters = [];
+        for (var i = 0; $scope.harvesters &&
+        i < $scope.harvesters.length; i++) {
+          var h = $scope.harvesters[i];
+          if (h.info.running && h["@type"] == 'csw2') {
+            runningHarvesters.push(h.info.result.processID);
+          }
+        }
+
+        return runningHarvesters;
+      };
+
       var isPolling = false;
       var pollHarvesterStatus = function() {
         if (isPolling) {
           return;
         }
         var runningHarvesters = getRunningHarvesterIds();
-        if (runningHarvesters.length == 0) {
+        var runningRemoteHarvesters = getRunningRemoteHarvesterIds();
+
+        if ((runningHarvesters.length == 0) && (runningRemoteHarvesters.length == 0)) {
           return;
         }
         isPolling = true;
 
-        $http.get('admin.harvester.list?onlyInfo=true&_content_type=json&id=' +
+        if (runningHarvesters.length > 0) {
+          $http.get('admin.harvester.list?onlyInfo=true&_content_type=json&id=' +
             runningHarvesters.join('&id=')).success(
             function(data) {
               isPolling = false;
@@ -156,8 +173,42 @@
                 setTimeout(pollHarvesterStatus, 5000);
               }
             }).error(function(data) {
-          isPolling = false;
-        });
+            isPolling = false;
+          });
+        }
+
+        if (runningRemoteHarvesters.length > 0) {
+          $http.get('../api/remoteharvesters/progress?id=' +
+            runningRemoteHarvesters.join('&id=')).success(
+            function(data) {
+              isPolling = false;
+              if (data != 'null') {
+                if (!angular.isArray(data)) {
+                  data = [data];
+                }
+                var harvesterIndex = {};
+                angular.forEach($scope.harvesters, function(oldH) {
+                  harvesterIndex[oldH['@id']] = oldH;
+                });
+
+                for (var i = 0; i < data.length; i++) {
+                  var h = data[i];
+                  gnUtilityService.parseBoolean(h.info);
+                  var old = harvesterIndex[h['@id']];
+                  if (old && !angular.equals(old.info, h.info)) {
+                    old.info = h.info;
+                  }
+                  if (old && !angular.equals(old.error, h.error)) {
+                    old.error = h.error;
+                  }
+                }
+
+                setTimeout(pollHarvesterStatus, 5000);
+              }
+            }).error(function(data) {
+            isPolling = false;
+          });
+        }
       };
 
       $scope.refreshHarvester = function() {
