@@ -25,14 +25,17 @@ package org.fao.geonet.kernel.security.keycloak;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.security.SecurityProviderUtil;
 import org.fao.geonet.utils.Log;
+import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 import javax.annotation.PostConstruct;
 
-public class KeycloakUtil {
+public class KeycloakUtil implements SecurityProviderUtil {
     public static String signinPath = null;
     private static LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint;
 
@@ -61,5 +64,15 @@ public class KeycloakUtil {
             }
         }
         return signinPath;
+    }
+
+    @Override
+    public String getSSOAuthenticationHeaderValue() {
+        if (SecurityContextHolder.getContext().getAuthentication().getDetails() instanceof RefreshableKeycloakSecurityContext) {
+            RefreshableKeycloakSecurityContext refreshableKeycloakSecurityContext =
+                (RefreshableKeycloakSecurityContext) SecurityContextHolder.getContext().getAuthentication().getDetails();
+            return "Bearer " + refreshableKeycloakSecurityContext.getTokenString();
+        }
+        return null;
     }
 }
