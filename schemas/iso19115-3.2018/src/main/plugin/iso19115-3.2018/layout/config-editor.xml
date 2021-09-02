@@ -400,7 +400,7 @@
       <row>
         <col xpath="cit:role"/>
         <col xpath="cit:party/cit:CI_Organisation/cit:name"/>
-        <col xpath="cit:party/*/cit:contactInfo/*/cit:individual/*/cit:name"/>
+        <col xpath="cit:party/*/cit:individual/*/cit:name"/>
         <col xpath="cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress"/>
         <col del=".."/>
       </row>
