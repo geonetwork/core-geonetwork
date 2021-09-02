@@ -66,6 +66,7 @@
   "facet-th_gemet_tree": "Mots-clés thématiques (GEMET)",
   "facet-th_regions_tree": "Territoires",
   "facet-th_httpinspireeceuropaeuthemetheme": "Thèmes INSPIRE",
+  "facet-th_httpinspireeceuropaeutheme-theme_tree": "Thèmes INSPIRE",
   "facet-creationYearForResource":  "Années",
   "facet-resolutionScaleDenominator": "Échelles",
   "facet-cl_maintenanceAndUpdateFrequency": "Fréquences de mise à jour",

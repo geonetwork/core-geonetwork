@@ -72,6 +72,7 @@
   "facet-th_gemet_tree": "Environmental tags",
   "facet-th_regions_tree": "Regions",
   "facet-th_httpinspireeceuropaeuthemetheme": "INSPIRE themes",
+  "facet-th_httpinspireeceuropaeutheme-theme_tree": "INSPIRE themes",
   "facet-creationYearForResource":  "Years",
   "facet-resolutionScaleDenominator": "Scales",
   "facet-cl_maintenanceAndUpdateFrequency": "Update frequencies",
