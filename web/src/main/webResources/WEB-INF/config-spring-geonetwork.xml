@@ -179,4 +179,16 @@
 
   <bean id="encryptorInitialiser"
         class="org.fao.geonet.EncryptorInitializer" />
+
+  <!-- Secured map services configuration -->
+  <!-- For security reasons BASIC auth will only allow userProxy=true as we don't want to expose the credentials in the javascript client -->
+  <util:list id="securedMapServices" value-type="org.fao.geonet.domain.mapservices.MapService">
+    <!-- Sample secured map services -->
+    <!--bean class="org.fao.geonet.domain.mapservices.MapService"
+          p:url="http://map1.com" p:useProxy="true" p:authType="BEARER"/-->
+
+    <!--bean class="org.fao.geonet.domain.mapservices.MapService"
+          p:url="http://map2.com" p:useProxy="true" p:authType="BASIC" p:username="test" p:password="testpass"/-->
+  </util:list>
+
 </beans>
