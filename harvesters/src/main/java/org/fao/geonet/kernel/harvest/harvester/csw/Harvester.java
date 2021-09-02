@@ -25,13 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.google.common.collect.ImmutableSet;
@@ -289,7 +283,7 @@ class Harvester implements IHarvester<HarvestResult> {
             int foundCnt = 0;
 
             log.debug("Extracting all elements in the csw harvesting response");
-            Set<RecordInfo> records = new HashSet<RecordInfo>();
+            Set<RecordInfo> records = new LinkedHashSet<RecordInfo>();
             for (Element record : list) {
                 try {
                     RecordInfo recInfo = getRecordInfo((Element) record.clone());
