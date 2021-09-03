@@ -63,6 +63,7 @@
              scope.initialTopicCategories = [];
              var xpathBySchema = {
                'iso19139': {
+                 name: 'gmd:topicCategory',
                  xpath: 'gmd:identificationInfo/*/gmd:topicCategory',
                  tpl: '<gmd:topicCategory ' +
                  'xmlns:gmd="http://www.isotc211.org/2005/gmd">' +
@@ -70,6 +71,7 @@
                  '</gmd:topicCategory>'
                },
                'iso19115-3': {
+                 name: 'mri:topicCategory',
                  xpath: 'mdb:identificationInfo/*/mri:topicCategory',
                  tpl: '<mri:topicCategory xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0">' +
                         '<mri:MD_TopicCategoryCode>{{t}}</mri:MD_TopicCategoryCode>\n' +
@@ -79,12 +81,17 @@
 
              var schema = gnCurrentEdit.schema;
 
+             scope.gnCurrentEdit = gnCurrentEdit;
+             scope.schema = schema;
+
              // By convention schema extension will have
              // an identifier of the form {baseSchemaId}.{extensionId}
              var schemaForXpath = (gnCurrentEdit.schema.indexOf(".") !== -1) ?
                gnCurrentEdit.schema.split('.')[0] :
                gnCurrentEdit.schema;
              scope.xpath = xpathBySchema[schemaForXpath].xpath;
+
+             scope.elementName = xpathBySchema[schemaForXpath].name;
 
              // Initial values are comma separated encoded
              if (scope.values) {
