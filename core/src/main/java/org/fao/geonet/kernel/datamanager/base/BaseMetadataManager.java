@@ -1045,7 +1045,9 @@ public class BaseMetadataManager implements IMetadataManager {
             result.addContent(env);
             // apply update-fixed-info.xsl
             Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(
-                metadata != null && metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE ?
+                metadata != null &&
+                    (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE
+                        || metadata.getDataInfo().getType() == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) ?
                     Geonet.File.UPDATE_FIXED_INFO_SUBTEMPLATE :
                     Geonet.File.UPDATE_FIXED_INFO);
             result = Xml.transform(result, styleSheet);
