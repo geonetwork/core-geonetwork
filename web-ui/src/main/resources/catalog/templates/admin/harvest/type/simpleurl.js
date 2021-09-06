@@ -90,7 +90,7 @@ var gnHarvestersimpleurl = {
       + '    <pageSizeParam>' + h.site.pageSizeParam + '</pageSizeParam>'
       + '    <toISOConversion>' + h.site.toISOConversion + '</toISOConversion>'
       + '  </site>'
-      + gnHarvestercsw.buildResponseCSWSearch($scope)
+      + gnHarvestersimpleurl.buildResponseCSWSearch($scope)
       + '  <options>'
       + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
       + '    <overrideUuid>' + h.options.overrideUuid + '</overrideUuid>'

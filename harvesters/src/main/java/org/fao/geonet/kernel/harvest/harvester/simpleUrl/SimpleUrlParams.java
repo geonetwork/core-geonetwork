@@ -80,6 +80,11 @@ public class SimpleUrlParams extends AbstractParams {
         icon = Util.getParam(site, "icon", icon);
     }
 
+    @Override
+    public String getIcon() {
+        return icon;
+    }
+
     public SimpleUrlParams copy() {
         SimpleUrlParams copy = new SimpleUrlParams(dm);
         copyTo(copy);

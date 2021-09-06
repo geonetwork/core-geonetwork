@@ -290,14 +290,11 @@
     "cron-0 15 10 ? * MON-FRI": "Fire at 10:15am every Monday, Tuesday, Wednesday, Thursday and Friday",
     "harvesterTimeZoneHelp": "Time in cron expression will be interpreted as in <i>{{timeZoneTransl}} {{zoneOffset}}</i> timezone.",
     "csvExport": "Export as CSV",
-<<<<<<< HEAD
     "duplicatedValueFoundHarvesterName": "An harvester with that name already exists. Choose another one.",
     "duplicatedValueFoundUserName": "A user with that name already exists. Choose another one.",
     "duplicatedValueFoundUserEmail": "A user with that email already exists. Choose another one.",
     "csw": "CSW",
-=======
     "simpleurl": "Simple URL",
->>>>>>> fxp/feature/harvester/json
     "csw-FailedToParseCapabilities": "Error while parsing GetCapabilities",
     "csw-capabilitiesUrlHelp": "CSW URL with or without GetCapabilities parameters",
     "csw-category": "Category for harvested records",

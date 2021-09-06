@@ -43,7 +43,6 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.jdom.Element;
 
@@ -142,8 +141,12 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
                 } else {
                     //record exists and belongs to this harvester
                     updateMetadata(e, id, false);
+                    if (params.isIfRecordExistAppendPrivileges()) {
+                        addPrivileges(id, params.getPrivileges(), localGroups, context);
+                        result.privilegesAppendedOnExistingRecord++;
+                    }
+
                 }
-                context.getBean(LuceneIndexLanguageTracker.class).commit();
                 result.totalMetadata++;
             } catch (Throwable t) {
                 errors.add(new HarvestError(this.context, t));
@@ -234,13 +237,13 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, xml, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        metadataIndexer.indexMetadata(id, true, null);
+        metadataIndexer.indexMetadata(id, true);
         result.addedMetadata++;
     }
 
@@ -273,7 +276,7 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByMetadataId(Integer.parseInt(id));
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         metadata.getCategories().clear();
         addCategories(metadata, params.getCategories(), localCateg, context, null, true);
