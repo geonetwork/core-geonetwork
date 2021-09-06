@@ -76,6 +76,48 @@
         </tr>
       </xsl:if>
 
+      <xsl:variable name="dates"
+                    select="$metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[gmd:date/* != '']"/>
+
+      <xsl:variable name="temporalCoverageContent">
+        <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/*">
+          <xsl:variable name="indeterminatePositionLabel">
+            <xsl:apply-templates mode="render-value"
+                                 select="gml:beginPosition/@indeterminatePosition"/>
+          </xsl:variable>
+
+          <xsl:if test="gml:beginPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
+            <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ')"/>
+            <xsl:value-of select="if (matches(gml:beginPosition, $dateFormatRegex)) then format-date(xs:date(tokenize(gml:beginPosition, 'T')[1]), '[D01]-[M01]-[Y0001]') else gml:beginPosition"/>
+            <!--                    <xsl:apply-templates mode="render-value" select="gml:beginPosition"/>-->
+            <i class="fa fa-fw fa-arrow-right">&#160;</i>
+          </xsl:if>
+
+          <xsl:variable name="indeterminatePositionLabel">
+            <xsl:apply-templates mode="render-value"
+                                 select="gml:endPosition/@indeterminatePosition"/>
+          </xsl:variable>
+          <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
+            <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ')"/>
+            <xsl:value-of select="if (matches(gml:endPosition, $dateFormatRegex)) then format-date(xs:date(tokenize(gml:endPosition, 'T')[1]), '[D01]-[M01]-[Y0001]') else gml:endPosition"/>
+            <!--                    <xsl:apply-templates mode="render-value" select="gml:endPosition"/>-->
+          </xsl:if>
+
+          <xsl:if test="gml:timePosition != ''">
+            <xsl:value-of select="concat ($schemaStrings/sxt-view-temporal-at, ' ', gml:timePosition)"/>
+          </xsl:if>
+          &#160;
+          <xsl:variable name="type">
+            <xsl:call-template name="landingpage-label">
+              <xsl:with-param name="key" select="'sxt-view-temporal'"/>
+            </xsl:call-template>
+          </xsl:variable>
+          (<xsl:copy-of select="if (count($type/element()) = 0) then concat(' ', $type, ' ') else $type/element()"/>)
+          <br/>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:if test="count($dates) > 0 or $temporalCoverageContent != ''">
       <tr>
         <td>
           <xsl:call-template name="landingpage-label">
@@ -83,7 +125,7 @@
           </xsl:call-template>
         </td>
         <td>
-          <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[gmd:date/* != '']">
+          <xsl:for-each select="$dates">
             <dl>
               <!--<dt>
                 <xsl:apply-templates mode="render-value" select="gmd:dateType/*/@codeListValue"/>
@@ -103,44 +145,6 @@
             </dl>
           </xsl:for-each>
 
-          <xsl:variable name="temporalCoverageContent">
-            <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/*">
-              <xsl:variable name="indeterminatePositionLabel">
-                <xsl:apply-templates mode="render-value"
-                                     select="gml:beginPosition/@indeterminatePosition"/>
-              </xsl:variable>
-
-              <xsl:if test="gml:beginPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
-                <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-from)[1], ' ')"/>
-                <xsl:value-of select="if (matches(gml:beginPosition, $dateFormatRegex)) then format-date(xs:date(tokenize(gml:beginPosition, 'T')[1]), '[D01]-[M01]-[Y0001]') else gml:beginPosition"/>
-                <!--                    <xsl:apply-templates mode="render-value" select="gml:beginPosition"/>-->
-                <i class="fa fa-fw fa-arrow-right">&#160;</i>
-              </xsl:if>
-
-              <xsl:variable name="indeterminatePositionLabel">
-                <xsl:apply-templates mode="render-value"
-                                     select="gml:endPosition/@indeterminatePosition"/>
-              </xsl:variable>
-              <xsl:if test="gml:endPosition != '' or normalize-space($indeterminatePositionLabel) != ''">
-                <xsl:value-of select="concat((normalize-space($indeterminatePositionLabel), $schemaStrings/sxt-view-temporal-to)[1], ' ')"/>
-                <xsl:value-of select="if (matches(gml:endPosition, $dateFormatRegex)) then format-date(xs:date(tokenize(gml:endPosition, 'T')[1]), '[D01]-[M01]-[Y0001]') else gml:endPosition"/>
-<!--                    <xsl:apply-templates mode="render-value" select="gml:endPosition"/>-->
-              </xsl:if>
-
-              <xsl:if test="gml:timePosition != ''">
-                <xsl:value-of select="concat ($schemaStrings/sxt-view-temporal-at, ' ', gml:timePosition)"/>
-              </xsl:if>
-              &#160;
-              <xsl:variable name="type">
-                <xsl:call-template name="landingpage-label">
-                  <xsl:with-param name="key" select="'sxt-view-temporal'"/>
-                </xsl:call-template>
-              </xsl:variable>
-              (<xsl:copy-of select="if (count($type/element()) = 0) then concat(' ', $type, ' ') else $type/element()"/>)
-              <br/>
-            </xsl:for-each>
-          </xsl:variable>
-
           <xsl:if test="$temporalCoverageContent != ''">
             <dl>
               <!--<dt>
@@ -155,6 +159,9 @@
           </xsl:if>
         </td>
       </tr>
+      </xsl:if>
+
+
       <xsl:variable name="authors"
                     select="$metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue = 'author']"/>
       <xsl:if test="count($authors) > 0">
@@ -251,29 +258,48 @@
           </td>
         </tr>
       </xsl:if>
-      <tr>
-        <td>
-          <xsl:call-template name="landingpage-label">
-            <xsl:with-param name="key" select="'sxt-view-constraints'"/>
-          </xsl:call-template>
-        </td>
-        <td class="gn-record-view_tablecell_aerate">
 
-          <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:useLimitation[normalize-space(.) != '']">
-            <xsl:apply-templates mode="render-field" select="."/>
-          </xsl:for-each>
 
-          <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/*[*/@codeListValue != 'otherRestrictions']">
-            <xsl:apply-templates mode="render-field"
-                                 select="."/>
-          </xsl:for-each>
+      <xsl:variable name="useLimitation"
+                    select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:useLimitation[normalize-space(.) != '']"/>
 
-          <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:otherConstraints">
-            <xsl:apply-templates mode="render-field"
-                                 select="."/>
-          </xsl:for-each>
-        </td>
-      </tr>
+      <xsl:variable name="otherRestriction"
+                    select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/*[*/@codeListValue != 'otherRestrictions']"/>
+
+      <xsl:variable name="otherRestrictionContent">
+        <xsl:for-each select="$otherRestriction">
+          <xsl:apply-templates mode="render-field"
+                               select="."/>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:variable name="otherConstraints"
+                    select="$metadata/gmd:identificationInfo/*/gmd:resourceConstraints/*/gmd:otherConstraints[normalize-space(.) != '']"/>
+
+      <xsl:if test="count($useLimitation) > 0
+                    or normalize-space($otherRestrictionContent) != ''
+                    or count($otherConstraints) > 0">
+        <tr>
+          <td>
+            <xsl:call-template name="landingpage-label">
+              <xsl:with-param name="key" select="'sxt-view-constraints'"/>
+            </xsl:call-template>
+          </td>
+          <td class="gn-record-view_tablecell_aerate">
+
+            <xsl:for-each select="$useLimitation">
+              <xsl:apply-templates mode="render-field" select="."/>
+            </xsl:for-each>
+
+            <xsl:copy-of select="$otherRestrictionContent"/>
+
+            <xsl:for-each select="$otherConstraints">
+              <xsl:apply-templates mode="render-field"
+                                   select="."/>
+            </xsl:for-each>
+          </td>
+        </tr>
+      </xsl:if>
 
       <xsl:variable name="geoinfo-content">
         <xsl:if test="$metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType/*/@codeListValue != ''">
