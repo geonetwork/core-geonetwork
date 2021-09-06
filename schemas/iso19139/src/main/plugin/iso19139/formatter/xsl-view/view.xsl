@@ -648,7 +648,7 @@
 
     <xsl:variable name="email">
       <xsl:for-each select="*/gmd:contactInfo/
-                                      */gmd:address/*/gmd:electronicMailAddress">
+                                      */gmd:address/*/gmd:electronicMailAddress[*/text() != '']">
         <xsl:apply-templates mode="render-value-no-breaklines"
                              select="."/><xsl:if test="position() != last()">, </xsl:if>
       </xsl:for-each>
@@ -671,8 +671,14 @@
                   (<xsl:apply-templates mode="render-value" select="*/gmd:positionName"/>)
                 </xsl:if>
                 - -->
-              (<xsl:apply-templates mode="render-value-no-breaklines"
-                                    select="*/gmd:organisationName"/>)
+              <xsl:variable name="organisation">
+                <xsl:apply-templates mode="render-value-no-breaklines"
+                                     select="*/gmd:organisationName"/>
+              </xsl:variable>
+              <xsl:if test="$organisation != ''">
+                (<xsl:apply-templates mode="render-value-no-breaklines"
+                                      select="*/gmd:organisationName"/>)
+              </xsl:if>
             </xsl:when>
             <xsl:when test="normalize-space(*/gmd:organisationName) != ''">
               <xsl:apply-templates mode="render-value-no-breaklines"
@@ -688,7 +694,7 @@
 
     <xsl:variable name="label">
       <xsl:choose>
-        <xsl:when test="$email">
+        <xsl:when test="$email != ''">
           <xsl:copy-of select="$displayName"/><xsl:comment select="'email'"/>
           <a href="mailto:{normalize-space($email)}">
             <sup class="fa fa-envelope"></sup>
