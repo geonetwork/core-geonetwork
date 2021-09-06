@@ -56,6 +56,9 @@
 
           <xsl:variable name="broaderPath"
                         select="tokenize($k/eng, '/')"/>
+
+          <xsl:variable name="levelOfCurrent"
+                        select="count($broaderPath)"/>
           <xsl:for-each select="$broaderPath">
             <xsl:variable name="position"
                           select="position()"/>
@@ -66,16 +69,29 @@
                           select="concat(
                   'http://www.ifremer.fr/thesaurus/sextant/theme#',
                   replace($enLabel, '[^a-zA-Z0-9-_]', ''))"/>
-            <xsl:if test="$broaderId != $k/id and $broaderId != 'http://www.ifremer.fr/thesaurus/sextant/theme#'">
+
+            <xsl:variable name="levelOfBroader"
+                          select="position()"/>
+
+            <xsl:if test="$broaderId != $k/id
+                           and $broaderId != 'http://www.ifremer.fr/thesaurus/sextant/theme#'
+                           and $levelOfBroader = ($levelOfCurrent - 1)">
               <skos:broader rdf:resource="{$broaderId}"/>
             </xsl:if>
           </xsl:for-each>
 
+          <xsl:message><xsl:value-of select="concat($levelOfCurrent, $k/eng)"/> </xsl:message>
 
           <xsl:variable name="narrower"
                         select="$themes/keyword[starts-with(fre, concat($k/fre, '/'))]"/>
           <xsl:for-each-group select="$narrower" group-by="id">
-            <skos:narrower rdf:resource="{id}"/>
+
+            <xsl:variable name="levelOfNarrower"
+                          select="count(tokenize(./eng, '/'))"/>
+            <xsl:message><xsl:value-of select="concat(' - ', $levelOfNarrower, ' ', ./eng)"/> </xsl:message>
+            <xsl:if test="($levelOfCurrent + 1) = $levelOfNarrower">
+              <skos:narrower rdf:resource="{id}"/>
+            </xsl:if>
           </xsl:for-each-group>
         </rdf:Description>
       </xsl:for-each>
