@@ -27,6 +27,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 
 import jeeves.constants.Jeeves;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
@@ -334,7 +335,7 @@ public class FilesystemStore implements PersistentStore {
                     } else {
                         Files.deleteIfExists(publicPath);
                         final Path landingPageFile = getLandingPageCacheDir().resolve(metadataUuid);
-                        Files.deleteIfExists(landingPageFile);
+			FileUtils.deleteDirectory(landingPageFile.toFile());
                     }
                     return super.visitFile(privatePath, attrs);
                 }
