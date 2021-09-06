@@ -27,15 +27,7 @@
 
 
   <xsl:variable name="isDoiAlreadySet"
-<<<<<<< HEAD
                 select="count(//gmd:distributionInfo//gmd:onLine/*[matches(gmd:protocol/gco:CharacterString, $doiProtocolRegex)]/gmd:linkage/gmd:URL[. != '']) > 0"/>
-=======
-                select="count(//gmd:identificationInfo/*/gmd:citation/*/
-                              gmd:identifier/*/gmd:code[
-                                contains(*/text(), 'datacite.org/doi/')
-                                or contains(*/text(), 'doi.org')
-                                or contains(*/@xlink:href, 'doi.org')]) > 0"/>
->>>>>>> origin/main
 
   <!--<xsl:variable name="isDoiAlreadySet"
                 select="count(//gmd:identificationInfo/*/gmd:citation/*/

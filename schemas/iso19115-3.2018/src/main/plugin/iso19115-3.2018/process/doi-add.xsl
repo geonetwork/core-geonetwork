@@ -23,17 +23,20 @@
   <xsl:param name="doiProtocolRegex"
              select="'(DOI|WWW:LINK-1.0-http--metadata-URL)'"/>
 
+
   <xsl:variable name="isDoiAlreadySet"
+                select="count(//mdb:distributionInfo//mrd:onLine/*[matches(cit:protocol/gco:CharacterString, $doiProtocolRegex)]/cit:linkage/gco:CharacterString[. != '']) > 0"/>
+  <!--<xsl:variable name="isDoiAlreadySet"
                 select="count(//mdb:identificationInfo/*/mri:citation/*/
                               cit:identifier/*/mcc:code[
                                 contains(*/text(), 'datacite.org/doi/')
                                 or contains(*/text(), 'doi.org')
-                                or contains(*/@xlink:href, 'doi.org')]) > 0"/>
+                                or contains(*/@xlink:href, 'doi.org')]) > 0"/>-->
 
 <!--  <xsl:variable name="isDoiAlreadySet"-->
 <!--                select="count(//mdb:distributionInfo//mrd:onLine/*[matches(cit:protocol/gco:CharacterString, $doiProtocolRegex)]/cit:linkage/gco:CharacterString[. != '']) > 0"/>-->
 
-
+<!--
   <xsl:template match="mdb:identificationInfo[1]/*/mri:citation/*[not($isDoiAlreadySet)]"
                 priority="2">
     <xsl:copy>
@@ -73,7 +76,7 @@
                            |cit:graphic
                           "/>
     </xsl:copy>
-  </xsl:template>
+  </xsl:template>-->
 
 
   <xsl:template match="mdb:distributionInfo[not($isDoiAlreadySet) and position() = 1]">
