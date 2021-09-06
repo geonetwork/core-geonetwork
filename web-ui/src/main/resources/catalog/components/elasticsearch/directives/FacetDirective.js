@@ -55,7 +55,7 @@
 
         var lastFacet = this.lastUpdatedFacet
 
-        if (this._isFlatTermsFacet(lastFacet) && this.searchCtrl.hasFiltersForKey(lastFacet.key)) {
+        if (this._isFlatTermsFacet(lastFacet) && this.searchCtrl.hasFiltersForKey(lastFacet.path[0])) {
           this.list.forEach(function (f) {
             if (f.key === lastFacet.key) {
               f.items = lastFacet.items
