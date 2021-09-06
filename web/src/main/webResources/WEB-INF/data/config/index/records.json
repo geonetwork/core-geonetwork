@@ -133,6 +133,7 @@
             "type": "synonym",
             "expand": true,
             "synonyms": [
+              "bathy, bathymetry"
             ]
           },
           "english_keywords": {
