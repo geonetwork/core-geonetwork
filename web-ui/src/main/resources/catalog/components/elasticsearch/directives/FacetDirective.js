@@ -55,7 +55,7 @@
 
         var lastFacet = this.lastUpdatedFacet
 
-        if (this._isFlatTermsFacet(lastFacet) && this.searchCtrl.hasFiltersForKey(lastFacet.path[0])) {
+        if (this._isNotNestedFacet(lastFacet) && this.searchCtrl.hasFiltersForKey(lastFacet.path[0])) {
           this.list.forEach(function (f) {
             if (f.key === lastFacet.key) {
               f.items = lastFacet.items
@@ -148,8 +148,8 @@
   };
 
 
-  FacetsController.prototype._isFlatTermsFacet = function (facet) {
-    return facet && (facet.type === 'terms') && !facet.aggs
+  FacetsController.prototype._isNotNestedFacet = function (facet) {
+    return facet && (facet.type === 'terms' || facet.type === 'tree') && !facet.aggs
   }
 
   FacetsController.$inject = [
@@ -272,6 +272,7 @@
         value = '-('+value+')';
       }
     } else if (facet.type === 'tree') {
+      this.facetsCtrl.lastUpdatedFacet = facet;
     }
     this.searchCtrl.updateState(item.path, value);
   }
