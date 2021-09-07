@@ -64,6 +64,7 @@ import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordCreateEvent;
 import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.events.history.RecordImportedEvent;
+import org.fao.geonet.events.md.MetadataPreRemove;
 import org.fao.geonet.exceptions.BadFormatEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
@@ -215,6 +216,9 @@ public class MetadataInsertDeleteApi {
             approved=false;
         }
 
+        MetadataPreRemove preRemoveEvent = new MetadataPreRemove(metadata);
+        appContext.publishEvent(preRemoveEvent);
+
         store.delResources(context, metadata.getUuid(), approved);
         RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, metadata.getId() + "");
         metadataManager.deleteMetadata(context, metadata.getId() + "");
@@ -264,6 +268,9 @@ public class MetadataInsertDeleteApi {
                         && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
                     MetadataUtils.backupRecord(metadata, context);
                 }
+
+                MetadataPreRemove preRemoveEvent = new MetadataPreRemove(metadata);
+                appContext.publishEvent(preRemoveEvent);
 
                 store.delResources(context, metadata.getUuid());
 
