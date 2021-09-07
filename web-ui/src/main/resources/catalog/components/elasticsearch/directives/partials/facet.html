@@ -16,7 +16,7 @@
           ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'fa-check-square' : 'fa-square-o'">
     </span>
     <span class="gn-facet-label flex-shrink text-ellipsis">
-      {{::ctrl.item.value | facetTranslator: ctrl.facet.key | capitalize}}
+      {{::ctrl.item.label || (ctrl.item.value | facetTranslator: ctrl.facet.key) | capitalize}}
     </span>
 
     <span ng-if="ctrl.item.count" class="gn-facet-count flex-no-shrink gn-facet-count-{{ctrl.item.count}}">{{::ctrl.item.count}}</span>

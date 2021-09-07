@@ -296,8 +296,8 @@
   ]
 
   module.directive('esFacet', [
-    'gnLangs',
-    function (gnLangs) {
+    'gnLangs', '$filter',
+    function (gnLangs, $filter) {
       return {
         restrict: 'A',
         controllerAs: 'ctrl',
@@ -317,6 +317,21 @@
             'partials/facet.html'
         },
         link: function (scope, element, attrs) {
+          var sextantThesaurusWithHierarchyInLabel = ['th_sextant-theme_tree.key'];
+          function buildLabel() {
+            if (scope.ctrl
+              && sextantThesaurusWithHierarchyInLabel.indexOf(
+                scope.ctrl.facet.key) !== -1) {
+              var parentLabel = scope.$parent.ctrl.item && scope.$parent.ctrl.item.value
+                ? $filter('facetTranslator')(scope.$parent.ctrl.item.value) + '/'
+                : '/';
+              scope.ctrl.item.label =
+                $filter('facetTranslator')(scope.ctrl.item.value)
+                  .replace(parentLabel, '');
+            }
+          }
+
+          buildLabel();
         }
       }
     }])
