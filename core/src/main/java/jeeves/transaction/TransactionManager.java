@@ -77,9 +77,10 @@ public class TransactionManager {
             // GlobalExceptionManager stores the exception in a request attribute, to be processed to rollback the transaction
             // as otherwise GlobalExceptionManager processes the exception and the code doesn't enter in the catch block
             // to rollback the transaction
-            Throwable ex = (Throwable) RequestContextHolder.currentRequestAttributes().getAttribute("exception", RequestAttributes.SCOPE_REQUEST);
+            Throwable requestException = (Throwable) RequestContextHolder.currentRequestAttributes().getAttribute("exception", RequestAttributes.SCOPE_REQUEST);
 
-            if (ex != null) {
+            if (requestException != null) {
+                rolledBack = true;
                 doRollback(context, transactionManager, transaction);
             }
 

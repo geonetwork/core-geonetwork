@@ -81,7 +81,7 @@ public class GlobalExceptionController {
         NotAllowedException.class
     })
     public ApiError notAllowedHandler(final Exception exception, final HttpServletRequest request) {
-        storeException(exception);
+        storeApiErrorCause(exception);
 
         if (contentTypeNeedsBody(request)) {
             updateExceptionLocale(exception, request);
@@ -102,7 +102,7 @@ public class GlobalExceptionController {
         ServiceNotAllowedEx.class
     })
     public Object unauthorizedHandler(final Exception exception) {
-        storeException(exception);
+        storeApiErrorCause(exception);
 
         return new ApiError("unauthorized", exception);
     }
@@ -114,7 +114,7 @@ public class GlobalExceptionController {
         SecurityException.class,
     })
     public Object securityHandler(final Exception exception) {
-        storeException(exception);
+        storeApiErrorCause(exception);
 
         return new ApiError("forbidden", exception);
     }
@@ -126,7 +126,7 @@ public class GlobalExceptionController {
         AccessDeniedException.class
     })
     public Object securityHandler(final HttpServletRequest request, final Exception exception) {
-        storeException(exception);
+        storeApiErrorCause(exception);
 
         if (contentTypeNeedsBody(request)) {
                 ApiError response = null;
@@ -151,7 +151,7 @@ public class GlobalExceptionController {
         MaxUploadSizeExceededException.class
     })
     public ApiError maxFileExceededHandler(final Exception exception) {
-        storeException(exception);
+        storeApiErrorCause(exception);
 
         return new ApiError("max_file_exceeded", exception);
     }
@@ -165,7 +165,7 @@ public class GlobalExceptionController {
         RuntimeException.class
     })
     public ApiError runtimeExceptionHandler(final Exception exception) {
-        storeException(exception);
+        storeApiErrorCause(exception);
 
         return new ApiError("runtime_exception", exception);
     }
@@ -177,7 +177,7 @@ public class GlobalExceptionController {
         FeatureNotEnabledException.class
     })
     public ApiError runtimeExceptionHandler(final FeatureNotEnabledException exception) {
-        storeException(exception);
+        storeApiErrorCause(exception);
 
         return new ApiError("feature_disabled", exception);
     }
@@ -190,7 +190,7 @@ public class GlobalExceptionController {
         WebApplicationException.class
     })
     public ApiError webappExceptionHandler(final Exception exception) {
-        storeException(exception);
+        storeApiErrorCause(exception);
 
         return new ApiError("webapplication_exception", exception);
     }
@@ -203,7 +203,7 @@ public class GlobalExceptionController {
         GeoPublisherException.class,
         NoResultsFoundException.class})
     public ApiError NotFoundHandler(final Exception exception) {
-        storeException(exception);
+        storeApiErrorCause(exception);
 
         return new ApiError("not_found", exception);
     }
@@ -215,7 +215,7 @@ public class GlobalExceptionController {
         UserNotFoundEx.class,
         ResourceNotFoundException.class})
     public ApiError resourceNotFoundHandler(final HttpServletRequest request, final Exception exception) {
-        storeException(exception);
+        storeApiErrorCause(exception);
 
         if (contentTypeNeedsBody(request)) {
             if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
@@ -307,7 +307,7 @@ public class GlobalExceptionController {
     @ExceptionHandler({
         ResourceAlreadyExistException.class})
     public ApiError resourceAlreadyExistHandler(final Exception exception) {
-        storeException(exception);
+        storeApiErrorCause(exception);
 
         return new ApiError("resource_already_exist", exception);
     }
@@ -317,7 +317,7 @@ public class GlobalExceptionController {
     @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ApiError missingParameterHandler(final Exception exception) {
-        storeException(exception);
+        storeApiErrorCause(exception);
 
         return new ApiError("required_parameter_missing", exception);
     }
@@ -334,7 +334,7 @@ public class GlobalExceptionController {
         DoiClientException.class
     })
     public ApiError unsatisfiedParameterHandler(final Exception exception) {
-        storeException(exception);
+        storeApiErrorCause(exception);
 
         return new ApiError("unsatisfied_request_parameter", exception);
     }
@@ -346,7 +346,7 @@ public class GlobalExceptionController {
         MissingResourceException.class
     })
     public ApiError missingResourceHandler(final Exception exception) {
-        storeException(exception);
+        storeApiErrorCause(exception);
 
         return new ApiError("missing_resource_parameter", exception);
     }
@@ -357,7 +357,7 @@ public class GlobalExceptionController {
      *
      * @param exception
      */
-    private void storeException(final Exception exception) {
+    private void storeApiErrorCause(final Exception exception) {
         RequestContextHolder.currentRequestAttributes().setAttribute("exception", exception, RequestAttributes.SCOPE_REQUEST);
     }
 }
