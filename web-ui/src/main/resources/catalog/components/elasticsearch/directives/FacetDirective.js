@@ -317,7 +317,11 @@
             'partials/facet.html'
         },
         link: function (scope, element, attrs) {
-          var sextantThesaurusWithHierarchyInLabel = ['th_sextant-theme_tree.key'];
+          var sextantThesaurusWithHierarchyInLabel = [
+            'th_sextant-theme_tree.key',
+            'th_odatis_variables_tree.key',
+            'th_mission-atlantic-bodc-parameters_tree.key',
+            'th_mission-atlantic-odemm_tree.key'];
           function buildLabel() {
             if (scope.ctrl
               && sextantThesaurusWithHierarchyInLabel.indexOf(
