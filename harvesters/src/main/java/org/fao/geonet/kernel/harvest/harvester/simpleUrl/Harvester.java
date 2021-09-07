@@ -223,7 +223,7 @@ class Harvester implements IHarvester<HarvestResult> {
             String recordAsXml = XML.toString(
                 new JSONObject(
                     objectMapper.writeValueAsString(record)), "record");
-            recordAsXml = Xml.stripNonValidXMLCharacters(recordAsXml);
+            recordAsXml = Xml.stripNonValidXMLCharacters(recordAsXml).replace("<@", "<").replace("</@", "</");
             Element recordAsElement = Xml.loadString(recordAsXml, false);
             Path importXsl = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
             final Path xslPath = importXsl.resolve(params.toISOConversion + ".xsl");
