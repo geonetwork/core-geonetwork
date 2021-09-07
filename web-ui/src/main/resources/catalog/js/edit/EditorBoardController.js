@@ -126,7 +126,7 @@
               deferred.resolve(data);
             }, function(reason) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant(reason.data.error.message),
+                title: $translate.instant(reason.data.message),
                 timeout: 0,
                 type: 'danger'
               });

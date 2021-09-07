@@ -554,7 +554,7 @@
                 closeEditor();
               }, function(reason) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant(reason.data.error.message),
+                  title: $translate.instant(reason.data.message),
                   error: reason.data.error.description,
                   timeout: 0,
                   type: 'danger'
