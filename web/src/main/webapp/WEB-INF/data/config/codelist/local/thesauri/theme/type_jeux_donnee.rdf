@@ -1,188 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:ns3="http://purl.org/dc/elements/1.1/"
-	xmlns:ns4="http://www.opengis.net/gml#"
-	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
-	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-
-<rdf:Description rdf:about="http://geonetwork-opensource.org/Type de jeux de donnée ODATIS">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
-	<ns3:title>Type de jeux de donnée ODATIS</ns3:title>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ce73db96-24b9-4ba1-86f8-4b7e45fa20a3">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#296cbeef-84cc-4c04-a43a-c9938a67a7f8">
-	<ns2:prefLabel xml:lang="fr">/Observations in-situ/Réseaux</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">/in-situ observations/Networks</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ce73db96-24b9-4ba1-86f8-4b7e45fa20a3">
-	<ns4:BoundedBy rdf:nodeID="node1e4npamtmx1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e4npamtmx1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#296cbeef-84cc-4c04-a43a-c9938a67a7f8">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ce73db96-24b9-4ba1-86f8-4b7e45fa20a3">
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="en">/in-situ observations/Sea cruises</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#296cbeef-84cc-4c04-a43a-c9938a67a7f8">
-	<ns4:BoundedBy rdf:nodeID="node1e4npamtmx2"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e4npamtmx2">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#79d31496-5683-42d1-bdd0-19d9a9847431">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Télédétection</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">/Remote sensing</ns2:prefLabel>
-	<ns4:BoundedBy rdf:nodeID="node1e4npamtmx3"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e4npamtmx3">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#10e0b1dd-92f9-4d02-8907-55a83c52113f">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3c673d80-ffca-4e90-b427-75916c9e88b9">
-	<ns2:prefLabel xml:lang="en">/Processed data/Reference datasets</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#10e0b1dd-92f9-4d02-8907-55a83c52113f">
-	<ns4:BoundedBy rdf:nodeID="node1e4npamtmx4"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e4npamtmx4">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3c673d80-ffca-4e90-b427-75916c9e88b9">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fe33aa4f-a653-4f3f-a40d-f179f358dd0c">
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="fr">/Données dérivées/Produits composites</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3c673d80-ffca-4e90-b427-75916c9e88b9">
-	<ns4:BoundedBy rdf:nodeID="node1e4npamtmx5"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e4npamtmx5">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#85c5fda1-1907-47c1-a7c2-fa5ec1695b5e">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e4npamtmx6">
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#85c5fda1-1907-47c1-a7c2-fa5ec1695b5e">
-	<ns4:BoundedBy rdf:nodeID="node1e4npamtmx7"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e4npamtmx7">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fe33aa4f-a653-4f3f-a40d-f179f358dd0c">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#10e0b1dd-92f9-4d02-8907-55a83c52113f">
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="fr">/Données dérivées/Indicateurs</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fe33aa4f-a653-4f3f-a40d-f179f358dd0c">
-	<ns4:BoundedBy rdf:nodeID="node1e4npamtmx6"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3c673d80-ffca-4e90-b427-75916c9e88b9">
-	<ns2:prefLabel xml:lang="fr">/Données dérivées/Références statiques</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Références statiques</ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#10e0b1dd-92f9-4d02-8907-55a83c52113f">
-	<ns2:scopeNote xml:lang="fr">Indicateurs</ns2:scopeNote>
-	<ns2:prefLabel xml:lang="en">/Processed data/Indicators</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fe33aa4f-a653-4f3f-a40d-f179f358dd0c">
-	<ns2:scopeNote xml:lang="fr">Produits composites</ns2:scopeNote>
-	<ns2:prefLabel xml:lang="en">/Processed data/Composite products</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#296cbeef-84cc-4c04-a43a-c9938a67a7f8">
-	<ns2:scopeNote xml:lang="fr">Réseaux</ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ce73db96-24b9-4ba1-86f8-4b7e45fa20a3">
-	<ns2:scopeNote xml:lang="fr">Campagnes</ns2:scopeNote>
-	<ns2:prefLabel xml:lang="fr">/Observations in-situ/Campagnes</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#79d31496-5683-42d1-bdd0-19d9a9847431">
-	<ns2:scopeNote xml:lang="fr">Télédétection</ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#85c5fda1-1907-47c1-a7c2-fa5ec1695b5e">
-	<ns2:prefLabel xml:lang="fr">/Données dérivées/Données de type modèle</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">/Processed data/Model outputs</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Données de type modèle</ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e4r6ktl4x1">
-	<ns4:lowerCorner> </ns4:lowerCorner>
-	<ns4:upperCorner> </ns4:upperCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#8daa55a2-48bd-4ffc-be74-935b855ea2dc">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e4r6ktl4x1">
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#8daa55a2-48bd-4ffc-be74-935b855ea2dc">
-	<ns4:BoundedBy rdf:nodeID="node1e4r6ktl4x1"/>
-	<ns2:prefLabel xml:lang="fr">/Données administratives</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Données administratives</ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-</rdf:Description>
-
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ns3="http://purl.org/dc/elements/1.1/"
+         xmlns:ns4="http://www.opengis.net/gml#"
+         xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+      <ns3:title>Type de jeux de donnée ODATIS</ns3:title>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Données administratives</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Processed data</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Données dérivées</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Referencedatasets"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Compositeproducts"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Indicators"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Modeloutputs"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Modeloutputs">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Processed data/Model outputs</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Données dérivées/Données de type modèle</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Indicators">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Processed data/Indicators</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Données dérivées/Indicateurs</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Compositeproducts">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Processed data/Composite products</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Données dérivées/Produits composites</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata-Referencedatasets">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Processed data/Reference datasets</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Données dérivées/Références statiques</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Processeddata"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#in-situobservations">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/in-situ observations</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Observations in-situ</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#in-situobservations-Networks"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#in-situobservations-Seacruises"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#in-situobservations-Seacruises">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/in-situ observations/Sea cruises</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Observations in-situ/Campagnes</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#in-situobservations"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#in-situobservations-Networks">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/in-situ observations/Networks</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Observations in-situ/Réseaux</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#in-situobservations"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/TypedejeuxdedonnéeODATIS#Remotesensing">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">/Remote sensing</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Télédétection</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+   </rdf:Description>
 </rdf:RDF>

@@ -6,11 +6,11 @@
          xmlns:skos="http://www.w3.org/2004/02/skos/core#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
    <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme">
-	     <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
-	     <dc:title>Thèmes Sextant</dc:title>
-	     <dc:description/>
-	     <dcterms:issued>2013-08-20</dcterms:issued>
-	     <dcterms:modified>2013-08-20</dcterms:modified>
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+      <dc:title>Thèmes Sextant</dc:title>
+      <dc:description/>
+      <dcterms:issued>2013-08-20</dcterms:issued>
+      <dcterms:modified>2013-08-20</dcterms:modified>
    </rdf:Description>
    <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
@@ -18,22 +18,22 @@
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Activités humaines</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesAgriculturalActivities"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesScientificActivities"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesTourismActivities"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesOceanographicalCruises"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesMarinecultures"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesVarious"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniques"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesLandOccupation"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesPollution"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesIndustrialFishing"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesRecreationalFishing"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesOceanObservationNetwork"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesCoastalmonitoringnetworks"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesMarineStructures"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-AgriculturalActivities"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-ScientificActivities"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-TourismActivities"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-OceanographicalCruises"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-Marinecultures"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-Various"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-EconomicEquipmentandOn-landTechniques"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-LandOccupation"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-Pollution"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-RecreationalFishing"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-IndustrialFishing"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-OceanObservationNetwork"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-Coastalmonitoringnetworks"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-MarineStructures"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesAgriculturalActivities">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-AgriculturalActivities">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Agricultural Activities</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -41,7 +41,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesScientificActivities">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-ScientificActivities">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Scientific Activities</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -49,7 +49,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesTourismActivities">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-TourismActivities">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Tourism Activities</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -57,7 +57,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesOceanographicalCruises">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-OceanographicalCruises">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Oceanographical Cruises</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -65,7 +65,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesMarinecultures">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-Marinecultures">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Marine cultures</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -73,7 +73,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesVarious">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-Various">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Various</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -81,19 +81,19 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniques">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-EconomicEquipmentandOn-landTechniques">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Economic Equipment and On-land Techniques</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Activités humaines/Equipements économiques et techniques à terre</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniquesIndustrialEstablishments"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniquesUrbanEstablishments"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniquesWastewaterNetworks"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniquesCommunicationNetworksroadtrainelectricity"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-EconomicEquipmentandOn-landTechniques-IndustrialEstablishments"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-EconomicEquipmentandOn-landTechniques-UrbanEstablishments"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-EconomicEquipmentandOn-landTechniques-WastewaterNetworks"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-EconomicEquipmentandOn-landTechniques-CommunicationNetworksroadtrainelectricity"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniquesIndustrialEstablishments">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-EconomicEquipmentandOn-landTechniques-IndustrialEstablishments">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Economic Equipment and On-land Techniques/Industrial Establishments</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -101,7 +101,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniques"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniquesUrbanEstablishments">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-EconomicEquipmentandOn-landTechniques-UrbanEstablishments">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Economic Equipment and On-land Techniques/Urban Establishments</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -109,17 +109,17 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniques"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniquesWastewaterNetworks">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-EconomicEquipmentandOn-landTechniques-WastewaterNetworks">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Economic Equipment and On-land Techniques/Wastewater Networks</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Activités humaines/Equipements économiques et techniques à terre/Réseaux assainissements</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniques"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniquesWastewaterNetworksDischargepoints"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniquesWastewaterNetworksTreatmentPlants"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-EconomicEquipmentandOn-landTechniques-WastewaterNetworks-Dischargepoints"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-EconomicEquipmentandOn-landTechniques-WastewaterNetworks-TreatmentPlants"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniquesWastewaterNetworksDischargepoints">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-EconomicEquipmentandOn-landTechniques-WastewaterNetworks-Dischargepoints">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Economic Equipment and On-land Techniques/Wastewater Networks/Discharge points</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -127,7 +127,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniquesWastewaterNetworks"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniquesWastewaterNetworksTreatmentPlants">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-EconomicEquipmentandOn-landTechniques-WastewaterNetworks-TreatmentPlants">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Economic Equipment and On-land Techniques/Wastewater Networks/Treatment Plants</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -135,7 +135,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniquesWastewaterNetworks"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniquesCommunicationNetworksroadtrainelectricity">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-EconomicEquipmentandOn-landTechniques-CommunicationNetworksroadtrainelectricity">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Economic Equipment and On-land Techniques/Communication Networks (road, train, electricity)</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -143,18 +143,18 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesEconomicEquipmentandOn-landTechniques"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesLandOccupation">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-LandOccupation">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Land Occupation</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Activités humaines/Occupation du sol</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesLandOccupationBDCarto"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesLandOccupationCORINELandCover"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesLandOccupationIPLI77"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-LandOccupation-BDCarto"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-LandOccupation-CORINELandCover"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-LandOccupation-IPLI77"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesLandOccupationBDCarto">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-LandOccupation-BDCarto">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Land Occupation/BD Carto</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -162,7 +162,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesLandOccupation"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesLandOccupationCORINELandCover">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-LandOccupation-CORINELandCover">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Land Occupation/CORINE Land Cover</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -170,7 +170,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesLandOccupation"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesLandOccupationIPLI77">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-LandOccupation-IPLI77">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Land Occupation/IPLI 77</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -178,7 +178,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesLandOccupation"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesPollution">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-Pollution">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Pollution</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -186,7 +186,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesRecreationalFishing">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-RecreationalFishing">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Recreational Fishing</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -194,7 +194,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesIndustrialFishing">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-IndustrialFishing">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Industrial Fishing</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -202,7 +202,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesOceanObservationNetwork">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-OceanObservationNetwork">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Ocean Observation Network</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -210,7 +210,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesCoastalmonitoringnetworks">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-Coastalmonitoringnetworks">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Coastal monitoring networks</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -218,18 +218,18 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesMarineStructures">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-MarineStructures">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Marine Structures</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Activités humaines/Structures en mer</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesMarineStructuresSeamarksandBeacons"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesMarineStructuresUnderwaterObjects"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesMarineStructuresPorts"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-MarineStructures-SeamarksandBeacons"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-MarineStructures-UnderwaterObjects"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-MarineStructures-Ports"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesMarineStructuresSeamarksandBeacons">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-MarineStructures-SeamarksandBeacons">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Marine Structures/Seamarks and Beacons</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -237,7 +237,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesMarineStructures"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesMarineStructuresUnderwaterObjects">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-MarineStructures-UnderwaterObjects">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Marine Structures/Underwater Objects</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -245,7 +245,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesMarineStructures"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivitiesMarineStructuresPorts">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#HumanActivities-MarineStructures-Ports">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Human Activities/Marine Structures/Ports</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -259,24 +259,24 @@
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Cartes scannées</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIGN"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIfremer"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsOceanographicInstitute"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsSHOM"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsScanLittoral"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-IGN"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-Ifremer"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-OceanographicInstitute"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-SHOM"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-ScanLittoral"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIGN">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-IGN">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Scanned Maps/IGN</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Cartes scannées/IGN</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIGNscan100"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIGNscan1000"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIGNscan25"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-IGN-scan100"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-IGN-scan1000"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-IGN-scan25"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIGNscan100">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-IGN-scan100">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Scanned Maps/IGN/scan100</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -284,7 +284,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIGN"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIGNscan1000">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-IGN-scan1000">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Scanned Maps/IGN/scan1000</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -292,7 +292,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIGN"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIGNscan25">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-IGN-scan25">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Scanned Maps/IGN/scan25</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -300,16 +300,16 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIGN"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIfremer">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-Ifremer">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Scanned Maps/Ifremer</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Cartes scannées/Ifremer</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIfremerSedimentology"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-Ifremer-Sedimentology"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIfremerSedimentology">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-Ifremer-Sedimentology">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Scanned Maps/Ifremer/Sedimentology</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -317,16 +317,16 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsIfremer"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsOceanographicInstitute">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-OceanographicInstitute">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Scanned Maps/Oceanographic Institute</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Cartes scannées/Institut océanographique</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsOceanographicInstituteMolluskMaps"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-OceanographicInstitute-MolluskMaps"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsOceanographicInstituteMolluskMaps">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-OceanographicInstitute-MolluskMaps">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Scanned Maps/Oceanographic Institute/Mollusk Maps</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -334,16 +334,16 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsOceanographicInstitute"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsSHOM">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-SHOM">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Scanned Maps/SHOM</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Cartes scannées/SHOM</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsSHOMMarineMaps"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-SHOM-MarineMaps"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsSHOMMarineMaps">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-SHOM-MarineMaps">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Scanned Maps/SHOM/Marine Maps</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -351,7 +351,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsSHOM"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMapsScanLittoral">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ScannedMaps-ScanLittoral">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Scanned Maps/Scan Littoral</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -365,21 +365,21 @@
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Imagerie</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAcousticImagery"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImagery"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImagerySatelliteImagery"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AcousticImagery"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AerialImagery"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-SatelliteImagery"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAcousticImagery">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AcousticImagery">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Imagery/Acoustic Imagery</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Imagerie/Imagerie acoustique</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAcousticImageryMultibeam"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAcousticImagerySonar"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AcousticImagery-Multibeam"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AcousticImagery-Sonar"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAcousticImageryMultibeam">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AcousticImagery-Multibeam">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Imagery/Acoustic Imagery/Multibeam</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -387,7 +387,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAcousticImagery"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAcousticImagerySonar">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AcousticImagery-Sonar">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Imagery/Acoustic Imagery/Sonar</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -395,20 +395,20 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAcousticImagery"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImagery">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AerialImagery">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Imagery/Aerial Imagery</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Imagerie/Imagerie aérienne</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImageryHyperspectralImagery"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImageryNumericImagery"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImageryInfraredOrthophotos"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImageryCoastalOrthophotos"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImageryHistoricPhotos"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AerialImagery-HyperspectralImagery"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AerialImagery-NumericImagery"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AerialImagery-InfraredOrthophotos"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AerialImagery-CoastalOrthophotos"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AerialImagery-HistoricPhotos"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImageryHyperspectralImagery">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AerialImagery-HyperspectralImagery">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Imagery/Aerial Imagery/Hyperspectral Imagery</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -416,7 +416,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImagery"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImageryNumericImagery">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AerialImagery-NumericImagery">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Imagery/Aerial Imagery/Numeric Imagery</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -424,7 +424,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImagery"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImageryInfraredOrthophotos">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AerialImagery-InfraredOrthophotos">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Imagery/Aerial Imagery/Infrared Orthophotos</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -432,7 +432,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImagery"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImageryCoastalOrthophotos">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AerialImagery-CoastalOrthophotos">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Imagery/Aerial Imagery/Coastal Orthophotos</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -440,7 +440,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImagery"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImageryHistoricPhotos">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-AerialImagery-HistoricPhotos">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Imagery/Aerial Imagery/Historic Photos</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -448,7 +448,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ImageryAerialImagery"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ImagerySatelliteImagery">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#Imagery-SatelliteImagery">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Imagery/Satellite Imagery</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -462,13 +462,13 @@
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Milieu biologique</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentBioinformatics"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentContaminants"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpecies"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentHabitats"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitats"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Bioinformatics"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Contaminants"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Species"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Habitats"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentBioinformatics">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Bioinformatics">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Bioinformatics</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -476,7 +476,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentContaminants">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Contaminants">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Contaminants</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -484,21 +484,21 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpecies">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Species">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Species</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Milieu biologique/Espèces</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpeciesAvifauna"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpeciesFishSpeciespreyedonbyAvifauna"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpeciesFishSpeciesofCommercialInterest"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpeciesUndesirableProliferatingSpecies"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpeciesRareProtectedSpeciesandSpeciesinDangerofExtinction"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpeciesFauna"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Species-Avifauna"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Species-FishSpeciespreyedonbyAvifauna"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Species-FishSpeciesofCommercialInterest"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Species-UndesirableProliferatingSpecies"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Species-RareProtectedSpeciesandSpeciesinDangerofExtinction"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Species-Fauna"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpeciesAvifauna">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Species-Avifauna">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Species/Avifauna</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -506,7 +506,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpecies"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpeciesFishSpeciespreyedonbyAvifauna">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Species-FishSpeciespreyedonbyAvifauna">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Species/Fish Species preyed on by Avifauna</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -514,7 +514,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpecies"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpeciesFishSpeciesofCommercialInterest">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Species-FishSpeciesofCommercialInterest">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Species/Fish Species of Commercial Interest</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -522,7 +522,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpecies"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpeciesUndesirableProliferatingSpecies">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Species-UndesirableProliferatingSpecies">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Species/Undesirable Proliferating Species</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -530,7 +530,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpecies"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpeciesRareProtectedSpeciesandSpeciesinDangerofExtinction">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Species-RareProtectedSpeciesandSpeciesinDangerofExtinction">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Species/Rare, Protected Species, and Species in Danger of Extinction</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -538,7 +538,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpecies"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpeciesFauna">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Species-Fauna">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Species/Fauna</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -546,7 +546,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentSpecies"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentHabitats">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-Habitats">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Habitats</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -554,19 +554,19 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitats">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Key Habitats</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Milieu biologique/Habitats remarquables</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsSeagrass"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsHoneycombWorm"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsMaerl"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsHumidCoastalZones"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats-Seagrass"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats-HoneycombWorm"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats-Maerl"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats-HumidCoastalZones"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsSeagrass">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats-Seagrass">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Key Habitats/Seagrass</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -574,7 +574,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitats"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsHoneycombWorm">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats-HoneycombWorm">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Key Habitats/Honeycomb Worm</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -582,7 +582,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitats"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsMaerl">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats-Maerl">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Key Habitats/Maerl</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -590,18 +590,18 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitats"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsHumidCoastalZones">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats-HumidCoastalZones">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Key Habitats/Humid Coastal Zones</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Milieu biologique/Habitats remarquables/Zones humides littorales</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitats"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsHumidCoastalZonesLagoons"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsHumidCoastalZonesMaritimedikedmarsh"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsHumidCoastalZonesSaltMeadows"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats-HumidCoastalZones-Lagoons"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats-HumidCoastalZones-Maritimedikedmarsh"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats-HumidCoastalZones-SaltMeadows"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsHumidCoastalZonesLagoons">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats-HumidCoastalZones-Lagoons">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Key Habitats/Humid Coastal Zones/Lagoons</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -609,7 +609,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsHumidCoastalZones"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsHumidCoastalZonesMaritimedikedmarsh">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats-HumidCoastalZones-Maritimedikedmarsh">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Key Habitats/Humid Coastal Zones/Maritime diked marsh</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -617,7 +617,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsHumidCoastalZones"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironmentKeyHabitatsHumidCoastalZonesSaltMeadows">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#BiologicalEnvironment-KeyHabitats-HumidCoastalZones-SaltMeadows">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Biological Environment/Key Habitats/Humid Coastal Zones/Salt Meadows</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -631,12 +631,12 @@
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Milieu chimique</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironmentBiotope"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironmentWaterColumn"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironmentContaminants"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironmentSediment"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironment-Biotope"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironment-WaterColumn"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironment-Contaminants"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironment-Sediment"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironmentBiotope">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironment-Biotope">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Chemical Environment/Biotope</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -644,7 +644,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironment"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironmentWaterColumn">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironment-WaterColumn">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Chemical Environment/Water Column</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -652,7 +652,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironment"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironmentContaminants">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironment-Contaminants">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Chemical Environment/Contaminants</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -660,7 +660,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironment"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironmentSediment">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#ChemicalEnvironment-Sediment">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Chemical Environment/Sediment</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -674,28 +674,28 @@
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Milieu physique</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentBathymetry"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentClimatology"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeology"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentPhysicalHabitats"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentHydrodynamics"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentCoastalHydrodynamics"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentOceanHydrodynamics"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentTerrestrialHydrography"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentPhysiographicLimits"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Bathymetry"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Climatology"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-PhysicalHabitats"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Hydrodynamics"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-CoastalHydrodynamics"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-OceanHydrodynamics"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-TerrestrialHydrography"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-PhysiographicLimits"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentBathymetry">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Bathymetry">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Bathymetry</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Milieu physique/Bathymétrie</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentBathymetryBathymetricContours"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentBathymetryDigitalTerrainModel"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentBathymetryDepthSounder"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Bathymetry-BathymetricContours"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Bathymetry-DigitalTerrainModel"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Bathymetry-DepthSounder"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentBathymetryBathymetricContours">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Bathymetry-BathymetricContours">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Bathymetry/Bathymetric Contours</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -703,7 +703,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentBathymetry"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentBathymetryDigitalTerrainModel">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Bathymetry-DigitalTerrainModel">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Bathymetry/Digital Terrain Model</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -711,7 +711,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentBathymetry"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentBathymetryDepthSounder">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Bathymetry-DepthSounder">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Bathymetry/Depth Sounder</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -719,7 +719,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentBathymetry"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentClimatology">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Climatology">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Climatology</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -727,23 +727,23 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeology">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Sedimentology Geology</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Milieu physique/Géologie sédimentologie</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologyCoastalErosion"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologyGeology"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologyGeomorphology"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologyHydromorphology"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologyIsopachs"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologySeabedNature"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologyMineralResources"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologyWorks"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-CoastalErosion"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-Geology"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-Geomorphology"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-Hydromorphology"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-Isopachs"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-SeabedNature"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-MineralResources"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-Works"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologyCoastalErosion">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-CoastalErosion">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Sedimentology Geology/Coastal Erosion</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -751,7 +751,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeology"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologyGeology">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-Geology">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Sedimentology Geology/Geology</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -759,7 +759,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeology"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologyGeomorphology">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-Geomorphology">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Sedimentology Geology/Geomorphology</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -767,7 +767,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeology"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologyHydromorphology">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-Hydromorphology">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Sedimentology Geology/Hydromorphology</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -775,7 +775,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeology"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologyIsopachs">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-Isopachs">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Sedimentology Geology/Isopachs</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -783,7 +783,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeology"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologySeabedNature">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-SeabedNature">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Sedimentology Geology/Seabed Nature</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -791,7 +791,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeology"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologyMineralResources">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-MineralResources">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Sedimentology Geology/Mineral Resources</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -799,7 +799,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeology"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeologyWorks">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-SedimentologyGeology-Works">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Sedimentology Geology/Works</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -807,7 +807,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentSedimentologyGeology"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentPhysicalHabitats">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-PhysicalHabitats">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Physical Habitats</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -815,19 +815,19 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentHydrodynamics">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Hydrodynamics">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Hydrodynamics</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Milieu physique/Hydrodynamique</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentHydrodynamicsWaterColumn"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentHydrodynamicsCurrents"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentHydrodynamicsSwell"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentHydrodynamicsTide"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Hydrodynamics-WaterColumn"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Hydrodynamics-Currents"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Hydrodynamics-Swell"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Hydrodynamics-Tide"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentCoastalHydrodynamics">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-CoastalHydrodynamics">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Coastal Hydrodynamics</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -835,7 +835,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentOceanHydrodynamics">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-OceanHydrodynamics">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Ocean Hydrodynamics</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -843,7 +843,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentHydrodynamicsWaterColumn">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Hydrodynamics-WaterColumn">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Hydrodynamics/Water Column</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -851,7 +851,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentHydrodynamics"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentHydrodynamicsCurrents">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Hydrodynamics-Currents">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Hydrodynamics/Currents</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -859,7 +859,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentHydrodynamics"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentHydrodynamicsSwell">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Hydrodynamics-Swell">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Hydrodynamics/Swell</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -867,7 +867,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentHydrodynamics"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentHydrodynamicsTide">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-Hydrodynamics-Tide">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Hydrodynamics/Tide</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -875,18 +875,18 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentHydrodynamics"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentTerrestrialHydrography">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-TerrestrialHydrography">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Terrestrial Hydrography</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Milieu physique/Hydrographie terrestre</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentTerrestrialHydrographyDrainageBasin"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentTerrestrialHydrographyHydrographicNetwork"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentTerrestrialHydrographySurfaceWaters"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-TerrestrialHydrography-DrainageBasin"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-TerrestrialHydrography-HydrographicNetwork"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-TerrestrialHydrography-SurfaceWaters"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentTerrestrialHydrographyDrainageBasin">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-TerrestrialHydrography-DrainageBasin">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Terrestrial Hydrography/Drainage Basin</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -894,7 +894,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentTerrestrialHydrography"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentTerrestrialHydrographyHydrographicNetwork">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-TerrestrialHydrography-HydrographicNetwork">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Terrestrial Hydrography/Hydrographic Network</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -902,7 +902,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentTerrestrialHydrography"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentTerrestrialHydrographySurfaceWaters">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-TerrestrialHydrography-SurfaceWaters">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Terrestrial Hydrography/Surface Waters</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -910,17 +910,17 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentTerrestrialHydrography"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentPhysiographicLimits">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-PhysiographicLimits">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Physiographic Limits</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Milieu physique/Limites physiographiques</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentPhysiographicLimitsForeshore"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentPhysiographicLimitsShoreline"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-PhysiographicLimits-Foreshore"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-PhysiographicLimits-Shoreline"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentPhysiographicLimitsForeshore">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-PhysiographicLimits-Foreshore">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Physiographic Limits/Foreshore</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -935,7 +935,7 @@
       <skos:prefLabel xml:lang="fr">/Milieu physique/Limites physiographiques/Toponyme</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironmentPhysiographicLimitsShoreline">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#PhysicalEnvironment-PhysiographicLimits-Shoreline">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Physical Environment/Physiographic Limits/Shoreline</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -949,15 +949,15 @@
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Réglementation et gestion</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementMarineAdministrativeData"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementTerrestrialAdministrativeData"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationData"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNaturalHeritageInventoryandProtection"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulations"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementTechnicalandManagementZonations"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementMilitaryZones"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-MarineAdministrativeData"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-TerrestrialAdministrativeData"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NaturalHeritageInventoryandProtection"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-TechnicalandManagementZonations"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-MilitaryZones"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementMarineAdministrativeData">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-MarineAdministrativeData">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Marine Administrative Data</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -965,7 +965,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementTerrestrialAdministrativeData">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-TerrestrialAdministrativeData">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Terrestrial Administrative Data</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -973,28 +973,28 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationData">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Navigation Data</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Réglementation et gestion/Données de navigation</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSurfaceNavigation"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSeafloorObstacles"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SurfaceNavigation"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SeafloorObstacles"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSurfaceNavigation">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SurfaceNavigation">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Navigation Data/Surface Navigation</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Réglementation et gestion/Données de navigation/Navigation de surface</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationData"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSurfaceNavigationMoorings"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSurfaceNavigationRegulatedNavigation"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSurfaceNavigationDangerousAreas"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SurfaceNavigation-Moorings"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SurfaceNavigation-RegulatedNavigation"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SurfaceNavigation-DangerousAreas"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSurfaceNavigationMoorings">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SurfaceNavigation-Moorings">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Navigation Data/Surface Navigation/Moorings</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1002,7 +1002,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSurfaceNavigation"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSurfaceNavigationRegulatedNavigation">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SurfaceNavigation-RegulatedNavigation">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Navigation Data/Surface Navigation/Regulated Navigation</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1010,7 +1010,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSurfaceNavigation"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSurfaceNavigationDangerousAreas">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SurfaceNavigation-DangerousAreas">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Navigation Data/Surface Navigation/Dangerous Areas</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1018,18 +1018,18 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSurfaceNavigation"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSeafloorObstacles">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SeafloorObstacles">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Navigation Data/Seafloor Obstacles</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Réglementation et gestion/Données de navigation/Obstacles de fond</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationData"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSeafloorObstaclesPipelines"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSeafloorObstaclesWrecks"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSeafloorObstaclesObstructions"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SeafloorObstacles-Pipelines"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SeafloorObstacles-Wrecks"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SeafloorObstacles-Obstructions"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSeafloorObstaclesPipelines">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SeafloorObstacles-Pipelines">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Navigation Data/Seafloor Obstacles/Pipelines</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1037,7 +1037,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSeafloorObstacles"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSeafloorObstaclesWrecks">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SeafloorObstacles-Wrecks">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Navigation Data/Seafloor Obstacles/Wrecks</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1045,7 +1045,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSeafloorObstacles"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSeafloorObstaclesObstructions">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NavigationData-SeafloorObstacles-Obstructions">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Navigation Data/Seafloor Obstacles/Obstructions</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1053,19 +1053,19 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNavigationDataSeafloorObstacles"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNaturalHeritageInventoryandProtection">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NaturalHeritageInventoryandProtection">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Natural Heritage Inventory and Protection</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Réglementation et gestion/Protection patrimoniale et inventaire</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNaturalHeritageInventoryandProtectionOther"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNaturalHeritageInventoryandProtectionCELRL"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNaturalHeritageInventoryandProtectionDIREN"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNaturalHeritageInventoryandProtectionMNHN"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NaturalHeritageInventoryandProtection-Other"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NaturalHeritageInventoryandProtection-CELRL"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NaturalHeritageInventoryandProtection-DIREN"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NaturalHeritageInventoryandProtection-MNHN"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNaturalHeritageInventoryandProtectionOther">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NaturalHeritageInventoryandProtection-Other">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Natural Heritage Inventory and Protection/Other</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1073,7 +1073,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNaturalHeritageInventoryandProtection"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNaturalHeritageInventoryandProtectionCELRL">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NaturalHeritageInventoryandProtection-CELRL">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Natural Heritage Inventory and Protection/CELRL</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1081,7 +1081,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNaturalHeritageInventoryandProtection"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNaturalHeritageInventoryandProtectionDIREN">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NaturalHeritageInventoryandProtection-DIREN">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Natural Heritage Inventory and Protection/DIREN</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1089,7 +1089,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNaturalHeritageInventoryandProtection"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNaturalHeritageInventoryandProtectionMNHN">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-NaturalHeritageInventoryandProtection-MNHN">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Natural Heritage Inventory and Protection/MNHN</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1097,28 +1097,28 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementNaturalHeritageInventoryandProtection"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulations">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Usage Regulations</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Réglementation et gestion/Réglementation des usages</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsRecreativeActivities"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsMarineCultures"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsPlotorConcession"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsFisheries"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-RecreativeActivities"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-MarineCultures"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-PlotorConcession"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-Fisheries"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsRecreativeActivities">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-RecreativeActivities">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Usage Regulations/Recreative Activities</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Réglementation et gestion/Réglementation des usages/Activités récréatives</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulations"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsRecreativeActivitiesSwimmingAreas"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-RecreativeActivities-SwimmingAreas"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsRecreativeActivitiesSwimmingAreas">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-RecreativeActivities-SwimmingAreas">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Usage Regulations/Recreative Activities/Swimming Areas</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1126,16 +1126,16 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsRecreativeActivities"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsMarineCultures">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-MarineCultures">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Usage Regulations/Marine Cultures</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Réglementation et gestion/Réglementation des usages/Cultures marines</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulations"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsMarineCulturesShellfishFarmCadastre"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-MarineCultures-ShellfishFarmCadastre"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsMarineCulturesShellfishFarmCadastre">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-MarineCultures-ShellfishFarmCadastre">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Usage Regulations/Marine Cultures/Shellfish Farm Cadastre</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1143,7 +1143,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsMarineCultures"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsPlotorConcession">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-PlotorConcession">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Usage Regulations/Plot or Concession</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1151,18 +1151,18 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulations"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsFisheries">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-Fisheries">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Usage Regulations/Fisheries</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Réglementation et gestion/Réglementation des usages/Pêche</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulations"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsFisheriesClosedAreas"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsFisheriesDeposits"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsFisheriesFishingAreaLimits"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-Fisheries-ClosedAreas"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-Fisheries-Deposits"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-Fisheries-FishingAreaLimits"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsFisheriesClosedAreas">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-Fisheries-ClosedAreas">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Usage Regulations/Fisheries/Closed Areas</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1170,7 +1170,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsFisheries"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsFisheriesDeposits">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-Fisheries-Deposits">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Usage Regulations/Fisheries/Deposits</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1178,7 +1178,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsFisheries"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsFisheriesFishingAreaLimits">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-UsageRegulations-Fisheries-FishingAreaLimits">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Usage Regulations/Fisheries/Fishing Area Limits</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1186,18 +1186,18 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementUsageRegulationsFisheries"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementTechnicalandManagementZonations">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-TechnicalandManagementZonations">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Technical and Management Zonations</skos:prefLabel>
       <skos:definition xml:lang="en"/>
       <skos:prefLabel xml:lang="fr">/Réglementation et gestion/Zonages techniques et de gestion</skos:prefLabel>
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementTechnicalandManagementZonationsZonationsresultingfromtheCoastalLawDecree"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementTechnicalandManagementZonationsZonesofSeafoodQualityLabelling"/>
-      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementTechnicalandManagementZonationsSensitiveZones"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-TechnicalandManagementZonations-ZonationsresultingfromtheCoastalLawDecree"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-TechnicalandManagementZonations-ZonesofSeafoodQualityLabelling"/>
+      <skos:narrower rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-TechnicalandManagementZonations-SensitiveZones"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementTechnicalandManagementZonationsZonationsresultingfromtheCoastalLawDecree">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-TechnicalandManagementZonations-ZonationsresultingfromtheCoastalLawDecree">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Technical and Management Zonations/Zonations resulting from the Coastal Law Decree</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1205,7 +1205,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementTechnicalandManagementZonations"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementTechnicalandManagementZonationsZonesofSeafoodQualityLabelling">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-TechnicalandManagementZonations-ZonesofSeafoodQualityLabelling">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Technical and Management Zonations/Zones of Seafood Quality Labelling</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1213,7 +1213,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementTechnicalandManagementZonations"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementTechnicalandManagementZonationsSensitiveZones">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-TechnicalandManagementZonations-SensitiveZones">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Technical and Management Zonations/Sensitive Zones</skos:prefLabel>
       <skos:definition xml:lang="en"/>
@@ -1221,7 +1221,7 @@
       <skos:definition xml:lang="fr"/>
       <skos:broader rdf:resource="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementTechnicalandManagementZonations"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagementMilitaryZones">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/theme#RegulationandManagement-MilitaryZones">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:prefLabel xml:lang="en">/Regulation and Management/Military Zones</skos:prefLabel>
       <skos:definition xml:lang="en"/>
