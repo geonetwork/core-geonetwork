@@ -30,6 +30,8 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.Collection;
 
@@ -71,6 +73,15 @@ public class TransactionManager {
             }
 
             result = action.doInTransaction(transaction);
+
+            // GlobalExceptionManager stores the exception in a request attribute, to be processed to rollback the transaction
+            // as otherwise GlobalExceptionManager processes the exception and the code doesn't enter in the catch block
+            // to rollback the transaction
+            Throwable ex = (Throwable) RequestContextHolder.currentRequestAttributes().getAttribute("exception", RequestAttributes.SCOPE_REQUEST);
+
+            if (ex != null) {
+                doRollback(context, transactionManager, transaction);
+            }
 
         } catch (Throwable e) {
             Log.error(Log.JEEVES, "Error occurred within a transaction", e);
