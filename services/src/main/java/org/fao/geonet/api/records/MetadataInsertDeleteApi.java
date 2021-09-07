@@ -206,6 +206,9 @@ public class MetadataInsertDeleteApi {
         SearchManager searchManager = appContext.getBean(SearchManager.class);
         Store store = context.getBean("resourceStore", Store.class);
 
+        MetadataPreRemove preRemoveEvent = new MetadataPreRemove(metadata);
+        appContext.publishEvent(preRemoveEvent);
+
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
                 && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
             MetadataUtils.backupRecord(metadata, context);
@@ -215,9 +218,6 @@ public class MetadataInsertDeleteApi {
         if (metadata instanceof MetadataDraft) {
             approved=false;
         }
-
-        MetadataPreRemove preRemoveEvent = new MetadataPreRemove(metadata);
-        appContext.publishEvent(preRemoveEvent);
 
         store.delResources(context, metadata.getUuid(), approved);
         RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, metadata.getId() + "");
@@ -264,13 +264,13 @@ public class MetadataInsertDeleteApi {
                     || metadataDraftRepository.findOneByUuid(uuid) != null) {
                 report.addNotEditableMetadataId(metadata.getId());
             } else {
+                MetadataPreRemove preRemoveEvent = new MetadataPreRemove(metadata);
+                appContext.publishEvent(preRemoveEvent);
+
                 if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
                         && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
                     MetadataUtils.backupRecord(metadata, context);
                 }
-
-                MetadataPreRemove preRemoveEvent = new MetadataPreRemove(metadata);
-                appContext.publishEvent(preRemoveEvent);
 
                 store.delResources(context, metadata.getUuid());
 
