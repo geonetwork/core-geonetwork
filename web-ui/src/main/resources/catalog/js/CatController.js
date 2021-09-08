@@ -298,7 +298,7 @@ goog.require('gn_alert');
                 "order" : { "_key" : "asc" }
               },
               'meta': {
-                'collapsed': true,
+                'collapsed': true
                 // 'translateOnLoad': true,
                 // 'treeKeySeparator': '^'
               }
