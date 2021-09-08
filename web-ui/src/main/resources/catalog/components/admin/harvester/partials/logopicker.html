@@ -1,6 +1,10 @@
 <button type="button"
         class="btn btn-default"
         data-ng-click="openLogoPicker()">
+  <img class="gn-selected-logo gn-margin-right"
+       data-ng-if="logo"
+       data-ng-src="../../images/harvesting/{{logo}}"
+       alt="{{logo}}"/>
   <span data-translate="">logoSelect</span>
 </button>
 <div data-gn-modal=""
