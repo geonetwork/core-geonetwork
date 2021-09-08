@@ -51,9 +51,10 @@
   var searchFormController =
       function($scope, $location, $parse, $translate, gnSearchManagerService,
                Metadata, gnSearchLocation, gnESClient,
-               gnESService, gnESFacet, gnAlertService) {
+               gnESService, gnESFacet, gnAlertService, gnSearchSettings) {
     var defaultParams = {};
     var self = this;
+    $scope.facetConfig = gnSearchSettings.facetConfig;
 
     var hiddenParams = $scope.searchObj.hiddenParams;
     $scope.searchObj.configId = $scope.searchObj.configId || 'search';
@@ -649,7 +650,8 @@
     'gnESClient',
     'gnESService',
     'gnESFacet',
-    'gnAlertService'
+    'gnAlertService',
+    'gnSearchSettings'
   ];
 
   /**
