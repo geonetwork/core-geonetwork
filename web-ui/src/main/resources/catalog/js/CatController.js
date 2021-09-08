@@ -619,7 +619,7 @@ goog.require('gn_alert');
                 'url' : '/formatters/xsl-view?root=div'
               }, {
                 'if': {'documentStandard': 'dublin-core'},
-                'url' : '/formatters/xsl-view?view=sextant&root=div&template=sextant-summary-view'
+                'url' : '/formatters/xsl-view?view=sextant&root=div&template=sextant-summary-view&header=false'
               }],
               'url' : '/formatters/xsl-view?view=sextant&root=div&loadJS=false&template=sextant-summary-view&header=false&related='
             }, {
