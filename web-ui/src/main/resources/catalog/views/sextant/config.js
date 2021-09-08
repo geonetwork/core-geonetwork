@@ -367,11 +367,15 @@
             function (criteria) {
               var name = criteria;
               var direction = '';
-              if (name.substring(0, 1) == '+') {
+              if (name.substring(0, 1) === '+') {
                 name = name.substring(1);
-              } else if (name.substring(0, 1) == '-') {
+              } else if (name.substring(0, 1) === '-') {
                 name = name.substring(1);
                 direction = 'desc';
+              }
+              // use a specific field for title sort
+              if (name === 'title') {
+                name = 'resourceTitleObject.default.keyword';
               }
               return {
                 sortBy: name,
