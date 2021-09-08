@@ -60,6 +60,10 @@
             }
           });
 
+          this.selectProcess = function() {
+            $scope.selectedProcess = $scope.processes[parseInt($scope.selectedProcessIndex)];
+          }
+
           /**
            * current menu panel size
            * @type {'collapsed'|'middle'|'full'}
@@ -94,7 +98,9 @@
             scope.download = null;
             scope.wfsLink = null;
             scope.hasIndexedFeatures = false;
-            scope.process = false;
+            scope.processes = null;
+            scope.selectedProcess = null;
+            scope.selectedProcessIndex = '0'; // this is because angularjs only supports string in select options
 
             // layer has no associated metadata: do nothing
             if (!newLayer.get('md')) { return; }
@@ -128,10 +134,10 @@
             }
 
             // look for processes
-            var processable = newLayer.get('md').process === true;
             var p = newLayer.get('processes');
-            if (Array.isArray(p) && processable) {
-              scope.process = p;
+            if (p) {
+              scope.processes = Array.isArray(p) ? p : [p];
+              scope.selectedProcess = scope.processes[0];
             }
           }
 
