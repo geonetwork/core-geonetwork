@@ -216,8 +216,9 @@
   }]);
 
   module.directive('esFacets', [
-   'gnFacetSorter',
-    function (gnFacetSorter) {
+    'gnFacetSorter',
+    '$translate',
+    function (gnFacetSorter, $translate) {
       return {
         restrict: 'A',
         controllerAs: 'ctrl',
@@ -233,8 +234,13 @@
           return attrs.template || '../../catalog/components/elasticsearch/directives/' +
             'partials/facets.html'
         },
-        link: function (scope, element, attrs) {
+        link: function (scope) {
           scope.facetSorter = gnFacetSorter.sortByTranslation;
+          scope.getFacetLabel = function(facet) {
+            if (!facet.meta || !facet.meta.labels) { return null; }
+            var currentLang = $translate.use();
+            return facet.meta.labels[currentLang];
+          }
         }
       }
     }])

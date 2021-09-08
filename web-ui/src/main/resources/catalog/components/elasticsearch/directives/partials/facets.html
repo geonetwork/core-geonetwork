@@ -39,7 +39,7 @@
               ng-class="{'gn-field-empty': !ctrl.searchCtrl.isInSearch([facet.key]),
               'fa-arrow-circle-right': ctrl.fLvlCollapse[facet.key],
               'fa-arrow-circle-down': !ctrl.fLvlCollapse[facet.key]}"></span>
-        <span class="flex-shrink text-ellipsis">{{('facet-' + facet.key) | facetKeyTranslator}}</span>
+        <span class="flex-shrink text-ellipsis">{{getFacetLabel(facet) || (('facet-' + facet.key) | facetKeyTranslator)}}</span>
       </a>
       <div class="gn-facet-root-container"
           ng-class="{'collapse': ctrl.fLvlCollapse[facet.key]}">

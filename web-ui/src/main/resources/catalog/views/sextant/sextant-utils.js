@@ -111,7 +111,8 @@
           var esFacet = angular.extend({}, esFacetTemplate);
           esFacet[esFacetName].meta = angular.extend({
             displayFilter: !!sxtFacet.filter,
-            collapsed: !sxtFacet.opened
+            collapsed: !sxtFacet.opened,
+            labels: sxtFacet.labels
           }, esFacetTemplate[esFacetName].meta);
           angular.extend(esFacetConfig, esFacet);
         } catch(e) {
