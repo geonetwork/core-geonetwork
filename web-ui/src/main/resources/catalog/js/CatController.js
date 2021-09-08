@@ -570,7 +570,7 @@ goog.require('gn_alert');
               'url' : ''
             }, {
               'label': 'full',
-              'url' : '/formatters/xsl-view?root=div&view=xml'
+              'url' : '/formatters/xsl-view?root=div&view=advanced'
             }]
           },
           'downloadFormatter': [{
