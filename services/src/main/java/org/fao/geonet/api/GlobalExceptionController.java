@@ -47,6 +47,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
@@ -73,6 +75,8 @@ public class GlobalExceptionController {
         NotAllowedException.class
     })
     public ApiError notAllowedHandler(final Exception exception, final HttpServletRequest request) {
+        storeApiErrorCause(exception);
+
         if (contentTypeNeedsBody(request)) {
             updateExceptionLocale(exception, request);
             ApiError apiError = new ApiError("forbidden", exception);
@@ -91,6 +95,8 @@ public class GlobalExceptionController {
         ServiceNotAllowedEx.class
     })
     public Object unauthorizedHandler(final Exception exception) {
+        storeApiErrorCause(exception);
+
         return new ApiError("unauthorized", exception);
     }
 
@@ -100,6 +106,8 @@ public class GlobalExceptionController {
         SecurityException.class,
     })
     public Object securityHandler(final Exception exception) {
+        storeApiErrorCause(exception);
+
         return new ApiError("forbidden", exception);
     }
 
@@ -109,6 +117,8 @@ public class GlobalExceptionController {
         AccessDeniedException.class
     })
     public Object securityHandler(final HttpServletRequest request, final Exception exception) {
+        storeApiErrorCause(exception);
+
         if (contentTypeNeedsBody(request)) {
                 ApiError response = null;
             try {
@@ -131,6 +141,8 @@ public class GlobalExceptionController {
         MaxUploadSizeExceededException.class
     })
     public ApiError maxFileExceededHandler(final Exception exception) {
+        storeApiErrorCause(exception);
+
         return new ApiError("max_file_exceeded", exception);
     }
 
@@ -142,6 +154,8 @@ public class GlobalExceptionController {
         RuntimeException.class
     })
     public ApiError runtimeExceptionHandler(final Exception exception) {
+        storeApiErrorCause(exception);
+
         return new ApiError("runtime_exception", exception);
     }
 
@@ -151,6 +165,8 @@ public class GlobalExceptionController {
         FeatureNotEnabledException.class
     })
     public ApiError runtimeExceptionHandler(final FeatureNotEnabledException exception) {
+        storeApiErrorCause(exception);
+
         return new ApiError("feature_disabled", exception);
     }
 
@@ -160,6 +176,8 @@ public class GlobalExceptionController {
         WebApplicationException.class
     })
     public ApiError webappExceptionHandler(final Exception exception) {
+        storeApiErrorCause(exception);
+
         return new ApiError("webapplication_exception", exception);
     }
 
@@ -170,6 +188,8 @@ public class GlobalExceptionController {
         GeoPublisherException.class,
         NoResultsFoundException.class})
     public ApiError NotFoundHandler(final Exception exception) {
+        storeApiErrorCause(exception);
+
         return new ApiError("not_found", exception);
     }
 
@@ -179,6 +199,8 @@ public class GlobalExceptionController {
         UserNotFoundEx.class,
         ResourceNotFoundException.class})
     public ApiError resourceNotFoundHandler(final HttpServletRequest request, final Exception exception) {
+        storeApiErrorCause(exception);
+
         if (contentTypeNeedsBody(request)) {
             if (exception instanceof ILocalizedException && StringUtils.isEmpty(((ILocalizedException) exception).getMessageKey())) {
                 ((ILocalizedException) exception).setMessageKey("api.exception.resourceNotFound");
@@ -268,6 +290,8 @@ public class GlobalExceptionController {
     @ExceptionHandler({
         ResourceAlreadyExistException.class})
     public ApiError resourceAlreadyExistHandler(final Exception exception) {
+        storeApiErrorCause(exception);
+
         return new ApiError("resource_already_exist", exception);
     }
 
@@ -275,6 +299,8 @@ public class GlobalExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ApiError missingParameterHandler(final Exception exception) {
+        storeApiErrorCause(exception);
+
         return new ApiError("required_parameter_missing", exception);
     }
 
@@ -289,6 +315,8 @@ public class GlobalExceptionController {
         DoiClientException.class
     })
     public ApiError unsatisfiedParameterHandler(final Exception exception) {
+        storeApiErrorCause(exception);
+
         return new ApiError("unsatisfied_request_parameter", exception);
     }
 
@@ -298,6 +326,18 @@ public class GlobalExceptionController {
         MissingResourceException.class
     })
     public ApiError missingResourceHandler(final Exception exception) {
+        storeApiErrorCause(exception);
+
         return new ApiError("missing_resource_parameter", exception);
+    }
+
+    /**
+     * Stores the exception in the request attributes to be processed by the TransactionManager and
+     * rollback the transaction.
+     *
+     * @param exception
+     */
+    private void storeApiErrorCause(final Exception exception) {
+        RequestContextHolder.currentRequestAttributes().setAttribute("exception", exception, RequestAttributes.SCOPE_REQUEST);
     }
 }

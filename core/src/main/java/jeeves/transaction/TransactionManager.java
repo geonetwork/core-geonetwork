@@ -30,6 +30,8 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.Collection;
 
@@ -99,11 +101,26 @@ public class TransactionManager {
             }
         } finally {
             try {
-                if (readOnly) {
+                // GlobalExceptionManager stores the exception in a request attribute, to be processed to rollback the transaction
+                // as otherwise GlobalExceptionManager processes the exception and the code doesn't enter in the catch block
+                // to rollback the transaction
+                Throwable requestException = null;
+                try {
+                    requestException = (Throwable) RequestContextHolder.currentRequestAttributes().getAttribute("exception", RequestAttributes.SCOPE_REQUEST);
+                } catch (IllegalStateException ex) {
+                    // Ignore: transaction non-related to a web request
+                }
+
+                if (requestException != null) {
                     isRolledBack = rollbackIfNotRolledBack(context, transactionManager, status, isRolledBack);
-                } else if (!isRolledBack && (isNewTransaction || commitBehavior == CommitBehavior.ALWAYS_COMMIT)) {
-                    doCommit(context, transactionManager, status);
-                    isCommitted = true;
+                } else {
+                    if (readOnly) {
+                        isRolledBack = rollbackIfNotRolledBack(context, transactionManager, status, isRolledBack);
+                    } else if (!isRolledBack && (isNewTransaction || commitBehavior == CommitBehavior.ALWAYS_COMMIT)) {
+                        doCommit(context, transactionManager, status);
+                        isCommitted = true;
+                    }
+
                 }
             } catch (TransactionSystemException e) {
                 if (!(e.getOriginalException() instanceof RollbackException)) {
