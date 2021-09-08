@@ -553,8 +553,11 @@
                 });
                 closeEditor();
               }, function(reason) {
+                //check if reason.data.error is defined
+                var errorMsg = reason.data.error==null? reason.data.message : reason.data.error.message;
+
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant(reason.data.message),
+                  title: $translate.instant(errorMsg),
                   error: reason.data.error.description,
                   timeout: 0,
                   type: 'danger'

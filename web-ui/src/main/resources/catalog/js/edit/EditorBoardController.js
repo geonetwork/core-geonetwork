@@ -125,8 +125,11 @@
               });
               deferred.resolve(data);
             }, function(reason) {
+              //check if reason.data.error is defined
+              var errorMsg = reason.data.error==null? reason.data.message : reason.data.error.message;
+
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant(reason.data.message),
+                title: $translate.instant(errorMsg),
                 timeout: 0,
                 type: 'danger'
               });
