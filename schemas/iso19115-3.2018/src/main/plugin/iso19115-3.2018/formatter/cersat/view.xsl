@@ -548,9 +548,9 @@
                     <xsl:with-param name="key" select="'eo-bbox'"/>
                   </xsl:call-template>
                 </strong>
-                <xsl:value-of select="format-number(gex:southBoundLatitude, $numberFormat)"/> to
+                Latitude <xsl:value-of select="format-number(gex:southBoundLatitude, $numberFormat)"/> to
                 <xsl:value-of select="format-number(gex:northBoundLatitude, $numberFormat)"/>,
-                <xsl:value-of select="format-number(gex:westBoundLongitude, $numberFormat)"/> to
+                Longitude <xsl:value-of select="format-number(gex:westBoundLongitude, $numberFormat)"/> to
                 <xsl:value-of select="format-number(gex:eastBoundLongitude, $numberFormat)"/>
               </div>
             </xsl:for-each>
