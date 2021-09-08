@@ -457,8 +457,13 @@ public class SettingManager {
         String baseURL = pathFinder.getBaseUrl();
         String protocol = getValue(Settings.SYSTEM_SERVER_PROTOCOL);
         String host = getValue(Settings.SYSTEM_SERVER_HOST);
-        String port = getValue(Settings.SYSTEM_SERVER_PORT);
 
+        if("https".equals(protocol)) {
+            String port = getValue(Settings.SYSTEM_SERVER_SECURE_PORT);
+        } else {
+            String port = getValue(Settings.SYSTEM_SERVER_PORT);
+        }
+        
         return protocol + "://" + host + (isPortRequired(protocol, port) ? ":" + port : "");
     }
 
