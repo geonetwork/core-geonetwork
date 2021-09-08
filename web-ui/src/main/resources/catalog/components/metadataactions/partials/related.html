@@ -157,15 +157,18 @@
             <div data-gn-attribute-table-renderer="r.featureType.attributeTable.element">
             </div>
           </div>
-
+         
           <div data-ng-switch-default>
             <p class="text-muted"
-               data-ng-if="mainType.indexOf('MD') == 0 && r.id
-                    && r.description && (r.description | gnLocalized: lang).length > 0">
-              <span class="gn-related-description">
+               data-ng-if="mainType.indexOf('MD') == 0 && r.id"
+               data-ng-init="hasDescription = r.description && (r.description | gnLocalized: lang).length > 0;">
+              <span class="gn-related-description"
+                    data-ng-show="hasDescription">
                 {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a data-ng-click="config.showMore(r, md)" href="">{{'more' |
                 translate}}...</a>
               </span>
+              <span data-ng-show="!hasDescription"
+                    ng-bind-html="r.url | gnLocalized: lang | linky:'_blank'"></span>
             </p>
 
             <p class="text-muted"
