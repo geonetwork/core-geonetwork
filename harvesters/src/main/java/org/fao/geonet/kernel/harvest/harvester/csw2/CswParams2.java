@@ -43,21 +43,7 @@ public class CswParams2 extends AbstractParams {
 
     public String outputSchema;
 
-    public String queryScope;
-
-    public Integer hopCount;
-
-
     public boolean remoteHarvesterNestedServices;
-
-    /**
-     * The filter is a process (see schema/process folder) which depends on the schema. It could be
-     * composed of parameter which will be sent to XSL transformation using the following syntax :
-     * <pre>
-     * anonymizer?protocol=MYLOCALNETWORK:FILEPATH&email=gis@organisation.org&thesaurus=MYORGONLYTHEASURUS
-     * </pre>
-     */
-    public String xslfilter;
 
     public List<Element> eltFilters = new ArrayList<Element>();
 
@@ -84,9 +70,6 @@ public class CswParams2 extends AbstractParams {
         Element options = node.getChild("options");
 
         capabUrl = Util.getParam(site, "capabilitiesUrl", "");
-        queryScope = Util.getParam(site, "queryScope", "local");
-        hopCount = Util.getParam(site, "hopCount", 2);
-        xslfilter = Util.getParam(site, "xslfilter", "");
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);
         icon = Util.getParam(site, "icon", "default.gif");
         remoteHarvesterNestedServices = Util.getParam(options, "remoteHarvesterNestedServices", false);
@@ -114,9 +97,6 @@ public class CswParams2 extends AbstractParams {
         Element options = node.getChild("options");
 
         capabUrl = Util.getParam(site, "capabilitiesUrl", capabUrl);
-        queryScope = Util.getParam(site, "queryScope", queryScope);
-        hopCount = Util.getParam(site, "hopCount", hopCount);
-        xslfilter = Util.getParam(site, "xslfilter", "");
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);
         remoteHarvesterNestedServices = Util.getParam(options, "remoteHarvesterNestedServices", remoteHarvesterNestedServices);
 
@@ -143,9 +123,6 @@ public class CswParams2 extends AbstractParams {
 
         copy.capabUrl = capabUrl;
         copy.icon = icon;
-        copy.queryScope = queryScope;
-        copy.hopCount = hopCount;
-        copy.xslfilter = xslfilter;
         copy.outputSchema = outputSchema;
         copy.remoteHarvesterNestedServices = remoteHarvesterNestedServices;
 

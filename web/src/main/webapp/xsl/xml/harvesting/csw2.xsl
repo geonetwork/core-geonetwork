@@ -10,12 +10,6 @@
     <icon>
       <xsl:value-of select="icon/value"/>
     </icon>
-    <hopCount>
-      <xsl:value-of select="hopCount/value"/>
-    </hopCount>
-    <queryScope>
-      <xsl:value-of select="queryScope/value"/>
-    </queryScope>
     <outputSchema>
       <xsl:value-of select="outputSchema/value"/>
     </outputSchema>

@@ -56,9 +56,6 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
 
         harvesterSettingsManager.add("id:" + siteId, "capabUrl", params.capabUrl);
         harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
-        harvesterSettingsManager.add("id:" + siteId, "queryScope", params.queryScope);
-        harvesterSettingsManager.add("id:" + siteId, "hopCount", params.hopCount);
-        harvesterSettingsManager.add("id:" + siteId, "xslfilter", params.xslfilter);
         harvesterSettingsManager.add("id:" + siteId, "outputSchema", params.outputSchema);
         harvesterSettingsManager.add("id:" + optionsId, "remoteHarvesterNestedServices", params.remoteHarvesterNestedServices);
 
