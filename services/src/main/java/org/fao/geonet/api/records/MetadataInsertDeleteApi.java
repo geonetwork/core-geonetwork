@@ -62,6 +62,7 @@ import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordCreateEvent;
 import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.events.history.RecordImportedEvent;
+import org.fao.geonet.events.md.MetadataPreRemove;
 import org.fao.geonet.exceptions.BadFormatEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
@@ -180,6 +181,9 @@ public class MetadataInsertDeleteApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         Store store = context.getBean("resourceStore", Store.class);
 
+        MetadataPreRemove preRemoveEvent = new MetadataPreRemove(metadata);
+        ApplicationContextHolder.get().publishEvent(preRemoveEvent);
+
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
             && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
             MetadataUtils.backupRecord(metadata, context);
@@ -230,6 +234,9 @@ public class MetadataInsertDeleteApi {
                 || metadataDraftRepository.findOneByUuid(uuid) != null) {
                 report.addNotEditableMetadataId(metadata.getId());
             } else {
+                MetadataPreRemove preRemoveEvent = new MetadataPreRemove(metadata);
+                ApplicationContextHolder.get().publishEvent(preRemoveEvent);
+
                 if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
                     && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
                     MetadataUtils.backupRecord(metadata, context);
