@@ -20,6 +20,9 @@
     <remoteHarvesterNestedServices>
       <xsl:value-of select="remoteHarvesterNestedServices/value"/>
     </remoteHarvesterNestedServices>
+    <numberOfRecordsPerRequest>
+      <xsl:value-of select="numberOfRecordsPerRequest/value"/>
+    </numberOfRecordsPerRequest>
   </xsl:template>
 
 

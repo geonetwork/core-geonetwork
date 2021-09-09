@@ -45,6 +45,8 @@ public class CswParams2 extends AbstractParams {
 
     public boolean remoteHarvesterNestedServices;
 
+    public int numberOfRecordsPerRequest;
+
     public List<Element> eltFilters = new ArrayList<Element>();
 
     public Element bboxFilter;
@@ -73,6 +75,7 @@ public class CswParams2 extends AbstractParams {
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);
         icon = Util.getParam(site, "icon", "default.gif");
         remoteHarvesterNestedServices = Util.getParam(options, "remoteHarvesterNestedServices", false);
+        numberOfRecordsPerRequest = Util.getParam(options, "numberOfRecordsPerRequest", 20);
 
         if (filters != null) {
             @SuppressWarnings("unchecked")
@@ -99,6 +102,7 @@ public class CswParams2 extends AbstractParams {
         capabUrl = Util.getParam(site, "capabilitiesUrl", capabUrl);
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);
         remoteHarvesterNestedServices = Util.getParam(options, "remoteHarvesterNestedServices", remoteHarvesterNestedServices);
+        numberOfRecordsPerRequest = Util.getParam(options, "numberOfRecordsPerRequest", numberOfRecordsPerRequest);
 
         icon = Util.getParam(site, "icon", icon);
 
@@ -125,6 +129,7 @@ public class CswParams2 extends AbstractParams {
         copy.icon = icon;
         copy.outputSchema = outputSchema;
         copy.remoteHarvesterNestedServices = remoteHarvesterNestedServices;
+        copy.numberOfRecordsPerRequest = numberOfRecordsPerRequest;
 
         copy.eltFilters = eltFilters;
         copy.bboxFilter = bboxFilter;

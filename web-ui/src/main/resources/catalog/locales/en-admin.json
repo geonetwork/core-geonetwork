@@ -321,6 +321,8 @@
     "csw-remoteHarvesterApiHelp": "Remote harvester API endpoint, to execute the harvesting in a external process.",
     "csw-remoteHarvesterNestedServices": "Process CSW endpoints in the service metadata",
     "csw-remoteHarvesterNestedServicesHelp": "Harvest the metadata of the CSW endpoints referenced by the service metadata.",
+    "csw-numberOfRecordsPerRequest": "Number of records to retrieve per request",
+    "csw-numberOfRecordsPerRequestHelp": "Number of records to retrieve in each GetRecords request to paginated the results. Default value: 20",
     "cswCapabilitiesAdvProperties": "Advanced configuration",
     "noCswCriteriaFoundInCapabilities": "No search criteria found in <a href='{{url}}'>capabilities</a>. All records will be harvested from that server.",
     "CswCriteriaFoundInCapabilities": "Optionally use one or more search criteria below to restrict the records to harvest. For the 'like' operator use '%'  for wildCard, '_' for single char and '\\' for escape char.",

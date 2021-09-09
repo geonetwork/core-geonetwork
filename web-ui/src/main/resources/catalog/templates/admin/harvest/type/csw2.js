@@ -28,7 +28,8 @@ var gnHarvestercsw2 = {
         "oneRunOnly" : false,
         "overrideUuid": "SKIP",
         "status" : "active",
-        "remoteHarvesterNestedServices": false
+        "remoteHarvesterNestedServices": false,
+        "numberOfRecordsPerRequest": 20
       },
       "ifRecordExistAppendPrivileges": false,
       "privileges" : [ {
@@ -108,6 +109,7 @@ var gnHarvestercsw2 = {
       + '    <every>' + h.options.every + '</every>'
       + '    <status>' + h.options.status + '</status>'
       + '    <remoteHarvesterNestedServices>' + h.options.remoteHarvesterNestedServices + '</remoteHarvesterNestedServices>'
+      + '    <numberOfRecordsPerRequest>' + h.options.numberOfRecordsPerRequest + '</numberOfRecordsPerRequest>'
       + '  </options>'
       + $scope.buildResponseGroup(h) + '</node>';
     return body;

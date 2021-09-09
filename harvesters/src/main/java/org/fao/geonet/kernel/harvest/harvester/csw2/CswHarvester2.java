@@ -58,6 +58,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
         harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
         harvesterSettingsManager.add("id:" + siteId, "outputSchema", params.outputSchema);
         harvesterSettingsManager.add("id:" + optionsId, "remoteHarvesterNestedServices", params.remoteHarvesterNestedServices);
+        harvesterSettingsManager.add("id:" + optionsId, "numberOfRecordsPerRequest", params.numberOfRecordsPerRequest);
 
         //--- store dynamic filter nodes
         String filtersID = harvesterSettingsManager.add(path, "filters", "");
