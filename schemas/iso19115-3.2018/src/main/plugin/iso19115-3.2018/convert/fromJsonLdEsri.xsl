@@ -70,7 +70,7 @@
           <mcc:MD_Identifier>
             <mcc:code>
               <gco:CharacterString>
-                <xsl:value-of select="identifier"/>
+                <xsl:value-of select="uuid"/>
               </gco:CharacterString>
             </mcc:code>
           </mcc:MD_Identifier>

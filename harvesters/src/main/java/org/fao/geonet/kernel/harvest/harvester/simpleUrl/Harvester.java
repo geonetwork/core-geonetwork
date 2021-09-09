@@ -136,8 +136,9 @@ class Harvester implements IHarvester<HarvestResult> {
                         log.debug("Number of records in response: " + nodes.size());
 
                         nodes.forEach(record -> {
-                            Element xml = convertRecordToXml(record);
-                            uuids.put(record.get(params.recordIdPath).asText(), xml);
+                            String uuid = this.extractUuidFromIdentifier(record.get(params.recordIdPath).asText());
+                            Element xml = convertRecordToXml(record, uuid);
+                            uuids.put(uuid, xml);
                         });
                         aligner.align(uuids, errors);
                         allUuids.putAll(uuids);
@@ -166,6 +167,14 @@ class Harvester implements IHarvester<HarvestResult> {
         }
 
         return result;
+    }
+
+    private String extractUuidFromIdentifier(final String identifier ) {
+        String uuid = identifier;
+        if (Lib.net.isUrlValid(uuid)) {
+            uuid = uuid.replaceFirst(".*/([^/?]+).*", "$1");
+        }
+        return uuid;
     }
 
     @VisibleForTesting
@@ -217,7 +226,7 @@ class Harvester implements IHarvester<HarvestResult> {
         return urlList;
     }
 
-    private Element convertRecordToXml(JsonNode record) {
+    private Element convertRecordToXml(JsonNode record, String uuid) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String recordAsXml = XML.toString(
@@ -225,6 +234,7 @@ class Harvester implements IHarvester<HarvestResult> {
                     objectMapper.writeValueAsString(record)), "record");
             recordAsXml = Xml.stripNonValidXMLCharacters(recordAsXml).replace("<@", "<").replace("</@", "</");
             Element recordAsElement = Xml.loadString(recordAsXml, false);
+            recordAsElement.addContent(new Element("uuid").setText(uuid));
             Path importXsl = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
             final Path xslPath = importXsl.resolve(params.toISOConversion + ".xsl");
             return Xml.transform(recordAsElement, xslPath);
