@@ -207,7 +207,7 @@
 
     <facet name="fem_data_types" indexKey="thesaurus-local.theme.fem_data_types" label="fem_data_types"/>
     <facet name="fem_facades" indexKey="thesaurus-local.place.fem_facades" label="fem_facades"/>
-    <facet name="fem_projects" indexKey="thesaurus-local.theme.fem_projectsm" label="fem_projects"/>
+    <facet name="fem_projects" indexKey="thesaurus-local.theme.fem_projects" label="fem_projects"/>
     <facet name="fem_technologies" indexKey="thesaurus-local.discipline.fem_technologies" label="fem_technologies"/>
 
     <facet name="mdActions" indexKey="_mdActions" label="mdActions"/>
