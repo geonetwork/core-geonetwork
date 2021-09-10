@@ -1176,6 +1176,8 @@
         <xsl:variable name="code"
                       select="if (mri:metadataReference/@uuidref != '')
                               then mri:metadataReference/@uuidref
+                              else if (mri:metadataReference/@xlink:href != '')
+                              then mri:metadataReference/@xlink:href
                               else mri:metadataReference/cit:CI_Citation/cit:identifier/mcc:MD_Identifier/mcc:code/*/text()"/>
         <xsl:if test="$code != ''">
           <xsl:variable name="xlink"
