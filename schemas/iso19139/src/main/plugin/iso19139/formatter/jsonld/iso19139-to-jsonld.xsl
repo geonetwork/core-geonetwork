@@ -250,8 +250,10 @@
         "@type":"DataDownload",
         "contentUrl":"<xsl:value-of select="gmd:linkage/gmd:URL/text()"/>",
         "encodingFormat":"<xsl:value-of select="if ($p != '') then $p else gmd:protocol/*/@xlink:href"/>",
-        "name":"<xsl:value-of select="gmd:name/*/text()"/>",
-        "description":"<xsl:value-of select="gmd:description/*/text()"/>"
+        "name": <xsl:apply-templates mode="toJsonLDLocalized"
+                                     select="gmd:name"/>,
+        "description": <xsl:apply-templates mode="toJsonLDLocalized"
+                                           select="gmd:description"/>
         }
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
