@@ -1,5 +1,4 @@
-<div title="{{'exactMatch-help' | translate}}"
-     data-ng-show="optionsConfig.exactMatch">
+<div data-ng-show="optionsConfig.exactMatch">
   <label>
     <input type="checkbox"
            data-ng-model="exactMatch"
@@ -15,13 +14,12 @@
     <span data-translate="">titleOnly</span>
   </label>
 </div>
-<div title="{{'searchAllLanguages-help' | translate}}"
-     data-ng-show="optionsConfig.language"
+<div data-ng-show="optionsConfig.language"
      class="row">
-  <div class="col-md-2">
+  <div class="col-md-12">
     <span data-translate="">searchWithLang</span>
   </div>
-  <div class="col-md-10">
+  <div class="col-md-12">
     <label>
       <input type="radio"
              name="languageStrategy"
@@ -30,6 +28,7 @@
              aria-label="{{'searchInAllLanguages' | translate}}">
       <span data-translate="">searchInAllLanguages</span>
     </label>
+    <br/>
     <label>
       <input type="radio"
              name="languageStrategy"
@@ -41,6 +40,7 @@
         ({{$parent.$parent.searchObj.state.detectedLanguage | translate}})
       </span>
     </label>
+    <br/>
     <label>
       <input type="radio"
              name="languageStrategy"
