@@ -36,7 +36,7 @@
         ng-class="{'gn-facet-panel-active': ctrl.searchCtrl.isInSearch(facet.path)}"
         gn-collapsible="::ctrl.fLvlCollapse[facet.key]">
         <span class="fa fa-fw"
-              ng-class="{'gn-field-empty': !ctrl.searchCtrl.isInSearch([facet.key]),
+              ng-class="{'gn-field-empty': !ctrl.searchCtrl.isInSearch(facet.path),
               'fa-arrow-circle-right': ctrl.fLvlCollapse[facet.key],
               'fa-arrow-circle-down': !ctrl.fLvlCollapse[facet.key]}"></span>
         <span class="flex-shrink text-ellipsis">{{getFacetLabel(facet) || (('facet-' + facet.key) | facetKeyTranslator)}}</span>
