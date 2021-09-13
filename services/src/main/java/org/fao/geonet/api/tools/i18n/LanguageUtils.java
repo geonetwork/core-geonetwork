@@ -67,6 +67,12 @@ public class LanguageUtils {
         return locale2gnCode(l.getISO3Language());
     }
 
+    /**
+     * Translate locale three-letter abbreviation to language code (providing a special case for 'fra' and 'slk' locales.
+     *
+     * @param code Locale {@link Locale#getISO3Language()} three-letter abbreviation
+     * @return language code
+     */
     static public String locale2gnCode (String code) {
         if (code.equals("fra")) {
             return "fre";

@@ -551,11 +551,12 @@ public class ServiceManager {
 
         HttpServletRequest request = getCurrentHttpRequest();
         if( request != null ) {
+            String iso3langCode = getIso3langCode( request.getLocale() );
             // reuse user session from http request
-            context = createServiceContext(name, "?", request);
+            context = createServiceContext(name, iso3langCode, request);
         }
         else {
-            // Not in an http request, creating a temporary user session wiht provided userId
+            // Not in an http request, creating a temporary user session with provided userId
             context = createServiceContext(name, applicationContext);
 
             UserRepository userRepository = applicationContext.getBean(UserRepository.class);
@@ -569,6 +570,33 @@ public class ServiceManager {
         context.setAsThreadLocal();
 
         return context;
+    }
+
+    /**
+     * Provide best-guess language code (covering special case for 'fra' and 'slk' locales).
+     * <p>
+     * Logic matches LanguageUtils from module services.
+     * </p>
+     *
+     * @param locale Locale used to obtain {@link Locale#getISO3Language()} three-letter abbreviation
+     * @return language code, or "?" for unknown
+     */
+    private static String getIso3langCode(Locale locale){
+        if( locale == null ){
+            return "?";
+        }
+        String iso3language = locale.getISO3Language();
+        String code;
+        if(iso3language.equalsIgnoreCase("fra")){
+            code = "fre";
+        }
+        else if (iso3language.equals("slk")){
+            code = "slo";
+        }
+        else {
+            code = iso3language;
+        }
+        return code;
     }
 
     /**
