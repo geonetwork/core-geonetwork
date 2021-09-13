@@ -143,7 +143,7 @@ goog.require('gn_alert');
           'searchOptions': {
             titleOnly: true,
             exactMatch: true,
-            language: true
+            language: false
           },
           // Language strategy can be:
           // * searchInUILanguage: search in UI languages
@@ -302,7 +302,7 @@ goog.require('gn_alert');
                 // 'translateOnLoad': true,
                 // 'treeKeySeparator': '^'
               }
-            },
+            }
             // 'th_type_jeux_donnee_tree.key': {
             //   'terms': {
             //     'field': 'th_type_jeux_donnee_tree.key',
@@ -507,6 +507,12 @@ goog.require('gn_alert');
               },
               "meta": {
                 'collapsed': true
+              }
+            },
+            "cl_hierarchyLevel.key": {
+              "terms": {
+                "field": "cl_hierarchyLevel.key",
+                "size": 10
               }
             }
             // Don't forget to enable Vega to use interactive graphic facets.
