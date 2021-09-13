@@ -305,7 +305,7 @@
           // if an external viewer is defined, use it here
           if (gnExternalViewer.isEnabled()) {
             gnExternalViewer.viewService({
-              id: md ? md.getId() : null,
+              id: md ? md.id : null,
               uuid: config.uuid
             }, {
               type: config.type,
