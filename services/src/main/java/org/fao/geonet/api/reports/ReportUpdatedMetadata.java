@@ -69,7 +69,7 @@ public class ReportUpdatedMetadata implements IReport {
             csvFilePrinter.println();
 
             String[] entries = (
-                "Metadata ID#Metadata Title#Metadata Create date#"
+                "Metadata ID#Metadata Title#Metadata Create date#Last update#"
                     + "Owner Username#Owner Surname#Owner Name#Owner Email#"
                     + "Group Owner#Group Owner Email").split("#");
             csvFilePrinter.printRecord(Arrays.asList(entries));
@@ -138,6 +138,7 @@ public class ReportUpdatedMetadata implements IReport {
                 record.add(metadata.getUuid());
                 record.add("" + mdTitle);
                 record.add("" + metadata.getDataInfo().getCreateDate());
+                record.add("" + metadata.getDataInfo().getChangeDate());
                 record.add(userOwnerUsername);
                 record.add(userOwnerSurname);
                 record.add(userOwnerName);
