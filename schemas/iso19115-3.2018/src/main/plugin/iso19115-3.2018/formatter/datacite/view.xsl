@@ -125,6 +125,13 @@
   <xsl:variable name="metadata"
                 select="//mdb:MD_Metadata"/>
 
+  <xsl:variable name="standardName"
+                select="$metadata/mdb:metadataStandard/cit:CI_Citation/cit:title"/>
+
+  <xsl:variable name="isCersat"
+                select="count($standardName[*/text() = 'ISO 19115-3:2018 - Remote Sensing']) > 0"/>
+
+
   <!-- TODO: Convert language code eng > en_US ? -->
   <xsl:variable name="metadataLanguage"
                 select="//mdb:MD_Metadata/mdb:defaultLocale/*/lan:language/*/@codeListValue"/>
@@ -345,13 +352,12 @@
     property.
    -->
   <xsl:variable name="creatorRoles"
-                select="'pointOfContact', 'custodian'"/>
+                select="if ($isCersat) then 'principalInvestigator' else 'author'"/>
   <xsl:template mode="toDatacite"
                 match="mdb:MD_Metadata/mdb:identificationInfo/*/
                           mri:pointOfContact[1]">
     <datacite:creators>
-      <!-- [cit:role/*/@codeListValue = $roles] TODO: Restrict on roles ?-->
-      <xsl:for-each select="../mri:pointOfContact/*">
+      <xsl:for-each select="../mri:pointOfContact/*[cit:role/*/@codeListValue = $creatorRoles]">
         <datacite:creator>
           <!--
           Expect the entry point to be CI_Organisation
@@ -456,10 +462,15 @@ eg.
 
       TODO: Define who is the publisher ? Only one allowed.
   -->
+
+  <xsl:variable name="publisherRoles"
+                select="if ($isCersat) then 'distributor' else 'publisher'"/>
+
   <xsl:template mode="toDatacite"
                 match="mdb:distributionInfo[1]">
     <datacite:publisher>
-      <xsl:value-of select="($metadata//mrd:distributorContact)[1]/*/cit:party//cit:CI_Organisation/cit:name/gco:CharacterString"/>
+      <xsl:value-of select="($metadata//mdb:identificationInfo/*/
+        mri:pointOfContact/*[cit:role/*/@codeListValue = ($publisherRoles)]//cit:CI_Organisation)[1]/cit:name/gco:CharacterString"/>
     </datacite:publisher>
 
     <!--

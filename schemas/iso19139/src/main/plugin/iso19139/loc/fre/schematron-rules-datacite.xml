@@ -58,7 +58,7 @@
     holds, archives, publishes
     prints, distributes, releases,
     issues, or produces the
-    resource. Check distribution section, the publisher is the first distributor contact. This field is mandatory.
+    resource. Check point of contact in resource identification with role 'publisher' (default) or 'custodian' (EMODNET - SDN). This field is mandatory.
   </datacite.publisher.missing>
   <datacite.publisher.present>The publisher is: </datacite.publisher.present>
 </strings>

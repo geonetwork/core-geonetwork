@@ -75,7 +75,7 @@
 
 
       <sch:let name="numberOfCreators"
-               value="count(mdb:identificationInfo/*/mri:pointOfContact/*[cit:role/*/@codeListValue = ('pointOfContact', 'custodian')])"/>
+               value="count(mdb:identificationInfo/*/mri:pointOfContact/*[cit:role/*/@codeListValue = ('author', 'principalInvestigator')])"/>
 
       <sch:assert test="$numberOfCreators > 0">$loc/strings/datacite.creator.missing</sch:assert>
       <sch:report test="$numberOfCreators > 0">
@@ -85,7 +85,8 @@
 
 
       <sch:let name="publisher"
-               value="(mdb:distributionInfo//mrd:distributorContact)[1]//cit:CI_Organisation/cit:name/gco:CharacterString"/>
+               value="(mdb:identificationInfo/*/
+                               mri:pointOfContact/*[cit:role/*/@codeListValue = ('publisher', 'distributor')]//cit:CI_Organisation)[1]/cit:name/gco:CharacterString"/>
 
       <sch:assert test="$publisher != ''">$loc/strings/datacite.publisher.missing</sch:assert>
       <sch:report test="$publisher != ''">
