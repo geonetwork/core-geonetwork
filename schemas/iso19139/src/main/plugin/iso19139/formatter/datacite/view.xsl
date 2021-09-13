@@ -105,6 +105,11 @@
   <xsl:variable name="metadataLanguage"
                 select="//gmd:MD_Metadata/gmd:language/*/@codeListValue"/>
 
+  <xsl:variable name="standardName"
+                select="$metadata/gmd:metadataStandardName"/>
+
+  <xsl:variable name="isEMODNET"
+                select="count($standardName[*/text() = 'ISO 19115:2003/19139 - EMODNET - SDN']) > 0"/>
 
   <xsl:template match="/">
     <datacite:resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -449,10 +454,17 @@ eg.
 
       TODO: Define who is the publisher ? Only one allowed.
   -->
+
+
+  <xsl:variable name="publisherRoles"
+                select="if ($isEMODNET) then 'custodian' else 'publisher'"/>
+
   <xsl:template mode="toDatacite"
                 match="gmd:distributionInfo[1]">
     <datacite:publisher>
-      <xsl:value-of select="($metadata//gmd:distributorContact)[1]/*/gmd:organisationName/gco:CharacterString"/>
+      <xsl:value-of select="($metadata//gmd:identificationInfo/*/
+        gmd:pointOfContact/*[gmd:role/*/@codeListValue = ($publisherRoles)])/
+          gmd:organisationName/gco:CharacterString"/>
     </datacite:publisher>
 
     <!--
