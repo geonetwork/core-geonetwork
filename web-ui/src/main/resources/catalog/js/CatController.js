@@ -302,7 +302,7 @@ goog.require('gn_alert');
                 // 'translateOnLoad': true,
                 // 'treeKeySeparator': '^'
               }
-            }
+            },
             // 'th_type_jeux_donnee_tree.key': {
             //   'terms': {
             //     'field': 'th_type_jeux_donnee_tree.key',
