@@ -513,6 +513,9 @@ goog.require('gn_alert');
               "terms": {
                 "field": "cl_hierarchyLevel.key",
                 "size": 10
+              },
+              'meta': {
+                'collapsed': true
               }
             }
             // Don't forget to enable Vega to use interactive graphic facets.
