@@ -1437,7 +1437,7 @@
                               olL.set('indexObject', esObj);
                               var sldConfig = wfsFilterService.createSLDConfig(esObj.initialFilters.qParams);
                               if (sldConfig.filters.length > 0) {
-                                wfsFilterService.getSldUrl(sldConfig, olL.get('url'), wfsConfig.name).success(function(sldURL) {
+                                wfsFilterService.getSldUrl(sldConfig, olL.get('url'), wfsConfig.name).then(function(sldURL) {
                                   olL.getSource().updateParams({
                                     SLD: sldURL
                                   });

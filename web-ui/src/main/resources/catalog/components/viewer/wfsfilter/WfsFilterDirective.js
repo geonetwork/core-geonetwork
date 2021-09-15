@@ -887,7 +887,7 @@
             }
             if (sldConfig.filters.length > 0) {
               wfsFilterService.getSldUrl(sldConfig, layer.get('directUrl') || layer.get('url'),
-                  ftName).success(function(sldURL) {
+                  ftName).then(function(sldURL) {
                 // Do not activate it
                 // Usually return 414 Request-URI Too Large
                 var useSldBody = false;

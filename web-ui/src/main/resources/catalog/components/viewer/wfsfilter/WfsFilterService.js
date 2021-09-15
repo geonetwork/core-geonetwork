@@ -437,19 +437,26 @@
        * @return {HttpPromise} promise
        */
       this.getSldUrl = function(rulesObj, wmsUrl, featureTypeName) {
-
         var params = {
           filters: JSON.stringify(rulesObj),
           url: wmsUrl,
           layers: featureTypeName
         };
 
-        return $http({
+        var defer = $q.defer();
+
+        $http({
           method: 'POST',
           url: '../api/0.1/tools/ogc/sld',
           data: $.param(params),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).success(function (url) {
+          setTimeout(function() {
+            defer.resolve(url);
+          }, 1000);
         });
+
+        return defer.promise;
       };
 
       /**
