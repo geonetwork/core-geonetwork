@@ -118,11 +118,11 @@
     'gnFeaturesTableManager',
     'gnHttp',
     'gnAlertService',
-    'gnTreeFromSlash',
+    'gnOwsCapabilities',
         function($http, wfsFilterService, $q, $rootScope, $translate,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
              gnSearchSettings, gnFeaturesTableManager, gnHttp,
-             gnAlertService, gnTreeFromSlash) {
+             gnAlertService, gnOwsCapabilities) {
       return {
         restrict: 'A',
         replace: true,
@@ -246,7 +246,10 @@
            * @return {HttpPromise} promise
            */
           scope.checkWFSServerUrl = function() {
-            return $http.get(scope.url)
+            var urlWithParam = gnOwsCapabilities.mergeParams(scope.url, {
+              service: 'WFS'
+            });
+            return $http.get(urlWithParam)
                 .then(function() {
                   scope.isWfsAvailable = true;
                 }, function() {
