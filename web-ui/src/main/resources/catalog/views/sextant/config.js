@@ -373,9 +373,12 @@
                 name = name.substring(1);
                 direction = 'desc';
               }
-              // use a specific field for title sort
+              // adhoc field name replacements for API retro-compatibility
               if (name === 'title') {
                 name = 'resourceTitleObject.default.keyword';
+                direction = ''; // clear direction for title as it was apparently not working anyway...
+              } else if (name === 'changeDate') {
+                name = 'dateStamp';
               }
               return {
                 sortBy: name,
