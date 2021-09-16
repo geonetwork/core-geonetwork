@@ -1,0 +1,32 @@
+<wps:Execute xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:xlink="http://www.w3.org/1999/xlink"
+             xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" service="WPS"
+             version="1.0.0">
+    <ows:Identifier>r:survalextraction30140</ows:Identifier>
+    <wps:DataInputs>
+        <wps:Input>
+            <ows:Identifier>entity_label</ows:Identifier>
+            <wps:Data>
+                <wps:LiteralData>037-P-020 - Blancs Sablons</wps:LiteralData>
+            </wps:Data>
+        </wps:Input>
+        <wps:Input>
+            <ows:Identifier>geometry_type</ows:Identifier>
+            <wps:Data>
+                <wps:LiteralData>POINT</wps:LiteralData>
+            </wps:Data>
+        </wps:Input>
+        <wps:Input>
+            <ows:Identifier>doubful_data</ows:Identifier>
+            <wps:Data>
+                <wps:LiteralData>False</wps:LiteralData>
+            </wps:Data>
+        </wps:Input>
+    </wps:DataInputs>
+    <wps:ResponseForm>
+        <wps:ResponseDocument storeExecuteResponse="true" lineage="false" status="false">
+            <wps:Output mimeType="application/octet-stream" asReference="true">
+                <ows:Identifier>output_csv</ows:Identifier>
+            </wps:Output>
+        </wps:ResponseDocument>
+    </wps:ResponseForm>
+</wps:Execute>
