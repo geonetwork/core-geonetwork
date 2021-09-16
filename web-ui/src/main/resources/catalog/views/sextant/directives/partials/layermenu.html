@@ -102,7 +102,7 @@
       </tab>
 
       <tab ng-if="processes">
-        <tab-heading translate>process</tab-heading>
+        <tab-heading translate>wpsProcess</tab-heading>
         <select class="form-control input-sm" ng-if="processes.length > 1" ng-model="selectedProcessIndex" ng-change="ctrl.selectProcess()">
           <option ng-repeat="p in processes" value="{{$index}}">{{p.description}}</option>
         </select>
