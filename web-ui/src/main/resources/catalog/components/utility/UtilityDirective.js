@@ -684,28 +684,43 @@
            link: function(scope, element, attrs) {
              element.attr('placeholder', '...');
 
-             var url = gnUrlUtils.append('q@json',
-              gnUrlUtils.toKeyValue({
-                isTemplate: 's',
-                any: '*QUERY*',
-                root: 'gmd:CI_ResponsibleParty',
-                sortBy: 'resourceTitleObject.default.keyword',
-                sortOrder: '',
-                resultType: 'subtemplates'
-              })
-             );
-             var parseResponse = function(data) {
-               var records = gnSearchManagerService.format(data);
-               return records.metadata;
-             };
+             function buildRecord(d) {
+               return {uuid: d._id,
+                 label: d._source.resourceTitle
+                   || d._source.resourceTitleObject.default
+                   || '-'};
+             }
+
              var source = new Bloodhound({
                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
                queryTokenizer: Bloodhound.tokenizers.whitespace,
                limit: 200,
                remote: {
                  wildcard: 'QUERY',
-                 url: url,
-                 filter: parseResponse
+                 url: '../api/search/records/_search',
+                 prepare: function (query, settings) {
+                   settings.type = "POST";
+                   settings.contentType = "application/json; charset=UTF-8";
+                   settings.data = JSON.stringify(
+                     {from: 0, size: 10, query: {
+                         bool: {
+                           must: {
+                             query_string: {
+                               query: (query || '*')
+                             }
+                           },
+                           filter: [
+                             {term: {isTemplate: 's'}},
+                             {term: {root: 'gmd:CI_ResponsibleParty'}}
+                           ]
+                         }}});
+                   return settings;
+                 },
+                 transform: function(response) {
+                   return response.hits.hits.map(function(d, i) {
+                     return buildRecord(d);
+                   });
+                 }
                }
              });
              source.initialize();
@@ -714,11 +729,11 @@
                highlight: true
              }, {
                name: 'directoryEntry',
-               displayKey: 'title',
+               displayKey: 'label',
                source: source.ttAdapter(),
                templates: {
                  suggestion: function(datum) {
-                   return '<p>' + datum.title + '</p>';
+                   return '<p>' + datum.label + '</p>';
                  }
                }
              });
