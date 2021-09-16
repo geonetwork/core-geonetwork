@@ -4,18 +4,6 @@
 @gn-sidebar-width: 300px;
 @gn-col-main-width: 65px;
 
-//@keyframes fadein{
-//  0% { opacity:0; }
-//  66% { opacity:0; }
-//  100% { opacity:1; }
-//}
-//
-//@-webkit-keyframes fadein{
-//  0% { opacity:0; }
-//  66% { opacity:0; }
-//  100% { opacity:1; }
-//}
-
 ul.gn-resultview li.list-group-item {
   margin-bottom: 0;
 }
@@ -330,7 +318,7 @@ ul.gn-resultview li.list-group-item {
       }
       .panel {
         .panel-heading {
-          .clearfix();
+          //.clearfix();
           .btn-toolbar {
             float: right;
           }
@@ -366,6 +354,28 @@ ul.gn-resultview li.list-group-item {
           }
         }
       }
+      // progress / status panels
+      .gn-harvester-running {
+        background-position: 0px 10px;
+        background-repeat: no-repeat;
+        background-size: 75px 75px;
+        padding-top: 10px;
+        padding-left: 90px;
+        min-height: 70px;
+        h2 {
+          font-size: 18px;
+        }
+      }
+      // icons from https://lordicon.com/icons#free
+      #gn-harvest-harvester-running {
+        background-image: url('../catalog/views/default/images/45-clock-time-outline.gif');
+      }
+      #gn-harvest-linkchecker-running {
+        background-image: url('../catalog/views/default/images/1325-code-fork-outline.gif');
+      }
+      #gn-harvest-ingester-running {
+        background-image: url('../catalog/views/default/images/57-server-outline.gif');
+      }
       #gn-harvest-records-panel {
         .gn-harvester-facets {
           .gn-facet {
@@ -373,7 +383,15 @@ ul.gn-resultview li.list-group-item {
             .gn-facet-root-container {
               .clearfix();
               .gn-facet-container {
-                width: calc(~"(100% / 4) - 15px");
+                @media (min-width: @screen-sm-min) {
+                  width: calc(~"(100% / 2) - 15px");
+                }
+                @media (min-width: @screen-md-min) {
+                  width: calc(~"(100% / 3) - 15px");
+                }
+                @media (min-width: @screen-lg-min) {
+                  width: calc(~"(100% / 4) - 15px");
+                }
                 float: left;
                 margin: 5px 15px 5px 0;
                 .gn-facet-item {

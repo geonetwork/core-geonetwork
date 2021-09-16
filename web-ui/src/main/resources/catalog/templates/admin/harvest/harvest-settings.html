@@ -100,6 +100,69 @@
   <div class="col-lg-8" data-ng-hide="harvesterSelected['@id'] == null"
        data-ng-search-form="">
 
+    <div class="panel panel-info">
+      <div class="panel-heading clearfix">
+        <span data-translate="">harvestStatus</span>
+        <div class="btn-toolbar pull-right">
+          <button id="gn-harvest-settings-buttons-run"
+                  type="button"
+                  class="btn btn-primary"
+                  data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === true"
+                  data-ng-disabled="deleting.indexOf(harvesterSelected['@id']) > -1"
+                  data-gn-click-and-spin="runHarvester(harvesterSelected['@id'])">
+            <span class="fa fa-play"></span>&nbsp;
+            <span data-translate="">runHarvester</span>
+          </button>
+          <button id="gn-harvest-settings-buttons-stop"
+                  type="button"
+                  class="btn btn-primary"
+                  data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === false"
+                  data-gn-click-and-spin="stopHarvester(harvesterSelected['@id'])"
+                  data-ng-disabled="stopping || deleting.indexOf(harvesterSelected['@id']) > -1">
+            <span class="fa fa-stop"></span>&nbsp;
+            <span data-translate="">stop</span>
+            <i data-ng-show="stopping" class="fa fa-spinner fa-spin"></i>
+          </button>
+        </div>
+      </div>
+      <div class="panel-body">
+<!--        <div class="alert alert-info" data-ng-show="harvesterSelected.info.running === true">-->
+        <div id="gn-harvest-harvester-running" class="gn-harvester-running">
+          <h2 data-translate="">harvesterIsRunning</h2>
+          <div class="panel panel-default">
+            <div class="panel-heading" data-gn-slide-toggle="true" data-translate="">
+              harvestDetails
+            </div>
+            <div class="panel-body">
+              <span data-translate="">harvestProgress</span>
+            </div>
+          </div>
+        </div>
+        <div id="gn-harvest-linkchecker-running" class="gn-harvester-running">
+          <h2 data-translate="">linkCheckerIsRunning</h2>
+          <div class="panel panel-default">
+            <div class="panel-heading" data-gn-slide-toggle="true" data-translate="">
+              harvestDetails
+            </div>
+            <div class="panel-body">
+              <span data-translate="">harvestProgress</span>
+            </div>
+          </div>
+        </div>
+        <div id="gn-harvest-ingester-running" class="gn-harvester-running">
+          <h2 data-translate="">ingesterIsRunning</h2>
+          <div class="panel panel-default">
+            <div class="panel-heading" data-gn-slide-toggle="true" data-translate="">
+              harvestDetails
+            </div>
+            <div class="panel-body">
+              <span data-translate="">harvestProgress</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <tabset id="harvester-tabset" type="pills" justified="false" role="tablist">
       <tab heading="{{'settings' | translate}}"
            role="tab"
@@ -119,25 +182,7 @@
         </span>
 
         <div id="gn-harvest-settings-buttons-row" class="btn-toolbar pull-right" data-ng-hide="isLoadingOneHarvester">
-          <button id="gn-harvest-settings-buttons-run"
-                  type="button"
-                  class="btn btn-primary pull-right"
-                  data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === true"
-                  data-ng-disabled="deleting.indexOf(harvesterSelected['@id']) > -1"
-                  data-gn-click-and-spin="runHarvester(harvesterSelected['@id'])">
-            <span class="fa fa-play"></span>&nbsp;
-            <span data-translate="">runHarvester</span>
-          </button>
-          <button id="gn-harvest-settings-buttons-stop"
-                  type="button"
-                  class="btn btn-primary pull-right"
-                  data-ng-hide="harvesterSelected['@id'] == '' || harvesterSelected.info.running === false"
-                  data-gn-click-and-spin="stopHarvester(harvesterSelected['@id'])"
-                  data-ng-disabled="stopping || deleting.indexOf(harvesterSelected['@id']) > -1">
-            <span class="fa fa-stop"></span>&nbsp;
-            <span data-translate="">stop</span>
-            <i data-ng-show="stopping" class="fa fa-spinner fa-spin"></i>
-          </button>
+
           <button id="gn-harvest-settings-buttons-save"
                   type="button"
                   class="btn btn-primary pull-right"
@@ -160,9 +205,6 @@
       </div>
       <div class="panel-body"
            data-ng-hide="isLoadingOneHarvester || deleting.indexOf(harvesterSelected['@id']) > -1">
-        <div id="gn-harvest-settings-info" class="alert alert-info" data-ng-show="harvesterSelected.info.running === true">
-          <strong data-translate="">harvesterIsRunning</strong>
-        </div>
         <div id="gn-harvest-settings-danger" class="alert alert-danger" data-ng-show="harvesterSelected.error">
           <strong data-translate="">harvesterError</strong>
           {{harvesterSelected.error['@id']}}
@@ -303,7 +345,7 @@
              class="gn-margin-top">
 
           <div class="panel panel-default">
-            <div class="panel-heading">
+            <div class="panel-heading" data-gn-slide-toggle="">
               <span data-translate="">summary</span>
             </div>
             <div class="panel-body">
@@ -318,6 +360,12 @@
                 </ul>
               </div>
               <div class="row">
+
+                <div data-search-filter-tags
+                     data-dimensions="searchResults.facets"
+                     ng-if="searchResults.facets">
+                </div>
+
                 <div data-ng-show="searchResults.records.length > 0"
                      class="gn-harvester-facets"
                      data-es-facets="searchResults.facets"></div>
@@ -353,12 +401,6 @@
                         data-translate-values="{records: '{{searchResults.count}}'}">
                         deleteHarvesterRecords</span>
                 </button>
-              </div>
-
-
-              <div data-search-filter-tags
-                   data-dimensions="searchResults.facets"
-                   ng-if="searchResults.facets">
               </div>
 
               <!-- This information is not relevant for GeoNetwork protocol

@@ -183,6 +183,74 @@
             </div>
           </div>
 
+        <h2 data-ng-if="user.isEditorOrMore()" data-translate="">Link analysis</h2>
+        <table data-ng-if="user.isEditorOrMore()" class="table table-bordered">
+          <tbody>
+          <tr data-ng-if="mdView.current.record.indicator_INDICATOR_CAPABILITIES_TYPE">
+            <th class="width-75">
+              {{'facet-indicator_INDICATOR_CAPABILITIES_TYPE' | translate }}
+              <span title="{{'facet-indicator_INDICATOR_CAPABILITIES_TYPE-help' | translate}}" class="fa fa-info-circle text-info"></span>
+            </th>
+            <td data-ng-class="{'text-success': mdView.current.record.indicator_INDICATOR_CAPABILITIES_TYPE == 'PASS', 'text-danger': mdView.current.record.indicator_INDICATOR_CAPABILITIES_TYPE == 'FAIL'}">{{mdView.current.record.indicator_INDICATOR_CAPABILITIES_TYPE}}</td>
+          </tr>
+          <tr data-ng-if="mdView.current.record.indicator_INDICATOR_LAYER_MATCHES">
+            <th>
+              {{'facet-indicator_INDICATOR_LAYER_MATCHES' | translate }}
+              <span title="{{'facet-indicator_INDICATOR_LAYER_MATCHES-help' | translate}}" class="fa fa-info-circle text-info"></span>
+            </th>
+            <td data-ng-class="{'text-success': mdView.current.record.indicator_INDICATOR_LAYER_MATCHES == 'PASS', 'text-danger': mdView.current.record.indicator_INDICATOR_LAYER_MATCHES == 'FAIL'}">{{mdView.current.record.indicator_INDICATOR_LAYER_MATCHES}}</td>
+          </tr>
+          <tr data-ng-if="mdView.current.record.indicator_INDICATOR_ALL_CAPABILITIES_LAYER_RESOLVE">
+            <th>
+              {{'facet-indicator_INDICATOR_ALL_CAPABILITIES_LAYER_RESOLVE' | translate }}
+              <span title="{{'facet-indicator_INDICATOR_ALL_CAPABILITIES_LAYER_RESOLVE-help' | translate}}" class="fa fa-info-circle text-info"></span>
+            </th>
+            <td data-ng-class="{'text-success': mdView.current.record.indicator_INDICATOR_ALL_CAPABILITIES_LAYER_RESOLVE == 'PASS', 'text-danger': mdView.current.record.indicator_INDICATOR_ALL_CAPABILITIES_LAYER_RESOLVE == 'FAIL'}">{{mdView.current.record.indicator_INDICATOR_ALL_CAPABILITIES_LAYER_RESOLVE}}</td>
+          </tr>
+          <tr data-ng-if="mdView.current.record.indicator_INDICATOR_ALL_OPERATES_ON_MATCH_CAPABILITIES">
+            <th>
+              {{'facet-indicator_INDICATOR_ALL_OPERATES_ON_MATCH_CAPABILITIES' | translate }}
+              <span title="{{'facet-indicator_INDICATOR_ALL_OPERATES_ON_MATCH_CAPABILITIES-help' | translate}}" class="fa fa-info-circle text-info"></span>
+            </th>
+            <td data-ng-class="{'text-success': mdView.current.record.indicator_INDICATOR_ALL_OPERATES_ON_MATCH_CAPABILITIES == 'PASS', 'text-danger': mdView.current.record.indicator_INDICATOR_ALL_OPERATES_ON_MATCH_CAPABILITIES == 'FAIL'}">{{mdView.current.record.indicator_INDICATOR_ALL_OPERATES_ON_MATCH_CAPABILITIES}}</td>
+          </tr>
+          <tr data-ng-if="mdView.current.record.indicator_INDICATOR_ALL_OPERATES_ON_RESOLVE">
+            <th>
+              {{'facet-indicator_INDICATOR_ALL_OPERATES_ON_RESOLVE' | translate }}
+              <span title="{{'facet-indicator_INDICATOR_ALL_OPERATES_ON_RESOLVE-help' | translate}}" class="fa fa-info-circle text-info"></span>
+            </th>
+            <td data-ng-class="{'text-success': mdView.current.record.indicator_INDICATOR_ALL_OPERATES_ON_RESOLVE == 'PASS', 'text-danger': mdView.current.record.indicator_INDICATOR_ALL_OPERATES_ON_RESOLVE == 'FAIL'}">{{mdView.current.record.indicator_INDICATOR_ALL_OPERATES_ON_RESOLVE}}</td>
+          </tr>
+          <tr data-ng-if="mdView.current.record.indicator_INDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE">
+            <th>
+              {{'facet-indicator_INDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE' | translate }}
+              <span title="{{'facet-indicator_INDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE-help' | translate}}" class="fa fa-info-circle text-info"></span>
+            </th>
+            <td data-ng-class="{'text-success': mdView.current.record.indicator_INDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE == 'PASS', 'text-danger': mdView.current.record.indicator_INDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE == 'FAIL'}">{{mdView.current.record.indicator_INDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE}}</td>
+          </tr>
+          <tr data-ng-if="mdView.current.record.indicator_INDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES">
+            <th>
+              {{'facet-indicator_INDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES' | translate }}
+              <span title="{{'facet-indicator_INDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES-help' | translate}}" class="fa fa-info-circle text-info"></span>
+            </th>
+            <td data-ng-class="{'text-success': mdView.current.record.indicator_INDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES == 'PASS', 'text-danger': mdView.current.record.indicator_INDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES == 'FAIL'}">{{mdView.current.record.indicator_INDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES}}</td>
+          </tr>
+          <tr data-ng-if="mdView.current.record.indicator_INDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES">
+            <th>
+              {{'facet-indicator_INDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES' | translate }}
+              <span title="{{'facet-indicator_INDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES-help' | translate}}" class="fa fa-info-circle text-info"></span>
+            </th>
+            <td data-ng-class="{'text-success': mdView.current.record.indicator_INDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES == 'PASS', 'text-danger': mdView.current.record.indicator_INDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES == 'FAIL'}">{{mdView.current.record.indicator_INDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES}}</td>
+          </tr>
+          <tr data-ng-if="mdView.current.record.indicator_INDICATOR_RESOLVES_TO_CAPABILITIES">
+            <th>
+              {{'facet-indicator_INDICATOR_RESOLVES_TO_CAPABILITIES' | translate }}
+              <span title="{{'facet-indicator_INDICATOR_RESOLVES_TO_CAPABILITIES-help' | translate}}" class="fa fa-info-circle text-info"></span>
+            </th>
+            <td data-ng-class="{'text-success': mdView.current.record.indicator_INDICATOR_RESOLVES_TO_CAPABILITIES == 'PASS', 'text-danger': mdView.current.record.indicator_INDICATOR_RESOLVES_TO_CAPABILITIES == 'FAIL'}">{{mdView.current.record.indicator_INDICATOR_RESOLVES_TO_CAPABILITIES}}</td>
+          </tr>
+          </tbody>
+        </table>
 
           <div data-gn-related-observer>
             <div data-gn-related="mdView.current.record"
