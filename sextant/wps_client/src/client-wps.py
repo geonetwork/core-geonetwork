@@ -7,9 +7,11 @@ import urllib.request
 import smtplib
 from email.message import EmailMessage
 
-SMTP_SERVER = ""
+SMTP_SERVER = "localhost"
 SMTP_USER = ""
 SMTP_PASSWORD = ""
+SMTP_PORT = 255
+FROM_EMAIL = "wps@ifremer.com"
 
 
 def usage():
@@ -34,19 +36,24 @@ python3 client-wps.py -d /tmp/toto.csv --verbose --url https://www.ifremer.fr/se
     )
 
 
-def send_mail(
-    to_email, subject, message, server=SMTP_SERVER, from_email="wps@ifremer.com"
-):
+def send_mail(to_email, subject, message, server=SMTP_SERVER, from_email=FROM_EMAIL):
+    print("failed will send mail")
     msg = EmailMessage()
     msg["Subject"] = subject
     msg["From"] = from_email
     msg["To"] = ", ".join(to_email)
     msg.set_content(message)
-    server = smtplib.SMTP(server, 587)
+    server = smtplib.SMTP(server, SMTP_PORT)
     server.ehlo()
-    server.starttls()
-    server.login(SMTP_USER, SMTP_PASSWORD)
+    try:
+        server.starttls()
+    except:
+        print("SMTP does not support ttls")
     server.send_message(msg)
+    try:
+        server.login(SMTP_USER, SMTP_PASSWORD)
+    except:
+        print("Enable to login to SMTP server")
     server.quit()
 
 
@@ -94,7 +101,7 @@ for opt, arg in options:
         assert False, "Unhandled option"
 
 # required arguments for all requests
-if url is None or destination is None:
+if url is None or destination is None or email is None:
     usage()
     sys.exit(3)
 
