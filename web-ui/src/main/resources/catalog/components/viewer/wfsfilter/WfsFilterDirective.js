@@ -1029,7 +1029,9 @@
 
           //Manage geographic search
           scope.$watch(function() {
-            return (scope.ctrl.searchGeometry || '').replace(',,,', '');
+            var geom = scope.ctrl.searchGeometry || '';
+            if (geom === ',,,') geom = '';
+            return geom;
           }, function(geom, old) {
             extentFilter = undefined;
             scope.filterGeometry = undefined;

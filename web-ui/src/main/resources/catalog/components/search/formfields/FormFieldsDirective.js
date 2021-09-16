@@ -854,7 +854,7 @@
 
               scope.updateMap = function() {
                 layer.getSource().clear();
-                if (scope.extent == ['', '', '', '']) {
+                if (scope.extent.some(function(n) { return !Number.isFinite(n); })) {
                   return;
                 }
                 var coordinates, geom, f;
