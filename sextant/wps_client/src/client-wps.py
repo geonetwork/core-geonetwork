@@ -21,7 +21,7 @@ Common Parameters for all request types
     -e, --email email in case of error - required
     -x, --xml XML file containing pre-made request to be submitted - required
     -t, --timeout (s). Timeout for WPS process - optional (defaults to 2000)
-    -sh, --smtphost. SMTP host
+    -sh, --smtphost. SMTP host -required
     -sp, --smtpport. SMTP port- optional (defaults to 25)
     -fe, --fromemail. Email that will be the sender
     -sps, --smtppass. SMTP password - optional
@@ -106,7 +106,7 @@ xml = None
 verbose = False
 destination = None
 email = None
-from_email = None
+from_email = "noreply"
 timeout = 2000
 smtp_host = None
 smtp_port = 25
