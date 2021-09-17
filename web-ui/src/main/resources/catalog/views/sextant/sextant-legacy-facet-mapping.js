@@ -625,14 +625,11 @@
         }
     },
     'odatis_type_jeux_donnee': {
-      'th_type_jeux_donnee_tree.default':
+      'th_type_jeux_donnee_tree.key':
         {
           'terms': {
-            'field': 'th_type_jeux_donnee_tree.default',
+            'field': 'th_type_jeux_donnee_tree.key',
             'size': 300
-          },
-          'meta': {
-            'treeKeySeparator': '/'
           }
         }
     },
