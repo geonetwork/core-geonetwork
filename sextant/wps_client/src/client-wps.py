@@ -7,6 +7,7 @@ import urllib.request
 import smtplib
 from email.message import EmailMessage
 from config import *
+from timeout import *
 
 
 def usage():
@@ -20,6 +21,7 @@ Common Parameters for all request types
     -d, --destination file destination - required
     -e, --email email in case of error - required
     -x, --xml XML file containing pre-made request to be submitted - required
+    -t, --timeout (s). Timeout for WPS process - optional (defaults to DEFAULT_TIME_OUT)
     -v, --verbose set flag for verbose output - optional (defaults to False)
 
 Examples
@@ -32,7 +34,6 @@ python3 client-wps.py -d /tmp/toto.csv --verbose --url https://www.ifremer.fr/se
 
 
 def send_mail(to_email, subject, message, server=SMTP_SERVER, from_email=FROM_EMAIL):
-    print("failed will send mail")
     msg = EmailMessage()
     msg["Subject"] = subject
     msg["From"] = from_email
@@ -63,7 +64,15 @@ try:
     options, remainder = getopt.getopt(
         sys.argv[1:],
         "u:x:d:i:v:e",
-        ["url=", "xml=", "destination=", "identifier=", "verbose", "email="],
+        [
+            "url=",
+            "xml=",
+            "destination=",
+            "identifier=",
+            "email=",
+            "timeout=",
+            "verbose",
+        ],
     )
 except getopt.GetoptError as err:
     print(str(err))
@@ -78,6 +87,7 @@ xml = None
 verbose = False
 destination = None
 email = None
+timeout = DEFAULT_TIME_OUT
 
 for opt, arg in options:
     if opt in ("-u", "--url"):
@@ -92,6 +102,12 @@ for opt, arg in options:
         identifier = arg
     elif opt in ("-v", "--verbose"):
         verbose = True
+    elif opt in ("-t", "--timeout"):
+        timeout = arg
+        try:
+            timeout = int(timeout)
+        except:
+            assert False, "Timeout must be an int"
     else:
         assert False, "Unhandled option"
 
@@ -111,7 +127,18 @@ if xml is None:
 execution = wps.execute(None, [], request=xml)
 
 # monitor the process
-monitorExecution(execution)
+with timeout_(seconds=timeout):
+    try:
+        monitorExecution(execution)
+    except TimeoutError as e:
+        send_mail(
+            to_email=[email],
+            subject="WPS: timeout ({})".format(e),
+            message="WPS process took more than {} s\n"
+            "This is an automatic email".format(timeout),
+        )
+
+
 if execution.errors:
     text_error = "{} error(s) when processing WPS \n:".format(len(execution.errors))
     for error in execution.errors:

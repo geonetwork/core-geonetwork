@@ -3,3 +3,4 @@ SMTP_USER = ""
 SMTP_PASSWORD = ""
 SMTP_PORT = 255
 FROM_EMAIL = "wps@ifremer.com"
+DEFAULT_TIME_OUT = 2000
