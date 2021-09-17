@@ -43,7 +43,7 @@
     this.$http = $injector.get('$http');
     this.$q = $injector.get('$q');
     this.$translate = $injector.get('$translate');
-    this.gnFacetTree = $injector.get('gnFacetTree');
+    this.gnTreeFromSlash = $injector.get('gnTreeFromSlash');
 
     this.config = config;
 
@@ -554,7 +554,7 @@
           });
         }
         else if (fieldId.endsWith('_tree')) {
-          facetField.tree = this.gnFacetTree.getTree(respAgg.buckets);
+          facetField.tree = this.gnTreeFromSlash.getTree(respAgg.buckets);
         }
         // date types
         else if (fieldId.endsWith('_dt') || facetField.type == 'rangeDate') {

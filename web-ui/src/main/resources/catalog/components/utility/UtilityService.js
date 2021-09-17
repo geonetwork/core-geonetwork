@@ -762,7 +762,10 @@
         if (!newNode) {
           newNode = {
             name: group,
-            value: group
+            value: group,
+            key: g.filter(function(name, index) {
+              return index <= g.indexOf(group)
+            }).join('/')
             //selected: themesInSearch.indexOf(t['@name']) >= 0 ? true : false
           };
           if (!node.nodes) node.nodes = [];
