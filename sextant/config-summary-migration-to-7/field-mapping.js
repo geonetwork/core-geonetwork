@@ -616,13 +616,12 @@ var facetMapping = {
       }
   },
   "odatis_type_jeux_donnee": {
-    "th_type_jeux_donnee.default":
-      {
-        "terms": {
-          "field": "th_type_jeux_donnee.default",
-          "size": 300
-        }
+    'th_type_jeux_donnee_tree.key': {
+      'terms': {
+        'field': 'th_type_jeux_donnee_tree.key',
+        'size': 300
       }
+    }
   },
   "lops-projets": {
     "th_lops_projets.default":
