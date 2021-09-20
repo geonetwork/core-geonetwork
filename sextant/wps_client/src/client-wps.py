@@ -7,6 +7,7 @@ import urllib.request
 import smtplib
 from email.message import EmailMessage
 from timeout import *
+from xml.etree import ElementTree as ET
 
 
 def usage():
@@ -37,6 +38,15 @@ python3 client-wps.py -d /tmp/toto.csv --verbose --url https://www.ifremer.fr/se
     )
 
 
+def get_output_name_from_xml(xml_path):
+    tree = ET.fromstring(xml_path)
+    ns = {"wps": "http://www.opengis.net/wps/1.0.0"}
+    output_file_name = (
+        list(tree.iterfind(".//wps:Output", namespaces=ns))[0].getchildren()[0].text
+    )
+    return output_file_name
+
+
 def send_mail(
     to_email,
     subject,
@@ -57,7 +67,7 @@ def send_mail(
     try:
         server.starttls()
     except:
-        print("SMTP does not support ttls")
+        print("[warning] SMTP does not support ttls")
     if smtp_user and smtp_pass:
         try:
             server.login(smtp_user, smtp_pass)
@@ -149,6 +159,10 @@ for opt, arg in options:
 if url is None or destination is None or email is None or smtp_host is None:
     usage()
     sys.exit(3)
+
+# check if destination is dir, if it is the case get the output value from the xml
+if os.path.isdir(destination):
+    destination = "{}/{}".format(destination, get_output_name_from_xml(xml))
 
 # instantiate client
 wps = WebProcessingService(url, verbose=verbose, skip_caps=True)
