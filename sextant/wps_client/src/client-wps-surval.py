@@ -27,6 +27,6 @@ process_wps_execute(
     smtp_port,
     from_email,
     timeout,
-    False,
+    True,
     verbose=True,
 )
