@@ -604,23 +604,20 @@
         }
     },
     'odatis_variables': {
-      'th_odatis_thematiques.default':
+      'th_odatis_thematiques_tree.key':
         {
           'terms': {
-            'field': 'th_odatis_thematiques.default',
+            'field': 'th_odatis_thematiques_tree.key',
             'size': 300
           }
         }
     },
     'odatis_centre_donnees': {
-      'th_odatis_centre_donnees_tree.default':
+      'th_odatis_centre_donnees.default':
         {
           'terms': {
-            'field': 'th_odatis_centre_donnees_tree.default',
+            'field': 'th_odatis_centre_donnees.default',
             'size': 300
-          },
-          'meta': {
-            'treeKeySeparator': '/'
           }
         }
     },
