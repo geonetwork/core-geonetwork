@@ -702,7 +702,9 @@
                    settings.type = "POST";
                    settings.contentType = "application/json; charset=UTF-8";
                    settings.data = JSON.stringify(
-                     {from: 0, size: 10, query: {
+                     {from: 0, size: 10,
+                       sort : [{'resourceTitleObject.default.keyword': 'asc'}],
+                       query: {
                          bool: {
                            must: {
                              query_string: {
