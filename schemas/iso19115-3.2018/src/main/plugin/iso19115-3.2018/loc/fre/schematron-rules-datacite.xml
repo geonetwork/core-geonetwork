@@ -50,15 +50,26 @@
   <datacite.creator.missing>Creator is missing. The main researchers involved
     in producing the data, or the authors of the publication, in
     priority order. To supply multiple creators, repeat this
-    property. Check point of contact in resource identification with role 'author' (default) or 'principalInvestigator' (CERSAT). This field is mandatory.
+    property. Check point of contact in resource identification with role 'author'. This field is mandatory.
   </datacite.creator.missing>
+  <datacite.creator.missing.cersat>Creator is missing. The main researchers involved
+    in producing the data, or the authors of the publication, in
+    priority order. To supply multiple creators, repeat this
+    property. Check point of contact in resource identification with role 'principalInvestigator'. This field is mandatory.
+  </datacite.creator.missing.cersat>
   <datacite.creator.found> creator(s) found.</datacite.creator.found>
 
   <datacite.publisher.missing>Publisher is missing. The name of the entity that
     holds, archives, publishes
     prints, distributes, releases,
     issues, or produces the
-    resource. Check point of contact in resource identification with role 'publisher' (default) or 'distributor' (CERSAT), the publisher is the first matching contact. This field is mandatory.
+    resource. Check point of contact in resource identification with role 'publisher', the publisher is the first matching contact. This field is mandatory.
   </datacite.publisher.missing>
+  <datacite.publisher.missing.cersat>Publisher is missing. The name of the entity that
+    holds, archives, publishes
+    prints, distributes, releases,
+    issues, or produces the
+    resource. Check point of contact in resource identification with role 'distributor', the publisher is the first matching contact. This field is mandatory.
+  </datacite.publisher.missing.cersat>
   <datacite.publisher.present>The publisher is: </datacite.publisher.present>
 </strings>

@@ -54,6 +54,10 @@
     <sch:rule
       context="//mdb:MD_Metadata|//*[@gco:isoType='mdb:MD_Metadata']">
 
+      <sch:let name="isCersat"
+               value="count(mdb:metadataStandard/cit:CI_Citation
+                        /cit:title[*/text() = 'ISO 19115-3:2018 - Remote Sensing']) > 0"/>
+
       <sch:let name="title"
                value="mdb:identificationInfo/*/mri:citation/*/cit:title"/>
 
@@ -73,22 +77,36 @@
         "<sch:value-of select="normalize-space($identifier)"/>"
       </sch:report>
 
-
+      <sch:let name="creatorRoles"
+               value="if ($isCersat)
+                      then 'principalInvestigator' else 'author'"/>
       <sch:let name="numberOfCreators"
-               value="count(mdb:identificationInfo/*/mri:pointOfContact/*[cit:role/*/@codeListValue = ('author', 'principalInvestigator')])"/>
+               value="count(mdb:identificationInfo/*/mri:pointOfContact/*[cit:role/*/@codeListValue = ($creatorRoles)])"/>
+      <sch:let name="creatorMessage"
+               value="if ($isCersat)
+                      then 'datacite.creator.missing.cersat'
+                      else 'datacite.creator.missing'"/>
 
-      <sch:assert test="$numberOfCreators > 0">$loc/strings/datacite.creator.missing</sch:assert>
+      <sch:assert test="$numberOfCreators > 0">$loc/strings/*[name() = $creatorMessage]</sch:assert>
       <sch:report test="$numberOfCreators > 0">
         <sch:value-of select="$numberOfCreators"/>
         <sch:value-of select="$loc/strings/datacite.creator.found"/>
       </sch:report>
 
 
+
+      <sch:let name="publisherRoles"
+               value="if ($isCersat)
+                      then 'distributor' else 'publisher'"/>
       <sch:let name="publisher"
                value="(mdb:identificationInfo/*/
-                               mri:pointOfContact/*[cit:role/*/@codeListValue = ('publisher', 'distributor')]//cit:CI_Organisation)[1]/cit:name/gco:CharacterString"/>
+                               mri:pointOfContact/*[cit:role/*/@codeListValue = ($publisherRoles)]//cit:CI_Organisation)[1]/cit:name/gco:CharacterString"/>
+      <sch:let name="publisherMessage"
+               value="if ($isCersat)
+                      then 'datacite.publisher.missing.cersat'
+                      else 'datacite.publisher.missing'"/>
 
-      <sch:assert test="$publisher != ''">$loc/strings/datacite.publisher.missing</sch:assert>
+      <sch:assert test="$publisher != ''">$loc/strings/*[name() = $publisherMessage]</sch:assert>
       <sch:report test="$publisher != ''">
         <sch:value-of select="$loc/strings/datacite.publisher.present"/>
         <sch:value-of select="$publisher"/>
