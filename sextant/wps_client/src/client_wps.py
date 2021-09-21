@@ -1,5 +1,4 @@
 #!/usr/bin/python
-import getopt
 import os
 from owslib.wps import WebProcessingService, monitorExecution
 import urllib.request
@@ -7,9 +6,6 @@ import urllib.request
 from timeout import *
 from utils import *
 import sys
-import requests
-
-MIN_FILE_SIZE = 100  # bytes
 
 
 def get_args(argv):
@@ -138,10 +134,32 @@ python3 client-wps.py -d /tmp/toto.csv --verbose --url https://www.ifremer.fr/se
     )
 
 
+def fetch_wps_output_file(output, email, user_destination, **kwargs):
+    # check if destination is dir, if it is the case get the output value from the xml
+    if os.path.isdir(user_destination):
+        base_name = user_destination + "/" + os.path.basename(output.reference)
+        destination = os.path.basename(base_name).split("?")[0]
+    else:
+        destination = user_destination
+    try:
+        urllib.request.urlretrieve(output.reference, destination)
+    except Exception as e:
+        send_mail(
+            to_email=[email],
+            smtp_host=kwargs["smtp_host"],
+            smtp_pass=kwargs["smtp_pass"],
+            smtp_user=kwargs["smtp_user"],
+            smtp_port=kwargs["smtp_port"],
+            from_email=kwargs["from_email"],
+            subject="WPS: Error",
+            message="Failed to get download file from {} \n"
+            "with error ({})".format(output.reference, e),
+        )
+
+
 def process_wps_execute(
     xml,
     url,
-    destination,
     email,
     smtp_host,
     smtp_user=None,
@@ -149,13 +167,8 @@ def process_wps_execute(
     smtp_port=None,
     from_email=None,
     timeout=None,
-    check_volume=False,
     verbose=False,
 ):
-
-    # check if destination is dir, if it is the case get the output value from the xml
-    if os.path.isdir(destination):
-        destination = "{}/{}".format(destination, get_output_name_from_xml(xml))
 
     # instantiate client
     wps = WebProcessingService(url, verbose=verbose, skip_caps=True)
@@ -208,42 +221,4 @@ def process_wps_execute(
     print("percent complete", execution.percentCompleted)
     print("status message", execution.statusMessage)
 
-    for output in execution.processOutputs:
-        print(
-            "identifier=%s, dataType=%s, data=%s, reference=%s"
-            % (output.identifier, output.dataType, output.data, output.reference)
-        )
-
-        if output.reference:
-            response = requests.head(output.reference, allow_redirects=True)
-            size = int(response.headers.get("content-length", -1))
-            if size < MIN_FILE_SIZE:
-                send_mail(
-                    to_email=[email],
-                    smtp_host=smtp_host,
-                    smtp_pass=smtp_pass,
-                    smtp_user=smtp_user,
-                    smtp_port=smtp_port,
-                    from_email=from_email,
-                    subject="WPS: Error with Size".format(),
-                    message="File should be > {} but is {}.\n"
-                    "To Download directly visit {}".format(
-                        MIN_FILE_SIZE, size, output.reference
-                    ),
-                )
-
-            try:
-                urllib.request.urlretrieve(output.reference, destination)
-            except:
-                send_mail(
-                    to_email=[email],
-                    smtp_host=smtp_host,
-                    smtp_pass=smtp_pass,
-                    smtp_user=smtp_user,
-                    smtp_port=smtp_port,
-                    from_email=from_email,
-                    subject="WPS: Error ({})".format(e),
-                    message="Failed to get download file from {}".format(
-                        output.reference
-                    ),
-                )
+    return execution.processOutputs
