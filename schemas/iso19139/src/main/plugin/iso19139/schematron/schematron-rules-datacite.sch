@@ -37,6 +37,9 @@
     <sch:rule
       context="//gmd:MD_Metadata|//*[@gco:isoType='gmd:MD_Metadata']">
 
+      <sch:let name="isSDN"
+               value="count(gmd:metadataStandardName[*/text() = 'ISO 19115:2003/19139 - EMODNET - SDN']) > 0"/>
+
       <sch:let name="title"
                value="gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
 
@@ -57,6 +60,7 @@
       </sch:report>
 
 
+
       <sch:let name="numberOfCreators"
                value="count(gmd:identificationInfo/*/gmd:pointOfContact/*[gmd:role/*/@codeListValue = ('author')])"/>
 
@@ -67,12 +71,19 @@
       </sch:report>
 
 
+      <sch:let name="publisherRoles"
+               value="if ($isSDN)
+                      then 'custodian' else 'publisher'"/>
       <sch:let name="publisher"
                value="(gmd:identificationInfo/*/
-                               gmd:pointOfContact/*[gmd:role/*/@codeListValue = ('publisher', 'custodian')]
+                               gmd:pointOfContact/*[gmd:role/*/@codeListValue = ($publisherRoles)]
                                )[1]/gmd:organisationName/gco:CharacterString"/>
+      <sch:let name="publisherMessage"
+               value="if ($isSDN)
+                      then 'datacite.publisher.missing.sdn'
+                      else 'datacite.publisher.missing'"/>
 
-      <sch:assert test="$publisher != ''">$loc/strings/datacite.publisher.missing</sch:assert>
+      <sch:assert test="$publisher != ''">$loc/strings/*[name() = $publisherMessage]</sch:assert>
       <sch:report test="$publisher != ''">
         <sch:value-of select="$loc/strings/datacite.publisher.present"/>
         <sch:value-of select="$publisher"/>
