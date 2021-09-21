@@ -606,13 +606,13 @@
       </div>
     </div>
 
-    <div class="row">
+    <!--<div class="row">
       <div class="col-md-12">
         <h2>
           <xsl:value-of select="$schemaStrings/cersat-publications"/>
         </h2>
       </div>
-    </div>
+    </div>-->
 
   </xsl:template>
 
