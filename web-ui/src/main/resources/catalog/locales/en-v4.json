@@ -200,5 +200,7 @@
   "ingesterIsRunning": "Records are being inserted in the GeoNetwork database",
   "harvestDetails": "Details",
   "harvestStatus": "Harvest status",
-  "harvestProgress": "Detailed progress information"
+  "harvestProgress": "Detailed progress information",
+  "facet-th_INSPIRE-priority-data-set": "Priority dataset",
+  "facet-th_INSPIRE-priority-data-setNumber": "Number of priority datasets"
 }
