@@ -23,8 +23,29 @@
     <numberOfRecordsPerRequest>
       <xsl:value-of select="numberOfRecordsPerRequest/value"/>
     </numberOfRecordsPerRequest>
-  </xsl:template>
 
+    <errorConfigNextRecordsNotZero>
+      <xsl:value-of select="errorConfigNextRecordsNotZero/value"/>
+    </errorConfigNextRecordsNotZero>
+    <errorConfigNextRecordsBadValue>
+      <xsl:value-of select="errorConfigNextRecordsBadValue/value"/>
+    </errorConfigNextRecordsBadValue>
+    <errorConfigFewerRecordsThanRequested>
+      <xsl:value-of select="errorConfigFewerRecordsThanRequested/value"/>
+    </errorConfigFewerRecordsThanRequested>
+    <errorConfigTotalRecordsChanged>
+      <xsl:value-of select="errorConfigTotalRecordsChanged/value"/>
+    </errorConfigTotalRecordsChanged>
+    <errorConfigMaxPercentTotalRecordsChangedAllowed>
+      <xsl:value-of select="errorConfigMaxPercentTotalRecordsChangedAllowed/value"/>
+    </errorConfigMaxPercentTotalRecordsChangedAllowed>
+    <errorConfigDuplicatedUuids>
+      <xsl:value-of select="errorConfigDuplicatedUuids/value"/>
+    </errorConfigDuplicatedUuids>
+    <processQueueType>
+      <xsl:value-of select="processQueueType/value"/>
+    </processQueueType>
+  </xsl:template>
 
   <xsl:template match="*" mode="searches">
     <!-- Convert old search filter values to the new filter format -->

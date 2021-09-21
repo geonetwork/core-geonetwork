@@ -60,6 +60,17 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
         harvesterSettingsManager.add("id:" + optionsId, "remoteHarvesterNestedServices", params.remoteHarvesterNestedServices);
         harvesterSettingsManager.add("id:" + optionsId, "numberOfRecordsPerRequest", params.numberOfRecordsPerRequest);
 
+        harvesterSettingsManager.add("id:" + optionsId, "errorConfigNextRecordsNotZero", params.errorConfigNextRecordsNotZero);
+        harvesterSettingsManager.add("id:" + optionsId, "errorConfigNextRecordsBadValue", params.errorConfigNextRecordsBadValue);
+        harvesterSettingsManager.add("id:" + optionsId, "errorConfigFewerRecordsThanRequested", params.errorConfigFewerRecordsThanRequested);
+        harvesterSettingsManager.add("id:" + optionsId, "errorConfigTotalRecordsChanged", params.errorConfigTotalRecordsChanged);
+        harvesterSettingsManager.add("id:" + optionsId, "errorConfigMaxPercentTotalRecordsChangedAllowed", params.errorConfigMaxPercentTotalRecordsChangedAllowed);
+        harvesterSettingsManager.add("id:" + optionsId, "errorConfigDuplicatedUuids", params.errorConfigDuplicatedUuids);
+
+        harvesterSettingsManager.add("id:" + optionsId, "processQueueType", params.processQueueType);
+
+        harvesterSettingsManager.add("id:" + optionsId, "doNotSort", params.doNotSort);
+
         //--- store dynamic filter nodes
         String filtersID = harvesterSettingsManager.add(path, "filters", "");
 

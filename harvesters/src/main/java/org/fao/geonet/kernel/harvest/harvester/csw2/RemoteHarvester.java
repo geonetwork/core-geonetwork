@@ -81,12 +81,18 @@ class RemoteHarvester implements IHarvester<CswRemoteHarvestResult> {
         RemoteHarvesterConfiguration remoteHarvesterConfiguration = new RemoteHarvesterConfiguration();
         remoteHarvesterConfiguration.setUrl(params.capabUrl);
         remoteHarvesterConfiguration.setLongTermTag(params.getUuid());
+        remoteHarvesterConfiguration.setNumberOfRecordsPerRequest(params.numberOfRecordsPerRequest);
         remoteHarvesterConfiguration.setLookForNestedDiscoveryService(params.remoteHarvesterNestedServices);
-
+        remoteHarvesterConfiguration.setErrorConfigDuplicatedUuids(params.errorConfigDuplicatedUuids);
+        remoteHarvesterConfiguration.setErrorConfigFewerRecordsThanRequested(params.errorConfigFewerRecordsThanRequested);
+        remoteHarvesterConfiguration.setErrorConfigNextRecordsBadValue(params.errorConfigNextRecordsBadValue);
+        remoteHarvesterConfiguration.setErrorConfigNextRecordsNotZero(params.errorConfigNextRecordsNotZero);
+        remoteHarvesterConfiguration.setErrorConfigTotalRecordsChanged(params.errorConfigTotalRecordsChanged);
+        remoteHarvesterConfiguration.setErrorConfigMaxPercentTotalRecordsChangedAllowed(params.errorConfigMaxPercentTotalRecordsChangedAllowed);
+        remoteHarvesterConfiguration.setGetRecordQueueHint(params.processQueueType);
 
         RemoteHarvesterApiClient remoteHarvesterApiClient = new RemoteHarvesterApiClient(url);
         result.processId = remoteHarvesterApiClient.startHarvest(remoteHarvesterConfiguration);
-
 
         //remoteHarvesterApiClient.retrieveProgress(result.processId);
 

@@ -47,6 +47,17 @@ public class CswParams2 extends AbstractParams {
 
     public int numberOfRecordsPerRequest;
 
+    public boolean errorConfigNextRecordsNotZero = false;
+    public boolean errorConfigNextRecordsBadValue = true;
+    public boolean errorConfigFewerRecordsThanRequested = true;
+    public boolean errorConfigTotalRecordsChanged = true;
+    public int errorConfigMaxPercentTotalRecordsChangedAllowed = 1;
+    public boolean errorConfigDuplicatedUuids = true;
+
+    public boolean doNotSort = false;
+
+    public String processQueueType = "auto";
+
     public List<Element> eltFilters = new ArrayList<Element>();
 
     public Element bboxFilter;
@@ -77,6 +88,17 @@ public class CswParams2 extends AbstractParams {
         remoteHarvesterNestedServices = Util.getParam(options, "remoteHarvesterNestedServices", false);
         numberOfRecordsPerRequest = Util.getParam(options, "numberOfRecordsPerRequest", 20);
 
+        errorConfigNextRecordsNotZero = Util.getParam(options, "errorConfigNextRecordsNotZero", true);
+        errorConfigNextRecordsBadValue = Util.getParam(options, "errorConfigNextRecordsBadValue", true);
+        errorConfigFewerRecordsThanRequested = Util.getParam(options, "errorConfigFewerRecordsThanRequested", true);
+        errorConfigTotalRecordsChanged = Util.getParam(options, "errorConfigTotalRecordsChanged", true);
+        errorConfigMaxPercentTotalRecordsChangedAllowed = Util.getParam(options, "errorConfigMaxPercentTotalRecordsChangedAllowed", 5);
+        errorConfigDuplicatedUuids = Util.getParam(options, "errorConfigDuplicatedUuids", true);
+
+        processQueueType = Util.getParam(options, "processQueueType", "auto");
+
+        doNotSort = Util.getParam(options, "doNotSort", false);
+
         if (filters != null) {
             @SuppressWarnings("unchecked")
             List<Element> tmp = filters.getChildren();
@@ -104,6 +126,17 @@ public class CswParams2 extends AbstractParams {
         remoteHarvesterNestedServices = Util.getParam(options, "remoteHarvesterNestedServices", remoteHarvesterNestedServices);
         numberOfRecordsPerRequest = Util.getParam(options, "numberOfRecordsPerRequest", numberOfRecordsPerRequest);
 
+        errorConfigNextRecordsNotZero = Util.getParam(options, "errorConfigNextRecordsNotZero", errorConfigNextRecordsNotZero);
+        errorConfigNextRecordsBadValue = Util.getParam(options, "errorConfigNextRecordsBadValue", errorConfigNextRecordsBadValue);
+        errorConfigFewerRecordsThanRequested = Util.getParam(options, "errorConfigFewerRecordsThanRequested", errorConfigFewerRecordsThanRequested);
+        errorConfigTotalRecordsChanged = Util.getParam(options, "errorConfigTotalRecordsChanged", errorConfigTotalRecordsChanged);
+        errorConfigMaxPercentTotalRecordsChangedAllowed = Util.getParam(options, "errorConfigMaxPercentTotalRecordsChangedAllowed", errorConfigMaxPercentTotalRecordsChangedAllowed);
+        errorConfigDuplicatedUuids = Util.getParam(options, "errorConfigDuplicatedUuids", errorConfigDuplicatedUuids);
+
+        processQueueType = Util.getParam(options, "processQueueType", processQueueType);
+
+        doNotSort = Util.getParam(options, "doNotSort", doNotSort);
+
         icon = Util.getParam(site, "icon", icon);
 
         //--- if some filter queries are given, we drop the previous ones and
@@ -130,6 +163,17 @@ public class CswParams2 extends AbstractParams {
         copy.outputSchema = outputSchema;
         copy.remoteHarvesterNestedServices = remoteHarvesterNestedServices;
         copy.numberOfRecordsPerRequest = numberOfRecordsPerRequest;
+
+        copy.errorConfigNextRecordsNotZero = errorConfigNextRecordsNotZero;
+        copy.errorConfigNextRecordsBadValue = errorConfigNextRecordsBadValue;
+        copy.errorConfigFewerRecordsThanRequested = errorConfigFewerRecordsThanRequested;
+        copy.errorConfigTotalRecordsChanged = errorConfigTotalRecordsChanged;
+        copy.errorConfigMaxPercentTotalRecordsChangedAllowed = errorConfigMaxPercentTotalRecordsChangedAllowed;
+        copy.errorConfigDuplicatedUuids = errorConfigDuplicatedUuids;
+
+        copy.processQueueType = processQueueType;
+
+        copy.doNotSort = doNotSort;
 
         copy.eltFilters = eltFilters;
         copy.bboxFilter = bboxFilter;

@@ -29,7 +29,15 @@ var gnHarvestercsw2 = {
         "overrideUuid": "SKIP",
         "status" : "active",
         "remoteHarvesterNestedServices": false,
-        "numberOfRecordsPerRequest": 20
+        "numberOfRecordsPerRequest": 20,
+        "errorConfigNextRecordsNotZero": false,
+        "errorConfigNextRecordsBadValue": true,
+        "errorConfigFewerRecordsThanRequested": true,
+        "errorConfigTotalRecordsChanged": true,
+        "errorConfigMaxPercentTotalRecordsChangedAllowed": 5,
+        "errorConfigDuplicatedUuids": true,
+        "processQueueType": "auto",
+        "doNotSort": false
       },
       "ifRecordExistAppendPrivileges": false,
       "privileges" : [ {
@@ -110,6 +118,14 @@ var gnHarvestercsw2 = {
       + '    <status>' + h.options.status + '</status>'
       + '    <remoteHarvesterNestedServices>' + h.options.remoteHarvesterNestedServices + '</remoteHarvesterNestedServices>'
       + '    <numberOfRecordsPerRequest>' + h.options.numberOfRecordsPerRequest + '</numberOfRecordsPerRequest>'
+      + '    <errorConfigNextRecordsNotZero>' + h.options.errorConfigNextRecordsNotZero + '</errorConfigNextRecordsNotZero>'
+      + '    <errorConfigNextRecordsBadValue>' + h.options.errorConfigNextRecordsBadValue + '</errorConfigNextRecordsBadValue>'
+      + '    <errorConfigFewerRecordsThanRequested>' + h.options.errorConfigFewerRecordsThanRequested + '</errorConfigFewerRecordsThanRequested>'
+      + '    <errorConfigTotalRecordsChanged>' + h.options.errorConfigTotalRecordsChanged + '</errorConfigTotalRecordsChanged>'
+      + '    <errorConfigMaxPercentTotalRecordsChangedAllowed>' + h.options.errorConfigMaxPercentTotalRecordsChangedAllowed + '</errorConfigMaxPercentTotalRecordsChangedAllowed>'
+      + '    <errorConfigDuplicatedUuids>' + h.options.errorConfigDuplicatedUuids + '</errorConfigDuplicatedUuids>'
+      + '    <processQueueType>' + h.options.processQueueType + '</processQueueType>'
+      + '    <doNotSort>' + h.options.doNotSort + '</doNotSort>'
       + '  </options>'
       + $scope.buildResponseGroup(h) + '</node>';
     return body;

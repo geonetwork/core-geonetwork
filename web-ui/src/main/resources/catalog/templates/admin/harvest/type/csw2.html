@@ -42,6 +42,84 @@
       <p class="help-block" data-translate="">csw-numberOfRecordsPerRequestHelp</p>
     </div>
 
+    <div id="gn-harvest-settings-csw-remote-process-donotsort-row" >
+      <label class="control-label">
+        <input id="gn-harvest-settings-gn-remote-process-donotsort-checkbox"
+               type="checkbox"
+               data-ng-model="harvesterSelected.options.doNotSort"/>
+        <span id="gn-harvest-settings-gn-remote-process-donotsort-label" data-translate="">csw-remoteHarvesterDoNotSort</span>
+      </label>
+      <p class="help-block" data-translate="">csw-remoteHarvesterDoNotSortHelp</p>
+    </div>
+
+
+    <div id="gn-harvest-settings-csw-remote-process-queue-type-row" >
+      <label id=gn-harvest-settings-gn-process-queue-type-label" class="control-label" data-translate="">csw-processQueueType</label>
+      <select id="gn-harvest-settings-gn-process-queue-type-list" class="form-control" data-ng-model="harvesterSelected.options.processQueueType">
+        <option value="auto">{{'csw-processQueueType-auto' | translate}}</option>
+        <option value="large">{{'csw-processQueueType-large' | translate}}</option>
+        <option value="parallel-2">{{'csw-processQueueType-parallel-2' | translate}}</option>
+        <option value="parallel-3">{{'csw-processQueueType-parallel-3' | translate}}</option>
+        <option value="parallel-4">{{'csw-processQueueType-parallel-4' | translate}}</option>
+      </select>
+
+      <p class="help-block" data-translate="">csw-processQueueTypeHelp</p>
+    </div>
+
+
+    <fieldset id="gn-harvest-settings-csw-errorconfig-row" class="form-horizontal cswCriteriaInfo">
+      <legend id="gn-harvest-settings-csw-errorconfig-title" data-translate="">csw-errorManagement</legend>
+      <label class="control-label">
+        <input id="gn-harvest-errorconfig-next-record-not-zero-checkbox"
+               type="checkbox"
+               data-ng-model="harvesterSelected.options.errorConfigNextRecordsNotZero"/>
+        <span id="gn-harvest-errorconfig-next-record-label" data-translate="">csw-errorconfigNextRecord</span>
+      </label>
+      <p class="help-block" data-translate="">csw-errorconfigNextRecordHelp</p>
+
+      <label class="control-label">
+        <input id="gn-harvest-errorconfig-next-record-bad-value-checkbox"
+               type="checkbox"
+               data-ng-model="harvesterSelected.options.errorConfigNextRecordsBadValue"/>
+        <span id="gn-harvest-errorconfig-next-record-label" data-translate="">csw-errorconfigNextRecordsBadValue</span>
+      </label>
+      <p class="help-block" data-translate="">csw-errorconfigNextRecordsBadValueHelp</p>
+
+      <label class="control-label">
+        <input id="gn-harvest-errorconfig-response-fewer-records-than-requested-checkbox"
+               type="checkbox"
+               data-ng-model="harvesterSelected.options.errorConfigFewerRecordsThanRequested"/>
+        <span id="gn-harvest-errorconfig-next-record-label" data-translate="">csw-errorconfigFewerRecordsThanRequested</span>
+      </label>
+      <p class="help-block" data-translate="">csw-errorconfigFewerRecordsThanRequestedHelp</p>
+
+      <label class="control-label">
+        <input id="gn-harvest-errorconfig-total-records-changed-checkbox"
+               type="checkbox"
+               data-ng-model="harvesterSelected.options.errorConfigTotalRecordsChanged"/>
+        <span id="gn-harvest-errorconfig-next-record-label" data-translate="">csw-errorconfigTotalRecordsChanged</span>
+      </label>
+      <p class="help-block" data-translate="">csw-errorconfigTotalRecordsChangedHelp</p>
+
+      <label class="control-label">
+        <span id="gn-harvest-errorconfig-max-percent-totalrecords-allowed-label" data-translate="">csw-errorconfigMaxPercentTotalRecordsChangedAllowed</span>
+      </label>
+      <input id="gn-harvest-errorconfig-max-percent-totalrecords-allowed-input"
+             type="number" min="0" max="100" data-gn-string-to-number
+             class="form-control"
+             data-ng-model="harvesterSelected.options.errorConfigMaxPercentTotalRecordsChangedAllowed"/>
+      <p class="help-block" data-translate="">csw-errorconfigMaxPercentTotalRecordsChangedAllowedHelp</p>
+
+      <label class="control-label">
+        <input id="gn-harvest-errorconfig-duplicated-uuids-checkbox"
+               type="checkbox"
+               data-ng-model="harvesterSelected.options.errorConfigDuplicatedUuids"/>
+        <span id="gn-harvest-errorconfig-next-record-label" data-translate="">csw-errorConfigDuplicatedUuids</span>
+      </label>
+      <p class="help-block" data-translate="">csw-errorConfigDuplicatedUuidsHelp</p>
+
+    </fieldset>
+
     <fieldset id="gn-harvest-settings-csw-basic-service-criteria-row" class="form-horizontal cswCriteriaInfo">
       <legend id="gn-harvest-settings-csw-basic-service-criteria-title" data-translate="">harvesterFilter</legend>
 
@@ -94,6 +172,7 @@
       </div>
     </fieldset>
   </fieldset>
+
 
   <div id="gn-harvest-settings-csw-privileges-row" data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
 </form>
