@@ -30,7 +30,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.client.RemoteHarvesterApiClient;
-import org.fao.geonet.client.RemoteHarvesterStatus;
+import org.fao.geonet.client.model.OrchestratedHarvestProcessStatus;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +79,7 @@ public class RemoteHarvestersApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
-    public List<RemoteHarvesterStatus> progress(
+    public List<OrchestratedHarvestProcessStatus> progress(
         @Parameter(
             description = "The harvester processes identifiers"
         )
@@ -90,7 +90,7 @@ public class RemoteHarvestersApi {
             throw new Exception("Remote harvester API endpoint is not configured. Configure it in the Settings page.");
         }
 
-        List<RemoteHarvesterStatus> statuses = new ArrayList<>();
+        List<OrchestratedHarvestProcessStatus> statuses = new ArrayList<>();
 
         RemoteHarvesterApiClient client = new RemoteHarvesterApiClient(url);
 
@@ -136,8 +136,8 @@ public class RemoteHarvestersApi {
         }
 
         RemoteHarvesterApiClient client = new RemoteHarvesterApiClient(url);
-        RemoteHarvesterStatus harvesterProcessStatus = client.retrieveProgress(processId);
+        OrchestratedHarvestProcessStatus harvesterProcessStatus = client.retrieveProgress(processId);
 
-        return new HttpEntity<>(harvesterProcessStatus.getState());
+        return new HttpEntity<>(harvesterProcessStatus.getOrchestratedHarvestProcessState().toString());
     }
 }

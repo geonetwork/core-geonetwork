@@ -2,7 +2,7 @@ package org.fao.geonet.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.junit.Assert;
+import org.fao.geonet.client.model.RemoteHarvesterConfiguration;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

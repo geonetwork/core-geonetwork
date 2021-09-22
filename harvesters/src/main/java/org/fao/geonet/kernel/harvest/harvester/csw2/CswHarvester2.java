@@ -25,7 +25,8 @@ package org.fao.geonet.kernel.harvest.harvester.csw2;
 
 import org.fao.geonet.Logger;
 import org.fao.geonet.client.RemoteHarvesterApiClient;
-import org.fao.geonet.client.RemoteHarvesterStatus;
+import org.fao.geonet.client.model.OrchestratedHarvestProcessState;
+import org.fao.geonet.client.model.OrchestratedHarvestProcessStatus;
 import org.fao.geonet.kernel.harvest.Common;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
@@ -128,10 +129,11 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                 while (check) {
 
                     try {
-                        RemoteHarvesterStatus harvesterStatus = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId);
+                        OrchestratedHarvestProcessStatus harvesterStatus = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId);
 
-                        if (!harvesterStatus.getState().equals("RECORDS_RECEIVED") &&
-                            !harvesterStatus.getState().equals("ERROR")) {
+                        if (!harvesterStatus.getOrchestratedHarvestProcessState().equals(OrchestratedHarvestProcessState.COMPLETE) &&
+                            !harvesterStatus.getOrchestratedHarvestProcessState().equals((OrchestratedHarvestProcessState.ERROR)) &&
+                            !harvesterStatus.getOrchestratedHarvestProcessState().equals((OrchestratedHarvestProcessState.USERABORT))) {
                             try {
                                 Thread.sleep(10 * 1000);
                             } catch (InterruptedException e) {

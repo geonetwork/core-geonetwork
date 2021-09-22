@@ -1,4 +1,4 @@
-package org.fao.geonet.client;
+package org.fao.geonet.client.model;
 
 import java.util.HashMap;
 import java.util.Objects;

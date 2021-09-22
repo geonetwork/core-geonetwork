@@ -28,7 +28,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.client.RemoteHarvesterApiClient;
-import org.fao.geonet.client.RemoteHarvesterConfiguration;
+import org.fao.geonet.client.model.RemoteHarvesterConfiguration;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;

@@ -12,6 +12,8 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.client.model.OrchestratedHarvestProcessStatus;
+import org.fao.geonet.client.model.RemoteHarvesterConfiguration;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
 
@@ -88,13 +90,13 @@ public class RemoteHarvesterApiClient {
     }
 
 
-    public RemoteHarvesterStatus retrieveProgress(String processId) throws RemoteHarvesterApiClientException {
+    public OrchestratedHarvestProcessStatus retrieveProgress(String processId) throws RemoteHarvesterApiClientException {
         String harvesterProgressUrl = url + String.format("/getstatus/%s", processId);
 
         ClientHttpResponse httpResponse = null;
         HttpGet getMethod = null;
 
-        RemoteHarvesterStatus harvesterStatus = null;
+        OrchestratedHarvestProcessStatus harvesterStatus = null;
 
         try {
             getMethod = new HttpGet(harvesterProgressUrl);
@@ -122,7 +124,7 @@ public class RemoteHarvesterApiClient {
                 String response = IOUtils.toString(httpResponse.getBody(), "UTF-8");
 
                 Gson gson = new Gson();
-                harvesterStatus = gson.fromJson(response, RemoteHarvesterStatus.class);
+                harvesterStatus = gson.fromJson(response, OrchestratedHarvestProcessStatus.class);
             }
         } catch (Exception ex) {
             throw new RemoteHarvesterApiClientException(ex.getMessage());
