@@ -43,6 +43,6 @@
   </bean>
 
   <bean class="org.fao.geonet.camelPeriodicProducer.MessageProducerFactory"/>
-  <bean class="org.fao.geonet.camelPeriodicProducer.MessageProducerService"/>"
+  <bean class="org.fao.geonet.camelPeriodicProducer.MessageProducerService"/>
 
 </beans>
