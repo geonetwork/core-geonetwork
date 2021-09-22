@@ -31,6 +31,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
@@ -49,8 +50,8 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.MailUtil;
@@ -61,6 +62,8 @@ import org.springframework.context.ApplicationContext;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -352,14 +355,24 @@ public class DefaultStatusActions implements StatusActions {
                 users.add(owner);
             } else if (notificationLevel == StatusValueNotificationLevel.recordProfileReviewer) {
                 List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(listOfId,
-                        Profile.Reviewer, SortUtils.createSort(User_.name));
+                        Profile.Reviewer);
+                Collections.sort(results, Comparator.comparing(s -> s.two().getName()));
+
                 for (Pair<Integer, User> p : results) {
                     users.add(p.two());
                 }
                 ;
             } else if (notificationLevel == StatusValueNotificationLevel.recordUserAuthor) {
                 Iterable<Metadata> records = this.context.getBean(MetadataRepository.class).findAll(listOfId);
+
                 for (Metadata r : records) {
+                    users.add(userRepository.findOne(r.getSourceInfo().getOwner()));
+                }
+
+                // Check metadata drafts
+                Iterable<MetadataDraft> recordsDraft = this.context.getBean(MetadataDraftRepository.class).findAll(listOfId);
+
+                for (MetadataDraft r : recordsDraft) {
                     users.add(userRepository.findOne(r.getSourceInfo().getOwner()));
                 }
                 ;

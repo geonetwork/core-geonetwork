@@ -39,6 +39,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -192,8 +194,8 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         _userGroupRepository.save(new UserGroup().setGroup(group2).setUser(reviewerUser).setProfile(Profile.Editor));
         _userGroupRepository.save(new UserGroup().setGroup(group1).setUser(reviewerUser).setProfile(Profile.Reviewer));
 
-        List<Pair<Integer, User>> found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId()), null,
-            SortUtils.createSort(User_.name));
+        List<Pair<Integer, User>> found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId()), null);
+        Collections.sort(found, Comparator.comparing(s -> s.two().getName()));
 
         assertEquals(2, found.size());
         assertEquals(md1.getId(), found.get(0).one().intValue());
@@ -201,8 +203,9 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         assertEquals(editUser, found.get(0).two());
         assertEquals(reviewerUser, found.get(1).two());
 
-        found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId()), null,
-            new Sort(new Sort.Order(Sort.Direction.DESC, User_.name.getName())));
+        found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId()), null);
+        // Sort by user name descending
+        Collections.sort(found, Comparator.comparing(s -> s.two().getName(), Comparator.reverseOrder()));
 
         assertEquals(2, found.size());
         assertEquals(md1.getId(), found.get(0).one().intValue());
@@ -211,7 +214,7 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         assertEquals(reviewerUser, found.get(0).two());
 
 
-        found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId(), md2.getId()), null, null);
+        found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId(), md2.getId()), null);
 
         assertEquals(4, found.size());
         int md1Found = 0;

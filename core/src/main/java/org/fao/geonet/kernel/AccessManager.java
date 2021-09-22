@@ -30,6 +30,8 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -394,7 +396,8 @@ public class AccessManager {
      */
     public Element getContentReviewers(ServiceContext context, final Set<Integer> metadataIds) throws Exception {
         List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(metadataIds,
-            Profile.Reviewer, SortUtils.createSort(User_.name));
+            Profile.Reviewer);
+        Collections.sort(results, Comparator.comparing(s -> s.two().getName()));
 
         Element resultEl = new Element("results");
         for (Pair<Integer, User> integerUserPair : results) {

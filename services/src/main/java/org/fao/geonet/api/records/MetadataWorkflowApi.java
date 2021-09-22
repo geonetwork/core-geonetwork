@@ -242,8 +242,9 @@ public class MetadataWorkflowApi {
         // --- get the list of content reviewers for this metadata record
         Set<Integer> ids = new HashSet<Integer>();
         ids.add(Integer.valueOf(metadata.getId()));
-        List<Pair<Integer, User>> reviewers = userRepository.findAllByGroupOwnerNameAndProfile(ids, Profile.Reviewer,
-                SortUtils.createSort(User_.name));
+        List<Pair<Integer, User>> reviewers = userRepository.findAllByGroupOwnerNameAndProfile(ids, Profile.Reviewer);
+        Collections.sort(reviewers, Comparator.comparing(s -> s.two().getName()));
+
         List<User> listOfReviewers = new ArrayList<>();
         for (Pair<Integer, User> reviewer : reviewers) {
             listOfReviewers.add(reviewer.two());
