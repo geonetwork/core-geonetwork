@@ -601,7 +601,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         }
 
         @Override
-        public void process() throws Exception {
+        public void process(String catalogueId) throws Exception {
             doHarvest(logger);
         }
     }
@@ -673,7 +673,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                         logger.info("Started harvesting from node : " + nodeName);
                         HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger);
                         // todo check (was: processwithfastindexing)
-                        h.process();
+                        h.process(settingManager.getSiteId());
                         logger.info("Ended harvesting from node : " + nodeName);
 
                         if (getParams().isOneRunOnly()) {

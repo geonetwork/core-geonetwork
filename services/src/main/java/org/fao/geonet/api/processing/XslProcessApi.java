@@ -41,6 +41,7 @@ import org.fao.geonet.events.history.RecordProcessingChangeEvent;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -93,6 +94,9 @@ public class XslProcessApi {
 
     @Autowired
     SchemaManager schemaMan;
+
+    @Autowired
+    SettingManager settingManager;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Preview process result applied to one or more records",
@@ -299,7 +303,7 @@ public class XslProcessApi {
                 ApiUtils.createServiceContext(request),
                 dataMan, records, process, httpSession, siteURL,
                 xslProcessingReport, request, index, updateDateStamp, userSession.getUserIdAsInt());
-            m.process();
+            m.process(settingManager.getSiteId());
 
         } catch (Exception exception) {
             xslProcessingReport.addError(exception);
@@ -346,7 +350,7 @@ public class XslProcessApi {
         }
 
         @Override
-        public void process() throws Exception {
+        public void process(String catalogueId) throws Exception {
             DataManager dataMan = context.getBean(DataManager.class);
             ApplicationContext appContext = ApplicationContextHolder.get();
             for (String uuid : this.records) {

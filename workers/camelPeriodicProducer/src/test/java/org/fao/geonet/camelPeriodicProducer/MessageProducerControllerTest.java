@@ -52,7 +52,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/camel-test-config.xml", "/domain-repository-test-context.xml"})
+@ContextConfiguration(locations = {
+    "/camel-test-config.xml",
+    "/domain-repository-test-context.xml",
+    "/config-spring-geonetwork.xml"
+})
 public class MessageProducerControllerTest {
     private static final String EVERY_SECOND = "* * * ? * * *";
 
@@ -73,12 +77,12 @@ public class MessageProducerControllerTest {
 
     private QuartzComponent quartzComponent;
 
-    private MessageProducerFactory messageProducerFactory;
+    @Autowired
+    MessageProducerFactory messageProducerFactory;
 
     @Before
     public void init() throws Exception {
         testCamelNetwork.getContext().start();
-        messageProducerFactory = new MessageProducerFactory();
         messageProducerFactory.routeBuilder = testCamelNetwork;
         quartzComponent = new QuartzComponent(testCamelNetwork.getContext());
         messageProducerFactory.quartzComponent = quartzComponent;
@@ -99,7 +103,7 @@ public class MessageProducerControllerTest {
 
         List<MessageProducerEntity> persisted = toTest.msgProducerRepository.findAll();
         assertEquals(1, persisted.size());
-        assertEquals(testCamelNetwork.getWfsHarvesterParamConsumer().getFromURI(), "quartz2://" + persisted.get(0).getId());
+        assertEquals(testCamelNetwork.getWfsHarvesterParamConsumer().getFromURI(), "quartz2://null-" + persisted.get(0).getId());
 
         toTest.delete(persisted.get(0).getId());
         testCamelNetwork.getWfsHarvesterParamConsumer().reset();
@@ -131,7 +135,7 @@ public class MessageProducerControllerTest {
         assertEquals("url-mod", persistedWfsHarvesterParam.getUrl());
         assertEquals("typeName-mod", persistedWfsHarvesterParam.getTypeName());
         assertEquals(1, toTest.msgProducerRepository.findAll().size());
-        assertEquals(testCamelNetwork.getWfsHarvesterParamConsumer().getFromURI(), "quartz2://" + persisted.getId());
+        assertEquals(testCamelNetwork.getWfsHarvesterParamConsumer().getFromURI(), "quartz2://null-" + persisted.getId());
 
         toTest.delete(persisted.getId());
     }

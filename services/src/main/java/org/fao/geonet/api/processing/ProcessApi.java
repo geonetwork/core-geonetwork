@@ -35,6 +35,7 @@ import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
 import org.fao.geonet.api.processing.report.ProcessingReport;
 import org.fao.geonet.api.processing.report.registry.IProcessingReportRegistry;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -63,6 +64,9 @@ public class ProcessApi {
 
     @Autowired
     DataManager dataMan;
+
+    @Autowired
+    SettingManager settingManager;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get current process reports",
@@ -184,7 +188,7 @@ public class ProcessApi {
                 isTesting, isCaseInsensitive, vacuumMode,
                 allParams,
                 ApiUtils.createServiceContext(request), records, report);
-            m.process();
+            m.process(settingManager.getSiteId());
         } catch (Exception e) {
             throw e;
         } finally {

@@ -238,7 +238,7 @@ public class BaseMetadataManager implements IMetadataManager {
                 Set<Integer> integerList = toIndex.stream().map(Integer::parseInt).collect(Collectors.toSet());
                 new BatchOpsMetadataReindexer(
                     context.getBean(DataManager.class),
-                    integerList).process(false);
+                    integerList).process(settingManager.getSiteId(), false);
             } else {
                 metadataIndexer.batchIndexInThreadPool(context, toIndex);
             }

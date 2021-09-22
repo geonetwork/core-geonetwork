@@ -42,10 +42,10 @@
   module.controller('GnHarvestSettingsController', [
     '$scope', '$q', '$http', '$translate', '$injector', '$rootScope',
     'gnSearchManagerService', 'gnUtilityService', '$timeout',
-    'Metadata', 'gnMapsManager', 'gnGlobalSettings',
+    'Metadata', 'gnMapsManager', 'gnGlobalSettings', 'gnConfig',
     function($scope, $q, $http, $translate, $injector, $rootScope,
              gnSearchManagerService, gnUtilityService, $timeout,
-             Metadata, gnMapsManager, gnGlobalSettings) {
+             Metadata, gnMapsManager, gnGlobalSettings, gnConfig) {
 
       $scope.searchObj = {
         internal: true,
@@ -385,7 +385,7 @@
       };
       $scope.assignHarvestedRecordToLocalNode = function() {
         $http.post('../api/harvesters/' + $scope.harvesterSelected.site.uuid +
-                   '/assign?source=' + $scope.info['system/site/siteId'])
+                   '/assign?source=' + gnConfig['system.site.siteId'])
             .success(function(data) {
               $scope.harvesterSelected = {};
               $scope.harvesterUpdated = false;
