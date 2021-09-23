@@ -102,6 +102,14 @@
             scope.selectedProcess = null;
             scope.selectedProcessIndex = '0'; // this is because angularjs only supports string in select options
 
+            // layer has no metadata but a direct download url
+            if (!newLayer.get('md') && newLayer.get('directDownloadURL')) {
+              scope.download = {
+                url: newLayer.get('directDownloadURL'),
+                protocol: 'WWW:DOWNLOAD-1.0-http--download' // direct download are always using the WWW:DOWNLOAD protocol
+              };
+            }
+
             // layer has no associated metadata: do nothing
             if (!newLayer.get('md')) { return; }
 
