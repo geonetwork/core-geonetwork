@@ -247,7 +247,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
      *
      * @return The date and time in ISO format.
      */
-    @JsonProperty("dateAndTime")
+    @JsonProperty("dateAndTimeUtc")
     public String getDateAndTimeUtc() {
         return internalDateTime.withZoneSameInstant(ZoneOffset.UTC).format(DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS);
     }

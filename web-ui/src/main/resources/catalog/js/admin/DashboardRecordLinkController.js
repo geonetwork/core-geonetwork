@@ -142,8 +142,8 @@
                   titleTooltip: $translate.instant('lastCheck'),
                   sortable: true,
                   formatter: function(val, row) {
-                    if (row.lastCheck && row.lastCheck.dateAndTime) {
-                      return gnHumanizeTimeService(row.lastCheck.dateAndTime, 'YYYY-MM-DD HH:mm (Z)', false).value;
+                    if (row.lastCheck && row.lastCheck.dateAndTimeUtc) {
+                      return gnHumanizeTimeService(row.lastCheck.dateAndTimeUtc, 'YYYY-MM-DD HH:mm (Z)', false).value;
                     } else {
                       return '';
                     }}.bind(this)}, {
