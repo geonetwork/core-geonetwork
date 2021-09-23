@@ -149,3 +149,13 @@ field expansion for [*] matches too many fields, limit: 1024
 An option is to restrict `queryBase` to limit the number of field to query on. `any:(${any}) resourceTitleObject.default:(${any})^2` is a good default. Using `${any}` will probably trigger the error if the number of records is high.
 
 The other option is to increase `indices.query.bool.max_clause_count`.
+
+## Disk space threshold
+
+The server application will refuse to write new content unless there is enough free space available (by default 1/4 of your hard drive).
+
+To turn off this check:
+
+```
+ curl -XPUT http://localhost:9200/_cluster/settings -H 'Content-Type: application/json' -d '{ "transient" : { "cluster.routing.allocation.disk.threshold_enabled" : false } }' 
+```
