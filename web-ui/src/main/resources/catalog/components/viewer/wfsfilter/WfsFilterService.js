@@ -35,9 +35,9 @@
     'gnGlobalSettings',
     '$http',
     '$q',
-    '$translate',
+    '$timeout',
     function(gnIndexRequestManager, gnHttp, gnUrlUtils, gnGlobalSettings,
-             $http, $q, $translate) {
+             $http, $q, $timeout) {
 
       var indexProxyUrl = gnHttp.getService('featureindexproxy');
 
@@ -501,7 +501,35 @@
           url: '../api/tools/ogc/sld',
           data: $.param(params),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        });
+        }).then(function(response) {
+          var url = response.data;
+          return this.pollSldUrl(url);
+        }.bind(this));
+      };
+
+      this.pollSldUrl = function(url) {
+        var defer = $q.defer();
+        var pollingTimeout = 200;
+        var pollingAttempts = 0;
+        var pollingMaxAttemps = 20;
+
+        var poller = function() {
+          pollingAttempts ++;
+          $http({
+            method: 'GET',
+            url: url,
+          }).then(function() {
+            defer.resolve(url);
+          }, function(error) {
+            if(pollingAttempts < pollingMaxAttemps) {
+              $timeout(poller, pollingTimeout);
+            } else {
+              defer.reject(error);
+            }
+          });
+        }
+        poller();
+        return defer.promise;
       };
 
       /**
