@@ -71,7 +71,7 @@
                     angular.isString(gnConfig['system.inspire.remotevalidation.url']) &&
                     gnCurrentEdit.schema.match(/iso19139|iso19115-3/) != null;
 
-                  scope.validationNode = gnConfig['system.inspire.remotevalidation.nodeid'];
+                  scope.validationNode = gnConfig['system.inspire.remotevalidation.nodeid'] || '';
                 });
               });
 
@@ -82,8 +82,8 @@
                   scope.token = null;
                   var url = '../api/records/' + scope.inspMdUuid +
                     '/validate/inspire?testsuite=' + test;
-                  if (angular.isDefined(scope.validationNode) && scope.validationNode !== '') {
-                    url += '&mode=' + scope.validationNode;
+                  if (angular.isDefined(mode) && mode !== '') {
+                    url += '&mode=' + mode;
                   }
                   $http({
                     method: 'PUT',
