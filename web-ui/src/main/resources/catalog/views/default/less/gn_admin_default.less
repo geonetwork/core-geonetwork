@@ -368,13 +368,22 @@ ul.gn-resultview li.list-group-item {
       }
       // icons from https://lordicon.com/icons#free
       #gn-harvest-harvester-running {
-        background-image: url('../catalog/views/default/images/45-clock-time-outline.gif');
+        background-image: url('../catalog/views/default/images/45-clock-time-outline.png');
+        &.isrunning {
+          background-image: url('../catalog/views/default/images/45-clock-time-outline.gif');
+        }
       }
       #gn-harvest-linkchecker-running {
-        background-image: url('../catalog/views/default/images/1325-code-fork-outline.gif');
+        background-image: url('../catalog/views/default/images/1325-code-fork-outline.png');
+        &.isrunning {
+          background-image: url('../catalog/views/default/images/1325-code-fork-outline.gif');
+        }
       }
       #gn-harvest-ingester-running {
-        background-image: url('../catalog/views/default/images/57-server-outline.gif');
+        background-image: url('../catalog/views/default/images/57-server-outline.png');
+        &.isrunning {
+          background-image: url('../catalog/views/default/images/57-server-outline.gif');
+        }
       }
       #gn-harvest-records-panel {
         .gn-harvester-facets {
