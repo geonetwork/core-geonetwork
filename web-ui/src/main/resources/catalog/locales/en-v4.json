@@ -128,6 +128,7 @@
   "exactMatch-help": "Exact match means that '\"' are added to the search terms.",
   "titleOnly": "Search in title only",
   "titleOnly-help": "Search in title only.",
+  "wfsIssueWhileLoadingSLD": "The filter couldn't be applied for the layer. The generated SLD is not available.",
   "wfsIndexingEndDate": "Last indexing date",
   "wfsIndexingScheduled": "Scheduled?",
   "wfsIndexingNewSchedule": "Add WFS harvester",
