@@ -1,16 +1,5 @@
 import smtplib
 from email.message import EmailMessage
-from xml.etree import ElementTree as ET
-
-
-def get_output_name_from_xml(xml_path):
-    tree = ET.fromstring(xml_path)
-    ns = {"wps": "http://www.opengis.net/wps/1.0.0"}
-    output_file_name = (
-        list(tree.iterfind(".//wps:Output", namespaces=ns))[0].getchildren()[0].text
-    )
-    return output_file_name
-
 
 def send_mail(
     to_email,
