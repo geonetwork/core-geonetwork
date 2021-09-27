@@ -509,9 +509,9 @@
 
       this.pollSldUrl = function(url) {
         var defer = $q.defer();
-        var pollingTimeout = 200;
+        var pollingTimeout = 100;
         var pollingAttempts = 0;
-        var pollingMaxAttemps = 20;
+        var pollingMaxAttemps = 25;
 
         var poller = function() {
           pollingAttempts ++;
