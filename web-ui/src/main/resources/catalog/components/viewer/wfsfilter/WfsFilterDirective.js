@@ -902,6 +902,11 @@
                     SLD: sldURL
                   });
                 }
+              }, function() {
+                gnAlertService.addAlert({
+                  msg: $translate.instant('wfsIssueWhileLoadingSLD'),
+                  type: 'danger'
+                });
               }).finally(function() {
                 scope.filtersChanged = false;   // reset 'apply filters' button
                 defer.resolve();

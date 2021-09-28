@@ -1,4 +1,5 @@
 {
+  "wfsIssueWhileLoadingSLD": "Le filtre n'a pas pu être appliqué sur la couche. Le fichier SLD généré n'est pas accessible.",
   "resetFilter": "Effacer les filtres",
   "applyFilter": "Appliquer les filtres",
   "view": "Visualiser",
