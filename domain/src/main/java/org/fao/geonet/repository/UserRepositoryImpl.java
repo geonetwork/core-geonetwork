@@ -129,19 +129,44 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     @Override
     @Nonnull
     public List<Pair<Integer, User>> findAllByGroupOwnerNameAndProfile(@Nonnull final Collection<Integer> metadataIds,
-                                                                       @Nullable final Profile profile, @Nullable final Sort sort) {
+                                                                       @Nullable final Profile profile) {
+        List<Pair<Integer, User>> results = new ArrayList<Pair<Integer, User>>();
+
+        results.addAll(findAllByGroupOwnerNameAndProfileInternal(metadataIds, profile, false));
+        results.addAll(findAllByGroupOwnerNameAndProfileInternal(metadataIds, profile, true));
+
+        return results;
+    }
+
+    private List<Pair<Integer, User>> findAllByGroupOwnerNameAndProfileInternal(@Nonnull final Collection<Integer> metadataIds,
+                                                                                 @Nullable final Profile profile, boolean draft) {
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> query = cb.createQuery(Tuple.class);
 
         Root<User> userRoot = query.from(User.class);
-        Root<Metadata> metadataRoot = query.from(Metadata.class);
         Root<UserGroup> userGroupRoot = query.from(UserGroup.class);
 
-        query.multiselect(metadataRoot.get(Metadata_.id), userRoot);
+        Predicate metadataPredicate;
+        Predicate ownerPredicate;
+        Root<Metadata> metadataRoot = null;
+        Root<MetadataDraft> metadataDraftRoot = null;
 
-        Predicate metadataPredicate = metadataRoot.get(Metadata_.id).in(metadataIds);
-        Predicate ownerPredicate = cb.equal(metadataRoot.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner),
-            userGroupRoot.get(UserGroup_.id).get(UserGroupId_.groupId));
+        if (!draft) {
+            metadataRoot = query.from(Metadata.class);
+            query.multiselect(metadataRoot.get(Metadata_.id), userRoot);
+            metadataPredicate = metadataRoot.get(Metadata_.id).in(metadataIds);
+
+            ownerPredicate = cb.equal(metadataRoot.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner),
+                userGroupRoot.get(UserGroup_.id).get(UserGroupId_.groupId));
+        } else {
+            metadataDraftRoot = query.from(MetadataDraft.class);
+            query.multiselect(metadataDraftRoot.get(MetadataDraft_.id), userRoot);
+            metadataPredicate = metadataDraftRoot.get(Metadata_.id).in(metadataIds);
+
+            ownerPredicate = cb.equal(metadataDraftRoot.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner),
+                userGroupRoot.get(UserGroup_.id).get(UserGroupId_.groupId));
+        }
+
         Predicate userToGroupPredicate = cb.equal(userGroupRoot.get(UserGroup_.id).get(UserGroupId_.userId), userRoot.get(User_.id));
 
         Predicate basePredicate = cb.and(metadataPredicate, ownerPredicate, userToGroupPredicate);
@@ -151,10 +176,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         } else {
             query.where(basePredicate);
         }
-        if (sort != null) {
-            List<Order> orders = SortUtils.sortToJpaOrders(cb, sort, userGroupRoot, metadataRoot, userRoot);
-            query.orderBy(orders);
-        }
+
         query.distinct(true);
 
         List<Pair<Integer, User>> results = new ArrayList<Pair<Integer, User>>();

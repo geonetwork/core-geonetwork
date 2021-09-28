@@ -63,7 +63,7 @@ public interface UserRepositoryCustom {
      */
     @Nonnull
     List<Pair<Integer, User>> findAllByGroupOwnerNameAndProfile(@Nonnull Collection<Integer> metadataIds,
-                                                                @Nullable Profile profile, @Nullable Sort sort);
+                                                                @Nullable Profile profile);
 
     /**
      * Find all the users that own at least one metadata element.
