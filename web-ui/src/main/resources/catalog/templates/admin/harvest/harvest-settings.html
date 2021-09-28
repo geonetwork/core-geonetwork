@@ -125,38 +125,59 @@
           </button>
         </div>
       </div>
-      <div class="panel-body">
-<!--        <div class="alert alert-info" data-ng-show="harvesterSelected.info.running === true">-->
-        <div id="gn-harvest-harvester-running" class="gn-harvester-running">
-          <h2 data-translate="">harvesterIsRunning</h2>
-          <div class="panel panel-default">
+      <div class="panel-body" data-ng-show="harvesterSelected.info.running === true">
+        <!--        <div class="alert alert-info" data-ng-show="harvesterSelected.info.running === true">-->
+        <div id="gn-harvest-harvester-running" class="gn-harvester-running" data-ng-class="{'isrunning': (harvesterSelected.info.running === true) && (harvesterSelected.info.result.runningHarvest === true)}"> <!-- data-ng-show="harvesterSelected.info.result.runningHarvest === true">-->
+          <h2 data-translate="" data-ng-if="harvesterSelected.info.result.runningHarvest === true">harvesterIsRunning</h2>
+          <h2 data-translate="" data-ng-if="harvesterSelected.info.result.runningHarvest !== true">harvester</h2>
+          <div class="panel panel-default" data-ng-if="harvesterSelected.info.result.harvesterStatus.harvestStatus != null">
             <div class="panel-heading" data-gn-slide-toggle="true" data-translate="">
               harvestDetails
             </div>
             <div class="panel-body">
-              <span data-translate="">harvestProgress</span>
+              <p>State: {{harvesterSelected.info.result.harvesterStatus.harvestStatus.state}}</p>
+              <div data-ng-repeat="endpoint in harvesterSelected.info.result.harvesterStatus.harvestStatus.endpoints">
+                <p data-ng-if="harvesterSelected.info.result.harvesterStatus.harvestStatus.endpoints.length > 1">End-point: {{endpoint.expectedNumberOfRecords}}</p>
+                <p><span data-translate="">harvestStatusExpected</span>: {{endpoint.expectedNumberOfRecords}}</p>
+                <p><span data-translate="">harvestStatusReceived</span>Received: {{endpoint.numberOfRecordsReceived}}</p>
+              </div>
             </div>
           </div>
         </div>
-        <div id="gn-harvest-linkchecker-running" class="gn-harvester-running">
-          <h2 data-translate="">linkCheckerIsRunning</h2>
-          <div class="panel panel-default">
+        <div id="gn-harvest-linkchecker-running" class="gn-harvester-running" data-ng-class="{'isrunning': (harvesterSelected.info.running === true) && (harvesterSelected.info.result.runningLinkChecker === true)}"> <!-- data-ng-show="harvesterSelected.info.result.runningLinkChecker === true">-->
+          <h2 data-translate="" data-ng-if="harvesterSelected.info.result.runningLinkChecker === true">linkCheckerIsRunning</h2>
+          <h2 data-translate="" data-ng-if="harvesterSelected.info.result.runningLinkChecker !== true">linkChecker</h2>
+
+
+          <div class="panel panel-default" data-ng-if="harvesterSelected.info.result.harvesterStatus.linkCheckStatus != null">
             <div class="panel-heading" data-gn-slide-toggle="true" data-translate="">
               harvestDetails
             </div>
             <div class="panel-body">
-              <span data-translate="">harvestProgress</span>
+              <span data-translate="">linkCheckerStatusDatasets</span>. <span data-translate="">linkCheckerStatusTotal</span> {{harvesterSelected.info.result.harvesterStatus.linkCheckStatus.datasetRecordStatus.nTotalDocuments}}
+              <div data-ng-repeat="statusType in harvesterSelected.info.result.harvesterStatus.linkCheckStatus.datasetRecordStatus.statusTypes">
+                <p>{{statusType.statusType}}. <span data-translate="">linkCheckerStatusProcessed</span> {{statusType.nDocuments}}</p>
+              </div>
+
+              <span data-translate="">linkCheckerStatusServices</span>. <span data-translate="">linkCheckerStatusTotal</span> {{harvesterSelected.info.result.harvesterStatus.linkCheckStatus.serviceRecordStatus.nTotalDocuments}}
+              <div data-ng-repeat="statusType in harvesterSelected.info.result.harvesterStatus.linkCheckStatus.serviceRecordStatus.statusTypes">
+                <p>{{statusType.statusType}}. <span data-translate="">linkCheckerStatusProcessed</span> {{statusType.nDocuments}}</p>
+              </div>
             </div>
           </div>
         </div>
-        <div id="gn-harvest-ingester-running" class="gn-harvester-running">
-          <h2 data-translate="">ingesterIsRunning</h2>
-          <div class="panel panel-default">
+
+        <div id="gn-harvest-ingester-running" class="gn-harvester-running" data-ng-class="{'isrunning': (harvesterSelected.info.running === true) && (harvesterSelected.info.result.runningIngest === true)}"> <!-- data-ng-show="harvesterSelected.info.result.runningIngest === true">-->
+          <h2 data-translate="" data-ng-if="harvesterSelected.info.result.runningIngest === true">ingesterIsRunning</h2>
+          <h2 data-translate="" data-ng-if="harvesterSelected.info.result.runningIngest !== true">ingester</h2>
+          <div class="panel panel-default" data-ng-if="harvesterSelected.info.result.harvesterStatus.ingestStatus != null">
             <div class="panel-heading" data-gn-slide-toggle="true" data-translate="">
               harvestDetails
             </div>
             <div class="panel-body">
-              <span data-translate="">harvestProgress</span>
+              <p><span data-translate="">ingestStatusTotal</span> {{harvesterSelected.info.result.harvesterStatus.ingestStatus.totalRecords}}</p>
+              <p><span data-translate="">ingestStatusAdded</span>  {{harvesterSelected.info.result.harvesterStatus.ingestStatus.numberOfRecordsIngested}}</p>
+              <p><span data-translate="">ingestStatusIndexed</span>  {{harvesterSelected.info.result.harvesterStatus.ingestStatus.numberOfRecordsIndexed}}</p>
             </div>
           </div>
         </div>

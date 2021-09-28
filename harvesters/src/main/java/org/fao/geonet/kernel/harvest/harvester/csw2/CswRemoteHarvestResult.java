@@ -23,9 +23,16 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw2;
 
+import org.fao.geonet.client.model.OrchestratedHarvestProcessStatus;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 
 public class CswRemoteHarvestResult extends HarvestResult {
     public String processId;
     public String error;
+
+    public boolean runningHarvest;
+    public boolean runningLinkChecker;
+    public boolean runningIngest;
+
+    public OrchestratedHarvestProcessStatus harvesterStatus;
 }

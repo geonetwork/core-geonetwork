@@ -201,6 +201,15 @@
   "harvestDetails": "Details",
   "harvestStatus": "Harvest status",
   "harvestProgress": "Detailed progress information",
+  "harvestStatusExpected": "Expected results",
+  "harvestStatusReceived": "Received results",
+  "linkCheckerStatusDatasets": "Datasets",
+  "linkCheckerStatusServices": "Services",
+  "linkCheckerStatusProcessed": "Processed:",
+  "linkCheckerStatusTotal": "Total:",
+  "ingestStatusTotal": "Total records to process:",
+  "ingestStatusAdded": "Added:",
+  "ingestStatusIndexed": "Indexed:",
   "facet-th_INSPIRE-priority-data-set": "Priority dataset",
   "facet-th_INSPIRE-priority-data-setNumber": "Number of priority datasets"
 }

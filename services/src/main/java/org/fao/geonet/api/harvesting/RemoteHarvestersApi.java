@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -20,7 +20,6 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-
 package org.fao.geonet.api.harvesting;
 
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,6 +29,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.client.RemoteHarvesterApiClient;
+import org.fao.geonet.client.model.OrchestratedHarvestProcessState;
 import org.fao.geonet.client.model.OrchestratedHarvestProcessStatus;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 @RequestMapping(value = {
@@ -79,7 +80,7 @@ public class RemoteHarvestersApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
-    public List<OrchestratedHarvestProcessStatus> progress(
+    public List<RemoteHarvesterInfoStatus> progress(
         @Parameter(
             description = "The harvester processes identifiers"
         )
@@ -90,15 +91,28 @@ public class RemoteHarvestersApi {
             throw new Exception("Remote harvester API endpoint is not configured. Configure it in the Settings page.");
         }
 
-        List<OrchestratedHarvestProcessStatus> statuses = new ArrayList<>();
+        List<RemoteHarvesterInfoStatus> statuses = new ArrayList<>();
 
         RemoteHarvesterApiClient client = new RemoteHarvesterApiClient(url);
 
         for(int i = 0; i < id.length; i++) {
+            OrchestratedHarvestProcessStatus harvesterProcessStatus = client.retrieveProgress(id[i]);
+            OrchestratedHarvestProcessState state = harvesterProcessStatus.getOrchestratedHarvestProcessState();
+
+            RemoteHarvesterInfoStatus remoteHarvesterInfoStatus = new RemoteHarvesterInfoStatus();
+            remoteHarvesterInfoStatus.processID = harvesterProcessStatus.getProcessID();
+            remoteHarvesterInfoStatus.running = !harvesterProcessStatus.isFinished();
+
+            remoteHarvesterInfoStatus.runningHarvest = state.equals(OrchestratedHarvestProcessState.HAVESTING);
+            remoteHarvesterInfoStatus.runningLinkChecker = state.equals(OrchestratedHarvestProcessState.LINKCHECKING);
+            remoteHarvesterInfoStatus.runningIngest = state.equals(OrchestratedHarvestProcessState.INGESTING);
+            remoteHarvesterInfoStatus.harvesterStatus = harvesterProcessStatus;
 
             //harvestManager.getHarvester()
-            statuses.add(client.retrieveProgress(id[i]));
+            statuses.add(remoteHarvesterInfoStatus);
         }
+
+
 
         return statuses;
     }
@@ -123,7 +137,7 @@ public class RemoteHarvestersApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
-    public HttpEntity<String> progress(
+    public HttpEntity<RemoteHarvesterInfoStatus> progress(
         @Parameter(
             description = "The harvester process identifier"
         )
@@ -135,9 +149,33 @@ public class RemoteHarvestersApi {
             throw new Exception("Remote harvester API endpoint is not configured. Configure it in the Settings page.");
         }
 
+
         RemoteHarvesterApiClient client = new RemoteHarvesterApiClient(url);
         OrchestratedHarvestProcessStatus harvesterProcessStatus = client.retrieveProgress(processId);
 
-        return new HttpEntity<>(harvesterProcessStatus.getOrchestratedHarvestProcessState().toString());
+        RemoteHarvesterInfoStatus remoteHarvesterInfoStatus = new RemoteHarvesterInfoStatus();
+        remoteHarvesterInfoStatus.processID = harvesterProcessStatus.getProcessID();
+        remoteHarvesterInfoStatus.running = !harvesterProcessStatus.isFinished();
+
+        OrchestratedHarvestProcessState state = harvesterProcessStatus.getOrchestratedHarvestProcessState();
+
+        remoteHarvesterInfoStatus.runningHarvest = state.equals(OrchestratedHarvestProcessState.HAVESTING);
+        remoteHarvesterInfoStatus.runningLinkChecker = state.equals(OrchestratedHarvestProcessState.LINKCHECKING);
+        remoteHarvesterInfoStatus.runningIngest = state.equals(OrchestratedHarvestProcessState.INGESTING);
+        remoteHarvesterInfoStatus.harvesterStatus = harvesterProcessStatus;
+
+        return new HttpEntity<>(remoteHarvesterInfoStatus);
+    }
+
+    private AtomicInteger counter = new AtomicInteger();
+
+    private class RemoteHarvesterInfoStatus {
+        public String processID;
+        public boolean running;
+        public boolean runningHarvest;
+        public boolean runningLinkChecker;
+        public boolean runningIngest;
+
+        public OrchestratedHarvestProcessStatus harvesterStatus;
     }
 }

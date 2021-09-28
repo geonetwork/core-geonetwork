@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -20,7 +20,6 @@
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
-
 package org.fao.geonet.kernel.harvest.harvester.csw2;
 
 
@@ -72,15 +71,10 @@ class RemoteHarvester implements IHarvester<CswRemoteHarvestResult> {
         if (StringUtils.isEmpty(url)) {
             throw new Exception("Remote harvester API endpoint is not configured. Configure it in the Settings page.");
         }
-        /*
-        curl -X POST "http://localhost:9999/api/startHarvest" -H "Content-Type: application/json" \\
-             -d '{"url":"https://metadata.geoportaal.ee/geonetwork/inspire/eng/csw","longTermTag":"EE-Estonia","lookForNestedDiscoveryService":false}'
-
-         */
 
         RemoteHarvesterConfiguration remoteHarvesterConfiguration = new RemoteHarvesterConfiguration();
         remoteHarvesterConfiguration.setUrl(params.capabUrl);
-        remoteHarvesterConfiguration.setLongTermTag(params.getUuid());
+        remoteHarvesterConfiguration.setLongTermTag(params.getName());
         remoteHarvesterConfiguration.setNumberOfRecordsPerRequest(params.numberOfRecordsPerRequest);
         remoteHarvesterConfiguration.setLookForNestedDiscoveryService(params.remoteHarvesterNestedServices);
         remoteHarvesterConfiguration.setErrorConfigDuplicatedUuids(params.errorConfigDuplicatedUuids);

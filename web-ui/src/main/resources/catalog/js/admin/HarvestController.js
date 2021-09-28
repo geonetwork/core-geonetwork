@@ -181,27 +181,48 @@
           $http.get('../api/remoteharvesters/progress?id=' +
             runningRemoteHarvesters.join('&id=')).success(
             function(data) {
+              console.log(data);
+
               isPolling = false;
               if (data != 'null') {
                 if (!angular.isArray(data)) {
                   data = [data];
                 }
-                var harvesterIndex = {};
+
+                angular.forEach($scope.harvesters, function(oldH) {
+                  for (var i = 0; i < data.length; i++) {
+                    var h = data[i];
+
+                    if ((oldH.info.result) && (oldH.info.result.processID == h.processID)) {
+                      oldH.info.result.running = h.running;
+                      oldH.info.result.runningHarvest = h.runningHarvest;
+                      oldH.info.result.runningLinkChecker = h.runningLinkChecker;
+                      oldH.info.result.runningIngest = h.runningIngest;
+                      oldH.info.result.harvesterStatus  = h.harvesterStatus;
+                    }
+                  }
+
+                });
+
+                /*var harvesterIndex = {};
                 angular.forEach($scope.harvesters, function(oldH) {
                   harvesterIndex[oldH['@id']] = oldH;
                 });
 
                 for (var i = 0; i < data.length; i++) {
                   var h = data[i];
-                  gnUtilityService.parseBoolean(h.info);
-                  var old = harvesterIndex[h['@id']];
-                  if (old && !angular.equals(old.info, h.info)) {
-                    old.info = h.info;
+                  gnUtilityService.parseBoolean(h);
+
+                  var k = Object.keys(harvesterIndex);
+
+                  for (var j = 0; j < k.length; k++) {
+                    var old = harvesterIndex[k[j]];
+
+                    if ((old.info.result) && (old.info.result.processID == h.processID)) {
+                      old.info.status = h;
+                    }
                   }
-                  if (old && !angular.equals(old.error, h.error)) {
-                    old.error = h.error;
-                  }
-                }
+                }*/
 
                 setTimeout(pollHarvesterStatus, 5000);
               }

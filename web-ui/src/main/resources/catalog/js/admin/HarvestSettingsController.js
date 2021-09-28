@@ -83,7 +83,19 @@
         return $http.get('admin.harvester.list?_content_type=json&id=' + id).
             success(function(data) {
               if (data && data[0]) {
-                $scope.harvesterSelected = data[0];
+
+                var sIndex = -1;
+                for(var i = 0; i < $scope.harvesters.length; i++) {
+                  if ($scope.harvesters[i]["@id"] == id) {
+                    $scope.harvesters[i] = data[0];
+                    sIndex = i;
+                    break;
+                  }
+                }
+                if (sIndex != -1) {
+                  $scope.harvesterSelected = $scope.harvesters[sIndex];
+                }
+                //$scope.harvesterSelected = data[0];
                 $scope.harvesterUpdated = false;
                 $scope.harvesterNew = false;
                 $scope.harvesterHistory = {};

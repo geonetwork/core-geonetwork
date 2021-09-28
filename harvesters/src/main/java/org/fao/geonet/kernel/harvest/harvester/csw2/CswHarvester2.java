@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -20,13 +20,19 @@
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
-
 package org.fao.geonet.kernel.harvest.harvester.csw2;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.client.RemoteHarvesterApiClient;
+import org.fao.geonet.client.model.DocumentTypeStatus;
+import org.fao.geonet.client.model.EndpointStatus;
+import org.fao.geonet.client.model.HarvestStatus;
+import org.fao.geonet.client.model.IngestStatus;
+import org.fao.geonet.client.model.LinkCheckStatus;
 import org.fao.geonet.client.model.OrchestratedHarvestProcessState;
 import org.fao.geonet.client.model.OrchestratedHarvestProcessStatus;
+import org.fao.geonet.client.model.StatusType;
 import org.fao.geonet.kernel.harvest.Common;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
@@ -118,46 +124,156 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
 
         final String harvesterProcessId = processId;
 
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
+        if (StringUtils.isNotEmpty(harvesterProcessId)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
 
-                String url = settingManager.getValue(RemoteHarvesterApiClient.SETTING_REMOTE_HARVESTER_API);
-                RemoteHarvesterApiClient remoteHarvesterApiClient = new RemoteHarvesterApiClient(url);
-                boolean check = true;
-                while (check) {
+                    String url = settingManager.getValue(RemoteHarvesterApiClient.SETTING_REMOTE_HARVESTER_API);
 
-                    try {
-                        OrchestratedHarvestProcessStatus harvesterStatus = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId);
+                    RemoteHarvesterApiClient remoteHarvesterApiClient = new RemoteHarvesterApiClient(url);
 
-                        if (!harvesterStatus.getOrchestratedHarvestProcessState().equals(OrchestratedHarvestProcessState.COMPLETE) &&
-                            !harvesterStatus.getOrchestratedHarvestProcessState().equals((OrchestratedHarvestProcessState.ERROR)) &&
-                            !harvesterStatus.getOrchestratedHarvestProcessState().equals((OrchestratedHarvestProcessState.USERABORT))) {
-                            try {
-                                Thread.sleep(10 * 1000);
-                            } catch (InterruptedException e) {
-                                log.error(e);
+                    boolean check = true;
+                    while (check) {
+
+                        try {
+                            OrchestratedHarvestProcessStatus harvesterStatus = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId);
+
+                            OrchestratedHarvestProcessState state = harvesterStatus.getOrchestratedHarvestProcessState();
+                            log.info(harvesterStatus.toString());
+                            ((CswRemoteHarvestResult) result).runningHarvest = state.equals(OrchestratedHarvestProcessState.HAVESTING);
+                            ((CswRemoteHarvestResult) result).runningLinkChecker = state.equals(OrchestratedHarvestProcessState.LINKCHECKING);
+                            ((CswRemoteHarvestResult) result).runningIngest = state.equals(OrchestratedHarvestProcessState.INGESTING);
+                            ((CswRemoteHarvestResult) result).harvesterStatus = harvesterStatus;
+
+                            if (!state.equals(OrchestratedHarvestProcessState.COMPLETE) &&
+                                !state.equals((OrchestratedHarvestProcessState.ERROR)) &&
+                                !state.equals((OrchestratedHarvestProcessState.USERABORT))) {
+                                try {
+                                    Thread.sleep(10 * 1000);
+                                } catch (InterruptedException e) {
+                                    log.error(e);
+                                }
+                            } else {
+                                CswHarvester2.this.stop(Common.Status.ACTIVE);
+                                check = false;
                             }
-                        } else {
-                            CswHarvester2.this.stop(Common.Status.ACTIVE);
-                            check = false;
+                        } catch (Exception ex) {
+                            // TODO: Handle
+                            ex.printStackTrace();
                         }
-                    } catch (Exception ex) {
-                        // TODO: Handle
-                        ex.printStackTrace();
                     }
+
                 }
-            }
-        }.start();
+            }.start();
+        }
+
     }
 
     public Element getResult() {
         Element resultEl = super.getResult();
         if (result != null) {
             resultEl.addContent(new Element("processID").setText(((CswRemoteHarvestResult) result).processId));
+            resultEl.addContent(new Element("runningHarvest").setText(((CswRemoteHarvestResult) result).runningHarvest + ""));
+            resultEl.addContent(new Element("runningLinkChecker").setText(((CswRemoteHarvestResult) result).runningLinkChecker + ""));
+            resultEl.addContent(new Element("runningIngest").setText(((CswRemoteHarvestResult) result).runningIngest + ""));
+            resultEl.addContent(getHarvestStatusAsElement(((CswRemoteHarvestResult) result).harvesterStatus.getHarvestStatus()));
+            resultEl.addContent(getLinkCheckerStatusAsElement(((CswRemoteHarvestResult) result).harvesterStatus.getLinkCheckStatus()));
+            resultEl.addContent(getIngestStatusAsElement(((CswRemoteHarvestResult) result).harvesterStatus.getIngestStatus()));
         }
 
         return resultEl;
+    }
+
+
+    private Element getHarvestStatusAsElement(HarvestStatus harvestStatus) {
+        Element element = new Element("harvestStatus");
+        for (EndpointStatus endpoint : harvestStatus.endpoints) {
+            Element elementEp = new Element("endPoint");
+
+            elementEp.addContent(new Element("url").setText(endpoint.url));
+            elementEp.addContent(new Element("expected").setText(String.valueOf(endpoint.expectedNumberOfRecords)));
+            elementEp.addContent(new Element("received").setText(String.valueOf(endpoint.numberOfRecordsReceived)));
+
+            element.addContent(elementEp);
+        }
+
+        Element elementErrors = new Element("errors");
+        for (String error : harvestStatus.errorMessage) {
+            elementErrors.addContent(new Element("error").setText(error));
+        }
+
+        element.addContent(elementErrors);
+
+        return element;
+    }
+
+    private Element getLinkCheckerStatusAsElement(LinkCheckStatus linkCheckStatus) {
+        Element element = new Element("linkCheckerStatus");
+
+        if (linkCheckStatus != null) {
+            DocumentTypeStatus datasets = linkCheckStatus.getDatasetRecordStatus();
+
+            if (datasets != null) {
+                Element elementDatasets = new Element("datasets");
+                elementDatasets.addContent(new Element("nTotalDocuments").setText(String.valueOf(datasets.getnTotalDocuments())));
+
+                Element elementDatasetsStatuses = new Element("statuses");
+
+                for (StatusType statusType : datasets.getStatusTypes()) {
+                    Element elementStatus = new Element("status");
+                    elementStatus.addContent(new Element("type").setText(statusType.getStatusType()));
+                    elementStatus.addContent(new Element("nTotalDocuments").setText(String.valueOf(statusType.getnDocuments())));
+
+                    elementDatasetsStatuses.addContent(elementStatus);
+                }
+
+                elementDatasets.addContent(elementDatasetsStatuses);
+                element.addContent(elementDatasets);
+            }
+
+
+            DocumentTypeStatus services = linkCheckStatus.getServiceRecordStatus();
+
+            if (services != null) {
+                Element elementServices = new Element("services");
+                elementServices.addContent(new Element("nTotalDocuments").setText(String.valueOf(services.getnTotalDocuments())));
+
+                Element elementServicesStatuses = new Element("statuses");
+
+                for (StatusType statusType : services.getStatusTypes()) {
+                    Element elementStatus = new Element("status");
+                    elementStatus.addContent(new Element("type").setText(statusType.getStatusType()));
+                    elementStatus.addContent(new Element("nTotalDocuments").setText(String.valueOf(statusType.getnDocuments())));
+
+                    elementServicesStatuses.addContent(elementStatus);
+                }
+
+                elementServices.addContent(elementServicesStatuses);
+                element.addContent(elementServices);
+            }
+        }
+
+        Element elementErrors = new Element("errors");
+        for (String error : linkCheckStatus.errorMessage) {
+            elementErrors.addContent(new Element("error").setText(error));
+        }
+
+        element.addContent(elementErrors);
+
+        return element;
+    }
+
+    private Element getIngestStatusAsElement(IngestStatus ingestStatus) {
+        Element element = new Element("ingestStatus");
+
+        if (ingestStatus != null) {
+            element.addContent(new Element("total").setText(String.valueOf(ingestStatus.getTotalRecords())));
+            element.addContent(new Element("ingested").setText(String.valueOf(ingestStatus.getNumberOfRecordsIngested())));
+            element.addContent(new Element("indexed").setText(String.valueOf(ingestStatus.getNumberOfRecordsIndexed())));
+        }
+
+        return element;
     }
 }
