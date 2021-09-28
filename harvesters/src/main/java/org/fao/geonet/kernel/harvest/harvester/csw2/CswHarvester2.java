@@ -189,23 +189,27 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
 
     private Element getHarvestStatusAsElement(HarvestStatus harvestStatus) {
         Element element = new Element("harvestStatus");
-        for (EndpointStatus endpoint : harvestStatus.endpoints) {
-            Element elementEp = new Element("endPoint");
 
-            elementEp.addContent(new Element("url").setText(endpoint.url));
-            elementEp.addContent(new Element("expected").setText(String.valueOf(endpoint.expectedNumberOfRecords)));
-            elementEp.addContent(new Element("received").setText(String.valueOf(endpoint.numberOfRecordsReceived)));
+        if (harvestStatus != null) {
+            for (EndpointStatus endpoint : harvestStatus.endpoints) {
+                Element elementEp = new Element("endPoint");
 
-            element.addContent(elementEp);
-        }
+                elementEp.addContent(new Element("url").setText(endpoint.url));
+                elementEp.addContent(new Element("expected").setText(String.valueOf(endpoint.expectedNumberOfRecords)));
+                elementEp.addContent(new Element("received").setText(String.valueOf(endpoint.numberOfRecordsReceived)));
 
-        if (harvestStatus.errorMessage != null) {
-            Element elementErrors = new Element("errors");
-            for (String error : harvestStatus.errorMessage) {
-                elementErrors.addContent(new Element("error").setText(error));
+                element.addContent(elementEp);
             }
 
-            element.addContent(elementErrors);
+            if (harvestStatus.errorMessage != null) {
+                Element elementErrors = new Element("errors");
+                for (String error : harvestStatus.errorMessage) {
+                    elementErrors.addContent(new Element("error").setText(error));
+                }
+
+                element.addContent(elementErrors);
+            }
+
         }
 
         return element;
@@ -255,17 +259,15 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                 elementServices.addContent(elementServicesStatuses);
                 element.addContent(elementServices);
             }
-        }
 
-        if ( linkCheckStatus.errorMessage != null) {
-            Element elementErrors = new Element("errors");
-            for (String error : linkCheckStatus.errorMessage) {
-                elementErrors.addContent(new Element("error").setText(error));
+            if ( linkCheckStatus.errorMessage != null) {
+                Element elementErrors = new Element("errors");
+                for (String error : linkCheckStatus.errorMessage) {
+                    elementErrors.addContent(new Element("error").setText(error));
+                }
+                element.addContent(elementErrors);
             }
-            element.addContent(elementErrors);
         }
-
-
 
         return element;
     }
