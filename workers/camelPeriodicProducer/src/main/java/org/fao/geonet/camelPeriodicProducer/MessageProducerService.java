@@ -83,6 +83,9 @@ public class MessageProducerService implements ApplicationListener<ServerStartup
             msgProducerRepository
                 .findAll()
                 .stream()
+                .filter(messageProducerEntity -> {
+                    return StringUtils.isNotEmpty(messageProducerEntity.getCronExpression());
+                })
                 .forEach(messageProducerEntity -> {
                     try {
                         messageProducerFactory.registerAndStart(buildWfsHarvesterParameterMessageProducer(messageProducerEntity));

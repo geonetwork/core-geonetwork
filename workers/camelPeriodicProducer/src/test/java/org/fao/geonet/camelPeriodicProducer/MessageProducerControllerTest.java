@@ -122,7 +122,7 @@ public class MessageProducerControllerTest {
         wfsHarvesterParamEntity.setTypeName("typeName-mod");
         wfsHarvesterParamEntity.setUrl("url-mod");
 
-        toTest.update(toTest.msgProducerRepository.findAll().get(0).getId(), messageProducerEntity);
+        toTest.update(toTest.msgProducerRepository.findAll().get(0).getId(), messageProducerEntity, false);
         testCamelNetwork.getWfsHarvesterParamConsumer().reset();
 
         List<WFSHarvesterParameter> received = testCamelNetwork.getWfsHarvesterParamConsumer().waitFiveMsg();
@@ -160,7 +160,7 @@ public class MessageProducerControllerTest {
         messageProducerEntity = ((ResponseEntity<MessageProducerEntity>) toTest.create(messageProducerEntity)).getBody();
         messageProducerEntity.setCronExpression("i am not a cron expression");
 
-        ResponseEntity<?> response = toTest.update(messageProducerEntity.getId(), messageProducerEntity);
+        ResponseEntity<?> response = toTest.update(messageProducerEntity.getId(), messageProducerEntity, false);
         String message = ((MessageProducerController.ErrorResponse) response.getBody()).getMessage();
 
         assertEquals("CronExpression 'i am not a cron expression' is invalid.", message);
@@ -169,21 +169,7 @@ public class MessageProducerControllerTest {
     }
 
     @Test
-    public void unicityWhenCreate() throws Exception {
-        MessageProducerController toTest = createToTest();
-        MessageProducerEntity messageProducerEntity = createMessageProducerEntity();
-        MessageProducerEntity messageProducerEntity2 = createMessageProducerEntity();
-        messageProducerEntity = ((ResponseEntity<MessageProducerEntity>) toTest.create(messageProducerEntity)).getBody();
-
-        ResponseEntity<?> response = toTest.create(messageProducerEntity2);
-        String message = ((MessageProducerController.ErrorResponse) response.getBody()).getMessage();
-
-        assertTrue(message.startsWith("Unique index or primary key violation"));
-        toTest.delete(messageProducerEntity.getId());
-    }
-
-    @Test
-    public void unicityWhenUpdate() throws Exception {
+    public void uniqueKeyErrorOnUrlAndTypenameWhenUpdate() throws Exception {
         MessageProducerController toTest = createToTest();
         MessageProducerEntity messageProducerEntity = createMessageProducerEntity();
         messageProducerEntity = ((ResponseEntity<MessageProducerEntity>) toTest.create(messageProducerEntity)).getBody();
@@ -192,7 +178,7 @@ public class MessageProducerControllerTest {
         messageProducerEntity2 = ((ResponseEntity<MessageProducerEntity>) toTest.create(messageProducerEntity2)).getBody();
         messageProducerEntity2.getWfsHarvesterParam().setUrl("url");
 
-        ResponseEntity<?> response = toTest.update(messageProducerEntity2.getId(), messageProducerEntity2);
+        ResponseEntity<?> response = toTest.update(messageProducerEntity2.getId(), messageProducerEntity2, false);
         String message = ((MessageProducerController.ErrorResponse) response.getBody()).getMessage();
 
         assertTrue(message.startsWith("Unique index or primary key violation"));
