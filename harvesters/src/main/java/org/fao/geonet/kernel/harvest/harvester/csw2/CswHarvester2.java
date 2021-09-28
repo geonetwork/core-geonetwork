@@ -199,12 +199,14 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
             element.addContent(elementEp);
         }
 
-        Element elementErrors = new Element("errors");
-        for (String error : harvestStatus.errorMessage) {
-            elementErrors.addContent(new Element("error").setText(error));
-        }
+        if (errorMessage != null) {
+            Element elementErrors = new Element("errors");
+            for (String error : harvestStatus.errorMessage) {
+                elementErrors.addContent(new Element("error").setText(error));
+            }
 
-        element.addContent(elementErrors);
+            element.addContent(elementErrors);
+        }
 
         return element;
     }
@@ -255,12 +257,15 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
             }
         }
 
-        Element elementErrors = new Element("errors");
-        for (String error : linkCheckStatus.errorMessage) {
-            elementErrors.addContent(new Element("error").setText(error));
+        if (errorMessage != null) {
+            Element elementErrors = new Element("errors");
+            for (String error : linkCheckStatus.errorMessage) {
+                elementErrors.addContent(new Element("error").setText(error));
+            }
+            element.addContent(elementErrors);
         }
 
-        element.addContent(elementErrors);
+
 
         return element;
     }
