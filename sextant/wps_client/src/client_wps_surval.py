@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import sys
 import requests
-from client_wps import process_wps_execute, fetch_wps_output_file, get_args, send_mail
+from utils_wps import process_wps_execute, fetch_wps_output_file, get_args, send_mail
 
 MIN_FILE_SIZE = 100  # bytes
 
