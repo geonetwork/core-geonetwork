@@ -199,7 +199,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
             element.addContent(elementEp);
         }
 
-        if (errorMessage != null) {
+        if (harvestStatus.errorMessage != null) {
             Element elementErrors = new Element("errors");
             for (String error : harvestStatus.errorMessage) {
                 elementErrors.addContent(new Element("error").setText(error));
@@ -257,7 +257,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
             }
         }
 
-        if (errorMessage != null) {
+        if ( linkCheckStatus.errorMessage != null) {
             Element elementErrors = new Element("errors");
             for (String error : linkCheckStatus.errorMessage) {
                 elementErrors.addContent(new Element("error").setText(error));
