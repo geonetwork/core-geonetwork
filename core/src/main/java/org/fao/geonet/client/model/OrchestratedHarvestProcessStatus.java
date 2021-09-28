@@ -34,7 +34,7 @@ public class OrchestratedHarvestProcessStatus {
 
     HarvestStatus harvestStatus;
     LinkCheckStatus linkCheckStatus;
-    IngestStatus ingestStatus;CswHarvester2
+    IngestStatus ingestStatus;
 
     public List<String> errorMessage;
     public List<List<String>> stackTraces;
