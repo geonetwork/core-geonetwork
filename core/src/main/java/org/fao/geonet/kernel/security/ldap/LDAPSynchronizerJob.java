@@ -178,15 +178,11 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
         final UserRepository userRepository = applicationContext.getBean(UserRepository.class);
         final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
         final IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
-        Specifications<User> spec = Specifications.where(
+        final Specifications<User> spec = Specifications.where(
             UserSpecs.hasAuthType(LDAPConstants.LDAP_FLAG)
+        ).and(
+            Specifications.not(UserSpecs.userIsNameNotOneOf(usernames))
         );
-
-        if (! usernames.isEmpty()) {
-        spec = spec.and(
-                Specifications.not(UserSpecs.userIsNameNotOneOf(usernames))
-            );
-        }
 
         final List<User> usersFound = userRepository.findAll(spec);
         Collection<Integer> userIds = Collections2.transform(usersFound, new Function<User, Integer>() {

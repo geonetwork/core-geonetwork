@@ -1341,7 +1341,7 @@
     <repository>
       <id>georchestra-mfprint</id>
       <name>build-releases</name>
-      <url>https://artifactory.georchestra.org/artifactory/mapfish-print</url>
+      <url>https://packages.georchestra.org/artifactory/mapfish-print</url>
     </repository>
 
   </repositories>
