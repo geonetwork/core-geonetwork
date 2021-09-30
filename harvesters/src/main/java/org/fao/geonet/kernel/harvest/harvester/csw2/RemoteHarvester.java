@@ -28,12 +28,20 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.client.RemoteHarvesterApiClient;
 import org.fao.geonet.client.model.RemoteHarvesterConfiguration;
+import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Content;
+import org.jdom.Element;
+import org.jdom.Namespace;
 
+import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 class RemoteHarvester implements IHarvester<CswRemoteHarvestResult> {
@@ -85,6 +93,9 @@ class RemoteHarvester implements IHarvester<CswRemoteHarvestResult> {
         remoteHarvesterConfiguration.setErrorConfigMaxPercentTotalRecordsChangedAllowed(params.errorConfigMaxPercentTotalRecordsChangedAllowed);
         remoteHarvesterConfiguration.setGetRecordQueueHint(params.processQueueType);
 
+        String filterConstraint = getFilterConstraint(params.eltFilters, params.bboxFilter);
+        remoteHarvesterConfiguration.setFilter(filterConstraint);
+
         RemoteHarvesterApiClient remoteHarvesterApiClient = new RemoteHarvesterApiClient(url);
         result.processId = remoteHarvesterApiClient.startHarvest(remoteHarvesterConfiguration);
 
@@ -101,6 +112,60 @@ class RemoteHarvester implements IHarvester<CswRemoteHarvestResult> {
     }
 
 
+    private String getFilterConstraint(List<Element> filters, Element bboxFilter) throws Exception {
+        Path file = context.getAppPath().resolve("xml").resolve("csw").resolve("harvester-csw-filter.xsl");
 
+        Element eltFilter = new Element("filters");
+        for(Element e: filters) {
+            Element e1 = (Element) e.clone();
 
+            eltFilter.addContent(e1.detach());
+        }
+
+        Element cswFilter = Xml.transform(eltFilter, file);
+
+        if (bboxFilter != null) {
+            Map<String, Double> bboxCoordinates = new HashMap<>();
+            bboxCoordinates.put("bbox-xmin", Double.parseDouble(bboxFilter.getChildText("bbox-xmin")));
+            bboxCoordinates.put("bbox-ymin", Double.parseDouble(bboxFilter.getChildText("bbox-ymin")));
+            bboxCoordinates.put("bbox-xmax", Double.parseDouble(bboxFilter.getChildText("bbox-xmax")));
+            bboxCoordinates.put("bbox-ymax", Double.parseDouble(bboxFilter.getChildText("bbox-ymax")));
+
+            if (cswFilter.getChildren().size() == 0) {
+                cswFilter.addContent(buildBboxFilter(bboxCoordinates));
+            } else {
+                Element filterContent = ((Element) cswFilter.getChildren().get(0));
+                filterContent = (Element) filterContent.detach();
+
+                Element and = new Element("And", Csw.NAMESPACE_OGC);
+                and.addContent(filterContent);
+                and.addContent(buildBboxFilter(bboxCoordinates));
+                cswFilter.setContent(and);
+            }
+        }
+
+        if (cswFilter.getChildren().size() == 0) {
+            return StringUtils.EMPTY;
+        } else {
+            return Xml.getString(cswFilter);
+        }
+    }
+
+    private Content buildBboxFilter(Map<String, Double> bboxCoordinates) {
+        Namespace gml = Namespace.getNamespace("http://www.opengis.net/gml");
+
+        Element bbox = new Element("BBOX", Csw.NAMESPACE_OGC);
+        Element bboxProperty = new Element("PropertyName", Csw.NAMESPACE_OGC);
+        bboxProperty.setText("ows:BoundingBox");
+        bbox.addContent(bboxProperty);
+        Element envelope = new Element("Envelope", gml);
+        Element lowerCorner = new Element("lowerCorner", gml);
+        lowerCorner.setText(bboxCoordinates.get("bbox-xmin") + " " + bboxCoordinates.get("bbox-ymin"));
+        Element upperCorner = new Element("upperCorner", gml);
+        upperCorner.setText(bboxCoordinates.get("bbox-xmax") + " " + bboxCoordinates.get("bbox-ymax"));
+        envelope.addContent(lowerCorner);
+        envelope.addContent(upperCorner);
+        bbox.addContent(envelope);
+        return bbox;
+    }
 }

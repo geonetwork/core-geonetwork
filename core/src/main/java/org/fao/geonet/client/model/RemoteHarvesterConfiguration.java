@@ -51,6 +51,8 @@ public class RemoteHarvesterConfiguration {
 
     private String url;
     private String longTermTag;
+    //CSW <ogc:Filter>
+    private String filter;
     private boolean lookForNestedDiscoveryService;
 
     private int numberOfRecordsPerRequest;
@@ -141,17 +143,24 @@ public class RemoteHarvesterConfiguration {
         this.getRecordQueueHint = getRecordQueueHint;
     }
 
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RemoteHarvesterConfiguration that = (RemoteHarvesterConfiguration) o;
-        return lookForNestedDiscoveryService == that.lookForNestedDiscoveryService && numberOfRecordsPerRequest == that.numberOfRecordsPerRequest && doNotSort == that.doNotSort && Objects.equals(url, that.url) && Objects.equals(longTermTag, that.longTermTag) && Objects.equals(problematicResultsConfiguration, that.problematicResultsConfiguration) && Objects.equals(getRecordQueueHint, that.getRecordQueueHint);
+        return lookForNestedDiscoveryService == that.lookForNestedDiscoveryService && numberOfRecordsPerRequest == that.numberOfRecordsPerRequest && doNotSort == that.doNotSort && url.equals(that.url) && Objects.equals(longTermTag, that.longTermTag) && Objects.equals(filter, that.filter) && Objects.equals(problematicResultsConfiguration, that.problematicResultsConfiguration) && Objects.equals(getRecordQueueHint, that.getRecordQueueHint);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(url, longTermTag, lookForNestedDiscoveryService, numberOfRecordsPerRequest, problematicResultsConfiguration, getRecordQueueHint, doNotSort);
+        return Objects.hash(url, longTermTag, filter, lookForNestedDiscoveryService, numberOfRecordsPerRequest, problematicResultsConfiguration, getRecordQueueHint, doNotSort);
     }
 }
