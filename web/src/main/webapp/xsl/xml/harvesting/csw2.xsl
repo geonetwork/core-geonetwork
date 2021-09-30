@@ -45,6 +45,9 @@
     <processQueueType>
       <xsl:value-of select="processQueueType/value"/>
     </processQueueType>
+    <doNotSort>
+      <xsl:value-of select="doNotSort/value"/>
+    </doNotSort>
   </xsl:template>
 
   <xsl:template match="*" mode="searches">
