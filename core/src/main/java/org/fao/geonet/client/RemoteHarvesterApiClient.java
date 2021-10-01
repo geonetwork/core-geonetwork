@@ -139,4 +139,40 @@ public class RemoteHarvesterApiClient {
 
         return harvesterStatus;
     }
+
+    public void abortHarvest(String processId) throws RemoteHarvesterApiClientException {
+        String harvesterProgressUrl = url + String.format("/abort/%s", processId);
+
+        ClientHttpResponse httpResponse = null;
+        HttpGet getMethod = null;
+
+        try {
+            getMethod = new HttpGet(harvesterProgressUrl);
+
+            ((HttpUriRequest) getMethod).addHeader( new BasicHeader("Content-Type",  "application/json") );
+
+            httpResponse = requestFactory.execute(getMethod);
+
+            int status = httpResponse.getRawStatusCode();
+
+            if (status != HttpStatus.SC_OK) {
+                String message = String.format(
+                    "Failed to abort the harvester '%s'. Status is %d. Error is %s.",
+                    url, status,
+                    httpResponse.getStatusText());
+
+                throw new RemoteHarvesterApiClientException(message);
+            }
+        } catch (Exception ex) {
+            throw new RemoteHarvesterApiClientException(ex.getMessage());
+
+        } finally {
+            if (getMethod != null) {
+                getMethod.releaseConnection();
+            }
+            // Release the connection.
+            IOUtils.closeQuietly(httpResponse);
+        }
+    }
+
 }

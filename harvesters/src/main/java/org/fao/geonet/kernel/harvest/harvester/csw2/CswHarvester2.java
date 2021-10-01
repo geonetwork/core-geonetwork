@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.harvest.Common;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.jdom.Element;
+import org.quartz.SchedulerException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -135,30 +136,36 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                     RemoteHarvesterApiClient remoteHarvesterApiClient = new RemoteHarvesterApiClient(url);
 
                     boolean check = true;
+
                     while (check) {
-
                         try {
-                            OrchestratedHarvestProcessStatus harvesterStatus = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId);
-
-                            OrchestratedHarvestProcessState state = harvesterStatus.getOrchestratedHarvestProcessState();
-                            log.info(harvesterStatus.toString());
-                            ((CswRemoteHarvestResult) result).runningHarvest = state.equals(OrchestratedHarvestProcessState.HAVESTING);
-                            ((CswRemoteHarvestResult) result).runningLinkChecker = state.equals(OrchestratedHarvestProcessState.LINKCHECKING);
-                            ((CswRemoteHarvestResult) result).runningIngest = state.equals(OrchestratedHarvestProcessState.INGESTING);
-                            ((CswRemoteHarvestResult) result).harvesterStatus = harvesterStatus;
-
-                            if (!state.equals(OrchestratedHarvestProcessState.COMPLETE) &&
-                                !state.equals((OrchestratedHarvestProcessState.ERROR)) &&
-                                !state.equals((OrchestratedHarvestProcessState.USERABORT))) {
-                                try {
-                                    Thread.sleep(10 * 1000);
-                                } catch (InterruptedException e) {
-                                    log.error(e);
-                                }
-                            } else {
-                                CswHarvester2.this.stop(Common.Status.ACTIVE);
+                            if (CswHarvester2.this.cancelMonitor.get()) {
+                                remoteHarvesterApiClient.abortHarvest(harvesterProcessId);
                                 check = false;
+                            } else {
+                                OrchestratedHarvestProcessStatus harvesterStatus = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId);
+
+                                OrchestratedHarvestProcessState state = harvesterStatus.getOrchestratedHarvestProcessState();
+                                log.info(harvesterStatus.toString());
+                                ((CswRemoteHarvestResult) result).runningHarvest = state.equals(OrchestratedHarvestProcessState.HAVESTING);
+                                ((CswRemoteHarvestResult) result).runningLinkChecker = state.equals(OrchestratedHarvestProcessState.LINKCHECKING);
+                                ((CswRemoteHarvestResult) result).runningIngest = state.equals(OrchestratedHarvestProcessState.INGESTING);
+                                ((CswRemoteHarvestResult) result).harvesterStatus = harvesterStatus;
+
+                                if (!state.equals(OrchestratedHarvestProcessState.COMPLETE) &&
+                                    !state.equals((OrchestratedHarvestProcessState.ERROR)) &&
+                                    !state.equals((OrchestratedHarvestProcessState.USERABORT))) {
+                                    try {
+                                        Thread.sleep(10 * 1000);
+                                    } catch (InterruptedException e) {
+                                        log.error(e);
+                                    }
+                                } else {
+                                    CswHarvester2.this.stop(Common.Status.ACTIVE);
+                                    check = false;
+                                }
                             }
+
                         } catch (Exception ex) {
                             // TODO: Handle
                             ex.printStackTrace();
