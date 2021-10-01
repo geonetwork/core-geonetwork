@@ -540,5 +540,14 @@
     "batchApproveDirect": "Approve the metadata without requiring to be in submitted status",
     "metadataInfoReport": "Metadata information",
     "metadataErrorReport": "Metadata errors",
-    "wmtsFailedToParseCapabilities": "Failed to parse GetCapabilities operation response."
+    "wmtsFailedToParseCapabilities": "Failed to parse GetCapabilities operation response.",
+    "statusWorkflow-0": "Unknown",
+    "statusWorkflow-1": "Draft",
+    "statusWorkflow-2": "Approved",
+    "statusWorkflow-3": "Retired",
+    "statusWorkflow-4": "Submitted",
+    "statusWorkflow-5": "Rejected",
+    "statusWorkflow-21": "Approved with draft copy",
+    "statusWorkflow-24": "Approved with draft copy submitted",
+    "mdStatusWorkflow": "Workflow progress"
 }
