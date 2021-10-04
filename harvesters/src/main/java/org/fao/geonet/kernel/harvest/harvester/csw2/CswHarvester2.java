@@ -78,6 +78,8 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
         harvesterSettingsManager.add("id:" + optionsId, "processQueueType", params.processQueueType);
 
         harvesterSettingsManager.add("id:" + optionsId, "doNotSort", params.doNotSort);
+        harvesterSettingsManager.add("id:" + optionsId, "executeLinkChecker", params.executeLinkChecker);
+
 
         //--- store dynamic filter nodes
         String filtersID = harvesterSettingsManager.add(path, "filters", "");

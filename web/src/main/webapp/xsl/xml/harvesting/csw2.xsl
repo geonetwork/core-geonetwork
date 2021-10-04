@@ -48,6 +48,9 @@
     <doNotSort>
       <xsl:value-of select="doNotSort/value"/>
     </doNotSort>
+    <executeLinkChecker>
+      <xsl:value-of select="executeLinkChecker/value"/>
+    </executeLinkChecker>
   </xsl:template>
 
   <xsl:template match="*" mode="searches">

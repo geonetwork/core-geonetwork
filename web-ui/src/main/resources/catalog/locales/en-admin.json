@@ -352,10 +352,10 @@
     "csw-processQueueType-parallel-2": "parallel-2",
     "csw-processQueueType-parallel-3": "parallel-3",
     "csw-processQueueType-parallel-4": "parallel-4",
-
     "csw-remoteHarvesterDoNotSort": "Do not sort records by identifier",
     "csw-remoteHarvesterDoNotSortHelp": "If true then do NOT add the SORT BY identifier to the individual getRecord requests",
-
+    "csw-remoteHarvesterExecuteLinkChecker": "Execute Link Checker",
+    "csw-remoteHarvesterExecuteLinkCheckerHelp": "Tests the links between services / datasets metadata.",
     "noCswCriteriaFoundInCapabilities": "No search criteria found in <a href='{{url}}'>capabilities</a>. All records will be harvested from that server.",
     "CswCriteriaFoundInCapabilities": "Optionally use one or more search criteria below to restrict the records to harvest. For the 'like' operator use '%'  for wildCard, '_' for single char and '\\' for escape char.",
     "errorRetrievingCswCapabilities": "Error occurred while retrieving service <a href='{{url}}'>capabilities</a>. Check service URL or current status.",

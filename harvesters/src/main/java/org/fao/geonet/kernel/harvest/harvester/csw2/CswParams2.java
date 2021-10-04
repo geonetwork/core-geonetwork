@@ -58,6 +58,8 @@ public class CswParams2 extends AbstractParams {
 
     public String processQueueType = "auto";
 
+    public boolean executeLinkChecker = true;
+
     public List<Element> eltFilters = new ArrayList<Element>();
 
     public Element bboxFilter;
@@ -99,6 +101,8 @@ public class CswParams2 extends AbstractParams {
 
         doNotSort = Util.getParam(options, "doNotSort", false);
 
+        executeLinkChecker = Util.getParam(options, "executeLinkChecker", true);
+
         if (filters != null) {
             @SuppressWarnings("unchecked")
             List<Element> tmp = filters.getChildren();
@@ -137,6 +141,8 @@ public class CswParams2 extends AbstractParams {
 
         doNotSort = Util.getParam(options, "doNotSort", doNotSort);
 
+        executeLinkChecker = Util.getParam(options, "executeLinkChecker", executeLinkChecker);
+
         icon = Util.getParam(site, "icon", icon);
 
         //--- if some filter queries are given, we drop the previous ones and
@@ -172,8 +178,8 @@ public class CswParams2 extends AbstractParams {
         copy.errorConfigDuplicatedUuids = errorConfigDuplicatedUuids;
 
         copy.processQueueType = processQueueType;
-
         copy.doNotSort = doNotSort;
+        copy.executeLinkChecker = executeLinkChecker;
 
         copy.eltFilters = eltFilters;
         copy.bboxFilter = bboxFilter;
