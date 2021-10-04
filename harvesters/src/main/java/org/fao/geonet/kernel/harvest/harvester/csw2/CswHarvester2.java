@@ -104,6 +104,8 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
         }
     }
 
+
+
     /**
      * @param log
      * @throws Exception
@@ -126,8 +128,8 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
         final String harvesterProcessId = processId;
 
         if (StringUtils.isNotEmpty(harvesterProcessId)) {
-            harvesterSettingsManager.setValue("harvesting/id:" + super.getId() + "/options/processID", harvesterProcessId);
-
+            harvesterSettingsManager.setValue("harvesting/id:" + getID() + "/options/processID", harvesterProcessId);
+            final CswHarvester2 thiz = this;
             new Thread() {
                 @Override
                 public void run() {
@@ -143,7 +145,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                         try {
                             if (CswHarvester2.this.cancelMonitor.get()) {
                                 remoteHarvesterApiClient.abortHarvest(harvesterProcessId);
-                                CswHarvester2.this.harvesterSettingsManager.setValue("harvesting/id:" + super.getId() + "/options/processID", "");
+                                CswHarvester2.this.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
                                 check = false;
                             } else {
                                 OrchestratedHarvestProcessStatus harvesterStatus = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId);
@@ -165,7 +167,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                     }
                                 } else {
                                     CswHarvester2.this.stop(Common.Status.ACTIVE);
-                                    CswHarvester2.this.harvesterSettingsManager.setValue("harvesting/id:" + super.getId() + "/options/processID", "");
+                                    CswHarvester2.this.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
                                     check = false;
                                 }
                             }
@@ -293,5 +295,9 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
         }
 
         return element;
+    }
+
+    public String getID() {
+        return super.getID();
     }
 }
