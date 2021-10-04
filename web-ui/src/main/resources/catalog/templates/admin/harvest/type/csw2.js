@@ -129,7 +129,7 @@ var gnHarvestercsw2 = {
       + '    <processQueueType>' + h.options.processQueueType + '</processQueueType>'
       + '    <doNotSort>' + h.options.doNotSort + '</doNotSort>'
       + '    <processID>' + h.options.processID + '</processID>'
-      + '    <executeLinkChecker>' + h.options.doNotSort + '</executeLinkChecker>'
+      + '    <executeLinkChecker>' + h.options.executeLinkChecker + '</executeLinkChecker>'
       + '  </options>'
       + $scope.buildResponseGroup(h) + '</node>';
     return body;
