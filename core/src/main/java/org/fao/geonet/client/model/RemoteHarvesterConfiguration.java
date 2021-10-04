@@ -134,7 +134,7 @@ public class RemoteHarvesterConfiguration {
     }
 
     public void setErrorConfigDuplicatedUuids(boolean errorConfigDuplicatedUuids) {
-        problematicResultsConfiguration.put(KEY_DUPLICATE_UUIDS, String.valueOf(errorConfigDuplicatedUuids));
+        problematicResultsConfiguration.put(KEY_DUPLICATE_UUIDS, String.valueOf(errorConfigDuplicatedUuids?"ERROR":"IGNORE"));
     }
 
     public String getGetRecordQueueHint() {
