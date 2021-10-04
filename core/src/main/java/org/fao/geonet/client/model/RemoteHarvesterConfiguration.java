@@ -129,12 +129,12 @@ public class RemoteHarvesterConfiguration {
         problematicResultsConfiguration.put(KEY_TOTAL_RECORDS_CHANGED, errorConfigTotalRecordsChanged?"ERROR":"IGNORE");
     }
 
-    public void setErrorConfigMaxPercentTotalRgit ecordsChangedAllowed(int errorConfigMaxPercentTotalRecordsChangedAllowed) {
+    public void setErrorConfigMaxPercentTotalRecordsChangedAllowed(int errorConfigMaxPercentTotalRecordsChangedAllowed) {
         problematicResultsConfiguration.put(KEY_MAX_PERCENT_TOTAL_RECORDS_ALLOWED, String.valueOf(errorConfigMaxPercentTotalRecordsChangedAllowed));
     }
 
     public void setErrorConfigDuplicatedUuids(boolean errorConfigDuplicatedUuids) {
-        problematicResultsConfiguration.put(KEY_DUPLICATE_UUIDS, errorConfigDuplicatedUuids?"ERROR":"IGNORE"));
+        problematicResultsConfiguration.put(KEY_DUPLICATE_UUIDS, errorConfigDuplicatedUuids?"ERROR":"IGNORE");
     }
 
     public String getGetRecordQueueHint() {
