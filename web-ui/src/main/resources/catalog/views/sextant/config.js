@@ -393,7 +393,7 @@
         if(sxtSettings.metadataType)  {
           searchSettings.filters.push({
             "query_string": {
-              "query": "+resourceType:(" + sxtSettings.metadataType.replace(' or ', ' OR ') + ")"
+              "query": "+resourceType:(" + sxtSettings.metadataType.replaceAll(' or ', ' OR ') + ")"
             }
           });
         }
