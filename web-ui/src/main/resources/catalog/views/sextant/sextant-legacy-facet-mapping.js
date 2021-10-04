@@ -560,19 +560,19 @@
         }
     },
     'dcsmm-area': {
-      'th_dcsmm.area.default':
+      'th_area.default':
         {
           'terms': {
-            'field': 'th_dcsmm.area.default',
+            'field': 'th_area.default',
             'size': 300
           }
         }
     },
     'dcsmm-descripteur': {
-      'th_dcsmm.descripteur.default':
+      'th_dcsmm-descripteur.default':
         {
           'terms': {
-            'field': 'th_dcsmm.descripteur.default',
+            'field': 'th_dcsmm-descripteur.default',
             'size': 300
           }
         }

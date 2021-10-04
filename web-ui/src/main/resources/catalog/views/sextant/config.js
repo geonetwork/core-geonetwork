@@ -393,7 +393,7 @@
         if(sxtSettings.metadataType)  {
           searchSettings.filters.push({
             "query_string": {
-              "query": "+type:" + sxtSettings.metadataType
+              "query": "+resourceType:(" + sxtSettings.metadataType.replace(' or ', ' OR ') + ")"
             }
           });
         }
@@ -416,7 +416,7 @@
       if(searchSettings.configWho) {
         searchSettings.filters.push({
             "query_string": {
-              "query": "+orgName:(\"" + searchSettings.configWho.replace(/,/g, '\" OR \"') + "\")"
+              "query": "+OrgForResource:(\"" + searchSettings.configWho.replace(/,/g, '\" OR \"') + "\")"
             }
           });
       }
