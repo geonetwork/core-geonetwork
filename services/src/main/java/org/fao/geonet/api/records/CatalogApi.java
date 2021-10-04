@@ -53,6 +53,7 @@ import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
@@ -138,7 +139,8 @@ public class CatalogApi {
     EsHTTPProxy esHTTPProxy;
     @Autowired
     LanguageUtils languageUtils;
-
+    @Autowired
+    IsoLanguagesMapper isoLanguagesMapper;
     /*
      * <p>Retrieve all parameters (except paging parameters) as a string.</p>
      */
@@ -447,7 +449,7 @@ public class CatalogApi {
         });
 
         Locale locale = languageUtils.parseAcceptLanguage(httpRequest.getLocales());
-        String language = LanguageUtils.locale2gnCode(locale.getISO3Language());
+        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         language = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
 
         new XsltResponseWriter("env", "search")
