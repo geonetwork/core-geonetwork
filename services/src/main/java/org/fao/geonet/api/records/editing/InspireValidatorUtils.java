@@ -29,9 +29,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -42,6 +40,7 @@ import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
@@ -66,6 +65,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_APIKEY;
+
 /**
  * Utility class to access methods in Inspire Service.
  *
@@ -76,6 +77,9 @@ public class InspireValidatorUtils {
 
     @Autowired
     private GeonetHttpRequestFactory requestFactory;
+
+    @Autowired
+    SettingManager settingManager;
 
     /**
      * The Constant USER_AGENT.
@@ -351,6 +355,8 @@ public class InspireValidatorUtils {
         request.setHeader("Content-type", ACCEPT);
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
+        addApiKey(request);
+
         ClientHttpResponse response = null;
 
         try {
@@ -396,6 +402,7 @@ public class InspireValidatorUtils {
             } else {
                 Log.warning(Log.SERVICE,
                     "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + TestRuns_URL);
+
                 return null;
             }
 
@@ -404,6 +411,17 @@ public class InspireValidatorUtils {
             return null;
         } finally {
             IOUtils.closeQuietly(response);
+        }
+    }
+
+    /**
+     * See https://github.com/INSPIRE-MIF/helpdesk-validator/issues/594
+     */
+    private void addApiKey(HttpRequestBase request) {
+        String apikey =
+            settingManager.getValue(SYSTEM_INSPIRE_REMOTE_VALIDATION_APIKEY);
+        if (StringUtils.isNotEmpty(apikey)) {
+            request.addHeader("X-API-key", apikey);
         }
     }
 
@@ -424,6 +442,7 @@ public class InspireValidatorUtils {
 
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
+        addApiKey(request);
 
         try (ClientHttpResponse response = this.execute(context, request)) {
             if (response.getStatusCode().value() == 200) {
@@ -473,6 +492,7 @@ public class InspireValidatorUtils {
 
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
+        addApiKey(request);
 
         try (ClientHttpResponse response = this.execute(context, request)) {
 
