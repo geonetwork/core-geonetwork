@@ -553,7 +553,7 @@ goog.require('gn_alert');
               'label': 'defaultView',
               // Conditional views can be used to configure custom
               // formatter to use depending on metadata properties.
-              // 'views': [ {
+              // 'views': [{
               //   'if': {'standardName': 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product'},
               //   'url' : '/formatters/xsl-view?root=div&view=advanced'
               // }, {
@@ -680,6 +680,10 @@ goog.require('gn_alert');
           'isSocialbarEnabled': true,
           'showStatusWatermarkFor': 'historicalArchive,obsolete,superseded',
           'showStatusTopBarFor': '',
+          'showCitation': {
+            'enabled': false
+            // 'if': {'documentStandard': ['iso19115-3.2018']}
+          },
           'sortKeywordsAlphabetically': true
         },
         'editor': {

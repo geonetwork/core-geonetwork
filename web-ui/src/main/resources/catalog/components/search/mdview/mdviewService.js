@@ -291,30 +291,24 @@
             // Check conditional views
             var isViewSet = false;
 
-            viewLoop:
-              for (var j = 0; j < f.views.length; j ++) {
-                var v = f.views[j];
-
-                if (v.if) {
-                  for (var key in v.if) {
-                    if (v.if.hasOwnProperty(key)) {
-                      var values = angular.isArray(v.if[key])
-                        ? v.if[key]
-                        : [v.if[key]]
-
-                      var recordValue = gnUtilityService.getObjectValueByPath(record, key);
-                      if (values.includes(recordValue)) {
-                        list.push({label: f.label, url: v.url});
-                        isViewSet = true;
-                        break viewLoop;
-                      }
-                    }
+            function addView(f, v) {
+              list.push({label: f.label, url: v.url});
+              isViewSet = true;
+            }
+            function evaluateView(v) {
+              gnUtilityService.checkConfigurationPropertyCondition(
+                record, v, function() {
+                  if (!isViewSet) {
+                    addView(f, v)
                   }
-                } else {
-                  console.warn('A conditional view MUST have a if property. ' +
-                    'eg. {"if": {"documentStandard": "iso19115-3.2018"}, "url": "..."}')
-                }
-              }
+                  return;
+                });
+            }
+            for (var j = 0; j < f.views.length; j ++) {
+              var v = f.views[j];
+              evaluateView(v);
+            }
+
             if (f.url !== undefined && !isViewSet) {
               list.push(f);
             }

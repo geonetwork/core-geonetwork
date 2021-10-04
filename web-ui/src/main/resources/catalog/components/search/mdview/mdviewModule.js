@@ -48,10 +48,11 @@
     'gnMetadataActions', 'gnAlertService', '$translate', '$location',
     'gnMdView', 'gnMdViewObj', 'gnMdFormatter', 'gnConfig',
     'gnGlobalSettings', 'gnConfigService', '$rootScope', '$filter',
+    'gnUtilityService',
     function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
              gnMetadataActions, gnAlertService, $translate, $location,
              gnMdView, gnMdViewObj, gnMdFormatter, gnConfig,
-             gnGlobalSettings, gnConfigService, $rootScope, $filter) {
+             gnGlobalSettings, gnConfigService, $rootScope, $filter, gnUtilityService) {
 
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
@@ -60,6 +61,7 @@
       $scope.recordIdentifierRequested = gnSearchLocation.uuid;
       $scope.isUserFeedbackEnabled = false;
       $scope.isRatingEnabled = false;
+      $scope.showCitation = false;
       $scope.isSocialbarEnabled = gnGlobalSettings.gnCfg.mods.recordview.isSocialbarEnabled;
       $scope.showStatusWatermarkFor = gnGlobalSettings.gnCfg.mods.recordview.showStatusWatermarkFor;
       $scope.showStatusTopBarFor = gnGlobalSettings.gnCfg.mods.recordview.showStatusTopBarFor;
@@ -233,12 +235,26 @@
           });
       };
 
+      function checkIfCitationIsDisplayed(record) {
+        $scope.showCitation = false;
+        if (gnGlobalSettings.gnCfg.mods.recordview.showCitation.if) {
+          gnUtilityService.checkConfigurationPropertyCondition(
+            record, gnGlobalSettings.gnCfg.mods.recordview.showCitation, function() {
+            $scope.showCitation = true;
+          });
+        } else {
+          $scope.showCitation = gnGlobalSettings.gnCfg.mods.recordview.showCitation.enabled;
+        }
+      }
+
       // Reset current formatter to open the next record
       // in default mode.
       function loadFormatter(n, o) {
         if (n === true) {
           $scope.recordFormatterList =
             gnMdFormatter.getFormatterForRecord($scope.mdView.current.record);
+
+          checkIfCitationIsDisplayed($scope.mdView.current.record);
 
           var f = gnSearchLocation.getFormatterPath($scope.recordFormatterList[0].url);
           $scope.currentFormatter = '';

@@ -353,6 +353,26 @@
             return obj;
           };
 
+          var checkConfigurationPropertyCondition = function (record, prop, cb) {
+            if (prop.if) {
+              for (var key in prop.if) {
+                if (prop.if.hasOwnProperty(key)) {
+                  var values = angular.isArray(prop.if[key])
+                    ? prop.if[key]
+                    : [prop.if[key]]
+
+                  var recordValue = this.getObjectValueByPath(record, key);
+                  if (values.includes(recordValue)) {
+                    cb();
+                  }
+                }
+              }
+            } else {
+              console.warn('A conditional config property MUST have a if property. ' +
+                'eg. {"if": {"documentStandard": "iso19115-3.2018"}, "url": "..."}')
+            }
+          };
+
         return {
           scrollTo: scrollTo,
           isInView: isInView,
@@ -361,6 +381,7 @@
           traverse: traverse,
           formatObjectPropertyAsArray: formatObjectPropertyAsArray,
           getObjectValueByPath: getObjectValueByPath,
+          checkConfigurationPropertyCondition: checkConfigurationPropertyCondition,
           toCsv: toCsv,
           CSVToArray: CSVToArray,
           getUrlParameter: getUrlParameter,

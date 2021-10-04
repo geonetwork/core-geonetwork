@@ -401,6 +401,65 @@
   );
 
 
+  module.directive('gnMetadataCitation', [
+    '$translate', '$http', 'gnAlertService',
+    function($translate, $http, gnAlertService) {
+
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/components/metadataactions/partials/' +
+          'citation.html',
+        scope: {
+          md: '=gnMetadataCitation',
+          format: '@'
+        },
+        link: function(scope) {
+          scope.defaultFormat = 'html';
+          scope.currentFormat = null;
+          scope.formats = [];
+          scope.citationText = '';
+          scope.isCode = false;
+          var apiBaseUrl = '../api/records/' + scope.md.uuid + '/formatters/citation?format=';
+          scope.getCitation = function(format) {
+            return $http.get(apiBaseUrl + format, {
+              cache: true,
+              headers: {'Accept': format === '?' ? 'application/json' : 'text/plain'}
+            })
+              .then(function(r) {
+                if(format === '?') {
+                  for (var i = 0; i < r.data.length; i ++) {
+                    var f = r.data[i],
+                      prefix = 'cite.format.',
+                      translation = $translate.instant(prefix + f),
+                      translationFound = translation.indexOf(prefix) === -1,
+                      help = $translate.instant(prefix + f + '.help'),
+                      helpFound = translation.indexOf(prefix) === -1;
+                    scope.formats.push({
+                      id: f,
+                      label: translationFound ? translation : f,
+                      help: helpFound ? help : ''
+                    })
+                  }
+                } else {
+                  scope.currentFormat = format;
+                  scope.isCode = ['ris', 'bibtex'].indexOf(format) != -1;
+                  scope.citationText = r.data;
+                }
+              }, function(r) {
+                gnAlertService.addAlert({
+                  msg: $translate.instant('citation.error'),
+                  type: 'danger'
+                });
+              });
+          }
+          scope.getCitation('?').then(function() {
+            scope.getCitation(scope.format || scope.defaultFormat);
+          });
+        }
+      };
+    }]);
+
   /**
    * @ngdoc directive
    * @name gn_mdactions_directive.directive:gnTransferOwnership
