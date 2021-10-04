@@ -357,9 +357,11 @@
         <div class="row">
           <div class="col-md-9">
             <header>
-              <div>
-                <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
-              </div>
+              <xsl:if test="$view != 'sdn'">
+                <div>
+                  <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
+                </div>
+              </xsl:if>
               <xsl:if test="$related != ''">
                 <div gn-related="md"
                      data-user="user"
