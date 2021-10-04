@@ -112,8 +112,8 @@
    * <gn-batch-tasks-container />
    */
   module.directive('gnBatchTasksContainer', [
-    '$http', 'gnConfig',
-    function ($http, gnConfig) {
+    '$http', 'gnConfig', 'gnConfigService',
+    function ($http, gnConfig, gnConfigService) {
       return {
         restrict: 'E',
         scope: {
@@ -197,7 +197,9 @@
               }
             }, true);
 
-            this.refresh();
+            gnConfigService.load().then(function(c) {
+              this.refresh();
+            });
           }
         ]
       };
