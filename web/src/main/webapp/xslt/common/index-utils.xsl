@@ -449,14 +449,14 @@
        records in the admin.
 
        TODO: Thesaurus id must be defined by a check in thesaurus manager based on multilingual titles.-->
-      <xsl:for-each select="$keywords">
+      <!--<xsl:for-each select="$keywords">
         <xsl:if test="$thesaurusId != ''
                 and util:getKeywordUri((*/text())[1], $thesaurusId, $mainLanguage) = ''">
           <indexingErrorMsg>Warning / Keyword <xsl:value-of select="(*/text())[1]"/> not found in <xsl:value-of select="$thesaurusId"/>.</indexingErrorMsg>
           <indexingError>true</indexingError>
         </xsl:if>
-      </xsl:for-each>
-      
+      </xsl:for-each>-->
+
 
       <xsl:variable name="thesaurusTree" as="node()">
         <values>
