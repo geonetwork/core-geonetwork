@@ -111,7 +111,7 @@ import static org.quartz.JobKey.jobKey;
 /**
  * Represents a harvester job. Used to launch harvester workers.
  * <p>
- * If you want to synchronize something here, use protected variable lock.
+ * If you want to synchronize something here, use protectedunnin variable lock.
  * If not, we may not be able to even stop a frozen harvester.
  */
 public abstract class AbstractHarvester<T extends HarvestResult, P extends AbstractParams> {

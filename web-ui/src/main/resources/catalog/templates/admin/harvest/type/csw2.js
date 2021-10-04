@@ -37,7 +37,8 @@ var gnHarvestercsw2 = {
         "errorConfigMaxPercentTotalRecordsChangedAllowed": 5,
         "errorConfigDuplicatedUuids": true,
         "processQueueType": "auto",
-        "doNotSort": false
+        "doNotSort": false,
+        "processID": ""
       },
       "ifRecordExistAppendPrivileges": false,
       "privileges" : [ {
@@ -126,6 +127,7 @@ var gnHarvestercsw2 = {
       + '    <errorConfigDuplicatedUuids>' + h.options.errorConfigDuplicatedUuids + '</errorConfigDuplicatedUuids>'
       + '    <processQueueType>' + h.options.processQueueType + '</processQueueType>'
       + '    <doNotSort>' + h.options.doNotSort + '</doNotSort>'
+      + '    <processID>' + h.options.processID + '</processID>'
       + '  </options>'
       + $scope.buildResponseGroup(h) + '</node>';
     return body;

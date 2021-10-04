@@ -126,6 +126,8 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
         final String harvesterProcessId = processId;
 
         if (StringUtils.isNotEmpty(harvesterProcessId)) {
+            harvesterSettingsManager.setValue("harvesting/id:" + id + "/options/processID", harvesterProcessId);
+
             new Thread() {
                 @Override
                 public void run() {
@@ -141,12 +143,13 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                         try {
                             if (CswHarvester2.this.cancelMonitor.get()) {
                                 remoteHarvesterApiClient.abortHarvest(harvesterProcessId);
+                                CswHarvester2.this.harvesterSettingsManager.setValue("harvesting/id:" + id + "/options/processID", "");
                                 check = false;
                             } else {
                                 OrchestratedHarvestProcessStatus harvesterStatus = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId);
 
                                 OrchestratedHarvestProcessState state = harvesterStatus.getOrchestratedHarvestProcessState();
-                                log.info(harvesterStatus.toString());
+
                                 ((CswRemoteHarvestResult) result).runningHarvest = state.equals(OrchestratedHarvestProcessState.HAVESTING);
                                 ((CswRemoteHarvestResult) result).runningLinkChecker = state.equals(OrchestratedHarvestProcessState.LINKCHECKING);
                                 ((CswRemoteHarvestResult) result).runningIngest = state.equals(OrchestratedHarvestProcessState.INGESTING);
@@ -162,6 +165,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                     }
                                 } else {
                                     CswHarvester2.this.stop(Common.Status.ACTIVE);
+                                    CswHarvester2.this.harvesterSettingsManager.setValue("harvesting/id:" + id + "/options/processID", "");
                                     check = false;
                                 }
                             }
