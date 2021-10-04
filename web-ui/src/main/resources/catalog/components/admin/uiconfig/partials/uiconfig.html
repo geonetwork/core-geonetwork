@@ -669,6 +669,21 @@
                    data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
                   {{('ui-' + key + '-help') | translate}} </p>
               </div>
+
+              <div data-ng-switch-when="showCitation">
+                <h3>{{('ui-' + key) | translate}}</h3>
+
+                <input type="checkbox"
+                       id="{{key}}enabled-checkbox"
+                       data-ng-model="mCfg[key].enabled"/>&nbsp;
+                <label for="{{key}}enabled-checkbox">{{('ui-enabled') | translate}}</label>
+
+                <div class="row">
+                  <label class="control-label">{{('ui-' + key + '-condition') | translate}}</label>
+                  <gn-json-edit height="300" model="mCfg[key].if"></gn-json-edit>
+                </div>
+              </div>
+
               <div data-ng-switch-when="isFilterTagsDisplayed">
                 <input type="checkbox"
                        id="{{key}}-checkbox"
@@ -1098,7 +1113,7 @@
                    data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
                   {{('ui-' + key + '-help') | translate}} </p>
               </div>
-	    
+
 	      <div data-ng-switch-when="sortKeywordsAlphabetically">
                 <input type="checkbox"
                        id="{{key}}-checkbox"

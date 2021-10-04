@@ -681,8 +681,8 @@ goog.require('gn_alert');
           'showStatusWatermarkFor': 'historicalArchive,obsolete,superseded',
           'showStatusTopBarFor': '',
           'showCitation': {
-            'enabled': false
-            // 'if': {'documentStandard': ['iso19115-3.2018']}
+            'enabled': false,
+            'if': null // {'documentStandard': ['iso19115-3.2018']}
           },
           'sortKeywordsAlphabetically': true
         },
