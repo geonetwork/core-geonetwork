@@ -1,2 +1,4 @@
+cython==0.29.24
+pyproj==3.0.1
 urllib3==1.22
 OWSLib==0.25.0

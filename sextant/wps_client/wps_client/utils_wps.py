@@ -3,8 +3,8 @@ import os
 from owslib.wps import WebProcessingService, monitorExecution
 import urllib.request
 
-from timeout import *
-from utils import *
+from timeout import timeout_
+import utils
 import sys
 
 
