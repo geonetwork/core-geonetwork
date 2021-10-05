@@ -59,6 +59,9 @@
               filters.push('type=' + k);
             }
           });
+          if (filter.sortOrder) {
+            filters.push('sortOrder=' + filter.sortOrder);
+          }
           if (filter.authorFilter && filter.authorFilter.id) {
             filters.push('author=' + filter.authorFilter.id);
           }

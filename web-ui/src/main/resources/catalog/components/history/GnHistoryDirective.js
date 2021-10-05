@@ -62,6 +62,7 @@
 
               scope.filter = {
                 types: types,
+                sortOrder: 'DESC',
                 recordFilter: null,
                 from: 0,
                 size: recordByPage
@@ -230,6 +231,7 @@
 
                 scope.filter = {
                   types: types,
+                  sortOrder: 'DESC',
                   ownerFilter: null,
                   authorFilter: null,
                   recordFilter: null,
