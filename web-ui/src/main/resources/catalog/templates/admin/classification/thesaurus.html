@@ -323,13 +323,30 @@
             <!-- Registry selection -->
             <div data-ng-show="importAs == 'registry'"
                  data-gn-registry-browser="thesaurusUrl"/>
-
             <br/>
-            <div
-              data-schema-info-combo="codelist"
-              data-selected-info="thesaurusImportType"
-              data-gn-schema-info="gmd:MD_KeywordTypeCode"
-              lang="lang"></div>
+
+            <label class="control-label">
+              <span data-translate="">thesaurusClass</span>
+              <select class="form-control"
+                      ng_model="thesaurusImportType"
+                      ng-options="o.key as o.label group by o.schema
+                                  for (k, o) in thesaurusTypeBySchema "/>
+            </label>
+            <br/>
+
+            <label class="control-label"
+                   data-ng-show="importAs != 'registry'">
+              <span data-translate="">origin</span>
+              <select class="form-control"
+                      name="type"
+                      data-ng-model="thesaurusImportOrigin">
+                <option data-ng-repeat="o in thesaurusTypes"
+                        value="{{o}}">{{o}}</option>
+              </select>
+            </label>
+
+
+
             <input type="text" class="hidden" name="dir" data-ng-model="thesaurusImportType"/>
             <ul>
               <li data-ng-repeat="file in queue">{{file.name}} ({{file.type}} / {{file.size}} KB) <i

@@ -78,6 +78,7 @@
        * The list of thesaurus
        */
       $scope.thesaurus = [];
+      $scope.thesaurusTypes = ['external', 'local'];
       /**
        * The currently selected thesaurus
        */
@@ -208,13 +209,41 @@
         }
       };
 
+      $scope.thesaurusTypeBySchema = [];
+      function loadKeywordTypeForSchema(schema) {
+        var url = '../api/standards/'
+          + schema.id + '/codelists/'
+          + schema.ns + ':MD_KeywordTypeCode';
+        $http.get(url, {cache: true}).then(function(r) {
+          angular.forEach(r.data, function(o, k) {
+            $scope.thesaurusTypeBySchema.push({
+              schema: schema.id,
+              key: k,
+              label: o
+            });
+          })
+        });
+      }
+      function loadKeywordTypeCodes() {
+        var schemas = [
+          {id: 'iso19139', ns: 'gmd'},
+          {id: 'iso19115-3.2018', ns: 'mri'}];
+        $scope.thesaurusTypeBySchema = [];
+        for (var i = 0; i < schemas.length; i ++) {
+          loadKeywordTypeForSchema(schemas[i]);
+        }
+      }
+
       /**
        * Add a new local thesaurus and open the modal
        */
       $scope.addThesaurus = function(type) {
         creatingThesaurus = true;
 
+        loadKeywordTypeCodes();
+
         $scope.thesaurusImportType = 'theme';
+        $scope.thesaurusImportOrigin = $scope.thesaurusTypes[0];
         $scope.importAs = type;
         $scope.thesaurusSelected = {
           title: '',
