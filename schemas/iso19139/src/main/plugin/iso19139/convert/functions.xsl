@@ -164,13 +164,9 @@
     <xsl:value-of select="normalize-space(string($tmp))"></xsl:value-of>
   </xsl:template>
 
-  <!-- ================================================================== -->
-  <!-- iso3code of default index language -->
-  <xsl:variable name="defaultLang">eng</xsl:variable>
-
   <xsl:template name="langId19139">
     <xsl:param name="md" select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']"/>
-    <xsl:param name="defaultLanguage" select="$defaultLang"/>
+    <xsl:param name="defaultLanguage" select="java:getDefaultLangCode()"/>
     <xsl:variable name="tmp">
       <xsl:choose>
         <xsl:when test="$md/gmd:language/gmd:LanguageCode/@codeListValue|
