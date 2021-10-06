@@ -1494,7 +1494,7 @@
     TODO: Probably better to switch to scroll API for full indexing. -->
     <es.index.max_result_window.limit>15000</es.index.max_result_window.limit>
 
-    <es.index.mapping.total_fields.limit>4000</es.index.mapping.total_fields.limit>
+    <es.index.mapping.total_fields.limit>15000</es.index.mapping.total_fields.limit>
 
     <es.username></es.username>
     <es.password></es.password>
