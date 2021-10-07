@@ -316,10 +316,10 @@
             if (url.indexOf('GetCapabilities') === -1) {
               url = url + (url.indexOf('?') === -1 ? '?' : '&') + 'request=GetCapabilities';
             }
-            return $http.head(url)
-              .then(function() {
+            return $http.get(url)
+              .success(function() {
                 scope.isWfsAvailable = true;
-              }, function() {
+              }).error(function() {
                 scope.isWfsAvailable = false;
               });
           };
