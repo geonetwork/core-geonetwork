@@ -111,6 +111,7 @@ public class MetadataIndexApi {
         for (String uuid : records) {
             try {
                 final String metadataId = dataManager.getMetadataId(uuid);
+                System.out.println("uuid: " + uuid + ", id:" + metadataId);
                 if (metadataId != null) {
                     ids.add(Integer.valueOf(metadataId));
                 }
@@ -123,7 +124,7 @@ public class MetadataIndexApi {
             }
         }
         index = ids.size();
-        new BatchOpsMetadataReindexer(dataManager, ids).process(false);
+        new BatchOpsMetadataReindexer(dataManager, ids).process(true);
 
         JSONObject res = new JSONObject();
         res.put("success", true);
