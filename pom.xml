@@ -676,11 +676,6 @@
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.geotools.xsd</groupId>
-        <artifactId>gt-xsd-fes</artifactId>
-        <version>${geotools.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.geotools</groupId>
         <artifactId>gt-epsg-extension</artifactId>
         <version>${geotools.version}</version>
