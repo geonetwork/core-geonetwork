@@ -52,28 +52,41 @@ public class LanguageUtils {
 //        }
 //    }
 
+    /**
+     * Review provided, and return the first supported one (or default language if none are acceptable).
+     * @param listOfLocales Locales to parse
+     * @return supported locale from the provided list, or default language if none are acceptable
+     */
     public Locale parseAcceptLanguage(final Enumeration<Locale> listOfLocales) {
         while (listOfLocales.hasMoreElements()) {
-            Locale l = listOfLocales.nextElement();
-            if (iso3code.contains(locale2gnCode(l.getISO3Language()))) {
-                return l;
+            Locale locale = listOfLocales.nextElement();
+            if (iso3code.contains(iso3code(locale))) {
+                return locale;
             }
         }
         return Locale.forLanguageTag(defaultLanguage);
     }
-
+    /**
+     * Review provided, and return the iso3code of the first selected one.
+     * @param locales Locales to check
+     * @return iso3code of the selected locale, or iso3code of the default language if none are acceptable
+     */
     public String getIso3langCode(Enumeration<Locale> locales) {
-        Locale l = parseAcceptLanguage(locales);
-        return locale2gnCode(l.getISO3Language());
+        Locale locale = parseAcceptLanguage(locales);
+        return iso3code(locale);
     }
 
     /**
      * Translate locale three-letter abbreviation to language code (providing a special case for 'fra' and 'slk' locales.
      *
-     * @param code Locale {@link Locale#getISO3Language()} three-letter abbreviation
-     * @return language code
+     * @param locale Locale, the {@link Locale#getISO3Language()} three-letter abbreviation is adjusted to an iso3code
+     * @return iso3code bsaed on {@link Locale#getISO3Language()}, converting fra to fre or slk to slo as required.
      */
-    static public String locale2gnCode (String code) {
+    static String iso3code(Locale locale) {
+        if( locale == null ){
+            return null;
+        }
+        String code = locale.getISO3Language();
         if (code.equals("fra")) {
             return "fre";
         } else if (code.equals("slk")) { // transforms ISO 639-2/T into ISO 639-2/B
@@ -83,6 +96,11 @@ public class LanguageUtils {
         }
     }
 
+    /**
+     * Review provided locale, and check if it is supported.
+     * @param locale Locale to check
+     * @return  provided locale if acceptable, or the default language as a fallback
+     */
     public Locale parseAcceptLanguage(final Locale locale) {
         Vector<Locale> locales = new Vector<>();
         locales.add(locale);

@@ -49,6 +49,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NotAllowedEx;
@@ -583,7 +584,7 @@ public class ServiceManager {
      */
     private static String getIso3langCode(Locale locale){
         if( locale == null ){
-            return "?";
+            return Geonet.UNSPECIFIED_LANGUAGE;
         }
         String iso3language = locale.getISO3Language();
         String code;
