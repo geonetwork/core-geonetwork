@@ -581,6 +581,10 @@ goog.require('gn_alert');
           },
           'savedSelection': {
             'enabled': false
+          },
+          "addWMSLayersToMap": {
+            "mode": "url", // values: resourceName, url
+            "urlLayerParam": "layers"
           }
         },
         'map': {
