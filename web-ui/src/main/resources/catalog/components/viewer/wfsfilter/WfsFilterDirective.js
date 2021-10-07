@@ -246,15 +246,16 @@
            * @return {HttpPromise} promise
            */
           scope.checkWFSServerUrl = function() {
-            var urlWithParam = gnOwsCapabilities.mergeParams(scope.url, {
-              service: 'WFS'
-            });
-            return $http.get(urlWithParam)
-                .then(function() {
-                  scope.isWfsAvailable = true;
-                }, function() {
-                  scope.isWfsAvailable = false;
-                });
+            var url = scope.url;
+            if (url.indexOf('GetCapabilities') === -1) {
+              url = url + (url.indexOf('?') === -1 ? '?' : '&') + 'request=GetCapabilities';
+            }
+            return $http.get(url)
+              .success(function() {
+                scope.isWfsAvailable = true;
+              }).error(function() {
+                scope.isWfsAvailable = false;
+              });
           };
 
           /**
