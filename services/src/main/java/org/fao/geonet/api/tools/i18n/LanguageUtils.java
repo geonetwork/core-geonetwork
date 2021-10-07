@@ -54,6 +54,7 @@ public class LanguageUtils {
 
     /**
      * Review provided, and return the first supported one (or default language if none are acceptable).
+     *
      * @param listOfLocales Locales to parse
      * @return supported locale from the provided list, or default language if none are acceptable
      */
@@ -66,34 +67,51 @@ public class LanguageUtils {
         }
         return Locale.forLanguageTag(defaultLanguage);
     }
+    @Deprecated
+    public String getIso3langCode(Enumeration<Locale> locales){
+        return iso3code(locales);
+    }
+
     /**
      * Review provided, and return the iso3code of the first selected one.
+     *
      * @param locales Locales to check
      * @return iso3code of the selected locale, or iso3code of the default language if none are acceptable
      */
-    public String getIso3langCode(Enumeration<Locale> locales) {
+    public String iso3code(Enumeration<Locale> locales) {
         Locale locale = parseAcceptLanguage(locales);
         return iso3code(locale);
     }
 
     /**
-     * Translate locale three-letter abbreviation to language code (providing a special case for 'fra' and 'slk' locales.
+     * Converts from {@link Locale#getISO3Language()} 639-2/T langauge code into GeoNetwork ISO Language 639-2/B representation.
      *
-     * @param locale Locale, the {@link Locale#getISO3Language()} three-letter abbreviation is adjusted to an iso3code
-     * @return iso3code bsaed on {@link Locale#getISO3Language()}, converting fra to fre or slk to slo as required.
+     * @param isoLanguage_638_2_T_code Java {@link Locale#getISO3Language()} 639-2/T language code
+     * @return Geonetwork ISO 639-2/B language code
      */
-    static String iso3code(Locale locale) {
-        if( locale == null ){
-            return null;
-        }
-        String code = locale.getISO3Language();
-        if (code.equals("fra")) {
+    public static String locale2gnCode(String isoLanguage_638_2_T_code){
+        if (isoLanguage_638_2_T_code.equals("fra")) {
             return "fre";
-        } else if (code.equals("slk")) { // transforms ISO 639-2/T into ISO 639-2/B
+        } else if (isoLanguage_638_2_T_code.equals("slk")) { // transforms ISO 639-2/T into ISO 639-2/B
             return "slo";
         } else {
-            return code;
+            return isoLanguage_638_2_T_code;
         }
+    }
+
+    /**
+     * Obtain into GeoNetwork ISO Language 639-2/B representation for locale.
+     *
+     * Translate locale three-letter abbreviation to language code (providing a special case for 'fra' and 'slk' locales.
+     *
+     * @param locale Locale, providing {@link Locale#getISO3Language()} 639-2/T language code
+     * @return Geonetwork ISO 639-2/B language code
+     */
+    public static String iso3code(Locale locale) {
+        if (locale == null){
+            return null;
+        }
+        return locale2gnCode(locale.getISO3Language());
     }
 
     /**

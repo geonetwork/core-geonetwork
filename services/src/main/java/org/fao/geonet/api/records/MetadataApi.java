@@ -566,7 +566,7 @@ public class MetadataApi {
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
-        String language = languageUtils.getIso3langCode(request.getLocales());
+        String language = languageUtils.iso3code(request.getLocales());
 
         // TODO PERF: ByPass XSL processing and create response directly
         // At least for related metadata and keep XSL only for links

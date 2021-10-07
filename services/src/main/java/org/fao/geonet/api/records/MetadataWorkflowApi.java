@@ -266,7 +266,7 @@ public class MetadataWorkflowApi {
                                      @ApiIgnore
                                      @ApiParam(hidden = true) HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request,
-            languageUtils.getIso3langCode(request.getLocales()));
+            languageUtils.iso3code(request.getLocales()));
 
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
 
@@ -364,7 +364,7 @@ public class MetadataWorkflowApi {
     public void setStatus(@ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
             @ApiParam(value = "Metadata status", required = true) @RequestBody(required = true) MetadataStatusParameter status,
             HttpServletRequest request) throws Exception {
-      try (ServiceContext context = ApiUtils.createServiceContext(request, languageUtils.getIso3langCode(request.getLocales()))) {
+      try (ServiceContext context = ApiUtils.createServiceContext(request, languageUtils.iso3code(request.getLocales()))) {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
 

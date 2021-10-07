@@ -277,8 +277,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         if (formatType == null) {
             formatType = FormatType.xml;
         }
-
-        String language = LanguageUtils.locale2gnCode(locale.getISO3Language());
+        String language = LanguageUtils.iso3code(locale);
         if (StringUtils.isNotEmpty(iso3lang)) {
             language = LanguageUtils.locale2gnCode(iso3lang);
         }
@@ -340,7 +339,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                 context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
             }
             writeOutResponse(context, metadataUuid,
-                LanguageUtils.locale2gnCode(locale.getISO3Language()),
+                LanguageUtils.iso3code(locale),
                 request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
       }
