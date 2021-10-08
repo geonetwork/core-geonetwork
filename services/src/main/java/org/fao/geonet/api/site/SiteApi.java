@@ -217,7 +217,7 @@ public class SiteApi {
         }
         if (source != null) {
             final List<Setting> settings = response.getSettings();
-            String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
+            String iso3langCode = languageUtils.iso3code(request.getLocales());
 
             settings.add(
                 new Setting().setName(Settings.NODE_DEFAULT)

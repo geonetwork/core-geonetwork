@@ -128,8 +128,7 @@ public class TranslationApi implements ApplicationContextAware {
 
         validateParameters(type);
 
-        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        String language = languageUtils.locale2gnCode(locale.getISO3Language());
+        String language = languageUtils.iso3code(request.getLocales());
 
         if (type == null || type.contains("StatusValue")) {
             List<StatusValue> valueList = statusValueRepository.findAll();

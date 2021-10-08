@@ -146,7 +146,7 @@ public class RegionsApi {
         HttpServletRequest request) throws Exception {
 
       try (ServiceContext context = ApiUtils.createServiceContext(request)) {
-        String language = languageUtils.getIso3langCode(request.getLocales());
+        String language = languageUtils.iso3code(request.getLocales());
         Collection<RegionsDAO> daos = ApplicationContextHolder.get().getBeansOfType(RegionsDAO.class).values();
         List<Category> response = new ArrayList<>();
         for (RegionsDAO dao : daos) {

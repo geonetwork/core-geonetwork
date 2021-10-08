@@ -586,7 +586,9 @@ public class CMISStore extends AbstractStore {
 
             if (metadataResourceExternalManagementPropertiesUrl.contains("{lang}") || metadataResourceExternalManagementPropertiesUrl.contains("{ISO3lang}")) {
                 final IsoLanguagesMapper mapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
-                String contextLang = context.getLanguage() == null ? Geonet.DEFAULT_LANGUAGE : context.getLanguage();
+                String contextLang = (context.getLanguage() == null || Geonet.UNSPECIFIED_LANGUAGE.equals(context.getLanguage()))
+                    ? Geonet.DEFAULT_LANGUAGE
+                    : context.getLanguage();
                 String lang;
                 String iso3Lang;
 
