@@ -255,7 +255,7 @@ public class ApiUtils {
      */
     static public ServiceContext createServiceContext(HttpServletRequest request) {
         String iso3langCode = ApplicationContextHolder.get().getBean(LanguageUtils.class)
-            .getIso3langCode(request.getLocales());
+            .iso3code(request.getLocales());
         return createServiceContext(request, iso3langCode);
     }
 

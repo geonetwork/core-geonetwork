@@ -126,7 +126,7 @@ public class SchemaLocalizations {
         final ServiceContext serviceContext = ServiceContext.get();
         final String lang3 = serviceContext != null ?
             serviceContext.getLanguage() :
-            appContext.getBean(LanguageUtils.class).getIso3langCode(request.getLocales());
+            appContext.getBean(LanguageUtils.class).iso3code(request.getLocales());
         return create(schema, lang3);
     }
 
