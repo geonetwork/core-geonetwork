@@ -426,9 +426,13 @@ public class MetadataWorkflowApi {
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        PageRequest pageRequest = null;
-        if (sortOrder !=null) {
+        PageRequest pageRequest;
+        if (sortOrder != null) {
             Sort sortByStatusChangeDate = SortUtils.createSort(sortOrder, MetadataStatus_.changeDate).and(SortUtils.createSort(sortOrder, MetadataStatus_.id));
+            pageRequest = PageRequest.of(from, size, sortByStatusChangeDate);
+        } else {
+            // Default sort order
+            Sort sortByStatusChangeDate = SortUtils.createSort(Sort.Direction.DESC, MetadataStatus_.changeDate).and(SortUtils.createSort(Sort.Direction.DESC, MetadataStatus_.id));
             pageRequest = PageRequest.of(from, size, sortByStatusChangeDate);
         }
 
