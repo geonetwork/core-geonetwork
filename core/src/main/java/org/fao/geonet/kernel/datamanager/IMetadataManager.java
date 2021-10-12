@@ -253,6 +253,8 @@ public interface IMetadataManager {
      */
     public void delete(Integer id);
 
+    boolean isValid(Integer id);
+
     /**
      * Create a {@link BatchUpdateQuery} object to allow for updating multiple objects in a single query.
      *

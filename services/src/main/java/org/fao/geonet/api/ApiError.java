@@ -24,6 +24,9 @@ package org.fao.geonet.api;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.fao.geonet.exceptions.ILocalizedException;
+import org.springframework.util.StringUtils;
+
 /**
  * Represents an API error message to be send to the requesting agent.
  * Created by juanluisrp on 10/06/2016.
@@ -33,17 +36,17 @@ public class ApiError {
     private String message;
     private String code;
     private String description;
+    private Exception exception;
 
     public ApiError() {
     }
 
     public ApiError(String code) {
-        this.code = code;
+        this(code, null, null);
     }
 
     public ApiError(String code, String message) {
-        this.code = code;
-        this.message = message;
+        this(code, message, null);
     }
 
 
@@ -51,6 +54,14 @@ public class ApiError {
         this.code = code;
         this.message = message;
         this.description = description;
+    }
+
+    public ApiError(String code, Exception exception) {
+        this(code,
+            exception.getClass().getSimpleName(),
+            exception.getMessage()
+        );
+        this.exception = exception;
     }
 
     public String getCode() {
@@ -62,7 +73,16 @@ public class ApiError {
     }
 
     public String getMessage() {
-        return message;
+        String localizedMessage=null;
+        // If the exception extends ILocalizedException then get the local message from the exception.
+        if (this.exception != null && this.exception instanceof ILocalizedException) {
+            localizedMessage =  ((ILocalizedException)this.exception).getLocalizedMessage();
+        }
+        if (StringUtils.isEmpty(localizedMessage)) {
+            return this.message;
+        } else {
+            return localizedMessage;
+        }
     }
 
     public void setMessage(String message) {
@@ -70,7 +90,16 @@ public class ApiError {
     }
 
     public String getDescription() {
-        return description;
+        String localizedDescription=null;
+        // If the exception extends ILocalizedException then get the local description from the exception.
+        if (this.exception != null && this.exception instanceof ILocalizedException) {
+            localizedDescription = ((ILocalizedException)this.exception).getLocalizedDescription();
+        }
+        if (StringUtils.isEmpty(localizedDescription)) {
+            return this.description;
+        } else {
+            return localizedDescription;
+        }
     }
 
     public void setDescription(String description) {

@@ -555,5 +555,7 @@
     "clickToDrawABox": "Click once to enable control and draw a box. Click again to stop drawing.",
     "drawRectangle": "Draw extent",
     "clickToClearMapBox": "Click to clear the map box.",
-    "clearRectangle": "Clear extent"
+    "clearRectangle": "Clear extent",
+    "searchOptions": "Search options",
+    "options": "Options"
 }

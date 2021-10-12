@@ -193,7 +193,7 @@
                   font-weight="{$label-weight}"
                   color="{$font-color}">
           <fo:basic-link internal-destination="section-{uuid}">
-            <xsl:value-of select="resourceTitle"/>
+            <xsl:value-of select="resourceTitleObject"/>
             <fo:leader leader-pattern="space"/>
             <fo:page-number-citation ref-id="section-{uuid}"/>
           </fo:basic-link>

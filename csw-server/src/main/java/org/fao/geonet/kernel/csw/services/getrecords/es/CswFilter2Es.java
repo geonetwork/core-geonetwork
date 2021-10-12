@@ -26,7 +26,9 @@ package org.fao.geonet.kernel.csw.services.getrecords.es;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
+import org.fao.geonet.utils.Log;
 import org.geotools.filter.visitor.AbstractFilterVisitor;
 import org.locationtech.jts.geom.*;
 import org.locationtech.jts.io.WKTReader;
@@ -78,6 +80,7 @@ import org.opengis.filter.temporal.OverlappedBy;
 import org.opengis.filter.temporal.TContains;
 import org.opengis.filter.temporal.TEquals;
 import org.opengis.filter.temporal.TOverlaps;
+import org.opengis.geometry.BoundingBox;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -277,10 +280,10 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         }
 
         // Process the stack entries for the processed children elements to calculate the filter condition
-        int n = filter.getChildren().size();
+        final int n = filter.getChildren().size();
 
-        List<String> conditionList = new ArrayList<>();
-        while (n-- > 0) {
+        final List<String> conditionList = new ArrayList<>(n);
+        for (int i = n; i > 0; i--) {
             conditionList.add(stack.pop());
         }
 
@@ -354,7 +357,6 @@ public class CswFilter2Es extends AbstractFilterVisitor {
 
     @Override
     public Object visit(PropertyIsEqualTo filter, Object extraData) {
-        String filterEqualTo = templateMatch;
 
         assert filter.getExpression1() instanceof PropertyName;
         filter.getExpression1().accept(expressionVisitor, extraData);
@@ -365,7 +367,7 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         String dataPropertyValue = stack.pop();
         String dataPropertyName = stack.pop();
 
-        filterEqualTo = String.format(filterEqualTo, dataPropertyName, dataPropertyValue);
+        final String filterEqualTo = String.format(templateMatch, dataPropertyName, dataPropertyValue);
         stack.push(filterEqualTo);
 
         return this;
@@ -463,9 +465,33 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         return this;
     }
 
+    /**
+     * Fills out the templateSpatial.
+     * 
+     * @param shapeType For example "bbox" or "polygon".
+     * @param coords    The coordinates in the form needed by shapeType.
+     * @param relation  Spatial operation, like "intersects".
+     * @return
+     */
+    private String fillTemplateSpatial(String shapeType, String coords, String relation) {
+        return String.format(templateSpatial, shapeType, coords, relation);
+    }
+
     @Override
     public Object visit(BBOX filter, Object extraData) {
-        return addGeomFilter(filter,"bbox", extraData);
+
+        final BoundingBox bbox = filter.getBounds();
+
+        final double x0 = bbox.getMinX();
+        final double x1 = bbox.getMaxX();
+        final double y0 = bbox.getMinY();
+        final double y1 = bbox.getMaxY();
+
+        final String coordsValue = String.format("[[%f, %f], [%f, %f]]", x0, y1, x1, y0);
+
+        final String filterSpatial = fillTemplateSpatial("envelope", coordsValue, "intersects");
+        stack.push(filterSpatial);
+        return this;
     }
 
     private Object addGeomFilter(BinarySpatialOperator filter, String geoOperator, Object extraData) {
@@ -474,59 +500,48 @@ public class CswFilter2Es extends AbstractFilterVisitor {
             filter.getExpression1().accept(expressionVisitor, extraData);
         }
 
-        //out.append(":\"").append(geoOperator).append("(");
-        final Expression geoExpression = filter.getExpression2() == null ?
-            filter.getExpression1() : filter.getExpression2();
+        // out.append(":\"").append(geoOperator).append("(");
+        final Expression geoExpression = filter.getExpression2() == null ? filter.getExpression1()
+                : filter.getExpression2();
         geoExpression.accept(expressionVisitor, extraData);
 
         String geom = stack.pop();
         // Extract field name
         stack.pop();
 
-
-        String filterSpatial = templateSpatial;
+        final String filterSpatial;
 
         WKTReader reader = new WKTReader();
         try {
             Geometry geometryJts = reader.read(geom);
 
-            if (geoOperator.equals("bbox")) {
-                Coordinate[] coords = geometryJts.getEnvelope().getCoordinates();
+            if (geometryJts instanceof Polygon) {
+                Polygon polygonGeom = (Polygon) geometryJts;
 
-                // top left, bottom right
-                String coordsValue = String.format("[[%f, %f], [%f, %f]]",
-                    coords[1].x, coords[1].y, coords[3].x, coords[3].y);
-                filterSpatial = String.format(filterSpatial, "envelope",coordsValue, "intersects");
+                String coordinatesText = buildCoordinatesString(polygonGeom.getCoordinates());
 
+                filterSpatial = fillTemplateSpatial("polygon", String.format("[[%s]]", coordinatesText), geoOperator);
+
+            } else if (geometryJts instanceof Point) {
+                Point pointGeom = (Point) geometryJts;
+
+                String coordsValue = String.format("[%f, %f]", pointGeom.getX(), pointGeom.getY());
+                filterSpatial = fillTemplateSpatial("point", coordsValue, geoOperator);
+
+            } else if (geometryJts instanceof LineString) {
+                LineString lineStringGeom = (LineString) geometryJts;
+
+                String coordinatesText = buildCoordinatesString(lineStringGeom.getCoordinates());
+
+                filterSpatial = fillTemplateSpatial("linestring", String.format("[%s]", coordinatesText), geoOperator);
             } else {
-                if (geometryJts instanceof Polygon) {
-                    Polygon polygonGeom = (Polygon) geometryJts;
-
-                    String coordinatesText = buildCoordinatesString(polygonGeom.getCoordinates());
-
-                    filterSpatial = String.format(filterSpatial, "polygon",
-                        String.format("[[%s]]", coordinatesText), geoOperator);
-
-                } else if (geometryJts instanceof Point) {
-                    Point pointGeom = (Point) geometryJts;
-
-                    String coordsValue = String.format("[%f, %f]",
-                        pointGeom.getX(), pointGeom.getY());
-                    filterSpatial = String.format(filterSpatial, "point", coordsValue, geoOperator);
-
-                } else if (geometryJts instanceof LineString) {
-                    LineString lineStringGeom = (LineString) geometryJts;
-
-                    String coordinatesText = buildCoordinatesString(lineStringGeom.getCoordinates());
-
-                    filterSpatial = String.format(filterSpatial, "linestring",
-                        String.format("[%s]", coordinatesText), geoOperator);
-                }
+                filterSpatial = null;
             }
 
             stack.push(filterSpatial);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Log.error(Geonet.CSW, "Error parsing geospatial object", ex);
+            throw new RuntimeException(ex);
         }
 
         return this;

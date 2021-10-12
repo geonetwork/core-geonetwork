@@ -1,0 +1,106 @@
+<form data-ng-keypress="updatingHarvester()">
+  <input type="hidden" name="_csrf" value="{{csrf}}"/>
+
+  <div class="row">
+    <div id="gn-harvest-settings-selected-id" class="col-lg-6 gn-nopadding-left" data-gn-harvester-identification="harvesterSelected"/>
+    <div id="gn-harvest-settings-selected-schedule" class="col-lg-6 gn-nopadding-right" data-gn-harvester-schedule="harvesterSelected"/>
+  </div>
+
+
+  <fieldset id="gn-harvest-settings-simpleurl-basic-row">
+    <legend id="gn-harvest-settings-simpleurl-basic-title"><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+      harvesterSelected['@type']) | translate}}
+    </legend>
+    <div id="gn-harvest-settings-simpleurl-basic-service-row" data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
+      <label id="gn-harvest-settings-simpleurl-basic-service-label" class="control-label"
+             data-translate="">url</label>
+      <input id="gn-harvest-settings-simpleurl-basic-service-input"
+             type="text"
+             class="form-control"
+             data-ng-model="harvesterSelected.site.url"/>
+      <p class="help-block" data-translate="">simpleurl-urlHelp</p>
+    </div>
+  </fieldset>
+
+
+  <fieldset id="gn-harvest-settings-simpleurl-advanced-row">
+    <legend id="gn-harvest-settings-simpleurl-advanced-title"><span data-translate="">harvesterAdvancedConfigurationFor</span>
+      {{harvesterSelected['@type'] | translate}}
+    </legend>
+
+    <div id="gn-harvest-settings-simpleurl-advanced-authentication-row" data-gn-harvester-account="harvesterSelected"/>
+
+    <div id="gn-harvest-settings-loopElement-row"
+         data-ng-class="harvesterSelected.site.loopElement == '' ? 'has-error' : ''">
+      <label id="gn-harvest-settings-loopElement-label" class="control-label"
+             data-translate="">loopElement</label>
+      <input id="gn-harvest-settings-loopElement-input"
+             type="text"
+             class="form-control"
+             data-ng-model="harvesterSelected.site.loopElement"/>
+      <p class="help-block" data-translate="">simpleurl-loopElementHelp</p>
+    </div>
+
+    <div id="gn-harvest-settings-numberOfRecordPath-row">
+      <label id="gn-harvest-settings-numberOfRecordPath-label" class="control-label" data-translate="">numberOfRecordPath</label>
+      <input id="gn-harvest-settings-numberOfRecordPath-input"
+             type="text"
+             class="form-control"
+             data-ng-model="harvesterSelected.site.numberOfRecordPath"/>
+      <p class="help-block" data-translate="">simpleurl-numberOfRecordPathHelp</p>
+    </div>
+
+    <div id="gn-harvest-settings-recordIdPath-row">
+      <label id="gn-harvest-settings-recordIdPath-label" class="control-label" data-translate="">recordIdPath</label>
+      <input id="gn-harvest-settings-recordIdPath-input"
+             type="text"
+             class="form-control"
+             data-ng-model="harvesterSelected.site.recordIdPath"/>
+      <p class="help-block" data-translate="">simpleurl-recordIdPathHelp</p>
+    </div>
+
+    <div id="gn-harvest-settings-pageFromParam-row">
+      <label id="gn-harvest-settings-pageFromParam-label" class="control-label" data-translate="">pageFromParam</label>
+      <input id="gn-harvest-settings-pageFromParam-input"
+             type="text"
+             class="form-control"
+             data-ng-model="harvesterSelected.site.pageFromParam"/>
+      <p class="help-block" data-translate="">simpleurl-pageFromParamHelp</p>
+    </div>
+
+    <div id="gn-harvest-settings-pageSizeParam-row">
+      <label id="gn-harvest-settings-pageSizeParam-label" class="control-label" data-translate="">pageSizeParam</label>
+      <input id="gn-harvest-settings-pageSizeParam-input"
+             type="text"
+             class="form-control"
+             data-ng-model="harvesterSelected.site.pageSizeParam"/>
+      <p class="help-block" data-translate="">simpleurl-pageSizeParamHelp</p>
+    </div>
+
+    <div id="gn-harvest-settings-simpleurl-basic-toISOConversion-row"
+         data-ng-class="harvesterSelected.site.toISOConversion == '' ? 'has-error' : ''">
+      <label id="gn-harvest-settings-toISOConversion-label" class="control-label"
+             data-translate="">toISOConversion</label>
+      <input id="gn-harvest-settings-toISOConversion-input"
+             type="text"
+             class="form-control"
+             data-ng-model="harvesterSelected.site.toISOConversion"/>
+      <p class="help-block" data-translate="">simpleurl-toISOConversionHelp</p>
+    </div>
+
+
+    <div id="gn-harvest-settings-simpleurl-advanced-category-row" data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
+         data-label="simpleurl-category"/>
+
+
+    <div id="gn-harvest-settings-simpleurl-advanced-validate-row">
+      <label id="gn-harvest-settings-simpleurl-advanced-validate-label" class="control-label">
+        <span data-translate="">harvesterValidate</span>
+      </label>
+      <div id="gn-harvest-settings-simpleurl-advanced-validate-list" data-gn-harvester-validation="harvesterSelected.content.validate"/>
+      <p class="help-block" data-translate="">harvesterValidateHelp</p>
+    </div>
+  </fieldset>
+
+  <div id="gn-harvest-settings-simpleurl-privileges-row" data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+</form>

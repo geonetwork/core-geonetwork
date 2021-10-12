@@ -534,6 +534,7 @@ public class EsSearchManager implements ISearchManager {
             .add("resourceVerticalRange")
             .add("resourceTemporalDateRange")
             .add("resourceTemporalExtentDateRange")
+            .add("resourceTemporalExtentDetails")
             .build();
         booleanFields = ImmutableSet.<String>builder()
             .add("hasxlinks")

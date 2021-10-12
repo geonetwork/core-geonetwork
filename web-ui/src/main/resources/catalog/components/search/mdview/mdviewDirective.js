@@ -56,12 +56,13 @@
 
             var hyperlinkTagName = 'A';
             if (element.get(0).tagName === hyperlinkTagName) {
-              var url = window.location.pathname + '#/' +
-                (scope.md.draft == 'y' ? 'metadraf' : 'metadata') +
-                '/' + scope.md.uuid +
-                (scope.formatter === undefined || scope.formatter == '' ?
-                  '' :
-                  formatter);
+             var url = window.location.pathname
+                + window.location.search
+                + '#/'
+                + (scope.md.draft == 'y' ? 'metadraf' : 'metadata')
+                + '/' + scope.md.uuid
+                + (scope.formatter === undefined || scope.formatter == ''
+                  ? '' : formatter);
 
               element.attr('href', url);
             } else {
@@ -96,7 +97,11 @@
             'morelikethis.html';
         },
         link: function(scope, element, attrs, controller) {
+          var initSize = 6;
           scope.similarDocuments = [];
+          scope.size = initSize;
+          scope.pageSize = 5;
+          scope.maxSize = 19;
           var moreLikeThisQuery = {};
           angular.copy(gnGlobalSettings.gnCfg.mods.search.moreLikeThisConfig, moreLikeThisQuery);
           var query = {
@@ -108,6 +113,7 @@
                 'cl_status*'
               ]
             },
+            "size": scope.size,
             "query": {
               "bool": {
                 "must": [
@@ -118,6 +124,11 @@
             }
           };
 
+          scope.moreRecords = function() {
+            query.size += scope.pageSize;
+            scope.size = query.size;
+            loadMore();
+          }
           function loadMore() {
             if (scope.md == null) {
               return;
@@ -129,6 +140,8 @@
           }
           scope.$watch('md', function() {
             scope.similarDocuments = [];
+            scope.size = initSize;
+            query.size = initSize;
             loadMore();
           });
 

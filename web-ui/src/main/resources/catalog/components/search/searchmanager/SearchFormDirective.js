@@ -263,7 +263,7 @@
     };
 
     /**
-     * If we use permalink, the triggerSerach call will in fact just update
+     * If we use permalink, the triggerSearch call will in fact just update
      * the url with the params, then the event $locationChangeSuccess will call
      * the geonetwork search from url params.
      */
@@ -424,8 +424,18 @@
     }
 
     this.updateState = function(path, value, doNotRemove) {
-      if(path[0] === 'any' || path[0] === 'uuid') {
+      if(path[0] === 'any'
+        || path[0] === 'uuid'
+        || path[0] === 'geometry'
+      ) {
         delete $scope.searchObj.params[path[0]];
+        if (path[0] === 'geometry') {
+          $scope.$broadcast('beforeSearchReset', false);
+        }
+      } else if(path[0] === 'resourceTemporalDateRange' && value === true
+        // // Remove range see SearchFilterTagsDirective
+      ) {
+        delete $scope.searchObj.state.filters[path[0]];
       } else {
         var filters = $scope.searchObj.state.filters;
         var getter = parse(path.join('^^^'));
@@ -522,6 +532,7 @@
      * @param {boolean} value
      */
     this.setExactMatch = function(value) {
+      this.updateSearchParams({'exactMatch': value});
       $scope.searchObj.state.exactMatch = value;
     };
 
@@ -536,6 +547,7 @@
      * @param {boolean} value
      */
     this.setTitleOnly = function(value) {
+      this.updateSearchParams({'titleOnly': value});
       $scope.searchObj.state.titleOnly = value;
     };
 
@@ -544,6 +556,31 @@
      */
     this.getTitleOnly = function() {
       return $scope.searchObj.state.titleOnly;
+    };
+
+    /**
+     * @param {boolean} value
+     */
+    this.setOnlyMyRecord = function(value) {
+      if (value){
+        $scope.searchObj.params['owner'] = $scope.user.id;
+      } else {
+        delete $scope.searchObj.params['owner'];
+      }
+    };
+
+    /**
+     * @return {boolean}
+     */
+    this.getOnlyMyRecord = function() {
+      $scope.value;
+      if ($scope.searchObj.params['owner']){
+        $scope.value = true
+      }
+      else {
+        $scope.value = false
+      }
+      return $scope.value;
     };
 
   };

@@ -27,7 +27,7 @@
               data-typeahead-focus-first="false"
               data-typeahead-wait-ms="300"/>
         <span class="input-group-btn">
-          <a class="btn btn-primary btn-lg"
+          <a class="btn btn-default btn-lg"
               type="button"
               data-ng-disabled="searchInfo.hits.total.value == 0"
               data-ng-href="#/search?any={{homeAnyField}}">
@@ -103,7 +103,7 @@
               data-ng-repeat="facet in searchInfo.aggregations[homeFacet.key].buckets
                                 | orderBy:facetSorter(searchInfo.aggregations[homeFacet.key], homeFacet.key) track by facet.key"
               class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic">
-          <div class="panel panel-default">
+          <div class="panel panel-default gn-facet-{{homeFacet.key}}">
             <div class="panel-body">
               <a class="clearfix"
                 title="{{facet.key}}"
@@ -153,7 +153,7 @@
         <div data-ng-repeat="(key, facet) in searchInfo.aggregations[homeFacet.lastKey].buckets"
              data-ng-show="facet.key"
              class="col-xs-6 col-sm-4 col-md-3 col-lg-2 gn-topic">
-          <div class="panel panel-default">
+          <div class="panel panel-default gn-facet-{{homeFacet.lastKey}}">
             <div class="panel-body">
               <a title="{{facet.key}}"
                  class="clearfix"

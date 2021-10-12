@@ -23,17 +23,26 @@
         <span data-translate="">addAFormatter</span>
       </div>
       <div class="panel-body">
-        <form id="fileupload" action="{{'md.formatter.register?_csrf=' + csrf}}" method="POST"
-              enctype="multipart/form-data" data-file-upload="formatterUploadOptions">
-          <span class="btn btn-success btn-block fileinput-button" ng-class="{disabled: disabled}">
+        <form id="fileupload"
+              action="{{'../api/formatters?_csrf=' + csrf}}"
+              method="POST"
+              enctype="multipart/form-data"
+              data-file-upload="formatterUploadOptions">
+          <span class="btn btn-success btn-block fileinput-button"
+                ng-class="{disabled: disabled}">
             <i class="fa fa-plus fa-white"/>
             <span data-translate="">chooseFormatter</span>
-            <input type="file" name="fname" multiple="true" autofocus="" ng-disabled="disabled"/>
+            <input type="file" name="file"
+                   multiple="true"
+                   autofocus=""
+                   ng-disabled="disabled"/>
           </span>
           <div class="col-lg-5 fade" data-ng-class="{in: active()}">
-            <div class="progress progress-striped active" data-file-upload-progress="progress()"
+            <div class="progress progress-striped active"
+                 data-file-upload-progress="progress()"
                  data-file-upload-done="loadFormatter()">
-              <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"/>
+              <div class="progress-bar progress-bar-success"
+                   data-ng-style="{width: num + '%'}"/>
             </div>
             <div class="progress-extended">&nbsp;</div>
           </div>
@@ -59,18 +68,14 @@
       </div>
       <div class="panel-body">
         <form class="form-horizontal" id="gn-formatter-file-edit">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+          <input type="hidden" name="_csrf" value="{{csrf}}"/>
           <div class="form-group">
             <label class="control-label col-sm-3" data-translate="">chooseAFile</label>
             <div class="col-sm-9">
-              <select class="form-control" data-ng-model="selectedFile"
+              <select class="form-control"
+                      data-ng-model="selectedFile"
                       data-ng-options="file['@name'] group by file.dir for file in formatterFiles"/>
             </div>
-          </div>
-          <div class="form-group hidden">
-            <input class="form-control" type="text" name="id" data-ng-model="formatterSelected.id"/>
-            <input class="form-control" type="text" name="fname"
-                   data-ng-model="selectedFile['@path']"/>
           </div>
           <div class="form-group">
             <div class="col-sm-12">
@@ -92,13 +97,48 @@
         <strong>{{formatterSelected.schema}}/{{formatterSelected.id}}</strong>
       </div>
       <div class="panel-body">
-        <form class="form-horizontal">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+        <form class="form-horizontal"
+              data-ng-search-form="">
+          <input type="hidden" name="_csrf" value="{{csrf}}"/>
           <div class="form-group">
             <label class="control-label col-sm-3" data-translate="">metadataInternalId</label>
             <div class="col-sm-9">
+
+              <div class="input-group" id="siblingdd">
+            <span class="input-group-addon">
+              <i class="fa fa-search"/>
+            </span>
+                <input class="form-control"
+                       data-ng-change="updateParams();triggerSearch();"
+                       type="text"
+                       data-ng-model="searchObj.any"
+                       data-ng-model-options="modelOptions"
+                       autocomplete="off"
+                       placeholder="{{'anyPlaceHolder' | translate}}"
+                       aria-label="{{'anyPlaceHolder' | translate}}"/>
+                <span class="input-group-btn">
+              <button class="btn btn-default" type="button"
+                      data-ng-click="clearSearch()">
+                <span class="fa fa-fw fa-times text-danger"></span>
+              </button>
+            </span>
+              </div>
+              <div>
+                <div class="list-group fixed gn-nopadding-left gn-nopadding-right">
+                  <a href=""
+                     data-ng-repeat="md in searchResults.records"
+                     class="list-group-item"
+                     data-ng-click="previewOn(md.uuid)">
+                    {{md.resourceTitle}}
+                  </a>
+                </div>
+              </div>
+              <div data-ng-show="searchResults.records.length > 0"
+                   data-gn-pagination="paginationInfo"></div>
+
               <!-- Could be nice to have a metadata list by autocompletion -->
-              <input class="form-control" type="text" name="id" data-ng-model="metadataId"/>
+              <input class="form-control" type="text" name="id"
+                     data-ng-model="metadataId"/>
             </div>
           </div>
 
@@ -109,9 +149,6 @@
             <button type="button" class="btn btn-primary" data-ng-disabled="metadataId == ''"
                     data-ng-click="testFormatter('HTML')">
               <i class="fa fa-cog"/>&nbsp; <span data-translate="">viewHTML</span></button>
-            <button type="button" class="btn btn-primary" data-ng-disabled="metadataId == ''"
-                    data-ng-click="testFormatter('DEBUG')">
-              <i class="fa fa-cog"/>&nbsp; <span data-translate="">viewDEBUG</span></button>
           </div>
         </form>
 

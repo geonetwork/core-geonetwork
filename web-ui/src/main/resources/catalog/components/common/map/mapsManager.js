@@ -166,6 +166,9 @@
             ]
           });
 
+          // Store map type name property
+          map.set('type', type);
+
           var defer = $q.defer();
           var sizeLoadPromise = defer.promise;
           map.set('sizePromise', sizeLoadPromise);
@@ -234,25 +237,21 @@
               }
             }
           }
-          if (!mapReady) {
-            if (config.context) {
+
+          if (!mapReady && config.context) {
               mapReady = gnOwsContextService.loadContextFromUrl(
                   config.context, map);
-            }
           }
+
           var creationPromise = $q.when(mapReady).then(function() {
 
-            // extent
-            if (config.extent && ol.extent.getWidth(config.extent) &&
-                ol.extent.getHeight(config.extent)) {
-              if (type !== this.SEARCH_MAP) {
-                // Because search map is fit by result md bbox
+            // Override context extent from UI settings for non-search maps
+            if (type !== this.SEARCH_MAP && config.extent &&
+              ol.extent.getWidth(config.extent) && ol.extent.getHeight(config.extent)) {
                 var newPromise = map.get('sizePromise').then(function () {
-                  map.getView().fit(config.extent, map.getSize(), {nearest: true});
+                  map.getView().fit(config.extent, map.getSize());
                 });
-
                 map.set('sizePromise', newPromise);
-              }
             }
 
             // layers: if defined a context file ignore layers

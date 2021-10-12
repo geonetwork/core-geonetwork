@@ -24,6 +24,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
+                xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
@@ -58,10 +59,78 @@
   </xsl:template>
 
   <xsl:template mode="getMetadataAbstract" match="simpledc">
-    <xsl:value-of select="dc:description"/>
+    <xsl:call-template name="addLineBreaksAndHyperlinks">
+      <xsl:with-param name="txt" select="dc:description"/>
+    </xsl:call-template>
   </xsl:template>
 
   <xsl:template mode="getMetadataHeader" match="simpledc">
+    <xsl:if test="normalize-space(dc:description) != ''">
+      <div class="gn-abstract">
+        <xsl:call-template name="addLineBreaksAndHyperlinks">
+          <xsl:with-param name="txt" select="dc:description"/>
+        </xsl:call-template>
+      </div>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template mode="getOverviews" match="simpledc">
+    <section class="gn-md-side-overview">
+      <h2>
+        <i class="fa fa-fw fa-image"><xsl:comment select="'image'"/></i>
+        <span>
+          <xsl:value-of select="$schemaStrings/overviews"/>
+        </span>
+      </h2>
+
+      <!-- In Sextant, only the first one is displayed-->
+      <xsl:variable name="overviews"
+                    select="(dct:references|dc:relation)[
+                              normalize-space(.) != ''
+                              and matches(., '.*(.gif|.png|.jpeg|.jpg)$', 'i')]"/>
+      <xsl:for-each select="$overviews">
+        <img data-gn-img-modal="md"
+             class="gn-img-thumbnail"
+             alt="{$schemaStrings/overview}"
+             src="{.}"/>
+      </xsl:for-each>
+    </section>
+  </xsl:template>
+
+
+  <xsl:template mode="getExtent" match="simpledc">
+    <section class="gn-md-side-extent">
+      <h2>
+        <i class="fa fa-fw fa-map-marker"><xsl:comment select="'image'"/></i>
+        <span><xsl:comment select="name()"/>
+          <xsl:value-of select="$schemaStrings/spatialExtent"/>
+        </span>
+      </h2>
+
+      <xsl:apply-templates mode="render-field"
+                           select=".//dc:coverage"/>
+    </section>
+  </xsl:template>
+
+
+  <xsl:template mode="getTags" match="simpledc">
+    <xsl:param name="byThesaurus" select="false()"/>
+
+    <section class="gn-md-side-social">
+      <h2>
+        <i class="fa fa-fw fa-tag"><xsl:comment select="'image'"/></i>
+        <span>
+          <xsl:value-of select="$schemaStrings/noThesaurusName"/>
+        </span>
+      </h2>
+      <xsl:for-each select="$metadata/dc:subject[. != '']">
+        <tag thesaurus="">
+          <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
+            <span class="badge"><xsl:copy-of select="."/></span>
+          </a>
+        </tag>
+      </xsl:for-each>
+    </section>
   </xsl:template>
 
 
@@ -100,18 +169,11 @@
                                       then substring-before($w,'. ') else $w"/>
     <xsl:variable name="place" select="substring-after($coverage,'. ')"/>
 
-    <dl>
-      <dt>
-        <xsl:value-of select="if ($place != '') then $place else ''"/>
-      </dt>
-      <dd>
-        <xsl:copy-of select="gn-fn-render:bbox(
-                                xs:double($west),
-                                xs:double($south),
-                                xs:double($east),
-                                xs:double($north))"/>
-      </dd>
-    </dl>
+    <xsl:copy-of select="gn-fn-render:bbox(
+                            xs:double($west),
+                            xs:double($south),
+                            xs:double($east),
+                            xs:double($north))"/>
   </xsl:template>
 
   <!-- Traverse the tree -->

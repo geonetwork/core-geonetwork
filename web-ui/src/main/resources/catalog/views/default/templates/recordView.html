@@ -135,7 +135,7 @@
             </button>
             <ul class="dropdown-menu" role="menu">
               <li role="menuitem"
-                  data-ng-repeat="f in formatter.list"
+                  data-ng-repeat="f in recordFormatterList"
                   data-ng-class="currentFormatter === f.url ? 'disabled' : ''">
                 <a href=""
                    gn-metadata-open="mdView.current.record"
@@ -231,7 +231,7 @@
               </tr>
               <tr
                 data-ng-if="mdView.current.record.cat.length > 0 ||
-                        mdView.current.record.topic.length > 0">
+                        mdView.current.record.cl_topic.length > 0">
                 <th data-translate="">listOfCategories</th>
                 <td>
                   <button data-ng-repeat="cat in mdView.current.record.cat"
@@ -242,13 +242,13 @@
                     {{('cat-' + cat) | translate}}
                   </button>
 
-                  <button data-ng-repeat="cat in mdView.current.record.topic track by $index"
-                          data-ng-click="filterBy('topic', cat)"
+                  <button data-ng-repeat="cat in mdView.current.record.cl_topic track by $index"
+                          data-ng-click="filterBy('cl_topic.key', cat.key)"
                           data-ng-if="cat != ''"
                           class="btn btn-sm btn-default"
-                          title="{{'clickToFilterOn' | translate}} {{cat | translate}}">
-                    <span class="fa gn-icon-{{cat}} topic-color"></span>&nbsp;
-                    {{cat | translate}}
+                          title="{{'clickToFilterOn' | translate}} {{cat.key | translate}}">
+                    <span class="fa gn-icon-{{cat.key}} topic-color"></span>&nbsp;
+                    {{cat.key | translate}}
                   </button>
                 </td>
               </tr>
@@ -443,12 +443,13 @@
                 </ul>
               </td>
             </tr>
-            <tr data-ng-if="mdView.current.record.coordinateSystem">
+            <tr data-ng-if="mdView.current.record.crsDetails">
               <th data-translate="">crs</th>
               <td>
                 <ul>
-                  <li data-ng-repeat="r in mdView.current.record.coordinateSystem">
-                    {{r}}
+                  <li data-ng-repeat="r in mdView.current.record.crsDetails">
+                    <a ng-show="r.url" href="{{r.url}}">{{r.name || r.code}}</a>
+                    <span ng-hide="r.url">{{r.name || r.code}}</span>
                   </li>
                 </ul>
               </td>
@@ -585,7 +586,7 @@
               </ul>
             </div>
 
-            <div data-ng-show="mdView.current.record.resourceTemporalExtentDateRange">
+            <div data-ng-show="mdView.current.record.resourceTemporalExtentDetails">
               <h2>
                 <i class="fa fa-fw fa-clock-o"></i>
                 <span data-translate="">tempExtent</span>
@@ -593,17 +594,26 @@
 
 
               <div class="flex-row flex-align-center gn-period"
-                  data-ng-repeat="range in mdView.current.record.resourceTemporalExtentDateRange">
+                  data-ng-repeat="range in mdView.current.record.resourceTemporalExtentDetails">
                 <div class="flex-start"
-                    data-ng-show="range.gte">
-                  <dt data-gn-humanize-time="{{range.gte}}"/>
+                    data-ng-show="range.start">
+                  <dt>
+                    <span data-ng-show="range.start.indeterminatePosition">{{range.start.indeterminatePosition | translate}}&nbsp;</span>
+                    <span data-gn-humanize-time="{{range.start.date}}"/>
+                    <span data-ng-show="range.start.calendarEraName">{{range.start.calendarEraName | translate}}</span>
+
+                  </dt>
                 </div>
                 <div class="spacer">
                   <i class="fa fa-chevron-right"></i>
                 </div>
                 <div class="flex-end"
-                    data-ng-show="range.lte">
-                  <dt data-gn-humanize-time="{{range.lte}}"/>
+                    data-ng-show="range.end">
+                  <dt>
+                    <span data-ng-show="range.end.indeterminatePosition">{{range.end.indeterminatePosition | translate}}&nbsp;</span>
+                    <span data-gn-humanize-time="{{range.end.date}}"/>
+                    <span data-ng-show="range.end.calendarEraName">{{range.end.calendarEraName | translate}}</span>
+                  </dt>
                 </div>
               </div>
             </div>
@@ -636,15 +646,7 @@
               <i class="fa fa-fw fa-cog"></i>
               <span data-translate="">sourceCatalog</span>
             </h2>
-            <img data-ng-if="isPreferGroupLogo && recordGroup.logo"
-                 data-ng-src="{{gnUrl}}../images/harvesting/{{recordGroup.logo}}"
-                 title="{{recordGroup.label | gnLocalized}}"
-                 aria-label="{{recordGroup.label | gnLocalized}}"
-                 class="gn-source-logo"/>
-            <img data-ng-if="!isPreferGroupLogo"
-                 data-ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.sourceCatalogue}}.png"
-                aria-label="{{'sourceCatalog' | translate}}"
-                class="gn-source-logo"/>
+            <div data-gn-record-origin-logo="mdView.current.record"/>
           </section>
 
           <section class="gn-md-side-calendar">

@@ -35,7 +35,9 @@
       <xsl:variable name="e" select="substring-after($coverage,'East ')"/>
       <xsl:variable name="east" select="substring-before($e,',')"/>
       <xsl:variable name="w" select="substring-after($coverage,'West ')"/>
-      <xsl:variable name="west" select="substring-before($w,'. ')"/>
+      <xsl:variable name="west" select="if (contains($w, '. '))
+                                        then substring-before($w,'. ')
+                                        else $w"/>
       <xsl:if test="$w!='' and $e!='' and $n!='' and $s!=''">
         <gml:Polygon>
           <gml:exterior>

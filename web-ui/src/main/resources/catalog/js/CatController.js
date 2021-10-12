@@ -527,12 +527,27 @@ goog.require('gn_alert');
           'formatter': {
             'list': [{
               'label': 'defaultView',
+              // Conditional views can be used to configure custom
+              // formatter to use depending on metadata properties.
+              // 'views': [ {
+              //   'if': {'standardName': 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product'},
+              //   'url' : '/formatters/xsl-view?root=div&view=advanced'
+              // }, {
+              //   'if': {
+              //     'standardName': [
+              //       'ISO 19115:2003/19139 - EMODNET - BATHYMETRY',
+              //       'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY']
+              //   },
+              //   'url' : '/formatters/xsl-view?root=div&view=emodnetHydrography'
+              // }, {
+              //   'if': {'documentStandard': 'iso19115-3.2018'},
+              //   'url' : '/dada'
+              // }],
               'url' : ''
             }, {
               'label': 'full',
-              'url' : '/formatters/xsl-view?root=div&view=advanced'
-            }],
-            defaultUrl: ''
+              'url' : '/formatters/xsl-view?root=div&view=xml'
+            }]
           },
           'downloadFormatter': [{
             'label': 'exportMEF',
@@ -672,15 +687,15 @@ goog.require('gn_alert');
                 'size': 15
               }
             },
-            'isValid': {
+            'valid': {
               'terms': {
-                'field': 'isValid',
+                'field': 'valid',
                 'size': 10
               }
             },
-            'isValidInspire': {
+            'valid_inspire': {
               'terms': {
-                'field': 'isValidInspire',
+                'field': 'valid_inspire',
                 'size': 10
               }
             },

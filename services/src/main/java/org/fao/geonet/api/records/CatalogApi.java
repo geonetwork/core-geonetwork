@@ -451,6 +451,7 @@ public class CatalogApi {
         language = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
 
         new XsltResponseWriter("env", "search")
+            .withJson(String.format("catalog/locales/%s-v4.json", language))
             .withJson(String.format("catalog/locales/%s-core.json", language))
             .withJson(String.format("catalog/locales/%s-search.json", language))
             .withXml(response)

@@ -2,16 +2,16 @@
   <legend id="gn-harvest-settings-selected-schedule-title">
     <span data-translate="">harvesterSchedule</span>
 
-    <div id="gn-harvest-settings-selected-schedule-buttons" class="btn-group pull-right" data-toggle="buttons">
+    <div id="gn-harvest-settings-selected-schedule-buttons" class="btn-group btn-group-sm pull-right gn-margin-bottom" data-toggle="buttons">
       <label id="gn-harvest-settings-selected-schedule-buttons-enable"
-             class="btn btn-primary"
+             class="btn btn-default"
              data-ng-click="harvester.options.status = 'active'"
              data-ng-class="harvester.options.status === 'active' ? 'active' : ''">
         <input type="radio" name="harvesterStatus"/>
         <strong data-translate="" class="">enable</strong>
       </label>
       <label id="gn-harvest-settings-selected-schedule-buttons-disable"
-             class="btn btn-primary"
+             class="btn btn-default"
              data-ng-class="harvester.options.status === 'active' ? '' : 'active'"
              data-ng-click="harvester.options.status = 'inactive'">
         <input type="radio" name="harvesterStatus"/>

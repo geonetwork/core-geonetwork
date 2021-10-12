@@ -193,20 +193,6 @@
               }
             }
           }).add({
-            combo: 'enter',
-            description: $translate.instant('hotkeySearchTheCatalog'),
-            allowIn: 'INPUT',
-            callback: function() {
-              $location.search('tab=search');
-            }
-            //}).add({
-            //  combo: 'r',
-            //  description: $translate.instant('hotkeyResetSearch'),
-            //  allowIn: 'INPUT',
-            //  callback: function () {
-            //    $scope.resetSearch();
-            //  }
-          }).add({
             combo: 'm',
             description: $translate.instant('hotkeyMap'),
             callback: function(event) {
@@ -319,7 +305,7 @@
           // if an external viewer is defined, use it here
           if (gnExternalViewer.isEnabled()) {
             gnExternalViewer.viewService({
-              id: md ? md.getId() : null,
+              id: md ? md.id : null,
               uuid: config.uuid
             }, {
               type: config.type,

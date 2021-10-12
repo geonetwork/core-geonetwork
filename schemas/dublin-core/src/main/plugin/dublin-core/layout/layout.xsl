@@ -31,11 +31,6 @@
   <xsl:include href="utility-fn.xsl"/>
   <xsl:include href="utility-tpl.xsl"/>
 
-  <!-- Get the main metadata languages -->
-  <xsl:template name="get-dublin-core-language">
-    <xsl:value-of select="$metadata/descendant::node()/dc:language[1]"/>
-  </xsl:template>
-
   <xsl:template name="get-dublin-core-title">
     <xsl:value-of select="$metadata//dc:title"/>
   </xsl:template>
