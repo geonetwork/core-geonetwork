@@ -307,10 +307,10 @@
         <xsl:variable name="p" select="normalize-space(cit:protocol/*/text())"/>
         {
         "@type":"DataDownload",
-        "contentUrl":"<xsl:value-of select="cit:linkage/*/text()"/>",
-        "encodingFormat":"<xsl:value-of select="if ($p != '') then $p else cit:protocol/*/@xlink:href"/>",
-        "name":"<xsl:value-of select="cit:name/*/text()"/>",
-        "description":"<xsl:value-of select="cit:description/*/text()"/>"
+        "contentUrl": "<xsl:value-of select="gn-fn-index:json-escape(cit:linkage/*/text())" />",
+        "encodingFormat": "<xsl:value-of select="gn-fn-index:json-escape(if ($p != '') then $p else cit:protocol/*/@xlink:href)"/>",
+        "name": <xsl:apply-templates mode="toJsonLDLocalized" select="cit:name"/>,
+        "description": <xsl:apply-templates mode="toJsonLDLocalized" select="cit:description"/>
         }
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
@@ -336,7 +336,7 @@
         <xsl:for-each select="gex:description[count(.//text() != '') > 0]">
           <xsl:apply-templates mode="toJsonLDLocalized" select="."/>
           <xsl:if test="position() != last()">,</xsl:if></xsl:for-each>
-          ], 
+          ],
         "geo": [
           <xsl:for-each select="gex:geographicElement/gex:EX_GeographicBoundingBox">
               {"@type":"GeoShape",
@@ -367,8 +367,8 @@
     </xsl:for-each>]
 
 
-    <xsl:if test="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints">    
-      ,"license": [<xsl:for-each select="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints"> 
+    <xsl:if test="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints">
+      ,"license": [<xsl:for-each select="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:otherConstraints">
           <xsl:choose>
             <xsl:when test="starts-with(normalize-space(string-join(gco:CharacterString/text(),'')),'http') or starts-with(normalize-space(string-join(gco:CharacterString/text(),'')),'//')">
               "<xsl:value-of select="normalize-space(string-join(gco:CharacterString/text(),''))"/>"
