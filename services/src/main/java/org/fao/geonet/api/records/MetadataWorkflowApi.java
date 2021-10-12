@@ -86,8 +86,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.sun.istack.NotNull;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -404,6 +402,16 @@ public class MetadataWorkflowApi {
 
         // --- reindex metadata
         metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, null);
+
+        // Reindex the metadata table record to update the field _statusWorkflow that contains the composite
+        // status of the published and draft versions
+        if (metadata instanceof MetadataDraft) {
+            Metadata metadataApproved = metadataRepository.findOneByUuid(metadata.getUuid());
+
+            if (metadataApproved != null) {
+                metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), true, null);
+            }
+        }
       }
     }
 
@@ -716,7 +724,6 @@ public class MetadataWorkflowApi {
      * Build a list of status with additional information about users (author and
      * owner of the status change).
      */
-    @NotNull
     private List<MetadataStatusResponse> buildMetadataStatusResponses(List<MetadataStatus> listOfStatus,
                                                                       boolean details, String language) {
         List<MetadataStatusResponse> response = new ArrayList<>();
