@@ -152,8 +152,8 @@ public class IsoLanguagesMapper {
             // If we could not find the code then just return the original code.
             return iso639_2B;
         } else {
-            return code.getAlpha3().getAlpha3B().name();
-}
+            return code.getAlpha3().getAlpha3T().name();
+        }
     }
 
     /**

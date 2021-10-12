@@ -840,7 +840,7 @@ public final class XslUtil {
     }
 
     /**
-     * Return 2 char iso lang code in uppercase from a 3 iso lang code.
+     * Return 2 char iso lang code from a 3 iso lang code.
      *
      * @param iso3LangCode The 2 iso lang code
      * @return The related 3 iso lang code
@@ -859,7 +859,9 @@ public final class XslUtil {
 
         // Catch language entries longer than 3 characters with a semicolon
         if (iso3LangCode.length() > 3 && (iso3LangCode.indexOf(';') != -1)) {
-            iso3LangCode = iso3LangCode.substring(0, 3);
+            //This will extract text similar to the following "fr;CAN", "fra;CAN", "fr ;CAN"
+            //In the case of "fr;CAN",  fr would be extracted even though it is not a 3 char code - but that is ok because LanguageCode.getByCode supports 2 and 3 char codes.
+            iso3LangCode = iso3LangCode.split(";")[0].trim();
         }
 
         LanguageCode languageCode = LanguageCode.getByCode(iso3LangCode.toLowerCase());

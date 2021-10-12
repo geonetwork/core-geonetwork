@@ -304,7 +304,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                 context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
             }
             writeOutResponse(context, metadataUuid,
-                isoLanguagesMapper.iso639_2B_to_iso639_2T(locale.getISO3Language()),
+                isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language()),
                 request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
     }
