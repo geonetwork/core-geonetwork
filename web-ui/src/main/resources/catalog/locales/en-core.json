@@ -547,7 +547,7 @@
     "statusWorkflow-3": "Retired",
     "statusWorkflow-4": "Submitted",
     "statusWorkflow-5": "Rejected",
-    "statusWorkflow-21": "Approved with draft copy",
-    "statusWorkflow-24": "Approved with draft copy submitted",
+    "statusWorkflow-21": "Approved with working copy",
+    "statusWorkflow-24": "Approved with working copy submitted",
     "mdStatusWorkflow": "Workflow progress"
 }
