@@ -170,7 +170,7 @@
                   }
                 }
 
-                setTimeout(pollHarvesterStatus, 5000);
+                setTimeout(pollHarvesterStatus, 10000);
               }
             }).error(function(data) {
             isPolling = false;
@@ -224,7 +224,7 @@
                   }
                 }*/
 
-                setTimeout(pollHarvesterStatus, 5000);
+                setTimeout(pollHarvesterStatus, 10000);
               }
             }).error(function(data) {
             isPolling = false;
