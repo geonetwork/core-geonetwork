@@ -517,7 +517,7 @@
           pollingAttempts ++;
           $http({
             method: 'GET',
-            url: url,
+            url: url
           }).then(function() {
             defer.resolve(url);
           }, function(error) {
