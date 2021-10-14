@@ -510,7 +510,8 @@
                       if (mdu && mdu.OnlineResource &&
                         mdu.OnlineResource.indexOf(uuid) > 0) {
                         needles.push(layers[i]);
-                        break capabilityLayers;
+                        // SEXTANT SPECIFIC: we don't need this
+                        // break capabilityLayers;
                       }
                     }
                   }
