@@ -57,9 +57,10 @@
     'gnESService',
     'orderByFilter',
     'gnConfigService',
+    'Metadata',
     function($scope, $q, $http, suggestService, gnAlertService,
              gnSearchSettings, gnGlobalSettings, gnConfig, gnESClient,
-             gnESService, orderByFilter, gnConfigService) {
+             gnESService, orderByFilter, gnConfigService, Metadata) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -168,7 +169,8 @@
                 for (var i = 0; i < a.length; i++) {
                   res.push({
                     id: a[i].id,
-                    name: a[i].name
+                    name: a[i].name,
+                    serviceRecord: a[i].serviceRecord
                   });
                 }
                 defer.resolve(res);
@@ -176,6 +178,47 @@
           return defer.promise;
         })()
       };
+
+      $scope.sourcesOptions.promise.then(function(d) {
+        var serviceMetadataUuidForPortal = null;
+
+        // Check if the source for the current node has a service metadata
+        for(var i = 0; i < d.length; i++) {
+          if (($scope.nodeId == 'srv') && (angular.isUndefined(d[i].id))) {
+            serviceMetadataUuidForPortal = d[i].serviceRecord;
+            break;
+          } else if (d[i].name == $scope.nodeId) {
+            serviceMetadataUuidForPortal = d[i].serviceRecord;
+            break;
+          }
+        }
+
+        if (serviceMetadataUuidForPortal != null) {
+          $scope.serviceMetadataForPortal = null;
+
+          // Retrieve the service metadata
+          // Use main portal, otherwise the query applies the portal filter
+          // and doesn't find the metadata
+          $http.post('../../srv/api/search/records/_search', {"query": {
+              "bool" : {
+                "must": [
+                  {"multi_match": {
+                      "query": serviceMetadataUuidForPortal,
+                      "fields": ['id', 'uuid']}},
+                  {"terms": {"isTemplate": ['n']}},
+                  {"terms": {"draft": ["n", "y", "e"]}}
+                ]
+              }
+            }}).then(function(r) {
+            if (r.data.hits.total.value > 0) {
+              $scope.serviceMetadataForPortal = new Metadata(r.data.hits.hits[0]);
+            }
+          });
+
+        }
+
+      });
+
 
       /**
        * Keep a reference on main cat scope
