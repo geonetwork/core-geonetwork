@@ -1489,6 +1489,8 @@
     "logoHeight": "Logo height",
     "ui-addWMSLayersToMap": "Add WMS layers from metadata to the map viewer",
     "ui-addWMSLayersToMap-mode": "Extract the layer name from",
+    "ui-addWMSLayersToMap-mode-url": "Resource URL parameter",
+    "ui-addWMSLayersToMap-mode-resourcename": "Resource name",
     "ui-addWMSLayersToMap-mode-help": "Configure how to extract the layer name to add WMS layers from metadata into the map viewer: using the metadata resource name (default) or from a parameter of the metadata resource url",
     "ui-addWMSLayersToMap-urlLayerParam": "URL parameter with the layer name",
     "ui-addWMSLayersToMap-urlLayerParam-help": "When the WMS layer name is configured in the metadata resource url, configure the url parameter that contains the layer name"

@@ -80,9 +80,9 @@
 
         <label class="control-label" for="{{key + 'mode'}}">{{('ui-' + key + '-mode') | translate}}</label>
 
-        <select model="mCfg[key].mode" class="form-control" id="{{key + 'mode'}}">
-          <option value="url">URL</option>
-          <option value="resource-name">Resource name</option>
+        <select data-ng-model="mCfg[key].mode" class="form-control" id="{{key + 'mode'}}">
+          <option value="url">{{('ui-' + key + '-mode-url') | translate}}</option>
+          <option value="resource-name">{{('ui-' + key + '-mode-resourcename') | translate}}</option>
         </select>
 
         <p class="help-block"
@@ -91,9 +91,10 @@
           ui-addWMSLayersToMap-mode-help</p>
 
         <label class="control-label" for="{{key + 'urlLayerParam'}}">{{('ui-' + key + '-urlLayerParam') | translate}}</label>
-
+       
         <input type="text"
                id="{{key + 'urlLayerParam'}}"
+               data-ng-disabled="mCfg[key].mode == 'resource-name'"
                class="form-control"
                data-ng-model="mCfg[key].urlLayerParam"/>
 
