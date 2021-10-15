@@ -382,7 +382,6 @@
                               normalize-space($keyword), $thesaurus, $language)"/>
 
       <xsl:for-each select="$keywordsWithHierarchy">
-        <xsl:variable name="path" select="tokenize(., '\^')"/>
         <xsl:for-each select="$path">
           <xsl:variable name="position"
                         select="position()"/>
@@ -395,6 +394,34 @@
   </xsl:template>
 
 
+  <!-- Produce a thesaurus field name valid in an XML document
+  and as an Elasticsearch field name. -->
+  <xsl:function name="gn-fn-index:build-thesaurus-index-field-name">
+    <xsl:param name="thesaurusId" as="xs:string?"/>
+    <xsl:param name="thesaurusName" as="xs:string?"/>
+
+    <xsl:variable name="key">
+      <xsl:choose>
+        <xsl:when test="starts-with($thesaurusId, 'geonetwork.thesaurus')">
+          <!-- eg. geonetwork.thesaurus.local.theme.dcsmm.area = dcsmm.area-->
+          <xsl:value-of select="string-join(
+                                  tokenize($thesaurusId, '\.')[position() > 4], '.')"/>
+        </xsl:when>
+        <xsl:when test="normalize-space($thesaurusId) != ''">
+          <xsl:value-of select="normalize-space($thesaurusId)"/>
+        </xsl:when>
+        <xsl:when test="normalize-space($thesaurusName) != ''">
+          <xsl:value-of select="replace(normalize-unicode($thesaurusName, 'NFKD'), '\P{IsBasicLatin}', '')"/>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:variable name="keyWithoutDot"
+                  select="replace($key, '\\.', '-')"/>
+
+    <xsl:value-of select="concat('th_', replace($keyWithoutDot, '[^a-zA-Z0-9_-]', ''))"/>
+  </xsl:function>
+
   <xsl:template name="build-thesaurus-fields">
     <xsl:param name="thesaurus" as="xs:string"/>
     <xsl:param name="thesaurusId" as="xs:string"/>
@@ -405,15 +432,13 @@
     <!-- Index keyword characterString including multilingual ones
      and element like gmx:Anchor including the href attribute
      which may contains keyword identifier. -->
-    <xsl:variable name="thesaurusField"
-                  select="concat('th_', replace($thesaurus, '[^a-zA-Z0-9-_]', ''))"/>
 
-    <xsl:element name="{$thesaurusField}Number">
+    <xsl:element name="{$thesaurus}Number">
       <xsl:value-of select="count($keywords)"/>
     </xsl:element>
 
     <xsl:if test="count($keywords) > 0">
-      <xsl:element name="{$thesaurusField}">
+      <xsl:element name="{$thesaurus}">
         <xsl:attribute name="type" select="'object'"/>
         [<xsl:for-each select="$keywords">
         <xsl:variable name="uri"
@@ -456,7 +481,7 @@
           <indexingError>true</indexingError>
         </xsl:if>
       </xsl:for-each>
-      
+
 
       <xsl:variable name="thesaurusTree" as="node()">
         <values>
@@ -499,7 +524,7 @@
 
 
       <xsl:if test="count($thesaurusTree/*) > 0">
-        <xsl:element name="{$thesaurusField}_tree">
+        <xsl:element name="{$thesaurus}_tree">
           <xsl:attribute name="type" select="'object'"/>{
           <xsl:variable name="defaults"
                         select="distinct-values($thesaurusTree/default)"/>
