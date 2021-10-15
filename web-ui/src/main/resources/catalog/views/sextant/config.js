@@ -375,7 +375,7 @@
               }
               // adhoc field name replacements for API retro-compatibility
               if (name === 'title') {
-                name = 'resourceTitleObject.default.keyword';
+                name = 'resourceTitleObject.default.keyword'; // TODO: Multilingual
                 direction = ''; // clear direction for title as it was apparently not working anyway...
               } else if (name === 'changeDate') {
                 name = 'dateStamp';
@@ -391,11 +391,11 @@
           searchSettings.metadataFormatter = sxtSettings.metadataFormatter;
         }
         if(sxtSettings.metadataType)  {
-          searchSettings.filters.push({
+          searchSettings.filters = [{
             "query_string": {
               "query": "+resourceType:(" + sxtSettings.metadataType.replaceAll(' or ', ' OR ') + ")"
             }
-          });
+          }];
         }
 
         var esFacetConfig = gnGlobalSettings.gnCfg.mods.search.facetConfig;
