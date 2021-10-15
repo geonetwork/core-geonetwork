@@ -176,15 +176,15 @@ public class PasswordApi {
             "LDAP users will not be able to retrieve their password " +
             "using this service.")
     @RequestMapping(
-        value = "/{username}/actions/forgot-password",
-        method = RequestMethod.GET,
+        value = "/actions/forgot-password",
+        method = RequestMethod.PUT,
         produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<String> sendPasswordByEmail(
         @Parameter(description = "The user name",
             required = true)
-        @PathVariable
+        @RequestParam
             String username,
         HttpServletRequest request)
         throws Exception {

@@ -159,9 +159,8 @@
           * Remind user password.
           */
          $scope.remindMyPassword = function() {
-           $http.get('../api/user/' +
-           $scope.usernameToRemind +
-                        '/actions/forgot-password')
+
+           $http.put('../api/user/actions/forgot-password?username=' + $scope.usernameToRemind)
             .success(function(data) {
              $scope.sendPassword = false;
              $rootScope.$broadcast('StatusUpdated', {
