@@ -58,9 +58,10 @@
     'orderByFilter',
     'gnConfigService',
     'Metadata',
+    'gnMetadataManager',
     function($scope, $q, $http, suggestService, gnAlertService,
              gnSearchSettings, gnGlobalSettings, gnConfig, gnESClient,
-             gnESService, orderByFilter, gnConfigService, Metadata) {
+             gnESService, orderByFilter, gnConfigService, Metadata, gnMetadataManager) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -199,22 +200,10 @@
           // Retrieve the service metadata
           // Use main portal, otherwise the query applies the portal filter
           // and doesn't find the metadata
-          $http.post('../../srv/api/search/records/_search', {"query": {
-              "bool" : {
-                "must": [
-                  {"multi_match": {
-                      "query": serviceMetadataUuidForPortal,
-                      "fields": ['id', 'uuid']}},
-                  {"terms": {"isTemplate": ['n']}},
-                  {"terms": {"draft": ["n", "y", "e"]}}
-                ]
-              }
-            }}).then(function(r) {
-            if (r.data.hits.total.value > 0) {
-              $scope.serviceMetadataForPortal = new Metadata(r.data.hits.hits[0]);
-            }
+          gnMetadataManager.getMdObjByUuidInPortal('srv',
+            serviceMetadataUuidForPortal, undefined).then(function(md) {
+            $scope.serviceMetadataForPortal = md;
           });
-
         }
 
       });
