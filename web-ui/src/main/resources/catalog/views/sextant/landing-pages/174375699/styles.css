@@ -47,11 +47,12 @@ div.gn-landing-page-header {
   padding: 0px !important;
   background-color: #ebecec;
   border: none;
-
+  word-break: break-all;
 }
 
 .gn-md-side-access .well::after {
-  content: "Link to the data services and to the full metadataset"
+  content: "Link to the data services \A and to the full metadataset";
+  white-space: pre;
 }
 
 .gn-md-side-access .btn {

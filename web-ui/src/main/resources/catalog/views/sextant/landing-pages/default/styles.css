@@ -92,8 +92,11 @@ section.links,
   display: block;
 }
 
-
 .vcenter {
   display: flex;
   align-items: center;
+}
+
+p {
+  text-align: justify;
 }
