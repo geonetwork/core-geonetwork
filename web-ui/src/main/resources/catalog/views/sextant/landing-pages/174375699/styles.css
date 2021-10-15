@@ -1,0 +1,86 @@
+body {
+  background: url(A4paysage-odatis.jpg);
+  background-size: 100%;
+  background-repeat: no-repeat;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  font-family: 'open_sansregular';
+  font-size: 14px;
+  line-height: 1.428571429;
+  color: #333333;
+}
+
+div.gn-landing-page-header-default {
+  display: none;
+}
+
+.gn-nojs [role=main], .container {
+  padding: 0px !important;
+}
+.row {
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+}
+.tab-pane {
+  height: auto !important;
+}
+div.gn-landing-page-header {
+  height: 420px;
+  background: url(exemple_bandeau.png) no-repeat;
+  background-position-x: 100%;
+  background-position-y: center;
+  background-color: #2772c5;
+  background-size: cover;
+}
+.vcenter {
+  display: unset;
+}
+.gn-md-side-access {
+  background-color: #ebecec;
+  padding: 25px;
+  margin-top: 20px;
+}
+
+.gn-md-side-access .well {
+  padding: 0px !important;
+  background-color: #ebecec;
+  border: none;
+
+}
+
+.gn-md-side-access .well::after {
+  content: "Link to the data services and to the full metadataset"
+}
+
+.gn-md-side-access .btn {
+  background-color: #b7b8b9;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  font-size: 16px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: none;
+}
+
+section.links,
+.gn-md-side-access .btn i {
+  display: none;
+}
+
+.footer {
+  background-color: #008798;
+  padding: 20px 40px;
+  bottom: 0;
+  height: 60px;
+  position: absolute;
+  width: 100%;
+}
+
+.gn-md-view .entry {
+  border-left: 2px solid #ddd !important;
+  padding-left: 8px !important;
+}
