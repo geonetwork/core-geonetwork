@@ -382,14 +382,6 @@
                               normalize-space($keyword), $thesaurus, $language)"/>
 
       <xsl:for-each select="$keywordsWithHierarchy">
-        <!--
-        Sextant themes are slash separated values with a leading /.
-        eg. /Activités humaines/Pêche professionnelle
-        Explode them and build one entry per token with the corresponding key.
-        if($isKeywordWithSeparator and not(starts-with(., 'http')))
-                                  then tokenize(substring(., 2) ,'/')
-                                  else
-        -->
         <xsl:variable name="path"
                       select="tokenize(., '\^')"/>
         <xsl:for-each select="$path">
@@ -427,8 +419,7 @@
     </xsl:variable>
 
     <xsl:variable name="keyWithoutDot"
-                  select="replace($key, '\\.', '-')"/>
-
+                  select="replace($key, '\.', '-')"/>
     <xsl:value-of select="concat('th_', replace($keyWithoutDot, '[^a-zA-Z0-9_-]', ''))"/>
   </xsl:function>
 
