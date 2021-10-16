@@ -1444,7 +1444,10 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>7.10.2</es.version> <!-- Up to 7.10.2 via Apache License 2.0 -->
+    <!-- 7.11.0 onward no longer use Apache License 2.0 -->
+    <!-- 7.10.2 known date_range issue                  -->
+    <!-- 7.6.2 tested -->
+    <es.version>7.6.2</es.version>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
     <es.protocol>http</es.protocol>

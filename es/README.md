@@ -2,10 +2,10 @@
 
 ## Manual installation
 
-1. Download Elasticsearch (up to 7.10.2 for Geonetwork 4.0.x) from https://www.elastic.co/downloads/elasticsearch
-and copy to the ES module. eg. es/elasticsearch-7.10.2
+1. Download Elasticsearch (use 7.6.2 for Geonetwork 4.0.x) from https://www.elastic.co/downloads/elasticsearch
+and copy to the ES module. eg. es/elasticsearch-7.6.2
    
-   .. info:: Elasticsearch 7.10.2 is available using the Apache 2.0 open source license. Newer versions of Elasticsearch use the Server Side Public License, see [faq](https://www.elastic.co/pricing/faq/licensing).
+   > info: Elasticsearch 7.6.2 is available using the Apache 2.0 open source license. Version 7.10.2 has a known [date_range](https://github.com/elastic/elasticsearch/issues/69012) issue. Newer versions of Elasticsearch from 7.11.0 use the Server Side Public License, see [faq](https://www.elastic.co/pricing/faq/licensing).
  
 2. Start ES using:
 
@@ -37,13 +37,13 @@ and copy to the ES module. eg. es/elasticsearch-7.10.2
 1. Use docker pull to download the image (you can check version in the :file:`pom.xml` file):
 
    ```
-   docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+   docker pull docker.elastic.co/elasticsearch/elasticsearch:7.6.2
    ```
 
 2. Use docker run, leaving 9200 available:
 
    ```
-   docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+   docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.6.2
    ```
    
 
@@ -158,4 +158,12 @@ To turn off this check:
 
 ```
  curl -XPUT http://localhost:9200/_cluster/settings -H 'Content-Type: application/json' -d '{ "transient" : { "cluster.routing.allocation.disk.threshold_enabled" : false } }' 
+```
+
+## Blocked by index read-only / allow delete
+
+To recover:
+
+```
+curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
 ```

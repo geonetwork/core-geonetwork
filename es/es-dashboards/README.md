@@ -2,26 +2,26 @@
 
 ## Manual installation
 
-Download Kibana from https://www.elastic.co/downloads/kibana. For Geonetwork 4.0.x use up to 7.10.2.
+1. Download Kibana from https://www.elastic.co/downloads/kibana. For Geonetwork 4.0.x use 7.6.2.
 
-.. info:: Elasticsearch 7.10.2 is available using the Apache 2.0 open source license. Newer versions of Elasticsearch use the Server Side Public License, see [faq](https://www.elastic.co/pricing/faq/licensing).
+   > info: Elasticsearch 7.6.2 is available using the Apache 2.0 open source license. Version 7.10.2 has a known [date_range](https://github.com/elastic/elasticsearch/issues/69012) issue. Newer versions of Elasticsearch from 7.11.0 use the Server Side Public License, see [faq](https://www.elastic.co/pricing/faq/licensing).
 
-Set Kibana base path and index name in config/kibana.yml:
+2. Set Kibana base path and index name in config/kibana.yml:
 
-```
-server.basePath: "/geonetwork/dashboards"
-server.rewriteBasePath: false
-kibana.index: ".dashboards"
-```
+   ```shell script
+   server.basePath: "/geonetwork/dashboards"
+   server.rewriteBasePath: false
+   kibana.index: ".dashboards"
+   ```
 
-Adapt if needed ```elasticsearch.url``` and ```server.host```.
+   Adapt if needed ```elasticsearch.url``` and ```server.host```.
 
-Start Kibana manually:
+3. Start Kibana manually:
 
-```
-cd kibana/bin
-./kibana
-```
+   ```shell script
+   cd kibana/bin
+   ./kibana
+   ```
 
 ## Maven installation
 
@@ -33,14 +33,14 @@ cd kibana/bin
 
 2. Use maven to download:
 
-   ```
+   ```shell script
    cd es/es-dashboard
    mvn install -Pkb-download
    ```
 
 3. Run locally:
 
-   ```
+   ```shell script
    mvn exec:exec -Dkb-start
    ```
 
@@ -48,7 +48,7 @@ cd kibana/bin
 
 1. Use docer compose with the provided [docker-compose.yml](docker-compose.yml):
 
-   ```
+   ```shell script
    cd es
    docker-compose up
    ```
@@ -62,13 +62,13 @@ cd kibana/bin
 
 1. Kibana should be running from:
 
-   ```
+   ```shell script
    http://localhost:5601
    ```
 
 2. And should be visible within the geonetwork interface at:
  
-   ```
+   ```shell script
    http://localhost:8080/geonetwork/dashboards
    ```
 
@@ -81,7 +81,9 @@ Visit Kibana in a browser using one of the above links and go to 'Saved Objects'
 
 ### Production Use
 
-Kibana can be installed from the debian files, and 7.3.2 is confirmed as working with Geonetwork 3.8.x.
+Kibana can be installed from the debian files:
+
+* 7.3.2 is confirmed as working with Geonetwork 3.8.x
 
 Set Kibana to start when the server starts up, using the instructions at https://www.elastic.co/guide/en/kibana/current/start-stop.html
 
