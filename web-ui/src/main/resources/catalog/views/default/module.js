@@ -170,7 +170,6 @@
 
       $scope.facetSorter = gnFacetSorter.sortByTranslation;
 
-      $scope.addToMapLayerNameMode = gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.mode;
       $scope.addToMapLayerNameUrlParam = gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam;
 
       $scope.toggleMap = function () {
@@ -293,7 +292,7 @@
 
           var name;
 
-          if ( $scope.addToMapLayerNameMode == 'url') {
+          if ( $scope.addToMapLayerNameUrlParam !== '') {
             var params = gnUrlUtils.parseKeyValue(
               config.url.split('?')[1]);
             name = params[$scope.addToMapLayerNameUrlParam];

@@ -583,7 +583,6 @@ goog.require('gn_alert');
             'enabled': false
           },
           "addWMSLayersToMap": {
-            "mode": "url", // values: resourceName, url
             "urlLayerParam": "layers"
           }
         },
