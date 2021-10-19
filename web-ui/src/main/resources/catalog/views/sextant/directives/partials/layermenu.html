@@ -101,13 +101,13 @@
         </div>
       </tab>
 
-      <tab ng-if="processes">
+      <tab ng-if="processes" select="wpsOpened = true" deselect="wpsOpened = false">
         <tab-heading translate>wpsProcess</tab-heading>
         <select class="form-control input-sm" ng-if="processes.length > 1" ng-model="selectedProcessIndex" ng-change="ctrl.selectProcess()">
           <option ng-repeat="p in processes" value="{{$index}}">{{p.description}}</option>
         </select>
         <div class="flex-spacer"></div>
-        <div>
+        <div ng-if="wpsOpened">
           <gn-wps-process-form map="map"
                                wps-link="selectedProcess"
                                wfs-link="wfsLink" />
