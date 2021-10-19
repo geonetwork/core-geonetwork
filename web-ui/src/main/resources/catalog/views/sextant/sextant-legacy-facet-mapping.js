@@ -335,73 +335,73 @@
         }
     },
     'p02': {
-      'th_P02.default':
+      'th_NVS-P02.default':
         {
           'terms': {
-            'field': 'th_P02.default',
+            'field': 'th_NVS-P02.default',
             'size': 300
           }
         }
     },
     'p03': {
-      'th_P03.default':
+      'th_NVS-P03.default':
         {
           'terms': {
-            'field': 'th_P03.default',
+            'field': 'th_NVS-P03.default',
             'size': 300
           }
         }
     },
     'p35': {
-      'th_P35.default':
+      'th_NVS-P35.default':
         {
           'terms': {
-            'field': 'th_P35.default',
+            'field': 'th_NVS-P35.default',
             'size': 300
           }
         }
     },
     'A05': {
-      'th_A05.default':
+      'th_NVS-A05.default':
         {
           'terms': {
-            'field': 'th_A05.default',
+            'field': 'th_NVS-A05.default',
             'size': 300
           }
         }
     },
     'C19': {
-      'th_C19.default':
+      'th_NVS-C19.default':
         {
           'terms': {
-            'field': 'th_C19.default',
+            'field': 'th_NVS-C19.default',
             'size': 300
           }
         }
     },
     'L04': {
-      'th_L04.default':
+      'th_NVS-L04.default':
         {
           'terms': {
-            'field': 'th_L04.default',
+            'field': 'th_NVS-L04.default',
             'size': 300
           }
         }
     },
     'P36': {
-      'th_P36.default':
+      'th_NVS-P36.default':
         {
           'terms': {
-            'field': 'th_P36.default',
+            'field': 'th_NVS-P36.default',
             'size': 300
           }
         }
     },
     'P08': {
-      'th_P08.default':
+      'th_NVS-P08.default':
         {
           'terms': {
-            'field': 'th_P08.default',
+            'field': 'th_NVS-P08.default',
             'size': 300
           }
         }
@@ -497,46 +497,46 @@
         }
     },
     'emodnet-checkpoint.environmental.matrix': {
-      'th_matrix.default':
+      'th_emodnet-checkpoint-environmental-matrix.default':
         {
           'terms': {
-            'field': 'th_matrix.default',
+            'field': 'th_emodnet-checkpoint-environmental-matrix.default',
             'size': 300
           }
         }
     },
     'emodnet-checkpoint.challenges': {
-      'th_challenges.default':
+      'th_emodnet-checkpoint-challenges.default':
         {
           'terms': {
-            'field': 'th_challenges.default',
+            'field': 'th_emodnet-checkpoint-challenges.default',
             'size': 300
           }
         }
     },
     'emodnet-checkpoint.level.of.characteristics': {
-      'th_characteristics.default':
+      'th_emodnet-checkpoint-level-of-characteristics.default':
         {
           'terms': {
-            'field': 'th_characteristics.default',
+            'field': 'th_emodnet-checkpoint-level-of-characteristics.default',
             'size': 300
           }
         }
     },
     'emodnet-checkpoint.production.mode': {
-      'th_mode.default':
+      'th_emodnet-checkpoint-production-mode.default':
         {
           'terms': {
-            'field': 'th_mode.default',
+            'field': 'th_emodnet-checkpoint-production-mode.default',
             'size': 300
           }
         }
     },
     'ParameterUsageVocabulary-other': {
-      'th_P01.default':
+      'th_NVS-P01.default':
         {
           'terms': {
-            'field': 'th_P01.default',
+            'field': 'th_NVS-P01.default',
             'size': 300
           }
         }
@@ -560,10 +560,10 @@
         }
     },
     'dcsmm-area': {
-      'th_area.default':
+      'th_dcsmm-area.default':
         {
           'terms': {
-            'field': 'th_area.default',
+            'field': 'th_dcsmm-area.default',
             'size': 300
           }
         }
@@ -639,19 +639,19 @@
         }
     },
     'simm-reglementaire': {
-      'th_reglementaire.default':
+      'th_simm-reglementaire.default':
         {
           'terms': {
-            'field': 'th_reglementaire.default',
+            'field': 'th_simm-reglementaire.default',
             'size': 300
           }
         }
     },
     'simm-thematiques': {
-      'th_thematiques.default':
+      'th_simm-thematiques.default':
         {
           'terms': {
-            'field': 'th_thematiques.default',
+            'field': 'th_simm-thematiques.default',
             'size': 300
           }
         }
@@ -711,10 +711,10 @@
         }
     },
     'myocean-reference-geographical-area': {
-      'th_reference-geographical-area.default':
+      'th_myocean-reference-geographical-area.default':
         {
           'terms': {
-            'field': 'th_reference-geographical-area.default',
+            'field': 'th_myocean-reference-geographical-area.default',
             'size': 300
           }
         }
