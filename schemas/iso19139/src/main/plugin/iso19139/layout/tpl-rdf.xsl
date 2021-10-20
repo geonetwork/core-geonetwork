@@ -69,7 +69,7 @@
     -->
   <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']" mode="to-dcat">
 
-  
+
     <!-- Catalogue records
       "A record in a data catalog, describing a single dataset."
 
@@ -128,7 +128,7 @@
     <xsl:for-each-group
       select="//gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource"
       group-by="gmd:linkage/gmd:URL">
-      <dcat:Distribution rdf:about="{iso19139:RecordUri($uuid)}#{encode-for-uri(gmd:protocol/*/text())}-{encode-for-uri(gmd:name/*/text())}">
+      <dcat:Distribution rdf:about="{iso19139:RecordUri($uuid)}#{encode-for-uri(gmd:protocol/*/text())}-{encode-for-uri(gmd:name/*[1]/text())}">
         <!--
           "points to the location of a distribution. This can be a direct download link, a link
           to an HTML page containing a link to the actual data, Feed, Web Service etc.
@@ -149,7 +149,7 @@
         <!-- "The size of a distribution.":N/A
           <dcat:size></dcat:size>
         -->
-        
+
           <xsl:if test="(gmd:protocol/gmx:Anchor/@xlink:href)[1]!=''">
           <dcat:mediaType>
             <xsl:attribute name="rdf:resource" select="(gmd:protocol/gmx:Anchor/@xlink:href)[1]"/>
@@ -161,7 +161,7 @@
             <xsl:value-of select="(gmd:protocol/gco:CharacterString)[1]"/>
           </dct:format>
           </xsl:if>
-          
+
       </dcat:Distribution>
     </xsl:for-each-group>
 
@@ -300,7 +300,7 @@
       <dcat:theme
         rdf:resource="{$resourcePrefix}/registries/vocabularies/{encode-for-uri(iso19139:getThesaurusCode(../../gmd:thesaurusName))}/concepts/{encode-for-uri(.)}"/>
     </xsl:for-each>
-    <!-- xpath: gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor -->    
+    <!-- xpath: gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor -->
     <xsl:for-each
       select="gmd:descriptiveKeywords/gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword/gmx:Anchor">
       <dcat:theme rdf:resource="{@xlink:href}">
@@ -428,9 +428,9 @@
     <!-- xpath: gmd:identificationInfo/*/gmd:resourceConstraints/??? -->
 
     <xsl:for-each select="../../gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine">
-      <dcat:distribution rdf:resource="{iso19139:RecordUri($uuid)}#{encode-for-uri(gmd:CI_OnlineResource/gmd:protocol/*/text())}-{encode-for-uri(gmd:CI_OnlineResource/gmd:name/*/text())}"/>
+      <dcat:distribution rdf:resource="{iso19139:RecordUri($uuid)}#{encode-for-uri(gmd:CI_OnlineResource/gmd:protocol/*/text())}-{encode-for-uri(gmd:CI_OnlineResource/gmd:name/*[1]/text())}"/>
     </xsl:for-each>
- 
+
     <!-- xpath: gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource -->
 
 
