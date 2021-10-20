@@ -92,6 +92,7 @@ import static jeeves.transaction.TransactionManager.TransactionRequirement.CREAT
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
+
 @RequestMapping(value = {
     "/{portal}/api/records",
     "/{portal}/api/" + API.VERSION_0_1 +
@@ -106,15 +107,18 @@ public class InspireValidationApi {
 
     @Autowired
     SettingManager settingManager;
+
     @Autowired
     InspireValidatorUtils inspireValidatorUtils;
+
     @Autowired
     LanguageUtils languageUtils;
+
     String supportedSchemaRegex = "(iso19139|iso19115-3).*";
+
     @Autowired
     private SchemaManager schemaManager;
-    @Autowired
-    private MetadataValidationRepository metadataValidationRepository;
+
     @Autowired
     private ThreadPool threadPool;
 
@@ -208,43 +212,43 @@ public class InspireValidationApi {
 
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
 
-        try {
-            Element md = (Element) ApiUtils.getUserSession(session).getProperty(Geonet.Session.METADATA_EDITING + id);
-            if (md == null) {
+
+        Element md = (Element) ApiUtils.getUserSession(session).getProperty(Geonet.Session.METADATA_EDITING + id);
+        if (md == null) {
+            response.setStatus(HttpStatus.SC_NOT_FOUND);
+            return String.format("Metadata with id '%s' not found in session. To be validated, the record must be in edition session.", id);
+            // TODO: Add support for such validation from not editing session ?
+        }
+
+        // Use formatter to convert the record
+        if (!schema.equals("iso19139")) {
+            try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+                Key key = new Key(metadata.getId(), "eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
+
+                final FormatterApi.FormatMetadata formatMetadata =
+                    new FormatterApi().new FormatMetadata(context, key, nativeRequest);
+                final byte[] data = formatMetadata.call().data;
+                md = Xml.loadString(new String(data, StandardCharsets.UTF_8), false);
+            } catch (Exception e) {
                 response.setStatus(HttpStatus.SC_NOT_FOUND);
-                return String.format("Metadata with id '%s' not found in session. To be validated, the record must be in edition session.", id);
-                // TODO: Add support for such validation from not editing session ?
+                return String.format("Metadata with id '%s' is in schema '%s'. No iso19139 formatter found. Error is %s", id, schema, e.getMessage());
             }
-
-            // Use formatter to convert the record
-            if (!schema.equals("iso19139")) {
-                try (ServiceContext context = ApiUtils.createServiceContext(request)) {
-                    Key key = new Key(metadata.getId(), "eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
-
-                    final FormatterApi.FormatMetadata formatMetadata =
-                        new FormatterApi().new FormatMetadata(context, key, nativeRequest);
-                    final byte[] data = formatMetadata.call().data;
-                    md = Xml.loadString(new String(data, StandardCharsets.UTF_8), false);
-                } catch (Exception e) {
-                    response.setStatus(HttpStatus.SC_NOT_FOUND);
-                    return String.format("Metadata with id '%s' is in schema '%s'. No iso19139 formatter found. Error is %s", id, schema, e.getMessage());
-                }
-            } else {
-                // Cleanup metadocument elements
-                EditLib editLib = appContext.getBean(DataManager.class).getEditLib();
-                editLib.removeEditingInfo(md);
-                editLib.contractElements(md);
-            }
+        } else {
+            // Cleanup metadocument elements
+            EditLib editLib = appContext.getBean(DataManager.class).getEditLib();
+            editLib.removeEditingInfo(md);
+            editLib.contractElements(md);
+        }
 
 
-            md.detach();
+        md.detach();
 
-            // The following is unusual, we are creating a service context so it is our responsibility
-            // to ensure it is cleaned up.
-            //
-            // This is going to be accomplished by the scheduled InspireValidationRunnable
-            ServiceContext context = ApiUtils.createServiceContext(request);
-          try {
+        // The following is unusual, we are creating a service context so it is our responsibility
+        // to ensure it is cleaned up.
+        //
+        // This is going to be accomplished by the scheduled InspireValidationRunnable
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        try {
             Attribute schemaLocAtt = schemaManager.getSchemaLocation(
                 "iso19139", context);
 
@@ -260,7 +264,6 @@ public class InspireValidationApi {
                 }
             }
 
-
             InputStream metadataToTest = convertElement2InputStream(md);
 
             String testId = inspireValidatorUtils.submitFile(context, URL, metadataToTest, testsuite, metadata.getUuid());
@@ -268,13 +271,9 @@ public class InspireValidationApi {
             threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));
 
             return testId;
-          } finally {
+        } finally {
             context.clearAsThreadLocal();
             // context clear is handled scheduled InspireValidationRunnable above
-          }
-        } catch (Exception e) {
-            response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-            return "";
         }
     }
 

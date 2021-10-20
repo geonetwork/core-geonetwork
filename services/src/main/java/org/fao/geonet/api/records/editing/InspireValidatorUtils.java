@@ -348,7 +348,7 @@ public class InspireValidatorUtils {
      * @throws IOException   Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
-    private String testRun(ServiceContext context, String endPoint, String fileId, List<String> testList, String testTitle) {
+    private String testRun(ServiceContext context, String endPoint, String fileId, List<String> testList, String testTitle) throws JSONException, IOException {
 
         HttpPost request = new HttpPost(endPoint + TestRuns_URL);
         request.setHeader("Content-type", ACCEPT);
@@ -401,13 +401,17 @@ public class InspireValidatorUtils {
             } else {
                 Log.warning(Log.SERVICE,
                     "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + TestRuns_URL);
-
-                return null;
+                throw new IOException(String.format("Error while creating test on validator side. Status is: %d (%s). Error: %s",
+                    response.getStatusCode().value(),
+                    response.getStatusText(),
+                    response.getBody() != null
+                        ? CharStreams.toString(new InputStreamReader(response.getBody())) : ""
+                    ));
             }
 
         } catch (Exception e) {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
-            return null;
+            throw e;
         } finally {
             IOUtils.closeQuietly(response);
         }
@@ -571,7 +575,7 @@ public class InspireValidatorUtils {
      * @throws JSONException the JSON exception
      */
     public String submitFile(ServiceContext context, String serviceEndpoint, InputStream record, String testsuite, String testTitle)
-        throws IOException {
+        throws IOException, JSONException {
 
         if (checkServiceStatus(context, serviceEndpoint)) {
             // Get the tests to execute
@@ -609,7 +613,7 @@ public class InspireValidatorUtils {
      * @throws JSONException the JSON exception
      */
     public String submitUrl(ServiceContext context, String serviceEndpoint, String getRecordById, String testsuite, String testTitle)
-        throws IOException {
+        throws IOException, JSONException {
 
         try {
             if (checkServiceStatus(context, serviceEndpoint)) {
