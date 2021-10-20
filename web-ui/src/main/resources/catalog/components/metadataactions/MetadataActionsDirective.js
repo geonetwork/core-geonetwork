@@ -419,10 +419,15 @@
           scope.currentFormat = null;
           scope.formats = [];
           scope.citationText = '';
+          scope.citationAvailable = false;
           scope.isCode = false;
-          var apiBaseUrl = '../api/records/' + scope.md.uuid + '/formatters/citation?format=';
+
+          function buildUrl() {
+            return '../api/records/' + scope.md.uuid + '/formatters/citation?format=';
+          }
+
           scope.getCitation = function(format) {
-            return $http.get(apiBaseUrl + format, {
+            return $http.get(buildUrl() + format, {
               cache: true,
               headers: {'Accept': format === '?' ? 'application/json' : 'text/plain'}
             })
@@ -445,16 +450,29 @@
                   scope.currentFormat = format;
                   scope.isCode = ['ris', 'bibtex'].indexOf(format) != -1;
                   scope.citationText = r.data;
+                  scope.citationAvailable = true;
                 }
               }, function(r) {
-                gnAlertService.addAlert({
-                  msg: $translate.instant('citation.error'),
-                  type: 'danger'
-                });
+                scope.citationAvailable = false;
               });
           }
-          scope.getCitation('?').then(function() {
-            scope.getCitation(scope.format || scope.defaultFormat);
+
+          function loadCitation() {
+            scope.citationAvailable = false;
+            scope.formats = [];
+            scope.getCitation('?').then(function() {
+              scope.getCitation(scope.format || scope.defaultFormat);
+            });
+          }
+
+          if (scope.md) {
+            loadCitation();
+          }
+
+          scope.$watchCollection('md', function(n, o) {
+            if (n && n !== o) {
+              loadCitation();
+            }
           });
         }
       };

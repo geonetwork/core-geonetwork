@@ -96,7 +96,7 @@
               (<xsl:value-of select="substring(lastPublicationDate, 1, 4)"/>)
             </xsl:if>
             <xsl:text>. </xsl:text>
-            <xsl:value-of select="translatedTitle"/>
+            <strong><xsl:value-of select="translatedTitle"/></strong>
             <xsl:text>. </xsl:text>
             <xsl:value-of select="string-join(publishersNameAndOrgList/*, ', ')"/>
             <br/>

@@ -1,4 +1,4 @@
-<div>
+<div data-ng-show="citationAvailable">
   <div>
     <h2>
       <span data-translate="">cite.dataset</span>
@@ -12,8 +12,10 @@
     </h2>
   </div>
   <div>
-    <div data-ng-hide="isCode"
-         ng-bind-html="citationText"></div>
-    <pre data-ng-show="isCode">{{citationText}}</pre>
+    <div gn-copy-to-clipboard-button="" timeout="1000"/>
+    <div data-ng-if="!isCode"
+         ng-bind-html="citationText">
+    </div>
+    <pre data-ng-if="isCode">{{citationText}}</pre>
   </div>
 </div>

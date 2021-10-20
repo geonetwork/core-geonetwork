@@ -560,6 +560,56 @@
     }
   ]);
 
+  module.service('gnClipboard', ['$q', function ($q) {
+      return {copy: function (toCopy) {
+        var deferred = $q.defer();
+        navigator.permissions.query({name: "clipboard-write"})
+          .then(function(result) {
+          if (result.state == "granted" || result.state == "prompt") {
+            navigator.clipboard.writeText(toCopy).then(function() {
+              deferred.resolve();
+            }, function() {
+              deferred.reject();
+            });
+          }
+        }, function() {
+          deferred.reject();
+        });
+        return deferred.promise;
+      }}
+    }])
+
+  /*
+   * @description
+   * Copy parent element inner HTML or the provided text attribute.
+   */
+  module.directive('gnCopyToClipboardButton', ['gnClipboard', '$timeout',
+    function(gnClipboard, $timeout) {
+      return {
+        restrict: 'A',
+        template: '<a class="btn btn-default btn-xs" ' +
+          '           ng-click="copy()" ' +
+          '           title="{{\'copyToClipboard\' | translate}}">' +
+          '<i class="fa fa-fw" ' +
+          '   ng-class="{\'fa-copy\': !copied, \'fa-check\': copied}"/>' +
+          '</a>',
+        scope: {},
+        link: function linkFn(scope, element, attr) {
+          scope.copied = false;
+          scope.copy = function() {
+            gnClipboard.copy(
+              attr['text']
+                ? attr['text']
+                : element.parent().text().trim()).then(function() {
+              scope.copied = true;
+              $timeout(function() {scope.copied = false}, attr['timeout'] || 5000);
+            })
+          }
+        }
+      };
+    }
+  ]);
+
   /**
    * @ngdoc directive
    * @name gn_utility.directive:gnMetadataPicker
