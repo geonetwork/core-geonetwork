@@ -135,8 +135,17 @@
               var unselect = false;
               for (var i = 0; i < elementsToRemove.length; i++) {
                 if (elementsToRemove[i] == n.id) {
-                  unselect = true;
-                  scope.options.push(n);
+                  // Check if the option to remove is in the choices,
+                  // otherwise don't allow to remove it
+                  for (var j = 0; j < scope.choices.length; j++) {
+                    if (elementsToRemove[i] == scope.choices[j].id) {
+                      unselect = true;
+                      break;
+                    }
+                  }
+                  if (unselect) {
+                    scope.options.push(n);
+                  }
                   break;
                 }
               }
