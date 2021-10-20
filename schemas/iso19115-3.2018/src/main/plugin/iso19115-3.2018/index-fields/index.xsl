@@ -581,18 +581,8 @@
                                   cit:identifier/mcc:MD_Identifier/
                                     mcc:code/(gco:CharacterString|gcx:Anchor)/text())"/>
 
-          <xsl:variable name="key">
-            <xsl:choose>
-              <xsl:when test="$thesaurusId != ''">
-                <xsl:value-of select="tokenize($thesaurusId, '\.')[last()]"/>
-              </xsl:when>
-              <!-- Try to build a thesaurus key based on the name
-              by removing space - to be improved. -->
-              <xsl:when test="normalize-space($thesaurusName) != ''">
-                <xsl:value-of select="replace($thesaurusName, '[^a-zA-Z0-9]', '')"/>
-              </xsl:when>
-            </xsl:choose>
-          </xsl:variable>
+          <xsl:variable name="key"
+                        select="gn-fn-index:build-thesaurus-index-field-name($thesaurusId, $thesaurusName)"/>
 
           <xsl:if test="normalize-space($key) != ''">
             <xsl:variable name="keywords"
@@ -617,28 +607,15 @@
                           select="current-grouping-key()"/>
 
             <xsl:variable name="thesaurusId"
-                          select="normalize-space(mri:thesaurusName/*/
-                                    cit:identifier[position() = 1]/*/
-                                      cit:code/(gco:CharacterString|gcx:Anchor)/text())"/>
+                          select="normalize-space(mri:thesaurusName/cit:CI_Citation/
+                                  cit:identifier/mcc:MD_Identifier/
+                                    mcc:code/(gco:CharacterString|gcx:Anchor)/text())"/>
 
-            <xsl:variable name="key">
-              <xsl:choose>
-                <xsl:when test="$thesaurusId != ''">
-                  <xsl:value-of select="$thesaurusId"/>
-                </xsl:when>
-                <!-- Try to build a thesaurus key based on the name
-                by removing space - to be improved. -->
-                <xsl:when test="normalize-space($thesaurusName) != ''">
-                  <xsl:value-of select="replace($thesaurusName, ' ', '-')"/>
-                </xsl:when>
-              </xsl:choose>
-            </xsl:variable>
+            <xsl:variable name="key"
+                          select="gn-fn-index:build-thesaurus-index-field-name($thesaurusId, $thesaurusName)"/>
 
             <xsl:if test="normalize-space($key) != ''">
-              <xsl:variable name="thesaurusField"
-                            select="replace($key, '[^a-zA-Z0-9]', '')"/>
-
-              "<xsl:value-of select="$thesaurusField"/>": {
+              "<xsl:value-of select="$key"/>": {
               "id": "<xsl:value-of select="gn-fn-index:json-escape($thesaurusId)"/>",
               "title": "<xsl:value-of select="gn-fn-index:json-escape($thesaurusName)"/>",
               "theme": "<xsl:value-of select="gn-fn-index:json-escape(mri:type/*/@codeListValue)"/>",
