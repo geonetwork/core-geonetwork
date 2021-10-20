@@ -30,8 +30,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
-import jeeves.transaction.TransactionManager;
-import jeeves.transaction.TransactionTask;
 import org.apache.http.HttpStatus;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -52,7 +50,6 @@ import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -65,7 +62,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -87,10 +83,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static jeeves.transaction.TransactionManager.CommitBehavior.ALWAYS_COMMIT;
-import static jeeves.transaction.TransactionManager.TransactionRequirement.CREATE_NEW;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+
 
 @RequestMapping(value = {
     "/{portal}/api/records",
@@ -106,15 +101,18 @@ public class InspireValidationApi {
 
     @Autowired
     SettingManager settingManager;
+
     @Autowired
     InspireValidatorUtils inspireValidatorUtils;
+
     @Autowired
     LanguageUtils languageUtils;
+
     String supportedSchemaRegex = "(iso19139|iso19115-3).*";
+
     @Autowired
     private SchemaManager schemaManager;
-    @Autowired
-    private MetadataValidationRepository metadataValidationRepository;
+
     @Autowired
     private ThreadPool threadPool;
 
@@ -208,65 +206,61 @@ public class InspireValidationApi {
 
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
 
-        try {
-            Element md = (Element) ApiUtils.getUserSession(session).getProperty(Geonet.Session.METADATA_EDITING + id);
-            if (md == null) {
-                response.setStatus(HttpStatus.SC_NOT_FOUND);
-                return String.format("Metadata with id '%s' not found in session. To be validated, the record must be in edition session.", id);
-                // TODO: Add support for such validation from not editing session ?
-            }
 
-            // Use formatter to convert the record
-            if (!schema.equals("iso19139")) {
-                try {
-                    ServiceContext context = ApiUtils.createServiceContext(request);
-                    Key key = new Key(metadata.getId(), "eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
-
-                    final FormatterApi.FormatMetadata formatMetadata =
-                        new FormatterApi().new FormatMetadata(context, key, nativeRequest);
-                    final byte[] data = formatMetadata.call().data;
-                    md = Xml.loadString(new String(data, StandardCharsets.UTF_8), false);
-                } catch (Exception e) {
-                    response.setStatus(HttpStatus.SC_NOT_FOUND);
-                    return String.format("Metadata with id '%s' is in schema '%s'. No iso19139 formatter found. Error is %s", id, schema, e.getMessage());
-                }
-            } else {
-                // Cleanup metadocument elements
-                EditLib editLib = appContext.getBean(DataManager.class).getEditLib();
-                editLib.removeEditingInfo(md);
-                editLib.contractElements(md);
-            }
-
-
-            md.detach();
-            ServiceContext context = ApiUtils.createServiceContext(request);
-            Attribute schemaLocAtt = schemaManager.getSchemaLocation(
-                "iso19139", context);
-
-            if (schemaLocAtt != null) {
-                if (md.getAttribute(
-                    schemaLocAtt.getName(),
-                    schemaLocAtt.getNamespace()) == null) {
-                    md.setAttribute(schemaLocAtt);
-                    // make sure namespace declaration for schemalocation is present -
-                    // remove it first (does nothing if not there) then add it
-                    md.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
-                    md.addNamespaceDeclaration(schemaLocAtt.getNamespace());
-                }
-            }
-
-
-            InputStream metadataToTest = convertElement2InputStream(md);
-
-            String testId = inspireValidatorUtils.submitFile(context, URL, metadataToTest, testsuite, metadata.getUuid());
-
-            threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));
-
-            return testId;
-        } catch (Exception e) {
-            response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-            return "";
+        Element md = (Element) ApiUtils.getUserSession(session).getProperty(Geonet.Session.METADATA_EDITING + id);
+        if (md == null) {
+            response.setStatus(HttpStatus.SC_NOT_FOUND);
+            return String.format("Metadata with id '%s' not found in session. To be validated, the record must be in edition session.", id);
+            // TODO: Add support for such validation from not editing session ?
         }
+
+        // Use formatter to convert the record
+        if (!schema.equals("iso19139")) {
+            try {
+                ServiceContext context = ApiUtils.createServiceContext(request);
+                Key key = new Key(metadata.getId(), "eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
+
+                final FormatterApi.FormatMetadata formatMetadata =
+                    new FormatterApi().new FormatMetadata(context, key, nativeRequest);
+                final byte[] data = formatMetadata.call().data;
+                md = Xml.loadString(new String(data, StandardCharsets.UTF_8), false);
+            } catch (Exception e) {
+                response.setStatus(HttpStatus.SC_NOT_FOUND);
+                return String.format("Metadata with id '%s' is in schema '%s'. No iso19139 formatter found. Error is %s", id, schema, e.getMessage());
+            }
+        } else {
+            // Cleanup metadocument elements
+            EditLib editLib = appContext.getBean(DataManager.class).getEditLib();
+            editLib.removeEditingInfo(md);
+            editLib.contractElements(md);
+        }
+
+
+        md.detach();
+
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        Attribute schemaLocAtt = schemaManager.getSchemaLocation(
+            "iso19139", context);
+
+        if (schemaLocAtt != null) {
+            if (md.getAttribute(
+                schemaLocAtt.getName(),
+                schemaLocAtt.getNamespace()) == null) {
+                md.setAttribute(schemaLocAtt);
+                // make sure namespace declaration for schemalocation is present -
+                // remove it first (does nothing if not there) then add it
+                md.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
+                md.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+            }
+        }
+
+        InputStream metadataToTest = convertElement2InputStream(md);
+
+        String testId = inspireValidatorUtils.submitFile(context, URL, metadataToTest, testsuite, metadata.getUuid());
+
+        threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));
+
+        return testId;
     }
 
     private InputStream convertElement2InputStream(Element md)
