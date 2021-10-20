@@ -307,8 +307,8 @@
           if (angular.isObject(link.title)) {
             title = $filter('gnLocalized')(link.title);
           }
-          if (angular.isObject(link.name)) {
-            name = $filter('gnLocalized')(link.name);
+          if (angular.isObject(name)) {
+            name = $filter('gnLocalized')(name);
           }
 
           if (name && name !== '') {

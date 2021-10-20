@@ -583,7 +583,7 @@ goog.require('gn_alert');
             'enabled': false
           },
           "addWMSLayersToMap": {
-            "urlLayerParam": "layers"
+            "urlLayerParam": ""
           }
         },
         'map': {
