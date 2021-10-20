@@ -113,12 +113,13 @@
     'hotkeys',
     'gnGlobalSettings',
     'gnExternalViewer',
+    'gnUrlUtils',
     function($scope, $location, $filter,
              suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
              gnMap, gnMdView, mdView, gnWmsQueue,
              gnSearchLocation, gnOwsContextService,
-             hotkeys, gnGlobalSettings, gnExternalViewer) {
+             hotkeys, gnGlobalSettings, gnExternalViewer, gnUrlUtils) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -142,6 +143,7 @@
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
       $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
       $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
+      $scope.addToMapLayerNameUrlParam = gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam;
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();
         $('button.gn-minimap-toggle > i').toggleClass('fa-angle-double-left fa-angle-double-right');
@@ -266,12 +268,27 @@
           };
 
           var title = link.title;
-          var name = link.name;
+
+          var name;
+
+          if ( $scope.addToMapLayerNameUrlParam !== '') {
+            var params = gnUrlUtils.parseKeyValue(
+              config.url.split('?')[1]);
+            name = params[$scope.addToMapLayerNameUrlParam];
+
+            if (angular.isUndefined(name)) {
+              name = link.name;
+            }
+          } else {
+            name = link.name;
+          }
+
           if (angular.isObject(link.title)) {
             title = $filter('gnLocalized')(link.title);
           }
-          if (angular.isObject(link.name)) {
-            name = $filter('gnLocalized')(link.name);
+
+          if (angular.isObject(name)) {
+            name = $filter('gnLocalized')(name);
           }
 
           if (name && name !== '') {

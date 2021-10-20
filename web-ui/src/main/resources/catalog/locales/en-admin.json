@@ -1456,5 +1456,8 @@
     "ui-autoFitOnLayer":"Always zoom on data",
     "ui-autoFitOnLayer-help":"If checked, the map will automatically zoom on data when adding a layer from a record. Otherwise, a message will be shown to let the user zoom on data manually.",
     "styleVariable-gnHeaderHeight":"Height",
-    "confirmDeletecategory": "Are you sure you want to delete this category?"
+    "confirmDeletecategory": "Are you sure you want to delete this category?",
+    "ui-addWMSLayersToMap": "Add WMS layers from metadata to the map viewer",
+    "ui-addWMSLayersToMap-urlLayerParam": "URL parameter with the layer name",
+    "ui-addWMSLayersToMap-urlLayerParam-help": "If the WMS layer name is configured in the metadata resource url, configure the url parameter that contains the layer name."
 }
