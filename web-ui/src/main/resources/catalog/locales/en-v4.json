@@ -179,5 +179,6 @@
   "system/inspire/remotevalidation/apikey": "API key",
   "system/inspire/remotevalidation/apikey-help": "Users and organisations interested in receiving an API key will need to contact the Validator team by sending an e-mail to JRC-INSPIRE-SUPPORT AT ec.europa.eu and provide the following information: name of the organisation, responsible contact point and intended use of the API key.",
   "system/inspire/remotevalidation/nodeid": "Portal identifier to use for the validation",
-  "system/inspire/remotevalidation/nodeid-help": "If null, the record is uploaded to the validator, if a node is defined, then the CSW url of this node is used, the validator will make a GetRecordById request to retrieve the record."
+  "system/inspire/remotevalidation/nodeid-help": "If null, the record is uploaded to the validator, if a node is defined, then the CSW url of this node is used, the validator will make a GetRecordById request to retrieve the record.",
+  "forMoreInformationContact": "For more information contact "
 }

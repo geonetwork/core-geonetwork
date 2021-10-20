@@ -8,11 +8,25 @@
       </div>
     </div>
 
-    <div class="col-md-offset-2 col-md-8 well well-sm" data-ng-if="serviceMetadataForPortal != null">
-      {{serviceMetadataForPortal.resourceAbstract}}
+    <div class="col-md-3 well well-sm"
+         data-ng-if="serviceMetadataForPortal != null">
+      <p>{{serviceMetadataForPortal.resourceAbstract}}</p>
+
+      <p data-ng-if="serviceMetadataForPortal.contactForResource
+                     && serviceMetadataForPortal.contactForResource.length > 0">
+        <span data-translate="">forMoreInformationContact</span>
+        <span data-ng-repeat="c in serviceMetadataForPortal.contactForResource"
+            data-ng-if="c.email != ''">
+          <a href="mailto:{{c.email}}">{{c.email}}</a>
+          <span data-ng-if="!$last">,</span>
+        </span>
+      </p>
+
+
     </div>
 
-    <div class="col-md-offset-3 col-md-6"
+    <div class="col-md-6"
+         data-ng-class="{'col-md-offset-3': serviceMetadataForPortal == null}"
           data-ng-if="!showHealthIndexError">
 
       <div class="input-group gn-form-any">
