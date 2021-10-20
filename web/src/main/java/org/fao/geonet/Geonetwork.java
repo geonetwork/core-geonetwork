@@ -500,6 +500,10 @@ public class Geonetwork implements ApplicationHandler {
         final long count = settingRepository.count();
         if (count == 0) {
             try {
+                // Set setFirstInitialSetupFlag to true for the encryptorInitializer as this is a new installation.
+                EncryptorInitializer encryptorInitializer = context.getBean(EncryptorInitializer.class);
+                encryptorInitializer.setFirstInitialSetupFlag(true);
+
                 // import data from init files
                 List<Pair<String, String>> importData = context.getBean("initial-data", List.class);
                 final DbLib dbLib = new DbLib();
