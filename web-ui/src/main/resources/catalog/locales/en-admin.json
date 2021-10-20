@@ -343,6 +343,7 @@
     "data.configDir": "Configuration folder: ",
     "data.dataDir": "Data directory: ",
     "data.formatterPath": "Formatter directory: ",
+    "data.indexConfigDir": "Index configuration folder: ",
     "data.resources": "Resources folder: ",
     "data.backupDir": "Backup folder: ",
     "data.schemaPluginsDir": "Standard folder: ",
