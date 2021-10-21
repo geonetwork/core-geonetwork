@@ -36,8 +36,8 @@
      *
      * TODO: Add drag&drop
      */
-  module.directive('gnMultiselect', [
-    function() {
+  module.directive('gnMultiselect', ['gnUtilityService', '$translate',
+    function(gnUtilityService, $translate) {
 
       return {
         restrict: 'A',
@@ -133,6 +133,7 @@
                 [k.id] : scope.currentSelectionRight;
             scope.selected = $.grep(scope.selected, function(n) {
               var unselect = false;
+              var notAllowedChoices = [];
               for (var i = 0; i < elementsToRemove.length; i++) {
                 if (elementsToRemove[i] == n.id) {
                   // Check if the option to remove is in the choices,
@@ -145,9 +146,22 @@
                   }
                   if (unselect) {
                     scope.options.push(n);
+                  } else {
+                    notAllowedChoices.push(n.name);
                   }
                   break;
                 }
+              }
+
+              if (notAllowedChoices.length > 0) {
+                var choiceNames = notAllowedChoices.join(',');
+
+                gnUtilityService.openModal({
+                  title: $translate.instant('unselectChoiceNotAllowedTitle'),
+                  content: '<span data-translate="unselectChoiceNotAllowed"' +
+                    '            data-translate-values="{\'notAllowedChoices\': \'' + choiceNames + '\'}"></span>',
+                  className: 'gn-choice-popup'
+                }, scope, 'UnselectChoice');
               }
 
               scope.currentSelectionLeft = [];
