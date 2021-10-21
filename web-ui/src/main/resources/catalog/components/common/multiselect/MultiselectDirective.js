@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,10 +23,12 @@
 
 (function() {
   goog.provide('gn_multiselect_directive');
+  goog.require('gn_utility_service');
 
-  var module = angular.module('gn_multiselect_directive', []);
+  var module = angular.module('gn_multiselect_directive',
+    ['gn_utility_service', 'pascalprecht.translate']);
 
-  /**
+    /**
      * Provide 2 multiple select list and allow
      * selection of element by double click or
      * move to left/right button.
@@ -44,7 +46,7 @@
         scope: {
           'selected': '=gnMultiselect',
           'choices': '=',
-          'readonlyMode': '='
+          'readonlyMode': '=?'
         },
         templateUrl: '../../catalog/components/common/multiselect/partials/' +
             'multiselect.html',
@@ -52,7 +54,7 @@
 
           var sortOnSelection = true;
 
-          scope.readonlyMode = scope.readonlyMode || false;
+          scope.readonlyMode = scope.readonlyMode || false;
 
           //
           scope.currentSelectionLeft = [];
@@ -149,7 +151,7 @@
                   if (unselect) {
                     scope.options.push(n);
                   } else {
-                    notAllowedChoices.push(n.langlabel);
+                    notAllowedChoices.push(n.langlabel || n.name);
                   }
 
                 }
@@ -162,7 +164,7 @@
             });
 
             if (notAllowedChoices.length > 0) {
-              var choiceNames = notAllowedChoices.join(',');
+              var choiceNames = notAllowedChoices.join(', ');
 
               gnUtilityService.openModal({
                 title: $translate.instant('unselectChoiceNotAllowedTitle'),
