@@ -557,5 +557,7 @@
     "clickToClearMapBox": "Click to clear the map box.",
     "clearRectangle": "Clear extent",
     "unselectChoiceNotAllowedTitle": "Unselect choices",
-    "unselectChoiceNotAllowed": "Some choices can't be removed: {{notAllowedChoices}}"
+    "unselectChoiceNotAllowed": "Some choices can't be removed: {{notAllowedChoices}}",
+    "searchOptions": "Search options",
+    "options": "Options"
 }

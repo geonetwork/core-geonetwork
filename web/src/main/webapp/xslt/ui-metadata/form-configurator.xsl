@@ -134,6 +134,7 @@
       <xsl:choose>
         <xsl:when test="@type = 'process' and @process">
           <xsl:call-template name="render-batch-process-button">
+            <xsl:with-param name="process-label-key" select="if (@labelKey) then @labelKey else @process"/>
             <xsl:with-param name="process-name" select="@process"/>
             <xsl:with-param name="process-params" select="@params"/>
             <xsl:with-param name="btnClass" select="@btnClass"/>

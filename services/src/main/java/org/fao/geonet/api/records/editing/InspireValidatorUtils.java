@@ -29,9 +29,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -42,6 +40,7 @@ import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
@@ -66,6 +65,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_APIKEY;
+
 /**
  * Utility class to access methods in Inspire Service.
  *
@@ -76,6 +77,9 @@ public class InspireValidatorUtils {
 
     @Autowired
     private GeonetHttpRequestFactory requestFactory;
+
+    @Autowired
+    SettingManager settingManager;
 
     /**
      * The Constant USER_AGENT.
@@ -345,12 +349,14 @@ public class InspireValidatorUtils {
      * @throws IOException   Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
-    private String  testRun(ServiceContext context, String endPoint, String fileId, List<String> testList, String testTitle) {
+    private String testRun(ServiceContext context, String endPoint, String fileId, List<String> testList, String testTitle) throws JSONException, IOException {
 
         HttpPost request = new HttpPost(endPoint + TestRuns_URL);
         request.setHeader("Content-type", ACCEPT);
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
+        addApiKey(request);
+
         ClientHttpResponse response = null;
 
         try {
@@ -396,14 +402,30 @@ public class InspireValidatorUtils {
             } else {
                 Log.warning(Log.SERVICE,
                     "WARNING: INSPIRE service HTTP response: " + response.getStatusCode().value() + " for " + TestRuns_URL);
-                return null;
+                throw new IOException(String.format("Error while creating test on validator side. Status is: %d (%s). Error: %s",
+                    response.getStatusCode().value(),
+                    response.getStatusText(),
+                    response.getBody() != null
+                        ? CharStreams.toString(new InputStreamReader(response.getBody())) : ""
+                    ));
             }
 
         } catch (Exception e) {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
-            return null;
+            throw e;
         } finally {
             IOUtils.closeQuietly(response);
+        }
+    }
+
+    /**
+     * See https://github.com/INSPIRE-MIF/helpdesk-validator/issues/594
+     */
+    private void addApiKey(HttpRequestBase request) {
+        String apikey =
+            settingManager.getValue(SYSTEM_INSPIRE_REMOTE_VALIDATION_APIKEY);
+        if (StringUtils.isNotEmpty(apikey)) {
+            request.addHeader("X-API-key", apikey);
         }
     }
 
@@ -424,6 +446,7 @@ public class InspireValidatorUtils {
 
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
+        addApiKey(request);
 
         try (ClientHttpResponse response = this.execute(context, request)) {
             if (response.getStatusCode().value() == 200) {
@@ -473,6 +496,7 @@ public class InspireValidatorUtils {
 
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Accept", ACCEPT);
+        addApiKey(request);
 
         try (ClientHttpResponse response = this.execute(context, request)) {
 
@@ -552,7 +576,7 @@ public class InspireValidatorUtils {
      * @throws JSONException the JSON exception
      */
     public String submitFile(ServiceContext context, String serviceEndpoint, InputStream record, String testsuite, String testTitle)
-        throws IOException {
+        throws IOException, JSONException {
 
         if (checkServiceStatus(context, serviceEndpoint)) {
             // Get the tests to execute
@@ -590,7 +614,7 @@ public class InspireValidatorUtils {
      * @throws JSONException the JSON exception
      */
     public String submitUrl(ServiceContext context, String serviceEndpoint, String getRecordById, String testsuite, String testTitle)
-        throws IOException {
+        throws IOException, JSONException {
 
         try {
             if (checkServiceStatus(context, serviceEndpoint)) {

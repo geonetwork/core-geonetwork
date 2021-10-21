@@ -40,10 +40,6 @@
   </xsl:variable>
 
   <xsl:template name="css-load">
-    <!--
-            TODO : less compilation
-            <link href="style/app.css" rel="stylesheet" media="screen" />
--->
     <link href="{/root/gui/url}/static/gn_fonts.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
           media="screen"/>
 
@@ -72,6 +68,7 @@
   <xsl:template name="css-load-nojs">
     <link href="{/root/gui/url}/static/{$customFilename}.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
           media="screen"/>
+
     <link href="{/root/gui/url}/static/gn_metadata_pdf.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
           media="print"/>
   </xsl:template>
@@ -86,9 +83,23 @@
     </xsl:if>
 
 
-    <xsl:if test="$isRecaptchaEnabled and $service = 'new.account'">
-      <script src="https://www.google.com/recaptcha/api.js"></script>
-    </xsl:if>
+    <!-- Load recaptcha api if recaptcha is enabled:
+          - in the new account service.
+          - in the search application if metadaat user feedback is enabled
+    -->
+    <xsl:choose>
+      <xsl:when test="$isRecaptchaEnabled and ($service = 'new.account' or ($angularApp = 'gn_search' and $metadataUserFeedbackEnabled))">
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- Add dummy object to prevent angularjs-recaptcha to load recaptcha api.js file in other cases.
+             If angularjs-recaptcha doesn't find the grecaptcha object with the function render, request the api.js file
+             adding some extra cookies that can cause issues with EU directive.
+        -->
+        <script>var grecaptcha = {render: function() {}};
+        </script>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <xsl:choose>
       <xsl:when test="$isDebugMode">

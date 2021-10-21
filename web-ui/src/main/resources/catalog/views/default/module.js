@@ -131,13 +131,14 @@
     'gnESFacet',
     'gnFacetSorter',
     'gnExternalViewer',
+    'gnUrlUtils',
     function($scope, $location, $filter,
              suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
              gnMap, gnMdView, mdView, gnWmsQueue,
              gnSearchLocation, gnOwsContextService,
              hotkeys, gnGlobalSettings, gnESClient,
-             gnESFacet, gnFacetSorter, gnExternalViewer) {
+             gnESFacet, gnFacetSorter, gnExternalViewer, gnUrlUtils) {
 
 
       var viewerMap = gnSearchSettings.viewerMap;
@@ -169,6 +170,8 @@
 
       $scope.facetSorter = gnFacetSorter.sortByTranslation;
 
+      $scope.addToMapLayerNameUrlParam = gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam;
+
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();
         $('button.gn-minimap-toggle > i').toggleClass('fa-angle-double-left fa-angle-double-right');
@@ -192,20 +195,6 @@
                 anyField.focus();
               }
             }
-          }).add({
-            combo: 'enter',
-            description: $translate.instant('hotkeySearchTheCatalog'),
-            allowIn: 'INPUT',
-            callback: function() {
-              $location.search('tab=search');
-            }
-            //}).add({
-            //  combo: 'r',
-            //  description: $translate.instant('hotkeyResetSearch'),
-            //  allowIn: 'INPUT',
-            //  callback: function () {
-            //    $scope.resetSearch();
-            //  }
           }).add({
             combo: 'm',
             description: $translate.instant('hotkeyMap'),
@@ -300,12 +289,26 @@
           };
 
           var title = link.title;
-          var name = link.name;
+
+          var name;
+
+          if ( $scope.addToMapLayerNameUrlParam !== '') {
+            var params = gnUrlUtils.parseKeyValue(
+              config.url.split('?')[1]);
+            name = params[$scope.addToMapLayerNameUrlParam];
+
+            if (angular.isUndefined(name)) {
+              name = link.name;
+            }
+          } else {
+            name = link.name;
+          }
+
           if (angular.isObject(link.title)) {
             title = $filter('gnLocalized')(link.title);
           }
-          if (angular.isObject(link.name)) {
-            name = $filter('gnLocalized')(link.name);
+          if (angular.isObject(name)) {
+            name = $filter('gnLocalized')(name);
           }
 
           if (name && name !== '') {
@@ -319,7 +322,7 @@
           // if an external viewer is defined, use it here
           if (gnExternalViewer.isEnabled()) {
             gnExternalViewer.viewService({
-              id: md ? md.getId() : null,
+              id: md ? md.id : null,
               uuid: config.uuid
             }, {
               type: config.type,

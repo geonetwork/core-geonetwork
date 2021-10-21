@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -25,6 +25,7 @@ package org.fao.geonet.component.csw;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
@@ -330,11 +331,22 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         vars.put("$PROTOCOL", protocol);
         vars.put("$HOST", sm.getValue(Settings.SYSTEM_SERVER_HOST));
 
-        String insecureport = sm.getValue(Settings.SYSTEM_SERVER_PORT);
-        String secureport = sm.getValue(Settings.SYSTEM_SERVER_SECURE_PORT);
+        Integer port;
+        try {
+            port = sm.getValueAsInt(Settings.SYSTEM_SERVER_PORT);
+        } catch (NumberFormatException e) {
+            port = null;
+        }
 
-        String port = "https".equals(protocol) ? secureport : insecureport;
-        vars.put("$PORT", isPortRequired(protocol, port) ? ":" + port : "");
+        if (port == null) {
+            if (protocol.equalsIgnoreCase(Geonet.HttpProtocol.HTTPS)) {
+                port = Geonet.DefaultHttpPort.HTTPS;
+            } else {
+                port = Geonet.DefaultHttpPort.HTTP;
+            }
+        }
+
+        vars.put("$PORT", isPortRequired(protocol, String.valueOf(port)) ? ":" + port : "");
         vars.put("$END-POINT", context.getService());
         vars.put("$NODE_ID", context.getNodeId());
 

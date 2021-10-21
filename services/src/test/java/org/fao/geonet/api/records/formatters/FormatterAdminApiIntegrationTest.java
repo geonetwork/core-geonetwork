@@ -43,12 +43,12 @@ import jeeves.server.context.ServiceContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ListFormattersIntegrationTest extends AbstractServiceIntegrationTest {
+public class FormatterAdminApiIntegrationTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
     @Autowired
-    private ListFormatters listService;
+    private FormatterAdminApi listService;
 
     @Test
     public void testExec() throws Exception {
@@ -64,15 +64,17 @@ public class ListFormattersIntegrationTest extends AbstractServiceIntegrationTes
         assertFormattersForSchema(true, "dublin-core", listService, "full_view");
     }
 
-    private void assertFormattersForSchema(boolean publishedOnly, String schema, ListFormatters listService,
-                                           String... expectedFormatters) throws Exception {
+    private void assertFormattersForSchema(
+        boolean publishedOnly, String schema, FormatterAdminApi listService,
+        String... expectedFormatters) throws Exception {
 
-        final ListFormatters.FormatterDataResponse response = listService.exec(null, null, schema, false, publishedOnly);
+        final FormatterAdminApi.FormatterDataResponse response =
+            listService.listFormatters(null, null, schema, false, publishedOnly);
 
-        final List<String> formatters = Lists.newArrayList(Lists.transform(response.getFormatters(), new Function<ListFormatters.FormatterData, String>() {
+        final List<String> formatters = Lists.newArrayList(Lists.transform(response.getFormatters(), new Function<FormatterAdminApi.FormatterData, String>() {
             @Nullable
             @Override
-            public String apply(@Nullable ListFormatters.FormatterData input) {
+            public String apply(@Nullable FormatterAdminApi.FormatterData input) {
                 return input.getSchema() + "/" + input.getId();
             }
         }));
@@ -80,10 +82,14 @@ public class ListFormattersIntegrationTest extends AbstractServiceIntegrationTes
         Collections.sort(formatters);
         Arrays.sort(expectedFormatters);
 
-        assertEquals("Expected/Actual: \n" + Arrays.asList(expectedFormatters) + "\n" + formatters,
-            expectedFormatters.length, formatters.size());
+        assertEquals(
+            "Expected/Actual: \n" + Arrays.asList(expectedFormatters) + "\n" + formatters,
+            expectedFormatters.length,
+            formatters.size());
         for (String expectedFormatter : expectedFormatters) {
-            assertTrue("Expected formatter: " + expectedFormatter, formatters.contains(schema + "/" + expectedFormatter));
+            assertTrue(
+                "Expected formatter: " + expectedFormatter,
+                formatters.contains(schema + "/" + expectedFormatter));
         }
     }
 }

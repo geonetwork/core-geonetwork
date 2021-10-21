@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.fao.geonet.api.reports.ReportUtils.CSV_FORMAT;
+
 /**
  * Created by jose on 31/01/17.
  */
@@ -46,9 +48,7 @@ public class ReportInternalMetadata implements IReport {
 
         try {
             //initialize CSVPrinter object
-            CSVFormat csvFileFormat =
-                CSVFormat.DEFAULT.withRecordSeparator("\n");
-            csvFilePrinter = new CSVPrinter(writer, csvFileFormat);
+            csvFilePrinter = new CSVPrinter(writer, CSV_FORMAT);
 
             // Retrieve metadata
             final IMetadataUtils metadataRepository =

@@ -75,10 +75,10 @@
   module.directive('gnUserSearchesPanel', [
     'gnUserSearchesService', 'gnConfigService', 'gnConfig',
     'gnUtilityService', 'gnAlertService', 'gnLangs', 'gnGlobalSettings',
-    '$http', '$translate', '$location', '$filter',
+    '$http', '$translate', '$location', '$filter', '$route',
     function(gnUserSearchesService, gnConfigService, gnConfig,
              gnUtilityService, gnAlertService, gnLangs, gnGlobalSettings,
-             $http, $translate, $location, $filter) {
+             $http, $translate, $location, $filter, $route) {
       return {
         restrict: 'A',
         replace: true,
@@ -89,6 +89,12 @@
           '../../catalog/components/usersearches/partials/usersearchespanel.html',
         link: function postLink(scope, element, attrs) {
           scope.lang = gnLangs.current;
+          // Configure the base url to launch the user search selected (search or board page)
+          if ($route && $route.current && $route.current.$$route.originalPath === '/board') {
+            scope.routeSearch = 'board';
+          } else {
+            scope.routeSearch = 'search';
+          }
           scope.isUserSearchesEnabled =
             gnGlobalSettings.gnCfg.mods.search.usersearches.enabled;
 

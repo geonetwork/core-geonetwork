@@ -32,6 +32,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -68,6 +69,8 @@ public class TranslationApi implements ApplicationContextAware {
     TranslationsRepository translationsRepository;
     @Autowired
     TranslationPackBuilder translationPackBuilder;
+    @Autowired
+    IsoLanguagesMapper isoLanguagesMapper;
 
     private ApplicationContext context;
 
@@ -134,7 +137,7 @@ public class TranslationApi implements ApplicationContextAware {
         ServletRequest request
     ) throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        String language = languageUtils.locale2gnCode(locale.getISO3Language());
+        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         List<Translations> translations = translationsRepository.findAllByFieldName(key);
         if(translations.size() == 0) {
             throw new ResourceNotFoundException(String.format(
@@ -157,7 +160,7 @@ public class TranslationApi implements ApplicationContextAware {
         ServletRequest request
     ) throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        String language = languageUtils.locale2gnCode(locale.getISO3Language());
+        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         return translationPackBuilder.getAllDbTranslations(language);
 
     }
@@ -179,7 +182,7 @@ public class TranslationApi implements ApplicationContextAware {
         ServletRequest request
     ) throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        String language = languageUtils.locale2gnCode(locale.getISO3Language());
+        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         return translationPackBuilder.getDbTranslation(language, type);
     }
 
@@ -222,7 +225,7 @@ public class TranslationApi implements ApplicationContextAware {
     ) throws Exception {
         final ServiceContext context = ApiUtils.createServiceContext(httpRequest);
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        String language = languageUtils.locale2gnCode(locale.getISO3Language());
+        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         return translationPackBuilder.getPack(language, pack, context);
     }
 

@@ -122,9 +122,9 @@
                 return topicCategoryAutocompleter;
               },
 
-              getTopicCategories: function() {
+              getTopicCategories: function(schema) {
                 var defer = $q.defer();
-                var url = getTopicCategoriesSearchUrl();
+                var url = getTopicCategoriesSearchUrl(schema);
                 $http.get(url, { cache: true }).
                 success(function(data) {
                   defer.resolve(parseTopicCategoriesResponse(data));

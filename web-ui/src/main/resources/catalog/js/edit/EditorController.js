@@ -24,17 +24,6 @@
 (function() {
   goog.provide('gn_editor_controller');
 
-
-
-
-
-
-
-
-
-
-
-
   goog.require('gn_batchedit_controller');
   goog.require('gn_directory_controller');
   goog.require('gn_editorboard_controller');
@@ -535,7 +524,7 @@
               $scope.saveError = true;
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('saveMetadataError'),
-                error: error,
+                error: error.description,
                 timeout: 0,
                 type: 'danger'});
             });
@@ -582,6 +571,7 @@
               }, function(reason) {
                 $rootScope.$broadcast('StatusUpdated', {
                   title: $translate.instant(reason.data.error.message),
+                  error: reason.data.error.description,
                   timeout: 0,
                   type: 'danger'
                 });
@@ -598,10 +588,11 @@
                 //  gnEditor.refreshEditorForm(null, true);
                 closeEditor();
               }, function(error) {
+                //an api-error is returned as xml
                 $scope.savedStatus = gnCurrentEdit.savedStatus;
                 $rootScope.$broadcast('StatusUpdated', {
                   title: $translate.instant('cancelMetadataError'),
-                  error: error,
+                  error: $(data).find('description').text(),
                   timeout: 0,
                   type: 'danger'});
               });
@@ -642,7 +633,7 @@
 
               $rootScope.$broadcast('StatusUpdated', {
                 title: error ? error.message : $translate.instant('saveMetadataError'),
-                error: error,
+                error: error.description,
                 timeout: 0,
                 type: 'danger'});
             });

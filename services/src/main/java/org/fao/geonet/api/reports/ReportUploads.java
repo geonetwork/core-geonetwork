@@ -19,6 +19,8 @@ import org.springframework.data.domain.Sort;
 import java.io.PrintWriter;
 import java.util.*;
 
+import static org.fao.geonet.api.reports.ReportUtils.CSV_FORMAT;
+
 /**
  * Creates a report for metadata file uploads.
  *
@@ -56,9 +58,7 @@ public class ReportUploads implements IReport {
 
         try {
             // Initialize CSVPrinter object
-            CSVFormat csvFileFormat =
-                CSVFormat.DEFAULT.withRecordSeparator("\n");
-            csvFilePrinter = new CSVPrinter(writer, csvFileFormat);
+            csvFilePrinter = new CSVPrinter(writer, CSV_FORMAT);
 
             // Retrieve metadata file uploads
             final MetadataFileUploadRepository uploadRepository =

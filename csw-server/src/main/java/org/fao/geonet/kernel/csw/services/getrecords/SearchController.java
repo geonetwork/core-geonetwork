@@ -81,10 +81,6 @@ public class SearchController {
 
     public final static String DEFAULT_ELEMENTNAMES_STRATEGY = "relaxed";
 
-    private static final Configuration FILTER_1_0_0 = new org.geotools.filter.v1_0.OGCConfiguration();
-    private static final Configuration FILTER_1_1_0 = new org.geotools.filter.v1_1.OGCConfiguration();
-    private static final Configuration FILTER_2_0_0 = new org.geotools.filter.v2_0.FESConfiguration();
-
     @Autowired
     IMetadataUtils metadataUtils;
 
@@ -100,20 +96,6 @@ public class SearchController {
 
     @Autowired
     private SchemaManager schemaManager;
-
-    public static Parser createFilterParser(String filterVersion) {
-        Configuration config;
-        if (filterVersion.equals(FilterCapabilities.VERSION_100)) {
-            config = FILTER_1_0_0;
-        } else if (filterVersion.equals(FilterCapabilities.VERSION_200)) {
-            config = FILTER_2_0_0;
-        } else if (filterVersion.equals(FilterCapabilities.VERSION_110)) {
-            config = FILTER_1_1_0;
-        } else {
-            throw new IllegalArgumentException("UnsupportFilterVersion: " + filterVersion);
-        }
-        return new Parser(config);
-    }
 
     /**
      * Retrieves metadata from the database. Conversion between metadata record and output schema
@@ -572,30 +554,8 @@ public class SearchController {
         }
     }
 
-
-
-    private Filter parseFilter(Element xml, String filterVersion) {
-        if (xml == null) return null;
-
-        final Parser parser = createFilterParser(filterVersion);
-        parser.setValidating(true);
-        parser.setFailOnValidationError(true);
-        String string = Xml.getString(xml);
-        try {
-            final Object parseResult = parser.parse(new StringReader(string));
-            if (parseResult instanceof Filter) {
-                return (Filter) parseResult;
-            } else {
-                return null;
-            }
-        } catch (IOException | SAXException | ParserConfigurationException e) {
-            Log.error(Geonet.CSW_SEARCH, "Errors occurred when trying to parse a filter", e);
-            throw new IllegalArgumentException(e.getMessage());
-        }
-    }
-
     private String  convertCswFilterToEsQuery(Element xml, String filterVersion) {
-        return CswFilter2Es.translate(parseFilter(xml, filterVersion), fieldMapper);
+        return CswFilter2Es.translate(FilterParser.parseFilter(xml, filterVersion), fieldMapper);
     }
 
     /**

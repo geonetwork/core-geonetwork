@@ -26,3 +26,4 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'spa','Record res
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'tur','Record restored.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'vie','Record restored.');
 
+DELETE FROM Settings WHERE name = 'system/server/securePort';

@@ -184,7 +184,7 @@
 
         <xsl:variable name="thesaurusTitleTranslated" select="$listOfThesaurus/thesaurus[title=$thesaurusTitle]/multilingualTitles/multilingualTitle[lang=$uiLang2code]/title" />
         <xsl:variable name="thesaurusTitleForEditor" select="if (string($thesaurusTitleTranslated)) then $thesaurusTitleTranslated else $thesaurusTitle" />
-        
+
         <!-- The thesaurus key may be contained in the MD_Identifier field or
           get it from the list of thesaurus based on its title.
           -->
@@ -281,8 +281,14 @@
                       select="count(gmd:type/gmd:MD_KeywordTypeCode[@codeListValue='place']) > 0"/>
         <xsl:if test="$isTypePlace">
           <xsl:call-template name="render-batch-process-button">
+            <xsl:with-param name="process-label-key" select="'add-extent-from-geokeywords'"/>
             <xsl:with-param name="process-name" select="'add-extent-from-geokeywords'"/>
-            <xsl:with-param name="process-params">{"replace": true}</xsl:with-param>
+            <xsl:with-param name="process-params">{"replace": "true"}</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="render-batch-process-button">
+            <xsl:with-param name="process-label-key" select="'add-one-extent-from-geokeywords'"/>
+            <xsl:with-param name="process-name" select="'add-extent-from-geokeywords'"/>
+            <xsl:with-param name="process-params">{"replace": "true", "boundingAll": "true"}</xsl:with-param>
           </xsl:call-template>
         </xsl:if>
       </xsl:when>
