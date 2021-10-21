@@ -48,8 +48,8 @@
   <property name="bundleName" value="geonetwork-bundle"/>
   <property name="displayName" value="GeoNetwork opensource"/>
   <property name="homepage" value="https://geonetwork-opensource.org"/>
-  <property name="version" value="3.10.8"/>
-  <property name="subVersion" value="0"/>
+  <property name="version" value="3.10.9"/>
+  <property name="subVersion" value="SNAPSHOT"/>
   <property name="javaVersion" value="1.8.0"/>
   <property name="jreUrl" value="http://openjdk.java.net/"/>
   <property name="OS" value="Compiled on ${os.name} (${osys})"/>
