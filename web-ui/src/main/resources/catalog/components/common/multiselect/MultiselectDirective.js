@@ -131,9 +131,11 @@
           scope.unselect = function(k) {
             var elementsToRemove = k ?
                 [k.id] : scope.currentSelectionRight;
+            var notAllowedChoices = [];
+
             scope.selected = $.grep(scope.selected, function(n) {
               var unselect = false;
-              var notAllowedChoices = [];
+
               for (var i = 0; i < elementsToRemove.length; i++) {
                 if (elementsToRemove[i] == n.id) {
                   // Check if the option to remove is in the choices,
@@ -147,21 +149,10 @@
                   if (unselect) {
                     scope.options.push(n);
                   } else {
-                    notAllowedChoices.push(n.name);
+                    notAllowedChoices.push(n.langlabel);
                   }
-                  break;
+
                 }
-              }
-
-              if (notAllowedChoices.length > 0) {
-                var choiceNames = notAllowedChoices.join(',');
-
-                gnUtilityService.openModal({
-                  title: $translate.instant('unselectChoiceNotAllowedTitle'),
-                  content: '<span data-translate="unselectChoiceNotAllowed"' +
-                    '            data-translate-values="{\'notAllowedChoices\': \'' + choiceNames + '\'}"></span>',
-                  className: 'gn-choice-popup'
-                }, scope, 'UnselectChoice');
               }
 
               scope.currentSelectionLeft = [];
@@ -169,6 +160,17 @@
 
               return !unselect;
             });
+
+            if (notAllowedChoices.length > 0) {
+              var choiceNames = notAllowedChoices.join(',');
+
+              gnUtilityService.openModal({
+                title: $translate.instant('unselectChoiceNotAllowedTitle'),
+                content: '<span data-translate="unselectChoiceNotAllowed"' +
+                  '            data-translate-values="{\'notAllowedChoices\': \'' + choiceNames + '\'}"></span>',
+                className: 'gn-choice-popup'
+              }, scope, 'UnselectChoice');
+            }
 
             if (sortOnSelection) {
               scope.selected.sort(scope.sortFn);
