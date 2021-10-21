@@ -36,12 +36,16 @@ Adjust the variables in config.py for the SMTP server
 
 ```
 python3 -m venv clientWPS # generate venv
+
 source clientWPS/bin/activate  # activate venv
+pip3 install --upgrade pip
+pip3 install .
 pip3 install -r requirements.txt # get dependencies
-pyinstaller --paths clientWPS/lib/python3.7/site-packages wps_client/client_wps.py # build executable
+pyinstaller --windowed --onefile --paths venv/lib/python3.6/site-packages wps_client/client_wps_surval.py
+pyinstaller --windowed --onefile --paths venv/lib/python3.6/site-packages wps_client/client_wps.py
 ```
 
 Then launch using :
 ```
-./dist/client_wps/client_wps --email julien.waddle@camptocamp.com -d /home/jwaddle/Documents/sextant/sextant-geonetwork-7/sextant-geonetwork/geonetwork/sextant/wps_client/src --url https://www.ifremer.fr/services/wps3/surval --xml ./sample/wps.xml --timeout 20 --smtphost localhost --smtpport 255 --fromemail toto@toto.fr
+./client_wps --email julien.waddle@camptocamp.com -d /home/jwaddle/Documents/sextant/sextant-geonetwork-7/sextant-geonetwork/geonetwork/sextant/wps_client/src --url https://www.ifremer.fr/services/wps3/surval --xml ./sample/wps.xml --timeout 20 --smtphost localhost --smtpport 255 --fromemail toto@toto.fr
 ```

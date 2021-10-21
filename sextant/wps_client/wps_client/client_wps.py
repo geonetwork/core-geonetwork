@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import sys
 from utils_wps import process_wps_execute, fetch_wps_output_file, get_args
 

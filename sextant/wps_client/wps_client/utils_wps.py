@@ -1,10 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import os
 from owslib.wps import WebProcessingService, monitorExecution
 import urllib.request
 
 from timeout import timeout_
-import utils
+from utils import send_mail
 import sys
 
 
@@ -38,7 +39,7 @@ def get_args(argv):
         )
     except getopt.GetoptError as err:
         print(str(err))
-        usage()
+        usage(argv)
         sys.exit(2)
 
     print("OPTIONS   :", options)
@@ -88,7 +89,7 @@ def get_args(argv):
 
         # required arguments for all requests
     if url is None or destination is None or email is None or smtp_host is None:
-        usage()
+        usage(argv)
         sys.exit(3)
     else:
         return (
@@ -106,7 +107,7 @@ def get_args(argv):
         )
 
 
-def usage():
+def usage(argv):
     print(
         """
 
@@ -175,7 +176,6 @@ def process_wps_execute(
 
     if xml is None:
         print('\nERROR: missing mandatory "-x (or --xml)" argument')
-        usage()
         sys.exit(5)
 
     # default IS ASYNCHRONOUS

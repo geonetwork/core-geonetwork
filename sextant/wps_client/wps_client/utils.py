@@ -1,5 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import smtplib
 from email.message import EmailMessage
+
 
 def send_mail(
     to_email,
