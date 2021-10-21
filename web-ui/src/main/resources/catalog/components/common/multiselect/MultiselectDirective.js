@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,10 +23,12 @@
 
 (function() {
   goog.provide('gn_multiselect_directive');
+  goog.require('gn_utility_service');
 
-  var module = angular.module('gn_multiselect_directive', []);
+  var module = angular.module('gn_multiselect_directive',
+    ['gn_utility_service', 'pascalprecht.translate']);
 
-  /**
+    /**
      * Provide 2 multiple select list and allow
      * selection of element by double click or
      * move to left/right button.
@@ -36,15 +38,15 @@
      *
      * TODO: Add drag&drop
      */
-  module.directive('gnMultiselect', [
-    function() {
+  module.directive('gnMultiselect', ['gnUtilityService', '$translate',
+    function(gnUtilityService, $translate) {
 
       return {
         restrict: 'A',
         scope: {
           'selected': '=gnMultiselect',
           'choices': '=',
-          'readonlyMode': '='
+          'readonlyMode': '=?'
         },
         templateUrl: '../../catalog/components/common/multiselect/partials/' +
             'multiselect.html',
@@ -52,7 +54,7 @@
 
           var sortOnSelection = true;
 
-          scope.readonlyMode = scope.readonlyMode || false;
+          scope.readonlyMode = scope.readonlyMode || false;
 
           //
           scope.currentSelectionLeft = [];
@@ -131,13 +133,27 @@
           scope.unselect = function(k) {
             var elementsToRemove = k ?
                 [k.id] : scope.currentSelectionRight;
+            var notAllowedChoices = [];
+
             scope.selected = $.grep(scope.selected, function(n) {
               var unselect = false;
+
               for (var i = 0; i < elementsToRemove.length; i++) {
                 if (elementsToRemove[i] == n.id) {
-                  unselect = true;
-                  scope.options.push(n);
-                  break;
+                  // Check if the option to remove is in the choices,
+                  // otherwise don't allow to remove it
+                  for (var j = 0; j < scope.choices.length; j++) {
+                    if (elementsToRemove[i] == scope.choices[j].id) {
+                      unselect = true;
+                      break;
+                    }
+                  }
+                  if (unselect) {
+                    scope.options.push(n);
+                  } else {
+                    notAllowedChoices.push(n.langlabel || n.name);
+                  }
+
                 }
               }
 
@@ -146,6 +162,17 @@
 
               return !unselect;
             });
+
+            if (notAllowedChoices.length > 0) {
+              var choiceNames = notAllowedChoices.join(', ');
+
+              gnUtilityService.openModal({
+                title: $translate.instant('unselectChoiceNotAllowedTitle'),
+                content: '<span data-translate="unselectChoiceNotAllowed"' +
+                  '            data-translate-values="{\'notAllowedChoices\': \'' + choiceNames + '\'}"></span>',
+                className: 'gn-choice-popup'
+              }, scope, 'UnselectChoice');
+            }
 
             if (sortOnSelection) {
               scope.selected.sort(scope.sortFn);

@@ -540,5 +540,7 @@
     "batchApproveDirect": "Approve the metadata without requiring to be in submitted status",
     "metadataInfoReport": "Metadata information",
     "metadataErrorReport": "Metadata errors",
-    "wmtsFailedToParseCapabilities": "Failed to parse GetCapabilities operation response."
+    "wmtsFailedToParseCapabilities": "Failed to parse GetCapabilities operation response.",
+    "unselectChoiceNotAllowedTitle": "Unselect choices",
+    "unselectChoiceNotAllowed": "Some choices can't be removed: {{notAllowedChoices}}"
 }
