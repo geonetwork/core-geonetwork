@@ -32,16 +32,23 @@
   </xsl:template>
 
   <xsl:template mode="citation" match="citation[lower-case($format) = 'text']">
+    <xsl:variable name="hasAuthor"
+                  select="count(authorsNameAndOrgList/*) > 0"/>
+    <xsl:variable name="hasPublisher"
+                  select="count(publishersNameAndOrgList/*) > 0"/>
     <textResponse>
       <xsl:value-of select="concat(
-                                  string-join(authorsNameAndOrgList/*, ', '),
-                                  if (lastPublicationDate != '')
+                                  (if ($hasAuthor)
+                                     then string-join(authorsNameAndOrgList/*, ', ')
+                                     else ''),
+                                  (if (lastPublicationDate != '')
                                     then concat(' (', substring(lastPublicationDate, 1, 4), '). ')
-                                    else '. ',
+                                    else if ($hasAuthor) then '. ' else ''),
                                   translatedTitle,
                                   '. ',
-                                  string-join(publishersNameAndOrgList/*, ', '),
-                                  '. ',
+                                  (if ($hasPublisher)
+                                     then concat(string-join(publishersNameAndOrgList/*, ', '), '. ')
+                                     else ''),
                                   if (doiUrl != '') then doiUrl else landingPageUrl)"/>
     </textResponse>
   </xsl:template>
@@ -69,9 +76,12 @@
         <xsl:text>AU  - </xsl:text><xsl:value-of select="."/><xsl:text>&#10;</xsl:text>
       </xsl:for-each>
       <xsl:text>TI  - </xsl:text><xsl:value-of select="translatedTitle"/><xsl:text>&#10;</xsl:text>
-      <!-- TODO: KW, LA, ET -->
+      <!-- TODO: LA, ET -->
       <xsl:for-each select="publishersNameAndOrgList/*[. != '']">
         <xsl:text>PB  - </xsl:text><xsl:value-of select="."/><xsl:text>&#10;</xsl:text>
+      </xsl:for-each>
+      <xsl:for-each select="keyword[. != '']">
+        <xsl:text>KW  - </xsl:text><xsl:value-of select="."/><xsl:text>&#10;</xsl:text>
       </xsl:for-each>
       <xsl:text>UR  - </xsl:text><xsl:value-of select="if (doiUrl != '') then doiUrl else landingPageUrl"/><xsl:text>&#10;</xsl:text>
       <xsl:if test="doi != ''">
@@ -84,6 +94,10 @@
 
 
   <xsl:template mode="citation" match="citation[lower-case($format) = 'html']">
+    <xsl:variable name="hasAuthor"
+                  select="count(authorsNameAndOrgList/*) > 0"/>
+    <xsl:variable name="hasPublisher"
+                  select="count(publishersNameAndOrgList/*) > 0"/>
     <blockquote>
       <div class="row">
         <div class="col-md-3">
@@ -92,12 +106,17 @@
         <div class="col-md-9">
           <p>
             <xsl:value-of select="string-join(authorsNameAndOrgList/*, ', ')"/>
-            <xsl:if test="lastPublicationDate != ''">
-              (<xsl:value-of select="substring(lastPublicationDate, 1, 4)"/>)
-            </xsl:if>
-            <xsl:text>. </xsl:text>
-            <strong><xsl:value-of select="translatedTitle"/></strong>
-            <xsl:text>. </xsl:text>
+            <xsl:choose>
+              <xsl:when test="lastPublicationDate != ''">
+                (<xsl:value-of select="substring(lastPublicationDate, 1, 4)"/>).
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:if test="$hasAuthor">
+                  <xsl:text>. </xsl:text>
+                </xsl:if>
+              </xsl:otherwise>
+            </xsl:choose>
+            <strong><xsl:value-of select="translatedTitle"/>.</strong>
             <xsl:value-of select="string-join(publishersNameAndOrgList/*, ', ')"/>
             <br/>
             <xsl:variable name="url"

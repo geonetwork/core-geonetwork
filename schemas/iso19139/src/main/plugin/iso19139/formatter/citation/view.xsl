@@ -146,6 +146,20 @@
                   select="concat($nodeUrl, 'api/records/', $metadataUuid)"/>
 
 
+    <xsl:variable name="keywords"
+                  select="$metadata/gmd:identificationInfo/*//gmd:keyword"/>
+
+    <xsl:variable name="translatedKeywords">
+      <xsl:for-each select="$keywords">
+        <keyword>
+          <xsl:call-template name="localised">
+            <xsl:with-param name="langId" select="$langId"/>
+          </xsl:call-template>
+        </keyword>
+      </xsl:for-each>
+    </xsl:variable>
+
+
     <xsl:variable name="citationInfo">
       <citation>
         <uuid><xsl:value-of
@@ -157,6 +171,7 @@
         <landingPageUrl><xsl:value-of select="$landingPageUrl"/></landingPageUrl>
         <doi><xsl:value-of select="replace($doiUrl, '.*doi.org/(.*)', '$1')"/></doi>
         <doiUrl><xsl:value-of select="$doiUrl"/></doiUrl>
+        <xsl:copy-of select="$translatedKeywords"/>
       </citation>
     </xsl:variable>
 
