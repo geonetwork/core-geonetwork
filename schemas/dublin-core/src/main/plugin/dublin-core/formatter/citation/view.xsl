@@ -102,7 +102,7 @@
                   select="concat($nodeUrl, 'api/records/', $metadataUuid)"/>
 
     <xsl:variable name="keywords"
-                  select="$metadata//dc:keyword"/>
+                  select="$metadata//dc:subject"/>
 
     <xsl:variable name="translatedKeywords">
       <xsl:for-each select="$keywords">
