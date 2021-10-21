@@ -1,7 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import sys
 import requests
-from utils_wps import process_wps_execute, fetch_wps_output_file, get_args, send_mail
+from utils_wps import process_wps_execute, fetch_wps_output_file, get_args
+from utils import send_mail
 
 MIN_FILE_SIZE = 100  # bytes
 
