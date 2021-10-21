@@ -1,0 +1,24 @@
+================================================================================
+===
+=== GeoNetwork 3.10.8: List of changes
+===
+================================================================================
+- [BP] Admin / Users / Fix the users that a UserAdmin can manage (#5886)
+- [BP] Fix rdf export for iso19139 metadata with multilingual online resources name element (#5956)
+- [BP] Configure how to extract the WMS layer name from metadata online resources to add them to the map viewer (#5998)
+- Dublin core / Editor / Fix autocomplete for subtemplates. (#5965)
+- [BP] Update iso19139 template for uuidref attribute to apply only for srv:operatesOn element (#5924)
+- [BP] Updated default language so that is comes from common java location. (#5981)
+- [BP] Fix a bug when the url doesn't contain the ? sign (#5994)
+- [BP] Process data feed download links with multiple download files/links per datafeed entry (#5985)
+- [BP] Fix dates xpath in iso19139 export to jsonld (#5990)
+- [BP] fixes resource links if multilingual fixes feature-catalog indexing in iso19115-3
+- [BP] fix duplicate string in normalize-space, if record both has a title as well as identifier has a citation with title (#5830)
+- [BP] Fix for indenting the 'multientry combiner` (#5764)
+- [BP] Add a new directive for combining add online resource fields (#5559)
+- [BP] Fix editing of directory entries templates #5936 (#5937)
+- [BP] Display topic categories tooltip in the metadata editor when tooltips are enabled (#5935)
+- [BP] Remove online resource - fix resource name comparison (#5934)
+- [BP] Formatter / Datacite / Avoid empty elements. (#5500)
+- [BP] Formatter / Datacite / Fix multiple geoLocations.
+- [BP] Datacite / XSD validation / valueUri is valueURI.
