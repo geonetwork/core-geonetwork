@@ -250,7 +250,7 @@
             </fieldset>
 
 
-            <fieldset data-ng-if="!user.isUserAdminOrMore() && isUserGroupUpdateEnabled">
+            <fieldset data-ng-if="!user.isUserAdminOrMore()">
               <legend data-translate="profile"></legend>
 
               <div data-ng-if="groupsByProfile['RegisteredUser'].length > 0">
@@ -275,7 +275,7 @@
               </div>
             </fieldset>
 
-            <fieldset data-ng-if="user.isUserAdminOrMore() && isUserGroupUpdateEnabled">
+            <fieldset data-ng-if="user.isUserAdminOrMore()">
               <legend data-translate="">defineUserGroupsPerProfile</legend>
               <input type="hidden" name="profile" data-ng-model="userSelected.profile"
                      value="{{userSelected.profile}}"/>
@@ -283,7 +283,8 @@
                 <input type="checkbox"
                        data-ng-checked="userSelected.profile == 'Administrator'"
                        data-ng-click="setUserProfile(true)"
-                       data-ng-show="user.isAdministratorOrMore()"/>
+                       data-ng-show="user.isAdministratorOrMore()"
+                       data-ng-disabled="!isUserGroupUpdateEnabled"/>
                 <span data-translate=""
                       data-ng-show="user.isAdministratorOrMore()">isAdministrator</span>
               </label>
@@ -292,17 +293,20 @@
                 data-ng-show="userSelected.profile != 'Administrator'">
                 <h3 data-translate="">RegisteredUser</h3>
 
-                <div data-gn-multiselect="groupsByProfile['RegisteredUser']"
+                <div readonly-mode="!isUserGroupUpdateEnabled"
+                     data-gn-multiselect="groupsByProfile['RegisteredUser']"
                      data-choices="groups"></div>
 
 
                 <h3 data-translate="">Editor</h3>
-                <div data-gn-multiselect="groupsByProfile['Editor']"
+                <div readonly-mode="!isUserGroupUpdateEnabled"
+                     data-gn-multiselect="groupsByProfile['Editor']"
                      data-choices="groups"></div>
 
 
                 <h3 data-translate="">Reviewer</h3>
-                <div data-gn-multiselect="groupsByProfile['Reviewer']"
+                <div readonly-mode="!isUserGroupUpdateEnabled"
+                     data-gn-multiselect="groupsByProfile['Reviewer']"
                      data-choices="groups"></div>
 
                 <p class="help-block"
@@ -310,7 +314,8 @@
 
 
                 <h3 data-translate="">UserAdmin</h3>
-                <div data-gn-multiselect="groupsByProfile['UserAdmin']"
+                <div readonly-mode="!isUserGroupUpdateEnabled"
+                     data-gn-multiselect="groupsByProfile['UserAdmin']"
                      data-choices="groups"></div>
 
                 <p class="help-block"
