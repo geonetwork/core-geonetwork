@@ -27,6 +27,7 @@ import org.fao.geonet.repository.IsoLanguageRepository;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.neovisionaries.i18n.LanguageCode;
 
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +134,32 @@ public class IsoLanguagesMapper {
             return defaultLang.toLowerCase();
         } else {
             return result;
+        }
+    }
+
+    /**
+     * Convert the iso639_2B to iso639_2T
+     */
+    public static String iso639_2B_to_iso639_2T(String iso639_2B) {
+        LanguageCode code = LanguageCode.getByCode(iso639_2B);
+        if (code == null) {
+            // If we could not find the code then just return the original code.
+            return iso639_2B;
+        } else {
+            return code.getAlpha3().getAlpha3T().name();
+        }
+    }
+
+    /**
+     * Convert the iso639_2T to iso639_2B
+     */
+    public static String iso639_2T_to_iso639_2B(String iso639_2T) {
+        LanguageCode code = LanguageCode.getByCode(iso639_2T);
+        if (code == null) {
+            // If we could not find the code then just return the original code.
+            return iso639_2T;
+        } else {
+            return code.getAlpha3().getAlpha3B().name();
         }
     }
 

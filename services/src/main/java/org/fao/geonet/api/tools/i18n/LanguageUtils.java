@@ -25,6 +25,8 @@ package org.fao.geonet.api.tools.i18n;
 
 import java.util.*;
 
+import org.fao.geonet.languages.IsoLanguagesMapper;
+
 /**
  * Created by francois on 05/02/16.
  */
@@ -84,22 +86,6 @@ public class LanguageUtils {
     }
 
     /**
-     * Converts from {@link Locale#getISO3Language()} 639-2/T langauge code into GeoNetwork ISO Language 639-2/B representation.
-     *
-     * @param isoLanguage_638_2_T_code Java {@link Locale#getISO3Language()} 639-2/T language code
-     * @return Geonetwork ISO 639-2/B language code
-     */
-    public static String locale2gnCode(String isoLanguage_638_2_T_code){
-        if (isoLanguage_638_2_T_code.equals("fra")) {
-            return "fre";
-        } else if (isoLanguage_638_2_T_code.equals("slk")) { // transforms ISO 639-2/T into ISO 639-2/B
-            return "slo";
-        } else {
-            return isoLanguage_638_2_T_code;
-        }
-    }
-
-    /**
      * Obtain into GeoNetwork ISO Language 639-2/B representation for locale.
      *
      * Translate locale three-letter abbreviation to language code (providing a special case for 'fra' and 'slk' locales.
@@ -111,7 +97,7 @@ public class LanguageUtils {
         if (locale == null){
             return null;
         }
-        return locale2gnCode(locale.getISO3Language());
+        return IsoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
     }
 
     /**
