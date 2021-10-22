@@ -71,6 +71,7 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USERS_IDENTICON;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
@@ -550,6 +551,20 @@ public class UsersApi {
             List<UserGroup> usergroups =
                 userGroupRepository.findAll(Specification.where(
                     hasUserId(Integer.parseInt(userDto.getId()))));
+
+            List<Integer> userToUpdateGroupIds = usergroups.stream()
+                .map(ug -> ug.getId().getGroupId())
+                .collect(Collectors.toList());
+
+            Set<Integer> groupsInCommon = myUserAdminGroups.stream()
+                .distinct()
+                .filter(userToUpdateGroupIds::contains)
+                .collect(Collectors.toSet());
+
+            // UserAdmin can't update users that are not in the groups administered
+            if (groupsInCommon.isEmpty()) {
+                throw new IllegalArgumentException("You don't have rights to do this");
+            }
 
             //keep unknown groups as is
             for (UserGroup ug : usergroups) {
