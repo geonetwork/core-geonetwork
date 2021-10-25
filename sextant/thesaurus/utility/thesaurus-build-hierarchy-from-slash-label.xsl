@@ -15,11 +15,14 @@
       -->
       <xsl:variable name="conceptScheme"
                     select=".//rdf:Description[rdf:type/@rdf:resource = 'http://www.w3.org/2004/02/skos/core#ConceptScheme']"/>
+      <!-- https://sextant.ifremer.fr/-->
       <xsl:variable name="baseUri"
-                    select="replace(replace(
+                    select="replace(replace(replace(
                               $conceptScheme/@rdf:about,
                               'http://geonetwork-opensource.org/',
-                              'http://www.ifremer.fr/thesaurus/sextant/'),
+                              'https://registry.sextant.ifremer.fr/'),
+                              'http://www.ifremer.fr/thesaurus/sextant/',
+                              'https://registry.sextant.ifremer.fr/'),
                             ' ', '')"/>
       <xsl:for-each select="$conceptScheme">
         <xsl:copy>
@@ -31,18 +34,35 @@
       <xsl:variable name="root"
                     select="."/>
 
-      <xsl:variable name="themes">
-        <xsl:for-each select=".//rdf:Description[(
+      <!-- Create one concept per level. -->
+      <xsl:variable name="concepts">
+        <xsl:for-each-group select=".//rdf:Description[(
                   not(rdf:type/@rdf:resource)
                   or rdf:type/@rdf:resource != 'http://www.w3.org/2004/02/skos/core#ConceptScheme')
-                 and skos:prefLabel != '']">
+                 and skos:prefLabel != '']"
+                            group-by="@rdf:about">
           <xsl:variable name="about"
                         select="@rdf:about"/>
+          <xsl:variable name="id"
+                        select="count(preceding-sibling::*)"/>
+          <xsl:variable name="freLabel"
+                        select="$root/rdf:Description[@rdf:about = $about]/skos:prefLabel[@xml:lang = 'fr' and . != ''][1]"/>
+          <xsl:variable name="engLabel"
+                        select="$root/rdf:Description[@rdf:about = $about]/skos:prefLabel[@xml:lang = 'en' and . != ''][1]"/>
           <xsl:variable name="frePath"
-                        select="tokenize($root/rdf:Description[@rdf:about = $about]/skos:prefLabel[@xml:lang = 'fr' and . != ''][1], '/')"/>
+                        select="tokenize($freLabel, '/')"/>
           <xsl:variable name="engPath"
-                        select="tokenize($root/rdf:Description[@rdf:about = $about]/skos:prefLabel[@xml:lang = 'en' and . != ''][1], '/')"/>
-          <xsl:for-each select="$frePath">
+                        select="tokenize($engLabel, '/')"/>
+
+          <xsl:variable name="pathToUse"
+                        select="if (count($frePath) >= count($engPath))
+                                then $frePath else $engPath"/>
+
+          <xsl:if test="count($frePath) != count($engPath)">
+            <xsl:message>WARNING: Number of / in french and english label does not match. Check labels for <xsl:value-of select="$freLabel"/> vs <xsl:value-of select="$engLabel"/>.</xsl:message>
+          </xsl:if>
+
+          <xsl:for-each select="$pathToUse">
             <xsl:variable name="position"
                           select="position()"/>
             <xsl:variable name="enLabel"
@@ -51,22 +71,30 @@
                           select="normalize-space(string-join($frePath[position() &lt;= $position], '/'))"/>
 
             <keyword>
+              <key><xsl:value-of select="if ($frLabel != '') then $frLabel else $enLabel"/></key>
               <fre><xsl:value-of select="$frLabel"/></fre>
               <eng><xsl:value-of select="$enLabel"/></eng>
-              <id><xsl:value-of select="concat(
-                  $baseUri, '#',
-                  replace(replace(substring-after($enLabel, '/'), '/', '-'), '[^a-zA-Z0-9-_]', ''))"/></id>
             </keyword>
           </xsl:for-each>
-        </xsl:for-each>
+        </xsl:for-each-group>
       </xsl:variable>
 
+      <xsl:variable name="conceptsWithIds">
+        <xsl:for-each select="distinct-values($concepts/keyword/key[. != ''])">
+          <xsl:sort select="." order="ascending"/>
+          <keyword>
+            <id><xsl:value-of select="concat($baseUri, '#', position())"/></id>
+            <xsl:copy-of select="$concepts/keyword[key = current()][1]/*"/>
+          </keyword>
+        </xsl:for-each>
+      </xsl:variable>
+      <xsl:message><xsl:copy-of select="$conceptsWithIds"/></xsl:message>
 
-      <xsl:for-each select="distinct-values($themes/keyword/fre[. != ''])">
+      <xsl:for-each select="distinct-values($conceptsWithIds/keyword/key[. != ''])">
         <xsl:sort select="." order="ascending"/>
 
         <xsl:variable name="k"
-                      select="($themes/keyword[fre = current()])[1]"/>
+                      select="($conceptsWithIds/keyword[key = current()])[1]"/>
         <rdf:Description rdf:about="{$k/id}">
           <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
           <skos:prefLabel xml:lang="en"><xsl:value-of select="$k/eng"/></skos:prefLabel>
@@ -75,20 +103,20 @@
           <skos:definition xml:lang="fr"></skos:definition>
 
           <xsl:variable name="broaderPath"
-                        select="tokenize($k/eng, '/')"/>
+                        select="tokenize($k/key, '/')"/>
 
           <xsl:variable name="levelOfCurrent"
                         select="count($broaderPath)"/>
           <xsl:for-each select="$broaderPath">
             <xsl:variable name="position"
                           select="position()"/>
-            <xsl:variable name="enLabel"
+            <xsl:variable name="keyValue"
                           select="normalize-space(string-join($broaderPath[position() &lt;= $position], '/'))"/>
 
+            <xsl:variable name="broaderConcept"
+                          select="($conceptsWithIds/keyword[key = $keyValue])[1]"/>
             <xsl:variable name="broaderId"
-                          select="concat(
-                  $baseUri, '#',
-                  replace($enLabel, '[^a-zA-Z0-9-_]', ''))"/>
+                          select="$broaderConcept/id"/>
 
             <xsl:variable name="levelOfBroader"
                           select="position()"/>
@@ -102,11 +130,11 @@
 
 
           <xsl:variable name="narrower"
-                        select="$themes/keyword[starts-with(fre, concat($k/fre, '/'))]"/>
+                        select="$conceptsWithIds/keyword[starts-with(key, concat($k/key, '/'))]"/>
           <xsl:for-each-group select="$narrower" group-by="id">
 
             <xsl:variable name="levelOfNarrower"
-                          select="count(tokenize(./eng, '/'))"/>
+                          select="count(tokenize(./key, '/'))"/>
             <xsl:if test="($levelOfCurrent + 1) = $levelOfNarrower">
               <skos:narrower rdf:resource="{id}"/>
             </xsl:if>
