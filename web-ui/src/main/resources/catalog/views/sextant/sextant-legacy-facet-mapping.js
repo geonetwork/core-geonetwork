@@ -560,11 +560,14 @@
         }
     },
     'dcsmm-area': {
-      'th_dcsmm-area.default':
+      'th_dcsmm-area_tree.key':
         {
           'terms': {
-            'field': 'th_dcsmm-area.default',
+            'field': 'th_dcsmm-area_tree.key',
             'size': 300
+          },
+          "meta": {
+            "thesaurus": "dcsmm.area"
           }
         }
     },
@@ -648,11 +651,14 @@
         }
     },
     'simm-thematiques': {
-      'th_simm-thematiques.default':
+      'th_simm-thematiques_tree.key':
         {
           'terms': {
-            'field': 'th_simm-thematiques.default',
+            'field': 'th_simm-thematiques_tree.key',
             'size': 300
+          },
+          "meta": {
+            "thesaurus": "simm.thematiques"
           }
         }
     },

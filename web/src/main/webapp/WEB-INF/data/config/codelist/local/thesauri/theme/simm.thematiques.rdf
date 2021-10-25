@@ -1,223 +1,193 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:ns3="http://purl.org/dc/elements/1.1/"
-	xmlns:ns5="http://www.opengis.net/gml#"
-	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
-	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-
-<rdf:Description rdf:about="http://geonetwork-opensource.org/Thématiques - SIMM">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
-	<ns3:title>Thématiques - SIMM</ns3:title>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#17c15bd3-3d71-4d1f-8561-11f085a2c918">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Actions concrètes</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Actions concrètes</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963grx1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963grx1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9fo6f35x1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#477f5a93-16c5-4c06-871d-00289c1180da">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Activités et Usages/Industrie et énergie</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#f0ebc96b-137b-4835-86b5-44bbec8fcf74">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Activités et Usages/Loisirs</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Loisirs</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963grx3"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963grx3">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ee492cf7-1c52-4a5c-bdae-7fdc6faa66c8">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Activités et Usages/Pêche et Aquaculture</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Pêche et Aquaculture</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963grx4"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963grx4">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0202b5ee-beae-4c8e-887d-b93b44976940">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Activités et Usages/Transport maritime et Ports</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Transport maritime et Ports</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963grx5"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963grx5">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#9a327d6f-29be-4be7-aadb-7f30583d361b">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Activités et Usages/Urbanisation et Artificialisation</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Urbanisation et Artificialisation</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963grx6"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963grx6">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3fced027-9dd8-4175-9193-9e7ec2d76115">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Etat du Milieu/Espèces</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Espèces</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963grx7"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963grx7">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#a4cd7fbd-37c8-40e6-9766-e78162a451f6">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Etat du Milieu/Géologie</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Géologie</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963grx8"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963grx8">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#181f8c01-b11b-4190-9497-c738fcb2b3f1">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Etat du Milieu/Habitats</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Habitats</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963grx9"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963grx9">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9fqi42mx1">
-	<ns5:upperCorner> </ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#f7a9b46f-1dfc-462e-a38a-d3d4280413de">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Etat du Milieu/Hydrodynamique</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Hydrodynamique</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9fqi42mx1"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#59598bf9-5be0-4e21-b388-d9ffd4fab463">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Etat du Milieu/Pollutions</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Pollutions</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963grx11"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963grx11">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#509d72db-ed1c-42d4-9c0c-d88a109f7ac4">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">Recherche</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Recherche</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963grx12"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963grx12">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#946383d1-d16f-41f0-9ba9-ba2a2fcf7bfb">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Etat du Milieu/Biogéochimie</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Biogéochimie</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963grx13"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963grx13">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fe916688-305c-4462-8778-fb59100390dc">
-	<ns2:prefLabel xml:lang="fr">/Activités et Usages/Analyse économique et sociale</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963grx14">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fe916688-305c-4462-8778-fb59100390dc">
-	<ns2:scopeNote xml:lang="fr">Analyse économique et sociale</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963grx14"/>
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#477f5a93-16c5-4c06-871d-00289c1180da">
-	<ns2:scopeNote xml:lang="fr">Industrie et énergie</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9fo6f35x1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9fqi42mx1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d0b36f38-24f7-4723-b5ec-19c2b2bdf7ea">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Etat du Milieu/Littoral</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Littoral</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9ftull0x1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9ftull0x1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3e085db4-2861-49c2-b6cf-09dc28060edc">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Etat du Milieu/Bathymétrie</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Bathymétrie</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9ftv48hx1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9ftv48hx1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner> </ns5:lowerCorner>
-	<ns5:upperCorner> </ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ns3="http://purl.org/dc/elements/1.1/"
+         xmlns:ns5="http://www.opengis.net/gml#"
+         xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+      <ns3:title>Thématiques - SIMM</ns3:title>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Activités et Usages</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-Industrieetnergie"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-Loisirs"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-PcheetAquaculture"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-TransportmaritimeetPorts"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-UrbanisationetArtificialisation"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-Analyseconomiqueetsociale"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-Analyseconomiqueetsociale">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Activités et Usages/Analyse économique et sociale</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-Industrieetnergie">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Activités et Usages/Industrie et énergie</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-Loisirs">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Activités et Usages/Loisirs</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-PcheetAquaculture">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Activités et Usages/Pêche et Aquaculture</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-TransportmaritimeetPorts">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Activités et Usages/Transport maritime et Ports</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages-UrbanisationetArtificialisation">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Activités et Usages/Urbanisation et Artificialisation</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#ActivitsetUsages"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Espces"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Gologie"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Habitats"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Hydrodynamique"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Pollutions"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Biogochimie"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Littoral"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Bathymtrie"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Bathymtrie">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Bathymétrie</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Biogochimie">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Biogéochimie</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Espces">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Espèces</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Gologie">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Géologie</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Habitats">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Habitats</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Hydrodynamique">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Hydrodynamique</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Littoral">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Littoral</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu-Pollutions">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Etat du Milieu/Pollutions</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#EtatduMilieu"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Actions concrètes</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Thématiques-SIMM#">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Recherche</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+   </rdf:Description>
 </rdf:RDF>

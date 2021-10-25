@@ -1,408 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:ns3="http://purl.org/dc/elements/1.1/"
-	xmlns:ns5="http://www.opengis.net/gml#"
-	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
-	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332537972">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx1">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-	<ns5:lowerCorner>-180 -90</ns5:lowerCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332537972">
-	<ns5:BoundedBy rdf:nodeID="node1e9d963arx1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:upperCorner>180 90</ns5:upperCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://geonetwork-opensource.org/Sous-regions marines">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
-	<ns3:title>Sous-regions marines</ns3:title>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332601865">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332638969">
-	<ns2:prefLabel xml:lang="en">Western Mediterranean</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx2">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx3">
-	<ns5:lowerCorner>-180 -90</ns5:lowerCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332601865">
-	<ns5:BoundedBy rdf:nodeID="node1e9d963arx2"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332638969">
-	<ns2:prefLabel xml:lang="fr">/Métropole/Méditerranée occidentale</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx2">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx3">
-	<ns5:upperCorner>180 90</ns5:upperCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332601865">
-	<ns2:scopeNote xml:lang="fr">Manche mer du Nord</ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en">Definition</ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332624393">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx3">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx4">
-	<ns5:upperCorner>10,250029 51,556887</ns5:upperCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332624393">
-	<ns5:BoundedBy rdf:nodeID="node1e9d963arx3"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx3">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx4">
-	<ns5:lowerCorner>-10,083396 40,083332</ns5:lowerCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332624393">
-	<ns2:prefLabel xml:lang="en">Celtic Seas</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fr">/Métropole/Mers Celtiques</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx2">
-	<ns5:lowerCorner>-180 -90</ns5:lowerCorner>
-	<ns5:upperCorner>180 90</ns5:upperCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332638969">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx4">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332638969">
-	<ns5:BoundedBy rdf:nodeID="node1e9d963arx4"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332645558">
-	<ns5:BoundedBy rdf:nodeID="node1e9d963arx5"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx5">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332537972">
-	<ns2:prefLabel xml:lang="en">Bay of Biscay</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="fr">/Métropole/Golfe de Gascogne</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332638969">
-	<ns2:scopeNote xml:lang="fr">Méditerranée occidentale</ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en">Definition</ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332645558">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx5">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332624393">
-	<ns2:scopeNote xml:lang="en">Definition</ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr">Mers Celtiques</ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332601865">
-	<ns2:prefLabel xml:lang="fr">/Métropole/Manche mer du Nord</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">Channel-North Sea</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332645558">
-	<ns2:scopeNote xml:lang="fr">National</ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en">Definition</ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332537972">
-	<ns2:scopeNote xml:lang="fr">Golfe de Gascogne</ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en">Definition</ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1398332645558">
-	<ns2:prefLabel xml:lang="fr">National</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en">National</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fed43259-2010-4693-b00c-63c13a170df9">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx9">
-	<ns5:upperCorner>-49,04 33,43</ns5:upperCorner>
-	<ns5:lowerCorner>-95,09 7,71</ns5:lowerCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fed43259-2010-4693-b00c-63c13a170df9">
-	<ns5:BoundedBy rdf:nodeID="node1e9d963arx6"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx6">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fed43259-2010-4693-b00c-63c13a170df9">
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr">Guyane française</ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx6">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#9983b2e8-abc5-4a6b-adfc-789e51d81175">
-	<ns5:BoundedBy rdf:nodeID="node1e9d963arx7"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx7">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#6de32215-6aca-405e-b31d-c74df6dd6032">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Outre-mer/Nouvelle-Calédonie</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Nouvelle-Calédonie</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963arx8"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx8">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner>150,10 -27,09</ns5:lowerCorner>
-	<ns5:upperCorner>187,45 -6,70</ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#9983b2e8-abc5-4a6b-adfc-789e51d81175">
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="fr">/Outre-mer/Océan Indien</ns2:prefLabel>
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx5">
-	<ns5:lowerCorner>10,083396 -90</ns5:lowerCorner>
-	<ns5:upperCorner>180 90</ns5:upperCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#dbf46ad6-4c93-4f7d-b775-c3110b160223">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9vpo4uqx1">
-	<ns5:upperCorner>185,65 -12,48</ns5:upperCorner>
-	<ns5:lowerCorner>179,97 -15,23</ns5:lowerCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#dbf46ad6-4c93-4f7d-b775-c3110b160223">
-	<ns5:BoundedBy rdf:nodeID="node1e9d963arx9"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx9">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#dbf46ad6-4c93-4f7d-b775-c3110b160223">
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr">Antilles françaises</ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx9">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx7">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#9983b2e8-abc5-4a6b-adfc-789e51d81175">
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Océan Indien</ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx7">
-	<ns5:lowerCorner>27,62 -62,42</ns5:lowerCorner>
-	<ns5:upperCorner>117,97 9,10</ns5:upperCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#77444180-b7ea-430d-ac81-3cb488605fd3">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx6">
-	<ns5:upperCorner>-47,93 10,15</ns5:upperCorner>
-	<ns5:lowerCorner>-55,93 -0,73</ns5:lowerCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#77444180-b7ea-430d-ac81-3cb488605fd3">
-	<ns5:BoundedBy rdf:nodeID="node1e9d963arx10"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx10">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#77444180-b7ea-430d-ac81-3cb488605fd3">
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:scopeNote xml:lang="fr">Polynésie française</ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx10">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0715b887-badf-4831-a3e8-d24c83963bcd">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx11">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-	<ns5:upperCorner>14,85 52,80</ns5:upperCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0715b887-badf-4831-a3e8-d24c83963bcd">
-	<ns5:BoundedBy rdf:nodeID="node1e9d963arx12"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx12">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0715b887-badf-4831-a3e8-d24c83963bcd">
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="fr">/Outre-mer/St-Pierre-et-Miquelon</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx12">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3e639981-7a67-44e9-b0d4-c7c922021197">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="fr">/Métropole</ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">Métropole</ns2:scopeNote>
-	<ns5:BoundedBy rdf:nodeID="node1e9d963arx11"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx11">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner>-9,66 39,43</ns5:lowerCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0715b887-badf-4831-a3e8-d24c83963bcd">
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-	<ns2:scopeNote xml:lang="fr">St-Pierre-et-Miquelon</ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx12">
-	<ns5:lowerCorner>-57,91 45,85</ns5:lowerCorner>
-	<ns5:upperCorner>-54,71 48,02</ns5:upperCorner>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ea7038ff-e410-4591-af5c-e74739df16fd">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fc653bb3-82b1-487b-8e4a-6d9e582ae7bf">
-	<ns2:scopeNote xml:lang="fr">Clipperton</ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ea7038ff-e410-4591-af5c-e74739df16fd">
-	<ns5:BoundedBy rdf:nodeID="node1e9vpo4uqx1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9vpo4uqx1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fc653bb3-82b1-487b-8e4a-6d9e582ae7bf">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9vpo4uqx1">
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fc653bb3-82b1-487b-8e4a-6d9e582ae7bf">
-	<ns5:BoundedBy rdf:nodeID="node1e9vpnn31x1"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9vpnn31x1">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns5:lowerCorner>-110,68 9,59</ns5:lowerCorner>
-	<ns5:upperCorner>-107,84 11,02</ns5:upperCorner>
-	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fc653bb3-82b1-487b-8e4a-6d9e582ae7bf">
-	<ns2:prefLabel xml:lang="fr">/Outre-mer/Clipperton</ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ea7038ff-e410-4591-af5c-e74739df16fd">
-	<ns2:scopeNote xml:lang="fr">Wallis-et-Futuna</ns2:scopeNote>
-	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
-	<ns2:prefLabel xml:lang="fr">/Outre-mer/Wallis-et-Futuna</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#dbf46ad6-4c93-4f7d-b775-c3110b160223">
-	<ns2:prefLabel xml:lang="fr">/Outre-mer/Antilles françaises</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fed43259-2010-4693-b00c-63c13a170df9">
-	<ns2:prefLabel xml:lang="fr">/Outre-mer/Guyane française</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#77444180-b7ea-430d-ac81-3cb488605fd3">
-	<ns2:prefLabel xml:lang="fr">/Outre-mer/Polynésie française</ns2:prefLabel>
-	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1e9d963arx10">
-	<ns5:lowerCorner>-167,07 -28,90</ns5:lowerCorner>
-	<ns5:upperCorner>-126,55 -6,29</ns5:upperCorner>
-</rdf:Description>
-
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ns3="http://purl.org/dc/elements/1.1/"
+         xmlns:ns5="http://www.opengis.net/gml#"
+         xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+      <ns3:title>Sous-regions marines</ns3:title>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Western Mediterranean</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Métropole</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-Mditerraneoccidentale"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-MersCeltiques"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-GolfedeGascogne"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-ManchemerduNord"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-GolfedeGascogne">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Bay of Biscay</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Métropole/Golfe de Gascogne</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-ManchemerduNord">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Channel-North Sea</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Métropole/Manche mer du Nord</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-MersCeltiques">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Celtic Seas</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Métropole/Mers Celtiques</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole-Mditerraneoccidentale">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">Western Mediterranean</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Métropole/Méditerranée occidentale</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Mtropole"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Nouvelle-Caldonie"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-OcanIndien"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-St-Pierre-et-Miquelon"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Clipperton"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Wallis-et-Futuna"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Antillesfranaises"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Guyanefranaise"/>
+      <skos:narrower xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                     rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Polynsiefranaise"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Antillesfranaises">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/Antilles françaises</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Clipperton">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/Clipperton</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Guyanefranaise">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/Guyane française</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Nouvelle-Caldonie">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/Nouvelle-Calédonie</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-OcanIndien">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/Océan Indien</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Polynsiefranaise">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/Polynésie française</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-St-Pierre-et-Miquelon">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/St-Pierre-et-Miquelon</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer-Wallis-et-Futuna">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">/Outre-mer/Wallis-et-Futuna</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+      <skos:broader xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    rdf:resource="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#Outre-mer"/>
+   </rdf:Description>
+   <rdf:Description rdf:about="http://www.ifremer.fr/thesaurus/sextant/Sous-regionsmarines#">
+      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en">National</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="en"/>
+      <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">National</skos:prefLabel>
+      <skos:definition xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr"/>
+   </rdf:Description>
 </rdf:RDF>

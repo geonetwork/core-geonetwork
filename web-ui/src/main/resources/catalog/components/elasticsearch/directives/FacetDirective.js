@@ -327,6 +327,8 @@
             'th_sextant-theme_tree.key',
             'th_type_jeux_donnee_tree.key',
             'th_odatis_variables_tree.key',
+            'th_dcsmm-area_tree.key',
+            'th_simm-thematiques_tree.key',
             'th_mission-atlantic-bodc-parameters_tree.key',
             'th_mission-atlantic-odemm_tree.key'];
           function buildLabel() {

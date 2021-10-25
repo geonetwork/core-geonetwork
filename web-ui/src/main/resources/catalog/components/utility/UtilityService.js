@@ -585,7 +585,7 @@
       }
     };
 
-    function loadTranslation(fieldId) {
+    function loadTranslation(fieldId, thesaurus) {
       var keys = Object.keys(translationsToLoad[fieldId]);
       var deferred = $q.defer();
       if (keys.length > 0) {
@@ -593,7 +593,7 @@
         angular.copy(keys, uris);
         translationsToLoad[fieldId] = {};
         $http.post('../api/registries/vocabularies/keyword', gnUrlUtils.toKeyValue({
-          thesaurus: fieldId.replace(/th_(.*)_tree.key/, '$1'),
+          thesaurus: thesaurus || fieldId.replace(/th_(.*)_tree.key/, '$1'),
           id: encodeURIComponent(uris.join(',')),
           lang: gnLangs.getCurrent() + ',' + Object.keys(gnLangs.langs).join(',')
         }), {
@@ -675,7 +675,7 @@
       buildTree(list, fieldId, tree, meta);
 
       if(Object.keys(translationsToLoad[fieldId]).length > 0) {
-        loadTranslation(fieldId, tree).then(function(translations) {
+        loadTranslation(fieldId, meta && meta.thesaurus).then(function(translations) {
           if (angular.isObject(translations)) {
             var t = {};
             t[gnLangs.current] = {};
