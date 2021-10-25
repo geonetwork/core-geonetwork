@@ -34,7 +34,6 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Translations;
-import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.TranslationsRepository;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,8 +70,6 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 public class TranslationApi {
 
-    @Autowired
-    SchemaManager schemaManager;
     @Autowired
     LanguageUtils languageUtils;
     @Autowired
@@ -145,7 +142,7 @@ public class TranslationApi {
 
     @Operation(
         summary = "Delete database translations.",
-        description = "Delete custom database translations. Note that only the translations in the request locale will be erased"
+        description = "Delete custom translations stored in the database."
     )
     @DeleteMapping(value = "/db/translations/{translationKey}",
         produces = {
@@ -156,7 +153,7 @@ public class TranslationApi {
     public void deleteTranslations(
         @Parameter(
             name = "translationKey",
-            description = "Untranslated key for which translations will be deleted."
+            description = "Untranslated key for which all translations will be deleted."
         )
         @PathVariable
         final String translationKey,
@@ -241,8 +238,7 @@ public class TranslationApi {
             MediaType.APPLICATION_JSON_VALUE
         })
     @ResponseBody
-    public Map<String, List<String>> getTranslationsPackage(
-    ) throws Exception {
+    public Map<String, List<String>> getTranslationsPackage() {
         return translationPackBuilder.getPackages();
     }
 
@@ -286,9 +282,7 @@ public class TranslationApi {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(OK)
     @ResponseBody
-    public void cleanTranslationsPackagesCache(
-        ServletRequest request
-    ) throws Exception {
+    public void cleanTranslationsPackagesCache() {
         translationPackBuilder.clearCache();
     }
 }
