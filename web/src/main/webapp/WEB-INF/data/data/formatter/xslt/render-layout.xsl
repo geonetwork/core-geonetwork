@@ -188,6 +188,15 @@
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:when>
+            <xsl:when test="$portalLink = 'file'">
+              <xsl:variable name="groupInfo"
+                            select="utils:getGroupDetailsInConfigFile($groupOwner)"/>
+              <xsl:variable name="groupUrlConfig"
+                            select="$groupInfo/config/portalUrl"/>
+              <url>
+                <xsl:copy-of select="$groupUrlConfig/*"/>
+              </url>
+            </xsl:when>
             <xsl:otherwise>
               <xsl:copy-of select="$defaultUrlConfig"/>
             </xsl:otherwise>

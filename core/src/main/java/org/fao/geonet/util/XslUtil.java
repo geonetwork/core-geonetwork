@@ -44,12 +44,9 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.IsoLanguage;
-import org.fao.geonet.domain.LinkStatus;
-import org.fao.geonet.domain.UiSetting;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
@@ -61,11 +58,7 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.url.UrlChecker;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.IsoLanguageRepository;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.UiSettingsRepository;
-import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -95,13 +88,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -718,6 +708,28 @@ public final class XslUtil {
         }
         return null;
     }
+
+
+    public static Node getGroupDetailsInConfigFile(String groupIdentifier) {
+        int id = Integer.parseInt(groupIdentifier);
+
+        GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
+        Path groupLandingPageDir = dataDirectory.getWebappDir()
+            .resolve("catalog").resolve("views")
+            .resolve("sextant").resolve("landing-pages")
+            .resolve(groupIdentifier).resolve("config.xml");
+        if(Files.exists(groupLandingPageDir)) {
+            try {
+                Element element = Xml.loadFile(groupLandingPageDir);
+                DOMOutputter outputter = new DOMOutputter();
+                return outputter.output(new Document(element));
+            } catch (JDOMException | NoSuchFileException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
 
     public static String reprojectCoords(Object minx, Object miny, Object maxx,
                                          Object maxy, Object fromEpsg) {

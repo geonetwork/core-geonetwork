@@ -1465,7 +1465,7 @@
 
     <withHeldCheck.frequency>0/30 * * * * ?</withHeldCheck.frequency>
 
-    <landingPage.formatter>landingpage?portalLink=group</landingPage.formatter>
+    <landingPage.formatter>landingpage?portalLink=file</landingPage.formatter>
     <landingPage.language>all</landingPage.language>
 
 
