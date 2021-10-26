@@ -169,7 +169,7 @@
                 var res = [];
                 for (var i = 0; i < a.length; i++) {
                   res.push({
-                    id: a[i].id,
+                    id: a[i].uuid,
                     name: a[i].name,
                     serviceRecord: a[i].serviceRecord
                   });
@@ -188,7 +188,7 @@
           if (($scope.nodeId == 'srv') && (angular.isUndefined(d[i].id))) {
             serviceMetadataUuidForPortal = d[i].serviceRecord;
             break;
-          } else if (d[i].name == $scope.nodeId) {
+          } else if (d[i].id == $scope.nodeId) {
             serviceMetadataUuidForPortal = d[i].serviceRecord;
             break;
           }
