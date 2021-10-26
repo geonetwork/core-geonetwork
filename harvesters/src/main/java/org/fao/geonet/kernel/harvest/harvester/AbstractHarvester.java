@@ -720,7 +720,9 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
                     long elapsedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
 
-                    logHarvest(logfile, logger, nodeName, lastRun, elapsedTime);
+                    if (!(this instanceof CswHarvester2)) {
+                        logHarvest(logfile, logger, nodeName, lastRun, elapsedTime);
+                    }
                 } finally {
                     cancelMonitor.set(false);
 
@@ -746,7 +748,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
     }
 
-    private void logHarvest(String logfile, Logger logger, String nodeName, String lastRun, long elapsedTime) {
+    protected void logHarvest(String logfile, Logger logger, String nodeName, String lastRun, long elapsedTime) {
         try {
             // record the results/errors for this harvest in the database
             Element result = getResult();

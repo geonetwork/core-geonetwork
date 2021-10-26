@@ -40,7 +40,11 @@ import org.jdom.Element;
 import org.quartz.SchedulerException;
 
 import java.sql.SQLException;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Harvest metadata from other catalogues using the CSW protocol
@@ -136,8 +140,8 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                 @Override
                 public void run() {
                     super.run();
-
-                    String url = settingManager.getValue(RemoteHarvesterApiClient.SETTING_REMOTE_HARVESTER_API);
+                    long startTime = System.currentTimeMillis();
+                    String url = thiz.settingManager.getValue(RemoteHarvesterApiClient.SETTING_REMOTE_HARVESTER_API);
 
                     RemoteHarvesterApiClient remoteHarvesterApiClient = new RemoteHarvesterApiClient(url);
 
@@ -145,9 +149,9 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
 
                     while (check) {
                         try {
-                            if (CswHarvester2.this.cancelMonitor.get()) {
+                            if (thiz.cancelMonitor.get()) {
                                 remoteHarvesterApiClient.abortHarvest(harvesterProcessId);
-                                CswHarvester2.this.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
+                                thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
                                 check = false;
                             } else {
                                 OrchestratedHarvestProcessStatus harvesterStatus = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId);
@@ -168,8 +172,8 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                         log.error(e);
                                     }
                                 } else {
-                                    CswHarvester2.this.stop(Common.Status.ACTIVE);
-                                    CswHarvester2.this.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
+                                    thiz.stop(Common.Status.ACTIVE);
+                                    thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
                                     check = false;
                                 }
                             }
@@ -179,6 +183,14 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                             ex.printStackTrace();
                         }
                     }
+
+                    final Logger logger = thiz.log;
+                    final String nodeName = thiz.getParams().getName() + " (" + thiz.getClass().getSimpleName() + ")";
+                    final String lastRun = OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME);
+
+                    long elapsedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
+
+                    thiz.logHarvest(log.getFileAppender(), logger, nodeName, lastRun, elapsedTime);
 
                 }
             }.start();
@@ -193,9 +205,14 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
             resultEl.addContent(new Element("runningHarvest").setText(((CswRemoteHarvestResult) result).runningHarvest + ""));
             resultEl.addContent(new Element("runningLinkChecker").setText(((CswRemoteHarvestResult) result).runningLinkChecker + ""));
             resultEl.addContent(new Element("runningIngest").setText(((CswRemoteHarvestResult) result).runningIngest + ""));
-            resultEl.addContent(getHarvestStatusAsElement(((CswRemoteHarvestResult) result).harvesterStatus.getHarvestStatus()));
-            resultEl.addContent(getLinkCheckerStatusAsElement(((CswRemoteHarvestResult) result).harvesterStatus.getLinkCheckStatus()));
-            resultEl.addContent(getIngestStatusAsElement(((CswRemoteHarvestResult) result).harvesterStatus.getIngestStatus()));
+
+            OrchestratedHarvestProcessStatus orchestratedHarvestProcessStatus = ((CswRemoteHarvestResult) result).harvesterStatus;
+
+            if (orchestratedHarvestProcessStatus != null) {
+                resultEl.addContent(getHarvestStatusAsElement(orchestratedHarvestProcessStatus.getHarvestStatus()));
+                resultEl.addContent(getLinkCheckerStatusAsElement(orchestratedHarvestProcessStatus.getLinkCheckStatus()));
+                resultEl.addContent(getIngestStatusAsElement(orchestratedHarvestProcessStatus.getIngestStatus()));
+            }
         }
 
         return resultEl;
