@@ -47,10 +47,7 @@ import org.fao.geonet.api.exception.WebApplicationException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.KeywordBean;
-import org.fao.geonet.kernel.Thesaurus;
-import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.search.keyword.*;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -671,7 +668,7 @@ public class KeywordsApi {
         @Parameter(
             description = "Local or external (default).")
         @RequestParam(value = "type", defaultValue = "external")
-            String type,
+            ThesaurusType type,
         @Parameter(
             description = "Type of thesaurus, usually one of the ISO thesaurus type codelist value. Default is theme.")
         @RequestParam(value = "dir", defaultValue = "theme")
@@ -737,7 +734,7 @@ public class KeywordsApi {
 
                 // Rename .xml to .rdf for all thesaurus
                 fname = fname.replace(extension, "rdf");
-                uploadThesaurus(rdfFile, stylesheet, context, fname, type, dir);
+                uploadThesaurus(rdfFile, stylesheet, context, fname, type.toString(), dir);
             } else {
                 Log.debug(Geonet.THESAURUS, "Incorrect extension for thesaurus named: " + fname);
                 throw new Exception("Incorrect extension for thesaurus named: "
@@ -786,7 +783,7 @@ public class KeywordsApi {
         @Parameter(
             description = "Local or external (default).")
         @RequestParam(value = "type", defaultValue = "external")
-            String type,
+            ThesaurusType type,
         @Parameter(
             description = "Type of thesaurus, usually one of the ISO thesaurus type codelist value. Default is theme.")
         @RequestParam(value = "dir", defaultValue = "theme")
@@ -891,7 +888,7 @@ public class KeywordsApi {
                 xmlOutput.output(element,
                     new OutputStreamWriter(new FileOutputStream(rdfFile.toFile().getCanonicalPath()),
                         StandardCharsets.UTF_8));
-                uploadThesaurus(rdfFile, "_none_", context, fname, type, dir);
+                uploadThesaurus(rdfFile, "_none_", context, fname, type.toString(), dir);
                 response.setStatus(HttpServletResponse.SC_CREATED);
             } else {
                 response.addHeader("Content-Disposition", "inline; filename=\"" + fname + "\"");
@@ -1110,7 +1107,7 @@ public class KeywordsApi {
         @Parameter(
             description = "Local or external (default).")
         @RequestParam(value = "type", defaultValue = "external")
-            String type,
+            ThesaurusType type,
         @Parameter(
             description = "Type of thesaurus, usually one of the ISO thesaurus type codelist value. Default is theme.")
         @RequestParam(value = "dir", defaultValue = "theme")
@@ -1191,7 +1188,7 @@ public class KeywordsApi {
 
             // Rename .xml to .rdf for all thesaurus
             fname = fname.replace(extension, "rdf");
-            uploadThesaurus(rdfFile, stylesheet, context, fname, type, dir);
+            uploadThesaurus(rdfFile, stylesheet, context, fname, type.toString(), dir);
         } else {
             Log.debug(Geonet.THESAURUS, "Incorrect extension for thesaurus named: " + fname);
             throw new MissingServletRequestParameterException("Incorrect extension for thesaurus", fname);
