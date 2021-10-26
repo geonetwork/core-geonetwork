@@ -1074,12 +1074,23 @@ public final class XslUtil {
         return si.getSiteUrl() + (!baseUrl.startsWith("/") ? "/" : "") + baseUrl;
     }
 
+    /**
+     * Return default iso lang code.
+     *
+     * @return The default 3 char iso lang code
+     */
+    public static
+    @Nonnull
+    String getDefaultLangCode() {
+        return Geonet.DEFAULT_LANGUAGE;
+    }
+
     public static String getLanguage() {
         ServiceContext context = ServiceContext.get();
         if (context != null) {
             return context.getLanguage();
         } else {
-            return "eng";
+            return Geonet.DEFAULT_LANGUAGE;
         }
     }
 

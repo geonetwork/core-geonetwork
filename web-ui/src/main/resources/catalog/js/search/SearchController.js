@@ -57,9 +57,11 @@
     'gnESService',
     'orderByFilter',
     'gnConfigService',
+    'Metadata',
+    'gnMetadataManager',
     function($scope, $q, $http, suggestService, gnAlertService,
              gnSearchSettings, gnGlobalSettings, gnConfig, gnESClient,
-             gnESService, orderByFilter, gnConfigService) {
+             gnESService, orderByFilter, gnConfigService, Metadata, gnMetadataManager) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -168,7 +170,8 @@
                 for (var i = 0; i < a.length; i++) {
                   res.push({
                     id: a[i].id,
-                    name: a[i].name
+                    name: a[i].name,
+                    serviceRecord: a[i].serviceRecord
                   });
                 }
                 defer.resolve(res);
@@ -176,6 +179,35 @@
           return defer.promise;
         })()
       };
+
+      $scope.sourcesOptions.promise.then(function(d) {
+        var serviceMetadataUuidForPortal = null;
+
+        // Check if the source for the current node has a service metadata
+        for(var i = 0; i < d.length; i++) {
+          if (($scope.nodeId == 'srv') && (angular.isUndefined(d[i].id))) {
+            serviceMetadataUuidForPortal = d[i].serviceRecord;
+            break;
+          } else if (d[i].name == $scope.nodeId) {
+            serviceMetadataUuidForPortal = d[i].serviceRecord;
+            break;
+          }
+        }
+
+        if (serviceMetadataUuidForPortal != null) {
+          $scope.serviceMetadataForPortal = null;
+
+          // Retrieve the service metadata
+          // Use main portal, otherwise the query applies the portal filter
+          // and doesn't find the metadata
+          gnMetadataManager.getMdObjByUuidInPortal('srv',
+            serviceMetadataUuidForPortal, undefined).then(function(md) {
+            $scope.serviceMetadataForPortal = md;
+          });
+        }
+
+      });
+
 
       /**
        * Keep a reference on main cat scope
