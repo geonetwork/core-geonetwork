@@ -87,6 +87,32 @@
   .view-header {
     border-bottom: 2px solid #e5e5e5;
   }
+  // indicators
+  .indicator-PASS {
+    color: @brand-success;
+    &:before {
+      display: inline-block;
+      font: normal normal normal 14px/1 FontAwesome;
+      font-size: inherit;
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+      margin-right: 10px;
+      content: "\f046";
+    }
+  }
+  .indicator-FAIL {
+    color: @brand-danger;
+    &:before {
+      display: inline-block;
+      font: normal normal normal 14px/1 FontAwesome;
+      font-size: inherit;
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+      margin-right: 10px;
+      content: "\f05e";
+    }
+  }
+
   .entry {
     margin-left: 8px;
     border-left: 2px solid #ddd;

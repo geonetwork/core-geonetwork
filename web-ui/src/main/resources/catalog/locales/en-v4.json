@@ -110,6 +110,8 @@
   "facet-indicator_INDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE-help": "PASS if ANY linked capabilities document has a link to a Service Metadata Record that resolves to a Service Metadata Record.",
   "facet-indicator_INDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES-help": "PASS if ANY linked capabilities document's Service Metadata Record has the same file identifier as our starting service metadata record.",
   "facet-indicator_INDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES-help": "PASS if ANY linked capabilities document's Service Metadata Record has the same file identifier and the XML documents are the same as our starting service metadata record.",
+  "facet-indicator_INDICATOR_LAYER_MATCHES_DOWNLOAD": "Download service",
+  "facet-indicator_INDICATOR_LAYER_MATCHES_VIEW": "View service",
   "isPublishedToAll-true": "Public records",
   "isPublishedToAll-false": "Restricted records",
   "indexRecordsWithErrors": "Index records with errors",
