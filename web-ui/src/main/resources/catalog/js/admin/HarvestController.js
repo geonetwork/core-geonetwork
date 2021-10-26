@@ -119,14 +119,26 @@
       };
 
       var getRunningRemoteHarvesterIds = function() {
-        var runningHarvesters = [];
+
+        var runningHarvestersReady = [];
+        var existRunningHarvestersNotReady = false;
+
         for (var i = 0; $scope.harvesters &&
         i < $scope.harvesters.length; i++) {
           var h = $scope.harvesters[i];
           if (h.info.running && h["@type"] == 'csw2') {
-            runningHarvesters.push(h.info.result.processID);
+            if (h.info.result != undefined) {
+              runningHarvestersReady.push(h.info.result.processID);
+            } else {
+              existRunningHarvestersNotReady = true;
+            }
           }
         }
+
+        var runningHarvesters = {
+          existRunningHarvestersNotReady: existRunningHarvestersNotReady,
+          runningHarvesters: runningHarvestersReady
+        };
 
         return runningHarvesters;
       };
@@ -137,11 +149,19 @@
           return;
         }
         var runningHarvesters = getRunningHarvesterIds();
-        var runningRemoteHarvesters = getRunningRemoteHarvesterIds();
+        var runningRemoteHarvestersInfo = getRunningRemoteHarvesterIds();
+        var runningRemoteHarvesters = runningRemoteHarvestersInfo.runningHarvesters;
+        var existRunningHarvestersNotReady = runningRemoteHarvestersInfo.existRunningHarvestersNotReady;
 
-        if ((runningHarvesters.length == 0) && (runningRemoteHarvesters.length == 0)) {
+        if ((runningHarvesters.length == 0) && (runningRemoteHarvesters.length == 0) && !existRunningHarvestersNotReady) {
           return;
         }
+
+        if ((runningHarvesters.length == 0) && (runningRemoteHarvesters.length == 0) && existRunningHarvestersNotReady) {
+          setTimeout(pollHarvesterStatus, 10000);
+          return;
+        }
+
         isPolling = true;
 
         if (runningHarvesters.length > 0) {

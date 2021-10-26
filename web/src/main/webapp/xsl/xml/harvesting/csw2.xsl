@@ -17,6 +17,9 @@
 
 
   <xsl:template match="*" mode="options">
+    <processID>
+      <xsl:value-of select="processID/value"/>
+    </processID>
     <remoteHarvesterNestedServices>
       <xsl:value-of select="remoteHarvesterNestedServices/value"/>
     </remoteHarvesterNestedServices>
