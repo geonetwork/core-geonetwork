@@ -10,8 +10,9 @@
 
     <div class="col-md-3 well well-sm"
          data-ng-if="serviceMetadataForPortal != null">
-      <p>{{serviceMetadataForPortal.resourceAbstract}}</p>
-
+      <p
+        ng-bind-html="serviceMetadataForPortal.resourceAbstract | linky:'_blank'"></p>
+      
       <p data-ng-if="serviceMetadataForPortal.contactForResource
                      && serviceMetadataForPortal.contactForResource.length > 0">
         <span data-translate="">forMoreInformationContact</span>
