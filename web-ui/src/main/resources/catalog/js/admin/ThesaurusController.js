@@ -471,11 +471,20 @@
         });
       };
 
+      function findKeywordByUri(uri) {
+        for (var i = 0; i < $scope.keywords.length; i ++) {
+          if ($scope.keywords[i].uri === uri) {
+            return $scope.keywords[i];
+          }
+        }
+        return undefined;
+      }
+
       /**
        * Edit an existing keyword, open the modal, search relations
        */
       $scope.editKeyword = function(k) {
-        $scope.keywordSelected = angular.copy(k);
+        $scope.keywordSelected = angular.copy(angular.isObject(k) ? k : findKeywordByUri(k));
         $scope.keywordSelected.oldId = $scope.keywordSelected.uri;
 
         // create geo object (if not already there)
