@@ -247,5 +247,6 @@
   "cite.format.ris.help": "Tag format developed by Research Information Systems.",
   "cite.format.bibtex": "BibTex",
   "cite.format.bibtex.help": "A BibTeX database file is formed by a list of entries, with each entry corresponding to a bibliographical item.",
-  "origin": "Origin"
+  "origin": "Origin",
+  "forMoreInformationContact": "For more information contact "
 }

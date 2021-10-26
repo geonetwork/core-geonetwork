@@ -217,18 +217,28 @@
 
         /**
          * @ngdoc method
-         * @name gnMetadataManager#getMdObjByUuid
+         * @name gnMetadataManager#getMdObjByUuidInPortal
          * @methodOf gnMetadataManager
          *
          * @description
          * Get the metadata js object from catalog. Trigger a search and
          * return a promise.
+         * @param {portal} portal name to query, null to use the current portal
          * @param {string} uuid or id of the metadata
          * @param {array} isTemplate optional isTemplate value (y, n, s, t...)
          * @return {HttpPromise} of the $http post
          */
-        getMdObjByUuid: function(uuid, isTemplate) {
-          return $http.post('../api/search/records/_search', {"query": {
+        getMdObjByUuidInPortal: function(portal, uuid, isTemplate) {
+          var url;
+
+          if (portal == null) {
+            // Use current portal
+            url = '../api/search/records/_search';
+          } else {
+            url = '../../' + portal + '/api/search/records/_search';
+          }
+
+          return $http.post(url, {"query": {
               "bool" : {
                 "must": [
                   {"multi_match": {
@@ -239,12 +249,28 @@
                 ]
               }
             }}).then(function(r) {
-              if (r.data.hits.total.value > 0) {
-                return new Metadata(r.data.hits.hits[0]);
-              } else {
-                console.warn("Record with UUID/ID " + uuid + " not found.")
-              }
-              });
+            if (r.data.hits.total.value > 0) {
+              return new Metadata(r.data.hits.hits[0]);
+            } else {
+              console.warn("Record with UUID/ID " + uuid + " not found.")
+            }
+          });
+        },
+
+        /**
+         * @ngdoc method
+         * @name gnMetadataManager#getMdObjByUuid
+         * @methodOf gnMetadataManager
+         *
+         * @description
+         * Get the metadata js object from catalog current portal. Trigger a search and
+         * return a promise.
+         * @param {string} uuid or id of the metadata
+         * @param {array} isTemplate optional isTemplate value (y, n, s, t...)
+         * @return {HttpPromise} of the $http post
+         */
+        getMdObjByUuid: function(uuid, isTemplate) {
+          return this.getMdObjByUuidInPortal(null, uuid, isTemplate);
         },
 
         /**
