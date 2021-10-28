@@ -198,7 +198,7 @@
             }, true);
 
             gnConfigService.load().then(function(c) {
-              this.refresh();
+              $scope.refresh();
             });
           }
         ]
