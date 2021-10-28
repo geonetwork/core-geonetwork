@@ -416,7 +416,7 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = API_PARAM_RECORD_TAGS, required = false) @RequestParam(required = false) final String[] category,
         @Parameter(description = "Copy categories from source?", required = false) @RequestParam(required = false, defaultValue = "false") final boolean hasCategoryOfSource,
         @Parameter(description = "Is child of the record to copy?", required = false) @RequestParam(required = false, defaultValue = "false") final boolean isChildOfSource,
-        @Parameter(description = "Has attachments to copy?", required = false) @RequestParam(required = false, defaultValue = "true") final boolean hasAttachments,
+        @Parameter(description = "Copy attachments from source?", required = false) @RequestParam(required = false, defaultValue = "true") final boolean hasAttachmentsOfSource,
         @Parameter(hidden = true) HttpSession httpSession, HttpServletRequest request) throws Exception {
 
         AbstractMetadata sourceMetadata = ApiUtils.getRecord(sourceUuid);
@@ -466,7 +466,7 @@ public class MetadataInsertDeleteApi {
 
         dataManager.activateWorkflowIfConfigured(context, newId, group);
 
-        if (hasAttachments) {
+        if (hasAttachmentsOfSource) {
             try {
                 StoreUtils.copyDataDir(context, sourceMetadata.getId(), Integer.parseInt(newId), true);
             } catch (Exception e) {
