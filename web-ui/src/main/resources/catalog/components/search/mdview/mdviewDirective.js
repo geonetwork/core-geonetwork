@@ -133,7 +133,7 @@
             if (scope.md == null) {
               return;
             }
-            query.query.bool.must[0].more_like_this.like = scope.md.resourceTitleObject.default;
+            query.query.bool.must[0].more_like_this.like = scope.md.resourceTitle;
             $http.post('../api/search/records/_search', query).then(function (r) {
               scope.similarDocuments = r.data.hits;
             })
