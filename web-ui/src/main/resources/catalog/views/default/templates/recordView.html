@@ -788,6 +788,27 @@
 
           <div data-ng-show="isRecordHistoryEnabled && user.isEditorOrMore() && mdView.current.record.draft != 'y'"
               data-gn-record-history="mdView.current.record"></div>
+
+
+          <section class="gn-md-side-errors"
+                   data-ng-if="(mdView.current.record.isHarvested == 'false'
+                                || mdView.current.record.isHarvested == undefined)
+                                && mdView.current.record.indexingErrorMsg
+                                && user.isEditorOrMore()">
+            <h2>
+              <i class="fa fa-fw fa-cog"></i>
+              <span data-translate="">indexingErrorMessages</span>
+            </h2>
+            <div class="alert alert-danger">
+              <ul>
+                <li data-ng-repeat="e in mdView.current.record.indexingErrorMsg">
+                  <code>
+                    {{e}}
+                  </code>
+                </li>
+              </ul>
+            </div>
+          </section>
         </div>
       </div>
     </div>

@@ -248,5 +248,6 @@
   "cite.format.bibtex": "BibTex",
   "cite.format.bibtex.help": "A BibTeX database file is formed by a list of entries, with each entry corresponding to a bibliographical item.",
   "origin": "Origin",
-  "forMoreInformationContact": "For more information contact "
+  "forMoreInformationContact": "For more information contact ",
+  "indexingErrorMessages": "Indexing warnings and errors"
 }

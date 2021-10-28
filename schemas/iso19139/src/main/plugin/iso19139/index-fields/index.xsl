@@ -807,8 +807,8 @@
                           select="date-util:convertToISOZuluDateTime($end)"/>
 
             <xsl:choose>
-              <xsl:when test="$zuluStartDate != ''
-                              and ($zuluEndDate != '' or $end/@indeterminatePosition = 'now')">
+              <xsl:when test="$zuluStartDate castable as xs:dateTime
+                              and ($zuluEndDate  castable as xs:dateTime or $end/@indeterminatePosition = 'now')">
                 <resourceTemporalDateRange type="object">{
                   "gte": "<xsl:value-of select="$zuluStartDate"/>"
                   <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
@@ -823,12 +823,12 @@
                   }</resourceTemporalExtentDateRange>
               </xsl:when>
               <xsl:otherwise>
-                <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Lower and upper bounds empty. Date range not indexed.</indexingErrorMsg>
+                <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Lower and upper bounds empty or not valid dates. Date range not indexed.</indexingErrorMsg>
               </xsl:otherwise>
             </xsl:choose>
 
-            <xsl:if test="$zuluStartDate != ''
-                          and $zuluEndDate != ''
+            <xsl:if test="$zuluStartDate castable as xs:dateTime
+                          and $zuluEndDate  castable as xs:dateTime
                           and $start &gt; $end">
               <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Lower range bound '<xsl:value-of select="$start"/>' can not be greater than upper bound '<xsl:value-of select="$end"/>'.</indexingErrorMsg>
             </xsl:if>
