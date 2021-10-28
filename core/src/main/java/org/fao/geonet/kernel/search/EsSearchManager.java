@@ -440,6 +440,7 @@ public class EsSearchManager implements ISearchManager {
                     ObjectNode docWithErrorInfo = mapper.createObjectNode();
                     String resourceTitle = String.format("Document #%s", e.getId());
                     String id = "";
+                    String uuid = "";
                     String isTemplate = "";
 
                     String failureDoc = documents.get(e.getId());
@@ -447,10 +448,12 @@ public class EsSearchManager implements ISearchManager {
                         JsonNode node = mapper.readTree(failureDoc);
                         resourceTitle = node.get("resourceTitleObject").get("default").asText();
                         id = node.get(IndexFields.DBID).asText();
+                        uuid = node.get("uuid").asText();
                         isTemplate = node.get(IS_TEMPLATE).asText();
                     } catch (Exception ignoredException) {
                     }
                     docWithErrorInfo.put(IndexFields.DBID, id);
+                    docWithErrorInfo.put("uuid", uuid);
                     docWithErrorInfo.put(IndexFields.RESOURCE_TITLE, resourceTitle);
                     docWithErrorInfo.put(IS_TEMPLATE, isTemplate);
                     docWithErrorInfo.put(IndexFields.DRAFT, "n");
@@ -501,6 +504,7 @@ public class EsSearchManager implements ISearchManager {
             .add("inspireThemeUri")
             .add("inspireTheme_syn")
             .add("inspireAnnex")
+            .add("indexingErrorMsg")
             .add("status")
             .add("status_text")
             .add("coordinateSystem")
