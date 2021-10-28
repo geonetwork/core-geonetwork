@@ -159,7 +159,15 @@
     <xsl:param name="fieldName" as="xs:string"/>
     <xsl:param name="elements" as="node()*"/>
     <xsl:param name="languages" as="node()?"/>
-    <xsl:copy-of select="gn-fn-index:add-multilingual-field($fieldName, $elements, $languages, false())"/>
+    <xsl:copy-of select="gn-fn-index:add-multilingual-field($fieldName, $elements, $languages, false(), false())"/>
+  </xsl:function>
+
+  <xsl:function name="gn-fn-index:add-multilingual-field" as="node()*">
+    <xsl:param name="fieldName" as="xs:string"/>
+    <xsl:param name="elements" as="node()*"/>
+    <xsl:param name="languages" as="node()?"/>
+    <xsl:param name="asJson" as="xs:boolean?"/>
+    <xsl:copy-of select="gn-fn-index:add-multilingual-field($fieldName, $elements, $languages, $asJson, false())"/>
   </xsl:function>
 
   <!--
@@ -196,7 +204,9 @@
     <xsl:param name="fieldName" as="xs:string"/>
     <xsl:param name="elements" as="node()*"/>
     <xsl:param name="languages" as="node()?"/>
+    <!-- Return the JSON object directly if true, wrap it in an element if false. -->
     <xsl:param name="asJson" as="xs:boolean?"/>
+    <xsl:param name="asXml" as="xs:boolean?"/>
 
     <xsl:variable name="mainLanguage"
                   select="$languages/lang[@id='default']/@value"/>
@@ -272,6 +282,9 @@
             <xsl:if test="$isArray and position() != last()">,</xsl:if>
             <xsl:if test="$isArray and position() = last()">]</xsl:if>
           </xsl:when>
+          <xsl:when test="$asXml">
+            <xsl:copy-of select="$textObject"/>
+          </xsl:when>
           <xsl:otherwise>
             <xsl:element name="{$fieldName}Object">
               <xsl:attribute name="type" select="'object'"/>
@@ -284,6 +297,39 @@
   </xsl:function>
 
 
+  <xsl:function name="gn-fn-index:add-keyword-field-with-uri" as="node()">
+    <xsl:param name="fieldName" as="xs:string"/>
+    <xsl:param name="thesaurusId" as="xs:string"/>
+    <xsl:param name="elements" as="node()*"/>
+    <xsl:param name="languages" as="node()?"/>
+
+    <xsl:variable name="fieldValues"
+                  select="gn-fn-index:add-multilingual-field($fieldName,
+                          $elements, $languages, false(), true())"/>
+
+    <xsl:variable name="useAnchor"
+                  select="count($fieldValues[starts-with(., concat($doubleQuote, 'link', $doubleQuote))]) != 0"/>
+
+    <xsl:variable name="keywordUri"
+                  as="xs:string?">
+      <xsl:if test="$thesaurusId != '' and not($useAnchor)">
+        <xsl:value-of select="util:getKeywordUri(
+                                  ($elements/*/text())[1],
+                                  $thesaurusId, $languages/lang[@id = 'default']/@value)"/>
+      </xsl:if>
+    </xsl:variable>
+
+    <xsl:variable name="fieldContent" as="node()*">
+      <xsl:copy-of select="$fieldValues"/>
+      <xsl:if test="$keywordUri != ''">
+        <value>"link": "<xsl:value-of select="$keywordUri"/>"</value>
+      </xsl:if>
+    </xsl:variable>
+
+    <json>
+      <xsl:value-of select="concat('{', string-join($fieldContent/text(), ', '), '}')"/>
+    </json>
+  </xsl:function>
   <!--
 
       <spatialRepresentationType>

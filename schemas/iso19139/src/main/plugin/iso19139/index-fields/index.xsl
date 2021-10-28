@@ -600,7 +600,7 @@
                 "link": "<xsl:value-of select="gn-fn-index:json-escape(@xlink:href)"/>",
                 "keywords": [
               <xsl:for-each select="gmd:keyword[*/normalize-space() != '']">
-                <xsl:value-of select="gn-fn-index:add-multilingual-field('keyword', ., $allLanguages)/text()"/>
+                <xsl:value-of select="gn-fn-index:add-keyword-field-with-uri('keyword', $thesaurusId, ., $allLanguages)/text()"/>
                 <xsl:if test="position() != last()">,</xsl:if>
               </xsl:for-each>
               ]}
