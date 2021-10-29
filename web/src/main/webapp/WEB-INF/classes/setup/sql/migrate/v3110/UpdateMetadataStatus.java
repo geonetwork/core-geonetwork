@@ -350,7 +350,9 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
             String[] fkColumns = new String[] {"relatedMetadataStatusId"};
             String[] pkColumns = new String[] {MetadataStatus_.id.getName()};
 
-            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " +  dialect.getAddForeignKeyConstraintString(MetadataStatus.TABLE_NAME + "relatedMetadataStatusIdFk", fkColumns, MetadataStatus.TABLE_NAME, pkColumns, true));
+            statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " +
+                dialect.getAddForeignKeyConstraintString(MetadataStatus.TABLE_NAME + "RelMdStatusIdFk",
+                    fkColumns, MetadataStatus.TABLE_NAME, pkColumns, true));
         } catch (Exception e) {
             connection.rollback();
             // If there was an error then we will log the error and continue.
