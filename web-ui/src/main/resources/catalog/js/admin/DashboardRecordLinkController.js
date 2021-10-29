@@ -59,7 +59,7 @@
         $http.delete('../api/records/links').then($scope.triggerSearch);
       };
 
-      $window.lastState = {ok: 'OK', ko: 'KO', unknown: '?'};
+      $window.lastState = {ok: 'OK', ko: 'Error', unknown: '?'};
 
       $scope.$watch('groupIdFilter', $scope.triggerSearch);
       $scope.$watch('groupOwnerIdFilter', $scope.triggerSearch);
@@ -118,15 +118,19 @@
                     // https://github.com/wenzhixin/bootstrap-table/commit/961eed40b81b7133578e21358b5299629d642825
                     // key is bound with  $window.lastState key
                     var _key = 'unknown';
+                    var _linkStatus = '';
                     if (val == -1) {
                       _class = 'fa-exclamation-triangle text-danger';
                       _key = 'ko';
+                      _linkStatus = ' data-toggle="tooltip" data-placement="bottom" title="'
+                        + $translate.instant('status') + ': ' + row.linkStatus[0].statusValue + '\r\n'
+                        + $translate.instant('statusLogMessage') + ': ' + row.linkStatus[0].statusInfo+ '"';
                     } else if (val == 1) {
                       _class = 'fa-check text-success';
                       _key = 'ok';
                     }
-                    return '<div><i class="fa fa-fw fa-2x ' + _class + '"><p class="hidden">' + _key + '</p></i></div>';}.bind(this)},{
-
+                    return '<div><i class="fa fa-fw fa-2x ' + _class + '"' + _linkStatus + '>' +
+                      '<p class="hidden">' + _key + '</p></i></div>';}.bind(this)},{
                   field: 'url',
                   title: $translate.instant('url'),
                   titleTooltip: $translate.instant('url'),
