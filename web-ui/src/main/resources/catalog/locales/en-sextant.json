@@ -121,5 +121,6 @@
   "layerExtentZoomTooltip": "Zoom on the layer extent",
   "downloadTooltip": "Download the dataset",
   "textInput": "Annotation",
-  "facet-availableInServices": "Available in"
+  "facet-availableInServices": "Available in",
+  "facet-OrgForResource": "Contact for the resource"
 }
