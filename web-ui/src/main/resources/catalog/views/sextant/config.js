@@ -311,6 +311,8 @@
       // Define if the 'related' dropdown should show source/hassource relations
       searchSettings.hideSourceRelations = false;
 
+      var esFacetConfig = gnGlobalSettings.gnCfg.mods.search.facetConfig;
+
       if(typeof sxtSettings != 'undefined') {
         angular.extend(searchSettings, sxtSettings);
         angular.extend(gnPanierSettings, sxtSettings.panier);
@@ -398,8 +400,6 @@
           }];
         }
 
-        var esFacetConfig = gnGlobalSettings.gnCfg.mods.search.facetConfig;
-
         // legacy Sextant facets are specified as array, so in that case we know we have to migrate them
         if (Array.isArray(sxtSettings.facetConfig)) {
           sxtService.migrateLegacyFacetConfigToEs(esFacetConfig, sxtSettings.facetConfig);
@@ -443,6 +443,9 @@
             "query": "+groupPublished:(\"" + searchSettings.configWhat.replace(/,/g, '\" OR \"') + "\")"
           }
         });
+        if (esFacetConfig.groupPublished) {
+          esFacetConfig.groupPublished.terms.include = '"' + searchSettings.configWhat.replace(/,/g, '"|"') + '"';
+        }
       }
 
       var searchMap = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
