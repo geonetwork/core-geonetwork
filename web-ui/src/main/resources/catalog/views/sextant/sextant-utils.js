@@ -6,7 +6,7 @@
 
   var module = angular.module('gn_sxt_utils', ['gn_sxt_legacy_facet_mapping']);
 
-  module.service('sxtService', ['SEXTANT_LEGACY_FACET_MAPPING', function(SEXTANT_LEGACY_FACET_MAPPING) {
+  module.service('sxtService', ['SEXTANT_LEGACY_FACET_MAPPING', 'gnLangs', function(SEXTANT_LEGACY_FACET_MAPPING, gnLangs) {
 
     var panierEnabled = typeof sxtSettings === 'undefined' || !angular.isUndefined(sxtSettings.tabOverflow.panier);
 
@@ -106,6 +106,11 @@
     this.migrateLegacyFacetConfigToEs = function (esFacetConfig, sxtFacetConfig) {
       function addEsFacetConfig(sxtFacet) {
         try {
+          // the facet has language variants (e.g. inspire theme)
+          if (sxtFacet.langs) {
+            sxtFacet.key = sxtFacet.langs[gnLangs.current];
+          }
+
           var esFacetTemplate = SEXTANT_LEGACY_FACET_MAPPING[sxtFacet.key];
           var esFacetName = Object.keys(esFacetTemplate)[0];
           var esFacet = angular.extend({}, esFacetTemplate);
