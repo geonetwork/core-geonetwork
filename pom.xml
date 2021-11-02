@@ -1150,6 +1150,11 @@
         <artifactId>jasypt-hibernate5</artifactId>
         <version>${jasypt.version}</version>
       </dependency>
+      <dependency>
+        <groupId>diff_match_patch</groupId>
+        <artifactId>diff_match_patch</artifactId>
+        <version>current</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -1188,6 +1193,10 @@
       <id>osgeo</id>
       <name>OSGeo repository</name>
       <url>https://repo.osgeo.org/repository/release/</url>
+    </repository>
+    <repository>
+      <id>redhat</id>
+      <url>https://maven.repository.redhat.com/ga/</url>
     </repository>
 
     <!-- managed by repo.osgeo.org k-int-cache -->

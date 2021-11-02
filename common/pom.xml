@@ -170,6 +170,10 @@
       <version>20140107</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>diff_match_patch</groupId>
+      <artifactId>diff_match_patch</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
