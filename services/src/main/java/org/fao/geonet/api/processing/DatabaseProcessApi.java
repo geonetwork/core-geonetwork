@@ -32,23 +32,30 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
 import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.events.history.RecordProcessingChangeEvent;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Diff;
+import org.fao.geonet.utils.DiffType;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -98,13 +105,13 @@ public class DatabaseProcessApi {
             MediaType.ALL_VALUE
         })
     @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Processed records."),
+        @ApiResponse(responseCode = "500", description = "If one record processed is invalid."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
-    public Object previewProcessSearchAndReplace(
+    public ResponseEntity<Object> previewProcessSearchAndReplace(
         @Parameter(
             description = "Use regular expression (may not be supported by all databases - tested with H2 and PostgreSQL)",
             required = false
@@ -134,6 +141,14 @@ public class DatabaseProcessApi {
             defaultValue = ""
         )
             String regexpFlags,
+        @Parameter(
+            description = "Return differences with diff, diffhtml or patch",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            DiffType diffType,
         @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
@@ -167,14 +182,21 @@ public class DatabaseProcessApi {
                 String id = dataMan.getMetadataId(uuid);
                 Log.info("org.fao.geonet.services.metadata",
                     "Processing metadata for preview with id:" + id);
-
+                ServiceContext serviceContext = ApiUtils.createServiceContext(request);
                 Element record = DatabaseProcessUtils.process(
-                    ApiUtils.createServiceContext(request),
+                    serviceContext,
                     id, useRegexp, search, replace, regexpFlags,
                     false, false,
                     false, processingReport);
                 if (record != null) {
-                    preview.addContent(record.detach());
+                    if (diffType != null) {
+                        IMetadataUtils metadataUtils = serviceContext.getBean(IMetadataUtils.class);
+                        AbstractMetadata metadata = metadataUtils.findOne(id);
+                        preview.addContent(
+                            Diff.diff(metadata.getData(), Xml.getString(record), diffType));
+                    } else {
+                        preview.addContent(record.detach());
+                    }
                 }
             }
         } catch (Exception exception) {
@@ -186,16 +208,21 @@ public class DatabaseProcessApi {
         // In case of errors during processing return report.
         if (processingReport.getMetadataErrors().size() > 0) {
             response.setHeader(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             ObjectMapper mapper = new ObjectMapper();
             try {
-                return mapper.writeValueAsString(processingReport);
+                return new ResponseEntity(
+                    mapper.writeValueAsString(processingReport),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
             } catch (JsonProcessingException errorReportException) {
-                return String.format("Failed to generate error report due to '%s'.",
-                    errorReportException.getMessage());
+                return new ResponseEntity(
+                    String.format("Failed to generate error report due to '%s'.",
+                    errorReportException.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
-        return preview;
+        return new ResponseEntity<>(preview, HttpStatus.OK);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
