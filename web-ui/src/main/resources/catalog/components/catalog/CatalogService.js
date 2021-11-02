@@ -803,7 +803,7 @@
           var keywordsWithGroup = [];
           for (var i = 0; i < thesaurus.keywords.length; i++) {
             var k = angular.copy(thesaurus.keywords[i]);
-            k.group = k.link.replaceAll(new RegExp(groupExtractionRegex, 'g'), '$1');
+            k.group = k.key ? k.key.replaceAll(new RegExp(groupExtractionRegex, 'g'), '$1') : '';
             keywordsWithGroup.push(k);
           }
           return keywordsWithGroup;
