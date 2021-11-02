@@ -340,7 +340,7 @@
         [<xsl:for-each select="$allKeywords/thesaurus[info/@type = current-grouping-key()]/keywords/keyword">
         {
         <xsl:value-of select="string-join(values/value, ', ')"/>
-        <xsl:if test="@uri != ''">, "key": "<xsl:value-of select="@uri"/>"</xsl:if>
+        <xsl:if test="@uri != ''">, "link": "<xsl:value-of select="@uri"/>"</xsl:if>
         }
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>]
@@ -358,7 +358,7 @@
         [<xsl:for-each select="keywords/keyword">
         {
         <xsl:value-of select="string-join(values/value, ', ')"/>
-        <xsl:if test="@uri != ''">, "key": "<xsl:value-of select="@uri"/>"</xsl:if>
+        <xsl:if test="@uri != ''">, "link": "<xsl:value-of select="@uri"/>"</xsl:if>
         }
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>]
@@ -381,7 +381,7 @@
         <xsl:for-each select="keywords/keyword">
           {
           <xsl:value-of select="string-join(values/value, ', ')"/>
-          <xsl:if test="@uri != ''">, "key": "<xsl:value-of select="@uri"/>"</xsl:if>
+          <xsl:if test="@uri != ''">, "link": "<xsl:value-of select="@uri"/>"</xsl:if>
           }
           <xsl:if test="position() != last()">,</xsl:if>
         </xsl:for-each>
