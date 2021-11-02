@@ -61,41 +61,41 @@
         }
     },
     'inspireTheme': {
-      'inspireThemeUri': {
+      'th_httpinspireeceuropaeutheme-theme_tree.key': {
         'terms': {
-          'field': 'inspireThemeUri',
+          'field': 'th_httpinspireeceuropaeutheme-theme_tree.key',
           'size': 34
         }
       }
     },
     'inspireTheme_en': {
-      'inspireThemeUri': {
+      'th_httpinspireeceuropaeutheme-theme_tree.key': {
         'terms': {
-          'field': 'inspireThemeUri',
+          'field': 'th_httpinspireeceuropaeutheme-theme_tree.key',
           'size': 34
         }
       }
     },
     'inspireTheme_fr': {
-      'inspireThemeUri': {
+      'th_httpinspireeceuropaeutheme-theme_tree.key': {
         'terms': {
-          'field': 'inspireThemeUri',
+          'field': 'th_httpinspireeceuropaeutheme-theme_tree.key',
           'size': 34
         }
       }
     },
     'inspireThemeWithAc': {
-      'inspireThemeUri': {
+      'th_httpinspireeceuropaeutheme-theme_tree.key': {
         'terms': {
-          'field': 'inspireThemeUri',
+          'field': 'th_httpinspireeceuropaeutheme-theme_tree.key',
           'size': 34
         }
       }
     },
     'inspireThemeURI': {
-      'inspireThemeUri': {
+      'th_httpinspireeceuropaeutheme-theme_tree.key': {
         'terms': {
-          'field': 'inspireThemeUri',
+          'field': 'th_httpinspireeceuropaeutheme-theme_tree.key',
           'size': 34
         }
       }
