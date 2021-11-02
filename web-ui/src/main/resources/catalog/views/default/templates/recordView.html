@@ -791,10 +791,8 @@
 
 
           <section class="gn-md-side-errors"
-                   data-ng-if="(mdView.current.record.isHarvested == 'false'
-                                || mdView.current.record.isHarvested == undefined)
-                                && mdView.current.record.indexingErrorMsg
-                                && user.isEditorOrMore()">
+                   data-ng-if="mdView.current.record.indexingErrorMsg
+                                && user.canEditRecord(mdView.current.record)">
             <h2>
               <i class="fa fa-fw fa-cog"></i>
               <span data-translate="">indexingErrorMessages</span>
