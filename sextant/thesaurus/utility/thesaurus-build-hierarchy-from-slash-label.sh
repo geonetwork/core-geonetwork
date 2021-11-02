@@ -2,7 +2,7 @@
 
 #for thesaurus in place/dcsmm.area.rdf
 #for thesaurus in place/dcsmm.area.rdf theme/simm.thematiques.rdf
-for thesaurus in theme/sextant-theme.rdf theme/mission-atlantic-bodc-parameters.rdf theme/mission-atlantic-odemm.rdf theme/odatis_variables.rdf theme/type_jeux_donnee.rdf thesaurus in place/dcsmm.area.rdf theme/simm.thematiques.rdf
+for thesaurus in theme/sextant-theme.rdf theme/mission-atlantic-bodc-parameters.rdf theme/mission-atlantic-odemm.rdf theme/odatis_variables.rdf theme/type_jeux_donnee.rdf place/dcsmm.area.rdf theme/simm.thematiques.rdf
 do
   THESAURUSFILE=`cut -d "/" -f2 <<< "$thesaurus"`
   #cp ../../../web/src/main/webapp/WEB-INF/data/config/codelist/local/thesauri/$thesaurus $THESAURUSFILE
