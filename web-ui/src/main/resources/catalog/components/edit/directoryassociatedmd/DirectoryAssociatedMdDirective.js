@@ -52,7 +52,7 @@
                 isTemplate: ['y', 'n'],
                 any: '',
                 sortBy: 'resourceTitleObject.default.keyword',
-                _xlink: '*'
+                xlink: '*'
               },
               internal: true,
               sortbyValues: [
@@ -77,8 +77,8 @@
 
             $scope.$watch('entryUuid', function(v) {
               if (v) {
-                $scope.searchObj.params._xlink =
-                    '*local://srv/api/registries/entries/' + v + '*';
+                $scope.searchObj.params.xlink =
+                    'local://srv/api/registries/entries/' + v + '*';
                 $scope.$broadcast('clearResults');
                 $scope.$broadcast('search');
               }
