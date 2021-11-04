@@ -423,7 +423,11 @@
                       </cit:linkage>
                       <cit:protocol>
                         <gco:CharacterString>
-                          <xsl:value-of select="mediaType"/>
+                          <xsl:choose>
+                            <xsl:when test="format = 'Web Page'">WWW:LINK-1.0-http--link</xsl:when>
+                            <xsl:when test="format = 'ArcGIS GeoServices REST API'">ESRI:REST</xsl:when>
+                            <xsl:otherwise>WWW:DOWNLOAD</xsl:otherwise>
+                          </xsl:choose>
                         </gco:CharacterString>
                       </cit:protocol>
                       <cit:name>
