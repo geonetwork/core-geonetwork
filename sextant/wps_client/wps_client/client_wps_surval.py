@@ -54,7 +54,7 @@ outputs = process_wps_execute(
     smtp_port,
     from_email,
     timeout,
-    verbose=True,
+    verbose,
 )
 for output in outputs:
     if is_file_output_size_correct(
