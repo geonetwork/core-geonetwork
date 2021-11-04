@@ -56,11 +56,15 @@
   Valid with regards to index date supported types:
   date_optional_time||yyyy-MM-dd||yyyy-MM||yyyy||epoch_millis
   -->
+  <!-- A date, dateTime, Year or Year and Month
+  Valid with regards to index date supported types:
+  date_optional_time||yyyy-MM-dd||yyyy-MM||yyyy||epoch_millis
+  -->
   <xsl:function name="gn-fn-index:is-isoDate" as="xs:boolean">
     <xsl:param name="value" as="xs:string?"/>
     <xsl:value-of select="if ($value castable as xs:date
                           or $value castable as xs:dateTime
-                          or matches($value, '[0-9]{4}(-[0-9]{2})?'))
+                          or matches($value, '^[0-9]{4}$|^[0-9]{4}-(0[1-9]|1[012])$'))
                           then true() else false()"/>
   </xsl:function>
 
