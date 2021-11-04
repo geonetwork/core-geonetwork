@@ -26,6 +26,7 @@ package org.fao.geonet.schema.iso19139;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.ExportablePlugin;
@@ -35,6 +36,11 @@ import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.RawLinkPatternStreamer;
 import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
+import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
+import org.fao.geonet.kernel.schema.subtemplate.KeywordReplacer;
+import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
+import org.fao.geonet.kernel.schema.subtemplate.SubtemplateAwareSchemaPlugin;
+import org.fao.geonet.kernel.schema.subtemplate.SubtemplatesByLocalXLinksReplacer;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -43,6 +49,8 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.*;
 
@@ -62,12 +70,21 @@ public class ISO19139SchemaPlugin
     MultilingualSchemaPlugin,
     ExportablePlugin,
     ISOPlugin,
-    LinkAwareSchemaPlugin {
+    LinkAwareSchemaPlugin,
+    SubtemplateAwareSchemaPlugin {
     public static final String IDENTIFIER = "iso19139";
 
     public static ImmutableSet<Namespace> allNamespaces;
     private static Map<String, Namespace> allTypenames;
     private static Map<String, String> allExportFormats;
+
+    @Autowired
+    private EsRestClient esRestClient;
+
+    @Value("${es.index.records:gn-records}")
+    private String defaultIndex = "records";
+
+    private SubtemplatesByLocalXLinksReplacer subtemplatesByLocalXLinksReplacer;
 
     static {
         allNamespaces = ImmutableSet.<Namespace>builder()
@@ -588,4 +605,32 @@ public class ISO19139SchemaPlugin
         }
         return "";
     }
+
+    @Override
+    public Element replaceSubtemplatesByLocalXLinks(Element dataXml, String templatesToOperateOn) {
+        return subtemplatesByLocalXLinksReplacer.replaceSubtemplatesByLocalXLinks(
+                dataXml,
+                templatesToOperateOn);
+    }
+
+    @Override
+    public void init(ManagersProxy managersProxy, ConstantsProxy constantsProxy) {
+        List<Namespace> namespaces = new ArrayList<>(allNamespaces);
+        subtemplatesByLocalXLinksReplacer = new SubtemplatesByLocalXLinksReplacer(namespaces, managersProxy, esRestClient, defaultIndex) {
+            @Override
+            public List<String> getLocalesAsHrefParam(Element dataXml) {
+                return ISO19139SchemaPlugin.getLanguages(dataXml);
+            }
+        };
+        subtemplatesByLocalXLinksReplacer.addReplacer(new ContactReplacer(namespaces, managersProxy, constantsProxy));
+        subtemplatesByLocalXLinksReplacer.addReplacer(new FormatReplacer(namespaces, managersProxy, constantsProxy));
+        subtemplatesByLocalXLinksReplacer.addReplacer(new ExtentReplacer(namespaces, managersProxy, constantsProxy));
+        subtemplatesByLocalXLinksReplacer.addReplacer(new KeywordReplacer(managersProxy));
+    }
+
+    @Override
+    public boolean isInitialised() {
+        return subtemplatesByLocalXLinksReplacer!=null;
+    }
+
 }

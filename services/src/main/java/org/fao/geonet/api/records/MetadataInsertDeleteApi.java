@@ -74,6 +74,8 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.subtemplate.SubtemplateAwareSchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -876,6 +878,25 @@ public class MetadataInsertDeleteApi {
         final List<String> id = new ArrayList<String>();
         final List<Element> md = new ArrayList<Element>();
         md.add(xmlElement);
+
+        // Substitute xlinks
+        MetadataSchema metadataSchema = schemaManager.getSchema(schema);
+
+        if (metadataType != MetadataType.SUB_TEMPLATE &&
+                metadataType != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+            if (metadataSchema.getSchemaPlugin() instanceof SubtemplateAwareSchemaPlugin) {
+
+
+                String templatesToOperateOn = settingManager.getValue(Settings.SYSTEM_XLINK_TEMPLATES_TO_OPERATE_ON_AT_INSERT);
+
+                // replace matching subtemplates
+                ((SubtemplateAwareSchemaPlugin) metadataSchema.getSchemaPlugin())
+                        .replaceSubtemplatesByLocalXLinks(
+                                xmlElement,
+                                templatesToOperateOn);
+            }
+        }
+
 
         // Import record
         Map<String, String> sourceTranslations = Maps.newHashMap();
