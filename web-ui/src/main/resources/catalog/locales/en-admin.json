@@ -294,6 +294,7 @@
     "duplicatedValueFoundUserName": "A user with that name already exists. Choose another one.",
     "duplicatedValueFoundUserEmail": "A user with that email already exists. Choose another one.",
     "csw": "CSW",
+    "simpleurl": "Simple URL",
     "csw-FailedToParseCapabilities": "Error while parsing GetCapabilities",
     "csw-capabilitiesUrlHelp": "CSW URL with or without GetCapabilities parameters",
     "csw-category": "Category for harvested records",
@@ -342,6 +343,7 @@
     "data.configDir": "Configuration folder: ",
     "data.dataDir": "Data directory: ",
     "data.formatterPath": "Formatter directory: ",
+    "data.indexConfigDir": "Index configuration folder: ",
     "data.resources": "Resources folder: ",
     "data.backupDir": "Backup folder: ",
     "data.schemaPluginsDir": "Standard folder: ",
@@ -446,6 +448,7 @@
     "harvesterReport": "Catalog harvester report",
     "harvester-arcsde": "ArcSDE",
     "harvester-arcsdeHelp": "Harvest metadata records from an ArcSDE database.",
+    "harvester-simpleurl": "Simple URL",
     "harvester-csw": "OGC CSW 2.0.2",
     "harvester-cswHelp": "Harvest from a CSW server",
     "harvester-filesystem": "Directory",
@@ -489,6 +492,9 @@
     "harvesterRecords": "Harvested records",
     "harvesterSchedule": "Schedule",
     "harvesterScheduleinactive": "Failed to activate harvester.",
+    "harvesterTotalRecords": "Total",
+    "harvesterUpdatedRecords": "Updated",
+    "harvesterUnchangedRecords": "Unchanged",
     "harvesterType": "Node type",
     "harvesterUpdated": "Harvester updated",
     "harvesterValidate": "Validate records before import",
@@ -922,7 +928,6 @@
     "system/server/host-help": "The server's host and port are used to create URLs to the GeoNetwork server. For example, they are used during metadata editing to create resource links and when returning the server's capabilities during a CS/W request.",
     "system/server/port": "Port",
     "system/server/protocol": "Preferred Protocol",
-    "system/server/securePort": "Secure Port",
     "system/server/log": "Log level",
     "system/server/timeZone": "Timezone",
     "system/server/timeZone-help": "Sets the timezone used to store dates in the database and interpret the time in cron expression specified in the harvesters Frequency field. If not set the JVM default timezone will be used. GeoNetwork uses the timezone definitions available in the JVM. Time zones definitions can change frequently. Please keep updated your JVM to get the latest timezones definition or use the tzupdater tool available for download from the <a href='http://www.oracle.com/technetwork/java/javase/downloads/index.html' target='_blank'>Java SE Download Page</a>.",
@@ -1482,7 +1487,9 @@
     "styleVariable-gnSearchBackgroundColor": "Backgound color",
     "confirmDeletecategory": "Are you sure you want to delete this category?",
     "ui-mod-page": "Static pages",
-    "logoHeight": "Logo height"
-
+    "logoHeight": "Logo height",
+    "ui-addWMSLayersToMap": "Add WMS layers from metadata to the map viewer",
+    "ui-addWMSLayersToMap-urlLayerParam": "URL parameter with the layer name",
+    "ui-addWMSLayersToMap-urlLayerParam-help": "If the WMS layer name is configured in the metadata resource url, configure the url parameter that contains the layer name."
 }
 

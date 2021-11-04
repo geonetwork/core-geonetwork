@@ -235,7 +235,7 @@ public class Geonetwork implements ApplicationHandler {
 
         // if the validator exists the proxyCallbackURL needs to have the external host and
         // servlet name added so that the cas knows where to send the validation notice
-        ServerBeanPropertyUpdater.updateURL(settingInfo.getSiteUrl(true) + baseURL, _applicationContext);
+        ServerBeanPropertyUpdater.updateURL(settingInfo.getSiteUrl() + baseURL, _applicationContext);
 
         //------------------------------------------------------------------------
         //--- extract intranet ip/mask and initialize AccessManager
@@ -409,6 +409,10 @@ public class Geonetwork implements ApplicationHandler {
         final long count = settingRepository.count();
         if (count == 0) {
             try {
+                // Set setFirstInitialSetupFlag to true for the encryptorInitializer as this is a new installation.
+                EncryptorInitializer encryptorInitializer = context.getBean(EncryptorInitializer.class);
+                encryptorInitializer.setFirstInitialSetupFlag(true);
+
                 // import data from init files
                 List<Pair<String, String>> importData = context.getBean("initial-data", List.class);
                 final DbLib dbLib = new DbLib();

@@ -676,11 +676,6 @@
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.geotools.xsd</groupId>
-        <artifactId>gt-xsd-fes</artifactId>
-        <version>${geotools.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.geotools</groupId>
         <artifactId>gt-epsg-extension</artifactId>
         <version>${geotools.version}</version>
@@ -934,6 +929,11 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
         <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.neovisionaries</groupId>
+        <artifactId>nv-i18n</artifactId>
+        <version>1.29</version>
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>

@@ -487,7 +487,7 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         final double y0 = bbox.getMinY();
         final double y1 = bbox.getMaxY();
 
-        final String coordsValue = String.format("[[%f, %f], [%f, %f]]", x0, y0, x1, y1);
+        final String coordsValue = String.format("[[%f, %f], [%f, %f]]", x0, y1, x1, y0);
 
         final String filterSpatial = fillTemplateSpatial("envelope", coordsValue, "intersects");
         stack.push(filterSpatial);
