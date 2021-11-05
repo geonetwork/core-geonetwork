@@ -457,6 +457,7 @@ public class MetadataInsertDeleteApi {
             @ApiParam(value = API_PARAM_RECORD_TAGS, required = false) @RequestParam(required = false) final String[] category,
             @ApiParam(value = "Copy categories from source?", required = false, defaultValue = "false") @RequestParam(required = false, defaultValue = "false") final boolean hasCategoryOfSource,
             @ApiParam(value = "Is child of the record to copy?", required = false, defaultValue = "false") @RequestParam(required = false, defaultValue = "false") final boolean isChildOfSource,
+            @ApiParam(value = "Copy attachments from source?", required = false) @RequestParam(required = false, defaultValue = "true") final boolean hasAttachmentsOfSource,
             @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession, HttpServletRequest request) throws Exception {
 
         AbstractMetadata sourceMetadata = ApiUtils.getRecord(sourceUuid);
@@ -505,15 +506,18 @@ public class MetadataInsertDeleteApi {
 
         dataManager.activateWorkflowIfConfigured(context, newId, group);
 
-        try {
-            StoreUtils.copyDataDir(context, sourceMetadata.getId(), Integer.parseInt(newId), true);
-        } catch (Exception e) {
-            Log.warning(Geonet.DATA_MANAGER,
+        if (hasAttachmentsOfSource) {
+            try {
+                StoreUtils.copyDataDir(context, sourceMetadata.getId(), Integer.parseInt(newId), true);
+            } catch (Exception e) {
+                Log.warning(Geonet.DATA_MANAGER,
                     String.format(
-                            "Error while copying metadata resources. Error is %s. "
-                                    + "Metadata is created but without resources from the source record with id '%s':",
-                            e.getMessage(), newId));
+                        "Error while copying metadata resources. Error is %s. "
+                            + "Metadata is created but without resources from the source record with id '%s':",
+                        e.getMessage(), newId));
+            }
         }
+
         if (hasCategoryOfSource) {
             final Collection<MetadataCategory> categories = dataManager.getCategories(sourceMetadata.getId() + "");
             try {
