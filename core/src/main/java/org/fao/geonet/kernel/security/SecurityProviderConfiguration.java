@@ -113,7 +113,7 @@ public interface SecurityProviderConfiguration {
         if (SecurityProviderUtils != null && SecurityProviderUtils.size() != 0) {
             if (SecurityProviderUtils.size() != 1) {
                 throw new RuntimeException("Too many security providers utils");
-}
+            }
             return SecurityProviderUtils.get(SecurityProviderUtils.keySet().toArray()[0]);
         }
         // If we cannot find SecurityProviderUtil then default to null.

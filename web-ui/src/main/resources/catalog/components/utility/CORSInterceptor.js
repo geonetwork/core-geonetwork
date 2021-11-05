@@ -66,7 +66,7 @@
                  var mapservice = gnMapServicesCache.getMapservice(config.url);
                  if (mapservice !== null) {
                     if (mapservice.useProxy) {
-                       // If we are using a proxy then add it to the list of required proxies.
+                       // If we need to use the proxy then add it to requireProxy list.
                        if ($.inArray(url, gnGlobalSettings.requireProxy) === -1) {
                          var url = config.url.split('/');
                          url = url[0] + '/' + url[1] + '/' + url[2] + '/';

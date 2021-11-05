@@ -175,8 +175,11 @@
             layer.getSource().updateParams({'STYLES': style.Name});
 
             // If this is an authorized mapservice then we need to adjust the url or add auth headers
-            // Only check http url and exclude any urls like data: which should not be changed. Also, there is not need to check prox urls.
-            if (style.LegendURL[0] !== null && style.LegendURL[0].OnlineResource !== null && style.LegendURL[0].OnlineResource.startsWith("http") && !style.LegendURL[0].OnlineResource.startsWith(gnGlobalSettings.proxyUrl)) {
+            // Only check http url and exclude any urls like data: which should not be changed. Also, there is not need to check proxy urls.
+            if (style.LegendURL[0] !== null &&
+              style.LegendURL[0].OnlineResource !== null &&
+              style.LegendURL[0].OnlineResource.startsWith("http") &&
+              !style.LegendURL[0].OnlineResource.startsWith(gnGlobalSettings.proxyUrl)) {
               var mapservice = gnMapServicesCache.getMapservice(style.LegendURL[0].OnlineResource);
 
               if (mapservice !== null) {
@@ -188,11 +191,11 @@
                   urlGetLegend = gnGlobalSettings.proxyUrl + encodeURIComponent(urlGetLegend);
                 } else {
                   // If not using the proxy then we need to use a custom loadFunction to set the authentication header
-                  var headerDict
+                  var headerDict;
                   if (gnMapServicesCache.getAuthorizationHeaderValue(mapservice)) {
                     headerDict = {
                       "Authorization": gnMapServicesCache.getAuthorizationHeaderValue(mapservice)
-                    }
+                    };
 
                     var requestOptions = {
                       headers: new Headers(headerDict),
