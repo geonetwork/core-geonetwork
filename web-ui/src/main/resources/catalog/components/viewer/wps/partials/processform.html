@@ -198,7 +198,7 @@
                 &nbsp;<span translate>wpsExecute</span>
               </button>
             </div>
-            <div class="flex-row">
+            <div class="flex-row wps-execute-container">
               <!-- show output-related action if process has succeeded -->
               <div ng-if="executeState == 'finished' && executeResponse.status.processSucceeded && executeResponse.processOutputs.output" class="gn-outputs">
 
@@ -210,12 +210,12 @@
                       {{::output.title.value}}
                     </h4>
                     <div ng-class="{'col-sm-6': executeResponse.processOutputs.output.length>1}">
-                      <a role="button" class="btn btn-default"
+                      <a role="button" class="btn btn-default process-output-button"
                          target="_blank" href="{{::output.reference.href}}">
                         <icon class="fa fa-fw fa-download"/>
                         <span data-translate="">Download</span>
                       </a>
-                      <a role="button" class="btn btn-default"
+                      <a role="button" class="btn btn-default load-ref-button"
                          data-ng-show="wpsLink.output.loadReferenceInMap"
                          data-ng-click="clearGeometry()">
                         <icon class="fa fa-fw fa-times"/>
