@@ -1211,4 +1211,25 @@ sxt-annotations-editor {
   }
 }
 
+// make wps button 6.7.x like
+// not pretty but it works
+// https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/343
+
+.form-group.gn-execute.flex-row-r.flex-end.flex-align-center {
+  float: left;
+}
+
+.btn.btn-default.process-output-button {
+  width: 7.2em;
+}
+
+.wps-execute-container {
+  float: right;
+  width: 8.5em;
+}
+
+.load-ref-button {
+  visibility: hidden;
+}
+
 @import 'gn_popover.less';
