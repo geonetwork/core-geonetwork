@@ -83,6 +83,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
 
         harvesterSettingsManager.add("id:" + optionsId, "doNotSort", params.doNotSort);
         harvesterSettingsManager.add("id:" + optionsId, "executeLinkChecker", params.executeLinkChecker);
+        harvesterSettingsManager.add("id:" + optionsId, "processID", "");
 
 
         //--- store dynamic filter nodes
@@ -147,6 +148,12 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
 
                     boolean check = true;
 
+                    try {
+                        Thread.sleep(2 * 1000);
+                    } catch (InterruptedException e) {
+                        log.error(e);
+                    }
+
                     while (check) {
                         try {
                             if (thiz.cancelMonitor.get()) {
@@ -173,6 +180,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                     }
                                 } else {
                                     thiz.stop(Common.Status.ACTIVE);
+                                    thiz.running = false;
                                     thiz.harvesterSettingsManager.setValue("harvesting/id:" + thiz.getID() + "/options/processID", "");
                                     check = false;
                                 }
@@ -199,16 +207,30 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
     }
 
     public Element getResult() {
-        Element resultEl = super.getResult();
+        Element resultEl = new Element("result");
         if (result != null) {
-            resultEl.addContent(new Element("processID").setText(((CswRemoteHarvestResult) result).processId));
-            resultEl.addContent(new Element("runningHarvest").setText(((CswRemoteHarvestResult) result).runningHarvest + ""));
+            CswRemoteHarvestResult r = (CswRemoteHarvestResult) result;
+
+            resultEl.addContent(new Element("processID").setText(r.processId));
+            resultEl.addContent(new Element("runningHarvest").setText(r.runningHarvest + ""));
             resultEl.addContent(new Element("runningLinkChecker").setText(((CswRemoteHarvestResult) result).runningLinkChecker + ""));
             resultEl.addContent(new Element("runningIngest").setText(((CswRemoteHarvestResult) result).runningIngest + ""));
 
             OrchestratedHarvestProcessStatus orchestratedHarvestProcessStatus = ((CswRemoteHarvestResult) result).harvesterStatus;
 
             if (orchestratedHarvestProcessStatus != null) {
+
+                if (orchestratedHarvestProcessStatus.getHarvestStatus() != null) {
+                    int total = 0;
+
+                    if (orchestratedHarvestProcessStatus.getHarvestStatus().endpoints != null) {
+                        for(int i = 0; i <  orchestratedHarvestProcessStatus.getHarvestStatus().endpoints.size(); i++) {
+                            total = total +  orchestratedHarvestProcessStatus.getHarvestStatus().endpoints.get(i).numberOfRecordsReceived;
+                        }
+                    }
+                    add(resultEl, "total", total);
+                }
+
                 resultEl.addContent(getHarvestStatusAsElement(orchestratedHarvestProcessStatus.getHarvestStatus()));
                 resultEl.addContent(getLinkCheckerStatusAsElement(orchestratedHarvestProcessStatus.getLinkCheckStatus()));
                 resultEl.addContent(getIngestStatusAsElement(orchestratedHarvestProcessStatus.getIngestStatus()));

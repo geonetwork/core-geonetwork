@@ -215,6 +215,7 @@
 
                     if ((oldH.info.result) && (oldH.info.result.processID == h.processID)) {
                       oldH.info.result.running = h.running;
+                      oldH.info.running = h.running;
                       oldH.info.result.runningHarvest = h.runningHarvest;
                       oldH.info.result.runningLinkChecker = h.runningLinkChecker;
                       oldH.info.result.runningIngest = h.runningIngest;
