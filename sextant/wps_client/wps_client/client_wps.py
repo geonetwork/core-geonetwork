@@ -27,7 +27,7 @@ outputs = process_wps_execute(
     smtp_port,
     from_email,
     timeout,
-    verbose=True,
+    verbose,
 )
 for output in outputs:
     fetch_wps_output_file(

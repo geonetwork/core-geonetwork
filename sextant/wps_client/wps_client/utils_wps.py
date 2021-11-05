@@ -17,8 +17,6 @@ def get_args(argv):
         usage()
         sys.exit(1)
 
-    print("ARGV      :", argv[1:])
-
     try:
         options, remainder = getopt.getopt(
             argv[1:],
@@ -42,8 +40,6 @@ def get_args(argv):
         usage(argv)
         sys.exit(2)
 
-    print("OPTIONS   :", options)
-
     url = None
     xml = None
     verbose = False
@@ -57,7 +53,6 @@ def get_args(argv):
     smtp_pass = None
 
     for opt, arg in options:
-        print(opt)
         if opt in ("-u", "--url"):
             url = arg
         elif opt in ("-d", "--destination"):
@@ -86,7 +81,8 @@ def get_args(argv):
             verbose = True
         else:
             assert False, "Unhandled option"
-
+    if verbose:
+        print("OPTIONS   :", options)
         # required arguments for all requests
     if url is None or destination is None or email is None or smtp_host is None:
         usage(argv)
@@ -218,7 +214,8 @@ def process_wps_execute(
         )
 
     # show status
-    print("percent complete", execution.percentCompleted)
-    print("status message", execution.statusMessage)
+    if verbose:
+        print("percent complete", execution.percentCompleted)
+        print("status message", execution.statusMessage)
 
     return execution.processOutputs
