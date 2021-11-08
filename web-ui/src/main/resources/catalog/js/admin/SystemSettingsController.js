@@ -503,4 +503,31 @@
       loadSettings();
     }]);
 
+  /**
+   * GnMapContextRecordController provides de search object to query
+   * metadata with public (download privilege to group ALL)
+   * map context resources (OGC:OWS-C protocol).
+   */
+  module.controller('GnMapContextRecordController', [
+    '$scope', 'gnGlobalSettings',
+    function($scope, gnGlobalSettings) {
+      $scope.searchObj = {
+        internal: true,
+        any: '',
+        defaultParams: {
+          any: '',
+          from: 1,
+          to: 50,
+          op1: 1,
+          linkProtocol: 'OGC:OWS-C',
+          sortBy: 'resourceTitleObject.default.keyword',
+          sortOrder: 'asc'
+        }
+      };
+      $scope.searchObj.params = angular.extend({},
+        $scope.searchObj.defaultParams);
+      $scope.updateParams = function() {
+        $scope.searchObj.params.any = $scope.searchObj.any;
+      };
+    }]);
 })();
