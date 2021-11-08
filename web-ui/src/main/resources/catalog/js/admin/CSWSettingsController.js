@@ -57,8 +57,10 @@
    *
    */
   module.controller('GnCSWSettingsController', [
-    '$scope', '$http', '$rootScope', '$translate', 'gnUtilityService',
-    function($scope, $http, $rootScope, $translate, gnUtilityService) {
+    '$scope', '$http', '$rootScope', '$translate',
+    'gnUtilityService', 'gnESClient', 'Metadata',
+    function($scope, $http, $rootScope, $translate, gnUtilityService,
+             gnESClient, Metadata) {
       /**
        * CSW properties
        */
@@ -107,17 +109,20 @@
       function loadServiceRecords() {
         var id = $scope.cswSettings['system/csw/capabilityRecordUuid'];
         if (angular.isDefined(id) && id != -1){
-          $http.post('../api/search/records/_search', {"query": {
-              "term": {
-                "uuid": {
-                  "value": "\"" + id + "\""
+          var query =
+            {"query": {
+                "term": {
+                  "uuid": {
+                    "value": id
+                  }
                 }
-              }
-            }, "from": 0, "size": 1}, {cache: true})
-            .then(function(r) {
-              if (r.data.hits.hits > 0) {
-                $scope.cswServiceRecord = new Metadata(r.data.hits.hits[0]);
-              }
+              }, "from": 0, "size": 1};
+
+          gnESClient.search(query).then(function(data) {
+            angular.forEach(data.hits.hits, function(record) {
+              var md = new Metadata(record);
+              $scope.cswServiceRecord = md;
+            });
           });
         }
       }
