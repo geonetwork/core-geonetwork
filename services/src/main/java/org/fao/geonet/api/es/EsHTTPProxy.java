@@ -36,14 +36,12 @@ import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.nio.charset.StandardCharsets;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -70,6 +68,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.DeflaterInputStream;
@@ -259,6 +258,33 @@ public class EsHTTPProxy {
     }
 
 
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Search endpoint",
+        description = "See https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html for search parameters details.")
+    @RequestMapping(value = "/search/records/_msearch",
+        method = {
+            RequestMethod.POST
+        })
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public void msearch(
+        @RequestParam(defaultValue = SelectionManager.SELECTION_METADATA)
+            String bucket,
+        @Parameter(hidden = true)
+            HttpSession httpSession,
+        @Parameter(hidden = true)
+            HttpServletRequest request,
+        @Parameter(hidden = true)
+            HttpServletResponse response,
+        @RequestBody(description = "JSON request based on Elasticsearch API.")
+            String body,
+        @Parameter(hidden = true)
+        HttpEntity<String> httpEntity) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        call(context, httpSession, request, response, "_msearch", httpEntity.getBody(), bucket);
+    }
+
+
     @Hidden
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Elasticsearch proxy endpoint",
@@ -298,7 +324,7 @@ public class EsHTTPProxy {
         final String url = client.getServerUrl() + "/" + defaultIndex + "/" + endPoint + "?";
         // Make query on multiple indices
 //        final String url = client.getServerUrl() + "/" + defaultIndex + ",gn-features/" + endPoint + "?";
-        if ("_search".equals(endPoint)) {
+        if ("_search".equals(endPoint) || "_msearch".equals(endPoint)) {
             UserSession session = context.getUserSession();
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode nodeQuery = objectMapper.readTree(body);
