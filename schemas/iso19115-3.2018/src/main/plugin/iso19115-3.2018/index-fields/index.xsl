@@ -921,7 +921,7 @@
         <xsl:if test="string($title)">
           <specificationConformance type="object">{
             "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
-            <xsl:if test="string(*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)">
+            <xsl:if test="gn-fn-index:is-isoDate(*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)">
             "date": "<xsl:value-of select="*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date" />",
             </xsl:if>
             <xsl:if test="*/mdq:specification/*/cit:title/*/@xlink:href">
@@ -1221,7 +1221,7 @@
         ,"identifiers":[
         <xsl:for-each select="$identifiers">
           {
-            "code": "<xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>",
+            "code": "<xsl:value-of select="gn-fn-index:json-escape(mcc:code/(gco:CharacterString|gcx:Anchor))"/>",
             "codeSpace": "<xsl:value-of select="(mcc:codeSpace/(gco:CharacterString|gcx:Anchor))[1]/normalize-space()"/>",
             "link": "<xsl:value-of select="mcc:code/gcx:Anchor/@xlink:href"/>"
           }

@@ -331,7 +331,7 @@
 
           <xsl:for-each select="gmd:identifier/*">
             <resourceIdentifier type="object">{
-              "code": "<xsl:value-of select="gmd:code/(gco:CharacterString|gmx:Anchor)"/>",
+              "code": "<xsl:value-of select="gn-fn-index:json-escape(gmd:code/(gco:CharacterString|gmx:Anchor))"/>",
               "codeSpace": "<xsl:value-of select="gmd:codeSpace/(gco:CharacterString|gmx:Anchor)"/>",
               "link": "<xsl:value-of select="gmd:code/gmx:Anchor/@xlink:href"/>"
               }</resourceIdentifier>
@@ -887,7 +887,7 @@
         <xsl:if test="string($title)">
           <specificationConformance type="object">{
             "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
-            <xsl:if test="string(*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date)">
+            <xsl:if test="gn-fn-index:is-isoDate(*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date)">
               "date": "<xsl:value-of select="*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date" />",
             </xsl:if>
             <xsl:if test="*/gmd:specification/*/gmd:title/*/@xlink:href">
