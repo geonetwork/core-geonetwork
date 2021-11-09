@@ -6,7 +6,12 @@
 
   var module = angular.module('gn_sxt_utils', ['gn_sxt_legacy_facet_mapping']);
 
-  module.service('sxtService', ['SEXTANT_LEGACY_FACET_MAPPING', 'gnLangs', function(SEXTANT_LEGACY_FACET_MAPPING, gnLangs) {
+  module.service('sxtService', [
+    'SEXTANT_LEGACY_FACET_MAPPING',
+    'gnLangs',
+    '$http',
+    '$q',
+    function(SEXTANT_LEGACY_FACET_MAPPING, gnLangs, $http, $q) {
 
     var panierEnabled = typeof sxtSettings === 'undefined' || !angular.isUndefined(sxtSettings.tabOverflow.panier);
 
@@ -132,6 +137,26 @@
       for (var i = 0; i < sxtFacetConfig.length; i++) {
         addEsFacetConfig(sxtFacetConfig[i]);
       }
+    };
+
+    /**
+     * This produces a filter to be used in the `terms.include` property of the group facet, based on the
+     * specified groups in `configWhat` API setting.
+     * @param {string} configWhat
+     * @return {Promise<string>}
+     */
+    this.getGroupFilterFromConfigWhat = function(configWhat) {
+      var defer = $q.defer();
+      $http.get('../../srv/api/groups').success(function (groups) {
+        var groupNames = configWhat.split(',');
+        var filter = groups.filter(function (group) {
+          return groupNames.indexOf(group.name) > -1;
+        }).map(function (group) {
+          return group.id;
+        }).join('|');
+        defer.resolve(filter);
+      });
+      return defer.promise;
     };
 
   }]);

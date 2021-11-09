@@ -306,14 +306,14 @@
         }
     },
     'publishedForGroup': {
-      'groupPublished':
-        {
-          'terms': {
-            'field': 'groupPublished',
-            'size': 199,
-            'order': {'_key': 'asc'}
-          }
+      'group': {
+        "terms": {
+          'field': 'groupPublishedId',
+          'size': 200,
+          'include': '.*',
+          'exclude': '1'
         }
+      }
     },
     'isPublishedToAll': {
       'isPublishedToAll':

@@ -443,8 +443,10 @@
             "query": "+groupPublished:(\"" + searchSettings.configWhat.replace(/,/g, '\" OR \"') + "\")"
           }
         });
-        if (esFacetConfig.groupPublished) {
-          esFacetConfig.groupPublished.terms.include = '"' + searchSettings.configWhat.replace(/,/g, '"|"') + '"';
+        if (esFacetConfig.group) {
+          sxtService.getGroupFilterFromConfigWhat(searchSettings.configWhat).then(function (filter) {
+            esFacetConfig.group.terms.include = filter;
+          });
         }
       }
 
