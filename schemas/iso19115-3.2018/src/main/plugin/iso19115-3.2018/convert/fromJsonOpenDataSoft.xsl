@@ -299,30 +299,39 @@
               </mmi:MD_MaintenanceInformation>
             </mri:resourceMaintenance>-->
 
-            <!--
-            keyword: [
-              "CASVP",
-              "Famille",
-              "handicap",
-              "Enfant handicapé",
-              "Aide Sociale",
-              "Aide famille"
-              ],....-->
-            <mri:descriptiveKeywords>
-              <mri:MD_Keywords>
-                <xsl:for-each select="metas/keyword|metas/theme">
-                  <mri:keyword>
-                    <gco:CharacterString>
-                      <xsl:value-of select="name"/>
-                    </gco:CharacterString>
-                  </mri:keyword>
-                </xsl:for-each>
-                <mri:type>
-                  <mri:MD_KeywordTypeCode codeListValue="theme"
-                                          codeList="./resources/codeList.xml#MD_KeywordTypeCode"/>
-                </mri:type>
-              </mri:MD_Keywords>
-            </mri:descriptiveKeywords>
+            <!-- ODS keywords copied without type -->
+            <xsl:if test="metas/keyword">
+              <mri:descriptiveKeywords>
+                <mri:MD_Keywords>
+                  <xsl:for-each select="metas/keyword">
+                    <mri:keyword>
+                      <gco:CharacterString>
+                        <xsl:value-of select="."/>
+                      </gco:CharacterString>
+                    </mri:keyword>
+                  </xsl:for-each>
+                </mri:MD_Keywords>
+              </mri:descriptiveKeywords>
+            </xsl:if>
+
+            <!-- ODS themes copied as keywords with type 'theme' -->
+            <xsl:if test="metas/theme">
+              <mri:descriptiveKeywords>
+                <mri:MD_Keywords>
+                  <xsl:for-each select="metas/theme">
+                    <mri:keyword>
+                      <gco:CharacterString>
+                        <xsl:value-of select="."/>
+                      </gco:CharacterString>
+                    </mri:keyword>
+                  </xsl:for-each>
+                  <mri:type>
+                    <mri:MD_KeywordTypeCode codeListValue="theme"
+                                            codeList="./resources/codeList.xml#MD_KeywordTypeCode"/>
+                  </mri:type>
+                </mri:MD_Keywords>
+              </mri:descriptiveKeywords>
+            </xsl:if>
 
             <!--
             license_url: "http://opendatacommons.org/licenses/odbl/",
@@ -408,11 +417,13 @@
                             </gfc:memberName>
                             <gfc:definition>
                               <gco:CharacterString>
-                                <xsl:value-of select="label"/>:
-                                <xsl:value-of select="description"/>
+                                <xsl:value-of select="label"/>
+                                <xsl:if test="description">
+                                  - <xsl:value-of select="description"/>
+                                </xsl:if>
                               </gco:CharacterString>
                             </gfc:definition>
-                            <gfc:cardinality></gfc:cardinality>
+                            <gfc:cardinality>1</gfc:cardinality>
                             <gfc:valueType>
                               <gco:TypeName>
                                 <gco:aName>
@@ -488,6 +499,27 @@
                     </cit:CI_OnlineResource>
                   </mrd:onLine>
                 </xsl:for-each>
+
+                <!-- Data download links are inferred from the record metadata -->
+                <xsl:if test="metas/records_count > 0">
+                  <xsl:call-template name="dataLink">
+                    <xsl:with-param name="format">csv</xsl:with-param>
+                  </xsl:call-template>
+                  <xsl:call-template name="dataLink">
+                    <xsl:with-param name="format">json</xsl:with-param>
+                  </xsl:call-template>
+                  <xsl:if test="count(features[. = 'geo']) > 0">
+                    <xsl:call-template name="dataLink">
+                      <xsl:with-param name="format">geojson</xsl:with-param>
+                    </xsl:call-template>
+                    <xsl:if test="metas/records_count &lt; 5000">
+                      <xsl:call-template name="dataLink">
+                        <xsl:with-param name="format">shapefile</xsl:with-param>
+                      </xsl:call-template>
+                    </xsl:if>
+                  </xsl:if>
+                </xsl:if>
+
               </mrd:MD_DigitalTransferOptions>
             </mrd:transferOptions>
           </mrd:MD_Distribution>
@@ -511,4 +543,36 @@
         </mdb:resourceLineage>
       </mdb:MD_Metadata>
     </xsl:template>
+
+    <xsl:template name="dataLink">
+      <xsl:param name="format" />
+
+      <mrd:onLine>
+        <cit:CI_OnlineResource>
+          <cit:linkage>
+            <gco:CharacterString>
+              <xsl:value-of select="concat(nodeUrl, '/explore/dataset/', datasetid, '/download?format=', $format, '&amp;timezone=Europe/Berlin&amp;use_labels_for_header=false')" />
+            </gco:CharacterString>
+          </cit:linkage>
+          <cit:protocol>
+            <gco:CharacterString>WWW:DOWNLOAD-1.0-http--download</gco:CharacterString>
+          </cit:protocol>
+          <cit:name>
+            <gco:CharacterString>
+              <xsl:value-of select="concat('Download as ', upper-case($format))"/>
+            </gco:CharacterString>
+          </cit:name>
+          <cit:description>
+            <gco:CharacterString>
+              <xsl:value-of select="concat('Download this dataset in the ', upper-case($format), ' format.')"/>
+            </gco:CharacterString>
+          </cit:description>
+          <cit:function>
+            <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                                       codeListValue="fileAccess"/>
+          </cit:function>
+        </cit:CI_OnlineResource>
+      </mrd:onLine>
+    </xsl:template>
+
 </xsl:stylesheet>

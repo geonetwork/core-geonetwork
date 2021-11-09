@@ -70,11 +70,12 @@
           <ul id="gn-harvest-select-available-list"
               class="dropdown-menu"
               role="menu">
-            <li data-ng-repeat="h in getHarvesterTypes() | orderBy:'text'"
+            <li data-ng-repeat="h in getHarvesterTypes() | orderBy:'label'"
                 data-ng-class="h.loaded ? '' : 'disabled'">
-              <a href="" data-ng-click="addHarvester(h.label)"
-                 title="{{'harvester-' + h.label + 'Help' | translate}}">{{h.text}}
-                <span data-ng-hide="h.loaded" data-translate="">notYetSupported</span>
+              <a href="" data-ng-click="addHarvester(h.type)"
+                 title="{{'harvester-' + h.type + 'Help' | translate}}">
+                <span translate>{{h.label}}</span>
+                <span data-ng-hide="h.loaded" translate>notYetSupported</span>
               </a>
             </li>
           </ul>

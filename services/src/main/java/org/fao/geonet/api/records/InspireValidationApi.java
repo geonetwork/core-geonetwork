@@ -86,6 +86,7 @@ import java.util.Map;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
+
 @RequestMapping(value = {
     "/{portal}/api/records"
 })
@@ -215,84 +216,79 @@ public class InspireValidationApi {
         String getRecordByIdUrl = null;
         String testId = null;
 
-        try {
-            Element md = (Element) ApiUtils.getUserSession(session).getProperty(Geonet.Session.METADATA_EDITING + id);
-            if (md == null) {
-                response.setStatus(HttpStatus.SC_NOT_FOUND);
-                return String.format("Metadata with id '%s' not found in session. To be validated, the record must be in edition session.", id);
-                // TODO: Add support for such validation from not editing session ?
-            }
-
-            if (StringUtils.isEmpty(mode)) {
-                // Use formatter to convert the record
-                if (!schema.equals("iso19139")) {
-                    try {
-                        Key key = new Key(metadata.getId(), "eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
-
-                        final FormatterApi.FormatMetadata formatMetadata =
-                            new FormatterApi().new FormatMetadata(context, key, nativeRequest);
-                        final byte[] data = formatMetadata.call().data;
-                        md = Xml.loadString(new String(data, StandardCharsets.UTF_8), false);
-                    } catch (Exception e) {
-                        response.setStatus(HttpStatus.SC_NOT_FOUND);
-                        return String.format("Metadata with id '%s' is in schema '%s'. No iso19139 formatter found. Error is %s", id, schema, e.getMessage());
-                    }
-                } else {
-                    // Cleanup metadocument elements
-                    EditLib editLib = appContext.getBean(DataManager.class).getEditLib();
-                    editLib.removeEditingInfo(md);
-                    editLib.contractElements(md);
-                }
-
-
-                md.detach();
-                Attribute schemaLocAtt = schemaManager.getSchemaLocation(
-                    "iso19139", context);
-
-                if (schemaLocAtt != null) {
-                    if (md.getAttribute(
-                        schemaLocAtt.getName(),
-                        schemaLocAtt.getNamespace()) == null) {
-                        md.setAttribute(schemaLocAtt);
-                        // make sure namespace declaration for schemalocation is present -
-                        // remove it first (does nothing if not there) then add it
-                        md.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
-                        md.addNamespaceDeclaration(schemaLocAtt.getNamespace());
-                    }
-                }
-
-
-                InputStream metadataToTest = convertElement2InputStream(md);
-                testId = inspireValidatorUtils.submitFile(context, URL, metadataToTest, testsuite, metadata.getUuid());
-            } else {
-                String portal = NodeInfo.DEFAULT_NODE;
-                if (!NodeInfo.DEFAULT_NODE.equals(mode)) {
-                    Source source = sourceRepository.findOneByUuid(mode);
-                    if (source == null) {
-                        response.setStatus(HttpStatus.SC_NOT_FOUND);
-                        return String.format(
-                            "Portal %s not found. There is no CSW endpoint at this URL " +
-                                "that we can send to the validator.", mode);
-                    }
-                    portal = mode;
-                }
-                getRecordByIdUrl = String.format(
-                    "%s%s/eng/csw?SERVICE=CSW&REQUEST=GetRecordById&VERSION=2.0.2&" +
-                        "OUTPUTSCHEMA=%s&ELEMENTSETNAME=full&ID=%s",
-                    settingManager.getBaseURL(),
-                    portal,
-                    ISO19139Namespaces.GMD.getURI(),
-                    metadataUuid);
-                testId = inspireValidatorUtils.submitUrl(context, URL, getRecordByIdUrl, testsuite, metadata.getUuid());
-            }
-
-            threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));
-
-            return testId;
-        } catch (Exception e) {
-            response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-            return "";
+        Element md = (Element) ApiUtils.getUserSession(session).getProperty(Geonet.Session.METADATA_EDITING + id);
+        if (md == null) {
+            response.setStatus(HttpStatus.SC_NOT_FOUND);
+            return String.format("Metadata with id '%s' not found in session. To be validated, the record must be in edition session.", id);
+            // TODO: Add support for such validation from not editing session ?
         }
+
+        if (StringUtils.isEmpty(mode)) {
+            // Use formatter to convert the record
+            if (!schema.equals("iso19139")) {
+                try {
+                    Key key = new Key(metadata.getId(), "eng", FormatType.xml, "iso19139", true, FormatterWidth._100);
+
+                    final FormatterApi.FormatMetadata formatMetadata =
+                        new FormatterApi().new FormatMetadata(context, key, nativeRequest);
+                    final byte[] data = formatMetadata.call().data;
+                    md = Xml.loadString(new String(data, StandardCharsets.UTF_8), false);
+                } catch (Exception e) {
+                    response.setStatus(HttpStatus.SC_NOT_FOUND);
+                    return String.format("Metadata with id '%s' is in schema '%s'. No iso19139 formatter found. Error is %s", id, schema, e.getMessage());
+                }
+            } else {
+                // Cleanup metadocument elements
+                EditLib editLib = appContext.getBean(DataManager.class).getEditLib();
+                editLib.removeEditingInfo(md);
+                editLib.contractElements(md);
+            }
+
+
+            md.detach();
+            Attribute schemaLocAtt = schemaManager.getSchemaLocation(
+                "iso19139", context);
+
+            if (schemaLocAtt != null) {
+                if (md.getAttribute(
+                    schemaLocAtt.getName(),
+                    schemaLocAtt.getNamespace()) == null) {
+                    md.setAttribute(schemaLocAtt);
+                    // make sure namespace declaration for schemalocation is present -
+                    // remove it first (does nothing if not there) then add it
+                    md.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
+                    md.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+                }
+            }
+
+
+            InputStream metadataToTest = convertElement2InputStream(md);
+            testId = inspireValidatorUtils.submitFile(context, URL, metadataToTest, testsuite, metadata.getUuid());
+        } else {
+            String portal = NodeInfo.DEFAULT_NODE;
+            if (!NodeInfo.DEFAULT_NODE.equals(mode)) {
+                Source source = sourceRepository.findOneByUuid(mode);
+                if (source == null) {
+                    response.setStatus(HttpStatus.SC_NOT_FOUND);
+                    return String.format(
+                        "Portal %s not found. There is no CSW endpoint at this URL " +
+                            "that we can send to the validator.", mode);
+                }
+                portal = mode;
+            }
+            getRecordByIdUrl = String.format(
+                "%s%s/eng/csw?SERVICE=CSW&REQUEST=GetRecordById&VERSION=2.0.2&" +
+                    "OUTPUTSCHEMA=%s&ELEMENTSETNAME=full&ID=%s",
+                settingManager.getBaseURL(),
+                portal,
+                ISO19139Namespaces.GMD.getURI(),
+                metadataUuid);
+            testId = inspireValidatorUtils.submitUrl(context, URL, getRecordByIdUrl, testsuite, metadata.getUuid());
+        }
+
+        threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));
+
+        return testId;
     }
 
     private InputStream convertElement2InputStream(Element md)

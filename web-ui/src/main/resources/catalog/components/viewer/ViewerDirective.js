@@ -183,7 +183,7 @@
 
                   var loadLayerPromise = gnMap[
                       config.type === 'wmts' ? 'addWmtsFromScratch' :
-                        (config.type === 'esrirest' ? 'addEsriRestFromScratch' : 'addWmsFromScratch')
+                        (config.type === 'esrirest' ? 'addEsriRestLayer' : 'addWmsFromScratch')
                       ](
                       scope.map, config.url,
                       config.name, undefined, config.md);

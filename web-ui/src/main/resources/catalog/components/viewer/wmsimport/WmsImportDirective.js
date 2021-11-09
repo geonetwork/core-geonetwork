@@ -104,7 +104,7 @@
           };
 
           this.addEsriRestLayer = function(getCapLayer) {
-            return gnMap.addEsriRestFromScratch($scope.map, $scope.url + '/' + getCapLayer.id , null, null, null);
+            return gnMap.addEsriRestLayer($scope.map, $scope.url + '/' + getCapLayer.id , null, null, null);
           };
         }],
         link: function(scope, element, attrs) {
@@ -522,20 +522,17 @@
    * gnEsriCapTreeElt directive.
    */
   module.directive('gnEsriRestCapTreeCol', [
-    '$translate',
-    function($translate) {
-
-      var label= $translate.instant('filter');
-
+    function() {
       return {
         restrict: 'E',
         replace: true,
         scope: {
-          collection: '='
+          collection: '=',
+          filterLabel: '@'
         },
         template: "<ul class='gn-layer-tree'><li data-ng-show='collection.length > 10' >" +
           "<div class='input-group input-group-sm'><span class='input-group-addon'><i class='fa fa-filter'></i></span>" +
-          "<input class='form-control' aria-label='" + label + "' data-ng-model-options='{debounce: 200}' data-ng-model='layerSearchText'/></div>" +
+          "<input class='form-control' aria-label='{{ ::filterLabel }}' data-ng-model-options='{debounce: 200}' data-ng-model='layerSearchText'/></div>" +
           "</li>" +
           '<gn-esri-rest-cap-tree-elt ng-repeat="member in collection | filter:layerSearchText | orderBy: \'name\'" member="member">' +
           '</gn-esri-rest-cap-tree-elt></ul>'
@@ -574,11 +571,9 @@
             evt.stopPropagation();
           };
 
-          scope.addLayer = function(c) {
+          scope.addLayer = function() {
             controller.addEsriRestLayer(scope.member);
           };
-
-          scope.isParentNode = false;
         }
       };
     }]);

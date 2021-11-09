@@ -1,10 +1,10 @@
-<li data-ng-class='::!isParentNode ? "leaf" : ""'>
+<li class="leaf">
   <div class="flex-col">
     <div class="flex-row width-100 flex-align-stretch">
       <div class="flex-col flex-grow">
         <a href=""
            class="truncate"
-           data-ng-click="addLayer(null, $event)"
+           data-ng-click="addLayer()"
            title="{{member.name}}">
           <i class='fa fa-fw'
              data-ng-class='"fa-map-o"'></i>
@@ -14,9 +14,9 @@
       <div class="gn-layer-toolbar btn-group btn-group-xs">
         <a href=""
           class="btn btn-link btn-xs"
-          data-ng-click="isParentNode ? toggleNode($event) : addLayer(null, $event)"
-          data-ng-if="!isParentNode" class="btn btn-default btn-xs"
-          title="{{(isParentNode ? 'showGroupLayers' : 'addToMap') | translate}}">
+          data-ng-click="addLayer()"
+          class="btn btn-default btn-xs"
+          title="{{'addToMap' | translate}}">
           <i class="fa fa-fw fa-plus"></i>
         </a>
       </div>
