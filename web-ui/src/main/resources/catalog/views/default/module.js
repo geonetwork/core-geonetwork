@@ -131,13 +131,14 @@
     'gnESFacet',
     'gnFacetSorter',
     'gnExternalViewer',
+    'gnUrlUtils',
     function($scope, $location, $filter,
              suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
              gnMap, gnMdView, mdView, gnWmsQueue,
              gnSearchLocation, gnOwsContextService,
              hotkeys, gnGlobalSettings, gnESClient,
-             gnESFacet, gnFacetSorter, gnExternalViewer) {
+             gnESFacet, gnFacetSorter, gnExternalViewer, gnUrlUtils) {
 
 
       var viewerMap = gnSearchSettings.viewerMap;
@@ -168,6 +169,8 @@
       $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
 
       $scope.facetSorter = gnFacetSorter.sortByTranslation;
+
+      $scope.addToMapLayerNameUrlParam = gnGlobalSettings.gnCfg.mods.search.addWMSLayersToMap.urlLayerParam;
 
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();
@@ -286,12 +289,26 @@
           };
 
           var title = link.title;
-          var name = link.name;
+
+          var name;
+
+          if ( $scope.addToMapLayerNameUrlParam !== '') {
+            var params = gnUrlUtils.parseKeyValue(
+              config.url.split('?')[1]);
+            name = params[$scope.addToMapLayerNameUrlParam];
+
+            if (angular.isUndefined(name)) {
+              name = link.name;
+            }
+          } else {
+            name = link.name;
+          }
+
           if (angular.isObject(link.title)) {
             title = $filter('gnLocalized')(link.title);
           }
-          if (angular.isObject(link.name)) {
-            name = $filter('gnLocalized')(link.name);
+          if (angular.isObject(name)) {
+            name = $filter('gnLocalized')(name);
           }
 
           if (name && name !== '') {

@@ -308,21 +308,37 @@
               "Aide Sociale",
               "Aide famille"
               ],....-->
-            <mri:descriptiveKeywords>
-              <mri:MD_Keywords>
-                <xsl:for-each select="keyword|theme">
-                  <mri:keyword>
-                    <gco:CharacterString>
-                      <xsl:value-of select="name"/>
-                    </gco:CharacterString>
-                  </mri:keyword>
-                </xsl:for-each>
-                <mri:type>
-                  <mri:MD_KeywordTypeCode codeListValue="theme"
-                                          codeList="./resources/codeList.xml#MD_KeywordTypeCode"/>
-                </mri:type>
-              </mri:MD_Keywords>
-            </mri:descriptiveKeywords>
+            <xsl:if test="keyword">
+              <mri:descriptiveKeywords>
+                <mri:MD_Keywords>
+                  <xsl:for-each select="keyword">
+                    <mri:keyword>
+                      <gco:CharacterString>
+                        <xsl:value-of select="."/>
+                      </gco:CharacterString>
+                    </mri:keyword>
+                  </xsl:for-each>
+                </mri:MD_Keywords>
+              </mri:descriptiveKeywords>
+            </xsl:if>
+
+            <xsl:if test="theme">
+              <mri:descriptiveKeywords>
+                <mri:MD_Keywords>
+                  <xsl:for-each select="theme">
+                    <mri:keyword>
+                      <gco:CharacterString>
+                        <xsl:value-of select="."/>
+                      </gco:CharacterString>
+                    </mri:keyword>
+                  </xsl:for-each>
+                  <mri:type>
+                    <mri:MD_KeywordTypeCode codeListValue="theme"
+                                            codeList="./resources/codeList.xml#MD_KeywordTypeCode"/>
+                  </mri:type>
+                </mri:MD_Keywords>
+              </mri:descriptiveKeywords>
+            </xsl:if>
 
             <!--
             license_url: "http://opendatacommons.org/licenses/odbl/",
@@ -407,7 +423,11 @@
                       </cit:linkage>
                       <cit:protocol>
                         <gco:CharacterString>
-                          <xsl:value-of select="mediaType"/>
+                          <xsl:choose>
+                            <xsl:when test="format = 'Web Page'">WWW:LINK-1.0-http--link</xsl:when>
+                            <xsl:when test="format = 'ArcGIS GeoServices REST API'">ESRI:REST</xsl:when>
+                            <xsl:otherwise>WWW:DOWNLOAD</xsl:otherwise>
+                          </xsl:choose>
                         </gco:CharacterString>
                       </cit:protocol>
                       <cit:name>

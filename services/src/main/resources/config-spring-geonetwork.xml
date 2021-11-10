@@ -180,7 +180,7 @@
     </entry>
     <entry key="search">
       <util:list>
-        <value>json/core+search+v4</value>
+        <value>json/core+search+v4+custom</value>
         <value>json/schemas</value>
         <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:DS_InitiativeTypeCode+gmd:MD_SpatialRepresentationTypeCode</value>
         <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition</value>
@@ -189,14 +189,14 @@
     </entry>
     <entry key="admin">
       <util:list>
-        <value>json/core+search+admin+v4</value>
+        <value>json/core+search+admin+v4+custom</value>
         <value>json/schemas</value>
         <value>db/MetadataCategory+Operation+Group+StatusValue+Source+Translations</value>
       </util:list>
     </entry>
     <entry key="editor">
       <util:list>
-        <value>json/core+search+editor+v4</value>
+        <value>json/core+search+editor+v4+custom</value>
         <value>json/schemas</value>
         <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:DS_InitiativeTypeCode+gmd:MD_SpatialRepresentationTypeCode</value>
         <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode</value>

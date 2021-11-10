@@ -1444,8 +1444,8 @@
 
           /**
            * @ngdoc method
-           * @methodOf gn_map.addEsriRestFromScratch:gnMap
-           * @name gnMap#addEsriRestFromScratch
+           * @methodOf gn_map.addEsriRestLayer:gnMap
+           * @name gnMap#addEsriRestLayer
            *
            * @description
            * Here is the method to use when you want to add a ESRIREst layer from
@@ -1463,7 +1463,7 @@
            * @param {boolean} createOnly or add it to the map
            * @param {!Object} md object
            */
-          addEsriRestFromScratch: function(map, url, name, createOnly, md) {
+          addEsriRestLayer: function(map, url, name, createOnly, md) {
             if (url === '') {
               var error = "Trying to add an ESRI layer with no service URL. Layer name is " + name + ". Check the metadata or the map.";
               console.warn(error);
@@ -2053,7 +2053,7 @@
                       opt);
                   break;
                 }
-                this.addEsriRestFromScratch(map, opt.url, opt.name)
+                this.addEsriRestLayer(map, opt.url, opt.name)
                     .then(function(layer) {
                       if (title) {
                         layer.set('title', title);

@@ -122,6 +122,11 @@
                         msg: $translate.instant('inspireServiceError'),
                         type: 'danger'
                       });
+                    } else {
+                      gnAlertService.addAlert({
+                        msg: error.data.description,
+                        type: 'danger'
+                      });
                     }
                   });
                 }

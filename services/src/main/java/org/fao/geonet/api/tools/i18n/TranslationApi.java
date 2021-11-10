@@ -24,12 +24,17 @@
 package org.fao.geonet.api.tools.i18n;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -57,7 +62,7 @@ import static org.springframework.http.HttpStatus.OK;
 })
 @Tag(name = "tools")
 @RestController
-public class TranslationApi implements ApplicationContextAware {
+public class TranslationApi {
 
     @Autowired
     SchemaManager schemaManager;
@@ -67,12 +72,8 @@ public class TranslationApi implements ApplicationContextAware {
     TranslationsRepository translationsRepository;
     @Autowired
     TranslationPackBuilder translationPackBuilder;
-
-    private ApplicationContext context;
-
-    public synchronized void setApplicationContext(ApplicationContext context) {
-        this.context = context;
-    }
+    @Autowired
+    IsoLanguagesMapper isoLanguagesMapper;
 
     /**
      * @param type The type of object to return.
@@ -91,7 +92,7 @@ public class TranslationApi implements ApplicationContextAware {
         ServletRequest request
     ) throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        String language = languageUtils.locale2gnCode(locale.getISO3Language());
+        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         return translationPackBuilder.getDbTranslation(language, type);
     }
 
@@ -156,7 +157,8 @@ public class TranslationApi implements ApplicationContextAware {
     }
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Add or update database translations for a key.")
+        summary = "Add or update database translations for a key.",
+        description = "Database translations can be used to customize labels in the UI for different languages.")
     @PutMapping(value = "/db/translations/{key:.+}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
@@ -165,15 +167,33 @@ public class TranslationApi implements ApplicationContextAware {
     @ResponseStatus(CREATED)
     public ResponseEntity addTranslationsFor(
         @PathVariable
+        @Parameter(
+            name = "key",
+            description = "Untranslated key for which translations are provided."
+        )
         final String key,
         @Parameter(
             name = "values"
         )
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "An object where keys are valid 3-letter language codes (e.g. `eng` or `fre`) and values are custom translations for the corresponding language.",
+            content = @Content(examples = {
+                @ExampleObject(value =
+                    "{" +
+                        "  \"eng\": \"my translation\",\n" +
+                        "  \"ger\": \"meine Übersetzung\",\n" +
+                        "  \"fre\": \"ma traduction\"\n" +
+                        "}")
+            })
+        )
         @RequestBody(required = true)
         final Map<String, String> values,
+        @Parameter(
+            name = "replace",
+            description = "Set to `true` to erase all existing translations for that key"
+        )
         @RequestParam(required = false)
-        final boolean replace,
-        ServletRequest request
+        final boolean replace
     ) throws Exception {
         if (replace) {
             translationsRepository.deleteAll(
@@ -209,7 +229,8 @@ public class TranslationApi implements ApplicationContextAware {
 
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Delete database translations.")
+        summary = "Delete database translations.",
+        description = "Delete custom translations stored in the database.")
     @DeleteMapping(value = "/db/translations/{key:.+}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
@@ -217,12 +238,16 @@ public class TranslationApi implements ApplicationContextAware {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(OK)
     public void deleteTranslations(
+        @Parameter(
+            name = "key",
+            description = "Untranslated key for which all translations will be deleted."
+        )
         @PathVariable
         final String key,
         ServletRequest request
     ) throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        String language = languageUtils.locale2gnCode(locale.getISO3Language());
+        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         List<Translations> translations = translationsRepository.findAllByFieldName(key);
         if(translations.size() == 0) {
             throw new ResourceNotFoundException(String.format(
@@ -241,12 +266,23 @@ public class TranslationApi implements ApplicationContextAware {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
+    @ApiResponse(
+        responseCode = "200",
+        content = @Content(mediaType = "application/json", examples = {
+            @ExampleObject(value =
+                "{" +
+                    "  \"translationKey1\": \"Translated Key One\",\n" +
+                    "  \"translationKey2\": \"Translated Key Two\",\n" +
+                    "  \"translationKey3\": \"Translated Key Two\"\n" +
+                    "}")
+        }, schema = @Schema(type = "{ < * >: string }"))
+    )
     @ResponseBody
     public Map<String, String> getDbTranslations(
         ServletRequest request
-    ) throws Exception {
+    ) {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        String language = languageUtils.locale2gnCode(locale.getISO3Language());
+        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         return translationPackBuilder.getAllDbTranslations(language);
 
     }
@@ -264,8 +300,7 @@ public class TranslationApi implements ApplicationContextAware {
             MediaType.APPLICATION_JSON_VALUE
         })
     @ResponseBody
-    public Map<String, List<String>> getTranslationsPackage(
-    ) throws Exception {
+    public Map<String, List<String>> getTranslationsPackage() {
         return translationPackBuilder.getPackages();
     }
 
@@ -287,10 +322,10 @@ public class TranslationApi implements ApplicationContextAware {
         final String pack,
         ServletRequest request,
         HttpServletRequest httpRequest
-    ) throws Exception {
+    ) {
         final ServiceContext context = ApiUtils.createServiceContext(httpRequest);
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        String language = languageUtils.locale2gnCode(locale.getISO3Language());
+        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         return translationPackBuilder.getPack(language, pack, context);
     }
 
@@ -309,9 +344,7 @@ public class TranslationApi implements ApplicationContextAware {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(OK)
     @ResponseBody
-    public void cleanTranslationsPackagesCache(
-        ServletRequest request
-    ) throws Exception {
+    public void cleanTranslationsPackagesCache() {
         translationPackBuilder.clearCache();
     }
 }
