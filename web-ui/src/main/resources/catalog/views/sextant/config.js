@@ -444,8 +444,8 @@
           }
         });
         if (esFacetConfig.group) {
-          sxtService.getGroupFilterFromConfigWhat(searchSettings.configWhat).then(function (filter) {
-            esFacetConfig.group.terms.include = filter;
+          sxtService.getGroupIdsFromConfigWhat(searchSettings.configWhat).then(function (groupIds) {
+            esFacetConfig.group.meta.filterValues = groupIds;
           });
         }
       }

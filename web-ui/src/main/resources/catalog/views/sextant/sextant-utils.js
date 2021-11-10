@@ -140,20 +140,20 @@
     };
 
     /**
-     * This produces a filter to be used in the `terms.include` property of the group facet, based on the
+     * This produces a list of ids to be used as a filter in the group facet, based on the
      * specified groups in `configWhat` API setting.
      * @param {string} configWhat
-     * @return {Promise<string>}
+     * @return {Promise<string[]>}
      */
-    this.getGroupFilterFromConfigWhat = function(configWhat) {
+    this.getGroupIdsFromConfigWhat = function(configWhat) {
       var defer = $q.defer();
       $http.get('../../srv/api/groups').success(function (groups) {
         var groupNames = configWhat.split(',');
         var filter = groups.filter(function (group) {
           return groupNames.indexOf(group.name) > -1;
         }).map(function (group) {
-          return group.id;
-        }).join('|');
+          return group.id.toString();
+        });
         defer.resolve(filter);
       });
       return defer.promise;

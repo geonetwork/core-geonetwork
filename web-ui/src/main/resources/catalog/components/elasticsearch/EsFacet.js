@@ -331,7 +331,7 @@
           collapsed: fieldConfig
             && fieldConfig.meta
             && fieldConfig.meta.collapsed,
-          meta: respAgg.meta,
+          meta: fieldConfig.meta,
           items: [],
           path: (path || []).concat([searchFieldId])
         };

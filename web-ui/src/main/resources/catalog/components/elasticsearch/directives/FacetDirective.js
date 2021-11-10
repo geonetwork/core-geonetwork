@@ -150,7 +150,16 @@
 
   FacetsController.prototype._isNotNestedFacet = function (facet) {
     return facet && (facet.type === 'terms' || facet.type === 'tree') && !facet.aggs
-  }
+  };
+
+  FacetsController.prototype.getFilteredItems = function (facet) {
+    if (!facet.meta || !facet.meta.filterValues) {
+      return facet.items;
+    }
+    return facet.items.filter(function (item) {
+      return facet.meta.filterValues.indexOf(item.value) > -1;
+    });
+  };
 
   FacetsController.$inject = [
     '$scope', '$filter'
