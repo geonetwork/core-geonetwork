@@ -312,6 +312,9 @@
           'size': 200,
           'include': '.*',
           'exclude': '1'
+        },
+        'meta': {
+          'field': 'groupPublishedId'
         }
       }
     },
