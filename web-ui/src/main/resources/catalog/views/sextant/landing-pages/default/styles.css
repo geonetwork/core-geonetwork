@@ -97,3 +97,6 @@ section.links,
   align-items: center;
 }
 
+.tab-pane {
+  height: auto !important;
+}
