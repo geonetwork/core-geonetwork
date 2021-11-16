@@ -51,7 +51,16 @@ import java.util.List;
 public class SchematronValidator extends AbstractSchematronValidator {
 
     public Element applyCustomSchematronRules(String schema, int metadataId, Element md,
-                                              String lang, List<MetadataValidation> validations) {
+                                              String lang,
+                                              List<MetadataValidation> validations) {
+        return applyCustomSchematronRules(schema, metadataId, md, lang,
+            validations, null);
+    }
+
+    public Element applyCustomSchematronRules(String schema, int metadataId, Element md,
+                                              String lang,
+                                              List<MetadataValidation> validations,
+                                              List<ApplicableSchematron> onlyForSchematronList) {
         SchemaManager schemaManager = ApplicationContextHolder.get().getBean(SchemaManager.class);
 
         MetadataSchema metadataSchema = schemaManager.getSchema(schema);
@@ -59,7 +68,10 @@ public class SchematronValidator extends AbstractSchematronValidator {
 
         Element schemaTronXmlOut = new Element("schematronerrors", Edit.NAMESPACE);
         try {
-            List<ApplicableSchematron> applicableSchematron = getApplicableSchematronList(metadataId, md, metadataSchema);
+            List<ApplicableSchematron> applicableSchematron =
+                onlyForSchematronList == null
+                    ? getApplicableSchematronList(metadataId, md, metadataSchema)
+                    : onlyForSchematronList;
 
             for (ApplicableSchematron applicable : applicableSchematron) {
                 runSchematron(lang, schemaDir, validations, schemaTronXmlOut, metadataId, md, applicable);
