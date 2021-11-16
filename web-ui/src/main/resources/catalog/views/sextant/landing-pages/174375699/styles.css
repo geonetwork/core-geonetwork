@@ -1,7 +1,6 @@
 body {
-  background: url(A4paysage-odatis.jpg) !important;
+  background: #fff url(A4paysage-odatis.jpg) no-repeat !important;
   background-size: 100%;
-  background-repeat: no-repeat;
   height: 100%;
   margin: 0;
   padding: 0;
