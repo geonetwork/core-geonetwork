@@ -1579,6 +1579,26 @@
           }
         }
       },
+      "specificationConformance": {
+        "type": "nested",
+        "properties": {
+          "title": {
+            "type": "keyword"
+          },
+          "date": {
+            "type": "date"
+          },
+          "link": {
+            "type": "keyword"
+          },
+          "explanation": {
+            "type": "keyword"
+          },
+          "pass": {
+            "type": "keyword"
+          }
+        }
+      },
       "link": {
         "type": "nested",
         "properties": {
