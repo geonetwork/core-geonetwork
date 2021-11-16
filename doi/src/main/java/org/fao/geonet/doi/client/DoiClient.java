@@ -56,6 +56,7 @@ public class DoiClient {
     public static final String DOI_ENTITY = "DOI";
     public static final String ALL_DOI_ENTITY = "All DOI";
     public static final String DOI_METADATA_ENTITY = "DOI metadata";
+
     private String serverUrl;
     private String username;
     private String password;
@@ -355,7 +356,7 @@ public class DoiClient {
      * @param service
      * @return
      */
-    private String createUrl(String service) {
+    public String createUrl(String service) {
         return this.serverUrl +
             (this.serverUrl.endsWith("/") ? "" : "/") +
             service;
