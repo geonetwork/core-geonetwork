@@ -48,6 +48,7 @@
   <xsl:variable name="template">
     <xsl:choose>
       <xsl:when test="$standardName = 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY'"></xsl:when>
+      <xsl:when test="$standardName = 'ISO 19115:2003/19139 - EMODNET - SDN'"></xsl:when>
       <xsl:otherwise>sextant-summary-view</xsl:otherwise>
     </xsl:choose>
   </xsl:variable>

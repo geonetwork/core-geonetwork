@@ -1,5 +1,5 @@
 body {
-  background: url("Fond-marin-La-Reunion-reduit.jpg");
+  background: #000000 url("Fond-marin-La-Reunion-reduit.jpg") no-repeat !important;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -92,8 +92,15 @@ section.links,
   display: block;
 }
 
-
 .vcenter {
   display: flex;
   align-items: center;
+}
+
+.tab-pane {
+  height: auto !important;
+}
+
+.container {
+  height: fit-content;
 }

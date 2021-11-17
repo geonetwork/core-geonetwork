@@ -1,6 +1,7 @@
 {
   "layerSource": "Sources",
   "facet-th_sextant-theme_tree": "Sextant themes",
+  "wfsIssueWhileLoadingSLD": "The filter couldn't be applied for the layer. The generated SLD is not available.",
   "resetFilter": "Reset filters",
   "applyFilter": "Apply filters",
   "view": "View",

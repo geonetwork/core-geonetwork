@@ -1,0 +1,6 @@
+<config>
+  <portalUrl>
+    <fre>https://www.odatis-ocean.fr/donnees-et-services/acces-aux-donnees/catalogue-complet#/metadata/${uuid}</fre>
+    <eng>https://www.odatis-ocean.fr/en/data-and-services/data-access/direct-access-to-the-data-catalogue#/metadata/${uuid}</eng>
+  </portalUrl>
+</config>
