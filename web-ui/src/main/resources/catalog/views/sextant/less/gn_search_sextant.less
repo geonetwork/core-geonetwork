@@ -554,8 +554,8 @@ gn-wps-process-form label, [sxt-main-viewer] .panel-tools gn-wps-process-form la
     }
   }
   input[type="checkbox"] {
-    margin-left: 0;
-    margin-right: 10px;
+    margin-left: 10px;
+    margin-right: 5px;
   }
   .gn-search-input {
     input[type='text'] {
@@ -677,6 +677,15 @@ gn-wps-process-form label, [sxt-main-viewer] .panel-tools gn-wps-process-form la
   [gn-map-field] {
     border: none;
   }
+}
+// deal with sextant like search options
+gn-search-options > div > label > span {
+  font-weight: 100;
+}
+gn-search-options > div > label > input {
+  margin-right: 3px;
+  margin-top: -4px;
+  height: 10px;
 }
 
 [gn-map-field] {
