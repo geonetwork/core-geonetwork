@@ -26,6 +26,9 @@ package org.fao.geonet.api.records.formatters.cache;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import org.apache.commons.io.FileUtils;
+
+import jeeves.constants.Jeeves;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -318,7 +321,7 @@ public class FilesystemStore implements PersistentStore {
                     } else {
                         Files.deleteIfExists(publicPath);
                         final Path landingPageFile = getLandingPageCacheDir().resolve(metadataUuid);
-                        FileUtils.deleteDirectory(landingPageFile.toFile());
+			FileUtils.deleteDirectory(landingPageFile.toFile());
                     }
                     return super.visitFile(privatePath, attrs);
                 }

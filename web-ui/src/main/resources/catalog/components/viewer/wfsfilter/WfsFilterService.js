@@ -488,8 +488,7 @@
        * @param {string} featureTypeName of the featuretype
        * @return {HttpPromise} promise
        */
-      this.getSldUrl = function(rulesObj, wmsUrl, featureTypeName) {
-
+      this.getSldUrl = function (rulesObj, wmsUrl, featureTypeName) {
         var params = {
           filters: JSON.stringify(rulesObj),
           url: wmsUrl,
@@ -531,6 +530,31 @@
         poller();
         return defer.promise;
       };
+
+      this.pollSldUrl = function (url) {
+        var defer = $q.defer();
+        var pollingTimeout = 100;
+        var pollingAttempts = 0;
+        var pollingMaxAttemps = 25;
+
+        var poller = function () {
+          pollingAttempts++
+          $http({
+            method: 'GET',
+            url: url
+          }).then(function () {
+            defer.resolve(url);
+          }, function (error) {
+            if (pollingAttempts < pollingMaxAttemps) {
+              $timeout(poller, pollingTimeout);
+            } else {
+              defer.reject(error);
+            }
+          })
+        }
+        poller()
+        return defer.promise
+      }
 
       /**
        * Run the indexation of the feature

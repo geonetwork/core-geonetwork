@@ -45,7 +45,8 @@
         sortbyValues: gnSearchSettings.sortbyValues,
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         selectionBucket: 'be101',
-        filters: gnSearchSettings.filters,
+        // SEXTANT / Turn this off to allow access to all records:
+        // filters: gnSearchSettings.filters,
         params: {
           sortBy: 'dateStamp',
           sortOrder: 'desc',

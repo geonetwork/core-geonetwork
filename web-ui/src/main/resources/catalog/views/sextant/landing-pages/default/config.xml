@@ -1,0 +1,6 @@
+<config>
+  <portalUrl>
+    <fre>https://sextant.ifremer.fr/Donnees/Catalogue#/metadata/${uuid}</fre>
+    <eng>https://sextant.ifremer.fr/eng/Data/Catalogue#/metadata/${uuid}</eng>
+  </portalUrl>
+</config>
