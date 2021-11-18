@@ -424,13 +424,7 @@
                       </cit:linkage>
                       <cit:protocol>
                         <gco:CharacterString>
-                          <xsl:choose>
-                            <xsl:when test="format = 'Web Page'">WWW:LINK-1.0-http--link</xsl:when>
-                            <xsl:when test="format = 'ArcGIS GeoServices REST API'">ESRI:REST</xsl:when>
-                            <xsl:otherwise>
-                              <xsl:value-of select="concat($format-mimetype-mapping/entry[format=lower-case(format)]/protocol,':', mediaType)"/>
-                            </xsl:otherwise>
-                          </xsl:choose>
+                          <xsl:value-of select="$format-protocol-mapping/entry[format=lower-case(format)]/protocol"/>
                         </gco:CharacterString>
                       </cit:protocol>
                       <cit:name>
