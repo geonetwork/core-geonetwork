@@ -70,7 +70,6 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
             !(servletRequest.getContextPath() + KeycloakUtil.getSigninPath()).equals(servletRequest.getRequestURI())  &&
             !servletRequest.getRequestURI().endsWith(AdapterConstants.K_LOGOUT) &&
             !servletRequest.getRequestURI().endsWith(AdapterConstants.K_PUSH_NOT_BEFORE) &&
-            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_VERSION) &&
             !servletRequest.getRequestURI().endsWith(AdapterConstants.K_TEST_AVAILABLE) &&
             !servletRequest.getRequestURI().endsWith(AdapterConstants.K_JWKS)) {
 
