@@ -104,6 +104,13 @@
          * @param {string} url of the service
          */
         var getTheLayerFromMap = function(map, name, url, style) {
+
+          // If style is undefined use empty value to compare with source.getParams().STYLES,
+          // that returns empty value for the default style.
+          if (style == undefined) {
+            style = '';
+          }
+
           for (var i = 0; i < map.getLayers().getLength(); i++) {
             var l = map.getLayers().item(i);
             var source = l.getSource();
