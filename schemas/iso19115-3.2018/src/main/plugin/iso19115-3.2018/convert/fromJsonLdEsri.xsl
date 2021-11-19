@@ -44,9 +44,10 @@
                 xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
                 exclude-result-prefixes="#all">
 
+    <xsl:import href="protocol-mapping.xsl"></xsl:import>
+
     <xsl:output method="xml" indent="yes"/>
     <xsl:strip-space elements="*"/>
-    <xsl:import href="protocol-mapping.xsl"></xsl:import>
 
     <xsl:template match="/record">
       <xsl:variable name="cataloglang" select="'fr'"></xsl:variable>
@@ -415,6 +416,7 @@
             <mrd:transferOptions>
               <mrd:MD_DigitalTransferOptions>
                 <xsl:for-each select="distribution">
+                  <xsl:variable name="format" select="format"/>
                   <mrd:onLine>
                     <cit:CI_OnlineResource>
                       <cit:linkage>
@@ -434,7 +436,7 @@
                       </cit:name>
                       <cit:description>
                         <gco:CharacterString>
-                          <xsl:value-of select="format"/>
+                          <xsl:value-of select="$format"/>
                         </gco:CharacterString>
                       </cit:description>
                     </cit:CI_OnlineResource>
