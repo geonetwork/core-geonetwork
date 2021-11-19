@@ -44,7 +44,9 @@
                 xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
                 exclude-result-prefixes="#all">
 
-    <xsl:output method="xml" indent="yes"/>
+  <xsl:import href="protocol-mapping.xsl"></xsl:import>
+
+  <xsl:output method="xml" indent="yes"/>
 
     <xsl:strip-space elements="*"/>
 
@@ -525,8 +527,6 @@
           </mrd:MD_Distribution>
         </mdb:distributionInfo>
 
-
-
         <mdb:resourceLineage>
           <mrl:LI_Lineage>
             <mrl:statement>
@@ -555,16 +555,18 @@
             </gco:CharacterString>
           </cit:linkage>
           <cit:protocol>
-            <gco:CharacterString>WWW:DOWNLOAD-1.0-http--download</gco:CharacterString>
+            <gco:CharacterString>
+              <xsl:value-of select="$format-protocol-mapping/entry[format=lower-case($format)]/protocol"/>
+            </gco:CharacterString>
           </cit:protocol>
           <cit:name>
             <gco:CharacterString>
-              <xsl:value-of select="concat('Download as ', upper-case($format))"/>
+              <xsl:value-of select="$format"/>
             </gco:CharacterString>
           </cit:name>
           <cit:description>
             <gco:CharacterString>
-              <xsl:value-of select="concat('Download this dataset in the ', upper-case($format), ' format.')"/>
+              <xsl:value-of select="$format"/>
             </gco:CharacterString>
           </cit:description>
           <cit:function>
