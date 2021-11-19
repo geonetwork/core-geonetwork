@@ -683,6 +683,7 @@ public final class Geonet {
         public static final String CAT = "_cat";
         public static final String STATUS = "_status";
         public static final String STATUS_CHANGE_DATE = "_statusChangeDate";
+        public static final String STATUS_WORKFLOW = "_statusWorkflow";
         public static final String VALID = "_valid";
         public static final String VALID_INSPIRE = "_valid_inspire";
         public static final String ID = "_id";

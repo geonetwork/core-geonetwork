@@ -124,7 +124,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Autowired
     private GeonetworkDataDirectory geonetworkDataDirectory;
     @Autowired
-    private MetadataStatusRepository statusRepository;
+    protected MetadataStatusRepository statusRepository;
 
     private IMetadataUtils metadataUtils;
     private IMetadataManager metadataManager;
@@ -602,6 +602,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS_CHANGE_DATE, statusChangeDate,
                     true, true));
             }
+
 
             // getValidationInfo
             // -1 : not evaluated

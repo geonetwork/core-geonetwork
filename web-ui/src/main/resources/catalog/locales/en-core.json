@@ -547,5 +547,14 @@
     "metadataErrorReport": "Metadata errors",
     "wmtsFailedToParseCapabilities": "Failed to parse GetCapabilities operation response.",
     "unselectChoiceNotAllowedTitle": "Unselect choices",
-    "unselectChoiceNotAllowed": "Some choices can't be removed: {{notAllowedChoices}}"
+    "unselectChoiceNotAllowed": "Some choices can't be removed: {{notAllowedChoices}}",
+    "statusWorkflow-0": "Unknown",
+    "statusWorkflow-1": "Draft",
+    "statusWorkflow-2": "Approved",
+    "statusWorkflow-3": "Retired",
+    "statusWorkflow-4": "Submitted",
+    "statusWorkflow-5": "Rejected",
+    "statusWorkflow-21": "Approved with working copy",
+    "statusWorkflow-24": "Approved with working copy submitted",
+    "mdStatusWorkflow": "Workflow progress"
 }
