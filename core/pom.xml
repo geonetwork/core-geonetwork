@@ -520,6 +520,10 @@
     </dependency>
     <!-- end language detection -->
     <dependency>
+      <groupId>com.neovisionaries</groupId>
+      <artifactId>nv-i18n</artifactId>
+    </dependency>
+    <dependency>
       <groupId>opendap</groupId>
       <artifactId>opendap</artifactId>
       <version>2.1</version>

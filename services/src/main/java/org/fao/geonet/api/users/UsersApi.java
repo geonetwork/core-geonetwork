@@ -92,6 +92,7 @@ import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USERS_IDENTICON;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 import static org.springframework.data.jpa.domain.Specifications.where;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserIdAndProfile;
 
 @RequestMapping(value = {
     "/{portal}/api/users",
@@ -159,27 +160,26 @@ public class UsersApi {
         Profile profile = session.getProfile();
 
         if (profile == Profile.Administrator) {
+            // Get all users
             return userRepository.findAll(SortUtils.createSort(User_.name));
         } else if (profile != Profile.UserAdmin) {
+            // Return only the current user
             return userRepository.findAll(UserSpecs.hasUserId(session.getUserIdAsInt()));
         } else if (profile == Profile.UserAdmin) {
+            // Return all the users belonging to a group where the current user is UserAdmin
             int userId = session.getUserIdAsInt();
-            final List<Integer> userGroupIds =
-                getGroupIds(userId);
+            final List<Integer> userGroupIds = getGroupIdsWhereUserIsUserAdmin(userId);
 
             List<User> allUsers = userRepository.findAll(SortUtils.createSort(User_.name));
 
-            // Filter users which are not in current user admin groups
-            allUsers.removeIf(u -> {
-                List<Integer> groupIdsForUser = getGroupIds(u.getId());
+            // Filter users that are not in current userAdmin groups or are administrators
+            allUsers.removeIf(u ->
+                    userGroupIds.stream().noneMatch(getGroupIds(u.getId())::contains) ||
+                    u.getProfile().equals(Profile.Administrator));
 
-                return groupIdsForUser.isEmpty() ||
-                    !userGroupIds.containsAll(groupIdsForUser) ||
-                    u.getProfile().equals(Profile.Administrator);
-            });
-//              TODO-API: Check why there was this check on profiles ?
-//                    if (!profileSet.contains(profile))
-//                        alToRemove.add(elRec);
+            // TODO-API: Check why there was this check on profiles ?
+            //  if (!profileSet.contains(profile))
+            //  alToRemove.add(elRec);
 
             return allUsers;
         }
@@ -786,6 +786,11 @@ public class UsersApi {
     private List<Integer> getGroupIds(int userId) {
         return  userGroupRepository.findGroupIds(hasUserId(userId));
     }
+
+    private List<Integer> getGroupIdsWhereUserIsUserAdmin(int userId) {
+        return userGroupRepository.findGroupIds(hasUserIdAndProfile(userId, Profile.UserAdmin));
+    }
+
 
     private void setUserGroups(final User user, List<GroupElem> userGroups)
         throws Exception {

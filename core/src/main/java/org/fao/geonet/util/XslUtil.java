@@ -27,6 +27,7 @@ package org.fao.geonet.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.neovisionaries.i18n.LanguageCode;
 
 import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
 import org.fao.geonet.api.records.attachments.Store;
@@ -662,6 +663,30 @@ public final class XslUtil {
     }
 
     /**
+     * Convert the iso639_2B to iso639_2T
+     *
+     * @param iso639_2B The 3 iso lang code B
+     * @return The iso639_2T lang code
+     */
+    public static
+    @Nonnull
+    String iso639_2B_to_iso639_2T(String iso639_2B) {
+        return IsoLanguagesMapper.iso639_2B_to_iso639_2T(iso639_2B);
+    }
+
+    /**
+     * Convert the iso639_2T to iso639_2B
+     *
+     * @param iso639_2T The 3 iso lang code T
+     * @return The iso639_2B lang code
+     */
+    public static
+    @Nonnull
+    String iso639_2T_to_iso639_2B(String iso639_2T) {
+        return IsoLanguagesMapper.iso639_2T_to_iso639_2B(iso639_2T);
+    }
+
+    /**
      * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
      *
      * @param iso3LangCode The 2 iso lang code
@@ -674,7 +699,7 @@ public final class XslUtil {
     }
 
     /**
-     * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
+     * Return 2 char iso lang code from a 3 iso lang code.
      *
      * @param iso3LangCode The 2 iso lang code
      * @return The related 3 iso lang code
@@ -686,38 +711,24 @@ public final class XslUtil {
             if (defaultValue != null) {
                 return defaultValue;
             } else {
-                return twoCharLangCode(Geonet.DEFAULT_LANGUAGE);
+                iso3LangCode = Geonet.DEFAULT_LANGUAGE;
             }
-        } else {
-            if (iso3LangCode.equalsIgnoreCase("FRA")) {
-                return "FR";
+            }
+        String iso2LangCode = null;
+
+        // Catch language entries longer than 3 characters with a semicolon
+        if (iso3LangCode.length() > 3 && (iso3LangCode.indexOf(';') != -1)) {
+            //This will extract text similar to the following "fr;CAN", "fra;CAN", "fr ;CAN"
+            //In the case of "fr;CAN",  fr would be extracted even though it is not a 3 char code - but that is ok because LanguageCode.getByCode supports 2 and 3 char codes.
+            iso3LangCode = iso3LangCode.split(";")[0].trim();
             }
 
-            if (iso3LangCode.equalsIgnoreCase("DEU")) {
-                return "DE";
-            }
-            String iso2LangCode = null;
-
-            try {
-                final IsoLanguagesMapper mapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
-                /*if the language  is 2 characters long...*/
-                if (iso3LangCode.length() == 2) {
-                    iso2LangCode = iso3LangCode;
-                    /*Catch language entries longer than 3 characters with a semicolon*/
-                } else if (iso3LangCode.length() > 3 && (iso3LangCode.indexOf(';') != -1)) {
-                    iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode.substring(0, 3));
-                    /** This final else works properly for languages with exactly three characters, so
-                     * an exception will occur if gmd:language has more than 3 characters but
-                     * does not have a semicolon.
-                     */
-                } else {
-                    iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode);
+        LanguageCode languageCode = LanguageCode.getByCode(iso3LangCode.toLowerCase());
+        if (languageCode != null) {
+            iso2LangCode = languageCode.name();
                 }
-            } catch (Exception ex) {
-                Log.error(Geonet.GEONETWORK, "Failed to get iso 2 language code for " + iso3LangCode + " caused by " + ex.getMessage());
 
-            }
-            /* Triggers when the language can't be matched to a code */
+        // Triggers when the language can't be matched to a code
             if (iso2LangCode == null) {
                 Log.error(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code", new Error());
                 return iso3LangCode.substring(0, 2);
@@ -725,7 +736,6 @@ public final class XslUtil {
                 return iso2LangCode;
             }
         }
-    }
 
     /**
      * Returns the HTTP code  or error message if error occurs during URL connection.
@@ -927,12 +937,23 @@ public final class XslUtil {
         return si.getSiteUrl() + (!baseUrl.startsWith("/") ? "/" : "") + baseUrl;
     }
 
+    /**
+     * Return default iso lang code.
+     *
+     * @return The default 3 char iso lang code
+     */
+    public static
+    @Nonnull
+    String getDefaultLangCode() {
+        return Geonet.DEFAULT_LANGUAGE;
+    }
+
     public static String getLanguage() {
         ServiceContext context = ServiceContext.get();
         if (context != null) {
             return context.getLanguage();
         } else {
-            return "eng";
+            return Geonet.DEFAULT_LANGUAGE;
         }
     }
 

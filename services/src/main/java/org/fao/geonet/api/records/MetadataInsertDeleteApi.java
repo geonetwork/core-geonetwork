@@ -64,6 +64,7 @@ import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordCreateEvent;
 import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.events.history.RecordImportedEvent;
+import org.fao.geonet.events.md.MetadataPreRemove;
 import org.fao.geonet.exceptions.BadFormatEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
@@ -205,6 +206,9 @@ public class MetadataInsertDeleteApi {
         SearchManager searchManager = appContext.getBean(SearchManager.class);
         Store store = context.getBean("resourceStore", Store.class);
 
+        MetadataPreRemove preRemoveEvent = new MetadataPreRemove(metadata);
+        ApplicationContextHolder.get().publishEvent(preRemoveEvent);
+
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
                 && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
             MetadataUtils.backupRecord(metadata, context);
@@ -260,6 +264,9 @@ public class MetadataInsertDeleteApi {
                     || metadataDraftRepository.findOneByUuid(uuid) != null) {
                 report.addNotEditableMetadataId(metadata.getId());
             } else {
+                MetadataPreRemove preRemoveEvent = new MetadataPreRemove(metadata);
+                ApplicationContextHolder.get().publishEvent(preRemoveEvent);
+
                 if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
                         && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
                     MetadataUtils.backupRecord(metadata, context);
@@ -450,6 +457,7 @@ public class MetadataInsertDeleteApi {
             @ApiParam(value = API_PARAM_RECORD_TAGS, required = false) @RequestParam(required = false) final String[] category,
             @ApiParam(value = "Copy categories from source?", required = false, defaultValue = "false") @RequestParam(required = false, defaultValue = "false") final boolean hasCategoryOfSource,
             @ApiParam(value = "Is child of the record to copy?", required = false, defaultValue = "false") @RequestParam(required = false, defaultValue = "false") final boolean isChildOfSource,
+            @ApiParam(value = "Copy attachments from source?", required = false) @RequestParam(required = false, defaultValue = "true") final boolean hasAttachmentsOfSource,
             @ApiIgnore @ApiParam(hidden = true) HttpSession httpSession, HttpServletRequest request) throws Exception {
 
         AbstractMetadata sourceMetadata = ApiUtils.getRecord(sourceUuid);
@@ -498,15 +506,18 @@ public class MetadataInsertDeleteApi {
 
         dataManager.activateWorkflowIfConfigured(context, newId, group);
 
-        try {
-            StoreUtils.copyDataDir(context, sourceMetadata.getId(), Integer.parseInt(newId), true);
-        } catch (Exception e) {
-            Log.warning(Geonet.DATA_MANAGER,
+        if (hasAttachmentsOfSource) {
+            try {
+                StoreUtils.copyDataDir(context, sourceMetadata.getId(), Integer.parseInt(newId), true);
+            } catch (Exception e) {
+                Log.warning(Geonet.DATA_MANAGER,
                     String.format(
-                            "Error while copying metadata resources. Error is %s. "
-                                    + "Metadata is created but without resources from the source record with id '%s':",
-                            e.getMessage(), newId));
+                        "Error while copying metadata resources. Error is %s. "
+                            + "Metadata is created but without resources from the source record with id '%s':",
+                        e.getMessage(), newId));
+            }
         }
+
         if (hasCategoryOfSource) {
             final Collection<MetadataCategory> categories = dataManager.getCategories(sourceMetadata.getId() + "");
             try {

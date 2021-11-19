@@ -44,12 +44,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.text.SimpleDateFormat;
@@ -190,15 +185,15 @@ public class PasswordApi {
             "LDAP users will not be able to retrieve their password " +
             "using this service.")
     @RequestMapping(
-        value = "/{username}/actions/forgot-password",
-        method = RequestMethod.GET,
+        value = "/actions/forgot-password",
+        method = RequestMethod.PUT,
         produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<String> sendPasswordByEmail(
         @ApiParam(value = "The user name",
             required = true)
-        @PathVariable
+        @RequestParam
             String username,
         HttpServletRequest request)
         throws Exception {

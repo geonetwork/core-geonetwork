@@ -53,7 +53,7 @@
 
         this.remove = function(url, params, ignoreCase) {
           var parts = url.split('?');
-          if (parts.length > 0) {
+          if (parts.length > 1) {
             var qs = '&' + parts[1];
             var flags = (ignoreCase) ? 'gi' : 'g';
             qs = qs.replace(

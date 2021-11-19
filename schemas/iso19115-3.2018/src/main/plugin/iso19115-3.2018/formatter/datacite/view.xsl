@@ -344,14 +344,12 @@
     multiple creators, repeat this
     property.
    -->
-  <xsl:variable name="creatorRoles"
-                select="'pointOfContact', 'custodian'"/>
   <xsl:template mode="toDatacite"
                 match="mdb:MD_Metadata/mdb:identificationInfo/*/
                           mri:pointOfContact[1]">
     <datacite:creators>
       <!-- [cit:role/*/@codeListValue = $roles] TODO: Restrict on roles ?-->
-      <xsl:for-each select="../mri:pointOfContact/*">
+      <xsl:for-each select="../mri:pointOfContact/*[cit:role/*/@codeListValue = ('pointOfContact', 'custodian')]">
         <datacite:creator>
           <!--
           Expect the entry point to be CI_Organisation

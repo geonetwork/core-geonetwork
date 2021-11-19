@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2017 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -21,31 +21,15 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.kernel;
+package org.fao.geonet.events.md;
 
-import org.fao.geonet.domain.Schematron;
-import org.fao.geonet.domain.SchematronRequirement;
+import org.fao.geonet.domain.AbstractMetadata;
 
-/**
- *
- * Class to model a schematron requirement and the related
- * schematron to apply if the requirement succeeds.
- *
- */
-public class ApplicableSchematron {
-    final SchematronRequirement requirement;
-    final Schematron schematron;
+public class MetadataPreRemove extends MetadataEvent {
 
-    public SchematronRequirement getRequirement() {
-        return requirement;
-    }
+    private static final long serialVersionUID = -2853271533747137586L;
 
-    public Schematron getSchematron() {
-        return schematron;
-    }
-
-    public ApplicableSchematron(SchematronRequirement requirement, Schematron schematron) {
-        this.requirement = requirement;
-        this.schematron = schematron;
+    public MetadataPreRemove(AbstractMetadata md) {
+        super(md);
     }
 }

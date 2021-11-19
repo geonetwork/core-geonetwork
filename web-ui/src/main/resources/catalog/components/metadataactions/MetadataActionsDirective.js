@@ -160,6 +160,11 @@
                 '/status', scope.newStatus
             ).then(
                 function(response) {
+                  //After the new status is approved, the working copy will get deleted and will not get searched.
+                  //The search parameter will need to reset to draft=n
+                  if (angular.isDefined(scope.md.draft) && scope.newStatus.status === "2") {
+                    scope.md.draft = "n";
+                  }
                   gnMetadataManager.updateMdObj(scope.md);
                   scope.$emit('metadataStatusUpdated', true);
                   scope.$emit('StatusUpdated', {

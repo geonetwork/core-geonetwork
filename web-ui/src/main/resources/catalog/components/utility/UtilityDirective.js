@@ -655,7 +655,7 @@
            link: function(scope, element, attrs) {
              element.attr('placeholder', '...');
 
-             var url = gnUrlUtils.append('q@json',
+             var url = gnUrlUtils.append('q?_content_type=json',
               gnUrlUtils.toKeyValue({
                 _isTemplate: 's',
                 any: '*QUERY*',

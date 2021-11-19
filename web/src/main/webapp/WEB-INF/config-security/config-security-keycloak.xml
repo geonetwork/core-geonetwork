@@ -82,6 +82,8 @@
   <bean id="keycloakAuthenticationProcessingFilter" class="org.fao.geonet.kernel.security.keycloak.KeycloakAuthenticationProcessingFilter" depends-on="keycloakUtil">
     <constructor-arg name="authenticationManager" ref="authenticationManager" />
   </bean>
+  <bean id="keycloakSecurityContextRequestFilter"
+        class="org.keycloak.adapters.springsecurity.filter.KeycloakSecurityContextRequestFilter" />
 
   <bean id="keycloakLogoutHandler" class="org.fao.geonet.kernel.security.keycloak.KeycloakLogoutHandler">
     <constructor-arg ref="adapterDeploymentContext" />
@@ -124,6 +126,7 @@
     <ref bean="logoutFilter" />
     <ref bean="keycloakPreAuthActionsLoginFilter" />
     <ref bean="keycloakAuthenticationProcessingFilter" />
+    <ref bean="keycloakSecurityContextRequestFilter" />
     <ref bean="requestCacheFilter" />
     <ref bean="anonymousFilter" />
     <ref bean="sessionMgmtFilter" />
@@ -139,6 +142,7 @@
     <ref bean="logoutFilter" />
     <ref bean="keycloakPreAuthActionsFilter" />
     <ref bean="keycloakAuthenticationProcessingFilter" />
+    <ref bean="keycloakSecurityContextRequestFilter" />
     <ref bean="requestCacheFilter" />
     <ref bean="anonymousFilter" />
     <ref bean="sessionMgmtFilter" />
@@ -155,6 +159,7 @@
 		<ref bean="logoutFilter" />
 		<ref bean="keycloakPreAuthActionsFilter"/>
 		<ref bean="keycloakAuthenticationProcessingFilter"/>
+		<ref bean="keycloakSecurityContextRequestFilter" />
 		<ref bean="basicAuthenticationFilter" />
 		<ref bean="formLoginFilter" />
 		<ref bean="requestCacheFilter" />

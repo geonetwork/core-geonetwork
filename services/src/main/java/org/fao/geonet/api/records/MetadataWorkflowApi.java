@@ -366,9 +366,13 @@ public class MetadataWorkflowApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, context);
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
 
-        if (!isMdWorkflowEnable) {
+        int author = context.getUserSession().getUserIdAsInt();
+        MetadataStatus metadataStatus = convertParameter(metadata.getId(), metadata.getUuid(), status, author);
+
+        if (metadataStatus.getStatusValue().getType() == StatusValueType.workflow
+          && !isMdWorkflowEnable) {
             throw new FeatureNotEnabledException(
-                    "Metadata workflow is disabled, can not be set the status of metadata");
+                "Metadata workflow is disabled, can not be set the status of metadata");
         }
 
         // --- only allow the owner of the record to set its status
@@ -394,8 +398,6 @@ public class MetadataWorkflowApi {
         // --- change status and carry out behaviours for status changes
         StatusActions sa = statusActionFactory.createStatusActions(context);
 
-        int author = context.getUserSession().getUserIdAsInt();
-        MetadataStatus metadataStatus = convertParameter(metadata.getId(), metadata.getUuid(), status, author);
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
         listOfStatusChange.add(metadataStatus);
         sa.onStatusChange(listOfStatusChange);
@@ -505,9 +507,13 @@ public class MetadataWorkflowApi {
         HttpServletRequest request) throws Exception {
       try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
-        PageRequest pageRequest = null;
+        PageRequest pageRequest;
         if (sortOrder !=null) {
             Sort sortByStatusChangeDate = SortUtils.createSort(sortOrder, MetadataStatus_.changeDate).and(SortUtils.createSort(sortOrder, MetadataStatus_.id));
+            pageRequest = new PageRequest(from, size, sortByStatusChangeDate);
+        } else {
+            // Default sort order
+            Sort sortByStatusChangeDate = SortUtils.createSort(Sort.Direction.DESC, MetadataStatus_.changeDate).and(SortUtils.createSort(Sort.Direction.DESC, MetadataStatus_.id));
             pageRequest = new PageRequest(from, size, sortByStatusChangeDate);
         }
 
@@ -764,6 +770,14 @@ public class MetadataWorkflowApi {
             if (s.getStatusValue().getType().equals(StatusValueType.event)) {
                 status.setCurrentStatus(extractCurrentStatus(s));
                 status.setPreviousStatus(extractPreviousStatus(s));
+            } else if (s.getStatusValue().getType().equals(StatusValueType.task)) {
+                status.setDateChange(s.getChangeDate().getDateAndTime());
+                if (s.getDueDate() != null) {
+                    status.setDateDue(s.getDueDate().getDateAndTime());
+                }
+                if (s.getCloseDate() != null) {
+                    status.setDateClose(s.getCloseDate().getDateAndTime());
+                }
             }
 
 

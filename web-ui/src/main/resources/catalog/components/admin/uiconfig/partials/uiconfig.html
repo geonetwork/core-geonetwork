@@ -65,6 +65,23 @@
           {{('ui-' + key + '-help') | translate}} </p>
       </div>
 
+      <div data-ng-switch-when="addWMSLayersToMap">
+        <h3>{{('ui-' + key) | translate}}</h3>
+
+        <label class="control-label" for="{{key + 'urlLayerParam'}}">{{('ui-' + key + '-urlLayerParam') | translate}}</label>
+
+        <input type="text"
+               id="{{key + 'urlLayerParam'}}"
+               data-ng-disabled="mCfg[key].mode == 'resource-name'"
+               class="form-control"
+               data-ng-model="mCfg[key].urlLayerParam"/>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-urlLayerParam-help') | translate) != ('ui-' + key + '-urlLayerParam-help')"
+           translate>
+          ui-addWMSLayersToMap-urlLayerParam-help</p>
+      </div>
+
       <div data-ng-switch-when="facetConfig">
         <label class="control-label">{{('ui-' + key) | translate}}</label>
         <table class="table table-striped">
