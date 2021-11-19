@@ -424,7 +424,7 @@
                       </cit:linkage>
                       <cit:protocol>
                         <gco:CharacterString>
-                          <xsl:value-of select="$format-protocol-mapping/entry[format=lower-case(format)]/protocol"/>
+                          <xsl:value-of select="$format-protocol-mapping/entry[format=lower-case($format)]/protocol"/>
                         </gco:CharacterString>
                       </cit:protocol>
                       <cit:name>
