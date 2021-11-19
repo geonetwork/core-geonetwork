@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -143,6 +144,9 @@ public class MetadataSharingApi {
 
     @Autowired
     IMetadataUtils metadataUtils;
+
+    @Autowired
+    IMetadataStatus metadataStatus;
 
     @Autowired
     MetadataRepository metadataRepository;
@@ -431,6 +435,25 @@ public class MetadataSharingApi {
 
             boolean allowPublishInvalidMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD);
             boolean allowPublishNonApprovedMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_NON_APPROVED_MD);
+
+            boolean isMdWorkflowEnable = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
+
+            // Check not trying to publish a retired metadata
+            if (isMdWorkflowEnable) {
+                MetadataStatus mdStatus = metadataStatus.getStatus(metadata.getId());
+                if (mdStatus.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.RETIRED)) {
+                    List<GroupOperations> allGroupOps =
+                        privileges.stream().filter(p -> p.getGroup() == ReservedGroup.all.getId()).collect(Collectors.toList());
+
+                    for (GroupOperations p : allGroupOps) {
+                        if (p.getOperations().containsValue(true)) {
+                            throw new Exception(String.format("Retired metadata %s can't be published.",
+                                metadata.getUuid()));
+                        }
+
+                    }
+                }
+            }
 
             SharingResponse sharingBefore = getRecordSharingSettings(metadata.getUuid(), request.getSession(), request);
 

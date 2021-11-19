@@ -28,8 +28,9 @@
           <span class="fa fa-fw fa-user"></span>&nbsp;
           <span data-translate="">transferOwnership</span>
         </a></li>
+      <!-- Retired metadata can't be published -->
       <li role="menuitem"
-          data-ng-if="user.canEditRecord(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) && md.draft != 'y'"
+          data-ng-if="user.canEditRecord(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) && md.draft != 'y' && md.mdStatus != 3"
           data-ng-class="
             (md.isPublished() || (allowPublishInvalidMd() === true) ||
             (!md.isPublished() && (allowPublishInvalidMd() === false) &&
@@ -135,9 +136,10 @@
         </a>
       </li>
       <!-- user = reviewer, status = 4, statusToSelect = 3 -->
+      <!-- To be able to retire the metadata, it should be approved, without a draft version -->
       <li role="menuitem"
           data-ng-if="user.canEditRecord(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) &&
-          md.mdStatus == 4  && isMdWorkflowEnable && md.isWorkflowEnabled()">
+          md.mdStatus == 2  && isMdWorkflowEnable && md.isWorkflowEnabled() && md.draft == 'n'">
         <a href=""
            data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 3, 33)">
           <span class="fa fa-fw fa-archive"></span>&nbsp;
