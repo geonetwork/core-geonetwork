@@ -288,7 +288,7 @@
            * @param {ol.Feature} feature
            * @return {Object} serialized style
            */
-          getStyleObjFromFeature = function(feature) {
+          var getStyleObjFromFeature = function(feature) {
             var st = feature.get('_style');
             var drawType = feature.get('_type');
             if (angular.isFunction(st)) {
@@ -314,14 +314,16 @@
                 width: parseInt(new RegExp('([0-9]{1,3})(?=px)').
                     exec(st.getText().getFont())[0])
               };
-              if (st.getText().getStroke()) {
-                styleObj.stroke = {
-                  color: st.getText().getStroke().getColor(),
-                  width: st.getText().getStroke().getWidth()
-                };
-              }
+              // SEXTANT SPECIFIC
+              // if (st.getText().getStroke()) {
+              //   styleObj.stroke = {
+              //     color: st.getText().getStroke().getColor(),
+              //     width: st.getText().getStroke().getWidth()
+              //   };
+              // }
+              // FIXME: remove this code since sextant is not using text stroke
             }
-            else if (drawType === 'point') {
+            if (drawType === 'point') {
               styleObj.image = {
                 radius: st.getImage().getRadius(),
                 fill: {

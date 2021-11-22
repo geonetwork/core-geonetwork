@@ -106,11 +106,40 @@
               });
             }
             else if (drawType === 'point') {
+              // handle broken annotation for https://gitlab.ifremer.fr/sextant/geonetwork/-/issues/395
+              // before this issue's fix, some annotations may be of type "point" without actually having a radius and color
+              if (!styleCfg.image) {
+                console.warn('Received an invalid annotation object (save again to make this error disappear)', styleCfg);
+                styleCfg.image = {
+                  radius: 7,
+                  fill: {
+                    color: '#ffcc33'
+                  }
+                }
+              }
               styleObjCfg.image = new ol.style.Circle({
                 radius: styleCfg.image.radius,
                 fill: new ol.style.Fill({
                   color: styleCfg.image.fill.color
                 })
+              });
+            }
+
+            // FIXME: refactor this to share code with DrawDirective!
+            if (styleCfg.text) {
+              styleObjCfg.text = new ol.style.Text({
+                font: styleCfg.text.font,
+                offsetY: drawType === 'point' ? 20 : 0,
+                text: styleCfg.text.text,
+                textAlign: 'center',
+                fill: new ol.style.Fill({
+                  color: styleCfg.image ? styleCfg.image.fill.color : styleCfg.stroke.color
+                }),
+                stroke:
+                  new ol.style.Stroke({
+                    color: '#fff',
+                    width: 2
+                  })
               });
             }
             return new ol.style.Style(styleObjCfg);
