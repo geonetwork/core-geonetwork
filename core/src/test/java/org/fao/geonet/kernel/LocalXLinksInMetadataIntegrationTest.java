@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -92,57 +92,58 @@ public class LocalXLinksInMetadataIntegrationTest extends AbstractIntegrationTes
         }
         final Element metadata = getSampleMetadataXml().setContent(content);
 
-        ServiceContext context = createServiceContext();
-        context.setAsThreadLocal();
-        loginAsAdmin(context);
+        try (ServiceContext context = createServiceContext()) {
+            // context.setAsThreadLocal();
+            loginAsAdmin(context);
 
-        _settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
+            _settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
 
-        String schema = _dataManager.autodetectSchema(metadata);
-        String uuid = UUID.randomUUID().toString();
-        int owner = context.getUserSession().getUserIdAsInt();
-        String groupOwner = "" + ReservedGroup.intranet.getId();
-        String source = _settingManager.getSiteId();
-        String metadataType = MetadataType.METADATA.codeString;
-        String changeDate;
-        String createDate = changeDate = new ISODate().getDateAndTime();
-        String id = _dataManager.insertMetadata(context, schema, metadata, uuid, owner, groupOwner, source, metadataType, null,
-            null, createDate, changeDate, false, false);
+            String schema = _dataManager.autodetectSchema(metadata);
+            String uuid = UUID.randomUUID().toString();
+            int owner = context.getUserSession().getUserIdAsInt();
+            String groupOwner = "" + ReservedGroup.intranet.getId();
+            String source = _settingManager.getSiteId();
+            String metadataType = MetadataType.METADATA.codeString;
+            String changeDate;
+            String createDate = changeDate = new ISODate().getDateAndTime();
+            String id = _dataManager.insertMetadata(context, schema, metadata, uuid, owner, groupOwner, source, metadataType, null,
+                null, createDate, changeDate, false, false);
 
-        SpringLocalServiceInvoker mockInvoker = resetAndGetMockInvoker();
+            SpringLocalServiceInvoker mockInvoker = resetAndGetMockInvoker();
 
-        String keyword1 = "World";
-        Element element1 = new SAXBuilder().build(new StringReader(String.format(responseTemplate, keyword1))).getRootElement();
-        when(mockInvoker.invoke(any(String.class))).thenReturn(element1);
+            String keyword1 = "World";
+            Element element1 = new SAXBuilder().build(new StringReader(String.format(responseTemplate, keyword1))).getRootElement();
+            when(mockInvoker.invoke(any(String.class))).thenReturn(element1);
 
-        final String xpath = "*//gmd:descriptiveKeywords//gmd:keyword/gco:CharacterString";
-        assertNull(Xml.selectElement(metadata, xpath));
-        verify(mockInvoker, never()).invoke(any(String.class));
+            final String xpath = "*//gmd:descriptiveKeywords//gmd:keyword/gco:CharacterString";
+            assertNull(Xml.selectElement(metadata, xpath));
+            verify(mockInvoker, never()).invoke(any(String.class));
 
-        final Element loadedMetadataNoXLinkAttributesNotEdit = _dataManager.getMetadata(context, id, false, false, false);
-        assertEqualsText(keyword1, loadedMetadataNoXLinkAttributesNotEdit, xpath, GCO, GMD);
-        verify(mockInvoker, times(1)).invoke(any(String.class));
+            final Element loadedMetadataNoXLinkAttributesNotEdit = _dataManager.getMetadata(context, id, false, false, false);
+            assertEqualsText(keyword1, loadedMetadataNoXLinkAttributesNotEdit, xpath, GCO, GMD);
+            verify(mockInvoker, times(1)).invoke(any(String.class));
 
-        final Element loadedMetadataKeepXLinkAttributesNotEdit = _dataManager.getMetadata(context, id, false, false, true);
-        assertEqualsText(keyword1, loadedMetadataKeepXLinkAttributesNotEdit, xpath, GCO, GMD);
-        verify(mockInvoker, times(2)).invoke(any(String.class));
+            final Element loadedMetadataKeepXLinkAttributesNotEdit = _dataManager.getMetadata(context, id, false, false, true);
+            assertEqualsText(keyword1, loadedMetadataKeepXLinkAttributesNotEdit, xpath, GCO, GMD);
+            verify(mockInvoker, times(2)).invoke(any(String.class));
 
-        final Element loadedMetadataNoXLinkAttributesEdit = _dataManager.getMetadata(context, id, false, true, false);
-        assertEqualsText(keyword1, loadedMetadataNoXLinkAttributesEdit, xpath, GCO, GMD);
-        verify(mockInvoker, times(3)).invoke(any(String.class));
+            final Element loadedMetadataNoXLinkAttributesEdit = _dataManager.getMetadata(context, id, false, true, false);
+            assertEqualsText(keyword1, loadedMetadataNoXLinkAttributesEdit, xpath, GCO, GMD);
+            verify(mockInvoker, times(3)).invoke(any(String.class));
 
-        final Element loadedMetadataKeepXLinkAttributesEdit = _dataManager.getMetadata(context, id, false, true, true);
-        assertEqualsText(keyword1, loadedMetadataKeepXLinkAttributesEdit, xpath, GCO, GMD);
-        verify(mockInvoker, times(4)).invoke(any(String.class));
+            final Element loadedMetadataKeepXLinkAttributesEdit = _dataManager.getMetadata(context, id, false, true, true);
+            assertEqualsText(keyword1, loadedMetadataKeepXLinkAttributesEdit, xpath, GCO, GMD);
+            verify(mockInvoker, times(4)).invoke(any(String.class));
 
-        Processor.clearCache();
+            Processor.clearCache();
 
-        String keyword2 = "Other Word";
-        Element element2 = new SAXBuilder().build(new StringReader(String.format(responseTemplate, keyword2))).getRootElement();
-        when(mockInvoker.invoke(any(String.class))).thenReturn(element2);
+            String keyword2 = "Other Word";
+            Element element2 = new SAXBuilder().build(new StringReader(String.format(responseTemplate, keyword2))).getRootElement();
+            when(mockInvoker.invoke(any(String.class))).thenReturn(element2);
 
-        final Element newLoad = _dataManager.getMetadata(context, id, false, true, true);
-        assertEqualsText(keyword2, newLoad, xpath, GCO, GMD);
-        verify(mockInvoker, times(5)).invoke(any(String.class));
+            final Element newLoad = _dataManager.getMetadata(context, id, false, true, true);
+            assertEqualsText(keyword2, newLoad, xpath, GCO, GMD);
+            verify(mockInvoker, times(5)).invoke(any(String.class));
+        }
     }
 }

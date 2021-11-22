@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -25,10 +25,12 @@ package org.fao.geonet;
 
 import com.google.common.annotations.VisibleForTesting;
 
-import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.util.ThreadPool;
 import org.springframework.context.ApplicationContext;
 
+/**
+ * GeoNetwork context managing application context and a shared thread pool.
+ */
 public class GeonetContext {
     private final ApplicationContext _springAppContext;
     private final ThreadPool _threadPool;

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -27,6 +27,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
@@ -71,7 +72,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
+/**
+ * Metadata indexer responsible for updating index in a background executor.
+ *
+ * Helper method exist to schedule records for reindex by id. These methods make use of the service context
+ * of the current thread if needed to access user session.
+ *
+ * This class maintains its own service context for use in the background, and does not have access
+ * to a user session.
+ */
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
 
     @Autowired
@@ -110,16 +119,28 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Autowired
     private Resources resources;
 
-    // FIXME remove when get rid of Jeeves
-    private ServiceContext servContext;
-
     private ApplicationEventPublisher publisher;
+
+    /** Private service context managed by service init / destroy for use by metadata indexing tasks. */
+    private ServiceContext indexMetadataTaskContext;
 
     public BaseMetadataIndexer() {
     }
 
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        servContext = context;
+    public void init(ServiceContext context) throws Exception {
+        ServiceManager serviceManager = context.getBean(ServiceManager.class);
+        if( indexMetadataTaskContext == null ) {
+            indexMetadataTaskContext = serviceManager.createServiceContext("_indexMetadataTask", context);
+        } else {
+            context.getLogger().debug("Metadata Indexer already initialized");
+        }
+    }
+
+    public void destroy(){
+        if (indexMetadataTaskContext != null) {
+            indexMetadataTaskContext.clear();
+            indexMetadataTaskContext = null;
+        }
     }
 
     @Override
@@ -210,7 +231,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 stringIds.add(id.toString());
             }
             // execute indexing operation
-            batchIndexInThreadPool(context, stringIds);
+            batchIndexInThreadPool(stringIds);
         }
     }
 
@@ -247,7 +268,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             // execute indexing operation
-            batchIndexInThreadPool(context, listOfIdsToIndex);
+            batchIndexInThreadPool(listOfIdsToIndex);
         }
     }
 
@@ -256,11 +277,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
      * transaction commits before starting threads (to make sure that all metadata
      * are committed).
      *
-     * @param context     context object
      * @param metadataIds the metadata ids to index
      */
     @Override
-    public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds) {
+    public void batchIndexInThreadPool(List<?> metadataIds) {
 
         TransactionStatus transactionStatus = null;
         try {
@@ -299,11 +319,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             // create threads to process this chunk of ids
-            Runnable worker = new IndexMetadataTask(context, subList, batchIndex, transactionStatus, numIndexedTracker);
+            Runnable worker = new IndexMetadataTask(indexMetadataTaskContext, subList, batchIndex, transactionStatus, numIndexedTracker);
             executor.execute(worker);
             index += count;
         }
-
+        // let the started threads finish in the background and then clean up executor
         executor.shutdown();
     }
 
@@ -323,6 +343,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     public void indexMetadata(final String metadataId, final boolean forceRefreshReaders)
         throws Exception {
         AbstractMetadata fullMd;
+
+        if (searchManager == null) {
+            searchManager = getServiceContext().getBean(EsSearchManager.class);
+        }
 
         try {
             Multimap<String, Object> fields = ArrayListMultimap.create();
@@ -348,6 +372,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             fullMd = metadataUtils.findOne(id$);
+            if( fullMd == null){
+                // Metadata record has been subsequently deleted
+                searchManager.delete(metadataId);
+                return;
+            }
 
             final String schema = fullMd.getDataInfo().getSchemaId();
             final String createDate = fullMd.getDataInfo().getCreateDate().getDateAndTime();
@@ -614,9 +643,17 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         }
     }
 
-    private ServiceContext getServiceContext() {
+    /**
+     * Service context for the current thread if available, or the one provided during init.
+     *
+     * @return service context for current thread if available, or service context used during init.
+     */
+    protected ServiceContext getServiceContext() {
         ServiceContext context = ServiceContext.get();
-        return context == null ? servContext : context;
+        if( context != null ){
+            return context; // use ServiceContext from current ThreadLocal
+        }
+        return indexMetadataTaskContext; // backup ServiceContext provided during init
     }
 
     public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {

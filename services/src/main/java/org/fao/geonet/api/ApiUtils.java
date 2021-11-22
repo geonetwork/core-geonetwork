@@ -77,6 +77,9 @@ import java.util.Set;
 
 /**
  * API utilities mainly to deal with parameters.
+ *
+ * Many of these methods assume a service context is available as a thread locale,
+ * see {@link #createServiceContext(HttpServletRequest)} methods for details.
  */
 public class ApiUtils {
 
@@ -137,14 +140,17 @@ public class ApiUtils {
         return id;
     }
 
-    //fixes the uri fragment portion (that the part after the "#")
-    // so it is properly encoded
-    //http://www.thesaurus.gc.ca/concept/#Offshore area        -->   http://www.thesaurus.gc.ca/concept/#Offshore%20area
-    //http://www.thesaurus.gc.ca/concept/#AIDS (disease)       -->   http://www.thesaurus.gc.ca/concept/#AIDS%20%28disease%29
-    //http://www.thesaurus.gc.ca/concept/#Alzheimer's disease  -->   http://www.thesaurus.gc.ca/concept/#Alzheimer%27s%20disease
-    //
-    //Includes some special case handling for spaces and ":"
-    //
+    /**
+     * Fixes the uri fragment portion (that the part after the "#") so it is properly encoded.
+     *
+     * <ul>
+     * <li>http://www.thesaurus.gc.ca/concept/#Offshore area        -->   http://www.thesaurus.gc.ca/concept/#Offshore%20area</li>
+     * <li>http://www.thesaurus.gc.ca/concept/#AIDS (disease)       -->   http://www.thesaurus.gc.ca/concept/#AIDS%20%28disease%29</li>
+     * <li>http://www.thesaurus.gc.ca/concept/#Alzheimer's disease  -->   http://www.thesaurus.gc.ca/concept/#Alzheimer%27s%20disease</li>
+     * </ul>
+     *
+     * Includes some special case handling for spaces and ":"
+     */
     //TODO: there could be other special handling for special cases in the future
     public static String fixURIFragment(String uri) throws UnsupportedEncodingException {
         String[] parts = uri.split("#");
@@ -157,7 +163,13 @@ public class ApiUtils {
         return String.join("#",parts);
     }
 
-
+    /**
+     * Look up metadata record.
+     *
+     * @param uuidOrInternalId
+     * @return record
+     * @throws ResourceNotFoundException
+     */
     public static AbstractMetadata getRecord(String uuidOrInternalId) throws ResourceNotFoundException {
         IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
         AbstractMetadata metadata = null;
@@ -196,6 +208,9 @@ public class ApiUtils {
      * <p>
      * If session is null, it's probably a bot due to {@link AllRequestsInterceptor#createSessionForAllButNotCrawlers(HttpServletRequest)}.
      * In such case return an exception.
+     *
+     * @param httpSession HTTP session
+     * @return Jeeves user session
      */
     static public UserSession getUserSession(HttpSession httpSession) {
         if (httpSession == null) {
@@ -211,6 +226,30 @@ public class ApiUtils {
     /**
      * If you really need a ServiceContext use this. Try to avoid in order to reduce dependency on
      * Jeeves.
+     * <p>
+     * This method has a side effect of setting the created service context for the current thread.
+     * If you create a service context you are responsible for managing on the current thread and any cleanup:
+     * </p>
+     * Using auto closable:
+     * <pre><code>
+     * try(ServiceContext context = ApiUtils.createServiceContext(request, iso3langCode)){
+     *    ...
+     * }
+     * </code></pre>
+     *
+     * Or manually:
+     * <pre><code>
+     * ServiceContext context = ApiUtils.createServiceContext(request, iso3langCode);
+     * try {
+     *     ...
+     * }
+     * finally {
+     *     context.clearAsThreadLocal();
+     *     context.clear();
+     * }
+     * </code></pre>
+     * @param request
+     * @return new sevice context, assigned to the current thread
      */
     static public ServiceContext createServiceContext(HttpServletRequest request) {
         String iso3langCode = ApplicationContextHolder.get().getBean(LanguageUtils.class)
@@ -218,13 +257,51 @@ public class ApiUtils {
         return createServiceContext(request, iso3langCode);
     }
 
+    /**
+     * If you really need a ServiceContext use this. Try to avoid in order to reduce dependency on
+     * Jeeves.
+     *
+     * This method has a side effect of setting the created service context for the current thread.
+     * If you create a service context you are responsible for managing on the current thread and any cleanup:
+     *
+     * Using auto closable:
+     * <pre><code>
+     * try(ServiceContext context = ApiUtils.createServiceContext(request, iso3langCode)){
+     *    ...
+     * }
+     * </code></pre>
+     *
+     * Or manually:
+     * <pre><code>
+     * ServiceContext context = ApiUtils.createServiceContext(request, iso3langCode);
+     * try {
+     *     ...
+     * }
+     * finally {
+     *     context.clearAsThreadLocal();
+     *     context.clear();
+     * }
+     * </code></pre>
+     *
+     * @param request
+     * @param iso3langCode
+     * @return new sevice context, assigned to the current thread
+     */
     static public ServiceContext createServiceContext(HttpServletRequest request, String iso3langCode) {
         ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
-        ServiceContext serviceContext = serviceManager.createServiceContext("Api", iso3langCode, request);
+        String contextName = "Api"+request.getPathInfo();
+        ServiceContext serviceContext = serviceManager.createServiceContext(contextName, iso3langCode, request);
         serviceContext.setAsThreadLocal();
         return serviceContext;
     }
 
+    /**
+     * Generate the filesize of files in a directory in KiB.
+     *
+     * @param lDir directory location
+     * @return size of files in directory in KiB
+     * @throws IOException
+     */
     public static long sizeOfDirectory(Path lDir) throws IOException {
         final long[] size = new long[]{0};
         Files.walkFileTree(lDir, new SimpleFileVisitor<Path>() {
@@ -235,9 +312,17 @@ public class ApiUtils {
             }
         });
 
-        return size[0] / 1024;
+        return size[0] / 1024; // convert to KiB
     }
 
+    /**
+     * Download xml file into temporary location.
+     *
+     * @param url
+     * @return temporary file
+     * @throws IOException
+     * @throws URISyntaxException
+     */
     public static Path downloadUrlInTemp(String url) throws IOException, URISyntaxException {
 
         URI uri = new URI(url);
@@ -258,61 +343,169 @@ public class ApiUtils {
 
     /**
      * Check if the current user can edit this record.
+     *
+     * This method creates a temporary service context using the provided request to check record access,
+     * if you have a service context already please use {@link #canEditRecord(String, ServiceContext)}.
+     *
+     * @param metadataUuid Look up metadata record
+     * @param request Request to identify current user
+     * @return metadata record
+     * @throws SecurityException if user is not allowed to edit
      */
     static public AbstractMetadata canEditRecord(String metadataUuid, HttpServletRequest request) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
+        ServiceContext previous = ServiceContext.get();
+        if (previous != null) previous.clearAsThreadLocal();
+
+        try (ServiceContext context = createServiceContext(request)) {
+            return canEditRecord(metadataUuid, context);
+        }
+        finally {
+            if (previous != null) previous.setAsThreadLocal();
+        }
+    }
+
+    /**
+     * Check if the current user can edit this record.
+     *
+     * @param metadataUuid Look up metadata record
+     * @return metadata record
+     * @throws SecurityException if user is not allowed to edit
+     */
+    static public AbstractMetadata canEditRecord(String metadataUuid, ServiceContext context) throws Exception {
         AbstractMetadata metadata = getRecord(metadataUuid);
-        AccessManager accessManager = appContext.getBean(AccessManager.class);
-        if (!accessManager.canEdit(createServiceContext(request), String.valueOf(metadata.getId()))) {
+        AccessManager accessManager = context.getBean(AccessManager.class);
+        if (!accessManager.canEdit(context, String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
-                "You can't edit record with UUID %s", metadataUuid));
+                "User %s can't edit record with UUID %s", context.userName(), metadataUuid));
         }
         return metadata;
     }
 
     /**
      * Check if the current user can review this record.
+     *
+     * This method creates a temporary service context using the provided request to check record access,
+     * if you have a service context already please use {@link #canReviewRecord(String, ServiceContext)}.
+     *
+     * @param metadataUuid Look up metadata record
+     * @param request Request to identify current user
+     * @return metadata record
+     * @throws SecurityException if user is not allowed to review
+     * @deprecated Not presently used
      */
     static public AbstractMetadata canReviewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
+        ServiceContext previous = ServiceContext.get();
+        if (previous != null) previous.clearAsThreadLocal();
+
+        try (ServiceContext context = createServiceContext(request)) {
+            return canReviewRecord(metadataUuid,context);
+        }
+        finally {
+            if (previous != null) previous.setAsThreadLocal();
+        }
+    }
+
+    /**
+     * Check if the current user can review this record.
+     *
+     * @param metadataUuid Look up metadata record
+     * @return metadata record
+     * @throws SecurityException if user is not allowed to review
+     */
+    static public AbstractMetadata canReviewRecord(String metadataUuid,ServiceContext context) throws Exception {
         AbstractMetadata metadata = getRecord(metadataUuid);
-        AccessManager accessManager = appContext.getBean(AccessManager.class);
-        if (!accessManager.canReview(createServiceContext(request), String.valueOf(metadata.getId()))) {
+        AccessManager accessManager = context.getBean(AccessManager.class);
+        if (!accessManager.canReview(context, String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
-                "You can't review or edit record with UUID %s", metadataUuid));
+                "User %s can't review or edit record with UUID %s", context.userName(), metadataUuid));
         }
         return metadata;
     }
 
     /**
      * Check if the current user can change status of this record.
+     *
+     * This method creates a temporary service context using the provided request to check record access,
+     * if you have a service context already please use {@link #canChangeStatusRecord(String, ServiceContext)}.
+     *
+     * @param metadataUuid Look up metadata record
+     * @param request Request to identify current user
+     * @return metadata record
+     * @throws SecurityException if user is not allowed to review
+     * @deprecated Not presently used
      */
     static public AbstractMetadata canChangeStatusRecord(String metadataUuid, HttpServletRequest request) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
+        ServiceContext previous = ServiceContext.get();
+        if (previous != null) previous.clearAsThreadLocal();
+
+        try (ServiceContext context = createServiceContext(request)) {
+            return canChangeStatusRecord(metadataUuid,context);
+        }
+        finally {
+            if (previous != null) previous.setAsThreadLocal();
+        }
+    }
+
+    /**
+     * Check if the current user can change status of this record.
+     *
+     * @param metadataUuid Look up metadata record
+     * @return metadata record
+     * @throws SecurityException if user is not allowed to change status
+     */
+    static public AbstractMetadata canChangeStatusRecord(String metadataUuid, ServiceContext context) throws Exception {
         AbstractMetadata metadata = getRecord(metadataUuid);
-        AccessManager accessManager = appContext.getBean(AccessManager.class);
-        if (!accessManager.canChangeStatus(createServiceContext(request), String.valueOf(metadata.getId()))) {
+        AccessManager accessManager = context.getBean(AccessManager.class);
+        if (!accessManager.canChangeStatus(context, String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
-                "You can't change status of record with UUID %s", metadataUuid));
+                "User %s can't change status of record with UUID %s", context.userName(), metadataUuid));
         }
         return metadata;
     }
 
     /**
      * Check if the current user can view this record.
+     *
+     * This method creates a temporary service context using the provided request to check record access,
+     * if you have a service context already please use {@link #canViewRecord(String, ServiceContext)}.
+     *
+     * @param metadataUuid Look up metadata record
+     * @param request Request to identify current user
+     * @return metadata record
+     * @throws SecurityException if user is not allowed to view
      */
     public static AbstractMetadata canViewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+        ServiceContext previous = ServiceContext.get();
+        if (previous != null) previous.clearAsThreadLocal();
+
+        try (ServiceContext context = createServiceContext(request)) {
+            return canViewRecord(metadataUuid,context);
+        }
+        finally {
+            if (previous != null) previous.setAsThreadLocal();
+        }
+    }
+    /**
+     * Check if the current user can view this record.
+     *
+     * @param metadataUuid Look up metadata record
+     * @return metadata record
+     * @throws SecurityException if user is not allowed to view
+     */
+    public static AbstractMetadata canViewRecord(String metadataUuid, ServiceContext context) throws Exception {
         AbstractMetadata metadata = getRecord(metadataUuid);
         try {
-            Lib.resource.checkPrivilege(createServiceContext(request), String.valueOf(metadata.getId()), ReservedOperation.view);
+            Lib.resource.checkPrivilege(context, String.valueOf(metadata.getId()), ReservedOperation.view);
         } catch (Exception e) {
             throw new SecurityException(String.format(
-                "You can't view record with UUID %s", metadataUuid));
+                "User %s can't view record with UUID %s", context.userName(), metadataUuid));
         }
         return metadata;
     }
 
     /**
+     * Create a favicon from the provided image.
+     *
      * @param img
      * @param outFile
      * @throws IOException

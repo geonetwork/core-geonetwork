@@ -99,128 +99,128 @@ public class RegisterApi {
             return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
         }
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
-        SettingManager sm = context.getBean(SettingManager.class);
-        boolean selfRegistrationEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_ENABLE);
-        if (!selfRegistrationEnabled) {
-            return new ResponseEntity<>(String.format(
-                messages.getString("self_registration_disabled")
-            ), HttpStatus.PRECONDITION_FAILED);
-        }
-
-        boolean recaptchaEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
-
-        if (recaptchaEnabled) {
-            boolean validRecaptcha = RecaptchaChecker.verify(userRegisterDto.getCaptcha(),
-                sm.getValue(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY));
-            if (!validRecaptcha) {
-                return new ResponseEntity<>(
-                    messages.getString("recaptcha_not_valid"), HttpStatus.PRECONDITION_FAILED);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            SettingManager sm = context.getBean(SettingManager.class);
+            boolean selfRegistrationEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_ENABLE);
+            if (!selfRegistrationEnabled) {
+                return new ResponseEntity<>(String.format(
+                    messages.getString("self_registration_disabled")
+                ), HttpStatus.PRECONDITION_FAILED);
             }
-        }
 
-        // Validate the user registration
-        if (bindingResult.hasErrors()) {
-            List<ObjectError> errorList = bindingResult.getAllErrors();
+            boolean recaptchaEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
 
-            StringBuilder sb = new StringBuilder();
-            Iterator<ObjectError> it = errorList.iterator();
-            while (it.hasNext()) {
-                sb.append(messages.getString(it.next().getDefaultMessage()));
-                if (it.hasNext()) {
-                    sb.append(", ");
+            if (recaptchaEnabled) {
+                boolean validRecaptcha = RecaptchaChecker.verify(userRegisterDto.getCaptcha(),
+                    sm.getValue(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY));
+                if (!validRecaptcha) {
+                    return new ResponseEntity<>(
+                        messages.getString("recaptcha_not_valid"), HttpStatus.PRECONDITION_FAILED);
                 }
             }
 
-            return new ResponseEntity<>(sb.toString(), HttpStatus.PRECONDITION_FAILED);
-        }
+            // Validate the user registration
+            if (bindingResult.hasErrors()) {
+                List<ObjectError> errorList = bindingResult.getAllErrors();
 
-        final UserRepository userRepository = context.getBean(UserRepository.class);
-        if (userRepository.findOneByEmail(userRegisterDto.getEmail()) != null) {
+                StringBuilder sb = new StringBuilder();
+                Iterator<ObjectError> it = errorList.iterator();
+                while (it.hasNext()) {
+                    sb.append(messages.getString(it.next().getDefaultMessage()));
+                    if (it.hasNext()) {
+                        sb.append(", ");
+                    }
+                }
+
+                return new ResponseEntity<>(sb.toString(), HttpStatus.PRECONDITION_FAILED);
+            }
+
+            final UserRepository userRepository = context.getBean(UserRepository.class);
+            if (userRepository.findOneByEmail(userRegisterDto.getEmail()) != null) {
+                return new ResponseEntity<>(String.format(
+                    messages.getString("user_with_that_email_found"),
+                    userRegisterDto.getEmail()
+                ), HttpStatus.PRECONDITION_FAILED);
+            }
+
+            if (userRepository.findByUsernameIgnoreCase(userRegisterDto.getEmail()).size() != 0) {
+                // username is ignored and the email is used as username in selfregister
+                return new ResponseEntity<>(String.format(
+                    messages.getString("user_with_that_username_found"),
+                    userRegisterDto.getEmail()
+                ), HttpStatus.PRECONDITION_FAILED);
+            }
+
+            User user = new User();
+
+            // user.setUsername(userRegisterDto.getUsername());
+            user.setName(userRegisterDto.getName());
+            user.setOrganisation(userRegisterDto.getOrganisation());
+            user.setProfile(Profile.findProfileIgnoreCase(userRegisterDto.getProfile()));
+            user.getAddresses().add(userRegisterDto.getAddress());
+            user.getEmailAddresses().add(userRegisterDto.getEmail());
+
+
+            String password = User.getRandomPassword();
+            user.getSecurity().setPassword(
+                PasswordUtil.encode(context, password)
+            );
+            user.setUsername(user.getEmail());
+            Profile requestedProfile = user.getProfile();
+            user.setProfile(Profile.RegisteredUser);
+            user = userRepository.save(user);
+
+            Group targetGroup = getGroup(context);
+            if (targetGroup != null) {
+                UserGroup userGroup = new UserGroup().setUser(user).setGroup(targetGroup).setProfile(Profile.RegisteredUser);
+                context.getBean(UserGroupRepository.class).save(userGroup);
+            }
+
+
+            String catalogAdminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
+            String subject = String.format(
+                messages.getString("register_email_admin_subject"),
+                sm.getSiteName(),
+                user.getEmail(),
+                requestedProfile
+            );
+            String message = String.format(
+                messages.getString("register_email_admin_message"),
+                user.getEmail(),
+                requestedProfile,
+                sm.getNodeURL(),
+                sm.getSiteName()
+            );
+            if (!MailUtil.sendMail(catalogAdminEmail, subject, message, null, sm)) {
+                return new ResponseEntity<>(String.format(
+                    messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
+            }
+
+            subject = String.format(
+                messages.getString("register_email_subject"),
+                sm.getSiteName(),
+                user.getProfile()
+            );
+            message = String.format(
+                messages.getString("register_email_message"),
+                sm.getSiteName(),
+                user.getUsername(),
+                password,
+                Profile.RegisteredUser,
+                requestedProfile,
+                sm.getNodeURL(),
+                sm.getSiteName()
+            );
+            if (!MailUtil.sendMail(user.getEmail(), subject, message, null, sm)) {
+                return new ResponseEntity<>(String.format(
+                    messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
+            }
+
             return new ResponseEntity<>(String.format(
-                messages.getString("user_with_that_email_found"),
-                userRegisterDto.getEmail()
-            ), HttpStatus.PRECONDITION_FAILED);
+                messages.getString("user_registered"),
+                user.getUsername()
+            ), HttpStatus.CREATED);
         }
-
-        if (userRepository.findByUsernameIgnoreCase(userRegisterDto.getEmail()).size() != 0) {
-            // username is ignored and the email is used as username in selfregister
-            return new ResponseEntity<>(String.format(
-                messages.getString("user_with_that_username_found"),
-                userRegisterDto.getEmail()
-            ), HttpStatus.PRECONDITION_FAILED);
-        }
-
-        User user = new User();
-
-        // user.setUsername(userRegisterDto.getUsername());
-        user.setName(userRegisterDto.getName());
-        user.setOrganisation(userRegisterDto.getOrganisation());
-        user.setProfile(Profile.findProfileIgnoreCase(userRegisterDto.getProfile()));
-        user.getAddresses().add(userRegisterDto.getAddress());
-        user.getEmailAddresses().add(userRegisterDto.getEmail());
-
-
-        String password = User.getRandomPassword();
-        user.getSecurity().setPassword(
-            PasswordUtil.encode(context, password)
-        );
-        user.setUsername(user.getEmail());
-        Profile requestedProfile = user.getProfile();
-        user.setProfile(Profile.RegisteredUser);
-        user = userRepository.save(user);
-
-        Group targetGroup = getGroup(context);
-        if (targetGroup != null) {
-            UserGroup userGroup = new UserGroup().setUser(user).setGroup(targetGroup).setProfile(Profile.RegisteredUser);
-            context.getBean(UserGroupRepository.class).save(userGroup);
-        }
-
-
-        String catalogAdminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
-        String subject = String.format(
-            messages.getString("register_email_admin_subject"),
-            sm.getSiteName(),
-            user.getEmail(),
-            requestedProfile
-        );
-        String message = String.format(
-            messages.getString("register_email_admin_message"),
-            user.getEmail(),
-            requestedProfile,
-            sm.getNodeURL(),
-            sm.getSiteName()
-        );
-        if (!MailUtil.sendMail(catalogAdminEmail, subject, message, null, sm)) {
-            return new ResponseEntity<>(String.format(
-                messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
-        }
-
-        subject = String.format(
-            messages.getString("register_email_subject"),
-            sm.getSiteName(),
-            user.getProfile()
-        );
-        message = String.format(
-            messages.getString("register_email_message"),
-            sm.getSiteName(),
-            user.getUsername(),
-            password,
-            Profile.RegisteredUser,
-            requestedProfile,
-            sm.getNodeURL(),
-            sm.getSiteName()
-        );
-        if (!MailUtil.sendMail(user.getEmail(), subject, message, null, sm)) {
-            return new ResponseEntity<>(String.format(
-                messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
-        }
-
-        return new ResponseEntity<>(String.format(
-            messages.getString("user_registered"),
-            user.getUsername()
-        ), HttpStatus.CREATED);
     }
 
     Group getGroup(ServiceContext context) throws SQLException {

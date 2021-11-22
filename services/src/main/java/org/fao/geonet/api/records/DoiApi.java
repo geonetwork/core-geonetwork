@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -94,11 +94,12 @@ public class DoiApi {
         @Parameter(hidden = true)
             HttpServletRequest request
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, serviceContext);
 
-        final Map<String, Boolean> reportStatus = doiManager.check(serviceContext, metadata, null);
-        return new ResponseEntity<>(reportStatus, HttpStatus.OK);
+            final Map<String, Boolean> reportStatus = doiManager.check(serviceContext, metadata, null);
+            return new ResponseEntity<>(reportStatus, HttpStatus.OK);
+        }
     }
 
 
@@ -130,11 +131,13 @@ public class DoiApi {
         @Parameter(hidden = true)
             HttpSession session
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        Map<String, String> doiInfo = doiManager.register(serviceContext, metadata);
-        return new ResponseEntity<>(doiInfo, HttpStatus.CREATED);
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request);) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, serviceContext);
+
+            Map<String, String> doiInfo = doiManager.register(serviceContext, metadata);
+            return new ResponseEntity<>(doiInfo, HttpStatus.CREATED);
+        }
     }
 
 
@@ -167,11 +170,13 @@ public class DoiApi {
         @Parameter(hidden = true)
             HttpSession session
     ) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        doiManager.unregisterDoi(metadata, serviceContext);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request);) {
+            AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, serviceContext);
+
+            doiManager.unregisterDoi(metadata, serviceContext);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
 //    TODO: At some point we may add support for DOI States management

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -261,10 +261,11 @@ public class TranslationApi {
         ServletRequest request,
         HttpServletRequest httpRequest
     ) throws Exception {
-        final ServiceContext context = ApiUtils.createServiceContext(httpRequest);
-        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
-        return translationPackBuilder.getPack(language, pack, context);
+        try (ServiceContext context = ApiUtils.createServiceContext(httpRequest)) {
+            Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+            String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
+            return translationPackBuilder.getPack(language, pack, context);
+        }
     }
 
 

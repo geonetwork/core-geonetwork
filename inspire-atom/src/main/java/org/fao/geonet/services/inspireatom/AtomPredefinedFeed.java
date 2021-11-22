@@ -90,17 +90,18 @@ public class AtomPredefinedFeed {
             @RequestParam(value = "language", required = false) String language,
             NativeWebRequest webRequest) throws Exception {
 
-        ServiceContext context = createServiceContext(Geonet.DEFAULT_LANGUAGE, webRequest.getNativeRequest(HttpServletRequest.class));
+        try (ServiceContext context = createServiceContext(Geonet.DEFAULT_LANGUAGE, webRequest.getNativeRequest(HttpServletRequest.class))) {
+            SettingManager sm = context.getBean(SettingManager.class);
+            boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
+            if (!inspireEnable) {
+                Log.info(Geonet.ATOM, "INSPIRE is disabled");
+                throw new OperationNotAllowedEx("INSPIRE option is not enabled on this catalog.");
+            }
 
-        SettingManager sm = context.getBean(SettingManager.class);
-        boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
-        if (!inspireEnable) {
-            Log.info(Geonet.ATOM, "INSPIRE is disabled");
-            throw new OperationNotAllowedEx("INSPIRE option is not enabled on this catalog.");
+            Element feed = getServiceFeed(context, uuid, language);
+            return writeOutResponse(Xml.getString(feed),"application", "atom+xml");
         }
 
-        Element feed = getServiceFeed(context, uuid, language);
-        return writeOutResponse(Xml.getString(feed),"application", "atom+xml");
     }
 
     /**
@@ -123,22 +124,22 @@ public class AtomPredefinedFeed {
             @RequestParam(value = "q", required = false) String searchTerms,
             NativeWebRequest webRequest) throws Exception
     {
-        ServiceContext context = createServiceContext("eng", webRequest.getNativeRequest(HttpServletRequest.class));
+        try (ServiceContext context = createServiceContext("eng", webRequest.getNativeRequest(HttpServletRequest.class))) {
+            SettingManager sm = context.getBean(SettingManager.class);
+            boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
+            if (!inspireEnable) {
+                Log.info(Geonet.ATOM, "INSPIRE is disabled");
+                throw new OperationNotAllowedEx("INSPIRE option is not enabled on this catalog.");
+            }
 
-        SettingManager sm = context.getBean(SettingManager.class);
-        boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
-        if (!inspireEnable) {
-            Log.info(Geonet.ATOM, "INSPIRE is disabled");
-            throw new OperationNotAllowedEx("INSPIRE option is not enabled on this catalog.");
+
+            Map<String, Object> params = getDefaultXSLParams(sm, context, XslUtil.twoCharLangCode(context.getLanguage()));
+            if (StringUtils.isNotBlank(searchTerms)) {
+                params.put("searchTerms", searchTerms.toLowerCase());
+            }
+            Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, params, language);
+            return writeOutResponse(Xml.getString(feed), "application", "atom+xml");
         }
-
-
-        Map<String, Object> params = getDefaultXSLParams(sm, context, XslUtil.twoCharLangCode(context.getLanguage()));
-        if (StringUtils.isNotBlank(searchTerms)) {
-            params.put("searchTerms", searchTerms.toLowerCase());
-        }
-        Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, params, language);
-        return writeOutResponse(Xml.getString(feed), "application", "atom+xml");
     }
 
     private Element getServiceFeed(ServiceContext context, final String uuid, final String language) throws Exception {
@@ -191,6 +192,15 @@ public class AtomPredefinedFeed {
         return params;
     }
 
+    /**
+     * Service context for atom.service.
+     *
+     * When creating a new service context you are responsible for thread local management and any cleanup.
+     *
+     * @param lang
+     * @param request
+     * @return service context for atom.service
+     */
     private ServiceContext createServiceContext(String lang, HttpServletRequest request) {
         final ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
         return serviceManager.createServiceContext("atom.service", lang, request);
@@ -215,7 +225,7 @@ public class AtomPredefinedFeed {
      * @param language the language to be used for translation of title, etc. in the resulting dataset ATOM feed
      * @param searchTerms the searchTerms for filtering of the spatial datasets
      * @param webRequest the request object
-     * @return
+     * @return atom feed
      * @throws Exception
      */
     @RequestMapping(value = "/" + InspireAtomUtil.LOCAL_DOWNLOAD_DATASET_URL_SUFFIX)
@@ -228,57 +238,57 @@ public class AtomPredefinedFeed {
             @RequestParam(value = "q", required = false) String searchTerms,
             NativeWebRequest webRequest) throws Exception
     {
-        ServiceContext context = createServiceContext(Geonet.DEFAULT_LANGUAGE, webRequest.getNativeRequest(HttpServletRequest.class));
-
-        SettingManager sm = context.getBean(SettingManager.class);
-        boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
-        if (!inspireEnable) {
-            Log.info(Geonet.ATOM, "INSPIRE is disabled");
-            throw new OperationNotAllowedEx("INSPIRE option is not enabled on this catalog.");
-        }
-
-        Map<String, Object> params = getDefaultXSLParams(sm, context, context.getLanguage());
-        if (StringUtils.isNotBlank(crs)) {
-        	crs = URLDecoder.decode(crs,Constants.ENCODING);
-            params.put("requestedCrs", crs);
-        }
-        if (StringUtils.isNotBlank(searchTerms)) {
-            params.put("searchTerms", searchTerms.toLowerCase());
-        }
-        Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, params, language);
-        Map<Integer, Element> crsCounts = new HashMap<Integer, Element>();;
-        Namespace ns = Namespace.getNamespace("http://www.w3.org/2005/Atom");
-        if (crs!=null) {
-            crsCounts = countDatasetsForCrs(feed, crs, ns);
-        } else {
-            List<Element> entries = (feed.getChildren("entry", ns));
-            if (entries.size()==1) {
-                crsCounts.put(1, entries.get(0));
+        try (ServiceContext context = createServiceContext(Geonet.DEFAULT_LANGUAGE, webRequest.getNativeRequest(HttpServletRequest.class))) {
+            SettingManager sm = context.getBean(SettingManager.class);
+            boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
+            if (!inspireEnable) {
+                Log.info(Geonet.ATOM, "INSPIRE is disabled");
+                throw new OperationNotAllowedEx("INSPIRE option is not enabled on this catalog.");
             }
-        }
-        int downloadCount = crsCounts.size()>0 ? crsCounts.keySet().iterator().next() : 0;
-        Element selectedEntry = crsCounts.get(downloadCount);
 
-        // No download  for the CRS specified
-        if (downloadCount == 0) {
-            throw new Exception("No downloads available for dataset (spatial_dataset_identifier_code: " + spIdentifier + ", spatial_dataset_identifier_namespace: " + spNamespace + ", crs: " + crs + ", searchTerms: " + searchTerms + ")");
-
-        // Only one download for the CRS specified
-        } else if (downloadCount == 1) {
-            String type = null;
-            Element link = selectedEntry.getChild("link", ns);
-            if (link!=null) {
-                type = link.getAttributeValue("type");
+            Map<String, Object> params = getDefaultXSLParams(sm, context, context.getLanguage());
+            if (StringUtils.isNotBlank(crs)) {
+                crs = URLDecoder.decode(crs,Constants.ENCODING);
+                params.put("requestedCrs", crs);
             }
-            HttpServletResponse nativeRes = webRequest.getNativeResponse(HttpServletResponse.class);
-            nativeRes.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+            if (StringUtils.isNotBlank(searchTerms)) {
+                params.put("searchTerms", searchTerms.toLowerCase());
+            }
+            Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, params, language);
+            Map<Integer, Element> crsCounts = new HashMap<Integer, Element>();;
+            Namespace ns = Namespace.getNamespace("http://www.w3.org/2005/Atom");
+            if (crs!=null) {
+                crsCounts = countDatasetsForCrs(feed, crs, ns);
+            } else {
+                List<Element> entries = (feed.getChildren("entry", ns));
+                if (entries.size()==1) {
+                    crsCounts.put(1, entries.get(0));
+                }
+            }
+            int downloadCount = crsCounts.size()>0 ? crsCounts.keySet().iterator().next() : 0;
+            Element selectedEntry = crsCounts.get(downloadCount);
+
+            // No download  for the CRS specified
+            if (downloadCount == 0) {
+                throw new Exception("No downloads available for dataset (spatial_dataset_identifier_code: " + spIdentifier + ", spatial_dataset_identifier_namespace: " + spNamespace + ", crs: " + crs + ", searchTerms: " + searchTerms + ")");
+
+                // Only one download for the CRS specified
+            } else if (downloadCount == 1) {
+                String type = null;
+                Element link = selectedEntry.getChild("link", ns);
+                if (link!=null) {
+                    type = link.getAttributeValue("type");
+                }
+                HttpServletResponse nativeRes = webRequest.getNativeResponse(HttpServletResponse.class);
+                nativeRes.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
 //            nativeRes.setHeader("Location", selectedEntry.getChildText("id",ns));
-            return redirectResponse(selectedEntry.getChildText("id",ns));
-        // Otherwise, return a feed with the downloads for the specified CRS
-        } else {
-            // Filter the dataset feed by CRS code.
-            InspireAtomUtil.filterDatasetFeedByCrs(feed, crs);
-            return writeOutResponse(Xml.getString(feed),"application", "atom+xml");
+                return redirectResponse(selectedEntry.getChildText("id",ns));
+                // Otherwise, return a feed with the downloads for the specified CRS
+            } else {
+                // Filter the dataset feed by CRS code.
+                InspireAtomUtil.filterDatasetFeedByCrs(feed, crs);
+                return writeOutResponse(Xml.getString(feed),"application", "atom+xml");
+            }
         }
     }
 
@@ -324,17 +334,18 @@ public class AtomPredefinedFeed {
             @RequestParam(value = "language", required = false) String language,
             NativeWebRequest webRequest) throws Exception {
 
-        ServiceContext context = createServiceContext(Geonet.DEFAULT_LANGUAGE, webRequest.getNativeRequest(HttpServletRequest.class));
+        try (ServiceContext context = createServiceContext(Geonet.DEFAULT_LANGUAGE, webRequest.getNativeRequest(HttpServletRequest.class))) {
+            SettingManager sm = context.getBean(SettingManager.class);
+            boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
+            if (!inspireEnable) {
+                Log.info(Geonet.ATOM, "INSPIRE is disabled");
+                throw new OperationNotAllowedEx("INSPIRE option is not enabled on this catalog.");
+            }
 
-        SettingManager sm = context.getBean(SettingManager.class);
-        boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
-        if (!inspireEnable) {
-            Log.info(Geonet.ATOM, "INSPIRE is disabled");
-            throw new OperationNotAllowedEx("INSPIRE option is not enabled on this catalog.");
+            Element description = getOpenSearchDescription(context, uuid);
+            return writeOutResponse(Xml.getString(description), "application", "opensearchdescription+xml");
+
         }
-
-        Element description = getOpenSearchDescription(context, uuid);
-        return writeOutResponse(Xml.getString(description), "application", "opensearchdescription+xml");
     }
 
     private Element getOpenSearchDescription(ServiceContext context, final String uuid) throws Exception {

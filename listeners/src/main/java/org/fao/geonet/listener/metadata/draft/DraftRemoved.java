@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -29,6 +29,8 @@ import java.util.List;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataDraft;
@@ -58,11 +60,14 @@ public class DraftRemoved {
     @Autowired
     private IMetadataIndexer metadataIndexer;
 
+    @Autowired
+    ServiceManager serviceManager;
+
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMPLETION, fallbackExecution = true)
     public void doAfterCommit(MetadataDraftRemove event) {
         Log.trace(Geonet.DATA_MANAGER, "Reindexing non drafted versions of uuid " + event.getMd().getUuid());
 
-        try {
+        try (ServiceContext context = serviceManager.createServiceContext("draft_removed", -1)) {
             for (AbstractMetadata md : getRecords(event)) {
                 if (!(md instanceof MetadataDraft)) {
                     Log.trace(Geonet.DATA_MANAGER, "Reindexing " + md.getId());

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -85,34 +85,35 @@ public class BackupArchiveApi {
     @ResponseBody
     public ResponseEntity<FileSystemResource> downloadBackup(HttpServletRequest request) throws Exception {
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
-        ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            ApplicationContext appContext = ApplicationContextHolder.get();
+            GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
+            ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
 
-        Log.info(ArchiveAllMetadataJob.BACKUP_LOG, "User " + context.getUserSession().getUsername() + " from IP: " + context
-            .getIpAddress() + " has started to download backup archive");
+            Log.info(ArchiveAllMetadataJob.BACKUP_LOG, "User " + context.userName() + " from IP: " + context
+                .getIpAddress() + " has started to download backup archive");
 
-        File backupDir = dataDirectory.getBackupDir().resolve(ArchiveAllMetadataJob.BACKUP_DIR).toFile();
-        if (!backupDir.exists()) {
-            throw new ResourceNotFoundException("Backup archive folder does not exist");
-        }
-        File[] files = backupDir.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                return !pathname.isDirectory();
+            File backupDir = dataDirectory.getBackupDir().resolve(ArchiveAllMetadataJob.BACKUP_DIR).toFile();
+            if (!backupDir.exists()) {
+                throw new ResourceNotFoundException("Backup archive folder does not exist");
             }
-        });
-        if (files == null || files.length == 0) {
-            throw new ResourceNotFoundException("Backup archive file does not yet exist");
+            File[] files = backupDir.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    return !pathname.isDirectory();
+                }
+            });
+            if (files == null || files.length == 0) {
+                throw new ResourceNotFoundException("Backup archive file does not yet exist");
+            }
+
+            MultiValueMap<String, String> headers = new HttpHeaders();
+            headers.add("content-disposition", "attachment; filename=" + files[0].getName());
+
+            final ResponseEntity<FileSystemResource> response = new ResponseEntity<>(new FileSystemResource(files[0]), headers, HttpStatus.OK);
+
+            return response;
         }
-
-        MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.add("content-disposition", "attachment; filename=" + files[0].getName());
-
-        final ResponseEntity<FileSystemResource> response = new ResponseEntity<>(new FileSystemResource(files[0]), headers, HttpStatus.OK);
-
-        return response;
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Trigger MEF backup archive",
@@ -128,11 +129,12 @@ public class BackupArchiveApi {
     })
     @ResponseBody
     public String trigger(HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        final Trigger trigger = newTrigger().forJob("archiveAllMetadata", "gnBackgroundTasks").startNow().build();
-        context.getBean("gnBackgroundJobScheduler", Scheduler.class).scheduleJob(trigger);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            final Trigger trigger = newTrigger().forJob("archiveAllMetadata", "gnBackgroundTasks").startNow().build();
+            context.getBean("gnBackgroundJobScheduler", Scheduler.class).scheduleJob(trigger);
 
-        return "{\"success\":true}";
+            return "{\"success\":true}";
+        }
     }
 
 }

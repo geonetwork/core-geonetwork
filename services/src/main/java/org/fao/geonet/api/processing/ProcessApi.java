@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -28,6 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -174,7 +175,7 @@ public class ProcessApi {
 
         MetadataReplacementProcessingReport report =
             new MetadataReplacementProcessingReport("massive-content-update");
-        try {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
 
             report.setTotalRecords(records.size());
@@ -183,7 +184,7 @@ public class ProcessApi {
                 process,
                 isTesting, isCaseInsensitive, vacuumMode,
                 allParams,
-                ApiUtils.createServiceContext(request), records, report);
+                context, records, report);
             m.process();
         } catch (Exception e) {
             throw e;

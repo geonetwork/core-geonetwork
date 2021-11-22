@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -250,78 +250,80 @@ public class CatalogApi {
         SelectionManager selectionManger = SelectionManager.getManager(session);
         Log.info(Geonet.MEF, "Current record(s) in selection: " + uuidList.size());
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        MEFLib.Version version = MEFLib.Version.find(acceptHeader);
-        if (version == MEFLib.Version.V1) {
-            throw new IllegalArgumentException("MEF version 1 only support one record. Use the /records/{uuid}/formatters/zip to retrieve that format");
-        } else {
-            Set<String> allowedUuid = new HashSet<String>();
-            for (Iterator<String> iter = uuidList.iterator(); iter.hasNext(); ) {
-                String uuid = iter.next();
-                try {
-                    ApiUtils.canViewRecord(uuid, request);
-                    allowedUuid.add(uuid);
-                } catch (Exception e) {
-                    Log.debug(API.LOG_MODULE_NAME, String.format(
-                        "Not allowed to export record '%s'.", uuid));
-                }
-            }
-
-            // If provided uuid, export the metadata record only
-            selectionManger.close(SelectionManager.SELECTION_METADATA);
-            selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA,
-                allowedUuid);
-
-            // MEF version 2 support multiple metadata record by file.
-            if (withRelated) {
-                int maxhits = Integer.parseInt(settingInfo.getSelectionMaxRecords());
-
-                Set<String> tmpUuid = new HashSet<String>();
-                for (Iterator<String> iter = allowedUuid.iterator(); iter.hasNext(); ) {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            MEFLib.Version version = MEFLib.Version.find(acceptHeader);
+            if (version == MEFLib.Version.V1) {
+                throw new IllegalArgumentException("MEF version 1 only support one record. Use the /records/{uuid}/formatters/zip to retrieve that format");
+            } else {
+                Set<String> allowedUuid = new HashSet<String>();
+                for (Iterator<String> iter = uuidList.iterator(); iter.hasNext(); ) {
                     String uuid = iter.next();
-
-                    // Search for children records
-                    // and service record. At some point this might be extended to all type of relations.
-                    final SearchResponse searchResponse = searchManager.query(
-                        String.format("parentUuid:\"%s\" recordOperateOn:\"%s\"", uuid, uuid),
-                        esHTTPProxy.buildPermissionsFilter(ApiUtils.createServiceContext(request)),
-                        FIELDLIST_UUID, 0, maxhits);
-
-                    Arrays.asList(searchResponse.getHits().getHits()).forEach(h ->
-                        tmpUuid.add((String) h.getSourceAsMap().get(Geonet.IndexFieldNames.UUID)));
+                    try {
+                        ApiUtils.canViewRecord(uuid, context);
+                        allowedUuid.add(uuid);
+                    } catch (Exception e) {
+                        Log.debug(API.LOG_MODULE_NAME, String.format(
+                            "Not allowed to export record '%s'.", uuid));
+                    }
                 }
 
-                if (selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA, tmpUuid)) {
-                    Log.info(Geonet.MEF, "Child and services added into the selection");
-                }
-                allowedUuid = selectionManger.getSelection(SelectionManager.SELECTION_METADATA);
-            }
-
-            Log.info(Geonet.MEF, "Building MEF2 file with " + uuidList.size()
-                + " records.");
-            try {
-                file = MEFLib.doMEF2Export(context, allowedUuid, format.toString(),
-                    false, stylePath,
-                    withXLinksResolved, withXLinkAttribute,
-                    false, addSchemaLocation, approved);
-
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HHmmss");
-                String fileName = String.format("%s-%s.zip",
-                    settingManager.getSiteName().replace(" ", ""),
-                    df.format(new Date()));
-
-                response.setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format(
-                    "inline; filename=\"%s\"",
-                    fileName
-                ));
-                response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(file)));
-                response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
-                FileUtils.copyFile(file.toFile(), response.getOutputStream());
-            } finally {
-                // -- Reset selection manager
+                // If provided uuid, export the metadata record only
                 selectionManger.close(SelectionManager.SELECTION_METADATA);
+                selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA,
+                    allowedUuid);
+
+                // MEF version 2 support multiple metadata record by file.
+                if (withRelated) {
+                    int maxhits = Integer.parseInt(settingInfo.getSelectionMaxRecords());
+
+                    Set<String> tmpUuid = new HashSet<String>();
+                    for (Iterator<String> iter = allowedUuid.iterator(); iter.hasNext(); ) {
+                        String uuid = iter.next();
+
+                        // Search for children records
+                        // and service record. At some point this might be extended to all type of relations.
+                        final SearchResponse searchResponse = searchManager.query(
+                            String.format("parentUuid:\"%s\" recordOperateOn:\"%s\"", uuid, uuid),
+                            esHTTPProxy.buildPermissionsFilter(ApiUtils.createServiceContext(request)),
+                            FIELDLIST_UUID, 0, maxhits);
+
+                        Arrays.asList(searchResponse.getHits().getHits()).forEach(h ->
+                            tmpUuid.add((String) h.getSourceAsMap().get(Geonet.IndexFieldNames.UUID)));
+                    }
+
+                    if (selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA, tmpUuid)) {
+                        Log.info(Geonet.MEF, "Child and services added into the selection");
+                    }
+                    allowedUuid = selectionManger.getSelection(SelectionManager.SELECTION_METADATA);
+                }
+
+                Log.info(Geonet.MEF, "Building MEF2 file with " + uuidList.size()
+                    + " records.");
+                try {
+                    file = MEFLib.doMEF2Export(context, allowedUuid, format.toString(),
+                        false, stylePath,
+                        withXLinksResolved, withXLinkAttribute,
+                        false, addSchemaLocation, approved);
+
+                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HHmmss");
+                    String fileName = String.format("%s-%s.zip",
+                        settingManager.getSiteName().replace(" ", ""),
+                        df.format(new Date()));
+
+                    response.setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format(
+                        "inline; filename=\"%s\"",
+                        fileName
+                    ));
+                    response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(file)));
+                    response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
+                    FileUtils.copyFile(file.toFile(), response.getOutputStream());
+                } finally {
+                    // -- Reset selection manager
+                    selectionManger.close(SelectionManager.SELECTION_METADATA);
+                }
             }
         }
+
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -506,30 +508,30 @@ public class CatalogApi {
             uuids, bucket, session);
 
         int maxhits = Integer.parseInt(settingInfo.getSelectionMaxRecords());
-        ServiceContext context = ApiUtils.createServiceContext(httpRequest);
+        try (ServiceContext context = ApiUtils.createServiceContext(httpRequest)) {
+            final SearchResponse searchResponse = searchManager.query(
+                String.format("uuid:(\"%s\")", String.join("\" or \"", uuidList)),
+                esHTTPProxy.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
+                FIELDLIST_CORE, 0, maxhits);
 
-        final SearchResponse searchResponse = searchManager.query(
-            String.format("uuid:(\"%s\")", String.join("\" or \"", uuidList)),
-            esHTTPProxy.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
-            FIELDLIST_CORE, 0, maxhits);
+            Element response = new Element("response");
+            Arrays.asList(searchResponse.getHits().getHits()).forEach(h -> {
+                try {
+                    response.addContent(
+                        dataManager.getMetadata(
+                            context,
+                            (String) h.getSourceAsMap().get("id"),
+                            false, false, false));
+                } catch (Exception e) {
+                }
+            });
 
-        Element response = new Element("response");
-        Arrays.asList(searchResponse.getHits().getHits()).forEach(h -> {
-            try {
-                response.addContent(
-                    dataManager.getMetadata(
-                        context,
-                        (String) h.getSourceAsMap().get("id"),
-                        false, false, false));
-            } catch (Exception e) {
-            }
-        });
-
-        Element r = new XsltResponseWriter(null,"search")
-            .withXml(response)
-            .withXsl("xslt/services/csv/csv-search.xsl")
-            .asElement();
-        httpResponse.getWriter().write(r.getText());
+            Element r = new XsltResponseWriter(null,"search")
+                .withXml(response)
+                .withXsl("xslt/services/csv/csv-search.xsl")
+                .asElement();
+            httpResponse.getWriter().write(r.getText());
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -628,84 +630,85 @@ public class CatalogApi {
         allRequestParams.put("hitsPerPage", Integer.toString(hitsPerPage));
         allRequestParams.put("from", Integer.toString(from));
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        RdfOutputManager manager = new RdfOutputManager(
-            thesaurusManager.buildResultfromThTable(context), hitsPerPage);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            RdfOutputManager manager = new RdfOutputManager(
+                thesaurusManager.buildResultfromThTable(context), hitsPerPage);
 
-        // Copy all request parameters
-        /// Mimic old Jeeves param style
-        Element params = new Element("params");
-        allRequestParams.forEach((k, v) -> {
-            params.addContent(new Element(k).setText(v));
-        });
+            // Copy all request parameters
+            /// Mimic old Jeeves param style
+            Element params = new Element("params");
+            allRequestParams.forEach((k, v) -> {
+                params.addContent(new Element(k).setText(v));
+            });
 
-        // Perform the search on the Lucene Index
-        RdfSearcher rdfSearcher = new RdfSearcher(params, context);
-        List results = rdfSearcher.search(context);
-        rdfSearcher.close();
+            // Perform the search on the Lucene Index
+            RdfSearcher rdfSearcher = new RdfSearcher(params, context);
+            List results = rdfSearcher.search(context);
+            rdfSearcher.close();
 
-        // Calculates the pagination information, needed for the LDP Paging and Hydra Paging
-        int numberMatched = rdfSearcher.getSize();
-        int firstPageFrom = numberMatched > 0 ? 1 : 0;
-        int firstPageTo = numberMatched > hitsPerPage ? hitsPerPage : numberMatched;
-        int nextFrom = to < numberMatched ? to + 1 : to;
-        int nextTo = to + hitsPerPage < numberMatched ? to + hitsPerPage : numberMatched;
-        int prevFrom = from - hitsPerPage > 0 ? from - hitsPerPage : 1;
-        int prevTo = to - hitsPerPage > 0 ? to - hitsPerPage : numberMatched;
-        int lastPageFrom = 0 < (numberMatched % hitsPerPage) ? numberMatched - (numberMatched % hitsPerPage) + 1 : (numberMatched - hitsPerPage + 1 > 0 ? numberMatched - hitsPerPage + 1 : numberMatched);
-        long versionTokenETag = rdfSearcher.getVersionToken();
-        String canonicalURL = hostURL + request.getRequestURI();
-        String currentPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + from + "&to=" + to;
-        String lastPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + lastPageFrom + "&to=" + numberMatched;
-        String firstPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + firstPageFrom + "&to=" + firstPageTo;
-        String previousPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + prevFrom + "&to=" + prevTo;
-        String nextPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + nextFrom + "&to=" + nextTo;
+            // Calculates the pagination information, needed for the LDP Paging and Hydra Paging
+            int numberMatched = rdfSearcher.getSize();
+            int firstPageFrom = numberMatched > 0 ? 1 : 0;
+            int firstPageTo = numberMatched > hitsPerPage ? hitsPerPage : numberMatched;
+            int nextFrom = to < numberMatched ? to + 1 : to;
+            int nextTo = to + hitsPerPage < numberMatched ? to + hitsPerPage : numberMatched;
+            int prevFrom = from - hitsPerPage > 0 ? from - hitsPerPage : 1;
+            int prevTo = to - hitsPerPage > 0 ? to - hitsPerPage : numberMatched;
+            int lastPageFrom = 0 < (numberMatched % hitsPerPage) ? numberMatched - (numberMatched % hitsPerPage) + 1 : (numberMatched - hitsPerPage + 1 > 0 ? numberMatched - hitsPerPage + 1 : numberMatched);
+            long versionTokenETag = rdfSearcher.getVersionToken();
+            String canonicalURL = hostURL + request.getRequestURI();
+            String currentPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + from + "&to=" + to;
+            String lastPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + lastPageFrom + "&to=" + numberMatched;
+            String firstPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + firstPageFrom + "&to=" + firstPageTo;
+            String previousPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + prevFrom + "&to=" + prevTo;
+            String nextPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + nextFrom + "&to=" + nextTo;
 
-        // Hydra Paging information (see also: http://www.hydra-cg.com/spec/latest/core/)
-        String hydraPagedCollection = "<hydra:PagedCollection xmlns:hydra=\"http://www.w3.org/ns/hydra/core#\" rdf:about=\"" + currentPage.replaceAll("&", "&amp;") + "\">\n" +
-            "<rdf:type rdf:resource=\"hydra:PartialCollectionView\"/>" +
-            "<hydra:lastPage>" + lastPage.replaceAll("&", "&amp;") + "</hydra:lastPage>\n" +
-            "<hydra:totalItems rdf:datatype=\"http://www.w3.org/2001/XMLSchema#integer\">" + numberMatched + "</hydra:totalItems>\n" +
-            ((prevFrom <= prevTo && prevFrom < from && prevTo < to) ? "<hydra:previousPage>" + previousPage.replaceAll("&", "&amp;") + "</hydra:previousPage>\n" : "") +
-            ((nextFrom <= nextTo && from < nextFrom && to < nextTo) ? "<hydra:nextPage>" + nextPage.replaceAll("&", "&amp;") + "</hydra:nextPage>\n" : "") +
-            "<hydra:firstPage>" + firstPage.replaceAll("&", "&amp;") + "</hydra:firstPage>\n" +
-            "<hydra:itemsPerPage rdf:datatype=\"http://www.w3.org/2001/XMLSchema#integer\">" + hitsPerPage + "</hydra:itemsPerPage>\n" +
-            "</hydra:PagedCollection>";
-        // Construct the RDF output
-        File rdfFile = manager.createRdfFile(context, results, 1, hydraPagedCollection);
+            // Hydra Paging information (see also: http://www.hydra-cg.com/spec/latest/core/)
+            String hydraPagedCollection = "<hydra:PagedCollection xmlns:hydra=\"http://www.w3.org/ns/hydra/core#\" rdf:about=\"" + currentPage.replaceAll("&", "&amp;") + "\">\n" +
+                "<rdf:type rdf:resource=\"hydra:PartialCollectionView\"/>" +
+                "<hydra:lastPage>" + lastPage.replaceAll("&", "&amp;") + "</hydra:lastPage>\n" +
+                "<hydra:totalItems rdf:datatype=\"http://www.w3.org/2001/XMLSchema#integer\">" + numberMatched + "</hydra:totalItems>\n" +
+                ((prevFrom <= prevTo && prevFrom < from && prevTo < to) ? "<hydra:previousPage>" + previousPage.replaceAll("&", "&amp;") + "</hydra:previousPage>\n" : "") +
+                ((nextFrom <= nextTo && from < nextFrom && to < nextTo) ? "<hydra:nextPage>" + nextPage.replaceAll("&", "&amp;") + "</hydra:nextPage>\n" : "") +
+                "<hydra:firstPage>" + firstPage.replaceAll("&", "&amp;") + "</hydra:firstPage>\n" +
+                "<hydra:itemsPerPage rdf:datatype=\"http://www.w3.org/2001/XMLSchema#integer\">" + hitsPerPage + "</hydra:itemsPerPage>\n" +
+                "</hydra:PagedCollection>";
+            // Construct the RDF output
+            File rdfFile = manager.createRdfFile(context, results, 1, hydraPagedCollection);
 
-        try (
-            ServletOutputStream out = response.getOutputStream();
-            InputStream in = new FileInputStream(rdfFile)
-        ) {
-            byte[] bytes = new byte[1024];
-            int bytesRead;
+            try (
+                ServletOutputStream out = response.getOutputStream();
+                InputStream in = new FileInputStream(rdfFile)
+            ) {
+                byte[] bytes = new byte[1024];
+                int bytesRead;
 
-            response.setContentType("application/rdf+xml");
+                response.setContentType("application/rdf+xml");
 
-            //Set the Lucene versionToken as ETag response header parameter
-            response.addHeader("ETag", Long.toString(versionTokenETag));
-            //Include the response header "link" parameters as suggested by the W3C Linked Data Platform paging specification (see also: https://www.w3.org/2012/ldp/hg/ldp-paging.html).
-            response.addHeader("Link", "<http://www.w3.org/ns/ldp#Page>; rel=\"type\"");
-            response.addHeader("Link", canonicalURL + "; rel=\"canonical\"; etag=" + versionTokenETag);
+                //Set the Lucene versionToken as ETag response header parameter
+                response.addHeader("ETag", Long.toString(versionTokenETag));
+                //Include the response header "link" parameters as suggested by the W3C Linked Data Platform paging specification (see also: https://www.w3.org/2012/ldp/hg/ldp-paging.html).
+                response.addHeader("Link", "<http://www.w3.org/ns/ldp#Page>; rel=\"type\"");
+                response.addHeader("Link", canonicalURL + "; rel=\"canonical\"; etag=" + versionTokenETag);
 
-            response.addHeader("Link", "<" + firstPage + "> ; rel=\"first\"");
-            if (nextFrom <= nextTo && from < nextFrom && to < nextTo) {
-                response.addHeader("Link", "<" + nextPage + "> ; rel=\"next\"");
+                response.addHeader("Link", "<" + firstPage + "> ; rel=\"first\"");
+                if (nextFrom <= nextTo && from < nextFrom && to < nextTo) {
+                    response.addHeader("Link", "<" + nextPage + "> ; rel=\"next\"");
+                }
+                if (prevFrom <= prevTo && prevFrom < from && prevTo < to) {
+                    response.addHeader("Link", "<" + previousPage + "> ; rel=\"prev\"");
+                }
+                response.addHeader("Link", "<" + lastPage + "> ; rel=\"last\"");
+
+                //Write the paged RDF result to the message body
+                while ((bytesRead = in.read(bytes)) != -1) {
+                    out.write(bytes, 0, bytesRead);
+                }
+            } catch (FileNotFoundException e) {
+                Log.error(API.LOG_MODULE_NAME, "Get catalog content as RDF. Error: " + e.getMessage(), e);
+            } catch (IOException e) {
+                Log.error(API.LOG_MODULE_NAME, "Get catalog content as RDF. Error: " + e.getMessage(), e);
             }
-            if (prevFrom <= prevTo && prevFrom < from && prevTo < to) {
-                response.addHeader("Link", "<" + previousPage + "> ; rel=\"prev\"");
-            }
-            response.addHeader("Link", "<" + lastPage + "> ; rel=\"last\"");
-
-            //Write the paged RDF result to the message body
-            while ((bytesRead = in.read(bytes)) != -1) {
-                out.write(bytes, 0, bytesRead);
-            }
-        } catch (FileNotFoundException e) {
-            Log.error(API.LOG_MODULE_NAME, "Get catalog content as RDF. Error: " + e.getMessage(), e);
-        } catch (IOException e) {
-            Log.error(API.LOG_MODULE_NAME, "Get catalog content as RDF. Error: " + e.getMessage(), e);
         }
     }
 

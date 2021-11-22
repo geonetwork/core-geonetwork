@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -30,29 +30,39 @@ import jeeves.server.context.ServiceContext;
 
 import java.lang.reflect.Constructor;
 
+/**
+ * Handle creation of {@link StatusActions} instances.
+ */
 public class StatusActionsFactory {
 
     Class<StatusActions> statusRules;
 
+    /**
+     * StatusAction implementation configured for creation.
+     */
     private String className;
     private static final String DEFAULT_STATUS_ACTION_CLASS = "org.fao.geonet.kernel.metadata.DefaultStatusActions";
 
     /**
-     * Constructor.
-     *
+     * Setup factory with default StatusActions implementation.
      */
     public StatusActionsFactory() {
         new StatusActionsFactory(DEFAULT_STATUS_ACTION_CLASS);
     }
+
+    /**
+     * Setup factory to use named StatusActions implementation.
+     * @param className StatusActions implementation
+     */
     public StatusActionsFactory(String className) {
         this.className = className;
         try {
             this.statusRules = (Class<StatusActions>) Class.forName(this.className);
         } catch (ClassNotFoundException e) {
-            Log.error(Geonet.DATA_MANAGER, String.format(
+            Log.warning(Geonet.DATA_MANAGER, String.format(
                 "Class name '%s' is not found. You MUST use a valid class name loaded in the classpath. " +
                     "The default status action class is used (ie. %s)",
-                this.className
+                this.className, DEFAULT_STATUS_ACTION_CLASS
             ));
             try {
                 this.statusRules = (Class<StatusActions>) Class.forName(DEFAULT_STATUS_ACTION_CLASS);
@@ -63,7 +73,6 @@ public class StatusActionsFactory {
                 ));
             }
         }
-
     }
 
     /**
@@ -72,10 +81,11 @@ public class StatusActionsFactory {
      * @param context ServiceContext from Jeeves
      */
     public StatusActions createStatusActions(ServiceContext context) throws Exception {
-        Constructor<StatusActions> ct = this.statusRules.getConstructor();
-        StatusActions sa = ct.newInstance();
-        sa.init(context);
-        return sa;
+        Constructor<StatusActions> constructor = this.statusRules.getConstructor();
+        StatusActions statusAction = constructor.newInstance();
+        statusAction.init(context);
+
+        return statusAction;
     }
 
     public String getClassName() {

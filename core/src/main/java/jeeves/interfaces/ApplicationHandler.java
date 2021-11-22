@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -29,12 +29,19 @@ import org.jdom.Element;
 
 //=============================================================================
 
+/**
+ * Used to maintain registry of handlers for {@link jeeves.server.dispatchers.ServiceManager}.
+ */
 public interface ApplicationHandler {
-    public String getContextName();
+    /** Context name for registry lookup */
+    String getContextName();
 
-    public Object start(Element config, ServiceContext s) throws Exception;
+    /** Start application handler, returning application context managed in registry */
 
-    public void stop();
+    Object start(Element config, ServiceContext s) throws Exception;
+
+    /** Stop handler */
+    void stop();
 }
 
 //=============================================================================

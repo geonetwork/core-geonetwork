@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -186,6 +186,15 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
     /**
      * Create a Service context without a user session but otherwise ready to use.
+     *
+     * This method assigns the created service context to the current thread, you are responsible for managing cleanup.
+     * <pre><code>
+     * try {
+     *   context = createServiceContext();
+     * finally {
+     *     context.clearAsThreadLocal();
+     * }
+     * </code></pre>
      */
     protected ServiceContext createServiceContext() throws Exception {
         final HashMap<String, Object> contexts = new HashMap<String, Object>();

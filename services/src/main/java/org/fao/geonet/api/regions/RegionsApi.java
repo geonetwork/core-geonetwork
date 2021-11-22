@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -121,23 +121,25 @@ public class RegionsApi {
         final HttpServletRequest nativeRequest =
             webRequest.getNativeRequest(HttpServletRequest.class);
 
-        ServiceContext context = ApiUtils.createServiceContext(nativeRequest);
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        Collection<RegionsDAO> daos =
-            applicationContext.getBeansOfType(RegionsDAO.class).values();
+        try (ServiceContext context = ApiUtils.createServiceContext(nativeRequest)) {
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
+            Collection<RegionsDAO> daos =
+                applicationContext.getBeansOfType(RegionsDAO.class).values();
 
-        Collection<Region> regions = Lists.newArrayList();
-        for (RegionsDAO dao : daos) {
-            if (dao.includeInListing()) {
-                Request request = createRequest(label, categoryId, maxRecords, context, dao);
-                regions.addAll(request.execute());
+            Collection<Region> regions = Lists.newArrayList();
+            for (RegionsDAO dao : daos) {
+                if (dao.includeInListing()) {
+                    Request request = createRequest(label, categoryId, maxRecords, context, dao);
+                    regions.addAll(request.execute());
+                }
             }
+
+            final HttpServletResponse nativeResponse = webRequest.getNativeResponse(HttpServletResponse.class);
+
+            nativeResponse.setHeader("Cache-Control", "no-cache");
+            return new ListRegionsResponse(regions);
         }
 
-        final HttpServletResponse nativeResponse = webRequest.getNativeResponse(HttpServletResponse.class);
-
-        nativeResponse.setHeader("Cache-Control", "no-cache");
-        return new ListRegionsResponse(regions);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -156,45 +158,45 @@ public class RegionsApi {
     @ResponseBody
     public List<Category> getRegionTypes(
         HttpServletRequest request) throws Exception {
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            String language = languageUtils.getIso3langCode(request.getLocales());
+            Collection<RegionsDAO> daos = ApplicationContextHolder.get().getBeansOfType(RegionsDAO.class).values();
+            List<Category> response = new ArrayList<>();
+            for (RegionsDAO dao : daos) {
+                if (dao instanceof ThesaurusBasedRegionsDAO) {
+                    java.util.List<KeywordBean> keywords =
+                        ((ThesaurusBasedRegionsDAO) dao).getRegionTopConcepts(context);
+                    if (keywords != null) {
+                        for (KeywordBean k : keywords) {
+                            String label = "";
+                            try {
+                                label = k.getPreferredLabel(language);
+                            } catch (LabelNotFoundException ex) {
+                                label = k.getDefaultValue();
+                            }
 
-        String language = languageUtils.getIso3langCode(request.getLocales());
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        Collection<RegionsDAO> daos = ApplicationContextHolder.get().getBeansOfType(RegionsDAO.class).values();
-        List<Category> response = new ArrayList<>();
-        for (RegionsDAO dao : daos) {
-            if (dao instanceof ThesaurusBasedRegionsDAO) {
-                java.util.List<KeywordBean> keywords =
-                    ((ThesaurusBasedRegionsDAO) dao).getRegionTopConcepts(context);
-                if (keywords != null) {
-                    for (KeywordBean k : keywords) {
-                        String label = "";
-                        try {
-                            label = k.getPreferredLabel(language);
-                        } catch (LabelNotFoundException ex) {
-                            label = k.getDefaultValue();
+                            Category c = new Category(
+                                k.getUriCode(),
+                                label
+                            );
+                            response.add(c);
                         }
-
-                        Category c = new Category(
-                            k.getUriCode(),
-                            label
-                        );
-                        response.add(c);
                     }
-                }
-            } else {
-                Collection<String> ids = dao.getRegionCategoryIds(context);
-                if (ids != null) {
-                    for (String id : ids) {
-                        Category c = new Category(
-                            id,
-                            null
-                        );
-                        response.add(c);
+                } else {
+                    Collection<String> ids = dao.getRegionCategoryIds(context);
+                    if (ids != null) {
+                        for (String id : ids) {
+                            Category c = new Category(
+                                id,
+                                null
+                            );
+                            response.add(c);
+                        }
                     }
                 }
             }
+            return response;
         }
-        return response;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -224,42 +226,43 @@ public class RegionsApi {
             NativeWebRequest nativeWebRequest,
         @Parameter(hidden = true)
             HttpServletRequest request) throws Exception {
-        final ServiceContext context = ApiUtils.createServiceContext(request);
-        if (width != null && height != null) {
-            throw new BadParameterEx(
-                WIDTH_PARAM,
-                "Only one of "
-                    + WIDTH_PARAM
-                    + " and "
-                    + HEIGHT_PARAM
-                    + " can be defined currently.  Future versions may support this but it is not supported at the moment");
-        }
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            if (width != null && height != null) {
+                throw new BadParameterEx(
+                    WIDTH_PARAM,
+                    "Only one of "
+                        + WIDTH_PARAM
+                        + " and "
+                        + HEIGHT_PARAM
+                        + " can be defined currently.  Future versions may support this but it is not supported at the moment");
+            }
 
-        if (width == null && height == null) {
-            throw new BadParameterEx(WIDTH_PARAM, "One of " + WIDTH_PARAM + " or " + HEIGHT_PARAM
-                + " parameters must be included in the request");
+            if (width == null && height == null) {
+                throw new BadParameterEx(WIDTH_PARAM, "One of " + WIDTH_PARAM + " or " + HEIGHT_PARAM
+                    + " parameters must be included in the request");
 
-        }
+            }
 
-        String outputFileName = "geom.png";
-        String regionId = null;
+            String outputFileName = "geom.png";
+            String regionId = null;
 
-        if (nativeWebRequest.checkNotModified(geomParam + srs + background)) {
-            return null;
-        }
+            if (nativeWebRequest.checkNotModified(geomParam + srs + background)) {
+                return null;
+            }
 
-        MapRenderer renderer = new MapRenderer(context);
-        BufferedImage image = renderer.render(regionId, srs, width, height, background, geomParam, geomType, geomSrs, null, null);
+            MapRenderer renderer = new MapRenderer(context);
+            BufferedImage image = renderer.render(regionId, srs, width, height, background, geomParam, geomType, geomSrs, null, null);
 
-        if (image == null) return null;
+            if (image == null) return null;
 
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            ImageIO.write(image, "png", out);
-            MultiValueMap<String, String> headers = new HttpHeaders();
-            headers.add("Content-Disposition", "inline; filename=\"" + outputFileName + "\"");
-            headers.add("Cache-Control", "public, max-age: " + TimeUnit.DAYS.toSeconds(5));
-            headers.add("Content-Type", "image/png");
-            return new HttpEntity<>(out.toByteArray(), headers);
+            try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                ImageIO.write(image, "png", out);
+                MultiValueMap<String, String> headers = new HttpHeaders();
+                headers.add("Content-Disposition", "inline; filename=\"" + outputFileName + "\"");
+                headers.add("Cache-Control", "public, max-age: " + TimeUnit.DAYS.toSeconds(5));
+                headers.add("Content-Type", "image/png");
+                return new HttpEntity<>(out.toByteArray(), headers);
+            }
         }
     }
 }

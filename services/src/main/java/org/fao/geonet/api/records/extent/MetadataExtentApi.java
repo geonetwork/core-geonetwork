@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -169,47 +169,49 @@ public class MetadataExtentApi {
             String metadataUuid,
         @Parameter(hidden = true)
             HttpServletRequest request) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
 
-        String schemaId = metadata.getDataInfo().getSchemaId();
-        MetadataSchema schema = schemaManager.getSchema(schemaId);
+            String schemaId = metadata.getDataInfo().getSchemaId();
+            MetadataSchema schema = schemaManager.getSchema(schemaId);
 
-        Element xmlData = metadata.getXmlData(false);
-        List<?> extentList = Xml.selectNodes(
-            xmlData,
-            EXTENT_XPATH, schema.getNamespaces());
+            Element xmlData = metadata.getXmlData(false);
+            List<?> extentList = Xml.selectNodes(
+                xmlData,
+                EXTENT_XPATH, schema.getNamespaces());
 
-        List<ExtentDto> response = new ArrayList<>(extentList.size() + 1);
-        if (!"iso19110".equals(schemaId)) {
-            response.add(new ExtentDto(
-                String.format("%sapi/records/%s/extents.png",
-                    settingManager.getNodeURL(), metadataUuid),
-                "ALL",
-                "",
-                ""));
-        }
-
-        int index = 1;
-
-        for (Object extent : extentList) {
-            if (extent instanceof Element) {
-                Element extentElement = (Element) extent;
-
-                String description =
-                    Xml.selectString(extentElement,
-                        EXTENT_DESCRIPTION_XPATH,
-                        schema.getNamespaces());
-
+            List<ExtentDto> response = new ArrayList<>(extentList.size() + 1);
+            if (!"iso19110".equals(schemaId)) {
                 response.add(new ExtentDto(
-                    String.format("%sapi/records/%s/extents/%d.png",
-                        settingManager.getNodeURL(), metadataUuid, index),
-                    extentElement.getName(),
-                    XPath.getXPath(xmlData, (Element) extent),
-                    description));
-                index ++;
+                    String.format("%sapi/records/%s/extents.png",
+                        settingManager.getNodeURL(), metadataUuid),
+                    "ALL",
+                    "",
+                    ""));
             }
+
+            int index = 1;
+
+            for (Object extent : extentList) {
+                if (extent instanceof Element) {
+                    Element extentElement = (Element) extent;
+
+                    String description =
+                        Xml.selectString(extentElement,
+                            EXTENT_DESCRIPTION_XPATH,
+                            schema.getNamespaces());
+
+                    response.add(new ExtentDto(
+                        String.format("%sapi/records/%s/extents/%d.png",
+                            settingManager.getNodeURL(), metadataUuid, index),
+                        extentElement.getName(),
+                        XPath.getXPath(xmlData, (Element) extent),
+                        description));
+                    index ++;
+                }
+            }
+            return response;
         }
-        return response;
     }
 
 
@@ -253,53 +255,54 @@ public class MetadataExtentApi {
     }
 
     private HttpEntity<byte[]> getExtent(String metadataUuid, String srs, Integer width, Integer height, String background, String fillColor, String strokeColor, Integer extentOrderOfAppearence, NativeWebRequest nativeWebRequest, HttpServletRequest request) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
 
-        if (width != null && height != null) {
-            throw new BadParameterEx(WIDTH_PARAM, WIDTH_AND_HEIGHT_BOTH_DEFINED_MESSAGE);
-        }
+            if (width != null && height != null) {
+                throw new BadParameterEx(WIDTH_PARAM, WIDTH_AND_HEIGHT_BOTH_DEFINED_MESSAGE);
+            }
 
-        if (width == null && height == null) {
-            throw new BadParameterEx(WIDTH_PARAM, WIDTH_AND_HEIGHT_BOTH_MISSING_MESSAGE);
-        }
+            if (width == null && height == null) {
+                throw new BadParameterEx(WIDTH_PARAM, WIDTH_AND_HEIGHT_BOTH_MISSING_MESSAGE);
+            }
 
-        if ((background != null) && (background.startsWith("http")) && (disableFullUrlBackgroundMapServices)) {
-           throw new BadParameterEx(BACKGROUND_PARAM, "Background layers from provided are not supported, " +
-                "use a preconfigured background layers map service.");
-        }
+            if ((background != null) && (background.startsWith("http")) && (disableFullUrlBackgroundMapServices)) {
+                throw new BadParameterEx(BACKGROUND_PARAM, "Background layers from provided are not supported, " +
+                    "use a preconfigured background layers map service.");
+            }
 
-        String regionId;
-        if (extentOrderOfAppearence == null) {
-            regionId = String.format("metadata:@id%s", metadata.getId());
-        } else {
-            regionId = String.format("metadata:@id%s:@xpath(%s)[%d]",
-                metadata.getId(), EXTENT_XPATH, extentOrderOfAppearence);
-        }
+            String regionId;
+            if (extentOrderOfAppearence == null) {
+                regionId = String.format("metadata:@id%s", metadata.getId());
+            } else {
+                regionId = String.format("metadata:@id%s:@xpath(%s)[%d]",
+                    metadata.getId(), EXTENT_XPATH, extentOrderOfAppearence);
+            }
 
-        Request searchRequest = metadataRegionDAO.createSearchRequest(context).id(regionId);
-        if (searchRequest.getLastModified().isPresent() && nativeWebRequest.checkNotModified(searchRequest.getLastModified().get())) {
-            return null;
-        }
+            Request searchRequest = metadataRegionDAO.createSearchRequest(context).id(regionId);
+            if (searchRequest.getLastModified().isPresent() && nativeWebRequest.checkNotModified(searchRequest.getLastModified().get())) {
+                return null;
+            }
 
-        MapRenderer renderer = new MapRenderer(context);
-        BufferedImage image = renderer.render(
-            regionId, srs, width, height, background,
-            null, null, null,
-            fillColor,
-            strokeColor);
+            MapRenderer renderer = new MapRenderer(context);
+            BufferedImage image = renderer.render(
+                regionId, srs, width, height, background,
+                null, null, null,
+                fillColor,
+                strokeColor);
 
-        if (image == null) {
-            return null;
-        }
+            if (image == null) {
+                return null;
+            }
 
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            ImageIO.write(image, "png", out);
-            MultiValueMap<String, String> headers = new HttpHeaders();
-            headers.add("Content-Disposition", String.format("inline; filename=\"%s-extent.png\"", metadataUuid));
-            headers.add("Cache-Control", "no-cache");
-            headers.add("Content-Type", "image/png");
-            return new HttpEntity<>(out.toByteArray(), headers);
+            try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                ImageIO.write(image, "png", out);
+                MultiValueMap<String, String> headers = new HttpHeaders();
+                headers.add("Content-Disposition", String.format("inline; filename=\"%s-extent.png\"", metadataUuid));
+                headers.add("Cache-Control", "no-cache");
+                headers.add("Content-Type", "image/png");
+                return new HttpEntity<>(out.toByteArray(), headers);
+            }
         }
     }
 }

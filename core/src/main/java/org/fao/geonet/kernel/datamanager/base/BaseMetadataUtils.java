@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -68,7 +68,11 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Autowired
     private MetadataRepository metadataRepository;
 
-    // FIXME Remove when get rid of Jeeves
+    /**
+     * Shared application handler service context.
+     *
+     * Used by {@link #getServiceContext()} if current service context unavailable.
+     */
     private ServiceContext servContext;
     @Autowired
     protected IMetadataSchemaUtils metadataSchemaUtils;
@@ -103,8 +107,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
         this.metadataManager = metadataManager;
     }
 
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        servContext = context;
+    public void init(ServiceContext appHandlerContext) throws Exception {
+        servContext = appHandlerContext;
         stylePath = dataDirectory.resolveWebResource(Geonet.Path.STYLESHEETS);
     }
 
@@ -116,6 +120,10 @@ public class BaseMetadataUtils implements IMetadataUtils {
         this.metadataIndexer.setMetadataUtils(this);
     }
 
+    @Override
+    public void destroy() throws Exception {
+        servContext = null;
+    }
     /**
      * @param id
      * @return

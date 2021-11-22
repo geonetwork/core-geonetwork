@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -161,9 +161,8 @@ public class ValidateApi {
 
         SimpleMetadataProcessingReport report =
             new SimpleMetadataProcessingReport();
-        try {
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
             ApplicationContext applicationContext = ApplicationContextHolder.get();
-            ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
             report.setTotalRecords(records.size());
@@ -255,9 +254,7 @@ public class ValidateApi {
 
         SimpleMetadataProcessingReport report =
             new SimpleMetadataProcessingReport();
-        try {
-            ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
 
             for (String uuid : records) {

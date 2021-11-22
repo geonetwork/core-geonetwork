@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -92,8 +92,11 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
         }
     }
 
+    /** Import records for integration test */
     public static class ImportMetadata {
         private final AbstractCoreIntegrationTest testClass;
+
+        /** Integration test context */
         private ServiceContext context;
         private List<String> metadataIds = new ArrayList<>();
         private List<String> mefFilesToLoad = new ArrayList<>();

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -151,31 +151,33 @@ public class MetadataApi {
         HttpServletRequest request
     )
         throws Exception {
-        try {
-            ApiUtils.canViewRecord(metadataUuid, request);
-        } catch (SecurityException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
-        }
-        List<String> accept = Arrays.asList(acceptHeader.split(","));
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            try {
+                ApiUtils.canViewRecord(metadataUuid, context);
+            } catch (SecurityException e) {
+                Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+            }
+            List<String> accept = Arrays.asList(acceptHeader.split(","));
 
-        String defaultFormatter = "xsl-view";
-        if (accept.contains(MediaType.TEXT_HTML_VALUE)
-            || accept.contains(MediaType.APPLICATION_XHTML_XML_VALUE)
-            || accept.contains("application/pdf")) {
-            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
-        } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)
-            || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
-            return "forward:" + (metadataUuid + "/formatters/xml");
-        } else if (accept.contains("application/zip")
-            || accept.contains(MEF_V1_ACCEPT_TYPE)
-            || accept.contains(MEF_V2_ACCEPT_TYPE)) {
-            return "forward:" + (metadataUuid + "/formatters/zip");
-        } else {
-            // FIXME this else is never reached because any of the accepted medias match one of the previous if conditions.
-            response.setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_XHTML_XML_VALUE);
-            //response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
-            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
+            String defaultFormatter = "xsl-view";
+            if (accept.contains(MediaType.TEXT_HTML_VALUE)
+                || accept.contains(MediaType.APPLICATION_XHTML_XML_VALUE)
+                || accept.contains("application/pdf")) {
+                return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
+            } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)
+                || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
+                return "forward:" + (metadataUuid + "/formatters/xml");
+            } else if (accept.contains("application/zip")
+                || accept.contains(MEF_V1_ACCEPT_TYPE)
+                || accept.contains(MEF_V2_ACCEPT_TYPE)) {
+                return "forward:" + (metadataUuid + "/formatters/zip");
+            } else {
+                // FIXME this else is never reached because any of the accepted medias match one of the previous if conditions.
+                response.setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_XHTML_XML_VALUE);
+                //response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
+                return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
+            }
         }
     }
 
@@ -234,75 +236,76 @@ public class MetadataApi {
         HttpServletRequest request
     )
         throws Exception {
-        AbstractMetadata metadata;
-        try {
-            metadata = ApiUtils.canViewRecord(metadataUuid, request);
-        } catch (ResourceNotFoundException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw e;
-        } catch (Exception e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
-        }
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        try {
-            Lib.resource.checkPrivilege(context,
-                String.valueOf(metadata.getId()),
-                ReservedOperation.view);
-        } catch (Exception e) {
-            // TODO: i18n
-            // TODO: Report exception in JSON format
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata;
+            try {
+                metadata = ApiUtils.canViewRecord(metadataUuid, context);
+            } catch (ResourceNotFoundException e) {
+                Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                throw e;
+            } catch (Exception e) {
+                Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+            }
+            try {
+                Lib.resource.checkPrivilege(context,
+                    String.valueOf(metadata.getId()),
+                    ReservedOperation.view);
+            } catch (Exception e) {
+                // TODO: i18n
+                // TODO: Report exception in JSON format
+                Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
 
-        }
+            }
 
-        if (increasePopularity) {
-            dataManager.increasePopularity(context, metadata.getId() + "");
-        }
+            if (increasePopularity) {
+                dataManager.increasePopularity(context, metadata.getId() + "");
+            }
 
 
-        boolean withValidationErrors = false, keepXlinkAttributes = false, forEditing = false;
+            boolean withValidationErrors = false, keepXlinkAttributes = false, forEditing = false;
 
-        String mdId = String.valueOf(metadata.getId());
+            String mdId = String.valueOf(metadata.getId());
 
-        //Here we just care if we need the approved version explicitly.
-        //ApiUtils.canViewRecord already filtered draft for non editors.
-        if (approved) {
-            mdId = String.valueOf(metadataRepository.findOneByUuid(metadata.getUuid()).getId());
-        }
+            //Here we just care if we need the approved version explicitly.
+            //ApiUtils.canViewRecord already filtered draft for non editors.
+            if (approved) {
+                mdId = String.valueOf(metadataRepository.findOneByUuid(metadata.getUuid()).getId());
+            }
 
-        Element xml = withInfo ?
-            dataManager.getMetadata(context, mdId, forEditing,
-                withValidationErrors, keepXlinkAttributes) :
-            dataManager.getMetadataNoInfo(context, mdId + "");
+            Element xml = withInfo ?
+                dataManager.getMetadata(context, mdId, forEditing,
+                    withValidationErrors, keepXlinkAttributes) :
+                dataManager.getMetadataNoInfo(context, mdId + "");
 
-        if (addSchemaLocation) {
-            Attribute schemaLocAtt = _schemaManager.getSchemaLocation(
-                metadata.getDataInfo().getSchemaId(), context);
+            if (addSchemaLocation) {
+                Attribute schemaLocAtt = _schemaManager.getSchemaLocation(
+                    metadata.getDataInfo().getSchemaId(), context);
 
-            if (schemaLocAtt != null) {
-                if (xml.getAttribute(
-                    schemaLocAtt.getName(),
-                    schemaLocAtt.getNamespace()) == null) {
-                    xml.setAttribute(schemaLocAtt);
-                    // make sure namespace declaration for schemalocation is present -
-                    // remove it first (does nothing if not there) then add it
-                    xml.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
-                    xml.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+                if (schemaLocAtt != null) {
+                    if (xml.getAttribute(
+                        schemaLocAtt.getName(),
+                        schemaLocAtt.getNamespace()) == null) {
+                        xml.setAttribute(schemaLocAtt);
+                        // make sure namespace declaration for schemalocation is present -
+                        // remove it first (does nothing if not there) then add it
+                        xml.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
+                        xml.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+                    }
                 }
             }
+
+            boolean isJson = acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE);
+
+            String mode = (attachment) ? "attachment" : "inline";
+            response.setHeader("Content-Disposition", String.format(
+                mode + "; filename=\"%s.%s\"",
+                metadata.getUuid(),
+                isJson ? "json" : "xml"
+            ));
+            return isJson ? Xml.getJSON(xml) : xml;
         }
-
-        boolean isJson = acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE);
-
-        String mode = (attachment) ? "attachment" : "inline";
-        response.setHeader("Content-Disposition", String.format(
-            mode + "; filename=\"%s.%s\"",
-            metadata.getUuid(),
-            isJson ? "json" : "xml"
-        ));
-        return isJson ? Xml.getJSON(xml) : xml;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -377,68 +380,69 @@ public class MetadataApi {
         HttpServletRequest request
     )
         throws Exception {
-        AbstractMetadata metadata;
-        try {
-            metadata = ApiUtils.canViewRecord(metadataUuid, request);
-        } catch (SecurityException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
-        }
-        Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.SCHEMAS);
-        Path file = null;
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        MEFLib.Version version = MEFLib.Version.find(acceptHeader);
-        if (version == MEFLib.Version.V1) {
-            // This parameter is deprecated in v2.
-            boolean skipUUID = false;
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata;
+            try {
+                metadata = ApiUtils.canViewRecord(metadataUuid, context);
+            } catch (SecurityException e) {
+                Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+            }
+            Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.SCHEMAS);
+            Path file = null;
+            MEFLib.Version version = MEFLib.Version.find(acceptHeader);
+            if (version == MEFLib.Version.V1) {
+                // This parameter is deprecated in v2.
+                boolean skipUUID = false;
 
-            Integer id = -1;
+                Integer id = -1;
 
-            if (approved) {
-                id = metadataRepository.findOneByUuid(metadataUuid).getId();
+                if (approved) {
+                    id = metadataRepository.findOneByUuid(metadataUuid).getId();
+                } else {
+                    id = metadataUtils.findOneByUuid(metadataUuid).getId();
+                }
+
+                file = MEFLib.doExport(
+                    context, id, format.toString(),
+                    skipUUID, withXLinksResolved, withXLinkAttribute, addSchemaLocation
+                );
+                response.setContentType(MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE);
             } else {
-                id = metadataUtils.findOneByUuid(metadataUuid).getId();
-            }
+                Set<String> tmpUuid = new HashSet<String>();
+                tmpUuid.add(metadataUuid);
+                // MEF version 2 support multiple metadata record by file.
+                if (withRelated) {
+                    // Adding children in MEF file
 
-            file = MEFLib.doExport(
-                context, id, format.toString(),
-                skipUUID, withXLinksResolved, withXLinkAttribute, addSchemaLocation
-            );
-            response.setContentType(MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE);
-        } else {
-            Set<String> tmpUuid = new HashSet<String>();
-            tmpUuid.add(metadataUuid);
-            // MEF version 2 support multiple metadata record by file.
-            if (withRelated) {
-                // Adding children in MEF file
+                    // Get children to export - It could be better to use GetRelated service TODO
+                    Set<String> childs = MetadataUtils.getUuidsToExport(
+                        String.format("+%s:%s", Geonet.IndexFieldNames.PARENTUUID, metadataUuid));
+                    if (childs.size() != 0) {
+                        tmpUuid.addAll(childs);
+                    }
 
-                // Get children to export - It could be better to use GetRelated service TODO
-                Set<String> childs = MetadataUtils.getUuidsToExport(
-                    String.format("+%s:%s", Geonet.IndexFieldNames.PARENTUUID, metadataUuid));
-                if (childs.size() != 0) {
-                    tmpUuid.addAll(childs);
+                    // Get linked services for export
+                    Set<String> services = MetadataUtils.getUuidsToExport(
+                        String.format("+%s:%s", Geonet.IndexFieldNames.RECORDOPERATESON, metadataUuid));
+                    if (services.size() != 0) {
+                        tmpUuid.addAll(services);
+                    }
                 }
+                Log.info(Geonet.MEF, "Building MEF2 file with " + tmpUuid.size()
+                    + " records.");
 
-                // Get linked services for export
-                Set<String> services = MetadataUtils.getUuidsToExport(
-                    String.format("+%s:%s", Geonet.IndexFieldNames.RECORDOPERATESON, metadataUuid));
-                if (services.size() != 0) {
-                    tmpUuid.addAll(services);
-                }
+                file = MEFLib.doMEF2Export(context, tmpUuid, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved);
+
+                response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
             }
-            Log.info(Geonet.MEF, "Building MEF2 file with " + tmpUuid.size()
-                + " records.");
-
-            file = MEFLib.doMEF2Export(context, tmpUuid, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved);
-
-            response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
+            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format(
+                "inline; filename=\"%s.zip\"",
+                metadata.getUuid()
+            ));
+            response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(file)));
+            FileUtils.copyFile(file.toFile(), response.getOutputStream());
         }
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format(
-            "inline; filename=\"%s.zip\"",
-            metadata.getUuid()
-        ));
-        response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(file)));
-        FileUtils.copyFile(file.toFile(), response.getOutputStream());
     }
 
 
@@ -463,19 +467,20 @@ public class MetadataApi {
         HttpServletRequest request
     )
         throws Exception {
-        AbstractMetadata metadata;
-        try {
-            metadata = ApiUtils.canViewRecord(metadataUuid, request);
-        } catch (ResourceNotFoundException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw e;
-        } catch (Exception e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
-        }
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata metadata;
+            try {
+                metadata = ApiUtils.canViewRecord(metadataUuid, context);
+            } catch (ResourceNotFoundException e) {
+                Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                throw e;
+            } catch (Exception e) {
+                Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+            }
 
-        dataManager.increasePopularity(context, metadata.getId() + "");
+            dataManager.increasePopularity(context, metadata.getId() + "");
+        }
     }
 
 
@@ -517,31 +522,33 @@ public class MetadataApi {
             int rows,
         HttpServletRequest request) throws Exception {
 
-        AbstractMetadata md;
-        try {
-            md = ApiUtils.canViewRecord(metadataUuid, request);
-        } catch (SecurityException e) {
-            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
-            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            AbstractMetadata md;
+            try {
+                md = ApiUtils.canViewRecord(metadataUuid, context);
+            } catch (SecurityException e) {
+                Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+                throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+            }
+
+            String language = languageUtils.getIso3langCode(request.getLocales());
+
+            // TODO PERF: ByPass XSL processing and create response directly
+            // At least for related metadata and keep XSL only for links
+            Element raw = new Element("root").addContent(Arrays.asList(
+                new Element("gui").addContent(Arrays.asList(
+                    new Element("language").setText(language),
+                    new Element("url").setText(context.getBaseUrl())
+                )),
+                MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows, true)
+            ));
+            Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
+
+            final Element transform = Xml.transform(raw, relatedXsl);
+            RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
+            return response;
+
         }
-
-        String language = languageUtils.getIso3langCode(request.getLocales());
-
-        // TODO PERF: ByPass XSL processing and create response directly
-        // At least for related metadata and keep XSL only for links
-        final ServiceContext context = ApiUtils.createServiceContext(request);
-        Element raw = new Element("root").addContent(Arrays.asList(
-            new Element("gui").addContent(Arrays.asList(
-                new Element("language").setText(language),
-                new Element("url").setText(context.getBaseUrl())
-            )),
-            MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows, true)
-        ));
-        Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
-
-        final Element transform = Xml.transform(raw, relatedXsl);
-        RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
-        return response;
     }
 
     @io.swagger.v3.oas.annotations.Operation(

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -63,123 +63,123 @@ public class ExtractServicesLayers {
         final NativeWebRequest webRequest) throws Exception {
 
         final ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
-        ServiceContext context = serviceManager.createServiceContext("selection.layers", lang, webRequest.getNativeRequest(HttpServletRequest.class));
 
-        DataManager dm = context.getBean(DataManager.class);
-        UserSession us = context.getUserSession();
-        SelectionManager sm = SelectionManager.getManager(us);
+        try (ServiceContext context = serviceManager.createServiceContext("selection.layers", lang, webRequest.getNativeRequest(HttpServletRequest.class))) {
+            DataManager dm = context.getBean(DataManager.class);
+            UserSession us = context.getUserSession();
+            SelectionManager sm = SelectionManager.getManager(us);
 
-        JSONObject ret = new JSONObject();
-        JSONArray services = new JSONArray();
-        JSONArray layers = new JSONArray();
+            JSONObject ret = new JSONObject();
+            JSONArray services = new JSONArray();
+            JSONArray layers = new JSONArray();
 
-        ArrayList<String> lst = new ArrayList<String>();
+            ArrayList<String> lst = new ArrayList<String>();
 
-        // case #1 : #id parameter is undefined
-        if (paramId == null) {
-            synchronized (sm.getSelection("metadata")) {
-                for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext(); ) {
-                    String uuid = iter.next();
-                    String id = dm.getMetadataId(uuid);
-                    lst.add(id);
+            // case #1 : #id parameter is undefined
+            if (paramId == null) {
+                synchronized (sm.getSelection("metadata")) {
+                    for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext(); ) {
+                        String uuid = iter.next();
+                        String id = dm.getMetadataId(uuid);
+                        lst.add(id);
+                    }
                 }
+            } else { // case #2 : id parameter has been passed
+                lst.add(paramId);
             }
-        } else { // case #2 : id parameter has been passed
-            lst.add(paramId);
+
+            for (Iterator<String> iter = lst.iterator(); iter.hasNext(); ) {
+                String id = iter.next();
+                String uuid = dm.getMetadataUuid(id);
+
+                Element curMd = dm.getMetadata(context, id, false, false, false);
+
+                XPath xpath = XPath.newInstance("gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine");
+
+                List<Element> elems;
+
+                try {
+                    @SuppressWarnings("unchecked")
+                    List<Element> tmp = xpath.selectNodes(curMd);
+                    elems = tmp;
+                } catch (Exception e) {
+                    // Bad XML input ?
+                    continue;
+                }
+
+                for (Element curnode : elems) {
+                    XPath pLinkage = XPath.newInstance("gmd:CI_OnlineResource/gmd:linkage/gmd:URL");
+                    XPath pProtocol = XPath.newInstance("gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString");
+                    XPath pName = XPath.newInstance("gmd:CI_OnlineResource/gmd:name/gco:CharacterString");
+                    XPath pDescription = XPath.newInstance("gmd:CI_OnlineResource/gmd:description/gco:CharacterString");
+
+                    Element eLinkage = (Element) pLinkage.selectSingleNode(curnode);
+                    Element eProtocol = (Element) pProtocol.selectSingleNode(curnode);
+                    Element eName = (Element) pName.selectSingleNode(curnode);
+                    Element eDescription = (Element) pDescription.selectSingleNode(curnode);
+
+                    if (eLinkage == null) {
+                        continue;
+                    }
+                    if (eProtocol == null) {
+                        continue;
+                    }
+                    if (eName == null) {
+                        continue;
+                    }
+
+                    String sLinkage = eLinkage.getValue();
+                    String sProtocol = eProtocol.getValue();
+                    String sName = eName.getValue();
+                    String sDescription = eDescription != null ? eDescription.getValue() : "";
+
+                    if ((sLinkage == null) || (sLinkage.equals(""))) {
+                        continue;
+                    }
+                    if ((sProtocol == null) || (sProtocol.equals(""))) {
+                        continue;
+                    }
+
+                    String sProto2 = "WMS"; // by default
+
+                    if (sProtocol.contains("OGC:WMS")) {
+                        sProto2 = "WMS";
+                    } else if (sProtocol.contains("OGC:WFS")) {
+                        sProto2 = "WFS";
+                    } else if (sProtocol.contains("OGC:WCS")) {
+                        sProto2 = "WMS";
+                    } else {
+                        continue;
+                    }
+
+                    // If no name, we are on a service
+                    if ((sName == null) || (sName.equals(""))) {
+                        JSONObject serviceObj = new JSONObject();
+                        serviceObj.put("owsurl", sLinkage);
+                        serviceObj.put("owstype", sProto2);
+                        serviceObj.put("text", sDescription);
+                        serviceObj.put("mdid", id);
+                        serviceObj.put("muuid", uuid);
+                        services.add(serviceObj);
+                    }
+                    // else it is a Layer
+                    else {
+                        JSONObject layerObj = new JSONObject();
+                        layerObj.put("owsurl", sLinkage);
+                        layerObj.put("owstype", sProto2);
+                        layerObj.put("layername", sName);
+                        layerObj.put("title", sDescription);
+                        layerObj.put("mdid", id);
+                        layerObj.put("muuid", uuid);
+                        layers.add(layerObj);
+                    }
+                } // for
+            } // iterates
+
+            ret.put("layers", layers);
+            ret.put("services", services);
+
+            return ret;
         }
-
-        for (Iterator<String> iter = lst.iterator(); iter.hasNext(); ) {
-            String id = iter.next();
-            String uuid = dm.getMetadataUuid(id);
-
-            Element curMd = dm.getMetadata(context, id, false, false, false);
-
-            XPath xpath = XPath.newInstance("gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine");
-
-            List<Element> elems;
-
-            try {
-                @SuppressWarnings("unchecked")
-                List<Element> tmp = xpath.selectNodes(curMd);
-                elems = tmp;
-            } catch (Exception e) {
-                // Bad XML input ?
-                continue;
-            }
-
-            for (Element curnode : elems) {
-                XPath pLinkage = XPath.newInstance("gmd:CI_OnlineResource/gmd:linkage/gmd:URL");
-                XPath pProtocol = XPath.newInstance("gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString");
-                XPath pName = XPath.newInstance("gmd:CI_OnlineResource/gmd:name/gco:CharacterString");
-                XPath pDescription = XPath.newInstance("gmd:CI_OnlineResource/gmd:description/gco:CharacterString");
-
-                Element eLinkage = (Element) pLinkage.selectSingleNode(curnode);
-                Element eProtocol = (Element) pProtocol.selectSingleNode(curnode);
-                Element eName = (Element) pName.selectSingleNode(curnode);
-                Element eDescription = (Element) pDescription.selectSingleNode(curnode);
-
-                if (eLinkage == null) {
-                    continue;
-                }
-                if (eProtocol == null) {
-                    continue;
-                }
-                if (eName == null) {
-                    continue;
-                }
-
-                String sLinkage = eLinkage.getValue();
-                String sProtocol = eProtocol.getValue();
-                String sName = eName.getValue();
-                String sDescription = eDescription != null ? eDescription.getValue() : "";
-
-                if ((sLinkage == null) || (sLinkage.equals(""))) {
-                    continue;
-                }
-                if ((sProtocol == null) || (sProtocol.equals(""))) {
-                    continue;
-                }
-
-                String sProto2 = "WMS"; // by default
-
-                if (sProtocol.contains("OGC:WMS")) {
-                    sProto2 = "WMS";
-                } else if (sProtocol.contains("OGC:WFS")) {
-                    sProto2 = "WFS";
-                } else if (sProtocol.contains("OGC:WCS")) {
-                    sProto2 = "WMS";
-                } else {
-                    continue;
-                }
-
-                // If no name, we are on a service
-                if ((sName == null) || (sName.equals(""))) {
-                    JSONObject serviceObj = new JSONObject();
-                    serviceObj.put("owsurl", sLinkage);
-                    serviceObj.put("owstype", sProto2);
-                    serviceObj.put("text", sDescription);
-                    serviceObj.put("mdid", id);
-                    serviceObj.put("muuid", uuid);
-                    services.add(serviceObj);
-                }
-                // else it is a Layer
-                else {
-                    JSONObject layerObj = new JSONObject();
-                    layerObj.put("owsurl", sLinkage);
-                    layerObj.put("owstype", sProto2);
-                    layerObj.put("layername", sName);
-                    layerObj.put("title", sDescription);
-                    layerObj.put("mdid", id);
-                    layerObj.put("muuid", uuid);
-                    layers.add(layerObj);
-                }
-            } // for
-        } // iterates
-
-        ret.put("layers", layers);
-        ret.put("services", services);
-
-        return ret;
-
     }
 }

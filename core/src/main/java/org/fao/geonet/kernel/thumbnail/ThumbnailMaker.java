@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2014 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -110,6 +110,11 @@ public class ThumbnailMaker {
         return result;
     }
 
+    /**
+     * Setup for use based on service context configuration.
+     *
+     * @param context AppService context used to look up configuration details
+     */
     public void init(ServiceContext context) {
         configFilePath = context.getAppPath() + File.separator + CONFIG_FILE;
         initMapPrinter();

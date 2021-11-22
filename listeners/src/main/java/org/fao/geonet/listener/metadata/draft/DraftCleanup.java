@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -25,6 +25,8 @@ package org.fao.geonet.listener.metadata.draft;
 
 import java.util.List;
 
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.events.md.MetadataRemove;
@@ -55,12 +57,15 @@ public class DraftCleanup {
     @Autowired
     private DraftUtilities draftUtilities;
 
+    @Autowired
+    ServiceManager serviceManager;
+
     @TransactionalEventListener
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void doAfterCommit(MetadataRemove event) {
         Log.trace(Geonet.DATA_MANAGER,
             "A metadata has been removed. Cleanup associated drafts of " + event.getSource());
-        try {
+        try (ServiceContext context = serviceManager.createServiceContext("draft_cleanup", -1)) {
             List<MetadataDraft> toRemove = metadataDraftRepository
                 .findAll((Specification<MetadataDraft>) MetadataSpecs.hasMetadataUuid(event.getMd().getUuid()));
 

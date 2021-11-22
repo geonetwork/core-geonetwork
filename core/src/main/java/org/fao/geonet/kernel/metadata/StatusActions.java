@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -31,12 +31,32 @@ import java.util.Set;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
 
+/**
+ * Facade performing actions with record status.
+ */
 public interface StatusActions {
 
-    public void init(ServiceContext context) throws Exception;
+    /**
+     * Setup using provided externally managed service context.
+     *
+     * @param context Externally managed service context.
+     */
+    void init(ServiceContext context) throws Exception;
 
-    public void onEdit(int id, boolean minorEdit) throws Exception;
+    /**
+     * Called when a record is edited to set/reset status.
+     *
+     * @param id        The metadata id that has been edited.
+     * @param minorEdit If true then the edit was a minor edit.
+     */
+    void onEdit(int id, boolean minorEdit) throws Exception;
 
-    public Set<Integer> onStatusChange(List<MetadataStatus> status) throws Exception;
+    /**
+     * Called when a record status is added.
+     *
+     * @param statusList List of status to update
+     * @return Ids of unchanged metadata records
+     */
+    Set<Integer> onStatusChange(List<MetadataStatus> statusList) throws Exception;
 
 }

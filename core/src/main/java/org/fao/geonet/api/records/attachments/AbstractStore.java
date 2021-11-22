@@ -1,27 +1,26 @@
-/*
- * =============================================================================
- * ===	Copyright (C) 2019 Food and Agriculture Organization of the
- * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
- * ===	and United Nations Environment Programme (UNEP)
- * ===
- * ===	This program is free software; you can redistribute it and/or modify
- * ===	it under the terms of the GNU General Public License as published by
- * ===	the Free Software Foundation; either version 2 of the License, or (at
- * ===	your option) any later version.
- * ===
- * ===	This program is distributed in the hope that it will be useful, but
- * ===	WITHOUT ANY WARRANTY; without even the implied warranty of
- * ===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * ===	General Public License for more details.
- * ===
- * ===	You should have received a copy of the GNU General Public License
- * ===	along with this program; if not, write to the Free Software
- * ===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
- * ===
- * ===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
- * ===	Rome - Italy. email: geonetwork@osgeo.org
- * ==============================================================================
- */
+///=============================================================================
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.api.records.attachments;
 
 import jeeves.server.context.ServiceContext;
@@ -125,23 +124,34 @@ public abstract class AbstractStore implements Store {
         boolean canEdit = getAccessManager(context).canEdit(context, String.valueOf(metadataId));
         if ((visibility == null && !canEdit) || (visibility == MetadataResourceVisibility.PRIVATE && !canEdit)) {
             throw new SecurityException(String.format("User '%s' does not have privileges to access '%s' resources for metadata '%s'.",
-                                                      context.getUserSession() != null ?
-                                                              context.getUserSession().getUsername() + "/" + context.getUserSession()
-                                                                      .getProfile() :
-                                                              "anonymous", visibility == null ? "any" : visibility, metadataUuid));
+                context.userName(), visibility == null ? "any" : visibility, metadataUuid));
         }
         return metadataId;
     }
 
+    /**
+     *
+     * @param context Service context used to determine user
+     * @param metadataUuid UUID of metadata record to check
+     * @param visibility resource visibility
+     * @param approved
+     * @return The metadata id used to access resources, obtained and approved from provided metadataUuid
+     * @throws Exception A security exception if the content is not allowed to access these resources
+     */
     protected int canDownload(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, Boolean approved)
             throws Exception {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
         if (visibility == MetadataResourceVisibility.PRIVATE) {
-            boolean canDownload = getAccessManager(context).canDownload(context, String.valueOf(metadataId));
-            if (!canDownload) {
-                throw new SecurityException(String.format(
+            if(context instanceof ServiceContext.AppHandlerServiceContext) {
+                // internal access granted
+            }
+            else {
+                boolean canDownload = getAccessManager(context).canDownload(context, String.valueOf(metadataId));
+                if (!canDownload) {
+                    throw new SecurityException(String.format(
                         "Current user can't download resources for metadata '%s' and as such can't access the requested resource.",
                         metadataUuid));
+                }
             }
         }
         return metadataId;

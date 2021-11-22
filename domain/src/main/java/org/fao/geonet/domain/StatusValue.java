@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -238,5 +238,14 @@ public class StatusValue extends Localized {
         public static final String RECORDDELETED = "61";
         public static final String RECORDIMPORTED = "62";
         public static final String RECORDRESTORED = "63";
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("StatusValue{");
+        sb.append("_id=").append(_id);
+        sb.append(", _name='").append(_name).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

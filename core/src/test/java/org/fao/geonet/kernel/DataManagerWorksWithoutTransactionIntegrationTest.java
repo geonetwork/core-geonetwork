@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -51,25 +51,36 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractD
             (new TestTask() {
                 @Override
                 public void run() throws Exception {
+                    ServiceContext restore = ServiceContext.get();
+                    if( restore != null ){
+                        restore.clearAsThreadLocal();
+                    }
+
                     ServiceContext serviceContext = createContextAndLogAsAdmin();
+                    try {
+                        String metadataCategory = metadataCategoryRepository.findAll().get(0).getName();
+                        Element sampleMetadataXml = getSampleMetadataXml();
+                        UserSession userSession = serviceContext.getUserSession();
+                        int userIdAsInt = userSession.getUserIdAsInt();
+                        String schema = dataManager.autodetectSchema(sampleMetadataXml);
+                        String mdId = dataManager.insertMetadata(serviceContext, schema, sampleMetadataXml,
+                            UUID.randomUUID().toString(), userIdAsInt, "2", "source",
+                            MetadataType.METADATA.codeString, null, metadataCategory, new ISODate().getDateAndTime(),
+                            new ISODate().getDateAndTime(), false, false);
+                        Element newMd = new Element(sampleMetadataXml.getName(), sampleMetadataXml.getNamespace()).addContent(new Element("fileIdentifier",
+                            GMD).addContent(new Element("CharacterString", GCO)));
 
-                    String metadataCategory = metadataCategoryRepository.findAll().get(0).getName();
-                    Element sampleMetadataXml = getSampleMetadataXml();
-                    UserSession userSession = serviceContext.getUserSession();
-                    int userIdAsInt = userSession.getUserIdAsInt();
-                    String schema = dataManager.autodetectSchema(sampleMetadataXml);
-                    String mdId = dataManager.insertMetadata(serviceContext, schema, sampleMetadataXml,
-                        UUID.randomUUID().toString(), userIdAsInt, "2", "source",
-                        MetadataType.METADATA.codeString, null, metadataCategory, new ISODate().getDateAndTime(),
-                        new ISODate().getDateAndTime(), false, false);
-                    Element newMd = new Element(sampleMetadataXml.getName(), sampleMetadataXml.getNamespace()).addContent(new Element("fileIdentifier",
-                        GMD).addContent(new Element("CharacterString", GCO)));
-
-                    AbstractMetadata updateMd = dataManager.updateMetadata(serviceContext, mdId, newMd, false, false, false, "eng",
-                        new ISODate().getDateAndTime(), false);
-                    assertNotNull(updateMd);
-                    boolean hasNext = updateMd.getCategories().iterator().hasNext();
-                    assertTrue(hasNext);
+                        AbstractMetadata updateMd = dataManager.updateMetadata(serviceContext, mdId, newMd, false, false, false, "eng",
+                            new ISODate().getDateAndTime(), false);
+                        assertNotNull(updateMd);
+                        boolean hasNext = updateMd.getCategories().iterator().hasNext();
+                        assertTrue(hasNext);
+                    } finally {
+                        serviceContext.clearAsThreadLocal();
+                        if( restore != null ){
+                            restore.setAsThreadLocal();
+                        }
+                    }
                 }
             });
     }

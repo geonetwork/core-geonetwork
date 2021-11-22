@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -106,26 +106,37 @@ public interface HarvestManager {
     boolean update(Element node, String ownerId) throws BadInputEx, SQLException, SchedulerException;
 
     /**
-     * Remove all metadata associated to one harvester
+     * Removes all the metadata associated with one harvester.
      *
      * @param id of the harvester
+     * @return {@link Common.OperResult#OK} indicating removal of associated metadata.
+     * @throws Exception
      */
     Common.OperResult clearBatch(String id) throws Exception;
 
+    /**
+     * Remove the harvester, including deleting harvester history.
+     *
+     * @param id harvester id
+     * @return {@link Common.OperResult#OK} if remove succeeded, or {@link Common.OperResult#NOT_FOUND} if not available
+     * @throws Exception
+     */
     Common.OperResult remove(String id) throws Exception;
 
     /**
      * Set harvester status to {@link org.fao.geonet.kernel.harvest.Common.Status#ACTIVE} and
      * schedule the harvester to be ran at the next time according to the harvesters schedule.
      *
-     * @return return {@link org.fao.geonet.kernel.harvest.Common.OperResult#ALREADY_ACTIVE} if the
-     * harvester is already active or {@link org.fao.geonet.kernel.harvest.Common.OperResult#OK}
+     * @param id harvester id
+     * @return {@link Common.OperResult#ALREADY_ACTIVE} if the
+     * harvester is already active or {@link Common.OperResult#OK}
      */
     Common.OperResult start(String id) throws SQLException, SchedulerException;
 
     /**
      * Set the harvester status to the provided status and unschedule any scheduled jobs.
      *
+     * @param id harvester id
      * @return {@link org.fao.geonet.kernel.harvest.Common.OperResult#ALREADY_INACTIVE} if the not
      * currently enabled or {@link org.fao.geonet.kernel.harvest.Common.OperResult#OK}
      */

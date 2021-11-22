@@ -1,5 +1,5 @@
 //=============================================================================
-//===   Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===   Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===   United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===   and United Nations Environment Programme (UNEP)
 //===
@@ -289,63 +289,64 @@ public class LinksApi {
         @Parameter(hidden = true)
             HttpServletRequest request
     ) throws IOException, JDOMException {
-        MAnalyseProcess registredMAnalyseProcess = getRegistredMAnalyseProcess();
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
+            MAnalyseProcess registredMAnalyseProcess = getRegistredMAnalyseProcess();
 
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-        UserSession session = ApiUtils.getUserSession(httpSession);
+            UserSession session = ApiUtils.getUserSession(httpSession);
 
-        boolean isAdministrator = session.getProfile() == Profile.Administrator;
-        if (isAdministrator && removeFirst) {
-            registredMAnalyseProcess.deleteAll();
-        }
+            boolean isAdministrator = session.getProfile() == Profile.Administrator;
+            if (isAdministrator && removeFirst) {
+                registredMAnalyseProcess.deleteAll();
+            }
 
-        SimpleMetadataProcessingReport report =
-            new SimpleMetadataProcessingReport();
+            SimpleMetadataProcessingReport report =
+                new SimpleMetadataProcessingReport();
 
-        Set<Integer> ids = Sets.newHashSet();
+            Set<Integer> ids = Sets.newHashSet();
 
-        if (uuids != null || StringUtils.isNotEmpty(bucket)) {
-            try {
-                Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
-                for (String uuid : records) {
-                    if (!metadataUtils.existsMetadataUuid(uuid)) {
-                        report.incrementNullRecords();
-                    }
-                    for (AbstractMetadata record : metadataRepository.findAllByUuid(uuid)) {
-                        if (!accessManager.canEdit(serviceContext, String.valueOf(record.getId()))) {
-                            report.addNotEditableMetadataId(record.getId());
-                        } else {
-                            ids.add(record.getId());
-                            report.addMetadataId(record.getId());
-                            report.incrementProcessedRecords();
+            if (uuids != null || StringUtils.isNotEmpty(bucket)) {
+                try {
+                    Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
+                    for (String uuid : records) {
+                        if (!metadataUtils.existsMetadataUuid(uuid)) {
+                            report.incrementNullRecords();
+                        }
+                        for (AbstractMetadata record : metadataRepository.findAllByUuid(uuid)) {
+                            if (!accessManager.canEdit(serviceContext, String.valueOf(record.getId()))) {
+                                report.addNotEditableMetadataId(record.getId());
+                            } else {
+                                ids.add(record.getId());
+                                report.addMetadataId(record.getId());
+                                report.incrementProcessedRecords();
+                            }
                         }
                     }
-                }
-            } catch (Exception e) {
-                report.addError(e);
-            } finally {
-                report.close();
-            }
-        } else {
-            if (isAdministrator) {
-                // Process all
-                final List<Metadata> metadataList = metadataRepository.findAll();
-                for (Metadata m : metadataList) {
-                    ids.add(m.getId());
-                    report.addMetadataId(m.getId());
-                    report.incrementProcessedRecords();
+                } catch (Exception e) {
+                    report.addError(e);
+                } finally {
+                    report.close();
                 }
             } else {
-                throw new OperationNotAllowedEx(String.format(
-                    "Only administrator can trigger link analysis on the entire catalogue. This is not allowed for %s.",
-                    session.getProfile()
-                ));
+                if (isAdministrator) {
+                    // Process all
+                    final List<Metadata> metadataList = metadataRepository.findAll();
+                    for (Metadata m : metadataList) {
+                        ids.add(m.getId());
+                        report.addMetadataId(m.getId());
+                        report.incrementProcessedRecords();
+                    }
+                } else {
+                    throw new OperationNotAllowedEx(String.format(
+                        "Only administrator can trigger link analysis on the entire catalogue. This is not allowed for %s.",
+                        session.getProfile()
+                    ));
+                }
+                report.close();
             }
-            report.close();
-        }
 
-        registredMAnalyseProcess.processMetadataAndTestLink(analyze, ids);
-        return report;
+            registredMAnalyseProcess.processMetadataAndTestLink(analyze, ids);
+            return report;
+        }
     }
 
 

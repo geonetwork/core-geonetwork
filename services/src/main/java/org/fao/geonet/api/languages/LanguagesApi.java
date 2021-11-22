@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -124,9 +124,10 @@ public class LanguagesApi {
                     }
                 }
                 if (data.size() > 0) {
-                    ServiceContext context = ApiUtils.createServiceContext(request);
-                    DbLib.runSQL(context, data);
-                    return;
+                    try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+                        DbLib.runSQL(context, data);
+                        return;
+                    }
                 }
             }
             throw new ResourceNotFoundException(String.format(
@@ -186,9 +187,10 @@ public class LanguagesApi {
                     }
                 }
                 if (data.size() > 0) {
-                    ServiceContext context = ApiUtils.createServiceContext(request);
-                    DbLib.runSQL(context, data);
-                    return;
+                    try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+                        DbLib.runSQL(context, data);
+                        return;
+                    }
                 }
             }
             throw new ResourceNotFoundException(String.format(

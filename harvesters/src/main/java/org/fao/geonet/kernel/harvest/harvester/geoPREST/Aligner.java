@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2013 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -61,6 +61,7 @@ import jeeves.server.context.ServiceContext;
 public class Aligner extends BaseAligner<GeoPRESTParams> {
 
     private Logger log;
+    /** Shared service context managed by HarvetManager */
     private ServiceContext context;
     private XmlRequest request;
     private DataManager dataMan;

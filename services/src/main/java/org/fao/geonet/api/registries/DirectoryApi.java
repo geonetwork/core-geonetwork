@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2016 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -193,9 +193,9 @@ public class DirectoryApi {
             String identifierXpath,
         HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
-        return collectEntries(context, uuids, bucket, xpath, identifierXpath, false, null);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            return collectEntries(context, uuids, bucket, xpath, identifierXpath, false, null);
+        }
     }
 
 
@@ -238,9 +238,9 @@ public class DirectoryApi {
         // TODO: Add an option to set groupOwner ?
         // TODO: Add an option to set privileges ?
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
-        return collectEntries(context, uuids, bucket, xpath, identifierXpath, true, null);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            return collectEntries(context, uuids, bucket, xpath, identifierXpath, true, null);
+        }
     }
 
 
@@ -368,9 +368,9 @@ public class DirectoryApi {
             String fq,
         HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
-        return updateRecordEntries(context, uuids, bucket, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, false, fq);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            return updateRecordEntries(context, uuids, bucket, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, false, fq);
+        }
     }
 
 
@@ -422,9 +422,9 @@ public class DirectoryApi {
             String fq,
         HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-
-        return updateRecordEntries(context, uuids, bucket, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, true, fq);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            return updateRecordEntries(context, uuids, bucket, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, true, fq);
+        }
     }
 
 
@@ -628,105 +628,106 @@ public class DirectoryApi {
             MultipartHttpServletRequest request)
         throws Exception {
 
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
 
-        MetadataSchema metadataSchema = dataManager.getSchema(schema);
-        Path xslProcessing = metadataSchema.getSchemaDir().resolve("process").resolve(process + ".xsl");
+            MetadataSchema metadataSchema = dataManager.getSchema(schema);
+            Path xslProcessing = metadataSchema.getSchemaDir().resolve("process").resolve(process + ".xsl");
 
-        File[] shapeFiles = unzipAndFilterShp(file);
+            File[] shapeFiles = unzipAndFilterShp(file);
 
-        CollectResults collectResults = new CollectResults();
+            CollectResults collectResults = new CollectResults();
 
-        SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
+            SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        for (File shapeFile : shapeFiles) {
+            for (File shapeFile : shapeFiles) {
 
-            SimpleFeatureCollection collection = shapeFileToFeatureCollection(shapeFile, charset);
+                SimpleFeatureCollection collection = shapeFileToFeatureCollection(shapeFile, charset);
 
-            try (FeatureIterator<SimpleFeature> features = collection.features()) {
+                try (FeatureIterator<SimpleFeature> features = collection.features()) {
 
 
-                while (features.hasNext()) {
-                    SimpleFeature feature = features.next();
+                    while (features.hasNext()) {
+                        SimpleFeature feature = features.next();
 
-                    String uuid = computeUuid(uuidAttribute, uuidPattern, feature);
-                    String description = computeDescription(descriptionAttribute, feature);
-                    Envelope wgsEnvelope = computeEnvelope(feature);
-                    Geometry featureGeometry = reprojGeom(geomProjectionTo, lenient, feature);
-                    String xmlGeometry = geometryToXml(featureGeometry, collection.getSchema());
+                        String uuid = computeUuid(uuidAttribute, uuidPattern, feature);
+                        String description = computeDescription(descriptionAttribute, feature);
+                        Envelope wgsEnvelope = computeEnvelope(feature);
+                        Geometry featureGeometry = reprojGeom(geomProjectionTo, lenient, feature);
+                        String xmlGeometry = geometryToXml(featureGeometry, collection.getSchema());
 
-                    Map<String, Object> parameters = new HashMap<>();
+                        Map<String, Object> parameters = new HashMap<>();
 
-                    parameters.put("uuid", uuid);
-                    parameters.put("description", description);
-                    parameters.put("east", wgsEnvelope.getMaxX());
-                    parameters.put("north", wgsEnvelope.getMaxY());
-                    parameters.put("west", wgsEnvelope.getMinX());
-                    parameters.put("south", wgsEnvelope.getMinY());
-                    parameters.put("onlyBoundingBox", onlyBoundingBox);
-                    parameters.put("geometry", xmlGeometry);
+                        parameters.put("uuid", uuid);
+                        parameters.put("description", description);
+                        parameters.put("east", wgsEnvelope.getMaxX());
+                        parameters.put("north", wgsEnvelope.getMaxY());
+                        parameters.put("west", wgsEnvelope.getMinX());
+                        parameters.put("south", wgsEnvelope.getMinY());
+                        parameters.put("onlyBoundingBox", onlyBoundingBox);
+                        parameters.put("geometry", xmlGeometry);
 
-                    Element subtemplate = new Element("root");
-                    Element snippet = Xml.transform(subtemplate, xslProcessing, parameters);
+                        Element subtemplate = new Element("root");
+                        Element snippet = Xml.transform(subtemplate, xslProcessing, parameters);
 
-                    collectResults.getEntries().put(uuid, uuid, snippet);
+                        collectResults.getEntries().put(uuid, uuid, snippet);
+                    }
                 }
+
+                report.addInfos(String.format(
+                    "%d entries extracted from shapefile '%s'.",
+                    collection.size(),
+                    shapeFile.getName()
+                ));
             }
 
-            report.addInfos(String.format(
-                "%d entries extracted from shapefile '%s'.",
-                collection.size(),
-                shapeFile.getName()
-            ));
+            report.setTotalRecords(collectResults.getEntries().size());
+
+            // Save the snippets and index
+            if (collectResults.getEntries().size() > 0) {
+                // Create an empty record providing schema information
+                // about collected subtemplates
+                Metadata record = new Metadata();
+                record.getDataInfo().setSchemaId(schema);
+                collectResults.setRecord(record);
+
+                int user = context.getUserSession().getUserIdAsInt();
+                String siteId = settingManager.getSiteId();
+
+                Map<String, Exception> errors = DirectoryUtils.saveEntries(
+                    context,
+                    collectResults,
+                    siteId, user,
+                    group,
+                    false);
+
+                dataManager.flush();
+
+                Set<Integer> listOfRecordInternalId = new HashSet<>();
+                listOfRecordInternalId.addAll(
+                    collectResults.getEntryIdentifiers().values()
+                );
+
+                report.addInfos(String.format(
+                    "%d entries saved.",
+                    listOfRecordInternalId.size()
+                ));
+
+                BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, listOfRecordInternalId);
+                r.process();
+
+                errors.forEach((k, v) ->
+                    report.addError(v)
+                );
+
+                report.close();
+            } else {
+                report.addInfos(String.format("No entry found in ZIP file '%s'",
+                    file.getOriginalFilename()));
+                report.close();
+            }
+            return report;
         }
-
-        report.setTotalRecords(collectResults.getEntries().size());
-
-        // Save the snippets and index
-        if (collectResults.getEntries().size() > 0) {
-            // Create an empty record providing schema information
-            // about collected subtemplates
-            Metadata record = new Metadata();
-            record.getDataInfo().setSchemaId(schema);
-            collectResults.setRecord(record);
-
-            int user = context.getUserSession().getUserIdAsInt();
-            String siteId = settingManager.getSiteId();
-
-            Map<String, Exception> errors = DirectoryUtils.saveEntries(
-                context,
-                collectResults,
-                siteId, user,
-                group,
-                false);
-
-            dataManager.flush();
-
-            Set<Integer> listOfRecordInternalId = new HashSet<>();
-            listOfRecordInternalId.addAll(
-                collectResults.getEntryIdentifiers().values()
-            );
-
-            report.addInfos(String.format(
-                "%d entries saved.",
-                listOfRecordInternalId.size()
-            ));
-
-            BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, listOfRecordInternalId);
-            r.process();
-
-            errors.forEach((k, v) ->
-                report.addError(v)
-            );
-
-            report.close();
-        } else {
-            report.addInfos(String.format("No entry found in ZIP file '%s'",
-                file.getOriginalFilename()));
-            report.close();
-        }
-        return report;
     }
 
     private Geometry reprojGeom(String geomProjectionTo, boolean lenient, SimpleFeature feature)

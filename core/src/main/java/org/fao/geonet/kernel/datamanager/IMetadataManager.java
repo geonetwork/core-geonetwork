@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -53,11 +53,17 @@ public interface IMetadataManager {
     /**
      * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
      *
-     * @param context
-     * @param force
+     * @param context ServiceContext used for initialization
      * @throws Exception
      */
-    public void init(ServiceContext context, Boolean force) throws Exception;
+     void init(ServiceContext context) throws Exception;
+
+    /**
+     * Clean up metadata manager during application shutdown.
+     *
+     * @throws Exception
+     */
+     void destroy() throws Exception;
 
     /**
      * Removes the record with the id metadataId

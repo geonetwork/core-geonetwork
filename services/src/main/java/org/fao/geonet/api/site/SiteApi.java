@@ -462,13 +462,14 @@ public class SiteApi {
         }
 
         SettingInfo info = applicationContext.getBean(SettingInfo.class);
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        ServerBeanPropertyUpdater.updateURL(info.getSiteUrl() +
-                context.getBaseUrl(),
-            applicationContext);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            ServerBeanPropertyUpdater.updateURL(info.getSiteUrl() +
+                    context.getBaseUrl(),
+                applicationContext);
 
-        // Reload services affected by updated settings
-        reloadServices(context);
+            // Reload services affected by updated settings
+            reloadServices(context);
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -485,9 +486,10 @@ public class SiteApi {
     @ResponseBody
     public SiteInformation getInformation(HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        return new SiteInformation(context, (GeonetContext) context
-            .getHandlerContext(Geonet.CONTEXT_NAME));
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            return new SiteInformation(context, (GeonetContext) context
+                .getHandlerContext(Geonet.CONTEXT_NAME));
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -504,8 +506,9 @@ public class SiteApi {
     public boolean isCasEnabled(
         HttpServletRequest request
     ) throws Exception {
-        ApiUtils.createServiceContext(request);
-        return ProfileManager.isCasEnabled();
+        try(ServiceContext context = ApiUtils.createServiceContext(request)) {
+            return ProfileManager.isCasEnabled();
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -554,8 +557,9 @@ public class SiteApi {
     public boolean isIndexing(
         HttpServletRequest request
     ) throws Exception {
-        ApiUtils.createServiceContext(request);
-        return ApplicationContextHolder.get().getBean(DataManager.class).isIndexing();
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            return ApplicationContextHolder.get().getBean(DataManager.class).isIndexing();
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -593,28 +597,29 @@ public class SiteApi {
             String bucket,
         HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
-        DataManager dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
-        boolean isIndexing = dataManager.isIndexing();
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
+            DataManager dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
+            boolean isIndexing = dataManager.isIndexing();
 
-        if (isIndexing) {
-            throw new NotAllowedException(
-                "Indexing is already in progress. Wait for the current task to complete.");
+            if (isIndexing) {
+                throw new NotAllowedException(
+                    "Indexing is already in progress. Wait for the current task to complete.");
+            }
+
+            if (reset) {
+                searchMan.init(true, Optional.of(Arrays.asList(indices)));
+            }
+
+            if (StringUtils.isEmpty(bucket)) {
+                BaseMetadataManager metadataManager = ApplicationContextHolder.get().getBean(BaseMetadataManager.class);
+                metadataManager.synchronizeDbWithIndex(context, false, asynchronous);
+            } else {
+                searchMan.rebuildIndex(context, havingXlinkOnly, false, bucket);
+            }
+
+            return new HttpEntity<>(HttpStatus.CREATED);
         }
-
-        if (reset) {
-            searchMan.init(true, Optional.of(Arrays.asList(indices)));
-        }
-
-        if (StringUtils.isEmpty(bucket)) {
-            BaseMetadataManager metadataManager = ApplicationContextHolder.get().getBean(BaseMetadataManager.class);
-            metadataManager.synchronizeDbWithIndex(context, false, asynchronous);
-        } else {
-            searchMan.rebuildIndex(context, havingXlinkOnly, false, bucket);
-        }
-
-        return new HttpEntity<>(HttpStatus.CREATED);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -743,59 +748,60 @@ public class SiteApi {
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final Resources resources = appContext.getBean(Resources.class);
         final Path logoDirectory = resources.locateHarvesterLogosDirSMVC(appContext);
-        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        checkFileName(file);
-        FilePathChecker.verify(file);
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
+            checkFileName(file);
+            FilePathChecker.verify(file);
 
-        SettingManager settingMan = appContext.getBean(SettingManager.class);
-        String nodeUuid = settingMan.getSiteId();
+            SettingManager settingMan = appContext.getBean(SettingManager.class);
+            String nodeUuid = settingMan.getSiteId();
 
-        Resources.ResourceHolder holder = resources.getImage(serviceContext, file, logoDirectory);
-        final Path resourcesDir =
-            resources.locateResourcesDir(request.getServletContext(), serviceContext.getApplicationContext());
-        if (holder == null || holder.getPath() == null) {
-            holder = resources.getImage(serviceContext, "images/harvesting/" + file, resourcesDir);
-        }
-        try {
-            try (InputStream inputStream = Files.newInputStream(holder.getPath())) {
-                BufferedImage source = ImageIO.read(inputStream);
+            Resources.ResourceHolder holder = resources.getImage(serviceContext, file, logoDirectory);
+            final Path resourcesDir =
+                resources.locateResourcesDir(request.getServletContext(), serviceContext.getApplicationContext());
+            if (holder == null || holder.getPath() == null) {
+                holder = resources.getImage(serviceContext, "images/harvesting/" + file, resourcesDir);
+            }
+            try {
+                try (InputStream inputStream = Files.newInputStream(holder.getPath())) {
+                    BufferedImage source = ImageIO.read(inputStream);
 
-                if (asFavicon) {
-                    try (Resources.ResourceHolder favicon =
-                             resources.getWritableImage(serviceContext, "images/logos/favicon.png",
-                                 resourcesDir)) {
-                        ApiUtils.createFavicon(source, favicon.getPath());
-                    }
-                } else {
-                    try (Resources.ResourceHolder logo =
-                             resources.getWritableImage(serviceContext,
-                                 "images/logos/" + nodeUuid + ".png",
-                                 resourcesDir);
-                         Resources.ResourceHolder defaultLogo =
-                             resources.getWritableImage(serviceContext,
-                                 "images/logo.png", resourcesDir)) {
-                        if (!file.endsWith(".png")) {
-                            try (
-                                OutputStream logoOut = Files.newOutputStream(logo.getPath());
-                                OutputStream defLogoOut = Files.newOutputStream(defaultLogo.getPath())
-                            ) {
-                                ImageIO.write(source, "png", logoOut);
-                                ImageIO.write(source, "png", defLogoOut);
+                    if (asFavicon) {
+                        try (Resources.ResourceHolder favicon =
+                                 resources.getWritableImage(serviceContext, "images/logos/favicon.png",
+                                     resourcesDir)) {
+                            ApiUtils.createFavicon(source, favicon.getPath());
+                        }
+                    } else {
+                        try (Resources.ResourceHolder logo =
+                                 resources.getWritableImage(serviceContext,
+                                     "images/logos/" + nodeUuid + ".png",
+                                     resourcesDir);
+                             Resources.ResourceHolder defaultLogo =
+                                 resources.getWritableImage(serviceContext,
+                                     "images/logo.png", resourcesDir)) {
+                            if (!file.endsWith(".png")) {
+                                try (
+                                    OutputStream logoOut = Files.newOutputStream(logo.getPath());
+                                    OutputStream defLogoOut = Files.newOutputStream(defaultLogo.getPath())
+                                ) {
+                                    ImageIO.write(source, "png", logoOut);
+                                    ImageIO.write(source, "png", defLogoOut);
+                                }
+                            } else {
+                                Files.copy(holder.getPath(), logo.getPath(), StandardCopyOption.REPLACE_EXISTING);
+                                Files.copy(holder.getPath(), defaultLogo.getPath(),
+                                    StandardCopyOption.REPLACE_EXISTING);
                             }
-                        } else {
-                            Files.copy(holder.getPath(), logo.getPath(), StandardCopyOption.REPLACE_EXISTING);
-                            Files.copy(holder.getPath(), defaultLogo.getPath(),
-                                StandardCopyOption.REPLACE_EXISTING);
                         }
                     }
                 }
+            } catch (Exception e) {
+                throw new Exception(
+                    "Unable to move uploaded thumbnail to destination directory. Error: " + e.getMessage());
+            } finally {
+                holder.close();
             }
-        } catch (Exception e) {
-            throw new Exception(
-                "Unable to move uploaded thumbnail to destination directory. Error: " + e.getMessage());
-        } finally {
-            holder.close();
         }
     }
 

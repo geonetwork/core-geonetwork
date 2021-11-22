@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -43,12 +43,21 @@ import jeeves.server.context.ServiceContext;
 public interface IMetadataIndexer {
 
     /**
-     * This is a hopefully soon to be deprecated when no deps on context
-     * 
-     * @param context
+     * Setup metadata indexer using app service context.
+     *
+     * This is a hopefully soon to be deprecated when no deps on context.
+     *
+     * @param context App Service context used for initial setup
      * @throws Exception
      */
-    public void init(ServiceContext context, Boolean force) throws Exception;
+    void init(ServiceContext context) throws Exception;
+
+    /**
+     * Clean up when service is not in use.
+     *
+     * @throws Exception
+     */
+    void destroy() throws Exception;
 
     /**
      * Force the index to wait until all changes are processed and the next reader obtained will get the latest data.
@@ -78,10 +87,9 @@ public interface IMetadataIndexer {
      * Index multiple metadata in a separate thread. Wait until the current transaction commits before starting threads (to make sure that
      * all metadata are committed).
      *
-     * @param context context object
      * @param metadataIds the metadata ids to index
      */
-    void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds);
+    void batchIndexInThreadPool(List<?> metadataIds);
 
     /**
      * Is the platform currently indexing?
