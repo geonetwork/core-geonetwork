@@ -126,7 +126,6 @@ import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.*;
@@ -1002,7 +1001,7 @@ public final class XslUtil {
             .resolve("catalog").resolve("views")
             .resolve("sextant").resolve("landing-pages")
             .resolve(groupIdentifier).resolve("config.xml");
-        if(Files.exists(groupLandingPageDir)) {
+        if(java.nio.file.Files.exists(groupLandingPageDir)) {
             try {
                 Element element = Xml.loadFile(groupLandingPageDir);
                 DOMOutputter outputter = new DOMOutputter();
