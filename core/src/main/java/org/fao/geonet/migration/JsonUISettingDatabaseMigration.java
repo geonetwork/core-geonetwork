@@ -61,7 +61,7 @@ public abstract class JsonUISettingDatabaseMigration extends DatabaseMigrationTa
                     try (PreparedStatement updateStatement = connection.prepareStatement("UPDATE settings_ui SET "
                         + "configuration=? WHERE id=?")) {
                         updateStatement.setString(1, newSettingJson);
-                        updateStatement.setInt(2, rs.getInt("id"));
+                        updateStatement.setString(2, rs.getString("id"));
                         updateStatement.executeUpdate();
                     }
                 }
