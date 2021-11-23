@@ -115,6 +115,8 @@
   "exactMatch-help": "Correspondance exacte signifie que des \\\"' sont ajoutés autour des termes recherchés.",
   "titleOnly": "Rechercher uniquement dans le titre",
   "titleOnly-help": "Rechercher uniquement dans le titre.",
+  "onlyMyRecord": "Uniquement mes enregistrements",
+  "onlyMyRecord-help": "Uniquement mes enregistrements",
   "wfsIssueWhileLoadingSLD": "Le filtre n'a pas pu être appliqué sur la couche. Le fichier SLD généré n'est pas accessible.",
   "wfsIndexingEndDate": "Dernière exécution",
   "wfsIndexingScheduled": "Planifié ?",
