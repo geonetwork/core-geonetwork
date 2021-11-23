@@ -147,7 +147,22 @@
             showExport: true,
             exportTypes: ['csv'],
             exportDataType: 'all',
-            locale: getBsTableLang()
+            locale: getBsTableLang(),
+            // SEXTANT SPECIFIC
+            exportOptions: {
+              onCellHtmlData: function onCellHtmlData(cell, rowIndex, colIndex, htmlData) {
+                if (cell.is('th')) { // default
+                  return cell.find('.th-inner').text();
+                }
+                else if (cell.is('td') && cell.children('a').length > 0 ) {
+                  // get html href value for column containing <a> tag
+                  return cell.find('a').context.innerHTML.match(/href="([^"]*)/)[1];
+                }
+                return htmlData;
+              }
+            }
+            // END SEXTANT SPECIFIC
+
           },bstConfig)
       );
       scope.$watch('ctrl.active', function() {
