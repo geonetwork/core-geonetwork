@@ -52,7 +52,7 @@ public abstract class JsonUISettingDatabaseMigration extends DatabaseMigrationTa
             "SELECT * FROM settings_ui")) {
             ResultSet rs = statement.executeQuery();
 
-            if (rs.next()) {
+            while (rs.next()) {
                 String currentSettingJson = rs.getString("configuration");
                 if (StringUtils.isNotEmpty(currentSettingJson)) {
                     Map<String, String> fieldsToUpdate = setUpNewSettingValues();
