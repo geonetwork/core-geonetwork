@@ -52,7 +52,7 @@ public class HttpServiceRequest extends ServiceRequest {
 
     @Override
     public void beginStream(String contentType, boolean cache) {
-        beginStream(contentType, -1, null, cache);
+        beginStream(contentType, -1L, null, cache);
     }
 
     //---------------------------------------------------------------------------
@@ -66,7 +66,7 @@ public class HttpServiceRequest extends ServiceRequest {
             httpRes.setContentType(contentType);
         }
 
-        if (contentLength != -1) {
+        if (contentLength != -1L) {
             httpRes.setContentLengthLong(contentLength);
         }
 
