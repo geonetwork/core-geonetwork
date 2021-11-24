@@ -343,7 +343,7 @@
       $scope.hideResetPassword = function() {
         if ((!$scope.userSelected) ||
             (!$scope.userSelected.security)) {
-          return false;
+          return true;
         }
 
         return (($scope.userSelected.security.authtype == 'LDAP') ||
