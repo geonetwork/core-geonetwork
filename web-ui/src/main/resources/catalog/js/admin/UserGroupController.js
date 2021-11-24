@@ -320,6 +320,21 @@
       };
 
       /**
+       * Hide reset password button for LDAP auth or if the user in the session
+       * is not the same as the user edited.
+       *
+       * @returns {boolean}
+       */
+      $scope.hideResetPassword = function() {
+        if ((!$scope.userSelected) ||
+            (!$scope.userSelected.security)) {
+          return true;
+        }
+
+        return ($scope.userSelected.security.authtype == 'LDAP');
+      };
+
+      /**
        * Check if the groupId is in the user groups
        * list with that profile.
        *
