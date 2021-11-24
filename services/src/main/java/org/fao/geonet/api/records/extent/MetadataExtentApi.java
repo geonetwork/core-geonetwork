@@ -153,7 +153,7 @@ public class MetadataExtentApi {
         if (StringUtils.isBlank(srs)) {
             // If no map srs parameter is provided use the `region/getmap/mapproj` setting and if this is not set defaults
             // to EPSG:4326
-            srs = StringUtils.defaultString(settingManager.getValue(Settings.REGION_GETMAP_MAPPROJ, true),
+            srs = StringUtils.defaultIfBlank(settingManager.getValue(Settings.REGION_GETMAP_MAPPROJ, true),
                 "EPSG:4326");
         }
 
@@ -265,7 +265,7 @@ public class MetadataExtentApi {
         if (StringUtils.isBlank(srs)) {
             // If no map srs parameter is provided use the `region/getmap/mapproj` setting and if this is not set defaults
             // to EPSG:4326
-            srs = StringUtils.defaultString(settingManager.getValue(Settings.REGION_GETMAP_MAPPROJ, true),
+            srs = StringUtils.defaultIfBlank(settingManager.getValue(Settings.REGION_GETMAP_MAPPROJ, true),
                 "EPSG:4326");
         }
 
