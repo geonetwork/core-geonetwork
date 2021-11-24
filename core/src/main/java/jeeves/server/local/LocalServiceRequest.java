@@ -185,7 +185,7 @@ public class LocalServiceRequest extends ServiceRequest {
     }
 
     public void beginStream(String contentType, boolean cache) {
-        beginStream(contentType, -1, null, cache);
+        beginStream(contentType, -1L, null, cache);
     }
 
     public void beginStream(String contentType, long contentLength,

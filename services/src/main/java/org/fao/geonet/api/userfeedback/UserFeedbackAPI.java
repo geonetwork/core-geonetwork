@@ -337,10 +337,13 @@ public class UserFeedbackAPI {
             required = false
         )
         int size,
+        @ApiIgnore final HttpServletRequest request,
         @ApiIgnore final HttpServletResponse response,
         @ApiIgnore final HttpSession httpSession) throws Exception {
 
-        return getUserFeedback(metadataUuid, size, response, httpSession);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            return getUserFeedback(metadataUuid, size, response, httpSession);
+        }
     }
 
     /**
@@ -380,10 +383,13 @@ public class UserFeedbackAPI {
             required = false
         )
         int size,
+        @ApiIgnore final HttpServletRequest request,
         @ApiIgnore final HttpServletResponse response,
         @ApiIgnore final HttpSession httpSession) throws Exception {
 
-        return getUserFeedback(metadataUuid, size, response, httpSession);
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+            return getUserFeedback(metadataUuid, size, response, httpSession);
+        }
     }
 
     private List<UserFeedbackDTO> getUserFeedback(

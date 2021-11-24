@@ -1019,7 +1019,7 @@ public class ServiceManager {
                 String contentDisposition = binaryFile.getContentDisposition();
                 String contentLength = binaryFile.getContentLength();
 
-                long cl = (contentLength == null) ? -1 : Long.parseLong(contentLength);
+                long cl = (contentLength == null) ? -1L : Long.parseLong(contentLength);
 
                 // Did we set up a status code for the response?
                 if (context.getStatusCode() != null) {
@@ -1042,7 +1042,7 @@ public class ServiceManager {
                 String contentDisposition = BLOB.getContentDisposition(response);
                 String contentLength = BLOB.getContentLength(response);
 
-                long cl = (contentLength == null) ? -1 : Long.parseLong(contentLength);
+                long cl = (contentLength == null) ? -1L : Long.parseLong(contentLength);
 
                 req.beginStream(contentType, cl, contentDisposition, cache);
                 BLOB.write(response, req.getOutputStream());
@@ -1117,7 +1117,7 @@ public class ServiceManager {
 
                                 if (outPage.getContentType() != null
                                     && outPage.getContentType().startsWith("text/plain")) {
-                                    req.beginStream(outPage.getContentType(), -1, "attachment;", cache);
+                                    req.beginStream(outPage.getContentType(), -1L, "attachment;", cache);
                                 } else {
                                     req.beginStream(outPage.getContentType(), cache);
                                 }
