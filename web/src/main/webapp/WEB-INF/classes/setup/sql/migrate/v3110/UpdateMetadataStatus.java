@@ -353,6 +353,7 @@ public class UpdateMetadataStatus extends DatabaseMigrationTask {
             statement.execute("ALTER TABLE " + MetadataStatus.TABLE_NAME + " " +
                 dialect.getAddForeignKeyConstraintString(MetadataStatus.TABLE_NAME + "RelMdStatusIdFk",
                     fkColumns, MetadataStatus.TABLE_NAME, pkColumns, true));
+            connection.commit();
         } catch (Exception e) {
             connection.rollback();
             // If there was an error then we will log the error and continue.
