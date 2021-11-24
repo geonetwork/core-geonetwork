@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -26,6 +26,7 @@ package org.fao.geonet.api.regions;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.*;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
@@ -37,6 +38,8 @@ import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
@@ -61,10 +64,6 @@ import java.util.concurrent.TimeUnit;
 
 import static org.fao.geonet.api.records.extent.MetadataExtentApi.*;
 
-/**
- *
- */
-
 @RequestMapping(value = {
     "/{portal}/api/regions",
     "/{portal}/api/" + API.VERSION_0_1 +
@@ -77,7 +76,9 @@ import static org.fao.geonet.api.records.extent.MetadataExtentApi.*;
 public class RegionsApi {
 
     @Autowired
-    LanguageUtils languageUtils;
+    private LanguageUtils languageUtils;
+    @Autowired
+    private SettingManager settingManager;
 
     @ApiOperation(
         value = "Get list of regions",
@@ -207,7 +208,9 @@ public class RegionsApi {
         },
         method = RequestMethod.GET)
     public HttpEntity<byte[]> getGeomAsImage(
-        @RequestParam(value = MAP_SRS_PARAM, defaultValue = "EPSG:4326") String srs,
+        @ApiParam(value = "(optional) the background map projection. If not passed uses the region/getmap/mapproj"
+            + " setting. If the setting is not set defaults to EPSG:4326")
+        @RequestParam(value = MAP_SRS_PARAM, required = false) String mapSrs,
         @ApiParam(value = "(optional) width of the image that is created. Only one of width and height are permitted")
         @RequestParam(value = WIDTH_PARAM, required = false, defaultValue = "300") Integer width,
         @ApiParam(value = "(optional) height of the image that is created. Only one of width and height are permitted")
@@ -224,43 +227,52 @@ public class RegionsApi {
             NativeWebRequest nativeWebRequest,
         @ApiIgnore
             HttpServletRequest request) throws Exception {
-      try (ServiceContext context = ApiUtils.createServiceContext(request)) {
-        if (width != null && height != null) {
-            throw new BadParameterEx(
-                WIDTH_PARAM,
-                "Only one of "
-                    + WIDTH_PARAM
-                    + " and "
-                    + HEIGHT_PARAM
-                    + " can be defined currently.  Future versions may support this but it is not supported at the moment");
+        try (ServiceContext context = ApiUtils.createServiceContext(request)) {
+
+            String srs = mapSrs;
+            if (StringUtils.isBlank(srs)) {
+                // If no map srs parameter is provided use the `region/getmap/mapproj` setting and if this is not set defaults
+                // to EPSG:4326
+                srs = StringUtils.defaultString(settingManager.getValue(Settings.REGION_GETMAP_MAPPROJ, true),
+                    "EPSG:4326");
+            }
+
+            if (width != null && height != null) {
+                throw new BadParameterEx(
+                    WIDTH_PARAM,
+                    "Only one of "
+                        + WIDTH_PARAM
+                        + " and "
+                        + HEIGHT_PARAM
+                        + " can be defined currently.  Future versions may support this but it is not supported at the moment");
+            }
+
+            if (width == null && height == null) {
+                throw new BadParameterEx(WIDTH_PARAM, "One of " + WIDTH_PARAM + " or " + HEIGHT_PARAM
+                    + " parameters must be included in the request");
+
+            }
+
+            String outputFileName = "geom.png";
+            String regionId = null;
+
+            if (nativeWebRequest.checkNotModified(geomParam + srs + background)) {
+                return null;
+            }
+
+            MapRenderer renderer = new MapRenderer(context);
+            BufferedImage image = renderer.render(regionId, srs, width, height, background, geomParam, geomType, geomSrs, null, null);
+
+            if (image == null) return null;
+
+            try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                ImageIO.write(image, "png", out);
+                MultiValueMap<String, String> headers = new HttpHeaders();
+                headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + outputFileName + "\"");
+                headers.add(HttpHeaders.CACHE_CONTROL, "public, max-age: " + TimeUnit.DAYS.toSeconds(5));
+                headers.add(HttpHeaders.CONTENT_TYPE, "image/png");
+                return new HttpEntity<>(out.toByteArray(), headers);
+            }
         }
-
-        if (width == null && height == null) {
-            throw new BadParameterEx(WIDTH_PARAM, "One of " + WIDTH_PARAM + " or " + HEIGHT_PARAM
-                + " parameters must be included in the request");
-
-        }
-
-        String outputFileName = "geom.png";
-        String regionId = null;
-
-        if (nativeWebRequest.checkNotModified(geomParam + srs + background)) {
-            return null;
-        }
-
-        MapRenderer renderer = new MapRenderer(context);
-        BufferedImage image = renderer.render(regionId, srs, width, height, background, geomParam, geomType, geomSrs, null, null);
-
-        if (image == null) return null;
-
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            ImageIO.write(image, "png", out);
-            MultiValueMap<String, String> headers = new HttpHeaders();
-            headers.add("Content-Disposition", "inline; filename=\"" + outputFileName + "\"");
-            headers.add("Cache-Control", "public, max-age: " + TimeUnit.DAYS.toSeconds(5));
-            headers.add("Content-Type", "image/png");
-            return new HttpEntity<>(out.toByteArray(), headers);
-        }
-      }
     }
 }
