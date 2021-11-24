@@ -58,7 +58,7 @@
             <span data-translate="">saveGroup</span>
           </button>
           <button type="button" class="btn pull-right btn-danger"
-                  data-ng-hide="!user.isAdministratorOrMore() || (!groupSelected.id || groupSelected.id<0)"
+                  data-ng-hide="!user.isAdministratorOrMore() || !groupSelected.id || groupSelected.id<0"
                   data-ng-disabled="searchResults.count > 0"
                   data-gn-confirm-click="{{'groupDeleteConfirm' | translate}}"
                   data-ng-click="deleteGroup(groupSelected.id)" id="gn-btn-group-delete">
