@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -78,6 +79,9 @@ public class RegionsApi {
     private LanguageUtils languageUtils;
     @Autowired
     private SettingManager settingManager;
+
+    @Value("${metadata.extentApi.disableFullUrlBackgroundMapServices:true}")
+    private boolean disableFullUrlBackgroundMapServices;
 
     public static Request createRequest(String label, String categoryId,
                                         int maxRecords, ServiceContext context,
@@ -249,6 +253,11 @@ public class RegionsApi {
             throw new BadParameterEx(WIDTH_PARAM, "One of " + WIDTH_PARAM + " or " + HEIGHT_PARAM
                 + " parameters must be included in the request");
 
+        }
+
+        if ((background != null) && (background.startsWith("http")) && (disableFullUrlBackgroundMapServices)) {
+            throw new BadParameterEx(BACKGROUND_PARAM, "Background layers from provided are not supported, " +
+                "use a preconfigured background layers map service.");
         }
 
         String outputFileName = "geom.png";
