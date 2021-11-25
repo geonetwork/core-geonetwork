@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -38,6 +38,7 @@ import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -61,10 +62,6 @@ import java.util.concurrent.TimeUnit;
 
 import static org.fao.geonet.api.records.extent.MetadataExtentApi.*;
 
-/**
- *
- */
-
 @RequestMapping(value = {
     "/{portal}/api/regions",
     "/{portal}/api/" + API.VERSION_0_1 +
@@ -78,6 +75,9 @@ public class RegionsApi {
 
     @Autowired
     LanguageUtils languageUtils;
+
+    @Value("${metadata.extentApi.disableFullUrlBackgroundMapServices:true}")
+    private boolean disableFullUrlBackgroundMapServices;
 
     @ApiOperation(
         value = "Get list of regions",
@@ -237,6 +237,11 @@ public class RegionsApi {
             throw new BadParameterEx(WIDTH_PARAM, "One of " + WIDTH_PARAM + " or " + HEIGHT_PARAM
                 + " parameters must be included in the request");
 
+        }
+
+        if ((background != null) && (background.startsWith("http")) && (disableFullUrlBackgroundMapServices)) {
+            throw new BadParameterEx(BACKGROUND_PARAM, "Background layers from provided are not supported, " +
+                "use a preconfigured background layers map service.");
         }
 
         String outputFileName = "geom.png";
