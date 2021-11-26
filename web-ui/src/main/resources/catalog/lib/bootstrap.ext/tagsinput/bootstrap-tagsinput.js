@@ -192,7 +192,7 @@
           $tag.addClass('tag ' + htmlEncode(tagClass));
           $tag.contents().first().contents().filter(function() {
             return this.nodeType == 3;
-          })[0].nodeValue = htmlEncode(itemText);
+          })[0].nodeValue = itemText;
 
           if (self.isSelect) {
             var option = $('option', self.$element).filter(function() { return $(this).data('item') === item; });
@@ -210,7 +210,7 @@
 
     /**
      * Assembly value by retrieving the value of each item, and set it on the
-     * element. 
+     * element.
      */
     pushVal: function() {
       var self = this,
@@ -381,7 +381,7 @@
     },
 
     /**
-     * Sets focus on the tagsinput 
+     * Sets focus on the tagsinput
      */
     focus: function() {
       this.$input.focus();
@@ -446,9 +446,9 @@
   };
 
   $.fn.tagsinput.Constructor = TagsInput;
-  
+
   /**
-   * Most options support both a string or number as well as a function as 
+   * Most options support both a string or number as well as a function as
    * option value. This function makes sure that the option with the given
    * key in the given options is wrapped in a function
    */
