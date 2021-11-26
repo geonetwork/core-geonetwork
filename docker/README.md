@@ -21,6 +21,7 @@ $ mvn clean install -U -DskipTests -Dsxt.properties=docker
 Puis de copier la webapp résultante dans le répertoire geonetwork (`docker/geonetwork`):
 
 ```
+$ cd docker
 $ cp ../web/target/geonetwork.war geonetwork/
 ```
 

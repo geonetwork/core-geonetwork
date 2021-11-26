@@ -1,6 +1,12 @@
 version: '3.1'
+
 volumes:
   geonetwork:
+  esdata:
+
+networks:
+  gn-network:
+    driver: bridge
 
 services:
   frontend:
@@ -10,27 +16,9 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      #      - cas
       - geonetwork
-
-      #  ldap:
-      #    build:
-      #      context: ../core/src/test/docker/ldap
-      #    image: sextant-ldap:latest
-
-      #  cas:
-      #    build:
-      #      context: ./cas
-      #      dockerfile: Dockerfile
-      #    image: sextant-cas:latest
-      #    environment:
-      #      JAVA_OPTS: -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
-      #    volumes:
-      #      - ./cas/cas-overlay-template-6.2/etc/cas:/etc/cas
-      #    ports:
-      #      - 5005:5005
-      #    depends_on:
-      #      - ldap
+    networks:
+      - gn-network
 
   geonetwork:
     build: geonetwork
@@ -52,7 +40,7 @@ services:
       ES_INDEX_SEARCHLOGS: geo-searchlogs
       ES_INDEX_RECORDS: geo-records
       ES_INDEX_FEATURES: geo-features
-      KB_URL: ""
+      KB_URL: "http://kibana:5601"
       POSTGRES_DB_HOST: database
       POSTGRES_DB_NAME: sextant
       POSTGRES_DB_USERNAME: sxt
@@ -72,17 +60,50 @@ services:
     depends_on:
       - elasticsearch
       - database
+      - kibana
     ports:
       - 5006:5005
+    networks:
+      - gn-network
 
   elasticsearch:
-    image: elasticsearch:7.6.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+    ports:
+      - 9200:9200
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
     environment:
+      ES_JAVA_OPTS: "-Xms1G -Xmx1G"
       discovery.type: single-node
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      - gn-network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.15.1
+    environment:
+      SERVER_NAME: 'kibana'
+      ELASTICSEARCH_URL: http://elasticsearch:9200/
+      SERVER_BASEPATH: /geonetwork/dashboards
+      SERVER_REWRITEBASEPATH: 'false'
+      KIBANA_INDEX: .dashboards
+      XPACK_MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED: 'true'
+    networks:
+      - gn-network
 
   database:
     image: mdillon/postgis
+    ports:
+      - 5434:5432
     environment:
       POSTGRES_USER: sxt
       POSTGRES_PASSWORD: sxt
       POSTGRES_DB: sextant
+    networks:
+      - gn-network
