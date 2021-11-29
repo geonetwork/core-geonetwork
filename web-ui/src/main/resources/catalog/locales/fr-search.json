@@ -49,7 +49,7 @@
     "resetContext": "Carte par défaut",
     "kmlContext": "Format KML",
     "displayHeatMap": "Afficher la heatmap",
-    "removeFeatures": "Supprimer les entités",
+    "removeFeatures": "Supprimer l'index des données",
     "refresh": "Rafraîchir",
     "mapLegend": "Légende",
     "kmlFile": "{{layer}} (KML)",
@@ -319,7 +319,7 @@
     "textStrokeWidth": "Largeur de trait",
     "textWidth": "Taille",
     "textFont": "Police",
-    "textInput": "Tapez votre texte",
+    "textContent": "Texte",
     "drawFillColor": "Couleur de remplissage",
     "drawStrokeColor": "Couleur de trait",
     "drawWidth": "Largeur",
@@ -358,7 +358,7 @@
     "KMLfileURL": "URL d'un fichier KML",
     "refineSearch": "Precisez votre recherche",
     "backToList": "Retour à la liste",
-    "privilegesBatchAlert": "Les privilèges seront modifiés pour toutes les fiches éditables dans la sélection. Le formulaire est vide et ne reflète pas les privilèges des fiches actuellement dans la sélection. Les privilèges sont supprimés puis remplacés par les nouveaux.",
+    "privilegesBatchAlert": "<span class='text-danger'>Les privilèges vont être mis à jour pour les fiches éditables de la sélection.  Le formulaire est vide et ne reflète pas les privilèges des fiches actuellement dans la sélection. Les privilèges sont supprimés et remplacer par les nouveaux.</span><br/><br/>Cliquer sur <strong>Fusionner</strong> pour ajouter ceux avec <strong>+</strong> et supprimer ceux avec <strong>-</strong>.<br/><br/>Cliquer sur <strong>Remplacer</strong> pour supprimer tout et ensuite ajouter ceux avec  <strong>+</strong>et supprimer ceux avec <strong>-</strong>.",
     "permalink": "Permalien",
     "permalinkTo": "Permalien vers {{title}}",
     "shareOnTwitter": "Partager via Twitter",
@@ -367,6 +367,8 @@
     "shareByEmail": "Partager via email",
     "zoomto": "Zoom vers",
     "recordNotFound": "La fiche avec l'identifiant {{uuid}} n'a pas été trouvée ou n'est pas partagée avec vous. Essayer <a href=\"catalog.signin?redirect={{url}}\">de vous connecter </a> si vous avec un compte.",
+    "recordNotFoundAuthenticatedUser": "The record with identifier <strong>{{uuid}}</strong> was not found or is not shared with you.",
+    "recordNotFoundAuthenticatedAdministrator":"The record with identifier <strong>{{uuid}}</strong> was not found",
     "intersectWith": "Intersection avec",
     "fullyOutsideOf": "Entièrement à l'extérieur de",
     "encloses": "Comprends au moins",
@@ -525,5 +527,6 @@
     "GUFname": "Nom",
     "GUFemail": "Email",
     "GUForganization": "Organisation",
-    "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed"
+    "printUnsupportedLayerTypes": "The following layer types are present but cannot be printed",
+    "rssFeed": "RSS feed"
 }

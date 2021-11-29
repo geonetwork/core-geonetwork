@@ -184,7 +184,7 @@
     "noLayersForThumbnail": "No s'ha definit cap capa al registre des de la que es pugui generar la miniatura",
     "noTemplatesAvailable": "Alerta! No hi ha plantilles disponibles al catàleg. Haurieu d'afegir-ne o <a href='admin.console#/metadata'>importar-ne</a> alguna.",
     "none": "Cap",
-    "notFoundInThesaurus": "<strong>Alerta! No s'han trobat al tesaure les paraules clau {{keywords}}.</strong> Això pot passar quan la paraula clau està en un idioma que no és el de la interfície de l'usuari actual. L'edició de paraules clau multiidoma no està suportada. <strong>Aquestes paraules clau no es modificaran amb l'edició actual</strong> llevat que esborreu aquesta secció del tesaure.",
+    "notFoundInThesaurus": "<strong>Warning! Keywords {{invalid}} not found in thesaurus.</strong> Others {{found}} were found in the thesaurus. 2 reasons: <ul><li>keywords in this record are in a language that is not in the current user interface language</li><li>keywords does not exists in the thesaurus</li></ul><strong>Those keywords will not be modified by this editing session</strong> unless you remove this thesaurus section.",
     "ocean": "Oceà",
     "isPublishedToAll": "Públic",
     "oneLanguage": "Un",
@@ -265,7 +265,7 @@
     "publishSuccess": "Publicació correcta. S'ha afegit la capa al mapa de vista prèvia",
     "recommendedValues": "Valors recomanats",
     "recursive": "Cercar també en subcarpetes",
-    "resetKeywordsAnyway": "Eliminar paraules clau",
+    "resetKeywordsAnyway": "Remove all keywords",
     "saveAtimeAgo": "L'última edició va ser {{timeAgo}}.",
     "saveMetadataError": "Error desant la metadada. Haurieu de recarregar l'editor.",
     "saveMetadataSuccess": "Canvis desats.",
@@ -351,7 +351,7 @@
     "sourceRecord": "Registre origen",
     "deleteField": "Esborra aquest camp",
     "deleteFieldSet": "Esborra aquest conjunt de camps",
-    "onlyMyRecord": "Only my records",
+    "onlyMyRecord": "Només els meus registres",
     "toggleSection": "Expandeix/Col·lapsa",
     "editorBoardInfo": "Crea o importa una nova entrada des d'aquesta pàgina. Accedeix i Administra ràpidament tots els registres de metadades.",
     "minorEditHelp": "No actualitzis la marca de temps en desar",
@@ -417,8 +417,8 @@
     "accessManagerChooseGroups": "Choose one or more groups",
     "accessManagerChooseOperations": "Choose one or more operation types",
     "status-no-status": "Workflow not active",
-    "badGmlProjectionCode": "The geometry projection <b>{{srsName}}</b> defined in the XML is not valid. Please edit the xml to fix the srs name or enter a new geometry.",
     "draft": "Working copy",
     "link": "Enllaç",
-    "link-text": "Link text"
+    "link-text": "Link text",
+    "confirmCancelEdit": "Do you want to cancel all changes and close the editor?"
 }
