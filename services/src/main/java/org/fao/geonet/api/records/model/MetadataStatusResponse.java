@@ -40,6 +40,10 @@ public class MetadataStatusResponse extends MetadataStatus {
     String ownerEmail;
     String ownerProfile;
 
+    private String dateDue;
+    private String dateClose;
+    private String dateChange;
+
     String title;
     String uuid;
     String currentStatus;
@@ -189,4 +193,27 @@ public class MetadataStatusResponse extends MetadataStatus {
         return metadataStatusObject.getStatusValue();
     }
 
+    public void setDateDue(String dateDue) {
+        this.dateDue = dateDue;
+    }
+
+    public String getDateDue() {
+        return dateDue;
+    }
+
+    public String getDateClose() {
+        return dateClose;
+    }
+
+    public void setDateClose(String dateClose) {
+        this.dateClose = dateClose;
+    }
+
+    public String getDateChange() {
+        return dateChange;
+    }
+
+    public void setDateChange(String dateChange) {
+        this.dateChange = dateChange;
+    }
 }
