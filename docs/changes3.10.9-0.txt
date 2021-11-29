@@ -1,0 +1,25 @@
+================================================================================
+===
+=== GeoNetwork 3.10.9: List of changes
+===
+================================================================================
+- Update transifex translations
+- [BP] Update Jsoup library (#6057)
+- [BP] Backport doi improvements (#6034) (#6064)
+- [BP] Reset search parameter after metadata status change to "approved" (#5970)
+- [BP] Remove the `htmlEncode` part for the label, this `htmlEncode` puts 'url safe' characters in the label. Fir instance 'Maps & graphics' turns into 'Maps &amp; graphics'. (#6038)
+- [BP] Validation / INSPIRE / Return message when quota exceeded. (#5995)
+- [BP] INSPIRE / Validation / Add API Key. (#5975) (#5978)
+- [BP] Don't display the reset password button when creating a new user (#6041)
+- [BP] Don't display the delete button when creating a new group (#6040)
+- [BP] Configuration option to restrict the map services supported in map extent API (geom.png) the usage of non-predefined map services. Related to #5166 (#6045)
+- [BP] Fix the registration of the `surname` and `country` for the 'self' registration process (#6060)
+- [BP] Encode view parameter (#6030)
+- [BP] Fix the list of elements to process in CSW ElementSet strategy 'context' (#6017)
+- [BP] Fix check for layer already in map (#6031)
+- [BP] Fix feedback email with multiple recipients (#6033)
+- [BP] Update XslProcessApi to process the draft copies for the metadata in a workflow (#5811)
+- [BP] Remove username from forgot password service url (#5993)
+- [BP] Remove username from forgot password service url (#5993)
+- [BP] Fix credentials autocomplete in harvesters (#6011)
+- Fix for the print bug with annotations on map. (#6008)
