@@ -1631,7 +1631,17 @@ span.text-ellipsis {
     color: @sxt-base-color;
   }
 }
+.gn-main-viewer .panel-tools .gn-facet h5 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 .gn-facet {
+  h5 .fa {
+      color: @sxt-base-color;
+      &.gn-field-empty {
+        color: #d3d3d3;
+    }
+  }
   .facet-invert>span.fa {
     display: none;
   }
@@ -1683,18 +1693,11 @@ span.text-ellipsis {
   .fa {
     margin-right: 4px;
   }
-  a.gn-facet-header {
+  .gn-facet-header {
     color: black;
     margin-top: 5px !important;
     margin-bottom: 5px !important;
   }
-  a.gn-facet-header .fa {
-    color: @sxt-base-color;
-    &.gn-field-empty {
-      color: #d3d3d3;
-    }
-  }
-
   > div {
     overflow: auto;
     overflow-x: hidden;
