@@ -63,11 +63,11 @@ import java.util.Map;
  * @author Francois Prunayre
  */
 public class DoiManager {
-    private static final String DOI_PROXY_URL = "https://doi.org/";
     private static final String DOI_ADD_XSL_PROCESS = "process/doi-add.xsl";
     private static final String DOI_REMOVE_XSL_PROCESS = "process/doi-remove.xsl";
     public static final String DATACITE_XSL_CONVERSION_FILE = "formatter/datacite/view.xsl";
     public static final String DOI_PREFIX_PARAMETER = "doiPrefix";
+    public static final String DOI_DEFAULT_URL = "https://doi.org/";
 
     private DoiClient client;
     private String doiPrefix;
@@ -107,6 +107,10 @@ public class DoiManager {
         if (sm != null) {
 
             String serverUrl = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIURL);
+            String doiPublicUrl = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIPUBLICURL);
+            if (StringUtils.isEmpty(doiPublicUrl)) {
+                doiPublicUrl = DOI_DEFAULT_URL;
+            }
             String username = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIUSERNAME);
             String password = sm.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIPASSWORD);
 
@@ -141,7 +145,7 @@ public class DoiManager {
                 Log.debug(DoiSettings.LOGGER_NAME,
                     "DOI configuration looks perfect.");
                 // TODO: Check connection ?
-                this.client = new DoiClient(serverUrl, username, password);
+                this.client = new DoiClient(serverUrl, username, password, doiPublicUrl);
                 initialised = true;
             }
         }
@@ -230,14 +234,15 @@ public class DoiManager {
             String currentDoi = schema.queryString(DOI_GET_SAVED_QUERY, xml);
             if (StringUtils.isNotEmpty(currentDoi)) {
                 // Current doi does not match the one going to be inserted. This is odd
-                if (!currentDoi.equals(DOI_PROXY_URL + doi)) {
+                String newDoi = client.createPublicUrl(doi);
+                if (!currentDoi.equals(newDoi)) {
                     throw new DoiClientException(String.format(
                         "Record '%s' already contains a DOI <a href='%s'>%s</a> which is not equal " +
                             "to the DOI about to be created (ie. '%s'). " +
                             "Maybe current DOI does not correspond to that record? " +
                             "This may happen when creating a copy of a record having " +
                             "an existing DOI.",
-                        metadata.getUuid(), currentDoi, currentDoi, client.createUrl("") + doi));
+                        metadata.getUuid(), currentDoi, currentDoi, newDoi));
                 }
 
                 throw new ResourceAlreadyExistException(String.format(
@@ -372,6 +377,8 @@ public class DoiManager {
         String landingPage = landingPageTemplate.replace(
                         "{{uuid}}", metadata.getUuid());
         doiInfo.put("doiLandingPage", landingPage);
+        doiInfo.put("doiUrl",
+            client.createPublicUrl(doiInfo.get("doi")));
         client.createDoi(doiInfo.get("doi"), landingPage);
 
 
@@ -440,9 +447,11 @@ public class DoiManager {
                 schema, DOI_ADD_XSL_PROCESS));
         }
 
+        String doiPublicUrl = client.createPublicUrl("");
+
         Map<String, Object> params = new HashMap<>(1);
         params.put("doi", doi);
-        params.put("doiProxy", DOI_PROXY_URL);
+        params.put("doiProxy", doiPublicUrl);
         return Xml.transform(md, styleSheet, params);
     }
 
