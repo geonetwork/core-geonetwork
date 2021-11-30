@@ -34,6 +34,7 @@ import com.neovisionaries.i18n.LanguageCode;
 import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.domain.MetadataResourceContainer;
+import org.jsoup.Jsoup;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.MultiPolygon;
 import jeeves.component.ProfileManager;
@@ -643,6 +644,10 @@ public final class XslUtil {
             Log.error(Geonet.GEONETWORK, "XMLtoJSON conversion I/O error. Error is " + e.getMessage() + ". XML is " + xml.toString());
         }
         return "";
+    }
+
+    public static String html2text(String html) {
+        return Jsoup.parse(html).text();
     }
 
     /**
