@@ -1692,11 +1692,16 @@ span.text-ellipsis {
   }
   .fa {
     margin-right: 4px;
+    color: #d3d3d3;
+
   }
   .gn-facet-header {
-    color: black;
+    color: black !important;
     margin-top: 5px !important;
     margin-bottom: 5px !important;
+    &.gn-facet-panel-active .fa {
+      color: @brand-primary;
+    }
   }
   > div {
     overflow: auto;
