@@ -97,8 +97,39 @@
         }
       });
 
-      scope.downloads = md.getLinksByType.apply(md, downloadTypes);
-      scope.layers = md.getLinksByType.apply(md, layerTypes);
+      scope.downloads = [];
+      scope.layers = [];
+
+      // an array of group indices, e.g. [0, 1, 2]
+      var linkGroups = md.link.map(function(link) { return link.group; })
+        .filter(function(link, i, arr) { return arr.indexOf(link) === i});
+
+      angular.forEach(linkGroups, function(group) {
+
+        // get all layers and downloads for this transferOptions
+        var layers = md.getLinksByType.apply(md,
+          [group].concat(layerTypes));
+
+        var downloads = md.getLinksByType.apply(md,
+          [group].concat(downloadTypes));
+
+        if(downloads.length > 0) {
+          // If only one layer, hide any WFS or WCS links unless there are several
+          // note: this does not apply if there is only one download link (otherwise we might end up with 0 links)
+          // https://gitlab.ifremer.fr/sextant/geonetwork/-/wikis/Catalogue#les-protocoles
+          if(layers.length === 1 && downloads.length > 1) {
+            var multipleWxS = md.getLinksByType(group, '#OGC:WFS', '#OGC:WCS').length > 1;
+
+            if (!multipleWxS) {
+              downloads = md.getLinksByType.apply(md,
+                [group].concat(downloadTypesWithoutWxS));
+            }
+          }
+
+          scope.downloads = scope.downloads.concat(downloads);
+        }
+        scope.layers = scope.layers.concat(layers);
+      }.bind(this));
     };
 
     /**
