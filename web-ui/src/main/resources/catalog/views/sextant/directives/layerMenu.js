@@ -128,16 +128,21 @@
               wfsLink = undefined;
             }
             if (wfsLink) {
-              scope.wfsLink = wfsLink;
-              var indexObject = wfsFilterService.registerEsObject(wfsLink.url, wfsLink.name);
-              indexObject.init({
-                wfsUrl: wfsLink.url,
-                featureTypeName: wfsLink.name
-              });
-              indexObject.searchWithFacets({}).then(function (data) {
-                if (data.count > 0) {
-                  scope.hasIndexedFeatures = true;
-                }
+              // set the wfs link with a delay so that it beomes null in the meantime,
+              // thus resetting the WFS form directive
+              // FIXME: refactor the WFS directive to handle changes in wfs link input
+              $timeout(function() {
+                scope.wfsLink = wfsLink;
+                var indexObject = wfsFilterService.registerEsObject(wfsLink.url, wfsLink.name);
+                indexObject.init({
+                  wfsUrl: wfsLink.url,
+                  featureTypeName: wfsLink.name
+                });
+                indexObject.searchWithFacets({}).then(function (data) {
+                  if (data.count > 0) {
+                    scope.hasIndexedFeatures = true;
+                  }
+                });
               });
             }
 
