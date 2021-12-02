@@ -43,6 +43,16 @@ public class UserDto {
     private List<Address> addresses;
     private String kind;
     private String password;
+
+    public boolean isGeneric() {
+        return generic;
+    }
+
+    public void setGeneric(boolean generic) {
+        this.generic = generic;
+    }
+
+    private boolean generic;
     private List<String> groupsRegisteredUser;
     private List<String> groupsEditor;
     private List<String> groupsReviewer;
