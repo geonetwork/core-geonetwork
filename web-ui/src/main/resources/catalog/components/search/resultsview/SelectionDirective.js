@@ -28,12 +28,12 @@
   var module = angular.module('gn_selection_directive', []);
 
   module.directive('gnSelectionWidget', [
-    '$translate', 'hotkeys',
+    '$translate', '$http', 'hotkeys',
     'gnHttp', 'gnMetadataActions', 'gnConfig', 'gnConfigService',
-    'gnSearchSettings', 'gnSearchManagerService',
-    function($translate, hotkeys,
+    'gnSearchSettings', 'gnSearchManagerService', 'gnCollectionService',
+    function($translate, $http, hotkeys,
              gnHttp, gnMetadataActions, gnConfig, gnConfigService,
-             gnSearchSettings, gnSearchManagerService) {
+             gnSearchSettings, gnSearchManagerService, gnCollectionService) {
 
       return {
         restrict: 'A',
@@ -50,6 +50,33 @@
           scope.withoutActionMenu =
               angular.isDefined(attrs.withoutActionMenu) ? true : false;
 
+
+          scope.withCollectionMenu = undefined;
+          scope.collectionQuery = "+resourceType:series";
+          scope.collectionTemplates = undefined;
+
+          scope.$watchCollection('user', function(n, o) {
+            if (scope.withCollectionMenu === undefined && n && n.isEditorOrMore) {
+              scope.withCollectionMenu = n.isEditorOrMore()
+                && !angular.isDefined(attrs.withoutCollectionMenu) ? true : false;
+
+              scope.withCollectionMenu
+              && gnCollectionService.getTemplates(scope.collectionQuery).then(function(templates) {
+                scope.collectionTemplates = templates;
+              });
+            }
+          });
+
+          scope.createCollection = function(record) {
+            gnSearchManagerService.selected(
+              scope.searchResults.selectionBucket).then(function(r) {
+              gnCollectionService.createCollection(record.uuid, r.data).then(function(id) {
+                window.location.hash = '#/metadata/' + id
+              });
+            });
+          }
+
+          
           scope.mdService = gnMetadataActions;
 
           scope.operationOnSelectionInProgress = false;

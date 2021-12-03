@@ -45,7 +45,9 @@
   </xsl:variable>
 
   <xsl:variable name="existingMemberUuids"
-                select="string-join(.//gmd:aggregationInfo/*/gmd:aggregateDataSetIdentifier/*/gmd:code/*/text(), ',')"/>
+                select="if ($newProductMemberUuids != '')
+                        then $newProductMemberUuids
+                        else string-join(.//gmd:aggregationInfo/*/gmd:aggregateDataSetIdentifier/*/gmd:code/*/text(), ',')"/>
 
   <xsl:variable name="existingMembers">
     <xsl:for-each select="tokenize($existingMemberUuids, ',')">
@@ -125,7 +127,6 @@
 
   <!-- Processing -->
   <xsl:template match="/">
-    <xsl:message>==First inject missing elements</xsl:message>
     <xsl:variable name="expandedRecord">
       <xsl:apply-templates mode="expand" select="."/>
     </xsl:variable>
@@ -156,7 +157,10 @@
       </xsl:call-template>
       <xsl:apply-templates select="gmd:resourceSpecificUsage" mode="expand"/>
       <xsl:apply-templates select="gmd:resourceConstraints" mode="expand"/>
+
       <xsl:apply-templates select="gmd:aggregationInfo" mode="expand"/>
+      <xsl:call-template name="addAssociatedResources"/>
+
       <xsl:call-template name="copyOrAddElement">
         <xsl:with-param name="elements" select="gmd:spatialRepresentationType"/>
         <xsl:with-param name="name" select="'gmd:spatialRepresentationType'"/>

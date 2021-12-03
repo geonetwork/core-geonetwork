@@ -268,5 +268,6 @@
   "regexpFlags-m": "enables multiline mode",
   "regexpFlags-n": "allows the period to match the newline character",
   "regexpFlags-i": "enables case insensitive matching",
-  "regexpFlags-c": "disables case insensitive matching"
+  "regexpFlags-c": "disables case insensitive matching",
+  "createCollectionFromSelectionAs": "Create collection from selection as"
 }
