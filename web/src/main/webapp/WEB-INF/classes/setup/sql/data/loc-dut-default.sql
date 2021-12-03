@@ -48,7 +48,7 @@ INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (26,'dut','Arapaho');
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (27,'dut','Kunsttalen (Overig)');
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (28,'dut','Arawak');
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (29,'dut','Assamees');
-INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (30,'dut','Asturisch; Babel');
+INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (30,'dut','Asturisch');
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (31,'dut','Athabaskische talen');
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (32,'dut','Australische talen');
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (33,'dut','Avaars');
