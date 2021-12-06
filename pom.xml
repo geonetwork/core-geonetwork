@@ -1043,11 +1043,6 @@
         <artifactId>springdoc-openapi-common</artifactId>
         <version>${springdoc.version}</version>
       </dependency>
-      <!--<dependency>
-        <groupId>org.springdoc</groupId>
-        <artifactId>springdoc-openapi-ui</artifactId>
-        <version>${springdoc.version}</version>
-      </dependency>-->
 
       <dependency>
         <groupId>org.hibernate</groupId>
