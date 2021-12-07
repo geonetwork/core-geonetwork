@@ -1478,5 +1478,6 @@
     "confirmDeletecategory": "Are you sure you want to delete this category?",
     "ui-addWMSLayersToMap": "Add WMS layers from metadata to the map viewer",
     "ui-addWMSLayersToMap-urlLayerParam": "URL parameter with the layer name",
-    "ui-addWMSLayersToMap-urlLayerParam-help": "If the WMS layer name is configured in the metadata resource url, configure the url parameter that contains the layer name."
+    "ui-addWMSLayersToMap-urlLayerParam-help": "If the WMS layer name is configured in the metadata resource url, configure the url parameter that contains the layer name.",
+    "confirmRemoveLogo": "Are you sure you want to delete this logo?"
 }
