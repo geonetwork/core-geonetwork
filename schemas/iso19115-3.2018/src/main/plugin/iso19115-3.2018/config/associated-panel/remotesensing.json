@@ -183,55 +183,8 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
-          },
-          "protocol": {
-            "value": "WWW:OPENSEARCH",
-            "hidden": true,
-            "isMultilingual": false
-          },
-          "name": {},
-          "desc": {},
-          "function": {
-            "value": "browsing",
-            "hidden": true,
-            "isMultilingual": false
-          }
-        }
-      },{
-        "group": "services",
-        "label": "OpenSearch / Ifremer",
-        "copyLabel": "desc",
-        "icon": "fa gn-icon-onlinesrc",
-        "process": "onlinesrc-add",
-        "fields": {
-          "url": {
             "isMultilingual": false,
-            "value": "https://opensearch.ifremer.fr/"
-          },
-          "protocol": {
-            "value": "WWW:OPENSEARCH",
-            "hidden": true,
-            "isMultilingual": false
-          },
-          "name": {},
-          "desc": {},
-          "function": {
-            "value": "browsing",
-            "hidden": true,
-            "isMultilingual": false
-          }
-        }
-      },{
-        "group": "services",
-        "label": "OpenSearch / PODAAC",
-        "copyLabel": "desc",
-        "icon": "fa gn-icon-onlinesrc",
-        "process": "onlinesrc-add",
-        "fields": {
-          "url": {
-            "isMultilingual": false,
-            "value": "https://cmr.earthdata.nasa.gov/opensearch/"
+            "choices": ["https://opensearch.ifremer.fr/", "https://cmr.earthdata.nasa.gov/opensearch/"]
           },
           "protocol": {
             "value": "WWW:OPENSEARCH",
