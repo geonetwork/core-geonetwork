@@ -2,7 +2,7 @@ FROM tomcat:8.5-jdk8
 
 ENV GN_FILE geonetwork.war
 ENV DATA_DIR=$CATALINA_HOME/webapps/geonetwork/WEB-INF/data
-ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -server -Xms512m -Xmx2024m -XX:NewSize=512m -XX:MaxNewSize=1024m -XX:+UseConcMarkSweepGC -Dspring.profiles.active=es"
+ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -server -Xms512m -Xmx2024m -XX:NewSize=512m -XX:MaxNewSize=1024m -XX:+UseConcMarkSweepGC -Dspring.profiles.active=es -Dgeonetwork.schema.dir=/usr/local/tomcat/webapps/geonetwork/WEB-INF/data/config/schema_plugins  -Dgeonetwork.formatter.dir=/usr/local/tomcat/webapps/geonetwork/WEB-INF/data/data/formatter"
 
 ENV ES_HOST localhost
 ENV ES_PROTOCOL http
