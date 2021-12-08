@@ -20,9 +20,19 @@ services:
     networks:
       - gn-network
 
+  ldap:
+    build: ../core/src/test/docker/ldap
+    networks:
+      - gn-network
+
+  cas:
+    build: ./cas
+    networks:
+      - gn-network
+
   geonetwork:
     build: geonetwork
-    image: sextant-geonetwork:elastic
+    image: sextant/geonetwork:7.0.0
     restart: always
     env_file:
       - ./.env
@@ -49,9 +59,9 @@ services:
       LDAP_URL: "ldap://ldap:389"
       LDAP_ADMIN_DN: cn=admin,dc=ifremer,dc=fr
       LDAP_ADMIN_PASSWORD: secret
-      CAS_URL: "https://users.marine-id.org"
+      CAS_URL: "http://localhost:8080/cas"
       GN_URL: "http://${DOCKER_HOST_ADDRESS}:8080/geonetwork"
-      CAS_TICKET_VALIDATION_URL: "https://users.marine-id.org"
+      CAS_TICKET_VALIDATION_URL: "http://cas:8080/cas"
       PANIER_XML_PATH_LOGGED: "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/intranet"
       PANIER_XML_PATH_ANONYMOUS: "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/anonymous"
       JAVA_OPTS: -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
