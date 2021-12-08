@@ -31,8 +31,13 @@ services:
       - gn-network
 
   geonetwork:
-    build: geonetwork
+    build:
+      context: geonetwork
+      args:
+        - GN_UID=${USER_ID}
+        - GN_GID=${GROUP_ID}
     image: sextant/geonetwork:7.0.0
+    user: ${USER_ID}:${GROUP_ID}
     restart: always
     env_file:
       - ./.env

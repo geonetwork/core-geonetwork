@@ -1,5 +1,8 @@
 FROM tomcat:8.5-jdk8
 
+ARG GN_UID
+ARG GN_GID
+
 ENV GN_FILE geonetwork.war
 ENV DATA_DIR=$CATALINA_HOME/webapps/geonetwork/WEB-INF/data
 ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -server -Xms512m -Xmx2024m -XX:NewSize=512m -XX:MaxNewSize=1024m -XX:+UseConcMarkSweepGC -Dspring.profiles.active=es"
@@ -33,6 +36,9 @@ RUN apt update && \
 
 RUN  unzip -d geonetwork geonetwork.war && \
      rm geonetwork.war
+
+RUN chown -R ${GN_UID}:${GN_GID} geonetwork/ && \
+  chown -R ${GN_UID}:${GN_GID} /usr/local/tomcat/conf
 
 COPY ./docker-entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
