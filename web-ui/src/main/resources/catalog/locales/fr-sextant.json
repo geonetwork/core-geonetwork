@@ -124,5 +124,6 @@
   "downloadTooltip": "Télécharger la donnée",
   "textInput": "Annotation",
   "facet-availableInServices": "Services associés",
-  "facet-OrgForResource": "Contact pour la ressource"
+  "facet-OrgForResource": "Contact pour la ressource",
+  "facet-sourceCatalogue": "Fourni par"
 }
