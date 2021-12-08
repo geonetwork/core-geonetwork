@@ -54,7 +54,9 @@
                gnESService, gnESFacet, gnAlertService, gnSearchSettings) {
     var defaultParams = {};
     var self = this;
-    $scope.facetConfig = gnSearchSettings.facetConfig;
+    if ($scope.facetConfig === undefined) {
+      $scope.facetConfig = gnSearchSettings.facetConfig;
+    }
 
     var hiddenParams = $scope.searchObj.hiddenParams;
     $scope.searchObj.configId = $scope.searchObj.configId || 'search';
