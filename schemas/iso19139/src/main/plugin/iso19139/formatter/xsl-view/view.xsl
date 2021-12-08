@@ -161,7 +161,7 @@
                   <span class="badge"><xsl:copy-of select="."/></span>
                 </xsl:when>
                 <xsl:otherwise>
-                  <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
+                  <a href='#/search?query_string=%7B"tag.default":%7B"{.}":true%7D%7D'>
                     <span class="badge"><xsl:copy-of select="."/></span>
                   </a>
                 </xsl:otherwise>
@@ -180,7 +180,7 @@
                 <span class="badge"><xsl:copy-of select="."/></span>
               </xsl:when>
               <xsl:otherwise>
-                <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
+                <a href='#/search?query_string=%7B"tag.default":%7B"{.}":true%7D%7D'>
                   <span class="badge"><xsl:copy-of select="."/></span>
                 </a>
               </xsl:otherwise>

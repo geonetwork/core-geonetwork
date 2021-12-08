@@ -127,7 +127,7 @@
       </h3>
       <xsl:for-each select="$metadata/dc:subject[. != '']">
         <tag thesaurus="">
-          <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
+          <a href='#/search?query_string=%7B"tag.default":%7B"{.}":true%7D%7D'>
             <span class="badge"><xsl:copy-of select="."/></span>
           </a>
         </tag>
