@@ -153,11 +153,11 @@
   };
 
   FacetsController.prototype.getFilteredItems = function (facet) {
-    if (!facet.meta || !facet.meta.filterValues) {
+    if (!facet.filterValues) {
       return facet.items;
     }
     return facet.items.filter(function (item) {
-      return facet.meta.filterValues.indexOf(item.value) > -1;
+      return facet.filterValues.indexOf(item.value) > -1;
     });
   };
 
