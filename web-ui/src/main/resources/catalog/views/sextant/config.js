@@ -315,6 +315,7 @@
 
       if(typeof sxtSettings != 'undefined') {
         angular.extend(searchSettings, sxtSettings);
+        searchSettings.facetConfig = esFacetConfig; // do not keep the sextant-specific facet config on the search settings
         angular.extend(gnPanierSettings, sxtSettings.panier);
 
         if(sxtSettings.servicesUrl) {
