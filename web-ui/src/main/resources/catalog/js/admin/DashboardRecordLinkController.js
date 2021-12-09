@@ -81,7 +81,9 @@
                 filterControl: true,
                 style: 'min-height:100',
                 classes: 'table table-responsive full-width',
-                height: '800',
+                // Does not work in Sextant. It would
+                // display the header twice slightly translated ...
+                // height: '800',
                 sortName: 'lastState',
                 sortOrder: 'desc',
 
