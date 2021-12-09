@@ -495,6 +495,19 @@
 
             scope.filterFacets();
           };
+          // counts recursively the number of occurrence of nodes
+          scope.getNodeCount = function(nodes) {
+            var count = 0;
+            var nodeCount = function(e) {
+              count += 1;
+              e.nodes && e.nodes.forEach(nodeCount);
+            };
+            if (nodes) {
+              nodes.forEach(nodeCount);
+            }
+            return count;
+          };
+
 
           scope.onFilterInputChange = function(field) {
             var name = field.name;
