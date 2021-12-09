@@ -1,4 +1,5 @@
-<div class="row" data-ng-controller="GnUserGroupController">
+<div class="row" data-ng-controller="GnUserGroupController"
+     id="gn-group-container">
   <div class="col-lg-4">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -61,8 +62,7 @@
           <button type="button" class="btn pull-right btn-danger"
                   data-ng-hide="!user.isAdministratorOrMore() || !groupSelected.id || groupSelected.id<0"
                   data-ng-disabled="searchResults.count > 0"
-                  data-gn-confirm-click="{{'groupDeleteConfirm' | translate}}"
-                  data-ng-click="deleteGroup(groupSelected.id)" id="gn-btn-group-delete">
+                  data-ng-click="removeGroup()" id="gn-btn-group-delete">
             <i class="fa fa-trash"></i>&nbsp;
             <span data-translate="">deleteGroup</span>
           </button>
@@ -254,5 +254,11 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div gn-modal class="gn-confirm-delete"
+       gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmRemoveGroup}"
+       id="gn-confirm-remove-group">
+    <p translate>groupDeleteConfirm</p>
   </div>
 </div>
