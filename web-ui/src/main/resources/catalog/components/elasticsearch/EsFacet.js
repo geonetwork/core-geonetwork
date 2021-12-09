@@ -323,13 +323,6 @@
           && fieldConfig.meta.field
             ? fieldConfig.meta.field
             : fieldId
-
-        // no clue why, but it looks like in API mode
-        // on ifremer, filterValues is not sent in the first
-        // request as meta. Testing a workaround... FIXME
-        var metaFilterValues = fieldConfig
-          && fieldConfig.meta
-          && fieldConfig.meta.filterValues;
         var facetModel = {
           key: fieldId,
           userHasRole: fieldConfig
@@ -338,8 +331,10 @@
           collapsed: fieldConfig
             && fieldConfig.meta
             && fieldConfig.meta.collapsed,
-          filterValues: metaFilterValues,
-          meta: metaFilterValues ? fieldConfig.meta : respAgg.meta,
+          filterValues: fieldConfig
+            && fieldConfig.meta
+            && fieldConfig.meta.filterValues,
+          meta: respAgg.meta,
           items: [],
           path: (path || []).concat([searchFieldId])
         };
