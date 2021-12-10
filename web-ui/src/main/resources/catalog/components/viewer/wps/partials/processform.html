@@ -92,9 +92,17 @@
                   <span class="input-group-addon" translate>date</span>
                 </div>
               </div>
-
+              <!--specific SEXTANT -->
+              <div ng-if="isBoolean(input)">
+                <div ng-repeat="field in getInputsByName(input.identifier.value)" class="input-checkbox checkbox" >
+                  <label>
+                    <input type="checkbox" id=field.value ng-model="field.value">
+                  </label>
+                </div>
+              </div>
+              <!--END specific SEXTANT -->
               <!-- Basic form field (combo box or text field) -->
-              <div ng-if="::input.literalData && !isDateTime(input)">
+              <div ng-if="::input.literalData && !isDateTime(input) && !isBoolean(input)">
                 <div class="input-group"
                   ng-repeat="field in getInputsByName(input.identifier.value)">
                   <select class="form-control input-sm"
