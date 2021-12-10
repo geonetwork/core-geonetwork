@@ -95,6 +95,7 @@ services:
     environment:
       ES_JAVA_OPTS: "-Xms1G -Xmx1G"
       discovery.type: single-node
+      xpack.security.enabled: 'false'
     volumes:
       - esdata:/usr/share/elasticsearch/data
     networks:
