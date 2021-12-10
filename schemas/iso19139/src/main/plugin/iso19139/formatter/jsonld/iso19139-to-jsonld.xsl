@@ -280,9 +280,9 @@
           <xsl:for-each select="gmd:geographicElement/gmd:EX_GeographicBoundingBox">
               {"@type":"GeoShape",
               "box": "<xsl:value-of select="string-join((
-                                              gmd:southBoundLatitude/gco:Decimal|
-                                              gmd:westBoundLongitude/gco:Decimal|
-                                              gmd:northBoundLatitude/gco:Decimal|
+                                              gmd:southBoundLatitude/gco:Decimal,
+                                              gmd:westBoundLongitude/gco:Decimal,
+                                              gmd:northBoundLatitude/gco:Decimal,
                                               gmd:eastBoundLongitude/gco:Decimal
                                               ), ' ')"/>"
               }<xsl:if test="position() != last()">,</xsl:if>
