@@ -44,6 +44,8 @@
                 xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
                 exclude-result-prefixes="#all">
 
+    <xsl:import href="protocol-mapping.xsl"></xsl:import>
+
     <xsl:output method="xml" indent="yes"/>
     <xsl:strip-space elements="*"/>
 
@@ -414,6 +416,7 @@
             <mrd:transferOptions>
               <mrd:MD_DigitalTransferOptions>
                 <xsl:for-each select="distribution">
+                  <xsl:variable name="format" select="format"/>
                   <mrd:onLine>
                     <cit:CI_OnlineResource>
                       <cit:linkage>
@@ -423,11 +426,7 @@
                       </cit:linkage>
                       <cit:protocol>
                         <gco:CharacterString>
-                          <xsl:choose>
-                            <xsl:when test="format = 'Web Page'">WWW:LINK-1.0-http--link</xsl:when>
-                            <xsl:when test="format = 'ArcGIS GeoServices REST API'">ESRI:REST</xsl:when>
-                            <xsl:otherwise>WWW:DOWNLOAD</xsl:otherwise>
-                          </xsl:choose>
+                          <xsl:value-of select="$format-protocol-mapping/entry[format=lower-case($format)]/protocol"/>
                         </gco:CharacterString>
                       </cit:protocol>
                       <cit:name>
@@ -437,12 +436,39 @@
                       </cit:name>
                       <cit:description>
                         <gco:CharacterString>
-                          <xsl:value-of select="format"/>
+                          <xsl:value-of select="$format"/>
                         </gco:CharacterString>
                       </cit:description>
                     </cit:CI_OnlineResource>
                   </mrd:onLine>
                 </xsl:for-each>
+              </mrd:MD_DigitalTransferOptions>
+            </mrd:transferOptions>
+            <mrd:transferOptions>
+              <mrd:MD_DigitalTransferOptions>
+                  <mrd:onLine>
+                    <cit:CI_OnlineResource>
+                      <cit:linkage>
+                        <gco:CharacterString>
+                          <xsl:value-of select="landingPage"/>
+                        </gco:CharacterString>
+                      </cit:linkage>
+                      <cit:protocol>
+                        <gco:CharacterString>
+                          WWW:LINK:LANDING_PAGE
+                        </gco:CharacterString>
+                      </cit:protocol>
+                      <cit:name>
+                        <gco:CharacterString>
+                          Landing Page
+                        </gco:CharacterString>
+                      </cit:name>
+                      <cit:description>
+                        <gco:CharacterString>
+                        </gco:CharacterString>
+                      </cit:description>
+                    </cit:CI_OnlineResource>
+                  </mrd:onLine>
               </mrd:MD_DigitalTransferOptions>
             </mrd:transferOptions>
           </mrd:MD_Distribution>

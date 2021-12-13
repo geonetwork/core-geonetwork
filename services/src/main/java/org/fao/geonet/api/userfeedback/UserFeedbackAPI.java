@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -28,6 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -61,13 +62,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_NAME_PATH;
 
@@ -492,7 +489,7 @@ public class UserFeedbackAPI {
         method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity sendEmailToContact(
+    public ResponseEntity<String> sendEmailToContact(
         @Parameter(
             description = "Metadata record UUID.",
             required = true
@@ -549,7 +546,7 @@ public class UserFeedbackAPI {
         )
         @RequestParam(required = false, defaultValue = "-") final String category,
         @Parameter(
-            description = "List of record's contact to send this email.",
+            description = "List of record's contact to send this email (separated by comma).",
             required = false
         )
         @RequestParam(required = false, defaultValue = "") final String metadataEmail,
@@ -574,19 +571,23 @@ public class UserFeedbackAPI {
         String to = settingManager.getValue(SYSTEM_FEEDBACK_EMAIL);
         String catalogueName = settingManager.getValue(SYSTEM_SITE_NAME_PATH);
 
-        List<String> toAddress = new LinkedList<String>();
+        Set<String> toAddress = new HashSet<>();
         toAddress.add(to);
-        if (isNotBlank(metadataEmail)) {
+        if (StringUtils.isNotBlank(metadataEmail)) {
             //Check metadata email belongs to metadata security!!
             AbstractMetadata md = metadataRepository.findOneByUuid(metadataUuid);
-            if (md.getData().indexOf(metadataEmail) > 0) {
-                toAddress.add(metadataEmail);
+            String[] metadataAddresses = StringUtils.split(metadataEmail, ",");
+            for (String metadataAddress : metadataAddresses) {
+                String cleanMetadataAddress = StringUtils.trimToEmpty(metadataAddress);
+                if (cleanMetadataAddress.length() > 0 && md.getData().indexOf(cleanMetadataAddress) > 0) {
+                    toAddress.add(cleanMetadataAddress);
+                }
             }
         }
 
         String title = XslUtil.getIndexField(null, metadataUuid, "resourceTitle", "");
 
-        MailUtil.sendMail(toAddress,
+        MailUtil.sendMail(new ArrayList<>(toAddress),
             String.format(
                 messages.getString("user_feedback_title"),
                 catalogueName, title, subject),
@@ -595,8 +596,7 @@ public class UserFeedbackAPI {
                 name, org, function, email, phone, title, type, category, comments,
                 settingManager.getNodeURL(), metadataUuid),
             settingManager);
-
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     /**
