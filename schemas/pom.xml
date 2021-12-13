@@ -28,7 +28,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.10.10</version>
+    <version>3.10-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -54,7 +54,7 @@
   </modules>
   <properties>
     <rootProjectDir>../..</rootProjectDir>
-    <gn.project.version>3.10.10</gn.project.version>
+    <gn.project.version>3.10-SNAPSHOT</gn.project.version>
   </properties>
 
   <!-- used by add-schema.sh -->
