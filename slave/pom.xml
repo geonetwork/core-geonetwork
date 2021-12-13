@@ -28,7 +28,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.10-SNAPSHOT</version>
+    <version>3.10.10</version>
   </parent>
 
   <name>GeoNetwork Slave</name>
