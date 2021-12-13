@@ -73,7 +73,7 @@ services:
       PANIER_XML_PATH_ANONYMOUS: "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/anonymous"
       JAVA_OPTS: -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
     volumes:
-      - geonetwork:/var/lib/geonetwork_data
+      - ${GN_LOG_PATH}:/data/mnt/logs/
     depends_on:
       - elasticsearch
       - database
