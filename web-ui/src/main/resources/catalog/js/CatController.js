@@ -709,9 +709,9 @@ goog.require('gn_alert');
           'editorIndentType': '',
           'allowRemoteRecordLink': true,
           'facetConfig': {
-            'resourceType': {
+            'cl_hierarchyLevel.key': {
               'terms': {
-                'field': 'resourceType',
+                'field': 'cl_hierarchyLevel.key',
                 'size': 20
               }
             },

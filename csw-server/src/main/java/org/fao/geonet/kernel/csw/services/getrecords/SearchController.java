@@ -347,7 +347,7 @@ public class SearchController {
                         }
 
                         List<Element> elementsInContextMatching = new ArrayList<Element>();
-                        for (Element match : elementsInContextMatching) {
+                        for (Element match : elementsMatching) {
                             Element parent = match.getParentElement();
                             while (parent != null) {
                                 parent.removeContent();

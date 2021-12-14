@@ -341,9 +341,9 @@
           <xsl:for-each select="gex:geographicElement/gex:EX_GeographicBoundingBox">
               {"@type":"GeoShape",
               "box": "<xsl:value-of select="string-join((
-                                              gex:southBoundLatitude/gco:Decimal|
-                                              gex:westBoundLongitude/gco:Decimal|
-                                              gex:northBoundLatitude/gco:Decimal|
+                                              gex:southBoundLatitude/gco:Decimal,
+                                              gex:westBoundLongitude/gco:Decimal,
+                                              gex:northBoundLatitude/gco:Decimal,
                                               gex:eastBoundLongitude/gco:Decimal
                                               ), ' ')"/>"
               }<xsl:if test="position() != last()">,</xsl:if>

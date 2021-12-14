@@ -189,11 +189,11 @@
 
 
       if ($routeParams.childOf) {
-        $scope.resourceTitle = $translate.instant('createChildOf');
+        $scope.resourceTitle = 'createChildOf';
       } else if ($routeParams.from) {
-        $scope.resourceTitle = $translate.instant('createCopyOf');
+        $scope.resourceTitle = 'createCopyOf';
       } else {
-        $scope.resourceTitle = $translate.instant('createA');
+        $scope.resourceTitle = 'createA';
       }
 
       $scope.createNewMetadata = function(isPublic) {

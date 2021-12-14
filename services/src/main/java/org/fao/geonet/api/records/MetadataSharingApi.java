@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2021 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -68,6 +68,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
@@ -101,6 +102,9 @@ public class MetadataSharingApi {
 
     @Autowired
     IMetadataUtils metadataUtils;
+
+    @Autowired
+    IMetadataStatus metadataStatus;
 
     @Autowired
     MetadataRepository metadataRepository;
@@ -397,6 +401,25 @@ public class MetadataSharingApi {
             boolean allowPublishInvalidMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD);
             boolean allowPublishNonApprovedMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_NON_APPROVED_MD);
 
+            boolean isMdWorkflowEnable = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
+
+            // Check not trying to publish a retired metadata
+            if (isMdWorkflowEnable) {
+                MetadataStatus mdStatus = metadataStatus.getStatus(metadata.getId());
+                if (mdStatus.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.RETIRED)) {
+                    List<GroupOperations> allGroupOps =
+                        privileges.stream().filter(p -> p.getGroup() == ReservedGroup.all.getId()).collect(Collectors.toList());
+
+                    for (GroupOperations p : allGroupOps) {
+                        if (p.getOperations().containsValue(true)) {
+                            throw new Exception(String.format("Retired metadata %s can't be published.",
+                                metadata.getUuid()));
+                        }
+
+                    }
+                }
+            }
+
             SharingResponse sharingBefore = getRecordSharingSettings(metadata.getUuid(), request.getSession(), request);
 
             if (sharing.isClear()) {
@@ -416,8 +439,8 @@ public class MetadataSharingApi {
                         // For privileges to ALL group, check if it's allowed or not to publish invalid metadata
                         if ((p.getGroup() == ReservedGroup.all.getId())) {
                             try {
-                                checkCanPublishToAllGroup(context, dataMan, metadata,
-                                    allowPublishInvalidMd, allowPublishNonApprovedMd);
+                                    checkCanPublishToAllGroup(context, dataMan, metadata,
+                                        allowPublishInvalidMd, allowPublishNonApprovedMd);
                             } catch (Exception ex) {
                                 // If building a report of the sharing, annotate the error and continue
                                 // processing the other group privileges, otherwise throw the exception

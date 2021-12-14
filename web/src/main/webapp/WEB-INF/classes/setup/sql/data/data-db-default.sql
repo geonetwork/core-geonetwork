@@ -700,6 +700,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal, encrypted) VALUES ('system/publication/doi/doipassword', '', 0, 100194, 'y', 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/publication/doi/doikey', '', 0, 110095, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/publication/doi/doilandingpagetemplate', 'http://localhost:8080/geonetwork/srv/resources/records/{{uuid}}', 0, 100195, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/publication/doi/doipublicurl', '', 0, 100196, 'n');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/minLength', '6', 1, 12000, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/maxLength', '20', 1, 12001, 'n');

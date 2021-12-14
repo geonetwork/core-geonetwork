@@ -415,6 +415,10 @@
                 <th data-translate="">credit</th>
                 <td><p data-ng-repeat="c in mdView.current.record.resourceCredit">{{c}}</p></td>
               </tr>
+              <tr data-ng-if="mdView.current.record.supplementalInformation">
+                <th data-translate="">supplementalInformation</th>
+                <td><p data-ng-bind-html="mdView.current.record.supplementalInformation | linky | newlines"/></p></td>
+              </tr>
               <tr data-ng-if="mdView.current.record.cl_status.length > 0">
                 <th data-translate="">resourceStatus</th>
                 <td>

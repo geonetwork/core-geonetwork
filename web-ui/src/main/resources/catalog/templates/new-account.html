@@ -79,11 +79,11 @@
                       data-ng-model="userInfo.address.city"/>
             </div>
             <div class="form-group">
-              <label data-translate=""
-                     data-ng-model="userInfo.address.country">country</label>
+              <label data-translate="">country</label>
               <!-- TODO : Add country list -->
               <input type="text" name="country" class="form-control"
-                      aria-label="{{'country' | translate}}"/>
+                      aria-label="{{'country' | translate}}"
+                      data-ng-model="userInfo.address.country"/>
             </div>
           </fieldset>
 
