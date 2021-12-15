@@ -30,8 +30,9 @@ import org.fao.geonet.domain.Metadata;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class InspireAtomFeedRepositoryCustomImpl implements InspireAtomFeedRepositoryCustom {
@@ -61,16 +62,17 @@ public class InspireAtomFeedRepositoryCustomImpl implements InspireAtomFeedRepos
 
         cbQuery.where(cb.and(datasetIdCodePredicate, datasetIdNsPredicate));
 
-        InspireAtomFeed feed = null;
+        List<InspireAtomFeed> feeds = new ArrayList<>();
 
         try {
-            feed = _entityManager.createQuery(cbQuery).getSingleResult();
+            feeds = _entityManager.createQuery(cbQuery).getResultList();
         } catch (NoResultException nre) {
             //Ignore this
         }
 
-        if (feed != null) {
-            Metadata md = _entityManager.find(Metadata.class, feed.getMetadataId());
+        if (!feeds.isEmpty()) {
+            // Several feeds can point to the same dataset, use the first
+            Metadata md = _entityManager.find(Metadata.class, feeds.get(0).getMetadataId());
             metadataUuid = md.getUuid();
         }
 
@@ -97,15 +99,16 @@ public class InspireAtomFeedRepositoryCustomImpl implements InspireAtomFeedRepos
 
         cbQuery.where(datasetIdCodePredicate);
 
-        InspireAtomFeed feed = null;
+        List<InspireAtomFeed> feeds = new ArrayList<>();
         try {
-            feed = _entityManager.createQuery(cbQuery).getSingleResult();
+            feeds = _entityManager.createQuery(cbQuery).getResultList();
         } catch (NoResultException nre) {
             //Ignore this
         }
 
-        if (feed != null) {
-            Metadata md = _entityManager.find(Metadata.class, feed.getMetadataId());
+        if (!feeds.isEmpty()) {
+            // Several feeds can point to the same dataset, use the first
+            Metadata md = _entityManager.find(Metadata.class, feeds.get(0).getMetadataId());
             metadataUuid = md.getUuid();
         }
 
