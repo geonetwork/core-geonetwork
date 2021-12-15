@@ -35,10 +35,13 @@
 
   <xsl:param name="updateAllFromMembers" select="true()"/>
 
+  <xsl:variable name="metadata"
+                select="/"/>
+
   <xsl:variable name="members">
     <xsl:for-each select="tokenize($newProductMemberUuids, ',')">
       <record uuid="{.}">
-        <xsl:variable name="xmlDocument" select="util:getRecord(.)"/>
+        <xsl:variable name="xmlDocument" select="util:getRecord(., $metadata/*/geonet:info/schema)"/>
         <xsl:copy-of select="$xmlDocument"/>
       </record>
     </xsl:for-each>
@@ -52,7 +55,7 @@
   <xsl:variable name="existingMembers">
     <xsl:for-each select="tokenize($existingMemberUuids, ',')">
       <record uuid="{.}">
-        <xsl:variable name="xmlDocument" select="util:getRecord(.)"/>
+        <xsl:variable name="xmlDocument" select="util:getRecord(., $metadata/*/geonet:info/schema)"/>
         <xsl:copy-of select="$xmlDocument"/>
       </record>
     </xsl:for-each>

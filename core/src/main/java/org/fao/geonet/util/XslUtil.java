@@ -124,6 +124,7 @@ import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -1035,13 +1036,31 @@ public final class XslUtil {
      * does not make any security checks.
      */
     public static Node getRecord(String uuid) {
+        return getRecord(uuid, null);
+    }
+    public static Node getRecord(String uuid, String schema) {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         DataManager dataManager = applicationContext.getBean(DataManager.class);
         try {
             String id = dataManager.getMetadataId(uuid);
             if (id != null) {
                 Element metadata = dataManager.getMetadata(id);
+                String metadataSchema = dataManager.getMetadataSchema(id);
 
+                if (StringUtils.isNotEmpty(schema)
+                    && !metadataSchema.equals(schema)) {
+                    final Path styleSheet = dataManager
+                        .getSchemaDir(metadataSchema)
+                        .resolve(String.format( "formatter/%s/view.xsl", schema));
+                    final boolean exists = java.nio.file.Files.exists(styleSheet);
+                    if (!exists) {
+                        Log.warning(Geonet.GEONETWORK,String.format(
+                            "XslUtil getRecord warning: Can't retrieve record %s (schema %s) in schema %s. A formatter is required for this conversion.",
+                            uuid, metadataSchema, schema));
+
+                    };
+                    metadata = Xml.transform(metadata, styleSheet);
+                }
                 DOMOutputter outputter = new DOMOutputter();
                 return outputter.output(new Document(metadata));
             }
