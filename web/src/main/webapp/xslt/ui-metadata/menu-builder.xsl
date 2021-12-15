@@ -185,7 +185,8 @@
                          select="concat('switchToTab(''', @id, ''', ''', @mode, ''')')"/>
         </xsl:if>
         <xsl:variable name="tabId" select="@id"/>
-        <xsl:value-of select="$strings/*[name() = $tabId]"/>
+        <xsl:variable name="tabLabel" select="$strings/*[name() = $tabId]"/>
+        <xsl:value-of select="($tabLabel|$tabId)[1]"/>
       </a>
     </li>
 
