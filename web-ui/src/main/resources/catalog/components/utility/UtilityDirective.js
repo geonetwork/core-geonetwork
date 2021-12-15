@@ -61,6 +61,62 @@
     }
   ]);
 
+
+  module.directive('gnRecordMosaic', ['$http',
+    function($http) {
+      return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          query: '@gnRecordMosaic',
+          sort: '@',
+          size: '@',
+          imageSize: '@'
+        },
+        templateUrl: '../../catalog/components/utility/' +
+          'partials/mosaic.html',
+        link: function(scope, element, attrs) {
+          scope.images = [];
+          scope.imageSize = parseInt(attrs.imagesize) || 300;
+          var query = {
+            "_source": {"includes": ["overview"]},
+            "from": 0,
+            "size": scope.size || 10,
+            "query": {
+              "bool" : {
+                "must": [
+                  {"exists": {"field": "overview"}},
+                  {"query_string": {"query": scope.query}}
+                ]
+              }
+            }};
+
+          if (scope.sort) {
+            var descOrder = scope.sort.startsWith('-'),
+            sort = {};
+            sort[descOrder ? scope.sort.substr(1) : scope.sort] = {
+              order: descOrder ? 'desc' : 'asc'
+            }
+            query.sort = [sort]
+          } else {
+            query.query = {
+              "function_score": {
+                "random_score": {seed: Math.floor(Math.random() * 10000)},
+                query: query.query
+              }
+            }
+          }
+
+          $http.post('../api/search/records/_search', query).then(function(r) {
+              r.data.hits.hits.map(function(h) {
+                scope.images.push(h);
+              })
+          });
+        }
+      };
+    }
+  ]);
+
   module.directive('gnConfirmClick', [
     function() {
       return {
