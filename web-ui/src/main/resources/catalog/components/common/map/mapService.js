@@ -35,6 +35,106 @@
     'gn_esri_service'
   ]);
 
+  module.factory('gnMapServicesCache',
+    ['gnGlobalSettings',
+      function(gnGlobalSettings) {
+        var mapservicesCache = null;
+
+        return {
+          getMapservices: function() {
+            if (mapservicesCache === null) {
+              var client = new XMLHttpRequest();
+              client.open('GET', '../api/mapservices', false);
+              client.setRequestHeader("accept", "application/json");
+              client.send();
+              if (client.status === 200) {
+                mapservicesCache = JSON.parse(client.responseText);
+              }
+            }
+            return mapservicesCache;
+          },
+
+          getMapservice: function(url) {
+            var mapservices = this.getMapservices();
+            if (mapservices !== null) {
+              for (var j = 0; j < mapservices.length; j++){
+                if ((mapservices[j].urlType='TEXT' && url.indexOf(mapservices[j].url) === 0) ||
+                    (mapservices[j].urlType='REGEXP') && (new RegExp(mapservices[j].url)).test(url)) {
+                  return mapservices[j];
+                }
+              }
+            }
+            return null;
+          },
+
+          getAuthorizationHeaderValue: function(mapservice) {
+            if (mapservice.authType === 'BEARER') {
+              // keycloak public client is the only supported bearer token at this time.
+              if (keycloak) {
+                if (keycloak.token) {
+                  return "Bearer " + keycloak.token;
+                } else {
+                  console.log("No token available. Will perform anonymous request")
+                }
+              } else {
+                console.log("No public client available to retreive token. Will perform anonymous request")
+              }
+            } else {
+              // For basic auth, we need to use proxy for security reasons as the username and password is not availabe in java.
+              // return 'Basic ' + btoa(user + ':' + pass);
+              return null;
+            }
+          },
+
+          // As this is a authorized mapservice lets use the authization load function for loading the images/tiles
+          authorizationLoadFunction: function(tile, src) {
+            var srcUrl = src;
+            var mapservice = this.getMapservice(srcUrl);
+            if (mapservice !== null) {
+              // If we are using a proxy then adjust the url.
+              if (mapservice.useProxy) {
+                // Proxy calls should have been handled withtout load function . So it this occures just log a warning and set the proxy url
+                console.log("Warning: attempting to get Using authorized Map service to get tile/image via proxy - this should have already been handled.")
+                tile.getImage().src  = gnGlobalSettings.proxyUrl + encodeURIComponent(srcUrl);
+              } else {
+                // Todo future add client side authentication request.
+                // For now set the src without authentication
+                tile.getImage().src = srcUrl
+              }
+            } else {
+              // Not a registered mapservice so just use the existing url
+              tile.getImage().src = srcUrl;
+            }
+          },
+
+
+          authorizationFunctionLegend: function(mapservice, legendUrl) {
+            var srcUrl = legendUrl.OnlineResource;
+
+            var mapservice = this.getMapservice(srcUrl);
+            if (mapservice !== null) {
+              // If we are using a proxy then adjust the url.
+              if (mapservice.useProxy) {
+                // Proxy calls should have been handled withtout load function . So it this occures just log a warning and set the proxy url
+                console.log("Warning: attempting to get Using authorized Map service to get legend/image via proxy - this should have already been handled.")
+                legendUrl.OnlineResource = gnGlobalSettings.proxyUrl + encodeURIComponent(srcUrl);
+                legend = data;
+              } else {
+                // Todo future add client side authentication request.
+                // For now set the src without authentication
+                legendUrl.OnlineResource = srcUrl
+                legend = srcUrl;
+              }
+            } else {
+              // Not a registered mapservice so just use the existing url
+              legendUrl.OnlineResource = srcUrl
+              legend = srcUrl;
+            }
+          }
+        };
+      }
+    ]);
+
   /**
    * @ngdoc service
    * @kind function
@@ -66,11 +166,12 @@
       'gnAlertService',
       '$http',
       'gnEsriUtils',
+      'gnMapServicesCache',
       function(olDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
           gnGlobalSettings, gnViewerSettings, gnViewerService, gnAlertService,
-          $http, gnEsriUtils) {
+          $http, gnEsriUtils, gnMapServicesCache) {
 
         /**
          * @description
@@ -743,6 +844,21 @@
 
             var loadFunction;
 
+            // If this is an authorized mapservice then we need to adjust the url or add auth headers
+            // Only check http url and exclude any urls like data: which should not be changed. Also, there is not need to check prox urls.
+            if (options.url !== null && options.url.startsWith("http") && !options.url.startsWith(gnGlobalSettings.proxyUrl)) {
+               var mapservice = gnMapServicesCache.getMapservice(options.url);
+               if (mapservice !== null) {
+                  if (mapservice.useProxy) {
+                     // If we are using a proxy then adjust the url.
+                     options.url = gnGlobalSettings.proxyUrl + encodeURIComponent(options.url);
+                  } else {
+                     // If not using the proxy then we need to use a custom loadFunction to set the authentication header
+                     loadFunction = gnMapServicesCache.authorizationLoadFunction;
+                  }
+               }
+            }
+
             var source, olLayer;
             if (gnViewerSettings.singleTileWMS) {
               var config = {
@@ -920,7 +1036,23 @@
               }
 
               if (legendUrl) {
-                legend = legendUrl.OnlineResource;
+
+                // If this is an authorized mapservice then we need to adjust the url or add auth headers
+                // Only check http url and exclude any urls like data: which should not be changed. Also, there is not need to check prox urls.
+                if (legendUrl !== null && legendUrl.OnlineResource !== null && legendUrl.OnlineResource.startsWith("http") && !legendUrl.OnlineResource.startsWith(gnGlobalSettings.proxyUrl)) {
+                   var mapservice = gnMapServicesCache.getMapservice(legendUrl.OnlineResource);
+                   if (mapservice !== null) {
+                      if (mapservice.useProxy) {
+                         // If we are using a proxy then adjust the url.
+                         legendUrl.OnlineResource= gnGlobalSettings.proxyUrl + encodeURIComponent(legendUrl.OnlineResource);
+                       } else {
+                         // If not using the proxy then we need to use a custom loadFunction to set the authentication header
+                         legendUrl.OnlineResource = gnMapServicesCache.authorizationFunctionLegend(mapservice, legendUrl);
+                       }
+                   }
+                }
+
+                legend = legendUrl.OnlineResource
               }
 
               if (angular.isDefined(getCapLayer.Attribution)) {
