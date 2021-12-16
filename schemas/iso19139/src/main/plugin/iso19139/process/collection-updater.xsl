@@ -75,6 +75,9 @@
     <tag name="gmd:language" context="gmd:MD_DataIdentification"
          groupBy="gmd:LanguageCode/@codeListValue"
          merge="gmd:LanguageCode"/>
+    <tag name="gmd:graphicOverview" context="gmd:MD_DataIdentification"
+         groupBy="*/gmd:fileName/*/text()"
+         merge="."/>
     <tag name="gmd:characterSet" context="gmd:MD_DataIdentification"
          groupBy="gmd:MD_CharacterSetCode/@codeListValue"
          merge="gmd:characterSet"/>
@@ -152,7 +155,10 @@
         <xsl:with-param name="name" select="'gmd:pointOfContact'"/>
       </xsl:call-template>
       <xsl:apply-templates select="gmd:resourceMaintenance" mode="expand"/>
-      <xsl:apply-templates select="gmd:graphicOverview" mode="expand"/>
+      <xsl:call-template name="copyOrAddElement">
+        <xsl:with-param name="elements" select="gmd:graphicOverview"/>
+        <xsl:with-param name="name" select="'gmd:graphicOverview'"/>
+      </xsl:call-template>
       <xsl:apply-templates select="gmd:resourceFormat" mode="expand"/>
       <xsl:call-template name="copyOrAddElement">
         <xsl:with-param name="elements" select="gmd:descriptiveKeywords"/>
