@@ -556,7 +556,7 @@
               if (!filter) { return; }
 
               // Regex filter can only be apply to string type.
-              if (facetName.match(/^ft_.*_s$/)) {
+              if (facetName.match(/^ft_.*(_s$|_tree$)/)) {
                 // make the filter case insensitive, ie : abc => [aA][bB][cC]
                 // only alpha regex
                 var lettersRegexOnly = /^[A-Za-z\u00C0-\u017F]+$/;
