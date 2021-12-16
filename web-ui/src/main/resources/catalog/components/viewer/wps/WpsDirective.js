@@ -230,11 +230,10 @@
               return false;
             };
             scope.isBoolean = function(input) {
-              console.log(input)
               if (input.hasOwnProperty('metadata')) {
                 return input.metadata[0].href === 'boolean';
               }
-              return true;
+              return false;
             };
             scope.checkOutput = function (outputs) {
               return outputs.filter(function(o) {
