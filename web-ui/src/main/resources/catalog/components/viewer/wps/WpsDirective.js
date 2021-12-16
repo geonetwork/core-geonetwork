@@ -223,9 +223,15 @@
             scope.sortKeyValue = '&#9660;';
 
             // SPECIFIC SEXTANT
-            scope.isDateTime = function(date) {
-              if (date.hasOwnProperty('metadata')) {
-                return date.metadata[0].href === 'datetime';
+            scope.isDateTime = function(input) {
+              if (input.hasOwnProperty('metadata')) {
+                return input.metadata[0].href === 'datetime';
+              }
+              return false;
+            };
+            scope.isBoolean = function(input) {
+              if (input.hasOwnProperty('metadata')) {
+                return input.metadata[0].href === 'boolean';
               }
               return false;
             };
