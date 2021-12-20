@@ -88,10 +88,11 @@
 
         // TODO: Should be used a promise?
         // How affects gnMdViewObj.recordsLoaded?
-        if (md.resourceType && md.resourceType.indexOf('series') > -1) {
+        if (md.resourceType) {
           // Retrieve all related records UUIDs
           // To be used by RelatedDirective
-          var types = 'parent|children|brothersAndSisters|services|datasets|siblings|associated',
+          // TODO: Maybe we can remove onlines and simply use the links in the doc.
+          var types = 'onlines|parent|children|sources|hassources|brothersAndSisters|services|datasets|siblings|associated',
               url = '../api/records/' + md.uuid + '/related?type='
                 + types.split('|').join('&type=');
           $http.get(url, {

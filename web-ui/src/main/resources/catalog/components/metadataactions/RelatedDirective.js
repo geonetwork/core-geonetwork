@@ -199,6 +199,47 @@
                 controller.registerGnRelated(elem);
               }
 
+              scope.loadRelations = function(relation) {
+                angular.forEach(relation, function(value, idx) {
+                  if (!value) { return; }
+
+                  // init object if required
+                  scope.relations = scope.relations || {};
+                  scope.relationFound = true;
+                  scope.hasResults = true;
+
+                  if (!scope.relations[idx]) {
+                    scope.relations[idx] = [];
+                  }
+                  if (scope.filter && angular.isArray(value)) {
+                    var tokens = scope.filter.split(':'),
+                      field = tokens[0],
+                      filter = tokens[1];
+                    scope.relations[idx] = [];
+                    for (var i = 0; i < value.length; i++) {
+                      if (filter.indexOf(value[i][field]) !== -1) {
+                        scope.relations[idx].push(value[i]);
+                      }
+                    }
+                  } else {
+                    scope.relations[idx] = value;
+                  }
+
+                  if (scope.relations.siblings && scope.relations.associated) {
+                    for (var i = 0; i < scope.relations.associated.length; i++) {
+                      if (scope.relations.siblings.filter(function (e) {
+                        return e.id === scope.relations.associated[i].id;
+                      }).length > 0) {
+                        /* siblings object contains associated element */
+                      } else {
+                        scope.relations.siblings.push(scope.relations.associated[i])
+                      }
+                    }
+                    scope.relations.associated = {};
+                  }
+                });
+              };
+
               scope.updateRelations = function() {
                 scope.relations = null;
                 if (scope.id) {
@@ -209,45 +250,7 @@
                   (promise = gnRelatedService.get(
                      scope.id, scope.types)
                   ).then(function(data) {
-                       angular.forEach(data, function(value, idx) {
-                         if (!value) { return; }
-
-                         // init object if required
-                         scope.relations = scope.relations || {};
-                         scope.relationFound = true;
-                         scope.hasResults = true;
-
-                         if (!scope.relations[idx]) {
-                           scope.relations[idx] = [];
-                         }
-                         if (scope.filter && angular.isArray(value)) {
-                           var tokens = scope.filter.split(':'),
-                               field = tokens[0],
-                               filter = tokens[1];
-                           scope.relations[idx] = [];
-                           for (var i = 0; i < value.length; i++) {
-                             if (filter.indexOf(value[i][field]) !== -1) {
-                                scope.relations[idx].push(value[i]);
-                             }
-                           }
-                         } else {
-                           scope.relations[idx] = value;
-                         }
-
-                         if (scope.relations.siblings && scope.relations.associated) {
-                           for (var i = 0; i < scope.relations.associated.length; i++) {
-                             if (scope.relations.siblings.filter(function (e) {
-                               return e.id === scope.relations.associated[i].id;
-                             }).length > 0) {
-                               /* siblings object contains associated element */
-                             } else {
-                               scope.relations.siblings.push(scope.relations.associated[i])
-                             }
-                           }
-                           scope.relations.associated = {};
-                         }
-                       });
-
+                       scope.loadRelations(data);
                        if (angular.isDefined(scope.container)
                            && scope.relations == null) {
                          $(scope.container).hide();
@@ -299,26 +302,19 @@
                     promise.abort();
                   }
                   if (scope.md != null) {
-                    scope.id = scope.md.id;
+                    if (scope.md.relatedRecords) {
+                      var relations = {};
+                      scope.types.split('|').map(function(t) {
+                        relations[t] = scope.md.relatedRecords[t];
+                      })
+                      scope.loadRelations(relations);
+                    } else {
+                      scope.id = scope.md.id;
+                      scope.updateRelations();
+                    }
                   }
-                  scope.updateRelations();
                 }
               });
-              //
-              // /**
-              //  * Return an array of all relations of the given types
-              //  * @return {Array}
-              //  */
-              // scope.getByTypes = function() {
-              //   var res = [];
-              //   var types = Array.prototype.splice.call(arguments, 0);
-              //   angular.forEach(scope.relations, function(rel) {
-              //     if (types.indexOf(rel['@type']) >= 0) {
-              //       res.push(rel);
-              //     }
-              //   });
-              //   return res;
-              // };
             }
           };
         }]);
