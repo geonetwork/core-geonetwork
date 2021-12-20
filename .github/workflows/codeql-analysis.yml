@@ -49,6 +49,14 @@ jobs:
         # The package type (jdk, jre, jdk+fx, jre+fx)
         java-package: jdk
         cache: maven
+    
+    - name: Maven repository caching
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
 
 
     # Initializes the CodeQL tools for scanning.
@@ -79,3 +87,10 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
+
+    - name: Remove SNAPSHOT jars from repository
+      run: |
+        find ~/.m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}
+    - name: Remove Schema 3.8 jars from repository
+      run: |
+        find ~/.m2/repository -name "*3.8*" -type d | xargs rm -rf {}
