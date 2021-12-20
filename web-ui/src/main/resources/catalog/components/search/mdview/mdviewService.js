@@ -89,40 +89,48 @@
         // TODO: Should be used a promise?
         // How affects gnMdViewObj.recordsLoaded?
         if (md.resourceType && md.resourceType.indexOf('series') > -1) {
-          // Retrieve children
-
-          var url = '../api/records/' + md.uuid + '/related?type=children';
+          // Retrieve all related records UUIDs
+          // To be used by RelatedDirective
+          var types = 'parent|children|brothersAndSisters|services|datasets|siblings|associated',
+              url = '../api/records/' + md.uuid + '/related?type='
+                + types.split('|').join('&type=');
           $http.get(url, {
             headers: {
               'Accept': 'application/json'
             }
           })
             .success(function(data) {
-              var uuids = [];
-              for (var i = 0; i < data.children.length; i++) {
-                uuids.push("\"" + data.children[i].id + "\"");
-              }
-              var uuidsQuery = uuids.reverse().join(' or ');
-
-              var query =
-                {
-                  "query": {"bool": {"must": [
-                        {"query_string": {"query": "uuid: " + uuidsQuery}},
-                        {"terms": {"isTemplate": ["n"]}}
-                      ]}},
-                  "from": 0,
-                  "size": 100
-                };
-
-
-              gnESClient.search(query).then(function (data) {
-                gnMdViewObj.current.record.children = [];
-
-                angular.forEach(data.hits.hits, function (record) {
-                  var mdChild = new Metadata(record);
-                  gnMdViewObj.current.record.children.push(mdChild)
+              var uuids = {};
+              // And collect details using search service
+              if (data) {
+                Object.keys(data).map(function(k) {
+                  data[k] && data[k].map(function(l) {
+                    uuids[l.id] = [];
+                  })
                 });
-              });
+                var query =
+                  {
+                    "query": {
+                      "bool": {
+                        "must": [
+                          { "terms": { "uuid": Object.keys(uuids) } },
+                          { "terms": { "isTemplate": ["n"] } }
+                        ]
+                      }
+                    },
+                    "from": 0,
+                    "size": 100
+                  };
+
+                gnESClient.search(query).then(function(data) {
+                  gnMdViewObj.current.record.children = [];
+
+                  angular.forEach(data.hits.hits, function(record) {
+                    var mdChild = new Metadata(record);
+                    gnMdViewObj.current.record.children.push(mdChild)
+                  });
+                });
+              }
             });
         }
 

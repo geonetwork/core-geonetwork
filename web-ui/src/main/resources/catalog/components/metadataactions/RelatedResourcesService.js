@@ -289,7 +289,7 @@
               action: openMd
             },
             'MDSIBLING' : {
-              iconClass: 'fa-sign-out',
+              iconClass: 'fa-puzzle-piece',
               label: 'openRecord',
               action: openMd
             },

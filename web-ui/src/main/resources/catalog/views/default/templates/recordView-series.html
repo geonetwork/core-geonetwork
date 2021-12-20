@@ -1,0 +1,43 @@
+<div class="col-md-12 gn-record">
+  <div class="md-series">
+    <div data-ng-if="mdView.current.record.children"
+         data-gn-record-mosaic=""
+         records="mdView.current.record.children" size="9"/>
+    <h1>
+      {{mdView.current.record.resourceTitle}}
+      <span class="text-muted badge"
+            data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
+            data-ng-if="user.isEditorOrMore() && md.mdStatus<50 && isMdWorkflowEnable">{{('mdStatus-' + md.mdStatus) | translate}}</span>
+    </h1>
+  </div>
+
+  <div class="gn-margin-bottom"
+       data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></div>
+
+
+  <!--<div data-gn-related-observer>
+    <div data-gn-related="mdView.current.record"
+         data-user="user"
+         data-types="children"
+         data-title="{{'associatedResources' | translate}}">
+    </div>
+  </div>-->
+
+
+  <div data-gn-related-series="mdView.current.record.children"
+       data-user="user"
+       data-title="{{'composed' | translate}}">
+  </div>
+
+  <div data-gn-related-series-by-period="mdView.current.record.children"
+       data-user="user"
+       data-title="{{'composed' | translate}}">
+  </div>
+
+
+  <div data-gn-download-series="mdView.current.record.children"
+       data-user="user"
+       data-title="{{'composed' | translate}}">
+  </div>
+
+</div>

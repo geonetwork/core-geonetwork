@@ -69,7 +69,7 @@
         replace: true,
         scope: {
           query: '@gnRecordMosaic',
-          record: '=',
+          records: '=',
           sort: '@',
           size: '@',
           imageSize: '@'
@@ -80,16 +80,21 @@
           scope.images = [];
           scope.imageSize = parseInt(attrs.imagesize) || 300;
 
-          function filter() {
+          function loadImages(hits) {
+            hits && hits.map(function(h) {
+              var overview = h.overview
+                || (h._source && h._source.overview);
+              if (overview) {
+                scope.images = scope.images.concat(overview);
+              }
+            });
             if (scope.size) {
               scope.images = scope.images.slice(0, scope.size);
             }
           }
 
-          if (scope.record) {
-            scope.images = scope.images.concat(scope.record.overview);
-            filter();
-            return;
+          if (scope.records) {
+            loadImages(scope.records);
           }
 
           if (scope.query) {
@@ -123,10 +128,7 @@
             }
 
             $http.post('../api/search/records/_search', query).then(function(r) {
-              r.data.hits.hits.map(function(h) {
-                scope.images = scope.images.concat(h._source.overview);
-              })
-              filter();
+              loadImages(r.data.hits.hits);
             });
           }
         }
