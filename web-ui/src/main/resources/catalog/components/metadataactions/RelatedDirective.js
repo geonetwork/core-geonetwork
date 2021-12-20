@@ -93,17 +93,6 @@
       var uuids = mds.map(function(md) {
         return md.uuid;
       });
-      // relatedIndexFields = ImmutableMap.<String, String>builder()
-      //   .put("children", "parentUuid")
-      //   .put("services", "recordOperateOn")
-      //   .put("hasfeaturecats", "hasfeaturecat")
-      //   .put("hassources", "hassources")
-      //   .put("associated", "agg_associated")
-      //   .put("datasets", "uuid")
-      //   .put("fcats", "uuid")
-      //   .put("sources", "uuid")
-      //   .put("parent", "uuid")
-      //   .build();
       // type:children > Is a children: If record.parentUuid then uuid: record.parentUuid
       // Is a service: If record.operatesOn then uuid: record.operatesOn
       // Is a sibling?: agg_associated: record.uuid
@@ -358,8 +347,8 @@
             scope.$watch('children', function(newvalue, oldvalue) {
               if (newvalue != oldvalue) {
                 angular.forEach(scope.children, function(value) {
-                  var type = value.cl_spatialRepresentationType[0].key;
-                  scope.types[type] = (scope.types[type]+1) || 1;
+                  var type = value.record.cl_spatialRepresentationType[0].key;
+                  scope.types[type] = (scope.types[type] + 1) || 1;
                 });
               }
             });

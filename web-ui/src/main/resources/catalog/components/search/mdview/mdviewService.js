@@ -99,15 +99,17 @@
               'Accept': 'application/json'
             }
           })
-            .success(function(data) {
+            .success(function(relatedRecords) {
               var uuids = {};
               // And collect details using search service
-              if (data) {
-                Object.keys(data).map(function(k) {
-                  data[k] && data[k].map(function(l) {
+              if (relatedRecords) {
+                Object.keys(relatedRecords).map(function(k) {
+                  relatedRecords[k] && relatedRecords[k].map(function(l) {
                     uuids[l.id] = [];
                   })
                 });
+                // TODO: Add aggregations required for summary
+                // eg. creationYear, spatialRepresentationType
                 var query =
                   {
                     "query": {
@@ -123,12 +125,19 @@
                   };
 
                 gnESClient.search(query).then(function(data) {
-                  gnMdViewObj.current.record.children = [];
+                  gnMdViewObj.current.record.relatedRecords = [];
 
+                  var recordMap = {};
                   angular.forEach(data.hits.hits, function(record) {
-                    var mdChild = new Metadata(record);
-                    gnMdViewObj.current.record.children.push(mdChild)
+                    recordMap[record._id] = new Metadata(record);
                   });
+                  Object.keys(relatedRecords).map(function(k) {
+                    relatedRecords[k] && relatedRecords[k].map(function(l) {
+                      l.record = recordMap[l.id];
+                    })
+                  });
+                  gnMdViewObj.current.record.relatedRecords = relatedRecords;
+                  gnMdViewObj.current.record.relatedRecords['all'] = Object.values(recordMap);
                 });
               }
             });

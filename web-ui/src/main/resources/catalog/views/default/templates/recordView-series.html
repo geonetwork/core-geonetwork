@@ -1,9 +1,10 @@
 <div class="col-md-12 gn-record">
-  <div class="md-series">
-    <div data-ng-if="mdView.current.record.children"
+  <div class="md-series-{{mdView.current.record.resourceType[0]}}">
+    <div data-ng-if="mdView.current.record.relatedRecords"
          data-gn-record-mosaic=""
-         records="mdView.current.record.children" size="9"/>
+         records="mdView.current.record.relatedRecords.all" size="9"/>
     <h1>
+      <i class="fa gn-icon-{{mdView.current.record.resourceType[0]}}"/>
       {{mdView.current.record.resourceTitle}}
       <span class="text-muted badge"
             data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
@@ -24,18 +25,21 @@
   </div>-->
 
 
-  <div data-gn-related-series="mdView.current.record.children"
+  <div data-ng-if="mdView.current.record.relatedRecords"
+       data-gn-related-series="mdView.current.record.relatedRecords.siblings"
        data-user="user"
        data-title="{{'composed' | translate}}">
   </div>
 
-  <div data-gn-related-series-by-period="mdView.current.record.children"
+  <div data-ng-if="mdView.current.record.relatedRecords"
+       data-gn-related-series-by-period="mdView.current.record.relatedRecords.all"
        data-user="user"
        data-title="{{'composed' | translate}}">
   </div>
 
 
-  <div data-gn-download-series="mdView.current.record.children"
+  <div data-ng-if="mdView.current.record.relatedRecords"
+       data-gn-download-series="mdView.current.record.relatedRecords.all"
        data-user="user"
        data-title="{{'composed' | translate}}">
   </div>

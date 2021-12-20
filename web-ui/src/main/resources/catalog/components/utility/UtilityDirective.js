@@ -81,7 +81,7 @@
           scope.imageSize = parseInt(attrs.imagesize) || 300;
 
           function loadImages(hits) {
-            hits && hits.map(function(h) {
+            hits && hits.map && hits.map(function(h) {
               var overview = h.overview
                 || (h._source && h._source.overview);
               if (overview) {
