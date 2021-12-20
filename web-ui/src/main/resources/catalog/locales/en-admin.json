@@ -1227,6 +1227,8 @@
     "ui-isFilterTagsDisplayed-help": "If enabled, display the list of filters applied in the dashboard and the batch editor dashboard",
     "ui-isFilterTagsDisplayedInSearch": "Display filter tags in the search results",
     "ui-isFilterTagsDisplayedInSearch-help": "If enabled, display the list of filters applied in the search results page",
+    "ui-showMapInFacet": "Display map in left column over search filter",
+    "ui-showMapInFacet-help": "If enabled, display the map in the left column and not in default position of lower right corner",
     "map/isMapViewerEnabled": "Enable Map Viewer",
     "map/isMapViewerEnabled-help": "If unselected, the map tab will be disabled and will not be used.",
     "ui-mapFilterCollapsed": "Collapse geographic filter",
