@@ -165,6 +165,7 @@
       return promise.promise;
     };
   }]);
+
   module
       .directive('gnRelated', [
         'gnRelatedService',
@@ -332,6 +333,100 @@
             }
           };
         }]);
+
+
+  module
+    .directive('gnRelatedSeries', [
+      function() {
+        return {
+          restrict: 'A',
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/relatedSeries.html';
+          },
+          scope: {
+            children: '=gnRelatedSeries',
+            user: '='
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.lang = scope.lang || scope.$parent.lang;
+            console.log('gnRelatedSeries');
+            console.log(scope.children);
+
+            scope.types = {};
+
+            scope.$watch('children', function(newvalue, oldvalue) {
+              if (newvalue != oldvalue) {
+                angular.forEach(scope.children, function(value) {
+                  var type = value.cl_spatialRepresentationType[0].key;
+                  scope.types[type] = (scope.types[type]+1) || 1;
+                });
+              }
+            });
+          }
+        };
+      }]);
+
+  module
+    .directive('gnRelatedSeriesByPeriod', [
+      function() {
+        return {
+          restrict: 'A',
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/relatedSeriesByPeriod.html';
+          },
+          scope: {
+            children: '=gnRelatedSeriesByPeriod',
+            user: '='
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.lang = scope.lang || scope.$parent.lang;
+            console.log('gnRelatedSeriesByPeriod');
+            console.log(scope.children);
+
+            scope.periods = {};
+
+            scope.$watch('children', function(newvalue, oldvalue) {
+              if (newvalue != oldvalue) {
+                angular.forEach(scope.children, function(value) {
+                  var publicationYearForResource = value.publicationYearForResource;
+
+                  if (Array.isArray(publicationYearForResource)) {
+                    publicationYearForResource = publicationYearForResource[0];
+                  }
+
+                  if (scope.periods[publicationYearForResource] == null) {
+                    scope.periods[publicationYearForResource] = [];
+                  }
+                  scope.periods[publicationYearForResource].push(value);
+                });
+              }
+            });
+          }
+        };
+      }]);
+
+  module
+    .directive('gnDownloadSeries', [
+      function() {
+        return {
+          restrict: 'A',
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/downloadSeries.html';
+          },
+          scope: {
+            children: '=gnDownloadSeries',
+            user: '='
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.lang = scope.lang || scope.$parent.lang;
+            console.log('gnDownloadSeries');
+            console.log(scope.children);
+          }
+        };
+      }]);
 
   module.directive('relatedTooltip', function() {
     return function(scope, element, attrs) {

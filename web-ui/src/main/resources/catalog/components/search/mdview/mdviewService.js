@@ -45,10 +45,12 @@
     'gnSearchSettings',
     'gnUrlUtils',
     'gnUtilityService',
+    'gnESService',
+    'gnESClient',
     '$http',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
-             gnUrlUtils, gnUtilityService, $http) {
+             gnUrlUtils, gnUtilityService, gnESService, gnESClient, $http) {
 
       // Keep where the metadataview come from to get back on close
       var initFromConfig = function() {
@@ -83,6 +85,46 @@
         });
 
         gnMdViewObj.current.record = md;
+
+        // TODO: Should be used a promise?
+        // How affects gnMdViewObj.recordsLoaded?
+        if (md.resourceType && md.resourceType.indexOf('series') > -1) {
+          // Retrieve children
+
+          var url = '../api/records/' + md.uuid + '/related?type=children';
+          $http.get(url, {
+            headers: {
+              'Accept': 'application/json'
+            }
+          })
+            .success(function(data) {
+              var uuids = [];
+              for (var i = 0; i < data.children.length; i++) {
+                uuids.push("\"" + data.children[i].id + "\"");
+              }
+              var uuidsQuery = uuids.reverse().join(' or ');
+
+              var query =
+                {
+                  "query": {"bool": {"must": [
+                        {"query_string": {"query": "uuid: " + uuidsQuery}},
+                        {"terms": {"isTemplate": ["n"]}}
+                      ]}},
+                  "from": 0,
+                  "size": 100
+                };
+
+
+              gnESClient.search(query).then(function (data) {
+                gnMdViewObj.current.record.children = [];
+
+                angular.forEach(data.hits.hits, function (record) {
+                  var mdChild = new Metadata(record);
+                  gnMdViewObj.current.record.children.push(mdChild)
+                });
+              });
+            });
+        }
 
         // TODO: do not add duplicates
         gnMdViewObj.previousRecords.push(md);
