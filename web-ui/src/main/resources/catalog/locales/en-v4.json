@@ -270,5 +270,6 @@
   "regexpFlags-i": "enables case insensitive matching",
   "regexpFlags-c": "disables case insensitive matching",
   "createCollectionFromSelectionAs": "Create collection from selection as",
-  "supplementalInformation": "Supplemental Information"
+  "supplementalInformation": "Supplemental Information",
+  "siblingsReverseLinks": "Other resources (other record links)"
 }

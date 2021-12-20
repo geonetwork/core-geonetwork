@@ -178,5 +178,6 @@
   "noINSPIRETestTokenAvailable": "Le validateur INSPIRE a retourné un jeton vide. La validation ne peut être vérifiée maintenant. Essayer plus tard.",
   "system/inspire/remotevalidation/nodeid": "Identifiant du portail à utiliser pour la validation",
   "system/inspire/remotevalidation/nodeid-help": "Si non défini, la fiche est envoyée au validateur. Si un portail est défini, alors l'URL du service de découverte CSW GetRecordById du portail est envoyée au validateur. ",
-  "supplementalInformation": "Information complémentaire"
+  "supplementalInformation": "Information complémentaire",
+  "siblingsReverseLinks": "Autres ressources (liens d'autres fiches)"
 }
