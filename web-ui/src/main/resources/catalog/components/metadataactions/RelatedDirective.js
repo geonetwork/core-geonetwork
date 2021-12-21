@@ -364,27 +364,6 @@
         };
       }]);
 
-  module
-    .directive('gnDownloadSeries', [
-      function() {
-        return {
-          restrict: 'A',
-          templateUrl: function(elem, attrs) {
-            return attrs.template ||
-              '../../catalog/components/metadataactions/partials/downloadSeries.html';
-          },
-          scope: {
-            children: '=gnDownloadSeries',
-            user: '='
-          },
-          link: function(scope, element, attrs, controller) {
-            scope.lang = scope.lang || scope.$parent.lang;
-            console.log('gnDownloadSeries');
-            console.log(scope.children);
-          }
-        };
-      }]);
-
   module.directive('relatedTooltip', function() {
     return function(scope, element, attrs) {
       for (var i = 0; i < element.length; i++) {
