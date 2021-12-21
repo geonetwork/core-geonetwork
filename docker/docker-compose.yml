@@ -36,11 +36,13 @@ services:
       args:
         - GN_UID=${USER_ID}
         - GN_GID=${GROUP_ID}
-    image: sextant/geonetwork:7.0.0
+        - GN_FILE=${WAR_FILE_NAME}
+        - GN_CONF_TARGET=${CONF_TARGET}
+    image: sextant/${VERSION_NAME}:7.0.0
     user: ${USER_ID}:${GROUP_ID}
     restart: always
     env_file:
-      - ./.env
+      - ./env/${CONF_TARGET}.env
     environment:
       # configure the tomcat connector
       # Needed for GN to send a service
@@ -71,7 +73,8 @@ services:
       PANIER_XML_PATH_ANONYMOUS: "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/anonymous"
       JAVA_OPTS: -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
     volumes:
-      - geonetwork:/var/lib/geonetwork_data
+      - ./${CONF_TARGET}:/var/lib/geonetwork_data/
+      - ${GN_LOG_PATH}:/data/mnt/logs/geonetwork.log
     depends_on:
       - elasticsearch
       - database

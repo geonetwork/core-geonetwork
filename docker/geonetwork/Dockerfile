@@ -2,8 +2,9 @@ FROM tomcat:8.5-jdk8
 
 ARG GN_UID
 ARG GN_GID
+ARG GN_WAR_FILE_NAME
+ARG GN_CONF_TARGET
 
-ENV GN_FILE geonetwork.war
 ENV DATA_DIR=$CATALINA_HOME/webapps/geonetwork/WEB-INF/data
 ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -server -Xms512m -Xmx2024m -XX:NewSize=512m -XX:MaxNewSize=1024m -XX:+UseConcMarkSweepGC -Dspring.profiles.active=es -Dgeonetwork.schema.dir=/usr/local/tomcat/webapps/geonetwork/WEB-INF/data/config/schema_plugins  -Dgeonetwork.formatter.dir=/usr/local/tomcat/webapps/geonetwork/WEB-INF/data/data/formatter"
 
@@ -28,16 +29,16 @@ ENV PANIER_XML_PATH_ANONYMOUS "/export/home/tomcat/instances_data/sextant-test/p
 
 WORKDIR $CATALINA_HOME/webapps
 
-COPY ./geonetwork.war ./geonetwork.war
+COPY ./geonetwork.war ./${WAR_FILE_NAME}.war
 
 RUN apt update && \
       apt install -y augeas-tools && \
       rm -rf /var/lib/apt/lists/*
 
-RUN  unzip -d geonetwork geonetwork.war && \
-     rm geonetwork.war
+RUN  unzip -d ${WAR_FILE_NAME} ${WAR_FILE_NAME}.war && \
+     rm ./${WAR_FILE_NAME}.war
 
-RUN chown -R ${GN_UID}:${GN_GID} geonetwork/ && \
+RUN chown -R ${GN_UID}:${GN_GID} ${WAR_FILE_NAME}/ && \
   chown -R ${GN_UID}:${GN_GID} /usr/local/tomcat/conf
 
 COPY ./docker-entrypoint.sh /entrypoint.sh

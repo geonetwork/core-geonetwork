@@ -22,12 +22,20 @@ Puis de copier la webapp résultante dans le répertoire geonetwork (`docker/geo
 
 ```
 $ cd docker
-$ cp ../web/target/geonetwork.war geonetwork/
+$ cp ../web/target/geonetwork.war geonetwork/geonetwork.war
 ```
 
 # Docker / Docker-compose
 
 ## Docker
+
+
+Spécifier la version que vous souhaitez utiliser en exportant le fichier d'env contenu
+dans le répertoire env
+
+```
+$ export CONF_TARGET=ifr-test
+```
 
 Afin de construire l'image docker, il suffit de lancer la commande suivante
 (toujours dans le répertoire `docker/`):
