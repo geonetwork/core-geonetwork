@@ -47,10 +47,12 @@
     'gnUtilityService',
     'gnESService',
     'gnESClient',
+    'gnESFacet',
     '$http',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
-             gnUrlUtils, gnUtilityService, gnESService, gnESClient, $http) {
+             gnUrlUtils, gnUtilityService, gnESService, gnESClient,
+             gnESFacet, $http) {
 
       // Keep where the metadataview come from to get back on close
       var initFromConfig = function() {
@@ -122,7 +124,8 @@
                       }
                     },
                     "from": 0,
-                    "size": 100
+                    "size": 100,
+                    "_source": gnESFacet.configs.simplelist.source.includes
                   };
 
                 gnESClient.search(query).then(function(data) {

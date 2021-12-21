@@ -204,7 +204,8 @@
             'uuid',
             'overview.*',
             'resource*',
-            'link'
+            'link',
+            'cl_status'
           ]
         }
       },
