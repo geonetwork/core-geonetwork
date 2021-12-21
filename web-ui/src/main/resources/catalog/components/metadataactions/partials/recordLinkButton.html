@@ -1,0 +1,21 @@
+<div>
+  <a type="button"
+     class="btn btn-default btn-sm btn-block gn-btn-addtomap text-wrap"
+     data-ng-show="hasAction"
+     data-ng-click="service.doAction(mainType, link, record)">
+    <i class="fa"
+       data-ng-class="icon" />
+    <span class="visible-lg-*">
+          {{::(service.getLabel(mainType, type)) | translate}}
+    </span>
+  </a>
+  <a data-ng-show="!hasAction"
+     class="btn btn-default btn-sm btn-block"
+     data-ng-href="{{link.url}}">
+    <i class="fa"
+       data-ng-class="icon" />
+    <span class="visible-lg-*">
+          {{::link.title | gnLocalized: lang}}
+    </span>
+  </a>
+</div>

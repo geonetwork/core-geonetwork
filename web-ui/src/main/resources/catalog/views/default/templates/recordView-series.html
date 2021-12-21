@@ -16,15 +16,6 @@
        data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></div>
 
 
-  <!--<div data-gn-related-observer>
-    <div data-gn-related="mdView.current.record"
-         data-user="user"
-         data-types="children"
-         data-title="{{'associatedResources' | translate}}">
-    </div>
-  </div>-->
-
-
   <div data-ng-if="mdView.current.record.relatedRecords"
        data-gn-related-series="mdView.current.record.relatedRecords.siblings"
        data-user="user"
@@ -37,12 +28,16 @@
        data-title="{{'composed' | translate}}">
   </div>
 
-
   <div data-ng-if="mdView.current.record.relatedRecords"
        data-gn-download-series="mdView.current.record.relatedRecords.all"
        data-user="user"
        data-title="{{'composed' | translate}}">
   </div>
+
+  <div data-gn-records-link="mdView.current.record.relatedRecords.all"
+       labels="title,cl_status,format,Esri,view,download,file,atom"
+       columns="resourceTitle,cl_status[0].key,format,link/ESRI:REST,link/OGC:WMS,link/OGC:WFS,link/WWW:DOWNLOAD,link/atom:feed"/>
+
 
   <div ng-include="'../../catalog/views/default/templates/recordView-common.html'"/>
 

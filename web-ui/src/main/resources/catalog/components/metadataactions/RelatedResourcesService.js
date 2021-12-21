@@ -57,12 +57,34 @@
         'gnConfig',
         '$filter',
         'gnExternalViewer',
+        'gnGlobalSettings',
         function(gnMap, gnOwsCapabilities, gnSearchSettings, gnViewerSettings,
             olDecorateLayer, gnSearchLocation, gnOwsContextService, gnWfsService,
-            gnAlertService, gnConfigService, gnConfig, $filter, gnExternalViewer) {
+            gnAlertService, gnConfigService, gnConfig, $filter, gnExternalViewer,
+            gnGlobalSettings) {
 
           this.configure = function(options) {
             angular.extend(this.map, options);
+          };
+
+          this.getBadgeLabel = function(mainType, r) {
+            if (r.protocol && r.protocol.indexOf('WWW:DOWNLOAD:') >= 0) {
+              return r.protocol.replace('WWW:DOWNLOAD:', '');
+            } else if (mainType.match(/W([MCF]|MT)S.*|ESRI:REST/)) {
+              return mainType.replace('SERVICE', '');
+            } else {
+              return '';
+            }
+          };
+
+          this.hasAction = function(mainType) {
+            var fn = this.map[mainType || 'DEFAULT'].action;
+            // If function name ends with ToMap do not display the action
+            if (fn && fn.name && fn.name.match(/.*ToMap$/) &&
+              gnGlobalSettings.isMapViewerEnabled === false) {
+              return false;
+            }
+            return angular.isFunction(fn);
           };
 
           this.gnConfigService = gnConfigService;
@@ -74,11 +96,13 @@
            *
            * If not, then only service information is displayed.
            *
+           * TODO: Would be more precise with a check for the name in Capabilities.
+           *
            * @param {object} link
            * @return {boolean}
            */
           this.isLayerProtocol = function(link) {
-            return Object.keys(link.title).length > 0 &&
+            return Object.keys(link.title || link.name).length > 0 &&
                gnSearchSettings.mapProtocols.layers.
                indexOf(link.protocol) > -1;
           };

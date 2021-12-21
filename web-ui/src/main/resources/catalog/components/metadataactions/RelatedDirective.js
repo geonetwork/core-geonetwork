@@ -269,28 +269,12 @@
               scope.getTitle = function(link) {
                 return link.title['#text'] || link.title;
               };
-              scope.getBadgeLabel = function(mainType, r) {
-                if (r.protocol && r.protocol.indexOf('WWW:DOWNLOAD:') >= 0) {
-                  return r.protocol.replace('WWW:DOWNLOAD:', '');
-                } else if (mainType.match(/W([MCF]|MT)S.*|ESRI:REST/)) {
-                  return mainType.replace('SERVICE', '');
-                } else {
-                  return '';
-                }
-              };
-              scope.hasAction = function(mainType) {
-                var fn = gnRelatedResources.map[mainType].action;
-                // If function name ends with ToMap do not display the action
-                if (fn && fn.name && fn.name.match(/.*ToMap$/) &&
-                   gnGlobalSettings.isMapViewerEnabled === false) {
-                  return false;
-                }
-                return angular.isFunction(fn);
-              };
+
               scope.externalViewerAction = function(mainType, link, md) {
                 gnExternalViewer.viewService(md, link);
               };
-
+              scope.hasAction = gnRelatedResources.hasAction;
+              scope.getBadgeLabel = gnRelatedResources.getBadgeLabel;
               scope.isLayerProtocol = gnRelatedResources.isLayerProtocol;
               scope.externalViewerActionEnabled = gnExternalViewer.isEnabledViewAction();
 
@@ -422,4 +406,89 @@
     };
   });
 
+
+  module
+    .directive('gnRecordLinkButton', ['gnRelatedResources',
+      function(gnRelatedResources) {
+        return {
+          restrict: 'A',
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/recordLinkButton.html';
+          },
+          scope: {
+            link: '=gnRecordLinkButton',
+            record: '='
+          },
+          link: function(scope, element, attrs, controller) {
+            if (scope.link) {
+              scope.type = 'onlines';
+              scope.mainType = gnRelatedResources.getType(scope.link, scope.type);
+              scope.badge = gnRelatedResources.getBadgeLabel(scope.mainType, scope.link);
+              scope.icon = gnRelatedResources.getClassIcon(scope.mainType);
+              scope.hasAction = gnRelatedResources.hasAction(scope.mainType);
+              scope.service = gnRelatedResources;
+            }
+          }
+        }
+      }]);
+
+  module
+    .directive('gnRecordsLink', [
+      'Metadata',
+      function(Metadata) {
+        return {
+          restrict: 'A',
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/recordsLinks.html';
+          },
+          scope: {
+            records: '=gnRecordsLink',
+            // Comma separated values. Supported
+            // * properties eg. resourceTitle
+            // * object path eg. cl_status.key
+            // * links by type eg. link:OGC
+            columns: '@',
+            labels: '@'
+          },
+          link: function(scope, element, attrs, controller) {
+            var initialized = false;
+            scope.columnsConfig = scope.columns.split(',');
+            scope.data = [];
+            scope.headers = [];
+            scope.isArray = angular.isArray;
+
+            if (scope.labels) {
+              scope.headers = scope.labels.split(',');
+            } else {
+              scope.columnsConfig.map(function(c) {
+                scope.headers.push(c.startsWith('link/') ? c.split('/')[1] : c);
+              });
+            }
+
+            function loadData() {
+              scope.data = [];
+              scope.records.map(function(r) {
+                r = new Metadata(r);
+                var recordData = {};
+                scope.columnsConfig.map(function(c) {
+                  recordData[c] = c.startsWith('link/')
+                    ? r.getLinksByType(c.split('/')[1])
+                    : (c.indexOf('.') != -1 ? _.at(r, c) : r[c]);
+                });
+                recordData.md = r;
+                scope.data.push(recordData);
+              });
+            }
+
+            scope.$watchCollection('records', function(n, o) {
+              if (n && (n !== o || !initialized)) {
+                loadData();
+                initialized = true;
+              }
+            });
+          }
+        }
+    }]);
 })();

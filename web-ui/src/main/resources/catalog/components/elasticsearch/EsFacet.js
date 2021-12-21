@@ -205,7 +205,8 @@
             'overview.*',
             'resource*',
             'link',
-            'cl_status'
+            'format',
+            'cl_status.key'
           ]
         }
       },

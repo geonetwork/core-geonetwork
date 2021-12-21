@@ -6,7 +6,7 @@
        data-ng-repeat="(type, items) in relations track by $index"
        data-ng-if="type && type !== 'thumbnails'">
     <div data-ng-init="mainType = config.getType(r, type);
-                       badge = getBadgeLabel(mainType, r);
+                       badge = config.getBadgeLabel(mainType, r);
                        icon = config.getClassIcon(mainType);"
          class="row list-group-item gn-related-item gn-related-{{type}} gn-relation-type-{{mainType}}"
          data-ng-repeat="r in items track by $index">
@@ -25,7 +25,11 @@
       </div>
       <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-7 col-sm-7'">
         <!-- Always display title if available -->
-        <h3 data-ng-if="::(r.title | gnLocalized: lang).length">{{::(r.title | gnLocalized: lang)}}</h3>
+        <h3 data-ng-if="::(r.title | gnLocalized: lang).length">
+          <a data-ng-href="{{r.url | gnLocalized: lang}}">
+            {{::(r.title | gnLocalized: lang)}}
+          </a>
+        </h3>
         <!-- Display description if available -->
         <p data-ng-if="(mainType === 'WMS' || mainType === 'WMSSERVICE' ||
                        mainType === 'WMTS' || mainType === 'WMTSSERVICE' ||
@@ -157,7 +161,7 @@
             <div data-gn-attribute-table-renderer="r.featureType.attributeTable.element">
             </div>
           </div>
-         
+
           <div data-ng-switch-default>
             <p class="text-muted"
                data-ng-if="mainType.indexOf('MD') == 0 && r.id"
@@ -176,7 +180,7 @@
               <span class="gn-related-description" data-ng-if="r.description">
                 {{ (r.description | gnLocalized: lang | striptags)}}</a>
               </span>
-              <span ng-bind-html="r.url | gnLocalized: lang | linky:'_blank'"></span>
+<!--              <span ng-bind-html="r.url | gnLocalized: lang | linky:'_blank'"></span>-->
             </p>
           </div>
         </div>
@@ -186,7 +190,7 @@
         <button type="button"
                 class="btn btn-default btn-sm btn-block gn-btn-addtomap text-wrap"
                 data-ng-attr-title="{{r.origin === 'remote' ? (r.url | gnLocalized: lang) : ''}}"
-                data-ng-show="hasAction(mainType)"
+                data-ng-show="config.hasAction(mainType)"
                 data-ng-click="config.doAction(mainType, r, md)">
           <span class="visible-lg-*">
             <i class="fa"
