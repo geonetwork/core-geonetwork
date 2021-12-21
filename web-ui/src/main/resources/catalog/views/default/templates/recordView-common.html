@@ -1,0 +1,220 @@
+<div>
+  <h2 data-translate="">aboutThisResource</h2>
+  <table class="table table-striped">
+    <tbody>
+    <tr data-ng-if="mdView.current.record.inspireTheme_syn.length > 0 ||
+                            mdView.current.record.inspireTheme_syn.length > 0">
+      <th data-translate="">inspireThemes</th>
+      <td>
+        <button
+          data-ng-repeat="cat in mdView.current.record.inspireTheme_syn"
+          data-ng-click="filterBy('inspireTheme_syn', cat)"
+          data-ng-if="!sortKeywordsAlphabetically"
+          class="btn btn-sm btn-default {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
+          title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}}">
+          <span class="iti-{{cat.split('|')[0]}}"></span>
+          <!-- TODOES: Restore icon -->{{cat}}
+        </button>
+
+        <button
+          data-ng-repeat="cat in mdView.current.record.inspireTheme_syn | orderBy: 'toString()'"
+          data-ng-click="filterBy('inspireTheme_syn', cat)"
+          data-ng-if="sortKeywordsAlphabetically"
+          class="btn btn-sm btn-default {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
+          title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}}">
+          <span class="iti-{{cat.split('|')[0]}}"></span>
+          <!-- TODOES: Restore icon -->{{cat}}
+        </button>
+      </td>
+    </tr>
+    <tr
+      data-ng-if="mdView.current.record.cat.length > 0 ||
+                        mdView.current.record.cl_topic.length > 0">
+      <th data-translate="">listOfCategories</th>
+      <td>
+        <button data-ng-repeat="cat in mdView.current.record.cat"
+                data-ng-click="filterBy('cat', cat)"
+                data-ng-if="!sortKeywordsAlphabetically"
+                class="btn btn-sm btn-default"
+                title="{{'clickToFilterOn' | translate}} {{('cat-' + cat) | translate}}">
+          <span class="fa gn-icon-{{cat}} resource-color"></span>&nbsp;
+          {{('cat-' + cat) | translate}}
+        </button>
+
+        <button data-ng-repeat="cat in mdView.current.record.cat  | orderBy:sortByCategory"
+                data-ng-click="filterBy('cat', cat)"
+                data-ng-if="sortKeywordsAlphabetically"
+                class="btn btn-sm btn-default"
+                title="{{'clickToFilterOn' | translate}} {{('cat-' + cat) | translate}}">
+          <span class="fa gn-icon-{{cat}} resource-color"></span>&nbsp;
+          {{('cat-' + cat) | translate}}
+        </button>
+
+        <hr data-ng-if="mdView.current.record.cat.length > 0 &&
+                        mdView.current.record.cl_topic.length > 0"/>
+
+        <button data-ng-repeat="cat in mdView.current.record.cl_topic track by $index"
+                data-ng-click="filterBy('cl_topic.key', cat.key)"
+                data-ng-if="(cat != '') && !sortKeywordsAlphabetically"
+                class="btn btn-sm btn-default"
+                title="{{'clickToFilterOn' | translate}} {{cat.key | translate}}">
+          <span class="fa gn-icon-{{cat.key}} topic-color"></span>&nbsp;
+          {{cat.key | translate}}
+        </button>
+
+        <button data-ng-repeat="cat in mdView.current.record.cl_topic  | orderBy: 'key | translate'"
+                data-ng-click="filterBy('cl_topic.key', cat.key)"
+                data-ng-if="(cat != '') && sortKeywordsAlphabetically"
+                class="btn btn-sm btn-default"
+                title="{{'clickToFilterOn' | translate}} {{cat.key | translate}}">
+          <span class="fa gn-icon-{{cat.key}} topic-color"></span>&nbsp;
+          {{cat.key | translate}}
+        </button>
+      </td>
+    </tr>
+    <tr data-ng-repeat="(key, t) in mdView.current.record.allKeywords">
+      <th>{{(t.title || key) | translate}}</th>
+      <td>
+        <div ng-if="key === 'th_regions'">
+          <ul data-ng-init="keywordWithGroup = mdView.current.record.getKeywordsGroupedByUriBase('th_regions', '(.*\/C19|.*#[A-Za-z]*).*')">
+
+            <li data-ng-repeat="k in (list = (keywordWithGroup | orderBy: ['-group','default']))"
+                class="tt-cursor"
+                style="{{list[$index + 1].group !== list[$index].group ? 'margin-bottom: 5px' : ''}}">
+              <span data-ng-hide="::!!k.link">{{::k.default | capitalize}}</span>
+              <a href=""
+                 data-ng-href="{{::k.link}}"
+                 data-ng-show="::!!k.link">
+                {{::k.default | capitalize}}</a>&nbsp;
+              <a href=""
+                 title="{{'clickToFilterOn' | translate}} {{::k.default | capitalize}}"
+                 aria-label="{{'clickToFilterOn' | translate}} {{::k.default | capitalize}}"
+                 data-ng-click="filterBy('tag.default', k.default)">
+                <i class="fa fa-search"/>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div ng-if="key !== 'th_regions'">
+          <ul>
+            <li data-ng-repeat="k in t.keywords track by $index"
+                data-ng-if="(k) && !sortKeywordsAlphabetically"
+                class="tt-cursor">
+              <span data-ng-hide="::!!k.link">{{::k.default | capitalize}}</span>
+              <a href=""
+                 data-ng-href="{{::k.link}}"
+                 data-ng-show="::!!k.link">
+                {{::k.default | capitalize}}</a>&nbsp;
+              <a href=""
+                 title="{{'clickToFilterOn' | translate}} {{::k.default | capitalize}}"
+                 aria-label="{{'clickToFilterOn' | translate}} {{::k.default | capitalize}}"
+                 data-ng-click="filterBy('tag.default', k.default)">
+                <i class="fa fa-search"/>
+              </a>
+            </li>
+
+            <li data-ng-repeat="k in t.keywords | orderBy: 'default'"
+                data-ng-if="(k) && sortKeywordsAlphabetically"
+                class="tt-cursor">
+              <span data-ng-hide="::!!k.link">{{::k.default | capitalize}}</span>
+              <a href=""
+                 data-ng-href="{{::k.link}}"
+                 data-ng-show="::!!k.link">
+                {{::k.default | capitalize}}</a>&nbsp;
+              <a href=""
+                 title="{{'clickToFilterOn' | translate}} {{::k.default | capitalize}}"
+                 aria-label="{{'clickToFilterOn' | translate}} {{::k.default | capitalize}}"
+                 data-ng-click="filterBy('tag.default', k.default)">
+                <i class="fa fa-search"/>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    <tr data-ng-if="mdView.current.record.resourceLanguage.length > 0">
+      <th data-translate="">language</th>
+      <td>
+        <ul>
+          <li data-ng-repeat="l in mdView.current.record.resourceLanguage">
+            {{l | translate}}
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr data-ng-if="mdView.current.record.resourceIdentifier">
+      <th data-translate="">identifier</th>
+      <td>
+        <ul>
+          <li data-ng-repeat="i in mdView.current.record.resourceIdentifier">
+            <span data-ng-bind-html="i.code | linky"/>
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <tr data-ng-if="mdView.current.record.cl_classification > 0">
+      <th data-translate="">classification</th>
+      <td>
+        <p data-ng-repeat="c in mdView.current.record.cl_classification">{{c.default}}</p>
+      </td>
+    </tr>
+    <tr data-ng-if="mdView.current.record.MD_LegalConstraintsUseLimitation
+                              || mdView.current.record.MD_LegalConstraintsOtherConstraints">
+      <th data-translate="">legalConstraints</th>
+      <td>
+        <p data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsOtherConstraints">
+          <span data-ng-bind-html="i | linky | newlines"/>
+        </p>
+        <p data-ng-repeat="i in mdView.current.record.MD_LegalConstraintsUseLimitation">
+          <span data-ng-bind-html="i | linky | newlines"/>
+        </p>
+      </td>
+    </tr>
+
+    <tr data-ng-if="mdView.current.record.MD_SecurityConstraintsUseLimitation">
+      <th data-translate="">securityConstraints</th>
+      <td>
+        <p data-ng-repeat="i in mdView.current.record.MD_SecurityConstraintsUseLimitation">
+          <span data-ng-bind-html="i | linky | newlines"/>
+        </p>
+      </td>
+    </tr>
+
+    <tr data-ng-if="mdView.current.record.MD_ConstraintsUseLimitation">
+      <th data-translate="">resourceConstraints</th>
+      <td>
+        <p data-ng-repeat="i in mdView.current.record.MD_ConstraintsUseLimitation">
+          <span data-ng-bind-html="i | linky | newlines"/>
+        </p>
+      </td>
+    </tr>
+
+    <tr data-ng-if="mdView.current.record.contactForResource">
+      <th data-translate="">resourceContact</th>
+      <td>
+        <div data-gn-metadata-contacts="mdView.current.record.contactForResource" data-gn-mode="org-role" />
+      </td>
+    </tr>
+
+    <tr data-ng-if="mdView.current.record.resourceCredit">
+      <th data-translate="">credit</th>
+      <td><p data-ng-repeat="c in mdView.current.record.resourceCredit">{{c}}</p></td>
+    </tr>
+    <tr data-ng-if="mdView.current.record.supplementalInformation">
+      <th data-translate="">supplementalInformation</th>
+      <td><p data-ng-bind-html="mdView.current.record.supplementalInformation | linky | newlines"/></p></td>
+    </tr>
+    <tr data-ng-if="mdView.current.record.cl_status.length > 0">
+      <th data-translate="">resourceStatus</th>
+      <td>
+        <p data-ng-repeat="c in mdView.current.record.cl_status">{{c.key | translate}}</p>
+      </td>
+    </tr>
+
+    <tr data-ng-if="mdView.current.record.versionIdentifier">
+      <th data-translate="">versionIdentifier</th>
+      <td>{{mdView.current.record.versionIdentifier}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
