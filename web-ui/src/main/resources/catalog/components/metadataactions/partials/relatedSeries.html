@@ -5,17 +5,17 @@
   <ul class="row list-group gn-info-list">
     <li class="list-group-item panel panel-default gn-card"
         data-ng-repeat="md in children"
-        gn-metadata-open="md"
+        gn-metadata-open="md.record"
         gn-records="children"
         gn-formatter="formatter.defaultUrl"
         id="gn-info-list-mw-{{md.uuid}}"
-        data-ng-class="md.overview.length > 0 ? 'hasThumbnail' : 'noThumbnail'">
+        data-ng-class="md.record.overview.length > 0 ? 'hasThumbnail' : 'noThumbnail'">
 
       <div class="panel-heading gn-card-heading">
         <div class="gn-md-title">
           <a href=""
              title="{{md.record.resourceTitle}}"
-             gn-metadata-open="md.record"
+             gn-metadata-open="md"
              gn-records="searchResults.records"
              gn-formatter="formatter.defaultUrl">
             <h1>

@@ -3,27 +3,27 @@
   <hr/>
 
   <tabset id="info-tabset pull-left" type="pills" justified="false" role="tablist">
-    <tab heading="{{key}}" data-ng-repeat="(key, values) in periods"
+    <tab heading="{{key}}" data-ng-repeat="(key, values) in criteria.p"
          role="tab">
 
       <ul class="row list-group gn-info-list">
         <li class="list-group-item panel panel-default gn-card"
             data-ng-repeat="md in values"
-            gn-metadata-open="md"
+            gn-metadata-open="md.record"
             gn-records="children"
             gn-formatter="formatter.defaultUrl"
-            id="gn-info-list-mw-{{md.uuid}}"
-            data-ng-class="md.overview.length > 0 ? 'hasThumbnail' : 'noThumbnail'">
+            id="gn-info-list-mw-{{md.record.uuid}}"
+            data-ng-class="md.record.overview.length > 0 ? 'hasThumbnail' : 'noThumbnail'">
 
           <div class="panel-heading gn-card-heading">
             <div class="gn-md-title">
               <a href=""
-                 title="{{md.resourceTitle}}"
-                 gn-metadata-open="md"
+                 title="{{md.record.resourceTitle}}"
+                 gn-metadata-open="md.record"
                  gn-records="searchResults.records"
                  gn-formatter="formatter.defaultUrl">
                 <h1>
-                  <span class="clamp-2">{{md.resourceTitle}}</span>
+                  <span class="clamp-2">{{md.record.resourceTitle}}</span>
                 </h1>
               </a>
             </div>
@@ -32,22 +32,22 @@
           <div class="panel-body gn-card-body">
             <div class="gn-md-contents">
               <div class="gn-md-thumbnail"
-                   data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}">
+                   data-ng-class="{'gn-md-no-thumbnail': !md.record.overview[0]}">
                 <a href=""
-                   title="{{(md.abstract || md.defaultAbstract) | striptags}}"
-                   gn-metadata-open="md"
+                   title="{{(md.record.abstract || md.record.defaultAbstract) | striptags}}"
+                   gn-metadata-open="md.record"
                    gn-records="searchResults.records"
                    gn-formatter="formatter.defaultUrl">
                   <div class="gn-img-thumbnail"
-                       style="background-image: url('{{md.overview[0].url | thumbnailUrlSize:320}}')">
+                       style="background-image: url('{{md.record.overview[0].url | thumbnailUrlSize:320}}')">
                   </div>
                 </a>
               </div>
               <div class="gn-md-details">
                 <div class="gn-md-abstract">
-                  <p>{{md.resourceAbstract}}</p>
+                  <p>{{md.record.resourceAbstract}}</p>
                   <div class="gn-md-types">
-                    <span class="badge" data-ng-repeat="t in md.resourceType track by $index">{{t | translate}}</span>
+                    <span class="badge" data-ng-repeat="t in md.record.resourceType track by $index">{{t | translate}}</span>
                   </div>
                 </div>
               </div>

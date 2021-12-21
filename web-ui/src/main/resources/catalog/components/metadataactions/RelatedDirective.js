@@ -315,62 +315,50 @@
           },
           scope: {
             children: '=gnRelatedSeries',
-            user: '='
+            agg: '=',
+            aggName: '='
           },
           link: function(scope, element, attrs, controller) {
             scope.lang = scope.lang || scope.$parent.lang;
-            console.log('gnRelatedSeries');
-            console.log(scope.children);
 
             scope.types = {};
 
-            scope.$watch('children', function(newvalue, oldvalue) {
-              if (newvalue != oldvalue) {
-                angular.forEach(scope.children, function(value) {
-                  var type = value.record.cl_spatialRepresentationType[0].key;
-                  scope.types[type] = (scope.types[type] + 1) || 1;
-                });
-              }
+            var b = scope.agg[scope.aggName].buckets;
+            b.forEach(function (k) {
+              scope.types[k.key] = k.doc_count;
             });
           }
         };
       }]);
 
   module
-    .directive('gnRelatedSeriesByPeriod', [
+    .directive('gnRelatedSeriesByCriteria', [
       function() {
         return {
           restrict: 'A',
           templateUrl: function(elem, attrs) {
             return attrs.template ||
-              '../../catalog/components/metadataactions/partials/relatedSeriesByPeriod.html';
+              '../../catalog/components/metadataactions/partials/relatedSeriesByCriteria.html';
           },
           scope: {
-            children: '=gnRelatedSeriesByPeriod',
-            user: '='
+            children: '=gnRelatedSeriesByCriteria',
+            agg: '=',
+            aggName: '='
           },
           link: function(scope, element, attrs, controller) {
             scope.lang = scope.lang || scope.$parent.lang;
-            console.log('gnRelatedSeriesByPeriod');
-            console.log(scope.children);
 
-            scope.periods = {};
+            scope.criteria = {p: {}};
 
-            scope.$watch('children', function(newvalue, oldvalue) {
-              if (newvalue != oldvalue) {
-                angular.forEach(scope.children, function(value) {
-                  var publicationYearForResource = value.publicationYearForResource;
+            var b = scope.agg[scope.aggName].buckets;
+            b.forEach(function (k) {
+              scope.criteria.p[k.key] = [];
 
-                  if (Array.isArray(publicationYearForResource)) {
-                    publicationYearForResource = publicationYearForResource[0];
-                  }
+              k.docs.hits.hits.forEach(function (r) {
+                var values = _.filter(scope.children, {id: r._id});
 
-                  if (scope.periods[publicationYearForResource] == null) {
-                    scope.periods[publicationYearForResource] = [];
-                  }
-                  scope.periods[publicationYearForResource].push(value);
-                });
-              }
+                scope.criteria.p[k.key] = scope.criteria.p[k.key].concat(values);
+              });
             });
           }
         };
