@@ -30,16 +30,16 @@ ENV PANIER_XML_PATH_ANONYMOUS "/export/home/tomcat/instances_data/sextant-test/p
 
 WORKDIR $CATALINA_HOME/webapps
 
-COPY ./geonetwork.war ./{GN_FILE}.war
+COPY ./geonetwork.war ./${GN_FILE}.war
 
 RUN apt update && \
       apt install -y augeas-tools && \
       rm -rf /var/lib/apt/lists/*
 
-RUN  unzip -d geonetwork {GN_FILE}.war && \
-     rm {GN_FILE}.war
+RUN  unzip -d ${GN_FILE} ${GN_FILE}.war && \
+     rm ./${GN_FILE}.war
 
-RUN chown -R ${GN_UID}:${GN_GID} geonetwork/ && \
+RUN chown -R ${GN_UID}:${GN_GID} ${GN_FILE}/ && \
   chown -R ${GN_UID}:${GN_GID} /usr/local/tomcat/conf
 
 COPY ./docker-entrypoint.sh /entrypoint.sh
