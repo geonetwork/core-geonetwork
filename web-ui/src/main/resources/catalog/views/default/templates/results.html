@@ -1,7 +1,9 @@
 <div data-ng-search-form=""
      data-runSearch="true">
   <div data-ng-include="'../../catalog/views/default/templates/searchForm.html'"></div>
-  <div gn-grid-related-query="searchResults.records"></div>
+  <div data-ng-if="resultTemplate.indexOf('grid.html') === -1"
+       gn-grid-related-query="searchResults.records"></div>
+
   <div class="row gn-row-results">
     <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
       <div class="col-md-3 gn-search-facet">
@@ -48,6 +50,11 @@
       </div>
       <!-- /.gn-row-tools -->
 
+      <div class="row">
+        <div data-ng-show="searchResults.records.length > 0"
+             data-es-facets="searchResults.facets"
+             data-tab-field="facetTabField"></div>
+      </div>
       <div class="row">
         <div class="col-xs-12 gn-nopadding-left gn-nopadding-right">
           <span class="loading fa fa-spinner fa-spin"

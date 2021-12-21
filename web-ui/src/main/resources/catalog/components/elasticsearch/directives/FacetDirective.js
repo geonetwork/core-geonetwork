@@ -216,15 +216,16 @@
   }]);
 
   module.directive('esFacets', [
-   'gnFacetSorter',
-    function (gnFacetSorter) {
+   'gnFacetSorter', 'gnSearchSettings',
+    function (gnFacetSorter, gnSearchSettings) {
       return {
         restrict: 'A',
         controllerAs: 'ctrl',
         controller: FacetsController,
         bindToController: true,
         scope: {
-          list: '<esFacets'
+          list: '<esFacets',
+          tabField: '='
         },
         require: {
           searchCtrl: '^^ngSearchForm'
@@ -234,6 +235,10 @@
             'partials/facets.html'
         },
         link: function (scope, element, attrs) {
+          // Applicaton tab field configured
+          scope.appTabField = gnSearchSettings.facetTabField;
+          // Directive tab field property
+          scope.isTabMode = scope.ctrl.tabField !== undefined;
           scope.facetSorter = gnFacetSorter.sortByTranslation;
         }
       }
@@ -300,6 +305,7 @@
     function (gnLangs) {
       return {
         restrict: 'A',
+        replace: true,
         controllerAs: 'ctrl',
         controller: FacetController,
         bindToController: true,
