@@ -1,0 +1,26 @@
+<table class="table table-striped">
+  <tbody>
+  <tr data-ng-if="mdView.current.record.contact">
+    <th data-translate="">contact</th>
+    <td>
+      <div data-gn-metadata-contacts="mdView.current.record.contact"
+           data-gn-mode="org-role" />
+    </td>
+  </tr>
+  <tr data-ng-if="mdView.current.record.mainLanguage">
+    <th data-translate="">metadataLanguage</th>
+    <td>
+      <ul>
+        <li>{{mdView.current.record.mainLanguage | translate}}</li>
+        <li data-ng-repeat="l in mdView.current.record.otherLanguage">
+          {{l | translate}}
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <th data-translate="">uuid</th>
+    <td>{{mdView.current.record.uuid}}</td>
+  </tr>
+  </tbody>
+</table>

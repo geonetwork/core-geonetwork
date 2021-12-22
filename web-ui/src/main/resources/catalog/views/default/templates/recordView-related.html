@@ -1,0 +1,19 @@
+<div data-gn-related-observer>
+  <div data-ng-if="mdView.current.record.relatedRecords"
+       data-gn-related="mdView.current.record"
+       data-user="user"
+       data-types="parent|children|brothersAndSisters|services|datasets"
+       data-title="{{'associatedResources' | translate}}">
+  </div>
+  <div data-gn-related="mdView.current.record"
+       data-user="user"
+       data-types="fcats|related"
+       data-title="{{'featureCatalog' | translate}}">
+  </div>
+  <div data-ng-if="mdView.current.record.relatedRecords"
+       data-gn-related="mdView.current.record"
+       data-user="user"
+       data-types="siblings|associated"
+       data-title="{{'siblings' | translate}}">
+  </div>
+</div>
