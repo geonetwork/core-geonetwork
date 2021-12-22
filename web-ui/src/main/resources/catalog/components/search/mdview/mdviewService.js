@@ -48,11 +48,12 @@
     'gnESService',
     'gnESClient',
     'gnESFacet',
+    'gnGlobalSettings',
     '$http',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
              gnUrlUtils, gnUtilityService, gnESService, gnESClient,
-             gnESFacet, $http) {
+             gnESFacet, gnGlobalSettings, $http) {
 
       // Keep where the metadataview come from to get back on close
       var initFromConfig = function() {
@@ -123,32 +124,7 @@
                         ]
                       }
                     },
-                    "aggs": {
-                      "agg-creationYearForResource": {
-                        "terms": {
-                          "field": "creationYearForResource"
-                        },
-                        "aggs": {
-                          "docs": {
-                            "top_hits": {
-                              "size": 100
-                            }
-                          }
-                        }
-                      },
-                      "agg-spatialRepresentationType": {
-                        "terms": {
-                          "field": "cl_spatialRepresentationType.default"
-                        },
-                        "aggs": {
-                          "docs": {
-                            "top_hits": {
-                              "size": 100
-                            }
-                          }
-                        }
-                      }
-                    },
+                    "aggs": gnGlobalSettings.gnCfg.mods.recordview.seriesFacetConfig,
                     "from": 0,
                     "size": 100,
                     "_source": gnESFacet.configs.simplelist.source.includes

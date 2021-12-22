@@ -695,7 +695,33 @@ goog.require('gn_alert');
             'enabled': false,
             'if': null // {'documentStandard': ['iso19115-3.2018']}
           },
-          'sortKeywordsAlphabetically': true
+          'sortKeywordsAlphabetically': true,
+          'seriesFacetConfig':  {
+            "creationYearForResource": {
+              "terms": {
+                "field": "creationYearForResource"
+              },
+              "aggs": {
+                "docs": {
+                  "top_hits": {
+                    "size": 100
+                  }
+                }
+              }
+            },
+            "spatialRepresentationType": {
+              "terms": {
+                "field": "cl_spatialRepresentationType.default"
+              },
+              "aggs": {
+                "docs": {
+                  "top_hits": {
+                    "size": 100
+                  }
+                }
+              }
+            }
+          }
         },
         'editor': {
           'enabled': true,
