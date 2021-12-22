@@ -304,32 +304,6 @@
         }]);
 
 
-  module
-    .directive('gnRelatedSeries', [
-      function() {
-        return {
-          restrict: 'A',
-          templateUrl: function(elem, attrs) {
-            return attrs.template ||
-              '../../catalog/components/metadataactions/partials/relatedSeries.html';
-          },
-          scope: {
-            children: '=gnRelatedSeries',
-            agg: '=',
-            aggName: '='
-          },
-          link: function(scope, element, attrs, controller) {
-            scope.lang = scope.lang || scope.$parent.lang;
-
-            scope.types = {};
-
-            var b = scope.agg[scope.aggName].buckets;
-            b.forEach(function (k) {
-              scope.types[k.key] = k.doc_count;
-            });
-          }
-        };
-      }]);
 
   module
     .directive('gnRelatedSeriesByCriteria', [
@@ -343,23 +317,27 @@
           scope: {
             children: '=gnRelatedSeriesByCriteria',
             agg: '=',
-            aggName: '='
+            aggName: '@',
+            title: '@'
           },
           link: function(scope, element, attrs, controller) {
             scope.lang = scope.lang || scope.$parent.lang;
 
             scope.criteria = {p: {}};
+            scope.aggName = scope.aggName || '';
 
-            var b = scope.agg[scope.aggName].buckets;
-            b.forEach(function (k) {
-              scope.criteria.p[k.key] = [];
+            if (scope.aggName) {
+              var b = scope.agg[scope.aggName].buckets;
+              b.forEach(function (k) {
+                scope.criteria.p[k.key] = [];
 
-              k.docs.hits.hits.forEach(function (r) {
-                var values = _.filter(scope.children, {id: r._id});
+                k.docs.hits.hits.forEach(function (r) {
+                  var values = _.filter(scope.children, {id: r._id});
 
-                scope.criteria.p[k.key] = scope.criteria.p[k.key].concat(values);
+                  scope.criteria.p[k.key] = scope.criteria.p[k.key].concat(values);
+                });
               });
-            });
+            }
           }
         };
       }]);
