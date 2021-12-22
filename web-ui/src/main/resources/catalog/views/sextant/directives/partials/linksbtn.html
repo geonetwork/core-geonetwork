@@ -3,7 +3,7 @@
   <!--Downloads to panier button-->
   <div class="btn-group pull-right" ng-if="downloads.length > 1" sxt-popover-dropdown placement="bottom" container="{{container}}" className="sxt-popover-grid">
     <button type="button" class="btn btn-default dropdown-toggle btn-sm" title="{{'download' | translate}}"
-            data-ng-disabled="md.download == 'false'">
+            data-ng-disabled="!md.download">
       <span class="fa fa-download"></span>
       <span class="caret"></span>
     </button>
@@ -24,14 +24,14 @@
 
     </ul>
   </div>
-  <button type="button" class="btn btn-default btn-sm pull-right" data-ng-disabled="md.download == 'false'"
+  <button type="button" class="btn btn-default btn-sm pull-right" data-ng-disabled="!md.download"
           ng-if="downloads.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md, $event)" title="{{'download' | translate}}">
     <span class="fa fa-download"></span>
   </button>
 
   <!--Layers to map button-->
   <div class="btn-group pull-right" ng-if="isMap && layers.length > 1 " sxt-popover-dropdown placement="bottom" container="{{container}}" className="sxt-popover-grid">
-    <button type="button" class="btn btn-default dropdown-toggle btn-sm" title="{{'view' | translate}}" data-ng-disabled="md.dynamic == 'false'">
+    <button type="button" class="btn btn-default dropdown-toggle btn-sm" title="{{'view' | translate}}" data-ng-disabled="!md.dynamic">
       <span class="fa fa-globe"></span>
       <span class="caret"></span>
     </button>
@@ -52,7 +52,7 @@
       </li>
     </ul>
   </div>
-  <button type="button" class="btn btn-default btn-sm pull-right" data-ng-disabled="md.dynamic == 'false'"
+  <button type="button" class="btn btn-default btn-sm pull-right" data-ng-disabled="!md.dynamic"
           ng-if="isMap && layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0], md, $event)" title="{{'view' | translate}}">
     <span class="fa fa-globe"></span>
   </button>
