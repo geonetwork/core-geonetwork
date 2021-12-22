@@ -39,6 +39,7 @@
             role="button"
             class="btn btn-default dropdown-toggle"
             data-toggle="dropdown"
+            data-ng-disabled="md.dynamic == false"
             title="{{'layers' | translate}}"
             aria-label="{{'layers' | translate}}">
       <span class="fa fa-globe"></span>
@@ -69,7 +70,7 @@
   <button type="button"
           role="button"
           class="btn btn-default"
-          data-ng-disabled="md.dynamic == 'false'"
+          data-ng-disabled="md.dynamic == false"
           data-ng-if="isMapViewerEnabled && layers.length == 1"
           data-ng-click="resultviewFns.addMdLayerToMap(layers[0], md)"
           title="{{'view' | translate}}"
@@ -104,7 +105,7 @@
             role="button"
             class="btn btn-default dropdown-toggle"
             data-toggle="dropdown"
-            data-ng-disabled="md['geonet:info'].download == 'false'"
+            data-ng-disabled="md.download == false"
             title="{{'downloads' | translate}}"
             aria-label="{{'downloads' | translate}}">
       <span class="fa fa-download"></span>
