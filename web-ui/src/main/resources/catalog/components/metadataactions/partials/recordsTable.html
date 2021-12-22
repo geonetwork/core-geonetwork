@@ -18,10 +18,15 @@
                 data-ng-repeat="l in r[c]">
               {{l}}
             </div>
+
             <div data-ng-if="c.startsWith('link')"
-                data-ng-repeat="l in r[c]">
-              <div data-gn-record-link-button="l" record="r.md"/>
+                 data-gn-record-links-button="r[c]"
+                 data-btn="dropdownOrButton"
+                 data-icon-mode="dropdownOnly"
+                 data-btn-disabled="!r.md.dynamic"
+                 data-record="r.md">
             </div>
+
           </span>
         </td>
       </tr>

@@ -353,6 +353,47 @@
 
 
   module
+    .directive('gnRecordLinksButton', ['gnRelatedResources',
+      function(gnRelatedResources) {
+        return {
+          restrict: 'A',
+          replace: true,
+          transclude: true,
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/recordLinksButton.html';
+          },
+          scope: {
+            links: '=gnRecordLinksButton',
+            // empty or dropdown or dropdownOrButton (if one link)
+            btn: '@',
+            btnClass: '@',
+            btnDisabled: '=',
+            type: '=',
+            title: '@',
+            altTitle: '@',
+            // none, dropdownOnly
+            iconMode: '@',
+            iconClass: '@',
+            record: '='
+          },
+          link: function(scope, element, attrs, controller) {
+            if (scope.links && scope.links.length > 0) {
+              scope.mainType = gnRelatedResources.getType(scope.links[0], scope.type || 'onlines');
+              scope.icon = scope.iconClass || gnRelatedResources.getClassIcon(scope.mainType);
+            }
+          }
+        }
+      }]);
+
+  /**
+   * Can support a link returned by the related API
+   * or a link in a metadata record.
+   *
+   * Related API provides multilingual links and takes care of
+   * user privileges. For metadata link, check download/dynamic properties.
+   */
+  module
     .directive('gnRecordLinkButton', ['gnRelatedResources',
       function(gnRelatedResources) {
         return {
@@ -363,33 +404,43 @@
           },
           scope: {
             link: '=gnRecordLinkButton',
+            btn: '=',
+            btnClass: '=',
+            btnDisabled: '=',
+            // none, only
+            iconMode: '=',
+            iconClass: '=',
+            type: '=',
             record: '='
           },
           link: function(scope, element, attrs, controller) {
             if (scope.link) {
-              scope.type = 'onlines';
-              scope.mainType = gnRelatedResources.getType(scope.link, scope.type);
+              scope.mainType = gnRelatedResources.getType(scope.link, scope.type || 'onlines');
               scope.badge = gnRelatedResources.getBadgeLabel(scope.mainType, scope.link);
-              scope.icon = gnRelatedResources.getClassIcon(scope.mainType);
+              scope.icon = scope.iconClass || gnRelatedResources.getClassIcon(scope.mainType);
               scope.hasAction = gnRelatedResources.hasAction(scope.mainType);
               scope.service = gnRelatedResources;
+              scope.isDropDown = scope.btn && scope.btn.indexOf('dropdown') === 0;
+              scope.isSibling = (scope.mainType == 'MDSIBLING'
+                && scope.link.associationType
+                && scope.link.associationType != '');
             }
           }
         }
       }]);
 
   module
-    .directive('gnRecordsLink', [
+    .directive('gnRecordsTable', [
       'Metadata',
       function(Metadata) {
         return {
           restrict: 'A',
           templateUrl: function(elem, attrs) {
             return attrs.template ||
-              '../../catalog/components/metadataactions/partials/recordsLinks.html';
+              '../../catalog/components/metadataactions/partials/recordsTable.html';
           },
           scope: {
-            records: '=gnRecordsLink',
+            records: '=gnRecordsTable',
             // Comma separated values. Supported
             // * properties eg. resourceTitle
             // * object path eg. cl_status.key

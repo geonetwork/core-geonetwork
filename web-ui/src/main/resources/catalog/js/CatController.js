@@ -281,15 +281,14 @@ goog.require('gn_alert');
               "max_query_terms" : 12
             }
           },
-          // TODOES
           'facetTabField': '',
           // Enable vega only if using vega facet type
           // See https://github.com/geonetwork/core-geonetwork/pull/5349
           'isVegaEnabled': true,
           'facetConfig': {
-            'cl_hierarchyLevel.key': {
+            'resourceType': {
               'terms': {
-                'field': 'cl_hierarchyLevel.key'
+                'field': 'resourceType'
               },
               'aggs': {
                 'format': {
@@ -602,7 +601,7 @@ goog.require('gn_alert');
           'linkTypes': {
             'links': ['LINK', 'kml'],
             'downloads': ['DOWNLOAD'],
-            'layers': ['OGC', 'ESRI:REST'],
+            'layers': ['OGC:WMS', 'OGC:WFS','OGC:WMTS', 'ESRI:REST'],
             'maps': ['ows']
           },
           'isFilterTagsDisplayedInSearch': true,
@@ -853,7 +852,7 @@ goog.require('gn_alert');
           blur: 0
         }
       },
-      stopKeyList: [        
+      stopKeyList: [
         'langDetector',
         'nodeDetector',
         'serviceDetector',

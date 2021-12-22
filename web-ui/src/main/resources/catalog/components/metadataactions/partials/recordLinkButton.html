@@ -1,21 +1,34 @@
-<div>
-  <a type="button"
-     class="btn btn-default btn-sm btn-block gn-btn-addtomap text-wrap"
-     data-ng-show="hasAction"
-     data-ng-click="service.doAction(mainType, link, record)">
-    <i class="fa"
-       data-ng-class="icon" />
-    <span class="visible-lg-*">
-          {{::(service.getLabel(mainType, type)) | translate}}
-    </span>
-  </a>
-  <a data-ng-show="!hasAction"
-     class="btn btn-default btn-sm btn-block"
-     data-ng-href="{{link.url}}">
-    <i class="fa"
-       data-ng-class="icon" />
-    <span class="visible-lg-*">
-          {{::link.title | gnLocalized: lang}}
-    </span>
-  </a>
-</div>
+<a type="button"
+   data-ng-show="hasAction"
+   data-ng-class="{'btn btn-default': !isDropDown || iconMode === 'only'}"
+   class="text-wrap {{btnClass}}"
+   data-ng-click="service.doAction(mainType, link, record)">
+  <i class="fa"
+     title="{{link.origin === 'remote' ? ('remoteRecord' | translate) : ''}}"
+     data-ng-if="iconMode !== 'none'"
+     data-ng-class="icon" />
+  <span class="visible-lg-*" data-ng-if="iconMode !== 'only'">
+    {{::isDropDown
+    ? link.desc || link.name || link.url
+    : (service.getLabel(mainType, type)) | translate}}
+  </span>
+
+  <br data-ng-if="isSibling"/>
+  <span class="visible-lg-*"
+        data-ng-if="iconMode !== 'only' && isSibling">
+    ({{::link.associationType | translate}}
+    {{::(link.initiativeType && link.initiativeType != ''
+         ? ' / ' + (link.initiativeType | translate) : '')}})
+  </span>
+</a>
+<a data-ng-show="!hasAction"
+   data-ng-class="{'btn btn-default': !isDropDown || iconMode === 'only'}"
+   class="{{btnClass}}"
+   data-ng-href="{{link.url}}">
+  <i class="fa"
+     data-ng-if="iconMode !== 'none'"
+     data-ng-class="icon" />
+  <span class="visible-lg-*">
+    {{::link.title | gnLocalized: lang}}
+  </span>
+</a>

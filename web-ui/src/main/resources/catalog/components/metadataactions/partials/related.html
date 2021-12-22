@@ -187,25 +187,12 @@
       </div>
 
       <div class="col-xs-12 col-sm-3">
-        <button type="button"
-                class="btn btn-default btn-sm btn-block gn-btn-addtomap text-wrap"
-                data-ng-attr-title="{{r.origin === 'remote' ? (r.url | gnLocalized: lang) : ''}}"
-                data-ng-show="config.hasAction(mainType)"
-                data-ng-click="config.doAction(mainType, r, md)">
-          <span class="visible-lg-*">
-            <i class="fa"
-               title="{{r.origin === 'remote' ? ('remoteRecord' | translate) : ''}}"
-               data-ng-class="{'fa-external-link': r.origin === 'remote'}"></i>
-
-            {{::(config.getLabel(mainType, type)) | translate}}
-          </span>
-          <br/>
-          <span class="visible-lg-*"
-                data-ng-if="mainType == 'MDSIBLING' && r.associationType != ''">
-            ({{::r.associationType | translate}}{{::(r.initiativeType != '' ? ' / ' + (r.initiativeType | translate) : '')}})
-          </span>
-        </button>
-
+        <div data-gn-record-links-button="[r]"
+             data-type="type"
+             data-icon-mode="none"
+             data-btn-class="btn-sm btn-block"
+             data-record="md">
+        </div>
 
         <button type="button"
                 class="btn btn-default btn-sm btn-block gn-btn-addtoexternal text-wrap"

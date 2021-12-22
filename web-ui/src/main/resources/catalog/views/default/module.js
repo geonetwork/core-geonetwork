@@ -279,71 +279,79 @@
         }
       });
 
-      $scope.resultviewFns = {
-        addMdLayerToMap: function (link, md) {
-          var config = {
-            uuid: md ? md.uuid : null,
-            type:
-              link.protocol.indexOf('WMTS') > -1 ? 'wmts' :
-                ((link.protocol == 'ESRI:REST') || (link.protocol.startsWith('ESRI REST')) ? 'esrirest' : 'wms'),
-            url: $filter('gnLocalized')(link.url) || link.url
-          };
+      function buildAddToMapConfig(link, md) {
+        var config = {
+          uuid: md ? md.uuid : null,
+          type:
+            link.protocol.indexOf('WMTS') > -1 ? 'wmts' :
+              ((link.protocol == 'ESRI:REST') || (link.protocol.startsWith('ESRI REST')) ? 'esrirest' : 'wms'),
+          url: $filter('gnLocalized')(link.url) || link.url
+        };
 
-          var title = link.title;
+        var title = link.title;
 
-          var name;
+        var name;
 
-          if ( $scope.addToMapLayerNameUrlParam !== '') {
-            var params = gnUrlUtils.parseKeyValue(
-              config.url.split('?')[1]);
-            name = params[$scope.addToMapLayerNameUrlParam];
+        if ( $scope.addToMapLayerNameUrlParam !== '') {
+          var params = gnUrlUtils.parseKeyValue(
+            config.url.split('?')[1]);
+          name = params[$scope.addToMapLayerNameUrlParam];
 
-            if (angular.isUndefined(name)) {
-              name = link.name;
-            }
-          } else {
+          if (angular.isUndefined(name)) {
             name = link.name;
           }
+        } else {
+          name = link.name;
+        }
 
-          if (angular.isObject(link.title)) {
-            title = $filter('gnLocalized')(link.title);
-          }
-          if (angular.isObject(name)) {
-            name = $filter('gnLocalized')(name);
-          }
+        if (angular.isObject(link.title)) {
+          title = $filter('gnLocalized')(link.title);
+        }
+        if (angular.isObject(name)) {
+          name = $filter('gnLocalized')(name);
+        }
 
-          if (name && name !== '') {
-            config.name = name;
-            config.group = link.group;
-            // Related service return a property title for the name
-          } else if (title) {
-            config.name = title;
-          }
+        if (name && name !== '') {
+          config.name = name;
+          config.group = link.group;
+          // Related service return a property title for the name
+        } else if (title) {
+          config.name = title;
+        }
 
-          // if an external viewer is defined, use it here
-          if (gnExternalViewer.isEnabled()) {
-            gnExternalViewer.viewService({
-              id: md ? md.id : null,
-              uuid: config.uuid
-            }, {
-              type: config.type,
-              url: config.url,
-              name: config.name,
-              title: title
-            });
-            return;
-          }
+        // if an external viewer is defined, use it here
+        if (gnExternalViewer.isEnabled()) {
+          gnExternalViewer.viewService({
+            id: md ? md.id : null,
+            uuid: config.uuid
+          }, {
+            type: config.type,
+            url: config.url,
+            name: config.name,
+            title: title
+          });
+          return;
+        }
+        return config;
+      };
 
+      $scope.resultviewFns = {
+        addMdLayerToMap: function (link, md) {
           // This is probably only a service
           // Open the add service layer tab
           $location.path('map').search({
-            add: encodeURIComponent(angular.toJson([config]))});
+            add: encodeURIComponent(angular.toJson(
+              [buildAddToMapConfig(link, md)]))});
           return;
-      },
+        },
         addAllMdLayersToMap: function (layers, md) {
+          var config = [];
           angular.forEach(layers, function (layer) {
-            $scope.resultviewFns.addMdLayerToMap(layer, md);
+            config.push(buildAddToMapConfig(layer, md));
           });
+          $location.path('map').search({
+            add: encodeURIComponent(angular.toJson(config))});
+          return;
         },
         loadMap: function (map, md) {
           gnOwsContextService.loadContextFromUrl(map.url, viewerMap);
