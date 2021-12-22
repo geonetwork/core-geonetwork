@@ -447,6 +447,10 @@
                 recordData.md = r;
                 scope.data.push(recordData);
               });
+              scope.data.sort(function(a, b) {
+                var sortBy = scope.columnsConfig[0];
+                return a[sortBy].localeCompare(b[sortBy])
+              });
             }
 
             scope.$watchCollection('records', function(n, o) {
