@@ -201,6 +201,7 @@ goog.require('gn_alert');
             'maps': ['ows']
           },
           'isFilterTagsDisplayedInSearch': false,
+          'showMapInFacet': false,
           'usersearches': {
             'enabled': false,
             'displayFeaturedSearchesPanel': false
