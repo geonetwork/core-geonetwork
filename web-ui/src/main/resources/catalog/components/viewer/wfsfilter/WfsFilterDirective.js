@@ -601,6 +601,9 @@
                   if (expandedFields.indexOf(f.name) >= 0) {
                     f.expanded = true;
                   }
+                  if (scope.facetFilters[f.name] && f.name.match(/^ft_.*_tree$/)) {
+                    scope.$broadcast('expandFacet.' + f.name);
+                  }
                 });
               });
             }
@@ -849,7 +852,7 @@
             scope.sortAggregation();
             resp.indexData.aggregations &&
             setFeatureExtent(resp.indexData.aggregations);
-          };
+          }
 
           /**
            * Each aggregations are sorted based as defined in the application profil config
@@ -1247,6 +1250,15 @@
               });
             };
           };
+        },
+        // this is only to expand tree facets which have a filter set
+        link: function(scope, elt) {
+          scope.$on('expandFacet.' + scope.treeCtrl.field.name, function () {
+            setTimeout(function() {
+              elt.find('.list-group').show();
+              elt.find('.fa.fa-plus-square').removeClass('fa-plus-square').addClass('fa-minus-square');
+            });
+          });
         }
       };
     }]);
