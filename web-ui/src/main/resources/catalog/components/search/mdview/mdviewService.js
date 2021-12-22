@@ -112,8 +112,20 @@
                     uuids[l.id] = [];
                   })
                 });
-                // TODO: Add aggregations required for summary
-                // eg. creationYear, spatialRepresentationType
+
+                var relatedFacetConfig = gnGlobalSettings.gnCfg.mods.recordview.relatedFacetConfig;
+
+                // Configuration to retrieve the results for the aggregations
+                Object.keys(relatedFacetConfig).map(function(k) {
+                  relatedFacetConfig[k].aggs = {
+                    'docs': {
+                      'top_hits': {
+                        'size': 100
+                      }
+                    }
+                  }
+                });
+
                 var query =
                   {
                     "query": {
@@ -124,7 +136,7 @@
                         ]
                       }
                     },
-                    "aggs": gnGlobalSettings.gnCfg.mods.recordview.seriesFacetConfig,
+                    "aggs": relatedFacetConfig,
                     "from": 0,
                     "size": 100,
                     "_source": gnESFacet.configs.simplelist.source.includes

@@ -1497,6 +1497,8 @@
     "ui-addWMSLayersToMap-urlLayerParam-help": "If the WMS layer name is configured in the metadata resource url, configure the url parameter that contains the layer name.",
     "confirmRemoveLogo": "Are you sure you want to delete this logo?",
     "groupRemoved": "Group removed",
-    "userRemoved": "User removed"
+    "userRemoved": "User removed",
+    "ui-relatedFacetConfig": "Related records facets config",
+    "ui-relatedFacetConfig-help": "This configuration is used to display facets for metadata relations, using either bucket aggregations (terms, filters and histogram are currently supported). See <a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html'>Elasticsearch documentation</a> for more information."
 }
 
