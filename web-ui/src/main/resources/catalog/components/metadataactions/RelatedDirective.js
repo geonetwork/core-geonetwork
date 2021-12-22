@@ -318,6 +318,7 @@
             children: '=gnRelatedSeriesByCriteria',
             agg: '=',
             aggName: '@',
+            sortBy: '@',
             title: '@'
           },
           link: function(scope, element, attrs, controller) {
@@ -336,6 +337,14 @@
 
                   scope.criteria.p[k.key] = scope.criteria.p[k.key].concat(values);
                 });
+
+                if (scope.sortBy) {
+                  Object.keys(scope.criteria.p).map(function(k) {
+                    scope.criteria.p[k].sort(function(a, b) {
+                      return a.record[scope.sortBy].localeCompare(b.record[scope.sortBy])
+                    });
+                  });
+                }
               });
             }
           }
