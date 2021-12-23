@@ -1,42 +1,58 @@
 <div class="col-md-8 gn-record">
-  <div ng-include="'../../catalog/views/default/templates/recordView-title.html'"/>
-
-  <div class="gn-margin-bottom"
-       data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></div>
+  <div class="gn-card gn-card-service">
+    <div ng-include="'../../catalog/views/default/templates/recordView-title.html'"/>
+    <!-- abstract -->
+    <p data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></p>
+  </div>
 
   <!-- Display the first metadata status (apply to ISO19139 record) -->
-  <div class="row">
-    <div data-ng-if="mdView.current.record.cl_status.length > 0"
-         data-ng-repeat="c in mdView.current.record.cl_status track by $index">
-      <div data-ng-if="showStatusWatermarkFor.indexOf(c.key) === -1
-                               && showStatusTopBarFor.indexOf(c.key) === -1"
-           title="{{c.key | translate}}"
-           class="gn-status gn-status-mdview gn-status-{{c.key}}">
-        {{c.key | translate}}
-      </div>
-    </div>
-  </div>
+<!--  <div class="row">-->
+<!--    <div data-ng-if="mdView.current.record.cl_status.length > 0"-->
+<!--         data-ng-repeat="c in mdView.current.record.cl_status track by $index">-->
+<!--      <div data-ng-if="showStatusWatermarkFor.indexOf(c.key) === -1-->
+<!--                               && showStatusTopBarFor.indexOf(c.key) === -1"-->
+<!--           title="{{c.key | translate}}"-->
+<!--           class="gn-status gn-status-mdview gn-status-{{c.key}}">-->
+<!--        {{c.key | translate}}-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
 
   <div data-ng-if="showCitation"
        data-gn-metadata-citation="mdView.current.record"/>
 
   <div ng-include="'../../catalog/views/default/templates/recordView-tabbed.html'"/>
 
-  <div ng-include="'../../catalog/views/default/templates/recordView-downloads.html'"/>
-
-  <div ng-include="'../../catalog/views/default/templates/recordView-related.html'"/>
-
-  <div ng-include="'../../catalog/views/default/templates/recordView-common.html'"/>
-
-  <div ng-include="'../../catalog/views/default/templates/recordView-technical.html'"/>
-
-  <div ng-include="'../../catalog/views/default/templates/recordView-metadata.html'"/>
-
-  <div ng-include="'../../catalog/views/default/templates/recordView-contact.html'"/>
-
 </div>
 
 <div class="col-md-4 gn-md-side">
+
+  <!-- summary -->
+  <div ng-include="'../../catalog/views/default/templates/recordView-summary.html'"/>
+
+  <div data-ng-show="mdView.current.record.resourceVerticalRange">
+    <h2>
+      <i class="fa fa-fw fa-clock-o"></i>
+      <span data-translate="">resourceVerticalRange</span>
+    </h2>
+
+    <div class="flex flex-row flex-align-center gn-vertical-range"
+         data-ng-repeat="range in mdView.current.record.resourceVerticalRange">
+      <div class="width-25">
+        <i class="fa fa-fw fa-chevron-up"/>
+      </div>
+      <div class="width-75">
+        <div data-ng-show="range.lte">
+          <dt>{{range.lte}}</dt>
+        </div>
+        <div data-ng-show="range.gte">
+          <dt>{{range.gte}}</dt>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
+
   <section class="gn-md-side-overview" data-ng-if="mdView.current.record.overview.length > 0">
     <h2>
       <i class="fa fa-fw fa-image"></i>
@@ -75,116 +91,9 @@
 
   </section>
 
-  <section class="gn-md-side-dates"
-           data-ng-if="mdView.current.record.resourceDate.length > 0 ||
-                              mdView.current.record.resourceTemporalExtentDateRange ||
-                              mdView.current.record.resourceVerticalRange">
-    <div data-ng-show="mdView.current.record.resourceDate.length > 0">
-      <h2>
-        <i class="fa fa-fw fa-clock-o"></i>
-        <span data-translate="">resourceEvents</span>
-      </h2>
 
-      <ul class="timeline timeline-1-col">
-        <li class="timeline-inverted"
-            data-ng-repeat="date in mdView.current.record.resourceDate">
-          <div class="timeline-badge timeline-badge-small"
-               data-ng-class="{'danger': date.type === 'deprecated'}">
-            <i class="fa fa-fw"
-               data-ng-class="{'fa-chevron-right': date.type === 'creation', 'fa-code-fork': date.type === 'superseded','fa-ban': date.type === 'deprecated', 'fa-retweet': date.type === 'revision', 'fa-check': date.type === 'publication', 'fa-calendar': date.type === 'nextUpdate'}"/>
-          </div>
-          <div class="timeline-panel">
-            <dt data-translate>{{date.type | translate}}</dt>
-            <dd data-gn-humanize-time="{{date.date}}"/>
-          </div>
-        </li>
-      </ul>
-    </div>
-
-    <div data-ng-show="mdView.current.record.resourceTemporalExtentDetails">
-      <h2>
-        <i class="fa fa-fw fa-clock-o"></i>
-        <span data-translate="">tempExtent</span>
-      </h2>
-
-
-      <div class="flex-row flex-align-center gn-period"
-           data-ng-repeat="range in mdView.current.record.resourceTemporalExtentDetails">
-        <div class="flex-start"
-             data-ng-show="range.start">
-          <dt>
-            <span data-ng-show="range.start.indeterminatePosition">{{range.start.indeterminatePosition | translate}}&nbsp;</span>
-            <span data-gn-humanize-time="{{range.start.date}}"/>
-            <span data-ng-show="range.start.calendarEraName">{{range.start.calendarEraName | translate}}</span>
-
-          </dt>
-        </div>
-        <div class="spacer">
-          <i class="fa fa-chevron-right"></i>
-        </div>
-        <div class="flex-end"
-             data-ng-show="range.end">
-          <dt>
-            <span data-ng-show="range.end.indeterminatePosition">{{range.end.indeterminatePosition | translate}}&nbsp;</span>
-            <span data-gn-humanize-time="{{range.end.date}}"/>
-            <span data-ng-show="range.end.calendarEraName">{{range.end.calendarEraName | translate}}</span>
-          </dt>
-        </div>
-      </div>
-    </div>
-
-    <div data-ng-show="mdView.current.record.resourceVerticalRange">
-      <h2>
-        <i class="fa fa-fw fa-clock-o"></i>
-        <span data-translate="">resourceVerticalRange</span>
-      </h2>
-
-      <div class="flex flex-row flex-align-center gn-vertical-range"
-           data-ng-repeat="range in mdView.current.record.resourceVerticalRange">
-        <div class="width-25">
-          <i class="fa fa-fw fa-chevron-up"/>
-        </div>
-        <div class="width-75">
-          <div data-ng-show="range.lte">
-            <dt>{{range.lte}}</dt>
-          </div>
-          <div data-ng-show="range.gte">
-            <dt>{{range.gte}}</dt>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="gn-md-side-providedby">
-    <h2>
-      <i class="fa fa-fw fa-cog"></i>
-      <span data-translate="">sourceCatalog</span>
-    </h2>
-    <div data-gn-record-origin-logo="mdView.current.record"/>
-  </section>
-
-  <section class="gn-md-side-calendar">
-    <h2>
-      <i class="fa fa-fw fa-calendar"></i>
-      <span data-translate="">updatedOn</span>
-    </h2>
-    <p>
-              <span data-gn-humanize-time="{{mdView.current.record.changeDate}}"
-                    data-from-now=""></span>
-    </p>
-  </section>
 
   <div data-gn-more-like-this="mdView.current.record"/>
-
-  <section data-ng-show="isRatingEnabled" class="gn-md-side-rating">
-    <h2>
-      <i class="fa fa-fw"></i>
-      <span data-translate="">rate</span>
-    </h2>
-    <div data-gn-metadata-rate="mdView.current.record"/>
-  </section>
-
 
   <div data-gn-userfeedback='mdView.current.record'
        data-gn-user={{user.username}}

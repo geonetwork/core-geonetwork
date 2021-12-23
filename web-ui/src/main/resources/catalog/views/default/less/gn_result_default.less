@@ -49,6 +49,7 @@
     h1 {
       margin-top: 15px;
       font-size: 32px;
+      font-weight: 300;
     }
     p {
       font-size: 14px;
@@ -60,7 +61,21 @@
     }
   }
   .gn-card-series {
+    margin-top: 30px !important;
+    margin-bottom: 30px !important;
     background-color: @brand-primary;
+    color: #fff;
+  }
+  .gn-card-dataset {
+    margin-top: 30px !important;
+    margin-bottom: 30px !important;
+    background-color: @brand-info;
+    color: #fff;
+  }
+  .gn-card-service {
+    margin-top: 30px !important;
+    margin-bottom: 30px !important;
+    background-color: @brand-success;
     color: #fff;
   }
   .gn-series {
@@ -70,6 +85,12 @@
       }
     }
 
+  }
+  .badge-rounded {
+    padding: 10px 8px;
+    border-radius: 50%;
+    color: #0e0e0e;
+    background-color: #efefef !important;
   }
   .gn-related-item {
     margin-top: -1px;
@@ -97,6 +118,7 @@
     }
   }
   .gn-md-side {
+    padding-top: 15px;
     .gn-img-thumbnail,
     .gn-img-extent {
       max-width: 100%;
@@ -106,10 +128,19 @@
       padding: 4px;
     }
     section {
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     h2 {
       font-size: 16px;
+    }
+    .gn-md-side-dates {
+      ul {
+        list-style: none;
+        padding-left: 0;
+        li {
+          padding: 5px 0;
+        }
+      }
     }
   }
   .view-header {
