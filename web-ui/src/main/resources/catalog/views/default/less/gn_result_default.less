@@ -45,7 +45,6 @@
   }
 
   .gn-card {
-    padding: 15px;
     h1 {
       margin-top: 15px;
       font-size: 32px;
@@ -58,25 +57,35 @@
     .gallery {
       width: 100%;
       margin-top: 15px;
+      margin-bottom: 15px;
+      padding: 0;
+      border: none;
+      height: auto;
     }
   }
-  .gn-card-series {
+  .gn-card-series, .gn-card-dataset, .gn-card-service {
+    padding: 15px;
     margin-top: 30px !important;
     margin-bottom: 30px !important;
-    background-color: @brand-primary;
     color: #fff;
+  }
+  .gn-card-series {
+    background-color: @brand-primary;
+    &:hover {
+      background-color: @brand-primary;
+    }
   }
   .gn-card-dataset {
-    margin-top: 30px !important;
-    margin-bottom: 30px !important;
     background-color: @brand-info;
-    color: #fff;
+    &:hover {
+      background-color: @brand-info;
+    }
   }
   .gn-card-service {
-    margin-top: 30px !important;
-    margin-bottom: 30px !important;
     background-color: @brand-success;
-    color: #fff;
+    &:hover {
+      background-color: @brand-success;
+    }
   }
   .gn-series {
     .nav-pills {
@@ -117,8 +126,20 @@
       overflow: auto;
     }
   }
+  .gn-collection {
+    .btn {
+      padding: 10px 15px;
+      margin: 0 10px 10px 0;
+    }
+  }
   .gn-md-side {
     padding-top: 15px;
+    .gn-providedby-logo {
+      display: inline-block;
+      img {
+        display: none;
+      }
+    }
     .gn-img-thumbnail,
     .gn-img-extent {
       max-width: 100%;

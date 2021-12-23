@@ -27,11 +27,7 @@
   <div ng-include="'../../catalog/views/default/templates/recordView-summary.html'"/>
 
   <section class="gn-md-side-overview" data-ng-if="mdView.current.record.overview.length > 0">
-    <h2>
-      <i class="fa fa-fw fa-image"></i>
-      <span data-translate="">overview</span>
-    </h2>
-
+    <h2 data-translate="">overview</h2>
     <div data-ng-repeat="img in mdView.current.record.overview">
       <img data-gn-img-modal="img"
            class="gn-img-thumbnail img-thumbnail"
@@ -45,10 +41,7 @@
   </section>
 
   <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geom || mdView.current.record.hasBoundingPolygon">
-    <h2>
-      <i class="fa fa-fw fa-map-marker"></i>
-      <span data-translate="">extent</span>
-    </h2>
+    <h2 data-translate="">extent</h2>
     <p data-ng-if="mdView.current.record.extentDescription">
     <ul>
       <li data-ng-repeat="d in mdView.current.record.extentDescription">{{d}}</li>
@@ -61,54 +54,17 @@
            aria-label="{{'extent' | translate}}"
            data-ng-src="../api/records/{{mdView.current.record.uuid}}/extents.png"/>
     </p>
-
   </section>
-
-
-
-  <div data-gn-more-like-this="mdView.current.record"/>
 
   <div data-gn-userfeedback='mdView.current.record'
        data-gn-user={{user.username}}
        data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
   </div>
   <div data-gn-md-feedback="mdView.current.record"></div>
-  </section>
 
+  <div data-gn-more-like-this="mdView.current.record"/>
 
-  <section class="gn-md-side-social" data-ng-show="isSocialbarEnabled">
-    <h2>
-      <i class="fa fa-fw fa-share-square-o"></i>
-      <span data-translate="">shareOn</span>
-    </h2>
-    <div class="btn-group">
-      <a data-ng-href="https://twitter.com/share?url={{socialMediaLink | encodeURIComponent}}"
-         title="{{'shareOnTwitter' | translate}}"
-         target="_blank"
-         class="btn btn-default"><i class="fa fa-fw fa-twitter"></i></a>
-      <a
-        data-ng-href="https://www.facebook.com/sharer.php?u={{socialMediaLink | encodeURIComponent}}"
-        title="{{'shareOnFacebook' | translate}}"
-        target="_blank"
-        class="btn btn-default"><i class="fa fa-fw fa-facebook"></i></a>
-      <a
-        data-ng-href="http://www.linkedin.com/shareArticle?mini=true&amp;summary={{mdView.current.record.resourceTitle}}&amp;url={{socialMediaLink | encodeURIComponent}}"
-        title="{{'shareOnLinkedIn' | translate}}"
-        target="_blank"
-        class="btn btn-default"><i class="fa fa-fw fa-linkedin"></i></a>
-      <a
-        data-ng-href="mailto:?subject={{mdView.current.record.resourceTitle}}&amp;body={{socialMediaLink | encodeURIComponent}}"
-        title="{{'shareByEmail' | translate}}"
-        target="_blank"
-        class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></a>
-      <a
-        data-ng-click="mdService.getPermalink(md)"
-        href=""
-        title="{{'permalink' | translate}}"
-        class="btn btn-default"><i class="fa fa-fw fa-link"></i></a>
-    </div>
-  </section>
-
+  <div ng-include="'../../catalog/views/default/templates/recordView-social.html'"/>
 
   <div data-ng-show="isRecordHistoryEnabled && user.isEditorOrMore() && mdView.current.record.draft != 'y'"
        data-gn-record-history="mdView.current.record"></div>

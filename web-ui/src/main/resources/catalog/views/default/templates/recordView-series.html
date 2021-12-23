@@ -1,13 +1,15 @@
 <div class="col-md-12 gn-record gn-series">
-  <div class="md-series-{{mdView.current.record.resourceType[0]}}">
+  <div class="gn-card gn-card-series md-series-{{mdView.current.record.resourceType[0]}}">
     <div data-ng-if="mdView.current.record.relatedRecords"
          data-gn-record-mosaic=""
          records="mdView.current.record.relatedRecords.all" size="9"/>
     <div ng-include="'../../catalog/views/default/templates/recordView-title.html'"/>
+
+    <p data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></p>
   </div>
 
-  <div class="gn-margin-bottom"
-       data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></div>
+  <h2 data-translate="">keywords</h2>
+  <div class="gn-collection" data-gn-keyword-badges="mdView.current.record.allKeywords"/>
 
   <div data-ng-if="mdView.current.record.relatedRecords"
        data-gn-related-series-by-criteria="mdView.current.record.relatedRecords.children.length > 0

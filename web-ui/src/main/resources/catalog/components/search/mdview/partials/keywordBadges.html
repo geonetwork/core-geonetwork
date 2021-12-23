@@ -2,7 +2,7 @@
      data-ng-if="mainThesaurus && mainThesaurus.indexOf(key) !== -1">
   <a data-ng-repeat="k in t.keywords track by $index"
      href=""
-     class="btn btn-default btn-xs"
+     class="btn btn-default"
      title="{{'clickToFilterOn' | translate}} {{::k.default | capitalize}}"
      aria-label="{{'clickToFilterOn' | translate}} {{::k.default | capitalize}}"
      data-ng-click="filterBy('tag.default', k.default)">

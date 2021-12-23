@@ -2,12 +2,11 @@
      data-ng-class="{'gn-info-list-blocks': type === 'blocks' || type === undefined, 'gn-info-list-large': type === 'large', 'gn-info-list-small': type === 'small'}">
 
   <h2>{{title}}</h2>
-  <hr />
   <div class="row">
     <div data-ng-repeat="filter in filters"
          class="pull-left">
-      {{filter | translate}}
-      <div class="btn-group"
+      <h3>{{filter | translate}}</h3>
+      <div class="gn-collection"
            role="group"
            aria-label="filter">
         <button data-ng-repeat="(key, b) in agg[filter].buckets"
