@@ -110,11 +110,14 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             final Source source = sourceRepository.findById(nodeinfo.getId()).get();
             if(source.getServiceRecord() != null) {
                 recordUuidToUseForCapability = source.getServiceRecord().toString();
+            } else {
+                recordUuidToUseForCapability = "-1";
             }
         }
         Element capabilities = null;
         String message = null;
-        if (StringUtils.isNotEmpty(recordUuidToUseForCapability) && !"-1".equals(recordUuidToUseForCapability)) {
+        if (StringUtils.isNotEmpty(recordUuidToUseForCapability)
+            && !"-1".equals(recordUuidToUseForCapability)) {
             Metadata record = metadataRepository.findOneByUuid(recordUuidToUseForCapability);
             if (record != null) {
                 try {
