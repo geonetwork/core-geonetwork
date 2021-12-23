@@ -28,10 +28,10 @@
   var module = angular.module('gn_selection_directive', []);
 
   module.directive('gnSelectionWidget', [
-    '$translate', '$http', 'hotkeys',
+    '$translate', '$http', 'hotkeys', 'gnAlertService',
     'gnHttp', 'gnMetadataActions', 'gnConfig', 'gnConfigService',
     'gnSearchSettings', 'gnSearchManagerService', 'gnCollectionService',
-    function($translate, $http, hotkeys,
+    function($translate, $http, hotkeys, gnAlertService,
              gnHttp, gnMetadataActions, gnConfig, gnConfigService,
              gnSearchSettings, gnSearchManagerService, gnCollectionService) {
 
@@ -70,13 +70,21 @@
           scope.createCollection = function(record) {
             gnSearchManagerService.selected(
               scope.searchResults.selectionBucket).then(function(r) {
-              gnCollectionService.createCollection(record.uuid, r.data).then(function(id) {
-                window.location.hash = '#/metadata/' + id
+              gnCollectionService.createCollection(record.uuid, r.data).then(function(r) {
+                window.location.hash = '#/metadata/' + r.id;
+              }, function(r) {
+                gnAlertService.addAlert({
+                  msg: r.data.description,
+                  delay: 20000,
+                  type: 'danger'});
+                if (r.id) {
+                  window.location.hash = '#/metadata/' + r.id
+                }
               });
             });
           }
 
-          
+
           scope.mdService = gnMetadataActions;
 
           scope.operationOnSelectionInProgress = false;

@@ -69,7 +69,7 @@
     <!-- TODO: temporalElement is also part of gmd:extent.
     How to group by both? -->
     <tag name="gmd:extent" context="gmd:MD_DataIdentification"
-         groupBy="normalize-space(*/gmd:geographicElement)"
+         groupBy="*/gmd:geographicElement"
          merge="gmd:geographicElement"/>
     <!-- TODO: gmd:language can be in various places. -->
     <tag name="gmd:language" context="gmd:MD_DataIdentification"

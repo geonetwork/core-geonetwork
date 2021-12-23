@@ -71,11 +71,15 @@
                   id = r.data;
                   $http.post('../api/records/' + id + '/processes/collection-updater?'
                     + 'newProductMemberUuids=' + memberUuids.join(',')).then(function() {
-                    defer.resolve(id);
+                    r.id = id;
+                    defer.resolve(r);
+                  }, function(r) {
+                    r.id = id;
+                    defer.reject(r);
                   });
                 }, function(r) {
-                  defer.reject();
-                })
+                  defer.reject(r);
+                });
               });
 
               return defer.promise;
