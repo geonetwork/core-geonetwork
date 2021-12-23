@@ -1,21 +1,7 @@
 <div class="col-md-8 gn-record">
   <div ng-include="'../../catalog/views/default/templates/recordView-title.html'"/>
-
-  <div class="gn-margin-bottom"
-       data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></div>
-
-  <!-- Display the first metadata status (apply to ISO19139 record) -->
-  <div class="row">
-    <div data-ng-if="mdView.current.record.cl_status.length > 0"
-         data-ng-repeat="c in mdView.current.record.cl_status track by $index">
-      <div data-ng-if="showStatusWatermarkFor.indexOf(c.key) === -1
-                               && showStatusTopBarFor.indexOf(c.key) === -1"
-           title="{{c.key | translate}}"
-           class="gn-status gn-status-mdview gn-status-{{c.key}}">
-        {{c.key | translate}}
-      </div>
-    </div>
-  </div>
+  <p class="gn-margin-bottom"
+       data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></p>
 
   <div data-ng-if="showCitation"
        data-gn-metadata-citation="mdView.current.record"/>
@@ -26,51 +12,63 @@
 
   <div ng-include="'../../catalog/views/default/templates/recordView-common.html'"/>
 
+  <div ng-include="'../../catalog/views/default/templates/recordView-contact.html'"/>
+
   <div ng-include="'../../catalog/views/default/templates/recordView-technical.html'"/>
 
   <div ng-include="'../../catalog/views/default/templates/recordView-metadata.html'"/>
 
-  <div ng-include="'../../catalog/views/default/templates/recordView-contact.html'"/>
-
 </div>
 
 <div class="col-md-4 gn-md-side">
-  <section class="gn-md-side-overview" data-ng-if="mdView.current.record.overview.length > 0">
-    <h2>
-      <i class="fa fa-fw fa-image"></i>
-      <span data-translate="">overview</span>
-    </h2>
 
-    <div data-ng-repeat="img in mdView.current.record.overview">
-      <img data-gn-img-modal="img"
-           class="gn-img-thumbnail img-thumbnail"
-           alt="{{img.name}}"
-           data-ng-src="{{img.url}}"/>
+  <h2 data-translate="">summary</h2>
 
-      <div class="gn-img-thumbnail-caption"
-           data-ng-show="img.name">{{img.name}}
-      </div>
+  <!-- Display the first metadata status (apply to ISO19139 record) -->
+  <section data-ng-if="mdView.current.record.cl_status.length > 0"
+       data-ng-repeat="c in mdView.current.record.cl_status track by $index">
+    <div data-ng-if="showStatusWatermarkFor.indexOf(c.key) === -1 && showStatusTopBarFor.indexOf(c.key) === -1">
+      <span class="badge badge-rounded gn-status-{{c.key}}" title="{{c.key | translate}}">
+        <i class="fa fa-fw fa-info"></i>
+      </span>
+      {{c.key | translate}}
     </div>
   </section>
 
-  <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geom || mdView.current.record.hasBoundingPolygon">
-    <h2>
-      <i class="fa fa-fw fa-map-marker"></i>
-      <span data-translate="">extent</span>
-    </h2>
-    <p data-ng-if="mdView.current.record.extentDescription">
-    <ul>
-      <li data-ng-repeat="d in mdView.current.record.extentDescription">{{d}}</li>
-    </ul>
+  <section data-ng-if="mdView.current.record.MD_ConstraintsUseLimitation">
+    <p data-ng-repeat="i in mdView.current.record.MD_ConstraintsUseLimitation">
+      <span class="badge badge-rounded" title="{{'resourceConstraints' | translate}}">
+        <i class="fa fa-fw fa-lock"></i>
+      </span>
+      <span data-ng-bind-html="i | linky | newlines"/>
     </p>
-    <!-- TODO: use map config -->
-    <p data-ng-if="mdView.current.record.geom || mdView.current.record.hasBoundingPolygon">
-      <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
-           alt="{{'extent' | translate}}"
-           aria-label="{{'extent' | translate}}"
-           data-ng-src="../api/records/{{mdView.current.record.uuid}}/extents.png"/>
-    </p>
+  </section>
 
+  <section class="gn-md-side-providedby">
+    <span class="badge badge-rounded" title="{{'sourceCatalog' | translate}}">
+      <i class="fa fa-fw fa-cog"></i>
+    </span>
+    <span data-translate="">sourceCatalog</span>
+    <span data-gn-record-origin-logo="mdView.current.record"/>
+  </section>
+
+  <section data-ng-show="isRatingEnabled" class="gn-md-side-rating">
+    <h2>
+      <i class="fa fa-fw"></i>
+      <span data-translate="">rate</span>
+    </h2>
+    <div data-gn-metadata-rate="mdView.current.record"/>
+  </section>
+
+  <section class="gn-md-side-calendar">
+    <p>
+      <span class="badge badge-rounded" title="{{'updatedOn' | translate}}">
+        <i class="fa fa-fw fa-calendar"></i>
+      </span>
+      <span data-translate="">updatedOn</span>
+      <span data-gn-humanize-time="{{mdView.current.record.changeDate}}"
+            data-from-now=""></span>
+    </p>
   </section>
 
   <section class="gn-md-side-dates"
@@ -78,34 +76,24 @@
                               mdView.current.record.resourceTemporalExtentDateRange ||
                               mdView.current.record.resourceVerticalRange">
     <div data-ng-show="mdView.current.record.resourceDate.length > 0">
-      <h2>
-        <i class="fa fa-fw fa-clock-o"></i>
-        <span data-translate="">resourceEvents</span>
-      </h2>
-
-      <ul class="timeline timeline-1-col">
-        <li class="timeline-inverted"
-            data-ng-repeat="date in mdView.current.record.resourceDate">
-          <div class="timeline-badge timeline-badge-small"
+      <h2 data-translate="">resourceEvents</h2>
+      <ul>
+        <li data-ng-repeat="date in mdView.current.record.resourceDate">
+          <div class="badge badge-rounded"
                data-ng-class="{'danger': date.type === 'deprecated'}">
             <i class="fa fa-fw"
                data-ng-class="{'fa-chevron-right': date.type === 'creation', 'fa-code-fork': date.type === 'superseded','fa-ban': date.type === 'deprecated', 'fa-retweet': date.type === 'revision', 'fa-check': date.type === 'publication', 'fa-calendar': date.type === 'nextUpdate'}"/>
           </div>
-          <div class="timeline-panel">
-            <dt data-translate>{{date.type | translate}}</dt>
-            <dd data-gn-humanize-time="{{date.date}}"/>
-          </div>
+          <span>
+            <strong data-translate>{{date.type | translate}}</strong>
+            <span data-gn-humanize-time="{{date.date}}"/>
+          </span>
         </li>
       </ul>
     </div>
 
     <div data-ng-show="mdView.current.record.resourceTemporalExtentDetails">
-      <h2>
-        <i class="fa fa-fw fa-clock-o"></i>
-        <span data-translate="">tempExtent</span>
-      </h2>
-
-
+      <h2 data-translate="">tempExtent</h2>
       <div class="flex-row flex-align-center gn-period"
            data-ng-repeat="range in mdView.current.record.resourceTemporalExtentDetails">
         <div class="flex-start"
@@ -154,35 +142,47 @@
     </div>
   </section>
 
-  <section class="gn-md-side-providedby">
+  <section class="gn-md-side-overview" data-ng-if="mdView.current.record.overview.length > 0">
     <h2>
-      <i class="fa fa-fw fa-cog"></i>
-      <span data-translate="">sourceCatalog</span>
+      <i class="fa fa-fw fa-image"></i>
+      <span data-translate="">overview</span>
     </h2>
-    <div data-gn-record-origin-logo="mdView.current.record"/>
+
+    <div data-ng-repeat="img in mdView.current.record.overview">
+      <img data-gn-img-modal="img"
+           class="gn-img-thumbnail img-thumbnail"
+           alt="{{img.name}}"
+           data-ng-src="{{img.url}}"/>
+
+      <div class="gn-img-thumbnail-caption"
+           data-ng-show="img.name">{{img.name}}
+      </div>
+    </div>
   </section>
 
-  <section class="gn-md-side-calendar">
+  <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geom || mdView.current.record.hasBoundingPolygon">
     <h2>
-      <i class="fa fa-fw fa-calendar"></i>
-      <span data-translate="">updatedOn</span>
+      <i class="fa fa-fw fa-map-marker"></i>
+      <span data-translate="">extent</span>
     </h2>
-    <p>
-              <span data-gn-humanize-time="{{mdView.current.record.changeDate}}"
-                    data-from-now=""></span>
+    <p data-ng-if="mdView.current.record.extentDescription">
+    <ul>
+      <li data-ng-repeat="d in mdView.current.record.extentDescription">{{d}}</li>
+    </ul>
     </p>
+    <!-- TODO: use map config -->
+    <p data-ng-if="mdView.current.record.geom || mdView.current.record.hasBoundingPolygon">
+      <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
+           alt="{{'extent' | translate}}"
+           aria-label="{{'extent' | translate}}"
+           data-ng-src="../api/records/{{mdView.current.record.uuid}}/extents.png"/>
+    </p>
+
   </section>
+
+
 
   <div data-gn-more-like-this="mdView.current.record"/>
-
-  <section data-ng-show="isRatingEnabled" class="gn-md-side-rating">
-    <h2>
-      <i class="fa fa-fw"></i>
-      <span data-translate="">rate</span>
-    </h2>
-    <div data-gn-metadata-rate="mdView.current.record"/>
-  </section>
-
 
   <div data-gn-userfeedback='mdView.current.record'
        data-gn-user={{user.username}}
