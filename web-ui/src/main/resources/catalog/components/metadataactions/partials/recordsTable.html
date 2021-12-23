@@ -12,11 +12,19 @@
             <a gn-metadata-open="r.md"
                gn-formatter="formatter.defaultUrl">{{r[c]}}</a>
           </span>
+
           <span data-ng-if="$index > 0 && !isArray(r[c])">{{r[c]}}</span>
+
           <span data-ng-if="isArray(r[c])">
-            <div data-ng-if="!c.startsWith('link')"
+            <div data-ng-if="!c.startsWith('link') && !c.startsWith('format')"
                 data-ng-repeat="l in r[c]">
               {{l}}
+            </div>
+
+            <div data-ng-if="c.startsWith('format') "
+                 class="clearfix"
+                 data-ng-repeat="l in r[c]">
+              <span class="label label-success">{{l}}</span>
             </div>
 
             <div data-ng-if="c.startsWith('link')"
