@@ -20,6 +20,9 @@
 
   <div ng-include="'../../catalog/views/default/templates/recordView-metadata.html'"/>
 
+
+  <div data-gn-more-like-this="mdView.current.record"/>
+
 </div>
 
 <div class="col-md-4 gn-md-side">
@@ -61,8 +64,6 @@
        data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
   </div>
   <div data-gn-md-feedback="mdView.current.record"></div>
-
-  <div data-gn-more-like-this="mdView.current.record"/>
 
   <div ng-include="'../../catalog/views/default/templates/recordView-social.html'"/>
 

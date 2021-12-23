@@ -1,14 +1,10 @@
-<div  data-ng-class="{
-      'gn-info-list-blocks': type === 'blocks' || type === undefined,
-      'gn-info-list-large': type === 'large',
-      'gn-info-list-small': type === 'small'}"
-      class="gn-related-resources"
+<div class="gn-related-resources gn-info-list-blocks"
       data-ng-if="relationFound">
   <h2>{{::title}}</h2>
 
   <div class=""
        data-ng-repeat="(type, items) in relations track by $index"
-       data-ng-if="type && type !== 'thumbnails'">
+       data-ng-if="layout !== 'card' && type && type !== 'thumbnails'">
     <div data-ng-init="mainType = config.getType(r, type);
                        badge = config.getBadgeLabel(mainType, r);
                        icon = config.getClassIcon(mainType);"
@@ -211,12 +207,12 @@
 
   <ul class="row list-group gn-info-list"
       data-ng-repeat="(type, items) in relations track by $index"
-      data-ng-if="type && type !== 'thumbnails' && type !== 'onlines'"
+      data-ng-if="layout === 'card' && type && type !== 'thumbnails' && type !== 'onlines'"
       data-ng-init="mainType = config.getType(md, type);
                     badge = config.getBadgeLabel(mainType, md);
                     icon = config.getClassIcon(mainType);" >
     <gn-metadata-card data-ng-repeat="md in items"
-                      md="md"
+                      md="md.record"
                       formatter-url="formatter.defaultUrl">
       <span class="label label-default"
             data-ng-class="{

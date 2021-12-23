@@ -86,7 +86,8 @@
    * https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-mlt-query.html
    */
   module.directive('gnMoreLikeThis', [
-    '$http', 'gnGlobalSettings', function($http, gnGlobalSettings) {
+    '$http', 'gnGlobalSettings', 'Metadata',
+    function($http, gnGlobalSettings, Metadata) {
       return {
         scope: {
           md: '=gnMoreLikeThis'
@@ -97,11 +98,11 @@
             'morelikethis.html';
         },
         link: function(scope, element, attrs, controller) {
-          var initSize = 6;
+          var initSize = 4;
           scope.similarDocuments = [];
           scope.size = initSize;
-          scope.pageSize = 5;
-          scope.maxSize = 19;
+          scope.pageSize = 4;
+          scope.maxSize = 8;
           var moreLikeThisQuery = {};
           angular.copy(gnGlobalSettings.gnCfg.mods.search.moreLikeThisConfig, moreLikeThisQuery);
           var query = {
@@ -135,7 +136,9 @@
             }
             query.query.bool.must[0].more_like_this.like = scope.md.resourceTitle;
             $http.post('../api/search/records/_search', query).then(function (r) {
-              scope.similarDocuments = r.data.hits;
+              scope.similarDocuments = r.data.hits.hits.map(function(r) {
+                return new Metadata(r);
+              });
             })
           }
           scope.$watch('md', function() {

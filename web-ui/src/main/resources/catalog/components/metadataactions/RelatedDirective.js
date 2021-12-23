@@ -180,7 +180,8 @@
               filter: '@',
               container: '@',
               user: '=',
-              hasResults: '=?'
+              hasResults: '=?',
+              layout: '@'
             },
             require: '?^gnRelatedObserver',
             link: function(scope, element, attrs, controller) {
