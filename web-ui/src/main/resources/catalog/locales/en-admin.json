@@ -1499,6 +1499,8 @@
     "groupRemoved": "Group removed",
     "userRemoved": "User removed",
     "ui-relatedFacetConfig": "Related records facets config",
-    "ui-relatedFacetConfig-help": "This configuration is used to display facets for metadata relations, using either bucket aggregations (terms, filters and histogram are currently supported). See <a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html'>Elasticsearch documentation</a> for more information."
+    "ui-relatedFacetConfig-help": "This configuration is used to display facets for metadata relations, using either bucket aggregations (terms, filters and histogram are currently supported). See <a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html'>Elasticsearch documentation</a> for more information.",
+    "ui-mainThesaurus": "Thesaurus keywords to highlight",
+    "ui-mainThesaurus-help": "Choose thesaurus that you want keywords to be displayed as badges."
 }
 
