@@ -323,7 +323,7 @@
           },
           link: function(scope, element, attrs, controller) {
             scope.lang = scope.lang || scope.$parent.lang;
-
+            scope.type = 'blocks';
             scope.criteria = {p: {}};
 
             function reset() {
@@ -332,6 +332,10 @@
             }
 
             reset();
+
+            scope.toggleListType = function(type) {
+              scope.type = type;
+            };
 
             scope.filterRecordsBy = function(key, value) {
               var newKey = key + '-' + value;
@@ -357,6 +361,26 @@
                 }
               });
             };
+          }
+        };
+      }]);
+
+  module
+    .directive('gnMetadataCard', [
+      function() {
+        return {
+          restrict: 'E',
+          templateUrl: function(elem, attrs) {
+            return attrs.template ||
+              '../../catalog/components/metadataactions/partials/metadataCard.html';
+          },
+          scope: {
+            md: '=',
+            formatterUrl: '='
+          },
+          link: function(scope, element, attrs, controller) {
+            scope.lang = scope.lang || scope.$parent.lang;
+
           }
         };
       }]);
