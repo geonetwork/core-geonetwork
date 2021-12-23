@@ -109,7 +109,7 @@ class Harvester implements IHarvester<HarvestResult> {
         //--- perform all searches
 
         boolean error = false;
-        HarvestResult result = null;
+        HarvestResult result = new HarvestResult();
     	Set<String> uuids = new HashSet<String>();
         try {
             Aligner aligner = new Aligner(cancelMonitor, context, server, params, log);
