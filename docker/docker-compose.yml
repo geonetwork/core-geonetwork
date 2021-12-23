@@ -38,7 +38,7 @@ services:
         - GN_GID=${GROUP_ID}
         - GN_FILE=${WAR_FILE_NAME}
         - GN_CONF_TARGET=${CONF_TARGET}
-    image: sextant/${VERSION_NAME}:7.0.0
+    image: ${IMAGE_NAME}
     user: ${USER_ID}:${GROUP_ID}
     restart: always
     env_file:
