@@ -317,7 +317,7 @@
           scope: {
             children: '=gnRelatedSeriesByCriteria',
             agg: '=',
-            aggName: '@',
+            filters: '=',
             sortBy: '@',
             title: '@'
           },
@@ -325,28 +325,38 @@
             scope.lang = scope.lang || scope.$parent.lang;
 
             scope.criteria = {p: {}};
-            scope.aggName = scope.aggName || '';
 
-            if (scope.aggName) {
-              var b = scope.agg[scope.aggName].buckets;
+            function reset() {
+              scope.displayedRecords = scope.children;
+              scope.current = undefined;
+            }
+
+            reset();
+
+            scope.filterRecordsBy = function(key, value) {
+              var newKey = key + '-' + value;
+              if (newKey === scope.current) {
+                reset();
+                return;
+              }
+              scope.current = key + '-' + value;
+              scope.displayedRecords = [];
+              var b = scope.agg[key].buckets;
               b.forEach(function (k) {
-                scope.criteria.p[k.key] = [];
+                if (k.key === value) {
+                  k.docs.hits.hits.forEach(function (r) {
+                    scope.displayedRecords =
+                      scope.displayedRecords.concat(_.filter(scope.children, {id: r._id}));
+                  });
 
-                k.docs.hits.hits.forEach(function (r) {
-                  var values = _.filter(scope.children, {id: r._id});
-
-                  scope.criteria.p[k.key] = scope.criteria.p[k.key].concat(values);
-                });
-
-                if (scope.sortBy) {
-                  Object.keys(scope.criteria.p).map(function(k) {
-                    scope.criteria.p[k].sort(function(a, b) {
+                  if (scope.sortBy) {
+                    scope.displayedRecords.sort(function(a, b) {
                       return a.record[scope.sortBy].localeCompare(b.record[scope.sortBy])
                     });
-                  });
+                  }
                 }
               });
-            }
+            };
           }
         };
       }]);

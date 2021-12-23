@@ -25,19 +25,10 @@
   <div data-ng-if="mdView.current.record.relatedRecords"
        data-gn-related-series-by-criteria="mdView.current.record.relatedRecords.children"
        data-agg="mdView.current.record.relatedRecords.aggregations"
-       data-agg-name="spatialRepresentationType"
+       data-filters="['spatialRepresentationType', 'creationYearForResource']"
        data-sort-by="resourceTitle"
        data-title="{{'seriesComposedOf' | translate}}">
   </div>
-
-  <div data-ng-if="mdView.current.record.relatedRecords"
-       data-gn-related-series-by-criteria="mdView.current.record.relatedRecords.children"
-       data-agg="mdView.current.record.relatedRecords.aggregations"
-       data-sort-by="resourceTitle"
-       data-agg-name="creationYearForResource"
-       data-title="{{'seriesCoveringPeriod' | translate}}">
-  </div>
-
 
   <div data-gn-records-table="mdView.current.record.relatedRecords.all"
        labels="title,cl_status,format,Esri,view,download,file,atom"
