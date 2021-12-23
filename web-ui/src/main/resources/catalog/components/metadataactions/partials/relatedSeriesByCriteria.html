@@ -1,5 +1,8 @@
 <div class="gn-info-list-blocks" data-ng-if="children"
-     data-ng-class="{'gn-info-list-blocks': type === 'blocks' || type === undefined, 'gn-info-list-large': type === 'large', 'gn-info-list-small': type === 'small'}">
+     data-ng-class="{
+      'gn-info-list-blocks': type === 'blocks' || type === undefined,
+      'gn-info-list-large': type === 'large',
+      'gn-info-list-small': type === 'small'}">
 
   <h2>{{title}}</h2>
   <div class="row">
@@ -47,7 +50,7 @@
   </div>
 
   <ul class="row list-group gn-info-list">
-    <gn-metadata-card data-ng-repeat="md in children"
+    <gn-metadata-card data-ng-repeat="md in displayedRecords"
                       md="md"
                       formatter-url="formatter.defaultUrl"/>
   </ul>

@@ -1,5 +1,9 @@
-<div class="gn-related-resources"
-           data-ng-if="relationFound">
+<div  data-ng-class="{
+      'gn-info-list-blocks': type === 'blocks' || type === undefined,
+      'gn-info-list-large': type === 'large',
+      'gn-info-list-small': type === 'small'}"
+      class="gn-related-resources"
+      data-ng-if="relationFound">
   <h2>{{::title}}</h2>
 
   <div class=""
@@ -204,4 +208,26 @@
 
     </div>
   </div>
+
+  <ul class="row list-group gn-info-list"
+      data-ng-repeat="(type, items) in relations track by $index"
+      data-ng-if="type && type !== 'thumbnails' && type !== 'onlines'"
+      data-ng-init="mainType = config.getType(md, type);
+                    badge = config.getBadgeLabel(mainType, md);
+                    icon = config.getClassIcon(mainType);" >
+    <gn-metadata-card data-ng-repeat="md in items"
+                      md="md"
+                      formatter-url="formatter.defaultUrl">
+      <span class="label label-default"
+            data-ng-class="{
+            'gn-card-series': type === 'parent',
+            'gn-card-service': type === 'services',
+            'gn-card-dataset': type !== 'parent' && type !== 'services'
+            }"
+            style="position: absolute; left: 5px; bottom: 5px;">
+        <i class="fa {{icon}}"/>
+        {{(config.getLabel(mainType, type)) | translate}}
+      </span>
+    </gn-metadata-card>
+  </ul>
 </div>

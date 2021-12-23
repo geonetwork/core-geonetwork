@@ -322,6 +322,11 @@
               label: 'openRecord',
               action: openMd
             },
+            'MDSERVICE' : {
+              iconClass: 'fa-cloud',
+              label: 'openRecord',
+              action: openMd
+            },
             'MD' : {
               iconClass: 'fa-file',
               label: 'openRecord',
@@ -466,12 +471,14 @@
                (type === 'siblings')) {
               return 'MDSIBLING';
             } else if (type &&
+               (type === 'services')) {
+              return 'MDSERVICE';
+            } else if (type &&
                (type === 'sources' ||
                 type === 'hassources')) {
               return 'MDSOURCE';
             } else if (type &&
                (type === 'associated' ||
-               type === 'services' ||
                type === 'hasfeaturecats' ||
                type === 'datasets')) {
               return 'MD';

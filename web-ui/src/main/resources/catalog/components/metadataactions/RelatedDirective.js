@@ -370,6 +370,7 @@
       function() {
         return {
           restrict: 'E',
+          transclude: true,
           templateUrl: function(elem, attrs) {
             return attrs.template ||
               '../../catalog/components/metadataactions/partials/metadataCard.html';
@@ -380,7 +381,6 @@
           },
           link: function(scope, element, attrs, controller) {
             scope.lang = scope.lang || scope.$parent.lang;
-
           }
         };
       }]);
