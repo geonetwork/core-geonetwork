@@ -696,6 +696,7 @@ goog.require('gn_alert');
             'if': null // {'documentStandard': ['iso19115-3.2018']}
           },
           'sortKeywordsAlphabetically': true,
+          'mainThesaurus': ['th_gemet'],
           'relatedFacetConfig':  {
             'creationYearForResource': {
               'terms': {

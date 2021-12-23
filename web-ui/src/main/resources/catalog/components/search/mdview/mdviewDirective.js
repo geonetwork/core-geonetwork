@@ -389,4 +389,18 @@
         templateUrl: '../../catalog/components/search/mdview/partials/' +
           'individual.html'
       }}]);
+
+
+  module.directive('gnKeywordBadges', ['gnGlobalSettings',
+    function(gnGlobalSettings) {
+      return {
+        scope: {
+          allKeywords: '=gnKeywordBadges'
+        },
+        templateUrl: '../../catalog/components/search/mdview/partials/' +
+          'keywordBadges.html',
+        link: function(scope) {
+          scope.mainThesaurus = gnGlobalSettings.gnCfg.mods.recordview.mainThesaurus;
+        }
+      }}]);
 })();

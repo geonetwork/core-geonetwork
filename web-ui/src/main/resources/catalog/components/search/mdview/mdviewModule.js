@@ -63,6 +63,7 @@
       $scope.isRatingEnabled = false;
       $scope.showCitation = false;
       $scope.isSocialbarEnabled = gnGlobalSettings.gnCfg.mods.recordview.isSocialbarEnabled;
+      $scope.mainThesaurus = gnGlobalSettings.gnCfg.mods.recordview.mainThesaurus;
       $scope.showStatusWatermarkFor = gnGlobalSettings.gnCfg.mods.recordview.showStatusWatermarkFor;
       $scope.showStatusTopBarFor = gnGlobalSettings.gnCfg.mods.recordview.showStatusTopBarFor;
       $scope.sortKeywordsAlphabetically = gnGlobalSettings.gnCfg.mods.recordview.sortKeywordsAlphabetically;

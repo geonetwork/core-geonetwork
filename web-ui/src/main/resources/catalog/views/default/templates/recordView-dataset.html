@@ -1,13 +1,5 @@
 <div class="col-md-8 gn-record">
-  <h1>
-    <i class="fa gn-icon-{{mdView.current.record.resourceType[0]}}"/>
-    {{mdView.current.record.resourceTitle}}
-    <span class="text-muted badge"
-          data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
-          data-ng-if="user.isEditorOrMore() && md.mdStatus<50 && isMdWorkflowEnable">{{('mdStatus-' + md.mdStatus) | translate}}</span>
-  </h1>
-
-
+  <div ng-include="'../../catalog/views/default/templates/recordView-title.html'"/>
 
   <div class="gn-margin-bottom"
        data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></div>
