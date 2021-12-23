@@ -10,7 +10,9 @@
        data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"></div>
 
   <div data-ng-if="mdView.current.record.relatedRecords"
-       data-gn-related-series-by-criteria="mdView.current.record.relatedRecords.children"
+       data-gn-related-series-by-criteria="mdView.current.record.relatedRecords.children.length > 0
+        ? mdView.current.record.relatedRecords.children
+        : mdView.current.record.relatedRecords.siblings"
        data-agg="mdView.current.record.relatedRecords.aggregations"
        data-filters="['spatialRepresentationType', 'creationYearForResource']"
        data-sort-by="resourceTitle"

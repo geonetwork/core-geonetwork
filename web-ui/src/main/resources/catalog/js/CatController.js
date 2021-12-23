@@ -700,12 +700,21 @@ goog.require('gn_alert');
           'relatedFacetConfig':  {
             'creationYearForResource': {
               'terms': {
-                'field': 'creationYearForResource'
+                'field': 'creationYearForResource',
+                'size': 100,
+                "order" : { "_key" : "asc" }
               }
             },
             'spatialRepresentationType': {
               'terms': {
-                'field': 'cl_spatialRepresentationType.default'
+                'field': 'cl_spatialRepresentationType.default',
+                "order" : { "_key" : "asc" }
+              }
+            },
+            'format': {
+              'terms': {
+                'field': 'format',
+                "order" : { "_key" : "asc" }
               }
             }
           }
@@ -899,7 +908,8 @@ goog.require('gn_alert');
         'scoreConfig',
         'autocompleteConfig',
         'moreLikeThisConfig',
-        'relatedFacetConfig'
+        'relatedFacetConfig',
+        'mainThesaurus'
       ],
       current: null,
       isDisableLoginForm: false,

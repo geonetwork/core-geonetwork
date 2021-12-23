@@ -239,7 +239,7 @@
     </h2>
     <div class="alert alert-danger">
       <ul>
-        <li data-ng-repeat="e in mdView.current.record.indexingErrorMsg">
+        <li data-ng-repeat="e in mdView.current.record.indexingErrorMsg track by $index">
           <code>
             {{e}}
           </code>

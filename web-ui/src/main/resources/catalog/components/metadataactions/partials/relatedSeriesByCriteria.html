@@ -1,4 +1,4 @@
-<div class="gn-info-list-blocks">
+<div class="gn-info-list-blocks" data-ng-if="children">
   <h2>{{title}}</h2>
   <hr />
   <div class="row">
@@ -13,7 +13,7 @@
                 type="button"
                 class="btn btn-default"
                 data-ng-class="{'btn-primary': current === (filter + '-' + b.key)}"
-        >{{b.key | translate}}
+        >{{(b.key | translate) || '&nbsp;'}} ({{b.doc_count}})
         </button>
       </div>
     </div>
