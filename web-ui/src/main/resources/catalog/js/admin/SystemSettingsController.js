@@ -278,6 +278,10 @@
       };
 
       $scope.deleteUiConfig = function() {
+        $('#gn-confirm-remove-ui').modal('show');
+      };
+
+      $scope.confirmDeleteUiConfig = function() {
         $scope.lastUiConfiguration = undefined;
         $http.delete('../api/ui/' + $scope.uiConfiguration.id).then(function(r) {
           loadUiConfigurations();
