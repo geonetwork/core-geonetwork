@@ -862,6 +862,8 @@ goog.require('gn_alert');
         var copy = angular.copy(defaultConfig);
         copy.mods.header.languages = {};
         copy.mods.search.grid.related = [];
+        copy.mods.search.sortbyValues = [];
+        copy.mods.search.hitsperpageValues = [];
         copy.mods.home.facetConfig = {};
         copy.mods.search.facetConfig = {};
         copy.mods.search.scoreConfig = {};
