@@ -37,7 +37,7 @@ RUN apt update && \
 RUN  unzip -d geonetwork ./${GN_FILE}.war && \
      rm ./${GN_FILE}.war
 
-RUN chown -R ${GN_UID}:${GN_GID} ${GN_FILE}/ && \
+RUN chown -R ${GN_UID}:${GN_GID} geonetwork/ && \
   chown -R ${GN_UID}:${GN_GID} /usr/local/tomcat/conf
 
 COPY ./docker-entrypoint.sh /entrypoint.sh
