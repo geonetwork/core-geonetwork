@@ -41,28 +41,28 @@
           <div data-ng-switch-when="WMS">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{(r.title | gnLocalized: lang).replaceAll('\'', '\\\'')}}'}">
+                    data-translate-values="{url:{{r.url | gnLocalized: lang | toJson}}, layer:{{r.title | gnLocalized: lang | toJson}}}">
                 wmsLinkDetails</span>
             </p>
           </div>
           <div data-ng-switch-when="WMTS">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{(r.title | gnLocalized: lang).replaceAll('\'', '\\\'')}}'}">
+                    data-translate-values="{url:{{r.url | gnLocalized: lang | toJson}}, layer:{{r.title | gnLocalized: lang | toJson}}}">
                 wmtsLinkDetails</span>
             </p>
           </div>
           <div data-ng-switch-when="WMSSERVICE">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}'}">
+                    data-translate-values="{url:{{r.url | gnLocalized: lang | toJson}}}">
                 wmsServiceLinkDetails</span>
             </p>
           </div>
           <div data-ng-switch-when="WMTSSERVICE">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}'}">
+                    data-translate-values="{url:{{r.url | gnLocalized: lang | toJson}}}">
                 wmtsServiceLinkDetails</span>
             </p>
           </div>
@@ -70,7 +70,7 @@
             <p class="text-muted"
                data-ng-if="isLayerProtocol(r)">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                    data-translate-values="{url:{{r.url | gnLocalized: lang | toJson}}, layer:{{r.title | gnLocalized: lang | toJson}}}">
                 wfsLinkDetails</span>
             </p>
             <div data-ng-if="isLayerProtocol(r)"
@@ -82,7 +82,7 @@
             <p class="text-muted"
                data-ng-if="!isLayerProtocol(r)">
               <span data-translate=""
-                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}'}">
+                    data-translate-values="{url:{{r.url | gnLocalized: lang | toJson}}}">
                 wfsServiceLinkDetails</span>
             </p>
             <div data-ng-if="!isLayerProtocol(r)"
@@ -94,33 +94,33 @@
 
           <div data-ng-switch-when="TMS">
             <span data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  data-translate-values="{url:{{r.url | gnLocalized: lang | toJson}}, layer:{{r.title | gnLocalized: lang | toJson}}}">
               tmsLinkDetails</span>
           </div>
 
           <div data-ng-switch-when="SOS">
             <span data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  data-translate-values="{url:{{r.url | gnLocalized: lang | toJson}}, layer:{{r.title | gnLocalized: lang | toJson}}}">
               sosLinkDetails</span>
           </div>
 
           <div data-ng-switch-when="ESRI:REST">
             <span data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  data-translate-values="{url:{{r.url | gnLocalized: lang | toJson}}, layer:{{r.title | gnLocalized: lang | toJson}}}">
               esriRestLinkDetails</span>
           </div>
 
           <div data-ng-switch-when="WCS">
             <p class="text-muted">
             <span data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  data-translate-values="{url:{{r.url | gnLocalized: lang | toJson}}, layer:{{r.title | gnLocalized: lang | toJson}}}">
               wcsLinkDetails</span>
             </p>
           </div>
 
           <div data-ng-switch-when="ATOM">
             <p class="text-muted" data-translate=""
-               data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+               data-translate-values="{url:{{r.url | gnLocalized: lang | toJson}}, layer:{{r.title | gnLocalized: lang | toJson}}}">
               atomLinkDetails
             </p>
             <div
@@ -134,7 +134,7 @@
           <div data-ng-switch-when="DB">
             <p class="text-muted">
             <span data-translate=""
-                  data-translate-values="{url:'{{(r.url | gnLocalized: lang).replaceAll('\\', '\\\\')}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  data-translate-values="{url:{{r.url | gnLocalized: lang | toJson}}, layer:{{r.title | gnLocalized: lang | toJson}}}">
               databaseLayerDetails</span>
             </p>
           </div>
@@ -142,7 +142,7 @@
           <div data-ng-switch-when="FILE">
             <p class="text-muted">
               <span data-translate=""
-                    data-translate-values="{url:'{{(r.url | gnLocalized: lang).replaceAll('\\', '\\\\')}}', name:'{{r.title | gnLocalized: lang}}'}">
+                    data-translate-values="{url:{{r.url | gnLocalized: lang | toJson}}, name:{{r.title | gnLocalized: lang | toJson}}}">
                 fileLayerDetails</span>
               <input class="form-control"
                      type="text"
