@@ -276,7 +276,7 @@ public class MetadataExtentApi {
 
     private HttpEntity<byte[]> getExtent(String metadataUuid, String srs, Integer width, Integer height, String background, String fillColor, String strokeColor, Integer extentOrderOfAppearance, NativeWebRequest nativeWebRequest, HttpServletRequest request) throws Exception {
         try (ServiceContext context = ApiUtils.createServiceContext(request)) {
-            AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+            AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, context);
 
             if (width != null && height != null) {
                 throw new BadParameterEx(WIDTH_PARAM, WIDTH_AND_HEIGHT_BOTH_DEFINED_MESSAGE);
@@ -315,13 +315,13 @@ public class MetadataExtentApi {
                 return null;
             }
 
-           try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-                 ImageIO.write(image, "png", out);
-                 MultiValueMap<String, String> headers = new HttpHeaders();
-                 headers.add(HttpHeaders.CONTENT_DISPOSITION, String.format("inline; filename=\"%s-extent.png\"", metadataUuid));
-                 headers.add(HttpHeaders.CACHE_CONTROL, "no-cache");
-                 headers.add(HttpHeaders.CONTENT_TYPE, "image/png");
-                 return new HttpEntity<>(out.toByteArray(), headers);
+            try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                ImageIO.write(image, "png", out);
+                MultiValueMap<String, String> headers = new HttpHeaders();
+                headers.add(HttpHeaders.CONTENT_DISPOSITION, String.format("inline; filename=\"%s-extent.png\"", metadataUuid));
+                headers.add(HttpHeaders.CACHE_CONTROL, "no-cache");
+                headers.add(HttpHeaders.CONTENT_TYPE, "image/png");
+                return new HttpEntity<>(out.toByteArray(), headers);
             }
         }
     }
