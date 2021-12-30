@@ -155,6 +155,7 @@ public class RegisterApi {
 
             // user.setUsername(userRegisterDto.getUsername());
             user.setName(userRegisterDto.getName());
+            user.setSurname(userRegisterDto.getSurname());
             user.setOrganisation(userRegisterDto.getOrganisation());
             user.setProfile(Profile.findProfileIgnoreCase(userRegisterDto.getProfile()));
             user.getAddresses().add(userRegisterDto.getAddress());
@@ -175,7 +176,6 @@ public class RegisterApi {
                 UserGroup userGroup = new UserGroup().setUser(user).setGroup(targetGroup).setProfile(Profile.RegisteredUser);
                 context.getBean(UserGroupRepository.class).save(userGroup);
             }
-
 
             String catalogAdminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
             String subject = String.format(

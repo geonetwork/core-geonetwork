@@ -524,6 +524,33 @@
 
               </mrd:MD_DigitalTransferOptions>
             </mrd:transferOptions>
+            <mrd:transferOptions>
+              <mrd:MD_DigitalTransferOptions>
+                <mrd:onLine>
+                  <cit:CI_OnlineResource>
+                    <cit:linkage>
+                      <gco:CharacterString>
+                        <xsl:value-of select="concat(nodeUrl, '/explore/dataset/', datasetid, '/information/')" />
+                      </gco:CharacterString>
+                    </cit:linkage>
+                    <cit:protocol>
+                      <gco:CharacterString>
+                        WWW:LINK:LANDING_PAGE
+                      </gco:CharacterString>
+                    </cit:protocol>
+                    <cit:name>
+                      <gco:CharacterString>
+                        Landing Page
+                      </gco:CharacterString>
+                    </cit:name>
+                    <cit:description>
+                      <gco:CharacterString>
+                      </gco:CharacterString>
+                    </cit:description>
+                  </cit:CI_OnlineResource>
+                </mrd:onLine>
+              </mrd:MD_DigitalTransferOptions>
+            </mrd:transferOptions>
           </mrd:MD_Distribution>
         </mdb:distributionInfo>
 
