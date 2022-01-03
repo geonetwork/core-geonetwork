@@ -1,5 +1,6 @@
 <div class="row">
-    <div class="col-md-12"  data-ng-controller="GnSystemSettingsController">
+  <div class="col-md-12" id="gn-uiconfig-container"
+       data-ng-controller="GnSystemSettingsController">
 
       <div class="navbar btn-toolbar">
         <form class="form-inline">
@@ -112,5 +113,11 @@
           </button>
         </div>
       </div>
-    </div>
+
+      <div gn-modal class="gn-confirm-delete"
+           gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmDeleteUiConfig}"
+           id="gn-confirm-remove-ui">
+        <p translate>confirmUiDelete</p>
+      </div>
   </div>
+</div>
