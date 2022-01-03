@@ -1495,6 +1495,7 @@
     "ui-addWMSLayersToMap-urlLayerParam-help": "If the WMS layer name is configured in the metadata resource url, configure the url parameter that contains the layer name.",
     "confirmRemoveLogo": "Are you sure you want to delete this logo?",
     "groupRemoved": "Group removed",
-    "userRemoved": "User removed"
+    "userRemoved": "User removed",
+    "confirmUiDelete":  "Are you sure you want to delete this UI configuration?"
 }
 
