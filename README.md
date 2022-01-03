@@ -2,7 +2,7 @@
 
 # Build Health
 
-[![Build Status](https://travis-ci.org/geonetwork/core-geonetwork.svg?branch=master)](https://travis-ci.org/geonetwork/core-geonetwork)
+[![Build Status](https://github.com/geonetwork/core-geonetwork/actions/workflows/linux.yml/badge.svg?branch=main)](https://github.com/geonetwork/core-geonetwork/actions/workflows/linux.yml?query=branch%3Amain)
 
 # Features
 
