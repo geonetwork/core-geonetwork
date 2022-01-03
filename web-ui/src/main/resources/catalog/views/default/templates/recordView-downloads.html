@@ -3,7 +3,21 @@
   <div data-gn-related="mdView.current.record"
        data-user="user"
        data-types="onlines"
-       data-has-results="hasRelations.onlines"
-       data-title="{{'downloadsAndResources' | translate}}">
+       data-filter="protocol:OGC:.*|ESRI:.*|atom.*"
+       data-title="{{'API' | translate}}">
+  </div>
+
+  <div data-gn-related="mdView.current.record"
+       data-user="user"
+       data-types="onlines"
+       data-filter="protocol:.*DOWNLOAD.*|DB:.*|FILE:.*"
+       data-title="{{'download' | translate}}">
+  </div>
+
+  <div data-gn-related="mdView.current.record"
+       data-user="user"
+       data-types="onlines"
+       data-filter="-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*"
+       data-title="{{'links' | translate}}">
   </div>
 </div>

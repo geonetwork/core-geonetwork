@@ -177,6 +177,11 @@
               types: '@',
               title: '@',
               list: '@',
+              // Filter a type based on an attribute.
+              // Can't be used when multiple types are requested
+              // eg. data-filter="associationType:upstreamData"
+              // data-filter="protocol:OGC:.*|ESRI:.*"
+              // data-filter="-protocol:OGC:.*"
               filter: '@',
               container: '@',
               user: '=',
@@ -213,15 +218,22 @@
                     scope.relations[idx] = [];
                   }
                   if (scope.filter && angular.isArray(value)) {
-                    var tokens = scope.filter.split(':'),
-                      field = tokens[0],
-                      filter = tokens[1];
+                    var separator = ':',
+                      tokens = scope.filter.split(separator),
+                      field = tokens.shift(),
+                      not = field && field.startsWith('-'),
+                      filter = tokens.join(separator);
+
                     scope.relations[idx] = [];
                     for (var i = 0; i < value.length; i++) {
-                      if (filter.indexOf(value[i][field]) !== -1) {
+                      var prop = value[i][not ? field.substr(1) : field];
+                      if (prop
+                        && ((!not && prop.match(new RegExp(filter)) != null)
+                          || (not && prop.match(new RegExp(filter)) == null))) {
                         scope.relations[idx].push(value[i]);
                       }
                     }
+                    scope.relationFound = scope.relations[idx].length > 0;
                   } else {
                     scope.relations[idx] = value;
                   }
