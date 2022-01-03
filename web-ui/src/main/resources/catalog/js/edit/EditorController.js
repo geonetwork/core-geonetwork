@@ -570,8 +570,8 @@
                 closeEditor();
               }, function(reason) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant(reason.data.error.message),
-                  error: reason.data.error.description,
+                  title: reason.data.message, //returned error JSON obj
+                  error: reason.data.description,
                   timeout: 0,
                   type: 'danger'
                 });

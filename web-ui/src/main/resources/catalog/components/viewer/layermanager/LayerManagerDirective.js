@@ -141,7 +141,10 @@
    */
   module.directive('gnLayermanagerItem', [
     'gnMdView',
-    function(gnMdView) {
+    '$http',
+    'gnGlobalSettings',
+    'gnMapServicesCache',
+    function(gnMdView, $http, gnGlobalSettings, gnMapServicesCache) {
       return {
         require: '^gnLayermanager',
         restrict: 'A',
@@ -170,6 +173,58 @@
           };
           scope.setLayerStyle = function(layer, style) {
             layer.getSource().updateParams({'STYLES': style.Name});
+
+            // If this is an authorized mapservice then we need to adjust the url or add auth headers
+            // Only check http url and exclude any urls like data: which should not be changed. Also, there is not need to check proxy urls.
+            if (style.LegendURL[0] !== null &&
+              style.LegendURL[0].OnlineResource !== null &&
+              style.LegendURL[0].OnlineResource.startsWith("http") &&
+              !style.LegendURL[0].OnlineResource.startsWith(gnGlobalSettings.proxyUrl)) {
+              var mapservice = gnMapServicesCache.getMapservice(style.LegendURL[0].OnlineResource);
+
+              if (mapservice !== null) {
+                // If this is an authorized mapservice then use authorization
+                var urlGetLegend = style.LegendURL[0].OnlineResource;
+
+                if (mapservice.useProxy) {
+                  // If we are using a proxy then adjust the url.
+                  urlGetLegend = gnGlobalSettings.proxyUrl + encodeURIComponent(urlGetLegend);
+                } else {
+                  // If not using the proxy then we need to use a custom loadFunction to set the authentication header
+                  var headerDict;
+                  if (gnMapServicesCache.getAuthorizationHeaderValue(mapservice)) {
+                    headerDict = {
+                      "Authorization": gnMapServicesCache.getAuthorizationHeaderValue(mapservice)
+                    };
+
+                    var requestOptions = {
+                      headers: new Headers(headerDict),
+                      responseType: "blob"
+                    };
+                    legendPromise = $http.get(urlGetLegend, requestOptions).success(function (data, status, headers, config) {
+                      var contentType = headers('content-type');
+                      if (contentType.indexOf('image') === 0) {
+                        // encode data to base 64 url
+                        fileReader = new FileReader();
+                        fileReader.onload = function () {
+                          style.LegendURL[0].OnlineResource = fileReader.result;
+                          layer.set('legend', fileReader.result);
+                          layer.set('currentStyle', style);
+                        };
+                        fileReader.readAsDataURL(data);
+                      } else {
+                        console.log("Error getting legend image (" + contentType + ")");
+                        console.log(this.responseText);
+                      }
+                    }).error(function (data, status, headers, config) {
+                      console.log("Error getting legend image");
+                      console.log(this.responseText);
+                    });
+                    return legendPromise;
+                  }
+                }
+              }
+            }
             layer.set('legend', style.LegendURL[0].OnlineResource);
             layer.set('currentStyle', style);
           };
