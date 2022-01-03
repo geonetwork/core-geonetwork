@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -44,6 +44,7 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.GroupSpecs;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.resources.Resources;
@@ -53,6 +54,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -172,53 +174,53 @@ public class GroupsApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
 
         ApplicationContext context = ApplicationContextHolder.get();
-      try (ServiceContext serviceContext = ApiUtils.createServiceContext(request, locale.getISO3Country())) {
-        if (context == null) {
-            throw new RuntimeException("ServiceContext not available");
-        }
+        try (ServiceContext serviceContext = ApiUtils.createServiceContext(request, locale.getISO3Country())) {
+            if (context == null) {
+                throw new RuntimeException("ServiceContext not available");
+            }
 
-        Group group = groupRepository.findOne(groupId);
-        if (group == null) {
-            throw new ResourceNotFoundException(messages.getMessage("api.groups.group_not_found", new
-                Object[]{groupId}, locale));
-        }
-        try {
-            final Resources resources = context.getBean(Resources.class);
-            final String logoUUID = group.getLogo();
-            if (StringUtils.isNotBlank(logoUUID) && !logoUUID.startsWith("http://") && !logoUUID.startsWith("https//")) {
-                try (Resources.ResourceHolder image = getImage(resources, serviceContext, group)){
-                    if (image != null) {
-                        FileTime lastModifiedTime = image.getLastModifiedTime();
-                        response.setDateHeader("Expires", System.currentTimeMillis() + SIX_HOURS * 1000L);
-                        if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
-                            // webRequest.checkNotModified sets the right HTTP headers
+            Group group = groupRepository.findOne(groupId);
+            if (group == null) {
+                throw new ResourceNotFoundException(messages.getMessage("api.groups.group_not_found", new
+                    Object[]{groupId}, locale));
+            }
+            try {
+                final Resources resources = context.getBean(Resources.class);
+                final String logoUUID = group.getLogo();
+                if (StringUtils.isNotBlank(logoUUID) && !logoUUID.startsWith("http://") && !logoUUID.startsWith("https//")) {
+                    try (Resources.ResourceHolder image = getImage(resources, serviceContext, group)){
+                        if (image != null) {
+                            FileTime lastModifiedTime = image.getLastModifiedTime();
+                            response.setDateHeader("Expires", System.currentTimeMillis() + SIX_HOURS * 1000L);
+                            if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
+                                // webRequest.checkNotModified sets the right HTTP headers
+                                return;
+                            }
+                            response.setContentType(AttachmentsApi.getFileContentType(image.getPath()));
+                            response.setContentLength((int) Files.size(image.getPath()));
+                            response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
+                            FileUtils.copyFile(image.getPath().toFile(), response.getOutputStream());
                             return;
                         }
-                        response.setContentType(AttachmentsApi.getFileContentType(image.getPath()));
-                        response.setContentLength((int) Files.size(image.getPath()));
-                        response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
-                        FileUtils.copyFile(image.getPath().toFile(), response.getOutputStream());
-                        return;
                     }
                 }
-            }
 
-            // no logo image found. Return a transparent 1x1 png
-            FileTime lastModifiedTime = FileTime.fromMillis(0);
-            if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
-                return;
-            }
-            response.setContentType("image/png");
-            response.setContentLength(TRANSPARENT_1_X_1_PNG.length);
-            response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
-            response.getOutputStream().write(TRANSPARENT_1_X_1_PNG);
+                // no logo image found. Return a transparent 1x1 png
+                FileTime lastModifiedTime = FileTime.fromMillis(0);
+                if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
+                    return;
+                }
+                response.setContentType("image/png");
+                response.setContentLength(TRANSPARENT_1_X_1_PNG.length);
+                response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
+                response.getOutputStream().write(TRANSPARENT_1_X_1_PNG);
 
-        } catch (IOException e) {
-            Log.error(LOGGER, String.format("There was an error accessing the logo of the group with id '%d'",
-                groupId));
-            throw new RuntimeException(e);
+            } catch (IOException e) {
+                Log.error(LOGGER, String.format("There was an error accessing the logo of the group with id '%d'",
+                    groupId));
+                throw new RuntimeException(e);
+            }
         }
-      }
     }
 
     private static Resources.ResourceHolder getImage(Resources resources, ServiceContext serviceContext, Group group) throws IOException {
@@ -487,6 +489,9 @@ public class GroupsApi {
     @Autowired
     private DataManager dm;
 
+    @Autowired
+    private MetadataRepository metadataRepository;
+
     @ApiOperation(
         value = "Remove a group",
         notes = "Remove a group by first removing sharing settings, link to users and " +
@@ -523,6 +528,16 @@ public class GroupsApi {
         Group group = groupRepository.findOne(groupIdentifier);
 
         if (group != null) {
+
+            final long metadataCount = metadataRepository.count(where((Specification<Metadata>)
+                MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(group.getId()))));
+            if (metadataCount > 0) {
+                throw new NotAllowedException(String.format(
+                    "Group %s owns metadata. To remove the group you should transfer first the metadata to another group.",
+                    group.getName()
+                ));
+            }
+
             List<Integer> reindex = operationAllowedRepo.findAllIds(OperationAllowedSpecs.hasGroupId(groupIdentifier),
                 OperationAllowedId_.metadataId);
 
