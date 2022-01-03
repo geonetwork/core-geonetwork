@@ -225,10 +225,19 @@
             }
             $scope.uiConfigurations = data;
 
-            // Select the first
+            // Select the current node if defined in the configuration, otherwise the first one
             if ($scope.uiConfigurations.length > 0 &&
                 angular.isUndefined($scope.uiConfiguration)) {
-              $scope.uiConfiguration = $scope.uiConfigurations[0];
+
+              var defaultUiIndex = _.findIndex($scope.uiConfigurations, function(ui){
+                return ui.id === gnGlobalSettings.nodeId;
+              });
+
+              if (defaultUiIndex > -1) {
+                $scope.uiConfiguration = $scope.uiConfigurations[defaultUiIndex];
+              } else {
+                $scope.uiConfiguration = $scope.uiConfigurations[0];
+              }
             }
           });
       };
